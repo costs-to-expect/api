@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use App\User;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 
@@ -12,7 +12,7 @@ class PassportController extends Controller
     public $successStatus = 200;
 
     /**
-     * login api
+     * login to the API
      *
      * @return \Illuminate\Http\Response
      */
@@ -28,7 +28,9 @@ class PassportController extends Controller
     }
 
     /**
-     * Register api
+     * Register with the API
+     *
+     * @param \Illuminate\Http\Request $request
      *
      * @return \Illuminate\Http\Response
      */
@@ -55,11 +57,11 @@ class PassportController extends Controller
     }
 
     /**
-     * details api
+     * Return user details
      *
      * @return \Illuminate\Http\Response
      */
-    public function getDetails()
+    public function user()
     {
         $user = Auth::user();
         return response()->json(['success' => $user], $this->successStatus);
