@@ -1,0 +1,29 @@
+version: '3'
+services:
+  app:
+    build:
+      context: .
+      dockerfile: .docker/Dockerfile
+    image: costs-to-expect
+    ports:
+      - 80:80
+    volumes:
+      - .:/.docker/app/php
+    links:
+      - mysql
+    environment:
+        DB_HOST: mysql
+        DB_DATABASE: api
+        DB_USERNAME: api_user
+        DB_PASSWORD: api_password
+  mysql:
+    image: mysql:5.7
+    ports:
+      - 3306:3306
+    environment:
+      MYSQL_DATABASE: api
+      MYSQL_USER: api_user
+      MYSQL_PASSWORD: api_password
+      MYSQL_ROOT_PASSWORD: root_password
+    volumes:
+      - ./.docker/app/mysql/data:/var/lib/mysql
