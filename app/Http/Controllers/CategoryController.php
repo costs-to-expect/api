@@ -46,4 +46,52 @@ class CategoryController extends Controller
             200
         );
     }
+
+    /**
+     * @param Request $request
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function optionsIndex(Request $request)
+    {
+        return response()->json(
+            [
+                'GET' => [
+                    'description' => 'Return the categories',
+                    'parameters' => []
+                ]
+            ],
+            200,
+            [
+                'Access-Control-Allow-Origin' => '*',
+                'Access-Control-Allow-Header' => 'X-Requested-With, Origin, Content-Type, Accept, Authorization',
+                'Access-Control-Allow-Methods' => 'GET, POST, OPTIONS',
+                'Content-Type' => 'application/json'
+            ]
+        );
+    }
+
+    /**
+     * @param Request $request
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function optionsShow(Request $request)
+    {
+        return response()->json(
+            [
+                'GET' => [
+                    'description' => 'Return the requested category',
+                    'parameters' => []
+                ]
+            ],
+            200,
+            [
+                'Access-Control-Allow-Origin' => '*',
+                'Access-Control-Allow-Header' => 'X-Requested-With, Origin, Content-Type, Accept, Authorization',
+                'Access-Control-Allow-Methods' => 'GET, PATCH, DELETE, OPTIONS',
+                'Content-Type' => 'application/json'
+            ]
+        );
+    }
 }

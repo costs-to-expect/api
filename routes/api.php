@@ -20,7 +20,9 @@ Route::group(
     ['middleware' => 'auth:api'],
     function () {
         Route::get('categories', 'CategoryController@index');
+        Route::options('categories', 'CategoryController@optionsIndex');
         Route::get('categories/{category_id}', 'CategoryController@show');
+        Route::options('categories/{category_id}', 'CategoryController@optionsShow');
         Route::get('categories/{category_id}/sub_categories', 'SubCategoryController@index');
         Route::get('categories/{category_id}/sub_categories/{sub_category_id}', 'SubCategoryController@show');
 
