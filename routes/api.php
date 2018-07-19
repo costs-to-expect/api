@@ -36,14 +36,13 @@ Route::group(
 
         Route::get('resource_types/{resource_type_id}/resources', 'ResourceController@index');
         Route::options('resource_types/{resource_type_id}/resources', 'ResourceController@optionsIndex');
-
         Route::get('resource_types/{resource_type_id}/resources/{resource_id}', 'ResourceController@show');
         Route::options('resource_types/{resource_type_id}/resources/{resource_id}', 'ResourceController@optionsShow');
-        
-        Route::get('resource_types/{resource_type_id}/resources/{resource_id}/items', 'ItemController@index');
-        Route::get('resource_types/{resource_type_id}/resources/{resource_id}/items/{item_id}', 'ItemController@show');
 
-        Route::get('user', 'PassportController@user');
+        Route::get('resource_types/{resource_type_id}/resources/{resource_id}/items', 'ItemController@index');
+        Route::options('resource_types/{resource_type_id}/resources/{resource_id}/items', 'ItemController@optionsIndex');
+        Route::get('resource_types/{resource_type_id}/resources/{resource_id}/items/{item_id}', 'ItemController@show');
+        Route::options('resource_types/{resource_type_id}/resources/{resource_id}/items/{item_id}', 'ItemController@optionsShow');
     }
 );
 
