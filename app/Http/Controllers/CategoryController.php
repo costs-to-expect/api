@@ -33,6 +33,7 @@ class CategoryController extends Controller
     /**
      * @param Request $request
      * @param string $category_id
+     *
      * @return \Illuminate\Http\JsonResponse
      */
     public function show(Request $request, string $category_id)
@@ -54,44 +55,43 @@ class CategoryController extends Controller
      */
     public function optionsIndex(Request $request)
     {
-        return response()->json(
+        $options_response = $this->optionsResponse(
             [
                 'GET' => [
                     'description' => 'Return the categories',
                     'parameters' => []
                 ]
-            ],
-            200,
-            [
-                'Access-Control-Allow-Origin' => '*',
-                'Access-Control-Allow-Header' => 'X-Requested-With, Origin, Content-Type, Accept, Authorization',
-                'Access-Control-Allow-Methods' => 'GET, POST, OPTIONS',
-                'Content-Type' => 'application/json'
             ]
+        );
+
+        return response()->json(
+            $options_response['verbs'],
+            $options_response['http_status_code'],
+            $options_response['headers']
         );
     }
 
     /**
      * @param Request $request
+     * @param string $category_id
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    public function optionsShow(Request $request)
+    public function optionsShow(Request $request, string $category_id)
     {
-        return response()->json(
+        $options_response = $this->optionsResponse(
             [
                 'GET' => [
                     'description' => 'Return the requested category',
                     'parameters' => []
                 ]
-            ],
-            200,
-            [
-                'Access-Control-Allow-Origin' => '*',
-                'Access-Control-Allow-Header' => 'X-Requested-With, Origin, Content-Type, Accept, Authorization',
-                'Access-Control-Allow-Methods' => 'GET, PATCH, DELETE, OPTIONS',
-                'Content-Type' => 'application/json'
             ]
+        );
+
+        return response()->json(
+            $options_response['verbs'],
+            $options_response['http_status_code'],
+            $options_response['headers']
         );
     }
 }
