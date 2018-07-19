@@ -2,17 +2,22 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use App\User;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 
+/**
+ * Register users and login
+ *
+ * @package App\Http\Controllers
+ */
 class PassportController extends Controller
 {
     public $successStatus = 200;
 
     /**
-     * login api
+     * login to the API
      *
      * @return \Illuminate\Http\Response
      */
@@ -20,7 +25,7 @@ class PassportController extends Controller
         if(Auth::attempt(['email' => request('email'), 'password' => request('password')])){
             $user = Auth::user();
             $success['token'] =  $user->createToken('costs-to-expect')->accessToken;
-            return response()->json(['success' => $success], $this->successStatus);
+            return response()->json(['result' => $success], $this->successStatus);
         }
         else{
             return response()->json(['error'=>'Unauthorised'], 401);
@@ -28,7 +33,9 @@ class PassportController extends Controller
     }
 
     /**
-     * Register api
+     * Register with the API
+     *
+     * @param \Illuminate\Http\Request $request
      *
      * @return \Illuminate\Http\Response
      */
@@ -51,17 +58,17 @@ class PassportController extends Controller
         $success['token'] =  $user->createToken('costs-to-expect')->accessToken;
         $success['name'] =  $user->name;
 
-        return response()->json(['success'=>$success], $this->successStatus);
+        return response()->json(['result'=>$success], $this->successStatus);
     }
 
     /**
-     * details api
+     * Return user details
      *
      * @return \Illuminate\Http\Response
      */
-    public function getDetails()
+    public function user()
     {
         $user = Auth::user();
-        return response()->json(['success' => $user], $this->successStatus);
+        return response()->json(['result' => $user], $this->successStatus);
     }
 }
