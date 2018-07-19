@@ -14,6 +14,7 @@ use Illuminate\Http\Request;
 class ResourceController extends Controller
 {
     /**
+     * @param Request $request
      * @param string $resource_type_id
      *
      * @return \Illuminate\Http\JsonResponse
@@ -49,6 +50,54 @@ class ResourceController extends Controller
                 ]
             ],
             200
+        );
+    }
+
+    /**
+     * @param Request $request
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function optionsIndex(Request $request)
+    {
+        $options_response = $this->optionsResponse(
+            [
+                'GET' => [
+                    'description' => 'Return the resources for the given resource type',
+                    'parameters' => []
+                ]
+            ]
+        );
+
+        return response()->json(
+            $options_response['verbs'],
+            $options_response['http_status_code'],
+            $options_response['headers']
+        );
+    }
+
+    /**
+     * @param Request $request
+     * @param string $resource_type_id
+     * @param string $resource_id
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function optionsShow(Request $request, string $resource_type_id, string $resource_id)
+    {
+        $options_response = $this->optionsResponse(
+            [
+                'GET' => [
+                    'description' => 'Return the requested resource',
+                    'parameters' => []
+                ]
+            ]
+        );
+
+        return response()->json(
+            $options_response['verbs'],
+            $options_response['http_status_code'],
+            $options_response['headers']
         );
     }
 }

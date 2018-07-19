@@ -30,9 +30,16 @@ Route::group(
         Route::options('categories/{category_id}/sub_categories/{sub_category_id}', 'SubCategoryController@optionsShow');
 
         Route::get('resource_types', 'ResourceTypeController@index');
+        Route::options('resource_types', 'ResourceTypeController@optionsIndex');
         Route::get('resource_types/{resource_type_id}', 'ResourceTypeController@show');
+        Route::options('resource_types/{resource_type_id}', 'ResourceTypeController@optionsShow');
+
         Route::get('resource_types/{resource_type_id}/resources', 'ResourceController@index');
+        Route::options('resource_types/{resource_type_id}/resources', 'ResourceController@optionsIndex');
+
         Route::get('resource_types/{resource_type_id}/resources/{resource_id}', 'ResourceController@show');
+        Route::options('resource_types/{resource_type_id}/resources/{resource_id}', 'ResourceController@optionsShow');
+        
         Route::get('resource_types/{resource_type_id}/resources/{resource_id}/items', 'ItemController@index');
         Route::get('resource_types/{resource_type_id}/resources/{resource_id}/items/{item_id}', 'ItemController@show');
 
