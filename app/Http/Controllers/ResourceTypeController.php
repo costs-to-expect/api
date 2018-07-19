@@ -14,9 +14,11 @@ use Illuminate\Http\Request;
 class ResourceTypeController extends Controller
 {
     /**
+     * @param Request $request
+     *
      * @return \Illuminate\Http\JsonResponse
      */
-    public function index()
+    public function index(Request $request)
     {
         return response()->json(
             [
@@ -45,6 +47,52 @@ class ResourceTypeController extends Controller
                 ]
             ],
             200
+        );
+    }
+
+    /**
+     * @param Request $request
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function optionsIndex(Request $request)
+    {
+        $options_response = $this->optionsResponse(
+            [
+                'GET' => [
+                    'description' => 'Return the resource types',
+                    'parameters' => []
+                ]
+            ]
+        );
+
+        return response()->json(
+            $options_response['verbs'],
+            $options_response['http_status_code'],
+            $options_response['headers']
+        );
+    }
+
+    /**
+     * @param Request $request
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function optionsShow(Request $request)
+    {
+        $options_response = $this->optionsResponse(
+            [
+                'GET' => [
+                    'description' => 'Return the requested resource type',
+                    'parameters' => []
+                ]
+            ]
+        );
+
+        return response()->json(
+            $options_response['verbs'],
+            $options_response['http_status_code'],
+            $options_response['headers']
         );
     }
 }
