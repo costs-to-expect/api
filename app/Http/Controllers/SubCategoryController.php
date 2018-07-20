@@ -118,10 +118,16 @@ class SubCategoryController extends Controller
     {
         $routes = [
             'GET' => [
-                'description' => 'Return the categories',
+                'description' => 'Return the requested sub category',
                 'parameters' => []
             ]
         ];
+
+        if (Auth::guard('api')->check() === true) {
+            $routes['DELETE'] = [
+                'description' => 'Delete the requested sub category'
+            ];
+        }
 
         $options_response = $this->optionsResponse($routes);
 
@@ -169,5 +175,19 @@ class SubCategoryController extends Controller
             ],
             200
         );
+    }
+
+    /**
+     * Delete a sub category
+     *
+     * @param Request $request
+     * @param string $category_id
+     * @param string $sub_category_id
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function delete(Request $request, string $category_id, string $sub_category_id)
+    {
+        return response()->json(null,204);
     }
 }

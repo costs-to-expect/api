@@ -37,7 +37,7 @@ class ResourceTypeController extends Controller
     }
 
     /**
-     * return a single resource type
+     * Return a single resource type
      *
      * @param Request $request
      * @param string $resource_type_id
@@ -117,6 +117,12 @@ class ResourceTypeController extends Controller
             ]
         ];
 
+        if (Auth::guard('api')->check() === true) {
+            $routes['DELETE'] = [
+                'description' => 'Delete the requested resource type'
+            ];
+        }
+
         $options_response = $this->optionsResponse($routes);
 
         return response()->json(
@@ -161,5 +167,18 @@ class ResourceTypeController extends Controller
             ],
             200
         );
+    }
+
+    /**
+     * Delete a resource type
+     *
+     * @param Request $request
+     * @param string $resource_type_id
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function delete(Request $request, string $resource_type_id)
+    {
+        return response()->json(null,204);
     }
 }
