@@ -104,14 +104,14 @@ class CategoryController extends Controller
      */
     public function optionsShow(Request $request, string $category_id)
     {
-        $options_response = $this->optionsResponse(
-            [
-                'GET' => [
-                    'description' => 'Return the requested category',
-                    'parameters' => []
-                ]
+        $routes = [
+            'GET' => [
+                'description' => 'Return the requested category',
+                'parameters' => []
             ]
-        );
+        ];
+
+        $options_response = $this->optionsResponse($routes);
 
         return response()->json(
             $options_response['verbs'],

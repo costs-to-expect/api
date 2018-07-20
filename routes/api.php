@@ -52,5 +52,6 @@ Route::group(
         Route::get('user', 'PassportController@user');
 
         Route::post('categories', 'CategoryController@create');
+        Route::post('categories/{category_id}/sub_categories', 'SubCategoryController@create');
     }
 );
