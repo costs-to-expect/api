@@ -76,7 +76,18 @@ class CategoryController extends Controller
             $routes['POST'] = [
                 'description' => 'Create a new category',
                 'fields' => [
-                    'name' => 'Category name'
+                    [
+                        'field' => 'name',
+                        'title' => 'Category name',
+                        'description' => 'Enter a name for the category',
+                        'type' => 'string'
+                    ],
+                    [
+                        'field' => 'description',
+                        'title' => 'Category description',
+                        'description' => 'Enter a description for the category',
+                        'type' => 'string'
+                    ]
                 ]
             ];
         }
@@ -100,14 +111,14 @@ class CategoryController extends Controller
      */
     public function optionsShow(Request $request, string $category_id)
     {
-        $options_response = $this->optionsResponse(
-            [
-                'GET' => [
-                    'description' => 'Return the requested category',
-                    'parameters' => []
-                ]
+        $routes = [
+            'GET' => [
+                'description' => 'Return the requested category',
+                'parameters' => []
             ]
-        );
+        ];
+
+        $options_response = $this->optionsResponse($routes);
 
         return response()->json(
             $options_response['verbs'],
@@ -129,6 +140,7 @@ class CategoryController extends Controller
             $request->all(),
             [
                 'name' => 'required|string',
+                'description' => 'required|string'
             ]
         );
 

@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Validator;
 
 /**
  * Manage category sub categories
@@ -14,6 +16,8 @@ use Illuminate\Http\Request;
 class SubCategoryController extends Controller
 {
     /**
+     * Return all the sub categories assigned to the given category
+     *
      * @param Request $request
      * @param string $category_id
      *
@@ -34,6 +38,8 @@ class SubCategoryController extends Controller
     }
 
     /**
+     * Return a single sub category
+     *
      * @param Request $request
      * @param string $category_id
      * @param string $sub_category_id
@@ -54,6 +60,8 @@ class SubCategoryController extends Controller
     }
 
     /**
+     * Generate the OPTIONS request for the sub categories list
+     *
      * @param Request $request
      * @param string $category_id
      *
@@ -61,14 +69,34 @@ class SubCategoryController extends Controller
      */
     public function optionsIndex(Request $request, string $category_id)
     {
-        $options_response = $this->optionsResponse(
-            [
-                'GET' => [
-                    'description' => 'Return the sub categories for the given category id',
-                    'parameters' => []
-                ]
+        $routes = [
+            'GET' => [
+                'description' => 'Return the categories',
+                'parameters' => []
             ]
-        );
+        ];
+
+        if (Auth::guard('api')->check() === true) {
+            $routes['POST'] = [
+                'description' => 'Create a new sub category',
+                'fields' => [
+                    [
+                        'field' => 'name',
+                        'title' => 'Sub category name',
+                        'description' => 'Enter a name for the sub category',
+                        'type' => 'string'
+                    ],
+                    [
+                        'field' => 'description',
+                        'title' => 'Sub category description',
+                        'description' => 'Enter a description for the sub category',
+                        'type' => 'string'
+                    ]
+                ]
+            ];
+        }
+
+        $options_response = $this->optionsResponse($routes);
 
         return response()->json(
             $options_response['verbs'],
@@ -78,6 +106,8 @@ class SubCategoryController extends Controller
     }
 
     /**
+     * Generate the OPTIONS request for the specific sub category
+     *
      * @param Request $request
      * @param string $category_id
      * @param string $sub_category_id
@@ -86,19 +116,58 @@ class SubCategoryController extends Controller
      */
     public function optionsShow(Request $request, string $category_id, string $sub_category_id)
     {
-        $options_response = $this->optionsResponse(
-            [
-                'GET' => [
-                    'description' => 'Return the requested sub category',
-                    'parameters' => []
-                ]
+        $routes = [
+            'GET' => [
+                'description' => 'Return the categories',
+                'parameters' => []
             ]
-        );
+        ];
+
+        $options_response = $this->optionsResponse($routes);
 
         return response()->json(
             $options_response['verbs'],
             $options_response['http_status_code'],
             $options_response['headers']
+        );
+    }
+
+    /**
+     * Create a new sub category
+     *
+     * @param Request $request
+     * @param string $category_id
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function create(Request $request, string $category_id)
+    {
+        $validator = Validator::make(
+            $request->all(),
+            [
+                'name' => 'required|string',
+                'description' => 'required|string'
+            ]
+        );
+
+        if ($validator->fails()) {
+            return response()->json(
+                [
+                    'error' => 'Validation error',
+                    'fields' => $validator->errors()
+                ],
+                422
+            );
+        }
+
+        return response()->json(
+            [
+                'result' => [
+                    'category_id' => $category_id,
+                    'sub_category_id' => $this->hash->encode($new_sub_category_id = 4)
+                ]
+            ],
+            200
         );
     }
 }

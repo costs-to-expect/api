@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Validator;
 
 /**
  * Manage resource types
@@ -14,6 +16,8 @@ use Illuminate\Http\Request;
 class ResourceTypeController extends Controller
 {
     /**
+     * Return all the resource types
+     *
      * @param Request $request
      *
      * @return \Illuminate\Http\JsonResponse
@@ -33,6 +37,8 @@ class ResourceTypeController extends Controller
     }
 
     /**
+     * return a single resource type
+     *
      * @param Request $request
      * @param string $resource_type_id
      *
@@ -51,20 +57,42 @@ class ResourceTypeController extends Controller
     }
 
     /**
+     * Generate the OPTIONS request for the resource type list
+     *
      * @param Request $request
      *
      * @return \Illuminate\Http\JsonResponse
      */
     public function optionsIndex(Request $request)
     {
-        $options_response = $this->optionsResponse(
-            [
-                'GET' => [
-                    'description' => 'Return the resource types',
-                    'parameters' => []
-                ]
+        $routes = [
+            'GET' => [
+                'description' => 'Return the resource types',
+                'parameters' => []
             ]
-        );
+        ];
+
+        if (Auth::guard('api')->check() === true) {
+            $routes['POST'] = [
+                'description' => 'Create a new resource type',
+                'fields' => [
+                    [
+                        'field' => 'name',
+                        'title' => 'Resource type name',
+                        'description' => 'Enter a name for the resource type',
+                        'type' => 'string'
+                    ],
+                    [
+                        'field' => 'description',
+                        'title' => 'Resource type description',
+                        'description' => 'Enter a description for the resource type',
+                        'type' => 'string'
+                    ]
+                ]
+            ];
+        }
+
+        $options_response = $this->optionsResponse($routes);
 
         return response()->json(
             $options_response['verbs'],
@@ -74,25 +102,64 @@ class ResourceTypeController extends Controller
     }
 
     /**
+     * Generate the OPTIONS request fir a specific resource type
+     *
      * @param Request $request
      *
      * @return \Illuminate\Http\JsonResponse
      */
     public function optionsShow(Request $request)
     {
-        $options_response = $this->optionsResponse(
-            [
-                'GET' => [
-                    'description' => 'Return the requested resource type',
-                    'parameters' => []
-                ]
+        $routes = [
+            'GET' => [
+                'description' => 'Return the requested resource type',
+                'parameters' => []
             ]
-        );
+        ];
+
+        $options_response = $this->optionsResponse($routes);
 
         return response()->json(
             $options_response['verbs'],
             $options_response['http_status_code'],
             $options_response['headers']
+        );
+    }
+
+    /**
+     * Create a new resource type
+     *
+     * @param Request $request
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function create(Request $request)
+    {
+        $validator = Validator::make(
+            $request->all(),
+            [
+                'name' => 'required|string',
+                'description' => 'required|string'
+            ]
+        );
+
+        if ($validator->fails()) {
+            return response()->json(
+                [
+                    'error' => 'Validation error',
+                    'fields' => $validator->errors()
+                ],
+                422
+            );
+        }
+
+        return response()->json(
+            [
+                'result' => [
+                    'category_id' => $this->hash->encode($new_resource_id = 4)
+                ]
+            ],
+            200
         );
     }
 }
