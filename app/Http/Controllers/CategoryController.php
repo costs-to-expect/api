@@ -75,12 +75,12 @@ class CategoryController extends Controller
         if (Auth::guard('api')->check() === true) {
             $routes['POST'] = [
                 'description' => 'Create a new category',
-                'parameters' => [
+                'fields' => [
                     'name' => 'Category name'
                 ]
             ];
         }
-        
+
         $options_response = $this->optionsResponse($routes);
 
         return response()->json(
