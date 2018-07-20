@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Validator;
 
 /**
  * Manage categories
@@ -14,6 +16,8 @@ use Illuminate\Http\Request;
 class CategoryController extends Controller
 {
     /**
+     * Return all the categories
+     *
      * @param Request $request
      *
      * @return \Illuminate\Http\JsonResponse
@@ -33,6 +37,8 @@ class CategoryController extends Controller
     }
 
     /**
+     * Return a single category
+     *
      * @param Request $request
      * @param string $category_id
      *
@@ -51,20 +57,31 @@ class CategoryController extends Controller
     }
 
     /**
+     * Generate the OPTIONS request for the category list
+     *
      * @param Request $request
      *
      * @return \Illuminate\Http\JsonResponse
      */
     public function optionsIndex(Request $request)
     {
-        $options_response = $this->optionsResponse(
-            [
-                'GET' => [
-                    'description' => 'Return the categories',
-                    'parameters' => []
-                ]
+        $routes = [
+            'GET' => [
+                'description' => 'Return the categories',
+                'parameters' => []
             ]
-        );
+        ];
+
+        if (Auth::guard('api')->check() === true) {
+            $routes['POST'] = [
+                'description' => 'Create a new category',
+                'fields' => [
+                    'name' => 'Category name'
+                ]
+            ];
+        }
+
+        $options_response = $this->optionsResponse($routes);
 
         return response()->json(
             $options_response['verbs'],
@@ -74,6 +91,8 @@ class CategoryController extends Controller
     }
 
     /**
+     * Generate the OPTIONS request for a specific category
+     *
      * @param Request $request
      * @param string $category_id
      *
@@ -94,6 +113,42 @@ class CategoryController extends Controller
             $options_response['verbs'],
             $options_response['http_status_code'],
             $options_response['headers']
+        );
+    }
+
+    /**
+     * Create a new category
+     *
+     * @param Request $request
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function create(Request $request)
+    {
+        $validator = Validator::make(
+            $request->all(),
+            [
+                'name' => 'required|string',
+            ]
+        );
+
+        if ($validator->fails()) {
+            return response()->json(
+                [
+                    'error' => 'Validation error',
+                    'fields' => $validator->errors()
+                ],
+                422
+            );
+        }
+
+        return response()->json(
+            [
+                'result' => [
+                    'category_id' => $this->hash->encode($new_category_id = 4)
+                ]
+            ],
+            200
         );
     }
 }

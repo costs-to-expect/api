@@ -50,5 +50,7 @@ Route::group(
     ['middleware' => 'auth:api'],
     function () {
         Route::get('user', 'PassportController@user');
+
+        Route::post('categories', 'CategoryController@create');
     }
 );
