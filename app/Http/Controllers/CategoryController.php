@@ -118,6 +118,12 @@ class CategoryController extends Controller
             ]
         ];
 
+        if (Auth::guard('api')->check() === true) {
+            $routes['DELETE'] = [
+                'description' => 'Delete the requested category'
+            ];
+        }
+
         $options_response = $this->optionsResponse($routes);
 
         return response()->json(
@@ -162,5 +168,18 @@ class CategoryController extends Controller
             ],
             200
         );
+    }
+
+    /**
+     * Delete a category
+     *
+     * @param Request $request
+     * @param string $category_id
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function delete(Request $request, string $category_id)
+    {
+        return response()->json(null,204);
     }
 }

@@ -140,6 +140,12 @@ class ItemController extends Controller
             ]
         ];
 
+        if (Auth::guard('api')->check() === true) {
+            $routes['DELETE'] = [
+                'description' => 'Delete the requested item'
+            ];
+        }
+
         $options_response = $this->optionsResponse($routes);
 
         return response()->json(
@@ -188,5 +194,20 @@ class ItemController extends Controller
             ],
             200
         );
+    }
+
+    /**
+     * Delete an item
+     *
+     * @param Request $request
+     * @param string $resource_id
+     * @param string $resource_type_id
+     * @param string $item_id
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function delete(Request $request, string $resource_type_id, string $resource_id, string $item_id)
+    {
+        return response()->json(null, 204);
     }
 }
