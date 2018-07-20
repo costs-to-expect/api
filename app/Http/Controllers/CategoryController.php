@@ -76,7 +76,11 @@ class CategoryController extends Controller
             $routes['POST'] = [
                 'description' => 'Create a new category',
                 'fields' => [
-                    'name' => 'Category name'
+                    [
+                        'field' => 'name',
+                        'title' => 'Category name',
+                        'description' => 'Enter a name for the category'
+                    ]
                 ]
             ];
         }
