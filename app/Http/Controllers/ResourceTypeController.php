@@ -154,7 +154,7 @@ class ResourceTypeController extends Controller
         return response()->json(
             [
                 'result' => [
-                    'category_id' => $this->hash->encode($new_category_id = 4)
+                    'category_id' => $this->hash->encode($new_resource_id = 4)
                 ]
             ],
             200

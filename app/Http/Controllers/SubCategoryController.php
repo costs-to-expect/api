@@ -162,7 +162,7 @@ class SubCategoryController extends Controller
             [
                 'result' => [
                     'category_id' => $category_id,
-                    'sub_category_id' => $this->hash->encode($new_category_id = 4)
+                    'sub_category_id' => $this->hash->encode($new_sub_category_id = 4)
                 ]
             ],
             200
