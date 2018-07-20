@@ -79,12 +79,14 @@ class ResourceTypeController extends Controller
                     [
                         'field' => 'name',
                         'title' => 'Resource type name',
-                        'description' => 'Enter a name for the resource type'
+                        'description' => 'Enter a name for the resource type',
+                        'type' => 'string'
                     ],
                     [
                         'field' => 'description',
                         'title' => 'Resource type description',
-                        'description' => 'Enter a description for the resource type'
+                        'description' => 'Enter a description for the resource type',
+                        'type' => 'string'
                     ]
                 ]
             ];

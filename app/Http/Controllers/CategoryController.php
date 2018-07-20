@@ -79,12 +79,14 @@ class CategoryController extends Controller
                     [
                         'field' => 'name',
                         'title' => 'Category name',
-                        'description' => 'Enter a name for the category'
+                        'description' => 'Enter a name for the category',
+                        'type' => 'string'
                     ],
                     [
                         'field' => 'description',
                         'title' => 'Category description',
-                        'description' => 'Enter a description for the category'
+                        'description' => 'Enter a description for the category',
+                        'type' => 'string'
                     ]
                 ]
             ];

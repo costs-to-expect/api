@@ -87,22 +87,26 @@ class ItemController extends Controller
                     [
                         'field' => 'description',
                         'title' => 'Item description',
-                        'description' => 'Enter a description for the item'
+                        'description' => 'Enter a description for the item',
+                        'type' => 'string'
                     ],
                     [
                         'field' => 'effective_date',
                         'title' => 'Item effective date',
-                        'description' => 'Enter the effective date for the item'
+                        'description' => 'Enter the effective date for the item',
+                        'type' => 'date (yyyy-mm-dd)'
                     ],
                     [
                         'field' => 'total',
                         'title' => 'Resource total',
-                        'description' => 'Enter the total amount for the item'
+                        'description' => 'Enter the total amount for the item',
+                        'type' => 'decimal (10,2)'
                     ],
                     [
                         'field' => 'percentage',
                         'title' => 'Resource effective date',
-                        'description' => 'Enter the percentage to allot, defaults to 100'
+                        'description' => 'Enter the percentage to allot, defaults to 100',
+                        'type' => 'string'
                     ]
                 ]
             ];
