@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 
 /**
  * Manage categories
@@ -95,5 +96,24 @@ class CategoryController extends Controller
             $options_response['http_status_code'],
             $options_response['headers']
         );
+    }
+
+    public function create(Request $request)
+    {
+        $validator = Validator::make(
+            $request->all(),
+            [
+                'name' => 'required',
+            ]
+        );
+
+        if ($validator->fails()) {
+            return response()->json(
+                [
+                    'error'=>$validator->errors()
+                ],
+                400
+            );
+        }
     }
 }
