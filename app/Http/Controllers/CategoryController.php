@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 
 /**
@@ -15,6 +16,8 @@ use Illuminate\Support\Facades\Validator;
 class CategoryController extends Controller
 {
     /**
+     * Return all the categories
+     *
      * @param Request $request
      *
      * @return \Illuminate\Http\JsonResponse
@@ -34,6 +37,8 @@ class CategoryController extends Controller
     }
 
     /**
+     * Return a single category
+     *
      * @param Request $request
      * @param string $category_id
      *
@@ -52,20 +57,31 @@ class CategoryController extends Controller
     }
 
     /**
+     * Generate the OPTIONS request for the category list
+     *
      * @param Request $request
      *
      * @return \Illuminate\Http\JsonResponse
      */
     public function optionsIndex(Request $request)
     {
-        $options_response = $this->optionsResponse(
-            [
-                'GET' => [
-                    'description' => 'Return the categories',
-                    'parameters' => []
-                ]
+        $routes = [
+            'GET' => [
+                'description' => 'Return the categories',
+                'parameters' => []
             ]
-        );
+        ];
+
+        if (Auth::guard('api')->check() === true) {
+            $routes['POST'] = [
+                'description' => 'Create a new category',
+                'parameters' => [
+                    'name' => 'Category name'
+                ]
+            ];
+        }
+        
+        $options_response = $this->optionsResponse($routes);
 
         return response()->json(
             $options_response['verbs'],
@@ -75,6 +91,8 @@ class CategoryController extends Controller
     }
 
     /**
+     * Generate the OPTIONS request for a specific category
+     *
      * @param Request $request
      * @param string $category_id
      *
@@ -98,6 +116,13 @@ class CategoryController extends Controller
         );
     }
 
+    /**
+     * Create a new category
+     *
+     * @param Request $request
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function create(Request $request)
     {
         $validator = Validator::make(
