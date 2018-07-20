@@ -103,17 +103,27 @@ class CategoryController extends Controller
         $validator = Validator::make(
             $request->all(),
             [
-                'name' => 'required',
+                'name' => 'required|string',
             ]
         );
 
         if ($validator->fails()) {
             return response()->json(
                 [
-                    'error'=>$validator->errors()
+                    'error' => 'Validation error',
+                    'fields' => $validator->errors()
                 ],
-                400
+                422
             );
         }
+
+        return response()->json(
+            [
+                'result' => [
+                    'category_id' => $this->hash->encode($new_category_id = 4)
+                ]
+            ],
+            200
+        );
     }
 }
