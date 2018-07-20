@@ -80,6 +80,11 @@ class CategoryController extends Controller
                         'field' => 'name',
                         'title' => 'Category name',
                         'description' => 'Enter a name for the category'
+                    ],
+                    [
+                        'field' => 'description',
+                        'title' => 'Category description',
+                        'description' => 'Enter a description for the category'
                     ]
                 ]
             ];
@@ -133,6 +138,7 @@ class CategoryController extends Controller
             $request->all(),
             [
                 'name' => 'required|string',
+                'description' => 'required|string'
             ]
         );
 

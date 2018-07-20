@@ -53,5 +53,6 @@ Route::group(
 
         Route::post('categories', 'CategoryController@create');
         Route::post('categories/{category_id}/sub_categories', 'SubCategoryController@create');
+        Route::post('resource_types', 'ResourceTypeController@create');
     }
 );

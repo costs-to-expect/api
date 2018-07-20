@@ -84,6 +84,11 @@ class SubCategoryController extends Controller
                         'field' => 'name',
                         'title' => 'Sub category name',
                         'description' => 'Enter a name for the sub category'
+                    ],
+                    [
+                        'field' => 'description',
+                        'title' => 'Sub category description',
+                        'description' => 'Enter a description for the sub category'
                     ]
                 ]
             ];
@@ -139,6 +144,7 @@ class SubCategoryController extends Controller
             $request->all(),
             [
                 'name' => 'required|string',
+                'description' => 'required|string'
             ]
         );
 
