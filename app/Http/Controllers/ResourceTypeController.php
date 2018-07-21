@@ -149,14 +149,8 @@ class ResourceTypeController extends Controller
             ]
         );
 
-        if ($validator->fails()) {
-            return response()->json(
-                [
-                    'error' => 'Validation error',
-                    'fields' => $validator->errors()
-                ],
-                422
-            );
+        if ($validator->fails() === true) {
+            return $this->returnValidationErrors($validator);
         }
 
         return response()->json(

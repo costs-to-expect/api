@@ -168,14 +168,8 @@ class CategoryController extends Controller
             ]
         );
 
-        if ($validator->fails()) {
-            return response()->json(
-                [
-                    'error' => 'Validation error',
-                    'fields' => $validator->errors()
-                ],
-                422
-            );
+        if ($validator->fails() === true) {
+            return $this->returnValidationErrors($validator);
         }
 
         return response()->json(
@@ -205,10 +199,11 @@ class CategoryController extends Controller
      * Update the request category
      *
      * @param Request $request
+     * @param string $category_id
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    public function update(Request $request)
+    public function update(Request $request, string $category_id)
     {
         $validator = Validator::make(
             $request->all(),
@@ -218,29 +213,18 @@ class CategoryController extends Controller
             ]
         );
 
-        if ($validator->fails()) {
-            return response()->json(
-                [
-                    'error' => 'Validation error',
-                    'fields' => $validator->errors()
-                ],
-                422
-            );
+        if ($validator->fails() === true) {
+            return $this->returnValidationErrors($validator);
         }
 
         if (count($request->all()) === 0) {
-            return response()->json(
-                [
-                    'error' => 'Bad request, must supply at least one field to patch'
-                ],
-                400
-            );
+            return $this->requireAtLeastOneFieldToPatch();
         }
 
         return response()->json(
             [
                 'result' => [
-                    'category_id' => $this->hash->encode($new_category_id = 4)
+                    'category_id' => $category_id
                 ]
             ],
             200
