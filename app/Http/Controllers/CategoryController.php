@@ -68,14 +68,14 @@ class CategoryController extends Controller
     {
         $routes = [
             'GET' => [
-                'description' => 'Return the categories',
+                'description' => Config::get('descriptions.category.GET_index'),
                 'parameters' => []
             ]
         ];
 
         if (Auth::guard('api')->check() === true) {
             $routes['POST'] = [
-                'description' => 'Create a new category',
+                'description' => Config::get('descriptions.category.POST'),
                 'fields' => Config::get('fields.category.fields')
             ];
         }
@@ -101,18 +101,18 @@ class CategoryController extends Controller
     {
         $routes = [
             'GET' => [
-                'description' => 'Return the requested category',
+                'description' => Config::get('descriptions.category.GET_show'),
                 'parameters' => []
             ]
         ];
 
         if (Auth::guard('api')->check() === true) {
             $routes['DELETE'] = [
-                'description' => 'Delete the requested category'
+                'description' => Config::get('descriptions.category.DELETE'),
             ];
 
             $routes['PATCH'] = [
-                'description' => 'Update the requested category',
+                'description' => Config::get('descriptions.category.PATCH'),
                 'fields' => Config::get('fields.category.fields')
             ];
         }
