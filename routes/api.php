@@ -62,5 +62,10 @@ Route::group(
         Route::delete('resource_types/{resource_type_id}', 'ResourceTypeController@delete');
         Route::delete('resource_types/{resource_type_id}/resources/{resource_id}', 'ResourceController@delete');
         Route::delete('resource_types/{resource_type_id}/resources/{resource_id}/items/{item_id}', 'ItemController@delete');
+
+        Route::patch('categories/{category_id}', 'CategoryController@update');
+        Route::patch('categories/{category_id}/sub_categories/{sub_category_id}', 'SubCategoryController@update');
+        Route::patch('resource_types/{resource_type_id}', 'ResourceTypeController@update');
+        Route::patch('resource_types/{resource_type_id}/resources/{resource_id}', 'ResourceController@update');
     }
 );

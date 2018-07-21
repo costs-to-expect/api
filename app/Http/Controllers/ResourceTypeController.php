@@ -121,6 +121,24 @@ class ResourceTypeController extends Controller
             $routes['DELETE'] = [
                 'description' => 'Delete the requested resource type'
             ];
+
+            $routes['PATCH'] = [
+                'description' => 'Update the requested resource type',
+                'fields' => [
+                    [
+                        'field' => 'name',
+                        'title' => 'Resource type name',
+                        'description' => 'Enter a name for the resource type',
+                        'type' => 'string'
+                    ],
+                    [
+                        'field' => 'description',
+                        'title' => 'Resource type description',
+                        'description' => 'Enter a description for the resource type',
+                        'type' => 'string'
+                    ]
+                ]
+            ];
         }
 
         $options_response = $this->optionsResponse($routes);
@@ -149,14 +167,8 @@ class ResourceTypeController extends Controller
             ]
         );
 
-        if ($validator->fails()) {
-            return response()->json(
-                [
-                    'error' => 'Validation error',
-                    'fields' => $validator->errors()
-                ],
-                422
-            );
+        if ($validator->fails() === true) {
+            return $this->returnValidationErrors($validator);
         }
 
         return response()->json(
@@ -180,5 +192,41 @@ class ResourceTypeController extends Controller
     public function delete(Request $request, string $resource_type_id)
     {
         return response()->json(null,204);
+    }
+
+    /**
+     * Update the request resource type
+     *
+     * @param Request $request
+     * @param string $resource_type_id
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function update(Request $request, string $resource_type_id)
+    {
+        $validator = Validator::make(
+            $request->all(),
+            [
+                'name' => 'sometimes|required|string',
+                'description' => 'sometimes|required|string'
+            ]
+        );
+
+        if ($validator->fails() === true) {
+            return $this->returnValidationErrors($validator);
+        }
+
+        if (count($request->all()) === 0) {
+            return $this->requireAtLeastOneFieldToPatch();
+        }
+
+        return response()->json(
+            [
+                'result' => [
+                    'resource_type_id' => $resource_type_id
+                ]
+            ],
+            200
+        );
     }
 }

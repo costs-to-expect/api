@@ -127,6 +127,24 @@ class SubCategoryController extends Controller
             $routes['DELETE'] = [
                 'description' => 'Delete the requested sub category'
             ];
+
+            $routes['PATCH'] = [
+                'description' => 'Update the requested sub category',
+                'fields' => [
+                    [
+                        'field' => 'name',
+                        'title' => 'Sub category name',
+                        'description' => 'Enter a name for the sub category',
+                        'type' => 'string'
+                    ],
+                    [
+                        'field' => 'description',
+                        'title' => 'Sub category description',
+                        'description' => 'Enter a description for the sub category',
+                        'type' => 'string'
+                    ]
+                ]
+            ];
         }
 
         $options_response = $this->optionsResponse($routes);
@@ -156,14 +174,8 @@ class SubCategoryController extends Controller
             ]
         );
 
-        if ($validator->fails()) {
-            return response()->json(
-                [
-                    'error' => 'Validation error',
-                    'fields' => $validator->errors()
-                ],
-                422
-            );
+        if ($validator->fails() === true) {
+            return $this->returnValidationErrors($validator);
         }
 
         return response()->json(
@@ -189,5 +201,43 @@ class SubCategoryController extends Controller
     public function delete(Request $request, string $category_id, string $sub_category_id)
     {
         return response()->json(null,204);
+    }
+
+    /**
+     * Update the request sub category
+     *
+     * @param Request $request
+     * @param string $category_id
+     * @param string $sub_category_id
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function update(Request $request, string $category_id, string $sub_category_id)
+    {
+        $validator = Validator::make(
+            $request->all(),
+            [
+                'name' => 'sometimes|required|string',
+                'description' => 'sometimes|required|string'
+            ]
+        );
+
+        if ($validator->fails() === true) {
+            return $this->returnValidationErrors($validator);
+        }
+
+        if (count($request->all()) === 0) {
+            return $this->requireAtLeastOneFieldToPatch();
+        }
+
+        return response()->json(
+            [
+                'result' => [
+                    'category_id' => $category_id,
+                    'sub_category_id' => $sub_category_id
+                ]
+            ],
+            200
+        );
     }
 }

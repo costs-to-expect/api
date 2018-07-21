@@ -122,6 +122,24 @@ class CategoryController extends Controller
             $routes['DELETE'] = [
                 'description' => 'Delete the requested category'
             ];
+
+            $routes['PATCH'] = [
+                'description' => 'Update the requested category',
+                'fields' => [
+                    [
+                        'field' => 'name',
+                        'title' => 'Category name',
+                        'description' => 'Enter a name for the category',
+                        'type' => 'string'
+                    ],
+                    [
+                        'field' => 'description',
+                        'title' => 'Category description',
+                        'description' => 'Enter a description for the category',
+                        'type' => 'string'
+                    ]
+                ]
+            ];
         }
 
         $options_response = $this->optionsResponse($routes);
@@ -150,14 +168,8 @@ class CategoryController extends Controller
             ]
         );
 
-        if ($validator->fails()) {
-            return response()->json(
-                [
-                    'error' => 'Validation error',
-                    'fields' => $validator->errors()
-                ],
-                422
-            );
+        if ($validator->fails() === true) {
+            return $this->returnValidationErrors($validator);
         }
 
         return response()->json(
@@ -181,5 +193,41 @@ class CategoryController extends Controller
     public function delete(Request $request, string $category_id)
     {
         return response()->json(null,204);
+    }
+
+    /**
+     * Update the request category
+     *
+     * @param Request $request
+     * @param string $category_id
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function update(Request $request, string $category_id)
+    {
+        $validator = Validator::make(
+            $request->all(),
+            [
+                'name' => 'sometimes|required|string',
+                'description' => 'sometimes|required|string'
+            ]
+        );
+
+        if ($validator->fails() === true) {
+            return $this->returnValidationErrors($validator);
+        }
+
+        if (count($request->all()) === 0) {
+            return $this->requireAtLeastOneFieldToPatch();
+        }
+
+        return response()->json(
+            [
+                'result' => [
+                    'category_id' => $category_id
+                ]
+            ],
+            200
+        );
     }
 }
