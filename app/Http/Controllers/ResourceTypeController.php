@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Validator;
 
 /**
@@ -75,20 +76,7 @@ class ResourceTypeController extends Controller
         if (Auth::guard('api')->check() === true) {
             $routes['POST'] = [
                 'description' => 'Create a new resource type',
-                'fields' => [
-                    [
-                        'field' => 'name',
-                        'title' => 'Resource type name',
-                        'description' => 'Enter a name for the resource type',
-                        'type' => 'string'
-                    ],
-                    [
-                        'field' => 'description',
-                        'title' => 'Resource type description',
-                        'description' => 'Enter a description for the resource type',
-                        'type' => 'string'
-                    ]
-                ]
+                'fields' => Config::get('fields.resource_type.fields')
             ];
         }
 
@@ -124,20 +112,7 @@ class ResourceTypeController extends Controller
 
             $routes['PATCH'] = [
                 'description' => 'Update the requested resource type',
-                'fields' => [
-                    [
-                        'field' => 'name',
-                        'title' => 'Resource type name',
-                        'description' => 'Enter a name for the resource type',
-                        'type' => 'string'
-                    ],
-                    [
-                        'field' => 'description',
-                        'title' => 'Resource type description',
-                        'description' => 'Enter a description for the resource type',
-                        'type' => 'string'
-                    ]
-                ]
+                'fields' => Config::get('fields.resource_type.fields')
             ];
         }
 
@@ -161,10 +136,7 @@ class ResourceTypeController extends Controller
     {
         $validator = Validator::make(
             $request->all(),
-            [
-                'name' => 'required|string',
-                'description' => 'required|string'
-            ]
+            Config::get('fields.resource_type.validation.POST')
         );
 
         if ($validator->fails() === true) {
@@ -206,10 +178,7 @@ class ResourceTypeController extends Controller
     {
         $validator = Validator::make(
             $request->all(),
-            [
-                'name' => 'sometimes|required|string',
-                'description' => 'sometimes|required|string'
-            ]
+            Config::get('fields.resource_type.validation.PATCH')
         );
 
         if ($validator->fails() === true) {
