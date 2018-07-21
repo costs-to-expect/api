@@ -204,7 +204,7 @@ class SubCategoryController extends Controller
     }
 
     /**
-     * Update the request category
+     * Update the request sub category
      *
      * @param Request $request
      * @param string $category_id

@@ -132,6 +132,30 @@ class ResourceController extends Controller
             $routes['DELETE'] = [
                 'description' => 'Delete the requested resource'
             ];
+
+            $routes['PATCH'] = [
+                'description' => 'Update the requested resource',
+                'fields' => [
+                    [
+                        'field' => 'name',
+                        'title' => 'Resource name',
+                        'description' => 'Enter a name for the resource',
+                        'type' => 'string'
+                    ],
+                    [
+                        'field' => 'description',
+                        'title' => 'Resource description',
+                        'description' => 'Enter a description for the resource',
+                        'type' => 'string'
+                    ],
+                    [
+                        'field' => 'effective_date',
+                        'title' => 'Resource effective date',
+                        'description' => 'Enter an effective date for the resource',
+                        'type' => 'date (yyyy-mm-dd)'
+                    ]
+                ]
+            ];
         }
 
         $options_response = $this->optionsResponse($routes);
@@ -187,5 +211,44 @@ class ResourceController extends Controller
     public function delete(Request $request, string $resource_type_id, string $resource_id)
     {
         return response()->json(null,204);
+    }
+
+    /**
+     * Update the request resource
+     *
+     * @param Request $request
+     * @param string $resource_type_id
+     * @param string $resource_id
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function update(Request $request, string $resource_type_id, string $resource_id)
+    {
+        $validator = Validator::make(
+            $request->all(),
+            [
+                'name' => 'sometimes|required|string',
+                'description' => 'sometimes|required|string',
+                'effective_date' => 'sometimes|required|date_format:Y-m-d'
+            ]
+        );
+
+        if ($validator->fails() === true) {
+            return $this->returnValidationErrors($validator);
+        }
+
+        if (count($request->all()) === 0) {
+            return $this->requireAtLeastOneFieldToPatch();
+        }
+
+        return response()->json(
+            [
+                'result' => [
+                    'resource_type_id' => $resource_type_id,
+                    'resource_id' => $resource_id
+                ]
+            ],
+            200
+        );
     }
 }

@@ -144,6 +144,36 @@ class ItemController extends Controller
             $routes['DELETE'] = [
                 'description' => 'Delete the requested item'
             ];
+
+            $routes['PATCH'] = [
+                'description' => 'Update the requested item',
+                'fields' => [
+                    [
+                        'field' => 'description',
+                        'title' => 'Item description',
+                        'description' => 'Enter a description for the item',
+                        'type' => 'string'
+                    ],
+                    [
+                        'field' => 'effective_date',
+                        'title' => 'Item effective date',
+                        'description' => 'Enter the effective date for the item',
+                        'type' => 'date (yyyy-mm-dd)'
+                    ],
+                    [
+                        'field' => 'total',
+                        'title' => 'Resource total',
+                        'description' => 'Enter the total amount for the item',
+                        'type' => 'decimal (10,2)'
+                    ],
+                    [
+                        'field' => 'percentage',
+                        'title' => 'Resource effective date',
+                        'description' => 'Enter the percentage to allot, defaults to 100',
+                        'type' => 'string'
+                    ]
+                ]
+            ];
         }
 
         $options_response = $this->optionsResponse($routes);
@@ -203,5 +233,47 @@ class ItemController extends Controller
     public function delete(Request $request, string $resource_type_id, string $resource_id, string $item_id)
     {
         return response()->json(null, 204);
+    }
+
+    /**
+     * Update the request item
+     *
+     * @param Request $request
+     * @param string $resource_type_id
+     * @param string $resource_id
+     * @param string $item_id
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function update(Request $request, string $resource_type_id, string $resource_id, string $item_id)
+    {
+        $validator = Validator::make(
+            $request->all(),
+            [
+                'description' => 'sometimes|required|string',
+                'effective_date' => 'sometimes|required|date_format:Y-m-d',
+                'total' => 'sometimes|required|regex:/^\d+\.\d{2}$/',
+                'percentage' => 'sometimes|required|integer|between:1,100'
+            ]
+        );
+
+        if ($validator->fails() === true) {
+            return $this->returnValidationErrors($validator);
+        }
+
+        if (count($request->all()) === 0) {
+            return $this->requireAtLeastOneFieldToPatch();
+        }
+
+        return response()->json(
+            [
+                'result' => [
+                    'resource_type_id' => $resource_type_id,
+                    'resource_id' => $resource_id,
+                    'item_id' => $item_id
+                ]
+            ],
+            200
+        );
     }
 }
