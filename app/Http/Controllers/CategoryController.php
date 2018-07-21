@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Validator;
 
 /**
@@ -75,20 +76,7 @@ class CategoryController extends Controller
         if (Auth::guard('api')->check() === true) {
             $routes['POST'] = [
                 'description' => 'Create a new category',
-                'fields' => [
-                    [
-                        'field' => 'name',
-                        'title' => 'Category name',
-                        'description' => 'Enter a name for the category',
-                        'type' => 'string'
-                    ],
-                    [
-                        'field' => 'description',
-                        'title' => 'Category description',
-                        'description' => 'Enter a description for the category',
-                        'type' => 'string'
-                    ]
-                ]
+                'fields' => Config::get('fields.category.fields')
             ];
         }
 
@@ -125,20 +113,7 @@ class CategoryController extends Controller
 
             $routes['PATCH'] = [
                 'description' => 'Update the requested category',
-                'fields' => [
-                    [
-                        'field' => 'name',
-                        'title' => 'Category name',
-                        'description' => 'Enter a name for the category',
-                        'type' => 'string'
-                    ],
-                    [
-                        'field' => 'description',
-                        'title' => 'Category description',
-                        'description' => 'Enter a description for the category',
-                        'type' => 'string'
-                    ]
-                ]
+                'fields' => Config::get('fields.category.fields')
             ];
         }
 
@@ -162,10 +137,7 @@ class CategoryController extends Controller
     {
         $validator = Validator::make(
             $request->all(),
-            [
-                'name' => 'required|string',
-                'description' => 'required|string'
-            ]
+            Config::get('fields.category.validation.POST')
         );
 
         if ($validator->fails() === true) {
@@ -207,10 +179,7 @@ class CategoryController extends Controller
     {
         $validator = Validator::make(
             $request->all(),
-            [
-                'name' => 'sometimes|required|string',
-                'description' => 'sometimes|required|string'
-            ]
+            Config::get('fields.category.validation.PATCH')
         );
 
         if ($validator->fails() === true) {
