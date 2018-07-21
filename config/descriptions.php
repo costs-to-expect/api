@@ -7,5 +7,33 @@ return [
         'POST' => 'Create a new category',
         'PATCH' => 'Update the requested category',
         'DELETE' => 'Delete the requested category'
+    ],
+    'sub_category' => [
+        'GET_index' => 'Return the sub categories',
+        'GET_show' => 'Return the requested sub category',
+        'POST' => 'Create a new sub category',
+        'PATCH' => 'Update the requested sub category',
+        'DELETE' => 'Delete the requested sub category'
+    ],
+    'resource_type' => [
+        'GET_index' => 'Return the resource types',
+        'GET_show' => 'Return the requested resource type',
+        'POST' => 'Create a new resource type',
+        'PATCH' => 'Update the requested resource type',
+        'DELETE' => 'Delete the requested resource type'
+    ],
+    'resource' => [
+        'GET_index' => 'Return the resources',
+        'GET_show' => 'Return the requested resource',
+        'POST' => 'Create a new resource',
+        'PATCH' => 'Update the requested resource',
+        'DELETE' => 'Delete the requested resource'
+    ],
+    'item' => [
+        'GET_index' => 'Return the items',
+        'GET_show' => 'Return the requested item',
+        'POST' => 'Create a new item',
+        'PATCH' => 'Update the requested item',
+        'DELETE' => 'Delete the requested item'
     ]
 ];

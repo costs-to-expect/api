@@ -72,14 +72,14 @@ class SubCategoryController extends Controller
     {
         $routes = [
             'GET' => [
-                'description' => 'Return the categories',
+                'description' => Config::get('descriptions.sub_category.GET_index'),
                 'parameters' => []
             ]
         ];
 
         if (Auth::guard('api')->check() === true) {
             $routes['POST'] = [
-                'description' => 'Create a new sub category',
+                'description' => Config::get('descriptions.sub_category.POST'),
                 'fields' => Config::get('fields.sub_category.fields')
             ];
         }
@@ -106,18 +106,18 @@ class SubCategoryController extends Controller
     {
         $routes = [
             'GET' => [
-                'description' => 'Return the requested sub category',
+                'description' => Config::get('descriptions.sub_category.GET_show'),
                 'parameters' => []
             ]
         ];
 
         if (Auth::guard('api')->check() === true) {
             $routes['DELETE'] = [
-                'description' => 'Delete the requested sub category'
+                'description' => Config::get('descriptions.sub_category.DELETE'),
             ];
 
             $routes['PATCH'] = [
-                'description' => 'Update the requested sub category',
+                'description' => Config::get('descriptions.sub_category.PATCH'),
                 'fields' => Config::get('fields.sub_category.fields')
             ];
         }

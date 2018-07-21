@@ -68,14 +68,14 @@ class ResourceTypeController extends Controller
     {
         $routes = [
             'GET' => [
-                'description' => 'Return the resource types',
+                'description' => Config::get('descriptions.resource_type.GET_index'),
                 'parameters' => []
             ]
         ];
 
         if (Auth::guard('api')->check() === true) {
             $routes['POST'] = [
-                'description' => 'Create a new resource type',
+                'description' => Config::get('descriptions.resource_type.POST'),
                 'fields' => Config::get('fields.resource_type.fields')
             ];
         }
@@ -100,18 +100,18 @@ class ResourceTypeController extends Controller
     {
         $routes = [
             'GET' => [
-                'description' => 'Return the requested resource type',
+                'description' => Config::get('descriptions.resource_type.GET_show'),
                 'parameters' => []
             ]
         ];
 
         if (Auth::guard('api')->check() === true) {
             $routes['DELETE'] = [
-                'description' => 'Delete the requested resource type'
+                'description' => Config::get('descriptions.resource_type.DELETE'),
             ];
 
             $routes['PATCH'] = [
-                'description' => 'Update the requested resource type',
+                'description' => Config::get('descriptions.resource_type.PATCH'),
                 'fields' => Config::get('fields.resource_type.fields')
             ];
         }
@@ -146,7 +146,7 @@ class ResourceTypeController extends Controller
         return response()->json(
             [
                 'result' => [
-                    'category_id' => $this->hash->encode($new_resource_id = 4)
+                    'resource_type_id' => $this->hash->encode($new_resource_id = 4)
                 ]
             ],
             200

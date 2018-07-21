@@ -76,14 +76,14 @@ class ItemController extends Controller
     {
         $routes = [
             'GET' => [
-                'description' => 'Return the items for the given resource',
+                'description' => Config::get('descriptions.item.GET_index'),
                 'parameters' => []
             ]
         ];
 
         if (Auth::guard('api')->check() === true) {
             $routes['POST'] = [
-                'description' => 'Create a new resource',
+                'description' => Config::get('descriptions.item.POST'),
                 'fields' => Config::get('fields.item.fields')
             ];
         }
@@ -111,18 +111,18 @@ class ItemController extends Controller
     {
         $routes = [
             'GET' => [
-                'description' => 'Return the requested item',
+                'description' => Config::get('descriptions.item.GET_show'),
                 'parameters' => []
             ]
         ];
 
         if (Auth::guard('api')->check() === true) {
             $routes['DELETE'] = [
-                'description' => 'Delete the requested item'
+                'description' => Config::get('descriptions.item.DELETE'),
             ];
 
             $routes['PATCH'] = [
-                'description' => 'Update the requested item',
+                'description' => Config::get('descriptions.item.PATCH'),
                 'fields' => Config::get('fields.item.fields')
             ];
         }

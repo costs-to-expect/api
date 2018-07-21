@@ -71,14 +71,14 @@ class ResourceController extends Controller
     {
         $routes = [
             'GET' => [
-                'description' => 'Return the resources for the given resource type',
+                'description' => Config::get('descriptions.resource.GET_index'),
                 'parameters' => []
             ]
         ];
 
         if (Auth::guard('api')->check() === true) {
             $routes['POST'] = [
-                'description' => 'Create a new resource',
+                'description' => Config::get('descriptions.resource.POST'),
                 'fields' => Config::get('fields.resource.fields')
             ];
         }
@@ -105,18 +105,18 @@ class ResourceController extends Controller
     {
         $routes = [
             'GET' => [
-                'description' => 'Return the requested resource',
+                'description' => Config::get('descriptions.resource.GET_show'),
                 'parameters' => []
             ]
         ];
 
         if (Auth::guard('api')->check() === true) {
             $routes['DELETE'] = [
-                'description' => 'Delete the requested resource'
+                'description' => Config::get('descriptions.resource.DELETE'),
             ];
 
             $routes['PATCH'] = [
-                'description' => 'Update the requested resource',
+                'description' => Config::get('descriptions.resource.PATCH'),
                 'fields' => Config::get('fields.resource.fields')
             ];
         }
