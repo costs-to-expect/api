@@ -122,6 +122,24 @@ class CategoryController extends Controller
             $routes['DELETE'] = [
                 'description' => 'Delete the requested category'
             ];
+
+            $routes['PATCH'] = [
+                'description' => 'Update the requested category',
+                'fields' => [
+                    [
+                        'field' => 'name',
+                        'title' => 'Category name',
+                        'description' => 'Enter a name for the category',
+                        'type' => 'string'
+                    ],
+                    [
+                        'field' => 'description',
+                        'title' => 'Category description',
+                        'description' => 'Enter a description for the category',
+                        'type' => 'string'
+                    ]
+                ]
+            ];
         }
 
         $options_response = $this->optionsResponse($routes);
@@ -181,5 +199,51 @@ class CategoryController extends Controller
     public function delete(Request $request, string $category_id)
     {
         return response()->json(null,204);
+    }
+
+    /**
+     * Update the request category
+     *
+     * @param Request $request
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function update(Request $request)
+    {
+        $validator = Validator::make(
+            $request->all(),
+            [
+                'name' => 'sometimes|required|string',
+                'description' => 'sometimes|required|string'
+            ]
+        );
+
+        if ($validator->fails()) {
+            return response()->json(
+                [
+                    'error' => 'Validation error',
+                    'fields' => $validator->errors()
+                ],
+                422
+            );
+        }
+
+        if (count($request->all()) === 0) {
+            return response()->json(
+                [
+                    'error' => 'Bad request, must supply at least one field to patch'
+                ],
+                400
+            );
+        }
+
+        return response()->json(
+            [
+                'result' => [
+                    'category_id' => $this->hash->encode($new_category_id = 4)
+                ]
+            ],
+            200
+        );
     }
 }
