@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Validator;
 
@@ -74,26 +73,10 @@ class ItemController extends Controller
      */
     public function optionsIndex(Request $request, string $resource_type_id, string $resource_id)
     {
-        $routes = [
-            'GET' => [
-                'description' => Config::get('descriptions.item.GET_index'),
-                'parameters' => []
-            ]
-        ];
-
-        if (Auth::guard('api')->check() === true) {
-            $routes['POST'] = [
-                'description' => Config::get('descriptions.item.POST'),
-                'fields' => Config::get('fields.item.fields')
-            ];
-        }
-
-        $options_response = $this->generateOptionsResponse($routes);
-
-        return response()->json(
-            $options_response['verbs'],
-            $options_response['http_status_code'],
-            $options_response['headers']
+        return $this->generateOptionsForIndex(
+            'descriptions.item.GET_index',
+            'descriptions.item.POST',
+            'fields.item.fields'
         );
     }
 
@@ -109,30 +92,11 @@ class ItemController extends Controller
      */
     public function optionsShow(Request $request, string $resource_type_id, string $resource_id, string $item_id)
     {
-        $routes = [
-            'GET' => [
-                'description' => Config::get('descriptions.item.GET_show'),
-                'parameters' => []
-            ]
-        ];
-
-        if (Auth::guard('api')->check() === true) {
-            $routes['DELETE'] = [
-                'description' => Config::get('descriptions.item.DELETE'),
-            ];
-
-            $routes['PATCH'] = [
-                'description' => Config::get('descriptions.item.PATCH'),
-                'fields' => Config::get('fields.item.fields')
-            ];
-        }
-
-        $options_response = $this->generateOptionsResponse($routes);
-
-        return response()->json(
-            $options_response['verbs'],
-            $options_response['http_status_code'],
-            $options_response['headers']
+        return $this->generateOptionsForShow(
+            'descriptions.item.GET_show',
+            'descriptions.item.DELETE',
+            'descriptions.item.PATCH',
+            'fields.item.fields'
         );
     }
 
