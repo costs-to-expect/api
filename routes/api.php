@@ -13,8 +13,8 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::post('login', 'PassportController@login');
-Route::post('register', 'PassportController@register');
+Route::post('auth/login', 'PassportController@login');
+Route::post('auth/register', 'PassportController@register');
 
 Route::group(
     [],
@@ -49,7 +49,7 @@ Route::group(
 Route::group(
     ['middleware' => 'auth:api'],
     function () {
-        Route::get('user', 'PassportController@user');
+        Route::get('auth/user', 'PassportController@user');
 
         Route::post('categories', 'CategoryController@create');
         Route::post('categories/{category_id}/sub_categories', 'SubCategoryController@create');
