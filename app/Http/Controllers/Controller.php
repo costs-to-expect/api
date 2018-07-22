@@ -92,16 +92,15 @@ class Controller extends BaseController
         $routes = [
             'GET' => [
                 'description' => Config::get($get_description_key),
+                'authenticated' => false,
                 'parameters' => []
+            ],
+            'POST' => [
+                'description' => Config::get($post_description_key),
+                'authenticated' => true,
+                'fields' => Config::get($post_fields_key)
             ]
         ];
-
-        if (Auth::guard('api')->check() === true) {
-            $routes['POST'] = [
-                'description' => Config::get($post_description_key),
-                'fields' => Config::get($post_fields_key)
-            ];
-        }
 
         $options_response = $this->generateOptionsResponse($routes);
 
@@ -122,20 +121,19 @@ class Controller extends BaseController
         $routes = [
             'GET' => [
                 'description' => Config::get($get_description_key),
+                'authenticated' => false,
                 'parameters' => []
+            ],
+            'DELETE' => [
+                'description' => Config::get($delete_description_key),
+                'authenticated' => true,
+            ],
+            'PATCH' => [
+                'description' => Config::get($patch_description_key),
+                'authenticated' => true,
+                'fields' => Config::get($patch_fields_key)
             ]
         ];
-
-        if (Auth::guard('api')->check() === true) {
-            $routes['DELETE'] = [
-                'description' => Config::get($delete_description_key),
-            ];
-
-            $routes['PATCH'] = [
-                'description' => Config::get($patch_description_key),
-                'fields' => Config::get($patch_fields_key)
-            ];
-        }
 
         $options_response = $this->generateOptionsResponse($routes);
 
