@@ -83,7 +83,7 @@ class ResourceController extends Controller
             ];
         }
 
-        $options_response = $this->optionsResponse($routes);
+        $options_response = $this->generateOptionsResponse($routes);
 
         return response()->json(
             $options_response['verbs'],
@@ -121,7 +121,7 @@ class ResourceController extends Controller
             ];
         }
 
-        $options_response = $this->optionsResponse($routes);
+        $options_response = $this->generateOptionsResponse($routes);
 
         return response()->json(
             $options_response['verbs'],

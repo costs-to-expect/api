@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Validator;
 
@@ -66,26 +65,10 @@ class CategoryController extends Controller
      */
     public function optionsIndex(Request $request)
     {
-        $routes = [
-            'GET' => [
-                'description' => Config::get('descriptions.category.GET_index'),
-                'parameters' => []
-            ]
-        ];
-
-        if (Auth::guard('api')->check() === true) {
-            $routes['POST'] = [
-                'description' => Config::get('descriptions.category.POST'),
-                'fields' => Config::get('fields.category.fields')
-            ];
-        }
-
-        $options_response = $this->optionsResponse($routes);
-
-        return response()->json(
-            $options_response['verbs'],
-            $options_response['http_status_code'],
-            $options_response['headers']
+        return $this->generateOptionsForIndex(
+            'descriptions.category.GET_index',
+            'descriptions.category.POST',
+            'fields.category.fields'
         );
     }
 
@@ -99,30 +82,11 @@ class CategoryController extends Controller
      */
     public function optionsShow(Request $request, string $category_id)
     {
-        $routes = [
-            'GET' => [
-                'description' => Config::get('descriptions.category.GET_show'),
-                'parameters' => []
-            ]
-        ];
-
-        if (Auth::guard('api')->check() === true) {
-            $routes['DELETE'] = [
-                'description' => Config::get('descriptions.category.DELETE'),
-            ];
-
-            $routes['PATCH'] = [
-                'description' => Config::get('descriptions.category.PATCH'),
-                'fields' => Config::get('fields.category.fields')
-            ];
-        }
-
-        $options_response = $this->optionsResponse($routes);
-
-        return response()->json(
-            $options_response['verbs'],
-            $options_response['http_status_code'],
-            $options_response['headers']
+        return $this->generateOptionsForShow(
+            'descriptions.category.GET_show',
+            'descriptions.category.DELETE',
+            'descriptions.category.PATCH',
+            'fields.category.fields'
         );
     }
 
