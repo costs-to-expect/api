@@ -4,11 +4,12 @@ namespace App\Http\Controllers;
 
 use Hashids\Hashids;
 use Illuminate\Foundation\Bus\DispatchesJobs;
-use Illuminate\Http\Request;
 use Illuminate\Routing\Controller as BaseController;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Contracts\Validation\Validator;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Config;
 
 class Controller extends BaseController
 {
@@ -29,7 +30,7 @@ class Controller extends BaseController
      *
      * @return array Three indexes, verbs, status and headers
      */
-    protected function optionsResponse(array $verbs, $http_status_code = 200)
+    protected function generateOptionsResponse(array $verbs, $http_status_code = 200)
     {
         $options = [
             'verbs' => [],
@@ -79,6 +80,67 @@ class Controller extends BaseController
                 'fields' => $validator->errors()
             ],
             422
+        );
+    }
+
+    protected function generateOptionsForIndex(
+        $get_description_key,
+        $post_description_key,
+        $post_fields_key
+    )
+    {
+        $routes = [
+            'GET' => [
+                'description' => Config::get($get_description_key),
+                'authenticated' => false,
+                'parameters' => []
+            ],
+            'POST' => [
+                'description' => Config::get($post_description_key),
+                'authenticated' => true,
+                'fields' => Config::get($post_fields_key)
+            ]
+        ];
+
+        $options_response = $this->generateOptionsResponse($routes);
+
+        return response()->json(
+            $options_response['verbs'],
+            $options_response['http_status_code'],
+            $options_response['headers']
+        );
+    }
+
+    protected function generateOptionsForShow(
+        $get_description_key,
+        $delete_description_key,
+        $patch_description_key,
+        $patch_fields_key
+    )
+    {
+        $routes = [
+            'GET' => [
+                'description' => Config::get($get_description_key),
+                'authenticated' => false,
+                'parameters' => []
+            ],
+            'DELETE' => [
+                'description' => Config::get($delete_description_key),
+                'authenticated' => true,
+            ],
+            'PATCH' => [
+                'description' => Config::get($patch_description_key),
+                'authenticated' => true,
+                'fields' => Config::get($patch_fields_key)
+            ]
+        ];
+
+        $options_response = $this->generateOptionsResponse($routes);
+
+        return response()->json(
+            $options_response['verbs'],
+            $options_response['http_status_code'],
+            $options_response['headers']
         );
     }
 }

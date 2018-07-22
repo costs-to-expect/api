@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Validator;
 
 /**
@@ -69,39 +69,10 @@ class SubCategoryController extends Controller
      */
     public function optionsIndex(Request $request, string $category_id)
     {
-        $routes = [
-            'GET' => [
-                'description' => 'Return the categories',
-                'parameters' => []
-            ]
-        ];
-
-        if (Auth::guard('api')->check() === true) {
-            $routes['POST'] = [
-                'description' => 'Create a new sub category',
-                'fields' => [
-                    [
-                        'field' => 'name',
-                        'title' => 'Sub category name',
-                        'description' => 'Enter a name for the sub category',
-                        'type' => 'string'
-                    ],
-                    [
-                        'field' => 'description',
-                        'title' => 'Sub category description',
-                        'description' => 'Enter a description for the sub category',
-                        'type' => 'string'
-                    ]
-                ]
-            ];
-        }
-
-        $options_response = $this->optionsResponse($routes);
-
-        return response()->json(
-            $options_response['verbs'],
-            $options_response['http_status_code'],
-            $options_response['headers']
+        return $this->generateOptionsForIndex(
+            'descriptions.sub_category.GET_index',
+            'descriptions.sub_category.POST',
+            'fields.sub_category.fields'
         );
     }
 
@@ -116,43 +87,11 @@ class SubCategoryController extends Controller
      */
     public function optionsShow(Request $request, string $category_id, string $sub_category_id)
     {
-        $routes = [
-            'GET' => [
-                'description' => 'Return the requested sub category',
-                'parameters' => []
-            ]
-        ];
-
-        if (Auth::guard('api')->check() === true) {
-            $routes['DELETE'] = [
-                'description' => 'Delete the requested sub category'
-            ];
-
-            $routes['PATCH'] = [
-                'description' => 'Update the requested sub category',
-                'fields' => [
-                    [
-                        'field' => 'name',
-                        'title' => 'Sub category name',
-                        'description' => 'Enter a name for the sub category',
-                        'type' => 'string'
-                    ],
-                    [
-                        'field' => 'description',
-                        'title' => 'Sub category description',
-                        'description' => 'Enter a description for the sub category',
-                        'type' => 'string'
-                    ]
-                ]
-            ];
-        }
-
-        $options_response = $this->optionsResponse($routes);
-
-        return response()->json(
-            $options_response['verbs'],
-            $options_response['http_status_code'],
-            $options_response['headers']
+        return $this->generateOptionsForShow(
+            'descriptions.sub_category.GET_show',
+            'descriptions.sub_category.DELETE',
+            'descriptions.sub_category.PATCH',
+            'fields.sub_category.fields'
         );
     }
 
@@ -168,10 +107,7 @@ class SubCategoryController extends Controller
     {
         $validator = Validator::make(
             $request->all(),
-            [
-                'name' => 'required|string',
-                'description' => 'required|string'
-            ]
+            Config::get('fields.sub_category.validation.PATCH')
         );
 
         if ($validator->fails() === true) {
@@ -216,10 +152,7 @@ class SubCategoryController extends Controller
     {
         $validator = Validator::make(
             $request->all(),
-            [
-                'name' => 'sometimes|required|string',
-                'description' => 'sometimes|required|string'
-            ]
+            Config::get('fields.sub_category.validation.PATCH')
         );
 
         if ($validator->fails() === true) {

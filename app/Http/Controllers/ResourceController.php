@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Validator;
 
 /**
@@ -68,45 +68,10 @@ class ResourceController extends Controller
      */
     public function optionsIndex(Request $request)
     {
-        $routes = [
-            'GET' => [
-                'description' => 'Return the resources for the given resource type',
-                'parameters' => []
-            ]
-        ];
-
-        if (Auth::guard('api')->check() === true) {
-            $routes['POST'] = [
-                'description' => 'Create a new resource',
-                'fields' => [
-                    [
-                        'field' => 'name',
-                        'title' => 'Resource name',
-                        'description' => 'Enter a name for the resource',
-                        'type' => 'string'
-                    ],
-                    [
-                        'field' => 'description',
-                        'title' => 'Resource description',
-                        'description' => 'Enter a description for the resource',
-                        'type' => 'string'
-                    ],
-                    [
-                        'field' => 'effective_date',
-                        'title' => 'Resource effective date',
-                        'description' => 'Enter an effective date for the resource',
-                        'type' => 'date (yyyy-mm-dd)'
-                    ]
-                ]
-            ];
-        }
-
-        $options_response = $this->optionsResponse($routes);
-
-        return response()->json(
-            $options_response['verbs'],
-            $options_response['http_status_code'],
-            $options_response['headers']
+        return $this->generateOptionsForIndex(
+            'descriptions.resource.GET_index',
+            'descriptions.resource.POST',
+            'fields.resource.fields'
         );
     }
 
@@ -121,49 +86,11 @@ class ResourceController extends Controller
      */
     public function optionsShow(Request $request, string $resource_type_id, string $resource_id)
     {
-        $routes = [
-            'GET' => [
-                'description' => 'Return the requested resource',
-                'parameters' => []
-            ]
-        ];
-
-        if (Auth::guard('api')->check() === true) {
-            $routes['DELETE'] = [
-                'description' => 'Delete the requested resource'
-            ];
-
-            $routes['PATCH'] = [
-                'description' => 'Update the requested resource',
-                'fields' => [
-                    [
-                        'field' => 'name',
-                        'title' => 'Resource name',
-                        'description' => 'Enter a name for the resource',
-                        'type' => 'string'
-                    ],
-                    [
-                        'field' => 'description',
-                        'title' => 'Resource description',
-                        'description' => 'Enter a description for the resource',
-                        'type' => 'string'
-                    ],
-                    [
-                        'field' => 'effective_date',
-                        'title' => 'Resource effective date',
-                        'description' => 'Enter an effective date for the resource',
-                        'type' => 'date (yyyy-mm-dd)'
-                    ]
-                ]
-            ];
-        }
-
-        $options_response = $this->optionsResponse($routes);
-
-        return response()->json(
-            $options_response['verbs'],
-            $options_response['http_status_code'],
-            $options_response['headers']
+        return $this->generateOptionsForShow(
+            'descriptions.resource.GET_show',
+            'descriptions.resource.DELETE',
+            'descriptions.resource.PATCH',
+            'fields.resource.fields'
         );
     }
 
@@ -178,11 +105,7 @@ class ResourceController extends Controller
     {
         $validator = Validator::make(
             $request->all(),
-            [
-                'name' => 'required|string',
-                'description' => 'required|string',
-                'effective_date' => 'required|date_format:Y-m-d'
-            ]
+            Config::get('fields.resource.validation.POST')
         );
 
         if ($validator->fails() === true) {
@@ -226,11 +149,7 @@ class ResourceController extends Controller
     {
         $validator = Validator::make(
             $request->all(),
-            [
-                'name' => 'sometimes|required|string',
-                'description' => 'sometimes|required|string',
-                'effective_date' => 'sometimes|required|date_format:Y-m-d'
-            ]
+            Config::get('fields.resource.validation.PATCH')
         );
 
         if ($validator->fails() === true) {

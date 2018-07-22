@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Validator;
 
 /**
@@ -65,39 +65,10 @@ class CategoryController extends Controller
      */
     public function optionsIndex(Request $request)
     {
-        $routes = [
-            'GET' => [
-                'description' => 'Return the categories',
-                'parameters' => []
-            ]
-        ];
-
-        if (Auth::guard('api')->check() === true) {
-            $routes['POST'] = [
-                'description' => 'Create a new category',
-                'fields' => [
-                    [
-                        'field' => 'name',
-                        'title' => 'Category name',
-                        'description' => 'Enter a name for the category',
-                        'type' => 'string'
-                    ],
-                    [
-                        'field' => 'description',
-                        'title' => 'Category description',
-                        'description' => 'Enter a description for the category',
-                        'type' => 'string'
-                    ]
-                ]
-            ];
-        }
-
-        $options_response = $this->optionsResponse($routes);
-
-        return response()->json(
-            $options_response['verbs'],
-            $options_response['http_status_code'],
-            $options_response['headers']
+        return $this->generateOptionsForIndex(
+            'descriptions.category.GET_index',
+            'descriptions.category.POST',
+            'fields.category.fields'
         );
     }
 
@@ -111,43 +82,11 @@ class CategoryController extends Controller
      */
     public function optionsShow(Request $request, string $category_id)
     {
-        $routes = [
-            'GET' => [
-                'description' => 'Return the requested category',
-                'parameters' => []
-            ]
-        ];
-
-        if (Auth::guard('api')->check() === true) {
-            $routes['DELETE'] = [
-                'description' => 'Delete the requested category'
-            ];
-
-            $routes['PATCH'] = [
-                'description' => 'Update the requested category',
-                'fields' => [
-                    [
-                        'field' => 'name',
-                        'title' => 'Category name',
-                        'description' => 'Enter a name for the category',
-                        'type' => 'string'
-                    ],
-                    [
-                        'field' => 'description',
-                        'title' => 'Category description',
-                        'description' => 'Enter a description for the category',
-                        'type' => 'string'
-                    ]
-                ]
-            ];
-        }
-
-        $options_response = $this->optionsResponse($routes);
-
-        return response()->json(
-            $options_response['verbs'],
-            $options_response['http_status_code'],
-            $options_response['headers']
+        return $this->generateOptionsForShow(
+            'descriptions.category.GET_show',
+            'descriptions.category.DELETE',
+            'descriptions.category.PATCH',
+            'fields.category.fields'
         );
     }
 
@@ -162,10 +101,7 @@ class CategoryController extends Controller
     {
         $validator = Validator::make(
             $request->all(),
-            [
-                'name' => 'required|string',
-                'description' => 'required|string'
-            ]
+            Config::get('fields.category.validation.POST')
         );
 
         if ($validator->fails() === true) {
@@ -207,10 +143,7 @@ class CategoryController extends Controller
     {
         $validator = Validator::make(
             $request->all(),
-            [
-                'name' => 'sometimes|required|string',
-                'description' => 'sometimes|required|string'
-            ]
+            Config::get('fields.category.validation.PATCH')
         );
 
         if ($validator->fails() === true) {
