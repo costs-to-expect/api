@@ -24,6 +24,15 @@ class ResourceTypeController extends Controller
      */
     public function index(Request $request)
     {
+        $headers = [
+            'X-Total-Count' => 30,
+        ];
+
+        $link = $this->generateLinkHeaderValue(10, 0, 20);
+        if ($link !== null) {
+            $headers['Link'] = $link;
+        }
+
         return response()->json(
             [
                 'results' => [
@@ -33,9 +42,7 @@ class ResourceTypeController extends Controller
                 ]
             ],
             200,
-            [
-                'X-Total-Count' => 10
-            ]
+            $headers
         );
     }
 

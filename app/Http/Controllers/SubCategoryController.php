@@ -25,6 +25,15 @@ class SubCategoryController extends Controller
      */
     public function index(Request $request, string $category_id)
     {
+        $headers = [
+            'X-Total-Count' => 30,
+        ];
+
+        $link = $this->generateLinkHeaderValue(10, 0, 20);
+        if ($link !== null) {
+            $headers['Link'] = $link;
+        }
+
         return response()->json(
             [
                 'results' => [
@@ -34,9 +43,7 @@ class SubCategoryController extends Controller
                 ]
             ],
             200,
-            [
-                'X-Total-Count' => 10
-            ]
+            $headers
         );
     }
 
