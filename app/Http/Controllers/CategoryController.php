@@ -24,6 +24,15 @@ class CategoryController extends Controller
      */
     public function index(Request $request)
     {
+        $headers = [
+            'X-Total-Count' => 30
+        ];
+
+        $link = $this->generateLinkHeader(10, 0, 20);
+        if ($link !== null) {
+            $headers['Link'] = $link;
+        }
+
         return response()->json(
             [
                 'results' => [
@@ -32,7 +41,8 @@ class CategoryController extends Controller
                     ['category_id' => $this->hash->encode(3)]
                 ]
             ],
-            200
+            200,
+            $headers
         );
     }
 
@@ -52,7 +62,10 @@ class CategoryController extends Controller
                     'category_id' => $category_id
                 ]
             ],
-            200
+            200,
+            [
+                'X-Total-Count' => 1
+            ]
         );
     }
 
@@ -68,7 +81,8 @@ class CategoryController extends Controller
         return $this->generateOptionsForIndex(
             'descriptions.category.GET_index',
             'descriptions.category.POST',
-            'fields.category.fields'
+            'routes.category.fields',
+            'routes.category.parameters'
         );
     }
 
@@ -86,7 +100,7 @@ class CategoryController extends Controller
             'descriptions.category.GET_show',
             'descriptions.category.DELETE',
             'descriptions.category.PATCH',
-            'fields.category.fields'
+            'routes.category.fields'
         );
     }
 
@@ -101,7 +115,7 @@ class CategoryController extends Controller
     {
         $validator = Validator::make(
             $request->all(),
-            Config::get('fields.category.validation.POST')
+            Config::get('routes.category.validation.POST')
         );
 
         if ($validator->fails() === true) {
@@ -143,7 +157,7 @@ class CategoryController extends Controller
     {
         $validator = Validator::make(
             $request->all(),
-            Config::get('fields.category.validation.PATCH')
+            Config::get('routes.category.validation.PATCH')
         );
 
         if ($validator->fails() === true) {

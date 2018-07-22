@@ -26,6 +26,15 @@ class ItemController extends Controller
      */
     public function index(Request $request, string $resource_type_id, string $resource_id)
     {
+        $headers = [
+            'X-Total-Count' => 30
+        ];
+
+        $link = $this->generateLinkHeader(10, 0, 20);
+        if ($link !== null) {
+            $headers['Link'] = $link;
+        }
+
         return response()->json(
             [
                 'results' => [
@@ -34,7 +43,8 @@ class ItemController extends Controller
                     ['item_id' => $this->hash->encode(3)]
                 ]
             ],
-            200
+            200,
+            $headers
         );
     }
 
@@ -58,7 +68,10 @@ class ItemController extends Controller
                     'item_id' => $item_id
                 ]
             ],
-            200
+            200,
+            [
+                'X-Total-Count' => 1
+            ]
         );
     }
 
@@ -76,7 +89,8 @@ class ItemController extends Controller
         return $this->generateOptionsForIndex(
             'descriptions.item.GET_index',
             'descriptions.item.POST',
-            'fields.item.fields'
+            'routes.item.fields',
+            'routes.item.parameters'
         );
     }
 
@@ -96,7 +110,7 @@ class ItemController extends Controller
             'descriptions.item.GET_show',
             'descriptions.item.DELETE',
             'descriptions.item.PATCH',
-            'fields.item.fields'
+            'routes.item.fields'
         );
     }
 
@@ -113,7 +127,7 @@ class ItemController extends Controller
     {
         $validator = Validator::make(
             $request->all(),
-            Config::get('fields.resource.item.POST')
+            Config::get('routes.resource.item.POST')
         );
 
         if ($validator->fails() === true) {
@@ -159,7 +173,7 @@ class ItemController extends Controller
     {
         $validator = Validator::make(
             $request->all(),
-            Config::get('fields.resource.item.PATCH')
+            Config::get('routes.resource.item.PATCH')
         );
 
         if ($validator->fails() === true) {

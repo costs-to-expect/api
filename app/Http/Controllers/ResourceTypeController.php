@@ -24,6 +24,15 @@ class ResourceTypeController extends Controller
      */
     public function index(Request $request)
     {
+        $headers = [
+            'X-Total-Count' => 30
+        ];
+
+        $link = $this->generateLinkHeader(10, 0, 20);
+        if ($link !== null) {
+            $headers['Link'] = $link;
+        }
+
         return response()->json(
             [
                 'results' => [
@@ -32,7 +41,8 @@ class ResourceTypeController extends Controller
                     ['resource_type_id' => $this->hash->encode(3)]
                 ]
             ],
-            200
+            200,
+            $headers
         );
     }
 
@@ -52,7 +62,10 @@ class ResourceTypeController extends Controller
                     'resource_type_id' => $resource_type_id
                 ]
             ],
-            200
+            200,
+            [
+                'X-Total-Count' => 1
+            ]
         );
     }
 
@@ -68,7 +81,8 @@ class ResourceTypeController extends Controller
         return $this->generateOptionsForIndex(
             'descriptions.resource_type.GET_index',
             'descriptions.resource_type.POST',
-            'fields.resource_type.fields'
+            'routes.resource_type.fields',
+            'routes.resource_type.parameters'
         );
     }
 
@@ -85,7 +99,7 @@ class ResourceTypeController extends Controller
             'descriptions.resource_type.GET_show',
             'descriptions.resource_type.DELETE',
             'descriptions.resource_type.PATCH',
-            'fields.resource_type.fields'
+            'routes.resource_type.fields'
         );
     }
 
@@ -100,7 +114,7 @@ class ResourceTypeController extends Controller
     {
         $validator = Validator::make(
             $request->all(),
-            Config::get('fields.resource_type.validation.POST')
+            Config::get('routes.resource_type.validation.POST')
         );
 
         if ($validator->fails() === true) {
@@ -142,7 +156,7 @@ class ResourceTypeController extends Controller
     {
         $validator = Validator::make(
             $request->all(),
-            Config::get('fields.resource_type.validation.PATCH')
+            Config::get('routes.resource_type.validation.PATCH')
         );
 
         if ($validator->fails() === true) {
