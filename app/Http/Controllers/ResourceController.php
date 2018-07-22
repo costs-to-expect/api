@@ -26,7 +26,7 @@ class ResourceController extends Controller
     public function index(Request $request, string $resource_type_id)
     {
         $headers = [
-            'X-Total-Count' => 30,
+            'X-Total-Count' => 30
         ];
 
         $link = $this->generateLinkHeader(10, 0, 20);
@@ -84,7 +84,8 @@ class ResourceController extends Controller
         return $this->generateOptionsForIndex(
             'descriptions.resource.GET_index',
             'descriptions.resource.POST',
-            'routes.resource.fields'
+            'routes.resource.fields',
+            'routes.resource.parameters'
         );
     }
 

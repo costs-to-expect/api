@@ -25,7 +25,7 @@ class CategoryController extends Controller
     public function index(Request $request)
     {
         $headers = [
-            'X-Total-Count' => 30,
+            'X-Total-Count' => 30
         ];
 
         $link = $this->generateLinkHeader(10, 0, 20);
@@ -81,7 +81,8 @@ class CategoryController extends Controller
         return $this->generateOptionsForIndex(
             'descriptions.category.GET_index',
             'descriptions.category.POST',
-            'routes.category.fields'
+            'routes.category.fields',
+            'routes.category.parameters'
         );
     }
 

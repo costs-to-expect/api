@@ -88,20 +88,22 @@ class Controller extends BaseController
      * @param string $get_description_key
      * @param string $post_description_key
      * @param string $post_fields_key
+     * @param string $parameters_key
      *
      * @return \Illuminate\Http\JsonResponse
      */
     protected function generateOptionsForIndex(
         string $get_description_key,
         string $post_description_key,
-        string $post_fields_key
+        string $post_fields_key,
+        string $parameters_key
     )
     {
         $routes = [
             'GET' => [
                 'description' => Config::get($get_description_key),
                 'authenticated' => false,
-                'parameters' => []
+                'parameters' => Config::get($parameters_key)
             ],
             'POST' => [
                 'description' => Config::get($post_description_key),
@@ -165,26 +167,28 @@ class Controller extends BaseController
     /**
      * Generate the Link header value based on the value of $previous_start, $next_start and $per_page
      *
-     * @param integer $per_page
-     * @param integer|null $previous_start
-     * @param integer|null $next_start
+     * @param integer $limit
+     * @param integer|null $offset_prev
+     * @param integer|null $offset_next
      *
      * @return string|null
      */
-    protected function generateLinkHeader(int $per_page, int $previous_start = null, int $next_start = null)
+    protected function generateLinkHeader(int $limit, int $offset_prev = null, int $offset_next = null)
     {
         $link = '';
 
-        if ($previous_start !== null) {
-            $link .= '<' . Config::get('app.url') . '/api-v1/categories?start=' . $next_start . '&per-page=' . $per_page . '>; rel="next"';
+        if ($offset_prev !== null) {
+            $link .= '<' . Config::get('app.url') . '/api-v1/categories?offset=' . $offset_prev . '&limit=' .
+                $limit . '>; rel="prev"';
         }
 
-        if ($next_start !== null) {
+        if ($offset_next !== null) {
             if (strlen($link) > 0) {
                 $link .= ', ';
             }
 
-            $link .= '<' . Config::get('app.url') . '/api-v1/categories?start=' . $previous_start . '&per-page=' . $per_page . '>; rel="prev"';
+            $link .= '<' . Config::get('app.url') . '/api-v1/categories?offset=' . $offset_next . '&limit=' .
+                $limit . '>; rel="next"';
         }
 
         if (strlen($link) > 0) {

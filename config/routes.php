@@ -1,5 +1,20 @@
 <?php
 
+$pagination = [
+    'offset' => [
+        'parameter' => 'offset',
+        'title' => 'Record offset for pagination',
+        'default' => 0,
+        'type' => 'integer'
+    ],
+    'limit' => [
+        'parameter' => 'limit',
+        'title' => 'Record limit for pagination',
+        'default' => 10,
+        'type' => 'integer'
+    ]
+];
+
 return [
     'category' => [
         'fields' => [
@@ -25,7 +40,11 @@ return [
                 'name' => 'sometimes|required|string',
                 'description' => 'sometimes|required|string'
             ]
-        ]
+        ],
+        'parameters' => array_merge(
+            $pagination,
+            []
+        )
     ],
     'sub_category' => [
         'fields' => [
@@ -51,7 +70,11 @@ return [
                 'name' => 'sometimes|required|string',
                 'description' => 'sometimes|required|string'
             ]
-        ]
+        ],
+        'parameters' => array_merge(
+            $pagination,
+            []
+        )
     ],
     'resource_type' => [
         'fields' => [
@@ -77,7 +100,11 @@ return [
                 'name' => 'sometimes|required|string',
                 'description' => 'sometimes|required|string'
             ]
-        ]
+        ],
+        'parameters' => array_merge(
+            $pagination,
+            []
+        )
     ],
     'resource' => [
         'fields' => [
@@ -111,7 +138,11 @@ return [
                 'description' => 'sometimes|required|string',
                 'effective_date' => 'sometimes|required|date_format:Y-m-d'
             ]
-        ]
+        ],
+        'parameters' => array_merge(
+            $pagination,
+            []
+        )
     ],
     'item' => [
         'fields' => [
@@ -153,6 +184,10 @@ return [
                 'total' => 'sometimes|required|regex:/^\d+\.\d{2}$/',
                 'percentage' => 'sometimes|required|integer|between:1,100'
             ]
-        ]
+        ],
+        'parameters' => array_merge(
+            $pagination,
+            []
+        )
     ]
 ];

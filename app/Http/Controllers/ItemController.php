@@ -27,7 +27,7 @@ class ItemController extends Controller
     public function index(Request $request, string $resource_type_id, string $resource_id)
     {
         $headers = [
-            'X-Total-Count' => 30,
+            'X-Total-Count' => 30
         ];
 
         $link = $this->generateLinkHeader(10, 0, 20);
@@ -89,7 +89,8 @@ class ItemController extends Controller
         return $this->generateOptionsForIndex(
             'descriptions.item.GET_index',
             'descriptions.item.POST',
-            'routes.item.fields'
+            'routes.item.fields',
+            'routes.item.parameters'
         );
     }
 
