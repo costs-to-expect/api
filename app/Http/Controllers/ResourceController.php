@@ -29,7 +29,7 @@ class ResourceController extends Controller
             'X-Total-Count' => 30,
         ];
 
-        $link = $this->generateLinkHeaderValue(10, 0, 20);
+        $link = $this->generateLinkHeader(10, 0, 20);
         if ($link !== null) {
             $headers['Link'] = $link;
         }
@@ -84,7 +84,7 @@ class ResourceController extends Controller
         return $this->generateOptionsForIndex(
             'descriptions.resource.GET_index',
             'descriptions.resource.POST',
-            'fields.resource.fields'
+            'routes.resource.fields'
         );
     }
 
@@ -103,7 +103,7 @@ class ResourceController extends Controller
             'descriptions.resource.GET_show',
             'descriptions.resource.DELETE',
             'descriptions.resource.PATCH',
-            'fields.resource.fields'
+            'routes.resource.fields'
         );
     }
 
@@ -118,7 +118,7 @@ class ResourceController extends Controller
     {
         $validator = Validator::make(
             $request->all(),
-            Config::get('fields.resource.validation.POST')
+            Config::get('routes.resource.validation.POST')
         );
 
         if ($validator->fails() === true) {
@@ -162,7 +162,7 @@ class ResourceController extends Controller
     {
         $validator = Validator::make(
             $request->all(),
-            Config::get('fields.resource.validation.PATCH')
+            Config::get('routes.resource.validation.PATCH')
         );
 
         if ($validator->fails() === true) {

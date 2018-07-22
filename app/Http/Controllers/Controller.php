@@ -171,12 +171,12 @@ class Controller extends BaseController
      *
      * @return string|null
      */
-    protected function generateLinkHeaderValue(int $per_page, int $previous_start = null, int $next_start = null)
+    protected function generateLinkHeader(int $per_page, int $previous_start = null, int $next_start = null)
     {
         $link = '';
 
         if ($previous_start !== null) {
-            $link .= '<' . Config::get('app.url') . '/api-v1/categories?start=20&per-page=10>; rel="next"';
+            $link .= '<' . Config::get('app.url') . '/api-v1/categories?start=' . $next_start . '&per-page=' . $per_page . '>; rel="next"';
         }
 
         if ($next_start !== null) {
@@ -184,7 +184,7 @@ class Controller extends BaseController
                 $link .= ', ';
             }
 
-            $link .= '<' . Config::get('app.url') . '/api-v1/categories?start=0&per-page=10>; rel="prev"';
+            $link .= '<' . Config::get('app.url') . '/api-v1/categories?start=' . $previous_start . '&per-page=' . $per_page . '>; rel="prev"';
         }
 
         if (strlen($link) > 0) {

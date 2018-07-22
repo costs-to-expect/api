@@ -30,7 +30,7 @@ class ItemController extends Controller
             'X-Total-Count' => 30,
         ];
 
-        $link = $this->generateLinkHeaderValue(10, 0, 20);
+        $link = $this->generateLinkHeader(10, 0, 20);
         if ($link !== null) {
             $headers['Link'] = $link;
         }
@@ -89,7 +89,7 @@ class ItemController extends Controller
         return $this->generateOptionsForIndex(
             'descriptions.item.GET_index',
             'descriptions.item.POST',
-            'fields.item.fields'
+            'routes.item.fields'
         );
     }
 
@@ -109,7 +109,7 @@ class ItemController extends Controller
             'descriptions.item.GET_show',
             'descriptions.item.DELETE',
             'descriptions.item.PATCH',
-            'fields.item.fields'
+            'routes.item.fields'
         );
     }
 
@@ -126,7 +126,7 @@ class ItemController extends Controller
     {
         $validator = Validator::make(
             $request->all(),
-            Config::get('fields.resource.item.POST')
+            Config::get('routes.resource.item.POST')
         );
 
         if ($validator->fails() === true) {
@@ -172,7 +172,7 @@ class ItemController extends Controller
     {
         $validator = Validator::make(
             $request->all(),
-            Config::get('fields.resource.item.PATCH')
+            Config::get('routes.resource.item.PATCH')
         );
 
         if ($validator->fails() === true) {

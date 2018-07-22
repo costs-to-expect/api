@@ -29,7 +29,7 @@ class SubCategoryController extends Controller
             'X-Total-Count' => 30,
         ];
 
-        $link = $this->generateLinkHeaderValue(10, 0, 20);
+        $link = $this->generateLinkHeader(10, 0, 20);
         if ($link !== null) {
             $headers['Link'] = $link;
         }
@@ -85,7 +85,7 @@ class SubCategoryController extends Controller
         return $this->generateOptionsForIndex(
             'descriptions.sub_category.GET_index',
             'descriptions.sub_category.POST',
-            'fields.sub_category.fields'
+            'routes.sub_category.fields'
         );
     }
 
@@ -104,7 +104,7 @@ class SubCategoryController extends Controller
             'descriptions.sub_category.GET_show',
             'descriptions.sub_category.DELETE',
             'descriptions.sub_category.PATCH',
-            'fields.sub_category.fields'
+            'routes.sub_category.fields'
         );
     }
 
@@ -120,7 +120,7 @@ class SubCategoryController extends Controller
     {
         $validator = Validator::make(
             $request->all(),
-            Config::get('fields.sub_category.validation.PATCH')
+            Config::get('routes.sub_category.validation.PATCH')
         );
 
         if ($validator->fails() === true) {
@@ -165,7 +165,7 @@ class SubCategoryController extends Controller
     {
         $validator = Validator::make(
             $request->all(),
-            Config::get('fields.sub_category.validation.PATCH')
+            Config::get('routes.sub_category.validation.PATCH')
         );
 
         if ($validator->fails() === true) {
