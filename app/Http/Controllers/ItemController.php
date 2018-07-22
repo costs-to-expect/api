@@ -34,7 +34,10 @@ class ItemController extends Controller
                     ['item_id' => $this->hash->encode(3)]
                 ]
             ],
-            200
+            200,
+            [
+                'X-Total-Count' => 10
+            ]
         );
     }
 
@@ -58,7 +61,10 @@ class ItemController extends Controller
                     'item_id' => $item_id
                 ]
             ],
-            200
+            200,
+            [
+                'X-Total-Count' => 1
+            ]
         );
     }
 

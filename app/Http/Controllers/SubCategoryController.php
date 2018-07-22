@@ -33,7 +33,10 @@ class SubCategoryController extends Controller
                     ['sub_category_id' => $this->hash->encode(3)]
                 ]
             ],
-            200
+            200,
+            [
+                'X-Total-Count' => 10
+            ]
         );
     }
 
@@ -55,7 +58,10 @@ class SubCategoryController extends Controller
                     'sub_category_id' => $sub_category_id
                 ]
             ],
-            200
+            200,
+            [
+                'X-Total-Count' => 1
+            ]
         );
     }
 

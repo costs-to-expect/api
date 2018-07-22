@@ -8,7 +8,6 @@ use Illuminate\Routing\Controller as BaseController;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Contracts\Validation\Validator;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Config;
 
 class Controller extends BaseController
@@ -83,10 +82,19 @@ class Controller extends BaseController
         );
     }
 
+    /**
+     * Generate the OPTIONS request for the index routes
+     *
+     * @param string $get_description_key
+     * @param string $post_description_key
+     * @param string $post_fields_key
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
     protected function generateOptionsForIndex(
-        $get_description_key,
-        $post_description_key,
-        $post_fields_key
+        string $get_description_key,
+        string $post_description_key,
+        string $post_fields_key
     )
     {
         $routes = [
@@ -111,11 +119,21 @@ class Controller extends BaseController
         );
     }
 
+    /**
+     * Generate the OPTIONS request for the show routes
+     *
+     * @param string $get_description_key
+     * @param string $delete_description_key
+     * @param string $patch_description_key
+     * @param string $patch_fields_key
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
     protected function generateOptionsForShow(
-        $get_description_key,
-        $delete_description_key,
-        $patch_description_key,
-        $patch_fields_key
+        string $get_description_key,
+        string $delete_description_key,
+        string $patch_description_key,
+        string $patch_fields_key
     )
     {
         $routes = [
@@ -142,5 +160,37 @@ class Controller extends BaseController
             $options_response['http_status_code'],
             $options_response['headers']
         );
+    }
+
+    /**
+     * Generate the Link header value based on the value of $previous_start, $next_start and $per_page
+     *
+     * @param integer $per_page
+     * @param integer|null $previous_start
+     * @param integer|null $next_start
+     *
+     * @return string|null
+     */
+    protected function generateLinkHeaderValue(int $per_page, int $previous_start = null, int $next_start = null)
+    {
+        $link = '';
+
+        if ($previous_start !== null) {
+            $link .= '<' . Config::get('app.url') . '/api-v1/categories?start=20&per-page=10>; rel="next"';
+        }
+
+        if ($next_start !== null) {
+            if (strlen($link) > 0) {
+                $link .= ', ';
+            }
+
+            $link .= '<' . Config::get('app.url') . '/api-v1/categories?start=0&per-page=10>; rel="prev"';
+        }
+
+        if (strlen($link) > 0) {
+            return $link;
+        } else {
+            return null;
+        }
     }
 }

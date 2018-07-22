@@ -24,6 +24,15 @@ class CategoryController extends Controller
      */
     public function index(Request $request)
     {
+        $headers = [
+            'X-Total-Count' => 30,
+        ];
+
+        $link = $this->generateLinkHeaderValue(10, 0, 20);
+        if ($link !== null) {
+            $headers['Link'] = $link;
+        }
+
         return response()->json(
             [
                 'results' => [
@@ -32,7 +41,8 @@ class CategoryController extends Controller
                     ['category_id' => $this->hash->encode(3)]
                 ]
             ],
-            200
+            200,
+            $headers
         );
     }
 
@@ -52,7 +62,10 @@ class CategoryController extends Controller
                     'category_id' => $category_id
                 ]
             ],
-            200
+            200,
+            [
+                'X-Total-Count' => 1
+            ]
         );
     }
 

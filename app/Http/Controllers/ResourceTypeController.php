@@ -32,7 +32,10 @@ class ResourceTypeController extends Controller
                     ['resource_type_id' => $this->hash->encode(3)]
                 ]
             ],
-            200
+            200,
+            [
+                'X-Total-Count' => 10
+            ]
         );
     }
 
@@ -52,7 +55,10 @@ class ResourceTypeController extends Controller
                     'resource_type_id' => $resource_type_id
                 ]
             ],
-            200
+            200,
+            [
+                'X-Total-Count' => 1
+            ]
         );
     }
 
