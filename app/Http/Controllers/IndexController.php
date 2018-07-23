@@ -42,7 +42,10 @@ class IndexController extends Controller
 
         return response()->json(
             $routes_to_display,
-            200
+            200,
+            [
+                'X-Total-Count' => count($routes_to_display)
+            ]
         );
     }
 }
