@@ -19,6 +19,9 @@ Route::post('auth/register', 'PassportController@register');
 Route::group(
     [],
     function () {
+        Route::get('', 'IndexController@index');
+        Route::options('', 'IndexController@optionsIndex');
+
         Route::get('categories', 'CategoryController@index');
         Route::options('categories', 'CategoryController@optionsIndex');
         Route::get('categories/{category_id}', 'CategoryController@show');

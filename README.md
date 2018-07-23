@@ -42,7 +42,8 @@ Current API Routes, for fields and parameters, check the OPTIONS request.
 
 | HTTP Verb | Route |
 | :--- | :--- |
-| GET/HEAD | / 
+| GET/HEAD | /                                                                                |
+| OPTIONS  | /                                                                                | 
 | POST     | api-v1/auth/login                                                                |
 | POST     | api-v1/auth/register                                                             |
 | GET/HEAD | api-v1/auth/user                                                                 |
