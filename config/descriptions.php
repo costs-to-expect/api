@@ -1,6 +1,9 @@
 <?php
 
 return [
+    'api' => [
+        'GET_index' => 'Return all routes',
+    ],
     'category' => [
         'GET_index' => 'Return the categories',
         'GET_show' => 'Return the requested category',

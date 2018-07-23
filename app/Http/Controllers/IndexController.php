@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Route;
 
 /**
@@ -46,6 +47,32 @@ class IndexController extends Controller
             [
                 'X-Total-Count' => count($routes_to_display)
             ]
+        );
+    }
+
+    /**
+     * Generate the OPTIONS request
+     *
+     * @param Request $request
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function optionsIndex(Request $request)
+    {
+        $routes = [
+            'GET' => [
+                'description' => Config::get('descriptions.api.GET_index'),
+                'authenticated' => false,
+                'parameters' => []
+            ]
+        ];
+
+        $options_response = $this->generateOptionsResponse($routes);
+
+        return response()->json(
+            $options_response['verbs'],
+            $options_response['http_status_code'],
+            $options_response['headers']
         );
     }
 }
