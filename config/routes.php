@@ -33,7 +33,7 @@ return [
         ],
         'validation' => [
             'POST' => [
-                'name' => 'required|string',
+                'name' => 'required|string|unique:category,name',
                 'description' => 'required|string'
             ],
             'PATCH' => [
