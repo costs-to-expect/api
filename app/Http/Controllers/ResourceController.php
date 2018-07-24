@@ -132,7 +132,7 @@ class ResourceController extends Controller
                     'resource_id' => $this->hash->encode($new_resource_id = 4)
                 ]
             ],
-            200
+            201
         );
     }
 

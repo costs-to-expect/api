@@ -148,7 +148,7 @@ class ResourceTypeController extends Controller
             [
                 'result' => (new ResourceTypeTransformer($resource_type))->toArray()
             ],
-            200
+            201
         );
     }
 
