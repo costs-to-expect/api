@@ -2,6 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\ResourceType;
+use App\Transformers\ResourceType as ResourceTypeTransformer;
+use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Validator;
@@ -24,8 +27,10 @@ class ResourceTypeController extends Controller
      */
     public function index(Request $request)
     {
+        $resource_types = ResourceType::all();
+
         $headers = [
-            'X-Total-Count' => 30
+            'X-Total-Count' => count($resource_types)
         ];
 
         $link = $this->generateLinkHeader(10, 0, 20);
@@ -35,11 +40,12 @@ class ResourceTypeController extends Controller
 
         return response()->json(
             [
-                'results' => [
-                    ['resource_type_id' => $this->hash->encode(1)],
-                    ['resource_type_id' => $this->hash->encode(2)],
-                    ['resource_type_id' => $this->hash->encode(3)]
-                ]
+                'results' => $resource_types->map(
+                    function ($resource_type)
+                    {
+                        return (new ResourceTypeTransformer($resource_type))->toArray();
+                    }
+                )
             ],
             200,
             $headers
@@ -56,11 +62,13 @@ class ResourceTypeController extends Controller
      */
     public function show(Request $request, string $resource_type_id)
     {
+        $resource_type_id = $this->decodeParameter($resource_type_id);
+
+        $resource_type = ResourceType::find($resource_type_id);
+
         return response()->json(
             [
-                'result' => [
-                    'resource_type_id' => $resource_type_id
-                ]
+                'result' => (new ResourceTypeTransformer($resource_type))->toArray()
             ],
             200,
             [
@@ -121,11 +129,24 @@ class ResourceTypeController extends Controller
             return $this->returnValidationErrors($validator);
         }
 
+        try {
+            $resource_type = new ResourceType([
+                'name' => $request->input('name'),
+                'description' => $request->input('description')
+            ]);
+            $resource_type->save();
+        } catch (Exception $e) {
+            return response()->json(
+                [
+                    'error' => 'Error creating new record'
+                ],
+                500
+            );
+        }
+
         return response()->json(
             [
-                'result' => [
-                    'resource_type_id' => $this->hash->encode($new_resource_id = 4)
-                ]
+                'result' => (new ResourceTypeTransformer($resource_type))->toArray()
             ],
             200
         );

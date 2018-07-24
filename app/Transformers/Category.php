@@ -26,7 +26,7 @@ class Category extends Transformer
             'id' => $this->hash->encode($this->category->id),
             'name' => $this->category->name,
             'description' => $this->category->description,
-            'created_at' => $this->category->created_at->toDateTimeString(),
+            'created' => $this->category->created_at->toDateTimeString(),
         ];
     }
 }

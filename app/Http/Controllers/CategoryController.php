@@ -27,8 +27,10 @@ class CategoryController extends Controller
      */
     public function index(Request $request)
     {
+        $categories = Category::all();
+
         $headers = [
-            'X-Total-Count' => 30
+            'X-Total-Count' => count($categories)
         ];
 
         $link = $this->generateLinkHeader(10, 0, 20);
@@ -38,7 +40,7 @@ class CategoryController extends Controller
 
         return response()->json(
             [
-                'results' => Category::get()->map(
+                'results' => $categories->map(
                     function ($category)
                     {
                         return (new CategoryTransformer($category))->toArray();
@@ -149,7 +151,7 @@ class CategoryController extends Controller
 
         return response()->json(
             [
-                'result' => (new CategoryTransformer($category))
+                'result' => (new CategoryTransformer($category))->toArray()
             ],
             200
         );
