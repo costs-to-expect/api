@@ -5,7 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 
 /**
- * Category eloquent model
+ * Category model
  *
  * @author Dean Blackborough <dean@g3d-development.com>
  * @copyright Dean Blackborough 2018
