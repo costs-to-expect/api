@@ -2,6 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Category;
+use App\Transformers\Category as CategoryTransformer;
+use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Validator;
@@ -35,11 +38,12 @@ class CategoryController extends Controller
 
         return response()->json(
             [
-                'results' => [
-                    ['category_id' => $this->hash->encode(1)],
-                    ['category_id' => $this->hash->encode(2)],
-                    ['category_id' => $this->hash->encode(3)]
-                ]
+                'results' => Category::get()->map(
+                    function ($category)
+                    {
+                        return (new CategoryTransformer($category))->toArray();
+                    }
+                )
             ],
             200,
             $headers
@@ -56,11 +60,17 @@ class CategoryController extends Controller
      */
     public function show(Request $request, string $category_id)
     {
+        $category_id = $this->decodeParameter($category_id);
+
+        $category = Category::find($category_id);
+
+        if ($category === null) {
+            return $this->returnResourceNotFound();
+        }
+
         return response()->json(
             [
-                'result' => [
-                    'category_id' => $category_id
-                ]
+                'result' => (new CategoryTransformer($category))->toArray()
             ],
             200,
             [
@@ -122,11 +132,24 @@ class CategoryController extends Controller
             return $this->returnValidationErrors($validator);
         }
 
+        try {
+            $category = new Category([
+                'name' => $request->input('name'),
+                'description' => $request->input('description')
+            ]);
+            $category->save();
+        } catch (Exception $e) {
+            return response()->json(
+                [
+                    'error' => 'Error creating new record'
+                ],
+                500
+            );
+        }
+
         return response()->json(
             [
-                'result' => [
-                    'category_id' => $this->hash->encode($new_category_id = 4)
-                ]
+                'result' => (new CategoryTransformer($category))
             ],
             200
         );

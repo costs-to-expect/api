@@ -83,6 +83,21 @@ class Controller extends BaseController
     }
 
     /**
+     * Return 404, resource not found
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
+    protected function returnResourceNotFound()
+    {
+        return response()->json(
+            [
+                'error' => 'Resource not found'
+            ],
+            404
+        );
+    }
+
+    /**
      * Generate the OPTIONS request for the index routes
      *
      * @param string $get_description_key
@@ -195,6 +210,23 @@ class Controller extends BaseController
             return $link;
         } else {
             return null;
+        }
+    }
+
+    /**
+     * Decode a get param and return the integer
+     *
+     * @param string $parameter The hash to decode
+     *
+     * @return int|\Illuminate\Http\JsonResponse
+     */
+    protected function decodeParameter(string $parameter)
+    {
+        $id = $this->hash->decode($parameter);
+        if (is_array($id) && array_key_exists(0, $id)) {
+            return $id[0];
+        } else {
+            return $this->returnResourceNotFound();
         }
     }
 }
