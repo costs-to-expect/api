@@ -5,20 +5,20 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 
 /**
- * Resource type model
+ * Category model
  *
  * @author Dean Blackborough <dean@g3d-development.com>
  * @copyright Dean Blackborough 2018
  * @license https://github.com/costs-to-expect/api/blob/master/LICENSE
  */
-class ResourceType extends Model
+class Resource extends Model
 {
-    protected $table = 'resource_type';
+    protected $table = 'resource';
 
     protected $guarded = ['id', 'created_at', 'updated_at'];
 
-    public function resource()
+    public function resourceType()
     {
-        $this->belongsTo(Resource::class, 'resource_type_id', 'id');
+        $this->hasOne(ResourceType::class, 'id', 'resource_type_id');
     }
 }

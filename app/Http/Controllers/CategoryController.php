@@ -153,7 +153,7 @@ class CategoryController extends Controller
             [
                 'result' => (new CategoryTransformer($category))->toArray()
             ],
-            200
+            201
         );
     }
 

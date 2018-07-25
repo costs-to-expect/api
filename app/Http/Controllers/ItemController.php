@@ -140,7 +140,7 @@ class ItemController extends Controller
                     'item_id' => $this->hash->encode($new_item_id = 4)
                 ]
             ],
-            200
+            201
         );
     }
 

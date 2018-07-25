@@ -135,7 +135,7 @@ class SubCategoryController extends Controller
                     'sub_category_id' => $this->hash->encode($new_sub_category_id = 4)
                 ]
             ],
-            200
+            201
         );
     }
 

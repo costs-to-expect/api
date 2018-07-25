@@ -2,6 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Resource;
+use App\Transformers\Resource as ResourceTransformer;
+use Exception;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Validator;
@@ -21,12 +25,18 @@ class ResourceController extends Controller
      * @param Request $request
      * @param string $resource_type_id
      *
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      */
-    public function index(Request $request, string $resource_type_id)
+    public function index(Request $request, string $resource_type_id): JsonResponse
     {
+        $resource_type_id = $this->decodeParameter($resource_type_id);
+
+        $resources = (new Resource)
+            ->where('resource_type_id', '=', $resource_type_id)
+            ->get();
+
         $headers = [
-            'X-Total-Count' => 30
+            'X-Total-Count' => 1
         ];
 
         $link = $this->generateLinkHeader(10, 0, 20);
@@ -36,11 +46,12 @@ class ResourceController extends Controller
 
         return response()->json(
             [
-                'results' => [
-                    ['resource_id' => $this->hash->encode(1)],
-                    ['resource_id' => $this->hash->encode(2)],
-                    ['resource_id' => $this->hash->encode(3)]
-                ]
+                'results' => $resources->map(
+                    function ($resource)
+                    {
+                        return (new ResourceTransformer($resource))->toArray();
+                    }
+                )
             ],
             200,
             $headers
@@ -54,16 +65,24 @@ class ResourceController extends Controller
      * @param string $resource_type_id
      * @param string $resource_id
      *
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      */
-    public function show(Request $request, string $resource_type_id, string $resource_id)
+    public function show(Request $request, string $resource_type_id, string $resource_id): JsonResponse
     {
+        $resource_type_id = $this->decodeParameter($resource_type_id);
+        $resource_id = $this->decodeParameter($resource_id);
+
+        $resource = (new Resource)
+            ->where('resource_type_id', '=', $resource_type_id)
+            ->find($resource_id);
+
+        if ($resource === null) {
+            return $this->returnResourceNotFound();
+        }
+
         return response()->json(
             [
-                'result' => [
-                    'resource_type_id' => $resource_type_id,
-                    'resource_id' => $resource_id
-                ]
+                'result' => (new ResourceTransformer($resource))->toArray()
             ],
             200,
             [
@@ -77,9 +96,9 @@ class ResourceController extends Controller
      *
      * @param Request $request
      *
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      */
-    public function optionsIndex(Request $request)
+    public function optionsIndex(Request $request): JsonResponse
     {
         return $this->generateOptionsForIndex(
             'descriptions.resource.GET_index',
@@ -96,9 +115,9 @@ class ResourceController extends Controller
      * @param string $resource_type_id
      * @param string $resource_id
      *
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      */
-    public function optionsShow(Request $request, string $resource_type_id, string $resource_id)
+    public function optionsShow(Request $request, string $resource_type_id, string $resource_id): JsonResponse
     {
         return $this->generateOptionsForShow(
             'descriptions.resource.GET_show',
@@ -112,27 +131,62 @@ class ResourceController extends Controller
      * Create a new resource
      *
      * @param Request $request
+     * @param string $resource_type_id
      *
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      */
-    public function create(Request $request, string $resource_type_id)
+    public function create(Request $request, string $resource_type_id): JsonResponse
     {
+        $resource_type_id = $this->decodeParameter($resource_type_id);
+
         $validator = Validator::make(
             $request->all(),
-            Config::get('routes.resource.validation.POST')
+            [
+                'name' => [
+                    'required',
+                    'string',
+                    'unique:resource,name,null,id,resource_type_id,' . $resource_type_id
+                ],
+                'description' => [
+                    'required',
+                    'string'
+                ],
+                'effective_date' => [
+                    'required',
+                    'date_format:Y-m-d'
+                ]
+            ],
+            $messages = [
+                'name.unique' => 'The resource name has already been used for this resource type',
+            ]
         );
 
         if ($validator->fails() === true) {
             return $this->returnValidationErrors($validator);
         }
 
+        try {
+            $resource = new Resource([
+                'resource_type_id' => $resource_type_id,
+                'name' => $request->input('name'),
+                'description' => $request->input('description'),
+                'effective_date' => $request->input('effective_date')
+            ]);
+            $resource->save();
+        } catch (Exception $e) {
+            return response()->json(
+                [
+                    'error' => 'Error creating new record'
+                ],
+                500
+            );
+        }
+
         return response()->json(
             [
-                'result' => [
-                    'resource_id' => $this->hash->encode($new_resource_id = 4)
-                ]
+                'result' => (new ResourceTransformer($resource))->toArray()
             ],
-            200
+            201
         );
     }
 
@@ -143,9 +197,9 @@ class ResourceController extends Controller
      * @param string $resource_type_id
      * @param string $resource_id
      *
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      */
-    public function delete(Request $request, string $resource_type_id, string $resource_id)
+    public function delete(Request $request, string $resource_type_id, string $resource_id): JsonResponse
     {
         return response()->json(null,204);
     }
@@ -157,9 +211,9 @@ class ResourceController extends Controller
      * @param string $resource_type_id
      * @param string $resource_id
      *
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      */
-    public function update(Request $request, string $resource_type_id, string $resource_id)
+    public function update(Request $request, string $resource_type_id, string $resource_id): JsonResponse
     {
         $validator = Validator::make(
             $request->all(),
