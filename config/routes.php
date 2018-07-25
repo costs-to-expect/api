@@ -93,7 +93,7 @@ return [
         ],
         'validation' => [
             'POST' => [
-                'name' => 'required|string',
+                'name' => 'required|string|unique:resource_type,name',
                 'description' => 'required|string'
             ],
             'PATCH' => [
