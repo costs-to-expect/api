@@ -2,10 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Validators\Item as ItemValidator;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Config;
-use Illuminate\Support\Facades\Validator;
 
 /**
  * Manage items
@@ -131,10 +130,10 @@ class ItemController extends Controller
      */
     public function create(Request $request, string $resource_type_id, string $resource_id): JsonResponse
     {
-        $validator = Validator::make(
-            $request->all(),
-            Config::get('routes.resource.item.POST')
-        );
+        $resource_type_id = $this->decodeParameter($resource_type_id);
+        $resource_id = $this->decodeParameter($resource_id);
+
+        $validator = ItemValidator::create($request, $resource_type_id, $resource_id);
 
         if ($validator->fails() === true) {
             return $this->returnValidationErrors($validator);
@@ -187,10 +186,11 @@ class ItemController extends Controller
         string $item_id
     ): JsonResponse
     {
-        $validator = Validator::make(
-            $request->all(),
-            Config::get('routes.resource.item.PATCH')
-        );
+        $resource_type_id = $this->decodeParameter($resource_type_id);
+        $resource_id = $this->decodeParameter($resource_id);
+        $item_id = $this->decodeParameter($item_id);
+
+        $validator = ItemValidator::update($request, $resource_type_id, $resource_id, $item_id);
 
         if ($validator->fails() === true) {
             return $this->returnValidationErrors($validator);

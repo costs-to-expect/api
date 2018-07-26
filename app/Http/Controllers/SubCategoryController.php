@@ -2,10 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Validators\SubCategory as SubCategoryValidator;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Config;
-use Illuminate\Support\Facades\Validator;
 
 /**
  * Manage category sub categories
@@ -120,10 +119,9 @@ class SubCategoryController extends Controller
      */
     public function create(Request $request, string $category_id): JsonResponse
     {
-        $validator = Validator::make(
-            $request->all(),
-            Config::get('routes.sub_category.validation.PATCH.fields')
-        );
+        $category_id = $this->decodeParameter($category_id);
+
+        $validator = SubCategoryValidator::create($request, $category_id);
 
         if ($validator->fails() === true) {
             return $this->returnValidationErrors($validator);
@@ -165,10 +163,10 @@ class SubCategoryController extends Controller
      */
     public function update(Request $request, string $category_id, string $sub_category_id): JsonResponse
     {
-        $validator = Validator::make(
-            $request->all(),
-            Config::get('routes.sub_category.validation.PATCH.fields')
-        );
+        $category_id = $this->decodeParameter($category_id);
+        $sub_category_id = $this->decodeParameter($sub_category_id);
+
+        $validator = SubCategoryValidator::update($request, $category_id, $sub_category_id);
 
         if ($validator->fails() === true) {
             return $this->returnValidationErrors($validator);

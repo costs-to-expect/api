@@ -4,11 +4,10 @@ namespace App\Http\Controllers;
 
 use App\Models\Category;
 use App\Transformers\Category as CategoryTransformer;
+use App\Validators\Category as CategoryValidator;
 use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Config;
-use Illuminate\Support\Facades\Validator;
 
 /**
  * Manage categories
@@ -126,10 +125,7 @@ class CategoryController extends Controller
      */
     public function create(Request $request): JsonResponse
     {
-        $validator = Validator::make(
-            $request->all(),
-            Config::get('routes.category.validation.POST.fields')
-        );
+        $validator = CategoryValidator::create($request);
 
         if ($validator->fails() === true) {
             return $this->returnValidationErrors($validator);
@@ -181,10 +177,9 @@ class CategoryController extends Controller
      */
     public function update(Request $request, string $category_id): JsonResponse
     {
-        $validator = Validator::make(
-            $request->all(),
-            Config::get('routes.category.validation.PATCH.fields')
-        );
+        $category_id = $this->decodeParameter($category_id);
+
+        $validator = CategoryValidator::update($request, $category_id);
 
         if ($validator->fails() === true) {
             return $this->returnValidationErrors($validator);
