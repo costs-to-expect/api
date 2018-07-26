@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Validators\SubCategory as SubCategoryValidator;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Config;
-use Illuminate\Support\Facades\Validator;
 
 /**
  * Manage category sub categories
@@ -21,9 +21,9 @@ class SubCategoryController extends Controller
      * @param Request $request
      * @param string $category_id
      *
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      */
-    public function index(Request $request, string $category_id)
+    public function index(Request $request, string $category_id): JsonResponse
     {
         $headers = [
             'X-Total-Count' => 30
@@ -54,9 +54,9 @@ class SubCategoryController extends Controller
      * @param string $category_id
      * @param string $sub_category_id
      *
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      */
-    public function show(Request $request, string $category_id, string $sub_category_id)
+    public function show(Request $request, string $category_id, string $sub_category_id): JsonResponse
     {
         return response()->json(
             [
@@ -78,9 +78,9 @@ class SubCategoryController extends Controller
      * @param Request $request
      * @param string $category_id
      *
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      */
-    public function optionsIndex(Request $request, string $category_id)
+    public function optionsIndex(Request $request, string $category_id): JsonResponse
     {
         return $this->generateOptionsForIndex(
             'descriptions.sub_category.GET_index',
@@ -97,9 +97,9 @@ class SubCategoryController extends Controller
      * @param string $category_id
      * @param string $sub_category_id
      *
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      */
-    public function optionsShow(Request $request, string $category_id, string $sub_category_id)
+    public function optionsShow(Request $request, string $category_id, string $sub_category_id): JsonResponse
     {
         return $this->generateOptionsForShow(
             'descriptions.sub_category.GET_show',
@@ -115,14 +115,13 @@ class SubCategoryController extends Controller
      * @param Request $request
      * @param string $category_id
      *
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      */
-    public function create(Request $request, string $category_id)
+    public function create(Request $request, string $category_id): JsonResponse
     {
-        $validator = Validator::make(
-            $request->all(),
-            Config::get('routes.sub_category.validation.PATCH')
-        );
+        $category_id = $this->decodeParameter($category_id);
+
+        $validator = SubCategoryValidator::create($request, $category_id);
 
         if ($validator->fails() === true) {
             return $this->returnValidationErrors($validator);
@@ -146,9 +145,9 @@ class SubCategoryController extends Controller
      * @param string $category_id
      * @param string $sub_category_id
      *
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      */
-    public function delete(Request $request, string $category_id, string $sub_category_id)
+    public function delete(Request $request, string $category_id, string $sub_category_id): JsonResponse
     {
         return response()->json(null,204);
     }
@@ -160,14 +159,14 @@ class SubCategoryController extends Controller
      * @param string $category_id
      * @param string $sub_category_id
      *
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      */
-    public function update(Request $request, string $category_id, string $sub_category_id)
+    public function update(Request $request, string $category_id, string $sub_category_id): JsonResponse
     {
-        $validator = Validator::make(
-            $request->all(),
-            Config::get('routes.sub_category.validation.PATCH')
-        );
+        $category_id = $this->decodeParameter($category_id);
+        $sub_category_id = $this->decodeParameter($sub_category_id);
+
+        $validator = SubCategoryValidator::update($request, $category_id, $sub_category_id);
 
         if ($validator->fails() === true) {
             return $this->returnValidationErrors($validator);

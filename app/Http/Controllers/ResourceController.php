@@ -4,11 +4,10 @@ namespace App\Http\Controllers;
 
 use App\Models\Resource;
 use App\Transformers\Resource as ResourceTransformer;
+use App\Validators\Resource as ResourceValidator;
 use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Config;
-use Illuminate\Support\Facades\Validator;
 
 /**
  * Manage resources
@@ -139,27 +138,7 @@ class ResourceController extends Controller
     {
         $resource_type_id = $this->decodeParameter($resource_type_id);
 
-        $validator = Validator::make(
-            $request->all(),
-            [
-                'name' => [
-                    'required',
-                    'string',
-                    'unique:resource,name,null,id,resource_type_id,' . $resource_type_id
-                ],
-                'description' => [
-                    'required',
-                    'string'
-                ],
-                'effective_date' => [
-                    'required',
-                    'date_format:Y-m-d'
-                ]
-            ],
-            $messages = [
-                'name.unique' => 'The resource name has already been used for this resource type',
-            ]
-        );
+        $validator = ResourceValidator::create($request, $resource_type_id);
 
         if ($validator->fails() === true) {
             return $this->returnValidationErrors($validator);
@@ -215,10 +194,10 @@ class ResourceController extends Controller
      */
     public function update(Request $request, string $resource_type_id, string $resource_id): JsonResponse
     {
-        $validator = Validator::make(
-            $request->all(),
-            Config::get('routes.resource.validation.PATCH')
-        );
+        $resource_type_id = $this->decodeParameter($resource_type_id);
+        $resource_id = $this->decodeParameter($resource_id);
+
+        $validator = ResourceValidator::update($request, $resource_type_id, $resource_id);
 
         if ($validator->fails() === true) {
             return $this->returnValidationErrors($validator);

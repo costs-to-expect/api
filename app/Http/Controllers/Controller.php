@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Hashids\Hashids;
 use Illuminate\Foundation\Bus\DispatchesJobs;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Routing\Controller as BaseController;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
@@ -29,7 +30,7 @@ class Controller extends BaseController
      *
      * @return array Three indexes, verbs, status and headers
      */
-    protected function generateOptionsResponse(array $verbs, $http_status_code = 200)
+    protected function generateOptionsResponse(array $verbs, $http_status_code = 200): array
     {
         $options = [
             'verbs' => [],
@@ -52,9 +53,9 @@ class Controller extends BaseController
     /**
      * Return bad request as there are no fields to patch
      *
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      */
-    protected function requireAtLeastOneFieldToPatch()
+    protected function requireAtLeastOneFieldToPatch(): JsonResponse
     {
         return response()->json(
             [
@@ -69,9 +70,9 @@ class Controller extends BaseController
      *
      * @param \Illuminate\Contracts\Validation\Validator $validator
      *
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      */
-    protected function returnValidationErrors(Validator $validator)
+    protected function returnValidationErrors(Validator $validator): JsonResponse
     {
         return response()->json(
             [
@@ -85,9 +86,9 @@ class Controller extends BaseController
     /**
      * Return 404, resource not found
      *
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      */
-    protected function returnResourceNotFound()
+    protected function returnResourceNotFound(): JsonResponse
     {
         return response()->json(
             [
@@ -105,14 +106,14 @@ class Controller extends BaseController
      * @param string $post_fields_key
      * @param string $parameters_key
      *
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      */
     protected function generateOptionsForIndex(
         string $get_description_key,
         string $post_description_key,
         string $post_fields_key,
         string $parameters_key
-    )
+    ): JsonResponse
     {
         $routes = [
             'GET' => [
@@ -144,14 +145,14 @@ class Controller extends BaseController
      * @param string $patch_description_key
      * @param string $patch_fields_key
      *
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      */
     protected function generateOptionsForShow(
         string $get_description_key,
         string $delete_description_key,
         string $patch_description_key,
         string $patch_fields_key
-    )
+    ): JsonResponse
     {
         $routes = [
             'GET' => [
@@ -188,7 +189,7 @@ class Controller extends BaseController
      *
      * @return string|null
      */
-    protected function generateLinkHeader(int $limit, int $offset_prev = null, int $offset_next = null)
+    protected function generateLinkHeader(int $limit, int $offset_prev = null, int $offset_next = null): ?string
     {
         $link = '';
 
@@ -218,7 +219,7 @@ class Controller extends BaseController
      *
      * @param string $parameter The hash to decode
      *
-     * @return int|\Illuminate\Http\JsonResponse
+     * @return int|JsonResponse
      */
     protected function decodeParameter(string $parameter)
     {

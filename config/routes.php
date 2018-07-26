@@ -33,12 +33,18 @@ return [
         ],
         'validation' => [
             'POST' => [
-                'name' => 'required|string|unique:category,name',
-                'description' => 'required|string'
+                'fields' => [
+                    'name' => 'required|string|unique:category,name',
+                    'description' => 'required|string'
+                ],
+                'messages' => []
             ],
             'PATCH' => [
-                'name' => 'sometimes|required|string',
-                'description' => 'sometimes|required|string'
+                'fields' => [
+                    'name' => 'sometimes|required|string',
+                    'description' => 'sometimes|required|string'
+                ],
+                'messages' => []
             ]
         ],
         'parameters' => array_merge(
@@ -63,12 +69,20 @@ return [
         ],
         'validation' => [
             'POST' => [
-                'name' => 'required|string',
-                'description' => 'required|string'
+                'fields' => [
+                    'name' => 'required|string',
+                    'description' => 'required|string'
+                ],
+                'messages' => [
+
+                ]
             ],
             'PATCH' => [
-                'name' => 'sometimes|required|string',
-                'description' => 'sometimes|required|string'
+                'fields' => [
+                    'name' => 'sometimes|required|string',
+                    'description' => 'sometimes|required|string'
+                ],
+                'messages' => []
             ]
         ],
         'parameters' => array_merge(
@@ -93,12 +107,18 @@ return [
         ],
         'validation' => [
             'POST' => [
-                'name' => 'required|string|unique:resource_type,name',
-                'description' => 'required|string'
+                'fields' => [
+                    'name' => 'required|string|unique:resource_type,name',
+                    'description' => 'required|string'
+                ],
+                'messages' => []
             ],
             'PATCH' => [
-                'name' => 'sometimes|required|string',
-                'description' => 'sometimes|required|string'
+                'fields' => [
+                    'name' => 'sometimes|required|string',
+                    'description' => 'sometimes|required|string'
+                ],
+                'messages' => []
             ]
         ],
         'parameters' => array_merge(
@@ -129,14 +149,28 @@ return [
         ],
         'validation' => [
             'POST' => [
-                'name' => 'required|string',
-                'description' => 'required|string',
-                'effective_date' => 'required|date_format:Y-m-d'
+                'fields' => [
+                    'description' => [
+                        'required',
+                        'string'
+                    ],
+                    'effective_date' => [
+                        'required',
+                        'date_format:Y-m-d'
+                    ]
+                ],
+                'messages' => [
+                    'name.unique' => 'The resource name has already been used within this resource type',
+                    'effective_date.date_format' => 'The effective date does not match the required format yyyy-mm-dd (e.g. 2001-01-01)'
+                ]
             ],
             'PATCH' => [
-                'name' => 'sometimes|required|string',
-                'description' => 'sometimes|required|string',
-                'effective_date' => 'sometimes|required|date_format:Y-m-d'
+                'fields' => [
+                    'name' => 'sometimes|required|string',
+                    'description' => 'sometimes|required|string',
+                    'effective_date' => 'sometimes|required|date_format:Y-m-d'
+                ],
+                'messages' => []
             ]
         ],
         'parameters' => array_merge(
@@ -173,16 +207,22 @@ return [
         ],
         'validation' => [
             'POST' => [
-                'description' => 'required|string',
-                'effective_date' => 'required|date_format:Y-m-d',
-                'total' => 'required|regex:/^\d+\.\d{2}$/',
-                'percentage' => 'required|integer|between:1,100'
+                'fields' => [
+                    'description' => 'required|string',
+                    'effective_date' => 'required|date_format:Y-m-d',
+                    'total' => 'required|regex:/^\d+\.\d{2}$/',
+                    'percentage' => 'required|integer|between:1,100'
+                ],
+                'messages' => []
             ],
             'PATCH' => [
-                'description' => 'sometimes|required|string',
-                'effective_date' => 'sometimes|required|date_format:Y-m-d',
-                'total' => 'sometimes|required|regex:/^\d+\.\d{2}$/',
-                'percentage' => 'sometimes|required|integer|between:1,100'
+                'fields' => [
+                    'description' => 'sometimes|required|string',
+                    'effective_date' => 'sometimes|required|date_format:Y-m-d',
+                    'total' => 'sometimes|required|regex:/^\d+\.\d{2}$/',
+                    'percentage' => 'sometimes|required|integer|between:1,100'
+                ],
+                'messages' => []
             ]
         ],
         'parameters' => array_merge(

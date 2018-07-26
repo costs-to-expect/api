@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Validators\Item as ItemValidator;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Config;
-use Illuminate\Support\Facades\Validator;
 
 /**
  * Manage items
@@ -22,9 +22,9 @@ class ItemController extends Controller
      * @param string $resource_type_id
      * @param string $resource_id
      *
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      */
-    public function index(Request $request, string $resource_type_id, string $resource_id)
+    public function index(Request $request, string $resource_type_id, string $resource_id): JsonResponse
     {
         $headers = [
             'X-Total-Count' => 30
@@ -56,9 +56,9 @@ class ItemController extends Controller
      * @param string $resource_type_id
      * @param string $item_id
      *
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      */
-    public function show(Request $request, string $resource_type_id, string $resource_id, string $item_id)
+    public function show(Request $request, string $resource_type_id, string $resource_id, string $item_id): JsonResponse
     {
         return response()->json(
             [
@@ -82,9 +82,9 @@ class ItemController extends Controller
      * @param string $resource_type_id
      * @param string $resource_id
      *
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      */
-    public function optionsIndex(Request $request, string $resource_type_id, string $resource_id)
+    public function optionsIndex(Request $request, string $resource_type_id, string $resource_id): JsonResponse
     {
         return $this->generateOptionsForIndex(
             'descriptions.item.GET_index',
@@ -102,9 +102,14 @@ class ItemController extends Controller
      * @param string $resource_type_id
      * @param string $item_id
      *
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      */
-    public function optionsShow(Request $request, string $resource_type_id, string $resource_id, string $item_id)
+    public function optionsShow(
+        Request $request,
+        string $resource_type_id,
+        string $resource_id,
+        string $item_id
+    ): JsonResponse
     {
         return $this->generateOptionsForShow(
             'descriptions.item.GET_show',
@@ -121,14 +126,14 @@ class ItemController extends Controller
      * @param string $resource_type_id
      * @param string $resource_id
      *
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      */
-    public function create(Request $request, string $resource_type_id, string $resource_id)
+    public function create(Request $request, string $resource_type_id, string $resource_id): JsonResponse
     {
-        $validator = Validator::make(
-            $request->all(),
-            Config::get('routes.resource.item.POST')
-        );
+        $resource_type_id = $this->decodeParameter($resource_type_id);
+        $resource_id = $this->decodeParameter($resource_id);
+
+        $validator = ItemValidator::create($request, $resource_type_id, $resource_id);
 
         if ($validator->fails() === true) {
             return $this->returnValidationErrors($validator);
@@ -152,9 +157,14 @@ class ItemController extends Controller
      * @param string $resource_type_id
      * @param string $item_id
      *
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      */
-    public function delete(Request $request, string $resource_type_id, string $resource_id, string $item_id)
+    public function delete(
+        Request $request,
+        string $resource_type_id,
+        string $resource_id,
+        string $item_id
+    ): JsonResponse
     {
         return response()->json(null, 204);
     }
@@ -167,14 +177,20 @@ class ItemController extends Controller
      * @param string $resource_id
      * @param string $item_id
      *
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      */
-    public function update(Request $request, string $resource_type_id, string $resource_id, string $item_id)
+    public function update(
+        Request $request,
+        string $resource_type_id,
+        string $resource_id,
+        string $item_id
+    ): JsonResponse
     {
-        $validator = Validator::make(
-            $request->all(),
-            Config::get('routes.resource.item.PATCH')
-        );
+        $resource_type_id = $this->decodeParameter($resource_type_id);
+        $resource_id = $this->decodeParameter($resource_id);
+        $item_id = $this->decodeParameter($item_id);
+
+        $validator = ItemValidator::update($request, $resource_type_id, $resource_id, $item_id);
 
         if ($validator->fails() === true) {
             return $this->returnValidationErrors($validator);
