@@ -4,11 +4,10 @@ namespace App\Http\Controllers;
 
 use App\Models\Resource;
 use App\Transformers\Resource as ResourceTransformer;
+use App\Validators\Resource as ResourceValidator;
 use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Config;
-use Illuminate\Support\Facades\Validator;
 
 /**
  * Manage resources
@@ -128,27 +127,6 @@ class ResourceController extends Controller
     }
 
     /**
-     * Create and return the validation rules for the create request
-     *
-     * @param integer $resource_type_id
-     * 
-     * @return array
-     */
-    private function validationRulesForCreate(int $resource_type_id): array
-    {
-        return array_merge(
-            [
-                'name' => [
-                    'required',
-                    'string',
-                    'unique:resource,name,null,id,resource_type_id,' . $resource_type_id
-                ],
-            ],
-            Config::get('routes.resource.validation.POST.fields')
-        );
-    }
-
-    /**
      * Create a new resource
      *
      * @param Request $request
@@ -160,11 +138,7 @@ class ResourceController extends Controller
     {
         $resource_type_id = $this->decodeParameter($resource_type_id);
 
-        $validator = Validator::make(
-            $request->all(),
-            $this->validationRulesForCreate($resource_type_id),
-            Config::get('routes.resource.validation.POST.messages')
-        );
+        $validator = ResourceValidator::create($request, $resource_type_id);
 
         if ($validator->fails() === true) {
             return $this->returnValidationErrors($validator);
@@ -220,10 +194,10 @@ class ResourceController extends Controller
      */
     public function update(Request $request, string $resource_type_id, string $resource_id): JsonResponse
     {
-        $validator = Validator::make(
-            $request->all(),
-            Config::get('routes.resource.validation.PATCH.fields')
-        );
+        $resource_type_id = $this->decodeParameter($resource_type_id);
+        $resource_id = $this->decodeParameter($resource_id);
+
+        $validator = ResourceValidator::update($request, $resource_type_id, $resource_id);
 
         if ($validator->fails() === true) {
             return $this->returnValidationErrors($validator);

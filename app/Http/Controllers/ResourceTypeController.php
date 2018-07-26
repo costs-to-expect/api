@@ -4,11 +4,10 @@ namespace App\Http\Controllers;
 
 use App\Models\ResourceType;
 use App\Transformers\ResourceType as ResourceTypeTransformer;
+use App\Validators\ResourceType as ResourceTypeValidator;
 use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Config;
-use Illuminate\Support\Facades\Validator;
 
 /**
  * Manage resource types
@@ -121,10 +120,7 @@ class ResourceTypeController extends Controller
      */
     public function create(Request $request): JsonResponse
     {
-        $validator = Validator::make(
-            $request->all(),
-            Config::get('routes.resource_type.validation.POST.fields')
-        );
+        $validator = ResourceTypeValidator::create($request);
 
         if ($validator->fails() === true) {
             return $this->returnValidationErrors($validator);
@@ -176,10 +172,9 @@ class ResourceTypeController extends Controller
      */
     public function update(Request $request, string $resource_type_id): JsonResponse
     {
-        $validator = Validator::make(
-            $request->all(),
-            Config::get('routes.resource_type.validation.PATCH.fields')
-        );
+        $resource_type_id = $this->decodeParameter($resource_type_id);
+
+        $validator = ResourceTypeValidator::update($request, $resource_type_id);
 
         if ($validator->fails() === true) {
             return $this->returnValidationErrors($validator);

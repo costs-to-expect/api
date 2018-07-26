@@ -161,7 +161,7 @@ return [
                 ],
                 'messages' => [
                     'name.unique' => 'The resource name has already been used within this resource type',
-                    'effective_date.date_format' => 'The effective date does not match the format yyyy-mm-dd (e.g. 2001-01-01).'
+                    'effective_date.date_format' => 'The effective date does not match the required format yyyy-mm-dd (e.g. 2001-01-01)'
                 ]
             ],
             'PATCH' => [
