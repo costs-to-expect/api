@@ -16,9 +16,4 @@ class Resource extends Model
     protected $table = 'resource';
 
     protected $guarded = ['id', 'created_at', 'updated_at'];
-
-    public function resourceType()
-    {
-        $this->hasOne(ResourceType::class, 'id', 'resource_type_id');
-    }
 }

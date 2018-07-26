@@ -27,7 +27,7 @@ class Resource extends Transformer
             'name' => $this->resource->name,
             'description' => $this->resource->description,
             'effective_date' => $this->resource->effective_date,
-            'created' => $this->resource->created_at->toDateTimeString(),
+            'created' => $this->resource->created_at->toDateTimeString()
         ];
     }
 }
