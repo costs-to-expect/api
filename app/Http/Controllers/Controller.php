@@ -30,7 +30,7 @@ class Controller extends BaseController
      *
      * @return array Three indexes, verbs, status and headers
      */
-    protected function generateOptionsResponse(array $verbs, $http_status_code = 200): JsonResponse
+    protected function generateOptionsResponse(array $verbs, $http_status_code = 200): array
     {
         $options = [
             'verbs' => [],
