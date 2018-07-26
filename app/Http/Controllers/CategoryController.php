@@ -128,7 +128,7 @@ class CategoryController extends Controller
     {
         $validator = Validator::make(
             $request->all(),
-            Config::get('routes.category.validation.POST')
+            Config::get('routes.category.validation.POST.fields')
         );
 
         if ($validator->fails() === true) {
@@ -183,7 +183,7 @@ class CategoryController extends Controller
     {
         $validator = Validator::make(
             $request->all(),
-            Config::get('routes.category.validation.PATCH')
+            Config::get('routes.category.validation.PATCH.fields')
         );
 
         if ($validator->fails() === true) {

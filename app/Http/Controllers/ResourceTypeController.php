@@ -123,7 +123,7 @@ class ResourceTypeController extends Controller
     {
         $validator = Validator::make(
             $request->all(),
-            Config::get('routes.resource_type.validation.POST')
+            Config::get('routes.resource_type.validation.POST.fields')
         );
 
         if ($validator->fails() === true) {
@@ -178,7 +178,7 @@ class ResourceTypeController extends Controller
     {
         $validator = Validator::make(
             $request->all(),
-            Config::get('routes.resource_type.validation.PATCH')
+            Config::get('routes.resource_type.validation.PATCH.fields')
         );
 
         if ($validator->fails() === true) {

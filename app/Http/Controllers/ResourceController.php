@@ -144,7 +144,7 @@ class ResourceController extends Controller
                     'unique:resource,name,null,id,resource_type_id,' . $resource_type_id
                 ],
             ],
-            Config::get('routes.resource.validation.POST')
+            Config::get('routes.resource.validation.POST.fields')
         );
     }
 
@@ -163,9 +163,7 @@ class ResourceController extends Controller
         $validator = Validator::make(
             $request->all(),
             $this->validationRulesForCreate($resource_type_id),
-            $messages = [
-                'name.unique' => 'The resource name has already been used for this resource type',
-            ]
+            Config::get('routes.resource.validation.POST.messages')
         );
 
         if ($validator->fails() === true) {
@@ -224,7 +222,7 @@ class ResourceController extends Controller
     {
         $validator = Validator::make(
             $request->all(),
-            Config::get('routes.resource.validation.PATCH')
+            Config::get('routes.resource.validation.PATCH.fields')
         );
 
         if ($validator->fails() === true) {

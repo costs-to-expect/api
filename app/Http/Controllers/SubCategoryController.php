@@ -122,7 +122,7 @@ class SubCategoryController extends Controller
     {
         $validator = Validator::make(
             $request->all(),
-            Config::get('routes.sub_category.validation.PATCH')
+            Config::get('routes.sub_category.validation.PATCH.fields')
         );
 
         if ($validator->fails() === true) {
@@ -167,7 +167,7 @@ class SubCategoryController extends Controller
     {
         $validator = Validator::make(
             $request->all(),
-            Config::get('routes.sub_category.validation.PATCH')
+            Config::get('routes.sub_category.validation.PATCH.fields')
         );
 
         if ($validator->fails() === true) {
