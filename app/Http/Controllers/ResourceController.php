@@ -128,6 +128,27 @@ class ResourceController extends Controller
     }
 
     /**
+     * Create and return the validation rules for the create request
+     *
+     * @param integer $resource_type_id
+     * 
+     * @return array
+     */
+    private function validationRulesForCreate(int $resource_type_id): array
+    {
+        return array_merge(
+            [
+                'name' => [
+                    'required',
+                    'string',
+                    'unique:resource,name,null,id,resource_type_id,' . $resource_type_id
+                ],
+            ],
+            Config::get('routes.resource.validation.POST')
+        );
+    }
+
+    /**
      * Create a new resource
      *
      * @param Request $request
@@ -141,21 +162,7 @@ class ResourceController extends Controller
 
         $validator = Validator::make(
             $request->all(),
-            [
-                'name' => [
-                    'required',
-                    'string',
-                    'unique:resource,name,null,id,resource_type_id,' . $resource_type_id
-                ],
-                'description' => [
-                    'required',
-                    'string'
-                ],
-                'effective_date' => [
-                    'required',
-                    'date_format:Y-m-d'
-                ]
-            ],
+            $this->validationRulesForCreate($resource_type_id),
             $messages = [
                 'name.unique' => 'The resource name has already been used for this resource type',
             ]

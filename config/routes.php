@@ -129,9 +129,14 @@ return [
         ],
         'validation' => [
             'POST' => [
-                'name' => 'required|string',
-                'description' => 'required|string',
-                'effective_date' => 'required|date_format:Y-m-d'
+                'description' => [
+                    'required',
+                    'string'
+                ],
+                'effective_date' => [
+                    'required',
+                    'date_format:Y-m-d'
+                ]
             ],
             'PATCH' => [
                 'name' => 'sometimes|required|string',
