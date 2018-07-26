@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\ResourceType;
 use App\Transformers\ResourceType as ResourceTypeTransformer;
 use Exception;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Validator;
@@ -23,9 +24,9 @@ class ResourceTypeController extends Controller
      *
      * @param Request $request
      *
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      */
-    public function index(Request $request)
+    public function index(Request $request): JsonResponse
     {
         $resource_types = ResourceType::all();
 
@@ -58,13 +59,13 @@ class ResourceTypeController extends Controller
      * @param Request $request
      * @param string $resource_type_id
      *
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      */
-    public function show(Request $request, string $resource_type_id)
+    public function show(Request $request, string $resource_type_id): JsonResponse
     {
         $resource_type_id = $this->decodeParameter($resource_type_id);
 
-        $resource_type = ResourceType::find($resource_type_id);
+        $resource_type = (new ResourceType)->find($resource_type_id);
 
         return response()->json(
             [
@@ -82,9 +83,9 @@ class ResourceTypeController extends Controller
      *
      * @param Request $request
      *
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      */
-    public function optionsIndex(Request $request)
+    public function optionsIndex(Request $request): JsonResponse
     {
         return $this->generateOptionsForIndex(
             'descriptions.resource_type.GET_index',
@@ -99,9 +100,9 @@ class ResourceTypeController extends Controller
      *
      * @param Request $request
      *
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      */
-    public function optionsShow(Request $request)
+    public function optionsShow(Request $request): JsonResponse
     {
         return $this->generateOptionsForShow(
             'descriptions.resource_type.GET_show',
@@ -116,9 +117,9 @@ class ResourceTypeController extends Controller
      *
      * @param Request $request
      *
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      */
-    public function create(Request $request)
+    public function create(Request $request): JsonResponse
     {
         $validator = Validator::make(
             $request->all(),
@@ -158,9 +159,9 @@ class ResourceTypeController extends Controller
      * @param Request $request
      * @param string $resource_type_id
      *
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      */
-    public function delete(Request $request, string $resource_type_id)
+    public function delete(Request $request, string $resource_type_id): JsonResponse
     {
         return response()->json(null,204);
     }
@@ -171,9 +172,9 @@ class ResourceTypeController extends Controller
      * @param Request $request
      * @param string $resource_type_id
      *
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      */
-    public function update(Request $request, string $resource_type_id)
+    public function update(Request $request, string $resource_type_id): JsonResponse
     {
         $validator = Validator::make(
             $request->all(),

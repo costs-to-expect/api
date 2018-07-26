@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Validator;
@@ -22,9 +23,9 @@ class ItemController extends Controller
      * @param string $resource_type_id
      * @param string $resource_id
      *
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      */
-    public function index(Request $request, string $resource_type_id, string $resource_id)
+    public function index(Request $request, string $resource_type_id, string $resource_id): JsonResponse
     {
         $headers = [
             'X-Total-Count' => 30
@@ -56,9 +57,9 @@ class ItemController extends Controller
      * @param string $resource_type_id
      * @param string $item_id
      *
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      */
-    public function show(Request $request, string $resource_type_id, string $resource_id, string $item_id)
+    public function show(Request $request, string $resource_type_id, string $resource_id, string $item_id): JsonResponse
     {
         return response()->json(
             [
@@ -82,9 +83,9 @@ class ItemController extends Controller
      * @param string $resource_type_id
      * @param string $resource_id
      *
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      */
-    public function optionsIndex(Request $request, string $resource_type_id, string $resource_id)
+    public function optionsIndex(Request $request, string $resource_type_id, string $resource_id): JsonResponse
     {
         return $this->generateOptionsForIndex(
             'descriptions.item.GET_index',
@@ -102,9 +103,14 @@ class ItemController extends Controller
      * @param string $resource_type_id
      * @param string $item_id
      *
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      */
-    public function optionsShow(Request $request, string $resource_type_id, string $resource_id, string $item_id)
+    public function optionsShow(
+        Request $request,
+        string $resource_type_id,
+        string $resource_id,
+        string $item_id
+    ): JsonResponse
     {
         return $this->generateOptionsForShow(
             'descriptions.item.GET_show',
@@ -121,9 +127,9 @@ class ItemController extends Controller
      * @param string $resource_type_id
      * @param string $resource_id
      *
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      */
-    public function create(Request $request, string $resource_type_id, string $resource_id)
+    public function create(Request $request, string $resource_type_id, string $resource_id): JsonResponse
     {
         $validator = Validator::make(
             $request->all(),
@@ -152,9 +158,14 @@ class ItemController extends Controller
      * @param string $resource_type_id
      * @param string $item_id
      *
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      */
-    public function delete(Request $request, string $resource_type_id, string $resource_id, string $item_id)
+    public function delete(
+        Request $request,
+        string $resource_type_id,
+        string $resource_id,
+        string $item_id
+    ): JsonResponse
     {
         return response()->json(null, 204);
     }
@@ -167,9 +178,14 @@ class ItemController extends Controller
      * @param string $resource_id
      * @param string $item_id
      *
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      */
-    public function update(Request $request, string $resource_type_id, string $resource_id, string $item_id)
+    public function update(
+        Request $request,
+        string $resource_type_id,
+        string $resource_id,
+        string $item_id
+    ): JsonResponse
     {
         $validator = Validator::make(
             $request->all(),
