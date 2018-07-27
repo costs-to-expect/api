@@ -21,4 +21,9 @@ class ResourceType extends Model
     {
         return $this->hasMany(Resource::class, 'resource_type_id', 'id');
     }
+
+    public function numberOfResources()
+    {
+        return $this->hasMany(Resource::class, 'resource_type_id', 'id')->count();
+    }
 }

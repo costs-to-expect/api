@@ -123,7 +123,14 @@ return [
         ],
         'parameters' => array_merge(
             $pagination,
-            []
+            [
+                'include_resources' => [
+                    'field' => 'include_resources',
+                    'title' => 'Include resources',
+                    'description' => 'Include resources assigned to resource type',
+                    'type' => 'boolean'
+                ]
+            ]
         )
     ],
     'resource' => [
