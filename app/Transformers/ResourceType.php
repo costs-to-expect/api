@@ -24,7 +24,7 @@ class ResourceType extends Transformer
      * @param \App\Models\ResourceType $resource_type
      * @param array $parameters
      */
-    public function __construct(\App\Models\ResourceType $resource_type, array $parameters)
+    public function __construct(\App\Models\ResourceType $resource_type, array $parameters = [])
     {
         parent::__construct();
 

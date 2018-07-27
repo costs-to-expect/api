@@ -4,6 +4,7 @@ Full changelog for the costs to expect REST API.
 
 ## Development
 
+* Added initial get parameters code.
 * Added validation helpers.
 * Added model transformers.
 * Added migrations and models.
