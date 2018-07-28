@@ -70,11 +70,10 @@ return [
         'validation' => [
             'POST' => [
                 'fields' => [
-                    'name' => 'required|string',
                     'description' => 'required|string'
                 ],
                 'messages' => [
-
+                    'name.unique' => 'The sub category name has already been used within this category'
                 ]
             ],
             'PATCH' => [

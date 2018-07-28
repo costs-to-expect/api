@@ -27,6 +27,7 @@ class Category extends Transformer
             'name' => $this->category->name,
             'description' => $this->category->description,
             'created' => $this->category->created_at->toDateTimeString(),
+            'sub_categories_count' => $this->category->numberOfSubCategories()
         ];
     }
 }

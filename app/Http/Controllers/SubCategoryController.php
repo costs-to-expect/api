@@ -2,7 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\SubCategory;
+use App\Transformers\SubCategory as SubCategoryTransformer;
 use App\Validators\SubCategory as SubCategoryValidator;
+use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
@@ -25,8 +28,14 @@ class SubCategoryController extends Controller
      */
     public function index(Request $request, string $category_id): JsonResponse
     {
+        $category_id = $this->decodeParameter($category_id);
+
+        $sub_categories = (new SubCategory())
+            ->where('category_id', '=', $category_id)
+            ->get();
+
         $headers = [
-            'X-Total-Count' => 30
+            'X-Total-Count' => count($sub_categories)
         ];
 
         $link = $this->generateLinkHeader(10, 0, 20);
@@ -36,11 +45,12 @@ class SubCategoryController extends Controller
 
         return response()->json(
             [
-                'results' => [
-                    ['sub_category_id' => $this->hash->encode(1)],
-                    ['sub_category_id' => $this->hash->encode(2)],
-                    ['sub_category_id' => $this->hash->encode(3)]
-                ]
+                'results' => $sub_categories->map(
+                    function ($sub_category)
+                    {
+                        return (new SubCategoryTransformer($sub_category))->toArray();
+                    }
+                )
             ],
             200,
             $headers
@@ -58,12 +68,20 @@ class SubCategoryController extends Controller
      */
     public function show(Request $request, string $category_id, string $sub_category_id): JsonResponse
     {
+        $category_id = $this->decodeParameter($category_id);
+        $sub_category_id = $this->decodeParameter($sub_category_id);
+
+        $sub_category = (new SubCategory())
+            ->where('category_id', '=', $category_id)
+            ->find($sub_category_id);
+
+        if ($sub_category === null) {
+            return $this->returnResourceNotFound();
+        }
+
         return response()->json(
             [
-                'result' => [
-                    'category_id' => $category_id,
-                    'sub_category_id' => $sub_category_id
-                ]
+                'result' => (new SubCategoryTransformer($sub_category))->toArray()
             ],
             200,
             [
@@ -127,12 +145,25 @@ class SubCategoryController extends Controller
             return $this->returnValidationErrors($validator);
         }
 
+        try {
+            $sub_category = new SubCategory([
+                'category_id' => $category_id,
+                'name' => $request->input('name'),
+                'description' => $request->input('description')
+            ]);
+            $sub_category->save();
+        } catch (Exception $e) {
+            return response()->json(
+                [
+                    'error' => 'Error creating new record'
+                ],
+                500
+            );
+        }
+
         return response()->json(
             [
-                'result' => [
-                    'category_id' => $category_id,
-                    'sub_category_id' => $this->hash->encode($new_sub_category_id = 4)
-                ]
+                'result' => (new SubCategoryTransformer($sub_category))->toArray()
             ],
             201
         );

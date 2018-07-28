@@ -47,7 +47,7 @@ class ResourceType extends Transformer
             'resources_count' => $this->resource_type->numberOfResources()
         ];
 
-        if ($this->parameters['include_resources'] === true) {
+        if (isset($this->parameters['include_resources']) && $this->parameters['include_resources'] === true) {
             $resourcesCollection = $this->resource_type->resources;
 
             $resourcesCollection->map(

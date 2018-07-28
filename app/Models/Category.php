@@ -17,8 +17,13 @@ class Category extends Model
 
     protected $guarded = ['id', 'created_at', 'updated_at'];
 
-    public function subCategory()
+    public function subCategories()
     {
-        return $this->belongsTo(SubCategory::class, 'category_id', 'id');
+        return $this->hasMany(SubCategory::class, 'category_id', 'id');
+    }
+
+    public function numberOfSubCategories()
+    {
+        return $this->hasMany(SubCategory::class, 'category_id', 'id')->count();
     }
 }
