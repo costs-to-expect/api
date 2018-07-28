@@ -43,8 +43,8 @@ class ResourceType extends Transformer
             'id' => $this->hash->encode($this->resource_type->id),
             'name' => $this->resource_type->name,
             'description' => $this->resource_type->description,
-            'number_of_resources' => $this->resource_type->numberOfResources(),
-            'created' => $this->resource_type->created_at->toDateTimeString()
+            'created' => $this->resource_type->created_at->toDateTimeString(),
+            'resources_count' => $this->resource_type->numberOfResources()
         ];
 
         if ($this->parameters['include_resources'] === true) {
