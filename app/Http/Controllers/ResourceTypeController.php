@@ -18,6 +18,8 @@ use Illuminate\Http\Request;
  */
 class ResourceTypeController extends Controller
 {
+    private $parameters_index = [];
+
     /**
      * Return all the resource types
      *
@@ -28,6 +30,8 @@ class ResourceTypeController extends Controller
     public function index(Request $request): JsonResponse
     {
         $resource_types = ResourceType::all();
+
+        $this->parameters_index['include_resources'] = boolval($request->query('include_resources', false));
 
         $headers = [
             'X-Total-Count' => count($resource_types)
@@ -43,7 +47,7 @@ class ResourceTypeController extends Controller
                 'results' => $resource_types->map(
                     function ($resource_type)
                     {
-                        return (new ResourceTypeTransformer($resource_type))->toArray();
+                        return (new ResourceTypeTransformer($resource_type, $this->parameters_index))->toArray();
                     }
                 )
             ],

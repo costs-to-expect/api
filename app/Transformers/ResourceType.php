@@ -2,6 +2,8 @@
 
 namespace App\Transformers;
 
+use App\Transformers\Resource as ResourceTransformer;
+
 /**
  * Transform the data returns from Eloquent into the format we want for the API
  *
@@ -11,22 +13,52 @@ namespace App\Transformers;
  */
 class ResourceType extends Transformer
 {
-    protected $resource_type;
+    private $resource_type;
+    private $parameters = [];
 
-    public function __construct(\App\Models\ResourceType $resource_type)
+    private $resources = [];
+
+    /**
+     * ResourceType constructor.
+     *
+     * @param \App\Models\ResourceType $resource_type
+     * @param array $parameters
+     */
+    public function __construct(\App\Models\ResourceType $resource_type, array $parameters = [])
     {
         parent::__construct();
 
         $this->resource_type = $resource_type;
+        $this->parameters = $parameters;
     }
 
+    /**
+     * Format the data
+     *
+     * @return array
+     */
     public function toArray(): array
     {
-        return [
+        $result = [
             'id' => $this->hash->encode($this->resource_type->id),
             'name' => $this->resource_type->name,
             'description' => $this->resource_type->description,
             'created' => $this->resource_type->created_at->toDateTimeString(),
+            'resources_count' => $this->resource_type->numberOfResources()
         ];
+
+        if (isset($this->parameters['include_resources']) && $this->parameters['include_resources'] === true) {
+            $resourcesCollection = $this->resource_type->resources;
+
+            $resourcesCollection->map(
+                function ($resource_item) {
+                    $this->resources[] = (new ResourceTransformer($resource_item))->toArray();
+                }
+            );
+
+            $result['resources'] = $this->resources;
+        }
+
+        return $result;
     }
 }

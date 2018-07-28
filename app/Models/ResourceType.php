@@ -17,8 +17,13 @@ class ResourceType extends Model
 
     protected $guarded = ['id', 'created_at', 'updated_at'];
 
-    public function resource()
+    public function resources()
     {
-        $this->belongsTo(Resource::class, 'resource_type_id', 'id');
+        return $this->hasMany(Resource::class, 'resource_type_id', 'id');
+    }
+
+    public function numberOfResources()
+    {
+        return $this->hasMany(Resource::class, 'resource_type_id', 'id')->count();
     }
 }

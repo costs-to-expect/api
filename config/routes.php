@@ -70,11 +70,10 @@ return [
         'validation' => [
             'POST' => [
                 'fields' => [
-                    'name' => 'required|string',
                     'description' => 'required|string'
                 ],
                 'messages' => [
-
+                    'name.unique' => 'The sub category name has already been used within this category'
                 ]
             ],
             'PATCH' => [
@@ -123,7 +122,14 @@ return [
         ],
         'parameters' => array_merge(
             $pagination,
-            []
+            [
+                'include_resources' => [
+                    'field' => 'include_resources',
+                    'title' => 'Include resources',
+                    'description' => 'Include resources assigned to resource type',
+                    'type' => 'boolean'
+                ]
+            ]
         )
     ],
     'resource' => [
