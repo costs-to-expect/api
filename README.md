@@ -39,7 +39,8 @@ POSTing to `http://api.local/api-v1/auth/login` - you will need a bearer for all
 
 ## Routes
 
-Current API Routes, for fields and parameters, check the OPTIONS request. 
+Current API Routes, for fields and parameters, check the OPTIONS request for each 
+endpoint.
 
 | HTTP Verb | Route |
 | :--- | :--- |
