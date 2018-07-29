@@ -32,7 +32,8 @@ install Passport.
 * `composer install`
 * `docker-compose exec app php artisan migrate`
 * `docker-compose exec app php artisan passport:install`
-* Run a GET request on `http://api.local/api-v1/resource_types`, you should see a nice OPTIONS request
+* Run a OPTIONS request on `http://api.local/api-v1/resource_types`, you should see a nice OPTIONS request, 
+alternatively a GET request to `http://api.local/api-v1` will show all the routes.
 * You can add a development user by POSTing to `http://api.local/api-v1/auth/register` and then get a bearer by 
 POSTing to `http://api.local/api-v1/auth/login` - you will need a bearer for all the routes that require authentication.
 
