@@ -216,16 +216,18 @@ return [
                 'fields' => [
                     'description' => 'required|string',
                     'effective_date' => 'required|date_format:Y-m-d',
-                    'total' => 'required|regex:/^\d+\.\d{2}$/',
+                    'total' => 'required|string|regex:/^\d+\.\d{2}$/',
                     'percentage' => 'required|integer|between:1,100'
                 ],
-                'messages' => []
+                'messages' => [
+                    'total.regex' => "Total cost in the format 0.00"
+                ]
             ],
             'PATCH' => [
                 'fields' => [
                     'description' => 'sometimes|required|string',
                     'effective_date' => 'sometimes|required|date_format:Y-m-d',
-                    'total' => 'sometimes|required|regex:/^\d+\.\d{2}$/',
+                    'total' => 'sometimes|required|string|regex:/^\d+\.\d{2}$/',
                     'percentage' => 'sometimes|required|integer|between:1,100'
                 ],
                 'messages' => []
