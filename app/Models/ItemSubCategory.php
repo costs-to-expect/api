@@ -16,4 +16,9 @@ class ItemSubCategory extends Model
     protected $table = 'item_sub_category';
 
     protected $guarded = ['id', 'created_at', 'updated_at'];
+
+    public function sub_category()
+    {
+        return $this->hasOne(SubCategory::class, 'id', 'sub_category_id');
+    }
 }

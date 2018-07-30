@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\ItemCategory;
-use App\Transformers\ItemCategory as ItemCategoryTransformer;
-use App\Validators\ItemCategory as ItemCategoryValidator;
+use App\Models\ItemSubCategory;
+use App\Transformers\ItemSubCategory as ItemSubCategoryTransformer;
+use App\Validators\ItemSubCategory as ItemSubCategoryValidator;
 use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -16,29 +16,37 @@ use Illuminate\Http\Request;
  * @copyright Dean Blackborough 2018
  * @license https://github.com/costs-to-expect/api/blob/master/LICENSE
  */
-class ItemCategoryController extends Controller
+class ItemSubCategoryController extends Controller
 {
     /**
-     * Return the category assigned to an item
+     * Return the sub category assigned to an item
      *
      * @param Request $request
      * @param string $resource_type_id
      * @param string $resource_id
      * @param string $item_id
+     * @param string $item_category_id
      *
      * @return JsonResponse
      */
-    public function index(Request $request, string $resource_type_id, string $resource_id, string $item_id): JsonResponse
+    public function index(
+        Request $request,
+        string $resource_type_id,
+        string $resource_id,
+        string $item_id,
+        string $item_category_id
+    ): JsonResponse
     {
         $resource_type_id = $this->decodeParameter($resource_type_id);
         $resource_id = $this->decodeParameter($resource_id);
         $item_id = $this->decodeParameter($item_id);
+        $item_category_id = $this->decodeParameter($item_category_id);
 
-        $item_category = (new ItemCategory())
+        $item_sub_category = (new ItemSubCategory())
             ->where('item_id', '=', $item_id)
             ->first();
 
-        if ($item_category === null) {
+        if ($item_sub_category === null) {
             return $this->returnResourceNotFound();
         }
 
@@ -48,7 +56,7 @@ class ItemCategoryController extends Controller
 
         return response()->json(
             [
-                'result' => (new ItemCategoryTransformer($item_category))->toArray()
+                'result' => (new ItemSubCategoryTransformer($item_sub_category))->toArray()
             ],
             200,
             $headers
@@ -63,6 +71,7 @@ class ItemCategoryController extends Controller
      * @param string $resource_type_id
      * @param string $item_id
      * @param string $item_category_id
+     * @param string $item_sub_category_id
      *
      * @return JsonResponse
      */
@@ -71,19 +80,21 @@ class ItemCategoryController extends Controller
         string $resource_type_id,
         string $resource_id,
         string $item_id,
-        string $item_category_id
+        string $item_category_id,
+        string $item_sub_category_id
     ): JsonResponse
     {
         $resource_type_id = $this->decodeParameter($resource_type_id);
         $resource_id = $this->decodeParameter($resource_id);
-        $item_id = $this->decodeParameter($item_id);
         $item_category_id = $this->decodeParameter($item_category_id);
+        $item_id = $this->decodeParameter($item_id);
+        $item_sub_category_id = $this->decodeParameter($item_sub_category_id);
 
-        $item_category = (new ItemCategory())
+        $item_sub_category = (new ItemSubCategory())
             ->where('item_id', '=', $item_id)
-            ->find($item_category_id);
+            ->find($item_sub_category_id);
 
-        if ($item_category === null) {
+        if ($item_sub_category === null) {
             return $this->returnResourceNotFound();
         }
 
@@ -93,7 +104,7 @@ class ItemCategoryController extends Controller
 
         return response()->json(
             [
-                'result' => (new ItemCategoryTransformer($item_category))->toArray()
+                'result' => (new ItemSubCategoryTransformer($item_sub_category))->toArray()
             ],
             200,
             $headers
@@ -112,10 +123,10 @@ class ItemCategoryController extends Controller
     public function optionsIndex(Request $request, string $resource_type_id, string $resource_id): JsonResponse
     {
         return $this->generateOptionsForIndex(
-            'descriptions.item_category.GET_index',
-            'descriptions.item_category.POST',
-            'routes.item_category.fields',
-            'routes.item_category.parameters'
+            'descriptions.item_sub_category.GET_index',
+            'descriptions.item_sub_category.POST',
+            'routes.item_sub_category.fields',
+            'routes.item_sub_category.parameters'
         );
     }
 
@@ -137,20 +148,21 @@ class ItemCategoryController extends Controller
     ): JsonResponse
     {
         return $this->generateOptionsForShow(
-            'descriptions.item_category.GET_show',
-            'descriptions.item_category.DELETE',
-            'descriptions.item_category.PATCH',
-            'routes.item_category.fields'
+            'descriptions.item_sub_category.GET_show',
+            'descriptions.item_sub_category.DELETE',
+            'descriptions.item_sub_category.PATCH',
+            'routes.item_sub_category.fields'
         );
     }
 
     /**
-     * Assign the category
+     * Assign the sub category
      *
      * @param Request $request
      * @param string $resource_type_id
      * @param string $resource_id
      * @param string $item_id
+     * @param string $item_category_id
      *
      * @return JsonResponse
      */
@@ -158,33 +170,35 @@ class ItemCategoryController extends Controller
         Request $request,
         string $resource_type_id,
         string $resource_id,
-        string $item_id
+        string $item_id,
+        string $item_category_id
     ): JsonResponse
     {
         $resource_type_id = $this->decodeParameter($resource_type_id);
         $resource_id = $this->decodeParameter($resource_id);
         $item_id = $this->decodeParameter($item_id);
+        $item_category_id = $this->decodeParameter($item_category_id);
 
-        $item_category = (new ItemCategory())
+        $item_sub_category = (new ItemSubCategory())
             ->where('item_id', '=', $item_id)
             ->first();
 
-        if ($item_category !== null) {
+        if ($item_sub_category !== null) {
             return $this->returnResourceConflict();
         }
 
-        $validator = ItemCategoryValidator::create($request);
+        $validator = ItemSubCategoryValidator::create($request);
 
         if ($validator->fails() === true) {
             return $this->returnValidationErrors($validator);
         }
 
         try {
-            $item_category = new ItemCategory([
+            $item_sub_category = new ItemSubCategory([
                 'item_id' => $item_id,
-                'category_id' => $this->decodeParameter($request->input('category_id'))
+                'sub_category_id' => $this->decodeParameter($request->input('sub_category_id'))
             ]);
-            $item_category->save();
+            $item_sub_category->save();
         } catch (Exception $e) {
             return response()->json(
                 [
@@ -196,7 +210,7 @@ class ItemCategoryController extends Controller
 
         return response()->json(
             [
-                'result' => (new ItemCategoryTransformer($item_category))->toArray()
+                'result' => (new ItemSubCategoryTransformer($item_sub_category))->toArray()
             ],
             201
         );
