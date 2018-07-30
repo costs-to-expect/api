@@ -24,6 +24,10 @@ class ItemCategory extends Transformer
     {
         return [
             'id' => $this->hash->encode($this->item_category->id),
+            'category' => [
+                'name' => $this->item_category->category->name,
+                'description' => $this->item_category->category->description
+            ],
             'created' => $this->item_category->created_at->toDateTimeString()
         ];
     }

@@ -116,28 +116,28 @@ Route::group(
             'ItemCategoryController@optionsIndex'
         );
         Route::get(
-            'resource_types/{resource_type_id}/resources/{resource_id}/items/{item_id}/category/{category_id}',
+            'resource_types/{resource_type_id}/resources/{resource_id}/items/{item_id}/category/{item_category_id}',
             'ItemCategoryController@show'
         );
         Route::options(
-            'resource_types/{resource_type_id}/resources/{resource_id}/items/{item_id}/category/{category_id}',
+            'resource_types/{resource_type_id}/resources/{resource_id}/items/{item_id}/category/{item_category_id}',
             'ItemCategoryController@optionsShow'
         );
 
         Route::get(
-            'resource_types/{resource_type_id}/resources/{resource_id}/items/{item_id}/category/{category_id}/sub_category',
+            'resource_types/{resource_type_id}/resources/{resource_id}/items/{item_id}/category/{item_category_id}/sub_category',
             'ItemSubCategoryController@optionsShow'
         );
         Route::options(
-            'resource_types/{resource_type_id}/resources/{resource_id}/items/{item_id}/category/{category_id}/sub_category',
+            'resource_types/{resource_type_id}/resources/{resource_id}/items/{item_id}/category/{item_category_id}/sub_category',
             'ItemSubCategoryController@optionsShow'
         );
         Route::get(
-            'resource_types/{resource_type_id}/resources/{resource_id}/items/{item_id}/category/{category_id}/sub_category/{sub_category_id}',
+            'resource_types/{resource_type_id}/resources/{resource_id}/items/{item_id}/category/{item_category_id}/sub_category/{item_sub_category_id}',
             'ItemSubCategoryController@show'
         );
         Route::options(
-            'resource_types/{resource_type_id}/resources/{resource_id}/items/{item_id}/category/{category_id}/sub_category/{sub_category_id}',
+            'resource_types/{resource_type_id}/resources/{resource_id}/items/{item_id}/category/{item_category_id}/sub_category/{item_sub_category_id}',
             'ItemSubCategoryController@show'
         );
     }
@@ -167,6 +167,10 @@ Route::group(
         Route::post(
             'resource_types/{resource_type_id}/resources/{resource_id}/items',
             'ItemController@create'
+        );
+        Route::post(
+            'resource_types/{resource_type_id}/resources/{resource_id}/items/{item_id}/category',
+            'ItemCategoryController@create'
         );
     }
 );

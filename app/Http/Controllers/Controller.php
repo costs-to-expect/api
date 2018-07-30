@@ -99,6 +99,21 @@ class Controller extends BaseController
     }
 
     /**
+     * Return 409, resource value already set
+     *
+     * @return JsonResponse
+     */
+    protected function returnResourceConflict(): JsonResponse
+    {
+        return response()->json(
+            [
+                'error' => 'Value already set, conflict'
+            ],
+            409
+        );
+    }
+
+    /**
      * Generate the OPTIONS request for the index routes
      *
      * @param string $get_description_key

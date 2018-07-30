@@ -38,5 +38,19 @@ return [
         'POST' => 'Create a new item',
         'PATCH' => 'Update the requested item',
         'DELETE' => 'Delete the requested item'
+    ],
+    'item_category' => [
+        'GET_index' => 'Return the category the item is assigned to',
+        'GET_show' => 'Return the category the item is assigned to',
+        'POST' => 'Assign the category',
+        'PATCH' => 'Update the category',
+        'DELETE' => 'Remove the assigned category'
+    ],
+    'item_sub_category' => [
+        'GET_index' => 'Return the sub category the item is assigned to',
+        'GET_show' => 'Return the sub category the item is assigned to',
+        'POST' => 'Assign the sub category',
+        'PATCH' => 'Update the sub category',
+        'DELETE' => 'Remove the assigned sub category'
     ]
 ];
