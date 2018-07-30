@@ -17,6 +17,27 @@ use Illuminate\Support\Facades\Validator as ValidatorFacade;
 class ResourceType
 {
     /**
+     * Create the validation rules for the update (PATCH) request
+     *
+     * @param integer $resource_type_id
+     *
+     * @return array
+     */
+    static private function updateRules(int $resource_type_id): array
+    {
+        return array_merge(
+            [
+                'name' => [
+                    'required',
+                    'string',
+                    'unique:resource_type,name,' . $resource_type_id . ',id'
+                ],
+            ],
+            Config::get('routes.resource_type.validation.PATCH.fields')
+        );
+    }
+
+    /**
      * Return the validator object for the create request
      *
      * @param Request $request
@@ -44,7 +65,7 @@ class ResourceType
     {
         return ValidatorFacade::make(
             $request->all(),
-            Config::get('routes.resource_type.validation.PATCH.fields'),
+            self::updateRules($resource_type_id),
             Config::get('routes.resource_type.validation.POST.messages')
         );
     }

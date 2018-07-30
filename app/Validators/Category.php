@@ -20,7 +20,6 @@ class Category
      * Create the validation rules for the update (PATCH) request
      *
      * @param integer $category_id
-     * @param integer $sub_category_id
      *
      * @return array
      */

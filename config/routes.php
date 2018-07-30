@@ -115,14 +115,18 @@ return [
                     'name' => 'required|string|unique:resource_type,name',
                     'description' => 'required|string'
                 ],
-                'messages' => []
+                'messages' => [
+                    'name.unique' => 'The resource type has already been used'
+                ]
             ],
             'PATCH' => [
                 'fields' => [
                     'name' => 'sometimes|required|string',
                     'description' => 'sometimes|required|string'
                 ],
-                'messages' => []
+                'messages' => [
+                    'name.unique' => 'The resource type has already been used'
+                ]
             ]
         ],
         'parameters' => array_merge(
