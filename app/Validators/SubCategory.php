@@ -17,7 +17,7 @@ use Illuminate\Support\Facades\Validator as ValidatorFacade;
 class SubCategory
 {
     /**
-     * Create the validation rules for the create request
+     * Create the validation rules for the create (POST) request
      *
      * @param integer $category_id
      *
@@ -34,6 +34,28 @@ class SubCategory
                 ],
             ],
             Config::get('routes.sub_category.validation.POST.fields')
+        );
+    }
+
+    /**
+     * Create the validation rules for the update (PATCH) request
+     *
+     * @param integer $category_id
+     * @param integer $sub_category_id
+     *
+     * @return array
+     */
+    static private function updateRules(int $category_id, int $sub_category_id): array
+    {
+        return array_merge(
+            [
+                'name' => [
+                    'required',
+                    'string',
+                    'unique:sub_category,name,' . $sub_category_id . ',id,category_id,' . $category_id
+                ],
+            ],
+            Config::get('routes.sub_category.validation.PATCH.fields')
         );
     }
     
@@ -67,7 +89,7 @@ class SubCategory
     {
         return ValidatorFacade::make(
             $request->all(),
-            Config::get('routes.sub_category.validation.PATCH.fields'),
+            self::updateRules($category_id, $sub_category_id),
             Config::get('routes.sub_category.validation.POST.messages')
         );
     }
