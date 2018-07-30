@@ -185,7 +185,9 @@ return [
                     'description' => 'sometimes|required|string',
                     'effective_date' => 'sometimes|required|date_format:Y-m-d'
                 ],
-                'messages' => []
+                'messages' => [
+                    'name.unique' => 'The resource name has already been used within this resource type'
+                ]
             ]
         ],
         'parameters' => array_merge(

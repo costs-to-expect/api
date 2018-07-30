@@ -20,12 +20,10 @@ class Item
      * Return the validator object for the create request
      *
      * @param Request $request
-     * @param integer $resource_type_id
-     * @param integer $resource_id
      *
      * @return Validator
      */
-    static public function create(Request $request, int $resource_type_id, int $resource_id): Validator
+    static public function create(Request $request): Validator
     {
         return ValidatorFacade::make(
             $request->all(),
@@ -38,13 +36,10 @@ class Item
      * Return the validator object for the update request
      *
      * @param Request $request
-     * @param integer $resource_type_id
-     * @param integer $resource_id
-     * @param integer $item_id
      *
      * @return Validator
      */
-    static public function update(Request $request, int $resource_type_id, int $resource_id, int $item_id): Validator
+    static public function update(Request $request): Validator
     {
         return ValidatorFacade::make(
             $request->all(),
