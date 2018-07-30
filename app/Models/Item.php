@@ -15,5 +15,10 @@ class Item extends Model
 {
     protected $table = 'item';
 
-    protected $guarded = ['id', 'created_at', 'updated_at'];
+    protected $guarded = ['id', 'actualised_total', 'created_at', 'updated_at'];
+
+    public function setActualisedTotal($total, $percentage)
+    {
+        $this->attributes['actualised_total'] = ($percentage === 100) ? $total : $total * ($percentage/100);
+    }
 }

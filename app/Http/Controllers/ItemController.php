@@ -162,8 +162,11 @@ class ItemController extends Controller
             $item = new Item([
                 'resource_id' => $resource_id,
                 'description' => $request->input('description'),
-                'effective_date' => $request->input('effective_date')
+                'effective_date' => $request->input('effective_date'),
+                'total' => $request->input('total'),
+                'percentage' => $request->input('percentage'),
             ]);
+            $item->setActualisedTotal($item->total, $item->percentage);
             $item->save();
         } catch (Exception $e) {
             return response()->json(
