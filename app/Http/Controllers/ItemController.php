@@ -2,7 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Item;
+use App\Transformers\Item as ItemTransformer;
 use App\Validators\Item as ItemValidator;
+use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
@@ -26,8 +29,15 @@ class ItemController extends Controller
      */
     public function index(Request $request, string $resource_type_id, string $resource_id): JsonResponse
     {
+        $resource_type_id = $this->decodeParameter($resource_type_id);
+        $resource_id = $this->decodeParameter($resource_id);
+
+        $items = (new Item())
+            ->where('resource_id', '=', $resource_id)
+            ->get();
+
         $headers = [
-            'X-Total-Count' => 30
+            'X-Total-Count' => count($items)
         ];
 
         $link = $this->generateLinkHeader(10, 0, 20);
@@ -37,11 +47,12 @@ class ItemController extends Controller
 
         return response()->json(
             [
-                'results' => [
-                    ['item_id' => $this->hash->encode(1)],
-                    ['item_id' => $this->hash->encode(2)],
-                    ['item_id' => $this->hash->encode(3)]
-                ]
+                'results' => $items->map(
+                    function ($item)
+                    {
+                        return (new ItemTransformer($item))->toArray();
+                    }
+                )
             ],
             200,
             $headers
@@ -60,13 +71,21 @@ class ItemController extends Controller
      */
     public function show(Request $request, string $resource_type_id, string $resource_id, string $item_id): JsonResponse
     {
+        $resource_type_id = $this->decodeParameter($resource_type_id);
+        $resource_id = $this->decodeParameter($resource_id);
+        $item_id = $this->decodeParameter($item_id);
+
+        $item = (new Item())
+            ->where('resource_id', '=', $resource_id)
+            ->find($item_id);
+
+        if ($item === null) {
+            return $this->returnResourceNotFound();
+        }
+
         return response()->json(
             [
-                'result' => [
-                    'resource_type_id' => $resource_type_id,
-                    'resource_id' => $resource_id,
-                    'item_id' => $item_id
-                ]
+                'result' => (new ItemTransformer($item))->toArray()
             ],
             200,
             [
@@ -139,11 +158,25 @@ class ItemController extends Controller
             return $this->returnValidationErrors($validator);
         }
 
+        try {
+            $item = new Item([
+                'resource_id' => $resource_id,
+                'description' => $request->input('description'),
+                'effective_date' => $request->input('effective_date')
+            ]);
+            $item->save();
+        } catch (Exception $e) {
+            return response()->json(
+                [
+                    'error' => 'Error creating new record'
+                ],
+                500
+            );
+        }
+
         return response()->json(
             [
-                'result' => [
-                    'item_id' => $this->hash->encode($new_item_id = 4)
-                ]
+                'result' => (new ItemTransformer($item))->toArray()
             ],
             201
         );
