@@ -35,7 +35,7 @@ class ResourceController extends Controller
             ->get();
 
         $headers = [
-            'X-Total-Count' => 1
+            'X-Total-Count' => count($resources)
         ];
 
         $link = $this->generateLinkHeader(10, 0, 20);
