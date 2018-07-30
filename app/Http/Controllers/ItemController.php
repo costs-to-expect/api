@@ -152,7 +152,7 @@ class ItemController extends Controller
         $resource_type_id = $this->decodeParameter($resource_type_id);
         $resource_id = $this->decodeParameter($resource_id);
 
-        $validator = ItemValidator::create($request, $resource_type_id, $resource_id);
+        $validator = ItemValidator::create($request);
 
         if ($validator->fails() === true) {
             return $this->returnValidationErrors($validator);
@@ -226,7 +226,7 @@ class ItemController extends Controller
         $resource_id = $this->decodeParameter($resource_id);
         $item_id = $this->decodeParameter($item_id);
 
-        $validator = ItemValidator::update($request, $resource_type_id, $resource_id, $item_id);
+        $validator = ItemValidator::update($request);
 
         if ($validator->fails() === true) {
             return $this->returnValidationErrors($validator);
