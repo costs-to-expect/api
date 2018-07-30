@@ -37,14 +37,17 @@ return [
                     'name' => 'required|string|unique:category,name',
                     'description' => 'required|string'
                 ],
-                'messages' => []
+                'messages' => [
+                    'name.unique' => 'The category name has already been used'
+                ]
             ],
             'PATCH' => [
                 'fields' => [
-                    'name' => 'sometimes|required|string',
                     'description' => 'sometimes|required|string'
                 ],
-                'messages' => []
+                'messages' => [
+                    'name.unique' => 'The category name has already been used'
+                ]
             ]
         ],
         'parameters' => array_merge(
@@ -81,7 +84,9 @@ return [
                     'name' => 'sometimes|required|string',
                     'description' => 'sometimes|required|string'
                 ],
-                'messages' => []
+                'messages' => [
+                    'name.unique' => 'The sub category name has already been used within this category'
+                ]
             ]
         ],
         'parameters' => array_merge(
