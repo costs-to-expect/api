@@ -235,5 +235,61 @@ return [
             $pagination,
             []
         )
+    ],
+    'item_category' => [
+        'fields' => [
+            'category_id' => [
+                'field' => 'category_id',
+                'title' => 'Category',
+                'description' => 'Which category should the item be assigned to',
+                'type' => 'string'
+            ]
+        ],
+        'validation' => [
+            'POST' => [
+                'fields' => [
+                    'category_id' => 'required|string'
+                ],
+                'messages' => []
+            ],
+            'PATCH' => [
+                'fields' => [
+                    'category_id' => 'required|string'
+                ],
+                'messages' => []
+            ]
+        ],
+        'parameters' => array_merge(
+            $pagination,
+            []
+        )
+    ],
+    'item_sub_category' => [
+        'fields' => [
+            'sub_category_id' => [
+                'field' => 'sub_category_id',
+                'title' => 'Sub category',
+                'description' => 'Which sub category should the item be assigned to',
+                'type' => 'string'
+            ]
+        ],
+        'validation' => [
+            'POST' => [
+                'fields' => [
+                    'sub_category_id' => 'required|string'
+                ],
+                'messages' => []
+            ],
+            'PATCH' => [
+                'fields' => [
+                    'sub_category_id' => 'required|string'
+                ],
+                'messages' => []
+            ]
+        ],
+        'parameters' => array_merge(
+            $pagination,
+            []
+        )
     ]
 ];
