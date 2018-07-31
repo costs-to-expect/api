@@ -261,9 +261,12 @@ return [
         'validation' => [
             'POST' => [
                 'fields' => [
-                    'category_id' => 'required|string'
+                    'category_id' => 'required|exists:category,id'
                 ],
-                'messages' => []
+                'messages' => [
+                    'category_id.required' => 'Category field required or could not be decoded',
+                    'category_id.exists' => "Given category id does not exist"
+                ]
             ],
             'PATCH' => [
                 'fields' => [

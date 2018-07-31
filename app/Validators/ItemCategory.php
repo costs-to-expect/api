@@ -2,6 +2,7 @@
 
 namespace App\Validators;
 
+use App\Validators\Validator as BaseValidator;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Config;
@@ -14,7 +15,7 @@ use Illuminate\Support\Facades\Validator as ValidatorFacade;
  * @copyright Dean Blackborough 2018
  * @license https://github.com/costs-to-expect/api/blob/master/LICENSE
  */
-class ItemCategory
+class ItemCategory extends BaseValidator
 {
     /**
      * Return the validator object for the create request
@@ -23,10 +24,16 @@ class ItemCategory
      *
      * @return Validator
      */
-    static public function create(Request $request): Validator
+    public function create(Request $request): Validator
     {
+        $decode = $this->hash->decode($request->input('category_id'));
+        $category_id = null;
+        if (count($decode) === 1) {
+            $category_id = $decode[0];
+        }
+
         return ValidatorFacade::make(
-            $request->all(),
+            ['category_id' => $category_id],
             Config::get('routes.item_category.validation.POST.fields'),
             Config::get('routes.item_category.validation.POST.messages')
         );
@@ -39,7 +46,7 @@ class ItemCategory
      *
      * @return Validator
      */
-    static public function update(Request $request): Validator
+    public function update(Request $request): Validator
     {
         return ValidatorFacade::make(
             $request->all(),

@@ -2,6 +2,7 @@
 
 namespace App\Validators;
 
+use App\Validators\Validator as BaseValidator;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Config;
@@ -14,7 +15,7 @@ use Illuminate\Support\Facades\Validator as ValidatorFacade;
  * @copyright Dean Blackborough 2018
  * @license https://github.com/costs-to-expect/api/blob/master/LICENSE
  */
-class Item
+class Item extends BaseValidator
 {
     /**
      * Return the validator object for the create request
@@ -23,7 +24,7 @@ class Item
      *
      * @return Validator
      */
-    static public function create(Request $request): Validator
+    public function create(Request $request): Validator
     {
         return ValidatorFacade::make(
             $request->all(),
@@ -39,7 +40,7 @@ class Item
      *
      * @return Validator
      */
-    static public function update(Request $request): Validator
+    public function update(Request $request): Validator
     {
         return ValidatorFacade::make(
             $request->all(),

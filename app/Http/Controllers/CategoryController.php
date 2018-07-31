@@ -125,7 +125,7 @@ class CategoryController extends Controller
      */
     public function create(Request $request): JsonResponse
     {
-        $validator = CategoryValidator::create($request);
+        $validator = (new CategoryValidator)->create($request);
 
         if ($validator->fails() === true) {
             return $this->returnValidationErrors($validator);
@@ -179,7 +179,7 @@ class CategoryController extends Controller
     {
         $category_id = $this->decodeParameter($category_id);
 
-        $validator = CategoryValidator::update($request, $category_id);
+        $validator = (new CategoryValidator)->update($request, $category_id);
 
         if ($validator->fails() === true) {
             return $this->returnValidationErrors($validator);
