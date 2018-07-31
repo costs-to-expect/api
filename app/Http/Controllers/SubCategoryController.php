@@ -139,7 +139,7 @@ class SubCategoryController extends Controller
     {
         $category_id = $this->decodeParameter($category_id);
 
-        $validator = SubCategoryValidator::create($request, $category_id);
+        $validator = (new SubCategoryValidator)->create($request, $category_id);
 
         if ($validator->fails() === true) {
             return $this->returnValidationErrors($validator);
@@ -197,7 +197,7 @@ class SubCategoryController extends Controller
         $category_id = $this->decodeParameter($category_id);
         $sub_category_id = $this->decodeParameter($sub_category_id);
 
-        $validator = SubCategoryValidator::update($request, $category_id, $sub_category_id);
+        $validator = (new SubCategoryValidator)->update($request, $category_id, $sub_category_id);
 
         if ($validator->fails() === true) {
             return $this->returnValidationErrors($validator);

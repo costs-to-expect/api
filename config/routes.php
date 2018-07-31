@@ -261,9 +261,12 @@ return [
         'validation' => [
             'POST' => [
                 'fields' => [
-                    'category_id' => 'required|string'
+                    'category_id' => 'required|exists:category,id'
                 ],
-                'messages' => []
+                'messages' => [
+                    'category_id.required' => 'Category field required or could not be decoded',
+                    'category_id.exists' => "Given category id does not exist"
+                ]
             ],
             'PATCH' => [
                 'fields' => [
@@ -289,9 +292,12 @@ return [
         'validation' => [
             'POST' => [
                 'fields' => [
-                    'sub_category_id' => 'required|string'
+
                 ],
-                'messages' => []
+                'messages' => [
+                    'sub_category_id.required' => 'Sub category field required or could not be decoded',
+                    'sub_category_id.exists' => "Given sub category id does not exist"
+                ]
             ],
             'PATCH' => [
                 'fields' => [

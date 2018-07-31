@@ -187,7 +187,7 @@ class ItemSubCategoryController extends Controller
             return $this->returnResourceConflict();
         }
 
-        $validator = ItemSubCategoryValidator::create($request);
+        $validator = (new ItemSubCategoryValidator)->create($request, $item_category_id);
 
         if ($validator->fails() === true) {
             return $this->returnValidationErrors($validator);

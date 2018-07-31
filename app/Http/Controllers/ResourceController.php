@@ -138,7 +138,7 @@ class ResourceController extends Controller
     {
         $resource_type_id = $this->decodeParameter($resource_type_id);
 
-        $validator = ResourceValidator::create($request, $resource_type_id);
+        $validator = (new ResourceValidator)->create($request, $resource_type_id);
 
         if ($validator->fails() === true) {
             return $this->returnValidationErrors($validator);
@@ -197,7 +197,7 @@ class ResourceController extends Controller
         $resource_type_id = $this->decodeParameter($resource_type_id);
         $resource_id = $this->decodeParameter($resource_id);
 
-        $validator = ResourceValidator::update($request, $resource_type_id, $resource_id);
+        $validator = (new ResourceValidator)->update($request, $resource_type_id, $resource_id);
 
         if ($validator->fails() === true) {
             return $this->returnValidationErrors($validator);

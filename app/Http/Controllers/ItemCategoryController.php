@@ -173,7 +173,7 @@ class ItemCategoryController extends Controller
             return $this->returnResourceConflict();
         }
 
-        $validator = ItemCategoryValidator::create($request);
+        $validator = (new ItemCategoryValidator)->create($request);
 
         if ($validator->fails() === true) {
             return $this->returnValidationErrors($validator);

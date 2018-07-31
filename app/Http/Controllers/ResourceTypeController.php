@@ -70,6 +70,10 @@ class ResourceTypeController extends Controller
 
         $resource_type = (new ResourceType)->find($resource_type_id);
 
+        if ($resource_type === null) {
+            return $this->returnResourceNotFound();
+        }
+
         return response()->json(
             [
                 'result' => (new ResourceTypeTransformer($resource_type))->toArray()
@@ -124,7 +128,7 @@ class ResourceTypeController extends Controller
      */
     public function create(Request $request): JsonResponse
     {
-        $validator = ResourceTypeValidator::create($request);
+        $validator = (new ResourceTypeValidator)->create($request);
 
         if ($validator->fails() === true) {
             return $this->returnValidationErrors($validator);
@@ -178,7 +182,7 @@ class ResourceTypeController extends Controller
     {
         $resource_type_id = $this->decodeParameter($resource_type_id);
 
-        $validator = ResourceTypeValidator::update($request, $resource_type_id);
+        $validator = (new ResourceTypeValidator)->update($request, $resource_type_id);
 
         if ($validator->fails() === true) {
             return $this->returnValidationErrors($validator);

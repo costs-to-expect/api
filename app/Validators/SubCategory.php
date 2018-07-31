@@ -2,6 +2,7 @@
 
 namespace App\Validators;
 
+use App\Validators\Validator as BaseValidator;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Config;
@@ -14,7 +15,7 @@ use Illuminate\Support\Facades\Validator as ValidatorFacade;
  * @copyright Dean Blackborough 2018
  * @license https://github.com/costs-to-expect/api/blob/master/LICENSE
  */
-class SubCategory
+class SubCategory extends BaseValidator
 {
     /**
      * Create the validation rules for the create (POST) request
@@ -23,7 +24,7 @@ class SubCategory
      *
      * @return array
      */
-    static private function createRules(int $category_id): array
+    private function createRules(int $category_id): array
     {
         return array_merge(
             [
@@ -45,7 +46,7 @@ class SubCategory
      *
      * @return array
      */
-    static private function updateRules(int $category_id, int $sub_category_id): array
+    private function updateRules(int $category_id, int $sub_category_id): array
     {
         return array_merge(
             [
@@ -67,7 +68,7 @@ class SubCategory
      *
      * @return Validator
      */
-    static public function create(Request $request, int $category_id): Validator
+    public function create(Request $request, int $category_id): Validator
     {
         return ValidatorFacade::make(
             $request->all(),
@@ -85,7 +86,7 @@ class SubCategory
      *
      * @return Validator
      */
-    static public function update(Request $request, int $category_id, int $sub_category_id): Validator
+    public function update(Request $request, int $category_id, int $sub_category_id): Validator
     {
         return ValidatorFacade::make(
             $request->all(),
