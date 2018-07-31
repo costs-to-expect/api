@@ -37,49 +37,59 @@ alternatively a GET request to `http://api.local/api-v1` will show all the route
 * You can add a development user by POSTing to `http://api.local/api-v1/auth/register` and then get a bearer by 
 POSTing to `http://api.local/api-v1/auth/login` - you will need a bearer for all the routes that require authentication.
 
-## Routes
+## Management routes
 
-Current API Routes, for fields and parameters, check the OPTIONS request for each 
-endpoint.
+Please find below a list of the API management routes that are (will be) implemented for version 1.00.  
+The summary routes will be displayed in another table. In general the GET, OPTIONS and HEAD routes are all public, 
+the POST, PATCH and DELETE required authorisation. The auth/register route will not be on the public website 
+post release. 
 
-| HTTP Verb | Route |
+| HTTP Verb(s) | Route |
 | :--- | :--- |
-| GET/HEAD | /                                                                                |
-| OPTIONS  | /                                                                                | 
-| POST     | api-v1/auth/login                                                                |
-| POST     | api-v1/auth/register                                                             |
-| GET/HEAD | api-v1/auth/user                                                                 |
-| POST     | api-v1/categories                                                                |
-| OPTIONS  | api-v1/categories                                                                |
-| GET/HEAD | api-v1/categories                                                                |
-| OPTIONS  | api-v1/categories/{category_id}                                                  |
-| GET/HEAD | api-v1/categories/{category_id}                                                  |
-| PATCH    | api-v1/categories/{category_id}                                                  |
-| DELETE   | api-v1/categories/{category_id}                                                  |
-| POST     | api-v1/categories/{category_id}/sub_categories                                   |
-| OPTIONS  | api-v1/categories/{category_id}/sub_categories                                   |
-| GET/HEAD | api-v1/categories/{category_id}/sub_categories                                   |
-| OPTIONS  | api-v1/categories/{category_id}/sub_categories/{sub_category_id}                 |
-| GET/HEAD | api-v1/categories/{category_id}/sub_categories/{sub_category_id}                 |
-| DELETE   | api-v1/categories/{category_id}/sub_categories/{sub_category_id}                 |
-| PATCH    | api-v1/categories/{category_id}/sub_categories/{sub_category_id}                 |
-| POST     | api-v1/resource_types                                                            |
-| GET/HEAD | api-v1/resource_types                                                            |
-| OPTIONS  | api-v1/resource_types                                                            |
-| GET/HEAD | api-v1/resource_types/{resource_type_id}                                         |
-| PATCH    | api-v1/resource_types/{resource_type_id}                                         |
-| OPTIONS  | api-v1/resource_types/{resource_type_id}                                         |
-| DELETE   | api-v1/resource_types/{resource_type_id}                                         |
-| POST     | api-v1/resource_types/{resource_type_id}/resources                               |
-| GET/HEAD | api-v1/resource_types/{resource_type_id}/resources                               |
-| OPTIONS  | api-v1/resource_types/{resource_type_id}/resources                               |
-| OPTIONS  | api-v1/resource_types/{resource_type_id}/resources/{resource_id}                 |
-| PATCH    | api-v1/resource_types/{resource_type_id}/resources/{resource_id}                 |
-| DELETE   | api-v1/resource_types/{resource_type_id}/resources/{resource_id}                 |
-| GET/HEAD | api-v1/resource_types/{resource_type_id}/resources/{resource_id}                 |
-| OPTIONS  | api-v1/resource_types/{resource_type_id}/resources/{resource_id}/items           |
-| POST     | api-v1/resource_types/{resource_type_id}/resources/{resource_id}/items           |
-| GET/HEAD | api-v1/resource_types/{resource_type_id}/resources/{resource_id}/items           |
+| GET/HEAD | api-v1/ |
+| OPTIONS  | api-v1/ | 
+| POST     | api-v1/auth/login |
+| POST     | api-v1/auth/register |
+| GET/HEAD | api-v1/auth/user |
+| POST     | api-v1/categories |
+| OPTIONS  | api-v1/categories |
+| GET/HEAD | api-v1/categories |
+| OPTIONS  | api-v1/categories/{category_id} |
+| GET/HEAD | api-v1/categories/{category_id} |
+| PATCH    | api-v1/categories/{category_id} |
+| DELETE   | api-v1/categories/{category_id} |
+| POST     | api-v1/categories/{category_id}/sub_categories |
+| OPTIONS  | api-v1/categories/{category_id}/sub_categories |
+| GET/HEAD | api-v1/categories/{category_id}/sub_categories |
+| OPTIONS  | api-v1/categories/{category_id}/sub_categories/{sub_category_id} |
+| GET/HEAD | api-v1/categories/{category_id}/sub_categories/{sub_category_id} |
+| DELETE   | api-v1/categories/{category_id}/sub_categories/{sub_category_id} |
+| PATCH    | api-v1/categories/{category_id}/sub_categories/{sub_category_id} |
+| POST     | api-v1/resource_types |
+| GET/HEAD | api-v1/resource_types |
+| OPTIONS  | api-v1/resource_types |
+| GET/HEAD | api-v1/resource_types/{resource_type_id} |
+| PATCH    | api-v1/resource_types/{resource_type_id} |
+| OPTIONS  | api-v1/resource_types/{resource_type_id} | 
+| DELETE   | api-v1/resource_types/{resource_type_id} |
+| POST     | api-v1/resource_types/{resource_type_id}/resources |
+| GET/HEAD | api-v1/resource_types/{resource_type_id}/resources |
+| OPTIONS  | api-v1/resource_types/{resource_type_id}/resources |
+| OPTIONS  | api-v1/resource_types/{resource_type_id}/resources/{resource_id} |
+| PATCH    | api-v1/resource_types/{resource_type_id}/resources/{resource_id} |
+| DELETE   | api-v1/resource_types/{resource_type_id}/resources/{resource_id} |
+| GET/HEAD | api-v1/resource_types/{resource_type_id}/resources/{resource_id} |
+| OPTIONS  | api-v1/resource_types/{resource_type_id}/resources/{resource_id}/items |
+| POST     | api-v1/resource_types/{resource_type_id}/resources/{resource_id}/items |
+| GET/HEAD | api-v1/resource_types/{resource_type_id}/resources/{resource_id}/items |
 | GET/HEAD | api-v1/resource_types/{resource_type_id}/resources/{resource_id}/items/{item_id} |
 | OPTIONS  | api-v1/resource_types/{resource_type_id}/resources/{resource_id}/items/{item_id} |
 | DELETE   | api-v1/resource_types/{resource_type_id}/resources/{resource_id}/items/{item_id} |
+| PATCH    | api-v1/resource_types/{resource_type_id}/resources/{resource_id}/items/{item_id} |
+| OPTIONS  | api-v1/resource_types/{resource_type_id}/resources/{resource_id}/items/category |
+| POST     | api-v1/resource_types/{resource_type_id}/resources/{resource_id}/items/category |
+| GET/HEAD | api-v1/resource_types/{resource_type_id}/resources/{resource_id}/items/category |
+| GET/HEAD | api-v1/resource_types/{resource_type_id}/resources/{resource_id}/items/{item_id}/category/{item_category_id} |
+| OPTIONS  | api-v1/resource_types/{resource_type_id}/resources/{resource_id}/items/{item_id}/category/{item_category_id} |
+| DELETE   | api-v1/resource_types/{resource_type_id}/resources/{resource_id}/items/{item_id}/category/{item_category_id} |
+| PATCH    | api-v1/resource_types/{resource_type_id}/resources/{resource_id}/items/{item_id}/category/{item_category_id} |
