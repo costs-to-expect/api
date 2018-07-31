@@ -70,6 +70,10 @@ class ResourceTypeController extends Controller
 
         $resource_type = (new ResourceType)->find($resource_type_id);
 
+        if ($resource_type === null) {
+            return $this->returnResourceNotFound();
+        }
+
         return response()->json(
             [
                 'result' => (new ResourceTypeTransformer($resource_type))->toArray()
