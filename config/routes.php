@@ -292,9 +292,12 @@ return [
         'validation' => [
             'POST' => [
                 'fields' => [
-                    'sub_category_id' => 'required|string'
+
                 ],
-                'messages' => []
+                'messages' => [
+                    'sub_category_id.required' => 'Sub category field required or could not be decoded',
+                    'sub_category_id.exists' => "Given sub category id does not exist"
+                ]
             ],
             'PATCH' => [
                 'fields' => [
