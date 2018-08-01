@@ -209,7 +209,7 @@ class Controller extends BaseController
         $link = '';
 
         if ($offset_prev !== null) {
-            $link .= '<' . Config::get('app.url') . '/api-v1/categories?offset=' . $offset_prev . '&limit=' .
+            $link .= '<' . Config::get('app.url') . '/' . Config::get('version.prefix') . '/categories?offset=' . $offset_prev . '&limit=' .
                 $limit . '>; rel="prev"';
         }
 
@@ -218,7 +218,7 @@ class Controller extends BaseController
                 $link .= ', ';
             }
 
-            $link .= '<' . Config::get('app.url') . '/api-v1/categories?offset=' . $offset_next . '&limit=' .
+            $link .= '<' . Config::get('app.url') . '/' . Config::get('version.prefix')  . '/categories?offset=' . $offset_next . '&limit=' .
                 $limit . '>; rel="next"';
         }
 
