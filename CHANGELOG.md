@@ -2,7 +2,15 @@
 
 Full changelog for the costs to expect REST API.
 
-## Development
+## Pre release changes
+
+## Additional development and fine tuning
+
+* Added a version config, for post release, includes the api prefix.
+* Redirect client if they request /.
+* Reworked the validation helpers.
+
+## Initial development
 
 * Added initial get parameters code.
 * Added validation helpers.
