@@ -23,7 +23,7 @@ class Category extends Transformer
     public function toArray(): array
     {
         return [
-            'id' => $this->hash->encode($this->category->id),
+            'id' => $this->hash_category->encode($this->category->id),
             'name' => $this->category->name,
             'description' => $this->category->description,
             'created' => $this->category->created_at->toDateTimeString(),

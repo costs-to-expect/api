@@ -34,7 +34,7 @@ class ResourceType extends BaseValidator
                     'unique:resource_type,name,' . $resource_type_id . ',id'
                 ],
             ],
-            Config::get('routes.resource_type.validation.PATCH.fields')
+            Config::get('api.routes.resource_type.validation.PATCH.fields')
         );
     }
 
@@ -49,8 +49,8 @@ class ResourceType extends BaseValidator
     {
         return ValidatorFacade::make(
             $request->all(),
-            Config::get('routes.resource_type.validation.POST.fields'),
-            Config::get('routes.resource_type.validation.POST.messages')
+            Config::get('api.routes.resource_type.validation.POST.fields'),
+            Config::get('api.routes.resource_type.validation.POST.messages')
         );
     }
 
@@ -67,7 +67,7 @@ class ResourceType extends BaseValidator
         return ValidatorFacade::make(
             $request->all(),
             self::updateRules($resource_type_id),
-            Config::get('routes.resource_type.validation.POST.messages')
+            Config::get('api.routes.resource_type.validation.POST.messages')
         );
     }
 }

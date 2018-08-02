@@ -3,6 +3,7 @@
 namespace App\Transformers;
 
 use Hashids\Hashids;
+use Illuminate\Support\Facades\Config;
 
 /**
  * Base transformer class, sets up the interface and includes helper methods
@@ -14,10 +15,12 @@ use Hashids\Hashids;
 abstract class Transformer
 {
     protected $hash;
+    protected $hash_category;
 
     public function __construct()
     {
         $this->hash = new Hashids('costs-to-expect', 10);
+        $this->hash_category = new Hashids(Config::get('api.hashids.category'), 10);
     }
 
     abstract public function toArray(): array;

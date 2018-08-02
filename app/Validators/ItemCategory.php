@@ -34,8 +34,8 @@ class ItemCategory extends BaseValidator
 
         return ValidatorFacade::make(
             ['category_id' => $category_id],
-            Config::get('routes.item_category.validation.POST.fields'),
-            Config::get('routes.item_category.validation.POST.messages')
+            Config::get('api.routes.item_category.validation.POST.fields'),
+            Config::get('api.routes.item_category.validation.POST.messages')
         );
     }
 
@@ -50,8 +50,8 @@ class ItemCategory extends BaseValidator
     {
         return ValidatorFacade::make(
             $request->all(),
-            Config::get('routes.item_category.validation.PATCH.fields'),
-            Config::get('routes.item_category.validation.POST.messages')
+            Config::get('api.routes.item_category.validation.PATCH.fields'),
+            Config::get('api.routes.item_category.validation.POST.messages')
         );
     }
 }

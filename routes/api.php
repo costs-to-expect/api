@@ -23,7 +23,8 @@ Route::get('', function () {
 
 Route::group(
     [
-        'prefix' => Config::get('api.version.prefix')
+        'prefix' => Config::get('api.version.prefix'),
+        'middleware' => 'convert.hash.ids'
     ],
     function () {
         Route::get('', 'IndexController@index');
@@ -152,8 +153,8 @@ Route::group(
 
 Route::group(
     [
-        'middleware' => 'auth:api',
-        'prefix' => Config::get('api.version.prefix')
+        'middleware' => ['auth:api', 'convert.hash.ids'],
+        'prefix' => Config::get('api.version.prefix'),
     ],
     function () {
         Route::get('auth/user', 'PassportController@user');
