@@ -6,7 +6,7 @@ Full changelog for the costs to expect REST API.
 
 ## Additional development and fine tuning
 
-* Reworked the id hashing, added middle and slightly improved encoding although I need to DRY the code, 
+* Reworked the id hashing, added middleware and slightly improved encoding although I need to DRY the code, 
 looking at you, transformers, validators and base controller.  
 * Moved API config files into a sub folder to separate them from Laravel.
 * Added a version config, for post release, includes the api prefix.
