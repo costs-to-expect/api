@@ -15,11 +15,19 @@ class Controller extends BaseController
 {
     use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
 
-    protected $hash;
+    protected $hashers;
 
     public function __construct()
     {
-        $this->hash = new Hashids('costs-to-expect', 10);
+        $min_length = Config::get('api.hashids.min_length');
+
+        $this->hashers['category'] = new Hashids(Config::get('api.hashids.category'), $min_length);
+        $this->hashers['_sub_category'] = new Hashids(Config::get('api.hashids.sub_category'), $min_length);
+        $this->hashers['resource_type'] = new Hashids(Config::get('api.hashids.resource_type'), $min_length);
+        $this->hashers['_resource'] = new Hashids(Config::get('api.hashids.resource'), $min_length);
+        $this->hashers['item'] = new Hashids(Config::get('api.hashids.item'), $min_length);
+        $this->hashers['item_category'] = new Hashids(Config::get('api.hashids.item_category'), $min_length);
+        $this->hashers['item_sub_category'] = new Hashids(Config::get('api.hashids.item_sub_category'), $min_length);
     }
 
     /**
@@ -209,7 +217,7 @@ class Controller extends BaseController
         $link = '';
 
         if ($offset_prev !== null) {
-            $link .= '<' . Config::get('app.url') . '/api-v1/categories?offset=' . $offset_prev . '&limit=' .
+            $link .= '<' . Config::get('api.app.url') . '/' . Config::get('api.version.prefix') . '/categories?offset=' . $offset_prev . '&limit=' .
                 $limit . '>; rel="prev"';
         }
 
@@ -218,7 +226,7 @@ class Controller extends BaseController
                 $link .= ', ';
             }
 
-            $link .= '<' . Config::get('app.url') . '/api-v1/categories?offset=' . $offset_next . '&limit=' .
+            $link .= '<' . Config::get('api.app.url') . '/' . Config::get('api.version.prefix')  . '/categories?offset=' . $offset_next . '&limit=' .
                 $limit . '>; rel="next"';
         }
 
@@ -233,16 +241,26 @@ class Controller extends BaseController
      * Decode a get param and return the integer
      *
      * @param string $parameter The hash to decode
+     * @param string $hasher to use to decode
      *
      * @return int|JsonResponse
      */
-    protected function decodeParameter(string $parameter)
+    protected function decodeParameter(string $parameter, $hasher)
     {
-        $id = $this->hash->decode($parameter);
-        if (is_array($id) && array_key_exists(0, $id)) {
-            return $id[0];
+        if (array_key_exists($hasher, $this->hashers) === true) {
+            $id = $this->$this->hashers[$hasher]->decode($parameter);
+            if (is_array($id) && array_key_exists(0, $id)) {
+                return $id[0];
+            } else {
+                return $this->returnResourceNotFound();
+            }
         } else {
-            return $this->returnResourceNotFound();
+            return response()->json(
+                [
+                    'error' => 'Hasher not found'
+                ],
+                500
+            );
         }
     }
 }

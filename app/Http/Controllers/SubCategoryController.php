@@ -28,8 +28,6 @@ class SubCategoryController extends Controller
      */
     public function index(Request $request, string $category_id): JsonResponse
     {
-        $category_id = $this->decodeParameter($category_id);
-
         $sub_categories = (new SubCategory())
             ->where('category_id', '=', $category_id)
             ->get();
@@ -68,9 +66,6 @@ class SubCategoryController extends Controller
      */
     public function show(Request $request, string $category_id, string $sub_category_id): JsonResponse
     {
-        $category_id = $this->decodeParameter($category_id);
-        $sub_category_id = $this->decodeParameter($sub_category_id);
-
         $sub_category = (new SubCategory())
             ->where('category_id', '=', $category_id)
             ->find($sub_category_id);
@@ -137,8 +132,6 @@ class SubCategoryController extends Controller
      */
     public function create(Request $request, string $category_id): JsonResponse
     {
-        $category_id = $this->decodeParameter($category_id);
-
         $validator = (new SubCategoryValidator)->create($request, $category_id);
 
         if ($validator->fails() === true) {
@@ -194,9 +187,6 @@ class SubCategoryController extends Controller
      */
     public function update(Request $request, string $category_id, string $sub_category_id): JsonResponse
     {
-        $category_id = $this->decodeParameter($category_id);
-        $sub_category_id = $this->decodeParameter($sub_category_id);
-
         $validator = (new SubCategoryValidator)->update($request, $category_id, $sub_category_id);
 
         if ($validator->fails() === true) {

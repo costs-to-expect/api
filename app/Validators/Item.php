@@ -28,8 +28,8 @@ class Item extends BaseValidator
     {
         return ValidatorFacade::make(
             $request->all(),
-            Config::get('routes.item.validation.POST.fields'),
-            Config::get('routes.item.validation.POST.messages')
+            Config::get('api.routes.item.validation.POST.fields'),
+            Config::get('api.routes.item.validation.POST.messages')
         );
     }
 
@@ -44,8 +44,8 @@ class Item extends BaseValidator
     {
         return ValidatorFacade::make(
             $request->all(),
-            Config::get('routes.item.validation.PATCH.fields'),
-            Config::get('routes.item.validation.POST.messages')
+            Config::get('api.routes.item.validation.PATCH.fields'),
+            Config::get('api.routes.item.validation.POST.messages')
         );
     }
 }

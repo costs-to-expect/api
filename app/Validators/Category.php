@@ -34,7 +34,7 @@ class Category extends BaseValidator
                     'unique:category,name,' . $category_id . ',id'
                 ],
             ],
-            Config::get('routes.category.validation.PATCH.fields')
+            Config::get('api.routes.category.validation.PATCH.fields')
         );
     }
 
@@ -49,8 +49,8 @@ class Category extends BaseValidator
     {
         return ValidatorFacade::make(
             $request->all(),
-            Config::get('routes.category.validation.POST.fields'),
-            Config::get('routes.category.validation.POST.messages')
+            Config::get('api.routes.category.validation.POST.fields'),
+            Config::get('api.routes.category.validation.POST.messages')
         );
     }
 
@@ -67,7 +67,7 @@ class Category extends BaseValidator
         return ValidatorFacade::make(
             $request->all(),
             self::updateRules($category_id),
-            Config::get('routes.category.validation.POST.messages')
+            Config::get('api.routes.category.validation.POST.messages')
         );
     }
 }

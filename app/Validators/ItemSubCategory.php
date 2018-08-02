@@ -42,7 +42,7 @@ class ItemSubCategory extends BaseValidator
 
                 ],
             ],
-            Config::get('routes.item_sub_category.validation.POST.fields')
+            Config::get('api.routes.item_sub_category.validation.POST.fields')
         );
     }
 
@@ -56,7 +56,7 @@ class ItemSubCategory extends BaseValidator
      */
     public function create(Request $request, $category_id): Validator
     {
-        $decode = $this->hash->decode($request->input('sub_category_id'));
+        $decode = $this->hash_sub_category->decode($request->input('sub_category_id'));
         $sub_category_id = null;
         if (count($decode) === 1) {
             $sub_category_id = $decode[0];
@@ -65,7 +65,7 @@ class ItemSubCategory extends BaseValidator
         return ValidatorFacade::make(
             ['sub_category_id' => $sub_category_id],
             self::createRules($category_id),
-            Config::get('routes.item_sub_category.validation.POST.messages')
+            Config::get('api.routes.item_sub_category.validation.POST.messages')
         );
     }
 
@@ -80,8 +80,8 @@ class ItemSubCategory extends BaseValidator
     {
         return ValidatorFacade::make(
             $request->all(),
-            Config::get('routes.item_sub_category.validation.PATCH.fields'),
-            Config::get('routes.item_sub_category.validation.POST.messages')
+            Config::get('api.routes.item_sub_category.validation.PATCH.fields'),
+            Config::get('api.routes.item_sub_category.validation.POST.messages')
         );
     }
 }

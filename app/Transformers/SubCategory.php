@@ -23,7 +23,7 @@ class SubCategory extends Transformer
     public function toArray(): array
     {
         return [
-            'id' => $this->hash->encode($this->sub_category->id),
+            'id' => $this->hash_sub_category->encode($this->sub_category->id),
             'name' => $this->sub_category->name,
             'description' => $this->sub_category->description,
             'created' => $this->sub_category->created_at->toDateTimeString()

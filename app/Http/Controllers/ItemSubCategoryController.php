@@ -37,11 +37,6 @@ class ItemSubCategoryController extends Controller
         string $item_category_id
     ): JsonResponse
     {
-        $resource_type_id = $this->decodeParameter($resource_type_id);
-        $resource_id = $this->decodeParameter($resource_id);
-        $item_id = $this->decodeParameter($item_id);
-        $item_category_id = $this->decodeParameter($item_category_id);
-
         $item_sub_category = (new ItemSubCategory())
             ->where('item_id', '=', $item_id)
             ->first();
@@ -84,12 +79,6 @@ class ItemSubCategoryController extends Controller
         string $item_sub_category_id
     ): JsonResponse
     {
-        $resource_type_id = $this->decodeParameter($resource_type_id);
-        $resource_id = $this->decodeParameter($resource_id);
-        $item_category_id = $this->decodeParameter($item_category_id);
-        $item_id = $this->decodeParameter($item_id);
-        $item_sub_category_id = $this->decodeParameter($item_sub_category_id);
-
         $item_sub_category = (new ItemSubCategory())
             ->where('item_id', '=', $item_id)
             ->find($item_sub_category_id);
@@ -174,11 +163,6 @@ class ItemSubCategoryController extends Controller
         string $item_category_id
     ): JsonResponse
     {
-        $resource_type_id = $this->decodeParameter($resource_type_id);
-        $resource_id = $this->decodeParameter($resource_id);
-        $item_id = $this->decodeParameter($item_id);
-        $item_category_id = $this->decodeParameter($item_category_id);
-
         $item_sub_category = (new ItemSubCategory())
             ->where('item_id', '=', $item_id)
             ->first();
@@ -196,7 +180,7 @@ class ItemSubCategoryController extends Controller
         try {
             $item_sub_category = new ItemSubCategory([
                 'item_id' => $item_id,
-                'sub_category_id' => $this->decodeParameter($request->input('sub_category_id'))
+                'sub_category_id' => $this->decodeParameter($request->input('sub_category_id'), 'sub_category')
             ]);
             $item_sub_category->save();
         } catch (Exception $e) {

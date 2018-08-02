@@ -1,5 +1,6 @@
 <?php
 
+use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -13,11 +14,18 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::post('auth/login', 'PassportController@login');
-Route::post('auth/register', 'PassportController@register');
+Route::post('auth/login', 'PassportController@login')->prefix(Config::get('api.version.prefix'));
+Route::post('auth/register', 'PassportController@register')->prefix(Config::get('api.version.prefix'));
+
+Route::get('', function () {
+    return redirect('/api-v1');
+});
 
 Route::group(
-    [],
+    [
+        'prefix' => Config::get('api.version.prefix'),
+        'middleware' => 'convert.hash.ids'
+    ],
     function () {
         Route::get('', 'IndexController@index');
         Route::options('', 'IndexController@optionsIndex');
@@ -144,7 +152,10 @@ Route::group(
 );
 
 Route::group(
-    ['middleware' => 'auth:api'],
+    [
+        'middleware' => ['auth:api', 'convert.hash.ids'],
+        'prefix' => Config::get('api.version.prefix'),
+    ],
     function () {
         Route::get('auth/user', 'PassportController@user');
 

@@ -30,10 +30,6 @@ class ItemCategoryController extends Controller
      */
     public function index(Request $request, string $resource_type_id, string $resource_id, string $item_id): JsonResponse
     {
-        $resource_type_id = $this->decodeParameter($resource_type_id);
-        $resource_id = $this->decodeParameter($resource_id);
-        $item_id = $this->decodeParameter($item_id);
-
         $item_category = (new ItemCategory())
             ->where('item_id', '=', $item_id)
             ->first();
@@ -74,11 +70,6 @@ class ItemCategoryController extends Controller
         string $item_category_id
     ): JsonResponse
     {
-        $resource_type_id = $this->decodeParameter($resource_type_id);
-        $resource_id = $this->decodeParameter($resource_id);
-        $item_id = $this->decodeParameter($item_id);
-        $item_category_id = $this->decodeParameter($item_category_id);
-
         $item_category = (new ItemCategory())
             ->where('item_id', '=', $item_id)
             ->find($item_category_id);
@@ -161,10 +152,6 @@ class ItemCategoryController extends Controller
         string $item_id
     ): JsonResponse
     {
-        $resource_type_id = $this->decodeParameter($resource_type_id);
-        $resource_id = $this->decodeParameter($resource_id);
-        $item_id = $this->decodeParameter($item_id);
-
         $item_category = (new ItemCategory())
             ->where('item_id', '=', $item_id)
             ->first();
@@ -182,7 +169,7 @@ class ItemCategoryController extends Controller
         try {
             $item_category = new ItemCategory([
                 'item_id' => $item_id,
-                'category_id' => $this->decodeParameter($request->input('category_id'))
+                'category_id' => $this->decodeParameter($request->input('category_id'), 'category')
             ]);
             $item_category->save();
         } catch (Exception $e) {

@@ -27,7 +27,7 @@ class IndexController extends Controller
         $routes_to_display = array();
 
         foreach (Route::getRoutes() as $route) {
-            if (starts_with($route->uri, 'api-v1') === true) {
+            if (starts_with($route->uri, Config::get('api.version.prefix') ) === true) {
                 if (isset($routes_to_display[$route->uri]['methods'])) {
                     $routes_to_display[$route->uri]['methods'] = array_merge($route->methods,
                         $routes_to_display[$route->uri]['methods']);
@@ -42,11 +42,17 @@ class IndexController extends Controller
         ksort($routes_to_display);
 
         return response()->json(
-            $routes_to_display,
-            200,
             [
-                'X-Total-Count' => count($routes_to_display)
-            ]
+                'api' => [
+                    'version' => Config::get('api.version.version'),
+                    'prefix' => Config::get('api.version.prefix'),
+                    'release_date' => Config::get('api.version.release_date'),
+                    'changelog' => Config::get('api.version.changelog'),
+                    'readme' => Config::get('api.version.readme')
+                ],
+                'routes' => $routes_to_display
+            ],
+            200
         );
     }
 

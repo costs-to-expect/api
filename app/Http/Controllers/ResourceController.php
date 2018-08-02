@@ -28,8 +28,6 @@ class ResourceController extends Controller
      */
     public function index(Request $request, string $resource_type_id): JsonResponse
     {
-        $resource_type_id = $this->decodeParameter($resource_type_id);
-
         $resources = (new Resource)
             ->where('resource_type_id', '=', $resource_type_id)
             ->get();
@@ -68,9 +66,6 @@ class ResourceController extends Controller
      */
     public function show(Request $request, string $resource_type_id, string $resource_id): JsonResponse
     {
-        $resource_type_id = $this->decodeParameter($resource_type_id);
-        $resource_id = $this->decodeParameter($resource_id);
-
         $resource = (new Resource)
             ->where('resource_type_id', '=', $resource_type_id)
             ->find($resource_id);
@@ -136,8 +131,6 @@ class ResourceController extends Controller
      */
     public function create(Request $request, string $resource_type_id): JsonResponse
     {
-        $resource_type_id = $this->decodeParameter($resource_type_id);
-
         $validator = (new ResourceValidator)->create($request, $resource_type_id);
 
         if ($validator->fails() === true) {
@@ -194,9 +187,6 @@ class ResourceController extends Controller
      */
     public function update(Request $request, string $resource_type_id, string $resource_id): JsonResponse
     {
-        $resource_type_id = $this->decodeParameter($resource_type_id);
-        $resource_id = $this->decodeParameter($resource_id);
-
         $validator = (new ResourceValidator)->update($request, $resource_type_id, $resource_id);
 
         if ($validator->fails() === true) {
