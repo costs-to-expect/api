@@ -1,6 +1,7 @@
 <?php
 
 return [
+    'min_length' => 10,
     'category' => '9nlFPIt8Rg',
     'sub_category' => '2kL3JPdOpP',
     'resource_type' => 'l4fTHvr2iA',

@@ -19,7 +19,7 @@ class Controller extends BaseController
 
     public function __construct()
     {
-        $this->hash = new Hashids('costs-to-expect', 10);
+        $this->hash = new Hashids('costs-to-expect', Config::get('api.hashids.min_length'));
     }
 
     /**

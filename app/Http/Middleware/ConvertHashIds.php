@@ -17,22 +17,16 @@ class ConvertHashIds
      */
     public function handle($request, Closure $next)
     {
-        $hash_category = new Hashids(Config::get('api.hashids.category'), 10);
-        $hash_sub_category = new Hashids(Config::get('api.hashids.sub_category'), 10);
-        $resource_type = new Hashids(Config::get('api.hashids.resource_type'), 10);
-        $resource = new Hashids(Config::get('api.hashids.resource'), 10);
-        $item = new Hashids(Config::get('api.hashids.item'), 10);
-        $item_category = new Hashids(Config::get('api.hashids.item_category'), 10);
-        $item_sub_category = new Hashids(Config::get('api.hashids.item_sub_category'), 10);
+        $min_length = Config::get('api.hashids.min_length');
 
         $params = [
-            'category_id' => $hash_category,
-            'sub_category_id' => $hash_sub_category,
-            'resource_type_id' => $resource_type,
-            'resource_id' => $resource,
-            'item_id' => $item,
-            'item_category_id' => $item_category,
-            'item_sub_category_id' =>$item_sub_category,
+            'category_id' => new Hashids(Config::get('api.hashids.category'), $min_length),
+            'sub_category_id' => new Hashids(Config::get('api.hashids.sub_category'), $min_length),
+            'resource_type_id' => new Hashids(Config::get('api.hashids.resource_type'), $min_length),
+            'resource_id' => new Hashids(Config::get('api.hashids.resource'), $min_length),
+            'item_id' => new Hashids(Config::get('api.hashids.item'), $min_length),
+            'item_category_id' => new Hashids(Config::get('api.hashids.item_category'), $min_length),
+            'item_sub_category_id' => new Hashids(Config::get('api.hashids.item_sub_category'), $min_length),
         ];
 
         foreach ($params as $param => $hasher) {

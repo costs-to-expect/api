@@ -3,6 +3,7 @@
 namespace App\Validators;
 
 use Hashids\Hashids;
+use Illuminate\Support\Facades\Config;
 
 /**
  * Base validator class, sets up the interface and includes helper methods
@@ -17,6 +18,6 @@ abstract class Validator
 
     public function __construct()
     {
-        $this->hash = new Hashids('costs-to-expect', 10);
+        $this->hash = new Hashids('costs-to-expect', Config::get('api.hashids.min_length'));
     }
 }

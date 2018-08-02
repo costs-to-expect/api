@@ -19,8 +19,10 @@ abstract class Transformer
 
     public function __construct()
     {
-        $this->hash = new Hashids('costs-to-expect', 10);
-        $this->hash_category = new Hashids(Config::get('api.hashids.category'), 10);
+        $min_length = Config::get('api.hashids.min_length');
+
+        $this->hash = new Hashids('costs-to-expect', Config::get($min_length));
+        $this->hash_category = new Hashids(Config::get('api.hashids.category'), Config::get($min_length));
     }
 
     abstract public function toArray(): array;
