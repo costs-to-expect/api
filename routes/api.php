@@ -14,8 +14,8 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::post('auth/login', 'PassportController@login')->prefix(Config::get('version.prefix'));
-Route::post('auth/register', 'PassportController@register')->prefix(Config::get('version.prefix'));
+Route::post('auth/login', 'PassportController@login')->prefix(Config::get('api.version.prefix'));
+Route::post('auth/register', 'PassportController@register')->prefix(Config::get('api.version.prefix'));
 
 Route::get('', function () {
     return redirect('/api-v1');
@@ -23,7 +23,7 @@ Route::get('', function () {
 
 Route::group(
     [
-        'prefix' => Config::get('version.prefix')
+        'prefix' => Config::get('api.version.prefix')
     ],
     function () {
         Route::get('', 'IndexController@index');
@@ -153,7 +153,7 @@ Route::group(
 Route::group(
     [
         'middleware' => 'auth:api',
-        'prefix' => Config::get('version.prefix')
+        'prefix' => Config::get('api.version.prefix')
     ],
     function () {
         Route::get('auth/user', 'PassportController@user');

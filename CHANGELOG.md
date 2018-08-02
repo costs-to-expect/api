@@ -6,6 +6,7 @@ Full changelog for the costs to expect REST API.
 
 ## Additional development and fine tuning
 
+* Moved API config files into a sub folder to separate them from Laravel.
 * Added a version config, for post release, includes the api prefix.
 * Redirect client if they request /.
 * Reworked the validation helpers.
