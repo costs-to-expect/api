@@ -29,9 +29,6 @@ class ItemController extends Controller
      */
     public function index(Request $request, string $resource_type_id, string $resource_id): JsonResponse
     {
-        $resource_type_id = $this->decodeParameter($resource_type_id);
-        $resource_id = $this->decodeParameter($resource_id);
-
         $items = (new Item())
             ->where('resource_id', '=', $resource_id)
             ->get();
@@ -71,10 +68,6 @@ class ItemController extends Controller
      */
     public function show(Request $request, string $resource_type_id, string $resource_id, string $item_id): JsonResponse
     {
-        $resource_type_id = $this->decodeParameter($resource_type_id);
-        $resource_id = $this->decodeParameter($resource_id);
-        $item_id = $this->decodeParameter($item_id);
-
         $item = (new Item())
             ->where('resource_id', '=', $resource_id)
             ->find($item_id);
@@ -149,9 +142,6 @@ class ItemController extends Controller
      */
     public function create(Request $request, string $resource_type_id, string $resource_id): JsonResponse
     {
-        $resource_type_id = $this->decodeParameter($resource_type_id);
-        $resource_id = $this->decodeParameter($resource_id);
-
         $validator = (new ItemValidator)->create($request);
 
         if ($validator->fails() === true) {
@@ -222,10 +212,6 @@ class ItemController extends Controller
         string $item_id
     ): JsonResponse
     {
-        $resource_type_id = $this->decodeParameter($resource_type_id);
-        $resource_id = $this->decodeParameter($resource_id);
-        $item_id = $this->decodeParameter($item_id);
-
         $validator = (new ItemValidator)->update($request);
 
         if ($validator->fails() === true) {

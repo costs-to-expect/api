@@ -23,7 +23,7 @@ class ItemCategory extends Transformer
     public function toArray(): array
     {
         return [
-            'id' => $this->hash->encode($this->item_category->id),
+            'id' => $this->hash_item_category->encode($this->item_category->id),
             'category' => [
                 'name' => $this->item_category->category->name,
                 'description' => $this->item_category->category->description

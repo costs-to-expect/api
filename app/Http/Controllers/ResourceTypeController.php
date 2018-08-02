@@ -66,8 +66,6 @@ class ResourceTypeController extends Controller
      */
     public function show(Request $request, string $resource_type_id): JsonResponse
     {
-        $resource_type_id = $this->decodeParameter($resource_type_id);
-
         $resource_type = (new ResourceType)->find($resource_type_id);
 
         if ($resource_type === null) {
@@ -180,8 +178,6 @@ class ResourceTypeController extends Controller
      */
     public function update(Request $request, string $resource_type_id): JsonResponse
     {
-        $resource_type_id = $this->decodeParameter($resource_type_id);
-
         $validator = (new ResourceTypeValidator)->update($request, $resource_type_id);
 
         if ($validator->fails() === true) {

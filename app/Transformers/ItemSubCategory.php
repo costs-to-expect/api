@@ -23,7 +23,7 @@ class ItemSubCategory extends Transformer
     public function toArray(): array
     {
         return [
-            'id' => $this->hash->encode($this->item_sub_category->id),
+            'id' => $this->hash_item_sub_category->encode($this->item_sub_category->id),
             'sub_category' => [
                 'name' => $this->item_sub_category->sub_category->name,
                 'description' => $this->item_sub_category->sub_category->description

@@ -175,8 +175,6 @@ class CategoryController extends Controller
      */
     public function update(Request $request, string $category_id): JsonResponse
     {
-        $category_id = $this->decodeParameter($category_id);
-
         $validator = (new CategoryValidator)->update($request, $category_id);
 
         if ($validator->fails() === true) {
