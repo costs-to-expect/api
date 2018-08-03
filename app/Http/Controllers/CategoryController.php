@@ -39,14 +39,12 @@ class CategoryController extends Controller
         }
 
         return response()->json(
-            [
-                'results' => $categories->map(
-                    function ($category)
-                    {
-                        return (new CategoryTransformer($category))->toArray();
-                    }
-                )
-            ],
+            $categories->map(
+                function ($category)
+                {
+                    return (new CategoryTransformer($category))->toArray();
+                }
+            ),
             200,
             $headers
         );
@@ -69,9 +67,7 @@ class CategoryController extends Controller
         }
 
         return response()->json(
-            [
-                'result' => (new CategoryTransformer($category))->toArray()
-            ],
+            (new CategoryTransformer($category))->toArray(),
             200,
             [
                 'X-Total-Count' => 1
@@ -145,9 +141,7 @@ class CategoryController extends Controller
         }
 
         return response()->json(
-            [
-                'result' => (new CategoryTransformer($category))->toArray()
-            ],
+            (new CategoryTransformer($category))->toArray(),
             201
         );
     }
@@ -187,9 +181,7 @@ class CategoryController extends Controller
 
         return response()->json(
             [
-                'result' => [
-                    'category_id' => $category_id
-                ]
+                'category_id' => $category_id
             ],
             200
         );
