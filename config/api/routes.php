@@ -5,13 +5,15 @@ $pagination = [
         'parameter' => 'offset',
         'title' => 'Record offset for pagination',
         'default' => 0,
-        'type' => 'integer'
+        'type' => 'integer',
+        'required' => false
     ],
     'limit' => [
         'parameter' => 'limit',
         'title' => 'Record limit for pagination',
         'default' => 10,
-        'type' => 'integer'
+        'type' => 'integer',
+        'required' => false
     ]
 ];
 
@@ -22,13 +24,15 @@ return [
                 'field' => 'name',
                 'title' => 'Category name',
                 'description' => 'Enter a name for the category',
-                'type' => 'string'
+                'type' => 'string',
+                'required' => true
             ],
             'description' => [
                 'field' => 'description',
                 'title' => 'Category description',
                 'description' => 'Enter a description for the category',
-                'type' => 'string'
+                'type' => 'string',
+                'required' => true
             ]
         ],
         'validation' => [
@@ -61,13 +65,15 @@ return [
                 'field' => 'name',
                 'title' => 'Sub category name',
                 'description' => 'Enter a name for the sub category',
-                'type' => 'string'
+                'type' => 'string',
+                'required' => true
             ],
             'description' => [
                 'field' => 'description',
                 'title' => 'Sub category description',
                 'description' => 'Enter a description for the sub category',
-                'type' => 'string'
+                'type' => 'string',
+                'required' => true
             ]
         ],
         'validation' => [
