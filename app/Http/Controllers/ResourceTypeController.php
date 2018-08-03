@@ -137,7 +137,7 @@ class ResourceTypeController extends Controller
         } catch (Exception $e) {
             return response()->json(
                 [
-                    'error' => 'Error creating new record'
+                    'message' => 'Error creating new record'
                 ],
                 500
             );
