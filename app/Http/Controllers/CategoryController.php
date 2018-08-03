@@ -85,10 +85,10 @@ class CategoryController extends Controller
     public function optionsIndex(Request $request): JsonResponse
     {
         return $this->generateOptionsForIndex(
-            'descriptions.category.GET_index',
-            'descriptions.category.POST',
-            'routes.category.fields',
-            'routes.category.parameters'
+            'api.descriptions.category.GET_index',
+            'api.descriptions.category.POST',
+            'api.routes.category.fields',
+            'api.routes.category.parameters'
         );
     }
 
@@ -103,10 +103,10 @@ class CategoryController extends Controller
     public function optionsShow(Request $request, string $category_id): JsonResponse
     {
         return $this->generateOptionsForShow(
-            'descriptions.category.GET_show',
-            'descriptions.category.DELETE',
-            'descriptions.category.PATCH',
-            'routes.category.fields'
+            'api.descriptions.category.GET_show',
+            'api.descriptions.category.DELETE',
+            'api.descriptions.category.PATCH',
+            'api.routes.category.fields'
         );
     }
 

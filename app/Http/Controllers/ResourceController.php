@@ -91,10 +91,10 @@ class ResourceController extends Controller
     public function optionsIndex(Request $request): JsonResponse
     {
         return $this->generateOptionsForIndex(
-            'descriptions.resource.GET_index',
-            'descriptions.resource.POST',
-            'routes.resource.fields',
-            'routes.resource.parameters'
+            'api.descriptions.resource.GET_index',
+            'api.descriptions.resource.POST',
+            'api.routes.resource.fields',
+            'api.routes.resource.parameters'
         );
     }
 
@@ -110,10 +110,10 @@ class ResourceController extends Controller
     public function optionsShow(Request $request, string $resource_type_id, string $resource_id): JsonResponse
     {
         return $this->generateOptionsForShow(
-            'descriptions.resource.GET_show',
-            'descriptions.resource.DELETE',
-            'descriptions.resource.PATCH',
-            'routes.resource.fields'
+            'api.descriptions.resource.GET_show',
+            'api.descriptions.resource.DELETE',
+            'api.descriptions.resource.PATCH',
+            'api.routes.resource.fields'
         );
     }
 

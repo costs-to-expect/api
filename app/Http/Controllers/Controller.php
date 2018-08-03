@@ -22,9 +22,9 @@ class Controller extends BaseController
         $min_length = Config::get('api.hashids.min_length');
 
         $this->hashers['category'] = new Hashids(Config::get('api.hashids.category'), $min_length);
-        $this->hashers['_sub_category'] = new Hashids(Config::get('api.hashids.sub_category'), $min_length);
+        $this->hashers['sub_category'] = new Hashids(Config::get('api.hashids.sub_category'), $min_length);
         $this->hashers['resource_type'] = new Hashids(Config::get('api.hashids.resource_type'), $min_length);
-        $this->hashers['_resource'] = new Hashids(Config::get('api.hashids.resource'), $min_length);
+        $this->hashers['resource'] = new Hashids(Config::get('api.hashids.resource'), $min_length);
         $this->hashers['item'] = new Hashids(Config::get('api.hashids.item'), $min_length);
         $this->hashers['item_category'] = new Hashids(Config::get('api.hashids.item_category'), $min_length);
         $this->hashers['item_sub_category'] = new Hashids(Config::get('api.hashids.item_sub_category'), $min_length);
@@ -77,15 +77,28 @@ class Controller extends BaseController
      * Return Validation errors
      *
      * @param \Illuminate\Contracts\Validation\Validator $validator
+     * @param array $allowed_values
      *
      * @return JsonResponse
      */
-    protected function returnValidationErrors(Validator $validator): JsonResponse
+    protected function returnValidationErrors(Validator $validator, array $allowed_values = []): JsonResponse
     {
+        $validation_errors = ['fields' => []];
+
+        foreach ($validator->errors()->toArray() as $field => $errors) {
+            foreach ($errors as $error) {
+                $validation_errors['fields'][$field]['errors'][] = $error;
+            }
+        }
+
+        if (count($allowed_values) > 0) {
+            $validation_errors = array_merge_recursive($validation_errors['fields'], $allowed_values);
+        }
+
         return response()->json(
             [
                 'message' => 'Validation error',
-                'fields' => $validator->errors()
+                'fields' => $validation_errors
             ],
             422
         );
@@ -128,6 +141,7 @@ class Controller extends BaseController
      * @param string $post_description_key
      * @param string $post_fields_key
      * @param string $parameters_key
+     * @param array $allowed_values Allowed values for fields, merged with fields array
      *
      * @return JsonResponse
      */
@@ -135,7 +149,8 @@ class Controller extends BaseController
         string $get_description_key,
         string $post_description_key,
         string $post_fields_key,
-        string $parameters_key
+        string $parameters_key,
+        array $allowed_values = []
     ): JsonResponse
     {
         $routes = [
@@ -147,7 +162,7 @@ class Controller extends BaseController
             'POST' => [
                 'description' => Config::get($post_description_key),
                 'authenticated' => true,
-                'fields' => Config::get($post_fields_key)
+                'fields' => array_merge_recursive(Config::get($post_fields_key), $allowed_values)
             ]
         ];
 
@@ -248,12 +263,34 @@ class Controller extends BaseController
     protected function decodeParameter(string $parameter, $hasher)
     {
         if (array_key_exists($hasher, $this->hashers) === true) {
-            $id = $this->$this->hashers[$hasher]->decode($parameter);
+            $id = $this->hashers[$hasher]->decode($parameter);
             if (is_array($id) && array_key_exists(0, $id)) {
                 return $id[0];
             } else {
                 return $this->returnResourceNotFound();
             }
+        } else {
+            return response()->json(
+                [
+                    'message' => 'Hasher not found'
+                ],
+                500
+            );
+        }
+    }
+
+    /**
+     * Encode a parameter
+     *
+     * @param string $parameter The hash to decode
+     * @param string $hasher to use to decode
+     *
+     * @return int|JsonResponse
+     */
+    protected function encodeParameter(string $parameter, $hasher)
+    {
+        if (array_key_exists($hasher, $this->hashers) === true) {
+            return $this->hashers[$hasher]->encode($parameter);
         } else {
             return response()->json(
                 [
