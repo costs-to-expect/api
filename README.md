@@ -37,6 +37,15 @@ alternatively a GET request to `http://api.local/api-v1` will show all the route
 * You can add a development user by POSTing to `http://api.local/api-v1/auth/register` and then get a bearer by 
 POSTing to `http://api.local/api-v1/auth/login` - you will need a bearer for all the routes that require authentication.
 
+## Responses
+
+* Collections will return an array and 200.
+* Items will return a single object and a 200.
+* Successful POST requests will return a single object and a 201.
+* Successful DELETE requests will return a 204.
+* Non 2xx results will return an object with a message field and optionally a fields field, for example containing 
+the validation errors.
+
 ## Management routes
 
 Please find below a list of the API management routes that are (will be) implemented for version 1.00.  
