@@ -6,6 +6,8 @@ Full changelog for the costs to expect REST API.
 
 ## Additional development and fine tuning
 
+* Added ability to define allowed values for fields.
+* Updated validation errors, now the same format as OPTIONS requests and shows allowed values if defined.
 * Removed response envelopes.
 * Non-2xx responses more consistent.
 * Added a responses section to the README that details the expected responses and formats.
