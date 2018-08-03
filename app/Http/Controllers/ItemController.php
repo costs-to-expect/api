@@ -43,14 +43,12 @@ class ItemController extends Controller
         }
 
         return response()->json(
-            [
-                'results' => $items->map(
-                    function ($item)
-                    {
-                        return (new ItemTransformer($item))->toArray();
-                    }
-                )
-            ],
+            $items->map(
+                function ($item)
+                {
+                    return (new ItemTransformer($item))->toArray();
+                }
+            ),
             200,
             $headers
         );
@@ -77,9 +75,7 @@ class ItemController extends Controller
         }
 
         return response()->json(
-            [
-                'result' => (new ItemTransformer($item))->toArray()
-            ],
+            (new ItemTransformer($item))->toArray(),
             200,
             [
                 'X-Total-Count' => 1
@@ -161,16 +157,14 @@ class ItemController extends Controller
         } catch (Exception $e) {
             return response()->json(
                 [
-                    'error' => 'Error creating new record'
+                    'message' => 'Error creating new record'
                 ],
                 500
             );
         }
 
         return response()->json(
-            [
-                'result' => (new ItemTransformer($item))->toArray()
-            ],
+            (new ItemTransformer($item))->toArray(),
             201
         );
     }
@@ -224,11 +218,9 @@ class ItemController extends Controller
 
         return response()->json(
             [
-                'result' => [
-                    'resource_type_id' => $resource_type_id,
-                    'resource_id' => $resource_id,
-                    'item_id' => $item_id
-                ]
+                'resource_type_id' => $resource_type_id,
+                'resource_id' => $resource_id,
+                'item_id' => $item_id
             ],
             200
         );

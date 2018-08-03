@@ -42,14 +42,12 @@ class SubCategoryController extends Controller
         }
 
         return response()->json(
-            [
-                'results' => $sub_categories->map(
-                    function ($sub_category)
-                    {
-                        return (new SubCategoryTransformer($sub_category))->toArray();
-                    }
-                )
-            ],
+            $sub_categories->map(
+                function ($sub_category)
+                {
+                    return (new SubCategoryTransformer($sub_category))->toArray();
+                }
+            ),
             200,
             $headers
         );
@@ -75,9 +73,7 @@ class SubCategoryController extends Controller
         }
 
         return response()->json(
-            [
-                'result' => (new SubCategoryTransformer($sub_category))->toArray()
-            ],
+            (new SubCategoryTransformer($sub_category))->toArray(),
             200,
             [
                 'X-Total-Count' => 1
@@ -148,16 +144,14 @@ class SubCategoryController extends Controller
         } catch (Exception $e) {
             return response()->json(
                 [
-                    'error' => 'Error creating new record'
+                    'message' => 'Error creating new record'
                 ],
                 500
             );
         }
 
         return response()->json(
-            [
-                'result' => (new SubCategoryTransformer($sub_category))->toArray()
-            ],
+            (new SubCategoryTransformer($sub_category))->toArray(),
             201
         );
     }
@@ -199,10 +193,8 @@ class SubCategoryController extends Controller
 
         return response()->json(
             [
-                'result' => [
-                    'category_id' => $category_id,
-                    'sub_category_id' => $sub_category_id
-                ]
+                'category_id' => $category_id,
+                'sub_category_id' => $sub_category_id
             ],
             200
         );

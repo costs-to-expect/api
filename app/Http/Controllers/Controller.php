@@ -67,7 +67,7 @@ class Controller extends BaseController
     {
         return response()->json(
             [
-                'error' => 'Bad request, you need to supply at least one field to patch'
+                'message' => 'Bad request, you need to supply at least one field to patch'
             ],
             400
         );
@@ -84,7 +84,7 @@ class Controller extends BaseController
     {
         return response()->json(
             [
-                'error' => 'Validation error',
+                'message' => 'Validation error',
                 'fields' => $validator->errors()
             ],
             422
@@ -100,7 +100,7 @@ class Controller extends BaseController
     {
         return response()->json(
             [
-                'error' => 'Resource not found'
+                'message' => 'Resource not found'
             ],
             404
         );
@@ -115,7 +115,7 @@ class Controller extends BaseController
     {
         return response()->json(
             [
-                'error' => 'Value already set, conflict'
+                'message' => 'Value already set, conflict'
             ],
             409
         );
@@ -257,7 +257,7 @@ class Controller extends BaseController
         } else {
             return response()->json(
                 [
-                    'error' => 'Hasher not found'
+                    'message' => 'Hasher not found'
                 ],
                 500
             );

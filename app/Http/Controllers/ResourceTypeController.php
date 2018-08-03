@@ -43,14 +43,12 @@ class ResourceTypeController extends Controller
         }
 
         return response()->json(
-            [
-                'results' => $resource_types->map(
-                    function ($resource_type)
-                    {
-                        return (new ResourceTypeTransformer($resource_type, $this->parameters_index))->toArray();
-                    }
-                )
-            ],
+            $resource_types->map(
+                function ($resource_type)
+                {
+                    return (new ResourceTypeTransformer($resource_type, $this->parameters_index))->toArray();
+                }
+            ),
             200,
             $headers
         );
@@ -73,9 +71,7 @@ class ResourceTypeController extends Controller
         }
 
         return response()->json(
-            [
-                'result' => (new ResourceTypeTransformer($resource_type))->toArray()
-            ],
+            (new ResourceTypeTransformer($resource_type))->toArray(),
             200,
             [
                 'X-Total-Count' => 1
@@ -141,16 +137,14 @@ class ResourceTypeController extends Controller
         } catch (Exception $e) {
             return response()->json(
                 [
-                    'error' => 'Error creating new record'
+                    'message' => 'Error creating new record'
                 ],
                 500
             );
         }
 
         return response()->json(
-            [
-                'result' => (new ResourceTypeTransformer($resource_type))->toArray()
-            ],
+            (new ResourceTypeTransformer($resource_type))->toArray(),
             201
         );
     }
@@ -190,9 +184,7 @@ class ResourceTypeController extends Controller
 
         return response()->json(
             [
-                'result' => [
-                    'resource_type_id' => $resource_type_id
-                ]
+                'resource_type_id' => $resource_type_id
             ],
             200
         );

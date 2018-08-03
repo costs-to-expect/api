@@ -25,10 +25,10 @@ class PassportController extends Controller
         if(Auth::attempt(['email' => request('email'), 'password' => request('password')])){
             $user = Auth::user();
             $success['token'] =  $user->createToken('costs-to-expect')->accessToken;
-            return response()->json(['result' => $success], $this->successStatus);
+            return response()->json($success, $this->successStatus);
         }
         else{
-            return response()->json(['error'=>'Unauthorised'], 401);
+            return response()->json(['message'=>'Unauthorised'], 401);
         }
     }
 
@@ -49,7 +49,13 @@ class PassportController extends Controller
         ]);
 
         if ($validator->fails()) {
-            return response()->json(['error'=>$validator->errors()], 401);
+            return response()->json(
+                [
+                    'message' => 'Validation error',
+                    'fields' => $validator->errors()
+                ],
+                422
+            );
         }
 
         $input = $request->all();
@@ -58,7 +64,7 @@ class PassportController extends Controller
         $success['token'] =  $user->createToken('costs-to-expect')->accessToken;
         $success['name'] =  $user->name;
 
-        return response()->json(['result'=>$success], $this->successStatus);
+        return response()->json($success, $this->successStatus);
     }
 
     /**
@@ -69,6 +75,6 @@ class PassportController extends Controller
     public function user()
     {
         $user = Auth::user();
-        return response()->json(['result' => $user], $this->successStatus);
+        return response()->json($user, $this->successStatus);
     }
 }
