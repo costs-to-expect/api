@@ -50,9 +50,7 @@ class ItemSubCategoryController extends Controller
         ];
 
         return response()->json(
-            [
-                'result' => (new ItemSubCategoryTransformer($item_sub_category))->toArray()
-            ],
+            (new ItemSubCategoryTransformer($item_sub_category))->toArray(),
             200,
             $headers
         );
@@ -92,9 +90,7 @@ class ItemSubCategoryController extends Controller
         ];
 
         return response()->json(
-            [
-                'result' => (new ItemSubCategoryTransformer($item_sub_category))->toArray()
-            ],
+            (new ItemSubCategoryTransformer($item_sub_category))->toArray(),
             200,
             $headers
         );
@@ -193,9 +189,7 @@ class ItemSubCategoryController extends Controller
         }
 
         return response()->json(
-            [
-                'result' => (new ItemSubCategoryTransformer($item_sub_category))->toArray()
-            ],
+            (new ItemSubCategoryTransformer($item_sub_category))->toArray(),
             201
         );
     }

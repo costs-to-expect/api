@@ -42,14 +42,12 @@ class ResourceController extends Controller
         }
 
         return response()->json(
-            [
-                'results' => $resources->map(
-                    function ($resource)
-                    {
-                        return (new ResourceTransformer($resource))->toArray();
-                    }
-                )
-            ],
+            $resources->map(
+                function ($resource)
+                {
+                    return (new ResourceTransformer($resource))->toArray();
+                }
+            ),
             200,
             $headers
         );
@@ -75,9 +73,7 @@ class ResourceController extends Controller
         }
 
         return response()->json(
-            [
-                'result' => (new ResourceTransformer($resource))->toArray()
-            ],
+            (new ResourceTransformer($resource))->toArray(),
             200,
             [
                 'X-Total-Count' => 1
@@ -155,9 +151,7 @@ class ResourceController extends Controller
         }
 
         return response()->json(
-            [
-                'result' => (new ResourceTransformer($resource))->toArray()
-            ],
+            (new ResourceTransformer($resource))->toArray(),
             201
         );
     }
@@ -199,10 +193,8 @@ class ResourceController extends Controller
 
         return response()->json(
             [
-                'result' => [
-                    'resource_type_id' => $resource_type_id,
-                    'resource_id' => $resource_id
-                ]
+                'resource_type_id' => $resource_type_id,
+                'resource_id' => $resource_id
             ],
             200
         );
