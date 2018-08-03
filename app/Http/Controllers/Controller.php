@@ -22,9 +22,9 @@ class Controller extends BaseController
         $min_length = Config::get('api.hashids.min_length');
 
         $this->hashers['category'] = new Hashids(Config::get('api.hashids.category'), $min_length);
-        $this->hashers['_sub_category'] = new Hashids(Config::get('api.hashids.sub_category'), $min_length);
+        $this->hashers['sub_category'] = new Hashids(Config::get('api.hashids.sub_category'), $min_length);
         $this->hashers['resource_type'] = new Hashids(Config::get('api.hashids.resource_type'), $min_length);
-        $this->hashers['_resource'] = new Hashids(Config::get('api.hashids.resource'), $min_length);
+        $this->hashers['resource'] = new Hashids(Config::get('api.hashids.resource'), $min_length);
         $this->hashers['item'] = new Hashids(Config::get('api.hashids.item'), $min_length);
         $this->hashers['item_category'] = new Hashids(Config::get('api.hashids.item_category'), $min_length);
         $this->hashers['item_sub_category'] = new Hashids(Config::get('api.hashids.item_sub_category'), $min_length);

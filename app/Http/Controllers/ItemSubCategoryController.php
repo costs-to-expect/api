@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\ItemCategory;
 use App\Models\ItemSubCategory;
+use App\Models\SubCategory;
 use App\Transformers\ItemSubCategory as ItemSubCategoryTransformer;
 use App\Validators\ItemSubCategory as ItemSubCategoryValidator;
 use Exception;
@@ -102,16 +104,31 @@ class ItemSubCategoryController extends Controller
      * @param Request $request
      * @param string $resource_type_id
      * @param string $resource_id
+     * @param string $item_id
+     * @param string $item_category_id
      *
      * @return JsonResponse
      */
-    public function optionsIndex(Request $request, string $resource_type_id, string $resource_id): JsonResponse
+    public function optionsIndex(
+        Request $request,
+        string $resource_type_id,
+        string $resource_id,
+        string $item_id,
+        string $item_category_id
+    ): JsonResponse
     {
+        $allowed_values = [];
+        $item_category = (new ItemCategory())->find($item_category_id);
+        if ($item_category_id !== null) {
+            $allowed_values = $this->allowedValues($item_category->category_id);
+        }
+
         return $this->generateOptionsForIndex(
             'api.descriptions.item_sub_category.GET_index',
             'api.descriptions.item_sub_category.POST',
             'api.routes.item_sub_category.fields',
-            'api.routes.item_sub_category.parameters'
+            'api.routes.item_sub_category.parameters',
+            $allowed_values
         );
     }
 
@@ -192,5 +209,33 @@ class ItemSubCategoryController extends Controller
             (new ItemSubCategoryTransformer($item_sub_category))->toArray(),
             201
         );
+    }
+
+    /**
+     * Generate the array of allowed values fields
+     *
+     * @param array $category_id
+     *
+     * @return array
+     */
+    private function allowedValues($category_id)
+    {
+        $sub_categories = (new SubCategory())
+            ->select('id', 'name', 'description')
+            ->where('category_id', '=', $category_id)
+            ->get();
+
+        $allowed_values = ['sub_category_id' => []];
+
+        foreach ($sub_categories as $sub_category) {
+            $id = $this->encodeParameter($sub_category->id, 'sub_category');
+            $allowed_values['sub_category_id']['allowed_values'][$id] = [
+                'value' => $id,
+                'name' => $sub_category->name,
+                'description' => $sub_category->description
+            ];
+        }
+
+        return $allowed_values;
     }
 }
