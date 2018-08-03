@@ -92,10 +92,10 @@ class SubCategoryController extends Controller
     public function optionsIndex(Request $request, string $category_id): JsonResponse
     {
         return $this->generateOptionsForIndex(
-            'descriptions.sub_category.GET_index',
-            'descriptions.sub_category.POST',
-            'routes.sub_category.fields',
-            'routes.sub_category.parameters'
+            'api.descriptions.sub_category.GET_index',
+            'api.descriptions.sub_category.POST',
+            'api.routes.sub_category.fields',
+            'api.routes.sub_category.parameters'
         );
     }
 
@@ -111,10 +111,10 @@ class SubCategoryController extends Controller
     public function optionsShow(Request $request, string $category_id, string $sub_category_id): JsonResponse
     {
         return $this->generateOptionsForShow(
-            'descriptions.sub_category.GET_show',
-            'descriptions.sub_category.DELETE',
-            'descriptions.sub_category.PATCH',
-            'routes.sub_category.fields'
+            'api.descriptions.sub_category.GET_show',
+            'api.descriptions.sub_category.DELETE',
+            'api.descriptions.sub_category.PATCH',
+            'api.routes.sub_category.fields'
         );
     }
 

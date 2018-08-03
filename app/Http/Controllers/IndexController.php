@@ -67,7 +67,7 @@ class IndexController extends Controller
     {
         $routes = [
             'GET' => [
-                'description' => Config::get('descriptions.api.GET_index'),
+                'description' => Config::get('api.descriptions.api.GET_index'),
                 'authenticated' => false,
                 'parameters' => []
             ]

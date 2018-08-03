@@ -95,10 +95,10 @@ class ItemController extends Controller
     public function optionsIndex(Request $request, string $resource_type_id, string $resource_id): JsonResponse
     {
         return $this->generateOptionsForIndex(
-            'descriptions.item.GET_index',
-            'descriptions.item.POST',
-            'routes.item.fields',
-            'routes.item.parameters'
+            'api.descriptions.item.GET_index',
+            'api.descriptions.item.POST',
+            'api.routes.item.fields',
+            'api.routes.item.parameters'
         );
     }
 
@@ -120,10 +120,10 @@ class ItemController extends Controller
     ): JsonResponse
     {
         return $this->generateOptionsForShow(
-            'descriptions.item.GET_show',
-            'descriptions.item.DELETE',
-            'descriptions.item.PATCH',
-            'routes.item.fields'
+            'api.descriptions.item.GET_show',
+            'api.descriptions.item.DELETE',
+            'api.descriptions.item.PATCH',
+            'api.routes.item.fields'
         );
     }
 
@@ -150,7 +150,7 @@ class ItemController extends Controller
                 'description' => $request->input('description'),
                 'effective_date' => $request->input('effective_date'),
                 'total' => $request->input('total'),
-                'percentage' => $request->input('percentage'),
+                'percentage' => $request->input('percentage', 100),
             ]);
             $item->setActualisedTotal($item->total, $item->percentage);
             $item->save();

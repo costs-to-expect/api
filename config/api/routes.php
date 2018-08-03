@@ -218,7 +218,7 @@ return [
             'percentage' => [
                 'field' => 'percentage',
                 'title' => 'Resource effective date',
-                'description' => 'Enter the percentage to allot, defaults to 100',
+                'description' => 'Enter the percentage to allot, defaults to 100 if not supplied',
                 'type' => 'string'
             ]
         ],
@@ -228,7 +228,7 @@ return [
                     'description' => 'required|string',
                     'effective_date' => 'required|date_format:Y-m-d',
                     'total' => 'required|string|regex:/^\d+\.\d{2}$/',
-                    'percentage' => 'required|integer|between:1,100'
+                    'percentage' => 'sometimes|required|integer|between:1,100'
                 ],
                 'messages' => [
                     'total.regex' => "Total cost in the format 0.00"

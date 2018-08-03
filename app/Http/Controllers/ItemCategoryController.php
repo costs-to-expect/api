@@ -99,10 +99,10 @@ class ItemCategoryController extends Controller
     public function optionsIndex(Request $request, string $resource_type_id, string $resource_id): JsonResponse
     {
         return $this->generateOptionsForIndex(
-            'descriptions.item_category.GET_index',
-            'descriptions.item_category.POST',
-            'routes.item_category.fields',
-            'routes.item_category.parameters'
+            'api.descriptions.item_category.GET_index',
+            'api.descriptions.item_category.POST',
+            'api.routes.item_category.fields',
+            'api.routes.item_category.parameters'
         );
     }
 
@@ -124,10 +124,10 @@ class ItemCategoryController extends Controller
     ): JsonResponse
     {
         return $this->generateOptionsForShow(
-            'descriptions.item_category.GET_show',
-            'descriptions.item_category.DELETE',
-            'descriptions.item_category.PATCH',
-            'routes.item_category.fields'
+            'api.descriptions.item_category.GET_show',
+            'api.descriptions.item_category.DELETE',
+            'api.descriptions.item_category.PATCH',
+            'api.routes.item_category.fields'
         );
     }
 
