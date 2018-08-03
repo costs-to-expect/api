@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Category;
 use App\Models\ItemCategory;
 use App\Transformers\ItemCategory as ItemCategoryTransformer;
 use App\Validators\ItemCategory as ItemCategoryValidator;
@@ -102,7 +103,8 @@ class ItemCategoryController extends Controller
             'api.descriptions.item_category.GET_index',
             'api.descriptions.item_category.POST',
             'api.routes.item_category.fields',
-            'api.routes.item_category.parameters'
+            'api.routes.item_category.parameters',
+            $this->allowedValues()
         );
     }
 
@@ -159,7 +161,7 @@ class ItemCategoryController extends Controller
         $validator = (new ItemCategoryValidator)->create($request);
 
         if ($validator->fails() === true) {
-            return $this->returnValidationErrors($validator);
+            return $this->returnValidationErrors($validator, $this->allowedValues());
         }
 
         try {
@@ -181,5 +183,28 @@ class ItemCategoryController extends Controller
             (new ItemCategoryTransformer($item_category))->toArray(),
             201
         );
+    }
+
+    /**
+     * Generate the array of allowed values fields
+     *
+     * @return array
+     */
+    private function allowedValues()
+    {
+        $categories = (new Category())->select('id', 'name', 'description')->get();
+
+        $allowed_values = ['category_id' => []];
+        foreach ($categories as $category) {
+            $id = $this->encodeParameter($category->id, 'category');
+
+            $allowed_values['category_id']['allowed_values'][$id] = [
+                'value' => $id,
+                'name' => $category->name,
+                'description' => $category->description
+            ];
+        }
+
+        return $allowed_values;
     }
 }
