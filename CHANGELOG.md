@@ -6,6 +6,9 @@ Full changelog for the costs to expect REST API.
 
 ## Additional development and fine tuning
 
+* Removed response envelopes.
+* Non-2xx responses more consistent.
+* Added a responses section to the README that details the expected responses and formats.
 * Reworked the id hashing, added middleware and slightly improved encoding although I need to DRY the code, 
 looking at you, transformers, validators and base controller.  
 * Moved API config files into a sub folder to separate them from Laravel.
