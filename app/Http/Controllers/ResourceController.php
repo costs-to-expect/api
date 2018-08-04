@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Resource;
+use App\Models\ResourceType;
 use App\Transformers\Resource as ResourceTransformer;
 use App\Validators\Resource as ResourceValidator;
 use Exception;
@@ -85,11 +86,16 @@ class ResourceController extends Controller
      * Generate the OPTIONS request for the resource list
      *
      * @param Request $request
+     * @param string $resource_type_id
      *
      * @return JsonResponse
      */
-    public function optionsIndex(Request $request): JsonResponse
+    public function optionsIndex(Request $request, string $resource_type_id): JsonResponse
     {
+        if ((new ResourceType)->find($resource_type_id) === null) {
+            return $this->returnResourceNotFound();
+        }
+
         return $this->generateOptionsForIndex(
             'api.descriptions.resource.GET_index',
             'api.descriptions.resource.POST',
@@ -109,6 +115,14 @@ class ResourceController extends Controller
      */
     public function optionsShow(Request $request, string $resource_type_id, string $resource_id): JsonResponse
     {
+        $resource = (new Resource)
+            ->where('resource_type_id', '=', $resource_type_id)
+            ->find($resource_id);
+
+        if ($resource === null) {
+            return $this->returnResourceNotFound();
+        }
+
         return $this->generateOptionsForShow(
             'api.descriptions.resource.GET_show',
             'api.descriptions.resource.DELETE',
@@ -127,6 +141,10 @@ class ResourceController extends Controller
      */
     public function create(Request $request, string $resource_type_id): JsonResponse
     {
+        if ((new ResourceType)->find($resource_type_id) === null) {
+            return $this->returnResourceNotFound();
+        }
+
         $validator = (new ResourceValidator)->create($request, $resource_type_id);
 
         if ($validator->fails() === true) {
