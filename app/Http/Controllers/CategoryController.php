@@ -102,9 +102,7 @@ class CategoryController extends Controller
      */
     public function optionsShow(Request $request, string $category_id): JsonResponse
     {
-        $category = (new Category)->find($category_id);
-
-        if ($category === null) {
+        if ((new Category)->find($category_id) === null) {
             return $this->returnResourceNotFound();
         }
 
