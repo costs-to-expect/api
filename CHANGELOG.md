@@ -6,6 +6,7 @@ Full changelog for the costs to expect REST API.
 
 ## Additional development and fine tuning
 
+* Updated OPTIONS requests, added required Yes/No flags.
 * Added ability to define allowed values for fields.
 * Updated validation errors, now the same format as OPTIONS requests and shows allowed values if defined.
 * Removed response envelopes.

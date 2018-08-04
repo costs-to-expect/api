@@ -5,13 +5,15 @@ $pagination = [
         'parameter' => 'offset',
         'title' => 'Record offset for pagination',
         'default' => 0,
-        'type' => 'integer'
+        'type' => 'integer',
+        'required' => false
     ],
     'limit' => [
         'parameter' => 'limit',
         'title' => 'Record limit for pagination',
         'default' => 10,
-        'type' => 'integer'
+        'type' => 'integer',
+        'required' => false
     ]
 ];
 
@@ -22,13 +24,15 @@ return [
                 'field' => 'name',
                 'title' => 'Category name',
                 'description' => 'Enter a name for the category',
-                'type' => 'string'
+                'type' => 'string',
+                'required' => true
             ],
             'description' => [
                 'field' => 'description',
                 'title' => 'Category description',
                 'description' => 'Enter a description for the category',
-                'type' => 'string'
+                'type' => 'string',
+                'required' => true
             ]
         ],
         'validation' => [
@@ -61,13 +65,15 @@ return [
                 'field' => 'name',
                 'title' => 'Sub category name',
                 'description' => 'Enter a name for the sub category',
-                'type' => 'string'
+                'type' => 'string',
+                'required' => true
             ],
             'description' => [
                 'field' => 'description',
                 'title' => 'Sub category description',
                 'description' => 'Enter a description for the sub category',
-                'type' => 'string'
+                'type' => 'string',
+                'required' => true
             ]
         ],
         'validation' => [
@@ -100,13 +106,15 @@ return [
                 'field' => 'name',
                 'title' => 'Resource type name',
                 'description' => 'Enter a name for the resource type',
-                'type' => 'string'
+                'type' => 'string',
+                'required' => true
             ],
             'description' => [
                 'field' => 'description',
                 'title' => 'Resource type description',
                 'description' => 'Enter a description for the resource type',
-                'type' => 'string'
+                'type' => 'string',
+                'required' => true
             ]
         ],
         'validation' => [
@@ -136,7 +144,8 @@ return [
                     'field' => 'include_resources',
                     'title' => 'Include resources',
                     'description' => 'Include resources assigned to resource type',
-                    'type' => 'boolean'
+                    'type' => 'boolean',
+                    'required' => false
                 ]
             ]
         )
@@ -147,19 +156,22 @@ return [
                 'field' => 'name',
                 'title' => 'Resource name',
                 'description' => 'Enter a name for the resource',
-                'type' => 'string'
+                'type' => 'string',
+                'required' => true
             ],
             'description' => [
                 'field' => 'description',
                 'title' => 'Resource description',
                 'description' => 'Enter a description for the resource',
-                'type' => 'string'
+                'type' => 'string',
+                'required' => true
             ],
             'effective_date' => [
                 'field' => 'effective_date',
                 'title' => 'Resource effective date',
                 'description' => 'Enter an effective date for the resource',
-                'type' => 'date (yyyy-mm-dd)'
+                'type' => 'date (yyyy-mm-dd)',
+                'required' => true
             ]
         ],
         'validation' => [
@@ -201,25 +213,29 @@ return [
                 'field' => 'description',
                 'title' => 'Item description',
                 'description' => 'Enter a description for the item',
-                'type' => 'string'
+                'type' => 'string',
+                'required' => true
             ],
             'effective_date' => [
                 'field' => 'effective_date',
                 'title' => 'Item effective date',
                 'description' => 'Enter the effective date for the item',
-                'type' => 'date (yyyy-mm-dd)'
+                'type' => 'date (yyyy-mm-dd)',
+                'required' => true
             ],
             'total' => [
                 'field' => 'total',
                 'title' => 'Resource total',
                 'description' => 'Enter the total amount for the item',
-                'type' => 'decimal (10,2)'
+                'type' => 'decimal (10,2)',
+                'required' => true
             ],
             'percentage' => [
                 'field' => 'percentage',
                 'title' => 'Resource effective date',
                 'description' => 'Enter the percentage to allot, defaults to 100 if not supplied',
-                'type' => 'string'
+                'type' => 'string',
+                'required' => false
             ]
         ],
         'validation' => [
@@ -255,7 +271,8 @@ return [
                 'field' => 'category_id',
                 'title' => 'Category',
                 'description' => 'Which category should the item be assigned to',
-                'type' => 'string'
+                'type' => 'string',
+                'required' => true
             ]
         ],
         'validation' => [
@@ -286,7 +303,8 @@ return [
                 'field' => 'sub_category_id',
                 'title' => 'Sub category',
                 'description' => 'Which sub category should the item be assigned to',
-                'type' => 'string'
+                'type' => 'string',
+                'required' => true
             ]
         ],
         'validation' => [
