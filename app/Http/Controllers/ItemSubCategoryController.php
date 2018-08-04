@@ -41,6 +41,12 @@ class ItemSubCategoryController extends Controller
     {
         $item_sub_category = (new ItemSubCategory())
             ->where('item_id', '=', $item_id)
+            ->whereHas('item', function ($query) use ($resource_id, $resource_type_id) {
+                $query->where('resource_id', '=', $resource_id)
+                    ->whereHas('resource', function ($query) use ($resource_type_id) {
+                        $query->where('resource_type_id', '=', $resource_type_id);
+                    });
+            })
             ->first();
 
         if ($item_sub_category === null) {
@@ -81,6 +87,12 @@ class ItemSubCategoryController extends Controller
     {
         $item_sub_category = (new ItemSubCategory())
             ->where('item_id', '=', $item_id)
+            ->whereHas('item', function ($query) use ($resource_id, $resource_type_id) {
+                $query->where('resource_id', '=', $resource_id)
+                    ->whereHas('resource', function ($query) use ($resource_type_id) {
+                        $query->where('resource_type_id', '=', $resource_type_id);
+                    });
+            })
             ->find($item_sub_category_id);
 
         if ($item_sub_category === null) {
@@ -117,6 +129,20 @@ class ItemSubCategoryController extends Controller
         string $item_category_id
     ): JsonResponse
     {
+        $item_category = (new ItemCategory())
+            ->where('item_id', '=', $item_id)
+            ->whereHas('item', function ($query) use ($resource_id, $resource_type_id) {
+                $query->where('resource_id', '=', $resource_id)
+                    ->whereHas('resource', function ($query) use ($resource_type_id) {
+                        $query->where('resource_type_id', '=', $resource_type_id);
+                    });
+            })
+            ->find($item_category_id);
+
+        if ($item_category === null) {
+            return $this->returnResourceNotFound();
+        }
+
         $allowed_values = [];
         $item_category = (new ItemCategory())->find($item_category_id);
         if ($item_category_id !== null) {
@@ -139,6 +165,8 @@ class ItemSubCategoryController extends Controller
      * @param string $resource_id
      * @param string $resource_type_id
      * @param string $item_id
+     * @param string $item_category_id
+     * @param string $item_sub_category_id
      *
      * @return JsonResponse
      */
@@ -146,9 +174,25 @@ class ItemSubCategoryController extends Controller
         Request $request,
         string $resource_type_id,
         string $resource_id,
-        string $item_id
+        string $item_id,
+        string $item_category_id,
+        string $item_sub_category_id
     ): JsonResponse
     {
+        $item_sub_category = (new ItemSubCategory())
+            ->where('item_id', '=', $item_id)
+            ->whereHas('item', function ($query) use ($resource_id, $resource_type_id) {
+                $query->where('resource_id', '=', $resource_id)
+                    ->whereHas('resource', function ($query) use ($resource_type_id) {
+                        $query->where('resource_type_id', '=', $resource_type_id);
+                    });
+            })
+            ->find($item_sub_category_id);
+
+        if ($item_sub_category === null) {
+            return $this->returnResourceNotFound();
+        }
+
         return $this->generateOptionsForShow(
             'api.descriptions.item_sub_category.GET_show',
             'api.descriptions.item_sub_category.DELETE',
@@ -178,6 +222,12 @@ class ItemSubCategoryController extends Controller
     {
         $item_sub_category = (new ItemSubCategory())
             ->where('item_id', '=', $item_id)
+            ->whereHas('item', function ($query) use ($resource_id, $resource_type_id) {
+                $query->where('resource_id', '=', $resource_id)
+                    ->whereHas('resource', function ($query) use ($resource_type_id) {
+                        $query->where('resource_type_id', '=', $resource_type_id);
+                    });
+            })
             ->first();
 
         if ($item_sub_category !== null) {
