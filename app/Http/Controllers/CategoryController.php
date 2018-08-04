@@ -102,6 +102,10 @@ class CategoryController extends Controller
      */
     public function optionsShow(Request $request, string $category_id): JsonResponse
     {
+        if ((new Category)->find($category_id) === null) {
+            return $this->returnResourceNotFound();
+        }
+
         return $this->generateOptionsForShow(
             'api.descriptions.category.GET_show',
             'api.descriptions.category.DELETE',
@@ -169,6 +173,12 @@ class CategoryController extends Controller
      */
     public function update(Request $request, string $category_id): JsonResponse
     {
+        $category = (new Category)->find($category_id);
+
+        if ($category === null) {
+            return $this->returnResourceNotFound();
+        }
+
         $validator = (new CategoryValidator)->update($request, $category_id);
 
         if ($validator->fails() === true) {

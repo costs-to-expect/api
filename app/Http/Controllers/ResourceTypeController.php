@@ -100,11 +100,16 @@ class ResourceTypeController extends Controller
      * Generate the OPTIONS request fir a specific resource type
      *
      * @param Request $request
+     * @param string $resource_type_id
      *
      * @return JsonResponse
      */
-    public function optionsShow(Request $request): JsonResponse
+    public function optionsShow(Request $request, string $resource_type_id): JsonResponse
     {
+        if ((new ResourceType)->find($resource_type_id) === null) {
+            return $this->returnResourceNotFound();
+        }
+
         return $this->generateOptionsForShow(
             'api.descriptions.resource_type.GET_show',
             'api.descriptions.resource_type.DELETE',

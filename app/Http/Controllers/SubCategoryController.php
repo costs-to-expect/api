@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Category;
 use App\Models\SubCategory;
 use App\Transformers\SubCategory as SubCategoryTransformer;
 use App\Validators\SubCategory as SubCategoryValidator;
@@ -91,6 +92,10 @@ class SubCategoryController extends Controller
      */
     public function optionsIndex(Request $request, string $category_id): JsonResponse
     {
+        if ((new Category)->find($category_id) === null) {
+            return $this->returnResourceNotFound();
+        }
+
         return $this->generateOptionsForIndex(
             'api.descriptions.sub_category.GET_index',
             'api.descriptions.sub_category.POST',
@@ -110,6 +115,14 @@ class SubCategoryController extends Controller
      */
     public function optionsShow(Request $request, string $category_id, string $sub_category_id): JsonResponse
     {
+        $sub_category = (new SubCategory())
+            ->where('category_id', '=', $category_id)
+            ->find($sub_category_id);
+
+        if ($sub_category === null) {
+            return $this->returnResourceNotFound();
+        }
+
         return $this->generateOptionsForShow(
             'api.descriptions.sub_category.GET_show',
             'api.descriptions.sub_category.DELETE',
@@ -128,6 +141,10 @@ class SubCategoryController extends Controller
      */
     public function create(Request $request, string $category_id): JsonResponse
     {
+        if ((new Category)->find($category_id) === null) {
+            return $this->returnResourceNotFound();
+        }
+
         $validator = (new SubCategoryValidator)->create($request, $category_id);
 
         if ($validator->fails() === true) {

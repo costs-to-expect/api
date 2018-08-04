@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Category;
+use App\Models\Item;
 use App\Models\ItemCategory;
 use App\Transformers\ItemCategory as ItemCategoryTransformer;
 use App\Validators\ItemCategory as ItemCategoryValidator;
@@ -33,6 +34,12 @@ class ItemCategoryController extends Controller
     {
         $item_category = (new ItemCategory())
             ->where('item_id', '=', $item_id)
+            ->whereHas('item', function ($query) use ($resource_id, $resource_type_id) {
+                $query->where('resource_id', '=', $resource_id)
+                    ->whereHas('resource', function ($query) use ($resource_type_id) {
+                        $query->where('resource_type_id', '=', $resource_type_id);
+                    });
+            })
             ->first();
 
         if ($item_category === null) {
@@ -71,6 +78,12 @@ class ItemCategoryController extends Controller
     {
         $item_category = (new ItemCategory())
             ->where('item_id', '=', $item_id)
+            ->whereHas('item', function ($query) use ($resource_id, $resource_type_id) {
+                $query->where('resource_id', '=', $resource_id)
+                    ->whereHas('resource', function ($query) use ($resource_type_id) {
+                        $query->where('resource_type_id', '=', $resource_type_id);
+                    });
+            })
             ->find($item_category_id);
 
         if ($item_category === null) {
@@ -94,11 +107,23 @@ class ItemCategoryController extends Controller
      * @param Request $request
      * @param string $resource_type_id
      * @param string $resource_id
+     * @param string $item_id
      *
      * @return JsonResponse
      */
-    public function optionsIndex(Request $request, string $resource_type_id, string $resource_id): JsonResponse
+    public function optionsIndex(Request $request, string $resource_type_id, string $resource_id, string $item_id): JsonResponse
     {
+        $item = (new Item())
+            ->where('resource_id', '=', $resource_id)
+            ->whereHas('resource', function ($query) use ($resource_type_id) {
+                $query->where('resource_type_id', '=', $resource_type_id);
+            })
+            ->find($item_id);
+
+        if ($item === null) {
+            return $this->returnResourceNotFound();
+        }
+
         return $this->generateOptionsForIndex(
             'api.descriptions.item_category.GET_index',
             'api.descriptions.item_category.POST',
@@ -115,6 +140,7 @@ class ItemCategoryController extends Controller
      * @param string $resource_id
      * @param string $resource_type_id
      * @param string $item_id
+     * @param string $item_category_id
      *
      * @return JsonResponse
      */
@@ -122,9 +148,24 @@ class ItemCategoryController extends Controller
         Request $request,
         string $resource_type_id,
         string $resource_id,
-        string $item_id
+        string $item_id,
+        string $item_category_id
     ): JsonResponse
     {
+        $item_category = (new ItemCategory())
+            ->where('item_id', '=', $item_id)
+            ->whereHas('item', function ($query) use ($resource_id, $resource_type_id) {
+                $query->where('resource_id', '=', $resource_id)
+                    ->whereHas('resource', function ($query) use ($resource_type_id) {
+                        $query->where('resource_type_id', '=', $resource_type_id);
+                    });
+            })
+            ->find($item_category_id);
+
+        if ($item_category === null) {
+            return $this->returnResourceNotFound();
+        }
+
         return $this->generateOptionsForShow(
             'api.descriptions.item_category.GET_show',
             'api.descriptions.item_category.DELETE',
@@ -150,6 +191,17 @@ class ItemCategoryController extends Controller
         string $item_id
     ): JsonResponse
     {
+        $item = (new Item())
+            ->where('resource_id', '=', $resource_id)
+            ->whereHas('resource', function ($query) use ($resource_type_id) {
+                $query->where('resource_type_id', '=', $resource_type_id);
+            })
+            ->find($item_id);
+
+        if ($item === null) {
+            return $this->returnResourceNotFound();
+        }
+
         $item_category = (new ItemCategory())
             ->where('item_id', '=', $item_id)
             ->first();
