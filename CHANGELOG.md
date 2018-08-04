@@ -6,6 +6,8 @@ Full changelog for the costs to expect REST API.
 
 ## Additional development and fine tuning
 
+* All route params are validated for each request. (In progress)
+* Updated ConvertHashIds middleware, returns 'nill' for values which can't be decode, useful for later checks. (In progress)
 * Updated OPTIONS requests, added required Yes/No flags.
 * Added ability to define allowed values for fields.
 * Updated validation errors, now the same format as OPTIONS requests and shows allowed values if defined.

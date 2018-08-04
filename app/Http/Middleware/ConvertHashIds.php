@@ -34,6 +34,8 @@ class ConvertHashIds
                 $id = $hasher->decode($request->route($param));
                 if (is_array($id) && array_key_exists(0, $id)) {
                     $request->route()->setParameter($param, $id[0]);
+                } else {
+                    $request->route()->setParameter($param, 'nill');
                 }
             }
         }

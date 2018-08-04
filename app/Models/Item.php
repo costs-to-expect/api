@@ -24,6 +24,6 @@ class Item extends Model
 
     public function resource()
     {
-        return $this->belongsTo(ResourceType::class, 'resource_id', 'id');
+        return $this->belongsTo(Resource::class, 'resource_id', 'id');
     }
 }
