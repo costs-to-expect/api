@@ -26,4 +26,9 @@ class Category extends Model
     {
         return $this->hasMany(SubCategory::class, 'category_id', 'id')->count();
     }
+
+    public function category()
+    {
+        return $this->belongsTo(Category::class, 'category_id', 'id');
+    }
 }
