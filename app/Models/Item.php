@@ -21,4 +21,9 @@ class Item extends Model
     {
         $this->attributes['actualised_total'] = ($percentage === 100) ? $total : $total * ($percentage/100);
     }
+
+    public function resource()
+    {
+        return $this->belongsTo(ResourceType::class, 'resource_id', 'id');
+    }
 }
