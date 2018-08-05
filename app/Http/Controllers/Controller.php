@@ -120,6 +120,21 @@ class Controller extends BaseController
     }
 
     /**
+     * Return 404, resource not found
+     *
+     * @return JsonResponse
+     */
+    protected function returnForeignKeyConstraintError(): JsonResponse
+    {
+        return response()->json(
+            [
+                'message' => 'Unable to delete resource, dependant data exists'
+            ],
+            500
+        );
+    }
+
+    /**
      * Return 409, resource value already set
      *
      * @return JsonResponse

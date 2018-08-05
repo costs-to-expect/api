@@ -9,6 +9,7 @@ use App\Models\SubCategory;
 use App\Transformers\ItemSubCategory as ItemSubCategoryTransformer;
 use App\Validators\ItemSubCategory as ItemSubCategoryValidator;
 use Exception;
+use Illuminate\Database\QueryException;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
@@ -319,22 +320,26 @@ class ItemSubCategoryController extends Controller
         string $item_sub_category_id
     ): JsonResponse
     {
-        try {
-            $result = (new ItemSubCategory())
-                ->where('item_id', '=', $item_id)
-                ->whereHas('item', function ($query) use ($resource_id, $resource_type_id) {
-                    $query->where('resource_id', '=', $resource_id)
-                        ->whereHas('resource', function ($query) use ($resource_type_id) {
-                            $query->where('resource_type_id', '=', $resource_type_id);
-                        });
-                })
-                ->delete($item_sub_category_id);
+        $item_sub_category = (new ItemSubCategory())
+            ->where('item_id', '=', $item_id)
+            ->whereHas('item', function ($query) use ($resource_id, $resource_type_id) {
+                $query->where('resource_id', '=', $resource_id)
+                    ->whereHas('resource', function ($query) use ($resource_type_id) {
+                        $query->where('resource_type_id', '=', $resource_type_id);
+                    });
+            })
+            ->find($item_sub_category_id);
 
-            if (boolval($result) === false) {
-                return $this->returnResourceNotFound();
-            }
+        if ($item_sub_category === null) {
+            return $this->returnResourceNotFound();
+        }
+
+        try {
+            $item_sub_category->delete();
 
             return response()->json([],204);
+        } catch (QueryException $e) {
+            return $this->returnForeignKeyConstraintError();
         } catch (Exception $e) {
             return $this->returnResourceNotFound();
         }
