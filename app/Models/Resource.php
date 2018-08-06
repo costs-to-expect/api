@@ -5,7 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 
 /**
- * Category model
+ * Resource model
  *
  * @author Dean Blackborough <dean@g3d-development.com>
  * @copyright Dean Blackborough 2018
@@ -25,5 +25,17 @@ class Resource extends Model
     public function resource_type()
     {
         return $this->belongsTo(ResourceType::class, 'resource_type_id', 'id');
+    }
+
+    public function paginatedCollection(int $resource_type_id, int $offset = 0, int $limit = 10)
+    {
+        return $this->where('resource_type_id', '=', $resource_type_id)
+            ->get();
+    }
+
+    public function single(int $resource_type_id, int $resource_id)
+    {
+        return $this->where('resource_type_id', '=', $resource_type_id)
+            ->find($resource_id);
     }
 }

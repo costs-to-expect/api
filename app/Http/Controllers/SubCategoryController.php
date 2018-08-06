@@ -72,6 +72,10 @@ class SubCategoryController extends Controller
         string $sub_category_id
     ): JsonResponse
     {
+        if (CategoryRouteValidator::validate($category_id) === false) {
+            return $this->returnResourceNotFound();
+        }
+
         $sub_category = (new SubCategory())->single(
             $category_id,
             $sub_category_id
