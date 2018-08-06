@@ -6,6 +6,7 @@ Full changelog for the costs to expect REST API.
 
 ## Additional development and fine tuning
 
+* Reworked relationship for item sub category and relevant controller updates. 
 * Added delete end points.
 * All route params are validated for each request.
 * Updated ConvertHashIds middleware, returns 'nill' for values which can't be decode, useful for later checks.
