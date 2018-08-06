@@ -6,6 +6,7 @@ Full changelog for the costs to expect REST API.
 
 ## Additional development and fine tuning
 
+* Added delete end points.
 * All route params are validated for each request.
 * Updated ConvertHashIds middleware, returns 'nill' for values which can't be decode, useful for later checks.
 * Updated OPTIONS requests, added required Yes/No flags.

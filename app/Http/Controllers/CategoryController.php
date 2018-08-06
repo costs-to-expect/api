@@ -6,6 +6,7 @@ use App\Models\Category;
 use App\Transformers\Category as CategoryTransformer;
 use App\Validators\Category as CategoryValidator;
 use Exception;
+use Illuminate\Database\QueryException;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
@@ -151,16 +152,33 @@ class CategoryController extends Controller
     }
 
     /**
-     * Delete a category
+     * Delete the requested category
      *
-     * @param Request $request
+     * @param Request $request,
      * @param string $category_id
      *
      * @return JsonResponse
      */
-    public function delete(Request $request, string $category_id): JsonResponse
+    public function delete(
+        Request $request,
+        string $category_id
+    ): JsonResponse
     {
-        return response()->json(null,204);
+        $category = (new Category())->find($category_id);
+
+        if ($category === null) {
+            return $this->returnResourceNotFound();
+        }
+
+        try {
+            $category->delete();
+
+            return response()->json([], 204);
+        } catch (QueryException $e) {
+            return $this->returnForeignKeyConstraintError();
+        } catch (Exception $e) {
+            return $this->returnResourceNotFound();
+        }
     }
 
     /**

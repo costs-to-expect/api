@@ -189,15 +189,29 @@ Route::group(
         );
 
         Route::delete(
+            'categories/{category_id}',
+            'CategoryController@delete'
+        );
+        Route::delete(
+            'categories/{category_id}/sub_categories/{sub_category_id}',
+            'SubCategoryController@delete'
+        );
+        Route::delete(
+            'resource_types/{resource_type_id}',
+            'ResourceTypeController@delete'
+        );
+        Route::delete(
+            'resource_types/{resource_type_id}/resources/{resource_id}',
+            'ResourceController@delete'
+        );
+        Route::delete(
             'resource_types/{resource_type_id}/resources/{resource_id}/items/{item_id}',
             'ItemController@delete'
         );
-
         Route::delete(
             'resource_types/{resource_type_id}/resources/{resource_id}/items/{item_id}/category/{item_category_id}',
             'ItemCategoryController@delete'
         );
-
         Route::delete(
             'resource_types/{resource_type_id}/resources/{resource_id}/items/{item_id}/category/{item_category_id}/sub_category/{item_sub_category_id}',
             'ItemSubCategoryController@delete'
