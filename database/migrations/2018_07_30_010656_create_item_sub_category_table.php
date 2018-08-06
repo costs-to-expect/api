@@ -18,7 +18,7 @@ class CreateItemSubCategoryTable extends Migration
             $table->collation = 'utf8mb4_unicode_ci';
 
             $table->bigIncrements('id');
-            $table->unsignedBigInteger('item_category_id');
+            $table->unsignedBigInteger('item_category_id')->unique();
             $table->unsignedBigInteger('sub_category_id');
             $table->timestamps();
             $table->foreign('item_category_id')->references('id')->on('item_category');
