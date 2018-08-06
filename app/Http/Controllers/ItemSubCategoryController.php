@@ -42,11 +42,14 @@ class ItemSubCategoryController extends Controller
     ): JsonResponse
     {
         $item_sub_category = (new ItemSubCategory())
-            ->where('item_id', '=', $item_id)
-            ->whereHas('item', function ($query) use ($resource_id, $resource_type_id) {
-                $query->where('resource_id', '=', $resource_id)
-                    ->whereHas('resource', function ($query) use ($resource_type_id) {
-                        $query->where('resource_type_id', '=', $resource_type_id);
+            ->where('item_category_id', '=', $item_category_id)
+            ->whereHas('item_category', function ($query) use ($item_id, $resource_id, $resource_type_id) {
+                $query->where('item_id', '=', $item_id)
+                    ->whereHas('item', function ($query) use ($resource_id, $resource_type_id) {
+                        $query->where('resource_id', '=', $resource_id)
+                            ->whereHas('resource', function ($query) use ($resource_type_id) {
+                                $query->where('resource_type_id', '=', $resource_type_id);
+                            });
                     });
             })
             ->first();
@@ -88,11 +91,14 @@ class ItemSubCategoryController extends Controller
     ): JsonResponse
     {
         $item_sub_category = (new ItemSubCategory())
-            ->where('item_id', '=', $item_id)
-            ->whereHas('item', function ($query) use ($resource_id, $resource_type_id) {
-                $query->where('resource_id', '=', $resource_id)
-                    ->whereHas('resource', function ($query) use ($resource_type_id) {
-                        $query->where('resource_type_id', '=', $resource_type_id);
+            ->where('item_category_id', '=', $item_category_id)
+            ->whereHas('item_category', function ($query) use ($item_id, $resource_id, $resource_type_id) {
+                $query->where('item_id', '=', $item_id)
+                    ->whereHas('item', function ($query) use ($resource_id, $resource_type_id) {
+                        $query->where('resource_id', '=', $resource_id)
+                            ->whereHas('resource', function ($query) use ($resource_type_id) {
+                                $query->where('resource_type_id', '=', $resource_type_id);
+                            });
                     });
             })
             ->find($item_sub_category_id);
@@ -135,9 +141,9 @@ class ItemSubCategoryController extends Controller
             ->where('item_id', '=', $item_id)
             ->whereHas('item', function ($query) use ($resource_id, $resource_type_id) {
                 $query->where('resource_id', '=', $resource_id)
-                    ->whereHas('resource', function ($query) use ($resource_type_id) {
-                        $query->where('resource_type_id', '=', $resource_type_id);
-                    });
+                ->whereHas('resource', function ($query) use ($resource_type_id) {
+                    $query->where('resource_type_id', '=', $resource_type_id);
+                });
             })
             ->find($item_category_id);
 
@@ -182,11 +188,14 @@ class ItemSubCategoryController extends Controller
     ): JsonResponse
     {
         $item_sub_category = (new ItemSubCategory())
-            ->where('item_id', '=', $item_id)
-            ->whereHas('item', function ($query) use ($resource_id, $resource_type_id) {
-                $query->where('resource_id', '=', $resource_id)
-                    ->whereHas('resource', function ($query) use ($resource_type_id) {
-                        $query->where('resource_type_id', '=', $resource_type_id);
+            ->where('item_category_id', '=', $item_category_id)
+            ->whereHas('item_category', function ($query) use ($item_id, $resource_id, $resource_type_id) {
+                $query->where('item_id', '=', $item_id)
+                    ->whereHas('item', function ($query) use ($resource_id, $resource_type_id) {
+                        $query->where('resource_id', '=', $resource_id)
+                            ->whereHas('resource', function ($query) use ($resource_type_id) {
+                                $query->where('resource_type_id', '=', $resource_type_id);
+                            });
                     });
             })
             ->find($item_sub_category_id);
@@ -223,11 +232,14 @@ class ItemSubCategoryController extends Controller
     ): JsonResponse
     {
         $item_sub_category = (new ItemSubCategory())
-            ->where('item_id', '=', $item_id)
-            ->whereHas('item', function ($query) use ($resource_id, $resource_type_id) {
-                $query->where('resource_id', '=', $resource_id)
-                    ->whereHas('resource', function ($query) use ($resource_type_id) {
-                        $query->where('resource_type_id', '=', $resource_type_id);
+            ->where('item_category_id', '=', $item_category_id)
+            ->whereHas('item_category', function ($query) use ($item_id, $resource_id, $resource_type_id) {
+                $query->where('item_id', '=', $item_id)
+                    ->whereHas('item', function ($query) use ($resource_id, $resource_type_id) {
+                        $query->where('resource_id', '=', $resource_id)
+                            ->whereHas('resource', function ($query) use ($resource_type_id) {
+                                $query->where('resource_type_id', '=', $resource_type_id);
+                            });
                     });
             })
             ->first();
@@ -238,12 +250,6 @@ class ItemSubCategoryController extends Controller
 
         $item_category = (new ItemCategory())
             ->where('item_id', '=', $item_id)
-            ->whereHas('item', function ($query) use ($resource_id, $resource_type_id) {
-                $query->where('resource_id', '=', $resource_id)
-                    ->whereHas('resource', function ($query) use ($resource_type_id) {
-                        $query->where('resource_type_id', '=', $resource_type_id);
-                    });
-            })
             ->find($item_category_id);
 
         $validator = (new ItemSubCategoryValidator)->create($request, $item_category->category_id);
@@ -254,7 +260,7 @@ class ItemSubCategoryController extends Controller
 
         try {
             $item_sub_category = new ItemSubCategory([
-                'item_id' => $item_id,
+                'item_category_id' => $item_category_id,
                 'sub_category_id' => $this->decodeParameter($request->input('sub_category_id'), 'sub_category')
             ]);
             $item_sub_category->save();
@@ -321,9 +327,10 @@ class ItemSubCategoryController extends Controller
     ): JsonResponse
     {
         $item_sub_category = (new ItemSubCategory())
-            ->where('item_id', '=', $item_id)
-            ->whereHas('item', function ($query) use ($resource_id, $resource_type_id) {
-                $query->where('resource_id', '=', $resource_id)
+            ->where('item_category_id', '=', $item_category_id)
+            ->whereHas('item', function ($query) use ($item_id, $resource_id, $resource_type_id) {
+                $query->where('item_id', '=', $item_id)
+                    ->where('resource_id', '=', $resource_id)
                     ->whereHas('resource', function ($query) use ($resource_type_id) {
                         $query->where('resource_type_id', '=', $resource_type_id);
                     });
