@@ -31,4 +31,9 @@ class Category extends Model
     {
         return $this->belongsTo(Category::class, 'category_id', 'id');
     }
+
+    public function paginatedCollection(int $offset = 0, int $limit = 10)
+    {
+        return $this::all();
+    }
 }
