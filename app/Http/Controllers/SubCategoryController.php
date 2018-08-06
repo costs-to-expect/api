@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Http\Route\Validators\Category as CategoryRouteValidator;
-use App\Models\Category;
 use App\Models\SubCategory;
 use App\Transformers\SubCategory as SubCategoryTransformer;
 use App\Validators\SubCategory as SubCategoryValidator;

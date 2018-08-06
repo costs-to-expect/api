@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 /**
  * Category model
  *
- * Single exists in this model to be consistent with all the other models, it is
+ * Single() exists in this model to be consistent with all the other models, it is
  * simply a synonym for find()
  *
  * @author Dean Blackborough <dean@g3d-development.com>
