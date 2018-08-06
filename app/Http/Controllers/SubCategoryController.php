@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Route\Validators\Category as CategoryRouteValidator;
 use App\Models\Category;
 use App\Models\SubCategory;
 use App\Transformers\SubCategory as SubCategoryTransformer;
@@ -30,9 +31,11 @@ class SubCategoryController extends Controller
      */
     public function index(Request $request, string $category_id): JsonResponse
     {
-        $sub_categories = (new SubCategory())
-            ->where('category_id', '=', $category_id)
-            ->get();
+        if (CategoryRouteValidator::validate($category_id) === false) {
+            return $this->returnResourceNotFound();
+        }
+
+        $sub_categories = (new SubCategory())->paginatedCollection($category_id);
 
         $headers = [
             'X-Total-Count' => count($sub_categories)
@@ -64,11 +67,16 @@ class SubCategoryController extends Controller
      *
      * @return JsonResponse
      */
-    public function show(Request $request, string $category_id, string $sub_category_id): JsonResponse
+    public function show(
+        Request $request,
+        string $category_id,
+        string $sub_category_id
+    ): JsonResponse
     {
-        $sub_category = (new SubCategory())
-            ->where('category_id', '=', $category_id)
-            ->find($sub_category_id);
+        $sub_category = (new SubCategory())->single(
+            $category_id,
+            $sub_category_id
+        );
 
         if ($sub_category === null) {
             return $this->returnResourceNotFound();
@@ -93,7 +101,7 @@ class SubCategoryController extends Controller
      */
     public function optionsIndex(Request $request, string $category_id): JsonResponse
     {
-        if ((new Category)->find($category_id) === null) {
+        if (CategoryRouteValidator::validate($category_id) === false) {
             return $this->returnResourceNotFound();
         }
 
@@ -114,11 +122,20 @@ class SubCategoryController extends Controller
      *
      * @return JsonResponse
      */
-    public function optionsShow(Request $request, string $category_id, string $sub_category_id): JsonResponse
+    public function optionsShow(
+        Request $request,
+        string $category_id,
+        string $sub_category_id
+    ): JsonResponse
     {
-        $sub_category = (new SubCategory())
-            ->where('category_id', '=', $category_id)
-            ->find($sub_category_id);
+        if ((new CategoryRouteValidator())->validate($category_id) === false) {
+            return $this->returnResourceNotFound();
+        }
+
+        $sub_category = (new SubCategory())->single(
+            $category_id,
+            $sub_category_id
+        );
 
         if ($sub_category === null) {
             return $this->returnResourceNotFound();
@@ -142,7 +159,7 @@ class SubCategoryController extends Controller
      */
     public function create(Request $request, string $category_id): JsonResponse
     {
-        if ((new Category)->find($category_id) === null) {
+        if ((new CategoryRouteValidator())->validate($category_id) === false) {
             return $this->returnResourceNotFound();
         }
 
@@ -189,9 +206,14 @@ class SubCategoryController extends Controller
         string $sub_category_id
     ): JsonResponse
     {
-        $sub_category = (new SubCategory())
-            ->where('category_id', '=', $category_id)
-            ->find($sub_category_id);
+        if ((new CategoryRouteValidator())->validate($category_id) === false) {
+            return $this->returnResourceNotFound();
+        }
+
+        $sub_category = (new SubCategory())->single(
+            $category_id,
+            $sub_category_id
+        );
 
         if ($sub_category === null) {
             return $this->returnResourceNotFound();

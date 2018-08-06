@@ -7,6 +7,9 @@ use Illuminate\Database\Eloquent\Model;
 /**
  * Category model
  *
+ * Single exists in this model to be consistent with all the other models, it is
+ * simply a synonym for find()
+ *
  * @author Dean Blackborough <dean@g3d-development.com>
  * @copyright Dean Blackborough 2018
  * @license https://github.com/costs-to-expect/api/blob/master/LICENSE
@@ -34,6 +37,11 @@ class Category extends Model
 
     public function paginatedCollection(int $offset = 0, int $limit = 10)
     {
-        return $this::all();
+        return $this->all();
+    }
+
+    public function single(int $category_id)
+    {
+        return $this->find($category_id);
     }
 }

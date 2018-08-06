@@ -61,7 +61,7 @@ class CategoryController extends Controller
      */
     public function show(Request $request, $category_id): JsonResponse
     {
-        $category = (new Category)->find($category_id);
+        $category = (new Category)->single($category_id);
 
         if ($category === null) {
             return $this->returnResourceNotFound();
@@ -103,7 +103,7 @@ class CategoryController extends Controller
      */
     public function optionsShow(Request $request, string $category_id): JsonResponse
     {
-        if ((new Category)->find($category_id) === null) {
+        if ((new Category)->single($category_id) === null) {
             return $this->returnResourceNotFound();
         }
 
@@ -164,7 +164,7 @@ class CategoryController extends Controller
         string $category_id
     ): JsonResponse
     {
-        $category = (new Category())->find($category_id);
+        $category = (new Category())->single($category_id);
 
         if ($category === null) {
             return $this->returnResourceNotFound();
