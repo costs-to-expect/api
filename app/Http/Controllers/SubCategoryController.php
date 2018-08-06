@@ -7,6 +7,7 @@ use App\Models\SubCategory;
 use App\Transformers\SubCategory as SubCategoryTransformer;
 use App\Validators\SubCategory as SubCategoryValidator;
 use Exception;
+use Illuminate\Database\QueryException;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
@@ -174,17 +175,37 @@ class SubCategoryController extends Controller
     }
 
     /**
-     * Delete a sub category
+     * Delete the requested sub category
      *
-     * @param Request $request
-     * @param string $category_id
+     * @param Request $request,
+     * @param string $category_id,
      * @param string $sub_category_id
      *
      * @return JsonResponse
      */
-    public function delete(Request $request, string $category_id, string $sub_category_id): JsonResponse
+    public function delete(
+        Request $request,
+        string $category_id,
+        string $sub_category_id
+    ): JsonResponse
     {
-        return response()->json(null,204);
+        $sub_category = (new SubCategory())
+            ->where('category_id', '=', $category_id)
+            ->find($sub_category_id);
+
+        if ($sub_category === null) {
+            return $this->returnResourceNotFound();
+        }
+
+        try {
+            $sub_category->delete();
+
+            return response()->json([], 204);
+        } catch (QueryException $e) {
+            return $this->returnForeignKeyConstraintError();
+        } catch (Exception $e) {
+            return $this->returnResourceNotFound();
+        }
     }
 
     /**

@@ -7,6 +7,7 @@ use App\Models\ResourceType;
 use App\Transformers\Resource as ResourceTransformer;
 use App\Validators\Resource as ResourceValidator;
 use Exception;
+use Illuminate\Database\QueryException;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
@@ -175,17 +176,37 @@ class ResourceController extends Controller
     }
 
     /**
-     * Delete a resource
+     * Delete the requested resource
      *
-     * @param Request $request
-     * @param string $resource_type_id
+     * @param Request $request,
+     * @param string $resource_type_id,
      * @param string $resource_id
      *
      * @return JsonResponse
      */
-    public function delete(Request $request, string $resource_type_id, string $resource_id): JsonResponse
+    public function delete(
+        Request $request,
+        string $resource_type_id,
+        string $resource_id
+    ): JsonResponse
     {
-        return response()->json(null,204);
+        $resource = (new Resource())
+            ->where('resource_type_id', '=', $resource_type_id)
+            ->find($resource_id);
+
+        if ($resource === null) {
+            return $this->returnResourceNotFound();
+        }
+
+        try {
+            $resource->delete();
+
+            return response()->json([], 204);
+        } catch (QueryException $e) {
+            return $this->returnForeignKeyConstraintError();
+        } catch (Exception $e) {
+            return $this->returnResourceNotFound();
+        }
     }
 
     /**

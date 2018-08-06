@@ -8,6 +8,7 @@ use App\Models\ItemCategory;
 use App\Transformers\ItemCategory as ItemCategoryTransformer;
 use App\Validators\ItemCategory as ItemCategoryValidator;
 use Exception;
+use Illuminate\Database\QueryException;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
@@ -258,5 +259,50 @@ class ItemCategoryController extends Controller
         }
 
         return $allowed_values;
+    }
+
+    /**
+     * Delete the assigned category
+     *
+     * @param Request $request,
+     * @param string $resource_type_id,
+     * @param string $resource_id,
+     * @param string $item_id,
+     * @param string $item_category_id
+     *
+     * @return JsonResponse
+     */
+    public function delete(
+        Request $request,
+        string $resource_type_id,
+        string $resource_id,
+        string $item_id,
+        string $item_category_id
+    ): JsonResponse
+    {
+        $item_category = (new ItemCategory())
+            ->where('item_id', '=', $item_id)
+            ->whereHas('item', function ($query) use ($resource_id, $resource_type_id) {
+                $query->where('resource_id', '=', $resource_id)
+                    ->whereHas('resource', function ($query) use ($resource_type_id) {
+                        $query->where('resource_type_id', '=', $resource_type_id);
+                    });
+            })
+            ->find($item_category_id);
+
+        if ($item_category === null) {
+            return $this->returnResourceNotFound();
+        }
+
+
+        try {
+            $item_category->delete();
+
+            return response()->json([],204);
+        } catch (QueryException $e) {
+            return $this->returnForeignKeyConstraintError();
+        } catch (Exception $e) {
+            return $this->returnResourceNotFound();
+        }
     }
 }

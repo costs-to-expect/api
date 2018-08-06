@@ -7,6 +7,7 @@ use App\Models\Resource;
 use App\Transformers\Item as ItemTransformer;
 use App\Validators\Item as ItemValidator;
 use Exception;
+use Illuminate\Database\QueryException;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
@@ -204,11 +205,11 @@ class ItemController extends Controller
     }
 
     /**
-     * Delete an item
+     * Delete the assigned item
      *
-     * @param Request $request
-     * @param string $resource_id
-     * @param string $resource_type_id
+     * @param Request $request,
+     * @param string $resource_type_id,
+     * @param string $resource_id,
      * @param string $item_id
      *
      * @return JsonResponse
@@ -220,7 +221,27 @@ class ItemController extends Controller
         string $item_id
     ): JsonResponse
     {
-        return response()->json(null, 204);
+
+        $item = (new Item())
+            ->where('resource_id', '=', $resource_id)
+            ->whereHas('resource', function ($query) use ($resource_type_id) {
+                $query->where('resource_type_id', '=', $resource_type_id);
+            })
+            ->find($item_id);
+
+        if ($item === null) {
+            return $this->returnResourceNotFound();
+        }
+
+        try {
+            $item->delete();
+
+            return response()->json([], 204);
+        } catch (QueryException $e) {
+            return $this->returnForeignKeyConstraintError();
+        } catch (Exception $e) {
+            return $this->returnResourceNotFound();
+        }
     }
 
     /**

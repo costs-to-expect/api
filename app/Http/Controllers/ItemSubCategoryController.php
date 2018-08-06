@@ -2,12 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Item;
 use App\Models\ItemCategory;
 use App\Models\ItemSubCategory;
 use App\Models\SubCategory;
 use App\Transformers\ItemSubCategory as ItemSubCategoryTransformer;
 use App\Validators\ItemSubCategory as ItemSubCategoryValidator;
 use Exception;
+use Illuminate\Database\QueryException;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
@@ -234,10 +236,20 @@ class ItemSubCategoryController extends Controller
             return $this->returnResourceConflict();
         }
 
-        $validator = (new ItemSubCategoryValidator)->create($request, $item_category_id);
+        $item_category = (new ItemCategory())
+            ->where('item_id', '=', $item_id)
+            ->whereHas('item', function ($query) use ($resource_id, $resource_type_id) {
+                $query->where('resource_id', '=', $resource_id)
+                    ->whereHas('resource', function ($query) use ($resource_type_id) {
+                        $query->where('resource_type_id', '=', $resource_type_id);
+                    });
+            })
+            ->find($item_category_id);
+
+        $validator = (new ItemSubCategoryValidator)->create($request, $item_category->category_id);
 
         if ($validator->fails() === true) {
-            return $this->returnValidationErrors($validator);
+            return $this->returnValidationErrors($validator, $this->allowedValues($item_category->category_id));
         }
 
         try {
@@ -264,8 +276,6 @@ class ItemSubCategoryController extends Controller
     /**
      * Generate the array of allowed values fields
      *
-     * @param array $category_id
-     *
      * @return array
      */
     private function allowedValues($category_id)
@@ -287,5 +297,51 @@ class ItemSubCategoryController extends Controller
         }
 
         return $allowed_values;
+    }
+
+    /**
+     * Delete the assigned sub category
+     *
+     * @param Request $request,
+     * @param string $resource_type_id,
+     * @param string $resource_id,
+     * @param string $item_id,
+     * @param string $item_category_id,
+     * @param string $item_sub_category_id
+     *
+     * @return JsonResponse
+     */
+    public function delete(
+        Request $request,
+        string $resource_type_id,
+        string $resource_id,
+        string $item_id,
+        string $item_category_id,
+        string $item_sub_category_id
+    ): JsonResponse
+    {
+        $item_sub_category = (new ItemSubCategory())
+            ->where('item_id', '=', $item_id)
+            ->whereHas('item', function ($query) use ($resource_id, $resource_type_id) {
+                $query->where('resource_id', '=', $resource_id)
+                    ->whereHas('resource', function ($query) use ($resource_type_id) {
+                        $query->where('resource_type_id', '=', $resource_type_id);
+                    });
+            })
+            ->find($item_sub_category_id);
+
+        if ($item_sub_category === null) {
+            return $this->returnResourceNotFound();
+        }
+
+        try {
+            $item_sub_category->delete();
+
+            return response()->json([],204);
+        } catch (QueryException $e) {
+            return $this->returnForeignKeyConstraintError();
+        } catch (Exception $e) {
+            return $this->returnResourceNotFound();
+        }
     }
 }
