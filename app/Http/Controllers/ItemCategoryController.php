@@ -198,9 +198,20 @@ class ItemCategoryController extends Controller
         }
 
         try {
+            $category_id = $this->hash->decode('category', $request->input('category_id'));
+
+            if ($category_id === false) {
+                return response()->json(
+                    [
+                        'message' => 'Unable to decode parameter or hasher not found'
+                    ],
+                    500
+                );
+            }
+
             $item_category = new ItemCategory([
                 'item_id' => $item_id,
-                'category_id' => $this->decodeParameter($request->input('category_id'), 'category')
+                'category_id' => $category_id
             ]);
             $item_category->save();
         } catch (Exception $e) {
@@ -229,7 +240,16 @@ class ItemCategoryController extends Controller
 
         $allowed_values = ['category_id' => []];
         foreach ($categories as $category) {
-            $id = $this->encodeParameter($category->id, 'category');
+            $id = $this->hash->encode('category', $category->id);
+
+            if ($id === false) {
+                return response()->json(
+                    [
+                        'message' => 'Unable to encode parameter or hasher not found'
+                    ],
+                    500
+                );
+            }
 
             $allowed_values['category_id']['allowed_values'][$id] = [
                 'value' => $id,
