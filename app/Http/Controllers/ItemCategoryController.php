@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Http\Route\Validators\Item as ItemRouteValidator;
 use App\Models\Category;
-use App\Models\Item;
 use App\Models\ItemCategory;
 use App\Transformers\ItemCategory as ItemCategoryTransformer;
 use App\Validators\ItemCategory as ItemCategoryValidator;

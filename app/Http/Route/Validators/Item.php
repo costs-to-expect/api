@@ -32,7 +32,8 @@ class Item
                 ->whereHas('resource', function ($query) use ($resource_type_id) {
                     $query->where('resource_type_id', '=', $resource_type_id);
                 })
-                ->find($item_id)->exists() === false
+                ->find($item_id)
+                ->exists() === false
         ) {
             return false;
         }

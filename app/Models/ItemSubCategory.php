@@ -31,4 +31,47 @@ class ItemSubCategory extends Model
     {
         return $this->belongsTo(ItemCategory::class, 'item_category_id', 'id');
     }
+
+    public function paginatedCollection(
+        int $resource_type_id,
+        int $resource_id,
+        int $item_id,
+        int $item_category_id,
+        int $offset = 0,
+        int $limit = 10
+    )
+    {
+        return (new ItemSubCategory())->where('item_category_id', '=', $item_category_id)
+            ->whereHas('item_category', function ($query) use ($item_id, $resource_id, $resource_type_id) {
+                $query->where('item_id', '=', $item_id)
+                    ->whereHas('item', function ($query) use ($resource_id, $resource_type_id) {
+                        $query->where('resource_id', '=', $resource_id)
+                            ->whereHas('resource', function ($query) use ($resource_type_id) {
+                                $query->where('resource_type_id', '=', $resource_type_id);
+                            });
+                    });
+            })
+            ->first();
+    }
+
+    public function single(
+        int $resource_type_id,
+        int $resource_id,
+        int $item_id,
+        int $item_category_id,
+        int $item_sub_category_id
+    )
+    {
+        return (new ItemSubCategory())->where('item_category_id', '=', $item_category_id)
+            ->whereHas('item_category', function ($query) use ($item_id, $resource_id, $resource_type_id) {
+                $query->where('item_id', '=', $item_id)
+                    ->whereHas('item', function ($query) use ($resource_id, $resource_type_id) {
+                        $query->where('resource_id', '=', $resource_id)
+                            ->whereHas('resource', function ($query) use ($resource_type_id) {
+                                $query->where('resource_type_id', '=', $resource_type_id);
+                            });
+                    });
+            })
+            ->find($item_sub_category_id);
+    }
 }

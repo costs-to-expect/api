@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Item;
+use App\Http\Route\Validators\ItemCategory as ItemCategoryRouteValidator;
 use App\Models\ItemCategory;
 use App\Models\ItemSubCategory;
 use App\Models\SubCategory;
@@ -41,18 +41,21 @@ class ItemSubCategoryController extends Controller
         string $item_category_id
     ): JsonResponse
     {
-        $item_sub_category = (new ItemSubCategory())
-            ->where('item_category_id', '=', $item_category_id)
-            ->whereHas('item_category', function ($query) use ($item_id, $resource_id, $resource_type_id) {
-                $query->where('item_id', '=', $item_id)
-                    ->whereHas('item', function ($query) use ($resource_id, $resource_type_id) {
-                        $query->where('resource_id', '=', $resource_id)
-                            ->whereHas('resource', function ($query) use ($resource_type_id) {
-                                $query->where('resource_type_id', '=', $resource_type_id);
-                            });
-                    });
-            })
-            ->first();
+        if (ItemCategoryRouteValidator::validate(
+            $resource_type_id,
+            $resource_id,
+            $item_id,
+            $item_category_id
+        ) === false) {
+            return $this->returnResourceNotFound();
+        }
+
+        $item_sub_category = (new ItemSubCategory())->paginatedCollection(
+            $resource_type_id,
+            $resource_id,
+            $item_id,
+            $item_category_id
+        );
 
         if ($item_sub_category === null) {
             return $this->returnResourceNotFound();
@@ -90,18 +93,22 @@ class ItemSubCategoryController extends Controller
         string $item_sub_category_id
     ): JsonResponse
     {
-        $item_sub_category = (new ItemSubCategory())
-            ->where('item_category_id', '=', $item_category_id)
-            ->whereHas('item_category', function ($query) use ($item_id, $resource_id, $resource_type_id) {
-                $query->where('item_id', '=', $item_id)
-                    ->whereHas('item', function ($query) use ($resource_id, $resource_type_id) {
-                        $query->where('resource_id', '=', $resource_id)
-                            ->whereHas('resource', function ($query) use ($resource_type_id) {
-                                $query->where('resource_type_id', '=', $resource_type_id);
-                            });
-                    });
-            })
-            ->find($item_sub_category_id);
+        if (ItemCategoryRouteValidator::validate(
+            $resource_type_id,
+            $resource_id,
+            $item_id,
+            $item_category_id
+        ) === false) {
+            return $this->returnResourceNotFound();
+        }
+
+        $item_sub_category = (new ItemSubCategory())->single(
+            $resource_type_id,
+            $resource_id,
+            $item_id,
+            $item_category_id,
+            $item_sub_category_id
+        );
 
         if ($item_sub_category === null) {
             return $this->returnResourceNotFound();
@@ -137,17 +144,12 @@ class ItemSubCategoryController extends Controller
         string $item_category_id
     ): JsonResponse
     {
-        $item_category = (new ItemCategory())
-            ->where('item_id', '=', $item_id)
-            ->whereHas('item', function ($query) use ($resource_id, $resource_type_id) {
-                $query->where('resource_id', '=', $resource_id)
-                ->whereHas('resource', function ($query) use ($resource_type_id) {
-                    $query->where('resource_type_id', '=', $resource_type_id);
-                });
-            })
-            ->find($item_category_id);
-
-        if ($item_category === null) {
+        if (ItemCategoryRouteValidator::validate(
+                $resource_type_id,
+                $resource_id,
+                $item_id,
+                $item_category_id
+            ) === false) {
             return $this->returnResourceNotFound();
         }
 
@@ -187,18 +189,22 @@ class ItemSubCategoryController extends Controller
         string $item_sub_category_id
     ): JsonResponse
     {
-        $item_sub_category = (new ItemSubCategory())
-            ->where('item_category_id', '=', $item_category_id)
-            ->whereHas('item_category', function ($query) use ($item_id, $resource_id, $resource_type_id) {
-                $query->where('item_id', '=', $item_id)
-                    ->whereHas('item', function ($query) use ($resource_id, $resource_type_id) {
-                        $query->where('resource_id', '=', $resource_id)
-                            ->whereHas('resource', function ($query) use ($resource_type_id) {
-                                $query->where('resource_type_id', '=', $resource_type_id);
-                            });
-                    });
-            })
-            ->find($item_sub_category_id);
+        if (ItemCategoryRouteValidator::validate(
+                $resource_type_id,
+                $resource_id,
+                $item_id,
+                $item_category_id
+            ) === false) {
+            return $this->returnResourceNotFound();
+        }
+
+        $item_sub_category = (new ItemSubCategory())->single(
+            $resource_type_id,
+            $resource_id,
+            $item_id,
+            $item_category_id,
+            $item_sub_category_id
+        );
 
         if ($item_sub_category === null) {
             return $this->returnResourceNotFound();
@@ -231,21 +237,13 @@ class ItemSubCategoryController extends Controller
         string $item_category_id
     ): JsonResponse
     {
-        $item_sub_category = (new ItemSubCategory())
-            ->where('item_category_id', '=', $item_category_id)
-            ->whereHas('item_category', function ($query) use ($item_id, $resource_id, $resource_type_id) {
-                $query->where('item_id', '=', $item_id)
-                    ->whereHas('item', function ($query) use ($resource_id, $resource_type_id) {
-                        $query->where('resource_id', '=', $resource_id)
-                            ->whereHas('resource', function ($query) use ($resource_type_id) {
-                                $query->where('resource_type_id', '=', $resource_type_id);
-                            });
-                    });
-            })
-            ->first();
-
-        if ($item_sub_category !== null) {
-            return $this->returnResourceConflict();
+        if (ItemCategoryRouteValidator::validate(
+                $resource_type_id,
+                $resource_id,
+                $item_id,
+                $item_category_id
+            ) === false) {
+            return $this->returnResourceNotFound();
         }
 
         $item_category = (new ItemCategory())
@@ -326,16 +324,22 @@ class ItemSubCategoryController extends Controller
         string $item_sub_category_id
     ): JsonResponse
     {
-        $item_sub_category = (new ItemSubCategory())
-            ->where('item_category_id', '=', $item_category_id)
-            ->whereHas('item', function ($query) use ($item_id, $resource_id, $resource_type_id) {
-                $query->where('item_id', '=', $item_id)
-                    ->where('resource_id', '=', $resource_id)
-                    ->whereHas('resource', function ($query) use ($resource_type_id) {
-                        $query->where('resource_type_id', '=', $resource_type_id);
-                    });
-            })
-            ->find($item_sub_category_id);
+        if (ItemCategoryRouteValidator::validate(
+                $resource_type_id,
+                $resource_id,
+                $item_id,
+                $item_category_id
+            ) === false) {
+            return $this->returnResourceNotFound();
+        }
+
+        $item_sub_category = (new ItemSubCategory())->single(
+            $resource_type_id,
+            $resource_id,
+            $item_id,
+            $item_category_id,
+            $item_sub_category_id
+        );
 
         if ($item_sub_category === null) {
             return $this->returnResourceNotFound();
