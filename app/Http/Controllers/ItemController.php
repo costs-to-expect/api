@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Route\Validators\Resource as ResourceRouteValidator;
 use App\Models\Item;
-use App\Models\Resource;
 use App\Transformers\Item as ItemTransformer;
 use App\Validators\Item as ItemValidator;
 use Exception;
@@ -31,12 +31,14 @@ class ItemController extends Controller
      */
     public function index(Request $request, string $resource_type_id, string $resource_id): JsonResponse
     {
-        $items = (new Item())
-            ->where('resource_id', '=', $resource_id)
-            ->whereHas('resource', function ($query) use ($resource_type_id) {
-                $query->where('resource_type_id', '=', $resource_type_id);
-            })
-            ->get();
+        if (ResourceRouteValidator::validate($resource_type_id, $resource_id) === false) {
+            return $this->returnResourceNotFound();
+        }
+
+        $items = (new Item())->paginatedCollection(
+            $resource_type_id,
+            $resource_id
+        );
 
         $headers = [
             'X-Total-Count' => count($items)
@@ -69,14 +71,18 @@ class ItemController extends Controller
      *
      * @return JsonResponse
      */
-    public function show(Request $request, string $resource_type_id, string $resource_id, string $item_id): JsonResponse
+    public function show(
+        Request $request,
+        string $resource_type_id,
+        string $resource_id,
+        string $item_id
+    ): JsonResponse
     {
-        $item = (new Item())
-            ->where('resource_id', '=', $resource_id)
-            ->whereHas('resource', function ($query) use ($resource_type_id) {
-                $query->where('resource_type_id', '=', $resource_type_id);
-            })
-            ->find($item_id);
+        if (ResourceRouteValidator::validate($resource_type_id, $resource_id) === false) {
+            return $this->returnResourceNotFound();
+        }
+
+        $item = (new Item())->single($resource_type_id, $resource_id, $item_id);
 
         if ($item === null) {
             return $this->returnResourceNotFound();
@@ -102,13 +108,9 @@ class ItemController extends Controller
      */
     public function optionsIndex(Request $request, string $resource_type_id, string $resource_id): JsonResponse
     {
-        if ($this->validateRoutesIds($resource_type_id, $resource_id) === false) {
+        if (ResourceRouteValidator::validate($resource_type_id, $resource_id) === false) {
             return $this->returnResourceNotFound();
         }
-
-        if ($this->resourceValid($resource_type_id, $resource_id) === false) {
-            return $this->returnResourceNotFound();
-        };
 
         return $this->generateOptionsForIndex(
             'api.descriptions.item.GET_index',
@@ -135,12 +137,11 @@ class ItemController extends Controller
         string $item_id
     ): JsonResponse
     {
-        $item = (new Item())
-            ->where('resource_id', '=', $resource_id)
-            ->whereHas('resource', function ($query) use ($resource_type_id) {
-                $query->where('resource_type_id', '=', $resource_type_id);
-            })
-            ->find($item_id);
+        if (ResourceRouteValidator::validate($resource_type_id, $resource_id) === false) {
+            return $this->returnResourceNotFound();
+        }
+
+        $item = (new Item())->single($resource_type_id, $resource_id, $item_id);
 
         if ($item === null) {
             return $this->returnResourceNotFound();
@@ -165,11 +166,7 @@ class ItemController extends Controller
      */
     public function create(Request $request, string $resource_type_id, string $resource_id): JsonResponse
     {
-        if ($this->validateRoutesIds($resource_type_id, $resource_id) === false) {
-            return $this->returnResourceNotFound();
-        }
-
-        if ($this->resourceValid($resource_type_id, $resource_id) === false) {
+        if (ResourceRouteValidator::validate($resource_type_id, $resource_id) === false) {
             return $this->returnResourceNotFound();
         };
 
@@ -221,13 +218,11 @@ class ItemController extends Controller
         string $item_id
     ): JsonResponse
     {
+        if (ResourceRouteValidator::validate($resource_type_id, $resource_id) === false) {
+            return $this->returnResourceNotFound();
+        }
 
-        $item = (new Item())
-            ->where('resource_id', '=', $resource_id)
-            ->whereHas('resource', function ($query) use ($resource_type_id) {
-                $query->where('resource_type_id', '=', $resource_type_id);
-            })
-            ->find($item_id);
+        $item = (new Item())->single($resource_type_id, $resource_id, $item_id);
 
         if ($item === null) {
             return $this->returnResourceNotFound();
@@ -242,82 +237,5 @@ class ItemController extends Controller
         } catch (Exception $e) {
             return $this->returnResourceNotFound();
         }
-    }
-
-    /**
-     * Update the request item
-     *
-     * @param Request $request
-     * @param string $resource_type_id
-     * @param string $resource_id
-     * @param string $item_id
-     *
-     * @return JsonResponse
-     */
-    public function update(
-        Request $request,
-        string $resource_type_id,
-        string $resource_id,
-        string $item_id
-    ): JsonResponse
-    {
-        $validator = (new ItemValidator)->update($request);
-
-        if ($validator->fails() === true) {
-            return $this->returnValidationErrors($validator);
-        }
-
-        if (count($request->all()) === 0) {
-            return $this->requireAtLeastOneFieldToPatch();
-        }
-
-        return response()->json(
-            [
-                'resource_type_id' => $resource_type_id,
-                'resource_id' => $resource_id,
-                'item_id' => $item_id
-            ],
-            200
-        );
-    }
-
-    /**
-     * Check to see if the resource is valid, if not return a 404 as the ids
-     * are invalid.
-     *
-     * @param integer $resource_type_id
-     * @param integer $resource_id
-     *
-     * @return boolean
-     */
-    private function resourceValid(int $resource_type_id, int $resource_id): bool
-    {
-        $resource = (new Resource())
-            ->where('resource_type_id', '=', $resource_type_id)
-            ->find($resource_id);
-
-        if ($resource === null) {
-            return false;
-        }
-
-        return true;
-    }
-
-    /**
-     * Check to see if the route ids are valid, should have been converted by
-     * the middleware and not be strings
-     *
-     * @param integer $resource_type_id
-     * @param integer $resource_id
-     *
-     * @return boolean
-     */
-    private function validateRoutesIds($resource_type_id, $resource_id): bool
-    {
-        if ($resource_type_id === 'nill' || $resource_id === 'nill') {
-            return false;
-        }
-
-        return true;
     }
 }
