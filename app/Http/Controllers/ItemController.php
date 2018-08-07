@@ -20,6 +20,8 @@ use Illuminate\Http\Request;
  */
 class ItemController extends Controller
 {
+    private $pagination = [];
+
     /**
      * Return all the items
      *
@@ -35,18 +37,23 @@ class ItemController extends Controller
             return $this->returnResourceNotFound();
         }
 
+        $total = Item::count();
+
+        $this->pagination($request, $total);
+
         $items = (new Item())->paginatedCollection(
             $resource_type_id,
-            $resource_id
+            $resource_id,
+            $this->pagination['offset'],
+            $this->pagination['limit']
         );
 
         $headers = [
-            'X-Total-Count' => count($items)
+            'X-Count' => count($items),
+            'X-Total-Count' => $total
         ];
-
-        $link = $this->generateLinkHeader(10, 0, 20);
-        if ($link !== null) {
-            $headers['Link'] = $link;
+        if ($this->pagination['link'] !== null) {
+            $headers['Link'] = $this->pagination['link'];
         }
 
         return response()->json(
@@ -237,5 +244,34 @@ class ItemController extends Controller
         } catch (Exception $e) {
             return $this->returnResourceNotFound();
         }
+    }
+
+    /**
+     * Generate the pagination parameters
+     *
+     * @param Request $request
+     * @param integer $total
+     */
+    private function pagination(Request $request, $total)
+    {
+        $offset = intval($request->query('offset', 0));
+        $limit = intval($request->query('limit', 10));
+
+        $previous_offset = null;
+        $next_offset = null;
+
+        if ($offset !== 0) {
+            $previous_offset = abs($offset - $limit);
+        }
+        if ($offset + $limit < $total) { $next_offset = $offset + $limit; }
+
+        $this->pagination['offset'] = $offset;
+        $this->pagination['limit'] = $limit;
+
+        $this->pagination['link'] = $this->generateLinkHeader(
+            $this->pagination['limit'],
+            $previous_offset,
+            $next_offset
+        );
     }
 }

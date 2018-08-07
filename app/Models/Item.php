@@ -38,6 +38,9 @@ class Item extends Model
             ->whereHas('resource', function ($query) use ($resource_type_id) {
                 $query->where('resource_type_id', '=', $resource_type_id);
             })
+            ->latest()
+            ->offset($offset)
+            ->limit($limit)
             ->get();
     }
 
