@@ -23,7 +23,7 @@ class Resource extends Transformer
     public function toArray(): array
     {
         return [
-            'id' => $this->hash_resource->encode($this->resource->id),
+            'id' => $this->hash->resource()->encode($this->resource->id),
             'name' => $this->resource->name,
             'description' => $this->resource->description,
             'effective_date' => $this->resource->effective_date,
