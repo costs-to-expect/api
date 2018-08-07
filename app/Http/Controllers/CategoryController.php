@@ -34,11 +34,6 @@ class CategoryController extends Controller
             'X-Total-Count' => count($categories)
         ];
 
-        $link = $this->generateLinkHeader(10, 0, 20);
-        if ($link !== null) {
-            $headers['Link'] = $link;
-        }
-
         return response()->json(
             $categories->map(
                 function ($category)

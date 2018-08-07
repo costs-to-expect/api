@@ -40,11 +40,6 @@ class SubCategoryController extends Controller
             'X-Total-Count' => count($sub_categories)
         ];
 
-        $link = $this->generateLinkHeader(10, 0, 20);
-        if ($link !== null) {
-            $headers['Link'] = $link;
-        }
-
         return response()->json(
             $sub_categories->map(
                 function ($sub_category)

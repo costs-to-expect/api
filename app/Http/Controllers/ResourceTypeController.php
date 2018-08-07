@@ -38,11 +38,6 @@ class ResourceTypeController extends Controller
             'X-Total-Count' => count($resource_types)
         ];
 
-        $link = $this->generateLinkHeader(10, 0, 20);
-        if ($link !== null) {
-            $headers['Link'] = $link;
-        }
-
         return response()->json(
             $resource_types->map(
                 function ($resource_type)
