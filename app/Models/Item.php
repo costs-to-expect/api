@@ -26,4 +26,27 @@ class Item extends Model
     {
         return $this->belongsTo(Resource::class, 'resource_id', 'id');
     }
+
+    public function paginatedCollection(
+        int $resource_type_id,
+        int $resource_id,
+        int $offset = 0,
+        int $limit = 10
+    )
+    {
+        return $this->where('resource_id', '=', $resource_id)
+            ->whereHas('resource', function ($query) use ($resource_type_id) {
+                $query->where('resource_type_id', '=', $resource_type_id);
+            })
+            ->get();
+    }
+
+    public function single(int $resource_type_id, int $resource_id, int $item_id)
+    {
+        return $this->where('resource_id', '=', $resource_id)
+            ->whereHas('resource', function ($query) use ($resource_type_id) {
+                $query->where('resource_type_id', '=', $resource_type_id);
+            })
+            ->find($item_id);
+    }
 }

@@ -28,7 +28,7 @@ class CategoryController extends Controller
      */
     public function index(Request $request): JsonResponse
     {
-        $categories = Category::all();
+        $categories = (new Category())->paginatedCollection();
 
         $headers = [
             'X-Total-Count' => count($categories)
@@ -61,7 +61,7 @@ class CategoryController extends Controller
      */
     public function show(Request $request, $category_id): JsonResponse
     {
-        $category = (new Category)->find($category_id);
+        $category = (new Category)->single($category_id);
 
         if ($category === null) {
             return $this->returnResourceNotFound();
@@ -103,7 +103,7 @@ class CategoryController extends Controller
      */
     public function optionsShow(Request $request, string $category_id): JsonResponse
     {
-        if ((new Category)->find($category_id) === null) {
+        if ((new Category)->single($category_id) === null) {
             return $this->returnResourceNotFound();
         }
 
@@ -164,7 +164,7 @@ class CategoryController extends Controller
         string $category_id
     ): JsonResponse
     {
-        $category = (new Category())->find($category_id);
+        $category = (new Category())->single($category_id);
 
         if ($category === null) {
             return $this->returnResourceNotFound();
@@ -179,39 +179,5 @@ class CategoryController extends Controller
         } catch (Exception $e) {
             return $this->returnResourceNotFound();
         }
-    }
-
-    /**
-     * Update the request category
-     *
-     * @param Request $request
-     * @param string $category_id
-     *
-     * @return JsonResponse
-     */
-    public function update(Request $request, string $category_id): JsonResponse
-    {
-        $category = (new Category)->find($category_id);
-
-        if ($category === null) {
-            return $this->returnResourceNotFound();
-        }
-
-        $validator = (new CategoryValidator)->update($request, $category_id);
-
-        if ($validator->fails() === true) {
-            return $this->returnValidationErrors($validator);
-        }
-
-        if (count($request->all()) === 0) {
-            return $this->requireAtLeastOneFieldToPatch();
-        }
-
-        return response()->json(
-            [
-                'category_id' => $category_id
-            ],
-            200
-        );
     }
 }

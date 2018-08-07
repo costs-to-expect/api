@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Route\Validators\ResourceType as ResourceTypeRouteValidator;
 use App\Models\Resource;
 use App\Models\ResourceType;
 use App\Transformers\Resource as ResourceTransformer;
@@ -30,9 +31,11 @@ class ResourceController extends Controller
      */
     public function index(Request $request, string $resource_type_id): JsonResponse
     {
-        $resources = (new Resource)
-            ->where('resource_type_id', '=', $resource_type_id)
-            ->get();
+        if (ResourceTypeRouteValidator::validate($resource_type_id) === false) {
+            return $this->returnResourceNotFound();
+        }
+
+        $resources = (new Resource)->paginatedCollection($resource_type_id);
 
         $headers = [
             'X-Total-Count' => count($resources)
@@ -64,11 +67,17 @@ class ResourceController extends Controller
      *
      * @return JsonResponse
      */
-    public function show(Request $request, string $resource_type_id, string $resource_id): JsonResponse
+    public function show(
+        Request $request,
+        string $resource_type_id,
+        string $resource_id
+    ): JsonResponse
     {
-        $resource = (new Resource)
-            ->where('resource_type_id', '=', $resource_type_id)
-            ->find($resource_id);
+        if (ResourceTypeRouteValidator::validate($resource_type_id) === false) {
+            return $this->returnResourceNotFound();
+        }
+
+        $resource = (new Resource)->single($resource_type_id, $resource_id);
 
         if ($resource === null) {
             return $this->returnResourceNotFound();
@@ -116,9 +125,14 @@ class ResourceController extends Controller
      */
     public function optionsShow(Request $request, string $resource_type_id, string $resource_id): JsonResponse
     {
-        $resource = (new Resource)
-            ->where('resource_type_id', '=', $resource_type_id)
-            ->find($resource_id);
+        if (ResourceTypeRouteValidator::validate($resource_type_id) === false) {
+            return $this->returnResourceNotFound();
+        }
+
+        $resource = (new Resource)->single(
+            $resource_type_id,
+            $resource_id
+        );
 
         if ($resource === null) {
             return $this->returnResourceNotFound();
@@ -142,7 +156,7 @@ class ResourceController extends Controller
      */
     public function create(Request $request, string $resource_type_id): JsonResponse
     {
-        if ((new ResourceType)->find($resource_type_id) === null) {
+        if (ResourceTypeRouteValidator::validate($resource_type_id) === false) {
             return $this->returnResourceNotFound();
         }
 
@@ -190,9 +204,14 @@ class ResourceController extends Controller
         string $resource_id
     ): JsonResponse
     {
-        $resource = (new Resource())
-            ->where('resource_type_id', '=', $resource_type_id)
-            ->find($resource_id);
+        if (ResourceTypeRouteValidator::validate($resource_type_id) === false) {
+            return $this->returnResourceNotFound();
+        }
+
+        $resource = (new Resource())->single(
+            $resource_type_id,
+            $resource_id
+        );
 
         if ($resource === null) {
             return $this->returnResourceNotFound();
@@ -207,35 +226,5 @@ class ResourceController extends Controller
         } catch (Exception $e) {
             return $this->returnResourceNotFound();
         }
-    }
-
-    /**
-     * Update the request resource
-     *
-     * @param Request $request
-     * @param string $resource_type_id
-     * @param string $resource_id
-     *
-     * @return JsonResponse
-     */
-    public function update(Request $request, string $resource_type_id, string $resource_id): JsonResponse
-    {
-        $validator = (new ResourceValidator)->update($request, $resource_type_id, $resource_id);
-
-        if ($validator->fails() === true) {
-            return $this->returnValidationErrors($validator);
-        }
-
-        if (count($request->all()) === 0) {
-            return $this->requireAtLeastOneFieldToPatch();
-        }
-
-        return response()->json(
-            [
-                'resource_type_id' => $resource_type_id,
-                'resource_id' => $resource_id
-            ],
-            200
-        );
     }
 }
