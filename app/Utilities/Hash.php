@@ -12,8 +12,6 @@ class Hash
 
     public function __construct()
     {
-        $this->min_length = Config::get('api.hashids.min_length');
-
         $this->hashers = [];
 
         $this->setUp();
@@ -23,6 +21,8 @@ class Hash
 
     private function setUp()
     {
+        $this->min_length = Config::get('api.hashids.min_length');
+
         $this->hashers['category'] = new Hashids(Config::get('api.hashids.category'), $this->min_length);
         $this->hashers['sub_category'] = new Hashids(Config::get('api.hashids.sub_category'), $this->min_length);
         $this->hashers['resource_type'] = new Hashids(Config::get('api.hashids.resource_type'), $this->min_length);
@@ -65,5 +65,75 @@ class Hash
         } else {
             return false;
         }
+    }
+
+    /**
+     * Helper method to return the category hash object
+     *
+     * @return Hashids
+     */
+    public function category(): Hashids
+    {
+        return $this->hashers['category'];
+    }
+
+    /**
+     * Helper method to return the sub category hash object
+     *
+     * @return Hashids
+     */
+    public function subCategory(): Hashids
+    {
+        return $this->hashers['sub_category'];
+    }
+
+    /**
+     * Helper method to return the resource type hash object
+     *
+     * @return Hashids
+     */
+    public function resourceType(): Hashids
+    {
+        return $this->hashers['resource_type'];
+    }
+
+    /**
+     * Helper method to return the resource hash object
+     *
+     * @return Hashids
+     */
+    public function resource(): Hashids
+    {
+        return $this->hashers['resource'];
+    }
+
+    /**
+     * Helper method to return the item hash object
+     *
+     * @return Hashids
+     */
+    public function item(): Hashids
+    {
+        return $this->hashers['item'];
+    }
+
+    /**
+     * Helper method to return the item category hash object
+     *
+     * @return Hashids
+     */
+    public function itemCategory(): Hashids
+    {
+        return $this->hashers['item_category'];
+    }
+
+    /**
+     * Helper method to return the item sub category hash object
+     *
+     * @return Hashids
+     */
+    public function itemSubCategory(): Hashids
+    {
+        return $this->hashers['item_sub_category'];
     }
 }
