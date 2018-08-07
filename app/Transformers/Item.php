@@ -23,7 +23,7 @@ class Item extends Transformer
     public function toArray(): array
     {
         return [
-            'id' => $this->hash_item->encode($this->item->id),
+            'id' => $this->hash->item()->encode($this->item->id),
             'description' => $this->item->description,
             'total' => number_format($this->item->total, 2),
             'percentage' => $this->item->percentage,

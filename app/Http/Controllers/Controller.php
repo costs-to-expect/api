@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use Hashids\Hashids;
+use App\Utilities\Hash;
 use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Routing\Controller as BaseController;
@@ -15,19 +15,11 @@ class Controller extends BaseController
 {
     use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
 
-    protected $hashers;
+    protected $hash;
 
     public function __construct()
     {
-        $min_length = Config::get('api.hashids.min_length');
-
-        $this->hashers['category'] = new Hashids(Config::get('api.hashids.category'), $min_length);
-        $this->hashers['sub_category'] = new Hashids(Config::get('api.hashids.sub_category'), $min_length);
-        $this->hashers['resource_type'] = new Hashids(Config::get('api.hashids.resource_type'), $min_length);
-        $this->hashers['resource'] = new Hashids(Config::get('api.hashids.resource'), $min_length);
-        $this->hashers['item'] = new Hashids(Config::get('api.hashids.item'), $min_length);
-        $this->hashers['item_category'] = new Hashids(Config::get('api.hashids.item_category'), $min_length);
-        $this->hashers['item_sub_category'] = new Hashids(Config::get('api.hashids.item_sub_category'), $min_length);
+        $this->hash = new Hash();
     }
 
     /**
@@ -264,55 +256,6 @@ class Controller extends BaseController
             return $link;
         } else {
             return null;
-        }
-    }
-
-    /**
-     * Decode a get param and return the integer
-     *
-     * @param string $parameter The hash to decode
-     * @param string $hasher to use to decode
-     *
-     * @return int|JsonResponse
-     */
-    protected function decodeParameter(string $parameter, $hasher)
-    {
-        if (array_key_exists($hasher, $this->hashers) === true) {
-            $id = $this->hashers[$hasher]->decode($parameter);
-            if (is_array($id) && array_key_exists(0, $id)) {
-                return $id[0];
-            } else {
-                return $this->returnResourceNotFound();
-            }
-        } else {
-            return response()->json(
-                [
-                    'message' => 'Hasher not found'
-                ],
-                500
-            );
-        }
-    }
-
-    /**
-     * Encode a parameter
-     *
-     * @param string $parameter The hash to decode
-     * @param string $hasher to use to decode
-     *
-     * @return int|JsonResponse
-     */
-    protected function encodeParameter(string $parameter, $hasher)
-    {
-        if (array_key_exists($hasher, $this->hashers) === true) {
-            return $this->hashers[$hasher]->encode($parameter);
-        } else {
-            return response()->json(
-                [
-                    'message' => 'Hasher not found'
-                ],
-                500
-            );
         }
     }
 }

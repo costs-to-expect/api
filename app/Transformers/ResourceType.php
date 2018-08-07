@@ -40,7 +40,7 @@ class ResourceType extends Transformer
     public function toArray(): array
     {
         $result = [
-            'id' => $this->hash_resource_type->encode($this->resource_type->id),
+            'id' => $this->hash->resourceType()->encode($this->resource_type->id),
             'name' => $this->resource_type->name,
             'description' => $this->resource_type->description,
             'created' => $this->resource_type->created_at->toDateTimeString(),

@@ -26,7 +26,7 @@ class ItemCategory extends BaseValidator
      */
     public function create(Request $request): Validator
     {
-        $decode = $this->hash_category->decode($request->input('category_id'));
+        $decode = $this->hash->category()->decode($request->input('category_id'));
         $category_id = null;
         if (count($decode) === 1) {
             $category_id = $decode[0];
