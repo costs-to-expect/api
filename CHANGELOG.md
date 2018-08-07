@@ -4,7 +4,9 @@ Full changelog for the costs to expect REST API.
 
 ## Pre release changes
 
-## Additional development and fine tuning
+
+
+### Additional development and fine tuning
 
 * Added Hash utility class to centralise all the encoding and decoding.
 * Added Http/Route/Validator classes to validate route params in controllers.
@@ -25,7 +27,7 @@ looking at you, transformers, validators and base controller.
 * Redirect client if they request /.
 * Reworked the validation helpers.
 
-## Initial development
+### Initial development
 
 * Added initial get parameters code.
 * Added validation helpers.

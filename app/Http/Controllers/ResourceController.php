@@ -41,11 +41,6 @@ class ResourceController extends Controller
             'X-Total-Count' => count($resources)
         ];
 
-        $link = $this->generateLinkHeader(10, 0, 20);
-        if ($link !== null) {
-            $headers['Link'] = $link;
-        }
-
         return response()->json(
             $resources->map(
                 function ($resource)
