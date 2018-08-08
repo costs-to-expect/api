@@ -7,6 +7,7 @@ Full changelog for the costs to expect REST API.
 Official release
 
 * Collections return data showing newest first.
+* OPTIONS requests no longer shows PATCH request fields, not yet implemented.
 
 ## 2018-08-08 - v1.00 (pre release)
 

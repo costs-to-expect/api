@@ -209,11 +209,11 @@ class Controller extends BaseController
                 'description' => Config::get($delete_description_key),
                 'authenticated' => true,
             ],
-            'PATCH' => [
+            /*'PATCH' => [
                 'description' => Config::get($patch_description_key),
                 'authenticated' => true,
                 'fields' => Config::get($patch_fields_key)
-            ]
+            ]*/
         ];
 
         $options_response = $this->generateOptionsResponse($routes);
