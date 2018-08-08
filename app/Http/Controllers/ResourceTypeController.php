@@ -60,6 +60,10 @@ class ResourceTypeController extends Controller
      */
     public function show(Request $request, string $resource_type_id): JsonResponse
     {
+        if ($resource_type_id === 'nill') {
+            return $this->returnResourceNotFound();
+        }
+
         $resource_type = (new ResourceType())->single($resource_type_id);
 
         if ($resource_type === null) {
@@ -102,7 +106,10 @@ class ResourceTypeController extends Controller
      */
     public function optionsShow(Request $request, string $resource_type_id): JsonResponse
     {
-        if ((new ResourceType)->single($resource_type_id) === null) {
+        if (
+            $resource_type_id === 'nill' ||
+            (new ResourceType)->single($resource_type_id) === null
+        ) {
             return $this->returnResourceNotFound();
         }
 

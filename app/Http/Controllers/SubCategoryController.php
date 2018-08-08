@@ -67,7 +67,10 @@ class SubCategoryController extends Controller
         string $sub_category_id
     ): JsonResponse
     {
-        if (CategoryRouteValidator::validate($category_id) === false) {
+        if (
+            CategoryRouteValidator::validate($category_id) === false ||
+            $sub_category_id === 'nill'
+        ) {
             return $this->returnResourceNotFound();
         }
 
@@ -126,7 +129,10 @@ class SubCategoryController extends Controller
         string $sub_category_id
     ): JsonResponse
     {
-        if ((new CategoryRouteValidator())->validate($category_id) === false) {
+        if (
+            (new CategoryRouteValidator())->validate($category_id) === false ||
+            $sub_category_id === 'nill'
+        ) {
             return $this->returnResourceNotFound();
         }
 

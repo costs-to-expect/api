@@ -56,6 +56,10 @@ class CategoryController extends Controller
      */
     public function show(Request $request, $category_id): JsonResponse
     {
+        if ($category_id === 'nill') {
+            return $this->returnResourceNotFound();
+        }
+
         $category = (new Category)->single($category_id);
 
         if ($category === null) {
@@ -98,7 +102,10 @@ class CategoryController extends Controller
      */
     public function optionsShow(Request $request, string $category_id): JsonResponse
     {
-        if ((new Category)->single($category_id) === null) {
+        if (
+            $category_id === 'nill' ||
+            (new Category)->single($category_id) === null
+        ) {
             return $this->returnResourceNotFound();
         }
 

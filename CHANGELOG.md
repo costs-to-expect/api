@@ -9,6 +9,8 @@ Official release
 * Collections return data showing newest first.
 * OPTIONS requests no longer shows PATCH request fields, not yet implemented.
 * Minor model updates.
+* Show action/Options show action will return resource not found for invalid 
+final ids.
 
 ## 2018-08-08 - v1.00 (pre release)
 

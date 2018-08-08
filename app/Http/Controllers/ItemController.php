@@ -85,7 +85,10 @@ class ItemController extends Controller
         string $item_id
     ): JsonResponse
     {
-        if (ResourceRouteValidator::validate($resource_type_id, $resource_id) === false) {
+        if (
+            ResourceRouteValidator::validate($resource_type_id, $resource_id) === false ||
+            $item_id === 'nill'
+        ) {
             return $this->returnResourceNotFound();
         }
 
@@ -144,7 +147,10 @@ class ItemController extends Controller
         string $item_id
     ): JsonResponse
     {
-        if (ResourceRouteValidator::validate($resource_type_id, $resource_id) === false) {
+        if (
+            ResourceRouteValidator::validate($resource_type_id, $resource_id) === false ||
+            $item_id === 'nill'
+        ) {
             return $this->returnResourceNotFound();
         }
 

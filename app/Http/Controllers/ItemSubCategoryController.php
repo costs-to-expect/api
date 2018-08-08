@@ -93,12 +93,14 @@ class ItemSubCategoryController extends Controller
         string $item_sub_category_id
     ): JsonResponse
     {
-        if (ItemCategoryRouteValidator::validate(
+        if (
+            ItemCategoryRouteValidator::validate(
             $resource_type_id,
             $resource_id,
             $item_id,
-            $item_category_id
-        ) === false) {
+            $item_category_id) === false ||
+            $item_sub_category_id === 'nill'
+        ) {
             return $this->returnResourceNotFound();
         }
 
@@ -189,12 +191,14 @@ class ItemSubCategoryController extends Controller
         string $item_sub_category_id
     ): JsonResponse
     {
-        if (ItemCategoryRouteValidator::validate(
+        if (
+            ItemCategoryRouteValidator::validate(
                 $resource_type_id,
                 $resource_id,
                 $item_id,
-                $item_category_id
-            ) === false) {
+                $item_category_id) === false ||
+            $item_sub_category_id === 'nill'
+        ) {
             return $this->returnResourceNotFound();
         }
 

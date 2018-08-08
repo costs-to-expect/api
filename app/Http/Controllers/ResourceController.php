@@ -68,7 +68,10 @@ class ResourceController extends Controller
         string $resource_id
     ): JsonResponse
     {
-        if (ResourceTypeRouteValidator::validate($resource_type_id) === false) {
+        if (
+            ResourceTypeRouteValidator::validate($resource_type_id) === false ||
+            $resource_id === 'nill'
+        ) {
             return $this->returnResourceNotFound();
         }
 
@@ -120,7 +123,10 @@ class ResourceController extends Controller
      */
     public function optionsShow(Request $request, string $resource_type_id, string $resource_id): JsonResponse
     {
-        if (ResourceTypeRouteValidator::validate($resource_type_id) === false) {
+        if (
+            $resource_id === 'nill' ||
+            ResourceTypeRouteValidator::validate($resource_type_id) === false
+        ) {
             return $this->returnResourceNotFound();
         }
 
