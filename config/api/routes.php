@@ -54,10 +54,10 @@ return [
                 ]
             ]
         ],
-        'parameters' => array_merge(
-            $pagination,
-            []
-        )
+        'parameters' => [
+            'collection' => [],
+            'item' => []
+        ]
     ],
     'sub_category' => [
         'fields' => [
@@ -95,10 +95,10 @@ return [
                 ]
             ]
         ],
-        'parameters' => array_merge(
-            $pagination,
-            []
-        )
+        'parameters' => [
+            'collection' => [],
+            'item' => []
+        ]
     ],
     'resource_type' => [
         'fields' => [
@@ -137,9 +137,17 @@ return [
                 ]
             ]
         ],
-        'parameters' => array_merge(
-            $pagination,
-            [
+        'parameters' => [
+            'collection' => [
+                'include_resources' => [
+                    'field' => 'include_resources',
+                    'title' => 'Include resources',
+                    'description' => 'Include resources assigned to resource type',
+                    'type' => 'boolean',
+                    'required' => false
+                ]
+            ],
+            'item' => [
                 'include_resources' => [
                     'field' => 'include_resources',
                     'title' => 'Include resources',
@@ -148,7 +156,7 @@ return [
                     'required' => false
                 ]
             ]
-        )
+        ]
     ],
     'resource' => [
         'fields' => [
@@ -202,10 +210,10 @@ return [
                 ]
             ]
         ],
-        'parameters' => array_merge(
-            $pagination,
-            []
-        )
+        'parameters' => [
+            'collection' => [],
+            'item' => []
+        ]
     ],
     'item' => [
         'fields' => [
@@ -260,10 +268,13 @@ return [
                 'messages' => []
             ]
         ],
-        'parameters' => array_merge(
-            $pagination,
-            []
-        )
+        'parameters' => [
+            'collection' => array_merge(
+                $pagination,
+                []
+            ),
+            'item' => []
+        ]
     ],
     'item_category' => [
         'fields' => [
@@ -292,10 +303,10 @@ return [
                 'messages' => []
             ]
         ],
-        'parameters' => array_merge(
-            $pagination,
-            []
-        )
+        'parameters' => [
+            'collection' => [],
+            'item' => []
+        ]
     ],
     'item_sub_category' => [
         'fields' => [
@@ -324,9 +335,9 @@ return [
                 'messages' => []
             ]
         ],
-        'parameters' => array_merge(
-            $pagination,
-            []
-        )
+        'parameters' => [
+            'collection' => [],
+            'item' => []
+        ]
     ]
 ];

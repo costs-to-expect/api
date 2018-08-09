@@ -17,6 +17,9 @@ class Controller extends BaseController
 
     protected $hash;
 
+    protected $parameters_collection = [];
+    protected $parameters_show = [];
+
     public function __construct()
     {
         $this->hash = new Hash();
@@ -189,6 +192,7 @@ class Controller extends BaseController
      * @param string $delete_description_key
      * @param string $patch_description_key
      * @param string $patch_fields_key
+     * @param string $parameters_key
      *
      * @return JsonResponse
      */
@@ -196,14 +200,15 @@ class Controller extends BaseController
         string $get_description_key,
         string $delete_description_key,
         string $patch_description_key,
-        string $patch_fields_key
+        string $patch_fields_key,
+        string $parameters_key
     ): JsonResponse
     {
         $routes = [
             'GET' => [
                 'description' => Config::get($get_description_key),
                 'authenticated' => false,
-                'parameters' => []
+                'parameters' => Config::get($parameters_key)
             ],
             'DELETE' => [
                 'description' => Config::get($delete_description_key),

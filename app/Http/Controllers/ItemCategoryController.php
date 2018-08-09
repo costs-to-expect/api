@@ -126,7 +126,7 @@ class ItemCategoryController extends Controller
             'api.descriptions.item_category.GET_index',
             'api.descriptions.item_category.POST',
             'api.routes.item_category.fields',
-            'api.routes.item_category.parameters',
+            'api.routes.item_category.parameters.collection',
             $this->allowedValues()
         );
     }
@@ -172,7 +172,8 @@ class ItemCategoryController extends Controller
             'api.descriptions.item_category.GET_show',
             'api.descriptions.item_category.DELETE',
             'api.descriptions.item_category.PATCH',
-            'api.routes.item_category.fields'
+            'api.routes.item_category.fields',
+            'api.routes.item_category.parameters.item'
         );
     }
 

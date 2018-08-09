@@ -108,7 +108,7 @@ class ResourceController extends Controller
             'api.descriptions.resource.GET_index',
             'api.descriptions.resource.POST',
             'api.routes.resource.fields',
-            'api.routes.resource.parameters'
+            'api.routes.resource.parameters.collection'
         );
     }
 
@@ -143,7 +143,8 @@ class ResourceController extends Controller
             'api.descriptions.resource.GET_show',
             'api.descriptions.resource.DELETE',
             'api.descriptions.resource.PATCH',
-            'api.routes.resource.fields'
+            'api.routes.resource.fields',
+            'api.routes.resource.parameters.item'
         );
     }
 

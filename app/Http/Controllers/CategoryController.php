@@ -88,7 +88,7 @@ class CategoryController extends Controller
             'api.descriptions.category.GET_index',
             'api.descriptions.category.POST',
             'api.routes.category.fields',
-            'api.routes.category.parameters'
+            'api.routes.category.parameters.collection'
         );
     }
 
@@ -113,7 +113,8 @@ class CategoryController extends Controller
             'api.descriptions.category.GET_show',
             'api.descriptions.category.DELETE',
             'api.descriptions.category.PATCH',
-            'api.routes.category.fields'
+            'api.routes.category.fields',
+            'api.routes.category.parameters.item'
         );
     }
 

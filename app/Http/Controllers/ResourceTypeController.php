@@ -19,8 +19,6 @@ use Illuminate\Http\Request;
  */
 class ResourceTypeController extends Controller
 {
-    private $parameters_index = [];
-
     /**
      * Return all the resource types
      *
@@ -32,7 +30,8 @@ class ResourceTypeController extends Controller
     {
         $resource_types = (new ResourceType())->paginatedCollection();
 
-        $this->parameters_index['include_resources'] = boolval($request->query('include_resources', false));
+        $this->parameters_collection = [];
+        $this->parameters_collection['include_resources'] = boolval($request->query('include_resources', false));
 
         $headers = [
             'X-Total-Count' => count($resource_types)
@@ -42,7 +41,7 @@ class ResourceTypeController extends Controller
             $resource_types->map(
                 function ($resource_type)
                 {
-                    return (new ResourceTypeTransformer($resource_type, $this->parameters_index))->toArray();
+                    return (new ResourceTypeTransformer($resource_type, $this->parameters_collection))->toArray();
                 }
             ),
             200,
@@ -64,6 +63,9 @@ class ResourceTypeController extends Controller
             return $this->returnResourceNotFound();
         }
 
+        $this->parameters_collection = [];
+        $this->parameters_collection['include_resources'] = boolval($request->query('include_resources', false));
+
         $resource_type = (new ResourceType())->single($resource_type_id);
 
         if ($resource_type === null) {
@@ -71,7 +73,7 @@ class ResourceTypeController extends Controller
         }
 
         return response()->json(
-            (new ResourceTypeTransformer($resource_type))->toArray(),
+            (new ResourceTypeTransformer($resource_type, $this->parameters_collection))->toArray(),
             200,
             [
                 'X-Total-Count' => 1
@@ -92,7 +94,7 @@ class ResourceTypeController extends Controller
             'api.descriptions.resource_type.GET_index',
             'api.descriptions.resource_type.POST',
             'api.routes.resource_type.fields',
-            'api.routes.resource_type.parameters'
+            'api.routes.resource_type.parameters.collection'
         );
     }
 
@@ -117,7 +119,8 @@ class ResourceTypeController extends Controller
             'api.descriptions.resource_type.GET_show',
             'api.descriptions.resource_type.DELETE',
             'api.descriptions.resource_type.PATCH',
-            'api.routes.resource_type.fields'
+            'api.routes.resource_type.fields',
+            'api.routes.resource_type.parameters.item'
         );
     }
 

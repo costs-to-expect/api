@@ -126,7 +126,7 @@ class ItemController extends Controller
             'api.descriptions.item.GET_index',
             'api.descriptions.item.POST',
             'api.routes.item.fields',
-            'api.routes.item.parameters'
+            'api.routes.item.parameters.collection'
         );
     }
 
@@ -164,7 +164,8 @@ class ItemController extends Controller
             'api.descriptions.item.GET_show',
             'api.descriptions.item.DELETE',
             'api.descriptions.item.PATCH',
-            'api.routes.item.fields'
+            'api.routes.item.fields',
+            'api.routes.item.parameters.item'
         );
     }
 
