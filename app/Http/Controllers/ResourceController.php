@@ -68,7 +68,10 @@ class ResourceController extends Controller
         string $resource_id
     ): JsonResponse
     {
-        if (ResourceTypeRouteValidator::validate($resource_type_id) === false) {
+        if (
+            ResourceTypeRouteValidator::validate($resource_type_id) === false ||
+            $resource_id === 'nill'
+        ) {
             return $this->returnResourceNotFound();
         }
 
@@ -105,7 +108,7 @@ class ResourceController extends Controller
             'api.descriptions.resource.GET_index',
             'api.descriptions.resource.POST',
             'api.routes.resource.fields',
-            'api.routes.resource.parameters'
+            'api.routes.resource.parameters.collection'
         );
     }
 
@@ -120,7 +123,10 @@ class ResourceController extends Controller
      */
     public function optionsShow(Request $request, string $resource_type_id, string $resource_id): JsonResponse
     {
-        if (ResourceTypeRouteValidator::validate($resource_type_id) === false) {
+        if (
+            $resource_id === 'nill' ||
+            ResourceTypeRouteValidator::validate($resource_type_id) === false
+        ) {
             return $this->returnResourceNotFound();
         }
 
@@ -137,7 +143,8 @@ class ResourceController extends Controller
             'api.descriptions.resource.GET_show',
             'api.descriptions.resource.DELETE',
             'api.descriptions.resource.PATCH',
-            'api.routes.resource.fields'
+            'api.routes.resource.fields',
+            'api.routes.resource.parameters.item'
         );
     }
 

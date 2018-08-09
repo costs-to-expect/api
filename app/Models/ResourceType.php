@@ -32,7 +32,7 @@ class ResourceType extends Model
 
     public function paginatedCollection(int $offset = 0, int $limit = 10)
     {
-        return $this->all();
+        return $this->latest()->get();
     }
 
     public function single(int $resource_type_id)

@@ -85,7 +85,10 @@ class ItemController extends Controller
         string $item_id
     ): JsonResponse
     {
-        if (ResourceRouteValidator::validate($resource_type_id, $resource_id) === false) {
+        if (
+            ResourceRouteValidator::validate($resource_type_id, $resource_id) === false ||
+            $item_id === 'nill'
+        ) {
             return $this->returnResourceNotFound();
         }
 
@@ -123,7 +126,7 @@ class ItemController extends Controller
             'api.descriptions.item.GET_index',
             'api.descriptions.item.POST',
             'api.routes.item.fields',
-            'api.routes.item.parameters'
+            'api.routes.item.parameters.collection'
         );
     }
 
@@ -144,7 +147,10 @@ class ItemController extends Controller
         string $item_id
     ): JsonResponse
     {
-        if (ResourceRouteValidator::validate($resource_type_id, $resource_id) === false) {
+        if (
+            ResourceRouteValidator::validate($resource_type_id, $resource_id) === false ||
+            $item_id === 'nill'
+        ) {
             return $this->returnResourceNotFound();
         }
 
@@ -158,7 +164,8 @@ class ItemController extends Controller
             'api.descriptions.item.GET_show',
             'api.descriptions.item.DELETE',
             'api.descriptions.item.PATCH',
-            'api.routes.item.fields'
+            'api.routes.item.fields',
+            'api.routes.item.parameters.item'
         );
     }
 

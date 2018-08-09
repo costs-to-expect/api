@@ -77,7 +77,10 @@ class ItemCategoryController extends Controller
         string $item_category_id
     ): JsonResponse
     {
-        if (ItemRouteValidator::validate($resource_type_id, $resource_id, $item_id) === false) {
+        if (
+            ItemRouteValidator::validate($resource_type_id, $resource_id, $item_id) === false ||
+            $item_category_id === 'nill'
+        ) {
             return $this->returnResourceNotFound();
         }
 
@@ -123,7 +126,7 @@ class ItemCategoryController extends Controller
             'api.descriptions.item_category.GET_index',
             'api.descriptions.item_category.POST',
             'api.routes.item_category.fields',
-            'api.routes.item_category.parameters',
+            'api.routes.item_category.parameters.collection',
             $this->allowedValues()
         );
     }
@@ -147,7 +150,10 @@ class ItemCategoryController extends Controller
         string $item_category_id
     ): JsonResponse
     {
-        if (ItemRouteValidator::validate($resource_type_id, $resource_id, $item_id) === false) {
+        if (
+            ItemRouteValidator::validate($resource_type_id, $resource_id, $item_id) === false ||
+            $item_category_id === 'nill'
+        ) {
             return $this->returnResourceNotFound();
         }
 
@@ -166,7 +172,8 @@ class ItemCategoryController extends Controller
             'api.descriptions.item_category.GET_show',
             'api.descriptions.item_category.DELETE',
             'api.descriptions.item_category.PATCH',
-            'api.routes.item_category.fields'
+            'api.routes.item_category.fields',
+            'api.routes.item_category.parameters.item'
         );
     }
 

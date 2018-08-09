@@ -93,12 +93,14 @@ class ItemSubCategoryController extends Controller
         string $item_sub_category_id
     ): JsonResponse
     {
-        if (ItemCategoryRouteValidator::validate(
+        if (
+            ItemCategoryRouteValidator::validate(
             $resource_type_id,
             $resource_id,
             $item_id,
-            $item_category_id
-        ) === false) {
+            $item_category_id) === false ||
+            $item_sub_category_id === 'nill'
+        ) {
             return $this->returnResourceNotFound();
         }
 
@@ -163,7 +165,7 @@ class ItemSubCategoryController extends Controller
             'api.descriptions.item_sub_category.GET_index',
             'api.descriptions.item_sub_category.POST',
             'api.routes.item_sub_category.fields',
-            'api.routes.item_sub_category.parameters',
+            'api.routes.item_sub_category.parameters.collection',
             $allowed_values
         );
     }
@@ -189,12 +191,14 @@ class ItemSubCategoryController extends Controller
         string $item_sub_category_id
     ): JsonResponse
     {
-        if (ItemCategoryRouteValidator::validate(
+        if (
+            ItemCategoryRouteValidator::validate(
                 $resource_type_id,
                 $resource_id,
                 $item_id,
-                $item_category_id
-            ) === false) {
+                $item_category_id) === false ||
+            $item_sub_category_id === 'nill'
+        ) {
             return $this->returnResourceNotFound();
         }
 
@@ -214,7 +218,8 @@ class ItemSubCategoryController extends Controller
             'api.descriptions.item_sub_category.GET_show',
             'api.descriptions.item_sub_category.DELETE',
             'api.descriptions.item_sub_category.PATCH',
-            'api.routes.item_sub_category.fields'
+            'api.routes.item_sub_category.fields',
+            'api.routes.item_sub_category.parameters.item'
         );
     }
 

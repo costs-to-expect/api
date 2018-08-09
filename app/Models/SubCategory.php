@@ -25,6 +25,7 @@ class SubCategory extends Model
     public function paginatedCollection(int $category_id, int $offset = 0, int $limit = 10)
     {
         return $this->where('category_id', '=', $category_id)
+            ->latest()
             ->get();
     }
 

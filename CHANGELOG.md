@@ -2,9 +2,22 @@
 
 Full changelog for the costs to expect REST API.
 
+## 2018-xx-xx - v1.00 
+
+Official release
+
+* Collections return data showing newest first.
+* OPTIONS requests no longer shows PATCH request fields, not yet implemented.
+* Show action/Options show action will return resource not found for invalid 
+final ids.
+* GET Parameters can now be set for collections and items.
+* Other minor fixes and updates.
+
+## 2018-08-08 - v1.00 (pre release)
+
+* API feature complete for release, not being released yet, real life in the way.
+
 ## Pre release changes
-
-
 
 ### Additional development and fine tuning
 

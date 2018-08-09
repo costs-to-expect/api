@@ -67,7 +67,10 @@ class SubCategoryController extends Controller
         string $sub_category_id
     ): JsonResponse
     {
-        if (CategoryRouteValidator::validate($category_id) === false) {
+        if (
+            CategoryRouteValidator::validate($category_id) === false ||
+            $sub_category_id === 'nill'
+        ) {
             return $this->returnResourceNotFound();
         }
 
@@ -107,7 +110,7 @@ class SubCategoryController extends Controller
             'api.descriptions.sub_category.GET_index',
             'api.descriptions.sub_category.POST',
             'api.routes.sub_category.fields',
-            'api.routes.sub_category.parameters'
+            'api.routes.sub_category.parameters.collection'
         );
     }
 
@@ -126,7 +129,10 @@ class SubCategoryController extends Controller
         string $sub_category_id
     ): JsonResponse
     {
-        if ((new CategoryRouteValidator())->validate($category_id) === false) {
+        if (
+            (new CategoryRouteValidator())->validate($category_id) === false ||
+            $sub_category_id === 'nill'
+        ) {
             return $this->returnResourceNotFound();
         }
 
@@ -143,7 +149,8 @@ class SubCategoryController extends Controller
             'api.descriptions.sub_category.GET_show',
             'api.descriptions.sub_category.DELETE',
             'api.descriptions.sub_category.PATCH',
-            'api.routes.sub_category.fields'
+            'api.routes.sub_category.fields',
+            'api.routes.sub_category.parameters.item'
         );
     }
 

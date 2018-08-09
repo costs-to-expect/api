@@ -30,6 +30,7 @@ class Resource extends Model
     public function paginatedCollection(int $resource_type_id, int $offset = 0, int $limit = 10)
     {
         return $this->where('resource_type_id', '=', $resource_type_id)
+            ->latest()
             ->get();
     }
 
