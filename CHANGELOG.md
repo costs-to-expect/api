@@ -6,6 +6,7 @@ Full changelog for the costs to expect REST API.
 
 Official release
 
+* Added include_sub_categories GET param for categories collection and single show.
 * Collections return data showing newest first.
 * OPTIONS requests no longer shows PATCH request fields, not yet implemented.
 * Show action/Options show action will return resource not found for invalid 
