@@ -55,8 +55,24 @@ return [
             ]
         ],
         'parameters' => [
-            'collection' => [],
-            'item' => []
+            'collection' => [
+                'include_sub_categories' => [
+                    'field' => 'include_sub_categories',
+                    'title' => 'Include sub categories',
+                    'description' => 'Include sub categories assigned to this category',
+                    'type' => 'boolean',
+                    'required' => false
+                ]
+            ],
+            'item' => [
+                'include_sub_categories' => [
+                    'field' => 'include_sub_categories',
+                    'title' => 'Include sub categories',
+                    'description' => 'Include sub categories assigned to this category',
+                    'type' => 'boolean',
+                    'required' => false
+                ]
+            ]
         ]
     ],
     'sub_category' => [

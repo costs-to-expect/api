@@ -2,6 +2,8 @@
 
 namespace App\Transformers;
 
+use App\Models\Category as CategoryModel;
+
 /**
  * Transform the data returns from Eloquent into the format we want for the API
  *
@@ -11,23 +13,49 @@ namespace App\Transformers;
  */
 class Category extends Transformer
 {
-    protected $category;
+    private $category;
+    private $parameters = [];
 
-    public function __construct(\App\Models\Category $category)
+    private $sub_categories = [];
+
+    /**
+     * ResourceType constructor.
+     *
+     * @param CategoryModel $category
+     * @param array $parameters
+     */
+    public function __construct(CategoryModel $category, array $parameters = [])
     {
         parent::__construct();
 
         $this->category = $category;
+        $this->parameters = $parameters;
     }
 
     public function toArray(): array
     {
-        return [
+        $result = [
             'id' => $this->hash->category()->encode($this->category->id),
             'name' => $this->category->name,
             'description' => $this->category->description,
             'created' => $this->category->created_at->toDateTimeString(),
-            'sub_categories_count' => $this->category->numberOfSubCategories()
+            'sub_categories_count' => $this->category->sub_categories_count()
         ];
+
+        if (
+            isset($this->parameters['include_sub_categories']) &&
+            $this->parameters['include_sub_categories'] === true) {
+            $subCategoriesCollection = $this->category->sub_categories;
+
+            $subCategoriesCollection->map(
+                function ($sub_category) {
+                    $this->sub_categories[] = (new SubCategory($sub_category))->toArray();
+                }
+            );
+
+            $result['sub_categories'] = $this->sub_categories;
+        }
+
+        return $result;
     }
 }

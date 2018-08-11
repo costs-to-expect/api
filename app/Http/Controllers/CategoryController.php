@@ -30,6 +30,10 @@ class CategoryController extends Controller
     {
         $categories = (new Category())->paginatedCollection();
 
+        $this->parameters_collection = [];
+        $this->parameters_collection['include_sub_categories'] =
+            boolval($request->query('include_sub_categories', false));
+
         $headers = [
             'X-Total-Count' => count($categories)
         ];
@@ -38,7 +42,7 @@ class CategoryController extends Controller
             $categories->map(
                 function ($category)
                 {
-                    return (new CategoryTransformer($category))->toArray();
+                    return (new CategoryTransformer($category, $this->parameters_collection))->toArray();
                 }
             ),
             200,
@@ -60,6 +64,10 @@ class CategoryController extends Controller
             return $this->returnResourceNotFound();
         }
 
+        $this->parameters_collection = [];
+        $this->parameters_collection['include_sub_categories'] =
+            boolval($request->query('include_sub_categories', false));
+
         $category = (new Category)->single($category_id);
 
         if ($category === null) {
@@ -67,7 +75,7 @@ class CategoryController extends Controller
         }
 
         return response()->json(
-            (new CategoryTransformer($category))->toArray(),
+            (new CategoryTransformer($category, $this->parameters_show))->toArray(),
             200,
             [
                 'X-Total-Count' => 1

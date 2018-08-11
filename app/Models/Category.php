@@ -20,12 +20,12 @@ class Category extends Model
 
     protected $guarded = ['id', 'created_at', 'updated_at'];
 
-    public function subCategories()
+    public function sub_categories()
     {
         return $this->hasMany(SubCategory::class, 'category_id', 'id');
     }
 
-    public function numberOfSubCategories()
+    public function sub_categories_count()
     {
         return $this->hasMany(SubCategory::class, 'category_id', 'id')->count();
     }
