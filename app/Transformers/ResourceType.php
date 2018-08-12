@@ -2,6 +2,7 @@
 
 namespace App\Transformers;
 
+use App\Models\ResourceType as ResourceTypeModel;
 use App\Transformers\Resource as ResourceTransformer;
 
 /**
@@ -21,10 +22,10 @@ class ResourceType extends Transformer
     /**
      * ResourceType constructor.
      *
-     * @param \App\Models\ResourceType $resource_type
+     * @param ResourceTypeModel $resource_type
      * @param array $parameters
      */
-    public function __construct(\App\Models\ResourceType $resource_type, array $parameters = [])
+    public function __construct(ResourceTypeModel $resource_type, array $parameters = [])
     {
         parent::__construct();
 
@@ -44,7 +45,7 @@ class ResourceType extends Transformer
             'name' => $this->resource_type->name,
             'description' => $this->resource_type->description,
             'created' => $this->resource_type->created_at->toDateTimeString(),
-            'resources_count' => $this->resource_type->numberOfResources()
+            'resources_count' => $this->resource_type->resources_count()
         ];
 
         if (isset($this->parameters['include_resources']) && $this->parameters['include_resources'] === true) {

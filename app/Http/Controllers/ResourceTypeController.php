@@ -63,8 +63,8 @@ class ResourceTypeController extends Controller
             return $this->returnResourceNotFound();
         }
 
-        $this->parameters_collection = [];
-        $this->parameters_collection['include_resources'] = boolval($request->query('include_resources', false));
+        $this->parameters_show = [];
+        $this->parameters_show['include_resources'] = boolval($request->query('include_resources', false));
 
         $resource_type = (new ResourceType())->single($resource_type_id);
 
@@ -73,7 +73,7 @@ class ResourceTypeController extends Controller
         }
 
         return response()->json(
-            (new ResourceTypeTransformer($resource_type, $this->parameters_collection))->toArray(),
+            (new ResourceTypeTransformer($resource_type, $this->parameters_show))->toArray(),
             200,
             [
                 'X-Total-Count' => 1

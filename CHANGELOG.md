@@ -6,6 +6,7 @@ Full changelog for the costs to expect REST API.
 
 Official release
 
+* Added include_sub_categories GET param for categories collection and single show.
 * Collections return data showing newest first.
 * OPTIONS requests no longer shows PATCH request fields, not yet implemented.
 * Show action/Options show action will return resource not found for invalid 
@@ -27,7 +28,7 @@ final ids.
 * Reworked relationship for item sub category and relevant controller updates. 
 * Added delete end points.
 * All route params are validated for each request.
-* Updated ConvertHashIds middleware, returns 'nill' for values which can't be decode, useful for later checks.
+* Updated ConvertHashIds middleware, returns 'nill' for values which can't be decoded, useful for later checks.
 * Updated OPTIONS requests, added required Yes/No flags.
 * Added ability to define allowed values for fields.
 * Updated validation errors, now the same format as OPTIONS requests and shows allowed values if defined.
