@@ -24,7 +24,10 @@ Route::get('', function () {
 Route::group(
     [
         'prefix' => Config::get('api.version.prefix'),
-        'middleware' => 'convert.hash.ids'
+        'middleware' => [
+            'convert.hash.ids',
+            'log.request'
+        ]
     ],
     function () {
         Route::get('', 'IndexController@index');
@@ -153,7 +156,10 @@ Route::group(
 
 Route::group(
     [
-        'middleware' => ['auth:api', 'convert.hash.ids'],
+        'middleware' => [
+            'auth:api',
+            'convert.hash.ids'
+        ],
         'prefix' => Config::get('api.version.prefix'),
     ],
     function () {
