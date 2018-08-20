@@ -18,6 +18,7 @@ class LogRequests extends Migration
             $table->collation = 'utf8mb4_unicode_ci';
 
             $table->bigIncrements('id');
+            $table->char('method', 8);
             $table->string('request');
             $table->timestamps();
         });
