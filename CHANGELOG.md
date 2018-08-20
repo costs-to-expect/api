@@ -6,6 +6,7 @@ Full changelog for the costs to expect REST API.
 
 Official release
 
+* Log requests to the API, GET and OPTIONS only.
 * Added include_sub_categories GET param for categories collection and single show.
 * Collections return data showing newest first.
 * OPTIONS requests no longer shows PATCH request fields, not yet implemented.
