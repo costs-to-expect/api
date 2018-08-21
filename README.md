@@ -46,59 +46,63 @@ POSTing to `http://api.local/api-v1/auth/login` - you will need a bearer for all
 * Non 2xx results will return an object with a message field and optionally a fields field, for example containing 
 the validation errors.
 
-## Management routes
+## Routes
 
-Please find below a list of the API management routes that are (will be) implemented for version 1.00.  
-The summary routes will be displayed in another table. In general the GET, OPTIONS and HEAD routes are all public, 
-the POST, PATCH and DELETE required authorisation. The auth/register route will not be on the public website 
-post release. 
+Please find below a list of the API routes that are (will be) implemented for version 1.00.
 
 | HTTP Verb(s) | Route |
 | :--- | :--- |
 | GET/HEAD | api-v1/ |
 | OPTIONS  | api-v1/ | 
-| POST     | api-v1/auth/login |
-| POST     | api-v1/auth/register |
-| GET/HEAD | api-v1/auth/user |
-| POST     | api-v1/categories |
+| POST     | api-v1/auth/login (Removed in production) |
+| POST     | api-v1/auth/register (Removed in production) |
 | OPTIONS  | api-v1/categories |
 | GET/HEAD | api-v1/categories |
 | OPTIONS  | api-v1/categories/{category_id} |
 | GET/HEAD | api-v1/categories/{category_id} |
-| DELETE   | api-v1/categories/{category_id} |
-| POST     | api-v1/categories/{category_id}/sub_categories |
 | OPTIONS  | api-v1/categories/{category_id}/sub_categories |
 | GET/HEAD | api-v1/categories/{category_id}/sub_categories |
 | OPTIONS  | api-v1/categories/{category_id}/sub_categories/{sub_category_id} |
 | GET/HEAD | api-v1/categories/{category_id}/sub_categories/{sub_category_id} |
-| DELETE   | api-v1/categories/{category_id}/sub_categories/{sub_category_id} |
-| POST     | api-v1/resource_types |
 | GET/HEAD | api-v1/resource_types |
 | OPTIONS  | api-v1/resource_types |
 | GET/HEAD | api-v1/resource_types/{resource_type_id} |
 | OPTIONS  | api-v1/resource_types/{resource_type_id} | 
-| DELETE   | api-v1/resource_types/{resource_type_id} |
-| POST     | api-v1/resource_types/{resource_type_id}/resources |
 | GET/HEAD | api-v1/resource_types/{resource_type_id}/resources |
 | OPTIONS  | api-v1/resource_types/{resource_type_id}/resources |
 | OPTIONS  | api-v1/resource_types/{resource_type_id}/resources/{resource_id} |
-| DELETE   | api-v1/resource_types/{resource_type_id}/resources/{resource_id} |
 | GET/HEAD | api-v1/resource_types/{resource_type_id}/resources/{resource_id} |
 | OPTIONS  | api-v1/resource_types/{resource_type_id}/resources/{resource_id}/items |
-| POST     | api-v1/resource_types/{resource_type_id}/resources/{resource_id}/items |
 | GET/HEAD | api-v1/resource_types/{resource_type_id}/resources/{resource_id}/items |
 | GET/HEAD | api-v1/resource_types/{resource_type_id}/resources/{resource_id}/items/{item_id} |
 | OPTIONS  | api-v1/resource_types/{resource_type_id}/resources/{resource_id}/items/{item_id} |
-| DELETE   | api-v1/resource_types/{resource_type_id}/resources/{resource_id}/items/{item_id} |
 | OPTIONS  | api-v1/resource_types/{resource_type_id}/resources/{resource_id}/items/{item_id}/category |
-| POST     | api-v1/resource_types/{resource_type_id}/resources/{resource_id}/items/{item_id}/category |
 | GET/HEAD | api-v1/resource_types/{resource_type_id}/resources/{resource_id}/items/{item_id}/category |
 | GET/HEAD | api-v1/resource_types/{resource_type_id}/resources/{resource_id}/items/{item_id}/category/{item_category_id} |
 | OPTIONS  | api-v1/resource_types/{resource_type_id}/resources/{resource_id}/items/{item_id}/category/{item_category_id} |
-| DELETE   | api-v1/resource_types/{resource_type_id}/resources/{resource_id}/items/{item_id}/category/{item_category_id} |
 | OPTIONS  | api-v1/resource_types/{resource_type_id}/resources/{resource_id}/items/{item_id}/category/{item_category_id}/sub_category |
-| POST     | api-v1/resource_types/{resource_type_id}/resources/{resource_id}/items/{item_id}/category/{item_category_id}/sub_category |
 | GET/HEAD | api-v1/resource_types/{resource_type_id}/resources/{resource_id}/items/{item_id}/category/{item_category_id}/sub_category |
 | GET/HEAD | api-v1/resource_types/{resource_type_id}/resources/{resource_id}/items/{item_id}/category/{item_category_id}/sub_category/{sub_category_id} |
 | OPTIONS  | api-v1/resource_types/{resource_type_id}/resources/{resource_id}/items/{item_id}/category/{item_category_id}/sub_category/{sub_category_id} |
+
+## Management routes
+
+Please find below a list of the API management routes that are (will be) implemented for version 1.00, these routes require authorisation.
+
+| HTTP Verb(s) | Route |
+| :--- | :--- |
+| GET      | api-v1/auth/user |
+| POST     | api-v1/categories |
+| DELETE   | api-v1/categories/{category_id} |
+| POST     | api-v1/categories/{category_id}/sub_categories |
+| DELETE   | api-v1/categories/{category_id}/sub_categories/{sub_category_id} |
+| POST     | api-v1/resource_types |
+| DELETE   | api-v1/resource_types/{resource_type_id} |
+| POST     | api-v1/resource_types/{resource_type_id}/resources |
+| DELETE   | api-v1/resource_types/{resource_type_id}/resources/{resource_id} |
+| POST     | api-v1/resource_types/{resource_type_id}/resources/{resource_id}/items |
+| DELETE   | api-v1/resource_types/{resource_type_id}/resources/{resource_id}/items/{item_id} |
+| POST     | api-v1/resource_types/{resource_type_id}/resources/{resource_id}/items/{item_id}/category |
+| DELETE   | api-v1/resource_types/{resource_type_id}/resources/{resource_id}/items/{item_id}/category/{item_category_id} |
+| POST     | api-v1/resource_types/{resource_type_id}/resources/{resource_id}/items/{item_id}/category/{item_category_id}/sub_category |
 | DELETE   | api-v1/resource_types/{resource_type_id}/resources/{resource_id}/items/{item_id}/category/{item_category_id}/sub_category/{sub_category_id} |

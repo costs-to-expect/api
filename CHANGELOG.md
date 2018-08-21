@@ -6,6 +6,8 @@ Full changelog for the costs to expect REST API.
 
 Official release
 
+* Updated README, routes layout.
+* Added web.config for Azure.
 * Log requests to the API, GET and OPTIONS only.
 * Added include_sub_categories GET param for categories collection and single show.
 * Collections return data showing newest first.
