@@ -54,7 +54,7 @@ Please find below a list of the API routes that are (will be) implemented for ve
 | :--- | :--- |
 | GET/HEAD | api-v1/ |
 | OPTIONS  | api-v1/ | 
-| POST     | api-v1/auth/login (Removed in production) |
+| POST     | api-v1/auth/login |
 | POST     | api-v1/auth/register (Removed in production) |
 | OPTIONS  | api-v1/categories |
 | GET/HEAD | api-v1/categories |

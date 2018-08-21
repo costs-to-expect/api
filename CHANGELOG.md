@@ -6,6 +6,7 @@ Full changelog for the costs to expect REST API.
 
 Official release
 
+* Disable register route. 
 * Updated README, routes layout.
 * Added web.config for Azure.
 * Log requests to the API, GET and OPTIONS only.
