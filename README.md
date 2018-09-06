@@ -2,7 +2,7 @@
 
 ## The API
 
-This Laravel app is the RESTful API for costs-to-expect, the API will be consumed by the 
+This Laravel app is the RESTful API for https://api.costs-to-expect.com, the API will be consumed by the 
 costs to expect website and iOS app which I'm creating to assist the wife with data input.
 
 ## Set up
@@ -85,6 +85,11 @@ Please find below a list of the API routes that are (will be) implemented for ve
 | GET/HEAD | v1/resource_types/{resource_type_id}/resources/{resource_id}/items/{item_id}/category/{item_category_id}/sub_category/{sub_category_id} |
 | OPTIONS  | v1/resource_types/{resource_type_id}/resources/{resource_id}/items/{item_id}/category/{item_category_id}/sub_category/{sub_category_id} |
 
+## Summary routes
+
+| HTTP Verb(s) | Route |
+| :--- | :--- |
+
 ## Management routes
 
 Please find below a list of the API management routes that are (will be) implemented for version 1.00, these routes require authorisation.
@@ -106,3 +111,14 @@ Please find below a list of the API management routes that are (will be) impleme
 | DELETE   | v1/resource_types/{resource_type_id}/resources/{resource_id}/items/{item_id}/category/{item_category_id} |
 | POST     | v1/resource_types/{resource_type_id}/resources/{resource_id}/items/{item_id}/category/{item_category_id}/sub_category |
 | DELETE   | v1/resource_types/{resource_type_id}/resources/{resource_id}/items/{item_id}/category/{item_category_id}/sub_category/{sub_category_id} |
+
+## Planned development
+
+* Validate GET params
+* PATCHES
+* PUTS
+* Upgrade Laravel
+* Move the user model
+* Dev setting to show generated queries
+* Switch to Money class
+* Create a white box version of API
