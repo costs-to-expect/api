@@ -53,4 +53,14 @@ class Item extends Model
             })
             ->find($item_id);
     }
+
+    public function summary(int $resource_type_id, int $resource_id)
+    {
+        return $this->where('resource_id', '=', $resource_id)
+            ->whereHas('resource', function ($query) use ($resource_type_id) {
+                $query->where('resource_type_id', '=', $resource_type_id);
+            })
+            ->get()
+            ->sum('actualised_total');
+    }
 }

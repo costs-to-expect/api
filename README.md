@@ -89,6 +89,8 @@ Please find below a list of the API routes that are (will be) implemented for ve
 
 | HTTP Verb(s) | Route |
 | :--- | :--- |
+| GET/HEAD | v1/resource_types/{resource_type_id}/resources/{resource_id}/summary/tco |
+| OPTIONS  | v1/resource_types/{resource_type_id}/resources/{resource_id}/summary/tco |
 
 ## Management routes
 

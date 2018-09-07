@@ -98,8 +98,8 @@ Route::group(
         );
         Route::get(
             'resource_types/{resource_type_id}/resources/{resource_id}',
-            'ResourceController@show')
-        ;
+            'ResourceController@show'
+        );
         Route::options(
             'resource_types/{resource_type_id}/resources/{resource_id}',
             'ResourceController@optionsShow'
@@ -154,6 +154,15 @@ Route::group(
         Route::options(
             'resource_types/{resource_type_id}/resources/{resource_id}/items/{item_id}/category/{item_category_id}/sub_category/{item_sub_category_id}',
             'ItemSubCategoryController@optionsShow'
+        );
+
+        Route::get(
+            'resource_types/{resource_type_id}/resources/{resource_id}/summary/tco',
+            'SummaryController@tco'
+        );
+        Route::options(
+            'resource_types/{resource_type_id}/resources/{resource_id}/summary/tco',
+            'SummaryController@optionsTco'
         );
     }
 );
