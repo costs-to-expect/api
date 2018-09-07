@@ -2,7 +2,7 @@
 
 ## The API
 
-This Laravel app is the RESTful API for costs-to-expect, the API will be consumed by the 
+This Laravel app is the RESTful API for https://api.costs-to-expect.com, the API will be consumed by the 
 costs to expect website and iOS app which I'm creating to assist the wife with data input.
 
 ## Set up
@@ -32,10 +32,10 @@ install Passport.
 * `composer install`
 * `docker-compose exec app php artisan migrate`
 * `docker-compose exec app php artisan passport:install`
-* Run a OPTIONS request on `http://api.local/api-v1/resource_types`, you should see a nice OPTIONS request, 
-alternatively a GET request to `http://api.local/api-v1` will show all the routes.
-* You can add a development user by POSTing to `http://api.local/api-v1/auth/register` and then get a bearer by 
-POSTing to `http://api.local/api-v1/auth/login` - you will need a bearer for all the routes that require authentication.
+* Run a OPTIONS request on `http://api.local/v1/resource_types`, you should see a nice OPTIONS request, 
+alternatively a GET request to `http://api.local/v1` will show all the routes.
+* You can add a development user by POSTing to `http://api.local/v1/auth/register` and then get a bearer by 
+POSTing to `http://api.local/v1/auth/login` - you will need a bearer for all the routes that require authentication.
 
 ## Responses
 
@@ -52,38 +52,45 @@ Please find below a list of the API routes that are (will be) implemented for ve
 
 | HTTP Verb(s) | Route |
 | :--- | :--- |
-| GET/HEAD | api-v1/ |
-| OPTIONS  | api-v1/ | 
-| POST     | api-v1/auth/login |
-| POST     | api-v1/auth/register (Removed in production) |
-| OPTIONS  | api-v1/categories |
-| GET/HEAD | api-v1/categories |
-| OPTIONS  | api-v1/categories/{category_id} |
-| GET/HEAD | api-v1/categories/{category_id} |
-| OPTIONS  | api-v1/categories/{category_id}/sub_categories |
-| GET/HEAD | api-v1/categories/{category_id}/sub_categories |
-| OPTIONS  | api-v1/categories/{category_id}/sub_categories/{sub_category_id} |
-| GET/HEAD | api-v1/categories/{category_id}/sub_categories/{sub_category_id} |
-| GET/HEAD | api-v1/resource_types |
-| OPTIONS  | api-v1/resource_types |
-| GET/HEAD | api-v1/resource_types/{resource_type_id} |
-| OPTIONS  | api-v1/resource_types/{resource_type_id} | 
-| GET/HEAD | api-v1/resource_types/{resource_type_id}/resources |
-| OPTIONS  | api-v1/resource_types/{resource_type_id}/resources |
-| OPTIONS  | api-v1/resource_types/{resource_type_id}/resources/{resource_id} |
-| GET/HEAD | api-v1/resource_types/{resource_type_id}/resources/{resource_id} |
-| OPTIONS  | api-v1/resource_types/{resource_type_id}/resources/{resource_id}/items |
-| GET/HEAD | api-v1/resource_types/{resource_type_id}/resources/{resource_id}/items |
-| GET/HEAD | api-v1/resource_types/{resource_type_id}/resources/{resource_id}/items/{item_id} |
-| OPTIONS  | api-v1/resource_types/{resource_type_id}/resources/{resource_id}/items/{item_id} |
-| OPTIONS  | api-v1/resource_types/{resource_type_id}/resources/{resource_id}/items/{item_id}/category |
-| GET/HEAD | api-v1/resource_types/{resource_type_id}/resources/{resource_id}/items/{item_id}/category |
-| GET/HEAD | api-v1/resource_types/{resource_type_id}/resources/{resource_id}/items/{item_id}/category/{item_category_id} |
-| OPTIONS  | api-v1/resource_types/{resource_type_id}/resources/{resource_id}/items/{item_id}/category/{item_category_id} |
-| OPTIONS  | api-v1/resource_types/{resource_type_id}/resources/{resource_id}/items/{item_id}/category/{item_category_id}/sub_category |
-| GET/HEAD | api-v1/resource_types/{resource_type_id}/resources/{resource_id}/items/{item_id}/category/{item_category_id}/sub_category |
-| GET/HEAD | api-v1/resource_types/{resource_type_id}/resources/{resource_id}/items/{item_id}/category/{item_category_id}/sub_category/{sub_category_id} |
-| OPTIONS  | api-v1/resource_types/{resource_type_id}/resources/{resource_id}/items/{item_id}/category/{item_category_id}/sub_category/{sub_category_id} |
+| GET/HEAD | v1/ |
+| OPTIONS  | v1/ | 
+| POST     | v1/auth/login |
+| POST     | v1/auth/register (Removed in production) |
+| OPTIONS  | v1/categories |
+| GET/HEAD | v1/categories |
+| OPTIONS  | v1/categories/{category_id} |
+| GET/HEAD | v1/categories/{category_id} |
+| OPTIONS  | v1/categories/{category_id}/sub_categories |
+| GET/HEAD | v1/categories/{category_id}/sub_categories |
+| OPTIONS  | v1/categories/{category_id}/sub_categories/{sub_category_id} |
+| GET/HEAD | v1/categories/{category_id}/sub_categories/{sub_category_id} |
+| GET/HEAD | v1/resource_types |
+| OPTIONS  | v1/resource_types |
+| GET/HEAD | v1/resource_types/{resource_type_id} |
+| OPTIONS  | v1/resource_types/{resource_type_id} | 
+| GET/HEAD | v1/resource_types/{resource_type_id}/resources |
+| OPTIONS  | v1/resource_types/{resource_type_id}/resources |
+| OPTIONS  | v1/resource_types/{resource_type_id}/resources/{resource_id} |
+| GET/HEAD | v1/resource_types/{resource_type_id}/resources/{resource_id} |
+| OPTIONS  | v1/resource_types/{resource_type_id}/resources/{resource_id}/items |
+| GET/HEAD | v1/resource_types/{resource_type_id}/resources/{resource_id}/items |
+| GET/HEAD | v1/resource_types/{resource_type_id}/resources/{resource_id}/items/{item_id} |
+| OPTIONS  | v1/resource_types/{resource_type_id}/resources/{resource_id}/items/{item_id} |
+| OPTIONS  | v1/resource_types/{resource_type_id}/resources/{resource_id}/items/{item_id}/category |
+| GET/HEAD | v1/resource_types/{resource_type_id}/resources/{resource_id}/items/{item_id}/category |
+| GET/HEAD | v1/resource_types/{resource_type_id}/resources/{resource_id}/items/{item_id}/category/{item_category_id} |
+| OPTIONS  | v1/resource_types/{resource_type_id}/resources/{resource_id}/items/{item_id}/category/{item_category_id} |
+| OPTIONS  | v1/resource_types/{resource_type_id}/resources/{resource_id}/items/{item_id}/category/{item_category_id}/sub_category |
+| GET/HEAD | v1/resource_types/{resource_type_id}/resources/{resource_id}/items/{item_id}/category/{item_category_id}/sub_category |
+| GET/HEAD | v1/resource_types/{resource_type_id}/resources/{resource_id}/items/{item_id}/category/{item_category_id}/sub_category/{sub_category_id} |
+| OPTIONS  | v1/resource_types/{resource_type_id}/resources/{resource_id}/items/{item_id}/category/{item_category_id}/sub_category/{sub_category_id} |
+
+## Summary routes
+
+| HTTP Verb(s) | Route |
+| :--- | :--- |
+| GET/HEAD | v1/resource_types/{resource_type_id}/resources/{resource_id}/summary/tco |
+| OPTIONS  | v1/resource_types/{resource_type_id}/resources/{resource_id}/summary/tco |
 
 ## Management routes
 
@@ -91,18 +98,30 @@ Please find below a list of the API management routes that are (will be) impleme
 
 | HTTP Verb(s) | Route |
 | :--- | :--- |
-| GET      | api-v1/auth/user |
-| POST     | api-v1/categories |
-| DELETE   | api-v1/categories/{category_id} |
-| POST     | api-v1/categories/{category_id}/sub_categories |
-| DELETE   | api-v1/categories/{category_id}/sub_categories/{sub_category_id} |
-| POST     | api-v1/resource_types |
-| DELETE   | api-v1/resource_types/{resource_type_id} |
-| POST     | api-v1/resource_types/{resource_type_id}/resources |
-| DELETE   | api-v1/resource_types/{resource_type_id}/resources/{resource_id} |
-| POST     | api-v1/resource_types/{resource_type_id}/resources/{resource_id}/items |
-| DELETE   | api-v1/resource_types/{resource_type_id}/resources/{resource_id}/items/{item_id} |
-| POST     | api-v1/resource_types/{resource_type_id}/resources/{resource_id}/items/{item_id}/category |
-| DELETE   | api-v1/resource_types/{resource_type_id}/resources/{resource_id}/items/{item_id}/category/{item_category_id} |
-| POST     | api-v1/resource_types/{resource_type_id}/resources/{resource_id}/items/{item_id}/category/{item_category_id}/sub_category |
-| DELETE   | api-v1/resource_types/{resource_type_id}/resources/{resource_id}/items/{item_id}/category/{item_category_id}/sub_category/{sub_category_id} |
+| GET      | v1/auth/user |
+| POST     | v1/categories |
+| DELETE   | v1/categories/{category_id} |
+| POST     | v1/categories/{category_id}/sub_categories |
+| DELETE   | v1/categories/{category_id}/sub_categories/{sub_category_id} |
+| POST     | v1/resource_types |
+| DELETE   | v1/resource_types/{resource_type_id} |
+| POST     | v1/resource_types/{resource_type_id}/resources |
+| DELETE   | v1/resource_types/{resource_type_id}/resources/{resource_id} |
+| POST     | v1/resource_types/{resource_type_id}/resources/{resource_id}/items |
+| DELETE   | v1/resource_types/{resource_type_id}/resources/{resource_id}/items/{item_id} |
+| POST     | v1/resource_types/{resource_type_id}/resources/{resource_id}/items/{item_id}/category |
+| DELETE   | v1/resource_types/{resource_type_id}/resources/{resource_id}/items/{item_id}/category/{item_category_id} |
+| POST     | v1/resource_types/{resource_type_id}/resources/{resource_id}/items/{item_id}/category/{item_category_id}/sub_category |
+| DELETE   | v1/resource_types/{resource_type_id}/resources/{resource_id}/items/{item_id}/category/{item_category_id}/sub_category/{sub_category_id} |
+
+## Planned development
+
+* Added filtering options for all GET routes
+* Validate GET params
+* PATCHES
+* PUTS
+* Upgrade Laravel
+* Move the user model
+* Dev setting to show generated queries
+* Switch to Money class
+* Create a white box version of API

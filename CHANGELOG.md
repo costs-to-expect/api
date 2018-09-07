@@ -2,10 +2,16 @@
 
 Full changelog for the costs to expect REST API.
 
-## 2018-xx-xx - v1.00 
+## 2018-09-07 - v1.00 
 
 Official release
 
+* Added summary/tco route for a resource.
+* Added planned development section to README.
+* Summary route section to README.
+* Added URL for live site to README.
+* Modified the prefix for routes, simplify to v1, my will be hosted on an api sub domain.
+* Set default values in env.example.
 * Disable register route. 
 * Updated README, routes layout.
 * Added web.config for Azure.
@@ -13,8 +19,7 @@ Official release
 * Added include_sub_categories GET param for categories collection and single show.
 * Collections return data showing newest first.
 * OPTIONS requests no longer shows PATCH request fields, not yet implemented.
-* Show action/Options show action will return resource not found for invalid 
-final ids.
+* Show action/Options show action will return resource not found for invalid final ids.
 * GET Parameters can now be set for collections and items.
 * Other minor fixes and updates.
 

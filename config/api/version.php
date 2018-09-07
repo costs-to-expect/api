@@ -1,9 +1,9 @@
 <?php
 
 return [
-    'version'=> '1.00',
-    'prefix' => 'api-v1',
-    'release_date' => 'In development',
+    'version'=> '1.00.0',
+    'prefix' => 'v1',
+    'release_date' => '2018-09-07',
     'changelog' => 'https://github.com/costs-to-expect/api/blob/master/CHANGELOG.md',
     'readme' => 'https://github.com/costs-to-expect/api/blob/master/README.md'
 ];

@@ -52,5 +52,9 @@ return [
         'POST' => 'Assign the sub category',
         'PATCH' => 'Update the sub category',
         'DELETE' => 'Remove the assigned sub category'
+    ],
+    'summary' => [
+        'GET_tco' => 'Total cost of ownership TCO',
     ]
+
 ];
