@@ -114,6 +114,7 @@ Please find below a list of the API management routes that are (will be) impleme
 
 ## Planned development
 
+* Added filtering options for all GET routes
 * Validate GET params
 * PATCHES
 * PUTS

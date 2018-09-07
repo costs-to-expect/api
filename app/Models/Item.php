@@ -38,6 +38,7 @@ class Item extends Model
             ->whereHas('resource', function ($query) use ($resource_type_id) {
                 $query->where('resource_type_id', '=', $resource_type_id);
             })
+            ->orderByDesc('effective_date')
             ->latest()
             ->offset($offset)
             ->limit($limit)
