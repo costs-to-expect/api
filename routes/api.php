@@ -171,7 +171,7 @@ Route::group(
         );
         Route::get(
             'resource_types/{resource_type_id}/resources/{resource_id}/summary/categories/{category_id}/sub_categories/{sub_category_id}',
-            'SummaryController@category'
+            'SummaryController@subCategory'
         );
         Route::get(
             'resource_types/{resource_type_id}/resources/{resource_id}/summary/tco',
@@ -180,10 +180,6 @@ Route::group(
         Route::options(
             'resource_types/{resource_type_id}/resources/{resource_id}/summary/tco',
             'SummaryController@optionsTco'
-        );
-        Route::get(
-            'resource_types/{resource_type_id}/resources/{resource_id}/summary/full',
-            'SummaryController@category'
         );
     }
 );

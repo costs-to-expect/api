@@ -200,4 +200,48 @@ class SummaryController extends Controller
             $headers
         );
     }
+
+    /**
+     * Return the resource sub category summary for a specific sub category
+     *
+     * @param Request $request
+     * @param string $resource_type_id
+     * @param string $resource_id
+     * @param string $category_id
+     * @param string $sub_category_id
+     *
+     * @return JsonResponse
+     */
+    public function subCategory(
+        Request $request,
+        string $resource_type_id,
+        string $resource_id,
+        string $category_id,
+        string $sub_category_id
+    ): JsonResponse {
+        if (ResourceRouteValidator::validate($resource_type_id, $resource_id) === false) {
+            return $this->returnResourceNotFound();
+        }
+
+        $sub_category_summary = (new Item())->subCategorySummary(
+            $resource_type_id,
+            $resource_id,
+            $category_id,
+            $sub_category_id
+        );
+
+        if (count($sub_category_summary) !== 1) {
+            return $this->returnResourceNotFound();
+        }
+
+        $headers = [
+            'X-Total-Count' => 1
+        ];
+
+        return response()->json(
+            (new ItemSubCategorySummaryTransformer($sub_category_summary[0]))->toArray(),
+            200,
+            $headers
+        );
+    }
 }
