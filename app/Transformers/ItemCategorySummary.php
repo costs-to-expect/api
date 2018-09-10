@@ -11,7 +11,7 @@ use App\Models\Item as ItemModel;
  * @copyright Dean Blackborough 2018
  * @license https://github.com/costs-to-expect/api/blob/master/LICENSE
  */
-class CategorySummary extends Transformer
+class ItemCategorySummary extends Transformer
 {
     private $category_summary;
 

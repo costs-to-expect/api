@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Route\Validators\Resource as ResourceRouteValidator;
 use App\Models\Item;
-use App\Transformers\CategorySummary as CategorySummaryTransformer;
+use App\Transformers\ItemCategorySummary as ItemCategorySummaryTransformer;
 use App\Transformers\ItemSubCategorySummary as ItemSubCategorySummaryTransformer;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -111,7 +111,7 @@ class SummaryController extends Controller
         return response()->json(
             $summary->map(
                 function ($category_summary) {
-                    return (new CategorySummaryTransformer($category_summary))->toArray();
+                    return (new ItemCategorySummaryTransformer($category_summary))->toArray();
                 }
             ),
             200,
@@ -143,14 +143,18 @@ class SummaryController extends Controller
             $resource_type_id,
             $resource_id,
             $category_id
-        )[0];
+        );
+
+        if (count($category_summary) !== 1) {
+            return $this->returnResourceNotFound();
+        }
 
         $headers = [
             'X-Total-Count' => 1
         ];
 
         return response()->json(
-            (new CategorySummaryTransformer($category_summary))->toArray(),
+            (new ItemCategorySummaryTransformer($category_summary[0]))->toArray(),
             200,
             $headers
         );
