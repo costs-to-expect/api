@@ -64,7 +64,7 @@ class Item extends Model
             ->sum('actualised_total');
     }
 
-    public function categorySummary(int $resource_type_id, int $resource_id)
+    public function categoriesSummary(int $resource_type_id, int $resource_id)
     {
         return $this->
             selectRaw("category.id, category.name AS name, SUM(item.actualised_total) AS total")->
@@ -77,6 +77,22 @@ class Item extends Model
             groupBy("item_category.category_id")->
             orderBy("name")->
             get();
+    }
+
+    public function categorySummary(int $resource_type_id, int $resource_id, $category_id)
+    {
+        return $this->
+        selectRaw("category.id, category.name AS name, SUM(item.actualised_total) AS total")->
+        join("resource", "resource.id", "item.resource_id")->
+        join("resource_type", "resource_type.id", "resource.resource_type_id")->
+        join("item_category", "item_category.item_id", "item.id")->
+        join("category", "category.id", "item_category.category_id")->
+        where("resource_type.id", "=", $resource_type_id)->
+        where("resource.id", "=", $resource_id)->
+        where("category.id", "=", $category_id)->
+        groupBy("item_category.category_id")->
+        orderBy("name")->
+        get();
     }
 
     public function subCategorySummary(int $resource_type_id, int $resource_id, int $category_id)

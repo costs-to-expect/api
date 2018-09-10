@@ -81,7 +81,7 @@ class SummaryController extends Controller
     }
 
     /**
-     * Return the category/sub category summary for a resource
+     * Return the categories summary for a resource
      *
      * @param Request $request
      * @param string $resource_type_id
@@ -89,16 +89,16 @@ class SummaryController extends Controller
      *
      * @return JsonResponse
      */
-    public function category(Request $request, string $resource_type_id, string $resource_id): JsonResponse
+    public function categories(Request $request, string $resource_type_id, string $resource_id): JsonResponse
     {
         if (ResourceRouteValidator::validate($resource_type_id, $resource_id) === false) {
             return $this->returnResourceNotFound();
         }
 
-        $summary = (new Item())->categorySummary($resource_type_id, $resource_id);
+        $summary = (new Item())->categoriesSummary($resource_type_id, $resource_id);
 
         $headers = [
-            'X-Total-Count' => count($summary)
+            'X-Total-Count' => 1
         ];
 
         return response()->json(
@@ -108,6 +108,35 @@ class SummaryController extends Controller
                     return (new CategorySummaryTransformer($category_summary))->toArray();
                 }
             ),
+            200,
+            $headers
+        );
+    }
+
+    /**
+     * Return the resource category summary for a specific category
+     *
+     * @param Request $request
+     * @param string $resource_type_id
+     * @param string $resource_id
+     * @param string $category_id
+     *
+     * @return JsonResponse
+     */
+    public function category(Request $request, string $resource_type_id, string $resource_id, string $category_id): JsonResponse
+    {
+        if (ResourceRouteValidator::validate($resource_type_id, $resource_id) === false) {
+            return $this->returnResourceNotFound();
+        }
+
+        $category_summary = (new Item())->categorySummary($resource_type_id, $resource_id, $category_id)[0];
+
+        $headers = [
+            'X-Total-Count' => 1
+        ];
+
+        return response()->json(
+            (new CategorySummaryTransformer($category_summary))->toArray(),
             200,
             $headers
         );

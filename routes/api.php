@@ -159,7 +159,7 @@ Route::group(
         // Summary end points
         Route::get(
             'resource_types/{resource_type_id}/resources/{resource_id}/summary/categories',
-            'SummaryController@category'
+            'SummaryController@categories'
         );
         Route::get(
             'resource_types/{resource_type_id}/resources/{resource_id}/summary/categories/{category_id}',
