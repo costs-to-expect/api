@@ -161,17 +161,33 @@ Route::group(
             'resource_types/{resource_type_id}/resources/{resource_id}/summary/categories',
             'SummaryController@categories'
         );
+        Route::options(
+            'resource_types/{resource_type_id}/resources/{resource_id}/summary/categories',
+            'SummaryController@optionsCategories'
+        );
         Route::get(
             'resource_types/{resource_type_id}/resources/{resource_id}/summary/categories/{category_id}',
             'SummaryController@category'
+        );
+        Route::options(
+            'resource_types/{resource_type_id}/resources/{resource_id}/summary/categories/{category_id}',
+            'SummaryController@optionsCategory'
         );
         Route::get(
             'resource_types/{resource_type_id}/resources/{resource_id}/summary/categories/{category_id}/sub_categories',
             'SummaryController@subCategories'
         );
+        Route::options(
+            'resource_types/{resource_type_id}/resources/{resource_id}/summary/categories/{category_id}/sub_categories',
+            'SummaryController@optionsSubCategories'
+        );
         Route::get(
             'resource_types/{resource_type_id}/resources/{resource_id}/summary/categories/{category_id}/sub_categories/{sub_category_id}',
             'SummaryController@subCategory'
+        );
+        Route::options(
+            'resource_types/{resource_type_id}/resources/{resource_id}/summary/categories/{category_id}/sub_categories/{sub_category_id}',
+            'SummaryController@optionsSubCategory'
         );
         Route::get(
             'resource_types/{resource_type_id}/resources/{resource_id}/summary/tco',

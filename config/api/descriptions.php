@@ -54,7 +54,10 @@ return [
         'DELETE' => 'Remove the assigned sub category'
     ],
     'summary' => [
-        'GET_tco' => 'Total cost of ownership TCO',
+        'GET_tco' => 'Total cost of ownership TCO for a resource',
+        'GET_categories' => 'Return the categories summary for a resource',
+        'GET_category' => 'Return the category summary for a resource',
+        'GET_sub_categories' => 'Return the category sub categories summary for a resource',
+        'GET_sub_category' => 'Return the category sub category summary for a resource',
     ]
-
 ];

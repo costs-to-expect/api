@@ -120,6 +120,38 @@ class SummaryController extends Controller
     }
 
     /**
+     * Generate the OPTIONS request for the categories summary
+     *
+     * @param Request $request
+     * @param string $resource_type_id
+     * @param string $resource_id
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function optionsCategories(Request $request, string $resource_type_id, string $resource_id): JsonResponse
+    {
+        if (ResourceRouteValidator::validate($resource_type_id, $resource_id) === false) {
+            return $this->returnResourceNotFound();
+        }
+
+        $routes = [
+            'GET' => [
+                'description' => Config::get('api.descriptions.summary.GET_categories'),
+                'authenticated' => false,
+                'parameters' => []
+            ]
+        ];
+
+        $options_response = $this->generateOptionsResponse($routes);
+
+        return response()->json(
+            $options_response['verbs'],
+            $options_response['http_status_code'],
+            $options_response['headers']
+        );
+    }
+
+    /**
      * Return the resource category summary for a specific category
      *
      * @param Request $request
@@ -157,6 +189,43 @@ class SummaryController extends Controller
             (new ItemCategorySummaryTransformer($category_summary[0]))->toArray(),
             200,
             $headers
+        );
+    }
+
+    /**
+     * Generate the OPTIONS request for a category summary
+     *
+     * @param Request $request
+     * @param string $resource_type_id
+     * @param string $resource_id
+     * @param string $category_id
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function optionsCategory(
+        Request $request,
+        string $resource_type_id,
+        string $resource_id,
+        string $category_id
+    ): JsonResponse {
+        if (ResourceRouteValidator::validate($resource_type_id, $resource_id) === false) {
+            return $this->returnResourceNotFound();
+        }
+
+        $routes = [
+            'GET' => [
+                'description' => Config::get('api.descriptions.summary.GET_category'),
+                'authenticated' => false,
+                'parameters' => []
+            ]
+        ];
+
+        $options_response = $this->generateOptionsResponse($routes);
+
+        return response()->json(
+            $options_response['verbs'],
+            $options_response['http_status_code'],
+            $options_response['headers']
         );
     }
 
@@ -202,6 +271,43 @@ class SummaryController extends Controller
     }
 
     /**
+     * Generate the OPTIONS request for the sub categories summary
+     *
+     * @param Request $request
+     * @param string $resource_type_id
+     * @param string $resource_id
+     * @param string $category_id
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function optionsSubCategories(
+        Request $request,
+        string $resource_type_id,
+        string $resource_id,
+        string $category_id
+    ): JsonResponse {
+        if (ResourceRouteValidator::validate($resource_type_id, $resource_id) === false) {
+            return $this->returnResourceNotFound();
+        }
+
+        $routes = [
+            'GET' => [
+                'description' => Config::get('api.descriptions.summary.GET_sub_categories'),
+                'authenticated' => false,
+                'parameters' => []
+            ]
+        ];
+
+        $options_response = $this->generateOptionsResponse($routes);
+
+        return response()->json(
+            $options_response['verbs'],
+            $options_response['http_status_code'],
+            $options_response['headers']
+        );
+    }
+
+    /**
      * Return the resource sub category summary for a specific sub category
      *
      * @param Request $request
@@ -242,6 +348,45 @@ class SummaryController extends Controller
             (new ItemSubCategorySummaryTransformer($sub_category_summary[0]))->toArray(),
             200,
             $headers
+        );
+    }
+
+    /**
+     * Generate the OPTIONS request for the sub category summary
+     *
+     * @param Request $request
+     * @param string $resource_type_id
+     * @param string $resource_id
+     * @param string $category_id
+     * @param string $sub_category_id
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function optionsSubCategory(
+        Request $request,
+        string $resource_type_id,
+        string $resource_id,
+        string $category_id,
+        string $sub_category_id
+    ): JsonResponse {
+        if (ResourceRouteValidator::validate($resource_type_id, $resource_id) === false) {
+            return $this->returnResourceNotFound();
+        }
+
+        $routes = [
+            'GET' => [
+                'description' => Config::get('api.descriptions.summary.GET_sub_category'),
+                'authenticated' => false,
+                'parameters' => []
+            ]
+        ];
+
+        $options_response = $this->generateOptionsResponse($routes);
+
+        return response()->json(
+            $options_response['verbs'],
+            $options_response['http_status_code'],
+            $options_response['headers']
         );
     }
 }
