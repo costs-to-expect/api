@@ -98,7 +98,7 @@ class SummaryController extends Controller
         $summary = (new Item())->categoriesSummary($resource_type_id, $resource_id);
 
         $headers = [
-            'X-Total-Count' => 1
+            'X-Total-Count' => count($summary)
         ];
 
         return response()->json(
