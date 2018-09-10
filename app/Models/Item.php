@@ -63,4 +63,55 @@ class Item extends Model
             ->get()
             ->sum('actualised_total');
     }
+
+    public function categorySummary(int $resource_type_id, int $resource_id)
+    {
+        return $this->
+            selectRaw("category.name AS category, SUM(item.actualised_total) AS total")->
+            join("resource", "resource.id", "item.resource_id")->
+            join("resource_type", "resource_type.id", "resource.resource_type_id")->
+            join("item_category", "item_category.item_id", "item.id")->
+            join("category", "category.id", "item_category.category_id")->
+            where("resource_type.id", "=", $resource_type_id)->
+            where("resource.id", "=", $resource_id)->
+            groupBy("item_category.category_id")->
+            orderBy("category")->
+            get();
+    }
+
+    public function subCategorySummary(int $resource_type_id, int $resource_id, int $category_id)
+    {
+        return $this->
+            selectRaw("sub_category.name AS sub_category, SUM(item.actualised_total) AS total")->
+            join("resource", "resource.id", "item.resource_id")->
+            join("resource_type", "resource_type.id", "resource.resource_type_id")->
+            join("item_category", "item_category.item_id", "item.id")->
+            join("item_sub_category", "item_sub_category.id", "item_category.id")->
+            join("category", "category.id", "item_category.category_id")->
+            join("sub_category", "sub_category.id", "item_sub_category.sub_category_id")->
+            where("resource_type.id", "=", $resource_type_id)->
+            where("resource.id", "=", $resource_id)->
+            where("category.id", "=", $category_id)->
+            groupBy("item_sub_category.sub_category_id")->
+            orderBy("sub_category")->
+            get();
+    }
+
+    public function categoryAndSubCategorySummary(int $resource_type_id, int $resource_id)
+    {
+        return $this->
+            selectRaw("category.name AS category, sub_category.name AS sub_category, SUM(item.actualised_total) AS total")->
+            join("resource", "resource.id", "item.resource_id")->
+            join("resource_type", "resource_type.id", "resource.resource_type_id")->
+            join("item_category", "item_category.item_id", "item.id")->
+            join("item_sub_category", "item_sub_category.id", "item_category.id")->
+            join("category", "category.id", "item_category.category_id")->
+            join("sub_category", "sub_category.id", "item_sub_category.sub_category_id")->
+            where("resource_type.id", "=", $resource_type_id)->
+            where("resource.id", "=", $resource_id)->
+            groupBy(["item_category.category_id", "item_sub_category.sub_category_id"])->
+            orderBy("category")->
+            orderBy("sub_category")->
+            get();
+    }
 }

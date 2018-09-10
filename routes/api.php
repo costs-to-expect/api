@@ -164,6 +164,10 @@ Route::group(
             'resource_types/{resource_type_id}/resources/{resource_id}/summary/tco',
             'SummaryController@optionsTco'
         );
+        Route::get(
+            'resource_types/{resource_type_id}/resources/{resource_id}/summary/category',
+            'SummaryController@category'
+        );
     }
 );
 

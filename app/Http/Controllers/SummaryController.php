@@ -78,4 +78,32 @@ class SummaryController extends Controller
             $options_response['headers']
         );
     }
+
+    /**
+     * Return the category/sub category summary for a resource
+     *
+     * @param Request $request
+     * @param string $resource_type_id
+     * @param string $resource_id
+     *
+     * @return JsonResponse
+     */
+    public function category(Request $request, string $resource_type_id, string $resource_id): JsonResponse
+    {
+        if (ResourceRouteValidator::validate($resource_type_id, $resource_id) === false) {
+            return $this->returnResourceNotFound();
+        }
+
+        $summary = (new Item())->categorySummary($resource_type_id, $resource_id);
+
+        $headers = [
+            'X-Total-Count' => count($summary)
+        ];
+
+        return response()->json(
+            $summary,
+            200,
+            $headers
+        );
+    }
 }
