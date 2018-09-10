@@ -95,10 +95,10 @@ class Item extends Model
         get();
     }
 
-    public function subCategorySummary(int $resource_type_id, int $resource_id, int $category_id)
+    public function subCategoriesSummary(int $resource_type_id, int $resource_id, int $category_id)
     {
         return $this->
-            selectRaw("sub_category.name AS sub_category, SUM(item.actualised_total) AS total")->
+            selectRaw("sub_category.id, sub_category.name AS name, SUM(item.actualised_total) AS total")->
             join("resource", "resource.id", "item.resource_id")->
             join("resource_type", "resource_type.id", "resource.resource_type_id")->
             join("item_category", "item_category.item_id", "item.id")->
@@ -109,7 +109,7 @@ class Item extends Model
             where("resource.id", "=", $resource_id)->
             where("category.id", "=", $category_id)->
             groupBy("item_sub_category.sub_category_id")->
-            orderBy("sub_category")->
+            orderBy("name")->
             get();
     }
 

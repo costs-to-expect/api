@@ -167,7 +167,7 @@ Route::group(
         );
         Route::get(
             'resource_types/{resource_type_id}/resources/{resource_id}/summary/categories/{category_id}/sub_categories',
-            'SummaryController@category'
+            'SummaryController@subCategories'
         );
         Route::get(
             'resource_types/{resource_type_id}/resources/{resource_id}/summary/categories/{category_id}/sub_categories/{sub_category_id}',
