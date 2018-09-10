@@ -2,7 +2,15 @@
 
 Full changelog for the costs to expect REST API.
 
-## 2018-09-07 - v1.00 
+## 2018-09-10 - v1.01.0
+
+* Minor updates to config files.
+* Categories and sub categories end points now returns results in alphabetical order.
+* Added four summary routes for a resource, categories collection, category, 
+sub categories collection and sub category.
+* Code style updates.
+
+## 2018-09-07 - v1.00.0 
 
 Official release
 

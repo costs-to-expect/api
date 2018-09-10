@@ -1,5 +1,23 @@
 # Costs to expect
 
+## Overview
+
+What does it costs to raise a child in the UK?
+
+Costs to Expect is a long-term project, my wife and I are tracking the expenses to raise our child to 
+adulthood, 18.
+
+### Why?
+
+There are two core reasons as to why I/we are doing this. I love data, and over the last twenty years, 
+it appears to have become accepted knowledge that it costs £250k to raise a child in the UK. 
+
+If you think about the number, it becomes apparent quickly that it can't be right, on average over 
+£10k a year?
+
+This API will show the costs to raise my child; obviously, every family is different, these costs only 
+relate to my family, more details will appear on https://www.costs-to-expect.com as the site develops.
+
 ## The API
 
 This Laravel app is the RESTful API for https://api.costs-to-expect.com, the API will be consumed by the 
@@ -91,6 +109,14 @@ Please find below a list of the API routes that are (will be) implemented for ve
 | :--- | :--- |
 | GET/HEAD | v1/resource_types/{resource_type_id}/resources/{resource_id}/summary/tco |
 | OPTIONS  | v1/resource_types/{resource_type_id}/resources/{resource_id}/summary/tco |
+| GET/HEAD | v1/resource_types/{resource_type_id}/resources/{resource_id}/summary/categories |
+| OPTIONS  | v1/resource_types/{resource_type_id}/resources/{resource_id}/summary/categories |
+| GET/HEAD | v1/resource_types/{resource_type_id}/resources/{resource_id}/summary/categories/{category_id} |
+| OPTIONS  | v1/resource_types/{resource_type_id}/resources/{resource_id}/summary/categories/{category_id} |
+| GET/HEAD | v1/resource_types/{resource_type_id}/resources/{resource_id}/summary/categories/{category_id}/sub_categories |
+| OPTIONS  | v1/resource_types/{resource_type_id}/resources/{resource_id}/summary/categories/{category_id}/sub_categories |
+| GET/HEAD | v1/resource_types/{resource_type_id}/resources/{resource_id}/summary/categories/{category_id}/sub_categories/{sub_category_id} |
+| OPTIONS  | v1/resource_types/{resource_type_id}/resources/{resource_id}/summary/categories/{category_id}/sub_categories/{sub_category_id} |
 
 ## Management routes
 

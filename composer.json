@@ -1,11 +1,11 @@
 {
-    "name": "laravel/laravel",
-    "description": "The Laravel Framework.",
-    "keywords": ["framework", "laravel"],
+    "name": "costs-to-expect/api",
+    "description": "The API for https://api.costs-to-expect.com",
+    "keywords": ["api", "laravel", "child cost"],
     "license": "MIT",
     "type": "project",
     "require": {
-        "php": "^7.1.3",
+        "php": "^7.2",
         "fideloper/proxy": "^4.0",
         "hashids/hashids": "^3.0",
         "laravel/framework": "5.6.*",
