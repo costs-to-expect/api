@@ -37,7 +37,7 @@ class Category extends Model
 
     public function paginatedCollection(int $offset = 0, int $limit = 10)
     {
-        return $this->latest()->get();
+        return $this->orderBy("name")->get();
     }
 
     public function single(int $category_id)

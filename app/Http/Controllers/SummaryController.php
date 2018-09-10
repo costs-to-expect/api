@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Route\Validators\Resource as ResourceRouteValidator;
 use App\Models\Item;
+use App\Transformers\CategorySummary as CategorySummaryTransformer;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Config;
@@ -101,7 +102,12 @@ class SummaryController extends Controller
         ];
 
         return response()->json(
-            $summary,
+            $summary->map(
+                function ($category_summary)
+                {
+                    return (new CategorySummaryTransformer($category_summary))->toArray();
+                }
+            ),
             200,
             $headers
         );
