@@ -2,6 +2,10 @@
 
 Full changelog for the costs to expect REST API.
 
+## 2018-09-19 - v1.01.1
+
+* Correct sub category queries, joins incorrect.
+
 ## 2018-09-10 - v1.01.0
 
 * Minor updates to config files.
