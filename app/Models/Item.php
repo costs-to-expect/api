@@ -102,7 +102,7 @@ class Item extends Model
             join("resource", "resource.id", "item.resource_id")->
             join("resource_type", "resource_type.id", "resource.resource_type_id")->
             join("item_category", "item_category.item_id", "item.id")->
-            join("item_sub_category", "item_sub_category.id", "item_category.id")->
+            join("item_sub_category", "item_sub_category.item_category_id", "item_category.id")->
             join("category", "category.id", "item_category.category_id")->
             join("sub_category", "sub_category.id", "item_sub_category.sub_category_id")->
             where("resource_type.id", "=", $resource_type_id)->
