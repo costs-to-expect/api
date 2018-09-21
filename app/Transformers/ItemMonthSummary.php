@@ -30,6 +30,7 @@ class ItemMonthSummary extends Transformer
     public function toArray(): array
     {
         return [
+            'id' => $this->month_summary->month,
             'month' => date("F", mktime(0, 0, 0, $this->month_summary->month, 1)),
             'total' => number_format($this->month_summary->total, 2, '.', '')
         ];

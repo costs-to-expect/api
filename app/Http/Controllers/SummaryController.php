@@ -617,4 +617,87 @@ class SummaryController extends Controller
             $options_response['headers']
         );
     }
+
+    /**
+     * Return the months summary for a resource and year
+     *
+     * @param Request $request
+     * @param string $resource_type_id
+     * @param string $resource_id
+     * @param integer $year
+     * @param integer $month
+     *
+     * @return JsonResponse
+     */
+    public function month(
+        Request $request,
+        string $resource_type_id,
+        string $resource_id,
+        int $year,
+        int $month
+    ): JsonResponse {
+        if (ResourceRouteValidator::validate($resource_type_id, $resource_id) === false) {
+            return $this->returnResourceNotFound();
+        }
+
+        $summary = (new Item())->monthSummary(
+            $resource_type_id,
+            $resource_id,
+            $year,
+            $month
+        );
+
+        if (count($summary) !== 1) {
+            return $this->returnResourceNotFound();
+        }
+
+        $headers = [
+            'X-Total-Count' => 1
+        ];
+
+        return response()->json(
+            (new ItemMonthSummaryTransformer($summary[0]))->toArray(),
+            200,
+            $headers
+        );
+    }
+
+    /**
+     * Generate the OPTIONS request for a year and month summary
+     *
+     * @param Request $request
+     * @param string $resource_type_id
+     * @param string $resource_id
+     * @param string $year
+     * @param string $month
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function optionsMonth(
+        Request $request,
+        string $resource_type_id,
+        string $resource_id,
+        string $year,
+        string $month
+    ): JsonResponse {
+        if (ResourceRouteValidator::validate($resource_type_id, $resource_id) === false) {
+            return $this->returnResourceNotFound();
+        }
+
+        $routes = [
+            'GET' => [
+                'description' => Config::get('api.descriptions.summary.GET_month'),
+                'authenticated' => false,
+                'parameters' => []
+            ]
+        ];
+
+        $options_response = $this->generateOptionsResponse($routes);
+
+        return response()->json(
+            $options_response['verbs'],
+            $options_response['http_status_code'],
+            $options_response['headers']
+        );
+    }
 }

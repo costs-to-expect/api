@@ -30,6 +30,7 @@ class ItemYearSummary extends Transformer
     public function toArray(): array
     {
         return [
+            'id' => $this->year_summary->year,
             'year' => $this->year_summary->year,
             'total' => number_format($this->year_summary->total, 2, '.', '')
         ];
