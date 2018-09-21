@@ -128,7 +128,7 @@ class ItemController extends Controller
             'api.routes.item.fields',
             'api.routes.item.parameters.collection',
             [],
-            []
+            $this->getAllowedValues()
         );
     }
 
@@ -282,5 +282,29 @@ class ItemController extends Controller
             $previous_offset,
             $next_offset
         );
+    }
+
+    /**
+     * Generate the allowed values for the collection
+     *
+     * @return array
+     */
+    private function getAllowedValues()
+    {
+        $allowed_values = [
+            'year' => [
+                'allowed_values' => []
+            ]
+        ];
+
+        for ($i=2013; $i <= intval(date('Y')); $i++) {
+            $allowed_values['year']['allowed_values'][$i] = [
+                'value' => $i,
+                'name' => $i,
+                'description' => 'Include results for ' . $i . ' only'
+            ];
+        }
+
+        return $allowed_values;
     }
 }
