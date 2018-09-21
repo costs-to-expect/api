@@ -144,4 +144,31 @@ class Item extends Model
             orderBy("year")->
             get();
     }
+
+    public function yearSummary(int $resource_type_id, int $resource_id, int $year)
+    {
+        return $this->
+            selectRaw("YEAR(item.effective_date) as year, SUM(item.actualised_total) AS total")->
+            join("resource", "resource.id", "item.resource_id")->
+            join("resource_type", "resource_type.id", "resource.resource_type_id")->
+            where("resource_type.id", "=", $resource_type_id)->
+            where("resource.id", "=", $resource_id)->
+            whereRaw(\DB::raw("YEAR(item.effective_date) = '{$year}'"))->
+            groupBy("year")->
+            get();
+    }
+
+    public function monthsSummary(int $resource_type_id, int $resource_id, int $year)
+    {
+        return $this->
+            selectRaw("MONTH(item.effective_date) as month, SUM(item.actualised_total) AS total")->
+            join("resource", "resource.id", "item.resource_id")->
+            join("resource_type", "resource_type.id", "resource.resource_type_id")->
+            where("resource_type.id", "=", $resource_type_id)->
+            where("resource.id", "=", $resource_id)->
+            whereRaw(\DB::raw("YEAR(item.effective_date) = '{$year}'"))->
+            groupBy("month")->
+            orderBy("month")->
+            get();
+    }
 }

@@ -6,6 +6,7 @@ use App\Http\Route\Validators\Resource as ResourceRouteValidator;
 use App\Models\Item;
 use App\Transformers\ItemCategorySummary as ItemCategorySummaryTransformer;
 use App\Transformers\ItemSubCategorySummary as ItemSubCategorySummaryTransformer;
+use App\Transformers\ItemMonthSummary as ItemMonthSummaryTransformer;
 use App\Transformers\ItemYearSummary as ItemYearSummaryTransformer;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -446,7 +447,163 @@ class SummaryController extends Controller
 
         $routes = [
             'GET' => [
-                'description' => Config::get('api.descriptions.summary.GET_tco'),
+                'description' => Config::get('api.descriptions.summary.GET_years'),
+                'authenticated' => false,
+                'parameters' => []
+            ]
+        ];
+
+        $options_response = $this->generateOptionsResponse($routes);
+
+        return response()->json(
+            $options_response['verbs'],
+            $options_response['http_status_code'],
+            $options_response['headers']
+        );
+    }
+
+    /**
+     * Return the months summary for a specific resource and year
+     *
+     * @param Request $request
+     * @param string $resource_type_id
+     * @param string $resource_id
+     * @param string $year
+     *
+     * @return JsonResponse
+     */
+    public function year(
+        Request $request,
+        string $resource_type_id,
+        string $resource_id,
+        string $year
+    ): JsonResponse {
+        if (ResourceRouteValidator::validate($resource_type_id, $resource_id) === false) {
+            return $this->returnResourceNotFound();
+        }
+
+        $year_summary = (new Item())->yearSummary(
+            $resource_type_id,
+            $resource_id,
+            $year
+        );
+
+        if (count($year_summary) !== 1) {
+            return $this->returnResourceNotFound();
+        }
+
+        $headers = [
+            'X-Total-Count' => 1
+        ];
+
+        return response()->json(
+            (new ItemYearSummaryTransformer($year_summary[0]))->toArray(),
+            200,
+            $headers
+        );
+    }
+
+    /**
+     * Return the months summary for a resource and year
+     *
+     * @param Request $request
+     * @param string $resource_type_id
+     * @param string $resource_id
+     * @param integer $year
+     *
+     * @return JsonResponse
+     */
+    public function months(
+        Request $request,
+        string $resource_type_id,
+        string $resource_id,
+        int $year
+    ): JsonResponse {
+        if (ResourceRouteValidator::validate($resource_type_id, $resource_id) === false) {
+            return $this->returnResourceNotFound();
+        }
+
+        $summary = (new Item())->monthsSummary(
+            $resource_type_id,
+            $resource_id,
+            $year
+        );
+
+        $headers = [
+            'X-Total-Count' => count($summary)
+        ];
+
+        return response()->json(
+            $summary->map(
+                function ($month_summary) {
+                    return (new ItemMonthSummaryTransformer($month_summary))->toArray();
+                }
+            ),
+            200,
+            $headers
+        );
+    }
+
+    /**
+     * Generate the OPTIONS request for the months summary
+     *
+     * @param Request $request
+     * @param string $resource_type_id
+     * @param string $resource_id
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function optionsMonths(
+        Request $request,
+        string $resource_type_id,
+        string $resource_id,
+        int $year
+    ): JsonResponse
+    {
+        if (ResourceRouteValidator::validate($resource_type_id, $resource_id) === false) {
+            return $this->returnResourceNotFound();
+        }
+
+        $routes = [
+            'GET' => [
+                'description' => Config::get('api.descriptions.summary.GET_months'),
+                'authenticated' => false,
+                'parameters' => []
+            ]
+        ];
+
+        $options_response = $this->generateOptionsResponse($routes);
+
+        return response()->json(
+            $options_response['verbs'],
+            $options_response['http_status_code'],
+            $options_response['headers']
+        );
+    }
+
+    /**
+     * Generate the OPTIONS request for a category summary
+     *
+     * @param Request $request
+     * @param string $resource_type_id
+     * @param string $resource_id
+     * @param string $year
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function optionsYear(
+        Request $request,
+        string $resource_type_id,
+        string $resource_id,
+        string $year
+    ): JsonResponse {
+        if (ResourceRouteValidator::validate($resource_type_id, $resource_id) === false) {
+            return $this->returnResourceNotFound();
+        }
+
+        $routes = [
+            'GET' => [
+                'description' => Config::get('api.descriptions.summary.GET_year'),
                 'authenticated' => false,
                 'parameters' => []
             ]
