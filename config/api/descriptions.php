@@ -59,5 +59,9 @@ return [
         'GET_category' => 'Return the category summary for a resource',
         'GET_sub_categories' => 'Return the category sub categories summary for a resource',
         'GET_sub_category' => 'Return the category sub category summary for a resource',
+        'GET_years' => 'Return the years summary for a resource',
+        'GET_year' => 'Return the year summary for a resource',
+        'GET_months' => 'Return the months summary for a resource and year',
+        'GET_month' => 'Return the month summary for a resource and year',
     ]
 ];

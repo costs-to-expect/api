@@ -197,6 +197,38 @@ Route::group(
             'resource_types/{resource_type_id}/resources/{resource_id}/summary/tco',
             'SummaryController@optionsTco'
         );
+        Route::get(
+            'resource_types/{resource_type_id}/resources/{resource_id}/summary/years',
+            'SummaryController@years'
+        );
+        Route::options(
+            'resource_types/{resource_type_id}/resources/{resource_id}/summary/years',
+            'SummaryController@optionsYears'
+        );
+        Route::get(
+            'resource_types/{resource_type_id}/resources/{resource_id}/summary/years/{year}',
+            'SummaryController@year'
+        );
+        Route::options(
+            'resource_types/{resource_type_id}/resources/{resource_id}/summary/years/{year}',
+            'SummaryController@optionsYear'
+        );
+        Route::get(
+            'resource_types/{resource_type_id}/resources/{resource_id}/summary/years/{year}/months',
+            'SummaryController@months'
+        );
+        Route::options(
+            'resource_types/{resource_type_id}/resources/{resource_id}/summary/years/{year}/months',
+            'SummaryController@optionsMonths'
+        );
+        Route::get(
+            'resource_types/{resource_type_id}/resources/{resource_id}/summary/years/{year}/months/{month}',
+            'SummaryController@month'
+        );
+        Route::options(
+            'resource_types/{resource_type_id}/resources/{resource_id}/summary/years/{year}/months/{month}',
+            'SummaryController@optionsMonth'
+        );
     }
 );
 
