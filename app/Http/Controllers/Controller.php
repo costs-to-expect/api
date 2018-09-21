@@ -151,7 +151,7 @@ class Controller extends BaseController
      * @param string $post_description_key
      * @param string $post_fields_key
      * @param string $parameters_key
-     * @param array $allowed_values Allowed values for fields, merged with fields array
+     * @param array $post_allowed_values Allowed values for POST fields, merged with POST fields array
      *
      * @return JsonResponse
      */
@@ -160,7 +160,7 @@ class Controller extends BaseController
         string $post_description_key,
         string $post_fields_key,
         string $parameters_key,
-        array $allowed_values = []
+        array $post_allowed_values = []
     ): JsonResponse
     {
         $routes = [
@@ -172,7 +172,7 @@ class Controller extends BaseController
             'POST' => [
                 'description' => Config::get($post_description_key),
                 'authenticated' => true,
-                'fields' => array_merge_recursive(Config::get($post_fields_key), $allowed_values)
+                'fields' => array_merge_recursive(Config::get($post_fields_key), $post_allowed_values)
             ]
         ];
 

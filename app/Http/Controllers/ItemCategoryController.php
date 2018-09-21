@@ -127,7 +127,7 @@ class ItemCategoryController extends Controller
             'api.descriptions.item_category.POST',
             'api.routes.item_category.fields',
             'api.routes.item_category.parameters.collection',
-            $this->allowedValues()
+            $this->postAllowedValues()
         );
     }
 
@@ -237,11 +237,11 @@ class ItemCategoryController extends Controller
     }
 
     /**
-     * Generate the array of allowed values fields
+     * Generate the array of allowed values for POST fields
      *
      * @return array
      */
-    private function allowedValues()
+    private function postAllowedValues()
     {
         $categories = (new Category())->select('id', 'name', 'description')->get();
 
