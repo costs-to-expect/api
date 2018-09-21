@@ -42,10 +42,25 @@ class Handler extends ExceptionHandler
      *
      * @param  \Illuminate\Http\Request  $request
      * @param  \Exception  $exception
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\JsonResponse
      */
     public function render($request, Exception $exception)
     {
-        return parent::render($request, $exception);
+        $status_code = method_exists($exception, 'getStatusCode') ? $exception->getStatusCode() : 500;
+
+        $message = $exception->getMessage();
+        if (strlen($message) === 0) {
+            switch ($status_code) {
+                default:
+                    $message = 'Unknown error';
+                    break;
+            }
+        }
+
+        return response()->json(
+            [
+                'message' => $message
+            ]
+        );
     }
 }

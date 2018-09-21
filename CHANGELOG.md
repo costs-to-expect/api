@@ -6,6 +6,10 @@ Full changelog for the costs to expect REST API.
 
 * Correct sub category queries, joins incorrect.
 
+## 2018-mm-dd - v1.xx.x
+
+* Override exceptions, always return json.
+
 ## 2018-09-10 - v1.01.0
 
 * Minor updates to config files.
