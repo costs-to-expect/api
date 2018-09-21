@@ -27,22 +27,48 @@ class Item extends Model
         return $this->belongsTo(Resource::class, 'resource_id', 'id');
     }
 
+    public function totalCount(
+        int $resource_type_id,
+        int $resource_id,
+        array $parameters_collection = []
+    )
+    {
+        $collection = $this->where('resource_id', '=', $resource_id)
+            ->whereHas('resource', function ($query) use ($resource_type_id) {
+                $query->where('resource_type_id', '=', $resource_type_id);
+            });
+
+        if (array_key_exists('year', $parameters_collection) === true &&
+            $parameters_collection['year'] !== null) {
+            $collection->whereRaw(\DB::raw("YEAR(item.effective_date) = '{$parameters_collection['year']}'"));
+        }
+
+        return count($collection->get());
+    }
+
     public function paginatedCollection(
         int $resource_type_id,
         int $resource_id,
         int $offset = 0,
-        int $limit = 10
+        int $limit = 10,
+        array $parameters_collection = []
     )
     {
-        return $this->where('resource_id', '=', $resource_id)
+        $collection = $this->where('resource_id', '=', $resource_id)
             ->whereHas('resource', function ($query) use ($resource_type_id) {
                 $query->where('resource_type_id', '=', $resource_type_id);
             })
             ->orderByDesc('effective_date')
             ->latest()
             ->offset($offset)
-            ->limit($limit)
-            ->get();
+            ->limit($limit);
+
+        if (array_key_exists('year', $parameters_collection) === true &&
+            $parameters_collection['year'] !== null) {
+            $collection->whereRaw(\DB::raw("YEAR(item.effective_date) = '{$parameters_collection['year']}'"));
+        }
+
+        return $collection->get();
     }
 
     public function single(int $resource_type_id, int $resource_id, int $item_id)

@@ -37,7 +37,14 @@ class ItemController extends Controller
             return $this->returnResourceNotFound();
         }
 
-        $total = Item::count();
+        $this->parameters_collection = [];
+        $this->parameters_collection['year'] = $request->query('year', null);
+
+        $total = (new Item())->totalCount(
+            $resource_type_id,
+            $resource_id,
+            $this->parameters_collection
+        );
 
         $this->pagination($request, $total);
 
@@ -45,7 +52,8 @@ class ItemController extends Controller
             $resource_type_id,
             $resource_id,
             $this->pagination['offset'],
-            $this->pagination['limit']
+            $this->pagination['limit'],
+            $this->parameters_collection
         );
 
         $headers = [
