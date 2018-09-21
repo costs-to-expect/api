@@ -2,14 +2,17 @@
 
 Full changelog for the costs to expect REST API.
 
+## 2018-09-21 - v1.02.0
+
+* Added a summary/years route for a resource.
+* Added a summary/years/{year} route for a resource.
+* Added a summary/years/{year}/month route for a resource.
+* Added a summary/years/{year}/month/{month} route for a resource.
+* Override exceptions, always return json.
+
 ## 2018-09-19 - v1.01.1
 
 * Correct sub category queries, joins incorrect.
-
-## 2018-mm-dd - v1.xx.x
-
-* Override exceptions, always return json.
-* Added a summary/years route for a resource.
 
 ## 2018-09-10 - v1.01.0
 

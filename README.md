@@ -119,6 +119,12 @@ Please find below a list of the API routes that are (will be) implemented for ve
 | OPTIONS  | v1/resource_types/{resource_type_id}/resources/{resource_id}/summary/categories/{category_id}/sub_categories/{sub_category_id} |
 | GET/HEAD | v1/resource_types/{resource_type_id}/resources/{resource_id}/summary/years |
 | OPTIONS  | v1/resource_types/{resource_type_id}/resources/{resource_id}/summary/years |
+| GET/HEAD | v1/resource_types/{resource_type_id}/resources/{resource_id}/summary/years/{year} |
+| OPTIONS  | v1/resource_types/{resource_type_id}/resources/{resource_id}/summary/years/{year} |
+| GET/HEAD | v1/resource_types/{resource_type_id}/resources/{resource_id}/summary/years/{year}/months |
+| OPTIONS  | v1/resource_types/{resource_type_id}/resources/{resource_id}/summary/years/{year}/months |
+| GET/HEAD | v1/resource_types/{resource_type_id}/resources/{resource_id}/summary/years/{year}/months/{month} |
+| OPTIONS  | v1/resource_types/{resource_type_id}/resources/{resource_id}/summary/years/{year}/months/{month} |
 
 ## Management routes
 
