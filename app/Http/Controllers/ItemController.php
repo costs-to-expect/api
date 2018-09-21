@@ -126,7 +126,9 @@ class ItemController extends Controller
             'api.descriptions.item.GET_index',
             'api.descriptions.item.POST',
             'api.routes.item.fields',
-            'api.routes.item.parameters.collection'
+            'api.routes.item.parameters.collection',
+            [],
+            []
         );
     }
 
