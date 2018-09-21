@@ -6,6 +6,7 @@ use App\Http\Route\Validators\Resource as ResourceRouteValidator;
 use App\Models\Item;
 use App\Transformers\ItemCategorySummary as ItemCategorySummaryTransformer;
 use App\Transformers\ItemSubCategorySummary as ItemSubCategorySummaryTransformer;
+use App\Transformers\ItemYearSummary as ItemYearSummaryTransformer;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Config;
@@ -376,6 +377,76 @@ class SummaryController extends Controller
         $routes = [
             'GET' => [
                 'description' => Config::get('api.descriptions.summary.GET_sub_category'),
+                'authenticated' => false,
+                'parameters' => []
+            ]
+        ];
+
+        $options_response = $this->generateOptionsResponse($routes);
+
+        return response()->json(
+            $options_response['verbs'],
+            $options_response['http_status_code'],
+            $options_response['headers']
+        );
+    }
+
+    /**
+     * Return the years summary for a resource
+     *
+     * @param Request $request
+     * @param string $resource_type_id
+     * @param string $resource_id
+     *
+     * @return JsonResponse
+     */
+    public function years(
+        Request $request,
+        string $resource_type_id,
+        string $resource_id
+    ): JsonResponse {
+        if (ResourceRouteValidator::validate($resource_type_id, $resource_id) === false) {
+            return $this->returnResourceNotFound();
+        }
+
+        $summary = (new Item())->yearsSummary(
+            $resource_type_id,
+            $resource_id
+        );
+
+        $headers = [
+            'X-Total-Count' => count($summary)
+        ];
+
+        return response()->json(
+            $summary->map(
+                function ($year_summary) {
+                    return (new ItemYearSummaryTransformer($year_summary))->toArray();
+                }
+            ),
+            200,
+            $headers
+        );
+    }
+
+    /**
+     * Generate the OPTIONS request for the years summary
+     *
+     * @param Request $request
+     * @param string $resource_type_id
+     * @param string $resource_id
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function optionsYears(Request $request, string $resource_type_id, string $resource_id): JsonResponse
+    {
+        if (ResourceRouteValidator::validate($resource_type_id, $resource_id) === false) {
+            return $this->returnResourceNotFound();
+        }
+
+        $routes = [
+            'GET' => [
+                'description' => Config::get('api.descriptions.summary.GET_tco'),
                 'authenticated' => false,
                 'parameters' => []
             ]

@@ -9,6 +9,7 @@ Full changelog for the costs to expect REST API.
 ## 2018-mm-dd - v1.xx.x
 
 * Override exceptions, always return json.
+* Added a summary/years route for a resource.
 
 ## 2018-09-10 - v1.01.0
 

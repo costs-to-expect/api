@@ -131,4 +131,17 @@ class Item extends Model
             orderBy("name")->
             get();
     }
+
+    public function yearsSummary(int $resource_type_id, int $resource_id)
+    {
+        return $this->
+            selectRaw("YEAR(item.effective_date) as year, SUM(item.actualised_total) AS total")->
+            join("resource", "resource.id", "item.resource_id")->
+            join("resource_type", "resource_type.id", "resource.resource_type_id")->
+            where("resource_type.id", "=", $resource_type_id)->
+            where("resource.id", "=", $resource_id)->
+            groupBy("year")->
+            orderBy("year")->
+            get();
+    }
 }

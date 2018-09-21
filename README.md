@@ -117,6 +117,8 @@ Please find below a list of the API routes that are (will be) implemented for ve
 | OPTIONS  | v1/resource_types/{resource_type_id}/resources/{resource_id}/summary/categories/{category_id}/sub_categories |
 | GET/HEAD | v1/resource_types/{resource_type_id}/resources/{resource_id}/summary/categories/{category_id}/sub_categories/{sub_category_id} |
 | OPTIONS  | v1/resource_types/{resource_type_id}/resources/{resource_id}/summary/categories/{category_id}/sub_categories/{sub_category_id} |
+| GET/HEAD | v1/resource_types/{resource_type_id}/resources/{resource_id}/summary/years |
+| OPTIONS  | v1/resource_types/{resource_type_id}/resources/{resource_id}/summary/years |
 
 ## Management routes
 
