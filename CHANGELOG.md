@@ -2,6 +2,12 @@
 
 Full changelog for the costs to expect REST API.
 
+## 2018-xx-xx - v1.xx.x
+
+* Added ability to set GET parameters in OPTIONS requests.
+* Added year parameter to /resource_types/{resource_type_id}/resources/{resource_id}/items.
+* /resource_types/{resource_type_id}/resources/{resource_id}/items route total count uses resource type and resources ids.
+
 ## 2018-09-21 - v1.02.0
 
 * Added a summary/years route for a resource.
