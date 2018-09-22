@@ -49,7 +49,7 @@ class ItemController extends Controller
         $this->pagination(
             $request,
             $total,
-            '',
+            $request->path(),
             $this->parameters_collection
         );
 
@@ -276,7 +276,12 @@ class ItemController extends Controller
      * @param string $uri
      * @param array $parameters_collection
      */
-    private function pagination(Request $request, int $total, string $uri = '', array $parameters_collection = [])
+    private function pagination(
+        Request $request,
+        int $total,
+        string $uri = '',
+        array $parameters_collection = []
+    )
     {
         $offset = intval($request->query('offset', 0));
         $limit = intval($request->query('limit', 10));
@@ -294,17 +299,17 @@ class ItemController extends Controller
 
         $parameters = '';
         foreach ($parameters_collection as $parameter => $parameter_value) {
-            if (strlen($parameters) > 0) {
-                $parameters .= '&';
+            if ($parameter_value !== null) {
+                if (strlen($parameters) > 0) {
+                    $parameters .= '&';
+                }
+                $parameters .= $parameter . '=' . $parameter_value;
             }
-            $parameters .= $parameter . '=' . $parameter_value;
-        }
-
-        if (strlen($parameters) > 0) {
-            $parameters = '?' . $parameters;
         }
 
         $this->pagination['link'] = $this->generateLinkHeader(
+            $uri,
+            $parameters,
             $this->pagination['limit'],
             $previous_offset,
             $next_offset

@@ -7,6 +7,8 @@ Full changelog for the costs to expect REST API.
 * Added ability to set GET parameters in OPTIONS requests.
 * Added year parameter to /resource_types/{resource_type_id}/resources/{resource_id}/items.
 * /resource_types/{resource_type_id}/resources/{resource_id}/items route total count uses resource type and resources ids.
+* Parameters not being passed through to pagination links.
+* Pagination links using incorrect URIs.
 
 ## 2018-09-21 - v1.02.0
 

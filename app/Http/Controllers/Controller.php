@@ -235,18 +235,26 @@ class Controller extends BaseController
     /**
      * Generate the Link header value based on the value of $previous_start, $next_start and $per_page
      *
+     * @param string $uri
+     * @param string $parameters
      * @param integer $limit
      * @param integer|null $offset_prev
      * @param integer|null $offset_next
      *
      * @return string|null
      */
-    protected function generateLinkHeader(int $limit, int $offset_prev = null, int $offset_next = null): ?string
+    protected function generateLinkHeader(string $uri, string $parameters, int $limit, int $offset_prev = null, int $offset_next = null): ?string
     {
+        $uri .= '?';
+
+        if (strlen($parameters) > 0) {
+            $uri .= $parameters . '&';
+        }
+
         $link = '';
 
         if ($offset_prev !== null) {
-            $link .= '<' . Config::get('api.app.url') . '/' . Config::get('api.version.prefix') . '/categories?offset=' . $offset_prev . '&limit=' .
+            $link .= '<' . Config::get('api.app.url') . '/' . $uri . 'offset=' . $offset_prev . '&limit=' .
                 $limit . '>; rel="prev"';
         }
 
@@ -255,7 +263,7 @@ class Controller extends BaseController
                 $link .= ', ';
             }
 
-            $link .= '<' . Config::get('api.app.url') . '/' . Config::get('api.version.prefix')  . '/categories?offset=' . $offset_next . '&limit=' .
+            $link .= '<' . Config::get('api.app.url') . '/' . $uri . 'offset=' . $offset_next . '&limit=' .
                 $limit . '>; rel="next"';
         }
 
