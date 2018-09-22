@@ -294,6 +294,13 @@ return [
                         "default" => null,
                         "type" => "integer",
                         "required" => false
+                    ],
+                    'month' => [
+                        "parameter" => "month",
+                        "title" => "Show results for given month",
+                        "default" => null,
+                        "type" => "integer",
+                        "required" => false
                     ]
                 ]
             ),

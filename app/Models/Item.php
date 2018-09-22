@@ -43,6 +43,11 @@ class Item extends Model
             $collection->whereRaw(\DB::raw("YEAR(item.effective_date) = '{$parameters_collection['year']}'"));
         }
 
+        if (array_key_exists('month', $parameters_collection) === true &&
+            $parameters_collection['month'] !== null) {
+            $collection->whereRaw(\DB::raw("MONTH(item.effective_date) = '{$parameters_collection['month']}'"));
+        }
+
         return count($collection->get());
     }
 
@@ -66,6 +71,11 @@ class Item extends Model
         if (array_key_exists('year', $parameters_collection) === true &&
             $parameters_collection['year'] !== null) {
             $collection->whereRaw(\DB::raw("YEAR(item.effective_date) = '{$parameters_collection['year']}'"));
+        }
+
+        if (array_key_exists('month', $parameters_collection) === true &&
+            $parameters_collection['month'] !== null) {
+            $collection->whereRaw(\DB::raw("MONTH(item.effective_date) = '{$parameters_collection['month']}'"));
         }
 
         return $collection->get();

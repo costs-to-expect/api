@@ -39,6 +39,7 @@ class ItemController extends Controller
 
         $this->parameters_collection = [];
         $this->parameters_collection['year'] = $request->query('year', null);
+        $this->parameters_collection['month'] = $request->query('month', null);
 
         $total = (new Item())->totalCount(
             $resource_type_id,
@@ -317,7 +318,7 @@ class ItemController extends Controller
     }
 
     /**
-     * Generate the allowed values for the collection
+     * Generate the allowed parameter values for the collection
      *
      * @return array
      */
@@ -325,6 +326,9 @@ class ItemController extends Controller
     {
         $allowed_values = [
             'year' => [
+                'allowed_values' => []
+            ],
+            'month' => [
                 'allowed_values' => []
             ]
         ];
@@ -334,6 +338,14 @@ class ItemController extends Controller
                 'value' => $i,
                 'name' => $i,
                 'description' => 'Include results for ' . $i . ' only'
+            ];
+        }
+
+        for ($i=1; $i <= 13; $i++) {
+            $allowed_values['month']['allowed_values'][$i] = [
+                'value' => $i,
+                'name' => date("F", mktime(0, 0, 0, $i, 10)),
+                'description' => 'Include results for ' . date("F", mktime(0, 0, 0, $i, 1)) . ' only'
             ];
         }
 
