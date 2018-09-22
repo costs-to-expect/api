@@ -155,10 +155,10 @@ class ItemSubCategoryController extends Controller
             return $this->returnResourceNotFound();
         }
 
-        $allowed_values = [];
+        $post_allowed_values = [];
         $item_category = (new ItemCategory())->find($item_category_id);
         if ($item_category_id !== null) {
-            $allowed_values = $this->allowedValues($item_category->category_id);
+            $post_allowed_values = $this->postAllowedValues($item_category->category_id);
         }
 
         return $this->generateOptionsForIndex(
@@ -166,7 +166,7 @@ class ItemSubCategoryController extends Controller
             'api.descriptions.item_sub_category.POST',
             'api.routes.item_sub_category.fields',
             'api.routes.item_sub_category.parameters.collection',
-            $allowed_values
+            $post_allowed_values
         );
     }
 
@@ -298,7 +298,7 @@ class ItemSubCategoryController extends Controller
      *
      * @return array
      */
-    private function allowedValues($category_id)
+    private function postAllowedValues($category_id)
     {
         $sub_categories = (new SubCategory())
             ->select('id', 'name', 'description')

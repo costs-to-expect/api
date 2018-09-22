@@ -287,7 +287,22 @@ return [
         'parameters' => [
             'collection' => array_merge(
                 $pagination,
-                []
+                [
+                    'year' => [
+                        "parameter" => "year",
+                        "title" => "Show results for given year",
+                        "default" => null,
+                        "type" => "integer",
+                        "required" => false
+                    ],
+                    'month' => [
+                        "parameter" => "month",
+                        "title" => "Show results for given month",
+                        "default" => null,
+                        "type" => "integer",
+                        "required" => false
+                    ]
+                ]
             ),
             'item' => []
         ]

@@ -151,7 +151,8 @@ class Controller extends BaseController
      * @param string $post_description_key
      * @param string $post_fields_key
      * @param string $parameters_key
-     * @param array $allowed_values Allowed values for fields, merged with fields array
+     * @param array $post_allowed_values Allowed values for POST fields, merged with POST fields array
+     * @param array $get_allowed_values Allowed values for GET parameters, merged with GET parameters array
      *
      * @return JsonResponse
      */
@@ -160,19 +161,20 @@ class Controller extends BaseController
         string $post_description_key,
         string $post_fields_key,
         string $parameters_key,
-        array $allowed_values = []
+        array $post_allowed_values = [],
+        array $get_allowed_values = []
     ): JsonResponse
     {
         $routes = [
             'GET' => [
                 'description' => Config::get($get_description_key),
                 'authenticated' => false,
-                'parameters' => Config::get($parameters_key)
+                'parameters' => array_merge_recursive(Config::get($parameters_key), $get_allowed_values)
             ],
             'POST' => [
                 'description' => Config::get($post_description_key),
                 'authenticated' => true,
-                'fields' => array_merge_recursive(Config::get($post_fields_key), $allowed_values)
+                'fields' => array_merge_recursive(Config::get($post_fields_key), $post_allowed_values)
             ]
         ];
 
@@ -233,18 +235,26 @@ class Controller extends BaseController
     /**
      * Generate the Link header value based on the value of $previous_start, $next_start and $per_page
      *
+     * @param string $uri
+     * @param string $parameters
      * @param integer $limit
      * @param integer|null $offset_prev
      * @param integer|null $offset_next
      *
      * @return string|null
      */
-    protected function generateLinkHeader(int $limit, int $offset_prev = null, int $offset_next = null): ?string
+    protected function generateLinkHeader(string $uri, string $parameters, int $limit, int $offset_prev = null, int $offset_next = null): ?string
     {
+        $uri .= '?';
+
+        if (strlen($parameters) > 0) {
+            $uri .= $parameters . '&';
+        }
+
         $link = '';
 
         if ($offset_prev !== null) {
-            $link .= '<' . Config::get('api.app.url') . '/' . Config::get('api.version.prefix') . '/categories?offset=' . $offset_prev . '&limit=' .
+            $link .= '<' . Config::get('api.app.url') . '/' . $uri . 'offset=' . $offset_prev . '&limit=' .
                 $limit . '>; rel="prev"';
         }
 
@@ -253,7 +263,7 @@ class Controller extends BaseController
                 $link .= ', ';
             }
 
-            $link .= '<' . Config::get('api.app.url') . '/' . Config::get('api.version.prefix')  . '/categories?offset=' . $offset_next . '&limit=' .
+            $link .= '<' . Config::get('api.app.url') . '/' . $uri . 'offset=' . $offset_next . '&limit=' .
                 $limit . '>; rel="next"';
         }
 

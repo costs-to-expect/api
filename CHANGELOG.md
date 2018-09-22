@@ -2,6 +2,17 @@
 
 Full changelog for the costs to expect REST API.
 
+## 2018-09-22 - v1.03.0
+
+* Added ability to set GET parameters in OPTIONS requests.
+* Added year parameter to /resource_types/{resource_type_id}/resources/{resource_id}/items.
+* Added month parameter to /resource_types/{resource_type_id}/resources/{resource_id}/items.
+* Added category parameter to /resource_types/{resource_type_id}/resources/{resource_id}/items.
+* ConvertHashIds middleware now automatically converts query params.
+* /resource_types/{resource_type_id}/resources/{resource_id}/items route total count not using resource type and resources ids.
+* Parameters not being passed through to pagination links.
+* Pagination links incorrect URIs.
+
 ## 2018-09-21 - v1.02.0
 
 * Added a summary/years route for a resource.
