@@ -26,7 +26,7 @@ class ConvertHashIds
     {
         $min_length = Config::get('api.hashids.min_length');
 
-        $params = [
+        $route_params = [
             'category_id' => new Hashids(Config::get('api.hashids.category'), $min_length),
             'sub_category_id' => new Hashids(Config::get('api.hashids.sub_category'), $min_length),
             'resource_type_id' => new Hashids(Config::get('api.hashids.resource_type'), $min_length),
@@ -36,13 +36,28 @@ class ConvertHashIds
             'item_sub_category_id' => new Hashids(Config::get('api.hashids.item_sub_category'), $min_length),
         ];
 
-        foreach ($params as $param => $hasher) {
+        foreach ($route_params as $param => $hasher) {
             if ($request->route($param) !== null) {
                 $id = $hasher->decode($request->route($param));
                 if (is_array($id) && array_key_exists(0, $id)) {
                     $request->route()->setParameter($param, $id[0]);
                 } else {
                     $request->route()->setParameter($param, 'nill');
+                }
+            }
+        }
+
+        $parameters = [
+            'category' => new Hashids(Config::get('api.hashids.category'), $min_length)
+        ];
+
+        foreach ($parameters as $param => $hasher) {
+            if ($request->query($param) !== null) {
+                $id = $hasher->decode($request->query($param));
+                if (is_array($id) && array_key_exists(0, $id)) {
+                    $request->request->add([$param => $id[0]]);
+                } else {
+                    $request->request->add([$param => 'nill']);
                 }
             }
         }

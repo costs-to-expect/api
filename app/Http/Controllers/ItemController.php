@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Route\Validators\Resource as ResourceRouteValidator;
+use App\Models\Category;
 use App\Models\Item;
 use App\Transformers\Item as ItemTransformer;
 use App\Validators\Item as ItemValidator;
@@ -20,6 +21,7 @@ use Illuminate\Http\Request;
  */
 class ItemController extends Controller
 {
+    private $allowed_values = [];
     private $pagination = [];
 
     /**
@@ -38,8 +40,23 @@ class ItemController extends Controller
         }
 
         $this->parameters_collection = [];
-        $this->parameters_collection['year'] = $request->query('year', null);
-        $this->parameters_collection['month'] = $request->query('month', null);
+        $parameters = $request->all();
+
+        if (array_key_exists('year', $parameters) === true &&
+            $parameters['year'] !== null &&
+            $parameters['year'] !== 'nill') {
+            $this->parameters_collection['year'] = $parameters['year'];
+        }
+        if (array_key_exists('month', $parameters) === true &&
+            $parameters['month'] !== null &&
+            $parameters['month'] !== 'nill') {
+            $this->parameters_collection['month'] = $parameters['month'];
+        }
+        if (array_key_exists('category', $parameters) === true &&
+            $parameters['category'] !== null &&
+            $parameters['category'] !== 'nill') {
+            $this->parameters_collection['category'] = $parameters['category'];
+        }
 
         $total = (new Item())->totalCount(
             $resource_type_id,
@@ -136,13 +153,15 @@ class ItemController extends Controller
             return $this->returnResourceNotFound();
         }
 
+        $this->getAllowedValues();
+
         return $this->generateOptionsForIndex(
             'api.descriptions.item.GET_index',
             'api.descriptions.item.POST',
             'api.routes.item.fields',
             'api.routes.item.parameters.collection',
             [],
-            $this->getAllowedValues()
+            $this->allowed_values
         );
     }
 
@@ -304,7 +323,16 @@ class ItemController extends Controller
                 if (strlen($parameters) > 0) {
                     $parameters .= '&';
                 }
-                $parameters .= $parameter . '=' . $parameter_value;
+
+                switch ($parameter) {
+                    case 'category':
+                        $parameters .= $parameter . '=' . $this->hash->encode($parameter, $parameter_value);
+                        break;
+
+                    default:
+                        $parameters .= $parameter . '=' . $parameter_value;
+                        break;
+                }
             }
         }
 
@@ -318,37 +346,47 @@ class ItemController extends Controller
     }
 
     /**
-     * Generate the allowed parameter values for the collection
-     *
-     * @return array
+     * Generate the $this->>allowed_values parameter values for the collection
      */
     private function getAllowedValues()
     {
-        $allowed_values = [
+        $this->allowed_values = [
             'year' => [
                 'allowed_values' => []
             ],
             'month' => [
                 'allowed_values' => []
+            ],
+            'category' => [
+                'allowed_values' => []
             ]
         ];
 
         for ($i=2013; $i <= intval(date('Y')); $i++) {
-            $allowed_values['year']['allowed_values'][$i] = [
+            $this->allowed_values['year']['allowed_values'][$i] = [
                 'value' => $i,
                 'name' => $i,
-                'description' => 'Include results for ' . $i . ' only'
+                'description' => 'Include results for ' . $i
             ];
         }
 
-        for ($i=1; $i <= 13; $i++) {
-            $allowed_values['month']['allowed_values'][$i] = [
+        for ($i=1; $i < 13; $i++) {
+            $this->allowed_values['month']['allowed_values'][$i] = [
                 'value' => $i,
                 'name' => date("F", mktime(0, 0, 0, $i, 10)),
-                'description' => 'Include results for ' . date("F", mktime(0, 0, 0, $i, 1)) . ' only'
+                'description' => 'Include results for ' . date("F", mktime(0, 0, 0, $i, 1))
             ];
         }
 
-        return $allowed_values;
+        (new Category())->paginatedCollection()->map(
+            function ($category)
+            {
+                $this->allowed_values['category']['allowed_values'][$this->hash->encode('category', $category->id)] = [
+                    'value' => $this->hash->encode('category', $category->id),
+                    'name' => $category->name,
+                    'description' => 'Include results for category ' . $category->name
+                ];
+            }
+        );
     }
 }

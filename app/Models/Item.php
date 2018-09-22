@@ -48,6 +48,12 @@ class Item extends Model
             $collection->whereRaw(\DB::raw("MONTH(item.effective_date) = '{$parameters_collection['month']}'"));
         }
 
+        if (array_key_exists('category', $parameters_collection) === true &&
+            $parameters_collection['category'] !== null) {
+            $collection->join("item_category", "item_category.item_id", "item.id");
+            $collection->where('item_category.category_id', '=', $parameters_collection['category']);
+        }
+
         return count($collection->get());
     }
 
@@ -63,8 +69,8 @@ class Item extends Model
             ->whereHas('resource', function ($query) use ($resource_type_id) {
                 $query->where('resource_type_id', '=', $resource_type_id);
             })
-            ->orderByDesc('effective_date')
-            ->latest()
+            ->orderByDesc('item.effective_date')
+            ->orderByDesc('item.created_at')
             ->offset($offset)
             ->limit($limit);
 
@@ -76,6 +82,12 @@ class Item extends Model
         if (array_key_exists('month', $parameters_collection) === true &&
             $parameters_collection['month'] !== null) {
             $collection->whereRaw(\DB::raw("MONTH(item.effective_date) = '{$parameters_collection['month']}'"));
+        }
+
+        if (array_key_exists('category', $parameters_collection) === true &&
+            $parameters_collection['category'] !== null) {
+            $collection->join("item_category", "item_category.item_id", "item.id");
+            $collection->where('item_category.category_id', '=', $parameters_collection['category']);
         }
 
         return $collection->get();
