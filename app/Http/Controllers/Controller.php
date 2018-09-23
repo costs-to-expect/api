@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Category;
 use App\Utilities\Hash;
 use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Http\JsonResponse;
@@ -294,5 +295,41 @@ class Controller extends BaseController
                 $this->collection_parameters[$parameter] = $request_parameters[$parameter];
             }
         }
+
+        $this->validateCollectionParameters($parameters);
+    }
+
+    /**
+     * Validate collection parameters, invalid collection parameters are silently removed
+     *
+     * @param array $parameters GET parameters to attempt to validate
+     *
+     * @return void
+     */
+    protected function validateCollectionParameters(array $parameters = [])
+    {
+        foreach ($parameters as $parameter) {
+            switch ($parameter) {
+                case 'category':
+                    if (array_key_exists($parameter, $this->collection_parameters) === true) {
+                        if ((new Category())->where('id', '=', $this->collection_parameters[$parameter])->exists() === false) {
+                            unset($this->collection_parameters[$parameter]);
+                        }
+                    }
+                    break;
+
+                default:
+                    // Do nothing
+                    break;
+            }
+        }
+
+        if (array_key_exists('category', $this->collection_parameters) === true) {
+            if ((new Category())->where('id', '=', $this->collection_parameters['category'])->exists() === false) {
+                unset($this->collection_parameters['category']);
+            }
+        }
+
+        var_dump($this->collection_parameters);
     }
 }

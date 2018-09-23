@@ -137,7 +137,9 @@ class ItemController extends Controller
         }
 
         $this->setCollectionParameters($request->all(), ['year', 'month', 'category']);
-        
+
+        $this->validateCollectionParameters();
+
         $this->setConditionalGetParameters();
 
         return $this->generateOptionsForIndex(
