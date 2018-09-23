@@ -21,7 +21,7 @@ use Illuminate\Http\Request;
  */
 class ItemController extends Controller
 {
-    private $allowed_values = [];
+    private $get_parameters = [];
     private $pagination = [];
 
     /**
@@ -136,7 +136,7 @@ class ItemController extends Controller
             return $this->returnResourceNotFound();
         }
 
-        $this->getAllowedValues();
+        $this->setConditionalGetParameters();
 
         return $this->generateOptionsForIndex(
             'api.descriptions.item.GET_index',
@@ -144,7 +144,7 @@ class ItemController extends Controller
             'api.routes.item.fields',
             'api.routes.item.parameters.collection',
             [],
-            $this->allowed_values
+            $this->get_parameters
         );
     }
 
@@ -329,11 +329,14 @@ class ItemController extends Controller
     }
 
     /**
-     * Generate the $this->>allowed_values parameter values for the collection
+     * Set any conditional GET parameters, will be merged with the data arrays defined in
+     * config/api/route.php
+     *
+     * @return void
      */
-    private function getAllowedValues()
+    private function setConditionalGetParameters()
     {
-        $this->allowed_values = [
+        $this->get_parameters = [
             'year' => [
                 'allowed_values' => []
             ],
@@ -346,7 +349,7 @@ class ItemController extends Controller
         ];
 
         for ($i=2013; $i <= intval(date('Y')); $i++) {
-            $this->allowed_values['year']['allowed_values'][$i] = [
+            $this->get_parameters['year']['allowed_values'][$i] = [
                 'value' => $i,
                 'name' => $i,
                 'description' => 'Include results for ' . $i
@@ -354,7 +357,7 @@ class ItemController extends Controller
         }
 
         for ($i=1; $i < 13; $i++) {
-            $this->allowed_values['month']['allowed_values'][$i] = [
+            $this->get_parameters['month']['allowed_values'][$i] = [
                 'value' => $i,
                 'name' => date("F", mktime(0, 0, 0, $i, 10)),
                 'description' => 'Include results for ' . date("F", mktime(0, 0, 0, $i, 1))
@@ -364,7 +367,7 @@ class ItemController extends Controller
         (new Category())->paginatedCollection()->map(
             function ($category)
             {
-                $this->allowed_values['category']['allowed_values'][$this->hash->encode('category', $category->id)] = [
+                $this->get_parameters['category']['allowed_values'][$this->hash->encode('category', $category->id)] = [
                     'value' => $this->hash->encode('category', $category->id),
                     'name' => $category->name,
                     'description' => 'Include results for category ' . $category->name
