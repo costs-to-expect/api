@@ -21,6 +21,8 @@ use Illuminate\Http\Request;
  */
 class ItemCategoryController extends Controller
 {
+    private $post_parameters = [];
+
     /**
      * Return the category assigned to an item
      *
@@ -122,12 +124,14 @@ class ItemCategoryController extends Controller
             return $this->returnResourceNotFound();
         }
 
+        $this->setConditionalPostParameters();
+
         return $this->generateOptionsForIndex(
             'api.descriptions.item_category.GET_index',
             'api.descriptions.item_category.POST',
             'api.routes.item_category.fields',
             'api.routes.item_category.parameters.collection',
-            $this->postAllowedValues()
+            $this->post_parameters
         );
     }
 
@@ -237,15 +241,16 @@ class ItemCategoryController extends Controller
     }
 
     /**
-     * Generate the array of allowed values for POST fields
+     * Set any conditional POST parameters, will be merged with the data arrays defined in
+     * config/api/route.php
      *
-     * @return array
+     * @return void|JsonResponse
      */
-    private function postAllowedValues()
+    private function setConditionalPostParameters()
     {
         $categories = (new Category())->select('id', 'name', 'description')->get();
 
-        $allowed_values = ['category_id' => []];
+        $this->post_parameters = ['category_id' => []];
         foreach ($categories as $category) {
             $id = $this->hash->encode('category', $category->id);
 
@@ -258,14 +263,12 @@ class ItemCategoryController extends Controller
                 );
             }
 
-            $allowed_values['category_id']['allowed_values'][$id] = [
+            $this->post_parameters['category_id']['allowed_values'][$id] = [
                 'value' => $id,
                 'name' => $category->name,
                 'description' => $category->description
             ];
         }
-
-        return $allowed_values;
     }
 
     /**

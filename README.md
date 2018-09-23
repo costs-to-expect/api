@@ -128,7 +128,7 @@ Please find below a list of the API routes that are (will be) implemented for ve
 
 ## Management routes
 
-Please find below a list of the API management routes that are (will be) implemented for version 1.00, these routes require authorisation.
+Please find below a list of the API management routes, these routes require authorisation.
 
 | HTTP Verb(s) | Route |
 | :--- | :--- |
@@ -150,12 +150,14 @@ Please find below a list of the API management routes that are (will be) impleme
 
 ## Planned development
 
-* Added filtering options for all GET routes
-* Validate GET params
-* PATCHES
-* PUTS
-* Upgrade Laravel
-* Move the user model
-* Dev setting to show generated queries
-* Switch to Money class
-* Create a white box version of API
+* Added filtering options for all GET routes, initially items route.
+* Validate GET parameters.
+* PATCH support.
+* PUTS support.
+* Upgrade Laravel to 5.7.
+* Move the user model.
+* Dev setting to show generated queries.
+* Switch to Money class.
+* Create a white box version of API.
+* Refactoring.
+* Add limits on POST for single item collections.

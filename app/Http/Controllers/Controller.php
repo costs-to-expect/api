@@ -151,8 +151,8 @@ class Controller extends BaseController
      * @param string $post_description_key
      * @param string $post_fields_key
      * @param string $parameters_key
-     * @param array $post_allowed_values Allowed values for POST fields, merged with POST fields array
-     * @param array $get_allowed_values Allowed values for GET parameters, merged with GET parameters array
+     * @param array $post_fields Conditionally set POST fields, typically used to set allowed values
+     * @param array $get_parameters Conditionally set GET parameters, typically used to set allowed values
      *
      * @return JsonResponse
      */
@@ -161,20 +161,20 @@ class Controller extends BaseController
         string $post_description_key,
         string $post_fields_key,
         string $parameters_key,
-        array $post_allowed_values = [],
-        array $get_allowed_values = []
+        array $post_fields = [],
+        array $get_parameters = []
     ): JsonResponse
     {
         $routes = [
             'GET' => [
                 'description' => Config::get($get_description_key),
                 'authenticated' => false,
-                'parameters' => array_merge_recursive(Config::get($parameters_key), $get_allowed_values)
+                'parameters' => array_merge_recursive(Config::get($parameters_key), $get_parameters)
             ],
             'POST' => [
                 'description' => Config::get($post_description_key),
                 'authenticated' => true,
-                'fields' => array_merge_recursive(Config::get($post_fields_key), $post_allowed_values)
+                'fields' => array_merge_recursive(Config::get($post_fields_key), $post_fields)
             ]
         ];
 
@@ -271,6 +271,28 @@ class Controller extends BaseController
             return $link;
         } else {
             return null;
+        }
+    }
+
+    /**
+     * Check the $request for GET parameters, if any are valid set them the the
+     * parameters collection
+     *
+     * @param array $request_parameters Parameters from $request->all()
+     * @param array $parameters GET params to try and set
+     *
+     * @return void
+     */
+    protected function setCollectionParameters(array $request_parameters = [], array $parameters = [])
+    {
+        $this->parameters_collection = [];
+
+        foreach ($parameters as $parameter) {
+            if (array_key_exists($parameter, $request_parameters) === true &&
+                $request_parameters[$parameter] !== null &&
+                $request_parameters[$parameter] !== 'nill') {
+                $this->parameters_collection[$parameter] = $request_parameters[$parameter];
+            }
         }
     }
 }
