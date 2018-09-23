@@ -39,24 +39,7 @@ class ItemController extends Controller
             return $this->returnResourceNotFound();
         }
 
-        $this->parameters_collection = [];
-        $parameters = $request->all();
-
-        if (array_key_exists('year', $parameters) === true &&
-            $parameters['year'] !== null &&
-            $parameters['year'] !== 'nill') {
-            $this->parameters_collection['year'] = $parameters['year'];
-        }
-        if (array_key_exists('month', $parameters) === true &&
-            $parameters['month'] !== null &&
-            $parameters['month'] !== 'nill') {
-            $this->parameters_collection['month'] = $parameters['month'];
-        }
-        if (array_key_exists('category', $parameters) === true &&
-            $parameters['category'] !== null &&
-            $parameters['category'] !== 'nill') {
-            $this->parameters_collection['category'] = $parameters['category'];
-        }
+        $this->setCollectionParameters($request->all(), ['year', 'month', 'category']);
 
         $total = (new Item())->totalCount(
             $resource_type_id,

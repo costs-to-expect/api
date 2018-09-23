@@ -273,4 +273,26 @@ class Controller extends BaseController
             return null;
         }
     }
+
+    /**
+     * Check the $request for GET parameters, if any are valid set them the the
+     * parameters collection
+     *
+     * @param array $request_parameters Parameters from $request->all()
+     * @param array $parameters GET params to try and set
+     *
+     * @return void
+     */
+    protected function setCollectionParameters(array $request_parameters = [], array $parameters = [])
+    {
+        $this->parameters_collection = [];
+
+        foreach ($parameters as $parameter) {
+            if (array_key_exists($parameter, $request_parameters) === true &&
+                $request_parameters[$parameter] !== null &&
+                $request_parameters[$parameter] !== 'nill') {
+                $this->parameters_collection[$parameter] = $request_parameters[$parameter];
+            }
+        }
+    }
 }
