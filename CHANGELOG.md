@@ -2,6 +2,10 @@
 
 Full changelog for the costs to expect REST API.
 
+## 2019-xx-xx - v1.xx.x
+
+* GET parameters are validated, invalid values are silently removed.
+
 ## 2018-09-23 - v1.03.1
 
 * Added helper method to base controller to easily set usable GET parameters for collections.
