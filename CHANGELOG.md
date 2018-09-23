@@ -2,7 +2,7 @@
 
 Full changelog for the costs to expect REST API.
 
-## 2018-xx-xx - v1.xx.x
+## 2018-09-23 - v1.03.1
 
 * Added helper method to base controller to easily set usable GET parameters for collections.
 * Updated the methods/logic for setting allowed values for GET parameters, it is capable of setting more than just 
