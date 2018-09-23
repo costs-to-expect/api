@@ -22,6 +22,8 @@ use Illuminate\Http\Request;
  */
 class ItemSubCategoryController extends Controller
 {
+    private $post_parameters = [];
+
     /**
      * Return the sub category assigned to an item
      *
@@ -155,10 +157,9 @@ class ItemSubCategoryController extends Controller
             return $this->returnResourceNotFound();
         }
 
-        $post_allowed_values = [];
         $item_category = (new ItemCategory())->find($item_category_id);
         if ($item_category_id !== null) {
-            $post_allowed_values = $this->postAllowedValues($item_category->category_id);
+            $this->setConditionalPostParameters($item_category->category_id);
         }
 
         return $this->generateOptionsForIndex(
@@ -166,7 +167,7 @@ class ItemSubCategoryController extends Controller
             'api.descriptions.item_sub_category.POST',
             'api.routes.item_sub_category.fields',
             'api.routes.item_sub_category.parameters.collection',
-            $post_allowed_values
+            $this->post_parameters
         );
     }
 
@@ -294,18 +295,21 @@ class ItemSubCategoryController extends Controller
     }
 
     /**
-     * Generate the array of allowed values fields
+     * Set any conditional POST parameters, will be merged with the data arrays defined in
+     * config/api/route.php
      *
-     * @return array
+     * @param integer $category_id
+     *
+     * @return void|JsonResponse
      */
-    private function postAllowedValues($category_id)
+    private function setConditionalPostParameters($category_id)
     {
         $sub_categories = (new SubCategory())
             ->select('id', 'name', 'description')
             ->where('category_id', '=', $category_id)
             ->get();
 
-        $allowed_values = ['sub_category_id' => []];
+        $this->post_parameters = ['sub_category_id' => []];
 
         foreach ($sub_categories as $sub_category) {
             $id = $this->hash->encode('sub_category', $sub_category->id);
@@ -319,14 +323,12 @@ class ItemSubCategoryController extends Controller
                 );
             }
 
-            $allowed_values['sub_category_id']['allowed_values'][$id] = [
+            $this->post_parameters['sub_category_id']['allowed_values'][$id] = [
                 'value' => $id,
                 'name' => $sub_category->name,
                 'description' => $sub_category->description
             ];
         }
-
-        return $allowed_values;
     }
 
     /**

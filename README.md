@@ -160,3 +160,4 @@ Please find below a list of the API management routes, these routes require auth
 * Switch to Money class.
 * Create a white box version of API.
 * Refactoring.
+* Add limits on POST for single item collections.
