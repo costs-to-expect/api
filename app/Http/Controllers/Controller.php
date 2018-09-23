@@ -318,18 +318,30 @@ class Controller extends BaseController
                     }
                     break;
 
+                case 'year':
+                    if (array_key_exists($parameter, $this->collection_parameters) === true) {
+                        if (intval($this->collection_parameters[$parameter]) < 2013 ||
+                            $this->collection_parameters[$parameter] > intval(date('Y'))) {
+
+                            unset($this->collection_parameters[$parameter]);
+                        }
+                    }
+                    break;
+
+                case 'month':
+                    if (array_key_exists($parameter, $this->collection_parameters) === true) {
+                        if (intval($this->collection_parameters[$parameter]) < 1 ||
+                            $this->collection_parameters[$parameter] > 12) {
+
+                            unset($this->collection_parameters[$parameter]);
+                        }
+                    }
+                    break;
+
                 default:
                     // Do nothing
                     break;
             }
         }
-
-        if (array_key_exists('category', $this->collection_parameters) === true) {
-            if ((new Category())->where('id', '=', $this->collection_parameters['category'])->exists() === false) {
-                unset($this->collection_parameters['category']);
-            }
-        }
-
-        var_dump($this->collection_parameters);
     }
 }
