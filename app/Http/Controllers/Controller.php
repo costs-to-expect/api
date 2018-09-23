@@ -17,7 +17,7 @@ class Controller extends BaseController
 
     protected $hash;
 
-    protected $parameters_collection = [];
+    protected $collection_parameters = [];
     protected $parameters_show = [];
 
     public function __construct()
@@ -285,13 +285,13 @@ class Controller extends BaseController
      */
     protected function setCollectionParameters(array $request_parameters = [], array $parameters = [])
     {
-        $this->parameters_collection = [];
+        $this->collection_parameters = [];
 
         foreach ($parameters as $parameter) {
             if (array_key_exists($parameter, $request_parameters) === true &&
                 $request_parameters[$parameter] !== null &&
                 $request_parameters[$parameter] !== 'nill') {
-                $this->parameters_collection[$parameter] = $request_parameters[$parameter];
+                $this->collection_parameters[$parameter] = $request_parameters[$parameter];
             }
         }
     }

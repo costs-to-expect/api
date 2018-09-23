@@ -44,14 +44,14 @@ class ItemController extends Controller
         $total = (new Item())->totalCount(
             $resource_type_id,
             $resource_id,
-            $this->parameters_collection
+            $this->collection_parameters
         );
 
         $this->pagination(
             $request,
             $total,
             $request->path(),
-            $this->parameters_collection
+            $this->collection_parameters
         );
 
         $items = (new Item())->paginatedCollection(
@@ -59,7 +59,7 @@ class ItemController extends Controller
             $resource_id,
             $this->pagination['offset'],
             $this->pagination['limit'],
-            $this->parameters_collection
+            $this->collection_parameters
         );
 
         $headers = [
@@ -136,6 +136,8 @@ class ItemController extends Controller
             return $this->returnResourceNotFound();
         }
 
+        $this->setCollectionParameters($request->all(), ['year', 'month', 'category']);
+        
         $this->setConditionalGetParameters();
 
         return $this->generateOptionsForIndex(
