@@ -2,9 +2,11 @@
 
 Full changelog for the costs to expect REST API.
 
-## 2019-xx-xx - v1.xx.x
+## 2019-09-25 - v1.04.0
 
-* GET parameters are validated, invalid values are silently removed.
+* GET parameters are now validated, invalid values are silently removed.
+* Added sub category parameter to /resource_types/{resource_type_id}/resources/{resource_id}/items.
+* Minor refactoring.
 
 ## 2018-09-23 - v1.03.1
 
