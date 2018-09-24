@@ -48,7 +48,8 @@ class ConvertHashIds
         }
 
         $parameters = [
-            'category' => new Hashids(Config::get('api.hashids.category'), $min_length)
+            'category' => new Hashids(Config::get('api.hashids.category'), $min_length),
+            'sub_category' => new Hashids(Config::get('api.hashids.sub_category'), $min_length)
         ];
 
         foreach ($parameters as $param => $hasher) {

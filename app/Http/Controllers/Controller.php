@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Category;
+use App\Models\SubCategory;
 use App\Utilities\Hash;
 use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Http\JsonResponse;
@@ -318,20 +319,33 @@ class Controller extends BaseController
                     }
                     break;
 
-                case 'year':
+                case 'month':
                     if (array_key_exists($parameter, $this->collection_parameters) === true) {
-                        if (intval($this->collection_parameters[$parameter]) < 2013 ||
-                            $this->collection_parameters[$parameter] > intval(date('Y'))) {
+                        if (intval($this->collection_parameters[$parameter]) < 1 ||
+                            $this->collection_parameters[$parameter] > 12) {
 
                             unset($this->collection_parameters[$parameter]);
                         }
                     }
                     break;
 
-                case 'month':
+                case 'sub_category':
                     if (array_key_exists($parameter, $this->collection_parameters) === true) {
-                        if (intval($this->collection_parameters[$parameter]) < 1 ||
-                            $this->collection_parameters[$parameter] > 12) {
+                        if (
+                            (new SubCategory())->
+                            where('sub_category.id', '=', $this->collection_parameters[$parameter])->
+                            where('sub_category.category_id', '=', $this->collection_parameters['category'])->
+                            exists() === false
+                        ) {
+                            unset($this->collection_parameters[$parameter]);
+                        }
+                    }
+                    break;
+
+                case 'year':
+                    if (array_key_exists($parameter, $this->collection_parameters) === true) {
+                        if (intval($this->collection_parameters[$parameter]) < 2013 ||
+                            $this->collection_parameters[$parameter] > intval(date('Y'))) {
 
                             unset($this->collection_parameters[$parameter]);
                         }

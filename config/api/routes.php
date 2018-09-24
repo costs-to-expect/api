@@ -301,6 +301,20 @@ return [
                         "default" => null,
                         "type" => "integer",
                         "required" => false
+                    ],
+                    'category' => [
+                        "parameter" => "category",
+                        "title" => "Show results for selected category",
+                        "default" => null,
+                        "type" => "string",
+                        "required" => false
+                    ],
+                    'sub_category' => [
+                        "parameter" => "sub_category",
+                        "title" => "Show results for selected sub category (Only relevant if category set)",
+                        "default" => null,
+                        "type" => "string",
+                        "required" => false
                     ]
                 ]
             ),
