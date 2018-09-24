@@ -284,7 +284,7 @@ class Controller extends BaseController
      *
      * @return void
      */
-    protected function setCollectionParameters(array $request_parameters = [], array $parameters = [])
+    protected function fetchCollectionParameters(array $request_parameters = [], array $parameters = [])
     {
         $this->collection_parameters = [];
 

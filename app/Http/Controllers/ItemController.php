@@ -39,7 +39,7 @@ class ItemController extends Controller
             return $this->returnResourceNotFound();
         }
 
-        $this->setCollectionParameters($request->all(), ['year', 'month', 'category']);
+        $this->fetchCollectionParameters($request->all(), ['year', 'month', 'category']);
 
         $total = (new Item())->totalCount(
             $resource_type_id,
@@ -136,7 +136,7 @@ class ItemController extends Controller
             return $this->returnResourceNotFound();
         }
 
-        $this->setCollectionParameters($request->all(), ['year', 'month', 'category']);
+        $this->fetchCollectionParameters($request->all(), ['year', 'month', 'category']);
 
         $this->setConditionalGetParameters();
 
