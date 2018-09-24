@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Category;
+use App\Models\SubCategory;
 use App\Utilities\Hash;
 use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Http\JsonResponse;
@@ -17,7 +19,7 @@ class Controller extends BaseController
 
     protected $hash;
 
-    protected $parameters_collection = [];
+    protected $collection_parameters = [];
     protected $parameters_show = [];
 
     public function __construct()
@@ -283,15 +285,76 @@ class Controller extends BaseController
      *
      * @return void
      */
-    protected function setCollectionParameters(array $request_parameters = [], array $parameters = [])
+    protected function fetchCollectionParameters(array $request_parameters = [], array $parameters = [])
     {
-        $this->parameters_collection = [];
+        $this->collection_parameters = [];
 
         foreach ($parameters as $parameter) {
             if (array_key_exists($parameter, $request_parameters) === true &&
                 $request_parameters[$parameter] !== null &&
                 $request_parameters[$parameter] !== 'nill') {
-                $this->parameters_collection[$parameter] = $request_parameters[$parameter];
+                $this->collection_parameters[$parameter] = $request_parameters[$parameter];
+            }
+        }
+
+        $this->validateCollectionParameters($parameters);
+    }
+
+    /**
+     * Validate collection parameters, invalid collection parameters are silently removed
+     *
+     * @param array $parameters GET parameters to attempt to validate
+     *
+     * @return void
+     */
+    protected function validateCollectionParameters(array $parameters = [])
+    {
+        foreach ($parameters as $parameter) {
+            switch ($parameter) {
+                case 'category':
+                    if (array_key_exists($parameter, $this->collection_parameters) === true) {
+                        if ((new Category())->where('id', '=', $this->collection_parameters[$parameter])->exists() === false) {
+                            unset($this->collection_parameters[$parameter]);
+                        }
+                    }
+                    break;
+
+                case 'month':
+                    if (array_key_exists($parameter, $this->collection_parameters) === true) {
+                        if (intval($this->collection_parameters[$parameter]) < 1 ||
+                            $this->collection_parameters[$parameter] > 12) {
+
+                            unset($this->collection_parameters[$parameter]);
+                        }
+                    }
+                    break;
+
+                case 'sub_category':
+                    if (array_key_exists($parameter, $this->collection_parameters) === true) {
+                        if (
+                            (new SubCategory())->
+                            where('sub_category.id', '=', $this->collection_parameters[$parameter])->
+                            where('sub_category.category_id', '=', $this->collection_parameters['category'])->
+                            exists() === false
+                        ) {
+                            unset($this->collection_parameters[$parameter]);
+                        }
+                    }
+                    break;
+
+                case 'year':
+                    if (array_key_exists($parameter, $this->collection_parameters) === true) {
+                        if (intval($this->collection_parameters[$parameter]) < 2013 ||
+                            $this->collection_parameters[$parameter] > intval(date('Y'))) {
+
+                            unset($this->collection_parameters[$parameter]);
+                        }
+                    }
+                    break;
+
+                default:
+                    // Do nothing
+                    break;
             }
         }
     }

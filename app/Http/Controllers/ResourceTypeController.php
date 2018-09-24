@@ -30,8 +30,8 @@ class ResourceTypeController extends Controller
     {
         $resource_types = (new ResourceType())->paginatedCollection();
 
-        $this->parameters_collection = [];
-        $this->parameters_collection['include_resources'] = boolval($request->query('include_resources', false));
+        $this->collection_parameters = [];
+        $this->collection_parameters['include_resources'] = boolval($request->query('include_resources', false));
 
         $headers = [
             'X-Total-Count' => count($resource_types)
@@ -41,7 +41,7 @@ class ResourceTypeController extends Controller
             $resource_types->map(
                 function ($resource_type)
                 {
-                    return (new ResourceTypeTransformer($resource_type, $this->parameters_collection))->toArray();
+                    return (new ResourceTypeTransformer($resource_type, $this->collection_parameters))->toArray();
                 }
             ),
             200,

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Route\Validators\Resource as ResourceRouteValidator;
 use App\Models\Category;
 use App\Models\Item;
+use App\Models\SubCategory;
 use App\Transformers\Item as ItemTransformer;
 use App\Validators\Item as ItemValidator;
 use Exception;
@@ -39,19 +40,19 @@ class ItemController extends Controller
             return $this->returnResourceNotFound();
         }
 
-        $this->setCollectionParameters($request->all(), ['year', 'month', 'category']);
+        $this->fetchCollectionParameters($request->all(), ['year', 'month', 'category', 'sub_category']);
 
         $total = (new Item())->totalCount(
             $resource_type_id,
             $resource_id,
-            $this->parameters_collection
+            $this->collection_parameters
         );
 
         $this->pagination(
             $request,
             $total,
             $request->path(),
-            $this->parameters_collection
+            $this->collection_parameters
         );
 
         $items = (new Item())->paginatedCollection(
@@ -59,7 +60,7 @@ class ItemController extends Controller
             $resource_id,
             $this->pagination['offset'],
             $this->pagination['limit'],
-            $this->parameters_collection
+            $this->collection_parameters
         );
 
         $headers = [
@@ -135,6 +136,8 @@ class ItemController extends Controller
         if (ResourceRouteValidator::validate($resource_type_id, $resource_id) === false) {
             return $this->returnResourceNotFound();
         }
+
+        $this->fetchCollectionParameters($request->all(), ['year', 'month', 'category', 'sub_category']);
 
         $this->setConditionalGetParameters();
 
@@ -309,6 +312,7 @@ class ItemController extends Controller
 
                 switch ($parameter) {
                     case 'category':
+                    case 'sub_category':
                         $parameters .= $parameter . '=' . $this->hash->encode($parameter, $parameter_value);
                         break;
 
@@ -370,9 +374,22 @@ class ItemController extends Controller
                 $this->get_parameters['category']['allowed_values'][$this->hash->encode('category', $category->id)] = [
                     'value' => $this->hash->encode('category', $category->id),
                     'name' => $category->name,
-                    'description' => 'Include results for category ' . $category->name
+                    'description' => 'Include results for ' . $category->name . ' category'
                 ];
             }
         );
+
+        if (array_key_exists('category', $this->collection_parameters) === true) {
+            (new SubCategory())->paginatedCollection($this->collection_parameters['category'])->map(
+                function ($sub_category)
+                {
+                    $this->get_parameters['sub_category']['allowed_values'][$this->hash->encode('sub_category', $sub_category->id)] = [
+                        'value' => $this->hash->encode('sub_category', $sub_category->id),
+                        'name' => $sub_category->name,
+                        'description' => 'Include results for ' . $sub_category->name . ' sub category'
+                    ];
+                }
+            );
+        }
     }
 }

@@ -2,6 +2,12 @@
 
 Full changelog for the costs to expect REST API.
 
+## 2019-09-25 - v1.04.0
+
+* GET parameters are now validated, invalid values are silently removed.
+* Added sub category parameter to /resource_types/{resource_type_id}/resources/{resource_id}/items.
+* Minor refactoring.
+
 ## 2018-09-23 - v1.03.1
 
 * Added helper method to base controller to easily set usable GET parameters for collections.
