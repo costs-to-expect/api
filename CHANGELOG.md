@@ -2,6 +2,11 @@
 
 Full changelog for the costs to expect REST API.
 
+## 2019-xx-xx - v1.xx-x
+
+* Corrected routes displayed in route of API.
+* Split Hashids middleware, now ConvertGetParameters and ConvertRouteParameters.
+
 ## 2019-09-25 - v1.04.0
 
 * GET parameters are now validated, invalid values are silently removed.
