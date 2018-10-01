@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Get\Parameters;
 use App\Http\Route\Validators\Resource as ResourceRouteValidator;
 use App\Models\Category;
 use App\Models\Item;
@@ -40,7 +41,11 @@ class ItemController extends Controller
             return $this->returnResourceNotFound();
         }
 
-        $this->fetchCollectionParameters($request->all(), ['year', 'month', 'category', 'sub_category']);
+        $get_params = new Parameters($request);
+        $this->collection_parameters = $get_params->
+            fetch(['year', 'month', 'category', 'sub_category'])->
+            validate()->
+            getParameters();
 
         $total = (new Item())->totalCount(
             $resource_type_id,
