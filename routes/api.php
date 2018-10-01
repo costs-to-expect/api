@@ -29,8 +29,8 @@ Route::group(
     [
         'prefix' => Config::get('api.version.prefix'),
         'middleware' => [
-            'convert.hash.ids',
-            'log.request'
+            'convert.route.parameters',
+            'log.requests'
         ]
     ],
     function () {
@@ -103,15 +103,6 @@ Route::group(
         Route::options(
             'resource_types/{resource_type_id}/resources/{resource_id}',
             'ResourceController@optionsShow'
-        );
-
-        Route::get(
-            'resource_types/{resource_type_id}/resources/{resource_id}/items',
-            'ItemController@index'
-        );
-        Route::options(
-            'resource_types/{resource_type_id}/resources/{resource_id}/items',
-            'ItemController@optionsIndex'
         );
         Route::get(
             'resource_types/{resource_type_id}/resources/{resource_id}/items/{item_id}',
@@ -234,9 +225,30 @@ Route::group(
 
 Route::group(
     [
+        'prefix' => Config::get('api.version.prefix'),
+        'middleware' => [
+            'convert.route.parameters',
+            'convert.get.parameters',
+            'log.requests'
+        ]
+    ],
+    function () {
+        Route::get(
+            'resource_types/{resource_type_id}/resources/{resource_id}/items',
+            'ItemController@index'
+        );
+        Route::options(
+            'resource_types/{resource_type_id}/resources/{resource_id}/items',
+            'ItemController@optionsIndex'
+        );
+    }
+);
+
+Route::group(
+    [
         'middleware' => [
             'auth:api',
-            'convert.hash.ids'
+            'convert.route.parameters'
         ],
         'prefix' => Config::get('api.version.prefix'),
     ],

@@ -29,13 +29,15 @@ class IndexController extends Controller
         foreach (Route::getRoutes() as $route) {
             if (starts_with($route->uri, Config::get('api.version.prefix') ) === true) {
                 if (isset($routes_to_display[$route->uri]['methods'])) {
-                    $routes_to_display[$route->uri]['methods'] = array_merge($route->methods,
-                        $routes_to_display[$route->uri]['methods']);
+                    $routes_to_display[$route->uri]['methods'] = array_merge(
+                        $route->methods,
+                        $routes_to_display[$route->uri]['methods']
+                    );
                 } else {
                     $routes_to_display[$route->uri]['methods'] = $route->methods;
                 }
 
-                $routes_to_display[$route->uri]['uri'] = $route->uri;
+                $routes_to_display[$route->uri]['uri'] = '/' . $route->uri;
             }
         }
 
