@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Get\Parameters;
-use App\Http\Route\Validators\Resource as ResourceRouteValidator;
+use App\Http\Parameters\Get;
+use App\Http\Parameters\Route\Validate;
 use App\Models\Category;
 use App\Models\Item;
 use App\Models\SubCategory;
@@ -23,11 +23,12 @@ use Illuminate\Http\Request;
  */
 class ItemController extends Controller
 {
-    private $get_parameters = [];
-    private $pagination = [];
+    protected $collection_parameters = [];
+    protected $get_parameters = [];
+    protected $pagination = [];
 
     /**
-     * Return all the items
+     * Return all the items based on the set filter options
      *
      * @param Request $request
      * @param string $resource_type_id
@@ -37,15 +38,9 @@ class ItemController extends Controller
      */
     public function index(Request $request, string $resource_type_id, string $resource_id): JsonResponse
     {
-        if (ResourceRouteValidator::validate($resource_type_id, $resource_id) === false) {
-            return $this->returnResourceNotFound();
-        }
+        Validate::resource($resource_type_id, $resource_id);
 
-        $get_params = new Parameters($request);
-        $this->collection_parameters = $get_params->
-            fetch(['year', 'month', 'category', 'sub_category'])->
-            validate()->
-            getParameters();
+        $this->collection_parameters = Get::parameters(['year', 'month', 'category', 'sub_category']);
 
         $total = (new Item())->totalCount(
             $resource_type_id,
@@ -105,12 +100,7 @@ class ItemController extends Controller
         string $item_id
     ): JsonResponse
     {
-        if (
-            ResourceRouteValidator::validate($resource_type_id, $resource_id) === false ||
-            $item_id === 'nill'
-        ) {
-            return $this->returnResourceNotFound();
-        }
+        Validate::resource($resource_type_id, $resource_id);
 
         $item = (new Item())->single($resource_type_id, $resource_id, $item_id);
 
@@ -138,11 +128,9 @@ class ItemController extends Controller
      */
     public function optionsIndex(Request $request, string $resource_type_id, string $resource_id): JsonResponse
     {
-        if (ResourceRouteValidator::validate($resource_type_id, $resource_id) === false) {
-            return $this->returnResourceNotFound();
-        }
+        Validate::resource($resource_type_id, $resource_id);
 
-        $this->fetchCollectionParameters($request->all(), ['year', 'month', 'category', 'sub_category']);
+        $this->collection_parameters = Get::parameters(['year', 'month', 'category', 'sub_category']);
 
         $this->setConditionalGetParameters();
 
@@ -173,12 +161,7 @@ class ItemController extends Controller
         string $item_id
     ): JsonResponse
     {
-        if (
-            ResourceRouteValidator::validate($resource_type_id, $resource_id) === false ||
-            $item_id === 'nill'
-        ) {
-            return $this->returnResourceNotFound();
-        }
+        Validate::resource($resource_type_id, $resource_id);
 
         $item = (new Item())->single($resource_type_id, $resource_id, $item_id);
 
@@ -206,9 +189,7 @@ class ItemController extends Controller
      */
     public function create(Request $request, string $resource_type_id, string $resource_id): JsonResponse
     {
-        if (ResourceRouteValidator::validate($resource_type_id, $resource_id) === false) {
-            return $this->returnResourceNotFound();
-        };
+        Validate::resource($resource_type_id, $resource_id);
 
         $validator = (new ItemValidator)->create($request);
 
@@ -258,9 +239,7 @@ class ItemController extends Controller
         string $item_id
     ): JsonResponse
     {
-        if (ResourceRouteValidator::validate($resource_type_id, $resource_id) === false) {
-            return $this->returnResourceNotFound();
-        }
+        Validate::resource($resource_type_id, $resource_id);
 
         $item = (new Item())->single($resource_type_id, $resource_id, $item_id);
 
