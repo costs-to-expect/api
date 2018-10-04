@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Route\Validators\Category as CategoryRouteValidator;
+use App\Http\Parameters\Route\Validate;
 use App\Models\SubCategory;
 use App\Transformers\SubCategory as SubCategoryTransformer;
 use App\Validators\SubCategory as SubCategoryValidator;
@@ -30,9 +30,7 @@ class SubCategoryController extends Controller
      */
     public function index(Request $request, string $category_id): JsonResponse
     {
-        if (CategoryRouteValidator::validate($category_id) === false) {
-            return $this->returnResourceNotFound();
-        }
+        Validate::category($category_id);
 
         $sub_categories = (new SubCategory())->paginatedCollection($category_id);
 
@@ -67,12 +65,7 @@ class SubCategoryController extends Controller
         string $sub_category_id
     ): JsonResponse
     {
-        if (
-            CategoryRouteValidator::validate($category_id) === false ||
-            $sub_category_id === 'nill'
-        ) {
-            return $this->returnResourceNotFound();
-        }
+        Validate::subCategory($category_id, $sub_category_id);
 
         $sub_category = (new SubCategory())->single(
             $category_id,
@@ -102,9 +95,7 @@ class SubCategoryController extends Controller
      */
     public function optionsIndex(Request $request, string $category_id): JsonResponse
     {
-        if (CategoryRouteValidator::validate($category_id) === false) {
-            return $this->returnResourceNotFound();
-        }
+        Validate::category($category_id);
 
         return $this->generateOptionsForIndex(
             'api.descriptions.sub_category.GET_index',
@@ -129,21 +120,7 @@ class SubCategoryController extends Controller
         string $sub_category_id
     ): JsonResponse
     {
-        if (
-            (new CategoryRouteValidator())->validate($category_id) === false ||
-            $sub_category_id === 'nill'
-        ) {
-            return $this->returnResourceNotFound();
-        }
-
-        $sub_category = (new SubCategory())->single(
-            $category_id,
-            $sub_category_id
-        );
-
-        if ($sub_category === null) {
-            return $this->returnResourceNotFound();
-        }
+        Validate::subCategory($category_id, $sub_category_id);
 
         return $this->generateOptionsForShow(
             'api.descriptions.sub_category.GET_show',
@@ -164,9 +141,7 @@ class SubCategoryController extends Controller
      */
     public function create(Request $request, string $category_id): JsonResponse
     {
-        if ((new CategoryRouteValidator())->validate($category_id) === false) {
-            return $this->returnResourceNotFound();
-        }
+        Validate::category($category_id);
 
         $validator = (new SubCategoryValidator)->create($request, $category_id);
 
@@ -211,9 +186,7 @@ class SubCategoryController extends Controller
         string $sub_category_id
     ): JsonResponse
     {
-        if ((new CategoryRouteValidator())->validate($category_id) === false) {
-            return $this->returnResourceNotFound();
-        }
+        Validate::subCategory($category_id, $sub_category_id);
 
         $sub_category = (new SubCategory())->single(
             $category_id,
@@ -233,35 +206,5 @@ class SubCategoryController extends Controller
         } catch (Exception $e) {
             return $this->returnResourceNotFound();
         }
-    }
-
-    /**
-     * Update the request sub category
-     *
-     * @param Request $request
-     * @param string $category_id
-     * @param string $sub_category_id
-     *
-     * @return JsonResponse
-     */
-    public function update(Request $request, string $category_id, string $sub_category_id): JsonResponse
-    {
-        $validator = (new SubCategoryValidator)->update($request, $category_id, $sub_category_id);
-
-        if ($validator->fails() === true) {
-            return $this->returnValidationErrors($validator);
-        }
-
-        if (count($request->all()) === 0) {
-            return $this->requireAtLeastOneFieldToPatch();
-        }
-
-        return response()->json(
-            [
-                'category_id' => $category_id,
-                'sub_category_id' => $sub_category_id
-            ],
-            200
-        );
     }
 }

@@ -26,7 +26,7 @@ class Validate
     static public function subCategory($category_id, $sub_category_id)
     {
         if (SubCategory::validate($category_id, $sub_category_id) === false) {
-            self::return404('Category not found');
+            self::return404('Sub category not found');
         }
     }
 
