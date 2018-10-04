@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Route\Validators\Item as ItemRouteValidator;
+use App\Http\Parameters\Route\Validate;
 use App\Models\Category;
 use App\Models\ItemCategory;
 use App\Transformers\ItemCategory as ItemCategoryTransformer;
@@ -35,9 +35,7 @@ class ItemCategoryController extends Controller
      */
     public function index(Request $request, string $resource_type_id, string $resource_id, string $item_id): JsonResponse
     {
-        if (ItemRouteValidator::validate($resource_type_id, $resource_id, $item_id) === false) {
-            return $this->returnResourceNotFound();
-        }
+        Validate::item($resource_type_id, $resource_id, $item_id);
 
         $item_category = (new ItemCategory())->paginatedCollection(
             $resource_type_id,
@@ -79,10 +77,9 @@ class ItemCategoryController extends Controller
         string $item_category_id
     ): JsonResponse
     {
-        if (
-            ItemRouteValidator::validate($resource_type_id, $resource_id, $item_id) === false ||
-            $item_category_id === 'nill'
-        ) {
+        Validate::item($resource_type_id, $resource_id, $item_id);
+
+        if ($item_category_id === 'nill') {
             return $this->returnResourceNotFound();
         }
 
@@ -120,9 +117,7 @@ class ItemCategoryController extends Controller
      */
     public function optionsIndex(Request $request, string $resource_type_id, string $resource_id, string $item_id): JsonResponse
     {
-        if (ItemRouteValidator::validate($resource_type_id, $resource_id, $item_id) === false) {
-            return $this->returnResourceNotFound();
-        }
+        Validate::item($resource_type_id, $resource_id, $item_id);
 
         $this->setConditionalPostParameters();
 
@@ -154,10 +149,9 @@ class ItemCategoryController extends Controller
         string $item_category_id
     ): JsonResponse
     {
-        if (
-            ItemRouteValidator::validate($resource_type_id, $resource_id, $item_id) === false ||
-            $item_category_id === 'nill'
-        ) {
+        Validate::item($resource_type_id, $resource_id, $item_id);
+
+        if ($item_category_id === 'nill') {
             return $this->returnResourceNotFound();
         }
 
@@ -198,9 +192,7 @@ class ItemCategoryController extends Controller
         string $item_id
     ): JsonResponse
     {
-        if (ItemRouteValidator::validate($resource_type_id, $resource_id, $item_id) === false) {
-            return $this->returnResourceNotFound();
-        }
+        Validate::item($resource_type_id, $resource_id, $item_id);
 
         $validator = (new ItemCategoryValidator)->create($request);
 
@@ -244,7 +236,7 @@ class ItemCategoryController extends Controller
      * Set any conditional POST parameters, will be merged with the data arrays defined in
      * config/api/route.php
      *
-     * @return void|JsonResponse
+     * @return JsonResponse
      */
     private function setConditionalPostParameters()
     {
@@ -290,9 +282,7 @@ class ItemCategoryController extends Controller
         string $item_category_id
     ): JsonResponse
     {
-        if (ItemRouteValidator::validate($resource_type_id, $resource_id, $item_id) === false) {
-            return $this->returnResourceNotFound();
-        }
+        Validate::item($resource_type_id, $resource_id, $item_id);
 
         $item_category = (new ItemCategory())->single(
             $resource_type_id,
