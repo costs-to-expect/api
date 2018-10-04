@@ -2,8 +2,10 @@
 
 namespace App\Http\Parameters\Route;
 
+use App\Http\Parameters\Route\Validators\Category;
 use App\Http\Parameters\Route\Validators\Resource;
 use App\Http\Parameters\Route\Validators\ResourceType;
+use App\Http\Parameters\Route\Validators\SubCategory;
 
 /**
  * Validate the set route parameters, redirect to 404 if invalid
@@ -14,6 +16,20 @@ use App\Http\Parameters\Route\Validators\ResourceType;
  */
 class Validate
 {
+    static public function category($category_id)
+    {
+        if (Category::validate($category_id) === false) {
+            self::return404('Category not found');
+        }
+    }
+
+    static public function subCategory($category_id, $sub_category_id)
+    {
+        if (SubCategory::validate($category_id, $sub_category_id) === false) {
+            self::return404('Category not found');
+        }
+    }
+
     static public function resourceType($resource_type_id)
     {
         if (ResourceType::validate($resource_type_id) === false) {

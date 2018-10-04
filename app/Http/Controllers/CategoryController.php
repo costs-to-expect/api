@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Parameters\Route\Validate;
 use App\Models\Category;
 use App\Transformers\Category as CategoryTransformer;
 use App\Validators\Category as CategoryValidator;
@@ -60,9 +61,7 @@ class CategoryController extends Controller
      */
     public function show(Request $request, $category_id): JsonResponse
     {
-        if ($category_id === 'nill') {
-            return $this->returnResourceNotFound();
-        }
+        Validate::category($category_id);
 
         $this->collection_parameters = [];
         $this->collection_parameters['include_sub_categories'] =
@@ -110,12 +109,7 @@ class CategoryController extends Controller
      */
     public function optionsShow(Request $request, string $category_id): JsonResponse
     {
-        if (
-            $category_id === 'nill' ||
-            (new Category)->single($category_id) === null
-        ) {
-            return $this->returnResourceNotFound();
-        }
+        Validate::category($category_id);
 
         return $this->generateOptionsForShow(
             'api.descriptions.category.GET_show',
@@ -175,14 +169,10 @@ class CategoryController extends Controller
         string $category_id
     ): JsonResponse
     {
-        $category = (new Category())->single($category_id);
-
-        if ($category === null) {
-            return $this->returnResourceNotFound();
-        }
+        Validate::category($category_id);
 
         try {
-            $category->delete();
+            (new Category())->find($category_id)->delete();
 
             return response()->json([], 204);
         } catch (QueryException $e) {
