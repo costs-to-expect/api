@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Parameters\Route\Validate;
 use App\Models\ResourceType;
 use App\Transformers\ResourceType as ResourceTypeTransformer;
 use App\Validators\ResourceType as ResourceTypeValidator;
@@ -59,9 +60,7 @@ class ResourceTypeController extends Controller
      */
     public function show(Request $request, string $resource_type_id): JsonResponse
     {
-        if ($resource_type_id === 'nill') {
-            return $this->returnResourceNotFound();
-        }
+        Validate::resourceType($resource_type_id);
 
         $this->parameters_show = [];
         $this->parameters_show['include_resources'] = boolval($request->query('include_resources', false));
@@ -108,12 +107,7 @@ class ResourceTypeController extends Controller
      */
     public function optionsShow(Request $request, string $resource_type_id): JsonResponse
     {
-        if (
-            $resource_type_id === 'nill' ||
-            (new ResourceType)->single($resource_type_id) === null
-        ) {
-            return $this->returnResourceNotFound();
-        }
+        Validate::resourceType($resource_type_id);
 
         return $this->generateOptionsForShow(
             'api.descriptions.resource_type.GET_show',
@@ -173,14 +167,10 @@ class ResourceTypeController extends Controller
         string $resource_type_id
     ): JsonResponse
     {
-        $resource_type = (new ResourceType())->single($resource_type_id);
-
-        if ($resource_type === null) {
-            return $this->returnResourceNotFound();
-        }
+        Validate::resourceType($resource_type_id);
 
         try {
-            $resource_type->delete();
+            (new ResourceType())->find($resource_type_id)->delete();
 
             return response()->json([], 204);
         } catch (QueryException $e) {
