@@ -4,9 +4,11 @@ Full changelog for the costs to expect REST API.
 
 ## 2019-xx-xx - v1.xx-x
 
-* Corrected routes displayed in route of API.
+* Corrected routes displayed in root of API.
 * Split Hashids middleware, now ConvertGetParameters and ConvertRouteParameters.
-* Added App\Http\Get\Parameters class to validate GET parameters, moved code from base controller.
+* Added App\Http\Parameters\Get class to validate GET parameters, moved code from base controller.
+* Added App\Http\Parameters\Route\Validate and child classes to validator route parameters.
+* Updated controllers to use new App\Http\Parameters\* classes.
 
 ## 2019-09-25 - v1.04.0
 
