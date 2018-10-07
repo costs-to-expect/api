@@ -9,6 +9,7 @@ Full changelog for the costs to expect REST API.
 * Added App\Http\Parameters\Get class to validate GET parameters, moved code from base controller.
 * Added App\Http\Parameters\Route\Validate and child classes to validator route parameters.
 * Updated controllers to use new App\Http\Parameters\* classes.
+* Minor bug fix, booleans not being checked correctly.
 
 ## 2019-09-25 - v1.04.0
 

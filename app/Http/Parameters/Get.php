@@ -4,7 +4,6 @@ namespace App\Http\Parameters;
 
 use App\Models\Category;
 use App\Models\SubCategory;
-use Illuminate\Http\Request;
 
 /**
  * Fetch any GET parameters attached to the end of the URI and validate
@@ -32,7 +31,17 @@ class Get
             if (array_key_exists($parameter, $request_parameters) === true &&
                 $request_parameters[$parameter] !== null &&
                 $request_parameters[$parameter] !== 'nill') {
-                self::$parameters[$parameter] = $request_parameters[$parameter];
+
+                switch ($parameter) {
+                    case 'include_resources';
+                    case 'include_sub_categories';
+                        self::$parameters[$parameter] = filter_var($request_parameters[$parameter], FILTER_VALIDATE_BOOLEAN);
+                        break;
+
+                    default:
+                        self::$parameters[$parameter] = $request_parameters[$parameter];
+                        break;
+                }
             }
         }
     }
@@ -55,16 +64,9 @@ class Get
                     break;
 
                 case 'include_sub_categories':
-                    if (array_key_exists($key, self::$parameters) === true) {
-                        if (boolval(self::$parameters['include_sub_categories']) === false) {
-                            unset(self::$parameters[$key]);
-                        }
-                    }
-                    break;
-
                 case 'include_resources':
                     if (array_key_exists($key, self::$parameters) === true) {
-                        if (boolval(self::$parameters['include_resources']) === false) {
+                        if (filter_var(self::$parameters[$key], FILTER_VALIDATE_BOOLEAN) === false) {
                             unset(self::$parameters[$key]);
                         }
                     }

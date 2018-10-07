@@ -44,7 +44,8 @@ class Category extends Transformer
 
         if (
             isset($this->parameters['include_sub_categories']) &&
-            $this->parameters['include_sub_categories'] === true) {
+            $this->parameters['include_sub_categories'] === true
+        ) {
             $subCategoriesCollection = $this->category->sub_categories;
 
             $subCategoriesCollection->map(
