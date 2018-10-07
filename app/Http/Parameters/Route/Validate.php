@@ -5,6 +5,7 @@ namespace App\Http\Parameters\Route;
 use App\Http\Parameters\Route\Validators\Category;
 use App\Http\Parameters\Route\Validators\Item;
 use App\Http\Parameters\Route\Validators\ItemCategory;
+use App\Http\Parameters\Route\Validators\ItemSubCategory;
 use App\Http\Parameters\Route\Validators\Resource;
 use App\Http\Parameters\Route\Validators\ResourceType;
 use App\Http\Parameters\Route\Validators\SubCategory;
@@ -53,10 +54,39 @@ class Validate
         }
     }
 
-    static public function itemCategory($resource_type_id, $resource_id, $item_id, $item_category_id)
-    {
-        if (ItemCategory::validate($resource_type_id, $resource_id, $item_id, $item_category_id) === false) {
+    static public function itemCategory(
+        $resource_type_id,
+        $resource_id,
+        $item_id,
+        $item_category_id
+    ) {
+        if (ItemCategory::validate(
+                $resource_type_id,
+                $resource_id,
+                $item_id,
+                $item_category_id
+            ) === false
+        ) {
             self::return404('Item category not found');
+        }
+    }
+
+    static public function itemSubCategory(
+        $resource_type_id,
+        $resource_id,
+        $item_id,
+        $item_category_id,
+        $item_sub_category_id
+    ) {
+        if (ItemSubCategory::validate(
+                $resource_type_id,
+                $resource_id,
+                $item_id,
+                $item_category_id,
+                $item_sub_category_id
+            ) === false
+        ) {
+            self::return404('Item sub category not found');
         }
     }
 
