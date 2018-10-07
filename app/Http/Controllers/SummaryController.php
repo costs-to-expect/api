@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Route\Validators\Resource as ResourceRouteValidator;
+use App\Http\Parameters\Route\Validate;
 use App\Models\Item;
 use App\Transformers\ItemCategorySummary as ItemCategorySummaryTransformer;
 use App\Transformers\ItemSubCategorySummary as ItemSubCategorySummaryTransformer;
@@ -32,9 +32,7 @@ class SummaryController extends Controller
      */
     public function tco(Request $request, string $resource_type_id, string $resource_id): JsonResponse
     {
-        if (ResourceRouteValidator::validate($resource_type_id, $resource_id) === false) {
-            return $this->returnResourceNotFound();
-        }
+        Validate::resource($resource_type_id, $resource_id);
 
         $summary = (new Item())->summary($resource_type_id, $resource_id);
 
@@ -62,9 +60,7 @@ class SummaryController extends Controller
      */
     public function optionsTco(Request $request, string $resource_type_id, string $resource_id): JsonResponse
     {
-        if (ResourceRouteValidator::validate($resource_type_id, $resource_id) === false) {
-            return $this->returnResourceNotFound();
-        }
+        Validate::resource($resource_type_id, $resource_id);
 
         $routes = [
             'GET' => [
@@ -96,10 +92,9 @@ class SummaryController extends Controller
         Request $request,
         string $resource_type_id,
         string $resource_id
-    ): JsonResponse {
-        if (ResourceRouteValidator::validate($resource_type_id, $resource_id) === false) {
-            return $this->returnResourceNotFound();
-        }
+    ): JsonResponse
+    {
+        Validate::resource($resource_type_id, $resource_id);
 
         $summary = (new Item())->categoriesSummary(
             $resource_type_id,
@@ -132,9 +127,7 @@ class SummaryController extends Controller
      */
     public function optionsCategories(Request $request, string $resource_type_id, string $resource_id): JsonResponse
     {
-        if (ResourceRouteValidator::validate($resource_type_id, $resource_id) === false) {
-            return $this->returnResourceNotFound();
-        }
+        Validate::resource($resource_type_id, $resource_id);
 
         $routes = [
             'GET' => [
@@ -168,10 +161,11 @@ class SummaryController extends Controller
         string $resource_type_id,
         string $resource_id,
         string $category_id
-    ): JsonResponse {
-        if (ResourceRouteValidator::validate($resource_type_id, $resource_id) === false) {
-            return $this->returnResourceNotFound();
-        }
+    ): JsonResponse
+    {
+        Validate::resource($resource_type_id, $resource_id);
+
+        Validate::category($category_id);
 
         $category_summary = (new Item())->categorySummary(
             $resource_type_id,
@@ -209,10 +203,11 @@ class SummaryController extends Controller
         string $resource_type_id,
         string $resource_id,
         string $category_id
-    ): JsonResponse {
-        if (ResourceRouteValidator::validate($resource_type_id, $resource_id) === false) {
-            return $this->returnResourceNotFound();
-        }
+    ): JsonResponse
+    {
+        Validate::resource($resource_type_id, $resource_id);
+
+        Validate::category($category_id);
 
         $routes = [
             'GET' => [
@@ -246,10 +241,11 @@ class SummaryController extends Controller
         string $resource_type_id,
         string $resource_id,
         string $category_id
-    ): JsonResponse {
-        if (ResourceRouteValidator::validate($resource_type_id, $resource_id) === false) {
-            return $this->returnResourceNotFound();
-        }
+    ): JsonResponse
+    {
+        Validate::resource($resource_type_id, $resource_id);
+
+        Validate::category($category_id);
 
         $summary = (new Item())->subCategoriesSummary(
             $resource_type_id,
@@ -287,10 +283,11 @@ class SummaryController extends Controller
         string $resource_type_id,
         string $resource_id,
         string $category_id
-    ): JsonResponse {
-        if (ResourceRouteValidator::validate($resource_type_id, $resource_id) === false) {
-            return $this->returnResourceNotFound();
-        }
+    ): JsonResponse
+    {
+        Validate::resource($resource_type_id, $resource_id);
+
+        Validate::category($category_id);
 
         $routes = [
             'GET' => [
@@ -326,10 +323,11 @@ class SummaryController extends Controller
         string $resource_id,
         string $category_id,
         string $sub_category_id
-    ): JsonResponse {
-        if (ResourceRouteValidator::validate($resource_type_id, $resource_id) === false) {
-            return $this->returnResourceNotFound();
-        }
+    ): JsonResponse
+    {
+        Validate::resource($resource_type_id, $resource_id);
+
+        Validate::subCategory($category_id, $sub_category_id);
 
         $sub_category_summary = (new Item())->subCategorySummary(
             $resource_type_id,
@@ -370,10 +368,11 @@ class SummaryController extends Controller
         string $resource_id,
         string $category_id,
         string $sub_category_id
-    ): JsonResponse {
-        if (ResourceRouteValidator::validate($resource_type_id, $resource_id) === false) {
-            return $this->returnResourceNotFound();
-        }
+    ): JsonResponse
+    {
+        Validate::resource($resource_type_id, $resource_id);
+
+        Validate::subCategory($category_id, $sub_category_id);
 
         $routes = [
             'GET' => [
@@ -405,10 +404,9 @@ class SummaryController extends Controller
         Request $request,
         string $resource_type_id,
         string $resource_id
-    ): JsonResponse {
-        if (ResourceRouteValidator::validate($resource_type_id, $resource_id) === false) {
-            return $this->returnResourceNotFound();
-        }
+    ): JsonResponse
+    {
+        Validate::resource($resource_type_id, $resource_id);
 
         $summary = (new Item())->yearsSummary(
             $resource_type_id,
@@ -441,9 +439,7 @@ class SummaryController extends Controller
      */
     public function optionsYears(Request $request, string $resource_type_id, string $resource_id): JsonResponse
     {
-        if (ResourceRouteValidator::validate($resource_type_id, $resource_id) === false) {
-            return $this->returnResourceNotFound();
-        }
+        Validate::resource($resource_type_id, $resource_id);
 
         $routes = [
             'GET' => [
@@ -477,10 +473,9 @@ class SummaryController extends Controller
         string $resource_type_id,
         string $resource_id,
         string $year
-    ): JsonResponse {
-        if (ResourceRouteValidator::validate($resource_type_id, $resource_id) === false) {
-            return $this->returnResourceNotFound();
-        }
+    ): JsonResponse
+    {
+        Validate::resource($resource_type_id, $resource_id);
 
         $year_summary = (new Item())->yearSummary(
             $resource_type_id,
@@ -518,10 +513,9 @@ class SummaryController extends Controller
         string $resource_type_id,
         string $resource_id,
         int $year
-    ): JsonResponse {
-        if (ResourceRouteValidator::validate($resource_type_id, $resource_id) === false) {
-            return $this->returnResourceNotFound();
-        }
+    ): JsonResponse
+    {
+        Validate::resource($resource_type_id, $resource_id);
 
         $summary = (new Item())->monthsSummary(
             $resource_type_id,
@@ -560,9 +554,7 @@ class SummaryController extends Controller
         int $year
     ): JsonResponse
     {
-        if (ResourceRouteValidator::validate($resource_type_id, $resource_id) === false) {
-            return $this->returnResourceNotFound();
-        }
+        Validate::resource($resource_type_id, $resource_id);
 
         $routes = [
             'GET' => [
@@ -596,10 +588,9 @@ class SummaryController extends Controller
         string $resource_type_id,
         string $resource_id,
         string $year
-    ): JsonResponse {
-        if (ResourceRouteValidator::validate($resource_type_id, $resource_id) === false) {
-            return $this->returnResourceNotFound();
-        }
+    ): JsonResponse
+    {
+        Validate::resource($resource_type_id, $resource_id);
 
         $routes = [
             'GET' => [
@@ -635,10 +626,9 @@ class SummaryController extends Controller
         string $resource_id,
         int $year,
         int $month
-    ): JsonResponse {
-        if (ResourceRouteValidator::validate($resource_type_id, $resource_id) === false) {
-            return $this->returnResourceNotFound();
-        }
+    ): JsonResponse
+    {
+        Validate::resource($resource_type_id, $resource_id);
 
         $summary = (new Item())->monthSummary(
             $resource_type_id,
@@ -679,10 +669,9 @@ class SummaryController extends Controller
         string $resource_id,
         string $year,
         string $month
-    ): JsonResponse {
-        if (ResourceRouteValidator::validate($resource_type_id, $resource_id) === false) {
-            return $this->returnResourceNotFound();
-        }
+    ): JsonResponse
+    {
+        Validate::resource($resource_type_id, $resource_id);
 
         $routes = [
             'GET' => [

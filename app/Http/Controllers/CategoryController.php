@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Parameters\Get;
+use App\Http\Parameters\Route\Validate;
 use App\Models\Category;
 use App\Transformers\Category as CategoryTransformer;
 use App\Validators\Category as CategoryValidator;
@@ -19,6 +21,9 @@ use Illuminate\Http\Request;
  */
 class CategoryController extends Controller
 {
+    protected $collection_parameters = [];
+    protected $show_parameters = [];
+
     /**
      * Return all the categories
      *
@@ -30,9 +35,7 @@ class CategoryController extends Controller
     {
         $categories = (new Category())->paginatedCollection();
 
-        $this->collection_parameters = [];
-        $this->collection_parameters['include_sub_categories'] =
-            boolval($request->query('include_sub_categories', false));
+        $this->collection_parameters = Get::parameters(['include_sub_categories']);
 
         $headers = [
             'X-Total-Count' => count($categories)
@@ -60,13 +63,9 @@ class CategoryController extends Controller
      */
     public function show(Request $request, $category_id): JsonResponse
     {
-        if ($category_id === 'nill') {
-            return $this->returnResourceNotFound();
-        }
+        Validate::category($category_id);
 
-        $this->collection_parameters = [];
-        $this->collection_parameters['include_sub_categories'] =
-            boolval($request->query('include_sub_categories', false));
+        $this->show_parameters = Get::parameters(['include_sub_categories']);
 
         $category = (new Category)->single($category_id);
 
@@ -75,7 +74,7 @@ class CategoryController extends Controller
         }
 
         return response()->json(
-            (new CategoryTransformer($category, $this->parameters_show))->toArray(),
+            (new CategoryTransformer($category, $this->show_parameters))->toArray(),
             200,
             [
                 'X-Total-Count' => 1
@@ -110,12 +109,7 @@ class CategoryController extends Controller
      */
     public function optionsShow(Request $request, string $category_id): JsonResponse
     {
-        if (
-            $category_id === 'nill' ||
-            (new Category)->single($category_id) === null
-        ) {
-            return $this->returnResourceNotFound();
-        }
+        Validate::category($category_id);
 
         return $this->generateOptionsForShow(
             'api.descriptions.category.GET_show',
@@ -175,14 +169,10 @@ class CategoryController extends Controller
         string $category_id
     ): JsonResponse
     {
-        $category = (new Category())->single($category_id);
-
-        if ($category === null) {
-            return $this->returnResourceNotFound();
-        }
+        Validate::category($category_id);
 
         try {
-            $category->delete();
+            (new Category())->find($category_id)->delete();
 
             return response()->json([], 204);
         } catch (QueryException $e) {

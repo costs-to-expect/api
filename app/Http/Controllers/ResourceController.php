@@ -2,9 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Route\Validators\ResourceType as ResourceTypeRouteValidator;
+use App\Http\Parameters\Route\Validate;
 use App\Models\Resource;
-use App\Models\ResourceType;
 use App\Transformers\Resource as ResourceTransformer;
 use App\Validators\Resource as ResourceValidator;
 use Exception;
@@ -31,9 +30,7 @@ class ResourceController extends Controller
      */
     public function index(Request $request, string $resource_type_id): JsonResponse
     {
-        if (ResourceTypeRouteValidator::validate($resource_type_id) === false) {
-            return $this->returnResourceNotFound();
-        }
+        Validate::resourceType($resource_type_id);
 
         $resources = (new Resource)->paginatedCollection($resource_type_id);
 
@@ -68,12 +65,7 @@ class ResourceController extends Controller
         string $resource_id
     ): JsonResponse
     {
-        if (
-            ResourceTypeRouteValidator::validate($resource_type_id) === false ||
-            $resource_id === 'nill'
-        ) {
-            return $this->returnResourceNotFound();
-        }
+        Validate::resource($resource_type_id, $resource_id);
 
         $resource = (new Resource)->single($resource_type_id, $resource_id);
 
@@ -100,9 +92,7 @@ class ResourceController extends Controller
      */
     public function optionsIndex(Request $request, string $resource_type_id): JsonResponse
     {
-        if ((new ResourceType)->find($resource_type_id) === null) {
-            return $this->returnResourceNotFound();
-        }
+        Validate::resourceType($resource_type_id);
 
         return $this->generateOptionsForIndex(
             'api.descriptions.resource.GET_index',
@@ -123,12 +113,7 @@ class ResourceController extends Controller
      */
     public function optionsShow(Request $request, string $resource_type_id, string $resource_id): JsonResponse
     {
-        if (
-            $resource_id === 'nill' ||
-            ResourceTypeRouteValidator::validate($resource_type_id) === false
-        ) {
-            return $this->returnResourceNotFound();
-        }
+        Validate::resource($resource_type_id, $resource_id);
 
         $resource = (new Resource)->single(
             $resource_type_id,
@@ -158,9 +143,7 @@ class ResourceController extends Controller
      */
     public function create(Request $request, string $resource_type_id): JsonResponse
     {
-        if (ResourceTypeRouteValidator::validate($resource_type_id) === false) {
-            return $this->returnResourceNotFound();
-        }
+        Validate::resourceType($resource_type_id);
 
         $validator = (new ResourceValidator)->create($request, $resource_type_id);
 
@@ -206,21 +189,10 @@ class ResourceController extends Controller
         string $resource_id
     ): JsonResponse
     {
-        if (ResourceTypeRouteValidator::validate($resource_type_id) === false) {
-            return $this->returnResourceNotFound();
-        }
-
-        $resource = (new Resource())->single(
-            $resource_type_id,
-            $resource_id
-        );
-
-        if ($resource === null) {
-            return $this->returnResourceNotFound();
-        }
+        Validate::resource($resource_type_id, $resource_id);
 
         try {
-            $resource->delete();
+            (new Resource())->find($resource_id)->delete();
 
             return response()->json([], 204);
         } catch (QueryException $e) {

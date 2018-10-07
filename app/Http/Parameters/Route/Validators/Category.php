@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Route\Validators;
+namespace App\Http\Parameters\Route\Validators;
 
 use App\Models\Category as CategoryModel;
 

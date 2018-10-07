@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Route\Validators\ItemCategory as ItemCategoryRouteValidator;
+use App\Http\Parameters\Route\Validate;
 use App\Models\ItemCategory;
 use App\Models\ItemSubCategory;
 use App\Models\SubCategory;
@@ -43,12 +43,9 @@ class ItemSubCategoryController extends Controller
         string $item_category_id
     ): JsonResponse
     {
-        if (ItemCategoryRouteValidator::validate(
-            $resource_type_id,
-            $resource_id,
-            $item_id,
-            $item_category_id
-        ) === false) {
+        Validate::item($resource_type_id, $resource_id, $item_id);
+
+        if ($item_category_id === 'nill') {
             return $this->returnResourceNotFound();
         }
 
@@ -95,14 +92,9 @@ class ItemSubCategoryController extends Controller
         string $item_sub_category_id
     ): JsonResponse
     {
-        if (
-            ItemCategoryRouteValidator::validate(
-            $resource_type_id,
-            $resource_id,
-            $item_id,
-            $item_category_id) === false ||
-            $item_sub_category_id === 'nill'
-        ) {
+        Validate::item($resource_type_id, $resource_id, $item_id);
+
+        if ($item_category_id === 'nill' || $item_sub_category_id === 'nill') {
             return $this->returnResourceNotFound();
         }
 
@@ -148,12 +140,9 @@ class ItemSubCategoryController extends Controller
         string $item_category_id
     ): JsonResponse
     {
-        if (ItemCategoryRouteValidator::validate(
-                $resource_type_id,
-                $resource_id,
-                $item_id,
-                $item_category_id
-            ) === false) {
+        Validate::item($resource_type_id, $resource_id, $item_id);
+
+        if ($item_category_id === 'nill') {
             return $this->returnResourceNotFound();
         }
 
@@ -192,14 +181,9 @@ class ItemSubCategoryController extends Controller
         string $item_sub_category_id
     ): JsonResponse
     {
-        if (
-            ItemCategoryRouteValidator::validate(
-                $resource_type_id,
-                $resource_id,
-                $item_id,
-                $item_category_id) === false ||
-            $item_sub_category_id === 'nill'
-        ) {
+        Validate::item($resource_type_id, $resource_id, $item_id);
+
+        if ($item_category_id === 'nill' || $item_sub_category_id === 'nill') {
             return $this->returnResourceNotFound();
         }
 
@@ -243,12 +227,9 @@ class ItemSubCategoryController extends Controller
         string $item_category_id
     ): JsonResponse
     {
-        if (ItemCategoryRouteValidator::validate(
-                $resource_type_id,
-                $resource_id,
-                $item_id,
-                $item_category_id
-            ) === false) {
+        Validate::item($resource_type_id, $resource_id, $item_id);
+
+        if ($item_category_id === 'nill') {
             return $this->returnResourceNotFound();
         }
 
@@ -300,7 +281,7 @@ class ItemSubCategoryController extends Controller
      *
      * @param integer $category_id
      *
-     * @return void|JsonResponse
+     * @return JsonResponse
      */
     private function setConditionalPostParameters($category_id)
     {
@@ -352,12 +333,9 @@ class ItemSubCategoryController extends Controller
         string $item_sub_category_id
     ): JsonResponse
     {
-        if (ItemCategoryRouteValidator::validate(
-                $resource_type_id,
-                $resource_id,
-                $item_id,
-                $item_category_id
-            ) === false) {
+        Validate::item($resource_type_id, $resource_id, $item_id);
+
+        if ($item_category_id === 'nill' || $item_sub_category_id === 'nill') {
             return $this->returnResourceNotFound();
         }
 
