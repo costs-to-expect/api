@@ -282,7 +282,7 @@ class ItemCategoryController extends Controller
         string $item_category_id
     ): JsonResponse
     {
-        Validate::item($resource_type_id, $resource_id, $item_id);
+        Validate::itemCategory($resource_type_id, $resource_id, $item_id, $item_category_id);
 
         $item_category = (new ItemCategory())->single(
             $resource_type_id,

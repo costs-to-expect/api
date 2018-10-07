@@ -4,6 +4,7 @@ namespace App\Http\Parameters\Route;
 
 use App\Http\Parameters\Route\Validators\Category;
 use App\Http\Parameters\Route\Validators\Item;
+use App\Http\Parameters\Route\Validators\ItemCategory;
 use App\Http\Parameters\Route\Validators\Resource;
 use App\Http\Parameters\Route\Validators\ResourceType;
 use App\Http\Parameters\Route\Validators\SubCategory;
@@ -49,6 +50,13 @@ class Validate
     {
         if (Item::validate($resource_type_id, $resource_id, $item_id) === false) {
             self::return404('Item not found');
+        }
+    }
+
+    static public function itemCategory($resource_type_id, $resource_id, $item_id, $item_category_id)
+    {
+        if (ItemCategory::validate($resource_type_id, $resource_id, $item_id, $item_category_id) === false) {
+            self::return404('Item category not found');
         }
     }
 
