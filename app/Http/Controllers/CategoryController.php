@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Parameters\Get;
 use App\Http\Parameters\Route\Validate;
 use App\Models\Category;
 use App\Transformers\Category as CategoryTransformer;
@@ -20,6 +21,9 @@ use Illuminate\Http\Request;
  */
 class CategoryController extends Controller
 {
+    protected $collection_parameters = [];
+    protected $show_parameters = [];
+
     /**
      * Return all the categories
      *
@@ -31,9 +35,7 @@ class CategoryController extends Controller
     {
         $categories = (new Category())->paginatedCollection();
 
-        $this->collection_parameters = [];
-        $this->collection_parameters['include_sub_categories'] =
-            boolval($request->query('include_sub_categories', false));
+        $this->collection_parameters = Get::parameters(['include_sub_categories']);
 
         $headers = [
             'X-Total-Count' => count($categories)
@@ -63,9 +65,7 @@ class CategoryController extends Controller
     {
         Validate::category($category_id);
 
-        $this->collection_parameters = [];
-        $this->collection_parameters['include_sub_categories'] =
-            boolval($request->query('include_sub_categories', false));
+        $this->show_parameters = Get::parameters(['include_sub_categories']);
 
         $category = (new Category)->single($category_id);
 
@@ -74,7 +74,7 @@ class CategoryController extends Controller
         }
 
         return response()->json(
-            (new CategoryTransformer($category, $this->parameters_show))->toArray(),
+            (new CategoryTransformer($category, $this->show_parameters))->toArray(),
             200,
             [
                 'X-Total-Count' => 1

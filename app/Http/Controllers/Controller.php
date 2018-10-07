@@ -17,9 +17,6 @@ class Controller extends BaseController
 
     protected $hash;
 
-    protected $collection_parameters = [];
-    protected $parameters_show = [];
-
     public function __construct()
     {
         $this->hash = new Hash();

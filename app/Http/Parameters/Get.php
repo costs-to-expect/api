@@ -15,7 +15,7 @@ use Illuminate\Http\Request;
  */
 class Get
 {
-    private static $collection_parameters = [];
+    private static $parameters = [];
 
     /**
      * Fetch GET parameters from the URI and check to see if they are valid for
@@ -26,13 +26,13 @@ class Get
     private static function fetch(array $parameter_names = [])
     {
         $request_parameters = request()->all();
-        self::$collection_parameters = [];
+        self::$parameters = [];
 
         foreach ($parameter_names as $parameter) {
             if (array_key_exists($parameter, $request_parameters) === true &&
                 $request_parameters[$parameter] !== null &&
                 $request_parameters[$parameter] !== 'nill') {
-                self::$collection_parameters[$parameter] = $request_parameters[$parameter];
+                self::$parameters[$parameter] = $request_parameters[$parameter];
             }
         }
     }
@@ -43,46 +43,62 @@ class Get
      */
     private static function validate()
     {
-        foreach (array_keys(self::$collection_parameters) as $key) {
+        foreach (array_keys(self::$parameters) as $key) {
             switch ($key) {
                 case 'category':
-                    if (array_key_exists($key, self::$collection_parameters) === true) {
+                    if (array_key_exists($key, self::$parameters) === true) {
                         if ((new Category())->
-                            where('id', '=', self::$collection_parameters[$key])->exists() === false) {
-                            unset(self::$collection_parameters[$key]);
+                            where('id', '=', self::$parameters[$key])->exists() === false) {
+                            unset(self::$parameters[$key]);
+                        }
+                    }
+                    break;
+
+                case 'include_sub_categories':
+                    if (array_key_exists($key, self::$parameters) === true) {
+                        if (boolval(self::$parameters['include_sub_categories']) === false) {
+                            unset(self::$parameters[$key]);
+                        }
+                    }
+                    break;
+
+                case 'include_sub_categories':
+                    if (array_key_exists($key, self::$parameters) === true) {
+                        if (boolval(self::$parameters['include_sub_categories']) === false) {
+                            unset(self::$parameters[$key]);
                         }
                     }
                     break;
 
                 case 'month':
-                    if (array_key_exists($key, self::$collection_parameters) === true) {
-                        if (intval(self::$collection_parameters[$key]) < 1 ||
-                            self::$collection_parameters[$key] > 12) {
+                    if (array_key_exists($key, self::$parameters) === true) {
+                        if (intval(self::$parameters[$key]) < 1 ||
+                            self::$parameters[$key] > 12) {
 
-                            unset(self::$collection_parameters[$key]);
+                            unset(self::$parameters[$key]);
                         }
                     }
                     break;
 
                 case 'sub_category':
-                    if (array_key_exists($key, self::$collection_parameters) === true) {
+                    if (array_key_exists($key, self::$parameters) === true) {
                         if (
                             (new SubCategory())->
-                            where('sub_category.id', '=', self::$collection_parameters[$key])->
-                            where('sub_category.category_id', '=', self::$collection_parameters['category'])->
+                            where('sub_category.id', '=', self::$parameters[$key])->
+                            where('sub_category.category_id', '=', self::$parameters['category'])->
                             exists() === false
                         ) {
-                            unset(self::$collection_parameters[$key]);
+                            unset(self::$parameters[$key]);
                         }
                     }
                     break;
 
                 case 'year':
-                    if (array_key_exists($key, self::$collection_parameters) === true) {
-                        if (intval(self::$collection_parameters[$key]) < 2013 ||
-                            self::$collection_parameters[$key] > intval(date('Y'))) {
+                    if (array_key_exists($key, self::$parameters) === true) {
+                        if (intval(self::$parameters[$key]) < 2013 ||
+                            self::$parameters[$key] > intval(date('Y'))) {
 
-                            unset(self::$collection_parameters[$key]);
+                            unset(self::$parameters[$key]);
                         }
                     }
                     break;
@@ -106,6 +122,6 @@ class Get
         self::fetch($parameter_names);
         self::validate();
 
-        return self::$collection_parameters;
+        return self::$parameters;
     }
 }
