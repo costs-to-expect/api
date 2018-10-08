@@ -97,51 +97,6 @@ class Controller extends BaseController
     }
 
     /**
-     * Return 404, resource not found
-     *
-     * @return JsonResponse
-     */
-    protected function returnResourceNotFound(): JsonResponse
-    {
-        return response()->json(
-            [
-                'message' => 'Resource not found'
-            ],
-            404
-        );
-    }
-
-    /**
-     * Return 404, resource not found
-     *
-     * @return JsonResponse
-     */
-    protected function returnForeignKeyConstraintError(): JsonResponse
-    {
-        return response()->json(
-            [
-                'message' => 'Unable to delete resource, dependant data exists'
-            ],
-            500
-        );
-    }
-
-    /**
-     * Return 409, resource value already set
-     *
-     * @return JsonResponse
-     */
-    protected function returnResourceConflict(): JsonResponse
-    {
-        return response()->json(
-            [
-                'message' => 'Value already set, conflict'
-            ],
-            409
-        );
-    }
-
-    /**
      * Generate the OPTIONS request for the index routes
      *
      * @param string $get_description_key

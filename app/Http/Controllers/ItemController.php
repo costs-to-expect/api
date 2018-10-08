@@ -8,6 +8,7 @@ use App\Models\Category;
 use App\Models\Item;
 use App\Models\SubCategory;
 use App\Transformers\Item as ItemTransformer;
+use App\Utilities\Request as UtilityRequest;
 use App\Validators\Item as ItemValidator;
 use Exception;
 use Illuminate\Database\QueryException;
@@ -105,7 +106,7 @@ class ItemController extends Controller
         $item = (new Item())->single($resource_type_id, $resource_id, $item_id);
 
         if ($item === null) {
-            return $this->returnResourceNotFound();
+            return UtilityRequest::notFound();
         }
 
         return response()->json(
@@ -166,7 +167,7 @@ class ItemController extends Controller
         $item = (new Item())->single($resource_type_id, $resource_id, $item_id);
 
         if ($item === null) {
-            return $this->returnResourceNotFound();
+            return UtilityRequest::notFound();
         }
 
         return $this->generateOptionsForShow(
@@ -244,7 +245,7 @@ class ItemController extends Controller
         $item = (new Item())->single($resource_type_id, $resource_id, $item_id);
 
         if ($item === null) {
-            return $this->returnResourceNotFound();
+            return UtilityRequest::notFound();
         }
 
         try {
@@ -252,9 +253,9 @@ class ItemController extends Controller
 
             return response()->json([], 204);
         } catch (QueryException $e) {
-            return $this->returnForeignKeyConstraintError();
+            return UtilityRequest::foreignKeyConstraintError();
         } catch (Exception $e) {
-            return $this->returnResourceNotFound();
+            return UtilityRequest::notFound();
         }
     }
 

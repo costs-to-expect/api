@@ -16,7 +16,7 @@ class Request
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    static protected function notFound()
+    static public function notFound()
     {
         return response()->json(
             [
@@ -31,7 +31,7 @@ class Request
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    static protected function foreignKeyConstraintError()
+    static public function foreignKeyConstraintError()
     {
         return response()->json(
             [
@@ -46,7 +46,7 @@ class Request
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    static protected function conflict()
+    static public function conflict()
     {
         return response()->json(
             [

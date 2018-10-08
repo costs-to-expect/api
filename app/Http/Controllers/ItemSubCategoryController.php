@@ -7,6 +7,7 @@ use App\Models\ItemCategory;
 use App\Models\ItemSubCategory;
 use App\Models\SubCategory;
 use App\Transformers\ItemSubCategory as ItemSubCategoryTransformer;
+use App\Utilities\Request as UtilityRequest;
 use App\Validators\ItemSubCategory as ItemSubCategoryValidator;
 use Exception;
 use Illuminate\Database\QueryException;
@@ -46,7 +47,7 @@ class ItemSubCategoryController extends Controller
         Validate::item($resource_type_id, $resource_id, $item_id);
 
         if ($item_category_id === 'nill') {
-            return $this->returnResourceNotFound();
+            return UtilityRequest::notFound();
         }
 
         $item_sub_category = (new ItemSubCategory())->paginatedCollection(
@@ -57,7 +58,7 @@ class ItemSubCategoryController extends Controller
         );
 
         if ($item_sub_category === null) {
-            return $this->returnResourceNotFound();
+            return UtilityRequest::notFound();
         }
 
         $headers = [
@@ -95,7 +96,7 @@ class ItemSubCategoryController extends Controller
         Validate::item($resource_type_id, $resource_id, $item_id);
 
         if ($item_category_id === 'nill' || $item_sub_category_id === 'nill') {
-            return $this->returnResourceNotFound();
+            return UtilityRequest::notFound();
         }
 
         $item_sub_category = (new ItemSubCategory())->single(
@@ -107,7 +108,7 @@ class ItemSubCategoryController extends Controller
         );
 
         if ($item_sub_category === null) {
-            return $this->returnResourceNotFound();
+            return UtilityRequest::notFound();
         }
 
         $headers = [
@@ -143,7 +144,7 @@ class ItemSubCategoryController extends Controller
         Validate::item($resource_type_id, $resource_id, $item_id);
 
         if ($item_category_id === 'nill') {
-            return $this->returnResourceNotFound();
+            return UtilityRequest::notFound();
         }
 
         $item_category = (new ItemCategory())->find($item_category_id);
@@ -184,7 +185,7 @@ class ItemSubCategoryController extends Controller
         Validate::item($resource_type_id, $resource_id, $item_id);
 
         if ($item_category_id === 'nill' || $item_sub_category_id === 'nill') {
-            return $this->returnResourceNotFound();
+            return UtilityRequest::notFound();
         }
 
         $item_sub_category = (new ItemSubCategory())->single(
@@ -196,7 +197,7 @@ class ItemSubCategoryController extends Controller
         );
 
         if ($item_sub_category === null) {
-            return $this->returnResourceNotFound();
+            return UtilityRequest::notFound();
         }
 
         return $this->generateOptionsForShow(
@@ -230,7 +231,7 @@ class ItemSubCategoryController extends Controller
         Validate::item($resource_type_id, $resource_id, $item_id);
 
         if ($item_category_id === 'nill') {
-            return $this->returnResourceNotFound();
+            return UtilityRequest::notFound();
         }
 
         $item_category = (new ItemCategory())
@@ -336,7 +337,7 @@ class ItemSubCategoryController extends Controller
         Validate::item($resource_type_id, $resource_id, $item_id);
 
         if ($item_category_id === 'nill' || $item_sub_category_id === 'nill') {
-            return $this->returnResourceNotFound();
+            return UtilityRequest::notFound();
         }
 
         $item_sub_category = (new ItemSubCategory())->single(
@@ -348,7 +349,7 @@ class ItemSubCategoryController extends Controller
         );
 
         if ($item_sub_category === null) {
-            return $this->returnResourceNotFound();
+            return UtilityRequest::notFound();
         }
 
         try {
@@ -356,9 +357,9 @@ class ItemSubCategoryController extends Controller
 
             return response()->json([],204);
         } catch (QueryException $e) {
-            return $this->returnForeignKeyConstraintError();
+            return UtilityRequest::foreignKeyConstraintError();
         } catch (Exception $e) {
-            return $this->returnResourceNotFound();
+            return UtilityRequest::notFound();
         }
     }
 }
