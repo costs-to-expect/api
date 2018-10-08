@@ -2,6 +2,11 @@
 
 Full changelog for the costs to expect REST API.
 
+## 2019-xx-xx - v1.xx.0
+
+* Added Request utility helper class.
+* Added Pagination utility helper class.
+
 ## 2019-10-08 - v1.04.1
 
 * Corrected routes displayed in root of API.
