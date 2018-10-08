@@ -5,6 +5,13 @@ namespace App\Utilities;
 use Hashids\Hashids;
 use Illuminate\Support\Facades\Config;
 
+/**
+ * Utility hash class to encode and decode strings by type
+ *
+ * @author Dean Blackborough <dean@g3d-development.com>
+ * @copyright Dean Blackborough 2018
+ * @license https://github.com/costs-to-expect/api/blob/master/LICENSE
+ */
 class Hash
 {
     private $min_length;
