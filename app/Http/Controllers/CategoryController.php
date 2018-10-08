@@ -6,6 +6,7 @@ use App\Http\Parameters\Get;
 use App\Http\Parameters\Route\Validate;
 use App\Models\Category;
 use App\Transformers\Category as CategoryTransformer;
+use App\Utilities\Request as UtilityRequest;
 use App\Validators\Category as CategoryValidator;
 use Exception;
 use Illuminate\Database\QueryException;
@@ -70,7 +71,7 @@ class CategoryController extends Controller
         $category = (new Category)->single($category_id);
 
         if ($category === null) {
-            return $this->returnResourceNotFound();
+            return UtilityRequest::notFound();
         }
 
         return response()->json(
@@ -176,9 +177,9 @@ class CategoryController extends Controller
 
             return response()->json([], 204);
         } catch (QueryException $e) {
-            return $this->returnForeignKeyConstraintError();
+            return UtilityRequest::foreignKeyConstraintError();
         } catch (Exception $e) {
-            return $this->returnResourceNotFound();
+            return UtilityRequest::notFound();
         }
     }
 }

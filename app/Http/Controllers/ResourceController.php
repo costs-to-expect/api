@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Parameters\Route\Validate;
 use App\Models\Resource;
 use App\Transformers\Resource as ResourceTransformer;
+use App\Utilities\Request as UtilityRequest;
 use App\Validators\Resource as ResourceValidator;
 use Exception;
 use Illuminate\Database\QueryException;
@@ -70,7 +71,7 @@ class ResourceController extends Controller
         $resource = (new Resource)->single($resource_type_id, $resource_id);
 
         if ($resource === null) {
-            return $this->returnResourceNotFound();
+            return UtilityRequest::notFound();
         }
 
         return response()->json(
@@ -121,7 +122,7 @@ class ResourceController extends Controller
         );
 
         if ($resource === null) {
-            return $this->returnResourceNotFound();
+            return UtilityRequest::notFound();
         }
 
         return $this->generateOptionsForShow(
@@ -196,9 +197,9 @@ class ResourceController extends Controller
 
             return response()->json([], 204);
         } catch (QueryException $e) {
-            return $this->returnForeignKeyConstraintError();
+            return UtilityRequest::foreignKeyConstraintError();
         } catch (Exception $e) {
-            return $this->returnResourceNotFound();
+            return UtilityRequest::notFound();
         }
     }
 }

@@ -97,51 +97,6 @@ class Controller extends BaseController
     }
 
     /**
-     * Return 404, resource not found
-     *
-     * @return JsonResponse
-     */
-    protected function returnResourceNotFound(): JsonResponse
-    {
-        return response()->json(
-            [
-                'message' => 'Resource not found'
-            ],
-            404
-        );
-    }
-
-    /**
-     * Return 404, resource not found
-     *
-     * @return JsonResponse
-     */
-    protected function returnForeignKeyConstraintError(): JsonResponse
-    {
-        return response()->json(
-            [
-                'message' => 'Unable to delete resource, dependant data exists'
-            ],
-            500
-        );
-    }
-
-    /**
-     * Return 409, resource value already set
-     *
-     * @return JsonResponse
-     */
-    protected function returnResourceConflict(): JsonResponse
-    {
-        return response()->json(
-            [
-                'message' => 'Value already set, conflict'
-            ],
-            409
-        );
-    }
-
-    /**
      * Generate the OPTIONS request for the index routes
      *
      * @param string $get_description_key
@@ -227,47 +182,5 @@ class Controller extends BaseController
             $options_response['http_status_code'],
             $options_response['headers']
         );
-    }
-
-    /**
-     * Generate the Link header value based on the value of $previous_start, $next_start and $per_page
-     *
-     * @param string $uri
-     * @param string $parameters
-     * @param integer $limit
-     * @param integer|null $offset_prev
-     * @param integer|null $offset_next
-     *
-     * @return string|null
-     */
-    protected function generateLinkHeader(string $uri, string $parameters, int $limit, int $offset_prev = null, int $offset_next = null): ?string
-    {
-        $uri .= '?';
-
-        if (strlen($parameters) > 0) {
-            $uri .= $parameters . '&';
-        }
-
-        $link = '';
-
-        if ($offset_prev !== null) {
-            $link .= '<' . Config::get('api.app.url') . '/' . $uri . 'offset=' . $offset_prev . '&limit=' .
-                $limit . '>; rel="prev"';
-        }
-
-        if ($offset_next !== null) {
-            if (strlen($link) > 0) {
-                $link .= ', ';
-            }
-
-            $link .= '<' . Config::get('api.app.url') . '/' . $uri . 'offset=' . $offset_next . '&limit=' .
-                $limit . '>; rel="next"';
-        }
-
-        if (strlen($link) > 0) {
-            return $link;
-        } else {
-            return null;
-        }
     }
 }
