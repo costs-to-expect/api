@@ -26,10 +26,8 @@ Full changelog for the costs to expect REST API.
 ## 2018-09-23 - v1.03.1
 
 * Added helper method to base controller to easily set usable GET parameters for collections.
-* Updated the methods/logic for setting allowed values for GET parameters, it is capable of setting more than just 
-the allowed values so all references have been updated to reflect intended usage.
-* Updated the methods/logic for setting allowed values for POST parameters, it is capable of setting more than just 
-the allowed values so all references have been updated to reflect intended usage. 
+* Updated the methods/logic for setting allowed values for GET parameters, it is capable of setting more than just the allowed values so all references have been updated to reflect intended usage.
+* Updated the methods/logic for setting allowed values for POST parameters, it is capable of setting more than just the allowed values so all references have been updated to reflect intended usage. 
 
 ## 2018-09-22 - v1.03.0
 
@@ -58,8 +56,7 @@ the allowed values so all references have been updated to reflect intended usage
 
 * Minor updates to config files.
 * Categories and sub categories end points now returns results in alphabetical order.
-* Added four summary routes for a resource, categories collection, category, 
-sub categories collection and sub category.
+* Added four summary routes for a resource, categories collection, category, sub categories collection and sub category.
 * Code style updates.
 
 ## 2018-09-07 - v1.00.0 
@@ -87,9 +84,7 @@ Official release
 
 * API feature complete for release, not being released yet, real life in the way.
 
-## Pre release changes
-
-### Additional development and fine tuning
+## Pre v1 release changes
 
 * Added initial pagination to item controller.
 * Added Hash utility class to centralise all the encoding and decoding.
@@ -104,14 +99,13 @@ Official release
 * Removed response envelopes.
 * Non-2xx responses more consistent.
 * Added a responses section to the README that details the expected responses and formats.
-* Reworked the id hashing, added middleware and slightly improved encoding although I need to DRY the code, 
-looking at you, transformers, validators and base controller.  
+* Reworked the id hashing, added middleware and slightly improved encoding although I need to DRY the code, looking at you, transformers, validators and base controller.  
 * Moved API config files into a sub folder to separate them from Laravel.
 * Added a version config, for post release, includes the api prefix.
 * Redirect client if they request /.
 * Reworked the validation helpers.
 
-### Initial development
+## Initial development
 
 * Added initial get parameters code.
 * Added validation helpers.
