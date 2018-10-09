@@ -37,6 +37,9 @@ Route::group(
         Route::get('', 'IndexController@index');
         Route::options('', 'IndexController@optionsIndex');
 
+        Route::get('changelog', 'IndexController@changeLog');
+        Route::options('changelog', 'IndexController@optionsChangeLog');
+
         Route::get(
             'categories',
             'CategoryController@index'
