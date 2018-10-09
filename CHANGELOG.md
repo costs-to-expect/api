@@ -4,6 +4,7 @@ Full changelog for the costs to expect REST API.
 
 ## 2019-xx-xx - v1.xx.0
 
+* Added a /changlog route, parses and displays CHANGELOG.md.
 * Added Utility\Request helper class.
 * Added Utility\Pagination helper class.
 * Added Utility\General helper class.
