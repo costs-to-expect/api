@@ -74,7 +74,7 @@ class SubCategoryController extends Controller
         );
 
         if ($sub_category === null) {
-            return UtilityRequest::notFound();
+            UtilityRequest::notFound();
         }
 
         return response()->json(
@@ -195,7 +195,7 @@ class SubCategoryController extends Controller
         );
 
         if ($sub_category === null) {
-            return UtilityRequest::notFound();
+            UtilityRequest::notFound();
         }
 
         try {
@@ -203,9 +203,9 @@ class SubCategoryController extends Controller
 
             return response()->json([], 204);
         } catch (QueryException $e) {
-            return UtilityRequest::foreignKeyConstraintError();
+            UtilityRequest::foreignKeyConstraintError();
         } catch (Exception $e) {
-            return UtilityRequest::notFound();
+            UtilityRequest::notFound();
         }
     }
 }
