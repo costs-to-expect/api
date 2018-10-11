@@ -47,7 +47,44 @@ class Controller extends BaseController
             $options['verbs'][$verb] = $detail;
         }
 
-        return $options;
+        return response()->json(
+            $options['verbs'],
+            $options['http_status_code'],
+            $options['headers']
+        );
+    }
+
+    /**
+     * Generate and return the options response
+     *
+     * @param array $verbs Verb arrays
+     * @param integer $http_status_code, defaults to 200
+     *
+     * @return JsonResponse
+     */
+    protected function optionsResponse(array $verbs, $http_status_code = 200): JsonResponse
+    {
+        $options = [
+            'verbs' => [],
+            'http_status_code' => $http_status_code,
+            'headers' => [
+                'Access-Control-Allow-Origin' => '*',
+                'Access-Control-Allow-Header' => 'X-Requested-With, Origin, Content-Type, Accept, Authorization',
+                'Access-Control-Allow-Methods' => implode(', ', array_keys($verbs)) . ', OPTIONS',
+                'Content-Type' => 'application/json'
+            ]
+        ];
+
+        foreach ($verbs as $verb => $detail) {
+            $options['verbs'][$verb] = $detail;
+        }
+
+        response()->json(
+            $options['verbs'],
+            $options['http_status_code'],
+            $options['headers']
+        )->send();
+        exit;
     }
 
     /**

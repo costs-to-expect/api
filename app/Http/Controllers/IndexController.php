@@ -63,25 +63,17 @@ class IndexController extends Controller
      * Generate the OPTIONS request
      *
      * @param Request $request
-     *
-     * @return \Illuminate\Http\JsonResponse
      */
     public function optionsIndex(Request $request)
     {
-        $routes = [
-            'GET' => [
-                'description' => Config::get('api.descriptions.api.GET_index'),
-                'authenticated' => false,
-                'parameters' => []
+        $this->optionsResponse(
+            [
+                'GET' => [
+                    'description' => Config::get('api.descriptions.api.GET_index'),
+                    'authenticated' => false,
+                    'parameters' => []
+                ]
             ]
-        ];
-
-        $options_response = $this->generateOptionsResponse($routes);
-
-        return response()->json(
-            $options_response['verbs'],
-            $options_response['http_status_code'],
-            $options_response['headers']
         );
     }
 
@@ -129,25 +121,17 @@ class IndexController extends Controller
      * Generate the OPTIONS request for the change log
      *
      * @param Request $request
-     *
-     * @return \Illuminate\Http\JsonResponse
      */
     public function optionsChangeLog(Request $request)
     {
-        $routes = [
-            'GET' => [
-                'description' => Config::get('api.descriptions.api.GET_changelog'),
-                'authenticated' => false,
-                'parameters' => []
+        $this->optionsResponse(
+            [
+                'GET' => [
+                    'description' => Config::get('api.descriptions.api.GET_changelog'),
+                    'authenticated' => false,
+                    'parameters' => []
+                ]
             ]
-        ];
-
-        $options_response = $this->generateOptionsResponse($routes);
-
-        return response()->json(
-            $options_response['verbs'],
-            $options_response['http_status_code'],
-            $options_response['headers']
         );
     }
 }
