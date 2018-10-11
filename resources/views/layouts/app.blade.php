@@ -21,7 +21,7 @@
                 <h3 class="masthead-brand">Costs to Expect</h3>
                 <nav class="nav nav-masthead justify-content-center">
                     <a class="nav-link" href="https://api.costs-to-expect.com/v1">The API</a>
-                    <a class="nav-link" href="https://github.com/costs-to-expect/web-app">The Web App</a>
+                    <a class="nav-link" href="https://github.com/costs-to-expect/api">View on GitHub</a>
                 </nav>
             </div>
         </header>
@@ -30,7 +30,8 @@
 
         <footer class="mastfoot mt-auto">
             <div class="inner">
-                <p>Cover template for <a href="https://getbootstrap.com/">Bootstrap</a>, by <a href="https://twitter.com/mdo">@mdo</a>.</p>
+                <p>Copyright &copy; <a href="https://www.deanblackborough.com">Dean Blackborough</a> {{ date('Y') }}</p>
+                <p>All code maintained by <a href="https://www.deanblackborough.com">Dean Blackborough</a> and licensed under MIT.</p>
             </div>
         </footer>
     </div>

@@ -41,6 +41,9 @@ body {
 .cover-container {
     max-width: 42em;
 }
+.cover-heading {
+    font-size: 3.5rem;
+}
 
 
 /*
