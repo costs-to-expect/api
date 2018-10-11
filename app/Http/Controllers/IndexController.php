@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Route;
+use SplFileObject;
 
 /**
  * Manage items
@@ -62,25 +63,75 @@ class IndexController extends Controller
      * Generate the OPTIONS request
      *
      * @param Request $request
-     *
-     * @return \Illuminate\Http\JsonResponse
      */
     public function optionsIndex(Request $request)
     {
-        $routes = [
-            'GET' => [
-                'description' => Config::get('api.descriptions.api.GET_index'),
-                'authenticated' => false,
-                'parameters' => []
+        $this->optionsResponse(
+            [
+                'GET' => [
+                    'description' => Config::get('api.descriptions.api.GET_index'),
+                    'authenticated' => false,
+                    'parameters' => []
+                ]
             ]
-        ];
+        );
+    }
 
-        $options_response = $this->generateOptionsResponse($routes);
+    /**
+     * Generate the change log request
+     *
+     * @param Request $request
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function changeLog(Request $request)
+    {
+        $changes = [];
+
+        $changelog = new SplFileObject(public_path() . '/../CHANGELOG.md');
+        $i = 0;
+
+        while (!$changelog->eof()) {
+
+            $line = trim($changelog->fgets());
+
+            if (strlen($line) > 0) {
+
+                if (strpos($line, '#') !== false) {
+
+                    ++$i;
+                    $changes[$i]['title'] = trim(str_replace('#', '', $line));
+                }
+
+                if (strpos($line, '*') !== false) {
+                    $changes[$i]['changes'][] = trim(str_replace('* ', '', $line));
+                }
+            }
+        }
 
         return response()->json(
-            $options_response['verbs'],
-            $options_response['http_status_code'],
-            $options_response['headers']
+            [
+                'changes' => array_values($changes)
+            ],
+            200
+        );
+    }
+
+    /**
+     * Generate the OPTIONS request for the change log
+     *
+     * @param Request $request
+     */
+    public function optionsChangeLog(Request $request)
+    {
+        $this->optionsResponse(
+            [
+                'GET' => [
+                    'description' => Config::get('api.descriptions.api.GET_changelog'),
+                    'authenticated' => false,
+                    'parameters' => []
+                ]
+            ]
         );
     }
 }

@@ -71,7 +71,7 @@ class ResourceController extends Controller
         $resource = (new Resource)->single($resource_type_id, $resource_id);
 
         if ($resource === null) {
-            return UtilityRequest::notFound();
+            UtilityRequest::notFound();
         }
 
         return response()->json(
@@ -122,7 +122,7 @@ class ResourceController extends Controller
         );
 
         if ($resource === null) {
-            return UtilityRequest::notFound();
+            UtilityRequest::notFound();
         }
 
         return $this->generateOptionsForShow(
@@ -197,9 +197,9 @@ class ResourceController extends Controller
 
             return response()->json([], 204);
         } catch (QueryException $e) {
-            return UtilityRequest::foreignKeyConstraintError();
+            UtilityRequest::foreignKeyConstraintError();
         } catch (Exception $e) {
-            return UtilityRequest::notFound();
+            UtilityRequest::notFound();
         }
     }
 }

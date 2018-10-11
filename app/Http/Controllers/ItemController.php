@@ -107,7 +107,7 @@ class ItemController extends Controller
         $item = (new Item())->single($resource_type_id, $resource_id, $item_id);
 
         if ($item === null) {
-            return UtilityRequest::notFound();
+            UtilityRequest::notFound();
         }
 
         return response()->json(
@@ -168,7 +168,7 @@ class ItemController extends Controller
         $item = (new Item())->single($resource_type_id, $resource_id, $item_id);
 
         if ($item === null) {
-            return UtilityRequest::notFound();
+            UtilityRequest::notFound();
         }
 
         return $this->generateOptionsForShow(
@@ -246,7 +246,7 @@ class ItemController extends Controller
         $item = (new Item())->single($resource_type_id, $resource_id, $item_id);
 
         if ($item === null) {
-            return UtilityRequest::notFound();
+            UtilityRequest::notFound();
         }
 
         try {
@@ -254,9 +254,9 @@ class ItemController extends Controller
 
             return response()->json([], 204);
         } catch (QueryException $e) {
-            return UtilityRequest::foreignKeyConstraintError();
+            UtilityRequest::foreignKeyConstraintError();
         } catch (Exception $e) {
-            return UtilityRequest::notFound();
+            UtilityRequest::notFound();
         }
     }
 

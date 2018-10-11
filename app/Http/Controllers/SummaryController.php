@@ -56,10 +56,8 @@ class SummaryController extends Controller
      * @param Request $request
      * @param string $resource_type_id
      * @param string $resource_id
-     *
-     * @return \Illuminate\Http\JsonResponse
      */
-    public function optionsTco(Request $request, string $resource_type_id, string $resource_id): JsonResponse
+    public function optionsTco(Request $request, string $resource_type_id, string $resource_id)
     {
         Validate::resource($resource_type_id, $resource_id);
 
@@ -71,13 +69,7 @@ class SummaryController extends Controller
             ]
         ];
 
-        $options_response = $this->generateOptionsResponse($routes);
-
-        return response()->json(
-            $options_response['verbs'],
-            $options_response['http_status_code'],
-            $options_response['headers']
-        );
+        $this->optionsResponse($routes);
     }
 
     /**
@@ -123,10 +115,8 @@ class SummaryController extends Controller
      * @param Request $request
      * @param string $resource_type_id
      * @param string $resource_id
-     *
-     * @return \Illuminate\Http\JsonResponse
      */
-    public function optionsCategories(Request $request, string $resource_type_id, string $resource_id): JsonResponse
+    public function optionsCategories(Request $request, string $resource_type_id, string $resource_id)
     {
         Validate::resource($resource_type_id, $resource_id);
 
@@ -138,13 +128,7 @@ class SummaryController extends Controller
             ]
         ];
 
-        $options_response = $this->generateOptionsResponse($routes);
-
-        return response()->json(
-            $options_response['verbs'],
-            $options_response['http_status_code'],
-            $options_response['headers']
-        );
+        $this->optionsResponse($routes);
     }
 
     /**
@@ -175,7 +159,7 @@ class SummaryController extends Controller
         );
 
         if (count($category_summary) !== 1) {
-            return UtilityRequest::notFound();
+            UtilityRequest::notFound();
         }
 
         $headers = [
@@ -196,16 +180,13 @@ class SummaryController extends Controller
      * @param string $resource_type_id
      * @param string $resource_id
      * @param string $category_id
-     *
-     * @return \Illuminate\Http\JsonResponse
      */
     public function optionsCategory(
         Request $request,
         string $resource_type_id,
         string $resource_id,
         string $category_id
-    ): JsonResponse
-    {
+    ) {
         Validate::resource($resource_type_id, $resource_id);
 
         Validate::category($category_id);
@@ -218,13 +199,7 @@ class SummaryController extends Controller
             ]
         ];
 
-        $options_response = $this->generateOptionsResponse($routes);
-
-        return response()->json(
-            $options_response['verbs'],
-            $options_response['http_status_code'],
-            $options_response['headers']
-        );
+        $this->optionsResponse($routes);
     }
 
     /**
@@ -276,16 +251,13 @@ class SummaryController extends Controller
      * @param string $resource_type_id
      * @param string $resource_id
      * @param string $category_id
-     *
-     * @return \Illuminate\Http\JsonResponse
      */
     public function optionsSubCategories(
         Request $request,
         string $resource_type_id,
         string $resource_id,
         string $category_id
-    ): JsonResponse
-    {
+    ) {
         Validate::resource($resource_type_id, $resource_id);
 
         Validate::category($category_id);
@@ -298,13 +270,7 @@ class SummaryController extends Controller
             ]
         ];
 
-        $options_response = $this->generateOptionsResponse($routes);
-
-        return response()->json(
-            $options_response['verbs'],
-            $options_response['http_status_code'],
-            $options_response['headers']
-        );
+        $this->optionsResponse($routes);
     }
 
     /**
@@ -338,7 +304,7 @@ class SummaryController extends Controller
         );
 
         if (count($sub_category_summary) !== 1) {
-            return UtilityRequest::notFound();
+            UtilityRequest::notFound();
         }
 
         $headers = [
@@ -360,8 +326,6 @@ class SummaryController extends Controller
      * @param string $resource_id
      * @param string $category_id
      * @param string $sub_category_id
-     *
-     * @return \Illuminate\Http\JsonResponse
      */
     public function optionsSubCategory(
         Request $request,
@@ -369,8 +333,7 @@ class SummaryController extends Controller
         string $resource_id,
         string $category_id,
         string $sub_category_id
-    ): JsonResponse
-    {
+    ) {
         Validate::resource($resource_type_id, $resource_id);
 
         Validate::subCategory($category_id, $sub_category_id);
@@ -383,13 +346,7 @@ class SummaryController extends Controller
             ]
         ];
 
-        $options_response = $this->generateOptionsResponse($routes);
-
-        return response()->json(
-            $options_response['verbs'],
-            $options_response['http_status_code'],
-            $options_response['headers']
-        );
+        $this->optionsResponse($routes);
     }
 
     /**
@@ -435,11 +392,12 @@ class SummaryController extends Controller
      * @param Request $request
      * @param string $resource_type_id
      * @param string $resource_id
-     *
-     * @return \Illuminate\Http\JsonResponse
      */
-    public function optionsYears(Request $request, string $resource_type_id, string $resource_id): JsonResponse
-    {
+    public function optionsYears(
+        Request $request,
+        string $resource_type_id,
+        string $resource_id
+    ) {
         Validate::resource($resource_type_id, $resource_id);
 
         $routes = [
@@ -450,13 +408,7 @@ class SummaryController extends Controller
             ]
         ];
 
-        $options_response = $this->generateOptionsResponse($routes);
-
-        return response()->json(
-            $options_response['verbs'],
-            $options_response['http_status_code'],
-            $options_response['headers']
-        );
+        $this->optionsResponse($routes);
     }
 
     /**
@@ -485,7 +437,7 @@ class SummaryController extends Controller
         );
 
         if (count($year_summary) !== 1) {
-            return UtilityRequest::notFound();
+            UtilityRequest::notFound();
         }
 
         $headers = [
@@ -545,16 +497,13 @@ class SummaryController extends Controller
      * @param Request $request
      * @param string $resource_type_id
      * @param string $resource_id
-     *
-     * @return \Illuminate\Http\JsonResponse
      */
     public function optionsMonths(
         Request $request,
         string $resource_type_id,
         string $resource_id,
         int $year
-    ): JsonResponse
-    {
+    ) {
         Validate::resource($resource_type_id, $resource_id);
 
         $routes = [
@@ -565,13 +514,7 @@ class SummaryController extends Controller
             ]
         ];
 
-        $options_response = $this->generateOptionsResponse($routes);
-
-        return response()->json(
-            $options_response['verbs'],
-            $options_response['http_status_code'],
-            $options_response['headers']
-        );
+        $this->optionsResponse($routes);
     }
 
     /**
@@ -581,16 +524,13 @@ class SummaryController extends Controller
      * @param string $resource_type_id
      * @param string $resource_id
      * @param string $year
-     *
-     * @return \Illuminate\Http\JsonResponse
      */
     public function optionsYear(
         Request $request,
         string $resource_type_id,
         string $resource_id,
         string $year
-    ): JsonResponse
-    {
+    ) {
         Validate::resource($resource_type_id, $resource_id);
 
         $routes = [
@@ -601,13 +541,7 @@ class SummaryController extends Controller
             ]
         ];
 
-        $options_response = $this->generateOptionsResponse($routes);
-
-        return response()->json(
-            $options_response['verbs'],
-            $options_response['http_status_code'],
-            $options_response['headers']
-        );
+        $this->optionsResponse($routes);
     }
 
     /**
@@ -639,7 +573,7 @@ class SummaryController extends Controller
         );
 
         if (count($summary) !== 1) {
-            return UtilityRequest::notFound();
+            UtilityRequest::notFound();
         }
 
         $headers = [
@@ -661,8 +595,6 @@ class SummaryController extends Controller
      * @param string $resource_id
      * @param string $year
      * @param string $month
-     *
-     * @return \Illuminate\Http\JsonResponse
      */
     public function optionsMonth(
         Request $request,
@@ -670,8 +602,7 @@ class SummaryController extends Controller
         string $resource_id,
         string $year,
         string $month
-    ): JsonResponse
-    {
+    ) {
         Validate::resource($resource_type_id, $resource_id);
 
         $routes = [
@@ -682,12 +613,6 @@ class SummaryController extends Controller
             ]
         ];
 
-        $options_response = $this->generateOptionsResponse($routes);
-
-        return response()->json(
-            $options_response['verbs'],
-            $options_response['http_status_code'],
-            $options_response['headers']
-        );
+        $this->optionsResponse($routes);
     }
 }

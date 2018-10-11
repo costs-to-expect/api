@@ -3,6 +3,7 @@
 return [
     'api' => [
         'GET_index' => 'Return all routes',
+        'GET_changelog' => 'Return API changelog'
     ],
     'category' => [
         'GET_index' => 'Return the categories',

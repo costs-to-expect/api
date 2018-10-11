@@ -23,14 +23,14 @@ class Controller extends BaseController
     }
 
     /**
-     * Generate the options response for an endpoint
+     * Generate and return the options response
      *
      * @param array $verbs Verb arrays
      * @param integer $http_status_code, defaults to 200
      *
-     * @return array Three indexes, verbs, status and headers
+     * @return JsonResponse
      */
-    protected function generateOptionsResponse(array $verbs, $http_status_code = 200): array
+    protected function optionsResponse(array $verbs, $http_status_code = 200): JsonResponse
     {
         $options = [
             'verbs' => [],
@@ -47,7 +47,12 @@ class Controller extends BaseController
             $options['verbs'][$verb] = $detail;
         }
 
-        return $options;
+        response()->json(
+            $options['verbs'],
+            $options['http_status_code'],
+            $options['headers']
+        )->send();
+        exit;
     }
 
     /**
@@ -105,8 +110,6 @@ class Controller extends BaseController
      * @param string $parameters_key
      * @param array $post_fields Conditionally set POST fields, typically used to set allowed values
      * @param array $get_parameters Conditionally set GET parameters, typically used to set allowed values
-     *
-     * @return JsonResponse
      */
     protected function generateOptionsForIndex(
         string $get_description_key,
@@ -115,8 +118,7 @@ class Controller extends BaseController
         string $parameters_key,
         array $post_fields = [],
         array $get_parameters = []
-    ): JsonResponse
-    {
+    ) {
         $routes = [
             'GET' => [
                 'description' => Config::get($get_description_key),
@@ -130,13 +132,7 @@ class Controller extends BaseController
             ]
         ];
 
-        $options_response = $this->generateOptionsResponse($routes);
-
-        return response()->json(
-            $options_response['verbs'],
-            $options_response['http_status_code'],
-            $options_response['headers']
-        );
+        $this->optionsResponse($routes);
     }
 
     /**
@@ -147,8 +143,6 @@ class Controller extends BaseController
      * @param string $patch_description_key
      * @param string $patch_fields_key
      * @param string $parameters_key
-     *
-     * @return JsonResponse
      */
     protected function generateOptionsForShow(
         string $get_description_key,
@@ -156,8 +150,7 @@ class Controller extends BaseController
         string $patch_description_key,
         string $patch_fields_key,
         string $parameters_key
-    ): JsonResponse
-    {
+    ) {
         $routes = [
             'GET' => [
                 'description' => Config::get($get_description_key),
@@ -175,12 +168,6 @@ class Controller extends BaseController
             ]*/
         ];
 
-        $options_response = $this->generateOptionsResponse($routes);
-
-        return response()->json(
-            $options_response['verbs'],
-            $options_response['http_status_code'],
-            $options_response['headers']
-        );
+        $this->optionsResponse($routes);
     }
 }

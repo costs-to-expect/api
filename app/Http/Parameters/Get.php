@@ -4,6 +4,7 @@ namespace App\Http\Parameters;
 
 use App\Models\Category;
 use App\Models\SubCategory;
+use App\Utilities\General;
 
 /**
  * Fetch any GET parameters attached to the end of the URI and validate
@@ -35,7 +36,7 @@ class Get
                 switch ($parameter) {
                     case 'include_resources';
                     case 'include_sub_categories';
-                        self::$parameters[$parameter] = filter_var($request_parameters[$parameter], FILTER_VALIDATE_BOOLEAN);
+                        self::$parameters[$parameter] = General::booleanValue($request_parameters[$parameter]);
                         break;
 
                     default:
@@ -66,7 +67,7 @@ class Get
                 case 'include_sub_categories':
                 case 'include_resources':
                     if (array_key_exists($key, self::$parameters) === true) {
-                        if (filter_var(self::$parameters[$key], FILTER_VALIDATE_BOOLEAN) === false) {
+                        if (General::booleanValue(self::$parameters[$key]) === false) {
                             unset(self::$parameters[$key]);
                         }
                     }
