@@ -2,7 +2,7 @@
 
 Full changelog for the costs to expect REST API.
 
-## 2019-xx-xx - v1.xx.0
+## 2019-10-11 - v1.04.2
 
 * Added a /changlog route, parses and displays CHANGELOG.md.
 * Added a landing page, links to the root of the API and GitHub.
