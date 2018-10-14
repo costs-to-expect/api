@@ -7,7 +7,7 @@
         <p class="lead">Costs to Expect is a long-term project, my wife and I
             are tracking the expenses to raise our child to adulthood, 18.</p>
         <p class="lead">
-            <a href="https://api.costs-to-expect.com/v1" class="btn btn-lg btn-primary">Access the API</a>
+            <a href="/v1" class="btn btn-lg btn-primary">Access the API</a>
             <a href="https://github.com/costs-to-expect" class="btn btn-lg btn-secondary">View on GitHub</a>
         </p>
 
