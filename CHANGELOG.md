@@ -2,10 +2,13 @@
 
 Full changelog for the costs to expect REST API.
 
-## 2019-xx-xx - v1.xx.x
+## 2019-10-14 - v1.04.3
 
 * Catch routing error, incorrectly return a 200.
 * Corrected link to API from landing page.
+* Added link to CHANGELOG on landing page.
+* Added latest release and version number to landing page.
+* Minor change to README.
 
 ## 2019-10-11 - v1.04.2
 
