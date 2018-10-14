@@ -2,6 +2,11 @@
 
 Full changelog for the costs to expect REST API.
 
+## 2019-xx-xx - v1.xx.x
+
+* Catch routing error, incorrectly return a 200.
+* Corrected link to API from landing page.
+
 ## 2019-10-11 - v1.04.2
 
 * Added a /changlog route, parses and displays CHANGELOG.md.
@@ -62,9 +67,7 @@ Full changelog for the costs to expect REST API.
 * Added four summary routes for a resource, categories collection, category, sub categories collection and sub category.
 * Code style updates.
 
-## 2018-09-07 - v1.00.0 
-
-Official release
+## 2018-09-07 - v1.00.0 (Official release)
 
 * Added summary/tco route for a resource.
 * Added planned development section to README.
@@ -83,12 +86,9 @@ Official release
 * GET Parameters can now be set for collections and items.
 * Other minor fixes and updates.
 
-## 2018-08-08 - v1.00 (pre release)
+## 2018-08-08 - v1.00.0 (pre release)
 
 * API feature complete for release, not being released yet, real life in the way.
-
-## Pre v1 release changes
-
 * Added initial pagination to item controller.
 * Added Hash utility class to centralise all the encoding and decoding.
 * Added Http/Route/Validator classes to validate route params in controllers.
@@ -107,9 +107,6 @@ Official release
 * Added a version config, for post release, includes the api prefix.
 * Redirect client if they request /.
 * Reworked the validation helpers.
-
-## Initial development
-
 * Added initial get parameters code.
 * Added validation helpers.
 * Added model transformers.

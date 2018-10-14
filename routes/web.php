@@ -11,8 +11,16 @@
 |
 */
 
+use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Route;
 
-Route::view('', 'welcome');
+Route::view(
+    '',
+    'welcome',
+    [
+        'version' => Config::get('api.version.version'),
+        'date' => Config::get('api.version.release_date')
+    ]
+);
 
 

@@ -11,9 +11,11 @@
             <a href="https://github.com/costs-to-expect" class="btn btn-lg btn-secondary">View on GitHub</a>
         </p>
 
+        <p><small>Latest release: {{ $version }} ({{ $date }})</small></p>
+
         <p class="mt-4">This Laravel app is the RESTful API for the Costs to Expect service,
             the API will be consumed by the Costs to Expect website and iOS app
-            which I'm creating to assist the wife with data input.
+            which I'm creating to assist my wife with data input.
         </p>
     </main>
 

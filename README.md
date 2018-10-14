@@ -21,7 +21,7 @@ relate to my family, more details will appear on https://www.costs-to-expect.com
 ## The API
 
 This Laravel app is the RESTful API for the Costs to Expect service, the API will be consumed by 
-the Costs to Expect website and iOS app which I'm creating to assist the wife with data input.
+the Costs to Expect website and iOS app which I'm creating to assist my wife with data input.
 
 ## Set up
 
