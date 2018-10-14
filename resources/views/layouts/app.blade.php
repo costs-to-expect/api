@@ -20,7 +20,8 @@
             <div class="inner">
                 <h3 class="masthead-brand">Costs to Expect</h3>
                 <nav class="nav nav-masthead justify-content-center">
-                    <a class="nav-link" href="https://api.costs-to-expect.com/v1">The API</a>
+                    <a class="nav-link" href="/v1">API</a>
+                    <a class="nav-link" href="/v1/changelog">API changelog</a>
                     <a class="nav-link" href="https://github.com/costs-to-expect/api">View on GitHub</a>
                 </nav>
             </div>

@@ -2,6 +2,7 @@
 
 namespace App\Exceptions;
 
+use App\Utilities\Request;
 use Exception;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 
@@ -46,11 +47,26 @@ class Handler extends ExceptionHandler
      */
     public function render($request, Exception $exception)
     {
-        $status_code = method_exists($exception, 'getStatusCode') ? $exception->getStatusCode() : 500;
+        $status_code = 500;
+        if (method_exists($exception, 'getStatusCode') === true) {
+            $status_code = $exception->getStatusCode();
+        }
 
         $message = $exception->getMessage();
         if (strlen($message) === 0) {
             switch ($status_code) {
+                case '404':
+                    Request::notFound();
+                    break;
+                case '500':
+                    response()->json(
+                        [
+                            'message' => $exception->getMessage()
+                        ],
+                        500
+                    )->send();
+                    exit;
+                    break;
                 default:
                     $message = 'Unknown error';
                     break;
@@ -61,7 +77,8 @@ class Handler extends ExceptionHandler
             [
                 'message' => $message,
                 'trace' => $exception->getTraceAsString()
-            ]
+            ],
+            $status_code
         );
     }
 }
