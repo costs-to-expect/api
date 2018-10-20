@@ -327,5 +327,54 @@ return [
             'collection' => [],
             'item' => []
         ]
+    ],
+    'request_error' => [
+        'fields' => [
+            'method' => [
+                'field' => 'method',
+                'title' => 'HTTP Verb',
+                'description' => 'HTTP Verb for request',
+                'type' => 'string',
+                'required' => true
+            ],
+            'expected_status_code' => [
+                'field' => 'expected_status_code',
+                'title' => 'Expected HTTP status code',
+                'description' => 'Enter the expected response HTTP status code',
+                'type' => 'integer',
+                'required' => true
+            ],
+            'returned_status_code' => [
+                'field' => 'returned_status_code',
+                'title' => 'Returned HTTP status code',
+                'description' => 'Enter the returned response HTTP status code',
+                'type' => 'integer',
+                'required' => true
+            ],
+            'request_uri' => [
+                'field' => 'request_uri',
+                'title' => 'API request URI',
+                'description' => 'Enter the URI the request was being made to',
+                'type' => 'string',
+                'required' => true
+            ]
+        ],
+        'validation' => [
+            'POST' => [
+                'fields' => [
+                    'method' => 'required|string',
+                    'expected_status_code' => 'required|integer|between:100,530',
+                    'returned_status_code' => 'required|integer|between:100,530',
+                    'request_uri' => 'required|string',
+                ],
+                'messages' => [
+
+                ]
+            ]
+        ],
+        'parameters' => [
+            'collection' => [],
+            'item' => []
+        ]
     ]
 ];

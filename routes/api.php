@@ -219,6 +219,16 @@ Route::group(
             'resource_types/{resource_type_id}/resources/{resource_id}/summary/years/{year}/months/{month}',
             'SummaryController@optionsMonth'
         );
+
+        Route::post(
+            'error/requests',
+            'ErrorController@createApiRequestError'
+        );
+
+        Route::options(
+            'error/requests',
+            'ErrorController@optionsRequests'
+        );
     }
 );
 
