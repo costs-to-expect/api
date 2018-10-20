@@ -154,9 +154,9 @@ class ItemSubCategoryController extends Controller
 
         return $this->generateOptionsForIndex(
             'api.descriptions.item_sub_category.GET_index',
+            'api.routes.item_sub_category.parameters.collection',
             'api.descriptions.item_sub_category.POST',
             'api.routes.item_sub_category.fields',
-            'api.routes.item_sub_category.parameters.collection',
             $this->post_parameters
         );
     }
@@ -202,10 +202,8 @@ class ItemSubCategoryController extends Controller
 
         return $this->generateOptionsForShow(
             'api.descriptions.item_sub_category.GET_show',
-            'api.descriptions.item_sub_category.DELETE',
-            'api.descriptions.item_sub_category.PATCH',
-            'api.routes.item_sub_category.fields',
-            'api.routes.item_sub_category.parameters.item'
+            'api.routes.item_sub_category.parameters.item',
+            'api.descriptions.item_sub_category.DELETE'
         );
     }
 

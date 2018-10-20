@@ -56,21 +56,6 @@ class Controller extends BaseController
     }
 
     /**
-     * Return bad request as there are no fields to patch
-     *
-     * @return JsonResponse
-     */
-    protected function requireAtLeastOneFieldToPatch(): JsonResponse
-    {
-        return response()->json(
-            [
-                'message' => 'Bad request, you need to supply at least one field to patch'
-            ],
-            400
-        );
-    }
-
-    /**
      * Return Validation errors
      *
      * @param \Illuminate\Contracts\Validation\Validator $validator
@@ -107,28 +92,30 @@ class Controller extends BaseController
      * @param string $get_description_key
      * @param string $post_description_key
      * @param string $post_fields_key
-     * @param string $parameters_key
-     * @param array $post_fields Conditionally set POST fields, typically used to set allowed values
-     * @param array $get_parameters Conditionally set GET parameters, typically used to set allowed values
+     * @param string $get_parameters_key
+     * @param array $conditional_post_fields Conditionally set POST fields,
+     * typically used to set allowed values
+     * @param array $conditional_get_parameters Conditionally set GET parameters,
+     * typically used to set allowed values
      */
     protected function generateOptionsForIndex(
         string $get_description_key,
+        string $get_parameters_key,
         string $post_description_key,
         string $post_fields_key,
-        string $parameters_key,
-        array $post_fields = [],
-        array $get_parameters = []
+        array $conditional_post_fields = [],
+        array $conditional_get_parameters = []
     ) {
         $routes = [
             'GET' => [
                 'description' => Config::get($get_description_key),
                 'authenticated' => false,
-                'parameters' => array_merge_recursive(Config::get($parameters_key), $get_parameters)
+                'parameters' => array_merge_recursive(Config::get($get_parameters_key), $conditional_get_parameters)
             ],
             'POST' => [
                 'description' => Config::get($post_description_key),
                 'authenticated' => true,
-                'fields' => array_merge_recursive(Config::get($post_fields_key), $post_fields)
+                'fields' => array_merge_recursive(Config::get($post_fields_key), $conditional_post_fields)
             ]
         ];
 
@@ -139,33 +126,24 @@ class Controller extends BaseController
      * Generate the OPTIONS request for the show routes
      *
      * @param string $get_description_key
+     * @param string $get_parameters_key
      * @param string $delete_description_key
-     * @param string $patch_description_key
-     * @param string $patch_fields_key
-     * @param string $parameters_key
      */
     protected function generateOptionsForShow(
         string $get_description_key,
-        string $delete_description_key,
-        string $patch_description_key,
-        string $patch_fields_key,
-        string $parameters_key
+        string $get_parameters_key,
+        string $delete_description_key
     ) {
         $routes = [
             'GET' => [
                 'description' => Config::get($get_description_key),
                 'authenticated' => false,
-                'parameters' => Config::get($parameters_key)
+                'parameters' => Config::get($get_parameters_key)
             ],
             'DELETE' => [
                 'description' => Config::get($delete_description_key),
                 'authenticated' => true,
             ],
-            /*'PATCH' => [
-                'description' => Config::get($patch_description_key),
-                'authenticated' => true,
-                'fields' => Config::get($patch_fields_key)
-            ]*/
         ];
 
         $this->optionsResponse($routes);

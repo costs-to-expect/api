@@ -97,9 +97,9 @@ class ResourceController extends Controller
 
         return $this->generateOptionsForIndex(
             'api.descriptions.resource.GET_index',
+            'api.routes.resource.parameters.collection',
             'api.descriptions.resource.POST',
-            'api.routes.resource.fields',
-            'api.routes.resource.parameters.collection'
+            'api.routes.resource.fields'
         );
     }
 
@@ -127,10 +127,8 @@ class ResourceController extends Controller
 
         return $this->generateOptionsForShow(
             'api.descriptions.resource.GET_show',
-            'api.descriptions.resource.DELETE',
-            'api.descriptions.resource.PATCH',
-            'api.routes.resource.fields',
-            'api.routes.resource.parameters.item'
+            'api.routes.resource.parameters.item',
+            'api.descriptions.resource.DELETE'
         );
     }
 

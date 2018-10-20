@@ -138,9 +138,9 @@ class ItemController extends Controller
 
         return $this->generateOptionsForIndex(
             'api.descriptions.item.GET_index',
+            'api.routes.item.parameters.collection',
             'api.descriptions.item.POST',
             'api.routes.item.fields',
-            'api.routes.item.parameters.collection',
             [],
             $this->get_parameters
         );
@@ -173,10 +173,8 @@ class ItemController extends Controller
 
         return $this->generateOptionsForShow(
             'api.descriptions.item.GET_show',
-            'api.descriptions.item.DELETE',
-            'api.descriptions.item.PATCH',
-            'api.routes.item.fields',
-            'api.routes.item.parameters.item'
+            'api.routes.item.parameters.item',
+            'api.descriptions.item.DELETE'
         );
     }
 

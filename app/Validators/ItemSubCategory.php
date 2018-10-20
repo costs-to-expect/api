@@ -68,20 +68,4 @@ class ItemSubCategory extends BaseValidator
             Config::get('api.routes.item_sub_category.validation.POST.messages')
         );
     }
-
-    /**
-     * Return the validator object for the update request
-     *
-     * @param Request $request
-     *
-     * @return Validator
-     */
-    public function update(Request $request): Validator
-    {
-        return ValidatorFacade::make(
-            $request->all(),
-            Config::get('api.routes.item_sub_category.validation.PATCH.fields'),
-            Config::get('api.routes.item_sub_category.validation.POST.messages')
-        );
-    }
 }
