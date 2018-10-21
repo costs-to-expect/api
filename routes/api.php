@@ -30,12 +30,6 @@ Route::group(
         ]
     ],
     function () {
-        Route::get('', 'IndexController@index');
-        Route::options('', 'IndexController@optionsIndex');
-
-        Route::get('changelog', 'IndexController@changeLog');
-        Route::options('changelog', 'IndexController@optionsChangeLog');
-
         Route::get(
             'categories',
             'CategoryController@index'
@@ -219,16 +213,6 @@ Route::group(
             'resource_types/{resource_type_id}/resources/{resource_id}/summary/years/{year}/months/{month}',
             'SummaryController@optionsMonth'
         );
-
-        Route::post(
-            'error/requests',
-            'ErrorController@createApiRequestError'
-        );
-
-        Route::options(
-            'error/requests',
-            'ErrorController@optionsRequests'
-        );
     }
 );
 
@@ -249,6 +233,57 @@ Route::group(
         Route::options(
             'resource_types/{resource_type_id}/resources/{resource_id}/items',
             'ItemController@optionsIndex'
+        );
+    }
+);
+
+Route::group(
+    [
+        'prefix' => Config::get('api.version.prefix'),
+        'middleware' => [
+            'log.requests'
+        ]
+    ],
+    function () {
+        Route::post(
+            'error/requests',
+            'ErrorController@createApiRequestError'
+        );
+        Route::options(
+            'error/requests',
+            'ErrorController@optionsRequests'
+        );
+
+        Route::get(
+            'request/error-log',
+            'RequestController@errorLog'
+        );
+    }
+);
+
+Route::group(
+    [
+        'prefix' => Config::get('api.version.prefix')
+    ],
+    function () {
+        Route::get('', 'IndexController@index');
+        Route::options('', 'IndexController@optionsIndex');
+
+        Route::get('changelog', 'IndexController@changeLog');
+        Route::options('changelog', 'IndexController@optionsChangeLog');
+
+        Route::post(
+            'error/requests',
+            'ErrorController@createApiRequestError'
+        );
+        Route::options(
+            'error/requests',
+            'ErrorController@optionsRequests'
+        );
+
+        Route::get(
+            'request/error-log',
+            'RequestController@errorLog'
         );
     }
 );
