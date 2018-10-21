@@ -50,28 +50,24 @@ class ItemController extends Controller
             $this->collection_parameters
         );
 
-        $this->pagination(
-            $request,
-            $total,
-            $request->path(),
-            $this->collection_parameters
-        );
+        $pagination = UtilityPagination::init($request->path(), $total)
+            ->setParameters($this->collection_parameters)
+            ->paging();
 
         $items = (new Item())->paginatedCollection(
             $resource_type_id,
             $resource_id,
-            $this->pagination['offset'],
-            $this->pagination['limit'],
+            $pagination['offset'],
+            $pagination['limit'],
             $this->collection_parameters
         );
 
         $headers = [
             'X-Count' => count($items),
-            'X-Total-Count' => $total
+            'X-Total-Count' => $total,
+            'X-Link-Previous' => $pagination['links']['previous'],
+            'X-Link-Next' => $pagination['links']['next'],
         ];
-        if ($this->pagination['link'] !== null) {
-            $headers['Link'] = $this->pagination['link'];
-        }
 
         return response()->json(
             $items->map(
@@ -256,65 +252,6 @@ class ItemController extends Controller
         } catch (Exception $e) {
             UtilityRequest::notFound();
         }
-    }
-
-    /**
-     * Generate the pagination parameters
-     *
-     * @param Request $request
-     * @param integer $total
-     * @param string $uri
-     * @param array $parameters_collection
-     */
-    private function pagination( // How much of this can also be a utility, all bar parameters section
-        Request $request,
-        int $total,
-        string $uri = '',
-        array $parameters_collection = []
-    )
-    {
-        $offset = intval($request->query('offset', 0));  // Move these into config?
-        $limit = intval($request->query('limit', 10)); // Move these defaults into config
-
-        $previous_offset = null;
-        $next_offset = null;
-
-        if ($offset !== 0) {
-            $previous_offset = abs($offset - $limit);
-        }
-        if ($offset + $limit < $total) { $next_offset = $offset + $limit; }
-
-        $this->pagination['offset'] = $offset;  // Assign this and never use it?
-        $this->pagination['limit'] = $limit;
-
-        // Pass the below in as a small object per type?
-        $parameters = '';
-        foreach ($parameters_collection as $parameter => $parameter_value) {
-            if ($parameter_value !== null) {
-                if (strlen($parameters) > 0) {
-                    $parameters .= '&';
-                }
-
-                switch ($parameter) {
-                    case 'category':
-                    case 'sub_category':
-                        $parameters .= $parameter . '=' . $this->hash->encode($parameter, $parameter_value);
-                        break;
-
-                    default:
-                        $parameters .= $parameter . '=' . $parameter_value;
-                        break;
-                }
-            }
-        }
-
-        $this->pagination['link'] = UtilityPagination::headerLink(
-            $uri,
-            $parameters, // I like this but maybe move parameters to the end as not always required?
-            $this->pagination['limit'],
-            $previous_offset,
-            $next_offset
-        );
     }
 
     /**
