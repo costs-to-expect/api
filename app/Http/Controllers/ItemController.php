@@ -266,15 +266,15 @@ class ItemController extends Controller
      * @param string $uri
      * @param array $parameters_collection
      */
-    private function pagination(
+    private function pagination( // How much of this can also be a utility, all bar parameters section
         Request $request,
         int $total,
         string $uri = '',
         array $parameters_collection = []
     )
     {
-        $offset = intval($request->query('offset', 0));
-        $limit = intval($request->query('limit', 10));
+        $offset = intval($request->query('offset', 0));  // Move these into config?
+        $limit = intval($request->query('limit', 10)); // Move these defaults into config
 
         $previous_offset = null;
         $next_offset = null;
@@ -284,9 +284,10 @@ class ItemController extends Controller
         }
         if ($offset + $limit < $total) { $next_offset = $offset + $limit; }
 
-        $this->pagination['offset'] = $offset;
+        $this->pagination['offset'] = $offset;  // Assign this and never use it?
         $this->pagination['limit'] = $limit;
 
+        // Pass the below in as a small object per type?
         $parameters = '';
         foreach ($parameters_collection as $parameter => $parameter_value) {
             if ($parameter_value !== null) {
@@ -309,7 +310,7 @@ class ItemController extends Controller
 
         $this->pagination['link'] = UtilityPagination::headerLink(
             $uri,
-            $parameters,
+            $parameters, // I like this but maybe move parameters to the end as not always required?
             $this->pagination['limit'],
             $previous_offset,
             $next_offset
