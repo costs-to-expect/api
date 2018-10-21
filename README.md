@@ -140,7 +140,7 @@ X-Link-Previous and X-Link-Next can be null.
 | OPTIONS  | v1/request/error-log |
 | GET/HEAD | v1/request/log |
 | OPTIONS  | v1/request/log |
-| POST     | v1/error/requests |
+| POST     | v1/request/error-log |
 
 ## Management routes
 
@@ -148,7 +148,7 @@ These routes require authorisation.
 
 | HTTP Verb(s) | Route |
 | :--- | :--- |
-| GET      | v1/auth/user |
+| GET/HEAD | v1/auth/user |
 | POST     | v1/categories |
 | DELETE   | v1/categories/{category_id} |
 | POST     | v1/categories/{category_id}/sub_categories |
