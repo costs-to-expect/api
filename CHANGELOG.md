@@ -5,6 +5,8 @@ Full changelog for the costs to expect REST API.
 ## 2019-xx-xx - v1.05.0
 
 * Added the ability to POST a request error to the API.
+* Added request/error-log route.
+* Added request/log route.
 * Removed all code referencing PATCH and update, not ready to implement yet and may modify design.
 * Minor refactoring, order of method params etc.
 
