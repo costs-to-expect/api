@@ -9,6 +9,7 @@ use App\Transformers\RequestLog as RequestLogTransformer;
 use App\Utilities\Pagination as UtilityPagination;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Config;
 
 /**
  * Manage categories
@@ -90,6 +91,42 @@ class RequestController extends Controller
             ),
             200,
             $headers
+        );
+    }
+
+    /**
+     * Generate the OPTIONS request for log
+     *
+     * @param Request $request
+     */
+    public function optionsLog(Request $request)
+    {
+        $this->optionsResponse(
+            [
+                'GET' => [
+                    'description' => Config::get('api.descriptions.request.GET_log'),
+                    'authenticated' => false,
+                    'parameters' => []
+                ]
+            ]
+        );
+    }
+
+    /**
+     * Generate the OPTIONS request for error log
+     *
+     * @param Request $request
+     */
+    public function optionsErrorLog(Request $request)
+    {
+        $this->optionsResponse(
+            [
+                'GET' => [
+                    'description' => Config::get('api.descriptions.request.GET_error_log'),
+                    'authenticated' => false,
+                    'parameters' => []
+                ]
+            ]
         );
     }
 }

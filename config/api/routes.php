@@ -328,7 +328,7 @@ return [
             'item' => []
         ]
     ],
-    'request_error' => [
+    'error_request' => [
         'fields' => [
             'method' => [
                 'field' => 'method',

@@ -18,7 +18,7 @@ class ErrorController extends Controller
      *
      * @return JsonResponse
      */
-    protected function createApiRequestError(Request $request): JsonResponse
+    protected function createRequestError(Request $request): JsonResponse
     {
         $validator = (new RequestErrorLogValidator())->create($request);
 
@@ -54,19 +54,19 @@ class ErrorController extends Controller
     }
 
     /**
-     * Generate the OPTIONS request for the request error list
+     * Generate the OPTIONS request for the error controller
      *
      * @param Request $request
      *
      * @return JsonResponse
      */
-    public function optionsRequests(Request $request): JsonResponse
+    public function optionsRequestError(Request $request): JsonResponse
     {
         return $this->generateOptionsForIndex(
-            'api.descriptions.request_error.GET_index',
-            'api.routes.request_error.parameters.collection',
-            'api.descriptions.request_error.POST',
-            'api.routes.request_error.fields'
+            'api.descriptions.error_request.GET_index',
+            'api.routes.error_request.parameters.collection',
+            'api.descriptions.error_request.POST',
+            'api.routes.error_request.fields'
         );
     }
 }

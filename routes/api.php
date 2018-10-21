@@ -245,19 +245,11 @@ Route::group(
         ]
     ],
     function () {
-        Route::post(
-            'error/requests',
-            'ErrorController@createApiRequestError'
-        );
-        Route::options(
-            'error/requests',
-            'ErrorController@optionsRequests'
-        );
+        Route::get('', 'IndexController@index');
+        Route::options('', 'IndexController@optionsIndex');
 
-        Route::get(
-            'request/error-log',
-            'RequestController@errorLog'
-        );
+        Route::get('changelog', 'IndexController@changeLog');
+        Route::options('changelog', 'IndexController@optionsChangeLog');
     }
 );
 
@@ -266,27 +258,22 @@ Route::group(
         'prefix' => Config::get('api.version.prefix')
     ],
     function () {
-        Route::get('', 'IndexController@index');
-        Route::options('', 'IndexController@optionsIndex');
-
-        Route::get('changelog', 'IndexController@changeLog');
-        Route::options('changelog', 'IndexController@optionsChangeLog');
-
-        Route::post('error/requests', 'ErrorController@createApiRequestError');
-        Route::options('error/requests', 'ErrorController@optionsRequests');
-
         Route::get('request/error-log', 'RequestController@errorLog');
+        Route::options('request/error-log', 'RequestController@optionsErrorLog');
         Route::get('request/log', 'RequestController@log');
+        Route::options('request/log', 'RequestController@optionsLog');
+        Route::post('error/request', 'ErrorController@createRequestError');
+        Route::options('error/request', 'ErrorController@optionsRequestError');
     }
 );
 
 Route::group(
     [
+        'prefix' => Config::get('api.version.prefix'),
         'middleware' => [
             'auth:api',
             'convert.route.parameters'
-        ],
-        'prefix' => Config::get('api.version.prefix'),
+        ]
     ],
     function () {
         Route::get('auth/user', 'PassportController@user');
