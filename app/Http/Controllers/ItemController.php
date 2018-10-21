@@ -66,7 +66,7 @@ class ItemController extends Controller
             'X-Count' => count($items),
             'X-Total-Count' => $total,
             'X-Link-Previous' => $pagination['links']['previous'],
-            'X-Link-Next' => $pagination['links']['next'],
+            'X-Link-Next' => $pagination['links']['next']
         ];
 
         return response()->json(

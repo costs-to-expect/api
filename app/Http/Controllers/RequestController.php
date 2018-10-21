@@ -6,6 +6,7 @@ use App\Models\RequestErrorLog;
 use App\Models\RequestLog;
 use App\Transformers\RequestErrorLog as RequestErrorLogTransformer;
 use App\Transformers\RequestLog as RequestLogTransformer;
+use App\Utilities\Pagination as UtilityPagination;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
@@ -29,10 +30,18 @@ class RequestController extends Controller
     {
         $total = (new RequestErrorLog())->totalCount();
 
-        $log = (new RequestErrorLog())->paginatedCollection(0, 50);
+        $pagination = UtilityPagination::init($request->path(), $total, 50)
+            ->paging();
+
+        $log = (new RequestErrorLog())->paginatedCollection(
+            $pagination['offset'],
+            $pagination['limit']
+        );
 
         $headers = [
-            'X-Total-Count' => $total
+            'X-Total-Count' => $total,
+            'X-Link-Previous' => $pagination['links']['previous'],
+            'X-Link-Next' => $pagination['links']['next'],
         ];
 
         return response()->json(
@@ -58,10 +67,18 @@ class RequestController extends Controller
     {
         $total = (new RequestLog())->totalCount();
 
-        $log = (new RequestLog())->paginatedCollection(0, 50);
+        $pagination = UtilityPagination::init($request->path(), $total, 50)
+            ->paging();
+
+        $log = (new RequestLog())->paginatedCollection(
+            $pagination['offset'],
+            $pagination['limit']
+        );
 
         $headers = [
-            'X-Total-Count' => $total
+            'X-Total-Count' => $total,
+            'X-Link-Previous' => $pagination['links']['previous'],
+            'X-Link-Next' => $pagination['links']['next'],
         ];
 
         return response()->json(
