@@ -262,8 +262,7 @@ Route::group(
         Route::options('request/error-log', 'RequestController@optionsErrorLog');
         Route::get('request/log', 'RequestController@log');
         Route::options('request/log', 'RequestController@optionsLog');
-        Route::post('error/request', 'ErrorController@createRequestError');
-        Route::options('error/request', 'ErrorController@optionsRequestError');
+        Route::post('request/error-log', 'RequestController@createErrorLog');
     }
 );
 

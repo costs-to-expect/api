@@ -65,12 +65,9 @@ return [
         'GET_months' => 'Return the months summary for a resource and year',
         'GET_month' => 'Return the month summary for a resource and year',
     ],
-    'error_request' => [
-        'GET_index' => 'API request errors, unexpected status code in response',
-        'POST' => 'Log an API request error',
-    ],
     'request' => [
         'GET_log' => 'Return the request log',
-        'GET_error_log' => 'Return the request error log'
+        'GET_error_log' => 'Return the request error log',
+        'POST' => 'Log an API request error'
     ]
 ];
