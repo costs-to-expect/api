@@ -272,19 +272,11 @@ Route::group(
         Route::get('changelog', 'IndexController@changeLog');
         Route::options('changelog', 'IndexController@optionsChangeLog');
 
-        Route::post(
-            'error/requests',
-            'ErrorController@createApiRequestError'
-        );
-        Route::options(
-            'error/requests',
-            'ErrorController@optionsRequests'
-        );
+        Route::post('error/requests', 'ErrorController@createApiRequestError');
+        Route::options('error/requests', 'ErrorController@optionsRequests');
 
-        Route::get(
-            'request/error-log',
-            'RequestController@errorLog'
-        );
+        Route::get('request/error-log', 'RequestController@errorLog');
+        Route::get('request/log', 'RequestController@log');
     }
 );
 

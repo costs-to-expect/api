@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\RequestErrorLog;
+use App\Models\RequestLog;
 use App\Transformers\RequestErrorLog as RequestErrorLogTransformer;
+use App\Transformers\RequestLog as RequestLogTransformer;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
@@ -38,6 +40,35 @@ class RequestController extends Controller
                 function ($log_item)
                 {
                     return (new RequestErrorLogTransformer($log_item))->toArray();
+                }
+            ),
+            200,
+            $headers
+        );
+    }
+
+    /**
+     * Return the paginated request log
+     *
+     * @param Request $request
+     *
+     * @return JsonResponse
+     */
+    public function log(Request $request): JsonResponse
+    {
+        $total = (new RequestLog())->totalCount();
+
+        $log = (new RequestLog())->paginatedCollection(0, 50);
+
+        $headers = [
+            'X-Total-Count' => $total
+        ];
+
+        return response()->json(
+            $log->map(
+                function ($log_item)
+                {
+                    return (new RequestLogTransformer($log_item))->toArray();
                 }
             ),
             200,

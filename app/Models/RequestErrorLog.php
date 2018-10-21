@@ -2,7 +2,6 @@
 
 namespace App\Models;
 
-use DB;
 use Illuminate\Database\Eloquent\Model;
 
 /**
@@ -25,6 +24,6 @@ class RequestErrorLog extends Model
 
     public function paginatedCollection(int $offset = 0, int $limit = 10)
     {
-        return $this->offset($offset)->limit($limit)->get();
+        return $this->orderByDesc('created_at')->offset($offset)->limit($limit)->get();
     }
 }

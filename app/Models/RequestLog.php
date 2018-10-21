@@ -16,4 +16,14 @@ class RequestLog extends Model
     protected $table = 'request_log';
 
     protected $guarded = ['id', 'created_at', 'updated_at'];
+
+    public function totalCount()
+    {
+        return count($this->select('id')->get());
+    }
+
+    public function paginatedCollection(int $offset = 0, int $limit = 10)
+    {
+        return $this->orderByDesc('created_at')->offset($offset)->limit($limit)->get();
+    }
 }
