@@ -46,11 +46,11 @@ otherwise see where you are and adjust accordingly.
 Now we need to set up the app by setting our .env, installing our dependencies and then running any migrations and 
 install Passport.
 
-* Copy the `.env.example` file and name the copy `.env`, set  your environment settings
+* Copy the `.env.example` file and name the copy `.env`, set your environment settings
 * `composer install`
 * `docker-compose exec app php artisan migrate`
 * `docker-compose exec app php artisan passport:install`
-* Run a OPTIONS request on `http://api.local/v1/resource_types`, you should see a nice OPTIONS request, 
+* Run an OPTIONS request on `http://api.local/v1/resource_types`, you should see a nice OPTIONS request, 
 alternatively a GET request to `http://api.local/v1` will show all the routes.
 * You can add a development user by POSTing to `http://api.local/v1/auth/register` and then get a bearer by 
 POSTing to `http://api.local/v1/auth/login` - you will need a bearer for all the routes that require authentication.
@@ -61,12 +61,16 @@ POSTing to `http://api.local/v1/auth/login` - you will need a bearer for all the
 * Items will return a single object and a 200.
 * Successful POST requests will return a single object and a 201.
 * Successful DELETE requests will return a 204.
-* Non 2xx results will return an object with a message field and optionally a fields field, for example containing 
-the validation errors.
+* Non 2xx results will return an object with a message field and optionally a fields array, in the 
+case of a validator error, 422, the fields array will contain the validation errors.
 
-## Routes
+## Pagination
 
-Please find below a list of the API routes that are (will be) implemented for version 1.00.
+You will notice that pagination links and total counts are in the HEADERS, I don't return an 
+envelope with counts etc. Specifically, X-Total-Count, X-Link-Previous and X-Link-Next. 
+X-Link-Previous and X-Link-Next can be null.
+
+## Data routes
 
 | HTTP Verb(s) | Route |
 | :--- | :--- |
@@ -126,13 +130,25 @@ Please find below a list of the API routes that are (will be) implemented for ve
 | GET/HEAD | v1/resource_types/{resource_type_id}/resources/{resource_id}/summary/years/{year}/months/{month} |
 | OPTIONS  | v1/resource_types/{resource_type_id}/resources/{resource_id}/summary/years/{year}/months/{month} |
 
-## Management routes
-
-Please find below a list of the API management routes, these routes require authorisation.
+## Misc routes
 
 | HTTP Verb(s) | Route |
 | :--- | :--- |
-| GET      | v1/auth/user |
+| GET/HEAD | v1/changelog |
+| OPTIONS  | v1/changelog |
+| GET/HEAD | v1/request/error-log |
+| OPTIONS  | v1/request/error-log |
+| GET/HEAD | v1/request/log |
+| OPTIONS  | v1/request/log |
+| POST     | v1/request/error-log |
+
+## Management routes
+
+These routes require authorisation.
+
+| HTTP Verb(s) | Route |
+| :--- | :--- |
+| GET/HEAD | v1/auth/user |
 | POST     | v1/categories |
 | DELETE   | v1/categories/{category_id} |
 | POST     | v1/categories/{category_id}/sub_categories |
@@ -151,7 +167,6 @@ Please find below a list of the API management routes, these routes require auth
 ## Planned development
 
 * Added filtering options for all GET routes, initially items route.
-* Validate GET parameters.
 * PATCH support.
 * PUTS support.
 * Upgrade Laravel to 5.7.
@@ -159,5 +174,4 @@ Please find below a list of the API management routes, these routes require auth
 * Dev setting to show generated queries.
 * Switch to Money class.
 * Create a white box version of API.
-* Refactoring.
 * Add limits on POST for single item collections.

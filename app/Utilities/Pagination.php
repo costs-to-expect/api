@@ -13,51 +13,164 @@ use Illuminate\Support\Facades\Config;
  */
 class Pagination
 {
-    /**
-     * Generate the Link header value based on the value of $previous_start, $next_start and $per_page
-     *
-     * @param string $uri
-     * @param string $parameters
-     * @param integer $limit
-     * @param integer|null $offset_prev
-     * @param integer|null $offset_next
-     *
-     * @return string|null
-     */
-    static public function headerLink(
-        string $uri,
-        string $parameters,
-        int $limit,
-        int $offset_prev = null,
-        int $offset_next = null
-    ): ?string {
+    private static $instance = null;
 
-        $uri .= '?';
+    /**
+     * @var array
+     */
+    private static $parameters;
+    /**
+     * @var int
+     */
+    private static $limit;
+    /**
+     * @var int
+     */
+    private static $offset;
+    /**
+     * @var int
+     */
+    private static $total;
+    /**
+     * @var string
+     */
+    private static $uri;
+    /**
+     * @var Hash
+     */
+    private static $hash;
+
+    /**
+     * Constructor
+     *
+     * @param string $uri Set the pagination uri
+     * @param int $total Set the total number of items in collection
+     * @param int $limit Set the 'per page' limit
+     *
+     * @return Pagination
+     */
+    public static function init(string $uri, int $total, int $limit = 10): Pagination
+    {
+        if (self::$instance === null) {
+            self::$instance = new Pagination;
+        }
+
+        self::$parameters = [];
+        self::$limit = $limit;
+        self::$total = $total;
+        self::$uri = $uri;
+        self::$hash = new Hash();
+        self::$offset = 0;
+
+        return self::$instance;
+    }
+
+    /**
+     * Set any optional route parameters
+     *
+     * @param array $parameters
+     *
+     * @return Pagination
+     */
+    public static function setParameters(array $parameters = []): Pagination
+    {
+        self::$parameters = $parameters;
+
+        return self::$instance;
+    }
+
+    /**
+     * Return the pagination array
+     *
+     * @return array
+     */
+    public static function paging(): array
+    {
+        return [
+            'links' => self::render(),
+            'offset' => self::$offset,
+            'limit' => self::$limit
+        ];
+    }
+
+    /**
+     * Process any passed in parameters, encoding as required
+     *
+     * @return string
+     */
+    private static function processParameters(): string
+    {
+        $parameters = '';
+        if (count(self::$parameters) > 0) {
+            foreach (self::$parameters as $parameter => $parameter_value) {
+                if ($parameter_value !== null) {
+                    if (strlen($parameters) > 0) {
+                        $parameters .= '&';
+                    }
+
+                    switch ($parameter) {
+                        case 'category':
+                        case 'sub_category':
+                            $parameters .= $parameter . '=' .
+                                self::$hash->encode($parameter, $parameter_value);
+                            break;
+
+                        default:
+                            $parameters .= $parameter . '=' . $parameter_value;
+                            break;
+                    }
+                }
+            }
+        }
 
         if (strlen($parameters) > 0) {
-            $uri .= $parameters . '&';
+            $parameters .= '&';
         }
 
-        $link = '';
+        return $parameters;
+    }
 
-        if ($offset_prev !== null) {
-            $link .= '<' . Config::get('api.app.url') . '/' . $uri . 'offset=' . $offset_prev . '&limit=' .
-                $limit . '>; rel="prev"';
+    /**
+     * Create the paging uris
+     *
+     * @return array
+     */
+    private static function render(): array
+    {
+        self::$offset = intval(request()->query('offset', 0));
+        self::$limit = intval(request()->query('limit', self::$limit));
+
+        $uris = [
+            'next' => null,
+            'previous' => null
+        ];
+
+        $previous_offset = null;
+        $next_offset = null;
+
+        if (self::$offset !== 0) {
+            $previous_offset = abs(self::$offset - self::$limit);
+        }
+        if (self::$offset + self::$limit < self::$total) {
+            $next_offset = self::$offset + self::$limit;
         }
 
-        if ($offset_next !== null) {
-            if (strlen($link) > 0) {
-                $link .= ', ';
-            }
+        $parameters = self::processParameters();
 
-            $link .= '<' . Config::get('api.app.url') . '/' . $uri . 'offset=' . $offset_next . '&limit=' .
-                $limit . '>; rel="next"';
+        self::$uri .= '?';
+
+        if ($previous_offset !== null) {
+            $uris['previous'] .= Config::get('api.app.url') . '/' . self::$uri .
+                $parameters . 'offset=' . $previous_offset . '&limit=' .
+                self::$limit;
         }
 
-        if (strlen($link) > 0) {
-            return $link;
-        } else {
-            return null;
+        if ($next_offset !== null) {
+            $uris['next'] .= Config::get('api.app.url') . '/' . self::$uri .
+                $parameters . 'offset=' . $next_offset . '&limit=' .
+                self::$limit;
         }
+
+        return $uris;
     }
 }

@@ -50,28 +50,24 @@ class ItemController extends Controller
             $this->collection_parameters
         );
 
-        $this->pagination(
-            $request,
-            $total,
-            $request->path(),
-            $this->collection_parameters
-        );
+        $pagination = UtilityPagination::init($request->path(), $total)
+            ->setParameters($this->collection_parameters)
+            ->paging();
 
         $items = (new Item())->paginatedCollection(
             $resource_type_id,
             $resource_id,
-            $this->pagination['offset'],
-            $this->pagination['limit'],
+            $pagination['offset'],
+            $pagination['limit'],
             $this->collection_parameters
         );
 
         $headers = [
             'X-Count' => count($items),
-            'X-Total-Count' => $total
+            'X-Total-Count' => $total,
+            'X-Link-Previous' => $pagination['links']['previous'],
+            'X-Link-Next' => $pagination['links']['next']
         ];
-        if ($this->pagination['link'] !== null) {
-            $headers['Link'] = $this->pagination['link'];
-        }
 
         return response()->json(
             $items->map(
@@ -138,9 +134,9 @@ class ItemController extends Controller
 
         return $this->generateOptionsForIndex(
             'api.descriptions.item.GET_index',
+            'api.routes.item.parameters.collection',
             'api.descriptions.item.POST',
             'api.routes.item.fields',
-            'api.routes.item.parameters.collection',
             [],
             $this->get_parameters
         );
@@ -173,10 +169,8 @@ class ItemController extends Controller
 
         return $this->generateOptionsForShow(
             'api.descriptions.item.GET_show',
-            'api.descriptions.item.DELETE',
-            'api.descriptions.item.PATCH',
-            'api.routes.item.fields',
-            'api.routes.item.parameters.item'
+            'api.routes.item.parameters.item',
+            'api.descriptions.item.DELETE'
         );
     }
 
@@ -258,64 +252,6 @@ class ItemController extends Controller
         } catch (Exception $e) {
             UtilityRequest::notFound();
         }
-    }
-
-    /**
-     * Generate the pagination parameters
-     *
-     * @param Request $request
-     * @param integer $total
-     * @param string $uri
-     * @param array $parameters_collection
-     */
-    private function pagination(
-        Request $request,
-        int $total,
-        string $uri = '',
-        array $parameters_collection = []
-    )
-    {
-        $offset = intval($request->query('offset', 0));
-        $limit = intval($request->query('limit', 10));
-
-        $previous_offset = null;
-        $next_offset = null;
-
-        if ($offset !== 0) {
-            $previous_offset = abs($offset - $limit);
-        }
-        if ($offset + $limit < $total) { $next_offset = $offset + $limit; }
-
-        $this->pagination['offset'] = $offset;
-        $this->pagination['limit'] = $limit;
-
-        $parameters = '';
-        foreach ($parameters_collection as $parameter => $parameter_value) {
-            if ($parameter_value !== null) {
-                if (strlen($parameters) > 0) {
-                    $parameters .= '&';
-                }
-
-                switch ($parameter) {
-                    case 'category':
-                    case 'sub_category':
-                        $parameters .= $parameter . '=' . $this->hash->encode($parameter, $parameter_value);
-                        break;
-
-                    default:
-                        $parameters .= $parameter . '=' . $parameter_value;
-                        break;
-                }
-            }
-        }
-
-        $this->pagination['link'] = UtilityPagination::headerLink(
-            $uri,
-            $parameters,
-            $this->pagination['limit'],
-            $previous_offset,
-            $next_offset
-        );
     }
 
     /**

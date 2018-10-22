@@ -44,14 +44,6 @@ return [
                 'messages' => [
                     'name.unique' => 'The category name has already been used'
                 ]
-            ],
-            'PATCH' => [
-                'fields' => [
-                    'description' => 'sometimes|required|string'
-                ],
-                'messages' => [
-                    'name.unique' => 'The category name has already been used'
-                ]
             ]
         ],
         'parameters' => [
@@ -100,15 +92,6 @@ return [
                 'messages' => [
                     'name.unique' => 'The sub category name has already been used within this category'
                 ]
-            ],
-            'PATCH' => [
-                'fields' => [
-                    'name' => 'sometimes|required|string',
-                    'description' => 'sometimes|required|string'
-                ],
-                'messages' => [
-                    'name.unique' => 'The sub category name has already been used within this category'
-                ]
             ]
         ],
         'parameters' => [
@@ -138,15 +121,6 @@ return [
                 'fields' => [
                     'name' => 'required|string|unique:resource_type,name',
                     'description' => 'required|string'
-                ],
-                'messages' => [
-                    'name.unique' => 'The resource type has already been used'
-                ]
-            ],
-            'PATCH' => [
-                'fields' => [
-                    'name' => 'sometimes|required|string',
-                    'description' => 'sometimes|required|string'
                 ],
                 'messages' => [
                     'name.unique' => 'The resource type has already been used'
@@ -214,16 +188,6 @@ return [
                     'name.unique' => 'The resource name has already been used within this resource type',
                     'effective_date.date_format' => 'The effective date does not match the required format yyyy-mm-dd (e.g. 2001-01-01)'
                 ]
-            ],
-            'PATCH' => [
-                'fields' => [
-                    'name' => 'sometimes|required|string',
-                    'description' => 'sometimes|required|string',
-                    'effective_date' => 'sometimes|required|date_format:Y-m-d'
-                ],
-                'messages' => [
-                    'name.unique' => 'The resource name has already been used within this resource type'
-                ]
             ]
         ],
         'parameters' => [
@@ -273,15 +237,6 @@ return [
                 'messages' => [
                     'total.regex' => "Total cost in the format 0.00"
                 ]
-            ],
-            'PATCH' => [
-                'fields' => [
-                    'description' => 'sometimes|required|string',
-                    'effective_date' => 'sometimes|required|date_format:Y-m-d',
-                    'total' => 'sometimes|required|string|regex:/^\d+\.\d{2}$/',
-                    'percentage' => 'sometimes|required|integer|between:1,100'
-                ],
-                'messages' => []
             ]
         ],
         'parameters' => [
@@ -340,12 +295,6 @@ return [
                     'category_id.required' => 'Category field required or could not be decoded',
                     'category_id.exists' => "Given category id does not exist"
                 ]
-            ],
-            'PATCH' => [
-                'fields' => [
-                    'category_id' => 'required|string'
-                ],
-                'messages' => []
             ]
         ],
         'parameters' => [
@@ -372,12 +321,55 @@ return [
                     'sub_category_id.required' => 'Sub category field required or could not be decoded',
                     'sub_category_id.exists' => "Given sub category id does not exist"
                 ]
+            ]
+        ],
+        'parameters' => [
+            'collection' => [],
+            'item' => []
+        ]
+    ],
+    'request' => [
+        'fields' => [
+            'method' => [
+                'field' => 'method',
+                'title' => 'HTTP Verb',
+                'description' => 'HTTP Verb for request',
+                'type' => 'string',
+                'required' => true
             ],
-            'PATCH' => [
+            'expected_status_code' => [
+                'field' => 'expected_status_code',
+                'title' => 'Expected HTTP status code',
+                'description' => 'Enter the expected response HTTP status code',
+                'type' => 'integer',
+                'required' => true
+            ],
+            'returned_status_code' => [
+                'field' => 'returned_status_code',
+                'title' => 'Returned HTTP status code',
+                'description' => 'Enter the returned response HTTP status code',
+                'type' => 'integer',
+                'required' => true
+            ],
+            'request_uri' => [
+                'field' => 'request_uri',
+                'title' => 'API request URI',
+                'description' => 'Enter the URI the request was being made to',
+                'type' => 'string',
+                'required' => true
+            ]
+        ],
+        'validation' => [
+            'POST' => [
                 'fields' => [
-                    'sub_category_id' => 'required|string'
+                    'method' => 'required|string',
+                    'expected_status_code' => 'required|integer|between:100,530',
+                    'returned_status_code' => 'required|integer|between:100,530',
+                    'request_uri' => 'required|string',
                 ],
-                'messages' => []
+                'messages' => [
+
+                ]
             ]
         ],
         'parameters' => [

@@ -39,28 +39,6 @@ class SubCategory extends BaseValidator
     }
 
     /**
-     * Create the validation rules for the update (PATCH) request
-     *
-     * @param integer $category_id
-     * @param integer $sub_category_id
-     *
-     * @return array
-     */
-    private function updateRules(int $category_id, int $sub_category_id): array
-    {
-        return array_merge(
-            [
-                'name' => [
-                    'required',
-                    'string',
-                    'unique:sub_category,name,' . $sub_category_id . ',id,category_id,' . $category_id
-                ],
-            ],
-            Config::get('api.routes.sub_category.validation.PATCH.fields')
-        );
-    }
-    
-    /**
      * Return the validator object for the create request
      *
      * @param Request $request
@@ -73,24 +51,6 @@ class SubCategory extends BaseValidator
         return ValidatorFacade::make(
             $request->all(),
             self::createRules($category_id),
-            Config::get('api.routes.sub_category.validation.POST.messages')
-        );
-    }
-
-    /**
-     * Return the validator object for the update request
-     *
-     * @param Request $request
-     * @param integer $category_id
-     * @param integer $sub_category_id
-     *
-     * @return Validator
-     */
-    public function update(Request $request, int $category_id, int $sub_category_id): Validator
-    {
-        return ValidatorFacade::make(
-            $request->all(),
-            self::updateRules($category_id, $sub_category_id),
             Config::get('api.routes.sub_category.validation.POST.messages')
         );
     }

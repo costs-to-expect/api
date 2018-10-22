@@ -94,9 +94,9 @@ class ResourceTypeController extends Controller
     {
         return $this->generateOptionsForIndex(
             'api.descriptions.resource_type.GET_index',
+            'api.routes.resource_type.parameters.collection',
             'api.descriptions.resource_type.POST',
-            'api.routes.resource_type.fields',
-            'api.routes.resource_type.parameters.collection'
+            'api.routes.resource_type.fields'
         );
     }
 
@@ -114,10 +114,8 @@ class ResourceTypeController extends Controller
 
         return $this->generateOptionsForShow(
             'api.descriptions.resource_type.GET_show',
-            'api.descriptions.resource_type.DELETE',
-            'api.descriptions.resource_type.PATCH',
-            'api.routes.resource_type.fields',
-            'api.routes.resource_type.parameters.item'
+            'api.routes.resource_type.parameters.item',
+            'api.descriptions.resource_type.DELETE'
         );
     }
 

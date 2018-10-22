@@ -100,9 +100,9 @@ class SubCategoryController extends Controller
 
         return $this->generateOptionsForIndex(
             'api.descriptions.sub_category.GET_index',
+            'api.routes.sub_category.parameters.collection',
             'api.descriptions.sub_category.POST',
-            'api.routes.sub_category.fields',
-            'api.routes.sub_category.parameters.collection'
+            'api.routes.sub_category.fields'
         );
     }
 
@@ -125,10 +125,8 @@ class SubCategoryController extends Controller
 
         return $this->generateOptionsForShow(
             'api.descriptions.sub_category.GET_show',
-            'api.descriptions.sub_category.DELETE',
-            'api.descriptions.sub_category.PATCH',
-            'api.routes.sub_category.fields',
-            'api.routes.sub_category.parameters.item'
+            'api.routes.sub_category.parameters.item',
+            'api.descriptions.sub_category.DELETE'
         );
     }
 

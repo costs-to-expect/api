@@ -2,6 +2,16 @@
 
 Full changelog for the costs to expect REST API.
 
+## 2019-10-22 - v1.05.0
+
+* Added the ability to POST a request error to the API.
+* Added request/error-log route.
+* Added request/log route.
+* Reworked pagination utility class.
+* Modified HEADER links for pagination.
+* Removed all code referencing PATCH and update, not ready to implement yet and may modify design.
+* Minor refactoring, order of method params etc.
+
 ## 2019-10-14 - v1.04.3
 
 * Catch routing error, incorrectly return a 200.

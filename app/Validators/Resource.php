@@ -39,28 +39,6 @@ class Resource extends BaseValidator
     }
 
     /**
-     * Create the validation rules for the update (PATCH) request
-     *
-     * @param integer $resource_type_id
-     * @param integer $resource_id
-     *
-     * @return array
-     */
-    private function updateRules(int $resource_type_id, int $resource_id): array
-    {
-        return array_merge(
-            [
-                'name' => [
-                    'required',
-                    'string',
-                    'unique:resource,name,' . $resource_id . ',id,resource_type_id,' . $resource_type_id
-                ],
-            ],
-            Config::get('api.routes.resource.validation.PATCH.fields')
-        );
-    }
-
-    /**
      * Return the validator object for the create request
      *
      * @param Request $request
@@ -73,24 +51,6 @@ class Resource extends BaseValidator
         return ValidatorFacade::make(
             $request->all(),
             self::createRules($resource_type_id),
-            Config::get('api.routes.resource.validation.POST.messages')
-        );
-    }
-
-    /**
-     * Return the validator object for the update request
-     *
-     * @param Request $request
-     * @param integer $resource_type_id
-     * @param integer $resource_id
-     *
-     * @return Validator
-     */
-    public function update(Request $request, int $resource_type_id, int $resource_id): Validator
-    {
-        return ValidatorFacade::make(
-            $request->all(),
-            self::updateRules($resource_type_id, $resource_id),
             Config::get('api.routes.resource.validation.POST.messages')
         );
     }

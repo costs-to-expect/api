@@ -94,9 +94,9 @@ class CategoryController extends Controller
     {
         return $this->generateOptionsForIndex(
             'api.descriptions.category.GET_index',
+            'api.routes.category.parameters.collection',
             'api.descriptions.category.POST',
-            'api.routes.category.fields',
-            'api.routes.category.parameters.collection'
+            'api.routes.category.fields'
         );
     }
 
@@ -114,10 +114,8 @@ class CategoryController extends Controller
 
         return $this->generateOptionsForShow(
             'api.descriptions.category.GET_show',
-            'api.descriptions.category.DELETE',
-            'api.descriptions.category.PATCH',
-            'api.routes.category.fields',
-            'api.routes.category.parameters.item'
+            'api.routes.category.parameters.item',
+            'api.descriptions.category.DELETE'
         );
     }
 

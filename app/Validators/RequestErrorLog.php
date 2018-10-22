@@ -9,13 +9,14 @@ use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Validator as ValidatorFacade;
 
 /**
- * Validation helper class for items, returns the generated validator objects
+ * Validation helper class for request errors, returns the generated validator
+ * object
  *
  * @author Dean Blackborough <dean@g3d-development.com>
  * @copyright Dean Blackborough 2018
  * @license https://github.com/costs-to-expect/api/blob/master/LICENSE
  */
-class Item extends BaseValidator
+class RequestErrorLog extends BaseValidator
 {
     /**
      * Return the validator object for the create request
@@ -28,8 +29,8 @@ class Item extends BaseValidator
     {
         return ValidatorFacade::make(
             $request->all(),
-            Config::get('api.routes.item.validation.POST.fields'),
-            Config::get('api.routes.item.validation.POST.messages')
+            Config::get('api.routes.request.validation.POST.fields'),
+            Config::get('api.routes.request.validation.POST.messages')
         );
     }
 }
