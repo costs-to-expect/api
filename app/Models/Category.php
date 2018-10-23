@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use DB;
 use Illuminate\Database\Eloquent\Model;
 
 /**
@@ -20,16 +21,6 @@ class Category extends Model
 
     protected $guarded = ['id', 'created_at', 'updated_at'];
 
-    public function sub_categories()
-    {
-        return $this->hasMany(SubCategory::class, 'category_id', 'id');
-    }
-
-    public function sub_categories_count()
-    {
-        return $this->hasMany(SubCategory::class, 'category_id', 'id')->count();
-    }
-
     public function category()
     {
         return $this->belongsTo(Category::class, 'category_id', 'id');
@@ -37,11 +28,33 @@ class Category extends Model
 
     public function paginatedCollection(int $offset = 0, int $limit = 10)
     {
-        return $this->orderBy("name")->get();
+        return $this->join('resource_type', $this->table . '.resource_type_id', '=', 'resource_type.id')
+            ->orderBy('category.name')
+            ->select(
+                'category.id AS category_id',
+                'category.name AS category_name',
+                'category.id AS category_id',
+                'category.description AS category_description',
+                'category.created_at AS category_created_at',
+                'category.updated_at AS category_updated_at',
+                DB::raw('(SELECT COUNT(sub_category.id) FROM sub_category WHERE sub_category.category_id = category.id) AS category_sub_categories')
+            )
+            ->get();
     }
 
     public function single(int $category_id)
     {
-        return $this->find($category_id);
+        return $this->join('resource_type', $this->table . '.resource_type_id', '=', 'resource_type.id')
+            ->orderBy('category.name')
+            ->select(
+                'category.id AS category_id',
+                'category.name AS category_name',
+                'category.id AS category_id',
+                'category.description AS category_description',
+                'category.created_at AS category_created_at',
+                'category.updated_at AS category_updated_at',
+                DB::raw('(SELECT COUNT(sub_category.id) FROM sub_category WHERE sub_category.category_id = category.id) AS category_sub_categories')
+            )
+            ->first();
     }
 }

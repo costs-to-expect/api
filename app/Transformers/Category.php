@@ -3,6 +3,7 @@
 namespace App\Transformers;
 
 use App\Models\Category as CategoryModel;
+use App\Models\SubCategory as SubCategoryModel;
 
 /**
  * Transform the data returns from Eloquent into the format we want for the API
@@ -35,18 +36,20 @@ class Category extends Transformer
     public function toArray(): array
     {
         $result = [
-            'id' => $this->hash->category()->encode($this->category->id),
-            'name' => $this->category->name,
-            'description' => $this->category->description,
-            'created' => $this->category->created_at->toDateTimeString(),
-            'sub_categories_count' => $this->category->sub_categories_count()
+            'id' => $this->hash->category()->encode($this->category->category_id),
+            'name' => $this->category->category_name,
+            'description' => $this->category->category_description,
+            'created' => $this->category->category_created_at,
+            'sub_categories_count' => $this->category->category_sub_categories
         ];
 
         if (
             isset($this->parameters['include_sub_categories']) &&
             $this->parameters['include_sub_categories'] === true
         ) {
-            $subCategoriesCollection = $this->category->sub_categories;
+            $subCategoriesCollection = (new SubCategoryModel())->paginatedCollection(
+                $this->category->category_id
+            );
 
             $subCategoriesCollection->map(
                 function ($sub_category) {
