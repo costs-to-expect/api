@@ -2,7 +2,7 @@
 
 Full changelog for the costs to expect REST API.
 
-## 2019-xx-xx - v1.06.0
+## 2019-10-27 - v1.06.0
 
 * Updated database, a category is now a child of a resource type, not global.
 * Updated categories collection and category, shows the resource type that category is assigned to.
