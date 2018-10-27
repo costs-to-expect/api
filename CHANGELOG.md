@@ -8,6 +8,7 @@ Full changelog for the costs to expect REST API.
 * Updated categories collection and category, shows the resource type that category is assigned to.
 * POST/resource_types/.../item/[item_id]/category updated to look at resource type.
 * POST/categories requires the resource_type_id to be set.
+* Request log and Request error log now show created times.
 * Minor updates to models.
 
 ## 2019-10-22 - v1.05.0
