@@ -33,7 +33,6 @@ class Category extends Model
             ->select(
                 'category.id AS category_id',
                 'category.name AS category_name',
-                'category.id AS category_id',
                 'category.description AS category_description',
                 'category.created_at AS category_created_at',
                 'category.updated_at AS category_updated_at',
@@ -47,11 +46,11 @@ class Category extends Model
     public function single(int $category_id)
     {
         return $this->join('resource_type', $this->table . '.resource_type_id', '=', 'resource_type.id')
+            ->where('category.id', '=', intval($category_id))
             ->orderBy('category.name')
             ->select(
                 'category.id AS category_id',
                 'category.name AS category_name',
-                'category.id AS category_id',
                 'category.description AS category_description',
                 'category.created_at AS category_created_at',
                 'category.updated_at AS category_updated_at',
@@ -60,5 +59,21 @@ class Category extends Model
                 'resource_type.name AS resource_type_name'
             )
             ->first();
+    }
+
+    /**
+     *
+     */
+    public function categoriesByResourceType(int $resource_type_id)
+    {
+        return $this->join('resource_type', $this->table . '.resource_type_id', '=', 'resource_type.id')
+            ->where('resource_type.id', '=', intval($resource_type_id))
+            ->orderBy('category.name')
+            ->select(
+                'category.id AS category_id',
+                'category.name AS category_name',
+                'category.description AS category_description'
+            )
+            ->get();
     }
 }

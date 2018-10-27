@@ -140,6 +140,7 @@ class Item extends Model
             join("resource_type", "resource_type.id", "resource.resource_type_id")->
             join("item_category", "item_category.item_id", "item.id")->
             join("category", "category.id", "item_category.category_id")->
+            where("category.resource_type_id", "=", $resource_type_id)->
             where("resource_type.id", "=", $resource_type_id)->
             where("resource.id", "=", $resource_id)->
             groupBy("item_category.category_id")->
@@ -155,6 +156,7 @@ class Item extends Model
             join("resource_type", "resource_type.id", "resource.resource_type_id")->
             join("item_category", "item_category.item_id", "item.id")->
             join("category", "category.id", "item_category.category_id")->
+            where("category.resource_type_id", "=", $resource_type_id)->
             where("resource_type.id", "=", $resource_type_id)->
             where("resource.id", "=", $resource_id)->
             where("category.id", "=", $category_id)->
