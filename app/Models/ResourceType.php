@@ -39,4 +39,20 @@ class ResourceType extends Model
     {
         return $this->find($resource_type_id);
     }
+
+    /**
+     * Return the an minimised collection, typically to be used in OPTIONS
+     *
+     * @return \Illuminate\Support\Collection
+     */
+    public function minimisedCollection()
+    {
+        return $this->orderBy('resource_type.name')
+            ->select(
+                'resource_type.id AS resource_type_id',
+                'resource_type.name AS resource_type_name',
+                'resource_type.description AS resource_type_description'
+            )
+            ->get();
+    }
 }

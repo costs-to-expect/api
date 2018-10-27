@@ -33,13 +33,21 @@ return [
                 'description' => 'Enter a description for the category',
                 'type' => 'string',
                 'required' => true
+            ],
+            'resource_type_id' => [
+                'field' => 'resource_type_id',
+                'title' => 'Resource type category will belong to',
+                'description' => 'Choose the resource type the category should be a child of',
+                'type' => 'string',
+                'required' => true
             ]
         ],
         'validation' => [
             'POST' => [
                 'fields' => [
                     'name' => 'required|string|unique:category,name',
-                    'description' => 'required|string'
+                    'description' => 'required|string',
+                    'resource_type_id' => 'required|exists:resource_type,id'
                 ],
                 'messages' => [
                     'name.unique' => 'The category name has already been used'

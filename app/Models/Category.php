@@ -26,6 +26,14 @@ class Category extends Model
         return $this->belongsTo(Category::class, 'category_id', 'id');
     }
 
+    /**
+     * Return the paginated collection
+     *
+     * @param integer $offset
+     * @param integer $limit
+     *
+     * @return \Illuminate\Support\Collection
+     */
     public function paginatedCollection(int $offset = 0, int $limit = 10)
     {
         return $this->join('resource_type', $this->table . '.resource_type_id', '=', 'resource_type.id')
@@ -43,6 +51,13 @@ class Category extends Model
             ->get();
     }
 
+    /**
+     * Return a single item
+     *
+     * @param integer $category_id
+     *
+     * @return \Illuminate\Support\Collection
+     */
     public function single(int $category_id)
     {
         return $this->join('resource_type', $this->table . '.resource_type_id', '=', 'resource_type.id')
@@ -62,7 +77,11 @@ class Category extends Model
     }
 
     /**
+     * Fetch all the categories assigned to the resource type
      *
+     * @param integer $resource_type_id
+     *
+     * @return \Illuminate\Support\Collection
      */
     public function categoriesByResourceType(int $resource_type_id)
     {
