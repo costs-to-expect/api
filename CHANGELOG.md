@@ -6,6 +6,7 @@ Full changelog for the costs to expect REST API.
 
 * Updated database, a category is now a child of a resource type, not global.
 * Updated categories collection and category, shows the resource type that category is assigned to.
+* POST/resource_types/.../item/[item_id]/category updated to look at resource type.
 * Minor updates to models.
 
 ## 2019-10-22 - v1.05.0
