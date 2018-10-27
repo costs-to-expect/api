@@ -26,7 +26,8 @@ class RequestErrorLog extends Transformer
             'method' => $this->log->method,
             'expected_status_code' => $this->log->expected_status_code,
             'returned_status_code' => $this->log->returned_status_code,
-            'request_uri' => $this->log->request_uri
+            'request_uri' => $this->log->request_uri,
+            'created' => $this->log->created_at->toDateTimeString()
         ];
     }
 }

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Parameters\Get;
 use App\Http\Parameters\Route\Validate;
 use App\Models\Category;
+use App\Models\ResourceType;
 use App\Transformers\Category as CategoryTransformer;
 use App\Utilities\Request as UtilityRequest;
 use App\Validators\Category as CategoryValidator;
@@ -22,6 +23,7 @@ use Illuminate\Http\Request;
  */
 class CategoryController extends Controller
 {
+    protected $post_parameters = [];
     protected $collection_parameters = [];
     protected $show_parameters = [];
 
@@ -92,11 +94,14 @@ class CategoryController extends Controller
      */
     public function optionsIndex(Request $request): JsonResponse
     {
+        $this->setConditionalPostParameters();
+
         return $this->generateOptionsForIndex(
             'api.descriptions.category.GET_index',
             'api.routes.category.parameters.collection',
             'api.descriptions.category.POST',
-            'api.routes.category.fields'
+            'api.routes.category.fields',
+            $this->post_parameters
         );
     }
 
@@ -150,7 +155,7 @@ class CategoryController extends Controller
         }
 
         return response()->json(
-            (new CategoryTransformer($category))->toArray(),
+            (new CategoryTransformer((new Category)->single($category->id)))->toArray(),
             201
         );
     }
@@ -178,6 +183,37 @@ class CategoryController extends Controller
             UtilityRequest::foreignKeyConstraintError();
         } catch (Exception $e) {
             UtilityRequest::notFound();
+        }
+    }
+
+    /**
+     * Set any conditional POST parameters, will be merged with the data arrays defined in
+     * config/api/route.php
+     *
+     * @return JsonResponse
+     */
+    private function setConditionalPostParameters()
+    {
+        $resource_types = (new ResourceType())->minimisedCollection();
+
+        $this->post_parameters = ['resource_type_id' => []];
+        foreach ($resource_types as $resource_type) {
+            $id = $this->hash->encode('resource_type', $resource_type->resource_type_id);
+
+            if ($id === false) {
+                return response()->json(
+                    [
+                        'message' => 'Unable to encode parameter or hasher not found'
+                    ],
+                    500
+                );
+            }
+
+            $this->post_parameters['resource_type_id']['allowed_values'][$id] = [
+                'value' => $id,
+                'name' => $resource_type->name,
+                'description' => $resource_type->resource_type_description
+            ];
         }
     }
 }

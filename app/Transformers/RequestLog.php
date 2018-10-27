@@ -24,7 +24,8 @@ class RequestLog extends Transformer
     {
         return [
             'method' => $this->log->method,
-            'request_uri' => $this->log->request
+            'request_uri' => $this->log->request,
+            'created' => $this->log->created_at->toDateTimeString()
         ];
     }
 }

@@ -27,8 +27,19 @@ class Category extends BaseValidator
      */
     public function create(Request $request): Validator
     {
+        $decode = $this->hash->resourceType()->decode($request->input('resource_type_id'));
+        $resource_type_id = null;
+        if (count($decode) === 1) {
+            $resource_type_id = $decode[0];
+        }
+
         return ValidatorFacade::make(
-            $request->all(),
+            array_merge(
+                $request->all(),
+                [
+                    'resource_type_id' => $resource_type_id
+                ]
+            ),
             Config::get('api.routes.category.validation.POST.fields'),
             Config::get('api.routes.category.validation.POST.messages')
         );

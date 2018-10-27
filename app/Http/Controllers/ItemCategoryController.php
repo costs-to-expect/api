@@ -120,7 +120,7 @@ class ItemCategoryController extends Controller
     {
         Validate::item($resource_type_id, $resource_id, $item_id);
 
-        $this->setConditionalPostParameters();
+        $this->setConditionalPostParameters($resource_type_id);
 
         return $this->generateOptionsForIndex(
             'api.descriptions.item_category.GET_index',
@@ -235,15 +235,17 @@ class ItemCategoryController extends Controller
      * Set any conditional POST parameters, will be merged with the data arrays defined in
      * config/api/route.php
      *
+     * @param integer $resource_type_id
+     *
      * @return JsonResponse
      */
-    private function setConditionalPostParameters()
+    private function setConditionalPostParameters($resource_type_id)
     {
-        $categories = (new Category())->select('id', 'name', 'description')->get();
+        $categories = (new Category())->categoriesByResourceType($resource_type_id);
 
         $this->post_parameters = ['category_id' => []];
         foreach ($categories as $category) {
-            $id = $this->hash->encode('category', $category->id);
+            $id = $this->hash->encode('category', $category->category_id);
 
             if ($id === false) {
                 return response()->json(
@@ -256,8 +258,8 @@ class ItemCategoryController extends Controller
 
             $this->post_parameters['category_id']['allowed_values'][$id] = [
                 'value' => $id,
-                'name' => $category->name,
-                'description' => $category->description
+                'name' => $category->category_name,
+                'description' => $category->category_description
             ];
         }
     }
