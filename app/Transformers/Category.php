@@ -40,6 +40,10 @@ class Category extends Transformer
             'name' => $this->category->category_name,
             'description' => $this->category->category_description,
             'created' => $this->category->category_created_at,
+            'resource_type' => [
+                'id' => $this->hash->resourceType()->encode($this->category->resource_type_id),
+                'name' => $this->category->resource_type_name,
+            ],
             'sub_categories_count' => $this->category->category_sub_categories
         ];
 

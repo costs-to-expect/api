@@ -37,7 +37,9 @@ class Category extends Model
                 'category.description AS category_description',
                 'category.created_at AS category_created_at',
                 'category.updated_at AS category_updated_at',
-                DB::raw('(SELECT COUNT(sub_category.id) FROM sub_category WHERE sub_category.category_id = category.id) AS category_sub_categories')
+                DB::raw('(SELECT COUNT(sub_category.id) FROM sub_category WHERE sub_category.category_id = category.id) AS category_sub_categories'),
+                'resource_type.id AS resource_type_id',
+                'resource_type.name AS resource_type_name'
             )
             ->get();
     }
@@ -53,7 +55,9 @@ class Category extends Model
                 'category.description AS category_description',
                 'category.created_at AS category_created_at',
                 'category.updated_at AS category_updated_at',
-                DB::raw('(SELECT COUNT(sub_category.id) FROM sub_category WHERE sub_category.category_id = category.id) AS category_sub_categories')
+                DB::raw('(SELECT COUNT(sub_category.id) FROM sub_category WHERE sub_category.category_id = category.id) AS category_sub_categories'),
+                'resource_type.id AS resource_type_id',
+                'resource_type.name AS resource_type_name'
             )
             ->first();
     }
