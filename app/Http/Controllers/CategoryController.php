@@ -140,9 +140,21 @@ class CategoryController extends Controller
         }
 
         try {
+            $resource_type_id = $this->hash->decode('resource_type', $request->input('resource_type_id'));
+
+            if ($resource_type_id === false) {
+                return response()->json(
+                    [
+                        'message' => 'Unable to decode parameter or hasher not found'
+                    ],
+                    500
+                );
+            }
+
             $category = new Category([
                 'name' => $request->input('name'),
-                'description' => $request->input('description')
+                'description' => $request->input('description'),
+                'resource_type_id' => $resource_type_id
             ]);
             $category->save();
         } catch (Exception $e) {
