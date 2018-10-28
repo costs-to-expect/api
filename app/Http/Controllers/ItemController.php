@@ -293,8 +293,6 @@ class ItemController extends Controller
         (new Category())->paginatedCollection()->map(
             function ($category)
             {
-                //var_dump($category); die;
-
                 $this->get_parameters['category']['allowed_values'][$this->hash->encode('category', $category->category_id)] = [
                     'value' => $this->hash->encode('category', $category->category_id),
                     'name' => $category->name,

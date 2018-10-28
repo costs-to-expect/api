@@ -23,8 +23,9 @@ use Illuminate\Http\Request;
  */
 class CategoryController extends Controller
 {
-    protected $post_parameters = [];
     protected $collection_parameters = [];
+    protected $get_parameters = [];
+    protected $post_parameters = [];
     protected $show_parameters = [];
 
     /**
@@ -36,9 +37,9 @@ class CategoryController extends Controller
      */
     public function index(Request $request): JsonResponse
     {
-        $categories = (new Category())->paginatedCollection();
+        $this->collection_parameters = Get::parameters(['include_sub_categories', 'resource_type']);
 
-        $this->collection_parameters = Get::parameters(['include_sub_categories']);
+        $categories = (new Category())->paginatedCollection($this->collection_parameters);
 
         $headers = [
             'X-Total-Count' => count($categories)
@@ -94,6 +95,10 @@ class CategoryController extends Controller
      */
     public function optionsIndex(Request $request): JsonResponse
     {
+        $this->collection_parameters = Get::parameters(['include_sub_categories', 'resource_type']);
+
+        $this->setConditionalGetParameters();
+
         $this->setConditionalPostParameters();
 
         return $this->generateOptionsForIndex(
@@ -101,7 +106,8 @@ class CategoryController extends Controller
             'api.routes.category.parameters.collection',
             'api.descriptions.category.POST',
             'api.routes.category.fields',
-            $this->post_parameters
+            $this->post_parameters,
+            $this->get_parameters
         );
     }
 
@@ -227,5 +233,31 @@ class CategoryController extends Controller
                 'description' => $resource_type->resource_type_description
             ];
         }
+    }
+
+    /**
+     * Set any conditional GET parameters, will be merged with the data arrays defined in
+     * config/api/route.php
+     *
+     * @return void
+     */
+    private function setConditionalGetParameters()
+    {
+        $this->get_parameters = [
+            'resource_type' => [
+                'allowed_values' => []
+            ]
+        ];
+
+        (new ResourceType())->paginatedCollection()->map(
+            function ($resource_type)
+            {
+                $this->get_parameters['resource_type']['allowed_values'][$this->hash->encode('resource_type', $resource_type->id)] = [
+                    'value' => $this->hash->encode('resource_type', $resource_type->id),
+                    'name' => $resource_type->name,
+                    'description' => 'Include results for ' . $resource_type->name . ' resource type'
+                ];
+            }
+        );
     }
 }
