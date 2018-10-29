@@ -1,6 +1,6 @@
 # Changelog
 
-Full changelog for the costs to expect REST API.
+Full changelog for the Costs to Expect REST API.
 
 ## 2018-xx-xx - v1.07.0
 
@@ -8,7 +8,8 @@ Full changelog for the costs to expect REST API.
 * Two options for changelog, markdown on github and via API.
 * Added Google Analytics to landing page.
 * Corrected CHANGELOG dates, I'm not from the future.
-* Add category was n0t setting the selected resource type, using default value.
+* Add category was not setting the selected resource type, using default value.
+* Split routes up based on the middleware they require.
 
 ## 2018-10-27 - v1.06.0
 

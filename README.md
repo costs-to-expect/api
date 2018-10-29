@@ -166,9 +166,8 @@ These routes require authorisation.
 
 ## Planned development
 
-* Added filtering options for all GET routes, initially items route.
 * PATCH support.
-* PUTS support.
+* PUT support.
 * Upgrade Laravel to 5.7.
 * Move the user model.
 * Dev setting to show generated queries.
