@@ -122,10 +122,18 @@ class RequestController extends Controller
     public function optionsErrorLog(Request $request)
     {
         return $this->generateOptionsForIndex(
-            'api.descriptions.request.GET_error_log',
-            'api.routes.request.parameters.collection',
-            'api.descriptions.request.POST',
-            'api.routes.request.fields'
+            [
+                'description_key' => 'api.descriptions.request.GET_error_log',
+                'parameters_key' => 'api.routes.request.parameters.collection',
+                'conditionals' => [],
+                'authenticated' => false
+            ],
+            [
+                'description_key' => 'api.descriptions.request.POST',
+                'fields_key' => 'api.routes.request.fields',
+                'conditionals' => [],
+                'authenticated' => false
+            ]
         );
     }
 

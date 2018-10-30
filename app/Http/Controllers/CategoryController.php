@@ -102,12 +102,18 @@ class CategoryController extends Controller
         $this->setConditionalPostParameters();
 
         return $this->generateOptionsForIndex(
-            'api.descriptions.category.GET_index',
-            'api.routes.category.parameters.collection',
-            'api.descriptions.category.POST',
-            'api.routes.category.fields',
-            $this->post_parameters,
-            $this->get_parameters
+            [
+                'description_key' => 'api.descriptions.category.GET_index',
+                'parameters_key' => 'api.routes.category.parameters.collection',
+                'conditionals' => [],
+                'authenticated' => false
+            ],
+            [
+                'description_key' => 'api.descriptions.category.POST',
+                'fields_key' => 'api.routes.category.fields',
+                'conditionals' => [],
+                'authenticated' => true
+            ]
         );
     }
 

@@ -99,10 +99,18 @@ class SubCategoryController extends Controller
         Validate::category($category_id);
 
         return $this->generateOptionsForIndex(
-            'api.descriptions.sub_category.GET_index',
-            'api.routes.sub_category.parameters.collection',
-            'api.descriptions.sub_category.POST',
-            'api.routes.sub_category.fields'
+            [
+                'description_key' => 'api.descriptions.sub_category.GET_index',
+                'parameters_key' => 'api.routes.sub_category.parameters.collection',
+                'conditionals' => [],
+                'authenticated' => false
+            ],
+            [
+                'description_key' => 'api.descriptions.sub_category.POST',
+                'fields_key' => 'api.routes.sub_category.fields',
+                'conditionals' => [],
+                'authenticated' => true
+            ]
         );
     }
 
