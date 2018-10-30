@@ -8,8 +8,9 @@ Full changelog for the Costs to Expect REST API.
 * Two options for changelog, markdown on github and via API.
 * Added Google Analytics to landing page.
 * Corrected CHANGELOG dates, I'm not from the future.
-* Add category was not setting the selected resource type, using default value.
+* POST to categories was not setting the selected resource type, using default value.
 * Split routes up based on the middleware they require.
+* Reworked how OPTIONS are generated, can now set `authenticated`, new method is more expandable as new verbs are supported.
 
 ## 2018-10-27 - v1.06.0
 
