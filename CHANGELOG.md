@@ -2,7 +2,7 @@
 
 Full changelog for the Costs to Expect REST API.
 
-## 2018-xx-xx - v1.07.0
+## 2018-10-31 - v1.07.0
 
 * Added resource_type GET parameter to /categories route to filter results.
 * Two options for changelog, markdown on github and via API.
