@@ -2,7 +2,7 @@
 
 namespace App\Http\Parameters\Request\Validators;
 
-use Validator as BaseValidator;
+use App\Http\Parameters\Request\Validators\Validator as BaseValidator;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Config;

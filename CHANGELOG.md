@@ -2,6 +2,10 @@
 
 Full changelog for the Costs to Expect REST API.
 
+## 2018-10-31 - v1.07.1
+
+* Validator base class not set correctly.
+
 ## 2018-10-31 - v1.07.0
 
 * Added resource_type GET parameter to /categories route to filter results.
