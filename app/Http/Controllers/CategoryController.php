@@ -8,7 +8,7 @@ use App\Models\Category;
 use App\Models\ResourceType;
 use App\Transformers\Category as CategoryTransformer;
 use App\Utilities\Request as UtilityRequest;
-use App\Validators\Category as CategoryValidator;
+use App\Http\Parameters\Request\Validators\Category as CategoryValidator;
 use Exception;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\JsonResponse;

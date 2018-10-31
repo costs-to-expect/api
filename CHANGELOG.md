@@ -11,6 +11,7 @@ Full changelog for the Costs to Expect REST API.
 * POST to categories was not setting the selected resource type, using default value.
 * Split routes up based on the middleware they require.
 * Reworked how OPTIONS are generated, can now set `authenticated`, new method is more expandable as new verbs are supported.
+* Moved request validators classes, no sit alongside route validators. 
 
 ## 2018-10-27 - v1.06.0
 

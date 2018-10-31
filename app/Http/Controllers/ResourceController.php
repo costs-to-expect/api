@@ -6,7 +6,7 @@ use App\Http\Parameters\Route\Validate;
 use App\Models\Resource;
 use App\Transformers\Resource as ResourceTransformer;
 use App\Utilities\Request as UtilityRequest;
-use App\Validators\Resource as ResourceValidator;
+use App\Http\Parameters\Request\Validators\Resource as ResourceValidator;
 use Exception;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\JsonResponse;

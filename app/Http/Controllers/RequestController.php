@@ -7,7 +7,7 @@ use App\Models\RequestLog;
 use App\Transformers\RequestErrorLog as RequestErrorLogTransformer;
 use App\Transformers\RequestLog as RequestLogTransformer;
 use App\Utilities\Pagination as UtilityPagination;
-use App\Validators\RequestErrorLog as RequestErrorLogValidator;
+use App\Http\Parameters\Request\Validators\RequestErrorLog as RequestErrorLogValidator;
 use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;

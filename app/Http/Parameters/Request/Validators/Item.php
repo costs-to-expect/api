@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Validators;
+namespace App\Http\Parameters\Request\Validators;
 
-use App\Validators\Validator as BaseValidator;
+use Validator as BaseValidator;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Config;
