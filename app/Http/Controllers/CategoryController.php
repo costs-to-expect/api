@@ -8,7 +8,7 @@ use App\Models\Category;
 use App\Models\ResourceType;
 use App\Transformers\Category as CategoryTransformer;
 use App\Utilities\Request as UtilityRequest;
-use App\Validators\Category as CategoryValidator;
+use App\Http\Parameters\Request\Validators\Category as CategoryValidator;
 use Exception;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\JsonResponse;
@@ -23,8 +23,9 @@ use Illuminate\Http\Request;
  */
 class CategoryController extends Controller
 {
-    protected $post_parameters = [];
     protected $collection_parameters = [];
+    protected $get_parameters = [];
+    protected $post_parameters = [];
     protected $show_parameters = [];
 
     /**
@@ -36,9 +37,9 @@ class CategoryController extends Controller
      */
     public function index(Request $request): JsonResponse
     {
-        $categories = (new Category())->paginatedCollection();
+        $this->collection_parameters = Get::parameters(['include_sub_categories', 'resource_type']);
 
-        $this->collection_parameters = Get::parameters(['include_sub_categories']);
+        $categories = (new Category())->paginatedCollection($this->collection_parameters);
 
         $headers = [
             'X-Total-Count' => count($categories)
@@ -94,14 +95,25 @@ class CategoryController extends Controller
      */
     public function optionsIndex(Request $request): JsonResponse
     {
+        $this->collection_parameters = Get::parameters(['include_sub_categories', 'resource_type']);
+
+        $this->setConditionalGetParameters();
+
         $this->setConditionalPostParameters();
 
         return $this->generateOptionsForIndex(
-            'api.descriptions.category.GET_index',
-            'api.routes.category.parameters.collection',
-            'api.descriptions.category.POST',
-            'api.routes.category.fields',
-            $this->post_parameters
+            [
+                'description_key' => 'api.descriptions.category.GET_index',
+                'parameters_key' => 'api.routes.category.parameters.collection',
+                'conditionals' => [],
+                'authenticated' => false
+            ],
+            [
+                'description_key' => 'api.descriptions.category.POST',
+                'fields_key' => 'api.routes.category.fields',
+                'conditionals' => [],
+                'authenticated' => true
+            ]
         );
     }
 
@@ -140,9 +152,21 @@ class CategoryController extends Controller
         }
 
         try {
+            $resource_type_id = $this->hash->decode('resource_type', $request->input('resource_type_id'));
+
+            if ($resource_type_id === false) {
+                return response()->json(
+                    [
+                        'message' => 'Unable to decode parameter or hasher not found'
+                    ],
+                    500
+                );
+            }
+
             $category = new Category([
                 'name' => $request->input('name'),
-                'description' => $request->input('description')
+                'description' => $request->input('description'),
+                'resource_type_id' => $resource_type_id
             ]);
             $category->save();
         } catch (Exception $e) {
@@ -215,5 +239,31 @@ class CategoryController extends Controller
                 'description' => $resource_type->resource_type_description
             ];
         }
+    }
+
+    /**
+     * Set any conditional GET parameters, will be merged with the data arrays defined in
+     * config/api/route.php
+     *
+     * @return void
+     */
+    private function setConditionalGetParameters()
+    {
+        $this->get_parameters = [
+            'resource_type' => [
+                'allowed_values' => []
+            ]
+        ];
+
+        (new ResourceType())->paginatedCollection()->map(
+            function ($resource_type)
+            {
+                $this->get_parameters['resource_type']['allowed_values'][$this->hash->encode('resource_type', $resource_type->id)] = [
+                    'value' => $this->hash->encode('resource_type', $resource_type->id),
+                    'name' => $resource_type->name,
+                    'description' => 'Include results for ' . $resource_type->name . ' resource type'
+                ];
+            }
+        );
     }
 }

@@ -1,8 +1,19 @@
 # Changelog
 
-Full changelog for the costs to expect REST API.
+Full changelog for the Costs to Expect REST API.
 
-## 2019-10-27 - v1.06.0
+## 2018-10-31 - v1.07.0
+
+* Added resource_type GET parameter to /categories route to filter results.
+* Two options for changelog, markdown on github and via API.
+* Added Google Analytics to landing page.
+* Corrected CHANGELOG dates, I'm not from the future.
+* POST to categories was not setting the selected resource type, using default value.
+* Split routes up based on the middleware they require.
+* Reworked how OPTIONS are generated, can now set `authenticated`, new method is more expandable as new verbs are supported.
+* Moved request validators classes, no sit alongside route validators. 
+
+## 2018-10-27 - v1.06.0
 
 * Updated database, a category is now a child of a resource type, not global.
 * Updated categories collection and category, shows the resource type that category is assigned to.
@@ -11,7 +22,7 @@ Full changelog for the costs to expect REST API.
 * Request log and Request error log now show created times.
 * Minor updates to models.
 
-## 2019-10-22 - v1.05.0
+## 2018-10-22 - v1.05.0
 
 * Added the ability to POST a request error to the API.
 * Added request/error-log route.
@@ -21,7 +32,7 @@ Full changelog for the costs to expect REST API.
 * Removed all code referencing PATCH and update, not ready to implement yet and may modify design.
 * Minor refactoring, order of method params etc.
 
-## 2019-10-14 - v1.04.3
+## 2018-10-14 - v1.04.3
 
 * Catch routing error, incorrectly return a 200.
 * Corrected link to API from landing page.
@@ -29,7 +40,7 @@ Full changelog for the costs to expect REST API.
 * Added latest release and version number to landing page.
 * Minor change to README.
 
-## 2019-10-11 - v1.04.2
+## 2018-10-11 - v1.04.2
 
 * Added a /changlog route, parses and displays CHANGELOG.md.
 * Added a landing page, links to the root of the API and GitHub.
@@ -38,7 +49,7 @@ Full changelog for the costs to expect REST API.
 * Added Utility\Pagination helper class.
 * Added Utility\General helper class.
 
-## 2019-10-08 - v1.04.1
+## 2018-10-08 - v1.04.1
 
 * Corrected routes displayed in root of API.
 * Split Hashids middleware, now ConvertGetParameters and ConvertRouteParameters.
@@ -47,7 +58,7 @@ Full changelog for the costs to expect REST API.
 * Updated controllers to use new App\Http\Parameters\* classes.
 * Minor bug fix, booleans not being checked correctly.
 
-## 2019-09-25 - v1.04.0
+## 2018-09-25 - v1.04.0
 
 * GET parameters are now validated, invalid values are silently removed.
 * Added sub category parameter to /resource_types/{resource_type_id}/resources/{resource_id}/items.

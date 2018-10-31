@@ -6,7 +6,7 @@ use App\Http\Parameters\Route\Validate;
 use App\Models\Resource;
 use App\Transformers\Resource as ResourceTransformer;
 use App\Utilities\Request as UtilityRequest;
-use App\Validators\Resource as ResourceValidator;
+use App\Http\Parameters\Request\Validators\Resource as ResourceValidator;
 use Exception;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\JsonResponse;
@@ -96,10 +96,18 @@ class ResourceController extends Controller
         Validate::resourceType($resource_type_id);
 
         return $this->generateOptionsForIndex(
-            'api.descriptions.resource.GET_index',
-            'api.routes.resource.parameters.collection',
-            'api.descriptions.resource.POST',
-            'api.routes.resource.fields'
+            [
+                'description_key' => 'api.descriptions.resource.GET_index',
+                'parameters_key' => 'api.routes.resource.parameters.collection',
+                'conditionals' => [],
+                'authenticated' => false
+            ],
+            [
+                'description_key' => 'api.descriptions.resource.POST',
+                'fields_key' => 'api.routes.resource.fields',
+                'conditionals' => [],
+                'authenticated' => true
+            ]
         );
     }
 

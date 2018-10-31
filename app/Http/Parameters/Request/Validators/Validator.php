@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Validators;
+namespace App\Http\Parameters\Request\Validators;
 
 use App\Utilities\Hash;
 

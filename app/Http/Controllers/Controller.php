@@ -89,33 +89,33 @@ class Controller extends BaseController
     /**
      * Generate the OPTIONS request for the index routes
      *
-     * @param string $get_description_key
-     * @param string $post_description_key
-     * @param string $post_fields_key
-     * @param string $get_parameters_key
-     * @param array $conditional_post_fields Conditionally set POST fields,
-     * typically used to set allowed values
-     * @param array $conditional_get_parameters Conditionally set GET parameters,
-     * typically used to set allowed values
+     * @param array $get Data array to define description_key, parameters_key, conditionals and required
+     * @param array $post Data array to define description_key, parameters_key, conditionals and required
      */
     protected function generateOptionsForIndex(
-        string $get_description_key,
-        string $get_parameters_key,
-        string $post_description_key,
-        string $post_fields_key,
-        array $conditional_post_fields = [],
-        array $conditional_get_parameters = []
+        array $get = [
+            'description_key' => '',
+            'parameters_key' => '',
+            'conditionals' => [],
+            'authenticated' => false
+        ],
+        array $post = [
+            'description_key' => '',
+            'fields_key' => '',
+            'conditionals' => [],
+            'authenticated' => true
+        ]
     ) {
         $routes = [
             'GET' => [
-                'description' => Config::get($get_description_key),
-                'authenticated' => false,
-                'parameters' => array_merge_recursive(Config::get($get_parameters_key), $conditional_get_parameters)
+                'description' => Config::get($get['description_key']),
+                'authenticated' => $get['authenticated'],
+                'parameters' => array_merge_recursive(Config::get($get['parameters_key']), $get['conditionals'])
             ],
             'POST' => [
-                'description' => Config::get($post_description_key),
-                'authenticated' => true,
-                'fields' => array_merge_recursive(Config::get($post_fields_key), $conditional_post_fields)
+                'description' => Config::get($post['description_key']),
+                'authenticated' => $post['authenticated'],
+                'fields' => array_merge_recursive(Config::get($post['fields_key']), $post['conditionals'])
             ]
         ];
 

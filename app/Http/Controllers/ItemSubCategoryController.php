@@ -8,7 +8,7 @@ use App\Models\ItemSubCategory;
 use App\Models\SubCategory;
 use App\Transformers\ItemSubCategory as ItemSubCategoryTransformer;
 use App\Utilities\Request as UtilityRequest;
-use App\Validators\ItemSubCategory as ItemSubCategoryValidator;
+use App\Http\Parameters\Request\Validators\ItemSubCategory as ItemSubCategoryValidator;
 use Exception;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\JsonResponse;
@@ -153,11 +153,18 @@ class ItemSubCategoryController extends Controller
         }
 
         return $this->generateOptionsForIndex(
-            'api.descriptions.item_sub_category.GET_index',
-            'api.routes.item_sub_category.parameters.collection',
-            'api.descriptions.item_sub_category.POST',
-            'api.routes.item_sub_category.fields',
-            $this->post_parameters
+            [
+                'description_key' => 'api.descriptions.item_sub_category.GET_index',
+                'parameters_key' => 'api.routes.item_sub_category.parameters.collection',
+                'conditionals' => [],
+                'authenticated' => false
+            ],
+            [
+                'description_key' => 'api.descriptions.item_sub_category.POST',
+                'fields_key' => 'api.routes.item_sub_category.fields',
+                'conditionals' => $this->post_parameters,
+                'authenticated' => true
+            ]
         );
     }
 

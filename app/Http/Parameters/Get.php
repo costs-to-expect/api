@@ -3,6 +3,7 @@
 namespace App\Http\Parameters;
 
 use App\Models\Category;
+use App\Models\ResourceType;
 use App\Models\SubCategory;
 use App\Utilities\General;
 
@@ -78,6 +79,15 @@ class Get
                         if (intval(self::$parameters[$key]) < 1 ||
                             self::$parameters[$key] > 12) {
 
+                            unset(self::$parameters[$key]);
+                        }
+                    }
+                    break;
+
+                case 'resource_type':
+                    if (array_key_exists($key, self::$parameters) === true) {
+                        if ((new ResourceType())->
+                            where('id', '=', self::$parameters[$key])->exists() === false) {
                             unset(self::$parameters[$key]);
                         }
                     }

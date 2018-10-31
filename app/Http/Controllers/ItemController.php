@@ -10,7 +10,7 @@ use App\Models\SubCategory;
 use App\Transformers\Item as ItemTransformer;
 use App\Utilities\Pagination as UtilityPagination;
 use App\Utilities\Request as UtilityRequest;
-use App\Validators\Item as ItemValidator;
+use App\Http\Parameters\Request\Validators\Item as ItemValidator;
 use Exception;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\JsonResponse;
@@ -130,15 +130,21 @@ class ItemController extends Controller
 
         $this->collection_parameters = Get::parameters(['year', 'month', 'category', 'sub_category']);
 
-        $this->setConditionalGetParameters();
+        $this->setConditionalGetParameters($resource_type_id);
 
         return $this->generateOptionsForIndex(
-            'api.descriptions.item.GET_index',
-            'api.routes.item.parameters.collection',
-            'api.descriptions.item.POST',
-            'api.routes.item.fields',
-            [],
-            $this->get_parameters
+            [
+                'description_key' => 'api.descriptions.item.GET_index',
+                'parameters_key' => 'api.routes.item.parameters.collection',
+                'conditionals' => $this->get_parameters,
+                'authenticated' => false
+            ],
+            [
+                'description_key' => 'api.descriptions.item.POST',
+                'fields_key' => 'api.routes.item.fields',
+                'conditionals' => [],
+                'authenticated' => true
+            ]
         );
     }
 
@@ -258,9 +264,11 @@ class ItemController extends Controller
      * Set any conditional GET parameters, will be merged with the data arrays defined in
      * config/api/route.php
      *
+     * @param integer $resource_type_id
+     *
      * @return void
      */
-    private function setConditionalGetParameters()
+    private function setConditionalGetParameters($resource_type_id)
     {
         $this->get_parameters = [
             'year' => [
@@ -290,15 +298,13 @@ class ItemController extends Controller
             ];
         }
 
-        (new Category())->paginatedCollection()->map(
+        (new Category())->paginatedCollection(['resource_type'=>$resource_type_id])->map(
             function ($category)
             {
-                //var_dump($category); die;
-
                 $this->get_parameters['category']['allowed_values'][$this->hash->encode('category', $category->category_id)] = [
                     'value' => $this->hash->encode('category', $category->category_id),
-                    'name' => $category->name,
-                    'description' => 'Include results for ' . $category->name . ' category'
+                    'name' => $category->category_name,
+                    'description' => 'Include results for ' . $category->category_name . ' category'
                 ];
             }
         );

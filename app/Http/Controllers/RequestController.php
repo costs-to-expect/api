@@ -7,7 +7,7 @@ use App\Models\RequestLog;
 use App\Transformers\RequestErrorLog as RequestErrorLogTransformer;
 use App\Transformers\RequestLog as RequestLogTransformer;
 use App\Utilities\Pagination as UtilityPagination;
-use App\Validators\RequestErrorLog as RequestErrorLogValidator;
+use App\Http\Parameters\Request\Validators\RequestErrorLog as RequestErrorLogValidator;
 use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -122,10 +122,18 @@ class RequestController extends Controller
     public function optionsErrorLog(Request $request)
     {
         return $this->generateOptionsForIndex(
-            'api.descriptions.request.GET_error_log',
-            'api.routes.request.parameters.collection',
-            'api.descriptions.request.POST',
-            'api.routes.request.fields'
+            [
+                'description_key' => 'api.descriptions.request.GET_error_log',
+                'parameters_key' => 'api.routes.request.parameters.collection',
+                'conditionals' => [],
+                'authenticated' => false
+            ],
+            [
+                'description_key' => 'api.descriptions.request.POST',
+                'fields_key' => 'api.routes.request.fields',
+                'conditionals' => [],
+                'authenticated' => false
+            ]
         );
     }
 

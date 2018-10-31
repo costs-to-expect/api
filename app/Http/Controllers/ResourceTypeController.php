@@ -7,7 +7,7 @@ use App\Http\Parameters\Route\Validate;
 use App\Models\ResourceType;
 use App\Transformers\ResourceType as ResourceTypeTransformer;
 use App\Utilities\Request as UtilityRequest;
-use App\Validators\ResourceType as ResourceTypeValidator;
+use App\Http\Parameters\Request\Validators\ResourceType as ResourceTypeValidator;
 use Exception;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\JsonResponse;
@@ -93,10 +93,18 @@ class ResourceTypeController extends Controller
     public function optionsIndex(Request $request): JsonResponse
     {
         return $this->generateOptionsForIndex(
-            'api.descriptions.resource_type.GET_index',
-            'api.routes.resource_type.parameters.collection',
-            'api.descriptions.resource_type.POST',
-            'api.routes.resource_type.fields'
+            [
+                'description_key' => 'api.descriptions.resource_type.GET_index',
+                'parameters_key' => 'api.routes.resource_type.parameters.collection',
+                'conditionals' => [],
+                'authenticated' => false
+            ],
+            [
+                'description_key' => 'api.descriptions.resource_type.POST',
+                'fields_key' => 'api.routes.resource_type.fields',
+                'conditionals' => [],
+                'authenticated' => true
+            ]
         );
     }
 
