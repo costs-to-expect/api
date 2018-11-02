@@ -14,14 +14,6 @@ Route::group(
     ],
     function () {
         Route::get(
-            'categories',
-            'CategoryController@index'
-        );
-        Route::options(
-            'categories',
-            'CategoryController@optionsIndex'
-        );
-        Route::get(
             'resource_types/{resource_type_id}/resources/{resource_id}/items',
             'ItemController@index'
         );
