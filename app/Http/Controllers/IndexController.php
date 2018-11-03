@@ -113,7 +113,10 @@ class IndexController extends Controller
             [
                 'changes' => array_values($changes)
             ],
-            200
+            200,
+            [
+                'X-Total-Count' => ($i + 1)
+            ]
         );
     }
 
