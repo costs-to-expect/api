@@ -65,16 +65,16 @@ class Controller extends BaseController
      */
     protected function returnValidationErrors(Validator $validator, array $allowed_values = []): JsonResponse
     {
-        $validation_errors = ['fields' => []];
+        $validation_errors = [];
 
         foreach ($validator->errors()->toArray() as $field => $errors) {
             foreach ($errors as $error) {
-                $validation_errors['fields'][$field]['errors'][] = $error;
+                $validation_errors[$field]['errors'][] = $error;
             }
         }
 
         if (count($allowed_values) > 0) {
-            $validation_errors = array_merge_recursive($validation_errors['fields'], $allowed_values);
+            $validation_errors = array_merge_recursive($validation_errors, $allowed_values);
         }
 
         return response()->json(
