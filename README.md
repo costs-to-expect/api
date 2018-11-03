@@ -138,9 +138,11 @@ X-Link-Previous and X-Link-Next can be null.
 | OPTIONS  | v1/changelog |
 | GET/HEAD | v1/request/error-log |
 | OPTIONS  | v1/request/error-log |
+| POST     | v1/request/error-log |
 | GET/HEAD | v1/request/log |
 | OPTIONS  | v1/request/log |
-| POST     | v1/request/error-log |
+| GET/HEAD | v1/request/log/monthly-requests |
+| OPTIONS  | v1/request/log/monthly-requests |
 
 ## Management routes
 

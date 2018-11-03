@@ -2,14 +2,14 @@
 
 Full changelog for the Costs to Expect REST API.
 
-## 2018-xx-xx - v1.07.2
+## 2018-11-03 - v1.07.2
 
 * Route corrections, some routes using unnecessary middleware.
 * Total count missing from HEAD for changelog.
 * Validation errors nesting fields property twice.
 * Allowed values methods renamed without updating calls in create methods, throwing an error.
 * Category name needs to be unique for resource type.
-* New request route, request/log/monthly-requests number of logged requests per month.
+* New route, request/log/monthly-requests number of logged requests per month.
 
 ## 2018-10-31 - v1.07.1
 
