@@ -97,6 +97,28 @@ class RequestController extends Controller
     }
 
     /**
+     * Return a summary of the monthly requests
+     *
+     * @param Request $request
+     *
+     * @return JsonResponse
+     */
+    public function monthlyRequests(Request $request): JsonResponse
+    {
+        $monthly_summary = (new RequestLog())->monthlyRequests();
+
+        $summary = [];
+        foreach ($monthly_summary as $month) {
+            $summary[$month['year']][] = ['month' => $month['month'], 'requests' => $month['requests']];
+        }
+
+        return response()->json(
+            $summary,
+            200
+        );
+    }
+
+    /**
      * Generate the OPTIONS request for log
      *
      * @param Request $request
@@ -133,6 +155,24 @@ class RequestController extends Controller
                 'fields_key' => 'api.routes.request.fields',
                 'conditionals' => [],
                 'authenticated' => false
+            ]
+        );
+    }
+
+    /**
+     * Generate the OPTIONS request for monthly request summary
+     *
+     * @param Request $request
+     */
+    public function optionsMonthlyRequests(Request $request)
+    {
+        $this->optionsResponse(
+            [
+                'GET' => [
+                    'description' => Config::get('api.descriptions.request.GET_log_monthly_requests'),
+                    'authenticated' => false,
+                    'parameters' => []
+                ]
             ]
         );
     }

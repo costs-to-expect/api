@@ -67,6 +67,7 @@ return [
     ],
     'request' => [
         'GET_log' => 'Return the request log',
+        'GET_log_monthly_requests' => 'Return the number of logged requests per month',
         'GET_error_log' => 'Return the request error log',
         'POST' => 'Log an API request error'
     ]

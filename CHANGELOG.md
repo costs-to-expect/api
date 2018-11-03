@@ -9,6 +9,7 @@ Full changelog for the Costs to Expect REST API.
 * Validation errors nesting fields property twice.
 * Allowed values methods renamed without updating calls in create methods, throwing an error.
 * Category name needs to be unique for resource type.
+* New request route, request/log/monthly-requests number of logged requests per month.
 
 ## 2018-10-31 - v1.07.1
 
