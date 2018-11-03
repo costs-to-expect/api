@@ -50,7 +50,7 @@ return [
                     'resource_type_id' => 'required|exists:resource_type,id'
                 ],
                 'messages' => [
-                    'name.unique' => 'The category name has already been used'
+                    'name.unique' => 'The category name has already been used with this resource type'
                 ]
             ]
         ],

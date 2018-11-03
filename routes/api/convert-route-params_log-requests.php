@@ -39,14 +39,6 @@ Route::group(
         );
 
         Route::get(
-            'resource_types',
-            'ResourceTypeController@index'
-        );
-        Route::options(
-            'resource_types',
-            'ResourceTypeController@optionsIndex'
-        );
-        Route::get(
             'resource_types/{resource_type_id}',
             'ResourceTypeController@show'
         );

@@ -245,8 +245,10 @@ class ItemSubCategoryController extends Controller
 
         $validator = (new ItemSubCategoryValidator)->create($request, $item_category->category_id);
 
+        $this->setConditionalPostParameters($item_category_id);
+
         if ($validator->fails() === true) {
-            return $this->returnValidationErrors($validator, $this->allowedValues($item_category->category_id));
+            return $this->returnValidationErrors($validator, $this->post_parameters);
         }
 
         try {

@@ -202,8 +202,10 @@ class ItemCategoryController extends Controller
 
         $validator = (new ItemCategoryValidator)->create($request);
 
+        $this->setConditionalPostParameters($resource_type_id);
+
         if ($validator->fails() === true) {
-            return $this->returnValidationErrors($validator, $this->allowedValues());
+            return $this->returnValidationErrors($validator, $this->post_parameters);
         }
 
         try {

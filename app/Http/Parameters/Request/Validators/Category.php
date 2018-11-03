@@ -18,6 +18,27 @@ use Illuminate\Support\Facades\Validator as ValidatorFacade;
 class Category extends BaseValidator
 {
     /**
+     * Create the validation rules for the create request
+     *
+     * @param integer $resource_type_id
+     *
+     * @return array
+     */
+    private function createRules(int $resource_type_id = null): array
+    {
+        return array_merge(
+            [
+                'name' => [
+                    'required',
+                    'string',
+                    'unique:category,name,null,id,resource_type_id,' . $resource_type_id
+                ],
+            ],
+            Config::get('api.routes.category.validation.POST.fields')
+        );
+    }
+
+    /**
      * Return the validator object for the create request
      *
      * @param Request $request
@@ -39,7 +60,7 @@ class Category extends BaseValidator
                     'resource_type_id' => $resource_type_id
                 ]
             ),
-            Config::get('api.routes.category.validation.POST.fields'),
+            $this->createRules($resource_type_id),
             Config::get('api.routes.category.validation.POST.messages')
         );
     }
