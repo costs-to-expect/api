@@ -2,7 +2,7 @@
 
 ## Overview
 
-What does it costs to raise a child in the UK?
+What does it cost to raise a child in the UK?
 
 Costs to Expect is a long-term project, my wife and I are tracking the expenses to raise our child to 
 adulthood, 18.
