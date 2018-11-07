@@ -9,17 +9,28 @@ use Illuminate\Routing\Controller as BaseController;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Contracts\Validation\Validator;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Config;
 
 class Controller extends BaseController
 {
     use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
 
+    /**
+     * @var \App\Utilities\Hash
+     */
     protected $hash;
+
+    /**
+     * @var bool Include private content
+     */
+    protected $include_private;
 
     public function __construct()
     {
         $this->hash = new Hash();
+
+        $this->include_private = Auth::guard('api')->check();
     }
 
     /**

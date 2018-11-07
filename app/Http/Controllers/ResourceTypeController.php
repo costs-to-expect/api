@@ -34,7 +34,7 @@ class ResourceTypeController extends Controller
      */
     public function index(Request $request): JsonResponse
     {
-        $resource_types = (new ResourceType())->paginatedCollection();
+        $resource_types = (new ResourceType())->paginatedCollection($this->include_private);
 
         $this->collection_parameters = Get::parameters(['include_resources']);
 
@@ -136,7 +136,7 @@ class ResourceTypeController extends Controller
      */
     public function create(Request $request): JsonResponse
     {
-        $validator = (new ResourceTypeValidator)->create($request);
+        $validator = (new ResourceTypeValidator)->create($request, $this->include_private);
 
         if ($validator->fails() === true) {
             return $this->returnValidationErrors($validator);
@@ -145,7 +145,8 @@ class ResourceTypeController extends Controller
         try {
             $resource_type = new ResourceType([
                 'name' => $request->input('name'),
-                'description' => $request->input('description')
+                'description' => $request->input('description'),
+                'private' => $request->input('private', 0)
             ]);
             $resource_type->save();
         } catch (Exception $e) {

@@ -30,9 +30,15 @@ class ResourceType extends Model
         return $this->hasMany(Resource::class, 'resource_type_id', 'id')->count();
     }
 
-    public function paginatedCollection(int $offset = 0, int $limit = 10)
+    public function paginatedCollection(bool $include_private, int $offset = 0, int $limit = 10)
     {
-        return $this->latest()->get();
+        $collection = $this->latest();
+
+        if ($include_private === false) {
+            $collection->where('private', '=', 0);
+        }
+
+        return $collection->get();
     }
 
     public function single(int $resource_type_id)

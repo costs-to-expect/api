@@ -122,13 +122,21 @@ return [
                 'description' => 'Enter a description for the resource type',
                 'type' => 'string',
                 'required' => true
+            ],
+            'private' => [
+                'field' => 'private',
+                'title' => 'Is the a private resource type',
+                'description' => 'Please set whether this should be marked as a private resource type',
+                'type' => 'boolean',
+                'required' => true
             ]
         ],
         'validation' => [
             'POST' => [
                 'fields' => [
                     'name' => 'required|string|unique:resource_type,name',
-                    'description' => 'required|string'
+                    'description' => 'required|string',
+                    'private' => 'sometimes|boolean',
                 ],
                 'messages' => [
                     'name.unique' => 'The resource type has already been used'

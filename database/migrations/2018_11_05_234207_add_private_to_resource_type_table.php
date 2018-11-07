@@ -29,7 +29,7 @@ class AddPrivateToResourceTypeTable extends Migration
     public function down()
     {
         Schema::table('resource_type', function (Blueprint $table) {
-            $table->dropIndex('private');
+            $table->dropIndex('resource_type_private_index');
             $table->dropColumn('private');
         });
     }
