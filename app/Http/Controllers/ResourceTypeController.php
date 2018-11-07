@@ -68,7 +68,7 @@ class ResourceTypeController extends Controller
 
         $this->show_parameters = Get::parameters(['include_resources']);
 
-        $resource_type = (new ResourceType())->single($resource_type_id);
+        $resource_type = (new ResourceType())->single($resource_type_id, $this->include_private);
 
         if ($resource_type === null) {
             UtilityRequest::notFound();
