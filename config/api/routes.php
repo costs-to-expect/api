@@ -251,7 +251,18 @@ return [
                     'percentage' => 'sometimes|required|integer|between:1,100'
                 ],
                 'messages' => [
-                    'total.regex' => "Total cost in the format 0.00"
+                    'total.regex' => "Total cost must be in the format 0.00"
+                ]
+            ],
+            'PATCH' => [
+                'fields' => [
+                    'description' => 'sometimes|string',
+                    'effective_date' => 'sometimes|date_format:Y-m-d',
+                    'total' => 'sometimes|string|regex:/^\d+\.\d{2}$/',
+                    'percentage' => 'sometimes|integer|between:1,100'
+                ],
+                'messages' => [
+                    'total.regex' => "Total cost must be in the format 0.00"
                 ]
             ]
         ],
