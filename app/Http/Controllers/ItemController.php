@@ -15,6 +15,10 @@ use Exception;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Rs\Json\Patch;
+use Rs\Json\Patch\InvalidOperationException;
+use Rs\Json\Patch\InvalidPatchDocumentJsonException;
+use Rs\Json\Patch\InvalidTargetDocumentJsonException;
 
 /**
  * Manage items
@@ -225,7 +229,7 @@ class ItemController extends Controller
     }
 
     /**
-     * Update the select item
+     * Update the selected item
      *
      * @param Request $request
      * @param string $resource_type_id
@@ -244,23 +248,55 @@ class ItemController extends Controller
         Validate::item($resource_type_id, $resource_id, $item_id);
 
         $validator = (new ItemValidator)->update($request);
+        $update_fields = (new ItemValidator)->updateFields();
 
         if ($validator->fails() === true) {
             return $this->returnValidationErrors($validator);
         }
 
+        if (count($request->all()) === 0) {
+            return response()->json(
+                [
+                    'message' => 'Nothing to patch'
+                ],
+                400
+            );
+        }
+
+        $invalid_fields = [];
+        foreach ($request->all() as $key => $value) {
+            if (in_array($key, $update_fields) === false) {
+                $invalid_fields[] = $key;
+            }
+        }
+
+        if (count($invalid_fields) !== 0) {
+            return response()->json(
+                [
+                    'message' => 'Non existent fields in PATCH request body',
+                    'fields' => $invalid_fields
+                ],
+                400
+            );
+        }
+
         $item = (new Item())->single($resource_type_id, $resource_id, $item_id);
 
-        try {
-           /* $item = new Item([
-                'resource_id' => $resource_id,
-                'description' => $request->input('description'),
-                'effective_date' => $request->input('effective_date'),
-                'total' => $request->input('total'),
-                'percentage' => $request->input('percentage', 100),
-            ]);
+        $update_actualised = false;
+        foreach ($request->all() as $key => $value) {
+            $item->$key = $value;
+
+            if (in_array($key, ['total', 'percentage']) === true) {
+                $update_actualised = true;
+            }
+        }
+
+        if ($update_actualised === true) {
             $item->setActualisedTotal($item->total, $item->percentage);
-            $item->save();*/
+        }
+
+        try {
+            $item->save();
         } catch (Exception $e) {
             return response()->json(
                 [
@@ -272,7 +308,7 @@ class ItemController extends Controller
 
         return response()->json(
             (new ItemTransformer($item))->toArray(),
-            201
+            200
         );
     }
 

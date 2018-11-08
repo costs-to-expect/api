@@ -22,13 +22,8 @@ abstract class Transformer
 
     abstract public function toArray(): array;
 
-    public function arrayToJson(array $array = []): string
+    public function toJson(): string
     {
-        return json_encode($array);
-    }
-
-    public function jsonToArray(string $json = ''): array
-    {
-        return json_decode($json, true);
+        return json_encode($this->toArray());
     }
 }
