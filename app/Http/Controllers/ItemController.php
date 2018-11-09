@@ -254,6 +254,9 @@ class ItemController extends Controller
             return $this->returnValidationErrors($validator);
         }
 
+        /**
+         * Move this to a utility or base class
+         */
         if (count($request->all()) === 0) {
             return response()->json(
                 [
@@ -263,6 +266,9 @@ class ItemController extends Controller
             );
         }
 
+        /**
+         * Move this to a utility or base class
+         */
         $invalid_fields = [];
         foreach ($request->all() as $key => $value) {
             if (in_array($key, $update_fields) === false) {
@@ -270,6 +276,9 @@ class ItemController extends Controller
             }
         }
 
+        /**
+         * Move this to a utility or base class
+         */
         if (count($invalid_fields) !== 0) {
             return response()->json(
                 [
