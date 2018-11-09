@@ -60,9 +60,10 @@ POSTing to `http://api.local/v1/auth/login` - you will need a bearer for all the
 * Collections will return an array and 200.
 * Items will return a single object and a 200.
 * Successful POST requests will return a single object and a 201.
+* Successful PATCH requests will return a single object and a 200.
 * Successful DELETE requests will return a 204.
 * Non 2xx results will return an object with a message field and optionally a fields array, in the 
-case of a validator error, 422, the fields array will contain the validation errors.
+case of a validation error, 422, the fields array will contain the validation errors.
 
 ## Pagination
 
@@ -160,6 +161,7 @@ These routes require authorisation.
 | POST     | v1/resource_types/{resource_type_id}/resources |
 | DELETE   | v1/resource_types/{resource_type_id}/resources/{resource_id} |
 | POST     | v1/resource_types/{resource_type_id}/resources/{resource_id}/items |
+| PATCH    | v1/resource_types/{resource_type_id}/resources/{resource_id}/items/{item_id} |
 | DELETE   | v1/resource_types/{resource_type_id}/resources/{resource_id}/items/{item_id} |
 | POST     | v1/resource_types/{resource_type_id}/resources/{resource_id}/items/{item_id}/category |
 | DELETE   | v1/resource_types/{resource_type_id}/resources/{resource_id}/items/{item_id}/category/{item_category_id} |
