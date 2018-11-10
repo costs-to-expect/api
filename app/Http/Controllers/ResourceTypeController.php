@@ -64,7 +64,7 @@ class ResourceTypeController extends Controller
      */
     public function show(Request $request, string $resource_type_id): JsonResponse
     {
-        Validate::resourceType($resource_type_id);
+        Validate::resourceTypeRoute($resource_type_id);
 
         $this->show_parameters = Get::parameters(['include_resources']);
 
@@ -118,7 +118,7 @@ class ResourceTypeController extends Controller
      */
     public function optionsShow(Request $request, string $resource_type_id): JsonResponse
     {
-        Validate::resourceType($resource_type_id);
+        Validate::resourceTypeRoute($resource_type_id);
 
         return $this->generateOptionsForShow(
             'api.descriptions.resource_type.GET_show',
@@ -177,7 +177,7 @@ class ResourceTypeController extends Controller
         string $resource_type_id
     ): JsonResponse
     {
-        Validate::resourceType($resource_type_id);
+        Validate::resourceTypeRoute($resource_type_id);
 
         try {
             (new ResourceType())->find($resource_type_id)->delete();

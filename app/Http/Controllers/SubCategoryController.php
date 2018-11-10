@@ -31,7 +31,7 @@ class SubCategoryController extends Controller
      */
     public function index(Request $request, string $category_id): JsonResponse
     {
-        Validate::category($category_id);
+        Validate::categoryRoute($category_id);
 
         $sub_categories = (new SubCategory())->paginatedCollection($category_id);
 
@@ -66,7 +66,7 @@ class SubCategoryController extends Controller
         string $sub_category_id
     ): JsonResponse
     {
-        Validate::subCategory($category_id, $sub_category_id);
+        Validate::subCategoryRoute($category_id, $sub_category_id);
 
         $sub_category = (new SubCategory())->single(
             $category_id,
@@ -96,7 +96,7 @@ class SubCategoryController extends Controller
      */
     public function optionsIndex(Request $request, string $category_id): JsonResponse
     {
-        Validate::category($category_id);
+        Validate::categoryRoute($category_id);
 
         return $this->generateOptionsForIndex(
             [
@@ -129,7 +129,7 @@ class SubCategoryController extends Controller
         string $sub_category_id
     ): JsonResponse
     {
-        Validate::subCategory($category_id, $sub_category_id);
+        Validate::subCategoryRoute($category_id, $sub_category_id);
 
         return $this->generateOptionsForShow(
             'api.descriptions.sub_category.GET_show',
@@ -148,7 +148,7 @@ class SubCategoryController extends Controller
      */
     public function create(Request $request, string $category_id): JsonResponse
     {
-        Validate::category($category_id);
+        Validate::categoryRoute($category_id);
 
         $validator = (new SubCategoryValidator)->create($request, $category_id);
 
@@ -193,7 +193,7 @@ class SubCategoryController extends Controller
         string $sub_category_id
     ): JsonResponse
     {
-        Validate::subCategory($category_id, $sub_category_id);
+        Validate::subCategoryRoute($category_id, $sub_category_id);
 
         $sub_category = (new SubCategory())->single(
             $category_id,

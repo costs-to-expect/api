@@ -20,35 +20,35 @@ use App\Utilities\Request as UtilityRequest;
  */
 class Validate
 {
-    static public function category($category_id)
+    static public function categoryRoute($category_id)
     {
         if (Category::validate($category_id) === false) {
             UtilityRequest::notFound('Category not found');
         }
     }
 
-    static public function subCategory($category_id, $sub_category_id)
+    static public function subCategoryRoute($category_id, $sub_category_id)
     {
         if (SubCategory::validate($category_id, $sub_category_id) === false) {
             UtilityRequest::notFound('Sub category not found');
         }
     }
 
-    static public function resourceType($resource_type_id)
+    static public function resourceTypeRoute($resource_type_id)
     {
         if (ResourceType::validate($resource_type_id) === false) {
             UtilityRequest::notFound('Resource type not found');
         }
     }
 
-    static public function resource($resource_type_id, $resource_id)
+    static public function resourceRoute($resource_type_id, $resource_id)
     {
         if (Resource::validate($resource_type_id, $resource_id) === false) {
             UtilityRequest::notFound('Resource not found');
         }
     }
 
-    static public function item($resource_type_id, $resource_id, $item_id)
+    static public function itemRoute($resource_type_id, $resource_id, $item_id)
     {
         if (Item::validate($resource_type_id, $resource_id, $item_id) === false) {
             UtilityRequest::notFound('Item not found');

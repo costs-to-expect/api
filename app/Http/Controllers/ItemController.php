@@ -44,7 +44,7 @@ class ItemController extends Controller
      */
     public function index(Request $request, string $resource_type_id, string $resource_id): JsonResponse
     {
-        Validate::resource($resource_type_id, $resource_id);
+        Validate::resourceRoute($resource_type_id, $resource_id);
 
         $this->collection_parameters = Get::parameters(['year', 'month', 'category', 'sub_category']);
 
@@ -102,7 +102,7 @@ class ItemController extends Controller
         string $item_id
     ): JsonResponse
     {
-        Validate::resource($resource_type_id, $resource_id);
+        Validate::resourceRoute($resource_type_id, $resource_id);
 
         $item = (new Item())->single($resource_type_id, $resource_id, $item_id);
 
@@ -130,7 +130,7 @@ class ItemController extends Controller
      */
     public function optionsIndex(Request $request, string $resource_type_id, string $resource_id): JsonResponse
     {
-        Validate::resource($resource_type_id, $resource_id);
+        Validate::resourceRoute($resource_type_id, $resource_id);
 
         $this->collection_parameters = Get::parameters(['year', 'month', 'category', 'sub_category']);
 
@@ -169,7 +169,7 @@ class ItemController extends Controller
         string $item_id
     ): JsonResponse
     {
-        Validate::resource($resource_type_id, $resource_id);
+        Validate::resourceRoute($resource_type_id, $resource_id);
 
         $item = (new Item())->single($resource_type_id, $resource_id, $item_id);
 
@@ -195,7 +195,7 @@ class ItemController extends Controller
      */
     public function create(Request $request, string $resource_type_id, string $resource_id): JsonResponse
     {
-        Validate::resource($resource_type_id, $resource_id);
+        Validate::resourceRoute($resource_type_id, $resource_id);
 
         $validator = (new ItemValidator)->create($request);
 
@@ -245,7 +245,7 @@ class ItemController extends Controller
         string $item_id
     ): JsonResponse
     {
-        Validate::item($resource_type_id, $resource_id, $item_id);
+        Validate::itemRoute($resource_type_id, $resource_id, $item_id);
 
         $validator = (new ItemValidator)->update($request);
 
@@ -311,7 +311,7 @@ class ItemController extends Controller
         string $item_id
     ): JsonResponse
     {
-        Validate::resource($resource_type_id, $resource_id);
+        Validate::resourceRoute($resource_type_id, $resource_id);
 
         $item = (new Item())->single($resource_type_id, $resource_id, $item_id);
 
