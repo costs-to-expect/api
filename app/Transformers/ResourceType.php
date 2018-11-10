@@ -45,6 +45,7 @@ class ResourceType extends Transformer
             'name' => $this->resource_type->name,
             'description' => $this->resource_type->description,
             'created' => $this->resource_type->created_at->toDateTimeString(),
+            'public' => !boolval($this->resource_type->private),
             'resources_count' => $this->resource_type->resources_count()
         ];
 

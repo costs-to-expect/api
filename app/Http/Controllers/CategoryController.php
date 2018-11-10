@@ -67,7 +67,7 @@ class CategoryController extends Controller
      */
     public function show(Request $request, $category_id): JsonResponse
     {
-        Validate::category($category_id);
+        Validate::categoryRoute($category_id);
 
         $this->show_parameters = Get::parameters(['include_sub_categories']);
 
@@ -127,7 +127,7 @@ class CategoryController extends Controller
      */
     public function optionsShow(Request $request, string $category_id): JsonResponse
     {
-        Validate::category($category_id);
+        Validate::categoryRoute($category_id);
 
         return $this->generateOptionsForShow(
             'api.descriptions.category.GET_show',
@@ -197,7 +197,7 @@ class CategoryController extends Controller
         string $category_id
     ): JsonResponse
     {
-        Validate::category($category_id);
+        Validate::categoryRoute($category_id);
 
         try {
             (new Category())->find($category_id)->delete();
@@ -255,7 +255,7 @@ class CategoryController extends Controller
             ]
         ];
 
-        (new ResourceType())->paginatedCollection()->map(
+        (new ResourceType())->paginatedCollection($this->include_private)->map(
             function ($resource_type)
             {
                 $this->get_parameters['resource_type']['allowed_values'][$this->hash->encode('resource_type', $resource_type->id)] = [

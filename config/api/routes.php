@@ -122,13 +122,21 @@ return [
                 'description' => 'Enter a description for the resource type',
                 'type' => 'string',
                 'required' => true
+            ],
+            'private' => [
+                'field' => 'private',
+                'title' => 'Is the a private resource type',
+                'description' => 'Please set whether this should be marked as a private resource type',
+                'type' => 'boolean',
+                'required' => true
             ]
         ],
         'validation' => [
             'POST' => [
                 'fields' => [
                     'name' => 'required|string|unique:resource_type,name',
-                    'description' => 'required|string'
+                    'description' => 'required|string',
+                    'private' => 'sometimes|boolean',
                 ],
                 'messages' => [
                     'name.unique' => 'The resource type has already been used'
@@ -243,7 +251,18 @@ return [
                     'percentage' => 'sometimes|required|integer|between:1,100'
                 ],
                 'messages' => [
-                    'total.regex' => "Total cost in the format 0.00"
+                    'total.regex' => "Total cost must be in the format 0.00"
+                ]
+            ],
+            'PATCH' => [
+                'fields' => [
+                    'description' => 'sometimes|string',
+                    'effective_date' => 'sometimes|date_format:Y-m-d',
+                    'total' => 'sometimes|string|regex:/^\d+\.\d{2}$/',
+                    'percentage' => 'sometimes|integer|between:1,100'
+                ],
+                'messages' => [
+                    'total.regex' => "Total cost must be in the format 0.00"
                 ]
             ]
         ],

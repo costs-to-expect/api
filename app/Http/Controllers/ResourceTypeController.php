@@ -34,7 +34,7 @@ class ResourceTypeController extends Controller
      */
     public function index(Request $request): JsonResponse
     {
-        $resource_types = (new ResourceType())->paginatedCollection();
+        $resource_types = (new ResourceType())->paginatedCollection($this->include_private);
 
         $this->collection_parameters = Get::parameters(['include_resources']);
 
@@ -64,11 +64,11 @@ class ResourceTypeController extends Controller
      */
     public function show(Request $request, string $resource_type_id): JsonResponse
     {
-        Validate::resourceType($resource_type_id);
+        Validate::resourceTypeRoute($resource_type_id);
 
         $this->show_parameters = Get::parameters(['include_resources']);
 
-        $resource_type = (new ResourceType())->single($resource_type_id);
+        $resource_type = (new ResourceType())->single($resource_type_id, $this->include_private);
 
         if ($resource_type === null) {
             UtilityRequest::notFound();
@@ -118,7 +118,7 @@ class ResourceTypeController extends Controller
      */
     public function optionsShow(Request $request, string $resource_type_id): JsonResponse
     {
-        Validate::resourceType($resource_type_id);
+        Validate::resourceTypeRoute($resource_type_id);
 
         return $this->generateOptionsForShow(
             'api.descriptions.resource_type.GET_show',
@@ -136,7 +136,7 @@ class ResourceTypeController extends Controller
      */
     public function create(Request $request): JsonResponse
     {
-        $validator = (new ResourceTypeValidator)->create($request);
+        $validator = (new ResourceTypeValidator)->create($request, $this->include_private);
 
         if ($validator->fails() === true) {
             return $this->returnValidationErrors($validator);
@@ -145,7 +145,8 @@ class ResourceTypeController extends Controller
         try {
             $resource_type = new ResourceType([
                 'name' => $request->input('name'),
-                'description' => $request->input('description')
+                'description' => $request->input('description'),
+                'private' => $request->input('private', 0)
             ]);
             $resource_type->save();
         } catch (Exception $e) {
@@ -176,7 +177,7 @@ class ResourceTypeController extends Controller
         string $resource_type_id
     ): JsonResponse
     {
-        Validate::resourceType($resource_type_id);
+        Validate::resourceTypeRoute($resource_type_id);
 
         try {
             (new ResourceType())->find($resource_type_id)->delete();

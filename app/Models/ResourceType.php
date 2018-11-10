@@ -30,14 +30,39 @@ class ResourceType extends Model
         return $this->hasMany(Resource::class, 'resource_type_id', 'id')->count();
     }
 
-    public function paginatedCollection(int $offset = 0, int $limit = 10)
+    /**
+     * Return the paginated collection
+     *
+     * @param boolean $include_private Also include private resource type
+     * @param integer $offset Paging offset
+     * @param integer $limit Paging limit
+     * @return mixed
+     */
+    public function paginatedCollection(bool $include_private, int $offset = 0, int $limit = 10)
     {
-        return $this->latest()->get();
+        $collection = $this->latest();
+
+        if ($include_private === false) {
+            $collection->where('private', '=', 0);
+        }
+
+        return $collection->get();
     }
 
-    public function single(int $resource_type_id)
+    /**
+     * Return a single item
+     *
+     * @param integer $resource_type_id Resource type to return
+     * @param boolean $include_private Add additional check to ensure we don't return private resource types
+     * @return mixed
+     */
+    public function single(int $resource_type_id, bool $include_private)
     {
-        return $this->find($resource_type_id);
+        if ($include_private === false) {
+            return $this->where('private', '=', 0)->find($resource_type_id);
+        } else {
+            return $this->find($resource_type_id);
+        }
     }
 
     /**

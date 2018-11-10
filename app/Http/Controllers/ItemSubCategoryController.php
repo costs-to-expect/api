@@ -44,7 +44,7 @@ class ItemSubCategoryController extends Controller
         string $item_category_id
     ): JsonResponse
     {
-        Validate::item($resource_type_id, $resource_id, $item_id);
+        Validate::itemRoute($resource_type_id, $resource_id, $item_id);
 
         if ($item_category_id === 'nill') {
             UtilityRequest::notFound();
@@ -93,7 +93,7 @@ class ItemSubCategoryController extends Controller
         string $item_sub_category_id
     ): JsonResponse
     {
-        Validate::item($resource_type_id, $resource_id, $item_id);
+        Validate::itemRoute($resource_type_id, $resource_id, $item_id);
 
         if ($item_category_id === 'nill' || $item_sub_category_id === 'nill') {
             UtilityRequest::notFound();
@@ -141,7 +141,7 @@ class ItemSubCategoryController extends Controller
         string $item_category_id
     ): JsonResponse
     {
-        Validate::item($resource_type_id, $resource_id, $item_id);
+        Validate::itemRoute($resource_type_id, $resource_id, $item_id);
 
         if ($item_category_id === 'nill') {
             UtilityRequest::notFound();
@@ -189,7 +189,7 @@ class ItemSubCategoryController extends Controller
         string $item_sub_category_id
     ): JsonResponse
     {
-        Validate::item($resource_type_id, $resource_id, $item_id);
+        Validate::itemRoute($resource_type_id, $resource_id, $item_id);
 
         if ($item_category_id === 'nill' || $item_sub_category_id === 'nill') {
             UtilityRequest::notFound();
@@ -233,7 +233,7 @@ class ItemSubCategoryController extends Controller
         string $item_category_id
     ): JsonResponse
     {
-        Validate::item($resource_type_id, $resource_id, $item_id);
+        Validate::itemRoute($resource_type_id, $resource_id, $item_id);
 
         if ($item_category_id === 'nill') {
             UtilityRequest::notFound();
@@ -341,7 +341,7 @@ class ItemSubCategoryController extends Controller
         string $item_sub_category_id
     ): JsonResponse
     {
-        Validate::item($resource_type_id, $resource_id, $item_id);
+        Validate::itemRoute($resource_type_id, $resource_id, $item_id);
 
         if ($item_category_id === 'nill' || $item_sub_category_id === 'nill') {
             UtilityRequest::notFound();

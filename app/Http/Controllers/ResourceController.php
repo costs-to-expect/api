@@ -31,7 +31,7 @@ class ResourceController extends Controller
      */
     public function index(Request $request, string $resource_type_id): JsonResponse
     {
-        Validate::resourceType($resource_type_id);
+        Validate::resourceTypeRoute($resource_type_id);
 
         $resources = (new Resource)->paginatedCollection($resource_type_id);
 
@@ -66,7 +66,7 @@ class ResourceController extends Controller
         string $resource_id
     ): JsonResponse
     {
-        Validate::resource($resource_type_id, $resource_id);
+        Validate::resourceRoute($resource_type_id, $resource_id);
 
         $resource = (new Resource)->single($resource_type_id, $resource_id);
 
@@ -93,7 +93,7 @@ class ResourceController extends Controller
      */
     public function optionsIndex(Request $request, string $resource_type_id): JsonResponse
     {
-        Validate::resourceType($resource_type_id);
+        Validate::resourceTypeRoute($resource_type_id);
 
         return $this->generateOptionsForIndex(
             [
@@ -122,7 +122,7 @@ class ResourceController extends Controller
      */
     public function optionsShow(Request $request, string $resource_type_id, string $resource_id): JsonResponse
     {
-        Validate::resource($resource_type_id, $resource_id);
+        Validate::resourceRoute($resource_type_id, $resource_id);
 
         $resource = (new Resource)->single(
             $resource_type_id,
@@ -150,7 +150,7 @@ class ResourceController extends Controller
      */
     public function create(Request $request, string $resource_type_id): JsonResponse
     {
-        Validate::resourceType($resource_type_id);
+        Validate::resourceTypeRoute($resource_type_id);
 
         $validator = (new ResourceValidator)->create($request, $resource_type_id);
 
@@ -196,7 +196,7 @@ class ResourceController extends Controller
         string $resource_id
     ): JsonResponse
     {
-        Validate::resource($resource_type_id, $resource_id);
+        Validate::resourceRoute($resource_type_id, $resource_id);
 
         try {
             (new Resource())->find($resource_id)->delete();

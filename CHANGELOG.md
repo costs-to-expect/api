@@ -2,6 +2,13 @@
 
 Full changelog for the Costs to Expect REST API.
 
+## 2018-11-10 - v1.08.0
+
+* Initial support for PATCHing, to start /resource_types/{resource_type_id}/resources/{resource_id}/items/{item_id}.
+* Added initial support for private resource types, if a valid bearer exists private resource types are shown.
+* Updates to README around expected responses.
+* Renamed route validation helper methods, now clearer when shown in context.
+
 ## 2018-11-03 - v1.07.2
 
 * Route corrections, some routes using unnecessary middleware.

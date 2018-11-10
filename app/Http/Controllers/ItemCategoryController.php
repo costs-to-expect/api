@@ -36,7 +36,7 @@ class ItemCategoryController extends Controller
      */
     public function index(Request $request, string $resource_type_id, string $resource_id, string $item_id): JsonResponse
     {
-        Validate::item($resource_type_id, $resource_id, $item_id);
+        Validate::itemRoute($resource_type_id, $resource_id, $item_id);
 
         $item_category = (new ItemCategory())->paginatedCollection(
             $resource_type_id,
@@ -78,7 +78,7 @@ class ItemCategoryController extends Controller
         string $item_category_id
     ): JsonResponse
     {
-        Validate::item($resource_type_id, $resource_id, $item_id);
+        Validate::itemRoute($resource_type_id, $resource_id, $item_id);
 
         if ($item_category_id === 'nill') {
             UtilityRequest::notFound();
@@ -118,7 +118,7 @@ class ItemCategoryController extends Controller
      */
     public function optionsIndex(Request $request, string $resource_type_id, string $resource_id, string $item_id): JsonResponse
     {
-        Validate::item($resource_type_id, $resource_id, $item_id);
+        Validate::itemRoute($resource_type_id, $resource_id, $item_id);
 
         $this->setConditionalPostParameters($resource_type_id);
 
@@ -157,7 +157,7 @@ class ItemCategoryController extends Controller
         string $item_category_id
     ): JsonResponse
     {
-        Validate::item($resource_type_id, $resource_id, $item_id);
+        Validate::itemRoute($resource_type_id, $resource_id, $item_id);
 
         if ($item_category_id === 'nill') {
             UtilityRequest::notFound();
@@ -198,7 +198,7 @@ class ItemCategoryController extends Controller
         string $item_id
     ): JsonResponse
     {
-        Validate::item($resource_type_id, $resource_id, $item_id);
+        Validate::itemRoute($resource_type_id, $resource_id, $item_id);
 
         $validator = (new ItemCategoryValidator)->create($request);
 

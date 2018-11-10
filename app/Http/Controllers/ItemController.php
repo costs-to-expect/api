@@ -15,6 +15,10 @@ use Exception;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Rs\Json\Patch;
+use Rs\Json\Patch\InvalidOperationException;
+use Rs\Json\Patch\InvalidPatchDocumentJsonException;
+use Rs\Json\Patch\InvalidTargetDocumentJsonException;
 
 /**
  * Manage items
@@ -40,7 +44,7 @@ class ItemController extends Controller
      */
     public function index(Request $request, string $resource_type_id, string $resource_id): JsonResponse
     {
-        Validate::resource($resource_type_id, $resource_id);
+        Validate::resourceRoute($resource_type_id, $resource_id);
 
         $this->collection_parameters = Get::parameters(['year', 'month', 'category', 'sub_category']);
 
@@ -98,7 +102,7 @@ class ItemController extends Controller
         string $item_id
     ): JsonResponse
     {
-        Validate::resource($resource_type_id, $resource_id);
+        Validate::resourceRoute($resource_type_id, $resource_id);
 
         $item = (new Item())->single($resource_type_id, $resource_id, $item_id);
 
@@ -126,7 +130,7 @@ class ItemController extends Controller
      */
     public function optionsIndex(Request $request, string $resource_type_id, string $resource_id): JsonResponse
     {
-        Validate::resource($resource_type_id, $resource_id);
+        Validate::resourceRoute($resource_type_id, $resource_id);
 
         $this->collection_parameters = Get::parameters(['year', 'month', 'category', 'sub_category']);
 
@@ -165,7 +169,7 @@ class ItemController extends Controller
         string $item_id
     ): JsonResponse
     {
-        Validate::resource($resource_type_id, $resource_id);
+        Validate::resourceRoute($resource_type_id, $resource_id);
 
         $item = (new Item())->single($resource_type_id, $resource_id, $item_id);
 
@@ -191,7 +195,7 @@ class ItemController extends Controller
      */
     public function create(Request $request, string $resource_type_id, string $resource_id): JsonResponse
     {
-        Validate::resource($resource_type_id, $resource_id);
+        Validate::resourceRoute($resource_type_id, $resource_id);
 
         $validator = (new ItemValidator)->create($request);
 
@@ -225,6 +229,72 @@ class ItemController extends Controller
     }
 
     /**
+     * Update the selected item
+     *
+     * @param Request $request
+     * @param string $resource_type_id
+     * @param string $resource_id
+     * @param string $item_id
+     *
+     * @return JsonResponse
+     */
+    public function update(
+        Request $request,
+        string $resource_type_id,
+        string $resource_id,
+        string $item_id
+    ): JsonResponse
+    {
+        Validate::itemRoute($resource_type_id, $resource_id, $item_id);
+
+        $validator = (new ItemValidator)->update($request);
+
+        if ($validator->fails() === true) {
+            return $this->returnValidationErrors($validator);
+        }
+
+        if ($this->isThereAnythingToPatchInRequest() === false) {
+            return $this->returnNothingToPatchError();
+        }
+
+        $invalid_fields = $this->areThereInvalidFieldsInRequest(
+            (new ItemValidator)->updateFields()
+        );
+
+        if ($invalid_fields !== false) {
+            return $this->returnInvalidFieldsInRequestError($invalid_fields);
+        }
+
+        $item = (new Item())->single($resource_type_id, $resource_id, $item_id);
+
+        $update_actualised = false;
+        foreach ($request->all() as $key => $value) {
+            $item->$key = $value;
+
+            if (in_array($key, ['total', 'percentage']) === true) {
+                $update_actualised = true;
+            }
+        }
+
+        if ($update_actualised === true) {
+            $item->setActualisedTotal($item->total, $item->percentage);
+        }
+
+        try {
+            $item->save();
+        } catch (Exception $e) {
+            return response()->json(
+                [
+                    'message' => 'Error updating record'
+                ],
+                500
+            );
+        }
+
+        return $this->returnSuccessNoContent();
+}
+
+    /**
      * Delete the assigned item
      *
      * @param Request $request,
@@ -241,7 +311,7 @@ class ItemController extends Controller
         string $item_id
     ): JsonResponse
     {
-        Validate::resource($resource_type_id, $resource_id);
+        Validate::resourceRoute($resource_type_id, $resource_id);
 
         $item = (new Item())->single($resource_type_id, $resource_id, $item_id);
 
@@ -252,7 +322,7 @@ class ItemController extends Controller
         try {
             $item->delete();
 
-            return response()->json([], 204);
+            return $this->returnSuccessNoContent();
         } catch (QueryException $e) {
             UtilityRequest::foreignKeyConstraintError();
         } catch (Exception $e) {
