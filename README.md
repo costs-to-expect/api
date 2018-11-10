@@ -60,7 +60,7 @@ POSTing to `http://api.local/v1/auth/login` - you will need a bearer for all the
 * Collections will return an array and 200.
 * Items will return a single object and a 200.
 * Successful POST requests will return a single object and a 201.
-* Successful PATCH requests will return a single object and a 200.
+* Successful PATCH requests will return 204.
 * Successful DELETE requests will return a 204.
 * Non 2xx results will return an object with a message field and optionally a fields array, in the 
 case of a validation error, 422, the fields array will contain the validation errors.
@@ -176,5 +176,6 @@ These routes require authorisation.
 * Move the user model.
 * Dev setting to show generated queries.
 * Switch to Money class.
-* Create a white box version of API.
 * Add limits on POST for single item collections.
+* Additional helper classes
+* General refactoring

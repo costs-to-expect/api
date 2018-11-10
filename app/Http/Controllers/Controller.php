@@ -159,4 +159,87 @@ class Controller extends BaseController
 
         $this->optionsResponse($routes);
     }
+
+    /**
+     * Return a 400 as there is nothing to PATCH
+     *
+     * @return JsonResponse
+     */
+    protected function returnNothingToPatchError(): JsonResponse
+    {
+        response()->json(
+            [
+                'message' => 'There is nothing to PATCH, please include a request body'
+            ],
+            400
+        )->send();
+        exit();
+    }
+
+    /**
+     * Return a 400 as there are invalid fields in the request body
+     *
+     * @param array $invalid_fields An array of invalid fields
+     *
+     * @return JsonResponse
+     */
+    protected function returnInvalidFieldsInRequestError(array $invalid_fields): JsonResponse
+    {
+        response()->json(
+            [
+                'message' => 'Non existent fields in PATCH request body',
+                'fields' => $invalid_fields
+            ],
+            400
+        )->send();
+        exit();
+    }
+
+    /**
+     * Check the request to ensure there is data to attempt patch
+     *
+     * @return boolean
+     */
+    protected function isThereAnythingToPatchInRequest(): bool
+    {
+        if (count(request()->all()) === 0) {
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
+     * Return success, no content (204)
+     *
+     * @return JsonResponse
+     */
+    protected function returnSuccessNoContent(): JsonResponse
+    {
+        response()->json([], 204)->send();
+        exit();
+    }
+
+    /**
+     * Check to see if there are any invalid fields in the request
+     *
+     * @param array $update_fields An array of fields that can be patched
+     *
+     * @return false|array
+     */
+    protected function areThereInvalidFieldsInRequest(array $update_fields)
+    {
+        $invalid_fields = [];
+        foreach (request()->all() as $key => $value) {
+            if (in_array($key, $update_fields) === false) {
+                $invalid_fields[] = $key;
+            }
+        }
+
+        if (count($invalid_fields) !== 0) {
+            return $invalid_fields;
+        }
+
+        return false;
+    }
 }

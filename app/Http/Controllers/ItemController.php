@@ -248,45 +248,21 @@ class ItemController extends Controller
         Validate::item($resource_type_id, $resource_id, $item_id);
 
         $validator = (new ItemValidator)->update($request);
-        $update_fields = (new ItemValidator)->updateFields();
 
         if ($validator->fails() === true) {
             return $this->returnValidationErrors($validator);
         }
 
-        /**
-         * Move this to a utility or base class
-         */
-        if (count($request->all()) === 0) {
-            return response()->json(
-                [
-                    'message' => 'Nothing to patch'
-                ],
-                400
-            );
+        if ($this->isThereAnythingToPatchInRequest() === false) {
+            return $this->returnNothingToPatchError();
         }
 
-        /**
-         * Move this to a utility or base class
-         */
-        $invalid_fields = [];
-        foreach ($request->all() as $key => $value) {
-            if (in_array($key, $update_fields) === false) {
-                $invalid_fields[] = $key;
-            }
-        }
+        $invalid_fields = $this->areThereInvalidFieldsInRequest(
+            (new ItemValidator)->updateFields()
+        );
 
-        /**
-         * Move this to a utility or base class
-         */
-        if (count($invalid_fields) !== 0) {
-            return response()->json(
-                [
-                    'message' => 'Non existent fields in PATCH request body',
-                    'fields' => $invalid_fields
-                ],
-                400
-            );
+        if ($invalid_fields !== false) {
+            return $this->returnInvalidFieldsInRequestError($invalid_fields);
         }
 
         $item = (new Item())->single($resource_type_id, $resource_id, $item_id);
@@ -315,11 +291,8 @@ class ItemController extends Controller
             );
         }
 
-        return response()->json(
-            (new ItemTransformer($item))->toArray(),
-            200
-        );
-    }
+        return $this->returnSuccessNoContent();
+}
 
     /**
      * Delete the assigned item
@@ -349,7 +322,7 @@ class ItemController extends Controller
         try {
             $item->delete();
 
-            return response()->json([], 204);
+            return $this->returnSuccessNoContent();
         } catch (QueryException $e) {
             UtilityRequest::foreignKeyConstraintError();
         } catch (Exception $e) {
