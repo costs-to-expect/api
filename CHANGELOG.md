@@ -2,6 +2,10 @@
 
 Full changelog for the Costs to Expect REST API.
 
+## 2018-11-12 - v1.09.0
+
+* Added an expanded-summary categories route.
+
 ## 2018-11-10 - v1.08.0
 
 * Initial support for PATCHing, to start /resource_types/{resource_type_id}/resources/{resource_id}/items/{item_id}.

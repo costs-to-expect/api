@@ -256,4 +256,26 @@ class Item extends Model
             orderBy("month")->
             get();
     }
+
+    public function expandedCategoriesSummary(int $resource_type_id, int $resource_id)
+    {
+        return $this->
+            selectRaw("`category`.`name` AS `category`")->
+            selectRaw("`sub_category`.`name` AS `sub_category`")->
+            selectRaw("SUM(`item`.`actualised_total`) AS `actualised_total`")->
+            selectRaw("COUNT(`item`.`id`) AS `items`")->
+            join("item_category", "item_category.item_id", "item.id")->
+            join("item_sub_category", "item_sub_category.item_category_id", "item_category.id")->
+            join("category", "item_category.category_id", "category.id")->
+            join("sub_category", "item_sub_category.sub_category_id", "sub_category.id")->
+            join("resource", "item.resource_id", "resource.id")->
+            join("resource_type", "resource.resource_type_id", "resource_type.id")->
+            where('resource_type.id', '=', $resource_type_id)->
+            where('resource.id', '=', $resource_id)->
+            groupBy("sub_category.name")->
+            groupBy("category.name")->
+            orderBy("category.name")->
+            orderBy("sub_category.name")->
+            get();
+    }
 }
