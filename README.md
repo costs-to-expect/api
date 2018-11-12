@@ -112,6 +112,8 @@ X-Link-Previous and X-Link-Next can be null.
 
 | HTTP Verb(s) | Route |
 | :--- | :--- |
+| GET/HEAD | v1/resource_types/{resource_type_id}/resources/{resource_id}/expanded-summary/categories |
+| OPTIONS  | v1/resource_types/{resource_type_id}/resources/{resource_id}/expanded-summary/categories |
 | GET/HEAD | v1/resource_types/{resource_type_id}/resources/{resource_id}/summary/tco |
 | OPTIONS  | v1/resource_types/{resource_type_id}/resources/{resource_id}/summary/tco |
 | GET/HEAD | v1/resource_types/{resource_type_id}/resources/{resource_id}/summary/categories |

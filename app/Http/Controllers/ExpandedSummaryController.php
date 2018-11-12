@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Http\Parameters\Route\Validate;
+use App\Models\Item;
+use App\Transformers\CategorySubCategorySummary as CategorySubCategorySummaryTransformer;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Config;
@@ -30,12 +32,20 @@ class ExpandedSummaryController extends Controller
         string $resource_type_id,
         string $resource_id
     ): JsonResponse {
+
         Validate::resourceRoute($resource_type_id, $resource_id);
 
-        return response()->json(
-            [
+        $summary = (new Item())->expandedCategoriesSummary(
+            $resource_type_id,
+            $resource_id
+        );
 
-            ],
+        return response()->json(
+            $summary->map(
+                function ($summary_row) {
+                    return (new CategorySubCategorySummaryTransformer($summary_row))->toArray();
+                }
+            ),
             200
         );
     }
