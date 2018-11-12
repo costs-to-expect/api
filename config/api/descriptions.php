@@ -57,6 +57,7 @@ return [
     'summary' => [
         'GET_tco' => 'Total cost of ownership TCO for a resource',
         'GET_categories' => 'Return the categories summary for a resource',
+        'GET_expanded_categories' => 'Return the expanded categories summary for a resource',
         'GET_category' => 'Return the category summary for a resource',
         'GET_sub_categories' => 'Return the category sub categories summary for a resource',
         'GET_sub_category' => 'Return the category sub category summary for a resource',

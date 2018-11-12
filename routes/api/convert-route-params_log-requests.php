@@ -108,6 +108,14 @@ Route::group(
 
         // Summary end points
         Route::get(
+            'resource_types/{resource_type_id}/resources/{resource_id}/expanded_summary/categories',
+            'ExpandedSummaryController@categories'
+        );
+        Route::options(
+            'resource_types/{resource_type_id}/resources/{resource_id}/expanded_summary/categories',
+            'ExpandedSummaryController@optionsCategories'
+        );
+        Route::get(
             'resource_types/{resource_type_id}/resources/{resource_id}/summary/categories',
             'SummaryController@categories'
         );
