@@ -139,11 +139,15 @@ class Controller extends BaseController
      * @param string $get_description_key
      * @param string $get_parameters_key
      * @param string $delete_description_key
+     * @param string $patch_description_key
+     * @param string $patch_fields_key
      */
     protected function generateOptionsForShow(
         string $get_description_key,
         string $get_parameters_key,
-        string $delete_description_key
+        string $delete_description_key,
+        string $patch_description_key = '',
+        string $patch_fields_key = ''
     ) {
         $routes = [
             'GET' => [
@@ -154,8 +158,19 @@ class Controller extends BaseController
             'DELETE' => [
                 'description' => Config::get($delete_description_key),
                 'authenticated' => true,
-            ],
+            ]
         ];
+
+        if (strlen($patch_description_key) > 0) {
+            $routes['PATCH'] = [
+                'description' => Config::get($patch_description_key),
+                'authenticated' => true,
+            ];
+
+            if (strlen($patch_fields_key) > 0) {
+                $routes['PATCH']['fields'] = Config::get($patch_fields_key);
+            }
+        }
 
         $this->optionsResponse($routes);
     }

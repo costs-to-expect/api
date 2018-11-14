@@ -3,8 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Parameters\Route\Validate;
-use App\Models\Item;
-use App\Transformers\CategorySubCategorySummary as CategorySubCategorySummaryTransformer;
+use App\Models\SubCategory;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Config;
@@ -19,7 +18,7 @@ use Illuminate\Support\Facades\Config;
 class ExpandedSummaryController extends Controller
 {
     /**
-     * Return the TCO for the resource
+     * Return the expanded sub categories summary, all sub categories and current counts and totals
      *
      * @param Request $request
      * @param string $resource_type_id
@@ -35,23 +34,24 @@ class ExpandedSummaryController extends Controller
 
         Validate::resourceRoute($resource_type_id, $resource_id);
 
-        $summary = (new Item())->expandedCategoriesSummary(
+        $sub_categories_summary = (new SubCategory())->subCategorySummary(
             $resource_type_id,
             $resource_id
         );
 
+        $headers = [
+            'X-Total-Count' => count($sub_categories_summary)
+        ];
+
         return response()->json(
-            $summary->map(
-                function ($summary_row) {
-                    return (new CategorySubCategorySummaryTransformer($summary_row))->toArray();
-                }
-            ),
-            200
+            $sub_categories_summary,
+            200,
+            $headers
         );
     }
 
     /**
-     * Generate the OPTIONS request for the TCO
+     * Generate the OPTIONS request for expanded categories summary
      *
      * @param Request $request
      * @param string $resource_type_id
