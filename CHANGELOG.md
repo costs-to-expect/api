@@ -2,6 +2,10 @@
 
 Full changelog for the Costs to Expect REST API.
 
+## 2018-11-14 - v1.09.2
+
+* Correction to query, not using the params passed into the method.
+
 ## 2018-11-14 - v1.09.1
 
 * Altered the query for the expanded summary, now begins at subcategories and shows categories without items.

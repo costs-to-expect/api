@@ -76,13 +76,17 @@ class SubCategory extends Model
                 ) AS assigned_items ON 
                     assigned_items.sub_category_id = sub_category.id        
                 WHERE 
-                    resource_type.id = 1
+                    resource_type.id = :resource_type_id
                     AND 
-                    resource.id = 1
+                    resource.id = :resource_id
                 ORDER BY 
                     category.name ASC, 
                     sub_category.name ASC"
-            )
+            ),
+            [
+                'resource_type_id' => $resource_type_id,
+                'resource_id' => $resource_id
+            ]
         );
     }
 }
