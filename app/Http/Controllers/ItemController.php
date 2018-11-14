@@ -180,7 +180,9 @@ class ItemController extends Controller
         return $this->generateOptionsForShow(
             'api.descriptions.item.GET_show',
             'api.routes.item.parameters.item',
-            'api.descriptions.item.DELETE'
+            'api.descriptions.item.DELETE',
+            'api.descriptions.item.PATCH',
+            'api.routes.item.fields'
         );
     }
 

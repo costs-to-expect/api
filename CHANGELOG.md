@@ -2,6 +2,11 @@
 
 Full changelog for the Costs to Expect REST API.
 
+## 2018-11-15 - v1.09.1
+
+* Altered the query for the expanded summary, now begins at sub categories and shows categories without items.
+* OPTIONS request not showing PATCH options.
+
 ## 2018-11-12 - v1.09.0
 
 * Added an expanded-summary categories route.
