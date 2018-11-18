@@ -208,9 +208,16 @@ class ItemSubCategoryController extends Controller
         }
 
         return $this->generateOptionsForShow(
-            'api.descriptions.item_sub_category.GET_show',
-            'api.routes.item_sub_category.parameters.item',
-            'api.descriptions.item_sub_category.DELETE'
+            [
+                'description_key' => 'api.descriptions.item_sub_category.GET_show',
+                'parameters_key' => 'api.routes.item_sub_category.parameters.item',
+                'conditionals' => [],
+                'authenticated' => false
+            ],
+            [
+                'description_key' => 'api.descriptions.item_sub_category.DELETE',
+                'authenticated' => true
+            ]
         );
     }
 

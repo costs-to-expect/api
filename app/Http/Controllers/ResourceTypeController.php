@@ -121,9 +121,16 @@ class ResourceTypeController extends Controller
         Validate::resourceTypeRoute($resource_type_id);
 
         return $this->generateOptionsForShow(
-            'api.descriptions.resource_type.GET_show',
-            'api.routes.resource_type.parameters.item',
-            'api.descriptions.resource_type.DELETE'
+            [
+                'description_key' => 'api.descriptions.resource_type.GET_show',
+                'parameters_key' => 'api.routes.resource_type.parameters.item',
+                'conditionals' => [],
+                'authenticated' => false
+            ],
+            [
+                'description_key' => 'api.descriptions.resource_type.DELETE',
+                'authenticated' => true
+            ]
         );
     }
 
