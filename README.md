@@ -16,7 +16,7 @@ If you think about the number, it becomes apparent quickly that it can't be righ
 £10k a year?
 
 This API will show the costs to raise my child; obviously, every family is different, these costs only 
-relate to my family, more details will appear on https://www.costs-to-expect.com as the site develops.
+relate to my family, more details will appear on https://www.costs-to-expect.com as out family and site develops.
 
 ## The API
 
@@ -31,7 +31,7 @@ development setup, go to the project root directory and run the below.
 ### Environment
 
 * Run `docker-compose build`
-* Create the following directories in `.docker`, `.docker/app/php`, `.docker/app/mysql` and `.docker/app/mysql/data`
+* Create the following directories `.docker`, `.docker/app/php`, `.docker/app/mysql` and `.docker/app/mysql/data`
 * Run `docker-compose up`
 
 ### App
@@ -48,12 +48,13 @@ install Passport.
 
 * Copy the `.env.example` file and name the copy `.env`, set your environment settings
 * `composer install`
+* `docker-compose exec app php artisan key:generate`
 * `docker-compose exec app php artisan migrate`
 * `docker-compose exec app php artisan passport:install`
-* Run an OPTIONS request on `http://api.local/v1/resource_types`, you should see a nice OPTIONS request, 
-alternatively a GET request to `http://api.local/v1` will show all the routes.
-* You can add a development user by POSTing to `http://api.local/v1/auth/register` and then get a bearer by 
-POSTing to `http://api.local/v1/auth/login` - you will need a bearer for all the routes that require authentication.
+* Run an OPTIONS request on `http://[your.domail.local]/v1/resource_types`, you should see a nice OPTIONS request, 
+alternatively a GET request to `http://[your.domail.local]/v1` will show all the routes.
+* You can add a development user by POSTing to `http://[your.domail.local]/v1/auth/register` and then get a bearer by 
+POSTing to `http://[your.domail.local]/v1/auth/login` - you will need a bearer for all the routes that require authentication.
 
 ## Responses
 
@@ -172,12 +173,11 @@ These routes require authorisation.
 
 ## Planned development
 
-* PATCH support.
-* PUT support.
+* PATCH support for all show routes.
+* PUT support for collections.
 * Upgrade Laravel to 5.7.
 * Move the user model.
-* Dev setting to show generated queries.
-* Switch to Money class.
-* Add limits on POST for single item collections.
-* Additional helper classes
-* General refactoring
+* Development setting to show generated queries.
+* Switch to Money class rather than using DECIMAL in database.
+* Add limits on POST for single item collections, item category and item sub category.
+* Additional helper classes.
