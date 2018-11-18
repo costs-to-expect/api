@@ -178,11 +178,22 @@ class ItemController extends Controller
         }
 
         return $this->generateOptionsForShow(
-            'api.descriptions.item.GET_show',
-            'api.routes.item.parameters.item',
-            'api.descriptions.item.DELETE',
-            'api.descriptions.item.PATCH',
-            'api.routes.item.fields'
+            [
+                'description_key' => 'api.descriptions.item.GET_show',
+                'parameters_key' => 'api.routes.item.parameters.item',
+                'conditionals' => [],
+                'authenticated' => false
+            ],
+            [
+                'description_key' => 'api.routes.item.parameters.item',
+                'authenticated' => true
+            ],
+            [
+                'description_key' => 'api.descriptions.item.PATCH',
+                'fields_key' => 'api.routes.item.fields',
+                'conditionals' => [],
+                'authenticated' => false
+            ]
         );
     }
 

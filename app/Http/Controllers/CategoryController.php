@@ -130,9 +130,16 @@ class CategoryController extends Controller
         Validate::categoryRoute($category_id);
 
         return $this->generateOptionsForShow(
-            'api.descriptions.category.GET_show',
-            'api.routes.category.parameters.item',
-            'api.descriptions.category.DELETE'
+            [
+                'description_key' => 'api.descriptions.category.GET_show',
+                'parameters_key' => 'api.routes.category.parameters.item',
+                'conditionals' => [],
+                'authenticated' => false
+            ],
+            [
+                'description_key' => 'api.descriptions.category.DELETE',
+                'authenticated' => true
+            ]
         );
     }
 

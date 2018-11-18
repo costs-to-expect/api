@@ -136,40 +136,46 @@ class Controller extends BaseController
     /**
      * Generate the OPTIONS request for the show routes
      *
-     * @param string $get_description_key
-     * @param string $get_parameters_key
-     * @param string $delete_description_key
-     * @param string $patch_description_key
-     * @param string $patch_fields_key
+     * @param array $get Data array to define description_key, parameters_key, conditionals and authenticated
+     * @param array $delete Data array to define description_key and authenticated
+     * @param array $patch Data array to define description_key, fields_key, conditionals and authenticated
      */
     protected function generateOptionsForShow(
-        string $get_description_key,
-        string $get_parameters_key,
-        string $delete_description_key,
-        string $patch_description_key = '',
-        string $patch_fields_key = ''
+        array $get = [
+            'description_key' => '',
+            'parameters_key' => '',
+            'conditionals' => [],
+            'authenticated' => false
+        ],
+        array $delete = [
+            'description_key' => '',
+            'authenticated' => false
+        ],
+        array $patch = [
+            'description_key' => '',
+            'fields_key' => '',
+            'conditionals' => [],
+            'authenticated' => false
+        ]
     ) {
         $routes = [
             'GET' => [
-                'description' => Config::get($get_description_key),
-                'authenticated' => false,
-                'parameters' => Config::get($get_parameters_key)
+                'description' => Config::get($get['description_key']),
+                'authenticated' => $get['authenticated'],
+                'parameters' => array_merge_recursive(Config::get($get['parameters_key']), $get['conditionals'])
             ],
             'DELETE' => [
-                'description' => Config::get($delete_description_key),
-                'authenticated' => true,
+                'description' => Config::get($delete['description_key']),
+                'authenticated' => $delete['authenticated']
             ]
         ];
 
-        if (strlen($patch_description_key) > 0) {
+        if (strlen($patch['description_key']) > 0) {
             $routes['PATCH'] = [
-                'description' => Config::get($patch_description_key),
-                'authenticated' => true,
+                'description' => Config::get($patch['description_key']),
+                'authenticated' => $patch['authenticated'],
+                'parameters' => array_merge_recursive(Config::get($patch['fields_key']), $patch['conditionals'])
             ];
-
-            if (strlen($patch_fields_key) > 0) {
-                $routes['PATCH']['fields'] = Config::get($patch_fields_key);
-            }
         }
 
         $this->optionsResponse($routes);

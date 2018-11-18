@@ -132,9 +132,16 @@ class SubCategoryController extends Controller
         Validate::subCategoryRoute($category_id, $sub_category_id);
 
         return $this->generateOptionsForShow(
-            'api.descriptions.sub_category.GET_show',
-            'api.routes.sub_category.parameters.item',
-            'api.descriptions.sub_category.DELETE'
+            [
+                'description_key' => 'api.descriptions.sub_category.GET_show',
+                'parameters_key' => 'api.routes.sub_category.parameters.item',
+                'conditionals' => [],
+                'authenticated' => false
+            ],
+            [
+                'description_key' => 'api.descriptions.sub_category.DELETE',
+                'authenticated' => true
+            ]
         );
     }
 
