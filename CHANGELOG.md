@@ -2,6 +2,10 @@
 
 Full changelog for the Costs to Expect REST API.
 
+## 2019-xx-xx - v1.10.0
+
+* Updated copyright, now 2018-2019.
+
 ## 2018-11-18 - v1.09.3
 
 * Updated how OPTIONS are generated for show requests, easier to define all route options.

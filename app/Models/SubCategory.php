@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace App\Models;
 
@@ -38,8 +39,7 @@ class SubCategory extends Model
 
     public function subCategorySummary(int $resource_type_id, int $resource_id)
     {
-        return DB::select(
-            DB::raw("
+        $query = DB::raw("
                 SELECT 
                     category.name AS category, 
                     sub_category.name AS sub_category,
@@ -81,8 +81,10 @@ class SubCategory extends Model
                     resource.id = :resource_id
                 ORDER BY 
                     category.name ASC, 
-                    sub_category.name ASC"
-            ),
+                    sub_category.name ASC")->getValue();
+
+        return DB::select(
+            $query,
             [
                 'resource_type_id' => $resource_type_id,
                 'resource_id' => $resource_id

@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace App\Http\Parameters\Route\Validators;
 
@@ -30,7 +31,7 @@ class ItemSubCategory
         $item_id,
         $item_category_id,
         $item_sub_category_id
-    ) {
+    ): bool {
         if (
             $resource_type_id === 'nill' ||
             $resource_id === 'nill' ||

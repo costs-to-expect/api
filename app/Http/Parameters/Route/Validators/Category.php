@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace App\Http\Parameters\Route\Validators;
 
@@ -20,7 +21,7 @@ class Category
      *
      * @return boolean
      */
-    static public function validate($category_id)
+    static public function validate($category_id): bool
     {
         if ($category_id === 'nill' || (new CategoryModel)->find($category_id)->exists() === false) {
             return false;

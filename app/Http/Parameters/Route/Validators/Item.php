@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace App\Http\Parameters\Route\Validators;
 
@@ -22,7 +23,7 @@ class Item
      *
      * @return boolean
      */
-    static public function validate($resource_type_id, $resource_id, $item_id)
+    static public function validate($resource_type_id, $resource_id, $item_id): bool
     {
         if (
             $resource_type_id === 'nill' ||

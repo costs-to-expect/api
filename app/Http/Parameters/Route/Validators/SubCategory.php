@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace App\Http\Parameters\Route\Validators;
 
@@ -22,7 +23,7 @@ class SubCategory
      *
      * @return boolean
      */
-    static public function validate($category_id, $sub_category_id)
+    static public function validate($category_id, $sub_category_id): bool
     {
         if (
             $category_id === 'nill' ||
