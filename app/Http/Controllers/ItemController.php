@@ -15,10 +15,6 @@ use Exception;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Rs\Json\Patch;
-use Rs\Json\Patch\InvalidOperationException;
-use Rs\Json\Patch\InvalidPatchDocumentJsonException;
-use Rs\Json\Patch\InvalidTargetDocumentJsonException;
 
 /**
  * Manage items
@@ -381,7 +377,7 @@ class ItemController extends Controller
             ];
         }
 
-        (new Category())->paginatedCollection(['resource_type'=>$resource_type_id])->map(
+        (new Category())->paginatedCollection($this->include_private, ['resource_type'=>$resource_type_id])->map(
             function ($category)
             {
                 $this->get_parameters['category']['allowed_values'][$this->hash->encode('category', $category->category_id)] = [

@@ -39,7 +39,7 @@ class CategoryController extends Controller
     {
         $this->collection_parameters = Get::parameters(['include_sub_categories', 'resource_type']);
 
-        $categories = (new Category())->paginatedCollection($this->collection_parameters);
+        $categories = (new Category())->paginatedCollection($this->include_private, $this->collection_parameters);
 
         $headers = [
             'X-Total-Count' => count($categories)

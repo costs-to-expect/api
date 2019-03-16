@@ -8,6 +8,7 @@ Full changelog for the Costs to Expect REST API.
 * Added `declare(strict_types=1)` to non framework files.
 * Added missing return types and method param hints.
 * Moved some configuration values into `.env`, no need for them to exist in config directly.
+* Removed some rogue `use` statements.
 
 ## 2018-11-18 - v1.09.3
 
