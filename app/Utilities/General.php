@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace App\Utilities;
 
@@ -19,7 +20,7 @@ class General
      *
      * @return bool
      */
-    static public function booleanValue($value)
+    static public function booleanValue($value): bool
     {
         if (filter_var($value, FILTER_VALIDATE_BOOLEAN) === true) {
             return true;
@@ -37,7 +38,7 @@ class General
      *
      * @return bool
      */
-    static public function isBooleanValue($value)
+    static public function isBooleanValue($value): bool
     {
         $filtered = filter_var($value, FILTER_VALIDATE_BOOLEAN,FILTER_NULL_ON_FAILURE);
 
