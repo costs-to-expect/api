@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
  * Request error log
  *
  * @author Dean Blackborough <dean@g3d-development.com>
- * @copyright Dean Blackborough 2018
+ * @copyright Dean Blackborough 2018-2019
  * @license https://github.com/costs-to-expect/api/blob/master/LICENSE
  */
 class RequestErrorLog extends Model
