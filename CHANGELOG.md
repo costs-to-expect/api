@@ -4,6 +4,7 @@ Full changelog for the Costs to Expect REST API.
 
 ## 2019-xx-xx - v1.10.0
 
+* Categories linked to private resource types don't display if not authenticated.
 * Updated copyright, now 2018-2019.
 * Added `declare(strict_types=1)` to non framework files.
 * Added missing return types and method param hints.
