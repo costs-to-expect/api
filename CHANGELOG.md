@@ -10,6 +10,7 @@ Full changelog for the Costs to Expect REST API.
 * Added missing return types and method param hints.
 * Moved some configuration values into `.env`, no need for them to exist in config directly.
 * Removed some rogue `use` statements.
+* Reviewed PATCH support for items, made a few minor changes to catch more errors.
 
 ## 2018-11-18 - v1.09.3
 
