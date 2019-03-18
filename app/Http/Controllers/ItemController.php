@@ -256,25 +256,25 @@ class ItemController extends Controller
     {
         Validate::itemRoute($resource_type_id, $resource_id, $item_id);
 
-        $validator = (new ItemValidator)->update($request);
-
-        if ($validator->fails() === true) {
-            return $this->returnValidationErrors($validator);
-        }
-
         if ($this->isThereAnythingToPatchInRequest() === false) {
             return $this->returnNothingToPatchError();
         }
 
-        $invalid_fields = $this->areThereInvalidFieldsInRequest(
-            (new ItemValidator)->updateFields()
-        );
+        $validate = (new ItemValidator)->update($request);
+        if ($validate->fails() === true) {
+            return $this->returnValidationErrors($validate);
+        }
 
+        $invalid_fields = $this->areThereInvalidFieldsInRequest((new Item())->patchableFields());
         if ($invalid_fields !== false) {
             return $this->returnInvalidFieldsInRequestError($invalid_fields);
         }
 
         $item = (new Item())->single($resource_type_id, $resource_id, $item_id);
+
+        if ($item === null) {
+            return $this->returnFailedToSelectModelForUpdate();
+        }
 
         $update_actualised = false;
         foreach ($request->all() as $key => $value) {
@@ -292,12 +292,7 @@ class ItemController extends Controller
         try {
             $item->save();
         } catch (Exception $e) {
-            return response()->json(
-                [
-                    'message' => 'Error updating record'
-                ],
-                500
-            );
+            return $this->returnFailedToSaveModelForUpdate();
         }
 
         return $this->returnSuccessNoContent();
