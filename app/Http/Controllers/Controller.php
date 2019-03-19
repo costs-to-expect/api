@@ -245,38 +245,6 @@ class Controller extends BaseController
     }
 
     /**
-     * Return unable to select model data prior to update (500)
-     *
-     * @return JsonResponse
-     */
-    protected function returnFailedToSelectModelForUpdate(): JsonResponse
-    {
-        response()->json(
-            [
-                'message' => 'Unable to select the requested data prior to update request',
-            ],
-            500
-        )->send();
-        exit();
-    }
-
-    /**
-     * Return unable to save data (500)
-     *
-     * @return JsonResponse
-     */
-    protected function returnFailedToSaveModelForUpdate(): JsonResponse
-    {
-        response()->json(
-            [
-                'message' => 'Unable to save the data for your update request',
-            ],
-            500
-        )->send();
-        exit();
-    }
-
-    /**
      * Check to see if there are any invalid fields in the request
      *
      * @param array $update_fields An array of fields that can be patched

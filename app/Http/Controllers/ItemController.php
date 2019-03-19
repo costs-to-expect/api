@@ -273,7 +273,7 @@ class ItemController extends Controller
         $item = (new Item())->single($resource_type_id, $resource_id, $item_id);
 
         if ($item === null) {
-            return $this->returnFailedToSelectModelForUpdate();
+            UtilityRequest::failedToSelectModelForUpdate();
         }
 
         $update_actualised = false;
@@ -292,7 +292,7 @@ class ItemController extends Controller
         try {
             $item->save();
         } catch (Exception $e) {
-            return $this->returnFailedToSaveModelForUpdate();
+            UtilityRequest::failedToSaveModelForUpdate();
         }
 
         return $this->returnSuccessNoContent();
