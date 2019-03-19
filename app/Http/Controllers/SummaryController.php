@@ -4,10 +4,10 @@ namespace App\Http\Controllers;
 
 use App\Http\Parameters\Route\Validate;
 use App\Models\Item;
-use App\Transformers\ItemCategorySummary as ItemCategorySummaryTransformer;
-use App\Transformers\ItemSubCategorySummary as ItemSubCategorySummaryTransformer;
-use App\Transformers\ItemMonthSummary as ItemMonthSummaryTransformer;
-use App\Transformers\ItemYearSummary as ItemYearSummaryTransformer;
+use App\Models\Transformers\ItemCategorySummary as ItemCategorySummaryTransformer;
+use App\Models\Transformers\ItemSubCategorySummary as ItemSubCategorySummaryTransformer;
+use App\Models\Transformers\ItemMonthSummary as ItemMonthSummaryTransformer;
+use App\Models\Transformers\ItemYearSummary as ItemYearSummaryTransformer;
 use App\Utilities\Request as UtilityRequest;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;

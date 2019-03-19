@@ -1,10 +1,10 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Transformers;
+namespace App\Models\Transformers;
 
 use App\Models\ResourceType as ResourceTypeModel;
-use App\Transformers\Resource as ResourceTransformer;
+use App\Models\Transformers\Resource as ResourceTransformer;
 
 /**
  * Transform the data returns from Eloquent into the format we want for the API

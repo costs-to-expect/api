@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Parameters\Get;
 use App\Http\Parameters\Route\Validate;
 use App\Models\ResourceType;
-use App\Transformers\ResourceType as ResourceTypeTransformer;
+use App\Models\Transformers\ResourceType as ResourceTypeTransformer;
 use App\Utilities\Request as UtilityRequest;
 use App\Http\Parameters\Request\Validators\ResourceType as ResourceTypeValidator;
 use Exception;

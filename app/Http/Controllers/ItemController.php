@@ -7,7 +7,7 @@ use App\Http\Parameters\Route\Validate;
 use App\Models\Category;
 use App\Models\Item;
 use App\Models\SubCategory;
-use App\Transformers\Item as ItemTransformer;
+use App\Models\Transformers\Item as ItemTransformer;
 use App\Utilities\Pagination as UtilityPagination;
 use App\Utilities\Request as UtilityRequest;
 use App\Http\Parameters\Request\Validators\Item as ItemValidator;

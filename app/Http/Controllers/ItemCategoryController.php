@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Parameters\Route\Validate;
 use App\Models\Category;
 use App\Models\ItemCategory;
-use App\Transformers\ItemCategory as ItemCategoryTransformer;
+use App\Models\Transformers\ItemCategory as ItemCategoryTransformer;
 use App\Utilities\Request as UtilityRequest;
 use App\Http\Parameters\Request\Validators\ItemCategory as ItemCategoryValidator;
 use Exception;

@@ -6,7 +6,7 @@ use App\Http\Parameters\Get;
 use App\Http\Parameters\Route\Validate;
 use App\Models\Category;
 use App\Models\ResourceType;
-use App\Transformers\Category as CategoryTransformer;
+use App\Models\Transformers\Category as CategoryTransformer;
 use App\Utilities\Request as UtilityRequest;
 use App\Http\Parameters\Request\Validators\Category as CategoryValidator;
 use Exception;

@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Transformers;
+namespace App\Models\Transformers;
 
 use App\Models\Item as ItemModel;
 
@@ -12,28 +12,28 @@ use App\Models\Item as ItemModel;
  * @copyright Dean Blackborough 2018-2019
  * @license https://github.com/costs-to-expect/api/blob/master/LICENSE
  */
-class ItemCategorySummary extends Transformer
+class ItemYearSummary extends Transformer
 {
-    private $category_summary;
+    private $year_summary;
 
     /**
      * ResourceType constructor.
      *
-     * @param ItemModel $category_summary
+     * @param ItemModel $year_summary
      */
-    public function __construct(ItemModel $category_summary)
+    public function __construct(ItemModel $year_summary)
     {
         parent::__construct();
 
-        $this->category_summary = $category_summary;
+        $this->year_summary = $year_summary;
     }
 
     public function toArray(): array
     {
         return [
-            'id' => $this->hash->category()->encode($this->category_summary->id),
-            'name' => $this->category_summary->name,
-            'total' => number_format((float) $this->category_summary->total, 2, '.', '')
+            'id' => $this->year_summary->year,
+            'year' => $this->year_summary->year,
+            'total' => number_format((float) $this->year_summary->total, 2, '.', '')
         ];
     }
 }

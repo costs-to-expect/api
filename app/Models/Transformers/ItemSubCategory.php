@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Transformers;
+namespace App\Models\Transformers;
 
 /**
  * Transform the data returns from Eloquent into the format we want for the API

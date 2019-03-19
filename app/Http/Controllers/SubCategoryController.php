@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Parameters\Route\Validate;
 use App\Models\SubCategory;
-use App\Transformers\SubCategory as SubCategoryTransformer;
+use App\Models\Transformers\SubCategory as SubCategoryTransformer;
 use App\Utilities\Request as UtilityRequest;
 use App\Http\Parameters\Request\Validators\SubCategory as SubCategoryValidator;
 use Exception;

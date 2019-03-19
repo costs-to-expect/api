@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Parameters\Route\Validate;
 use App\Models\Resource;
-use App\Transformers\Resource as ResourceTransformer;
+use App\Models\Transformers\Resource as ResourceTransformer;
 use App\Utilities\Request as UtilityRequest;
 use App\Http\Parameters\Request\Validators\Resource as ResourceValidator;
 use Exception;

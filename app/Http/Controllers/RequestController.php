@@ -4,8 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\RequestErrorLog;
 use App\Models\RequestLog;
-use App\Transformers\RequestErrorLog as RequestErrorLogTransformer;
-use App\Transformers\RequestLog as RequestLogTransformer;
+use App\Models\Transformers\RequestErrorLog as RequestErrorLogTransformer;
+use App\Models\Transformers\RequestLog as RequestLogTransformer;
 use App\Utilities\Pagination as UtilityPagination;
 use App\Http\Parameters\Request\Validators\RequestErrorLog as RequestErrorLogValidator;
 use Exception;
