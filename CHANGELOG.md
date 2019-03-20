@@ -2,6 +2,18 @@
 
 Full changelog for the Costs to Expect REST API.
 
+## 2019-03-19 - v1.10.0
+
+* Categories linked to private resource types don't display if not authenticated.
+* Updated copyright, now 2018-2019.
+* Added `declare(strict_types=1)` to non framework files.
+* Added missing return types and method param hints.
+* Moved some configuration values into `.env`, no need for them to exist in config directly.
+* Removed some rogue `use` statements.
+* Reviewed PATCH support for items, made a few minor changes to catch more errors.
+* Moved helper redirects from base controller to utility class.
+* Moved transformer classes, now sit below the models.
+
 ## 2018-11-18 - v1.09.3
 
 * Updated how OPTIONS are generated for show requests, easier to define all route options.

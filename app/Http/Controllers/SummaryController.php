@@ -4,10 +4,10 @@ namespace App\Http\Controllers;
 
 use App\Http\Parameters\Route\Validate;
 use App\Models\Item;
-use App\Transformers\ItemCategorySummary as ItemCategorySummaryTransformer;
-use App\Transformers\ItemSubCategorySummary as ItemSubCategorySummaryTransformer;
-use App\Transformers\ItemMonthSummary as ItemMonthSummaryTransformer;
-use App\Transformers\ItemYearSummary as ItemYearSummaryTransformer;
+use App\Models\Transformers\ItemCategorySummary as ItemCategorySummaryTransformer;
+use App\Models\Transformers\ItemSubCategorySummary as ItemSubCategorySummaryTransformer;
+use App\Models\Transformers\ItemMonthSummary as ItemMonthSummaryTransformer;
+use App\Models\Transformers\ItemYearSummary as ItemYearSummaryTransformer;
 use App\Utilities\Request as UtilityRequest;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -17,7 +17,7 @@ use Illuminate\Support\Facades\Config;
  * Resource summary
  *
  * @author Dean Blackborough <dean@g3d-development.com>
- * @copyright Dean Blackborough 2018
+ * @copyright Dean Blackborough 2018-2019
  * @license https://github.com/costs-to-expect/api/blob/master/LICENSE
  */
 class SummaryController extends Controller

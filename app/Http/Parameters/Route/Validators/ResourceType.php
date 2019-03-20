@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace App\Http\Parameters\Route\Validators;
 
@@ -8,7 +9,7 @@ use App\Models\ResourceType as ResourceTypeModel;
  * Validate the route params to a resource type
  *
  * @author Dean Blackborough <dean@g3d-development.com>
- * @copyright Dean Blackborough 2018
+ * @copyright Dean Blackborough 2018-2019
  * @license https://github.com/costs-to-expect/api/blob/master/LICENSE
  */
 class ResourceType
@@ -20,7 +21,7 @@ class ResourceType
      *
      * @return boolean
      */
-    static public function validate($resource_type_id)
+    static public function validate($resource_type_id): bool
     {
         if (
             $resource_type_id === 'nill' ||

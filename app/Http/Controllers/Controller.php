@@ -198,7 +198,8 @@ class Controller extends BaseController
     }
 
     /**
-     * Return a 400 as there are invalid fields in the request body
+     * Return a 400 as there are invalid fields in the request body and for now
+     * we don't want to deal with requests with `extra` data
      *
      * @param array $invalid_fields An array of invalid fields
      *
@@ -217,7 +218,9 @@ class Controller extends BaseController
     }
 
     /**
-     * Check the request to ensure there is data to attempt patch
+     * Check the request to see if there is anything in the PATCH we need to
+     * deal with, checked the entire request for values, assumption being we have
+     * already checked the validity of the submitted data
      *
      * @return boolean
      */

@@ -6,7 +6,7 @@ use App\Http\Parameters\Get;
 use App\Http\Parameters\Route\Validate;
 use App\Models\Category;
 use App\Models\ResourceType;
-use App\Transformers\Category as CategoryTransformer;
+use App\Models\Transformers\Category as CategoryTransformer;
 use App\Utilities\Request as UtilityRequest;
 use App\Http\Parameters\Request\Validators\Category as CategoryValidator;
 use Exception;
@@ -18,7 +18,7 @@ use Illuminate\Http\Request;
  * Manage categories
  *
  * @author Dean Blackborough <dean@g3d-development.com>
- * @copyright Dean Blackborough 2018
+ * @copyright Dean Blackborough 2018-2019
  * @license https://github.com/costs-to-expect/api/blob/master/LICENSE
  */
 class CategoryController extends Controller
@@ -39,7 +39,7 @@ class CategoryController extends Controller
     {
         $this->collection_parameters = Get::parameters(['include_sub_categories', 'resource_type']);
 
-        $categories = (new Category())->paginatedCollection($this->collection_parameters);
+        $categories = (new Category())->paginatedCollection($this->include_private, $this->collection_parameters);
 
         $headers = [
             'X-Total-Count' => count($categories)

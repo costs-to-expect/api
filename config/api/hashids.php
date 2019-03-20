@@ -1,12 +1,12 @@
 <?php
 
 return [
-    'min_length' => 10,
-    'category' => '9nlFPIt8Rg',
-    'sub_category' => '2kL3JPdOpP',
-    'resource_type' => 'l4fTHvr2iA',
-    'resource' => 'Eldb7U5n0n',
-    'item' => 'djF5y3MYys',
-    'item_category' => 'lU0229DVHs',
-    'item_sub_category' => 'M4pZd8IPXI'
+    'min_length' => env('APP_HASH_MIN_LENGTH'),
+    'category' => env('APP_HASH_SALT_CATEGORY'),
+    'sub_category' => env('APP_HASH_SALT_SUB_CATEGORY'),
+    'resource_type' => env('APP_HASH_SALT_RESOURCE_TYPE'),
+    'resource' => env('APP_HASH_SALT_RESOURCE'),
+    'item' => env('APP_HASH_SALT_ITEM'),
+    'item_category' => env('APP_HASH_SALT_ITEM_CATEGORY'),
+    'item_sub_category' => env('APP_HASH_SALT_ITEM_SUB_CATEGORY')
 ];

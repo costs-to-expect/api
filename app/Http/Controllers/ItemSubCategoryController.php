@@ -6,7 +6,7 @@ use App\Http\Parameters\Route\Validate;
 use App\Models\ItemCategory;
 use App\Models\ItemSubCategory;
 use App\Models\SubCategory;
-use App\Transformers\ItemSubCategory as ItemSubCategoryTransformer;
+use App\Models\Transformers\ItemSubCategory as ItemSubCategoryTransformer;
 use App\Utilities\Request as UtilityRequest;
 use App\Http\Parameters\Request\Validators\ItemSubCategory as ItemSubCategoryValidator;
 use Exception;
@@ -18,7 +18,7 @@ use Illuminate\Http\Request;
  * Manage the category for an item row
  *
  * @author Dean Blackborough <dean@g3d-development.com>
- * @copyright Dean Blackborough 2018
+ * @copyright Dean Blackborough 2018-2019
  * @license https://github.com/costs-to-expect/api/blob/master/LICENSE
  */
 class ItemSubCategoryController extends Controller

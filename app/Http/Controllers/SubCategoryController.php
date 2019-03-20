@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Parameters\Route\Validate;
 use App\Models\SubCategory;
-use App\Transformers\SubCategory as SubCategoryTransformer;
+use App\Models\Transformers\SubCategory as SubCategoryTransformer;
 use App\Utilities\Request as UtilityRequest;
 use App\Http\Parameters\Request\Validators\SubCategory as SubCategoryValidator;
 use Exception;
@@ -16,7 +16,7 @@ use Illuminate\Http\Request;
  * Manage category sub categories
  *
  * @author Dean Blackborough <dean@g3d-development.com>
- * @copyright Dean Blackborough 2018
+ * @copyright Dean Blackborough 2018-2019
  * @license https://github.com/costs-to-expect/api/blob/master/LICENSE
  */
 class SubCategoryController extends Controller

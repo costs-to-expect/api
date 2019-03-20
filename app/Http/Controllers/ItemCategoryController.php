@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Parameters\Route\Validate;
 use App\Models\Category;
 use App\Models\ItemCategory;
-use App\Transformers\ItemCategory as ItemCategoryTransformer;
+use App\Models\Transformers\ItemCategory as ItemCategoryTransformer;
 use App\Utilities\Request as UtilityRequest;
 use App\Http\Parameters\Request\Validators\ItemCategory as ItemCategoryValidator;
 use Exception;
@@ -17,7 +17,7 @@ use Illuminate\Http\Request;
  * Manage the category for an item row
  *
  * @author Dean Blackborough <dean@g3d-development.com>
- * @copyright Dean Blackborough 2018
+ * @copyright Dean Blackborough 2018-2019
  * @license https://github.com/costs-to-expect/api/blob/master/LICENSE
  */
 class ItemCategoryController extends Controller

@@ -1,14 +1,16 @@
 <?php
+declare(strict_types=1);
 
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Config;
 
 /**
  * Item model
  *
  * @author Dean Blackborough <dean@g3d-development.com>
- * @copyright Dean Blackborough 2018
+ * @copyright Dean Blackborough 2018-2019
  * @license https://github.com/costs-to-expect/api/blob/master/LICENSE
  */
 class Item extends Model
@@ -16,6 +18,16 @@ class Item extends Model
     protected $table = 'item';
 
     protected $guarded = ['id', 'actualised_total', 'created_at', 'updated_at'];
+
+    /**
+     * Return an array of the fields that can be PATCHed.
+     *
+     * @return array
+     */
+    public function patchableFields(): array
+    {
+        return array_keys(Config::get('api.routes.item.validation.PATCH.fields'));
+    }
 
     public function setActualisedTotal($total, $percentage)
     {

@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace App\Http\Parameters\Route\Validators;
 
@@ -8,7 +9,7 @@ use App\Models\Category as CategoryModel;
  * Validate the route params to a category
  *
  * @author Dean Blackborough <dean@g3d-development.com>
- * @copyright Dean Blackborough 2018
+ * @copyright Dean Blackborough 2018-2019
  * @license https://github.com/costs-to-expect/api/blob/master/LICENSE
  */
 class Category
@@ -20,7 +21,7 @@ class Category
      *
      * @return boolean
      */
-    static public function validate($category_id)
+    static public function validate($category_id): bool
     {
         if ($category_id === 'nill' || (new CategoryModel)->find($category_id)->exists() === false) {
             return false;

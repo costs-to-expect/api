@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace App\Utilities;
 
@@ -8,7 +9,7 @@ use Illuminate\Support\Facades\Config;
  * Pagination helper
  *
  * @author Dean Blackborough <dean@g3d-development.com>
- * @copyright Dean Blackborough 2018
+ * @copyright Dean Blackborough 2018-2019
  * @license https://github.com/costs-to-expect/api/blob/master/LICENSE
  */
 class Pagination

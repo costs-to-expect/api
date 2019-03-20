@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Parameters\Get;
 use App\Http\Parameters\Route\Validate;
 use App\Models\ResourceType;
-use App\Transformers\ResourceType as ResourceTypeTransformer;
+use App\Models\Transformers\ResourceType as ResourceTypeTransformer;
 use App\Utilities\Request as UtilityRequest;
 use App\Http\Parameters\Request\Validators\ResourceType as ResourceTypeValidator;
 use Exception;
@@ -17,7 +17,7 @@ use Illuminate\Http\Request;
  * Manage resource types
  *
  * @author Dean Blackborough <dean@g3d-development.com>
- * @copyright Dean Blackborough 2018
+ * @copyright Dean Blackborough 2018-2019
  * @license https://github.com/costs-to-expect/api/blob/master/LICENSE
  */
 class ResourceTypeController extends Controller

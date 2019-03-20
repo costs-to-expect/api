@@ -1,12 +1,17 @@
 <?php
+declare(strict_types=1);
 
 namespace App\Utilities;
 
+use Illuminate\Http\JsonResponse;
+
 /**
- * Utility class to return default error responses
+ * Utility class to return default error responses, we want some consistency
+ * through out the API so all non expected responses should be returned via this
+ * class
  *
  * @author Dean Blackborough <dean@g3d-development.com>
- * @copyright Dean Blackborough 2018
+ * @copyright Dean Blackborough 2018-2019
  * @license https://github.com/costs-to-expect/api/blob/master/LICENSE
  */
 class Request
@@ -15,8 +20,10 @@ class Request
      * Return not found, 404
      *
      * @param string $message Custom message for error
+     *
+     * @return JsonResponse
      */
-    static public function notFound($message = '')
+    static public function notFound($message = ''): JsonResponse
     {
         response()->json(
             [
@@ -31,8 +38,10 @@ class Request
      * Return a foreign key constraint error, 500
      *
      * @param string $message Custom message for error
+     *
+     * @return JsonResponse
      */
-    static public function foreignKeyConstraintError($message = '')
+    static public function foreignKeyConstraintError($message = ''): JsonResponse
     {
         response()->json(
             [
@@ -47,8 +56,10 @@ class Request
      * Return a conflict, 409
      *
      * @param string $message Custom message for error
+     *
+     * @return JsonResponse
      */
-    static public function conflict($message = '')
+    static public function conflict($message = ''): JsonResponse
     {
         response()->json(
             [
@@ -57,5 +68,43 @@ class Request
             409
         )->send();
         exit;
+    }
+
+    /**
+     * 500 error, unable to select the data ready to update
+     *
+     * Until we add logging this is an unknown server error, later we will
+     * add MySQL error logging
+     *
+     * @return JsonResponse
+     */
+    static public function failedToSelectModelForUpdate(): JsonResponse
+    {
+        response()->json(
+            [
+                'message' => 'Unable to select the requested data prior to update request',
+            ],
+            500
+        )->send();
+        exit();
+    }
+
+    /**
+     * 500 error, failed to save the model.
+     *
+     * Until we add logging this is an unknown server error, later we will
+     * add MySQL error logging
+     *
+     * @return JsonResponse
+     */
+    static public function failedToSaveModelForUpdate(): JsonResponse
+    {
+        response()->json(
+            [
+                'message' => 'Unable to save the data for your update request',
+            ],
+            500
+        )->send();
+        exit();
     }
 }

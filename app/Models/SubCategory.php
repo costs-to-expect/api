@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace App\Models;
 
@@ -9,7 +10,7 @@ use Illuminate\Support\Facades\DB;
  * Sub category model
  *
  * @author Dean Blackborough <dean@g3d-development.com>
- * @copyright Dean Blackborough 2018
+ * @copyright Dean Blackborough 2018-2019
  * @license https://github.com/costs-to-expect/api/blob/master/LICENSE
  */
 class SubCategory extends Model
@@ -38,8 +39,7 @@ class SubCategory extends Model
 
     public function subCategorySummary(int $resource_type_id, int $resource_id)
     {
-        return DB::select(
-            DB::raw("
+        $query = DB::raw("
                 SELECT 
                     category.name AS category, 
                     sub_category.name AS sub_category,
@@ -81,8 +81,10 @@ class SubCategory extends Model
                     resource.id = :resource_id
                 ORDER BY 
                     category.name ASC, 
-                    sub_category.name ASC"
-            ),
+                    sub_category.name ASC")->getValue();
+
+        return DB::select(
+            $query,
             [
                 'resource_type_id' => $resource_type_id,
                 'resource_id' => $resource_id

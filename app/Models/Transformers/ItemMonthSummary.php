@@ -1,6 +1,7 @@
 <?php
+declare(strict_types=1);
 
-namespace App\Transformers;
+namespace App\Models\Transformers;
 
 use App\Models\Item as ItemModel;
 
@@ -8,7 +9,7 @@ use App\Models\Item as ItemModel;
  * Transform the data returns from Eloquent into the format we want for the API
  *
  * @author Dean Blackborough <dean@g3d-development.com>
- * @copyright Dean Blackborough 2018
+ * @copyright Dean Blackborough 2018-2019
  * @license https://github.com/costs-to-expect/api/blob/master/LICENSE
  */
 class ItemMonthSummary extends Transformer
@@ -32,7 +33,7 @@ class ItemMonthSummary extends Transformer
         return [
             'id' => $this->month_summary->month,
             'month' => date("F", mktime(0, 0, 0, $this->month_summary->month, 1)),
-            'total' => number_format($this->month_summary->total, 2, '.', '')
+            'total' => number_format((float) $this->month_summary->total, 2, '.', '')
         ];
     }
 }

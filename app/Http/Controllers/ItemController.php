@@ -7,7 +7,7 @@ use App\Http\Parameters\Route\Validate;
 use App\Models\Category;
 use App\Models\Item;
 use App\Models\SubCategory;
-use App\Transformers\Item as ItemTransformer;
+use App\Models\Transformers\Item as ItemTransformer;
 use App\Utilities\Pagination as UtilityPagination;
 use App\Utilities\Request as UtilityRequest;
 use App\Http\Parameters\Request\Validators\Item as ItemValidator;
@@ -15,16 +15,12 @@ use Exception;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Rs\Json\Patch;
-use Rs\Json\Patch\InvalidOperationException;
-use Rs\Json\Patch\InvalidPatchDocumentJsonException;
-use Rs\Json\Patch\InvalidTargetDocumentJsonException;
 
 /**
  * Manage items
  *
  * @author Dean Blackborough <dean@g3d-development.com>
- * @copyright Dean Blackborough 2018
+ * @copyright Dean Blackborough 2018-2019
  * @license https://github.com/costs-to-expect/api/blob/master/LICENSE
  */
 class ItemController extends Controller
@@ -260,25 +256,25 @@ class ItemController extends Controller
     {
         Validate::itemRoute($resource_type_id, $resource_id, $item_id);
 
-        $validator = (new ItemValidator)->update($request);
-
-        if ($validator->fails() === true) {
-            return $this->returnValidationErrors($validator);
-        }
-
         if ($this->isThereAnythingToPatchInRequest() === false) {
             return $this->returnNothingToPatchError();
         }
 
-        $invalid_fields = $this->areThereInvalidFieldsInRequest(
-            (new ItemValidator)->updateFields()
-        );
+        $validate = (new ItemValidator)->update($request);
+        if ($validate->fails() === true) {
+            return $this->returnValidationErrors($validate);
+        }
 
+        $invalid_fields = $this->areThereInvalidFieldsInRequest((new Item())->patchableFields());
         if ($invalid_fields !== false) {
             return $this->returnInvalidFieldsInRequestError($invalid_fields);
         }
 
         $item = (new Item())->single($resource_type_id, $resource_id, $item_id);
+
+        if ($item === null) {
+            UtilityRequest::failedToSelectModelForUpdate();
+        }
 
         $update_actualised = false;
         foreach ($request->all() as $key => $value) {
@@ -296,12 +292,7 @@ class ItemController extends Controller
         try {
             $item->save();
         } catch (Exception $e) {
-            return response()->json(
-                [
-                    'message' => 'Error updating record'
-                ],
-                500
-            );
+            UtilityRequest::failedToSaveModelForUpdate();
         }
 
         return $this->returnSuccessNoContent();
@@ -381,7 +372,7 @@ class ItemController extends Controller
             ];
         }
 
-        (new Category())->paginatedCollection(['resource_type'=>$resource_type_id])->map(
+        (new Category())->paginatedCollection($this->include_private, ['resource_type'=>$resource_type_id])->map(
             function ($category)
             {
                 $this->get_parameters['category']['allowed_values'][$this->hash->encode('category', $category->category_id)] = [
