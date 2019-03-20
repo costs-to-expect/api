@@ -53,24 +53,6 @@ class Response
     }
 
     /**
-     * Return a conflict, 409
-     *
-     * @param string $message Custom message for error
-     *
-     * @return JsonResponse
-     */
-    static public function conflict($message = ''): JsonResponse
-    {
-        response()->json(
-            [
-                'message' => (strlen($message) > 0) ? $message : 'Value already set, conflict'
-            ],
-            409
-        )->send();
-        exit;
-    }
-
-    /**
      * 500 error, unable to select the data ready to update
      *
      * Until we add logging this is an unknown server error, later we will
