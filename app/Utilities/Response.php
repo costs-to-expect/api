@@ -27,7 +27,7 @@ class Response
     {
         response()->json(
             [
-                'message' => (strlen($message) > 0) ? $message : 'Resource not found'
+                'message' => (strlen($message) > 0) ? $message : trans('responses.not-found')
             ],
             404
         )->send();
@@ -45,7 +45,7 @@ class Response
     {
         response()->json(
             [
-                'message' => (strlen($message) > 0) ? $message : 'Unable to delete resource, dependant data exists'
+                'message' => (strlen($message) > 0) ? $message : trans('responses.constraint')
             ],
             500
         )->send();
@@ -64,7 +64,7 @@ class Response
     {
         response()->json(
             [
-                'message' => 'Unable to select the requested data prior to update request',
+                'message' => trans('responses.model-select-failure'),
             ],
             500
         )->send();
@@ -83,7 +83,7 @@ class Response
     {
         response()->json(
             [
-                'message' => 'Unable to save the data for your update request',
+                'message' => trans('responses.model-save-failure-update'),
             ],
             500
         )->send();
@@ -102,7 +102,7 @@ class Response
     {
         response()->json(
             [
-                'message' => 'Unable to save the data for your create request',
+                'message' => trans('responses.model-save-failure-create'),
             ],
             500
         )->send();
@@ -119,7 +119,7 @@ class Response
     {
         response()->json(
             [
-                'message' => 'Unable to decode parameter or hasher not found'
+                'message' => trans('responses.decode-error')
             ],
             500
         )->send();
@@ -147,7 +147,7 @@ class Response
     {
         response()->json(
             [
-                'message' => 'There is nothing to PATCH, please include a request body'
+                'message' => trans('responses.patch-empty')
             ],
             400
         )->send();
@@ -165,7 +165,7 @@ class Response
     {
         response()->json(
             [
-                'message' => 'Non existent fields in PATCH request body',
+                'message' => trans('responses.patch-invalid'),
                 'fields' => $invalid_fields
             ],
             400
@@ -184,7 +184,7 @@ class Response
     {
         response()->json(
             [
-                'message' => 'Validation error',
+                'message' => trans('responses.validation'),
                 'fields' => $validation_errors
             ],
             422

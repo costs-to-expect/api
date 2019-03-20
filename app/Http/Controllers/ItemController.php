@@ -98,7 +98,7 @@ class ItemController extends Controller
         string $item_id
     ): JsonResponse
     {
-        Validate::resourceRoute($resource_type_id, $resource_id);
+        Validate::itemRoute($resource_type_id, $resource_id, $item_id);
 
         $item = (new Item())->single($resource_type_id, $resource_id, $item_id);
 
@@ -165,7 +165,7 @@ class ItemController extends Controller
         string $item_id
     ): JsonResponse
     {
-        Validate::resourceRoute($resource_type_id, $resource_id);
+        Validate::itemRoute($resource_type_id, $resource_id, $item_id);
 
         $item = (new Item())->single($resource_type_id, $resource_id, $item_id);
 
