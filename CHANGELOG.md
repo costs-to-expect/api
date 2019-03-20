@@ -2,6 +2,13 @@
 
 Full changelog for the Costs to Expect REST API.
 
+## 2019-xx-xx - v1.11.0
+
+* Added additional helper methods to the Utilities\Response class.
+* Utilities\Response class name was incorrect.
+* Non 200/201 responses returned via the Utilities\Response class.
+* Upgraded to the latest version of Laravel 5.7.
+
 ## 2019-03-19 - v1.10.0
 
 * Categories linked to private resource types don't display if not authenticated.
