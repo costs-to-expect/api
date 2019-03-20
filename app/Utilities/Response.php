@@ -19,15 +19,16 @@ class Response
     /**
      * Return not found, 404
      *
-     * @param string $message Custom message for error
+     * @param string|null $type Entity type that cannot be found
      *
      * @return JsonResponse
      */
-    static public function notFound($message = ''): JsonResponse
+    static public function notFound(?string $type = null): JsonResponse
     {
         response()->json(
             [
-                'message' => (strlen($message) > 0) ? $message : trans('responses.not-found')
+                'message' => ($type !== null) ? trans('responses.not-found-entity', ['type'=>$type]) :
+                    trans('responses.not-found')
             ],
             404
         )->send();

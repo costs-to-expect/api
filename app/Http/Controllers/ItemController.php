@@ -103,7 +103,7 @@ class ItemController extends Controller
         $item = (new Item())->single($resource_type_id, $resource_id, $item_id);
 
         if ($item === null) {
-            UtilityResponse::notFound();
+            UtilityResponse::notFound(trans('entities.item'));
         }
 
         return response()->json(
@@ -170,7 +170,7 @@ class ItemController extends Controller
         $item = (new Item())->single($resource_type_id, $resource_id, $item_id);
 
         if ($item === null) {
-            UtilityResponse::notFound();
+            UtilityResponse::notFound(trans('entities.item'));
         }
 
         return $this->generateOptionsForShow(
@@ -315,7 +315,7 @@ class ItemController extends Controller
         $item = (new Item())->single($resource_type_id, $resource_id, $item_id);
 
         if ($item === null) {
-            UtilityResponse::notFound();
+            UtilityResponse::notFound(trans('entities.item'));
         }
 
         try {
@@ -325,7 +325,7 @@ class ItemController extends Controller
         } catch (QueryException $e) {
             UtilityResponse::foreignKeyConstraintError();
         } catch (Exception $e) {
-            UtilityResponse::notFound();
+            UtilityResponse::notFound(trans('entities.item'));
         }
     }
 

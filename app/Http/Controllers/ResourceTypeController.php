@@ -71,7 +71,7 @@ class ResourceTypeController extends Controller
         $resource_type = (new ResourceType())->single($resource_type_id, $this->include_private);
 
         if ($resource_type === null) {
-            UtilityResponse::notFound();
+            UtilityResponse::notFound(trans('entities.resource-type'));
         }
 
         return response()->json(
@@ -188,7 +188,7 @@ class ResourceTypeController extends Controller
         } catch (QueryException $e) {
             UtilityResponse::foreignKeyConstraintError();
         } catch (Exception $e) {
-            UtilityResponse::notFound();
+            UtilityResponse::notFound(trans('entities.resource-type'));
         }
     }
 }

@@ -203,7 +203,7 @@ class SubCategoryController extends Controller
         );
 
         if ($sub_category === null) {
-            UtilityResponse::notFound();
+            UtilityResponse::notFound(trans('entities.sub-category'));
         }
 
         try {
@@ -213,7 +213,7 @@ class SubCategoryController extends Controller
         } catch (QueryException $e) {
             UtilityResponse::foreignKeyConstraintError();
         } catch (Exception $e) {
-            UtilityResponse::notFound();
+            UtilityResponse::notFound(trans('entities.sub-category'));
         }
     }
 }

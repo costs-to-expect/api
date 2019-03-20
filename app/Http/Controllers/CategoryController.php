@@ -74,7 +74,7 @@ class CategoryController extends Controller
         $category = (new Category)->single($category_id);
 
         if ($category === null) {
-            UtilityResponse::notFound();
+            UtilityResponse::notFound(trans('entities.category'));
         }
 
         return response()->json(
@@ -203,7 +203,7 @@ class CategoryController extends Controller
         } catch (QueryException $e) {
             UtilityResponse::foreignKeyConstraintError();
         } catch (Exception $e) {
-            UtilityResponse::notFound();
+            UtilityResponse::notFound(trans('entities.category'));
         }
     }
 

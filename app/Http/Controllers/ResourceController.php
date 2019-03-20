@@ -71,7 +71,7 @@ class ResourceController extends Controller
         $resource = (new Resource)->single($resource_type_id, $resource_id);
 
         if ($resource === null) {
-            UtilityResponse::notFound();
+            UtilityResponse::notFound(trans('entities.resource'));
         }
 
         return response()->json(
@@ -130,7 +130,7 @@ class ResourceController extends Controller
         );
 
         if ($resource === null) {
-            UtilityResponse::notFound();
+            UtilityResponse::notFound(trans('entities.resource'));
         }
 
         return $this->generateOptionsForShow(
@@ -207,7 +207,7 @@ class ResourceController extends Controller
         } catch (QueryException $e) {
             UtilityResponse::foreignKeyConstraintError();
         } catch (Exception $e) {
-            UtilityResponse::notFound();
+            UtilityResponse::notFound(trans('entities.resource'));
         }
     }
 }
