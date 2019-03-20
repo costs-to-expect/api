@@ -219,12 +219,7 @@ class ItemCategoryController extends Controller
             $category_id = $this->hash->decode('category', $request->input('category_id'));
 
             if ($category_id === false) {
-                return response()->json(
-                    [
-                        'message' => 'Unable to decode parameter or hasher not found'
-                    ],
-                    500
-                );
+                UtilityResponse::unableToDecode();
             }
 
             $item_category = new ItemCategory([
@@ -233,12 +228,7 @@ class ItemCategoryController extends Controller
             ]);
             $item_category->save();
         } catch (Exception $e) {
-            return response()->json(
-                [
-                    'message' => 'Error creating new record'
-                ],
-                500
-            );
+            UtilityResponse::failedToSaveModelForCreate();
         }
 
         return response()->json(
@@ -264,12 +254,7 @@ class ItemCategoryController extends Controller
             $id = $this->hash->encode('category', $category->category_id);
 
             if ($id === false) {
-                return response()->json(
-                    [
-                        'message' => 'Unable to encode parameter or hasher not found'
-                    ],
-                    500
-                );
+                UtilityResponse::unableToDecode();
             }
 
             $this->post_parameters['category_id']['allowed_values'][$id] = [
@@ -316,7 +301,7 @@ class ItemCategoryController extends Controller
         try {
             $item_category->delete();
 
-            return response()->json([],204);
+            UtilityResponse::successNoContent();
         } catch (QueryException $e) {
             UtilityResponse::foreignKeyConstraintError();
         } catch (Exception $e) {

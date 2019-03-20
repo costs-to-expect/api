@@ -223,12 +223,7 @@ class ItemController extends Controller
             $item->setActualisedTotal($item->total, $item->percentage);
             $item->save();
         } catch (Exception $e) {
-            return response()->json(
-                [
-                    'message' => 'Error creating new record'
-                ],
-                500
-            );
+            UtilityResponse::failedToSaveModelForCreate();
         }
 
         return response()->json(
@@ -257,7 +252,7 @@ class ItemController extends Controller
         Validate::itemRoute($resource_type_id, $resource_id, $item_id);
 
         if ($this->isThereAnythingToPatchInRequest() === false) {
-            return $this->returnNothingToPatchError();
+            UtilityResponse::nothingToPatch();
         }
 
         $validate = (new ItemValidator)->update($request);
@@ -267,7 +262,7 @@ class ItemController extends Controller
 
         $invalid_fields = $this->areThereInvalidFieldsInRequest((new Item())->patchableFields());
         if ($invalid_fields !== false) {
-            return $this->returnInvalidFieldsInRequestError($invalid_fields);
+            UtilityResponse::invalidFieldsInRequest($invalid_fields);
         }
 
         $item = (new Item())->single($resource_type_id, $resource_id, $item_id);
@@ -295,7 +290,7 @@ class ItemController extends Controller
             UtilityResponse::failedToSaveModelForUpdate();
         }
 
-        return $this->returnSuccessNoContent();
+        UtilityResponse::successNoContent();
 }
 
     /**
@@ -326,7 +321,7 @@ class ItemController extends Controller
         try {
             $item->delete();
 
-            return $this->returnSuccessNoContent();
+            UtilityResponse::successNoContent();
         } catch (QueryException $e) {
             UtilityResponse::foreignKeyConstraintError();
         } catch (Exception $e) {

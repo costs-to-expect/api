@@ -171,12 +171,7 @@ class SubCategoryController extends Controller
             ]);
             $sub_category->save();
         } catch (Exception $e) {
-            return response()->json(
-                [
-                    'message' => 'Error creating new record'
-                ],
-                500
-            );
+            UtilityResponse::failedToSaveModelForCreate();
         }
 
         return response()->json(
@@ -214,7 +209,7 @@ class SubCategoryController extends Controller
         try {
             $sub_category->delete();
 
-            return response()->json([], 204);
+            UtilityResponse::successNoContent();
         } catch (QueryException $e) {
             UtilityResponse::foreignKeyConstraintError();
         } catch (Exception $e) {

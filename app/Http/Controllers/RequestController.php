@@ -8,6 +8,7 @@ use App\Models\Transformers\RequestErrorLog as RequestErrorLogTransformer;
 use App\Models\Transformers\RequestLog as RequestLogTransformer;
 use App\Utilities\Pagination as UtilityPagination;
 use App\Http\Parameters\Request\Validators\RequestErrorLog as RequestErrorLogValidator;
+use App\Utilities\Response as UtilityResponse;
 use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -202,12 +203,7 @@ class RequestController extends Controller
             ]);
             $request_log->save();
         } catch (Exception $e) {
-            return response()->json(
-                [
-                    'message' => 'Error creating request log error'
-                ],
-                500
-            );
+            UtilityResponse::failedToSaveModelForCreate();
         }
 
         return response()->json(

@@ -6,7 +6,7 @@ namespace App\Utilities;
 use Illuminate\Http\JsonResponse;
 
 /**
- * Utility class to return default error responses, we want some consistency
+ * Utility class to return default responses, we want some consistency
  * through out the API so all non expected responses should be returned via this
  * class
  *
@@ -104,6 +104,108 @@ class Response
                 'message' => 'Unable to save the data for your update request',
             ],
             500
+        )->send();
+        exit();
+    }
+
+    /**
+     * 500 error, failed to save the model.
+     *
+     * Until we add logging this is an unknown server error, later we will
+     * add MySQL error logging
+     *
+     * @return JsonResponse
+     */
+    static public function failedToSaveModelForCreate(): JsonResponse
+    {
+        response()->json(
+            [
+                'message' => 'Unable to save the data for your create request',
+            ],
+            500
+        )->send();
+        exit();
+    }
+
+    /**
+     * 404 error, unable to decode the selected value, hasher missing or value
+     * invalid
+     *
+     * @return JsonResponse
+     */
+    static public function unableToDecode(): JsonResponse
+    {
+        response()->json(
+            [
+                'message' => 'Unable to decode parameter or hasher not found'
+            ],
+            500
+        )->send();
+        exit;
+    }
+
+    /**
+     * 404 error, unable to decode the selected value, hasher missing or value
+     * invalid
+     *
+     * @return JsonResponse
+     */
+    static public function successNoContent(): JsonResponse
+    {
+        response()->json([],204)->send();
+        exit;
+    }
+
+    /**
+     * 400 error, nothing to PATCH, bad request
+     *
+     * @return JsonResponse
+     */
+    static public function nothingToPatch()
+    {
+        response()->json(
+            [
+                'message' => 'There is nothing to PATCH, please include a request body'
+            ],
+            400
+        )->send();
+        exit();
+    }
+
+    /**
+     * 400 error, invalid fields in the request, therefore bad request
+     *
+     * @param array $invalid_fields An array of invalid fields
+     *
+     * @return JsonResponse
+     */
+    static public function invalidFieldsInRequest(array $invalid_fields): JsonResponse
+    {
+        response()->json(
+            [
+                'message' => 'Non existent fields in PATCH request body',
+                'fields' => $invalid_fields
+            ],
+            400
+        )->send();
+        exit();
+    }
+
+    /**
+     * 422 error, validation error
+     *
+     * @param array $validation_errors
+     *
+     * @return JsonResponse
+     */
+    static public function validationErrors(array $validation_errors): JsonResponse
+    {
+        response()->json(
+            [
+                'message' => 'Validation error',
+                'fields' => $validation_errors
+            ],
+            422
         )->send();
         exit();
     }

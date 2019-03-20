@@ -162,12 +162,7 @@ class CategoryController extends Controller
             $resource_type_id = $this->hash->decode('resource_type', $request->input('resource_type_id'));
 
             if ($resource_type_id === false) {
-                return response()->json(
-                    [
-                        'message' => 'Unable to decode parameter or hasher not found'
-                    ],
-                    500
-                );
+                UtilityResponse::unableToDecode();
             }
 
             $category = new Category([
@@ -177,12 +172,7 @@ class CategoryController extends Controller
             ]);
             $category->save();
         } catch (Exception $e) {
-            return response()->json(
-                [
-                    'message' => 'Error creating new record'
-                ],
-                500
-            );
+            UtilityResponse::failedToSaveModelForCreate();
         }
 
         return response()->json(
@@ -209,7 +199,7 @@ class CategoryController extends Controller
         try {
             (new Category())->find($category_id)->delete();
 
-            return response()->json([], 204);
+            UtilityResponse::successNoContent();
         } catch (QueryException $e) {
             UtilityResponse::foreignKeyConstraintError();
         } catch (Exception $e) {
@@ -232,12 +222,7 @@ class CategoryController extends Controller
             $id = $this->hash->encode('resource_type', $resource_type->resource_type_id);
 
             if ($id === false) {
-                return response()->json(
-                    [
-                        'message' => 'Unable to encode parameter or hasher not found'
-                    ],
-                    500
-                );
+                UtilityResponse::unableToDecode();
             }
 
             $this->post_parameters['resource_type_id']['allowed_values'][$id] = [
