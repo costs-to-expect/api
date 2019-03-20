@@ -8,7 +8,7 @@ use App\Models\Transformers\ItemCategorySummary as ItemCategorySummaryTransforme
 use App\Models\Transformers\ItemSubCategorySummary as ItemSubCategorySummaryTransformer;
 use App\Models\Transformers\ItemMonthSummary as ItemMonthSummaryTransformer;
 use App\Models\Transformers\ItemYearSummary as ItemYearSummaryTransformer;
-use App\Utilities\Request as UtilityRequest;
+use App\Utilities\Response as UtilityResponse;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Config;
@@ -159,7 +159,7 @@ class SummaryController extends Controller
         );
 
         if (count($category_summary) !== 1) {
-            UtilityRequest::notFound();
+            UtilityResponse::notFound();
         }
 
         $headers = [
@@ -304,7 +304,7 @@ class SummaryController extends Controller
         );
 
         if (count($sub_category_summary) !== 1) {
-            UtilityRequest::notFound();
+            UtilityResponse::notFound();
         }
 
         $headers = [
@@ -437,7 +437,7 @@ class SummaryController extends Controller
         );
 
         if (count($year_summary) !== 1) {
-            UtilityRequest::notFound();
+            UtilityResponse::notFound();
         }
 
         $headers = [
@@ -573,7 +573,7 @@ class SummaryController extends Controller
         );
 
         if (count($summary) !== 1) {
-            UtilityRequest::notFound();
+            UtilityResponse::notFound();
         }
 
         $headers = [

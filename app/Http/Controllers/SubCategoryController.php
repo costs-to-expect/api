@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Parameters\Route\Validate;
 use App\Models\SubCategory;
 use App\Models\Transformers\SubCategory as SubCategoryTransformer;
-use App\Utilities\Request as UtilityRequest;
+use App\Utilities\Response as UtilityResponse;
 use App\Http\Parameters\Request\Validators\SubCategory as SubCategoryValidator;
 use Exception;
 use Illuminate\Database\QueryException;
@@ -74,7 +74,7 @@ class SubCategoryController extends Controller
         );
 
         if ($sub_category === null) {
-            UtilityRequest::notFound();
+            UtilityResponse::notFound();
         }
 
         return response()->json(
@@ -208,7 +208,7 @@ class SubCategoryController extends Controller
         );
 
         if ($sub_category === null) {
-            UtilityRequest::notFound();
+            UtilityResponse::notFound();
         }
 
         try {
@@ -216,9 +216,9 @@ class SubCategoryController extends Controller
 
             return response()->json([], 204);
         } catch (QueryException $e) {
-            UtilityRequest::foreignKeyConstraintError();
+            UtilityResponse::foreignKeyConstraintError();
         } catch (Exception $e) {
-            UtilityRequest::notFound();
+            UtilityResponse::notFound();
         }
     }
 }

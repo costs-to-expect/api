@@ -14,7 +14,7 @@ use Illuminate\Http\JsonResponse;
  * @copyright Dean Blackborough 2018-2019
  * @license https://github.com/costs-to-expect/api/blob/master/LICENSE
  */
-class Request
+class Response
 {
     /**
      * Return not found, 404

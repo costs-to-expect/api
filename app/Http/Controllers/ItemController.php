@@ -9,7 +9,7 @@ use App\Models\Item;
 use App\Models\SubCategory;
 use App\Models\Transformers\Item as ItemTransformer;
 use App\Utilities\Pagination as UtilityPagination;
-use App\Utilities\Request as UtilityRequest;
+use App\Utilities\Response as UtilityResponse;
 use App\Http\Parameters\Request\Validators\Item as ItemValidator;
 use Exception;
 use Illuminate\Database\QueryException;
@@ -103,7 +103,7 @@ class ItemController extends Controller
         $item = (new Item())->single($resource_type_id, $resource_id, $item_id);
 
         if ($item === null) {
-            UtilityRequest::notFound();
+            UtilityResponse::notFound();
         }
 
         return response()->json(
@@ -170,7 +170,7 @@ class ItemController extends Controller
         $item = (new Item())->single($resource_type_id, $resource_id, $item_id);
 
         if ($item === null) {
-            UtilityRequest::notFound();
+            UtilityResponse::notFound();
         }
 
         return $this->generateOptionsForShow(
@@ -273,7 +273,7 @@ class ItemController extends Controller
         $item = (new Item())->single($resource_type_id, $resource_id, $item_id);
 
         if ($item === null) {
-            UtilityRequest::failedToSelectModelForUpdate();
+            UtilityResponse::failedToSelectModelForUpdate();
         }
 
         $update_actualised = false;
@@ -292,7 +292,7 @@ class ItemController extends Controller
         try {
             $item->save();
         } catch (Exception $e) {
-            UtilityRequest::failedToSaveModelForUpdate();
+            UtilityResponse::failedToSaveModelForUpdate();
         }
 
         return $this->returnSuccessNoContent();
@@ -320,7 +320,7 @@ class ItemController extends Controller
         $item = (new Item())->single($resource_type_id, $resource_id, $item_id);
 
         if ($item === null) {
-            UtilityRequest::notFound();
+            UtilityResponse::notFound();
         }
 
         try {
@@ -328,9 +328,9 @@ class ItemController extends Controller
 
             return $this->returnSuccessNoContent();
         } catch (QueryException $e) {
-            UtilityRequest::foreignKeyConstraintError();
+            UtilityResponse::foreignKeyConstraintError();
         } catch (Exception $e) {
-            UtilityRequest::notFound();
+            UtilityResponse::notFound();
         }
     }
 

@@ -7,7 +7,7 @@ use App\Models\ItemCategory;
 use App\Models\ItemSubCategory;
 use App\Models\SubCategory;
 use App\Models\Transformers\ItemSubCategory as ItemSubCategoryTransformer;
-use App\Utilities\Request as UtilityRequest;
+use App\Utilities\Response as UtilityResponse;
 use App\Http\Parameters\Request\Validators\ItemSubCategory as ItemSubCategoryValidator;
 use Exception;
 use Illuminate\Database\QueryException;
@@ -47,7 +47,7 @@ class ItemSubCategoryController extends Controller
         Validate::itemRoute($resource_type_id, $resource_id, $item_id);
 
         if ($item_category_id === 'nill') {
-            UtilityRequest::notFound();
+            UtilityResponse::notFound();
         }
 
         $item_sub_category = (new ItemSubCategory())->paginatedCollection(
@@ -58,7 +58,7 @@ class ItemSubCategoryController extends Controller
         );
 
         if ($item_sub_category === null) {
-            UtilityRequest::notFound();
+            UtilityResponse::notFound();
         }
 
         $headers = [
@@ -96,7 +96,7 @@ class ItemSubCategoryController extends Controller
         Validate::itemRoute($resource_type_id, $resource_id, $item_id);
 
         if ($item_category_id === 'nill' || $item_sub_category_id === 'nill') {
-            UtilityRequest::notFound();
+            UtilityResponse::notFound();
         }
 
         $item_sub_category = (new ItemSubCategory())->single(
@@ -108,7 +108,7 @@ class ItemSubCategoryController extends Controller
         );
 
         if ($item_sub_category === null) {
-            UtilityRequest::notFound();
+            UtilityResponse::notFound();
         }
 
         $headers = [
@@ -144,7 +144,7 @@ class ItemSubCategoryController extends Controller
         Validate::itemRoute($resource_type_id, $resource_id, $item_id);
 
         if ($item_category_id === 'nill') {
-            UtilityRequest::notFound();
+            UtilityResponse::notFound();
         }
 
         $item_category = (new ItemCategory())->find($item_category_id);
@@ -192,7 +192,7 @@ class ItemSubCategoryController extends Controller
         Validate::itemRoute($resource_type_id, $resource_id, $item_id);
 
         if ($item_category_id === 'nill' || $item_sub_category_id === 'nill') {
-            UtilityRequest::notFound();
+            UtilityResponse::notFound();
         }
 
         $item_sub_category = (new ItemSubCategory())->single(
@@ -204,7 +204,7 @@ class ItemSubCategoryController extends Controller
         );
 
         if ($item_sub_category === null) {
-            UtilityRequest::notFound();
+            UtilityResponse::notFound();
         }
 
         return $this->generateOptionsForShow(
@@ -243,7 +243,7 @@ class ItemSubCategoryController extends Controller
         Validate::itemRoute($resource_type_id, $resource_id, $item_id);
 
         if ($item_category_id === 'nill') {
-            UtilityRequest::notFound();
+            UtilityResponse::notFound();
         }
 
         $item_category = (new ItemCategory())
@@ -351,7 +351,7 @@ class ItemSubCategoryController extends Controller
         Validate::itemRoute($resource_type_id, $resource_id, $item_id);
 
         if ($item_category_id === 'nill' || $item_sub_category_id === 'nill') {
-            UtilityRequest::notFound();
+            UtilityResponse::notFound();
         }
 
         $item_sub_category = (new ItemSubCategory())->single(
@@ -363,7 +363,7 @@ class ItemSubCategoryController extends Controller
         );
 
         if ($item_sub_category === null) {
-            UtilityRequest::notFound();
+            UtilityResponse::notFound();
         }
 
         try {
@@ -371,9 +371,9 @@ class ItemSubCategoryController extends Controller
 
             return response()->json([],204);
         } catch (QueryException $e) {
-            UtilityRequest::foreignKeyConstraintError();
+            UtilityResponse::foreignKeyConstraintError();
         } catch (Exception $e) {
-            UtilityRequest::notFound();
+            UtilityResponse::notFound();
         }
     }
 }

@@ -6,7 +6,7 @@ use App\Http\Parameters\Route\Validate;
 use App\Models\Category;
 use App\Models\ItemCategory;
 use App\Models\Transformers\ItemCategory as ItemCategoryTransformer;
-use App\Utilities\Request as UtilityRequest;
+use App\Utilities\Response as UtilityResponse;
 use App\Http\Parameters\Request\Validators\ItemCategory as ItemCategoryValidator;
 use Exception;
 use Illuminate\Database\QueryException;
@@ -45,7 +45,7 @@ class ItemCategoryController extends Controller
         );
 
         if ($item_category === null) {
-            UtilityRequest::notFound();
+            UtilityResponse::notFound();
         }
 
         $headers = [
@@ -81,7 +81,7 @@ class ItemCategoryController extends Controller
         Validate::itemRoute($resource_type_id, $resource_id, $item_id);
 
         if ($item_category_id === 'nill') {
-            UtilityRequest::notFound();
+            UtilityResponse::notFound();
         }
 
         $item_category = (new ItemCategory())->single(
@@ -92,7 +92,7 @@ class ItemCategoryController extends Controller
         );
 
         if ($item_category === null) {
-            UtilityRequest::notFound();
+            UtilityResponse::notFound();
         }
 
         $headers = [
@@ -160,7 +160,7 @@ class ItemCategoryController extends Controller
         Validate::itemRoute($resource_type_id, $resource_id, $item_id);
 
         if ($item_category_id === 'nill') {
-            UtilityRequest::notFound();
+            UtilityResponse::notFound();
         }
 
         $item_category = (new ItemCategory())->single(
@@ -171,7 +171,7 @@ class ItemCategoryController extends Controller
         );
 
         if ($item_category === null) {
-            UtilityRequest::notFound();
+            UtilityResponse::notFound();
         }
 
         return $this->generateOptionsForShow(
@@ -309,7 +309,7 @@ class ItemCategoryController extends Controller
         );
 
         if ($item_category === null) {
-            UtilityRequest::notFound();
+            UtilityResponse::notFound();
         }
 
 
@@ -318,9 +318,9 @@ class ItemCategoryController extends Controller
 
             return response()->json([],204);
         } catch (QueryException $e) {
-            UtilityRequest::foreignKeyConstraintError();
+            UtilityResponse::foreignKeyConstraintError();
         } catch (Exception $e) {
-            UtilityRequest::notFound();
+            UtilityResponse::notFound();
         }
     }
 }

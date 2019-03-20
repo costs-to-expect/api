@@ -10,7 +10,7 @@ use App\Http\Parameters\Route\Validators\ItemSubCategory;
 use App\Http\Parameters\Route\Validators\Resource;
 use App\Http\Parameters\Route\Validators\ResourceType;
 use App\Http\Parameters\Route\Validators\SubCategory;
-use App\Utilities\Request as UtilityRequest;
+use App\Utilities\Response as UtilityResponse;
 
 /**
  * Validate the set route parameters, redirect to 404 if invalid
@@ -24,35 +24,35 @@ class Validate
     static public function categoryRoute($category_id)
     {
         if (Category::validate($category_id) === false) {
-            UtilityRequest::notFound('Category not found');
+            UtilityResponse::notFound('Category not found');
         }
     }
 
     static public function subCategoryRoute($category_id, $sub_category_id)
     {
         if (SubCategory::validate($category_id, $sub_category_id) === false) {
-            UtilityRequest::notFound('Sub category not found');
+            UtilityResponse::notFound('Sub category not found');
         }
     }
 
     static public function resourceTypeRoute($resource_type_id)
     {
         if (ResourceType::validate($resource_type_id) === false) {
-            UtilityRequest::notFound('Resource type not found');
+            UtilityResponse::notFound('Resource type not found');
         }
     }
 
     static public function resourceRoute($resource_type_id, $resource_id)
     {
         if (Resource::validate($resource_type_id, $resource_id) === false) {
-            UtilityRequest::notFound('Resource not found');
+            UtilityResponse::notFound('Resource not found');
         }
     }
 
     static public function itemRoute($resource_type_id, $resource_id, $item_id)
     {
         if (Item::validate($resource_type_id, $resource_id, $item_id) === false) {
-            UtilityRequest::notFound('Item not found');
+            UtilityResponse::notFound('Item not found');
         }
     }
 
@@ -69,7 +69,7 @@ class Validate
                 $item_category_id
             ) === false
         ) {
-            UtilityRequest::notFound('Item category not found');
+            UtilityResponse::notFound('Item category not found');
         }
     }
 
@@ -88,7 +88,7 @@ class Validate
                 $item_sub_category_id
             ) === false
         ) {
-            UtilityRequest::notFound('Item sub category not found');
+            UtilityResponse::notFound('Item sub category not found');
         }
     }
 }
