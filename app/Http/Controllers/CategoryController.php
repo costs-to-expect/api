@@ -103,13 +103,13 @@ class CategoryController extends Controller
 
         return $this->generateOptionsForIndex(
             [
-                'description_key' => 'api.descriptions.category.GET_index',
+                'description_key' => 'api.route-descriptions.category.GET_index',
                 'parameters_key' => 'api.routes.category.parameters.collection',
                 'conditionals' => [],
                 'authenticated' => false
             ],
             [
-                'description_key' => 'api.descriptions.category.POST',
+                'description_key' => 'api.route-descriptions.category.POST',
                 'fields_key' => 'api.routes.category.fields',
                 'conditionals' => [],
                 'authenticated' => true
@@ -131,13 +131,13 @@ class CategoryController extends Controller
 
         return $this->generateOptionsForShow(
             [
-                'description_key' => 'api.descriptions.category.GET_show',
+                'description_key' => 'api.route-descriptions.category.GET_show',
                 'parameters_key' => 'api.routes.category.parameters.item',
                 'conditionals' => [],
                 'authenticated' => false
             ],
             [
-                'description_key' => 'api.descriptions.category.DELETE',
+                'description_key' => 'api.route-descriptions.category.DELETE',
                 'authenticated' => true
             ]
         );

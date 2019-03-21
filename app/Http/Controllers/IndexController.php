@@ -69,7 +69,7 @@ class IndexController extends Controller
         $this->optionsResponse(
             [
                 'GET' => [
-                    'description' => Config::get('api.descriptions.api.GET_index'),
+                    'description' => config::get('api.route-descriptions.api.GET_index'),
                     'authenticated' => false,
                     'parameters' => []
                 ]
@@ -130,7 +130,7 @@ class IndexController extends Controller
         $this->optionsResponse(
             [
                 'GET' => [
-                    'description' => Config::get('api.descriptions.api.GET_changelog'),
+                    'description' => config::get('api.route-descriptions.api.GET_changelog'),
                     'authenticated' => false,
                     'parameters' => []
                 ]

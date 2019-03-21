@@ -63,7 +63,7 @@ class SummaryController extends Controller
 
         $routes = [
             'GET' => [
-                'description' => Config::get('api.descriptions.summary.GET_tco'),
+                'description' => config::get('api.route-descriptions.summary.GET_tco'),
                 'authenticated' => false,
                 'parameters' => []
             ]
@@ -122,7 +122,7 @@ class SummaryController extends Controller
 
         $routes = [
             'GET' => [
-                'description' => Config::get('api.descriptions.summary.GET_categories'),
+                'description' => config::get('api.route-descriptions.summary.GET_categories'),
                 'authenticated' => false,
                 'parameters' => []
             ]
@@ -193,7 +193,7 @@ class SummaryController extends Controller
 
         $routes = [
             'GET' => [
-                'description' => Config::get('api.descriptions.summary.GET_category'),
+                'description' => config::get('api.route-descriptions.summary.GET_category'),
                 'authenticated' => false,
                 'parameters' => []
             ]
@@ -264,7 +264,7 @@ class SummaryController extends Controller
 
         $routes = [
             'GET' => [
-                'description' => Config::get('api.descriptions.summary.GET_sub_categories'),
+                'description' => config::get('api.route-descriptions.summary.GET_sub_categories'),
                 'authenticated' => false,
                 'parameters' => []
             ]
@@ -340,7 +340,7 @@ class SummaryController extends Controller
 
         $routes = [
             'GET' => [
-                'description' => Config::get('api.descriptions.summary.GET_sub_category'),
+                'description' => config::get('api.route-descriptions.summary.GET_sub_category'),
                 'authenticated' => false,
                 'parameters' => []
             ]
@@ -402,7 +402,7 @@ class SummaryController extends Controller
 
         $routes = [
             'GET' => [
-                'description' => Config::get('api.descriptions.summary.GET_years'),
+                'description' => config::get('api.route-descriptions.summary.GET_years'),
                 'authenticated' => false,
                 'parameters' => []
             ]
@@ -508,7 +508,7 @@ class SummaryController extends Controller
 
         $routes = [
             'GET' => [
-                'description' => Config::get('api.descriptions.summary.GET_months'),
+                'description' => config::get('api.route-descriptions.summary.GET_months'),
                 'authenticated' => false,
                 'parameters' => []
             ]
@@ -535,7 +535,7 @@ class SummaryController extends Controller
 
         $routes = [
             'GET' => [
-                'description' => Config::get('api.descriptions.summary.GET_year'),
+                'description' => config::get('api.route-descriptions.summary.GET_year'),
                 'authenticated' => false,
                 'parameters' => []
             ]
@@ -607,7 +607,7 @@ class SummaryController extends Controller
 
         $routes = [
             'GET' => [
-                'description' => Config::get('api.descriptions.summary.GET_month'),
+                'description' => config::get('api.route-descriptions.summary.GET_month'),
                 'authenticated' => false,
                 'parameters' => []
             ]

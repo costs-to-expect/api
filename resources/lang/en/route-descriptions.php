@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 return [
     'api' => [
         'GET_index' => 'Return all routes',
