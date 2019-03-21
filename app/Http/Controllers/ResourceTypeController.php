@@ -94,13 +94,13 @@ class ResourceTypeController extends Controller
     {
         return $this->generateOptionsForIndex(
             [
-                'description_key' => 'api.route-descriptions.resource_type.GET_index',
+                'description_key' => 'route-descriptions.resource_type_GET_index',
                 'parameters_key' => 'api.routes.resource_type.parameters.collection',
                 'conditionals' => [],
                 'authenticated' => false
             ],
             [
-                'description_key' => 'api.route-descriptions.resource_type.POST',
+                'description_key' => 'route-descriptions.resource_type_POST',
                 'fields_key' => 'api.routes.resource_type.fields',
                 'conditionals' => [],
                 'authenticated' => true
@@ -122,13 +122,13 @@ class ResourceTypeController extends Controller
 
         return $this->generateOptionsForShow(
             [
-                'description_key' => 'api.route-descriptions.resource_type.GET_show',
+                'description_key' => 'route-descriptions.resource_type_GET_show',
                 'parameters_key' => 'api.routes.resource_type.parameters.item',
                 'conditionals' => [],
                 'authenticated' => false
             ],
             [
-                'description_key' => 'api.route-descriptions.resource_type.DELETE',
+                'description_key' => 'route-descriptions.resource_type_DELETE',
                 'authenticated' => true
             ]
         );

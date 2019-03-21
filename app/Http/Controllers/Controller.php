@@ -153,19 +153,19 @@ class Controller extends BaseController
     ) {
         $routes = [
             'GET' => [
-                'description' => Config::get($get['description_key']),
+                'description' => trans($get['description_key']),
                 'authenticated' => $get['authenticated'],
                 'parameters' => array_merge_recursive(Config::get($get['parameters_key']), $get['conditionals'])
             ],
             'DELETE' => [
-                'description' => Config::get($delete['description_key']),
+                'description' => trans($delete['description_key']),
                 'authenticated' => $delete['authenticated']
             ]
         ];
 
         if (strlen($patch['description_key']) > 0) {
             $routes['PATCH'] = [
-                'description' => Config::get($patch['description_key']),
+                'description' => trans($patch['description_key']),
                 'authenticated' => $patch['authenticated'],
                 'parameters' => array_merge_recursive(Config::get($patch['fields_key']), $patch['conditionals'])
             ];
