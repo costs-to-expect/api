@@ -24,35 +24,35 @@ class Validate
     static public function categoryRoute($category_id)
     {
         if (Category::validate($category_id) === false) {
-            UtilityResponse::notFound();
+            UtilityResponse::notFound(trans('entities.category'));
         }
     }
 
     static public function subCategoryRoute($category_id, $sub_category_id)
     {
         if (SubCategory::validate($category_id, $sub_category_id) === false) {
-            UtilityResponse::notFound();
+            UtilityResponse::notFound(trans('entities.sub-category'));
         }
     }
 
     static public function resourceTypeRoute($resource_type_id)
     {
         if (ResourceType::validate($resource_type_id) === false) {
-            UtilityResponse::notFound();
+            UtilityResponse::notFound(trans('entities.resource-type'));
         }
     }
 
     static public function resourceRoute($resource_type_id, $resource_id)
     {
         if (Resource::validate($resource_type_id, $resource_id) === false) {
-            UtilityResponse::notFound();
+            UtilityResponse::notFound(trans('entities.resource'));
         }
     }
 
     static public function itemRoute($resource_type_id, $resource_id, $item_id)
     {
         if (Item::validate($resource_type_id, $resource_id, $item_id) === false) {
-            UtilityResponse::notFound();
+            UtilityResponse::notFound(trans('entities.item'));
         }
     }
 
@@ -69,7 +69,7 @@ class Validate
                 $item_category_id
             ) === false
         ) {
-            UtilityResponse::notFound();
+            UtilityResponse::notFound(trans('entities.item-category'));
         }
     }
 
@@ -88,7 +88,7 @@ class Validate
                 $item_sub_category_id
             ) === false
         ) {
-            UtilityResponse::notFound();
+            UtilityResponse::notFound(trans('entities.item-sub-category'));
         }
     }
 }

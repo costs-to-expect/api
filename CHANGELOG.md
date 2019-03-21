@@ -8,6 +8,7 @@ Full changelog for the Costs to Expect REST API.
 * Utilities\Response class name was incorrect.
 * Non 200/201 responses returned via the Utilities\Response class.
 * Upgraded to the latest version of Laravel 5.7.
+* Not found responses not consistent with their error messages.
 
 ## 2019-03-19 - v1.10.0
 
