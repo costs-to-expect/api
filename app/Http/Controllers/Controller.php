@@ -112,12 +112,12 @@ class Controller extends BaseController
     ) {
         $routes = [
             'GET' => [
-                'description' => Config::get($get['description_key']),
+                'description' => trans($get['description_key']),
                 'authenticated' => $get['authenticated'],
                 'parameters' => array_merge_recursive(Config::get($get['parameters_key']), $get['conditionals'])
             ],
             'POST' => [
-                'description' => Config::get($post['description_key']),
+                'description' => trans($post['description_key']),
                 'authenticated' => $post['authenticated'],
                 'fields' => array_merge_recursive(Config::get($post['fields_key']), $post['conditionals'])
             ]

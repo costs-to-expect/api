@@ -103,13 +103,13 @@ class CategoryController extends Controller
 
         return $this->generateOptionsForIndex(
             [
-                'description_key' => 'api.route-descriptions.category.GET_index',
+                'description_key' => 'route-descriptions.category_GET_index',
                 'parameters_key' => 'api.routes.category.parameters.collection',
                 'conditionals' => [],
                 'authenticated' => false
             ],
             [
-                'description_key' => 'api.route-descriptions.category.POST',
+                'description_key' => 'route-descriptions.category_POST',
                 'fields_key' => 'api.routes.category.fields',
                 'conditionals' => [],
                 'authenticated' => true
