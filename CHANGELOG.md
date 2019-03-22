@@ -9,6 +9,8 @@ Full changelog for the Costs to Expect REST API.
 * Non 200/201 responses returned via the Utilities\Response class.
 * Upgraded to the latest version of Laravel 5.7.
 * Not found responses not consistent with their error messages.
+* Pull route descriptions from a translation file.
+* Removed route descriptions config file, no longer necessary.
 
 ## 2019-03-19 - v1.10.0
 
