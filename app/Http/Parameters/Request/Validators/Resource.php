@@ -35,7 +35,7 @@ class Resource extends BaseValidator
                     'unique:resource,name,null,id,resource_type_id,' . $resource_type_id
                 ],
             ],
-            Config::get('api.routes.resource.validation.POST.fields')
+            Config::get('api.parameters-and-fields.resource.validation.POST.fields')
         );
     }
 
@@ -52,7 +52,7 @@ class Resource extends BaseValidator
         return ValidatorFacade::make(
             $request->all(),
             self::createRules($resource_type_id),
-            Config::get('api.routes.resource.validation.POST.messages')
+            Config::get('api.parameters-and-fields.resource.validation.POST.messages')
         );
     }
 }

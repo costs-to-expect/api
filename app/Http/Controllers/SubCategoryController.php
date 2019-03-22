@@ -101,13 +101,13 @@ class SubCategoryController extends Controller
         return $this->generateOptionsForIndex(
             [
                 'description_key' => 'route-descriptions.sub_category_GET_index',
-                'parameters_key' => 'api.routes.sub_category.parameters.collection',
+                'parameters_key' => 'api.parameters-and-fields.sub_category.parameters.collection',
                 'conditionals' => [],
                 'authenticated' => false
             ],
             [
                 'description_key' => 'route-descriptions.sub_category_POST',
-                'fields_key' => 'api.routes.sub_category.fields',
+                'fields_key' => 'api.parameters-and-fields.sub_category.fields',
                 'conditionals' => [],
                 'authenticated' => true
             ]
@@ -134,7 +134,7 @@ class SubCategoryController extends Controller
         return $this->generateOptionsForShow(
             [
                 'description_key' => 'route-descriptions.sub_category_GET_show',
-                'parameters_key' => 'api.routes.sub_category.parameters.item',
+                'parameters_key' => 'api.parameters-and-fields.sub_category.parameters.item',
                 'conditionals' => [],
                 'authenticated' => false
             ],

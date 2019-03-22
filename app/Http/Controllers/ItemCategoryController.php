@@ -125,13 +125,13 @@ class ItemCategoryController extends Controller
         return $this->generateOptionsForIndex(
             [
                 'description_key' => 'route-descriptions.item_category_GET_index',
-                'parameters_key' => 'api.routes.item_category.parameters.collection',
+                'parameters_key' => 'api.parameters-and-fields.item_category.parameters.collection',
                 'conditionals' => [],
                 'authenticated' => false
             ],
             [
                 'description_key' => 'route-descriptions.item_category_POST',
-                'fields_key' => 'api.routes.item_category.fields',
+                'fields_key' => 'api.parameters-and-fields.item_category.fields',
                 'conditionals' => $this->post_parameters,
                 'authenticated' => true
             ]
@@ -177,7 +177,7 @@ class ItemCategoryController extends Controller
         return $this->generateOptionsForShow(
             [
                 'description_key' => 'route-descriptions.item_category_GET_show',
-                'parameters_key' => 'api.routes.item_category.parameters.item',
+                'parameters_key' => 'api.parameters-and-fields.item_category.parameters.item',
                 'conditionals' => [],
                 'authenticated' => false
             ],

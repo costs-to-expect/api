@@ -98,13 +98,13 @@ class ResourceController extends Controller
         return $this->generateOptionsForIndex(
             [
                 'description_key' => 'route-descriptions.resource_GET_index',
-                'parameters_key' => 'api.routes.resource.parameters.collection',
+                'parameters_key' => 'api.parameters-and-fields.resource.parameters.collection',
                 'conditionals' => [],
                 'authenticated' => false
             ],
             [
                 'description_key' => 'route-descriptions.resource_POST',
-                'fields_key' => 'api.routes.resource.fields',
+                'fields_key' => 'api.parameters-and-fields.resource.fields',
                 'conditionals' => [],
                 'authenticated' => true
             ]
@@ -136,7 +136,7 @@ class ResourceController extends Controller
         return $this->generateOptionsForShow(
             [
                 'description_key' => 'route-descriptions.resource_GET_show',
-                'parameters_key' => 'api.routes.resource.parameters.item',
+                'parameters_key' => 'api.parameters-and-fields.resource.parameters.item',
                 'conditionals' => [],
                 'authenticated' => false
             ],

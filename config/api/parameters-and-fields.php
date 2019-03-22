@@ -3,14 +3,16 @@
 $pagination = [
     'offset' => [
         'parameter' => 'offset',
-        'title' => 'Record offset for pagination',
+        'title' => 'Offset',
+        'description' => 'Record offset for pagination',
         'default' => 0,
         'type' => 'integer',
         'required' => false
     ],
     'limit' => [
         'parameter' => 'limit',
-        'title' => 'Record limit for pagination',
+        'title' => 'Limit',
+        'description' => 'Record limit for pagination',
         'default' => 10,
         'type' => 'integer',
         'required' => false
@@ -272,28 +274,32 @@ return [
                 [
                     'year' => [
                         "parameter" => "year",
-                        "title" => "Show results for given year",
+                        "title" => "Year",
+                        "description" => "Show results for given year",
                         "default" => null,
                         "type" => "integer",
                         "required" => false
                     ],
                     'month' => [
                         "parameter" => "month",
-                        "title" => "Show results for given month",
+                        "title" => "Month",
+                        "description" => "Show results for given month",
                         "default" => null,
                         "type" => "integer",
                         "required" => false
                     ],
                     'category' => [
                         "parameter" => "category",
-                        "title" => "Show results for selected category",
+                        "title" => "Category",
+                        "description" => "Show results for selected category",
                         "default" => null,
                         "type" => "string",
                         "required" => false
                     ],
                     'sub_category' => [
                         "parameter" => "sub_category",
-                        "title" => "Show results for selected sub category (Only relevant if category set)",
+                        "title" => "Subcategory",
+                        "description" => "Show results for selected sub category (Only relevant if category set)",
                         "default" => null,
                         "type" => "string",
                         "required" => false

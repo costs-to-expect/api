@@ -29,8 +29,8 @@ class ResourceType extends BaseValidator
     {
         return ValidatorFacade::make(
             $request->all(),
-            Config::get('api.routes.resource_type.validation.POST.fields'),
-            Config::get('api.routes.resource_type.validation.POST.messages')
+            Config::get('api.parameters-and-fields.resource_type.validation.POST.fields'),
+            Config::get('api.parameters-and-fields.resource_type.validation.POST.messages')
         );
     }
 }
