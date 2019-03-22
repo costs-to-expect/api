@@ -129,7 +129,7 @@ class RequestController extends Controller
         $this->optionsResponse(
             [
                 'GET' => [
-                    'description' => config::get('api.route-descriptions.request.GET_log'),
+                    'description' => trans('route-descriptions.request_GET_log'),
                     'authenticated' => false,
                     'parameters' => []
                 ]
@@ -146,13 +146,13 @@ class RequestController extends Controller
     {
         return $this->generateOptionsForIndex(
             [
-                'description_key' => 'api.route-descriptions.request.GET_error_log',
+                'description_key' => 'route-descriptions.request_GET_error_log',
                 'parameters_key' => 'api.routes.request.parameters.collection',
                 'conditionals' => [],
                 'authenticated' => false
             ],
             [
-                'description_key' => 'api.route-descriptions.request.POST',
+                'description_key' => 'route-descriptions.request_POST',
                 'fields_key' => 'api.routes.request.fields',
                 'conditionals' => [],
                 'authenticated' => false
@@ -170,7 +170,7 @@ class RequestController extends Controller
         $this->optionsResponse(
             [
                 'GET' => [
-                    'description' => config::get('api.route-descriptions.request.GET_log_monthly_requests'),
+                    'description' => trans('route-descriptions.request_GET_log_monthly_requests'),
                     'authenticated' => false,
                     'parameters' => []
                 ]
