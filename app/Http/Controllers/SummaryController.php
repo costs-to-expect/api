@@ -508,7 +508,7 @@ class SummaryController extends Controller
 
         $routes = [
             'GET' => [
-                'description' => trans('api.route-descriptions.summary_GET_months'),
+                'description' => trans('route-descriptions.summary_GET_months'),
                 'authenticated' => false,
                 'parameters' => []
             ]
