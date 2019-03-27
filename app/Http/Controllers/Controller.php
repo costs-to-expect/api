@@ -91,31 +91,31 @@ class Controller extends BaseController
     }
 
     /**
-     * Generate the OPTIONS request for the index routes
+     * Generate the OPTIONS request for the index (collection) routes
      *
-     * @param array $get Data array to define description_key, parameters_key, conditionals and required
-     * @param array $post Data array to define description_key, parameters_key, conditionals and required
+     * @param array $get Four indexes, description_localisation, parameters_config, conditionals and authenticated
+     * @param array $post Four indexes, description_localisation, fields_config, conditionals and authenticated
      */
     protected function generateOptionsForIndex(
         array $get = [
-            'description_key' => '',
-            'parameters_key' => '',
+            'description_localisation' => '',
+            'parameters_config' => '',
             'conditionals' => [],
             'authenticated' => false
         ],
         array $post = [
-            'description_key' => '',
-            'fields_key' => '',
+            'description_localisation' => '',
+            'fields_config' => '',
             'conditionals' => [],
             'authenticated' => true
         ]
     ) {
-        $post_fields_definition = array_merge_recursive(Config::get($post['fields_key']), $post['conditionals']);
+        $post_fields_definition = array_merge_recursive(Config::get($post['fields_config']), $post['conditionals']);
 
         $get_parameters = [];
         $post_field = [];
 
-        foreach (array_merge_recursive(Config::get($get['parameters_key']), $get['conditionals']) as $parameter => $detail) {
+        foreach (array_merge_recursive(Config::get($get['parameters_config']), $get['conditionals']) as $parameter => $detail) {
             $detail['title'] = trans($detail['title']);
             $detail['description'] = trans($detail['description']);
             $get_parameters[$parameter] = $detail;
@@ -123,14 +123,14 @@ class Controller extends BaseController
 
         $routes = [
             'GET' => [
-                'description' => trans($get['description_key']),
+                'description' => trans($get['description_localisation']),
                 'authenticated' => $get['authenticated'],
-                'parameters' => array_merge_recursive(Config::get($get['parameters_key']), $get['conditionals'])
+                'parameters' => array_merge_recursive(Config::get($get['parameters_config']), $get['conditionals'])
             ],
             'POST' => [
-                'description' => trans($post['description_key']),
+                'description' => trans($post['description_localisation']),
                 'authenticated' => $post['authenticated'],
-                'fields' => array_merge_recursive(Config::get($post['fields_key']), $post['conditionals'])
+                'fields' => array_merge_recursive(Config::get($post['fields_config']), $post['conditionals'])
             ]
         ];
 

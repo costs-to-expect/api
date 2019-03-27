@@ -94,14 +94,14 @@ class ResourceTypeController extends Controller
     {
         return $this->generateOptionsForIndex(
             [
-                'description_key' => 'route-descriptions.resource_type_GET_index',
-                'parameters_key' => 'api.parameters-and-fields.resource_type.parameters.collection',
+                'description_localisation' => 'route-descriptions.resource_type_GET_index',
+                'parameters_config' => 'api.parameters-and-fields.resource_type.parameters.collection',
                 'conditionals' => [],
                 'authenticated' => false
             ],
             [
-                'description_key' => 'route-descriptions.resource_type_POST',
-                'fields_key' => 'api.parameters-and-fields.resource_type.fields',
+                'description_localisation' => 'route-descriptions.resource_type_POST',
+                'fields_config' => 'api.parameters-and-fields.resource_type.fields',
                 'conditionals' => [],
                 'authenticated' => true
             ]
