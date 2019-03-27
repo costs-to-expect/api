@@ -5,22 +5,22 @@ declare(strict_types=1);
 return [
     'name' => [
         'field' => 'name',
-        'title' => 'Resource type name',
-        'description' => 'Enter a name for the resource type',
+        'title' => 'title_name',
+        'description' => 'description_name',
         'type' => 'string',
         'required' => true
     ],
     'description' => [
         'field' => 'description',
-        'title' => 'Resource type description',
-        'description' => 'Enter a description for the resource type',
+        'title' => 'title_description',
+        'description' => 'description_description',
         'type' => 'string',
         'required' => true
     ],
     'private' => [
         'field' => 'private',
-        'title' => 'Is the a private resource type',
-        'description' => 'Please set whether this should be marked as a private resource type',
+        'title' => 'title_private',
+        'description' => 'description_private',
         'type' => 'boolean',
         'required' => true
     ]
