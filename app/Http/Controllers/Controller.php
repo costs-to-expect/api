@@ -144,45 +144,53 @@ class Controller extends BaseController
     /**
      * Generate the OPTIONS request for the show routes
      *
-     * @param array $get Data array to define description_key, parameters_key, conditionals and authenticated
-     * @param array $delete Data array to define description_key and authenticated
-     * @param array $patch Data array to define description_key, fields_key, conditionals and authenticated
+     * @param array $get Data array to define description_localisation, parameters_config, conditionals and authenticated
+     * @param array $delete Data array to define description_localisation and authenticated
+     * @param array $patch Data array to define description_localisation, fields_config, conditionals and authenticated
      */
     protected function generateOptionsForShow(
         array $get = [
-            'description_key' => '',
-            'parameters_key' => '',
+            'description_localisation' => '',
+            'parameters_config' => '',
             'conditionals' => [],
             'authenticated' => false
         ],
         array $delete = [
-            'description_key' => '',
+            'description_localisation' => '',
             'authenticated' => false
         ],
         array $patch = [
-            'description_key' => '',
-            'fields_key' => '',
+            'description_localisation' => '',
+            'fields_config' => '',
             'conditionals' => [],
             'authenticated' => false
         ]
     ) {
+        $get_parameters = [];
+
+        foreach (array_merge_recursive(Config::get($get['parameters_config']), $get['conditionals']) as $parameter => $detail) {
+            $detail['title'] = trans($detail['title']);
+            $detail['description'] = trans($detail['description']);
+            $get_parameters[$parameter] = $detail;
+        }
+
         $routes = [
             'GET' => [
-                'description' => trans($get['description_key']),
+                'description' => trans($get['description_localisation']),
                 'authenticated' => $get['authenticated'],
-                'parameters' => array_merge_recursive(Config::get($get['parameters_key']), $get['conditionals'])
+                'parameters' => $get_parameters
             ],
             'DELETE' => [
-                'description' => trans($delete['description_key']),
+                'description' => trans($delete['description_localisation']),
                 'authenticated' => $delete['authenticated']
             ]
         ];
 
-        if (strlen($patch['description_key']) > 0) {
+        if (strlen($patch['description_localisation']) > 0) {
             $routes['PATCH'] = [
-                'description' => trans($patch['description_key']),
+                'description' => trans($patch['description_localisation']),
                 'authenticated' => $patch['authenticated'],
-                'parameters' => array_merge_recursive(Config::get($patch['fields_key']), $patch['conditionals'])
+                'parameters' => array_merge_recursive(Config::get($patch['fields_config']), $patch['conditionals'])
             ];
         }
 

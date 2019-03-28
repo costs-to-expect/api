@@ -122,13 +122,13 @@ class ResourceTypeController extends Controller
 
         return $this->generateOptionsForShow(
             [
-                'description_key' => 'route-descriptions.resource_type_GET_show',
-                'parameters_key' => 'api.parameters-and-fields.resource_type.parameters.item',
+                'description_localisation' => 'route-descriptions.resource_type_GET_show',
+                'parameters_config' => 'api.resource-type.parameters.item',
                 'conditionals' => [],
                 'authenticated' => false
             ],
             [
-                'description_key' => 'route-descriptions.resource_type_DELETE',
+                'description_localisation' => 'route-descriptions.resource_type_DELETE',
                 'authenticated' => true
             ]
         );
