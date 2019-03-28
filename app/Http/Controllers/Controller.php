@@ -110,8 +110,6 @@ class Controller extends BaseController
             'authenticated' => true
         ]
     ) {
-        $post_fields_definition = array_merge_recursive(Config::get($post['fields_config']), $post['conditionals']);
-
         $get_parameters = [];
         $post_fields = [];
 
@@ -131,7 +129,7 @@ class Controller extends BaseController
             'GET' => [
                 'description' => trans($get['description_localisation']),
                 'authenticated' => $get['authenticated'],
-                'parameters' => array_merge_recursive(Config::get($get['parameters_config']), $get['conditionals'])
+                'parameters' => $get_parameters
             ],
             'POST' => [
                 'description' => trans($post['description_localisation']),
