@@ -6,8 +6,8 @@ return [
     'collection' => [
         'include_resources' => [
             'field' => 'include_resources',
-            'title' => 'title_include_resources',
-            'description' => 'description_include_resources',
+            'title' => 'resource-type/parameters.title-include_resources',
+            'description' => 'resource-type/parameters.description-include_resources',
             'type' => 'boolean',
             'required' => false
         ]
@@ -15,8 +15,8 @@ return [
     'item' => [
         'include_resources' => [
             'field' => 'include_resources',
-            'title' => 'title_include_resources',
-            'description' => 'description_include_resources',
+            'title' => 'resource-type/parameters.title-include_resources',
+            'description' => 'resource-type/parameters.description-include_resources',
             'type' => 'boolean',
             'required' => false
         ]

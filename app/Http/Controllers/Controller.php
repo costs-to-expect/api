@@ -113,12 +113,18 @@ class Controller extends BaseController
         $post_fields_definition = array_merge_recursive(Config::get($post['fields_config']), $post['conditionals']);
 
         $get_parameters = [];
-        $post_field = [];
+        $post_fields = [];
 
         foreach (array_merge_recursive(Config::get($get['parameters_config']), $get['conditionals']) as $parameter => $detail) {
             $detail['title'] = trans($detail['title']);
             $detail['description'] = trans($detail['description']);
             $get_parameters[$parameter] = $detail;
+        }
+
+        foreach (array_merge_recursive(Config::get($post['fields_config']), $post['conditionals']) as $field => $detail) {
+            $detail['title'] = trans($detail['title']);
+            $detail['description'] = trans($detail['description']);
+            $post_fields[$field] = $detail;
         }
 
         $routes = [
@@ -130,7 +136,7 @@ class Controller extends BaseController
             'POST' => [
                 'description' => trans($post['description_localisation']),
                 'authenticated' => $post['authenticated'],
-                'fields' => array_merge_recursive(Config::get($post['fields_config']), $post['conditionals'])
+                'fields' => $post_fields
             ]
         ];
 

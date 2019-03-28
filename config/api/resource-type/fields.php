@@ -5,22 +5,22 @@ declare(strict_types=1);
 return [
     'name' => [
         'field' => 'name',
-        'title' => 'title_name',
-        'description' => 'description_name',
+        'title' => 'resource-type/fields.title-name',
+        'description' => 'resource-type/fields.description-name',
         'type' => 'string',
         'required' => true
     ],
     'description' => [
         'field' => 'description',
-        'title' => 'title_description',
-        'description' => 'description_description',
+        'title' => 'resource-type/fields.title-description',
+        'description' => 'resource-type/fields.description-description',
         'type' => 'string',
         'required' => true
     ],
     'private' => [
         'field' => 'private',
-        'title' => 'title_private',
-        'description' => 'description_private',
+        'title' => 'resource-type/fields.title-private',
+        'description' => 'resource-type/fields.description-private',
         'type' => 'boolean',
         'required' => true
     ]

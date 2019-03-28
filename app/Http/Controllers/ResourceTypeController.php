@@ -101,7 +101,7 @@ class ResourceTypeController extends Controller
             ],
             [
                 'description_localisation' => 'route-descriptions.resource_type_POST',
-                'fields_config' => 'api.parameters-and-fields.resource_type.fields',
+                'fields_config' => 'api.resource-type.fields',
                 'conditionals' => [],
                 'authenticated' => true
             ]
