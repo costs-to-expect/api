@@ -7,10 +7,10 @@ return [
         'fields' => [
             'name' => 'required|string|unique:resource_type,name',
             'description' => 'required|string',
-            'private' => 'sometimes|boolean',
+            'private' => 'sometimes|boolean'
         ],
         'messages' => [
-            'name.unique' => 'The resource type has already been used'
+            'name.unique' => 'resource-type/validation.name-unique'
         ]
     ]
 ];
