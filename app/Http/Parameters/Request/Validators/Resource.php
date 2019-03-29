@@ -35,7 +35,7 @@ class Resource extends BaseValidator
                     'unique:resource,name,null,id,resource_type_id,' . $resource_type_id
                 ],
             ],
-            Config::get('api.parameters-and-fields.resource.validation.POST.fields')
+            Config::get('api.resource.validation.POST.fields')
         );
     }
 
@@ -49,10 +49,15 @@ class Resource extends BaseValidator
      */
     public function create(Request $request, int $resource_type_id): Validator
     {
+        $messages = [];
+        foreach (Config::get('api.resource.validation.POST.messages') as $key => $custom_message) {
+            $messages[$key] = trans($custom_message);
+        };
+
         return ValidatorFacade::make(
             $request->all(),
             self::createRules($resource_type_id),
-            Config::get('api.parameters-and-fields.resource.validation.POST.messages')
+            $this->translateMessages('api.resource.validation.POST.messages')
         );
     }
 }

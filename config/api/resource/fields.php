@@ -5,22 +5,22 @@ declare(strict_types=1);
 return [
     'name' => [
         'field' => 'name',
-        'title' => 'Resource name',
-        'description' => 'Enter a name for the resource',
+        'title' => 'resource/fields.title-name',
+        'description' => 'resource/fields.description-name',
         'type' => 'string',
         'required' => true
     ],
     'description' => [
         'field' => 'description',
-        'title' => 'Resource description',
-        'description' => 'Enter a description for the resource',
+        'title' => 'resource/fields.title-description',
+        'description' => 'resource/fields.description-description',
         'type' => 'string',
         'required' => true
     ],
     'effective_date' => [
         'field' => 'effective_date',
-        'title' => 'Resource effective date',
-        'description' => 'Enter an effective date for the resource',
+        'title' => 'resource/fields.title-effective_date',
+        'description' => 'resource/fields.description-effective_date',
         'type' => 'date (yyyy-mm-dd)',
         'required' => true
     ]
