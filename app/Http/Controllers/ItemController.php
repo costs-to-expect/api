@@ -291,7 +291,7 @@ class ItemController extends Controller
         }
 
         UtilityResponse::successNoContent();
-}
+    }
 
     /**
      * Delete the assigned item
@@ -330,8 +330,8 @@ class ItemController extends Controller
     }
 
     /**
-     * Set any conditional GET parameters, will be merged with the data arrays defined in
-     * config/api/route.php
+     * Set any conditional GET parameters, these will be merged with the data arrays defined in
+     * config/api/[item-type]/parameters.php
      *
      * @param integer $resource_type_id
      *

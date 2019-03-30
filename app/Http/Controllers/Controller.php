@@ -113,7 +113,12 @@ class Controller extends BaseController
         $get_parameters = [];
         $post_fields = [];
 
-        foreach (array_merge_recursive(Config::get($get['parameters_config']), $get['conditionals']) as $parameter => $detail) {
+        foreach (
+            array_merge_recursive(
+                Config::get('api.pagination.parameters'),
+                Config::get($get['parameters_config']),
+                $get['conditionals']
+            ) as $parameter => $detail) {
             $detail['title'] = trans($detail['title']);
             $detail['description'] = trans($detail['description']);
             $get_parameters[$parameter] = $detail;
