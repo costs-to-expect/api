@@ -134,14 +134,14 @@ class ItemController extends Controller
 
         return $this->generateOptionsForIndex(
             [
-                'description_key' => 'route-descriptions.item_GET_index',
-                'parameters_key' => 'api.parameters-and-fields.item.parameters.collection',
+                'description_localisation' => 'route-descriptions.item_GET_index',
+                'parameters_config' => 'api.item.parameters.collection',
                 'conditionals' => $this->get_parameters,
                 'authenticated' => false
             ],
             [
-                'description_key' => 'route-descriptions.item_POST',
-                'fields_key' => 'api.parameters-and-fields.item.fields',
+                'description_localisation' => 'route-descriptions.item_POST',
+                'fields_config' => 'api.item.fields',
                 'conditionals' => [],
                 'authenticated' => true
             ]

@@ -3,5 +3,32 @@
 declare(strict_types=1);
 
 return [
-
+    'description' => [
+        'field' => 'description',
+        'title' => 'item/fields.title-description',
+        'description' => 'item/fields.description-description',
+        'type' => 'string',
+        'required' => true
+    ],
+    'effective_date' => [
+        'field' => 'effective_date',
+        'title' => 'item/fields.title-effective_date',
+        'description' => 'item/fields.description-effective_date',
+        'type' => 'date (yyyy-mm-dd)',
+        'required' => true
+    ],
+    'total' => [
+        'field' => 'total',
+        'title' => 'item/fields.title-total',
+        'description' => 'item/fields.description-total',
+        'type' => 'decimal (10,2)',
+        'required' => true
+    ],
+    'percentage' => [
+        'field' => 'percentage',
+        'title' => 'item/fields.title-percentage',
+        'description' => 'item/fields.description-percentage',
+        'type' => 'string',
+        'required' => false
+    ]
 ];
