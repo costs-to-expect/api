@@ -135,13 +135,13 @@ class ResourceController extends Controller
 
         return $this->generateOptionsForShow(
             [
-                'description_key' => 'route-descriptions.resource_GET_show',
-                'parameters_key' => 'api.parameters-and-fields.resource.parameters.item',
+                'description_localisation' => 'route-descriptions.resource_GET_show',
+                'parameters_config' => 'api.resource.parameters.item',
                 'conditionals' => [],
                 'authenticated' => false
             ],
             [
-                'description_key' => 'route-descriptions.resource_DELETE',
+                'description_localisation' => 'route-descriptions.resource_DELETE',
                 'authenticated' => true
             ]
         );
