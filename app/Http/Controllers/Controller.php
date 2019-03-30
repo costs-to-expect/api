@@ -172,11 +172,18 @@ class Controller extends BaseController
         ]
     ) {
         $get_parameters = [];
+        $patch_fields = [];
 
         foreach (array_merge_recursive(Config::get($get['parameters_config']), $get['conditionals']) as $parameter => $detail) {
             $detail['title'] = trans($detail['title']);
             $detail['description'] = trans($detail['description']);
             $get_parameters[$parameter] = $detail;
+        }
+
+        foreach (array_merge_recursive(Config::get($patch['fields_config']), $patch['conditionals']) as $field => $detail) {
+            $detail['title'] = trans($detail['title']);
+            $detail['description'] = trans($detail['description']);
+            $patch_fields[$field] = $detail;
         }
 
         $routes = [
@@ -195,7 +202,7 @@ class Controller extends BaseController
             $routes['PATCH'] = [
                 'description' => trans($patch['description_localisation']),
                 'authenticated' => $patch['authenticated'],
-                'parameters' => array_merge_recursive(Config::get($patch['fields_config']), $patch['conditionals'])
+                'fields' => $patch_fields
             ];
         }
 

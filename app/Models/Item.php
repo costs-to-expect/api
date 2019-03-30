@@ -26,7 +26,7 @@ class Item extends Model
      */
     public function patchableFields(): array
     {
-        return array_keys(Config::get('api.parameters-and-fields.item.validation.PATCH.fields'));
+        return array_keys(Config::get('api.item.validation.PATCH.fields'));
     }
 
     public function setActualisedTotal($total, $percentage)

@@ -175,18 +175,18 @@ class ItemController extends Controller
 
         return $this->generateOptionsForShow(
             [
-                'description_key' => 'route-descriptions.item_GET_show',
-                'parameters_key' => 'api.parameters-and-fields.item.parameters.item',
+                'description_localisation' => 'route-descriptions.item_GET_show',
+                'parameters_config' => 'api.item.parameters.item',
                 'conditionals' => [],
                 'authenticated' => false
             ],
             [
-                'description_key' => 'route-descriptions.item_DELETE',
+                'description_localisation' => 'route-descriptions.item_DELETE',
                 'authenticated' => true
             ],
             [
-                'description_key' => 'route-descriptions.item_PATCH',
-                'fields_key' => 'api.parameters-and-fields.item.fields',
+                'description_localisation' => 'route-descriptions.item_PATCH',
+                'fields_config' => 'api.item.fields',
                 'conditionals' => [],
                 'authenticated' => false
             ]
@@ -355,7 +355,7 @@ class ItemController extends Controller
             $this->get_parameters['year']['allowed_values'][$i] = [
                 'value' => $i,
                 'name' => $i,
-                'description' => 'Include results for ' . $i
+                'description' => trans('item/allowed-values.description-prefix-year') . $i
             ];
         }
 
@@ -363,7 +363,8 @@ class ItemController extends Controller
             $this->get_parameters['month']['allowed_values'][$i] = [
                 'value' => $i,
                 'name' => date("F", mktime(0, 0, 0, $i, 10)),
-                'description' => 'Include results for ' . date("F", mktime(0, 0, 0, $i, 1))
+                'description' => trans('item/allowed-values.description-prefix-month') .
+                    date("F", mktime(0, 0, 0, $i, 1))
             ];
         }
 
@@ -373,7 +374,8 @@ class ItemController extends Controller
                 $this->get_parameters['category']['allowed_values'][$this->hash->encode('category', $category->category_id)] = [
                     'value' => $this->hash->encode('category', $category->category_id),
                     'name' => $category->category_name,
-                    'description' => 'Include results for ' . $category->category_name . ' category'
+                    'description' => trans('item/allowed-values.description-prefix-category') .
+                        $category->category_name . trans('item/allowed-values.description-suffix-category')
                 ];
             }
         );
@@ -385,7 +387,8 @@ class ItemController extends Controller
                     $this->get_parameters['sub_category']['allowed_values'][$this->hash->encode('sub_category', $sub_category->id)] = [
                         'value' => $this->hash->encode('sub_category', $sub_category->id),
                         'name' => $sub_category->name,
-                        'description' => 'Include results for ' . $sub_category->name . ' sub category'
+                        'description' => trans('item/allowed-values.description-prefix-subcategory') .
+                            $sub_category->name . trans('item/allowed-values.description-suffix-subcategory')
                     ];
                 }
             );
