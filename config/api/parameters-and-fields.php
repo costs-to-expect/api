@@ -20,63 +20,6 @@ $pagination = [
 ];
 
 return [
-    'category' => [
-        'fields' => [
-            'name' => [
-                'field' => 'name',
-                'title' => 'Category name',
-                'description' => 'Enter a name for the category',
-                'type' => 'string',
-                'required' => true
-            ],
-            'description' => [
-                'field' => 'description',
-                'title' => 'Category description',
-                'description' => 'Enter a description for the category',
-                'type' => 'string',
-                'required' => true
-            ],
-            'resource_type_id' => [
-                'field' => 'resource_type_id',
-                'title' => 'Resource type category will belong to',
-                'description' => 'Choose the resource type the category should be a child of',
-                'type' => 'string',
-                'required' => true
-            ]
-        ],
-        'validation' => [
-            'POST' => [
-                'fields' => [
-                    'name' => 'required|string|unique:category,name',
-                    'description' => 'required|string',
-                    'resource_type_id' => 'required|exists:resource_type,id'
-                ],
-                'messages' => [
-                    'name.unique' => 'The category name has already been used with this resource type'
-                ]
-            ]
-        ],
-        'parameters' => [
-            'collection' => [
-                'include_sub_categories' => [
-                    'field' => 'include_sub_categories',
-                    'title' => 'Include sub categories',
-                    'description' => 'Include sub categories assigned to this category',
-                    'type' => 'boolean',
-                    'required' => false
-                ]
-            ],
-            'item' => [
-                'include_sub_categories' => [
-                    'field' => 'include_sub_categories',
-                    'title' => 'Include sub categories',
-                    'description' => 'Include sub categories assigned to this category',
-                    'type' => 'boolean',
-                    'required' => false
-                ]
-            ]
-        ]
-    ],
     'sub_category' => [
         'fields' => [
             'name' => [

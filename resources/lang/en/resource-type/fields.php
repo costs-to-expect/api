@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 return [
-    'title-name' => 'Resource type',
+    'title-name' => 'Resource type name',
     'description-name' => 'Enter a name for the resource type',
 
     'title-description' => 'Resource type description',
