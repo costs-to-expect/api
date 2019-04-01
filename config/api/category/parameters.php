@@ -6,8 +6,8 @@ return [
     'collection' => [
         'include_sub_categories' => [
             'field' => 'include_sub_categories',
-            'title' => 'resource-type/parameters.title-include_sub_categories',
-            'description' => 'resource-type/parameters.description-include_sub_categories',
+            'title' => 'category/parameters.title-include_sub_categories',
+            'description' => 'category/parameters.description-include_sub_categories',
             'type' => 'boolean',
             'required' => false
         ]
@@ -15,8 +15,8 @@ return [
     'item' => [
         'include_sub_categories' => [
             'field' => 'include_sub_categories',
-            'title' => 'resource-type/parameters.title-include_sub_categories',
-            'description' => 'resource-type/parameters.description-include_sub_categories',
+            'title' => 'category/parameters.title-include_sub_categories',
+            'description' => 'category/parameters.description-include_sub_categories',
             'type' => 'boolean',
             'required' => false
         ]

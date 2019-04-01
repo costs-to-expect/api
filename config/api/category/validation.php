@@ -10,7 +10,7 @@ return [
             'resource_type_id' => 'required|exists:resource_type,id'
         ],
         'messages' => [
-            'name.unique' => 'resource/validation.name-unique',
+            'name.unique' => 'category/validation.name-unique'
         ]
     ]
 ];

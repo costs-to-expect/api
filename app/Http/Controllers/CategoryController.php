@@ -24,8 +24,6 @@ use Illuminate\Http\Request;
 class CategoryController extends Controller
 {
     protected $collection_parameters = [];
-    protected $get_parameters = [];
-    protected $post_parameters = [];
     protected $show_parameters = [];
 
     /**
@@ -37,7 +35,7 @@ class CategoryController extends Controller
      */
     public function index(Request $request): JsonResponse
     {
-        $this->collection_parameters = Get::parameters(['include_sub_categories', 'resource_type']);
+        $this->collection_parameters = Get::parameters(['include_sub_categories']);
 
         $categories = (new Category())->paginatedCollection($this->include_private, $this->collection_parameters);
 
@@ -95,23 +93,19 @@ class CategoryController extends Controller
      */
     public function optionsIndex(Request $request): JsonResponse
     {
-        $this->collection_parameters = Get::parameters(['include_sub_categories', 'resource_type']);
-
-        $this->setConditionalGetParameters();
-
-        $this->setConditionalPostParameters();
+        $this->collection_parameters = Get::parameters(['include_sub_categories']);
 
         return $this->generateOptionsForIndex(
             [
-                'description_key' => 'route-descriptions.category_GET_index',
-                'parameters_key' => 'api.parameters-and-fields.category.parameters.collection',
+                'description_localisation' => 'route-descriptions.category_GET_index',
+                'parameters_config' => 'api.category.parameters.collection',
                 'conditionals' => [],
                 'authenticated' => false
             ],
             [
-                'description_key' => 'route-descriptions.category_POST',
-                'fields_key' => 'api.parameters-and-fields.category.fields',
-                'conditionals' => [],
+                'description_localisation' => 'route-descriptions.category_POST',
+                'fields_config' => 'api.category.fields',
+                'conditionals' => $this->conditionalPostParameters(),
                 'authenticated' => true
             ]
         );
@@ -208,16 +202,14 @@ class CategoryController extends Controller
     }
 
     /**
-     * Set any conditional POST parameters, will be merged with the data arrays defined in
-     * config/api/route.php
-     *
-     * @return JsonResponse
+     * Define any conditional POST parameters/allowed values, will be passed into
+     * the relevant options method to merge with the definition array
      */
-    private function setConditionalPostParameters()
+    private function conditionalPostParameters(): array
     {
-        $resource_types = (new ResourceType())->minimisedCollection();
+        $resource_types = (new ResourceType())->minimisedCollection($this->include_private);
 
-        $this->post_parameters = ['resource_type_id' => []];
+        $conditional_post_fields = ['resource_type_id' => []];
         foreach ($resource_types as $resource_type) {
             $id = $this->hash->encode('resource_type', $resource_type->resource_type_id);
 
@@ -225,37 +217,13 @@ class CategoryController extends Controller
                 UtilityResponse::unableToDecode();
             }
 
-            $this->post_parameters['resource_type_id']['allowed_values'][$id] = [
+            $conditional_post_fields['resource_type_id']['allowed_values'][$id] = [
                 'value' => $id,
-                'name' => $resource_type->name,
+                'name' => $resource_type->resource_type_name,
                 'description' => $resource_type->resource_type_description
             ];
         }
-    }
 
-    /**
-     * Set any conditional GET parameters, will be merged with the data arrays defined in
-     * config/api/route.php
-     *
-     * @return void
-     */
-    private function setConditionalGetParameters()
-    {
-        $this->get_parameters = [
-            'resource_type' => [
-                'allowed_values' => []
-            ]
-        ];
-
-        (new ResourceType())->paginatedCollection($this->include_private)->map(
-            function ($resource_type)
-            {
-                $this->get_parameters['resource_type']['allowed_values'][$this->hash->encode('resource_type', $resource_type->id)] = [
-                    'value' => $this->hash->encode('resource_type', $resource_type->id),
-                    'name' => $resource_type->name,
-                    'description' => 'Include results for ' . $resource_type->name . ' resource type'
-                ];
-            }
-        );
+        return $conditional_post_fields;
     }
 }
