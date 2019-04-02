@@ -35,8 +35,8 @@ class ItemCategory extends BaseValidator
 
         return ValidatorFacade::make(
             ['category_id' => $category_id],
-            Config::get('api.parameters-and-fields.item_category.validation.POST.fields'),
-            Config::get('api.parameters-and-fields.item_category.validation.POST.messages')
+            Config::get('api.item-category.validation.POST.fields'),
+            $this->translateMessages('api.item-category.validation.POST.messages')
         );
     }
 }

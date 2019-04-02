@@ -1,32 +1,6 @@
 <?php
 
 return [
-    'item_category' => [
-        'fields' => [
-            'category_id' => [
-                'field' => 'category_id',
-                'title' => 'Category',
-                'description' => 'Which category should the item be assigned to',
-                'type' => 'string',
-                'required' => true
-            ]
-        ],
-        'validation' => [
-            'POST' => [
-                'fields' => [
-                    'category_id' => 'required|exists:category,id'
-                ],
-                'messages' => [
-                    'category_id.required' => 'Category field required or could not be decoded',
-                    'category_id.exists' => "Given category id does not exist"
-                ]
-            ]
-        ],
-        'parameters' => [
-            'collection' => [],
-            'item' => []
-        ]
-    ],
     'item_sub_category' => [
         'fields' => [
             'sub_category_id' => [

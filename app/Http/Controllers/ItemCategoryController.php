@@ -22,8 +22,6 @@ use Illuminate\Http\Request;
  */
 class ItemCategoryController extends Controller
 {
-    private $post_parameters = [];
-
     /**
      * Return the category assigned to an item
      *
@@ -120,19 +118,17 @@ class ItemCategoryController extends Controller
     {
         Validate::itemRoute($resource_type_id, $resource_id, $item_id);
 
-        $this->setConditionalPostParameters($resource_type_id);
-
         return $this->generateOptionsForIndex(
             [
-                'description_key' => 'route-descriptions.item_category_GET_index',
-                'parameters_key' => 'api.parameters-and-fields.item_category.parameters.collection',
+                'description_localisation' => 'route-descriptions.item_category_GET_index',
+                'parameters_config' => 'api.item-category.parameters.collection',
                 'conditionals' => [],
                 'authenticated' => false
             ],
             [
-                'description_key' => 'route-descriptions.item_category_POST',
-                'fields_key' => 'api.parameters-and-fields.item_category.fields',
-                'conditionals' => $this->post_parameters,
+                'description_localisation' => 'route-descriptions.item_category_POST',
+                'fields_config' => 'api.item-category.fields',
+                'conditionals' => $this->conditionalPostParameters($resource_type_id),
                 'authenticated' => true
             ]
         );
@@ -176,13 +172,13 @@ class ItemCategoryController extends Controller
 
         return $this->generateOptionsForShow(
             [
-                'description_key' => 'route-descriptions.item_category_GET_show',
-                'parameters_key' => 'api.parameters-and-fields.item_category.parameters.item',
+                'description_localisation' => 'route-descriptions.item_category_GET_show',
+                'parameters_config' => 'api.item-category.parameters.item',
                 'conditionals' => [],
                 'authenticated' => false
             ],
             [
-                'description_key' => 'route-descriptions.item_category_DELETE',
+                'description_localisation' => 'route-descriptions.item_category_DELETE',
                 'authenticated' => true
             ]
         );
@@ -209,10 +205,8 @@ class ItemCategoryController extends Controller
 
         $validator = (new ItemCategoryValidator)->create($request);
 
-        $this->setConditionalPostParameters($resource_type_id);
-
         if ($validator->fails() === true) {
-            return $this->returnValidationErrors($validator, $this->post_parameters);
+            return $this->returnValidationErrors($validator, $this->conditionalPostParameters($resource_type_id));
         }
 
         try {
@@ -238,18 +232,18 @@ class ItemCategoryController extends Controller
     }
 
     /**
-     * Set any conditional POST parameters, will be merged with the data arrays defined in
-     * config/api/route.php
+     * Generate any conditional POST parameters, will be merged with the relevant
+     * config/api/[type]/fields.php data array
      *
      * @param integer $resource_type_id
      *
-     * @return JsonResponse
+     * @return array
      */
-    private function setConditionalPostParameters($resource_type_id)
+    private function conditionalPostParameters($resource_type_id): array
     {
         $categories = (new Category())->categoriesByResourceType($resource_type_id);
 
-        $this->post_parameters = ['category_id' => []];
+        $conditional_post_parameters = ['category_id' => []];
         foreach ($categories as $category) {
             $id = $this->hash->encode('category', $category->category_id);
 
@@ -257,12 +251,14 @@ class ItemCategoryController extends Controller
                 UtilityResponse::unableToDecode();
             }
 
-            $this->post_parameters['category_id']['allowed_values'][$id] = [
+            $conditional_post_parameters['category_id']['allowed_values'][$id] = [
                 'value' => $id,
                 'name' => $category->category_name,
                 'description' => $category->category_description
             ];
         }
+
+        return $conditional_post_parameters;
     }
 
     /**
