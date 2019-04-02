@@ -8,7 +8,7 @@ use App\Models\Transformers\ItemCategorySummary as ItemCategorySummaryTransforme
 use App\Models\Transformers\ItemSubCategorySummary as ItemSubCategorySummaryTransformer;
 use App\Models\Transformers\ItemMonthSummary as ItemMonthSummaryTransformer;
 use App\Models\Transformers\ItemYearSummary as ItemYearSummaryTransformer;
-use App\Utilities\Request as UtilityRequest;
+use App\Utilities\Response as UtilityResponse;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Config;
@@ -63,7 +63,7 @@ class SummaryController extends Controller
 
         $routes = [
             'GET' => [
-                'description' => Config::get('api.descriptions.summary.GET_tco'),
+                'description' => trans('route-descriptions.summary_GET_tco'),
                 'authenticated' => false,
                 'parameters' => []
             ]
@@ -122,7 +122,7 @@ class SummaryController extends Controller
 
         $routes = [
             'GET' => [
-                'description' => Config::get('api.descriptions.summary.GET_categories'),
+                'description' => trans('route-descriptions.summary_GET_categories'),
                 'authenticated' => false,
                 'parameters' => []
             ]
@@ -159,7 +159,7 @@ class SummaryController extends Controller
         );
 
         if (count($category_summary) !== 1) {
-            UtilityRequest::notFound();
+            UtilityResponse::notFound();
         }
 
         $headers = [
@@ -193,7 +193,7 @@ class SummaryController extends Controller
 
         $routes = [
             'GET' => [
-                'description' => Config::get('api.descriptions.summary.GET_category'),
+                'description' => trans('route-descriptions.summary_GET_category'),
                 'authenticated' => false,
                 'parameters' => []
             ]
@@ -264,7 +264,7 @@ class SummaryController extends Controller
 
         $routes = [
             'GET' => [
-                'description' => Config::get('api.descriptions.summary.GET_sub_categories'),
+                'description' => trans('route-descriptions.summary_GET_sub_categories'),
                 'authenticated' => false,
                 'parameters' => []
             ]
@@ -304,7 +304,7 @@ class SummaryController extends Controller
         );
 
         if (count($sub_category_summary) !== 1) {
-            UtilityRequest::notFound();
+            UtilityResponse::notFound();
         }
 
         $headers = [
@@ -340,7 +340,7 @@ class SummaryController extends Controller
 
         $routes = [
             'GET' => [
-                'description' => Config::get('api.descriptions.summary.GET_sub_category'),
+                'description' => trans('route-descriptions.summary_GET_sub_category'),
                 'authenticated' => false,
                 'parameters' => []
             ]
@@ -402,7 +402,7 @@ class SummaryController extends Controller
 
         $routes = [
             'GET' => [
-                'description' => Config::get('api.descriptions.summary.GET_years'),
+                'description' => trans('route-descriptions.summary_GET_years'),
                 'authenticated' => false,
                 'parameters' => []
             ]
@@ -437,7 +437,7 @@ class SummaryController extends Controller
         );
 
         if (count($year_summary) !== 1) {
-            UtilityRequest::notFound();
+            UtilityResponse::notFound();
         }
 
         $headers = [
@@ -508,7 +508,7 @@ class SummaryController extends Controller
 
         $routes = [
             'GET' => [
-                'description' => Config::get('api.descriptions.summary.GET_months'),
+                'description' => trans('route-descriptions.summary_GET_months'),
                 'authenticated' => false,
                 'parameters' => []
             ]
@@ -535,7 +535,7 @@ class SummaryController extends Controller
 
         $routes = [
             'GET' => [
-                'description' => Config::get('api.descriptions.summary.GET_year'),
+                'description' => trans('route-descriptions.summary_GET_year'),
                 'authenticated' => false,
                 'parameters' => []
             ]
@@ -573,7 +573,7 @@ class SummaryController extends Controller
         );
 
         if (count($summary) !== 1) {
-            UtilityRequest::notFound();
+            UtilityResponse::notFound();
         }
 
         $headers = [
@@ -607,7 +607,7 @@ class SummaryController extends Controller
 
         $routes = [
             'GET' => [
-                'description' => Config::get('api.descriptions.summary.GET_month'),
+                'description' => trans('route-descriptions.summary_GET_month'),
                 'authenticated' => false,
                 'parameters' => []
             ]

@@ -35,7 +35,7 @@ class Category extends BaseValidator
                     'unique:category,name,null,id,resource_type_id,' . $resource_type_id
                 ],
             ],
-            Config::get('api.routes.category.validation.POST.fields')
+            Config::get('api.category.validation.POST.fields')
         );
     }
 
@@ -62,7 +62,7 @@ class Category extends BaseValidator
                 ]
             ),
             $this->createRules($resource_type_id),
-            Config::get('api.routes.category.validation.POST.messages')
+            $this->translateMessages('api.category.validation.POST.messages')
         );
     }
 }

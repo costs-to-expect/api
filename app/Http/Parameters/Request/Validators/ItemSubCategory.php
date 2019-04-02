@@ -43,7 +43,7 @@ class ItemSubCategory extends BaseValidator
 
                 ],
             ],
-            Config::get('api.routes.item_sub_category.validation.POST.fields')
+            Config::get('api.item-subcategory.validation.POST.fields')
         );
     }
 
@@ -66,7 +66,7 @@ class ItemSubCategory extends BaseValidator
         return ValidatorFacade::make(
             ['sub_category_id' => $sub_category_id],
             self::createRules($category_id),
-            Config::get('api.routes.item_sub_category.validation.POST.messages')
+            $this->translateMessages('api.item-subcategory.validation.POST.messages')
         );
     }
 }

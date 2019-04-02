@@ -35,7 +35,7 @@ class SubCategory extends BaseValidator
                     'unique:sub_category,name,null,id,category_id,' . $category_id
                 ],
             ],
-            Config::get('api.routes.sub_category.validation.POST.fields')
+            Config::get('api.subcategory.validation.POST.fields')
         );
     }
 
@@ -52,7 +52,7 @@ class SubCategory extends BaseValidator
         return ValidatorFacade::make(
             $request->all(),
             self::createRules($category_id),
-            Config::get('api.routes.sub_category.validation.POST.messages')
+            $this->translateMessages('api.subcategory.validation.POST.messages')
         );
     }
 }

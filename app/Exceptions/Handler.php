@@ -2,7 +2,7 @@
 
 namespace App\Exceptions;
 
-use App\Utilities\Request;
+use App\Utilities\Response;
 use Exception;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 
@@ -56,7 +56,7 @@ class Handler extends ExceptionHandler
         if (strlen($message) === 0) {
             switch ($status_code) {
                 case '404':
-                    Request::notFound();
+                    Response::notFound();
                     break;
                 case '500':
                     response()->json(

@@ -6,7 +6,7 @@ use App\Http\Parameters\Get;
 use App\Http\Parameters\Route\Validate;
 use App\Models\ResourceType;
 use App\Models\Transformers\ResourceType as ResourceTypeTransformer;
-use App\Utilities\Request as UtilityRequest;
+use App\Utilities\Response as UtilityResponse;
 use App\Http\Parameters\Request\Validators\ResourceType as ResourceTypeValidator;
 use Exception;
 use Illuminate\Database\QueryException;
@@ -71,7 +71,7 @@ class ResourceTypeController extends Controller
         $resource_type = (new ResourceType())->single($resource_type_id, $this->include_private);
 
         if ($resource_type === null) {
-            UtilityRequest::notFound();
+            UtilityResponse::notFound(trans('entities.resource-type'));
         }
 
         return response()->json(
@@ -94,14 +94,14 @@ class ResourceTypeController extends Controller
     {
         return $this->generateOptionsForIndex(
             [
-                'description_key' => 'api.descriptions.resource_type.GET_index',
-                'parameters_key' => 'api.routes.resource_type.parameters.collection',
+                'description_localisation' => 'route-descriptions.resource_type_GET_index',
+                'parameters_config' => 'api.resource-type.parameters.collection',
                 'conditionals' => [],
                 'authenticated' => false
             ],
             [
-                'description_key' => 'api.descriptions.resource_type.POST',
-                'fields_key' => 'api.routes.resource_type.fields',
+                'description_localisation' => 'route-descriptions.resource_type_POST',
+                'fields_config' => 'api.resource-type.fields',
                 'conditionals' => [],
                 'authenticated' => true
             ]
@@ -122,13 +122,13 @@ class ResourceTypeController extends Controller
 
         return $this->generateOptionsForShow(
             [
-                'description_key' => 'api.descriptions.resource_type.GET_show',
-                'parameters_key' => 'api.routes.resource_type.parameters.item',
+                'description_localisation' => 'route-descriptions.resource_type_GET_show',
+                'parameters_config' => 'api.resource-type.parameters.item',
                 'conditionals' => [],
                 'authenticated' => false
             ],
             [
-                'description_key' => 'api.descriptions.resource_type.DELETE',
+                'description_localisation' => 'route-descriptions.resource_type_DELETE',
                 'authenticated' => true
             ]
         );
@@ -157,12 +157,7 @@ class ResourceTypeController extends Controller
             ]);
             $resource_type->save();
         } catch (Exception $e) {
-            return response()->json(
-                [
-                    'message' => 'Error creating new record'
-                ],
-                500
-            );
+            UtilityResponse::failedToSaveModelForCreate();
         }
 
         return response()->json(
@@ -189,11 +184,11 @@ class ResourceTypeController extends Controller
         try {
             (new ResourceType())->find($resource_type_id)->delete();
 
-            return response()->json([], 204);
+            UtilityResponse::successNoContent();
         } catch (QueryException $e) {
-            UtilityRequest::foreignKeyConstraintError();
+            UtilityResponse::foreignKeyConstraintError();
         } catch (Exception $e) {
-            UtilityRequest::notFound();
+            UtilityResponse::notFound(trans('entities.resource-type'));
         }
     }
 }

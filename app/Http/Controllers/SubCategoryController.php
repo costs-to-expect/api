@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Parameters\Route\Validate;
 use App\Models\SubCategory;
 use App\Models\Transformers\SubCategory as SubCategoryTransformer;
-use App\Utilities\Request as UtilityRequest;
+use App\Utilities\Response as UtilityResponse;
 use App\Http\Parameters\Request\Validators\SubCategory as SubCategoryValidator;
 use Exception;
 use Illuminate\Database\QueryException;
@@ -74,7 +74,7 @@ class SubCategoryController extends Controller
         );
 
         if ($sub_category === null) {
-            UtilityRequest::notFound();
+            UtilityResponse::notFound();
         }
 
         return response()->json(
@@ -100,14 +100,14 @@ class SubCategoryController extends Controller
 
         return $this->generateOptionsForIndex(
             [
-                'description_key' => 'api.descriptions.sub_category.GET_index',
-                'parameters_key' => 'api.routes.sub_category.parameters.collection',
+                'description_localisation' => 'route-descriptions.sub_category_GET_index',
+                'parameters_config' => 'api.subcategory.parameters.collection',
                 'conditionals' => [],
                 'authenticated' => false
             ],
             [
-                'description_key' => 'api.descriptions.sub_category.POST',
-                'fields_key' => 'api.routes.sub_category.fields',
+                'description_localisation' => 'route-descriptions.sub_category_POST',
+                'fields_config' => 'api.subcategory.fields',
                 'conditionals' => [],
                 'authenticated' => true
             ]
@@ -133,13 +133,13 @@ class SubCategoryController extends Controller
 
         return $this->generateOptionsForShow(
             [
-                'description_key' => 'api.descriptions.sub_category.GET_show',
-                'parameters_key' => 'api.routes.sub_category.parameters.item',
+                'description_localisation' => 'route-descriptions.sub_category_GET_show',
+                'parameters_config' => 'api.subcategory.parameters.item',
                 'conditionals' => [],
                 'authenticated' => false
             ],
             [
-                'description_key' => 'api.descriptions.sub_category.DELETE',
+                'description_localisation' => 'route-descriptions.sub_category_DELETE',
                 'authenticated' => true
             ]
         );
@@ -171,12 +171,7 @@ class SubCategoryController extends Controller
             ]);
             $sub_category->save();
         } catch (Exception $e) {
-            return response()->json(
-                [
-                    'message' => 'Error creating new record'
-                ],
-                500
-            );
+            UtilityResponse::failedToSaveModelForCreate();
         }
 
         return response()->json(
@@ -208,17 +203,17 @@ class SubCategoryController extends Controller
         );
 
         if ($sub_category === null) {
-            UtilityRequest::notFound();
+            UtilityResponse::notFound(trans('entities.sub-category'));
         }
 
         try {
             $sub_category->delete();
 
-            return response()->json([], 204);
+            UtilityResponse::successNoContent();
         } catch (QueryException $e) {
-            UtilityRequest::foreignKeyConstraintError();
+            UtilityResponse::foreignKeyConstraintError();
         } catch (Exception $e) {
-            UtilityRequest::notFound();
+            UtilityResponse::notFound(trans('entities.sub-category'));
         }
     }
 }

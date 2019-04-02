@@ -9,7 +9,7 @@ use App\Models\Item;
 use App\Models\SubCategory;
 use App\Models\Transformers\Item as ItemTransformer;
 use App\Utilities\Pagination as UtilityPagination;
-use App\Utilities\Request as UtilityRequest;
+use App\Utilities\Response as UtilityResponse;
 use App\Http\Parameters\Request\Validators\Item as ItemValidator;
 use Exception;
 use Illuminate\Database\QueryException;
@@ -98,12 +98,12 @@ class ItemController extends Controller
         string $item_id
     ): JsonResponse
     {
-        Validate::resourceRoute($resource_type_id, $resource_id);
+        Validate::itemRoute($resource_type_id, $resource_id, $item_id);
 
         $item = (new Item())->single($resource_type_id, $resource_id, $item_id);
 
         if ($item === null) {
-            UtilityRequest::notFound();
+            UtilityResponse::notFound(trans('entities.item'));
         }
 
         return response()->json(
@@ -134,14 +134,14 @@ class ItemController extends Controller
 
         return $this->generateOptionsForIndex(
             [
-                'description_key' => 'api.descriptions.item.GET_index',
-                'parameters_key' => 'api.routes.item.parameters.collection',
+                'description_localisation' => 'route-descriptions.item_GET_index',
+                'parameters_config' => 'api.item.parameters.collection',
                 'conditionals' => $this->get_parameters,
                 'authenticated' => false
             ],
             [
-                'description_key' => 'api.descriptions.item.POST',
-                'fields_key' => 'api.routes.item.fields',
+                'description_localisation' => 'route-descriptions.item_POST',
+                'fields_config' => 'api.item.fields',
                 'conditionals' => [],
                 'authenticated' => true
             ]
@@ -165,28 +165,28 @@ class ItemController extends Controller
         string $item_id
     ): JsonResponse
     {
-        Validate::resourceRoute($resource_type_id, $resource_id);
+        Validate::itemRoute($resource_type_id, $resource_id, $item_id);
 
         $item = (new Item())->single($resource_type_id, $resource_id, $item_id);
 
         if ($item === null) {
-            UtilityRequest::notFound();
+            UtilityResponse::notFound(trans('entities.item'));
         }
 
         return $this->generateOptionsForShow(
             [
-                'description_key' => 'api.descriptions.item.GET_show',
-                'parameters_key' => 'api.routes.item.parameters.item',
+                'description_localisation' => 'route-descriptions.item_GET_show',
+                'parameters_config' => 'api.item.parameters.item',
                 'conditionals' => [],
                 'authenticated' => false
             ],
             [
-                'description_key' => 'api.routes.item.parameters.item',
+                'description_localisation' => 'route-descriptions.item_DELETE',
                 'authenticated' => true
             ],
             [
-                'description_key' => 'api.descriptions.item.PATCH',
-                'fields_key' => 'api.routes.item.fields',
+                'description_localisation' => 'route-descriptions.item_PATCH',
+                'fields_config' => 'api.item.fields',
                 'conditionals' => [],
                 'authenticated' => false
             ]
@@ -223,12 +223,7 @@ class ItemController extends Controller
             $item->setActualisedTotal($item->total, $item->percentage);
             $item->save();
         } catch (Exception $e) {
-            return response()->json(
-                [
-                    'message' => 'Error creating new record'
-                ],
-                500
-            );
+            UtilityResponse::failedToSaveModelForCreate();
         }
 
         return response()->json(
@@ -257,7 +252,7 @@ class ItemController extends Controller
         Validate::itemRoute($resource_type_id, $resource_id, $item_id);
 
         if ($this->isThereAnythingToPatchInRequest() === false) {
-            return $this->returnNothingToPatchError();
+            UtilityResponse::nothingToPatch();
         }
 
         $validate = (new ItemValidator)->update($request);
@@ -267,13 +262,13 @@ class ItemController extends Controller
 
         $invalid_fields = $this->areThereInvalidFieldsInRequest((new Item())->patchableFields());
         if ($invalid_fields !== false) {
-            return $this->returnInvalidFieldsInRequestError($invalid_fields);
+            UtilityResponse::invalidFieldsInRequest($invalid_fields);
         }
 
         $item = (new Item())->single($resource_type_id, $resource_id, $item_id);
 
         if ($item === null) {
-            UtilityRequest::failedToSelectModelForUpdate();
+            UtilityResponse::failedToSelectModelForUpdate();
         }
 
         $update_actualised = false;
@@ -292,11 +287,11 @@ class ItemController extends Controller
         try {
             $item->save();
         } catch (Exception $e) {
-            UtilityRequest::failedToSaveModelForUpdate();
+            UtilityResponse::failedToSaveModelForUpdate();
         }
 
-        return $this->returnSuccessNoContent();
-}
+        UtilityResponse::successNoContent();
+    }
 
     /**
      * Delete the assigned item
@@ -320,23 +315,23 @@ class ItemController extends Controller
         $item = (new Item())->single($resource_type_id, $resource_id, $item_id);
 
         if ($item === null) {
-            UtilityRequest::notFound();
+            UtilityResponse::notFound(trans('entities.item'));
         }
 
         try {
             $item->delete();
 
-            return $this->returnSuccessNoContent();
+            UtilityResponse::successNoContent();
         } catch (QueryException $e) {
-            UtilityRequest::foreignKeyConstraintError();
+            UtilityResponse::foreignKeyConstraintError();
         } catch (Exception $e) {
-            UtilityRequest::notFound();
+            UtilityResponse::notFound(trans('entities.item'));
         }
     }
 
     /**
-     * Set any conditional GET parameters, will be merged with the data arrays defined in
-     * config/api/route.php
+     * Set any conditional GET parameters, these will be merged with the data arrays defined in
+     * config/api/[item-type]/parameters.php
      *
      * @param integer $resource_type_id
      *
@@ -360,7 +355,7 @@ class ItemController extends Controller
             $this->get_parameters['year']['allowed_values'][$i] = [
                 'value' => $i,
                 'name' => $i,
-                'description' => 'Include results for ' . $i
+                'description' => trans('item/allowed-values.description-prefix-year') . $i
             ];
         }
 
@@ -368,7 +363,8 @@ class ItemController extends Controller
             $this->get_parameters['month']['allowed_values'][$i] = [
                 'value' => $i,
                 'name' => date("F", mktime(0, 0, 0, $i, 10)),
-                'description' => 'Include results for ' . date("F", mktime(0, 0, 0, $i, 1))
+                'description' => trans('item/allowed-values.description-prefix-month') .
+                    date("F", mktime(0, 0, 0, $i, 1))
             ];
         }
 
@@ -378,7 +374,8 @@ class ItemController extends Controller
                 $this->get_parameters['category']['allowed_values'][$this->hash->encode('category', $category->category_id)] = [
                     'value' => $this->hash->encode('category', $category->category_id),
                     'name' => $category->category_name,
-                    'description' => 'Include results for ' . $category->category_name . ' category'
+                    'description' => trans('item/allowed-values.description-prefix-category') .
+                        $category->category_name . trans('item/allowed-values.description-suffix-category')
                 ];
             }
         );
@@ -390,7 +387,8 @@ class ItemController extends Controller
                     $this->get_parameters['sub_category']['allowed_values'][$this->hash->encode('sub_category', $sub_category->id)] = [
                         'value' => $this->hash->encode('sub_category', $sub_category->id),
                         'name' => $sub_category->name,
-                        'description' => 'Include results for ' . $sub_category->name . ' sub category'
+                        'description' => trans('item/allowed-values.description-prefix-subcategory') .
+                            $sub_category->name . trans('item/allowed-values.description-suffix-subcategory')
                     ];
                 }
             );

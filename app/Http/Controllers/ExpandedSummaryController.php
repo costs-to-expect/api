@@ -66,7 +66,7 @@ class ExpandedSummaryController extends Controller
 
         $routes = [
             'GET' => [
-                'description' => Config::get('api.descriptions.summary.GET_expanded_categories'),
+                'description' => trans('route-descriptions.summary_GET_expanded_categories'),
                 'authenticated' => false,
                 'parameters' => []
             ]

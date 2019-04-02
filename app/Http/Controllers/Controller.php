@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Utilities\Hash;
+use App\Utilities\Response as UtilityResponse;
 use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Routing\Controller as BaseController;
@@ -71,10 +72,8 @@ class Controller extends BaseController
      *
      * @param \Illuminate\Contracts\Validation\Validator $validator
      * @param array $allowed_values
-     *
-     * @return JsonResponse
      */
-    protected function returnValidationErrors(Validator $validator, array $allowed_values = []): JsonResponse
+    protected function returnValidationErrors(Validator $validator, array $allowed_values = [])
     {
         $validation_errors = [];
 
@@ -88,45 +87,59 @@ class Controller extends BaseController
             $validation_errors = array_merge_recursive($validation_errors, $allowed_values);
         }
 
-        return response()->json(
-            [
-                'message' => 'Validation error',
-                'fields' => $validation_errors
-            ],
-            422
-        );
+        UtilityResponse::validationErrors($validation_errors);
     }
 
     /**
-     * Generate the OPTIONS request for the index routes
+     * Generate the OPTIONS request for the index (collection) routes
      *
-     * @param array $get Data array to define description_key, parameters_key, conditionals and required
-     * @param array $post Data array to define description_key, parameters_key, conditionals and required
+     * @param array $get Four indexes, description_localisation, parameters_config, conditionals and authenticated
+     * @param array $post Four indexes, description_localisation, fields_config, conditionals and authenticated
      */
     protected function generateOptionsForIndex(
         array $get = [
-            'description_key' => '',
-            'parameters_key' => '',
+            'description_localisation' => '',
+            'parameters_config' => '',
             'conditionals' => [],
             'authenticated' => false
         ],
         array $post = [
-            'description_key' => '',
-            'fields_key' => '',
+            'description_localisation' => '',
+            'fields_config' => '',
             'conditionals' => [],
             'authenticated' => true
         ]
     ) {
+        $get_parameters = [];
+        $post_fields = [];
+
+        foreach (
+            array_merge_recursive(
+                Config::get('api.pagination.parameters'),
+                Config::get($get['parameters_config']),
+                $get['conditionals']
+            ) as $parameter => $detail) {
+            $detail['title'] = trans($detail['title']);
+            $detail['description'] = trans($detail['description']);
+            $get_parameters[$parameter] = $detail;
+        }
+
+        foreach (array_merge_recursive(Config::get($post['fields_config']), $post['conditionals']) as $field => $detail) {
+            $detail['title'] = trans($detail['title']);
+            $detail['description'] = trans($detail['description']);
+            $post_fields[$field] = $detail;
+        }
+
         $routes = [
             'GET' => [
-                'description' => Config::get($get['description_key']),
+                'description' => trans($get['description_localisation']),
                 'authenticated' => $get['authenticated'],
-                'parameters' => array_merge_recursive(Config::get($get['parameters_key']), $get['conditionals'])
+                'parameters' => $get_parameters
             ],
             'POST' => [
-                'description' => Config::get($post['description_key']),
+                'description' => trans($post['description_localisation']),
                 'authenticated' => $post['authenticated'],
-                'fields' => array_merge_recursive(Config::get($post['fields_key']), $post['conditionals'])
+                'fields' => $post_fields
             ]
         ];
 
@@ -136,85 +149,64 @@ class Controller extends BaseController
     /**
      * Generate the OPTIONS request for the show routes
      *
-     * @param array $get Data array to define description_key, parameters_key, conditionals and authenticated
-     * @param array $delete Data array to define description_key and authenticated
-     * @param array $patch Data array to define description_key, fields_key, conditionals and authenticated
+     * @param array $get Data array to define description_localisation, parameters_config, conditionals and authenticated
+     * @param array $delete Data array to define description_localisation and authenticated
+     * @param array $patch Data array to define description_localisation, fields_config, conditionals and authenticated
      */
     protected function generateOptionsForShow(
         array $get = [
-            'description_key' => '',
-            'parameters_key' => '',
+            'description_localisation' => '',
+            'parameters_config' => '',
             'conditionals' => [],
             'authenticated' => false
         ],
         array $delete = [
-            'description_key' => '',
+            'description_localisation' => '',
             'authenticated' => false
         ],
         array $patch = [
-            'description_key' => '',
-            'fields_key' => '',
+            'description_localisation' => '',
+            'fields_config' => '',
             'conditionals' => [],
             'authenticated' => false
         ]
     ) {
+        $get_parameters = [];
+        $patch_fields = [];
+
+        foreach (array_merge_recursive(Config::get($get['parameters_config']), $get['conditionals']) as $parameter => $detail) {
+            $detail['title'] = trans($detail['title']);
+            $detail['description'] = trans($detail['description']);
+            $get_parameters[$parameter] = $detail;
+        }
+
         $routes = [
             'GET' => [
-                'description' => Config::get($get['description_key']),
+                'description' => trans($get['description_localisation']),
                 'authenticated' => $get['authenticated'],
-                'parameters' => array_merge_recursive(Config::get($get['parameters_key']), $get['conditionals'])
+                'parameters' => $get_parameters
             ],
             'DELETE' => [
-                'description' => Config::get($delete['description_key']),
+                'description' => trans($delete['description_localisation']),
                 'authenticated' => $delete['authenticated']
             ]
         ];
 
-        if (strlen($patch['description_key']) > 0) {
+        if (strlen($patch['description_localisation']) > 0) {
+            foreach (array_merge_recursive(Config::get($patch['fields_config']), $patch['conditionals']) as $field => $detail) {
+                $detail['title'] = trans($detail['title']);
+                $detail['description'] = trans($detail['description']);
+                $patch_fields[$field] = $detail;
+            }
+
             $routes['PATCH'] = [
-                'description' => Config::get($patch['description_key']),
+                'description' => trans($patch['description_localisation']),
                 'authenticated' => $patch['authenticated'],
-                'parameters' => array_merge_recursive(Config::get($patch['fields_key']), $patch['conditionals'])
+                'fields' => $patch_fields
             ];
         }
 
         $this->optionsResponse($routes);
-    }
-
-    /**
-     * Return a 400 as there is nothing to PATCH
-     *
-     * @return JsonResponse
-     */
-    protected function returnNothingToPatchError(): JsonResponse
-    {
-        response()->json(
-            [
-                'message' => 'There is nothing to PATCH, please include a request body'
-            ],
-            400
-        )->send();
-        exit();
-    }
-
-    /**
-     * Return a 400 as there are invalid fields in the request body and for now
-     * we don't want to deal with requests with `extra` data
-     *
-     * @param array $invalid_fields An array of invalid fields
-     *
-     * @return JsonResponse
-     */
-    protected function returnInvalidFieldsInRequestError(array $invalid_fields): JsonResponse
-    {
-        response()->json(
-            [
-                'message' => 'Non existent fields in PATCH request body',
-                'fields' => $invalid_fields
-            ],
-            400
-        )->send();
-        exit();
     }
 
     /**
@@ -231,17 +223,6 @@ class Controller extends BaseController
         }
 
         return true;
-    }
-
-    /**
-     * Return success, no content (204)
-     *
-     * @return JsonResponse
-     */
-    protected function returnSuccessNoContent(): JsonResponse
-    {
-        response()->json([], 204)->send();
-        exit();
     }
 
     /**

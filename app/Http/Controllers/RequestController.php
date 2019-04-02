@@ -8,6 +8,7 @@ use App\Models\Transformers\RequestErrorLog as RequestErrorLogTransformer;
 use App\Models\Transformers\RequestLog as RequestLogTransformer;
 use App\Utilities\Pagination as UtilityPagination;
 use App\Http\Parameters\Request\Validators\RequestErrorLog as RequestErrorLogValidator;
+use App\Utilities\Response as UtilityResponse;
 use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -128,7 +129,7 @@ class RequestController extends Controller
         $this->optionsResponse(
             [
                 'GET' => [
-                    'description' => Config::get('api.descriptions.request.GET_log'),
+                    'description' => trans('route-descriptions.request_GET_log'),
                     'authenticated' => false,
                     'parameters' => []
                 ]
@@ -145,14 +146,14 @@ class RequestController extends Controller
     {
         return $this->generateOptionsForIndex(
             [
-                'description_key' => 'api.descriptions.request.GET_error_log',
-                'parameters_key' => 'api.routes.request.parameters.collection',
+                'description_localisation' => 'route-descriptions.request_GET_error_log',
+                'parameters_config' => 'api.request.parameters.collection',
                 'conditionals' => [],
                 'authenticated' => false
             ],
             [
-                'description_key' => 'api.descriptions.request.POST',
-                'fields_key' => 'api.routes.request.fields',
+                'description_localisation' => 'route-descriptions.request_POST',
+                'fields_config' => 'api.request.fields',
                 'conditionals' => [],
                 'authenticated' => false
             ]
@@ -169,7 +170,7 @@ class RequestController extends Controller
         $this->optionsResponse(
             [
                 'GET' => [
-                    'description' => Config::get('api.descriptions.request.GET_log_monthly_requests'),
+                    'description' => trans('route-descriptions.request_GET_log_monthly_requests'),
                     'authenticated' => false,
                     'parameters' => []
                 ]
@@ -202,12 +203,7 @@ class RequestController extends Controller
             ]);
             $request_log->save();
         } catch (Exception $e) {
-            return response()->json(
-                [
-                    'message' => 'Error creating request log error'
-                ],
-                500
-            );
+            UtilityResponse::failedToSaveModelForCreate();
         }
 
         return response()->json(

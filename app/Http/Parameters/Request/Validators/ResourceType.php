@@ -27,10 +27,15 @@ class ResourceType extends BaseValidator
      */
     public function create(Request $request): Validator
     {
+        $messages = [];
+        foreach (Config::get('api.resource-type.validation.POST.messages') as $key => $custom_message) {
+            $messages[$key] = trans($custom_message);
+        };
+
         return ValidatorFacade::make(
             $request->all(),
-            Config::get('api.routes.resource_type.validation.POST.fields'),
-            Config::get('api.routes.resource_type.validation.POST.messages')
+            Config::get('api.resource-type.validation.POST.fields'),
+            $this->translateMessages('api.resource-type.validation.POST.messages')
         );
     }
 }

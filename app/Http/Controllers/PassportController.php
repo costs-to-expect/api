@@ -26,8 +26,7 @@ class PassportController extends Controller
             $user = Auth::user();
             $success['token'] =  $user->createToken('costs-to-expect')->accessToken;
             return response()->json($success, $this->successStatus);
-        }
-        else{
+        } else {
             return response()->json(['message'=>'Unauthorised'], 401);
         }
     }

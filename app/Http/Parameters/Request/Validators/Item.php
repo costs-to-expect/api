@@ -27,10 +27,15 @@ class Item extends BaseValidator
      */
     public function create(Request $request): Validator
     {
+        $messages = [];
+        foreach (Config::get('api.item.validation.POST.messages') as $key => $custom_message) {
+            $messages[$key] = trans($custom_message);
+        };
+
         return ValidatorFacade::make(
             $request->all(),
-            Config::get('api.routes.item.validation.POST.fields'),
-            Config::get('api.routes.item.validation.POST.messages')
+            Config::get('api.item.validation.POST.fields'),
+            $messages
         );
     }
 
@@ -43,15 +48,15 @@ class Item extends BaseValidator
      */
     public function update(Request $request): Validator
     {
+        $messages = [];
+        foreach (Config::get('api.item.validation.PATCH.messages') as $key => $custom_message) {
+            $messages[$key] = trans($custom_message);
+        };
+
         return ValidatorFacade::make(
             $request->all(),
-            Config::get('api.routes.item.validation.PATCH.fields'),
-            Config::get('api.routes.item.validation.PATCH.messages')
+            Config::get('api.item.validation.PATCH.fields'),
+            $messages
         );
-    }
-
-    public function updateFields()
-    {
-        return array_keys(Config::get('api.routes.item.validation.PATCH.fields'));
     }
 }

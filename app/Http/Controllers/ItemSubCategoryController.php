@@ -7,7 +7,7 @@ use App\Models\ItemCategory;
 use App\Models\ItemSubCategory;
 use App\Models\SubCategory;
 use App\Models\Transformers\ItemSubCategory as ItemSubCategoryTransformer;
-use App\Utilities\Request as UtilityRequest;
+use App\Utilities\Response as UtilityResponse;
 use App\Http\Parameters\Request\Validators\ItemSubCategory as ItemSubCategoryValidator;
 use Exception;
 use Illuminate\Database\QueryException;
@@ -47,7 +47,7 @@ class ItemSubCategoryController extends Controller
         Validate::itemRoute($resource_type_id, $resource_id, $item_id);
 
         if ($item_category_id === 'nill') {
-            UtilityRequest::notFound();
+            UtilityResponse::notFound(trans('entities.item-sub-category'));
         }
 
         $item_sub_category = (new ItemSubCategory())->paginatedCollection(
@@ -58,7 +58,7 @@ class ItemSubCategoryController extends Controller
         );
 
         if ($item_sub_category === null) {
-            UtilityRequest::notFound();
+            UtilityResponse::notFound(trans('entities.item-sub-category'));
         }
 
         $headers = [
@@ -96,7 +96,7 @@ class ItemSubCategoryController extends Controller
         Validate::itemRoute($resource_type_id, $resource_id, $item_id);
 
         if ($item_category_id === 'nill' || $item_sub_category_id === 'nill') {
-            UtilityRequest::notFound();
+            UtilityResponse::notFound(trans('entities.item-sub-category'));
         }
 
         $item_sub_category = (new ItemSubCategory())->single(
@@ -108,7 +108,7 @@ class ItemSubCategoryController extends Controller
         );
 
         if ($item_sub_category === null) {
-            UtilityRequest::notFound();
+            UtilityResponse::notFound(trans('entities.item-sub-category'));
         }
 
         $headers = [
@@ -144,25 +144,25 @@ class ItemSubCategoryController extends Controller
         Validate::itemRoute($resource_type_id, $resource_id, $item_id);
 
         if ($item_category_id === 'nill') {
-            UtilityRequest::notFound();
+            UtilityResponse::notFound(trans('entities.item-sub-category'));
         }
 
         $item_category = (new ItemCategory())->find($item_category_id);
-        if ($item_category_id !== null) {
-            $this->setConditionalPostParameters($item_category->category_id);
+        if ($item_category === null) {
+            UtilityResponse::notFound(trans('entities.item-category'));
         }
 
         return $this->generateOptionsForIndex(
             [
-                'description_key' => 'api.descriptions.item_sub_category.GET_index',
-                'parameters_key' => 'api.routes.item_sub_category.parameters.collection',
+                'description_localisation' => 'route-descriptions.item_sub_category_GET_index',
+                'parameters_config' => 'api.item-subcategory.parameters.collection',
                 'conditionals' => [],
                 'authenticated' => false
             ],
             [
-                'description_key' => 'api.descriptions.item_sub_category.POST',
-                'fields_key' => 'api.routes.item_sub_category.fields',
-                'conditionals' => $this->post_parameters,
+                'description_localisation' => 'route-descriptions.item_sub_category_POST',
+                'fields_config' => 'api.item-subcategory.fields',
+                'conditionals' => $this->conditionalPostParameters($item_category->category_id),
                 'authenticated' => true
             ]
         );
@@ -192,7 +192,7 @@ class ItemSubCategoryController extends Controller
         Validate::itemRoute($resource_type_id, $resource_id, $item_id);
 
         if ($item_category_id === 'nill' || $item_sub_category_id === 'nill') {
-            UtilityRequest::notFound();
+            UtilityResponse::notFound(trans('entities.item-sub-category'));
         }
 
         $item_sub_category = (new ItemSubCategory())->single(
@@ -204,18 +204,18 @@ class ItemSubCategoryController extends Controller
         );
 
         if ($item_sub_category === null) {
-            UtilityRequest::notFound();
+            UtilityResponse::notFound(trans('entities.item-sub-category'));
         }
 
         return $this->generateOptionsForShow(
             [
-                'description_key' => 'api.descriptions.item_sub_category.GET_show',
-                'parameters_key' => 'api.routes.item_sub_category.parameters.item',
+                'description_localisation' => 'route-descriptions.item_sub_category_GET_show',
+                'parameters_config' => 'api.item-subcategory.parameters.item',
                 'conditionals' => [],
                 'authenticated' => false
             ],
             [
-                'description_key' => 'api.descriptions.item_sub_category.DELETE',
+                'description_localisation' => 'route-descriptions.item_sub_category_DELETE',
                 'authenticated' => true
             ]
         );
@@ -243,7 +243,7 @@ class ItemSubCategoryController extends Controller
         Validate::itemRoute($resource_type_id, $resource_id, $item_id);
 
         if ($item_category_id === 'nill') {
-            UtilityRequest::notFound();
+            UtilityResponse::notFound(trans('entities.item-sub-category'));
         }
 
         $item_category = (new ItemCategory())
@@ -252,22 +252,15 @@ class ItemSubCategoryController extends Controller
 
         $validator = (new ItemSubCategoryValidator)->create($request, $item_category->category_id);
 
-        $this->setConditionalPostParameters($item_category_id);
-
         if ($validator->fails() === true) {
-            return $this->returnValidationErrors($validator, $this->post_parameters);
+            return $this->returnValidationErrors($validator, $this->conditionalPostParameters($item_category_id));
         }
 
         try {
             $sub_category_id = $this->hash->decode('sub_category', $request->input('sub_category_id'));
 
             if ($sub_category_id === false) {
-                return response()->json(
-                    [
-                        'message' => 'Unable to decode parameter or hasher not found'
-                    ],
-                    500
-                );
+                UtilityResponse::unableToDecode();
             }
 
             $item_sub_category = new ItemSubCategory([
@@ -276,12 +269,7 @@ class ItemSubCategoryController extends Controller
             ]);
             $item_sub_category->save();
         } catch (Exception $e) {
-            return response()->json(
-                [
-                    'message' => 'Error creating new record'
-                ],
-                500
-            );
+            UtilityResponse::failedToSaveModelForCreate();
         }
 
         return response()->json(
@@ -291,40 +279,37 @@ class ItemSubCategoryController extends Controller
     }
 
     /**
-     * Set any conditional POST parameters, will be merged with the data arrays defined in
-     * config/api/route.php
+     * Generate any conditional POST parameters, will be merged with the data
+     * arrays defined in config/api/[type]/fields.php
      *
      * @param integer $category_id
      *
-     * @return JsonResponse
+     * @return array
      */
-    private function setConditionalPostParameters($category_id)
+    private function conditionalPostParameters($category_id): array
     {
         $sub_categories = (new SubCategory())
             ->select('id', 'name', 'description')
             ->where('category_id', '=', $category_id)
             ->get();
 
-        $this->post_parameters = ['sub_category_id' => []];
+        $conditional_post_parameters = ['sub_category_id' => []];
 
         foreach ($sub_categories as $sub_category) {
             $id = $this->hash->encode('sub_category', $sub_category->id);
 
             if ($id === false) {
-                return response()->json(
-                    [
-                        'message' => 'Unable to encode parameter or hasher not found'
-                    ],
-                    500
-                );
+                UtilityResponse::unableToDecode();
             }
 
-            $this->post_parameters['sub_category_id']['allowed_values'][$id] = [
+            $conditional_post_parameters['sub_category_id']['allowed_values'][$id] = [
                 'value' => $id,
                 'name' => $sub_category->name,
                 'description' => $sub_category->description
             ];
         }
+
+        return $conditional_post_parameters;
     }
 
     /**
@@ -351,7 +336,7 @@ class ItemSubCategoryController extends Controller
         Validate::itemRoute($resource_type_id, $resource_id, $item_id);
 
         if ($item_category_id === 'nill' || $item_sub_category_id === 'nill') {
-            UtilityRequest::notFound();
+            UtilityResponse::notFound(trans('entities.item-sub-category'));
         }
 
         $item_sub_category = (new ItemSubCategory())->single(
@@ -363,17 +348,17 @@ class ItemSubCategoryController extends Controller
         );
 
         if ($item_sub_category === null) {
-            UtilityRequest::notFound();
+            UtilityResponse::notFound(trans('entities.item-sub-category'));
         }
 
         try {
             $item_sub_category->delete();
 
-            return response()->json([],204);
+            UtilityResponse::successNoContent();
         } catch (QueryException $e) {
-            UtilityRequest::foreignKeyConstraintError();
+            UtilityResponse::foreignKeyConstraintError();
         } catch (Exception $e) {
-            UtilityRequest::notFound();
+            UtilityResponse::notFound(trans('entities.item-sub-category'));
         }
     }
 }

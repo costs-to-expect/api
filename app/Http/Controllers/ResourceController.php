@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Parameters\Route\Validate;
 use App\Models\Resource;
 use App\Models\Transformers\Resource as ResourceTransformer;
-use App\Utilities\Request as UtilityRequest;
+use App\Utilities\Response as UtilityResponse;
 use App\Http\Parameters\Request\Validators\Resource as ResourceValidator;
 use Exception;
 use Illuminate\Database\QueryException;
@@ -71,7 +71,7 @@ class ResourceController extends Controller
         $resource = (new Resource)->single($resource_type_id, $resource_id);
 
         if ($resource === null) {
-            UtilityRequest::notFound();
+            UtilityResponse::notFound(trans('entities.resource'));
         }
 
         return response()->json(
@@ -97,14 +97,14 @@ class ResourceController extends Controller
 
         return $this->generateOptionsForIndex(
             [
-                'description_key' => 'api.descriptions.resource.GET_index',
-                'parameters_key' => 'api.routes.resource.parameters.collection',
+                'description_localisation' => 'route-descriptions.resource_GET_index',
+                'parameters_config' => 'api.resource.parameters.collection',
                 'conditionals' => [],
                 'authenticated' => false
             ],
             [
-                'description_key' => 'api.descriptions.resource.POST',
-                'fields_key' => 'api.routes.resource.fields',
+                'description_localisation' => 'route-descriptions.resource_POST',
+                'fields_config' => 'api.resource.fields',
                 'conditionals' => [],
                 'authenticated' => true
             ]
@@ -130,18 +130,18 @@ class ResourceController extends Controller
         );
 
         if ($resource === null) {
-            UtilityRequest::notFound();
+            UtilityResponse::notFound(trans('entities.resource'));
         }
 
         return $this->generateOptionsForShow(
             [
-                'description_key' => 'api.descriptions.resource.GET_show',
-                'parameters_key' => 'api.routes.resource.parameters.item',
+                'description_localisation' => 'route-descriptions.resource_GET_show',
+                'parameters_config' => 'api.resource.parameters.item',
                 'conditionals' => [],
                 'authenticated' => false
             ],
             [
-                'description_key' => 'api.descriptions.resource.DELETE',
+                'description_localisation' => 'route-descriptions.resource_DELETE',
                 'authenticated' => true
             ]
         );
@@ -174,12 +174,7 @@ class ResourceController extends Controller
             ]);
             $resource->save();
         } catch (Exception $e) {
-            return response()->json(
-                [
-                    'message' => 'Error creating new record'
-                ],
-                500
-            );
+            UtilityResponse::failedToSaveModelForCreate();
         }
 
         return response()->json(
@@ -208,11 +203,11 @@ class ResourceController extends Controller
         try {
             (new Resource())->find($resource_id)->delete();
 
-            return response()->json([], 204);
+            UtilityResponse::successNoContent();
         } catch (QueryException $e) {
-            UtilityRequest::foreignKeyConstraintError();
+            UtilityResponse::foreignKeyConstraintError();
         } catch (Exception $e) {
-            UtilityRequest::notFound();
+            UtilityResponse::notFound(trans('entities.resource'));
         }
     }
 }
