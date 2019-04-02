@@ -2,14 +2,15 @@
 
 Full changelog for the Costs to Expect REST API.
 
-## 2019-xx-xx - v1.11.0
+## 2019-04-xx - v1.11.0
 
 * Added additional helper methods to the Utilities\Response class.
-* Utilities\Response class name was incorrect.
+* Utilities\Response class name incorrect.
 * Non 200/201 responses returned via the Utilities\Response class.
 * Upgraded to the latest version of Laravel 5.7.
 * Not found responses not consistent with their error messages.
 * Pull route descriptions from a translation file.
+* Localisations added for all API messages, OPTIONS requests content, validation messages etc.
 * Removed route descriptions config file, no longer necessary.
 
 ## 2019-03-19 - v1.10.0
