@@ -130,7 +130,7 @@ class IndexController extends Controller
         $this->optionsResponse(
             [
                 'GET' => [
-                    'description' => config::get('api.route-descriptions.api.GET_changelog'),
+                    'description' => trans('route-descriptions.api_GET_changelog'),
                     'authenticated' => false,
                     'parameters' => []
                 ]

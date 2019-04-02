@@ -146,14 +146,14 @@ class RequestController extends Controller
     {
         return $this->generateOptionsForIndex(
             [
-                'description_key' => 'route-descriptions.request_GET_error_log',
-                'parameters_key' => 'api.parameters-and-fields.request.parameters.collection',
+                'description_localisation' => 'route-descriptions.request_GET_error_log',
+                'parameters_config' => 'api.request.parameters.collection',
                 'conditionals' => [],
                 'authenticated' => false
             ],
             [
-                'description_key' => 'route-descriptions.request_POST',
-                'fields_key' => 'api.parameters-and-fields.request.fields',
+                'description_localisation' => 'route-descriptions.request_POST',
+                'fields_config' => 'api.request.fields',
                 'conditionals' => [],
                 'authenticated' => false
             ]
