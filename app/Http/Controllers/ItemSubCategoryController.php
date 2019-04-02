@@ -148,21 +148,21 @@ class ItemSubCategoryController extends Controller
         }
 
         $item_category = (new ItemCategory())->find($item_category_id);
-        if ($item_category_id !== null) {
-            $this->setConditionalPostParameters($item_category->category_id);
+        if ($item_category === null) {
+            UtilityResponse::notFound(trans('entities.item-category'));
         }
 
         return $this->generateOptionsForIndex(
             [
-                'description_key' => 'route-descriptions.item_sub_category_GET_index',
-                'parameters_key' => 'api.parameters-and-fields.item_sub_category.parameters.collection',
+                'description_localisation' => 'route-descriptions.item_sub_category_GET_index',
+                'parameters_config' => 'api.item-subcategory.parameters.collection',
                 'conditionals' => [],
                 'authenticated' => false
             ],
             [
-                'description_key' => 'route-descriptions.item_sub_category_POST',
-                'fields_key' => 'api.parameters-and-fields.item_sub_category.fields',
-                'conditionals' => $this->post_parameters,
+                'description_localisation' => 'route-descriptions.item_sub_category_POST',
+                'fields_config' => 'api.item-subcategory.fields',
+                'conditionals' => $this->conditionalPostParameters($item_category->category_id),
                 'authenticated' => true
             ]
         );
@@ -209,13 +209,13 @@ class ItemSubCategoryController extends Controller
 
         return $this->generateOptionsForShow(
             [
-                'description_key' => 'route-descriptions.item_sub_category_GET_show',
-                'parameters_key' => 'api.parameters-and-fields.item_sub_category.parameters.item',
+                'description_localisation' => 'route-descriptions.item_sub_category_GET_show',
+                'parameters_config' => 'api.item-subcategory.parameters.item',
                 'conditionals' => [],
                 'authenticated' => false
             ],
             [
-                'description_key' => 'route-descriptions.item_sub_category_DELETE',
+                'description_localisation' => 'route-descriptions.item_sub_category_DELETE',
                 'authenticated' => true
             ]
         );
@@ -252,10 +252,8 @@ class ItemSubCategoryController extends Controller
 
         $validator = (new ItemSubCategoryValidator)->create($request, $item_category->category_id);
 
-        $this->setConditionalPostParameters($item_category_id);
-
         if ($validator->fails() === true) {
-            return $this->returnValidationErrors($validator, $this->post_parameters);
+            return $this->returnValidationErrors($validator, $this->conditionalPostParameters($item_category_id));
         }
 
         try {
@@ -281,21 +279,21 @@ class ItemSubCategoryController extends Controller
     }
 
     /**
-     * Set any conditional POST parameters, will be merged with the data arrays defined in
-     * config/api/route.php
+     * Generate any conditional POST parameters, will be merged with the data
+     * arrays defined in config/api/[type]/fields.php
      *
      * @param integer $category_id
      *
-     * @return JsonResponse
+     * @return array
      */
-    private function setConditionalPostParameters($category_id)
+    private function conditionalPostParameters($category_id): array
     {
         $sub_categories = (new SubCategory())
             ->select('id', 'name', 'description')
             ->where('category_id', '=', $category_id)
             ->get();
 
-        $this->post_parameters = ['sub_category_id' => []];
+        $conditional_post_parameters = ['sub_category_id' => []];
 
         foreach ($sub_categories as $sub_category) {
             $id = $this->hash->encode('sub_category', $sub_category->id);
@@ -304,12 +302,14 @@ class ItemSubCategoryController extends Controller
                 UtilityResponse::unableToDecode();
             }
 
-            $this->post_parameters['sub_category_id']['allowed_values'][$id] = [
+            $conditional_post_parameters['sub_category_id']['allowed_values'][$id] = [
                 'value' => $id,
                 'name' => $sub_category->name,
                 'description' => $sub_category->description
             ];
         }
+
+        return $conditional_post_parameters;
     }
 
     /**
