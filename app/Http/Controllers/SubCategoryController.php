@@ -100,14 +100,14 @@ class SubCategoryController extends Controller
 
         return $this->generateOptionsForIndex(
             [
-                'description_key' => 'route-descriptions.sub_category_GET_index',
-                'parameters_key' => 'api.parameters-and-fields.sub_category.parameters.collection',
+                'description_localisation' => 'route-descriptions.sub_category_GET_index',
+                'parameters_config' => 'api.subcategory.parameters.collection',
                 'conditionals' => [],
                 'authenticated' => false
             ],
             [
-                'description_key' => 'route-descriptions.sub_category_POST',
-                'fields_key' => 'api.parameters-and-fields.sub_category.fields',
+                'description_localisation' => 'route-descriptions.sub_category_POST',
+                'fields_config' => 'api.subcategory.fields',
                 'conditionals' => [],
                 'authenticated' => true
             ]
@@ -133,13 +133,13 @@ class SubCategoryController extends Controller
 
         return $this->generateOptionsForShow(
             [
-                'description_key' => 'route-descriptions.sub_category_GET_show',
-                'parameters_key' => 'api.parameters-and-fields.sub_category.parameters.item',
+                'description_localisation' => 'route-descriptions.sub_category_GET_show',
+                'parameters_config' => 'api.subcategory.parameters.item',
                 'conditionals' => [],
                 'authenticated' => false
             ],
             [
-                'description_key' => 'route-descriptions.sub_category_DELETE',
+                'description_localisation' => 'route-descriptions.sub_category_DELETE',
                 'authenticated' => true
             ]
         );

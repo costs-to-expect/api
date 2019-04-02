@@ -1,57 +1,6 @@
 <?php
 
-$pagination = [
-    'offset' => [
-        'parameter' => 'offset',
-        'title' => 'Offset',
-        'description' => 'Record offset for pagination',
-        'default' => 0,
-        'type' => 'integer',
-        'required' => false
-    ],
-    'limit' => [
-        'parameter' => 'limit',
-        'title' => 'Limit',
-        'description' => 'Record limit for pagination',
-        'default' => 10,
-        'type' => 'integer',
-        'required' => false
-    ]
-];
-
 return [
-    'sub_category' => [
-        'fields' => [
-            'name' => [
-                'field' => 'name',
-                'title' => 'Sub category name',
-                'description' => 'Enter a name for the sub category',
-                'type' => 'string',
-                'required' => true
-            ],
-            'description' => [
-                'field' => 'description',
-                'title' => 'Sub category description',
-                'description' => 'Enter a description for the sub category',
-                'type' => 'string',
-                'required' => true
-            ]
-        ],
-        'validation' => [
-            'POST' => [
-                'fields' => [
-                    'description' => 'required|string'
-                ],
-                'messages' => [
-                    'name.unique' => 'The sub category name has already been used within this category'
-                ]
-            ]
-        ],
-        'parameters' => [
-            'collection' => [],
-            'item' => []
-        ]
-    ],
     'item_category' => [
         'fields' => [
             'category_id' => [

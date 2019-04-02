@@ -12,7 +12,7 @@ return [
     'category_PATCH' => 'Update the selected category',
     'category_DELETE' => 'Delete the selected category',
 
-    'sub_category_GET_index' => 'Return all the sub-categories that are children of the selected category',
+    'sub_category_GET_index' => 'Return all the subcategories that are children of the selected category',
     'sub_category_GET_show' => 'Return the selected subcategory',
     'sub_category_POST' => 'Create a new subcategory',
     'sub_category_PATCH' => 'Update the selected subcategory',
