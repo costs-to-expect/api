@@ -180,12 +180,6 @@ class Controller extends BaseController
             $get_parameters[$parameter] = $detail;
         }
 
-        foreach (array_merge_recursive(Config::get($patch['fields_config']), $patch['conditionals']) as $field => $detail) {
-            $detail['title'] = trans($detail['title']);
-            $detail['description'] = trans($detail['description']);
-            $patch_fields[$field] = $detail;
-        }
-
         $routes = [
             'GET' => [
                 'description' => trans($get['description_localisation']),
@@ -199,6 +193,12 @@ class Controller extends BaseController
         ];
 
         if (strlen($patch['description_localisation']) > 0) {
+            foreach (array_merge_recursive(Config::get($patch['fields_config']), $patch['conditionals']) as $field => $detail) {
+                $detail['title'] = trans($detail['title']);
+                $detail['description'] = trans($detail['description']);
+                $patch_fields[$field] = $detail;
+            }
+
             $routes['PATCH'] = [
                 'description' => trans($patch['description_localisation']),
                 'authenticated' => $patch['authenticated'],

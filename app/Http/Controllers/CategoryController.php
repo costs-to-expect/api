@@ -125,13 +125,13 @@ class CategoryController extends Controller
 
         return $this->generateOptionsForShow(
             [
-                'description_key' => 'route-descriptions.category_GET_show',
-                'parameters_key' => 'api.parameters-and-fields.category.parameters.item',
+                'description_localisation' => 'route-descriptions.category_GET_show',
+                'parameters_config' => 'api.category.parameters.item',
                 'conditionals' => [],
                 'authenticated' => false
             ],
             [
-                'description_key' => 'route-descriptions.category_DELETE',
+                'description_localisation' => 'route-descriptions.category_DELETE',
                 'authenticated' => true
             ]
         );
