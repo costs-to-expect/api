@@ -2,9 +2,16 @@
 
 The complete changelog for the Costs to Expect REST API, follows the format defined at https://keepachangelog.com/en/1.0.0/
 
-## [v1.12.0] - 2019-04-xx
+## [v2.00.0] - 2019-04-xx
 ### Changed
 - Renamed the route files, filenames relate to access, not the middleware that runs.
+- /request/log route now /request/access-log
+
+### Fixed
+- OPTIONS request failure when collections do not support POST.
+
+### Removed
+- Removed /request/log, see changed. 
 
 ## [v1.11.0] - 2019-04-02
 ### Added 

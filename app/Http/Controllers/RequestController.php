@@ -12,7 +12,6 @@ use App\Utilities\Response as UtilityResponse;
 use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Config;
 
 /**
  * Manage categories
@@ -61,13 +60,13 @@ class RequestController extends Controller
     }
 
     /**
-     * Return the paginated request log
+     * Return the paginated access log
      *
      * @param Request $request
      *
      * @return JsonResponse
      */
-    public function log(Request $request): JsonResponse
+    public function accessLog(Request $request): JsonResponse
     {
         $total = (new RequestLog())->totalCount();
 
@@ -124,15 +123,14 @@ class RequestController extends Controller
      *
      * @param Request $request
      */
-    public function optionsLog(Request $request)
+    public function optionsAccessLog(Request $request)
     {
-        $this->optionsResponse(
+        return $this->generateOptionsForIndex(
             [
-                'GET' => [
-                    'description' => trans('route-descriptions.request_GET_log'),
-                    'authenticated' => false,
-                    'parameters' => []
-                ]
+                'description_localisation' => 'route-descriptions.request_GET_access-log',
+                'parameters_config' => [],
+                'conditionals' => [],
+                'authenticated' => false
             ]
         );
     }

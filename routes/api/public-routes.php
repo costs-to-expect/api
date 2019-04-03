@@ -186,13 +186,13 @@ Route::group(
         );
 
         Route::get(
-            'request/log',
-            'RequestController@log'
+            'request/access-log',
+            'RequestController@accessLog'
         );
 
         Route::options(
-            'request/log',
-            'RequestController@optionsLog'
+            'request/access-log',
+            'RequestController@optionsAccessLog'
         );
 
         Route::get(

@@ -124,24 +124,27 @@ class Controller extends BaseController
             $get_parameters[$parameter] = $detail;
         }
 
-        foreach (array_merge_recursive(Config::get($post['fields_config']), $post['conditionals']) as $field => $detail) {
-            $detail['title'] = trans($detail['title']);
-            $detail['description'] = trans($detail['description']);
-            $post_fields[$field] = $detail;
-        }
-
         $routes = [
             'GET' => [
                 'description' => trans($get['description_localisation']),
                 'authenticated' => $get['authenticated'],
                 'parameters' => $get_parameters
-            ],
-            'POST' => [
+            ]
+        ];
+
+        if (strlen($post['description_localisation']) > 0) {
+            foreach (array_merge_recursive(Config::get($post['fields_config']), $post['conditionals']) as $field => $detail) {
+                $detail['title'] = trans($detail['title']);
+                $detail['description'] = trans($detail['description']);
+                $post_fields[$field] = $detail;
+            }
+
+            $routes['POST'] = [
                 'description' => trans($post['description_localisation']),
                 'authenticated' => $post['authenticated'],
                 'fields' => $post_fields
-            ]
-        ];
+            ];
+        }
 
         $this->optionsResponse($routes);
     }
