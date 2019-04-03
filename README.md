@@ -134,6 +134,9 @@ X-Link-Previous and X-Link-Next can be null.
 | GET/HEAD | v1/resource_types/{resource_type_id}/resources/{resource_id}/summary/years/{year}/months/{month} |
 | OPTIONS  | v1/resource_types/{resource_type_id}/resources/{resource_id}/summary/years/{year}/months/{month} |
 
+| GET/HEAD | v1/summary/request/access-log/monthly |
+| OPTIONS  | v1/summary/request/access-log/monthly |
+
 ## Misc routes
 
 | HTTP Verb(s) | Route |
@@ -143,12 +146,10 @@ X-Link-Previous and X-Link-Next can be null.
 | GET/HEAD | v1/request/error-log |
 | OPTIONS  | v1/request/error-log |
 | POST     | v1/request/error-log |
-| GET/HEAD | v1/request/log |
-| OPTIONS  | v1/request/log |
-| GET/HEAD | v1/request/log/monthly-requests |
-| OPTIONS  | v1/request/log/monthly-requests |
+| GET/HEAD | v1/request/access-log |
+| OPTIONS  | v1/request/access-log |
 
-## Management routes
+## Private routes
 
 These routes require authorisation.
 

@@ -97,28 +97,6 @@ class RequestController extends Controller
     }
 
     /**
-     * Return a summary of the monthly requests
-     *
-     * @param Request $request
-     *
-     * @return JsonResponse
-     */
-    public function monthlyRequests(Request $request): JsonResponse
-    {
-        $monthly_summary = (new RequestLog())->monthlyRequests();
-
-        $summary = [];
-        foreach ($monthly_summary as $month) {
-            $summary[$month['year']][] = ['month' => $month['month'], 'requests' => $month['requests']];
-        }
-
-        return response()->json(
-            $summary,
-            200
-        );
-    }
-
-    /**
      * Generate the OPTIONS request for log
      *
      * @param Request $request
@@ -130,6 +108,7 @@ class RequestController extends Controller
                 'description_localisation' => 'route-descriptions.request_GET_access-log',
                 'parameters_config' => [],
                 'conditionals' => [],
+                'pagination' => true,
                 'authenticated' => false
             ]
         );
@@ -147,6 +126,7 @@ class RequestController extends Controller
                 'description_localisation' => 'route-descriptions.request_GET_error_log',
                 'parameters_config' => 'api.request.parameters.collection',
                 'conditionals' => [],
+                'pagination' => true,
                 'authenticated' => false
             ],
             [
@@ -154,24 +134,6 @@ class RequestController extends Controller
                 'fields_config' => 'api.request.fields',
                 'conditionals' => [],
                 'authenticated' => false
-            ]
-        );
-    }
-
-    /**
-     * Generate the OPTIONS request for monthly request summary
-     *
-     * @param Request $request
-     */
-    public function optionsMonthlyRequests(Request $request)
-    {
-        $this->optionsResponse(
-            [
-                'GET' => [
-                    'description' => trans('route-descriptions.request_GET_log_monthly_requests'),
-                    'authenticated' => false,
-                    'parameters' => []
-                ]
             ]
         );
     }

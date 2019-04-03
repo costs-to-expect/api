@@ -60,7 +60,8 @@ return [
     'summary_GET_month' => 'Return the monthly summary (sum of items) for the selected resource, year and month',
 
     'request_GET_access-log' => 'Return the access log, read requests',
-    'request_GET_log_monthly_requests' => 'Return the monthly summary of read requests',
     'request_GET_error_log' => 'Return the error log',
     'request_POST' => 'Create an error log report',
+
+    'summary_GET_request_access-log_monthly' => 'Return a summary of the access log, read requests, grouped by month'
 ];

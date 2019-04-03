@@ -175,14 +175,19 @@ Route::group(
         );
 
         // Request access and error logs
+        Route::options(
+            'request/error-log',
+            'RequestController@optionsErrorLog'
+        );
+
         Route::get(
             'request/error-log',
             'RequestController@errorLog'
         );
 
-        Route::options(
+        Route::post(
             'request/error-log',
-            'RequestController@optionsErrorLog'
+            'RequestController@createErrorLog'
         );
 
         Route::get(
@@ -193,21 +198,6 @@ Route::group(
         Route::options(
             'request/access-log',
             'RequestController@optionsAccessLog'
-        );
-
-        Route::get(
-            'request/log/monthly-requests',
-            'RequestController@monthlyRequests'
-        );
-
-        Route::options(
-            'request/log/monthly-requests',
-            'RequestController@optionsMonthlyRequests'
-        );
-
-        Route::post(
-            'request/error-log',
-            'RequestController@createErrorLog'
         );
     }
 );

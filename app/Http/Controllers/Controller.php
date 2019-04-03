@@ -93,7 +93,7 @@ class Controller extends BaseController
     /**
      * Generate the OPTIONS request for the index (collection) routes
      *
-     * @param array $get Four indexes, description_localisation, parameters_config, conditionals and authenticated
+     * @param array $get Four indexes, description_localisation, parameters_config, conditionals, authenticated and pagination
      * @param array $post Four indexes, description_localisation, fields_config, conditionals and authenticated
      */
     protected function generateOptionsForIndex(
@@ -101,6 +101,7 @@ class Controller extends BaseController
             'description_localisation' => '',
             'parameters_config' => '',
             'conditionals' => [],
+            'pagination' => true,
             'authenticated' => false
         ],
         array $post = [
@@ -115,7 +116,7 @@ class Controller extends BaseController
 
         foreach (
             array_merge_recursive(
-                Config::get('api.pagination.parameters'),
+                ($get['pagination'] === true ? Config::get('api.pagination.parameters') : []),
                 Config::get($get['parameters_config']),
                 $get['conditionals']
             ) as $parameter => $detail) {
