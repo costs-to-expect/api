@@ -65,22 +65,22 @@ Route::group(
         );
 
         Route::get(
-            'categories/{category_id}/sub_categories',
+            'categories/{category_id}/subcategories',
             'SubCategoryController@index'
         );
 
         Route::options(
-            'categories/{category_id}/sub_categories',
+            'categories/{category_id}/subcategories',
             'SubCategoryController@optionsIndex'
         );
 
         Route::get(
-            'categories/{category_id}/sub_categories/{sub_category_id}',
+            'categories/{category_id}/subcategories/{sub_category_id}',
             'SubCategoryController@show'
         );
 
         Route::options(
-            'categories/{category_id}/sub_categories/{sub_category_id}',
+            'categories/{category_id}/subcategories/{sub_category_id}',
             'SubCategoryController@optionsShow'
         );
 

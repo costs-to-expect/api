@@ -84,10 +84,10 @@ X-Link-Previous and X-Link-Next can be null.
 | GET/HEAD | v1/categories |
 | OPTIONS  | v1/categories/{category_id} |
 | GET/HEAD | v1/categories/{category_id} |
-| OPTIONS  | v1/categories/{category_id}/sub_categories |
-| GET/HEAD | v1/categories/{category_id}/sub_categories |
-| OPTIONS  | v1/categories/{category_id}/sub_categories/{sub_category_id} |
-| GET/HEAD | v1/categories/{category_id}/sub_categories/{sub_category_id} |
+| OPTIONS  | v1/categories/{category_id}/subcategories |
+| GET/HEAD | v1/categories/{category_id}/subcategories |
+| OPTIONS  | v1/categories/{category_id}/subcategories/{sub_category_id} |
+| GET/HEAD | v1/categories/{category_id}/subcategories/{sub_category_id} |
 | GET/HEAD | v1/resource_types |
 | OPTIONS  | v1/resource_types |
 | GET/HEAD | v1/resource_types/{resource_type_id} |
