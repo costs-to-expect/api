@@ -155,22 +155,22 @@ Route::group(
         );
 
         Route::get(
-            'resource_types/{resource_type_id}/resources/{resource_id}/items/{item_id}/category/{item_category_id}/sub_category',
+            'resource_types/{resource_type_id}/resources/{resource_id}/items/{item_id}/category/{item_category_id}/subcategory',
             'ItemSubCategoryController@index'
         );
 
         Route::options(
-            'resource_types/{resource_type_id}/resources/{resource_id}/items/{item_id}/category/{item_category_id}/sub_category',
+            'resource_types/{resource_type_id}/resources/{resource_id}/items/{item_id}/category/{item_category_id}/subcategory',
             'ItemSubCategoryController@optionsIndex'
         );
 
         Route::get(
-            'resource_types/{resource_type_id}/resources/{resource_id}/items/{item_id}/category/{item_category_id}/sub_category/{item_sub_category_id}',
+            'resource_types/{resource_type_id}/resources/{resource_id}/items/{item_id}/category/{item_category_id}/subcategory/{item_sub_category_id}',
             'ItemSubCategoryController@show'
         );
 
         Route::options(
-            'resource_types/{resource_type_id}/resources/{resource_id}/items/{item_id}/category/{item_category_id}/sub_category/{item_sub_category_id}',
+            'resource_types/{resource_type_id}/resources/{resource_id}/items/{item_id}/category/{item_category_id}/subcategory/{item_sub_category_id}',
             'ItemSubCategoryController@optionsShow'
         );
 

@@ -23,8 +23,6 @@ use Illuminate\Http\Request;
  */
 class ItemSubCategoryController extends Controller
 {
-    private $post_parameters = [];
-
     /**
      * Return the sub category assigned to an item
      *
