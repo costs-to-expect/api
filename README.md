@@ -117,14 +117,6 @@ X-Link-Previous and X-Link-Next can be null.
 | OPTIONS  | v1/resource_types/{resource_type_id}/resources/{resource_id}/expanded-summary/categories |
 | GET/HEAD | v1/resource_types/{resource_type_id}/resources/{resource_id}/summary/tco |
 | OPTIONS  | v1/resource_types/{resource_type_id}/resources/{resource_id}/summary/tco |
-| GET/HEAD | v1/resource_types/{resource_type_id}/resources/{resource_id}/summary/categories |
-| OPTIONS  | v1/resource_types/{resource_type_id}/resources/{resource_id}/summary/categories |
-| GET/HEAD | v1/resource_types/{resource_type_id}/resources/{resource_id}/summary/categories/{category_id} |
-| OPTIONS  | v1/resource_types/{resource_type_id}/resources/{resource_id}/summary/categories/{category_id} |
-| GET/HEAD | v1/resource_types/{resource_type_id}/resources/{resource_id}/summary/categories/{category_id}/sub_categories |
-| OPTIONS  | v1/resource_types/{resource_type_id}/resources/{resource_id}/summary/categories/{category_id}/sub_categories |
-| GET/HEAD | v1/resource_types/{resource_type_id}/resources/{resource_id}/summary/categories/{category_id}/sub_categories/{sub_category_id} |
-| OPTIONS  | v1/resource_types/{resource_type_id}/resources/{resource_id}/summary/categories/{category_id}/sub_categories/{sub_category_id} |
 | GET/HEAD | v1/resource_types/{resource_type_id}/resources/{resource_id}/summary/years |
 | OPTIONS  | v1/resource_types/{resource_type_id}/resources/{resource_id}/summary/years |
 | GET/HEAD | v1/resource_types/{resource_type_id}/resources/{resource_id}/summary/years/{year} |
@@ -136,6 +128,14 @@ X-Link-Previous and X-Link-Next can be null.
 
 | GET/HEAD | v1/summary/request/access-log/monthly |
 | OPTIONS  | v1/summary/request/access-log/monthly |
+| GET/HEAD | v1/summary/resource_types/{resource_type_id}/resources/{resource_id}/summary/categories |
+| OPTIONS  | v1/summary/resource_types/{resource_type_id}/resources/{resource_id}/summary/categories |
+| GET/HEAD | v1/summary/resource_types/{resource_type_id}/resources/{resource_id}/summary/categories/{category_id} |
+| OPTIONS  | v1/summary/resource_types/{resource_type_id}/resources/{resource_id}/summary/categories/{category_id} |
+| GET/HEAD | v1/summary/resource_types/{resource_type_id}/resources/{resource_id}/summary/categories/{category_id}/subcategories |
+| OPTIONS  | v1/summary/resource_types/{resource_type_id}/resources/{resource_id}/summary/categories/{category_id}/subcategories |
+| GET/HEAD | v1/summary/resource_types/{resource_type_id}/resources/{resource_id}/summary/categories/{category_id}/subcategories/{sub_category_id} |
+| OPTIONS  | v1/summary/resource_types/{resource_type_id}/resources/{resource_id}/summary/categories/{category_id}/subcategories/{sub_category_id} |
 
 ## Misc routes
 

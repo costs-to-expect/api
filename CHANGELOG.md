@@ -5,15 +5,24 @@ The complete changelog for the Costs to Expect REST API, follows the format defi
 ## [v1.12.0] - 2019-04-xx
 ### Changed
 - Renamed the route files, filenames relate to access, not the middleware that runs.
+- Added flag to allow turning pagination on and off for collection OPTIONS requests.
 - /request/log route now /request/access-log.
 - /request/log/monthly-requests route now summary/request/access-log/monthly.
-- Added flag to allow turning pagination on and off for collection OPTIONS requests.
+- /resource_types/[resource-type]/resources/[resource]/summary/categories now /summary/resource_types/[resource-type]/resources/[resource]/categories
+- /resource_types/[resource-type]/resources/[resource]/summary/categories/[category-id] now /summary/resource_types/[resource-type]/resources/[resource]/categories/[category-id]
+- /resource_types/[resource-type]/resources/[resource]/summary/categories/[category-id]/sub_categories now /summary/resource_types/[resource-type]/resources/[resource]/categories/[category-id]/subcategories
+- /resource_types/[resource-type]/resources/[resource]/summary/categories/[category-id]/sub_categories/[sub-category-id] now /summary/resource_types/[resource-type]/resources/[resource]/categories/[category-id]/subcategories/[sub-category-id]
 
 ### Fixed
 - OPTIONS request failure when collections do not support POST.
+- OPTIONS request showing DELETE when not always valid.
 
 ### Removed
 - Removed /request/log, see changed. 
+- Removed /request/log/monthly-requests, see changed.
+- Removed /resource_types/[resource-type]/resources/[resource]/summary/categories, see changed.
+- Removed /resource_types/[resource-type]/resources/[resource]/summary/categories/[category-id], see changed.
+- Removed /resource_types/[resource-type]/resources/[resource]/summary/categories/[category-id]/sub_categories, see changed.
 
 ## [v1.11.0] - 2019-04-02
 ### Added 

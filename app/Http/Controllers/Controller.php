@@ -189,12 +189,15 @@ class Controller extends BaseController
                 'description' => trans($get['description_localisation']),
                 'authenticated' => $get['authenticated'],
                 'parameters' => $get_parameters
-            ],
-            'DELETE' => [
-                'description' => trans($delete['description_localisation']),
-                'authenticated' => $delete['authenticated']
             ]
         ];
+
+        if (strlen($delete['description_localisation']) > 0) {
+            $routes['DELETE'] = [
+                'description' => trans($delete['description_localisation']),
+                'authenticated' => $delete['authenticated']
+            ];
+        }
 
         if (strlen($patch['description_localisation']) > 0) {
             foreach (array_merge_recursive(Config::get($patch['fields_config']), $patch['conditionals']) as $field => $detail) {

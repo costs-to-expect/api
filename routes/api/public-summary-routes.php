@@ -24,46 +24,6 @@ Route::group(
         );
 
         Route::get(
-            'resource_types/{resource_type_id}/resources/{resource_id}/summary/categories',
-            'SummaryController@categories'
-        );
-
-        Route::options(
-            'resource_types/{resource_type_id}/resources/{resource_id}/summary/categories',
-            'SummaryController@optionsCategories'
-        );
-
-        Route::get(
-            'resource_types/{resource_type_id}/resources/{resource_id}/summary/categories/{category_id}',
-            'SummaryController@category'
-        );
-
-        Route::options(
-            'resource_types/{resource_type_id}/resources/{resource_id}/summary/categories/{category_id}',
-            'SummaryController@optionsCategory'
-        );
-
-        Route::get(
-            'resource_types/{resource_type_id}/resources/{resource_id}/summary/categories/{category_id}/sub_categories',
-            'SummaryController@subCategories'
-        );
-
-        Route::options(
-            'resource_types/{resource_type_id}/resources/{resource_id}/summary/categories/{category_id}/sub_categories',
-            'SummaryController@optionsSubCategories'
-        );
-
-        Route::get(
-            'resource_types/{resource_type_id}/resources/{resource_id}/summary/categories/{category_id}/sub_categories/{sub_category_id}',
-            'SummaryController@subCategory'
-        );
-
-        Route::options(
-            'resource_types/{resource_type_id}/resources/{resource_id}/summary/categories/{category_id}/sub_categories/{sub_category_id}',
-            'SummaryController@optionsSubCategory'
-        );
-
-        Route::get(
             'resource_types/{resource_type_id}/resources/{resource_id}/summary/tco',
             'SummaryController@tco'
         );
@@ -121,6 +81,46 @@ Route::group(
         Route::options(
             'summary/request/access-log/monthly',
             'SummaryRequestController@optionsMonthlyAccessLog'
+        );
+
+        Route::get(
+            'summary/resource_types/{resource_type_id}/resources/{resource_id}/categories',
+            'SummaryCategoryController@categories'
+        );
+
+        Route::options(
+            'summary/resource_types/{resource_type_id}/resources/{resource_id}/categories',
+            'SummaryCategoryController@optionsCategories'
+        );
+
+        Route::get(
+            'summary/resource_types/{resource_type_id}/resources/{resource_id}/categories/{category_id}',
+            'SummaryCategoryController@category'
+        );
+
+        Route::options(
+            'summary/resource_types/{resource_type_id}/resources/{resource_id}/categories/{category_id}',
+            'SummaryCategoryController@optionsCategory'
+        );
+
+        Route::get(
+            'summary/resource_types/{resource_type_id}/resources/{resource_id}/categories/{category_id}/subcategories',
+            'SummaryCategoryController@subCategories'
+        );
+
+        Route::options(
+            'summary/resource_types/{resource_type_id}/resources/{resource_id}/categories/{category_id}/subcategories',
+            'SummaryCategoryController@optionsSubCategories'
+        );
+
+        Route::get(
+            'summary/resource_types/{resource_type_id}/resources/{resource_id}/categories/{category_id}/subcategories/{sub_category_id}',
+            'SummaryCategoryController@subCategory'
+        );
+
+        Route::options(
+            'summary/resource_types/{resource_type_id}/resources/{resource_id}/categories/{category_id}/subcategories/{sub_category_id}',
+            'SummaryCategoryController@optionsSubCategory'
         );
     }
 );
