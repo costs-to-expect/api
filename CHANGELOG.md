@@ -15,7 +15,8 @@ The complete changelog for the Costs to Expect REST API, follows the format defi
 - /resource_types/[resource_type]/resources/[resource]/items/[item]/category/[item-category]/sub_category now /resource_types/[resource-type]/resources/[resource]/items/[item]/category/[item-category]/subcategory.
 - /resource_types/[resource_type]/resources/[resource]/items/[item]/category/[item-category]/sub_category/[sub-category] now /resource_types/[resource-type]/resources/[resource]/items/[item]/category/[item-category]/sub_category/[subcategory].
 - /categories/[category]/sub_categories now /categories/[category]/subcategories. 
-- /categories/[category]/sub_categories/[subcategory] now /categories/[category]/subcategories/[subcategory]. 
+- /categories/[category]/sub_categories/[subcategory] now /categories/[category]/subcategories/[subcategory].
+- /resource_types/[resource_type_id]/resources/[resource_id]/summary/tco now /summary/resource_types/[resource_type_id]/resources/[resource_id]/tco 
 
 ### Fixed
 - OPTIONS request failure when collections do not support POST.
@@ -31,6 +32,8 @@ The complete changelog for the Costs to Expect REST API, follows the format defi
 - Removed /categories/[category]/sub_categories now /categories/[category]/subcategories, see changed.
 - Removed /categories/[category]/sub_categories, see changed.
 - Removed /categories/[category]/sub_categories/[subcategory], see changed.
+- Removed /resource_types/[resource-type]/resources/[resource]/summary/tco, see changed.
+- Removed /resource_types/[resource-type]/resources/{[resource]/expanded_summary/categories. 
 
 ## [v1.11.0] - 2019-04-02
 ### Added 

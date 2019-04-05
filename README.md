@@ -86,8 +86,8 @@ X-Link-Previous and X-Link-Next can be null.
 | GET/HEAD | v1/categories/{category_id} |
 | OPTIONS  | v1/categories/{category_id}/subcategories |
 | GET/HEAD | v1/categories/{category_id}/subcategories |
-| OPTIONS  | v1/categories/{category_id}/subcategories/{sub_category_id} |
-| GET/HEAD | v1/categories/{category_id}/subcategories/{sub_category_id} |
+| OPTIONS  | v1/categories/{category_id}/subcategories/{subcategory_id} |
+| GET/HEAD | v1/categories/{category_id}/subcategories/{subcategory_id} |
 | GET/HEAD | v1/resource_types |
 | OPTIONS  | v1/resource_types |
 | GET/HEAD | v1/resource_types/{resource_type_id} |
@@ -106,17 +106,13 @@ X-Link-Previous and X-Link-Next can be null.
 | OPTIONS  | v1/resource_types/{resource_type_id}/resources/{resource_id}/items/{item_id}/category/{item_category_id} |
 | OPTIONS  | v1/resource_types/{resource_type_id}/resources/{resource_id}/items/{item_id}/category/{item_category_id}/subcategory |
 | GET/HEAD | v1/resource_types/{resource_type_id}/resources/{resource_id}/items/{item_id}/category/{item_category_id}/subcategory |
-| GET/HEAD | v1/resource_types/{resource_type_id}/resources/{resource_id}/items/{item_id}/category/{item_category_id}/subcategory/{sub_category_id} |
-| OPTIONS  | v1/resource_types/{resource_type_id}/resources/{resource_id}/items/{item_id}/category/{item_category_id}/subcategory/{sub_category_id} |
+| GET/HEAD | v1/resource_types/{resource_type_id}/resources/{resource_id}/items/{item_id}/category/{item_category_id}/subcategory/{item_subcategory_id} |
+| OPTIONS  | v1/resource_types/{resource_type_id}/resources/{resource_id}/items/{item_id}/category/{item_category_id}/subcategory/{item_subcategory_id} |
 
 ## Summary routes
 
 | HTTP Verb(s) | Route |
 | :--- | :--- |
-| GET/HEAD | v1/resource_types/{resource_type_id}/resources/{resource_id}/expanded-summary/categories |
-| OPTIONS  | v1/resource_types/{resource_type_id}/resources/{resource_id}/expanded-summary/categories |
-| GET/HEAD | v1/resource_types/{resource_type_id}/resources/{resource_id}/summary/tco |
-| OPTIONS  | v1/resource_types/{resource_type_id}/resources/{resource_id}/summary/tco |
 | GET/HEAD | v1/resource_types/{resource_type_id}/resources/{resource_id}/summary/years |
 | OPTIONS  | v1/resource_types/{resource_type_id}/resources/{resource_id}/summary/years |
 | GET/HEAD | v1/resource_types/{resource_type_id}/resources/{resource_id}/summary/years/{year} |
@@ -128,14 +124,16 @@ X-Link-Previous and X-Link-Next can be null.
 
 | GET/HEAD | v1/summary/request/access-log/monthly |
 | OPTIONS  | v1/summary/request/access-log/monthly |
-| GET/HEAD | v1/summary/resource_types/{resource_type_id}/resources/{resource_id}/summary/categories |
-| OPTIONS  | v1/summary/resource_types/{resource_type_id}/resources/{resource_id}/summary/categories |
-| GET/HEAD | v1/summary/resource_types/{resource_type_id}/resources/{resource_id}/summary/categories/{category_id} |
-| OPTIONS  | v1/summary/resource_types/{resource_type_id}/resources/{resource_id}/summary/categories/{category_id} |
-| GET/HEAD | v1/summary/resource_types/{resource_type_id}/resources/{resource_id}/summary/categories/{category_id}/subcategories |
-| OPTIONS  | v1/summary/resource_types/{resource_type_id}/resources/{resource_id}/summary/categories/{category_id}/subcategories |
-| GET/HEAD | v1/summary/resource_types/{resource_type_id}/resources/{resource_id}/summary/categories/{category_id}/subcategories/{sub_category_id} |
-| OPTIONS  | v1/summary/resource_types/{resource_type_id}/resources/{resource_id}/summary/categories/{category_id}/subcategories/{sub_category_id} |
+| GET/HEAD | v1/summary/resource_types/{resource_type_id}/resources/{resource_id}/tco |
+| OPTIONS  | v1/summary/resource_types/{resource_type_id}/resources/{resource_id}/tco |
+| GET/HEAD | v1/summary/resource_types/{resource_type_id}/resources/{resource_id}/categories |
+| OPTIONS  | v1/summary/resource_types/{resource_type_id}/resources/{resource_id}/categories |
+| GET/HEAD | v1/summary/resource_types/{resource_type_id}/resources/{resource_id}/categories/{category_id} |
+| OPTIONS  | v1/summary/resource_types/{resource_type_id}/resources/{resource_id}/categories/{category_id} |
+| GET/HEAD | v1/summary/resource_types/{resource_type_id}/resources/{resource_id}/categories/{category_id}/subcategories |
+| OPTIONS  | v1/summary/resource_types/{resource_type_id}/resources/{resource_id}/categories/{category_id}/subcategories |
+| GET/HEAD | v1/summary/resource_types/{resource_type_id}/resources/{resource_id}/categories/{category_id}/subcategories/{subcategory_id} |
+| OPTIONS  | v1/summary/resource_types/{resource_type_id}/resources/{resource_id}/categories/{category_id}/subcategories/{subcategory_id} |
 
 ## Misc routes
 
@@ -170,7 +168,7 @@ These routes require authorisation.
 | POST     | v1/resource_types/{resource_type_id}/resources/{resource_id}/items/{item_id}/category |
 | DELETE   | v1/resource_types/{resource_type_id}/resources/{resource_id}/items/{item_id}/category/{item_category_id} |
 | POST     | v1/resource_types/{resource_type_id}/resources/{resource_id}/items/{item_id}/category/{item_category_id}/sub_category |
-| DELETE   | v1/resource_types/{resource_type_id}/resources/{resource_id}/items/{item_id}/category/{item_category_id}/sub_category/{sub_category_id} |
+| DELETE   | v1/resource_types/{resource_type_id}/resources/{resource_id}/items/{item_id}/category/{item_category_id}/sub_category/{item_subcategory_id} |
 
 ## Planned development
 

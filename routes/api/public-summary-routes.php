@@ -24,16 +24,6 @@ Route::group(
         );
 
         Route::get(
-            'resource_types/{resource_type_id}/resources/{resource_id}/summary/tco',
-            'SummaryController@tco'
-        );
-
-        Route::options(
-            'resource_types/{resource_type_id}/resources/{resource_id}/summary/tco',
-            'SummaryController@optionsTco'
-        );
-
-        Route::get(
             'resource_types/{resource_type_id}/resources/{resource_id}/summary/years',
             'SummaryController@years'
         );
@@ -81,6 +71,16 @@ Route::group(
         Route::options(
             'summary/request/access-log/monthly',
             'SummaryRequestController@optionsMonthlyAccessLog'
+        );
+
+        Route::get(
+            'summary/resource_types/{resource_type_id}/resources/{resource_id}/tco',
+            'SummaryController@tco'
+        );
+
+        Route::options(
+            'summary/resource_types/{resource_type_id}/resources/{resource_id}/tco',
+            'SummaryController@optionsTco'
         );
 
         Route::get(
