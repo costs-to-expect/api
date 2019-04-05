@@ -14,53 +14,43 @@ Route::group(
     ],
     function () {
         Route::get(
-            'resource_types/{resource_type_id}/resources/{resource_id}/expanded_summary/categories',
-            'ExpandedSummaryController@categories'
-        );
-
-        Route::options(
-            'resource_types/{resource_type_id}/resources/{resource_id}/expanded_summary/categories',
-            'ExpandedSummaryController@optionsCategories'
-        );
-
-        Route::get(
             'resource_types/{resource_type_id}/resources/{resource_id}/summary/years',
-            'SummaryController@years'
+            'SummaryPeriodController@years'
         );
 
         Route::options(
             'resource_types/{resource_type_id}/resources/{resource_id}/summary/years',
-            'SummaryController@optionsYears'
+            'SummaryPeriodController@optionsYears'
         );
 
         Route::get(
             'resource_types/{resource_type_id}/resources/{resource_id}/summary/years/{year}',
-            'SummaryController@year'
+            'SummaryPeriodController@year'
         );
 
         Route::options(
             'resource_types/{resource_type_id}/resources/{resource_id}/summary/years/{year}',
-            'SummaryController@optionsYear'
+            'SummaryPeriodController@optionsYear'
         );
 
         Route::get(
             'resource_types/{resource_type_id}/resources/{resource_id}/summary/years/{year}/months',
-            'SummaryController@months'
+            'SummaryPeriodController@months'
         );
 
         Route::options(
             'resource_types/{resource_type_id}/resources/{resource_id}/summary/years/{year}/months',
-            'SummaryController@optionsMonths'
+            'SummaryPeriodController@optionsMonths'
         );
 
         Route::get(
             'resource_types/{resource_type_id}/resources/{resource_id}/summary/years/{year}/months/{month}',
-            'SummaryController@month'
+            'SummaryPeriodController@month'
         );
 
         Route::options(
             'resource_types/{resource_type_id}/resources/{resource_id}/summary/years/{year}/months/{month}',
-            'SummaryController@optionsMonth'
+            'SummaryPeriodController@optionsMonth'
         );
 
         Route::get(

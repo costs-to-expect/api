@@ -6,8 +6,6 @@ use App\Http\Parameters\Route\Validate;
 use App\Models\Item;
 use App\Models\Transformers\ItemCategorySummary as ItemCategorySummaryTransformer;
 use App\Models\Transformers\ItemSubCategorySummary as ItemSubCategorySummaryTransformer;
-use App\Models\Transformers\ItemMonthSummary as ItemMonthSummaryTransformer;
-use App\Models\Transformers\ItemYearSummary as ItemYearSummaryTransformer;
 use App\Utilities\Response as UtilityResponse;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -78,7 +76,6 @@ class SummaryCategoryController extends Controller
                 'authenticated' => false
             ]
         );
-
     }
 
     /**

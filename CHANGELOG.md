@@ -21,6 +21,7 @@ The complete changelog for the Costs to Expect REST API, follows the format defi
 ### Fixed
 - OPTIONS request failure when collections do not support POST.
 - OPTIONS request showing DELETE when not always valid.
+- OPTIONS request methods now all use the same helper methods.
 
 ### Removed
 - Removed /request/log, see changed. 
