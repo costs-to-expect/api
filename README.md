@@ -80,60 +80,47 @@ X-Link-Previous and X-Link-Next can be null.
 | OPTIONS  | v1/ | 
 | POST     | v1/auth/login |
 | POST     | v1/auth/register (Removed in production) |
-| OPTIONS  | v1/categories |
 | GET/HEAD | v1/categories |
-| OPTIONS  | v1/categories/{category_id} |
+| OPTIONS  | v1/categories |
 | GET/HEAD | v1/categories/{category_id} |
-| OPTIONS  | v1/categories/{category_id}/subcategories |
+| OPTIONS  | v1/categories/{category_id} |
 | GET/HEAD | v1/categories/{category_id}/subcategories |
-| OPTIONS  | v1/categories/{category_id}/subcategories/{subcategory_id} |
+| OPTIONS  | v1/categories/{category_id}/subcategories |
 | GET/HEAD | v1/categories/{category_id}/subcategories/{subcategory_id} |
-| GET/HEAD | v1/resource_types |
-| OPTIONS  | v1/resource_types |
-| GET/HEAD | v1/resource_types/{resource_type_id} |
-| OPTIONS  | v1/resource_types/{resource_type_id} | 
-| GET/HEAD | v1/resource_types/{resource_type_id}/resources |
-| OPTIONS  | v1/resource_types/{resource_type_id}/resources |
-| OPTIONS  | v1/resource_types/{resource_type_id}/resources/{resource_id} |
-| GET/HEAD | v1/resource_types/{resource_type_id}/resources/{resource_id} |
-| OPTIONS  | v1/resource_types/{resource_type_id}/resources/{resource_id}/items |
-| GET/HEAD | v1/resource_types/{resource_type_id}/resources/{resource_id}/items |
-| GET/HEAD | v1/resource_types/{resource_type_id}/resources/{resource_id}/items/{item_id} |
-| OPTIONS  | v1/resource_types/{resource_type_id}/resources/{resource_id}/items/{item_id} |
-| OPTIONS  | v1/resource_types/{resource_type_id}/resources/{resource_id}/items/{item_id}/category |
-| GET/HEAD | v1/resource_types/{resource_type_id}/resources/{resource_id}/items/{item_id}/category |
-| GET/HEAD | v1/resource_types/{resource_type_id}/resources/{resource_id}/items/{item_id}/category/{item_category_id} |
-| OPTIONS  | v1/resource_types/{resource_type_id}/resources/{resource_id}/items/{item_id}/category/{item_category_id} |
-| OPTIONS  | v1/resource_types/{resource_type_id}/resources/{resource_id}/items/{item_id}/category/{item_category_id}/subcategory |
-| GET/HEAD | v1/resource_types/{resource_type_id}/resources/{resource_id}/items/{item_id}/category/{item_category_id}/subcategory |
-| GET/HEAD | v1/resource_types/{resource_type_id}/resources/{resource_id}/items/{item_id}/category/{item_category_id}/subcategory/{item_subcategory_id} |
-| OPTIONS  | v1/resource_types/{resource_type_id}/resources/{resource_id}/items/{item_id}/category/{item_category_id}/subcategory/{item_subcategory_id} |
+| OPTIONS  | v1/categories/{category_id}/subcategories/{subcategory_id} |
+| GET/HEAD | v1/resource-types |
+| OPTIONS  | v1/resource-types |
+| GET/HEAD | v1/resource-types/{resource_type_id} |
+| OPTIONS  | v1/resource-types/{resource_type_id} | 
+| GET/HEAD | v1/resource-types/{resource_type_id}/resources |
+| OPTIONS  | v1/resource-types/{resource_type_id}/resources |
+| GET/HEAD | v1/resource-types/{resource_type_id}/resources/{resource_id} |
+| OPTIONS  | v1/resource-types/{resource_type_id}/resources/{resource_id} |
+| GET/HEAD | v1/resource-types/{resource_type_id}/resources/{resource_id}/items |
+| OPTIONS  | v1/resource-types/{resource_type_id}/resources/{resource_id}/items |
+| GET/HEAD | v1/resource-types/{resource_type_id}/resources/{resource_id}/items/{item_id} |
+| OPTIONS  | v1/resource-types/{resource_type_id}/resources/{resource_id}/items/{item_id} |
+| GET/HEAD | v1/resource-types/{resource_type_id}/resources/{resource_id}/items/{item_id}/category |
+| OPTIONS  | v1/resource-types/{resource_type_id}/resources/{resource_id}/items/{item_id}/category |
+| GET/HEAD | v1/resource-types/{resource_type_id}/resources/{resource_id}/items/{item_id}/category/{item_category_id} |
+| OPTIONS  | v1/resource-types/{resource_type_id}/resources/{resource_id}/items/{item_id}/category/{item_category_id} |
+| GET/HEAD | v1/resource-types/{resource_type_id}/resources/{resource_id}/items/{item_id}/category/{item_category_id}/subcategory |
+| OPTIONS  | v1/resource-types/{resource_type_id}/resources/{resource_id}/items/{item_id}/category/{item_category_id}/subcategory |
+| GET/HEAD | v1/resource-types/{resource_type_id}/resources/{resource_id}/items/{item_id}/category/{item_category_id}/subcategory/{item_subcategory_id} |
+| OPTIONS  | v1/resource-types/{resource_type_id}/resources/{resource_id}/items/{item_id}/category/{item_category_id}/subcategory/{item_subcategory_id} |
 
 ## Summary routes
 
+Eventually there will be a summary route for every API route, till that point the summary routes 
+are details below, some use GET parameters to breakdown the data, one example being items 
+which allows you to provide year, month, category and subcategory.
+
 | HTTP Verb(s) | Route |
 | :--- | :--- |
-| GET/HEAD | v1/resource_types/{resource_type_id}/resources/{resource_id}/summary/years |
-| OPTIONS  | v1/resource_types/{resource_type_id}/resources/{resource_id}/summary/years |
-| GET/HEAD | v1/resource_types/{resource_type_id}/resources/{resource_id}/summary/years/{year} |
-| OPTIONS  | v1/resource_types/{resource_type_id}/resources/{resource_id}/summary/years/{year} |
-| GET/HEAD | v1/resource_types/{resource_type_id}/resources/{resource_id}/summary/years/{year}/months |
-| OPTIONS  | v1/resource_types/{resource_type_id}/resources/{resource_id}/summary/years/{year}/months |
-| GET/HEAD | v1/resource_types/{resource_type_id}/resources/{resource_id}/summary/years/{year}/months/{month} |
-| OPTIONS  | v1/resource_types/{resource_type_id}/resources/{resource_id}/summary/years/{year}/months/{month} |
-
 | GET/HEAD | v1/summary/request/access-log/monthly |
 | OPTIONS  | v1/summary/request/access-log/monthly |
-| GET/HEAD | v1/summary/resource_types/{resource_type_id}/resources/{resource_id}/tco |
-| OPTIONS  | v1/summary/resource_types/{resource_type_id}/resources/{resource_id}/tco |
-| GET/HEAD | v1/summary/resource_types/{resource_type_id}/resources/{resource_id}/categories |
-| OPTIONS  | v1/summary/resource_types/{resource_type_id}/resources/{resource_id}/categories |
-| GET/HEAD | v1/summary/resource_types/{resource_type_id}/resources/{resource_id}/categories/{category_id} |
-| OPTIONS  | v1/summary/resource_types/{resource_type_id}/resources/{resource_id}/categories/{category_id} |
-| GET/HEAD | v1/summary/resource_types/{resource_type_id}/resources/{resource_id}/categories/{category_id}/subcategories |
-| OPTIONS  | v1/summary/resource_types/{resource_type_id}/resources/{resource_id}/categories/{category_id}/subcategories |
-| GET/HEAD | v1/summary/resource_types/{resource_type_id}/resources/{resource_id}/categories/{category_id}/subcategories/{subcategory_id} |
-| OPTIONS  | v1/summary/resource_types/{resource_type_id}/resources/{resource_id}/categories/{category_id}/subcategories/{subcategory_id} |
+| GET/HEAD | v1/summary/resource-types/{resource_type_id}/resources/{resource_id}/items |
+| OPTIONS  | v1/summary/resource-types/{resource_type_id}/resources/{resource_id}/items |
 
 ## Misc routes
 
@@ -158,25 +145,14 @@ These routes require authorisation.
 | DELETE   | v1/categories/{category_id} |
 | POST     | v1/categories/{category_id}/sub_categories |
 | DELETE   | v1/categories/{category_id}/sub_categories/{sub_category_id} |
-| POST     | v1/resource_types |
-| DELETE   | v1/resource_types/{resource_type_id} |
-| POST     | v1/resource_types/{resource_type_id}/resources |
-| DELETE   | v1/resource_types/{resource_type_id}/resources/{resource_id} |
-| POST     | v1/resource_types/{resource_type_id}/resources/{resource_id}/items |
-| PATCH    | v1/resource_types/{resource_type_id}/resources/{resource_id}/items/{item_id} |
-| DELETE   | v1/resource_types/{resource_type_id}/resources/{resource_id}/items/{item_id} |
-| POST     | v1/resource_types/{resource_type_id}/resources/{resource_id}/items/{item_id}/category |
-| DELETE   | v1/resource_types/{resource_type_id}/resources/{resource_id}/items/{item_id}/category/{item_category_id} |
-| POST     | v1/resource_types/{resource_type_id}/resources/{resource_id}/items/{item_id}/category/{item_category_id}/sub_category |
-| DELETE   | v1/resource_types/{resource_type_id}/resources/{resource_id}/items/{item_id}/category/{item_category_id}/sub_category/{item_subcategory_id} |
-
-## Planned development
-
-* PATCH support for all show routes.
-* PUT support for collections.
-* Upgrade Laravel to 5.7.
-* Move the user model.
-* Development setting to show generated queries.
-* Switch to Money class rather than using DECIMAL in database.
-* Add limits on POST for single item collections, item category and item sub category.
-* Additional helper classes.
+| POST     | v1/resource-types |
+| DELETE   | v1/resource-types/{resource_type_id} |
+| POST     | v1/resource-types/{resource_type_id}/resources |
+| DELETE   | v1/resource-types/{resource_type_id}/resources/{resource_id} |
+| POST     | v1/resource-types/{resource_type_id}/resources/{resource_id}/items |
+| PATCH    | v1/resource-types/{resource_type_id}/resources/{resource_id}/items/{item_id} |
+| DELETE   | v1/resource-types/{resource_type_id}/resources/{resource_id}/items/{item_id} |
+| POST     | v1/resource-types/{resource_type_id}/resources/{resource_id}/items/{item_id}/category |
+| DELETE   | v1/resource-types/{resource_type_id}/resources/{resource_id}/items/{item_id}/category/{item_category_id} |
+| POST     | v1/resource-types/{resource_type_id}/resources/{resource_id}/items/{item_id}/category/{item_category_id}/sub_category |
+| DELETE   | v1/resource-types/{resource_type_id}/resources/{resource_id}/items/{item_id}/category/{item_category_id}/sub_category/{item_subcategory_id} |

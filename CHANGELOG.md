@@ -8,15 +8,16 @@ The complete changelog for the Costs to Expect REST API, follows the format defi
 - Added flag to allow turning pagination on and off for collection OPTIONS requests.
 - /request/log route now /request/access-log.
 - /request/log/monthly-requests route now summary/request/access-log/monthly.
-- /resource_types/[resource-type]/resources/[resource]/summary/categories now /summary/resource_types/[resource-type]/resources/[resource]/categories.
-- /resource_types/[resource-type]/resources/[resource]/summary/categories/[category] now /summary/resource_types/[resource-type]/resources/[resource]/categories/[category].
-- /resource_types/[resource-type]/resources/[resource]/summary/categories/[category]/sub_categories now /summary/resource_types/[resource-type]/resources/[resource]/categories/[category]/subcategories.
-- /resource_types/[resource-type]/resources/[resource]/summary/categories/[category]/sub_categories/[sub-category] now /summary/resource_types/[resource-type]/resources/[resource]/categories/[category]/subcategories/[subcategory].
+- /resource_types/[resource-type]/resources/[resource]/summary/tco now /summary/resource_types/[resource-type]/resources/[resource]/items.
+- /resource_types/[resource-type]/resources/[resource]/summary/categories now /summary/resource_types/[resource-type]/resources/[resource]/items?category=all.
+- /resource_types/[resource-type]/resources/[resource]/summary/categories/[category] now /summary/resource_types/[resource-type]/resources/[resource]/items?category=[category].
+- /resource_types/[resource-type]/resources/[resource]/summary/categories/[category]/sub_categories now /summary/resource_types/[resource-type]/resources/[resource]/items?category=[category]&subcategory=all.
+- /resource_types/[resource-type]/resources/[resource]/summary/categories/[category]/sub_categories/[sub-category] now /summary/resource_types/[resource-type]/resources/items?category=[category]&subcategory=[subcategory].
 - /resource_types/[resource_type]/resources/[resource]/items/[item]/category/[item-category]/sub_category now /resource_types/[resource-type]/resources/[resource]/items/[item]/category/[item-category]/subcategory.
 - /resource_types/[resource_type]/resources/[resource]/items/[item]/category/[item-category]/sub_category/[sub-category] now /resource_types/[resource-type]/resources/[resource]/items/[item]/category/[item-category]/sub_category/[subcategory].
 - /categories/[category]/sub_categories now /categories/[category]/subcategories. 
 - /categories/[category]/sub_categories/[subcategory] now /categories/[category]/subcategories/[subcategory].
-- /resource_types/[resource_type_id]/resources/[resource_id]/summary/tco now /summary/resource_types/[resource_type_id]/resources/[resource_id]/tco 
+- resource_type switched to resource-types in all URIs 
 
 ### Fixed
 - OPTIONS request failure when collections do not support POST.
