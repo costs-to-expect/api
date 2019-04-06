@@ -28,10 +28,10 @@ return [
             "type" => "string",
             "required" => false
         ],
-        'sub_category' => [
-            "parameter" => "sub_category",
-            "title" => 'item/parameters.title-sub_category',
-            "description" => 'item/parameters.description-sub_category',
+        'subcategory' => [
+            "parameter" => "subcategory",
+            "title" => 'item/parameters.title-subcategory',
+            "description" => 'item/parameters.description-subcategory',
             "default" => null,
             "type" => "string",
             "required" => false

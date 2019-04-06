@@ -94,7 +94,7 @@ class Get
                     }
                     break;
 
-                case 'sub_category':
+                case 'subcategory':
                     if (array_key_exists($key, self::$parameters) === true) {
                         if (
                             (new SubCategory())->
@@ -112,6 +112,14 @@ class Get
                         if (intval(self::$parameters[$key]) < 2013 ||
                             self::$parameters[$key] > intval(date('Y'))) {
 
+                            unset(self::$parameters[$key]);
+                        }
+                    }
+                    break;
+
+                case 'years':
+                    if (array_key_exists($key, self::$parameters) === true) {
+                        if (General::isBooleanValue(self::$parameters[$key]) === false) {
                             unset(self::$parameters[$key]);
                         }
                     }

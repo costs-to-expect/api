@@ -12,6 +12,6 @@ return [
     'title-category' => 'Category',
     'description-category' => 'Show results for the requested category',
 
-    'title-sub_category' => 'Subcategory',
-    'description-sub_category' => 'Show results for the requested subcategory, only applicable if category provided',
+    'title-subcategory' => 'Subcategory',
+    'description-subcategory' => 'Show results for the requested subcategory, only applicable if category provided',
 ];
