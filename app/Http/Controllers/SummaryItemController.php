@@ -60,6 +60,11 @@ class SummaryItemController extends Controller
                 if (array_key_exists('months', $collection_parameters) === true &&
                     General::booleanValue($collection_parameters['months']) === true) {
                     return $this->monthsSummary($collection_parameters['year']);
+                } else if (array_key_exists('month', $collection_parameters) === true) {
+                    return $this->monthSummary(
+                        $collection_parameters['year'],
+                        $collection_parameters['month']
+                    );
                 } else {
                     return $this->yearSummary($collection_parameters['year']);
                 }
@@ -156,6 +161,34 @@ class SummaryItemController extends Controller
             ),
             200,
             [ 'X-Total-Count' => count($summary) ]
+        );
+    }
+
+    /**
+     * Return the month summary for a specific year and month
+     *
+     * @param integer $year
+     * @param integer $month
+     *
+     * @return JsonResponse
+     */
+    private function monthSummary(int $year, int $month): JsonResponse
+    {
+        $summary = (new Item())->monthSummary(
+            $this->resource_type_id,
+            $this->resource_id,
+            $year,
+            $month
+        );
+
+        if (count($summary) !== 1) {
+            UtilityResponse::notFound();
+        }
+
+        return response()->json(
+            (new ItemMonthSummaryTransformer($summary[0]))->toArray(),
+            200,
+            [ 'X-Total-Count' => 1 ]
         );
     }
 
