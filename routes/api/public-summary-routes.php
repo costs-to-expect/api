@@ -14,6 +14,18 @@ Route::group(
     ],
     function () {
         Route::get(
+            'summary/resource-types/{resource_type_id}/resources/{resource_id}/items',
+            'SummaryItemController@index'
+        );
+
+        Route::options(
+            'summary/resource-types/{resource_type_id}/resources/{resource_id}/items',
+            'SummaryItemController@optionsIndex'
+        );
+
+
+
+        Route::get(
             'summary/resource-types/{resource_type_id}/resources/{resource_id}/years',
             'SummaryPeriodController@years'
         );

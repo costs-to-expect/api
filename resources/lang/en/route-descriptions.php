@@ -63,5 +63,7 @@ return [
     'request_GET_error_log' => 'Return the error log',
     'request_POST' => 'Create an error log report',
 
-    'summary_GET_request_access-log_monthly' => 'Return a summary of the access log, read requests, grouped by month'
+    'summary_GET_request_access-log_monthly' => 'Return a summary of the access log, read requests, grouped by month',
+
+    'summary_GET_resource-type_resource_items' => 'Return the TCO (Total cost of ownership, sum of items) for the selected resource',
 ];
