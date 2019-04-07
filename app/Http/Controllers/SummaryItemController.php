@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Parameters\Get;
 use App\Http\Parameters\Route\Validate;
 use App\Models\Item;
+use App\Models\Transformers\ItemCategorySummary as ItemCategorySummaryTransformer;
 use App\Models\Transformers\ItemMonthSummary as ItemMonthSummaryTransformer;
 use App\Models\Transformers\ItemYearSummary as ItemYearSummaryTransformer;
 use App\Utilities\General;
@@ -54,23 +55,23 @@ class SummaryItemController extends Controller
         if (array_key_exists('years', $collection_parameters) === true &&
             General::booleanValue($collection_parameters['years']) === true) {
             return $this->yearsSummary();
-        } else {
-            if (array_key_exists('year', $collection_parameters) === true) {
-
-                if (array_key_exists('months', $collection_parameters) === true &&
-                    General::booleanValue($collection_parameters['months']) === true) {
-                    return $this->monthsSummary($collection_parameters['year']);
-                } else if (array_key_exists('month', $collection_parameters) === true) {
-                    return $this->monthSummary(
-                        $collection_parameters['year'],
-                        $collection_parameters['month']
-                    );
-                } else {
-                    return $this->yearSummary($collection_parameters['year']);
-                }
+        } else if (array_key_exists('year', $collection_parameters) === true) {
+            if (array_key_exists('months', $collection_parameters) === true &&
+                General::booleanValue($collection_parameters['months']) === true) {
+                return $this->monthsSummary($collection_parameters['year']);
+            } else if (array_key_exists('month', $collection_parameters) === true) {
+                return $this->monthSummary(
+                    $collection_parameters['year'],
+                    $collection_parameters['month']
+                );
             } else {
-                return $this->tcoSummary();
+                return $this->yearSummary($collection_parameters['year']);
             }
+        } else if (array_key_exists('categories', $collection_parameters) === true &&
+            General::booleanValue($collection_parameters['categories']) === true) {
+            return $this->categoriesSummary();
+        } else {
+            return $this->tcoSummary();
         }
     }
 
@@ -189,6 +190,29 @@ class SummaryItemController extends Controller
             (new ItemMonthSummaryTransformer($summary[0]))->toArray(),
             200,
             [ 'X-Total-Count' => 1 ]
+        );
+    }
+
+    /**
+     * Return the categories summary for a resource
+     *
+     * @return JsonResponse
+     */
+    public function categoriesSummary(): JsonResponse
+    {
+        $summary = (new Item())->categoriesSummary(
+            $this->resource_type_id,
+            $this->resource_id
+        );
+
+        return response()->json(
+            $summary->map(
+                function ($category_summary) {
+                    return (new ItemCategorySummaryTransformer($category_summary))->toArray();
+                }
+            ),
+            200,
+            [ 'X-Total-Count' => count($summary) ]
         );
     }
 

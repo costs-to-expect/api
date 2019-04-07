@@ -20,65 +20,6 @@ use Illuminate\Http\Request;
 class SummaryCategoryController extends Controller
 {
     /**
-     * Return the categories summary for a resource
-     *
-     * @param Request $request
-     * @param string $resource_type_id
-     * @param string $resource_id
-     *
-     * @return JsonResponse
-     */
-    public function categories(
-        Request $request,
-        string $resource_type_id,
-        string $resource_id
-    ): JsonResponse
-    {
-        Validate::resourceRoute($resource_type_id, $resource_id);
-
-        $summary = (new Item())->categoriesSummary(
-            $resource_type_id,
-            $resource_id
-        );
-
-        $headers = [
-            'X-Total-Count' => count($summary)
-        ];
-
-        return response()->json(
-            $summary->map(
-                function ($category_summary) {
-                    return (new ItemCategorySummaryTransformer($category_summary))->toArray();
-                }
-            ),
-            200,
-            $headers
-        );
-    }
-
-    /**
-     * Generate the OPTIONS request for the categories summary
-     *
-     * @param Request $request
-     * @param string $resource_type_id
-     * @param string $resource_id
-     */
-    public function optionsCategories(Request $request, string $resource_type_id, string $resource_id)
-    {
-        Validate::resourceRoute($resource_type_id, $resource_id);
-
-        return $this->generateOptionsForIndex(
-            [
-                'description_localisation' => 'route-descriptions.summary_GET_categories',
-                'parameters_config' => [],
-                'conditionals' => [],
-                'pagination' => false,
-                'authenticated' => false
-            ]
-        );
-    }
-
-    /**
      * Return the resource category summary for a specific category
      *
      * @param Request $request
