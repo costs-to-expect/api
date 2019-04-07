@@ -189,7 +189,7 @@ class ItemController extends Controller
                 'description_localisation' => 'route-descriptions.item_PATCH',
                 'fields_config' => 'api.item.fields',
                 'conditionals' => [],
-                'authenticated' => false
+                'authenticated' => true
             ]
         );
     }
