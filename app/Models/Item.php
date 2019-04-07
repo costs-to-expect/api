@@ -69,11 +69,11 @@ class Item extends Model
         if (
             array_key_exists('category', $parameters_collection) === true &&
             $parameters_collection['category'] !== null &&
-            array_key_exists('sub_category', $parameters_collection) === true &&
-            $parameters_collection['sub_category'] !== null
+            array_key_exists('subcategory', $parameters_collection) === true &&
+            $parameters_collection['subcategory'] !== null
         ) {
             $collection->join("item_sub_category", "item_sub_category.item_category_id", "item_category.id");
-            $collection->where('item_sub_category.sub_category_id', '=', $parameters_collection['sub_category']);
+            $collection->where('item_sub_category.sub_category_id', '=', $parameters_collection['subcategory']);
         }
 
         return count($collection->get());
@@ -115,11 +115,11 @@ class Item extends Model
         if (
             array_key_exists('category', $parameters_collection) === true &&
             $parameters_collection['category'] !== null &&
-            array_key_exists('sub_category', $parameters_collection) === true &&
-            $parameters_collection['sub_category'] !== null
+            array_key_exists('subcategory', $parameters_collection) === true &&
+            $parameters_collection['subcategory'] !== null
         ) {
             $collection->join("item_sub_category", "item_sub_category.item_category_id", "item_category.id");
-            $collection->where('item_sub_category.sub_category_id', '=', $parameters_collection['sub_category']);
+            $collection->where('item_sub_category.sub_category_id', '=', $parameters_collection['subcategory']);
         }
 
         return $collection->get();
