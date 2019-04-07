@@ -85,7 +85,24 @@ class Get
                     }
                     break;
 
+                case 'months':
+                    if (array_key_exists($key, self::$parameters) === true) {
+                        if (General::isBooleanValue(self::$parameters[$key]) === false) {
+                            unset(self::$parameters[$key]);
+                        }
+                    }
+                    break;
+
                 case 'resource_type':
+                    if (array_key_exists($key, self::$parameters) === true) {
+                        if ((new ResourceType())->
+                            where('id', '=', self::$parameters[$key])->exists() === false) {
+                            unset(self::$parameters[$key]);
+                        }
+                    }
+                    break;
+
+                case 'resource-type':
                     if (array_key_exists($key, self::$parameters) === true) {
                         if ((new ResourceType())->
                             where('id', '=', self::$parameters[$key])->exists() === false) {
@@ -102,6 +119,27 @@ class Get
                             where('sub_category.category_id', '=', self::$parameters['category'])->
                             exists() === false
                         ) {
+                            unset(self::$parameters[$key]);
+                        }
+                    }
+                    break;
+
+                case 'sub_category':
+                    if (array_key_exists($key, self::$parameters) === true) {
+                        if (
+                            (new SubCategory())->
+                            where('sub_category.id', '=', self::$parameters[$key])->
+                            where('sub_category.category_id', '=', self::$parameters['category'])->
+                            exists() === false
+                        ) {
+                            unset(self::$parameters[$key]);
+                        }
+                    }
+                    break;
+
+                case 'subcategories':
+                    if (array_key_exists($key, self::$parameters) === true) {
+                        if (General::isBooleanValue(self::$parameters[$key]) === false) {
                             unset(self::$parameters[$key]);
                         }
                     }

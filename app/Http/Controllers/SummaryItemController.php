@@ -7,6 +7,7 @@ use App\Http\Parameters\Route\Validate;
 use App\Models\Item;
 use App\Models\Transformers\ItemCategorySummary as ItemCategorySummaryTransformer;
 use App\Models\Transformers\ItemMonthSummary as ItemMonthSummaryTransformer;
+use App\Models\Transformers\ItemSubCategorySummary as ItemSubCategorySummaryTransformer;
 use App\Models\Transformers\ItemYearSummary as ItemYearSummaryTransformer;
 use App\Utilities\General;
 use App\Utilities\Response as UtilityResponse;
@@ -70,6 +71,18 @@ class SummaryItemController extends Controller
         } else if (array_key_exists('categories', $collection_parameters) === true &&
             General::booleanValue($collection_parameters['categories']) === true) {
             return $this->categoriesSummary();
+        } else if (array_key_exists('category', $collection_parameters) === true) {
+            if (array_key_exists('subcategories', $collection_parameters) === true &&
+                General::booleanValue($collection_parameters['subcategories']) === true) {
+                return $this->subcategoriesSummary($collection_parameters['category']);
+            } else if (array_key_exists('subcategory', $collection_parameters) === true) {
+                return $this->subcategorySummary(
+                    $collection_parameters['category'],
+                    $collection_parameters['subcategory']
+                );
+            } else {
+                return $this->categorySummary($collection_parameters['category']);
+            }
         } else {
             return $this->tcoSummary();
         }
@@ -213,6 +226,92 @@ class SummaryItemController extends Controller
             ),
             200,
             [ 'X-Total-Count' => count($summary) ]
+        );
+    }
+
+    /**
+     * Return the category summary for a resource
+     *
+     * @param integer $category_id
+     *
+     * @return JsonResponse
+     */
+    public function categorySummary(int $category_id): JsonResponse
+    {
+        Validate::categoryRoute($category_id);
+
+        $summary = (new Item())->categorySummary(
+            $this->resource_type_id,
+            $this->resource_id,
+            $category_id
+        );
+
+        if (count($summary) !== 1) {
+            UtilityResponse::notFound();
+        }
+
+        return response()->json(
+            (new ItemCategorySummaryTransformer($summary[0]))->toArray(),
+            200,
+            [ 'X-Total-Count' => 1 ]
+        );
+    }
+
+    /**
+     * Return the subcategories summary for a category
+     *
+     * @param integer $category_id
+     *
+     * @return JsonResponse
+     */
+    public function subcategoriesSummary(int $category_id): JsonResponse
+    {
+        Validate::categoryRoute($category_id);
+
+        $summary = (new Item())->subCategoriesSummary(
+            $this->resource_type_id,
+            $this->resource_id,
+            $category_id
+        );
+
+        return response()->json(
+            $summary->map(
+                function ($category_summary) {
+                    return (new ItemSubCategorySummaryTransformer($category_summary))->toArray();
+                }
+            ),
+            200,
+            [ 'X-Total-Count' => count($summary) ]
+        );
+    }
+
+    /**
+     * Return the subcategories summary for a category
+     *
+     * @param integer $category_id
+     * @param integer $sub_category_id
+     *
+     * @return JsonResponse
+     */
+    public function subcategorySummary(int $category_id, int $sub_category_id): JsonResponse
+    {
+        Validate::subCategoryRoute($category_id, $sub_category_id);
+
+        $summary = (new Item())->subCategorySummary(
+            $this->resource_type_id,
+            $this->resource_id,
+            $category_id,
+            $sub_category_id
+        );
+
+        if (count($summary) !== 1) {
+            UtilityResponse::notFound();
+        }
+
+        return response()->json(
+            (new ItemSubCategorySummaryTransformer($summary[0]))->toArray(),
+            200,
+            [ 'X-Total-Count' => 1 ]
         );
     }
 
