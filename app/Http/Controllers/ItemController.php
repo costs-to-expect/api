@@ -385,7 +385,7 @@ class ItemController extends Controller
             (new SubCategory())->paginatedCollection($this->collection_parameters['category'])->map(
                 function ($sub_category)
                 {
-                    $this->get_parameters['sub_category']['allowed_values'][$this->hash->encode('sub_category', $sub_category->id)] = [
+                    $this->get_parameters['subcategory']['allowed_values'][$this->hash->encode('sub_category', $sub_category->id)] = [
                         'value' => $this->hash->encode('sub_category', $sub_category->id),
                         'name' => $sub_category->name,
                         'description' => trans('item/allowed-values.description-prefix-subcategory') .
