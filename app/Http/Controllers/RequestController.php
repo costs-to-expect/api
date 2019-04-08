@@ -126,7 +126,7 @@ class RequestController extends Controller
                 'description_localisation' => 'route-descriptions.request_GET_error_log',
                 'parameters_config' => 'api.request.parameters.collection',
                 'conditionals' => [],
-                'pagination' => true,
+                'pagination' => false,
                 'authenticated' => false
             ],
             [

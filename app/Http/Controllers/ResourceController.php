@@ -100,7 +100,7 @@ class ResourceController extends Controller
                 'description_localisation' => 'route-descriptions.resource_GET_index',
                 'parameters_config' => 'api.resource.parameters.collection',
                 'conditionals' => [],
-                'pagination' => true,
+                'pagination' => false,
                 'authenticated' => false
             ],
             [
