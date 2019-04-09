@@ -2,7 +2,7 @@
 
 The complete changelog for the Costs to Expect REST API, follows the format defined at https://keepachangelog.com/en/1.0.0/
 
-## [v1.12.0] - 2019-04-xx
+## [v1.12.0] - 2019-04-09
 ### Changed
 - Renamed the route files, filenames relate to access, not the middleware that runs.
 - Added flag to allow turning pagination on and off for collection OPTIONS requests.
@@ -23,6 +23,8 @@ The complete changelog for the Costs to Expect REST API, follows the format defi
 - OPTIONS request failure when collections do not support POST.
 - OPTIONS request showing DELETE when not always valid.
 - OPTIONS request methods now all use the same helper methods.
+- Validation incorrect for categories, wrong rule being used.
+- Unique index incorrect in category table.
 
 ### Removed
 - Removed /request/log, see changed. 
