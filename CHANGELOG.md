@@ -2,6 +2,43 @@
 
 The complete changelog for the Costs to Expect REST API, follows the format defined at https://keepachangelog.com/en/1.0.0/
 
+## [v1.12.0] - 2019-04-09
+### Changed
+- Renamed the route files, filenames relate to access, not the middleware that runs.
+- Added flag to allow turning pagination on and off for collection OPTIONS requests.
+- /request/log route now /request/access-log.
+- /request/log/monthly-requests route now summary/request/access-log/monthly.
+- /resource_types/[resource-type]/resources/[resource]/summary/tco now /summary/resource_types/[resource-type]/resources/[resource]/items.
+- /resource_types/[resource-type]/resources/[resource]/summary/categories now /summary/resource_types/[resource-type]/resources/[resource]/items?category=all.
+- /resource_types/[resource-type]/resources/[resource]/summary/categories/[category] now /summary/resource_types/[resource-type]/resources/[resource]/items?category=[category].
+- /resource_types/[resource-type]/resources/[resource]/summary/categories/[category]/sub_categories now /summary/resource_types/[resource-type]/resources/[resource]/items?category=[category]&subcategory=all.
+- /resource_types/[resource-type]/resources/[resource]/summary/categories/[category]/sub_categories/[sub-category] now /summary/resource_types/[resource-type]/resources/items?category=[category]&subcategory=[subcategory].
+- /resource_types/[resource_type]/resources/[resource]/items/[item]/category/[item-category]/sub_category now /resource_types/[resource-type]/resources/[resource]/items/[item]/category/[item-category]/subcategory.
+- /resource_types/[resource_type]/resources/[resource]/items/[item]/category/[item-category]/sub_category/[sub-category] now /resource_types/[resource-type]/resources/[resource]/items/[item]/category/[item-category]/sub_category/[subcategory].
+- /categories/[category]/sub_categories now /categories/[category]/subcategories. 
+- /categories/[category]/sub_categories/[subcategory] now /categories/[category]/subcategories/[subcategory].
+- resource_type switched to resource-types in all URIs 
+
+### Fixed
+- OPTIONS request failure when collections do not support POST.
+- OPTIONS request showing DELETE when not always valid.
+- OPTIONS request methods now all use the same helper methods.
+- Validation incorrect for categories, wrong rule being used.
+- Unique index incorrect in category table.
+
+### Removed
+- Removed /request/log, see changed. 
+- Removed /request/log/monthly-requests, see changed.
+- Removed /resource_types/[resource-type]/resources/[resource]/summary/categories, see changed.
+- Removed /resource_types/[resource-type]/resources/[resource]/summary/categories/[category], see changed.
+- Removed /resource_types/[resource-type]/resources/[resource]/summary/categories/[category]/sub_categories, see changed.
+- Removed /resource_types/[resource_type]/resources/[resource]/items/[item]/category/[item-category]/sub_category/[subcategory], see changed
+- Removed /categories/[category]/sub_categories now /categories/[category]/subcategories, see changed.
+- Removed /categories/[category]/sub_categories, see changed.
+- Removed /categories/[category]/sub_categories/[subcategory], see changed.
+- Removed /resource_types/[resource-type]/resources/[resource]/summary/tco, see changed.
+- Removed /resource_types/[resource-type]/resources/{[resource]/expanded_summary/categories. 
+
 ## [v1.11.0] - 2019-04-02
 ### Added 
 - All messages and strings (route descriptions, fields in OPTIONS requests, error messages) localised.

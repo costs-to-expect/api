@@ -23,8 +23,6 @@ use Illuminate\Http\Request;
  */
 class ItemSubCategoryController extends Controller
 {
-    private $post_parameters = [];
-
     /**
      * Return the sub category assigned to an item
      *
@@ -157,6 +155,7 @@ class ItemSubCategoryController extends Controller
                 'description_localisation' => 'route-descriptions.item_sub_category_GET_index',
                 'parameters_config' => 'api.item-subcategory.parameters.collection',
                 'conditionals' => [],
+                'pagination' => false,
                 'authenticated' => false
             ],
             [

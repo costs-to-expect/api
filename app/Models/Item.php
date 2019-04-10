@@ -69,11 +69,11 @@ class Item extends Model
         if (
             array_key_exists('category', $parameters_collection) === true &&
             $parameters_collection['category'] !== null &&
-            array_key_exists('sub_category', $parameters_collection) === true &&
-            $parameters_collection['sub_category'] !== null
+            array_key_exists('subcategory', $parameters_collection) === true &&
+            $parameters_collection['subcategory'] !== null
         ) {
             $collection->join("item_sub_category", "item_sub_category.item_category_id", "item_category.id");
-            $collection->where('item_sub_category.sub_category_id', '=', $parameters_collection['sub_category']);
+            $collection->where('item_sub_category.sub_category_id', '=', $parameters_collection['subcategory']);
         }
 
         return count($collection->get());
@@ -115,11 +115,11 @@ class Item extends Model
         if (
             array_key_exists('category', $parameters_collection) === true &&
             $parameters_collection['category'] !== null &&
-            array_key_exists('sub_category', $parameters_collection) === true &&
-            $parameters_collection['sub_category'] !== null
+            array_key_exists('subcategory', $parameters_collection) === true &&
+            $parameters_collection['subcategory'] !== null
         ) {
             $collection->join("item_sub_category", "item_sub_category.item_category_id", "item_category.id");
-            $collection->where('item_sub_category.sub_category_id', '=', $parameters_collection['sub_category']);
+            $collection->where('item_sub_category.sub_category_id', '=', $parameters_collection['subcategory']);
         }
 
         return $collection->get();
@@ -134,16 +134,31 @@ class Item extends Model
             ->find($item_id);
     }
 
+    /**
+     * Return the summary for items
+     *
+     * @param int $resource_type_id
+     * @param int $resource_id
+     * @return mixed
+     */
     public function summary(int $resource_type_id, int $resource_id)
     {
-        return $this->where('resource_id', '=', $resource_id)
+        return $this->selectRaw('sum(item.actualised_total) AS actualised_total')
+            ->where('resource_id', '=', $resource_id)
             ->whereHas('resource', function ($query) use ($resource_type_id) {
                 $query->where('resource_type_id', '=', $resource_type_id);
             })
             ->get()
-            ->sum('actualised_total');
+            ->toArray();
     }
 
+    /**
+     * Return the summary of items, grouped by category
+     *
+     * @param int $resource_type_id
+     * @param int $resource_id
+     * @return mixed
+     */
     public function categoriesSummary(int $resource_type_id, int $resource_id)
     {
         return $this->

@@ -48,19 +48,11 @@ return [
     'item_sub_category_PATCH' => 'Update the subcategory assigned to the selected item',
     'item_sub_category_DELETE' => 'Delete the subcategory assigned to the selected item',
 
-    'summary_GET_tco' => 'Return the total costs of ownership (sum of items) for the selected resource',
-    'summary_GET_categories' => 'Return the categories summary (sum of items) for the selected resource',
-    'summary_GET_expanded_categories' => 'Return the categories summary (sum of items) for the selected resource, includes categories with no data',
-    'summary_GET_category' => 'Return the category summary (sum of items) for the selected resource and category',
-    'summary_GET_sub_categories' => 'Return the subcategories summary (sum of items) for the selected resource and category',
-    'summary_GET_sub_category' => 'Return the subcategory summary (sum of items) for the selected resource, category and subcategory',
-    'summary_GET_years' => 'Return the annualised summary (sum of items) for the selected resource',
-    'summary_GET_year' => 'Return the annualised summary (sum of items) for the selected resource and year',
-    'summary_GET_months' => 'Return the monthly summary (sum of items) for the selected resource and year',
-    'summary_GET_month' => 'Return the monthly summary (sum of items) for the selected resource, year and month',
-
-    'request_GET_log' => 'Return the requests log, read requests',
-    'request_GET_log_monthly_requests' => 'Return the monthly summary of read requests',
+    'request_GET_access-log' => 'Return the access log, read requests',
     'request_GET_error_log' => 'Return the error log',
     'request_POST' => 'Create an error log report',
+
+    'summary_GET_request_access-log_monthly' => 'Return a summary of the access log, read requests, grouped by month',
+
+    'summary_GET_resource-type_resource_items' => 'Return the TCO (Total cost of ownership, sum of items) for the selected resource',
 ];

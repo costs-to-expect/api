@@ -29,7 +29,9 @@ class ConvertGetParameters
         $parameters = [
             'category' => new Hashids(Config::get('api.hashids.category'), $min_length),
             'sub_category' => new Hashids(Config::get('api.hashids.sub_category'), $min_length),
+            'subcategory' => new Hashids(Config::get('api.hashids.sub_category'), $min_length),
             'resource_type' => new Hashids(Config::get('api.hashids.resource_type'), $min_length),
+            'resource-type' => new Hashids(Config::get('api.hashids.resource_type'), $min_length),
         ];
 
         foreach ($parameters as $param => $hasher) {

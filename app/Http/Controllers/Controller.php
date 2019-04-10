@@ -93,7 +93,7 @@ class Controller extends BaseController
     /**
      * Generate the OPTIONS request for the index (collection) routes
      *
-     * @param array $get Four indexes, description_localisation, parameters_config, conditionals and authenticated
+     * @param array $get Four indexes, description_localisation, parameters_config, conditionals, authenticated and pagination
      * @param array $post Four indexes, description_localisation, fields_config, conditionals and authenticated
      */
     protected function generateOptionsForIndex(
@@ -101,6 +101,7 @@ class Controller extends BaseController
             'description_localisation' => '',
             'parameters_config' => '',
             'conditionals' => [],
+            'pagination' => true,
             'authenticated' => false
         ],
         array $post = [
@@ -115,7 +116,7 @@ class Controller extends BaseController
 
         foreach (
             array_merge_recursive(
-                Config::get('api.pagination.parameters'),
+                ($get['pagination'] === true ? Config::get('api.pagination.parameters') : []),
                 Config::get($get['parameters_config']),
                 $get['conditionals']
             ) as $parameter => $detail) {
@@ -124,24 +125,27 @@ class Controller extends BaseController
             $get_parameters[$parameter] = $detail;
         }
 
-        foreach (array_merge_recursive(Config::get($post['fields_config']), $post['conditionals']) as $field => $detail) {
-            $detail['title'] = trans($detail['title']);
-            $detail['description'] = trans($detail['description']);
-            $post_fields[$field] = $detail;
-        }
-
         $routes = [
             'GET' => [
                 'description' => trans($get['description_localisation']),
                 'authenticated' => $get['authenticated'],
                 'parameters' => $get_parameters
-            ],
-            'POST' => [
+            ]
+        ];
+
+        if (strlen($post['description_localisation']) > 0) {
+            foreach (array_merge_recursive(Config::get($post['fields_config']), $post['conditionals']) as $field => $detail) {
+                $detail['title'] = trans($detail['title']);
+                $detail['description'] = trans($detail['description']);
+                $post_fields[$field] = $detail;
+            }
+
+            $routes['POST'] = [
                 'description' => trans($post['description_localisation']),
                 'authenticated' => $post['authenticated'],
                 'fields' => $post_fields
-            ]
-        ];
+            ];
+        }
 
         $this->optionsResponse($routes);
     }
@@ -185,12 +189,15 @@ class Controller extends BaseController
                 'description' => trans($get['description_localisation']),
                 'authenticated' => $get['authenticated'],
                 'parameters' => $get_parameters
-            ],
-            'DELETE' => [
-                'description' => trans($delete['description_localisation']),
-                'authenticated' => $delete['authenticated']
             ]
         ];
+
+        if (strlen($delete['description_localisation']) > 0) {
+            $routes['DELETE'] = [
+                'description' => trans($delete['description_localisation']),
+                'authenticated' => $delete['authenticated']
+            ];
+        }
 
         if (strlen($patch['description_localisation']) > 0) {
             foreach (array_merge_recursive(Config::get($patch['fields_config']), $patch['conditionals']) as $field => $detail) {

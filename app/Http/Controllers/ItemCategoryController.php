@@ -123,6 +123,7 @@ class ItemCategoryController extends Controller
                 'description_localisation' => 'route-descriptions.item_category_GET_index',
                 'parameters_config' => 'api.item-category.parameters.collection',
                 'conditionals' => [],
+                'pagination' => false,
                 'authenticated' => false
             ],
             [

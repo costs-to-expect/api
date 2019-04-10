@@ -42,7 +42,7 @@ class ItemController extends Controller
     {
         Validate::resourceRoute($resource_type_id, $resource_id);
 
-        $this->collection_parameters = Get::parameters(['year', 'month', 'category', 'sub_category']);
+        $this->collection_parameters = Get::parameters(['year', 'month', 'category', 'subcategory']);
 
         $total = (new Item())->totalCount(
             $resource_type_id,
@@ -128,7 +128,7 @@ class ItemController extends Controller
     {
         Validate::resourceRoute($resource_type_id, $resource_id);
 
-        $this->collection_parameters = Get::parameters(['year', 'month', 'category', 'sub_category']);
+        $this->collection_parameters = Get::parameters(['year', 'month', 'category', 'subcategory']);
 
         $this->setConditionalGetParameters($resource_type_id);
 
@@ -137,6 +137,7 @@ class ItemController extends Controller
                 'description_localisation' => 'route-descriptions.item_GET_index',
                 'parameters_config' => 'api.item.parameters.collection',
                 'conditionals' => $this->get_parameters,
+                'pagination' => true,
                 'authenticated' => false
             ],
             [
@@ -188,7 +189,7 @@ class ItemController extends Controller
                 'description_localisation' => 'route-descriptions.item_PATCH',
                 'fields_config' => 'api.item.fields',
                 'conditionals' => [],
-                'authenticated' => false
+                'authenticated' => true
             ]
         );
     }
@@ -384,7 +385,7 @@ class ItemController extends Controller
             (new SubCategory())->paginatedCollection($this->collection_parameters['category'])->map(
                 function ($sub_category)
                 {
-                    $this->get_parameters['sub_category']['allowed_values'][$this->hash->encode('sub_category', $sub_category->id)] = [
+                    $this->get_parameters['subcategory']['allowed_values'][$this->hash->encode('sub_category', $sub_category->id)] = [
                         'value' => $this->hash->encode('sub_category', $sub_category->id),
                         'name' => $sub_category->name,
                         'description' => trans('item/allowed-values.description-prefix-subcategory') .
