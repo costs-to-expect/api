@@ -90,6 +90,7 @@ class IndexController extends Controller
 
         $changelog = new SplFileObject(public_path() . '/../CHANGELOG.md');
         $i = 0;
+        $section = null;
 
         while (!$changelog->eof()) {
 
@@ -97,21 +98,25 @@ class IndexController extends Controller
 
             if (strlen($line) > 0) {
 
-                if (strpos($line, '#') !== false) {
+                if (strpos($line, '## [v') !== false) {
 
                     ++$i;
-                    $changes[$i]['title'] = trim(str_replace('#', '', $line));
+                    $changes[$i]['release'] = trim(str_replace('##', '', $line));
                 }
 
-                if (strpos($line, '*') !== false) {
-                    $changes[$i]['changes'][] = trim(str_replace('* ', '', $line));
+                if (strpos($line, '###') !== false) {
+                    $section = strtolower(trim(str_replace('###', '', $line)));
+                }
+
+                if (strpos($line, '-') !== false && $section !== null) {
+                    $changes[$i][$section][] = trim(str_replace('- ', '', $line));
                 }
             }
         }
 
         return response()->json(
             [
-                'changes' => array_values($changes)
+                'releases' => array_values($changes)
             ],
             200,
             [
