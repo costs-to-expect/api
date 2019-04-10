@@ -2,6 +2,11 @@
 
 The complete changelog for the Costs to Expect REST API, follows the format defined at https://keepachangelog.com/en/1.0.0/
 
+## [v1.12.1] - 2019-04-10
+### Fixed
+- Private routes not updated correctly.
+- Changelog endpoint not showing changes after format change.
+
 ## [v1.12.0] - 2019-04-09
 ### Changed
 - Renamed the route files, filenames relate to access, not the middleware that runs.

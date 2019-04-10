@@ -23,7 +23,7 @@ Route::group(
         );
 
         Route::post(
-            'categories/{category_id}/sub_categories',
+            'categories/{category_id}/subcategories',
             'SubCategoryController@create'
         );
 
@@ -48,7 +48,7 @@ Route::group(
         );
 
         Route::post(
-            'resource-types/{resource_type_id}/resources/{resource_id}/items/{item_id}/category/{item_category_id}/sub_category',
+            'resource-types/{resource_type_id}/resources/{resource_id}/items/{item_id}/category/{item_category_id}/subcategory',
             'ItemSubCategoryController@create'
         );
 
