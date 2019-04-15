@@ -2,6 +2,11 @@
 
 The complete changelog for the Costs to Expect REST API, follows the format defined at https://keepachangelog.com/en/1.0.0/
 
+## [v1.13.0] - 2019-xx-xx
+### Changed
+- Updated the API landing page to point to the new website.
+- Updated the README to include the new website URL.
+
 ## [v1.12.1] - 2019-04-10
 ### Fixed
 - Private routes not updated correctly.
