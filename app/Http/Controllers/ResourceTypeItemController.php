@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Parameters\Get;
 use App\Http\Parameters\Route\Validate;
 use App\Models\ResourceTypeItem;
 use App\Models\Transformers\ResourceTypeItem as ResourceTypeItemTransformer;
@@ -18,8 +19,6 @@ use Illuminate\Http\Request;
  */
 class ResourceTypeItemController extends Controller
 {
-    protected $collection_parameters = [];
-
     /**
      * Return all the items based on the set filter options
      *
@@ -32,9 +31,14 @@ class ResourceTypeItemController extends Controller
     {
         Validate::resourceTypeRoute($resource_type_id);
 
+        $collection_parameters = Get::parameters([
+            'include-categories',
+            'include-subcategories'
+        ]);
+
         $total = (new ResourceTypeItem())->totalCount(
             $resource_type_id,
-            $this->collection_parameters
+            $collection_parameters
         );
 
         $pagination = UtilityPagination::init($request->path(), $total)
@@ -45,7 +49,7 @@ class ResourceTypeItemController extends Controller
             $resource_type_id,
             $pagination['offset'],
             $pagination['limit'],
-            $this->collection_parameters
+            $collection_parameters
         );
 
         $headers = [

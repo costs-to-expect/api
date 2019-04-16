@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace App\Models;
 
+use App\Utilities\General;
 use Illuminate\Database\Eloquent\Model;
 
 /**
@@ -53,18 +54,20 @@ class ResourceTypeItem extends Model
         array $parameters_collection = []
     ): array
     {
-        $collection = $this->select(
-                'resource.id AS resource_id',
-                'resource.name AS resource_name',
-                'item.id AS item_id',
-                'item.description AS item_description',
-                'item.effective_date AS item_effective_date',
-                'item.total AS item_total',
-                'item.percentage AS item_percentage',
-                'item.actualised_total AS item_actualised_total',
-                'item.created_at AS item_created_at'
-            )->
-            join('resource', 'item.resource_id', 'resource.id')->
+        $select_fields = [
+            'resource.id AS resource_id',
+            'resource.name AS resource_name',
+            'resource.description AS resource_description',
+            'item.id AS item_id',
+            'item.description AS item_description',
+            'item.effective_date AS item_effective_date',
+            'item.total AS item_total',
+            'item.percentage AS item_percentage',
+            'item.actualised_total AS item_actualised_total',
+            'item.created_at AS item_created_at'
+        ];
+
+        $collection = $this->join('resource', 'item.resource_id', 'resource.id')->
             join('resource_type', 'resource.resource_type_id', 'resource_type.id')->
             where('resource_type.id', '=', $resource_type_id)->
             orderByDesc('item.effective_date')->
@@ -72,31 +75,31 @@ class ResourceTypeItem extends Model
             offset($offset)->
             limit($limit);
 
-        /*if (array_key_exists('year', $parameters_collection) === true &&
-            $parameters_collection['year'] !== null) {
-            $collection->whereRaw(\DB::raw("YEAR(item.effective_date) = '{$parameters_collection['year']}'"));
-        }
-
-        if (array_key_exists('month', $parameters_collection) === true &&
-            $parameters_collection['month'] !== null) {
-            $collection->whereRaw(\DB::raw("MONTH(item.effective_date) = '{$parameters_collection['month']}'"));
-        }
-
-        if (array_key_exists('category', $parameters_collection) === true &&
-            $parameters_collection['category'] !== null) {
-            $collection->join("item_category", "item_category.item_id", "item.id");
-            $collection->where('item_category.category_id', '=', $parameters_collection['category']);
-        }
-
         if (
-            array_key_exists('category', $parameters_collection) === true &&
-            $parameters_collection['category'] !== null &&
-            array_key_exists('subcategory', $parameters_collection) === true &&
-            $parameters_collection['subcategory'] !== null
+            array_key_exists('include-categories', $parameters_collection) === true &&
+            General::booleanValue($parameters_collection['include-categories']) === true
         ) {
-            $collection->join("item_sub_category", "item_sub_category.item_category_id", "item_category.id");
-            $collection->where('item_sub_category.sub_category_id', '=', $parameters_collection['subcategory']);
-        }*/
+            $collection->leftJoin('item_category', 'item.id', 'item_category.item_id')->
+                leftJoin('category', 'item_category.category_id', 'category.id');
+
+            $select_fields[] = 'category.id AS category_id';
+            $select_fields[] = 'category.name AS category_name';
+            $select_fields[] = 'category.description AS category_description';
+
+            if (
+                array_key_exists('include-subcategories', $parameters_collection) === true &&
+                General::booleanValue($parameters_collection['include-subcategories']) === true
+            ) {
+                $collection->leftJoin('item_sub_category', 'item_category.id', 'item_sub_category.item_category_id')->
+                    leftJoin('sub_category', 'item_sub_category.sub_category_id', 'sub_category.id');
+
+                $select_fields[] = 'sub_category.id AS subcategory_id';
+                $select_fields[] = 'sub_category.name AS subcategory_name';
+                $select_fields[] = 'sub_category.description AS subcategory_description';
+            }
+        }
+
+        $collection->select($select_fields);
 
         return $collection->get()->toArray();
     }
