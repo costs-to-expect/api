@@ -103,4 +103,20 @@ class ResourceTypeItem extends Model
 
         return $collection->get()->toArray();
     }
+
+    /**
+     * Return the summary for all items for the resources in the requested resource type
+     *
+     * @param int $resource_type_id
+     * @return mixed
+     */
+    public function summary(int $resource_type_id): array
+    {
+        return $this->selectRaw('sum(item.actualised_total) AS actualised_total')->
+            join('resource', 'item.resource_id', 'resource.id')->
+            join('resource_type', 'resource.resource_type_id', 'resource_type.id')->
+            where('resource_type.id', '=', $resource_type_id)->
+            get()->
+            toArray();
+    }
 }

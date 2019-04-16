@@ -14,6 +14,11 @@ Route::group(
     ],
     function () {
         Route::get(
+            'summary/resource-types/{resource_type_id}/items',
+            'SummaryResourceTypeItemController@index'
+        );
+
+        Route::get(
             'summary/resource-types/{resource_type_id}/resources/{resource_id}/items',
             'SummaryItemController@index'
         );
