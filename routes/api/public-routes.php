@@ -95,6 +95,11 @@ Route::group(
         );
 
         Route::get(
+            'resource-types/{resource_type_id}/items',
+            'ResourceTypeItemController@index'
+        );
+
+        Route::get(
             'resource-types/{resource_type_id}/resources',
             'ResourceController@index'
         );
