@@ -12,7 +12,7 @@
             <a href="https://www.costs-to-expect.com" class="btn btn-lg btn-primary mb-1">Website</a>
         </p>
         <p class="lead">
-            <a href="https://github.com/costs-to-expect" class="btn btn-lg btn-secondary">View on GitHub</a>
+            <a href="https://github.com/costs-to-expect" class="btn btn-lg btn-primary">View on GitHub</a>
         </p>
 
         <p><small>Latest release: {{ $version }} ({{ $date }})</small></p>
