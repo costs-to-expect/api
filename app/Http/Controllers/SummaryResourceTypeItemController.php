@@ -75,7 +75,7 @@ class SummaryResourceTypeItemController extends Controller
         return $this->generateOptionsForIndex(
             [
                 'description_localisation' => 'route-descriptions.summary-resource-type-item-GET-index',
-                'parameters_config' => [],
+                'parameters_config' => 'api.resource-type-item.summary-parameters.collection',
                 'conditionals' => [],
                 'pagination' => false,
                 'authenticated' => false
