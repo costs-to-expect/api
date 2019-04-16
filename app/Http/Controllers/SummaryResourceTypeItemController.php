@@ -58,4 +58,28 @@ class SummaryResourceTypeItemController extends Controller
             ['X-Total-Count' => 1]
         );
     }
+
+    /**
+     * Generate the OPTIONS request for items summary route
+     *
+     * @param Request $request
+     * @param string $resource_type_id
+     *
+     * @return JsonResponse
+     *
+     */
+    public function optionsIndex(Request $request, string $resource_type_id): JsonResponse
+    {
+        Validate::resourceTypeRoute($resource_type_id);
+
+        return $this->generateOptionsForIndex(
+            [
+                'description_localisation' => 'route-descriptions.summary-resource-type-item-GET-index',
+                'parameters_config' => [],
+                'conditionals' => [],
+                'pagination' => false,
+                'authenticated' => false
+            ]
+        );
+    }
 }
