@@ -92,6 +92,8 @@ X-Link-Previous and X-Link-Next can be null.
 | OPTIONS  | v1/resource-types |
 | GET/HEAD | v1/resource-types/{resource_type_id} |
 | OPTIONS  | v1/resource-types/{resource_type_id} | 
+| GET/HEAD | v1/resource-types/{resource_type_id}/items |
+| OPTIONS  | v1/resource-types/{resource_type_id}/items |
 | GET/HEAD | v1/resource-types/{resource_type_id}/resources |
 | OPTIONS  | v1/resource-types/{resource_type_id}/resources |
 | GET/HEAD | v1/resource-types/{resource_type_id}/resources/{resource_id} |

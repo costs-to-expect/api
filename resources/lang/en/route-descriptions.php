@@ -24,6 +24,8 @@ return [
     'resource_type_PATCH' => 'Update the selected resource type',
     'resource_type_DELETE' => 'Delete the selected resource type',
 
+    'resource_type_item_GET_index' => 'Return all the items assigned to the resources for this resource type',
+
     'resource_GET_index' => 'Return all the resources that are children of the selected resource type',
     'resource_GET_show' => 'Return the selected resource',
     'resource_POST' => 'Create a new resource',

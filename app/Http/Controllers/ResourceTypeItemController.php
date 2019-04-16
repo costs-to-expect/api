@@ -81,17 +81,11 @@ class ResourceTypeItemController extends Controller
 
         return $this->generateOptionsForIndex(
             [
-                'description_localisation' => 'route-descriptions.item_GET_index',
-                'parameters_config' => 'api.item.parameters.collection',
+                'description_localisation' => 'route-descriptions.resource_type_item_GET_index',
+                'parameters_config' => 'api.resource-type-item.parameters.collection',
                 'conditionals' => [],
                 'pagination' => true,
                 'authenticated' => false
-            ],
-            [
-                'description_localisation' => 'route-descriptions.item_POST',
-                'fields_config' => 'api.item.fields',
-                'conditionals' => [],
-                'authenticated' => true
             ]
         );
     }
