@@ -138,7 +138,7 @@ class ResourceTypeItemController extends Controller
             $this->conditional_get_parameters['year']['allowed_values'][$i] = [
                 'value' => $i,
                 'name' => $i,
-                'description' => trans('item/allowed-values.description-prefix-year') . $i
+                'description' => trans('resource-type-item/allowed-values.description-prefix-year') . $i
             ];
         }
 
@@ -146,7 +146,7 @@ class ResourceTypeItemController extends Controller
             $this->conditional_get_parameters['month']['allowed_values'][$i] = [
                 'value' => $i,
                 'name' => date("F", mktime(0, 0, 0, $i, 10)),
-                'description' => trans('item/allowed-values.description-prefix-month') .
+                'description' => trans('resource-type-item/allowed-values.description-prefix-month') .
                     date("F", mktime(0, 0, 0, $i, 1))
             ];
         }
@@ -157,8 +157,8 @@ class ResourceTypeItemController extends Controller
                 $this->conditional_get_parameters['category']['allowed_values'][$this->hash->encode('category', $category->category_id)] = [
                     'value' => $this->hash->encode('category', $category->category_id),
                     'name' => $category->category_name,
-                    'description' => trans('item/allowed-values.description-prefix-category') .
-                        $category->category_name . trans('item/allowed-values.description-suffix-category')
+                    'description' => trans('resource-type-item/allowed-values.description-prefix-category') .
+                        $category->category_name . trans('resource-type-item/allowed-values.description-suffix-category')
                 ];
             }
         );
@@ -170,8 +170,8 @@ class ResourceTypeItemController extends Controller
                     $this->conditional_get_parameters['subcategory']['allowed_values'][$this->hash->encode('sub_category', $sub_category->id)] = [
                         'value' => $this->hash->encode('sub_category', $sub_category->id),
                         'name' => $sub_category->name,
-                        'description' => trans('item/allowed-values.description-prefix-subcategory') .
-                            $sub_category->name . trans('item/allowed-values.description-suffix-subcategory')
+                        'description' => trans('resource-type-item/allowed-values.description-prefix-subcategory') .
+                            $sub_category->name . trans('resource-type-item/allowed-values.description-suffix-subcategory')
                     ];
                 }
             );
