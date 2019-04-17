@@ -232,4 +232,29 @@ class ResourceTypeItem extends Model
             get()->
             toArray();
     }
+
+    /**
+     * Return the summary for all items for the resources in the requested resource
+     * type for the requested category
+     *
+     * @param integer $resource_type_id
+     * @param integer $category_id
+     *
+     * @return array
+     */
+    public function categorySummary(int $resource_type_id, int $category_id): array
+    {
+        return $this->selectRaw("category.id, category.name AS name, SUM(item.actualised_total) AS total")->
+            join("resource", "resource.id", "item.resource_id")->
+            join("resource_type", "resource_type.id", "resource.resource_type_id")->
+            join("item_category", "item_category.item_id", "item.id")->
+            join("category", "category.id", "item_category.category_id")->
+            where("category.resource_type_id", "=", $resource_type_id)->
+            where("resource_type.id", "=", $resource_type_id)->
+            where("category.id", '=', $category_id)->
+            groupBy("category.id")->
+            orderBy("name")->
+            get()->
+            toArray();
+    }
 }

@@ -235,6 +235,32 @@ class SummaryResourceTypeItemController extends Controller
     }
 
     /**
+     * Return the total summary for all the resources in the resource type
+     * for a specific category
+     *
+     * @param integer $category_id
+     *
+     * @return JsonResponse
+     */
+    private function categorySummary(int $category_id): JsonResponse
+    {
+        $summary = (new ResourceTypeItem())->categorySummary(
+            $this->resource_type_id,
+            $category_id
+        );
+
+        if (count($summary) !== 1) {
+            UtilityResponse::notFound();
+        }
+
+        return response()->json(
+            (new ResourceTypeItemCategorySummaryTransformer($summary[0]))->toArray(),
+            200,
+            ['X-Total-Count' => 1]
+        );
+    }
+
+    /**
      * Generate the OPTIONS request for items summary route
      *
      * @param Request $request
