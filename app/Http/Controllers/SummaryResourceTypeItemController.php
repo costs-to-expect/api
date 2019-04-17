@@ -8,6 +8,7 @@ use App\Models\ResourceTypeItem;
 use App\Models\Transformers\ResourceTypeItemYearSummary as ResourceTypeItemYearSummaryTransformer;
 use App\Models\Transformers\ResourceTypeItemMonthSummary as ResourceTypeItemMonthSummaryTransformer;
 use App\Utilities\General;
+use App\Utilities\Response as UtilityResponse;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
@@ -130,6 +131,31 @@ class SummaryResourceTypeItemController extends Controller
 
     /**
      * Return the total summary for all the resources in the resource type
+     * for the requested year
+     *
+     * @param integer $year
+     * @return JsonResponse
+     */
+    private function yearSummary($year): JsonResponse
+    {
+        $summary = (new ResourceTypeItem())->yearSummary(
+            $this->resource_type_id,
+            $year
+        );
+
+        if (count($summary) !== 1) {
+            UtilityResponse::notFound();
+        }
+
+        return response()->json(
+            (new ResourceTypeItemYearSummaryTransformer($summary[0]))->toArray(),
+            200,
+            ['X-Total-Count' => count($summary)]
+        );
+    }
+
+    /**
+     * Return the total summary for all the resources in the resource type
      * grouped by year
      *
      * @param integer $year
@@ -152,6 +178,34 @@ class SummaryResourceTypeItemController extends Controller
             ),
             200,
             ['X-Total-Count' => count($summary)]
+        );
+    }
+
+    /**
+     * Return the total summary for all the resources in the resource type
+     * for a specific month
+     *
+     * @param integer $year
+     * @param integer $month
+     *
+     * @return JsonResponse
+     */
+    private function monthSummary(int $year, int $month): JsonResponse
+    {
+        $summary = (new ResourceTypeItem())->monthSummary(
+            $this->resource_type_id,
+            $year,
+            $month
+        );
+
+        if (count($summary) !== 1) {
+            UtilityResponse::notFound();
+        }
+
+        return response()->json(
+            (new ResourceTypeItemMonthSummaryTransformer($summary[0]))->toArray(),
+            200,
+            ['X-Total-Count' => 1]
         );
     }
 

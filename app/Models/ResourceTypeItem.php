@@ -146,12 +146,12 @@ class ResourceTypeItem extends Model
      * Return the summary for all items for the resources in the requested resource
      * type grouped by month for the requested year
      *
-     * @param int $year
-     * @param int $resource_type_id
+     * @param integer $year
+     * @param integer $resource_type_id
 
      * @return array
      */
-    public function monthsSummary(int $resource_type_id, $year): array
+    public function monthsSummary(int $resource_type_id, int $year): array
     {
         return $this->selectRaw("MONTH(item.effective_date) as month, SUM(item.actualised_total) AS total")->
             join("resource", "resource.id", "item.resource_id")->
@@ -160,6 +160,52 @@ class ResourceTypeItem extends Model
             where(DB::raw('YEAR(item.effective_date)'), '=', $year)->
             groupBy("month")->
             orderBy("month")->
+            get()->
+            toArray();
+    }
+
+    /**
+     * Return the summary for all items for the resources in the requested resource
+     * type for a specific year and month
+     *
+     * @param integer $year
+     * @param integer $month
+     * @param int $resource_type_id
+
+     * @return array
+     */
+    public function monthSummary(int $resource_type_id, int $year, int $month): array
+    {
+        return $this->selectRaw("MONTH(item.effective_date) as month, SUM(item.actualised_total) AS total")->
+            join("resource", "resource.id", "item.resource_id")->
+            join("resource_type", "resource_type.id", "resource.resource_type_id")->
+            where("resource_type.id", "=", $resource_type_id)->
+            where(DB::raw('YEAR(item.effective_date)'), '=', $year)->
+            where(DB::raw('MONTH(item.effective_date)'), '=', $month)->
+            groupBy("month")->
+            orderBy("month")->
+            get()->
+            toArray();
+    }
+
+    /**
+     * Return the summary for all items for the resources in the requested resource
+     * type for a specific year
+     *
+     * @param integer $year
+     * @param int $resource_type_id
+
+     * @return array
+     */
+    public function yearSummary(int $resource_type_id, int $year): array
+    {
+        return $this->selectRaw("YEAR(item.effective_date) as year, SUM(item.actualised_total) AS total")->
+            join("resource", "resource.id", "item.resource_id")->
+            join("resource_type", "resource_type.id", "resource.resource_type_id")->
+            where("resource_type.id", "=", $resource_type_id)->
+            where(DB::raw('YEAR(item.effective_date)'), '=', $year)->
+            groupBy("year")->
+            orderBy("year")->
             get()->
             toArray();
     }
