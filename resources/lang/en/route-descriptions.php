@@ -24,6 +24,8 @@ return [
     'resource_type_PATCH' => 'Update the selected resource type',
     'resource_type_DELETE' => 'Delete the selected resource type',
 
+    'resource_type_item_GET_index' => 'Return all the items assigned to the resources for this resource type',
+
     'resource_GET_index' => 'Return all the resources that are children of the selected resource type',
     'resource_GET_show' => 'Return the selected resource',
     'resource_POST' => 'Create a new resource',
@@ -55,4 +57,6 @@ return [
     'summary_GET_request_access-log_monthly' => 'Return a summary of the access log, read requests, grouped by month',
 
     'summary_GET_resource-type_resource_items' => 'Return the TCO (Total cost of ownership, sum of items) for the selected resource',
+
+    'summary-resource-type-item-GET-index' => 'Return a summary of the items for all the resources matching this resource type',
 ];

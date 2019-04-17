@@ -4,7 +4,7 @@
 
 What does it cost to raise a child in the UK?
 
-Costs to Expect is a long-term project, my wife and I are tracking the expenses to raise our child to 
+[Costs to Expect](https://www.costs-to-expect.com) is a long-term project, my wife and I are tracking the expenses to raise our child to 
 adulthood, 18.
 
 ### Why?
@@ -16,12 +16,12 @@ If you think about the number, it becomes apparent quickly that it can't be righ
 £10k a year?
 
 This API will show the costs to raise my child; obviously, every family is different, these costs only 
-relate to my family, more details will appear on https://www.costs-to-expect.com as out family and site develops.
+relate to my family, more details will appear on [Costs to Expect](https://www.costs-to-expect.com) as our family and site develops.
 
 ## The API
 
-This Laravel app is the RESTful API for the Costs to Expect service, the API will be consumed by 
-the Costs to Expect website and iOS app which I'm creating to assist my wife with data input.
+This Laravel app is the RESTful API for the [Costs to Expect](https://www.costs-to-expect.com) service, the API will be consumed by 
+the [Costs to Expect](https://www.costs-to-expect.com) website and the iOS app which I'm creating to assist my wife with data input.
 
 ## Set up
 
@@ -92,6 +92,8 @@ X-Link-Previous and X-Link-Next can be null.
 | OPTIONS  | v1/resource-types |
 | GET/HEAD | v1/resource-types/{resource_type_id} |
 | OPTIONS  | v1/resource-types/{resource_type_id} | 
+| GET/HEAD | v1/resource-types/{resource_type_id}/items |
+| OPTIONS  | v1/resource-types/{resource_type_id}/items |
 | GET/HEAD | v1/resource-types/{resource_type_id}/resources |
 | OPTIONS  | v1/resource-types/{resource_type_id}/resources |
 | GET/HEAD | v1/resource-types/{resource_type_id}/resources/{resource_id} |
@@ -119,6 +121,8 @@ which allows you to provide year, month, category and subcategory.
 | :--- | :--- |
 | GET/HEAD | v1/summary/request/access-log/monthly |
 | OPTIONS  | v1/summary/request/access-log/monthly |
+| GET/HEAD | v1/summary/resource-types/{resource_type_id}/items |
+| OPTIONS  | v1/summary/resource-types/{resource_type_id}/items |
 | GET/HEAD | v1/summary/resource-types/{resource_type_id}/resources/{resource_id}/items |
 | OPTIONS  | v1/summary/resource-types/{resource_type_id}/resources/{resource_id}/items |
 

@@ -10,8 +10,12 @@
 
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
     <link href="{{ asset('/css/app.css') }}" rel="stylesheet">
-    {{--<link rel="shortcut icon" href="{{ asset('favicon.ico') }}" />
-    <link rel="icon" type="image/x-icon" href="{{ asset('favicon-32x32.png') }}" />--}}
+    <link rel="shortcut icon" href="{{ asset('images/theme/favicon.ico') }}">
+    <link rel="icon" sizes="16x16 32x32 64x64" href="{{ asset('images/theme/favicon.ico') }}">
+    <link rel="icon" type="image/png" sizes="196x196" href="{{ asset('images/theme/favicon-192.png') }}">
+    <link rel="apple-touch-icon" sizes="180x180" href="{{ asset('images/theme/favicon-180.png') }}">
+    <meta name="msapplication-TileColor" content="#FFFFFF">
+    <meta name="msapplication-TileImage" content="{{ asset('images/theme/favicon-144.png') }}">
     <!-- Global site tag (gtag.js) - Google Analytics -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=UA-64736-10"></script>
     <script>
@@ -29,9 +33,9 @@
             <div class="inner">
                 <h3 class="masthead-brand">Costs to Expect</h3>
                 <nav class="nav nav-masthead justify-content-center">
+                    <a class="nav-link" href="https://www.costs-to-expect.com">Website</a>
                     <a class="nav-link" href="/v1">API</a>
                     <a class="nav-link" href="/v1/changelog">API changelog</a>
-                    <a class="nav-link" href="https://github.com/costs-to-expect/api">View on GitHub</a>
                 </nav>
             </div>
         </header>

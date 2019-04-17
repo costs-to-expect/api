@@ -66,6 +66,8 @@ class Get
                     }
                     break;
 
+                case 'include-categories':
+                case 'include_subcategories':
                 case 'include_sub_categories':
                 case 'include_resources':
                     if (array_key_exists($key, self::$parameters) === true) {
