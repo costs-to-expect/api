@@ -193,7 +193,7 @@ class ResourceTypeItem extends Model
      * type for a specific year
      *
      * @param integer $year
-     * @param int $resource_type_id
+     * @param integer $resource_type_id
 
      * @return array
      */
@@ -206,6 +206,29 @@ class ResourceTypeItem extends Model
             where(DB::raw('YEAR(item.effective_date)'), '=', $year)->
             groupBy("year")->
             orderBy("year")->
+            get()->
+            toArray();
+    }
+
+    /**
+     * Return the summary for all items for the resources in the requested resource
+     * type grouped by category
+     *
+     * @param integer $resource_type_id
+     *
+     * @return array
+     */
+    public function categoriesSummary(int $resource_type_id): array
+    {
+        return $this->selectRaw("category.id, category.name AS name, SUM(item.actualised_total) AS total")->
+            join("resource", "resource.id", "item.resource_id")->
+            join("resource_type", "resource_type.id", "resource.resource_type_id")->
+            join("item_category", "item_category.item_id", "item.id")->
+            join("category", "category.id", "item_category.category_id")->
+            where("category.resource_type_id", "=", $resource_type_id)->
+            where("resource_type.id", "=", $resource_type_id)->
+            groupBy("category.id")->
+            orderBy("name")->
             get()->
             toArray();
     }

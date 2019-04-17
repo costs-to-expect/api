@@ -5,8 +5,9 @@ namespace App\Http\Controllers;
 use App\Http\Parameters\Get;
 use App\Http\Parameters\Route\Validate;
 use App\Models\ResourceTypeItem;
-use App\Models\Transformers\ResourceTypeItemYearSummary as ResourceTypeItemYearSummaryTransformer;
+use App\Models\Transformers\ResourceTypeItemCategorySummary as ResourceTypeItemCategorySummaryTransformer;
 use App\Models\Transformers\ResourceTypeItemMonthSummary as ResourceTypeItemMonthSummaryTransformer;
+use App\Models\Transformers\ResourceTypeItemYearSummary as ResourceTypeItemYearSummaryTransformer;
 use App\Utilities\General;
 use App\Utilities\Response as UtilityResponse;
 use Illuminate\Http\JsonResponse;
@@ -206,6 +207,30 @@ class SummaryResourceTypeItemController extends Controller
             (new ResourceTypeItemMonthSummaryTransformer($summary[0]))->toArray(),
             200,
             ['X-Total-Count' => 1]
+        );
+    }
+
+    /**
+     * Return the total summary for all the resources in the resource type
+     * grouped by category
+     *
+     * @return JsonResponse
+     */
+    private function categoriesSummary(): JsonResponse
+    {
+        $summary = (new ResourceTypeItem())->categoriesSummary(
+            $this->resource_type_id
+        );
+
+        return response()->json(
+            array_map(
+                function ($category) {
+                    return (new ResourceTypeItemCategorySummaryTransformer($category))->toArray();
+                },
+                $summary
+            ),
+            200,
+            ['X-Total-Count' => count($summary)]
         );
     }
 
