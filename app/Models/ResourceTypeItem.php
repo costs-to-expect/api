@@ -34,6 +34,16 @@ class ResourceTypeItem extends Model
             join('resource_type', 'resource.resource_type_id', 'resource_type.id')->
             where('resource_type.id', '=', $resource_type_id);
 
+        if (array_key_exists('year', $parameters_collection) === true &&
+            $parameters_collection['year'] !== null) {
+            $collection->where(DB::raw('YEAR(item.effective_date)'), '=', $parameters_collection['year']);
+        }
+
+        if (array_key_exists('month', $parameters_collection) === true &&
+            $parameters_collection['month'] !== null) {
+            $collection->where(DB::raw('MONTH(item.effective_date)'), '=', $parameters_collection['month']);
+        }
+
         return count($collection->get());
     }
 
@@ -98,6 +108,16 @@ class ResourceTypeItem extends Model
                 $select_fields[] = 'sub_category.name AS subcategory_name';
                 $select_fields[] = 'sub_category.description AS subcategory_description';
             }
+        }
+
+        if (array_key_exists('year', $parameters_collection) === true &&
+            $parameters_collection['year'] !== null) {
+            $collection->where(DB::raw('YEAR(item.effective_date)'), '=', $parameters_collection['year']);
+        }
+
+        if (array_key_exists('month', $parameters_collection) === true &&
+            $parameters_collection['month'] !== null) {
+            $collection->where(DB::raw('MONTH(item.effective_date)'), '=', $parameters_collection['month']);
         }
 
         $collection->select($select_fields);

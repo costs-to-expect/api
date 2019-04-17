@@ -33,7 +33,11 @@ class ResourceTypeItemController extends Controller
 
         $collection_parameters = Get::parameters([
             'include-categories',
-            'include-subcategories'
+            'include-subcategories',
+            'year',
+            'month',
+            'category',
+            'subcategory'
         ]);
 
         $total = (new ResourceTypeItem())->totalCount(
