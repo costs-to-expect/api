@@ -5,6 +5,7 @@ namespace App\Models;
 
 use App\Utilities\General;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\DB;
 
 /**
  * Item model, fetches data by resource type
@@ -137,6 +138,28 @@ class ResourceTypeItem extends Model
             where("resource_type.id", "=", $resource_type_id)->
             groupBy("year")->
             orderBy("year")->
+            get()->
+            toArray();
+    }
+
+    /**
+     * Return the summary for all items for the resources in the requested resource
+     * type grouped by month for the requested year
+     *
+     * @param int $year
+     * @param int $resource_type_id
+
+     * @return array
+     */
+    public function monthsSummary(int $resource_type_id, $year): array
+    {
+        return $this->selectRaw("MONTH(item.effective_date) as month, SUM(item.actualised_total) AS total")->
+            join("resource", "resource.id", "item.resource_id")->
+            join("resource_type", "resource_type.id", "resource.resource_type_id")->
+            where("resource_type.id", "=", $resource_type_id)->
+            where(DB::raw('YEAR(item.effective_date)'), '=', $year)->
+            groupBy("month")->
+            orderBy("month")->
             get()->
             toArray();
     }
