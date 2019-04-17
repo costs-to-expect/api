@@ -257,4 +257,31 @@ class ResourceTypeItem extends Model
             get()->
             toArray();
     }
+
+    /**
+     * Return the summary for all items for the resources in the requested resource
+     * type and category grouped by subcategory
+     *
+     * @param int $resource_type_id
+     * @param int $category_id
+     *
+     * @return array
+     */
+    public function subcategoriesSummary(int $resource_type_id, int $category_id): array
+    {
+        return $this->selectRaw("sub_category.id, sub_category.name AS name, SUM(item.actualised_total) AS total")->
+            join("resource", "resource.id", "item.resource_id")->
+            join("resource_type", "resource_type.id", "resource.resource_type_id")->
+            join("item_category", "item_category.item_id", "item.id")->
+            join("item_sub_category", "item_sub_category.item_category_id", "item_category.id")->
+            join("category", "category.id", "item_category.category_id")->
+            join("sub_category", "sub_category.id", "item_sub_category.sub_category_id")->
+            where("category.resource_type_id", "=", $resource_type_id)->
+            where("resource_type.id", "=", $resource_type_id)->
+            where("category.id", "=", $category_id)->
+            groupBy("sub_category.id")->
+            orderBy("name")->
+            get()->
+            toArray();
+    }
 }

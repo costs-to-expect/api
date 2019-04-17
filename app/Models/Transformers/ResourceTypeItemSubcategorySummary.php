@@ -13,7 +13,7 @@ namespace App\Models\Transformers;
  * @copyright Dean Blackborough 2018-2019
  * @license https://github.com/costs-to-expect/api/blob/master/LICENSE
  */
-class ResourceTypeItemCategorySummary extends Transformer
+class ResourceTypeItemSubcategorySummary extends Transformer
 {
     private $data_to_transform;
 
@@ -32,7 +32,7 @@ class ResourceTypeItemCategorySummary extends Transformer
     public function toArray(): array
     {
         return [
-            'id' => $this->hash->category()->encode($this->data_to_transform['id']),
+            'id' => $this->hash->subCategory()->encode($this->data_to_transform['id']),
             'name' => $this->data_to_transform['name'],
             'total' => number_format((float) $this->data_to_transform['total'], 2, '.', '')
         ];

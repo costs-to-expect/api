@@ -7,6 +7,7 @@ use App\Http\Parameters\Route\Validate;
 use App\Models\ResourceTypeItem;
 use App\Models\Transformers\ResourceTypeItemCategorySummary as ResourceTypeItemCategorySummaryTransformer;
 use App\Models\Transformers\ResourceTypeItemMonthSummary as ResourceTypeItemMonthSummaryTransformer;
+use App\Models\Transformers\ResourceTypeItemSubcategorySummary as ResourceTypeItemSubcategorySummaryTransformer;
 use App\Models\Transformers\ResourceTypeItemYearSummary as ResourceTypeItemYearSummaryTransformer;
 use App\Utilities\General;
 use App\Utilities\Response as UtilityResponse;
@@ -257,6 +258,33 @@ class SummaryResourceTypeItemController extends Controller
             (new ResourceTypeItemCategorySummaryTransformer($summary[0]))->toArray(),
             200,
             ['X-Total-Count' => 1]
+        );
+    }
+
+    /**
+     * Return the total summary for all the resources in the resource type
+     * and category grouped by subcategory
+     *
+     * @param integer $category_id
+     *
+     * @return JsonResponse
+     */
+    private function subcategoriesSummary(int $category_id): JsonResponse
+    {
+        $summary = (new ResourceTypeItem())->subcategoriesSummary(
+            $this->resource_type_id,
+            $category_id
+        );
+
+        return response()->json(
+            array_map(
+                function ($category) {
+                    return (new ResourceTypeItemSubcategorySummaryTransformer($category))->toArray();
+                },
+                $summary
+            ),
+            200,
+            ['X-Total-Count' => count($summary)]
         );
     }
 
