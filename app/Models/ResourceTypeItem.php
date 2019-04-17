@@ -44,6 +44,12 @@ class ResourceTypeItem extends Model
             $collection->where(DB::raw('MONTH(item.effective_date)'), '=', $parameters_collection['month']);
         }
 
+        if (array_key_exists('category', $parameters_collection) === true &&
+            $parameters_collection['category'] !== null) {
+            $collection->join("item_category", "item_category.item_id", "item.id");
+            $collection->where('item_category.category_id', '=', $parameters_collection['category']);
+        }
+
         return count($collection->get());
     }
 
@@ -83,8 +89,11 @@ class ResourceTypeItem extends Model
             where('resource_type.id', '=', $resource_type_id)->
             orderByDesc('item.effective_date')->
             orderByDesc('item.created_at')->
+            orderBy('item.description')->
             offset($offset)->
             limit($limit);
+
+        $category_join = false; // Check to see if join has taken place
 
         if (
             array_key_exists('include-categories', $parameters_collection) === true &&
@@ -93,9 +102,16 @@ class ResourceTypeItem extends Model
             $collection->join('item_category', 'item.id', 'item_category.item_id')->
                 join('category', 'item_category.category_id', 'category.id');
 
+            $category_join = true;
+
             $select_fields[] = 'category.id AS category_id';
             $select_fields[] = 'category.name AS category_name';
             $select_fields[] = 'category.description AS category_description';
+
+            if (array_key_exists('category', $parameters_collection) === true &&
+                $parameters_collection['category'] !== null) {
+                $collection->where('item_category.category_id', '=', $parameters_collection['category']);
+            }
 
             if (
                 array_key_exists('include-subcategories', $parameters_collection) === true &&
@@ -118,6 +134,15 @@ class ResourceTypeItem extends Model
         if (array_key_exists('month', $parameters_collection) === true &&
             $parameters_collection['month'] !== null) {
             $collection->where(DB::raw('MONTH(item.effective_date)'), '=', $parameters_collection['month']);
+        }
+
+        if (array_key_exists('category', $parameters_collection) === true &&
+            $parameters_collection['category'] !== null &&
+            $category_join === false) {
+
+            $collection->join('item_category', 'item.id', 'item_category.item_id')->
+                join('category', 'item_category.category_id', 'category.id')->
+                where('item_category.category_id', '=', $parameters_collection['category']);
         }
 
         $collection->select($select_fields);
