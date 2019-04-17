@@ -108,7 +108,8 @@ class ResourceTypeItem extends Model
      * Return the summary for all items for the resources in the requested resource type
      *
      * @param int $resource_type_id
-     * @return mixed
+     *
+     * @return array
      */
     public function summary(int $resource_type_id): array
     {
@@ -116,6 +117,26 @@ class ResourceTypeItem extends Model
             join('resource', 'item.resource_id', 'resource.id')->
             join('resource_type', 'resource.resource_type_id', 'resource_type.id')->
             where('resource_type.id', '=', $resource_type_id)->
+            get()->
+            toArray();
+    }
+
+    /**
+     * Return the summary for all items for the resources in the requested resource
+     * type grouped by year
+     *
+     * @param int $resource_type_id
+
+     * @return array
+     */
+    public function yearsSummary(int $resource_type_id): array
+    {
+        return $this->selectRaw("YEAR(item.effective_date) as year, SUM(item.actualised_total) AS total")->
+            join("resource", "resource.id", "item.resource_id")->
+            join("resource_type", "resource_type.id", "resource.resource_type_id")->
+            where("resource_type.id", "=", $resource_type_id)->
+            groupBy("year")->
+            orderBy("year")->
             get()->
             toArray();
     }
