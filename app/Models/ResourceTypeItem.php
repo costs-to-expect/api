@@ -90,8 +90,8 @@ class ResourceTypeItem extends Model
             array_key_exists('include-categories', $parameters_collection) === true &&
             General::booleanValue($parameters_collection['include-categories']) === true
         ) {
-            $collection->leftJoin('item_category', 'item.id', 'item_category.item_id')->
-                leftJoin('category', 'item_category.category_id', 'category.id');
+            $collection->join('item_category', 'item.id', 'item_category.item_id')->
+                join('category', 'item_category.category_id', 'category.id');
 
             $select_fields[] = 'category.id AS category_id';
             $select_fields[] = 'category.name AS category_name';
@@ -101,8 +101,8 @@ class ResourceTypeItem extends Model
                 array_key_exists('include-subcategories', $parameters_collection) === true &&
                 General::booleanValue($parameters_collection['include-subcategories']) === true
             ) {
-                $collection->leftJoin('item_sub_category', 'item_category.id', 'item_sub_category.item_category_id')->
-                    leftJoin('sub_category', 'item_sub_category.sub_category_id', 'sub_category.id');
+                $collection->join('item_sub_category', 'item_category.id', 'item_sub_category.item_category_id')->
+                    join('sub_category', 'item_sub_category.sub_category_id', 'sub_category.id');
 
                 $select_fields[] = 'sub_category.id AS subcategory_id';
                 $select_fields[] = 'sub_category.name AS subcategory_name';
