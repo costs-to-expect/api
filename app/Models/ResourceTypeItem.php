@@ -124,6 +124,26 @@ class ResourceTypeItem extends Model
 
     /**
      * Return the summary for all items for the resources in the requested resource
+     * type grouped by resource
+     *
+     * @param int $resource_type_id
+     *
+     * @return array
+     */
+    public function resourcesSummary(int $resource_type_id): array
+    {
+        return $this->selectRaw('resource.id AS id, resource.name AS `name`, SUM(item.actualised_total) AS total')->
+            join('resource', 'item.resource_id', 'resource.id')->
+            join('resource_type', 'resource.resource_type_id', 'resource_type.id')->
+            where('resource_type.id', '=', $resource_type_id)->
+            groupBy('resource.id')->
+            orderBy('name')->
+            get()->
+            toArray();
+    }
+
+    /**
+     * Return the summary for all items for the resources in the requested resource
      * type grouped by year
      *
      * @param int $resource_type_id

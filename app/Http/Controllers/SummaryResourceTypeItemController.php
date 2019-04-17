@@ -7,6 +7,7 @@ use App\Http\Parameters\Route\Validate;
 use App\Models\ResourceTypeItem;
 use App\Models\Transformers\ResourceTypeItemCategorySummary as ResourceTypeItemCategorySummaryTransformer;
 use App\Models\Transformers\ResourceTypeItemMonthSummary as ResourceTypeItemMonthSummaryTransformer;
+use App\Models\Transformers\ResourceTypeItemResourceSummary as ResourceTypeItemResourceSummaryTransformer;
 use App\Models\Transformers\ResourceTypeItemSubcategorySummary as ResourceTypeItemSubcategorySummaryTransformer;
 use App\Models\Transformers\ResourceTypeItemYearSummary as ResourceTypeItemYearSummaryTransformer;
 use App\Utilities\General;
@@ -73,14 +74,19 @@ class SummaryResourceTypeItemController extends Controller
             if (array_key_exists('subcategories', $collection_parameters) === true &&
                 General::booleanValue($collection_parameters['subcategories']) === true) {
                 return $this->subcategoriesSummary($collection_parameters['category']);
-            } else if (array_key_exists('subcategory', $collection_parameters) === true) {
-                return $this->subcategorySummary(
-                    $collection_parameters['category'],
-                    $collection_parameters['subcategory']
-                );
             } else {
-                return $this->categorySummary($collection_parameters['category']);
+                if (array_key_exists('subcategory', $collection_parameters) === true) {
+                    return $this->subcategorySummary(
+                        $collection_parameters['category'],
+                        $collection_parameters['subcategory']
+                    );
+                } else {
+                    return $this->categorySummary($collection_parameters['category']);
+                }
             }
+        } else if (array_key_exists('resources', $collection_parameters) === true &&
+            General::booleanValue($collection_parameters['resources']) === true) {
+            return $this->resourcesSummary();
         } else {
             return $this->summary();
         }
@@ -106,6 +112,28 @@ class SummaryResourceTypeItemController extends Controller
             ],
             200,
             ['X-Total-Count' => 1]
+        );
+    }
+
+    /**
+     * Return the total summary for all the resources in the resource type
+     * grouped by resource
+     *
+     * @return JsonResponse
+     */
+    private function resourcesSummary(): JsonResponse
+    {
+        $summary = (new ResourceTypeItem())->resourcesSummary($this->resource_type_id);
+
+        return response()->json(
+            array_map(
+                function ($resource) {
+                    return (new ResourceTypeItemResourceSummaryTransformer($resource))->toArray();
+                },
+                $summary
+            ),
+            200,
+            ['X-Total-Count' => count($summary)]
         );
     }
 
