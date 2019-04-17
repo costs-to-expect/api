@@ -4,6 +4,14 @@ declare(strict_types=1);
 
 return [
     'collection' => [
+        'resources' => [
+            "parameter" => "resources",
+            "title" => 'resource-type-item/summary-parameters.title-resources',
+            "description" => 'resource-type-item/summary-parameters.description-resources',
+            "default" => false,
+            "type" => "boolean",
+            "required" => false
+        ],
         'year' => [
             "parameter" => "year",
             "title" => 'resource-type-item/summary-parameters.title-year',
