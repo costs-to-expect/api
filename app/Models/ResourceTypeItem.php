@@ -48,6 +48,15 @@ class ResourceTypeItem extends Model
             $parameters_collection['category'] !== null) {
             $collection->join("item_category", "item_category.item_id", "item.id");
             $collection->where('item_category.category_id', '=', $parameters_collection['category']);
+
+            if (
+                array_key_exists('subcategory', $parameters_collection) === true &&
+                $parameters_collection['subcategory'] !== null
+            ) {
+                $collection->join('item_sub_category', 'item_category.id', 'item_sub_category.item_category_id')->
+                    join('sub_category', 'item_sub_category.sub_category_id', 'sub_category.id')->
+                    where('item_sub_category.sub_category_id', '=', $parameters_collection['subcategory']);
+            }
         }
 
         return count($collection->get());
@@ -94,6 +103,7 @@ class ResourceTypeItem extends Model
             limit($limit);
 
         $category_join = false; // Check to see if join has taken place
+        $subcategory_join = false; // Check to see if join has taken place
 
         if (
             array_key_exists('include-categories', $parameters_collection) === true &&
@@ -120,9 +130,16 @@ class ResourceTypeItem extends Model
                 $collection->join('item_sub_category', 'item_category.id', 'item_sub_category.item_category_id')->
                     join('sub_category', 'item_sub_category.sub_category_id', 'sub_category.id');
 
+                $subcategory_join = true;
+
                 $select_fields[] = 'sub_category.id AS subcategory_id';
                 $select_fields[] = 'sub_category.name AS subcategory_name';
                 $select_fields[] = 'sub_category.description AS subcategory_description';
+
+                if (array_key_exists('subcategory', $parameters_collection) === true &&
+                    $parameters_collection['subcategory'] !== null) {
+                    $collection->where('item_sub_category.sub_category_id', '=', $parameters_collection['subcategory']);
+                }
             }
         }
 
@@ -143,7 +160,17 @@ class ResourceTypeItem extends Model
             $collection->join('item_category', 'item.id', 'item_category.item_id')->
                 join('category', 'item_category.category_id', 'category.id')->
                 where('item_category.category_id', '=', $parameters_collection['category']);
+
+            if (array_key_exists('subcategory', $parameters_collection) === true &&
+                $parameters_collection['subcategory'] !== null &&
+                $subcategory_join === false) {
+
+                $collection->join('item_sub_category', 'item_category.id', 'item_sub_category.item_category_id')->
+                    join('sub_category', 'item_sub_category.sub_category_id', 'sub_category.id')->
+                    where('item_sub_category.sub_category_id', '=', $parameters_collection['subcategory']);
+            }
         }
+
 
         $collection->select($select_fields);
 
