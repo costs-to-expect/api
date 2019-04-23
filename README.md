@@ -4,24 +4,26 @@
 
 What does it cost to raise a child in the UK?
 
-[Costs to Expect](https://www.costs-to-expect.com) is a long-term project, my wife and I are tracking the expenses to raise our child to 
-adulthood, 18.
+[Costs to Expect](https://www.costs-to-expect.com) is a long-term project, my wife and I are tracking the expenses to 
+raise our children to, adulthood, 18.
 
 ### Why?
 
-There are two core reasons as to why I/we are doing this. I love data, and over the last twenty years, 
+There are two core reasons as to why we are doing this. I love data, and over the last twenty years, 
 it appears to have become accepted knowledge that it costs £250k to raise a child in the UK. 
 
 If you think about the number, it becomes apparent quickly that it can't be right, on average over 
 £10k a year?
 
-This API will show the costs to raise my child; obviously, every family is different, these costs only 
-relate to my family, more details will appear on [Costs to Expect](https://www.costs-to-expect.com) as our family and site develops.
+This API will show the costs to raise our children; obviously, every family is different, these costs only 
+relate to our family, more details will appear on [Costs to Expect](https://www.costs-to-expect.com) as development 
+on the site continues.
 
 ## The API
 
-This Laravel app is the RESTful API for the [Costs to Expect](https://www.costs-to-expect.com) service, the API will be consumed by 
-the [Costs to Expect](https://www.costs-to-expect.com) website and the iOS app which I'm creating to assist my wife with data input.
+This Laravel app is the RESTful API for the [Costs to Expect](https://www.costs-to-expect.com) service, 
+the API will be consumed by the [Costs to Expect](https://www.costs-to-expect.com) website and the iOS app which 
+I'm creating to assist my wife with data input.
 
 ## Set up
 
