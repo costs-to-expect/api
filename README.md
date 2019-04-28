@@ -123,6 +123,8 @@ which allows you to provide year, month, category and subcategory.
 | :--- | :--- |
 | GET/HEAD | v1/summary/request/access-log/monthly |
 | OPTIONS  | v1/summary/request/access-log/monthly |
+| GET/HEAD | v1/summary/resource-types |
+| OPTIONS  | v1/summary/resource-types |
 | GET/HEAD | v1/summary/resource-types/{resource_type_id}/items |
 | OPTIONS  | v1/summary/resource-types/{resource_type_id}/items |
 | GET/HEAD | v1/summary/resource-types/{resource_type_id}/resources/{resource_id}/items |

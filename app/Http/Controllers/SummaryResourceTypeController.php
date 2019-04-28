@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\ResourceType;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
@@ -23,7 +24,15 @@ class SummaryResourceTypeController extends Controller
      */
     public function index(Request $request): JsonResponse
     {
+        $summary = (new ResourceType())->totalCount($this->include_private);
 
+        return response()->json(
+            [
+                'resource-types' => $summary
+            ],
+            200,
+            ['X-Total-Count' => $summary]
+        );
     }
 
 

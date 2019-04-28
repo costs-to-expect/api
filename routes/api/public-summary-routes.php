@@ -13,6 +13,11 @@ Route::group(
         ]
     ],
     function () {
+        Route::get(
+            'summary/resource-types',
+            'SummaryResourceTypeController@index'
+        );
+
         Route::options(
             'summary/resource-types',
             'SummaryResourceTypeController@optionsIndex'
