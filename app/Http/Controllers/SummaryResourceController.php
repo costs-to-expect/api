@@ -2,28 +2,32 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Parameters\Route\Validate;
 use App\Models\ResourceType;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
 /**
- * Summary controller for the resource-type routes
+ * Summary controller for the resource routes
  *
  * @author Dean Blackborough <dean@g3d-development.com>
  * @copyright Dean Blackborough 2018-2019
  * @license https://github.com/costs-to-expect/api/blob/master/LICENSE
  */
-class SummaryResourceTypeController extends Controller
+class SummaryResourceController extends Controller
 {
     /**
-     * Return a summary of the resource types
+     * Return a summary of the resources
      *
      * @param Request $request
+     * @param string $resource_type_id
      *
      * @return JsonResponse
      */
-    public function index(Request $request): JsonResponse
+    public function index(Request $request, string $resource_type_id): JsonResponse
     {
+        Validate::resourceTypeRoute($resource_type_id);
+
         $summary = (new ResourceType())->totalCount($this->include_private);
 
         return response()->json(
@@ -37,18 +41,21 @@ class SummaryResourceTypeController extends Controller
 
 
     /**
-     * Generate the OPTIONS request for the resource type summarys
+     * Generate the OPTIONS request for the resource summary
      *
      * @param Request $request
+     * @param string $resource_type_id
      *
      * @return JsonResponse
      */
-    public function optionsIndex(Request $request): JsonResponse
+    public function optionsIndex(Request $request, string $resource_type_id): JsonResponse
     {
+        Validate::resourceTypeRoute($resource_type_id);
+
         return $this->generateOptionsForIndex(
             [
-                'description_localisation' => 'route-descriptions.summary-resource-type-GET-index',
-                'parameters_config' => 'api.resource-type.summary-parameters.collection',
+                'description_localisation' => 'route-descriptions.summary-resource-GET-index',
+                'parameters_config' => 'api.resource.summary-parameters.collection',
                 'conditionals' => [],
                 'pagination' => false,
                 'authenticated' => false
