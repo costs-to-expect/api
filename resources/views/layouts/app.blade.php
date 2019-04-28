@@ -33,8 +33,8 @@
             <div class="inner">
                 <h3 class="masthead-brand">Costs to Expect</h3>
                 <nav class="nav nav-masthead justify-content-center">
-                    <a class="nav-link" href="https://www.costs-to-expect.com">Website</a>
-                    <a class="nav-link" href="/v1">API</a>
+                    <a class="nav-link" href="https://www.costs-to-expect.com">The Website</a>
+                    <a class="nav-link" href="/v1">The API</a>
                     <a class="nav-link" href="/v1/changelog">API changelog</a>
                 </nav>
             </div>
@@ -44,7 +44,7 @@
 
         <footer class="mastfoot mt-auto">
             <div class="inner">
-                <p>Copyright &copy; <a href="https://www.deanblackborough.com">Dean Blackborough</a> {{ date('Y') }}</p>
+                <p>Copyright &copy; <a href="https://www.deanblackborough.com">Dean Blackborough</a> 2018-{{ date('Y') }}</p>
                 <p>All code maintained by <a href="https://www.deanblackborough.com">Dean Blackborough</a> and licensed under MIT.</p>
             </div>
         </footer>
