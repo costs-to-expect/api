@@ -36,7 +36,7 @@ class ResourceTypeController extends Controller
     {
         $resource_types = (new ResourceType())->paginatedCollection($this->include_private);
 
-        $this->collection_parameters = Get::parameters(['include_resources']);
+        $this->collection_parameters = Get::parameters(['include-resources']);
 
         $headers = [
             'X-Total-Count' => count($resource_types)
@@ -66,7 +66,7 @@ class ResourceTypeController extends Controller
     {
         Validate::resourceTypeRoute($resource_type_id);
 
-        $this->show_parameters = Get::parameters(['include_resources']);
+        $this->show_parameters = Get::parameters(['include-resources']);
 
         $resource_type = (new ResourceType())->single($resource_type_id, $this->include_private);
 

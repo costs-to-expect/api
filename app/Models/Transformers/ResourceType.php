@@ -47,10 +47,10 @@ class ResourceType extends Transformer
             'description' => $this->resource_type->description,
             'created' => $this->resource_type->created_at->toDateTimeString(),
             'public' => !boolval($this->resource_type->private),
-            'resources_count' => $this->resource_type->resources_count()
+            'resources-count' => $this->resource_type->resources_count()
         ];
 
-        if (isset($this->parameters['include_resources']) && $this->parameters['include_resources'] === true) {
+        if (isset($this->parameters['include-resources']) && $this->parameters['include-resources'] === true) {
             $resourcesCollection = $this->resource_type->resources;
 
             $resourcesCollection->map(

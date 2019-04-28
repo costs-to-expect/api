@@ -36,7 +36,7 @@ class Get
                 $request_parameters[$parameter] !== 'nill') {
 
                 switch ($parameter) {
-                    case 'include_resources';
+                    case 'include-resources';
                     case 'include_sub_categories';
                         self::$parameters[$parameter] = General::booleanValue($request_parameters[$parameter]);
                         break;
@@ -69,7 +69,7 @@ class Get
                 case 'include-categories':
                 case 'include_subcategories':
                 case 'include_sub_categories':
-                case 'include_resources':
+                case 'include-resources':
                     if (array_key_exists($key, self::$parameters) === true) {
                         if (General::booleanValue(self::$parameters[$key]) === false) {
                             unset(self::$parameters[$key]);
