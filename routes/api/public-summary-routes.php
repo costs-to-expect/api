@@ -13,6 +13,11 @@ Route::group(
         ]
     ],
     function () {
+        Route::options(
+            'summary/resource-types',
+            'SummaryResourceTypeController@optionsIndex'
+        );
+
         Route::get(
             'summary/resource-types/{resource_type_id}/items',
             'SummaryResourceTypeItemController@index'
@@ -22,7 +27,6 @@ Route::group(
             'summary/resource-types/{resource_type_id}/items',
             'SummaryResourceTypeItemController@optionsIndex'
         );
-
 
         Route::get(
             'summary/resource-types/{resource_type_id}/resources/{resource_id}/items',
