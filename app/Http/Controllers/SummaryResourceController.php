@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Parameters\Route\Validate;
-use App\Models\ResourceType;
+use App\Models\Resource;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
@@ -28,7 +28,7 @@ class SummaryResourceController extends Controller
     {
         Validate::resourceTypeRoute($resource_type_id);
 
-        $summary = (new ResourceType())->totalCount($this->include_private);
+        $summary = (new Resource())->totalCount($resource_type_id, $this->include_private);
 
         return response()->json(
             [
