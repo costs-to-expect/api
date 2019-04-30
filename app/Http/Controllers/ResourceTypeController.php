@@ -97,6 +97,7 @@ class ResourceTypeController extends Controller
                 'description_localisation' => 'route-descriptions.resource_type_GET_index',
                 'parameters_config' => 'api.resource-type.parameters.collection',
                 'conditionals' => [],
+                'sortable_config' => null,
                 'pagination' => false,
                 'authenticated' => false
             ],

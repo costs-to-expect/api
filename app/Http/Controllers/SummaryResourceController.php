@@ -57,6 +57,7 @@ class SummaryResourceController extends Controller
                 'description_localisation' => 'route-descriptions.summary-resource-GET-index',
                 'parameters_config' => 'api.resource.summary-parameters.collection',
                 'conditionals' => [],
+                'sortable_config' => null,
                 'pagination' => false,
                 'authenticated' => false
             ]

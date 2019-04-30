@@ -103,6 +103,7 @@ class ResourceTypeItemController extends Controller
                 'description_localisation' => 'route-descriptions.resource_type_item_GET_index',
                 'parameters_config' => 'api.resource-type-item.parameters.collection',
                 'conditionals' => $this->conditional_get_parameters,
+                'sortable_config' => null,
                 'pagination' => true,
                 'authenticated' => false
             ]

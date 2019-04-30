@@ -100,6 +100,7 @@ class CategoryController extends Controller
                 'description_localisation' => 'route-descriptions.category_GET_index',
                 'parameters_config' => 'api.category.parameters.collection',
                 'conditionals' => [],
+                'sortable_config' => null,
                 'pagination' => false,
                 'authenticated' => false
             ],

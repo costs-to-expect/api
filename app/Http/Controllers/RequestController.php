@@ -108,6 +108,7 @@ class RequestController extends Controller
                 'description_localisation' => 'route-descriptions.request_GET_access-log',
                 'parameters_config' => [],
                 'conditionals' => [],
+                'sortable_config' => null,
                 'pagination' => true,
                 'authenticated' => false
             ]
@@ -126,6 +127,7 @@ class RequestController extends Controller
                 'description_localisation' => 'route-descriptions.request_GET_error_log',
                 'parameters_config' => 'api.request.parameters.collection',
                 'conditionals' => [],
+                'sortable_config' => null,
                 'pagination' => false,
                 'authenticated' => false
             ],

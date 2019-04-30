@@ -103,6 +103,7 @@ class SubCategoryController extends Controller
                 'description_localisation' => 'route-descriptions.sub_category_GET_index',
                 'parameters_config' => 'api.subcategory.parameters.collection',
                 'conditionals' => [],
+                'sortable_config' => null,
                 'pagination' => false,
                 'authenticated' => false
             ],
