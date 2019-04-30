@@ -32,7 +32,7 @@ class SummaryResourceController extends Controller
 
         return response()->json(
             [
-                'resource-types' => $summary
+                'resources' => $summary
             ],
             200,
             ['X-Total-Count' => $summary]
