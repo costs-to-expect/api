@@ -2,6 +2,10 @@
 
 The complete changelog for the Costs to Expect REST API, follows the format defined at https://keepachangelog.com/en/1.0.0/
 
+## [v1.14.1] - 2019-05-01
+### Fixed
+- Item subcategory collection and single item returning incorrect results.
+
 ## [v1.14.0] - 2019-04-30
 ### Added
 - New route /summary/resource-types.
