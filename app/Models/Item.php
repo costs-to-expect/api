@@ -91,8 +91,6 @@ class Item extends Model
             ->whereHas('resource', function ($query) use ($resource_type_id) {
                 $query->where('resource_type_id', '=', $resource_type_id);
             })
-            ->orderByDesc('item.effective_date')
-            ->orderByDesc('item.created_at')
             ->offset($offset)
             ->limit($limit);
 
@@ -120,6 +118,42 @@ class Item extends Model
         ) {
             $collection->join("item_sub_category", "item_sub_category.item_category_id", "item_category.id");
             $collection->where('item_sub_category.sub_category_id', '=', $parameters_collection['subcategory']);
+        }
+
+        if (array_key_exists('sort', $parameters_collection) === true) {
+            $sorting_parameters = explode('|', $parameters_collection['sort']);
+
+            if (count($sorting_parameters) > 0) {
+                foreach ($sorting_parameters as $sort) {
+                    $sort = explode(':', $sort);
+
+                    if (
+                        is_array($sort) === true &&
+                        count($sort) === 2 &&
+                        in_array($sort[1], ['asc', 'desc']) === true &&
+                        in_array($sort[0], ["description", "total", "actualised_total", "effective_date", "created"]) === true
+                    ) {
+                        switch ($sort[0]) {
+                            case 'description':
+                            case 'total':
+                            case 'actualised_total':
+                            case 'effective_date':
+                                $collection->orderBy($sort[0], $sort[1]);
+                                break;
+
+                            case 'created':
+                                $collection->orderBy('created_at', $sort[1]);
+                                break;
+
+                            default:
+                                break;
+                        }
+                    }
+                }
+            }
+        } else {
+            $collection->orderBy('item.effective_date', 'desc');
+            $collection->orderBy('item.created_at', 'desc');
         }
 
         return $collection->get();

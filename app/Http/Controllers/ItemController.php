@@ -42,7 +42,7 @@ class ItemController extends Controller
     {
         Validate::resourceRoute($resource_type_id, $resource_id);
 
-        $this->collection_parameters = Get::parameters(['year', 'month', 'category', 'subcategory']);
+        $this->collection_parameters = Get::parameters(['year', 'month', 'category', 'subcategory', 'sort']);
 
         $total = (new Item())->totalCount(
             $resource_type_id,

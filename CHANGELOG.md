@@ -6,6 +6,7 @@ The complete changelog for the Costs to Expect REST API, follows the format defi
 ### Added
 - New route /summary/resource-types.
 - New route /summary/resource-types/[resource-type]/resources
+- Sorting options added to /resource_types/[resource-type]/resources/[resource]/items collection.
 
 ### Changed
 - Content updates, README, CHANGELOG and the landing page.
