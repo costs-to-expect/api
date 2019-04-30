@@ -113,6 +113,7 @@ class Controller extends BaseController
         ]
     ) {
         $get_parameters = [];
+        $get_parameters_sortable = [];
         $post_fields = [];
 
         if ($get['parameters_config'] !== null) {
@@ -128,10 +129,15 @@ class Controller extends BaseController
             }
         }
 
+        if ($get['sortable_config'] !== null) {
+            $get_parameters_sortable = Config::get($get['sortable_config']);
+        }
+
         $routes = [
             'GET' => [
                 'description' => trans($get['description_localisation']),
                 'authenticated' => $get['authenticated'],
+                'sortable' => $get_parameters_sortable,
                 'parameters' => $get_parameters
             ]
         ];

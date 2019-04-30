@@ -3,5 +3,6 @@
 declare(strict_types=1);
 
 return [
-    'asc-desc' => 'Field is sortable in ascending and descending order'
+    'title' => 'Sorting options',
+    'description' => 'Sortable fields are all sortable in ascending and descending order, example sort=field1:asc|field2:desc'
 ];

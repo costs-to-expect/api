@@ -137,7 +137,7 @@ class ItemController extends Controller
                 'description_localisation' => 'route-descriptions.item_GET_index',
                 'parameters_config' => 'api.item.parameters.collection',
                 'conditionals' => $this->get_parameters,
-                'sortable_config' => null,
+                'sortable_config' => 'api.item.sortable',
                 'pagination' => true,
                 'authenticated' => false
             ],
