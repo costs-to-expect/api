@@ -49,6 +49,7 @@ class SummaryRequestController extends Controller
                 'description_localisation' => 'route-descriptions.summary_GET_request_access-log_monthly',
                 'parameters_config' => [],
                 'conditionals' => [],
+                'sortable_config' => null,
                 'pagination' => false,
                 'authenticated' => false
             ]

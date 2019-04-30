@@ -99,8 +99,9 @@ class Controller extends BaseController
     protected function generateOptionsForIndex(
         array $get = [
             'description_localisation' => '',
-            'parameters_config' => '',
+            'parameters_config' => null,
             'conditionals' => [],
+            'sortable_config' => null,
             'pagination' => true,
             'authenticated' => false
         ],
@@ -112,23 +113,31 @@ class Controller extends BaseController
         ]
     ) {
         $get_parameters = [];
+        $get_parameters_sortable = [];
         $post_fields = [];
 
-        foreach (
-            array_merge_recursive(
-                ($get['pagination'] === true ? Config::get('api.pagination.parameters') : []),
-                Config::get($get['parameters_config']),
-                $get['conditionals']
-            ) as $parameter => $detail) {
-            $detail['title'] = trans($detail['title']);
-            $detail['description'] = trans($detail['description']);
-            $get_parameters[$parameter] = $detail;
+        if ($get['parameters_config'] !== null) {
+            foreach (
+                array_merge_recursive(
+                    ($get['pagination'] === true ? Config::get('api.pagination.parameters') : []),
+                    Config::get($get['parameters_config']),
+                    $get['conditionals']
+                ) as $parameter => $detail) {
+                $detail['title'] = trans($detail['title']);
+                $detail['description'] = trans($detail['description']);
+                $get_parameters[$parameter] = $detail;
+            }
+        }
+
+        if ($get['sortable_config'] !== null) {
+            $get_parameters_sortable = Config::get($get['sortable_config']);
         }
 
         $routes = [
             'GET' => [
                 'description' => trans($get['description_localisation']),
                 'authenticated' => $get['authenticated'],
+                'sortable' => $get_parameters_sortable,
                 'parameters' => $get_parameters
             ]
         ];

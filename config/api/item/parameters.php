@@ -4,6 +4,14 @@ declare(strict_types=1);
 
 return [
     'collection' => [
+        'sort' => [
+            "parameter" => "sort",
+            "title" => 'sortable.title',
+            "description" => 'sortable.description',
+            "default" => null,
+            "type" => "string",
+            "required" => false
+        ],
         'year' => [
             "parameter" => "year",
             "title" => 'item/parameters.title-year',

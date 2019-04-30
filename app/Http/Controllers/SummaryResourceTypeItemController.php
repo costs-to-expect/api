@@ -358,6 +358,7 @@ class SummaryResourceTypeItemController extends Controller
                 'description_localisation' => 'route-descriptions.summary-resource-type-item-GET-index',
                 'parameters_config' => 'api.resource-type-item.summary-parameters.collection',
                 'conditionals' => [],
+                'sortable_config' => null,
                 'pagination' => false,
                 'authenticated' => false
             ]

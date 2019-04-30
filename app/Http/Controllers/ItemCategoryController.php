@@ -51,7 +51,7 @@ class ItemCategoryController extends Controller
         ];
 
         return response()->json(
-            (new ItemCategoryTransformer($item_category))->toArray(),
+            [(new ItemCategoryTransformer($item_category))->toArray()],
             200,
             $headers
         );
@@ -123,6 +123,7 @@ class ItemCategoryController extends Controller
                 'description_localisation' => 'route-descriptions.item_category_GET_index',
                 'parameters_config' => 'api.item-category.parameters.collection',
                 'conditionals' => [],
+                'sortable_config' => null,
                 'pagination' => false,
                 'authenticated' => false
             ],

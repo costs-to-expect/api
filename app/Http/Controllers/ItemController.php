@@ -42,7 +42,7 @@ class ItemController extends Controller
     {
         Validate::resourceRoute($resource_type_id, $resource_id);
 
-        $this->collection_parameters = Get::parameters(['year', 'month', 'category', 'subcategory']);
+        $this->collection_parameters = Get::parameters(['year', 'month', 'category', 'subcategory', 'sort']);
 
         $total = (new Item())->totalCount(
             $resource_type_id,
@@ -137,6 +137,7 @@ class ItemController extends Controller
                 'description_localisation' => 'route-descriptions.item_GET_index',
                 'parameters_config' => 'api.item.parameters.collection',
                 'conditionals' => $this->get_parameters,
+                'sortable_config' => 'api.item.sortable',
                 'pagination' => true,
                 'authenticated' => false
             ],

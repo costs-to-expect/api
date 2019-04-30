@@ -21,6 +21,23 @@ class ResourceType extends Model
 
     protected $guarded = ['id', 'created_at', 'updated_at'];
 
+    /**
+     * Return the total number of resource types
+     *
+     * @param boolean $include_private Include private resource types
+     *
+     * @return integer
+     */
+    public function totalCount(bool $include_private = false): int
+    {
+        $collection = $this->select("resource_type.id");
+        if ($include_private === false) {
+            $collection->where('resource_type.private', '=', 0);
+        }
+
+        return count($collection->get());
+    }
+
     public function resources()
     {
         return $this->hasMany(Resource::class, 'resource_type_id', 'id');

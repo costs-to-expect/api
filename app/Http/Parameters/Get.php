@@ -36,8 +36,8 @@ class Get
                 $request_parameters[$parameter] !== 'nill') {
 
                 switch ($parameter) {
-                    case 'include_resources';
-                    case 'include_sub_categories';
+                    case 'include-resources';
+                    case 'include-subcategories';
                         self::$parameters[$parameter] = General::booleanValue($request_parameters[$parameter]);
                         break;
 
@@ -67,9 +67,8 @@ class Get
                     break;
 
                 case 'include-categories':
-                case 'include_subcategories':
-                case 'include_sub_categories':
-                case 'include_resources':
+                case 'include-subcategories':
+                case 'include-resources':
                     if (array_key_exists($key, self::$parameters) === true) {
                         if (General::booleanValue(self::$parameters[$key]) === false) {
                             unset(self::$parameters[$key]);
@@ -142,6 +141,14 @@ class Get
                 case 'subcategories':
                     if (array_key_exists($key, self::$parameters) === true) {
                         if (General::isBooleanValue(self::$parameters[$key]) === false) {
+                            unset(self::$parameters[$key]);
+                        }
+                    }
+                    break;
+
+                case 'sort':
+                    if (array_key_exists($key, self::$parameters) === true) {
+                        if (strlen(self::$parameters[$key]) < 1) {
                             unset(self::$parameters[$key]);
                         }
                     }

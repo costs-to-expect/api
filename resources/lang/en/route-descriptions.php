@@ -56,6 +56,9 @@ return [
 
     'summary_GET_request_access-log_monthly' => 'Return a summary of the access log, read requests, grouped by month',
 
+    'summary-resource-type-GET-index' => 'Return a summary of the resource types',
+    'summary-resource-GET-index' => 'Return a summary of the resources',
+
     'summary_GET_resource-type_resource_items' => 'Return the TCO (Total cost of ownership, sum of items) for the selected resource',
 
     'summary-resource-type-item-GET-index' => 'Return a summary of the items for all the resources matching this resource type',

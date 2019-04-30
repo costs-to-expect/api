@@ -2,6 +2,20 @@
 
 The complete changelog for the Costs to Expect REST API, follows the format defined at https://keepachangelog.com/en/1.0.0/
 
+## [v1.14.0] - 2019-04-30
+### Added
+- New route /summary/resource-types.
+- New route /summary/resource-types/[resource-type]/resources.
+- Sorting options added to /resource-types/[resource-type]/resources/[resource]/items collection.
+
+### Changed
+- Content updates to the README, CHANGELOG and the landing page.
+- GET parameter changed to include-resources for the resource-types route.
+- GET parameter changed to include-subcategories for the categories routes.
+
+### Fixed
+- Item category and Item subcategory collections were not returning a collection.
+
 ## [v1.13.1] - 2019-04-23
 ### Changed
 - Content update, there are now multiple children.

@@ -4,8 +4,8 @@
 
 What does it cost to raise a child in the UK?
 
-[Costs to Expect](https://www.costs-to-expect.com) is a long-term project, my wife and I are tracking the expenses to 
-raise our children to, adulthood, 18.
+[Costs to Expect](https://www.costs-to-expect.com) is a long-term personal project, my wife and I are tracking 
+the expenses to raise our children to, adulthood, 18.
 
 ### Why?
 
@@ -123,8 +123,12 @@ which allows you to provide year, month, category and subcategory.
 | :--- | :--- |
 | GET/HEAD | v1/summary/request/access-log/monthly |
 | OPTIONS  | v1/summary/request/access-log/monthly |
+| GET/HEAD | v1/summary/resource-types |
+| OPTIONS  | v1/summary/resource-types |
 | GET/HEAD | v1/summary/resource-types/{resource_type_id}/items |
 | OPTIONS  | v1/summary/resource-types/{resource_type_id}/items |
+| GET/HEAD | v1/summary/resource-types/{resource_type_id}/resources |
+| OPTIONS  | v1/summary/resource-types/{resource_type_id}/resources |
 | GET/HEAD | v1/summary/resource-types/{resource_type_id}/resources/{resource_id}/items |
 | OPTIONS  | v1/summary/resource-types/{resource_type_id}/resources/{resource_id}/items |
 

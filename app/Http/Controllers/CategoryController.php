@@ -35,7 +35,7 @@ class CategoryController extends Controller
      */
     public function index(Request $request): JsonResponse
     {
-        $this->collection_parameters = Get::parameters(['include_sub_categories']);
+        $this->collection_parameters = Get::parameters(['include-subcategories']);
 
         $categories = (new Category())->paginatedCollection($this->include_private, $this->collection_parameters);
 
@@ -67,7 +67,7 @@ class CategoryController extends Controller
     {
         Validate::categoryRoute($category_id);
 
-        $this->show_parameters = Get::parameters(['include_sub_categories']);
+        $this->show_parameters = Get::parameters(['include-subcategories']);
 
         $category = (new Category)->single($category_id);
 
@@ -93,13 +93,14 @@ class CategoryController extends Controller
      */
     public function optionsIndex(Request $request): JsonResponse
     {
-        $this->collection_parameters = Get::parameters(['include_sub_categories']);
+        $this->collection_parameters = Get::parameters(['include-subcategories']);
 
         return $this->generateOptionsForIndex(
             [
                 'description_localisation' => 'route-descriptions.category_GET_index',
                 'parameters_config' => 'api.category.parameters.collection',
                 'conditionals' => [],
+                'sortable_config' => null,
                 'pagination' => false,
                 'authenticated' => false
             ],

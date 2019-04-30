@@ -114,7 +114,7 @@ class ItemSubCategoryController extends Controller
         ];
 
         return response()->json(
-            (new ItemSubCategoryTransformer($item_sub_category))->toArray(),
+            [(new ItemSubCategoryTransformer($item_sub_category))->toArray()],
             200,
             $headers
         );
@@ -155,6 +155,7 @@ class ItemSubCategoryController extends Controller
                 'description_localisation' => 'route-descriptions.item_sub_category_GET_index',
                 'parameters_config' => 'api.item-subcategory.parameters.collection',
                 'conditionals' => [],
+                'sortable_config' => null,
                 'pagination' => false,
                 'authenticated' => false
             ],
