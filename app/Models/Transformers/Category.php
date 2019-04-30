@@ -45,12 +45,12 @@ class Category extends Transformer
                 'id' => $this->hash->resourceType()->encode($this->category->resource_type_id),
                 'name' => $this->category->resource_type_name,
             ],
-            'sub_categories_count' => $this->category->category_sub_categories
+            'subcategories_count' => $this->category->category_sub_categories
         ];
 
         if (
-            isset($this->parameters['include_sub_categories']) &&
-            $this->parameters['include_sub_categories'] === true
+            isset($this->parameters['include-subcategories']) &&
+            $this->parameters['include-subcategories'] === true
         ) {
             $subCategoriesCollection = (new SubCategoryModel())->paginatedCollection(
                 $this->category->category_id
@@ -62,7 +62,7 @@ class Category extends Transformer
                 }
             );
 
-            $result['sub_categories'] = $this->sub_categories;
+            $result['subcategories'] = $this->sub_categories;
         }
 
         return $result;

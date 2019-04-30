@@ -11,6 +11,7 @@ The complete changelog for the Costs to Expect REST API, follows the format defi
 ### Changed
 - Content updates, README, CHANGELOG and the landing page.
 - GET parameter changed to include-resources for resource-types route.
+- GET parameter changed to include-subcategories for categories routes
 
 ## [v1.13.1] - 2019-04-23
 ### Changed

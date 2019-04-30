@@ -37,7 +37,7 @@ class Get
 
                 switch ($parameter) {
                     case 'include-resources';
-                    case 'include_sub_categories';
+                    case 'include-subcategories';
                         self::$parameters[$parameter] = General::booleanValue($request_parameters[$parameter]);
                         break;
 
@@ -67,8 +67,7 @@ class Get
                     break;
 
                 case 'include-categories':
-                case 'include_subcategories':
-                case 'include_sub_categories':
+                case 'include-subcategories':
                 case 'include-resources':
                     if (array_key_exists($key, self::$parameters) === true) {
                         if (General::booleanValue(self::$parameters[$key]) === false) {
