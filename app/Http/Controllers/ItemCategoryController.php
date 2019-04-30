@@ -51,7 +51,7 @@ class ItemCategoryController extends Controller
         ];
 
         return response()->json(
-            (new ItemCategoryTransformer($item_category))->toArray(),
+            [(new ItemCategoryTransformer($item_category))->toArray()],
             200,
             $headers
         );
