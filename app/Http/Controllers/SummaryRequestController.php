@@ -47,7 +47,7 @@ class SummaryRequestController extends Controller
         return $this->generateOptionsForIndex(
             [
                 'description_localisation' => 'route-descriptions.summary_GET_request_access-log_monthly',
-                'parameters_config' => [],
+                'parameters_config' => 'api.request.parameters.collection',
                 'conditionals' => [],
                 'sortable_config' => null,
                 'pagination' => false,
