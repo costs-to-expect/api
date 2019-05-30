@@ -65,6 +65,8 @@ class ItemController extends Controller
         $headers = [
             'X-Count' => count($items),
             'X-Total-Count' => $total,
+            'X-Offset' => $pagination['offset'],
+            'X-Limit' => $pagination['limit'],
             'X-Link-Previous' => $pagination['links']['previous'],
             'X-Link-Next' => $pagination['links']['next']
         ];

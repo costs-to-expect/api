@@ -43,6 +43,8 @@ class RequestController extends Controller
 
         $headers = [
             'X-Total-Count' => $total,
+            'X-Offset' => $pagination['offset'],
+            'X-Limit' => $pagination['limit'],
             'X-Link-Previous' => $pagination['links']['previous'],
             'X-Link-Next' => $pagination['links']['next'],
         ];
@@ -80,6 +82,8 @@ class RequestController extends Controller
 
         $headers = [
             'X-Total-Count' => $total,
+            'X-Offset' => $pagination['offset'],
+            'X-Limit' => $pagination['limit'],
             'X-Link-Previous' => $pagination['links']['previous'],
             'X-Link-Next' => $pagination['links']['next'],
         ];
