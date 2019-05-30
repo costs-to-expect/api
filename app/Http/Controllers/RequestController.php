@@ -110,7 +110,7 @@ class RequestController extends Controller
         return $this->generateOptionsForIndex(
             [
                 'description_localisation' => 'route-descriptions.request_GET_access-log',
-                'parameters_config' => [],
+                'parameters_config' => 'api.request.parameters.collection',
                 'conditionals' => [],
                 'sortable_config' => null,
                 'pagination' => true,
@@ -129,7 +129,7 @@ class RequestController extends Controller
         return $this->generateOptionsForIndex(
             [
                 'description_localisation' => 'route-descriptions.request_GET_error_log',
-                'parameters_config' => 'api.request.parameters.collection',
+                'parameters_config' => [],
                 'conditionals' => [],
                 'sortable_config' => null,
                 'pagination' => false,
