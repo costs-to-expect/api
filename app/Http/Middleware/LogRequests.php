@@ -37,7 +37,8 @@ class LogRequests
         try {
             $log = new RequestLog([
                 'method' => $request->method(),
-                'request' => $request->fullUrl()
+                'request' => $request->fullUrl(),
+                'source' => $request->header('X-Source', 'api')
             ]);
             $log->save();
         } catch (Exception $e) {
