@@ -2,6 +2,17 @@
 
 The complete changelog for the Costs to Expect REST API, follows the format defined at https://keepachangelog.com/en/1.0.0/
 
+## [v1.14.2] - 2019-05-31
+### Added 
+- Offset and Limit X headers added to collections.
+- If X-Source exists in request header it is saved with the request so we can start tracking sources.
+- Capture the id of the user that created an item.
+- `source` filter added to /request/access-log.
+- `source` filter added to /summary/request/access-log/monthly.
+
+## Changed
+- Upgraded `RequestLog` Transformer, switching to a new system.
+
 ## [v1.14.1] - 2019-05-01
 ### Fixed
 - Item subcategory collection and single item returning incorrect results.

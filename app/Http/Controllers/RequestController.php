@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Parameters\Get;
 use App\Models\RequestErrorLog;
 use App\Models\RequestLog;
 use App\Models\Transformers\RequestErrorLog as RequestErrorLogTransformer;
@@ -22,6 +23,8 @@ use Illuminate\Http\Request;
  */
 class RequestController extends Controller
 {
+    protected $collection_parameters = [];
+
     /**
      * Return the paginated request log
      *
@@ -43,6 +46,8 @@ class RequestController extends Controller
 
         $headers = [
             'X-Total-Count' => $total,
+            'X-Offset' => $pagination['offset'],
+            'X-Limit' => $pagination['limit'],
             'X-Link-Previous' => $pagination['links']['previous'],
             'X-Link-Next' => $pagination['links']['next'],
         ];
@@ -70,26 +75,31 @@ class RequestController extends Controller
     {
         $total = (new RequestLog())->totalCount();
 
+        $this->collection_parameters = Get::parameters(['source']);
+
         $pagination = UtilityPagination::init($request->path(), $total, 50)
             ->paging();
 
         $log = (new RequestLog())->paginatedCollection(
             $pagination['offset'],
-            $pagination['limit']
+            $pagination['limit'],
+            $this->collection_parameters
         );
 
         $headers = [
             'X-Total-Count' => $total,
+            'X-Offset' => $pagination['offset'],
+            'X-Limit' => $pagination['limit'],
             'X-Link-Previous' => $pagination['links']['previous'],
             'X-Link-Next' => $pagination['links']['next'],
         ];
 
         return response()->json(
-            $log->map(
-                function ($log_item)
-                {
-                    return (new RequestLogTransformer($log_item))->toArray();
-                }
+            array_map(
+                function ($access_log_entry) {
+                    return (new RequestLogTransformer($access_log_entry))->toArray();
+                },
+                $log
             ),
             200,
             $headers
@@ -106,7 +116,7 @@ class RequestController extends Controller
         return $this->generateOptionsForIndex(
             [
                 'description_localisation' => 'route-descriptions.request_GET_access-log',
-                'parameters_config' => [],
+                'parameters_config' => 'api.request.parameters.collection',
                 'conditionals' => [],
                 'sortable_config' => null,
                 'pagination' => true,
@@ -125,7 +135,7 @@ class RequestController extends Controller
         return $this->generateOptionsForIndex(
             [
                 'description_localisation' => 'route-descriptions.request_GET_error_log',
-                'parameters_config' => 'api.request.parameters.collection',
+                'parameters_config' => [],
                 'conditionals' => [],
                 'sortable_config' => null,
                 'pagination' => false,

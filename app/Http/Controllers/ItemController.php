@@ -15,6 +15,7 @@ use Exception;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 /**
  * Manage items
@@ -65,6 +66,8 @@ class ItemController extends Controller
         $headers = [
             'X-Count' => count($items),
             'X-Total-Count' => $total,
+            'X-Offset' => $pagination['offset'],
+            'X-Limit' => $pagination['limit'],
             'X-Link-Previous' => $pagination['links']['previous'],
             'X-Link-Next' => $pagination['links']['next']
         ];
@@ -221,6 +224,7 @@ class ItemController extends Controller
                 'effective_date' => $request->input('effective_date'),
                 'total' => $request->input('total'),
                 'percentage' => $request->input('percentage', 100),
+                'user_id' => Auth::user()->id
             ]);
             $item->setActualisedTotal($item->total, $item->percentage);
             $item->save();
