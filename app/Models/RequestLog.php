@@ -24,9 +24,29 @@ class RequestLog extends Model
         return count($this->select('id')->get());
     }
 
-    public function paginatedCollection(int $offset = 0, int $limit = 10)
+    /**
+     * @param int $offset
+     * @param int $limit
+     * @param array $collection_parameters
+     *
+     * @return array
+     */
+    public function paginatedCollection(
+        int $offset = 0,
+        int $limit = 10,
+        array $collection_parameters = []
+    )
     {
-        return $this->orderByDesc('created_at')->offset($offset)->limit($limit)->get();
+        $collection = $this->orderByDesc('created_at');
+
+        if (array_key_exists('source', $collection_parameters) === true) {
+            $collection->where('source', '=', $collection_parameters['source']);
+        }
+
+        return $collection->offset($offset)->
+            limit($limit)->
+            get()->
+            toArray();
     }
 
     public function monthlyRequests()

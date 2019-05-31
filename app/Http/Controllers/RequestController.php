@@ -77,14 +77,13 @@ class RequestController extends Controller
 
         $this->collection_parameters = Get::parameters(['source']);
 
-        print_r($this->collection_parameters);
-
         $pagination = UtilityPagination::init($request->path(), $total, 50)
             ->paging();
 
         $log = (new RequestLog())->paginatedCollection(
             $pagination['offset'],
-            $pagination['limit']
+            $pagination['limit'],
+            $this->collection_parameters
         );
 
         $headers = [
@@ -96,11 +95,11 @@ class RequestController extends Controller
         ];
 
         return response()->json(
-            $log->map(
-                function ($log_item)
-                {
-                    return (new RequestLogTransformer($log_item))->toArray();
-                }
+            array_map(
+                function ($access_log_entry) {
+                    return (new RequestLogTransformer($access_log_entry))->toArray();
+                },
+                $log
             ),
             200,
             $headers
