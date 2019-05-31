@@ -49,17 +49,27 @@ class RequestLog extends Model
             toArray();
     }
 
-    public function monthlyRequests()
+    /**
+     * @param array $collection_parameters
+     *
+     * @return array
+     */
+    public function monthlyRequests(array $collection_parameters = [])
     {
         $collection = $this->orderBy(DB::raw("DATE_FORMAT(`request_log`.`created_at`, '%Y-%m')"))
-            ->groupBy(DB::raw("DATE_FORMAT(`request_log`.`created_at`, '%Y-%m')"))
-            ->select(
-                DB::raw("DATE_FORMAT(`request_log`.`created_at`, '%Y-%m')"),
-                DB::raw("COUNT(`request_log`.`id`) AS `requests`"),
-                DB::raw("ANY_VALUE(DATE_FORMAT(`request_log`.`created_at`, '%Y')) AS `year`"),
-                DB::raw("ANY_VALUE(DATE_FORMAT(`request_log`.`created_at`, '%M')) AS `month`")
-            );
+            ->groupBy(DB::raw("DATE_FORMAT(`request_log`.`created_at`, '%Y-%m')"));
 
-        return $collection->get();
+        if (array_key_exists('source', $collection_parameters) === true) {
+            $collection->where("source", '=', $collection_parameters['source']);
+        }
+
+        $collection->select(
+            DB::raw("DATE_FORMAT(`request_log`.`created_at`, '%Y-%m')"),
+            DB::raw("COUNT(`request_log`.`id`) AS `requests`"),
+            DB::raw("ANY_VALUE(DATE_FORMAT(`request_log`.`created_at`, '%Y')) AS `year`"),
+            DB::raw("ANY_VALUE(DATE_FORMAT(`request_log`.`created_at`, '%M')) AS `month`")
+        );
+
+        return $collection->get()->toArray();
     }
 }
