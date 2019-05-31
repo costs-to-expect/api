@@ -172,6 +172,17 @@ class Get
                     }
                     break;
 
+                case 'source':
+                    if (array_key_exists($key, self::$parameters) === true) {
+                        if (
+                            is_string(self::$parameters[$key]) === false ||
+                            in_array(self::$parameters[$key], ['api', 'legacy', 'website']) === false
+                        ) {
+                            unset(self::$parameters[$key]);
+                        }
+                    }
+                    break;
+
                 default:
                     // Do nothing
                     break;

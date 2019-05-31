@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Parameters\Get;
 use App\Models\RequestErrorLog;
 use App\Models\RequestLog;
 use App\Models\Transformers\RequestErrorLog as RequestErrorLogTransformer;
@@ -22,6 +23,8 @@ use Illuminate\Http\Request;
  */
 class RequestController extends Controller
 {
+    protected $collection_parameters = [];
+
     /**
      * Return the paginated request log
      *
@@ -71,6 +74,10 @@ class RequestController extends Controller
     public function accessLog(Request $request): JsonResponse
     {
         $total = (new RequestLog())->totalCount();
+
+        $this->collection_parameters = Get::parameters(['source']);
+
+        print_r($this->collection_parameters);
 
         $pagination = UtilityPagination::init($request->path(), $total, 50)
             ->paging();
