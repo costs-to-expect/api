@@ -7,6 +7,10 @@ The complete changelog for the Costs to Expect REST API, follows the format defi
 - Offset and Limit X headers added to collections.
 - If X-Source exists in request header it is saved with the request so we can start tracking sources.
 - Capture the id of the user that created an item.
+- `source` filter added to /request/access-log.
+
+## Changed
+- Upgraded `RequestLog` Transformer, switching to a new system.
 
 ## [v1.14.1] - 2019-05-01
 ### Fixed
