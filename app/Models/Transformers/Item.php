@@ -14,7 +14,7 @@ class Item extends Transformer
 {
     protected $item;
 
-    public function __construct(\App\Models\Item $item)
+    public function __construct(array $item)
     {
         parent::__construct();
 
@@ -23,14 +23,38 @@ class Item extends Transformer
 
     public function toArray(): array
     {
-        return [
-            'id' => $this->hash->item()->encode($this->item->id),
-            'description' => $this->item->description,
-            'total' => number_format((float) $this->item->total, 2),
-            'percentage' => $this->item->percentage,
-            'actualised_total' => number_format((float) $this->item->actualised_total, 2),
-            'effective_date' => $this->item->effective_date,
-            'created' => $this->item->created_at->toDateTimeString()
+        $item = [
+            'id' => $this->hash->item()->encode($this->item['item_id']),
+            'description' => $this->item['item_description'],
+            'total' => number_format((float) $this->item['item_total'], 2),
+            'percentage' => $this->item['item_percentage'],
+            'actualised_total' => number_format((float) $this->item['item_actualised_total'], 2),
+            'effective_date' => $this->item['item_effective_date'],
+            'created' => $this->item['item_created_at']
         ];
+
+        if (
+            array_key_exists('category_id', $this->item) === true &&
+            array_key_exists('category_name', $this->item) === true
+        ) {
+            $item['category'] = [
+                'id' => $this->hash->category()->encode($this->item['category_id']),
+                'name' => $this->item['category_name'],
+                'description' => $this->item['category_description']
+            ];
+
+            if (
+                array_key_exists('subcategory_id', $this->item) === true &&
+                array_key_exists('subcategory_name', $this->item) === true
+            ) {
+                $item['subcategory'] = [
+                    'id' => $this->hash->subCategory()->encode($this->item['subcategory_id']),
+                    'name' => $this->item['subcategory_name'],
+                    'description' => $this->item['subcategory_description']
+                ];
+            }
+        }
+
+        return $item;
     }
 }

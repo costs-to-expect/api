@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace App\Models;
 
+use App\Utilities\General;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Config;
 
@@ -87,12 +88,56 @@ class Item extends Model
         array $parameters_collection = []
     )
     {
+        $select_fields = [
+            'item.id AS item_id',
+            'item.description AS item_description',
+            'item.effective_date AS item_effective_date',
+            'item.total AS item_total',
+            'item.percentage AS item_percentage',
+            'item.actualised_total AS item_actualised_total',
+            'item.created_at AS item_created_at'
+        ];
+
         $collection = $this->where('resource_id', '=', $resource_id)
             ->whereHas('resource', function ($query) use ($resource_type_id) {
                 $query->where('resource_type_id', '=', $resource_type_id);
             })
             ->offset($offset)
             ->limit($limit);
+
+        if (
+            array_key_exists('include-categories', $parameters_collection) === true &&
+            General::booleanValue($parameters_collection['include-categories']) === true
+        ) {
+            $collection->join('item_category', 'item.id', 'item_category.item_id')->
+                join('category', 'item_category.category_id', 'category.id');
+
+            $select_fields[] = 'category.id AS category_id';
+            $select_fields[] = 'category.name AS category_name';
+            $select_fields[] = 'category.description AS category_description';
+
+            if (array_key_exists('category', $parameters_collection) === true &&
+                $parameters_collection['category'] !== null) {
+                $collection->where('item_category.category_id', '=', $parameters_collection['category']);
+            }
+
+            if (
+                array_key_exists('include-subcategories', $parameters_collection) === true &&
+                General::booleanValue($parameters_collection['include-subcategories']) === true
+            ) {
+                $collection->join('item_sub_category', 'item_category.id', 'item_sub_category.item_category_id')->
+                    join('sub_category', 'item_sub_category.sub_category_id', 'sub_category.id');
+
+                $select_fields[] = 'sub_category.id AS subcategory_id';
+                $select_fields[] = 'sub_category.name AS subcategory_name';
+                $select_fields[] = 'sub_category.description AS subcategory_description';
+
+                if (array_key_exists('subcategory', $parameters_collection) === true &&
+                    $parameters_collection['subcategory'] !== null) {
+                    $collection->where('item_sub_category.sub_category_id', '=', $parameters_collection['subcategory']);
+                }
+            }
+        }
 
         if (array_key_exists('year', $parameters_collection) === true &&
             $parameters_collection['year'] !== null) {
@@ -156,7 +201,7 @@ class Item extends Model
             $collection->orderBy('item.created_at', 'desc');
         }
 
-        return $collection->get();
+        return $collection->select($select_fields)->get()->toArray();
     }
 
     public function single(int $resource_type_id, int $resource_id, int $item_id)
