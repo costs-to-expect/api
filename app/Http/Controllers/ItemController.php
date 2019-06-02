@@ -240,8 +240,11 @@ class ItemController extends Controller
             UtilityResponse::failedToSaveModelForCreate();
         }
 
+        /**
+         * Fix this hack
+         */
         return response()->json(
-            (new ItemTransformer($item))->toArray(),
+            (new ItemTransformer((new Item())->single($resource_type_id, $resource_id, $item->id)))->toArray(),
             201
         );
     }
