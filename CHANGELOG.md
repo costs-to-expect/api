@@ -2,9 +2,9 @@
 
 The complete changelog for the Costs to Expect REST API, follows the format defined at https://keepachangelog.com/en/1.0.0/
 
-## [v1.14.3] - 2019-06-xx
+## [v1.14.3] - 2019-06-02
 ## Added
-- Added Twitter social card summary to landing page.
+- Added Twitter social card summary to the landing page.
 - Added `include-categories` and `include-subcategories` parameters to /resource-types/[resource-type]/resources/[resource]/items collection.
 
 ## Changed
