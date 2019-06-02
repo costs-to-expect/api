@@ -43,7 +43,15 @@ class ItemController extends Controller
     {
         Validate::resourceRoute($resource_type_id, $resource_id);
 
-        $this->collection_parameters = Get::parameters(['year', 'month', 'category', 'subcategory', 'sort']);
+        $this->collection_parameters = Get::parameters([
+            'include-categories',
+            'include-subcategories',
+            'year',
+            'month',
+            'category',
+            'subcategory',
+            'sort'
+        ]);
 
         $total = (new Item())->totalCount(
             $resource_type_id,
@@ -73,11 +81,11 @@ class ItemController extends Controller
         ];
 
         return response()->json(
-            $items->map(
-                function ($item)
-                {
+            array_map(
+                function($item) {
                     return (new ItemTransformer($item))->toArray();
-                }
+                },
+                $items
             ),
             200,
             $headers
