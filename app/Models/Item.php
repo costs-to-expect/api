@@ -210,7 +210,17 @@ class Item extends Model
             ->whereHas('resource', function ($query) use ($resource_type_id) {
                 $query->where('resource_type_id', '=', $resource_type_id);
             })
-            ->find($item_id);
+            ->select(
+                'item.id AS item_id',
+                'item.description AS item_description',
+                'item.effective_date AS item_effective_date',
+                'item.total AS item_total',
+                'item.percentage AS item_percentage',
+                'item.actualised_total AS item_actualised_total',
+                'item.created_at AS item_created_at'
+            )
+            ->find($item_id)
+            ->toArray();
     }
 
     /**
