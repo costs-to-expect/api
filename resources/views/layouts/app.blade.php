@@ -16,6 +16,17 @@
     <link rel="apple-touch-icon" sizes="180x180" href="{{ asset('images/theme/favicon-180.png') }}">
     <meta name="msapplication-TileColor" content="#FFFFFF">
     <meta name="msapplication-TileImage" content="{{ asset('images/theme/favicon-144.png') }}">
+    <meta name="twitter:image:src" content="{{ asset('images/theme/favicon-192.png') }}" />
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:site" content="@coststoexpect" />
+    <meta name="twitter:title" content="Costs to Expect API" />
+    <meta name="twitter:description" content="The Open Source API for the Costs to Expect</a> service, a small part of the service is a long-term personal project, my wife and I are tracking the expenses to raise our two children to adulthood, 18." />
+    <meta property="og:image" content="{{ asset('images/theme/favicon-192.png') }}" />
+    <meta property="og:site_name" content="Costs to Expect API" />
+    <meta property="og:type" content="object" />
+    <meta property="og:title" content="Costs to Expect API" />
+    <meta property="og:url" content="https://api.costs-to-expect.com" />
+    <meta property="og:description" content="The Open Source API for the Costs to Expect</a> service, a small part of the service is a long-term personal project, my wife and I are tracking the expenses to raise our two children to adulthood, 18." />
     <!-- Global site tag (gtag.js) - Google Analytics -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=UA-64736-10"></script>
     <script>
