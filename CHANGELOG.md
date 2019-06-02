@@ -4,7 +4,7 @@ The complete changelog for the Costs to Expect REST API, follows the format defi
 
 ## [v1.14.3] - 2019-06-xx
 ## Added
-- Added twitter social card summary to landing page.
+- Added Twitter social card summary to landing page.
 - Added `include-categories` and `include-subcategories` parameters to /resource-types/[resource-type]/resources/[resource]/items collection.
 
 ## Changed
