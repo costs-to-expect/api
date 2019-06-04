@@ -251,7 +251,11 @@ class Item extends Model
     public function categoriesSummary(int $resource_type_id, int $resource_id)
     {
         return $this->
-            selectRaw("category.id, category.name AS name, SUM(item.actualised_total) AS total")->
+            selectRaw('
+                category.id, 
+                category.name AS name, 
+                category.description AS description,
+                SUM(item.actualised_total) AS total')->
             join("resource", "resource.id", "item.resource_id")->
             join("resource_type", "resource_type.id", "resource.resource_type_id")->
             join("item_category", "item_category.item_id", "item.id")->

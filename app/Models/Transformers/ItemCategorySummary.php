@@ -33,6 +33,7 @@ class ItemCategorySummary extends Transformer
         return [
             'id' => $this->hash->category()->encode($this->category_summary->id),
             'name' => $this->category_summary->name,
+            'description' => $this->category_summary->description,
             'total' => number_format((float) $this->category_summary->total, 2, '.', '')
         ];
     }

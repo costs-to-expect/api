@@ -5,6 +5,7 @@ The complete changelog for the Costs to Expect REST API, follows the format defi
 ## [v1.15.0] - 2019-06-xx
 ### Changed
 - Category transformer updated to new setup.
+- `description` added to /summary/resource-types/[resource-type]/resources/[resource]/items?categories=true summary
 
 ### Fixed
 - Collection parameters not passed through to category transformer. 
