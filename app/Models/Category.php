@@ -37,13 +37,18 @@ class Category extends Model
      * @param integer $offset
      * @param integer $limit
      *
-     * @return \Illuminate\Support\Collection
+     * @return array
      */
-    public function paginatedCollection(bool $include_private, array $collection_parameters, int $offset = 0, int $limit = 10)
-    {
+    public function paginatedCollection(
+        bool $include_private,
+        array $collection_parameters,
+        int $offset = 0,
+        int $limit = 10
+    ): array {
         $collection = $this->select(
             'category.id AS category_id',
             'category.name AS category_name',
+            'category.description AS category_description',
             'category.created_at AS category_created_at',
             'category.updated_at AS category_updated_at',
             'resource_type.id AS resource_type_id',
@@ -71,7 +76,7 @@ class Category extends Model
             $collection->where('resource_type.private', '=', 0);
         }
 
-        return $collection->get();
+        return $collection->get()->toArray();
     }
 
     /**
@@ -79,9 +84,9 @@ class Category extends Model
      *
      * @param integer $category_id
      *
-     * @return \Illuminate\Support\Collection
+     * @return array
      */
-    public function single(int $category_id)
+    public function single(int $category_id): array
     {
         return $this->join('resource_type', $this->table . '.resource_type_id', '=', 'resource_type.id')
             ->where('category.id', '=', intval($category_id))
@@ -96,7 +101,8 @@ class Category extends Model
                 'resource_type.id AS resource_type_id',
                 'resource_type.name AS resource_type_name'
             )
-            ->first();
+            ->first()
+            ->toArray();
     }
 
     /**

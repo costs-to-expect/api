@@ -9,43 +9,47 @@ use App\Models\SubCategory as SubCategoryModel;
 /**
  * Transform the data returns from Eloquent into the format we want for the API
  *
+ * This is an updated version of the transformers, the other transformers need to
+ * be updated to operate on an array rather than collections
+ *
  * @author Dean Blackborough <dean@g3d-development.com>
  * @copyright Dean Blackborough 2018-2019
  * @license https://github.com/costs-to-expect/api/blob/master/LICENSE
  */
 class Category extends Transformer
 {
-    private $category;
+    protected $data_to_transform;
+
     private $parameters = [];
 
-    private $sub_categories = [];
+    private $subcategories = [];
 
     /**
      * ResourceType constructor.
      *
-     * @param CategoryModel $category
+     * @param array $data_to_transform
      * @param array $parameters
      */
-    public function __construct(CategoryModel $category, array $parameters = [])
+    public function __construct(array $data_to_transform, array $parameters = [])
     {
         parent::__construct();
 
-        $this->category = $category;
+        $this->data_to_transform = $data_to_transform;
         $this->parameters = $parameters;
     }
 
     public function toArray(): array
     {
         $result = [
-            'id' => $this->hash->category()->encode($this->category->category_id),
-            'name' => $this->category->category_name,
-            'description' => $this->category->category_description,
-            'created' => $this->category->category_created_at,
+            'id' => $this->hash->category()->encode($this->data_to_transform['category_id']),
+            'name' => $this->data_to_transform['category_name'],
+            'description' => $this->data_to_transform['category_description'],
+            'created' => $this->data_to_transform['category_created_at'],
             'resource_type' => [
-                'id' => $this->hash->resourceType()->encode($this->category->resource_type_id),
-                'name' => $this->category->resource_type_name,
+                'id' => $this->hash->resourceType()->encode($this->data_to_transform['resource_type_id']),
+                'name' => $this->data_to_transform['resource_type_name'],
             ],
-            'subcategories_count' => $this->category->category_sub_categories
+            'subcategories_count' => $this->data_to_transform['category_sub_categories']
         ];
 
         if (
@@ -53,16 +57,16 @@ class Category extends Transformer
             $this->parameters['include-subcategories'] === true
         ) {
             $subCategoriesCollection = (new SubCategoryModel())->paginatedCollection(
-                $this->category->category_id
+                $this->data_to_transform['category_id']
             );
 
             $subCategoriesCollection->map(
                 function ($sub_category) {
-                    $this->sub_categories[] = (new SubCategory($sub_category))->toArray();
+                    $this->subcategories[] = (new SubCategory($sub_category))->toArray();
                 }
             );
 
-            $result['subcategories'] = $this->sub_categories;
+            $result['subcategories'] = $this->subcategories;
         }
 
         return $result;

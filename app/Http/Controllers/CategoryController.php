@@ -37,18 +37,21 @@ class CategoryController extends Controller
     {
         $this->collection_parameters = Get::parameters(['include-subcategories']);
 
-        $categories = (new Category())->paginatedCollection($this->include_private, $this->collection_parameters);
+        $categories = (new Category())->paginatedCollection(
+            $this->include_private,
+            $this->collection_parameters
+        );
 
         $headers = [
             'X-Total-Count' => count($categories)
         ];
 
         return response()->json(
-            $categories->map(
-                function ($category)
-                {
+            array_map(
+                function($category) {
                     return (new CategoryTransformer($category, $this->collection_parameters))->toArray();
-                }
+                },
+                $categories
             ),
             200,
             $headers
