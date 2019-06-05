@@ -4,12 +4,16 @@ The complete changelog for the Costs to Expect REST API, follows the format defi
 
 ## [v1.15.0] - 2019-06-xx
 ### Added
-- Tests for POSTMAN, now up to 193 tests.
+- Tests for POSTMAN, now up to 277 tests.
 
 ### Changed
 - `description` added to /summary/resource-types/[resource-type]/resources/[resource]/items?categories=true summary
+- `description` added to /summary/resource-types/[resource-type]/items?categories=true summary
 - `description` added to /summary/resource-types/[resource-type]/resources/[resource]/items?category=[category]&subcategories=true
+- `description` added to /summary/resource-types/[resource-type]/items?category=[category]&subcategories=true
 - Category, ItemCategorySummary and ItemSubCategorySummary transformers updated to new setup.
+- Up the throttle limit.
+- Don't format numbers in output, leave that to the apps.
 
 ### Fixed
 - Collection parameters not passed through to category transformer. 

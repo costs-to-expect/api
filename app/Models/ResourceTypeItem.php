@@ -312,7 +312,11 @@ class ResourceTypeItem extends Model
      */
     public function categoriesSummary(int $resource_type_id): array
     {
-        return $this->selectRaw("category.id, category.name AS name, SUM(item.actualised_total) AS total")->
+        return $this->selectRaw('
+                category.id, 
+                category.name AS name, 
+                category.description AS description,
+                SUM(item.actualised_total) AS total')->
             join("resource", "resource.id", "item.resource_id")->
             join("resource_type", "resource_type.id", "resource.resource_type_id")->
             join("item_category", "item_category.item_id", "item.id")->
@@ -336,7 +340,11 @@ class ResourceTypeItem extends Model
      */
     public function categorySummary(int $resource_type_id, int $category_id): array
     {
-        return $this->selectRaw("category.id, category.name AS name, SUM(item.actualised_total) AS total")->
+        return $this->selectRaw('
+                category.id, 
+                category.name AS name, 
+                category.description, 
+                SUM(item.actualised_total) AS total')->
             join("resource", "resource.id", "item.resource_id")->
             join("resource_type", "resource_type.id", "resource.resource_type_id")->
             join("item_category", "item_category.item_id", "item.id")->
@@ -361,7 +369,11 @@ class ResourceTypeItem extends Model
      */
     public function subcategoriesSummary(int $resource_type_id, int $category_id): array
     {
-        return $this->selectRaw("sub_category.id, sub_category.name AS name, SUM(item.actualised_total) AS total")->
+        return $this->selectRaw('
+                sub_category.id, 
+                sub_category.name AS name, 
+                sub_category.description AS description, 
+                SUM(item.actualised_total) AS total')->
             join("resource", "resource.id", "item.resource_id")->
             join("resource_type", "resource_type.id", "resource.resource_type_id")->
             join("item_category", "item_category.item_id", "item.id")->
@@ -389,7 +401,11 @@ class ResourceTypeItem extends Model
      */
     public function subcategorySummary(int $resource_type_id, int $category_id, int $subcategory_id): array
     {
-        return $this->selectRaw("sub_category.id, sub_category.name AS name, SUM(item.actualised_total) AS total")->
+        return $this->selectRaw('
+                sub_category.id, 
+                sub_category.name AS name, 
+                sub_category.description AS description, 
+                SUM(item.actualised_total) AS total')->
             join("resource", "resource.id", "item.resource_id")->
             join("resource_type", "resource_type.id", "resource.resource_type_id")->
             join("item_category", "item_category.item_id", "item.id")->

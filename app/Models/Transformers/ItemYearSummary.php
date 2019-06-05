@@ -33,7 +33,7 @@ class ItemYearSummary extends Transformer
         return [
             'id' => $this->year_summary->year,
             'year' => $this->year_summary->year,
-            'total' => number_format((float) $this->year_summary->total, 2, '.', '')
+            'total' => (float) $this->year_summary->total
         ];
     }
 }
