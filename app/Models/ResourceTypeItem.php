@@ -59,6 +59,9 @@ class ResourceTypeItem extends Model
             }
         }
 
+        $collection->whereNull('item.publish_after')->
+            orWhereRaw('item.publish_after < NOW()');
+
         return count($collection->get());
     }
 
@@ -171,6 +174,8 @@ class ResourceTypeItem extends Model
             }
         }
 
+        $collection->whereNull('item.publish_after')->
+            orWhereRaw('item.publish_after < NOW()');
 
         $collection->select($select_fields);
 

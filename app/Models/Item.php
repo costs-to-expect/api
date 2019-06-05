@@ -77,6 +77,9 @@ class Item extends Model
             $collection->where('item_sub_category.sub_category_id', '=', $parameters_collection['subcategory']);
         }
 
+        $collection->whereNull('item.publish_after')->
+            orWhereRaw('item.publish_after < NOW()');
+
         return count($collection->get());
     }
 
@@ -200,6 +203,9 @@ class Item extends Model
             $collection->orderBy('item.effective_date', 'desc');
             $collection->orderBy('item.created_at', 'desc');
         }
+
+        $collection->whereNull('item.publish_after')->
+            orWhereRaw('item.publish_after < NOW()');
 
         return $collection->select($select_fields)->get()->toArray();
     }
