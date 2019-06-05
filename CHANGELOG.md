@@ -4,6 +4,7 @@ The complete changelog for the Costs to Expect REST API, follows the format defi
 
 ## [v1.15.0] - 2019-06-xx
 ### Added
+- `publish_after` field added to item, POST and PATCH updated.
 - Tests for POSTMAN, now up to 277 tests.
 
 ### Changed

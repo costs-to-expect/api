@@ -223,6 +223,25 @@ class Item extends Model
             ->toArray();
     }
 
+    public function instance(int $resource_type_id, int $resource_id, int $item_id)
+    {
+        return $this->where('resource_id', '=', $resource_id)
+            ->whereHas('resource', function ($query) use ($resource_type_id) {
+                $query->where('resource_type_id', '=', $resource_type_id);
+            })
+            ->select(
+                'item.id',
+                'item.description',
+                'item.effective_date',
+                'item.publish_after',
+                'item.total',
+                'item.percentage',
+                'item.actualised_total',
+                'item.created_at'
+            )
+            ->find($item_id);
+    }
+
     /**
      * Return the summary for items
      *

@@ -230,6 +230,7 @@ class ItemController extends Controller
                 'resource_id' => $resource_id,
                 'description' => $request->input('description'),
                 'effective_date' => $request->input('effective_date'),
+                'publish_after' => $request->input('publish_after', null),
                 'total' => $request->input('total'),
                 'percentage' => $request->input('percentage', 100),
                 'user_id' => Auth::user()->id
@@ -282,7 +283,7 @@ class ItemController extends Controller
             UtilityResponse::invalidFieldsInRequest($invalid_fields);
         }
 
-        $item = (new Item())->single($resource_type_id, $resource_id, $item_id);
+        $item = (new Item())->instance($resource_type_id, $resource_id, $item_id);
 
         if ($item === null) {
             UtilityResponse::failedToSelectModelForUpdate();
@@ -296,6 +297,8 @@ class ItemController extends Controller
                 $update_actualised = true;
             }
         }
+
+        //print_r($item); die;
 
         if ($update_actualised === true) {
             $item->setActualisedTotal($item->total, $item->percentage);
