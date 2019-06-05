@@ -219,10 +219,11 @@ class SummaryItemController extends Controller
         );
 
         return response()->json(
-            $summary->map(
-                function ($category_summary) {
-                    return (new ItemCategorySummaryTransformer($category_summary))->toArray();
-                }
+            array_map(
+                function($category) {
+                    return (new ItemCategorySummaryTransformer($category))->toArray();
+                },
+                $summary
             ),
             200,
             [ 'X-Total-Count' => count($summary) ]
@@ -275,10 +276,11 @@ class SummaryItemController extends Controller
         );
 
         return response()->json(
-            $summary->map(
-                function ($category_summary) {
-                    return (new ItemSubCategorySummaryTransformer($category_summary))->toArray();
-                }
+            array_map(
+                function($subcategory) {
+                    return (new ItemSubCategorySummaryTransformer($subcategory))->toArray();
+                },
+                $summary
             ),
             200,
             [ 'X-Total-Count' => count($summary) ]

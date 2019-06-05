@@ -3,9 +3,13 @@
 The complete changelog for the Costs to Expect REST API, follows the format defined at https://keepachangelog.com/en/1.0.0/
 
 ## [v1.15.0] - 2019-06-xx
+### Added
+- Tests for POSTMAN, now up to 193 tests.
+
 ### Changed
-- Category transformer updated to new setup.
 - `description` added to /summary/resource-types/[resource-type]/resources/[resource]/items?categories=true summary
+- `description` added to /summary/resource-types/[resource-type]/resources/[resource]/items?category=[category]&subcategories=true
+- Category, ItemCategorySummary and ItemSubCategorySummary transformers updated to new setup.
 
 ### Fixed
 - Collection parameters not passed through to category transformer. 

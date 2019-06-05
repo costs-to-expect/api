@@ -385,16 +385,17 @@ class ItemController extends Controller
             ];
         }
 
-        (new Category())->paginatedCollection($this->include_private, ['resource_type'=>$resource_type_id])->map(
-            function ($category)
-            {
-                $this->get_parameters['category']['allowed_values'][$this->hash->encode('category', $category->category_id)] = [
-                    'value' => $this->hash->encode('category', $category->category_id),
-                    'name' => $category->category_name,
-                    'description' => trans('item/allowed-values.description-prefix-category') .
-                        $category->category_name . trans('item/allowed-values.description-suffix-category')
+        $categories = (new Category())->paginatedCollection($this->include_private, ['resource_type'=>$resource_type_id]);
+        array_map(
+            function($category) {
+                $this->get_parameters['category']['allowed_values'][$this->hash->encode('category', $category['category_id'])] = [
+                    'value' => $this->hash->encode('category', $category['category_id']),
+                    'name' => $category['category_name'],
+                    'description' => trans('resource-type-item/allowed-values.description-prefix-category') .
+                        $category['category_name'] . trans('resource-type-item/allowed-values.description-suffix-category')
                 ];
-            }
+            },
+            $categories
         );
 
         if (array_key_exists('category', $this->collection_parameters) === true) {

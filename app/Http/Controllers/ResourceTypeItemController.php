@@ -154,16 +154,17 @@ class ResourceTypeItemController extends Controller
             ];
         }
 
-        (new Category())->paginatedCollection($this->include_private, ['resource_type'=>$resource_type_id])->map(
-            function ($category)
-            {
-                $this->conditional_get_parameters['category']['allowed_values'][$this->hash->encode('category', $category->category_id)] = [
-                    'value' => $this->hash->encode('category', $category->category_id),
-                    'name' => $category->category_name,
+        $categories = (new Category())->paginatedCollection($this->include_private, ['resource_type'=>$resource_type_id]);
+        array_map(
+            function($category) {
+                $this->conditional_get_parameters['category']['allowed_values'][$this->hash->encode('category', $category['category_id'])] = [
+                    'value' => $this->hash->encode('category', $category['category_id']),
+                    'name' => $category['category_name'],
                     'description' => trans('resource-type-item/allowed-values.description-prefix-category') .
-                        $category->category_name . trans('resource-type-item/allowed-values.description-suffix-category')
+                        $category['category_name'] . trans('resource-type-item/allowed-values.description-suffix-category')
                 ];
-            }
+            },
+            $categories
         );
 
         if (array_key_exists('category', $collection_parameters) === true) {
