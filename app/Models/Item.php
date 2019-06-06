@@ -253,15 +253,18 @@ class Item extends Model
      *
      * @param int $resource_type_id
      * @param int $resource_id
-     * @return mixed
+     *
+     * @return array
      */
-    public function summary(int $resource_type_id, int $resource_id)
+    public function summary(int $resource_type_id, int $resource_id): array
     {
         return $this->selectRaw('sum(item.actualised_total) AS actualised_total')
             ->where('resource_id', '=', $resource_id)
             ->whereHas('resource', function ($query) use ($resource_type_id) {
                 $query->where('resource_type_id', '=', $resource_type_id);
             })
+            ->whereNull('item.publish_after')
+            ->orWhereRaw('item.publish_after < NOW()')
             ->get()
             ->toArray();
     }
@@ -288,6 +291,8 @@ class Item extends Model
             where("category.resource_type_id", "=", $resource_type_id)->
             where("resource_type.id", "=", $resource_type_id)->
             where("resource.id", "=", $resource_id)->
+            whereNull('item.publish_after')->
+            orWhereRaw('item.publish_after < NOW()')->
             groupBy("item_category.category_id")->
             orderBy("name")->
             get()->
@@ -310,6 +315,8 @@ class Item extends Model
             where("resource_type.id", "=", $resource_type_id)->
             where("resource.id", "=", $resource_id)->
             where("category.id", "=", $category_id)->
+            whereNull('item.publish_after')->
+            orWhereRaw('item.publish_after < NOW()')->
             groupBy("item_category.category_id")->
             orderBy("name")->
             get()->
@@ -333,6 +340,8 @@ class Item extends Model
             where("resource_type.id", "=", $resource_type_id)->
             where("resource.id", "=", $resource_id)->
             where("category.id", "=", $category_id)->
+            whereNull('item.publish_after')->
+            orWhereRaw('item.publish_after < NOW()')->
             groupBy("item_sub_category.sub_category_id")->
             orderBy("name")->
             get()->
@@ -362,6 +371,8 @@ class Item extends Model
             where("resource.id", "=", $resource_id)->
             where("category.id", "=", $category_id)->
             where("sub_category.id", "=", $sub_category_id)->
+            whereNull('item.publish_after')->
+            orWhereRaw('item.publish_after < NOW()')->
             groupBy("item_sub_category.sub_category_id")->
             orderBy("name")->
             get()->
@@ -376,6 +387,8 @@ class Item extends Model
             join("resource_type", "resource_type.id", "resource.resource_type_id")->
             where("resource_type.id", "=", $resource_type_id)->
             where("resource.id", "=", $resource_id)->
+            whereNull('item.publish_after')->
+            orWhereRaw('item.publish_after < NOW()')->
             groupBy("year")->
             orderBy("year")->
             get();
@@ -390,6 +403,8 @@ class Item extends Model
             where("resource_type.id", "=", $resource_type_id)->
             where("resource.id", "=", $resource_id)->
             whereRaw(\DB::raw("YEAR(item.effective_date) = '{$year}'"))->
+            whereNull('item.publish_after')->
+            orWhereRaw('item.publish_after < NOW()')->
             groupBy("year")->
             get();
     }
@@ -403,6 +418,8 @@ class Item extends Model
             where("resource_type.id", "=", $resource_type_id)->
             where("resource.id", "=", $resource_id)->
             whereRaw(\DB::raw("YEAR(item.effective_date) = '{$year}'"))->
+            whereNull('item.publish_after')->
+            orWhereRaw('item.publish_after < NOW()')->
             groupBy("month")->
             orderBy("month")->
             get();
@@ -418,6 +435,8 @@ class Item extends Model
             where("resource.id", "=", $resource_id)->
             whereRaw(\DB::raw("YEAR(item.effective_date) = '{$year}'"))->
             whereRaw(\DB::raw("MONTH(item.effective_date) = '{$month}'"))->
+            whereNull('item.publish_after')->
+            orWhereRaw('item.publish_after < NOW()')->
             groupBy("month")->
             orderBy("month")->
             get();
