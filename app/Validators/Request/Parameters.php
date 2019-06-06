@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Http\Parameters;
+namespace App\Validators\Request;
 
 use App\Models\Category;
 use App\Models\ResourceType;
@@ -9,23 +9,23 @@ use App\Models\SubCategory;
 use App\Utilities\General;
 
 /**
- * Fetch any GET parameters attached to the end of the URI and validate
+ * Fetch any GET parameters attached to the URI and validate them, silently
+ * ignore any invalid parameters
  *
  * @author Dean Blackborough <dean@g3d-development.com>
  * @copyright Dean Blackborough 2018-2019
  * @license https://github.com/costs-to-expect/api/blob/master/LICENSE
  */
-class Get
+class Parameters
 {
     private static $parameters = [];
 
     /**
-     * Fetch GET parameters from the URI and check to see if they are valid for
-     * the request
+     * Fetch any GET parameters from the URI and alter the type if necessary
      *
      * @param array $parameter_names
      */
-    private static function fetch(array $parameter_names = [])
+    private static function find(array $parameter_names = [])
     {
         $request_parameters = request()->all();
         self::$parameters = [];
@@ -198,9 +198,9 @@ class Get
      *
      * @return array
      */
-    public static function parameters(array $parameter_names = []): array
+    public static function fetch(array $parameter_names = []): array
     {
-        self::fetch($parameter_names);
+        self::find($parameter_names);
         self::validate();
 
         return self::$parameters;

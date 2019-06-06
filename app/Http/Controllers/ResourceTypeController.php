@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Parameters\Get;
+use App\Validators\Request\Parameters;
 use App\Validators\Request\Route;
 use App\Models\ResourceType;
 use App\Models\Transformers\ResourceType as ResourceTypeTransformer;
@@ -36,7 +36,7 @@ class ResourceTypeController extends Controller
     {
         $resource_types = (new ResourceType())->paginatedCollection($this->include_private);
 
-        $this->collection_parameters = Get::parameters(['include-resources']);
+        $this->collection_parameters = Parameters::fetch(['include-resources']);
 
         $headers = [
             'X-Total-Count' => count($resource_types)
@@ -66,7 +66,7 @@ class ResourceTypeController extends Controller
     {
         Route::resourceTypeRoute($resource_type_id);
 
-        $this->show_parameters = Get::parameters(['include-resources']);
+        $this->show_parameters = Parameters::fetch(['include-resources']);
 
         $resource_type = (new ResourceType())->single($resource_type_id, $this->include_private);
 

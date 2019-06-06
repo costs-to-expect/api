@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Parameters\Get;
+use App\Validators\Request\Parameters;
 use App\Validators\Request\Route;
 use App\Models\Item;
 use App\Models\Transformers\ItemCategorySummary as ItemCategorySummaryTransformer;
@@ -42,7 +42,7 @@ class SummaryItemController extends Controller
         $this->resource_type_id = $resource_type_id;
         $this->resource_id = $resource_id;
 
-        $collection_parameters = Get::parameters([
+        $collection_parameters = Parameters::fetch([
             'year',
             'years',
             'month',

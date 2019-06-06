@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Parameters\Get;
+use App\Validators\Request\Parameters;
 use App\Models\RequestLog;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -27,7 +27,7 @@ class SummaryRequestController extends Controller
      */
     public function monthlyAccessLog(Request $request): JsonResponse
     {
-        $this->collection_parameters = Get::parameters(['source']);
+        $this->collection_parameters = Parameters::fetch(['source']);
 
         $monthly_summary = (new RequestLog())->monthlyRequests($this->collection_parameters);
 

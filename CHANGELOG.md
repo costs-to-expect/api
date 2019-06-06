@@ -5,7 +5,7 @@ The complete changelog for the Costs to Expect REST API, follows the format defi
 ## [v1.15.0] - 2019-06-xx
 ### Added
 - `publish_after` field added to item, POST and PATCH updated.
-- Tests for POSTMAN, now up to 277 tests.
+- Tests for POSTMAN, now up to 280 tests.
 - /resource-types/[resource-type]/resources/[resource]/items collection updated to not include unpublished items.
 - /resource-types/[resource-type]/items collection updated to not include unpublished items.
 - /summary/resource-types/d185Q15grY/resources/kw8gLq31VB/items updated to not include unpublished items.
@@ -21,6 +21,7 @@ The complete changelog for the Costs to Expect REST API, follows the format defi
 - Don't format numbers in output, leave that to the apps.
 - Moved request fields validators.
 - Moved request route validators.
+- Moved class used to fetch GET parameters.
 
 ### Fixed
 - Collection parameters not passed through to category transformer. 

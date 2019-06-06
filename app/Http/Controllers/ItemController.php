@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Parameters\Get;
+use App\Validators\Request\Parameters;
 use App\Validators\Request\Route;
 use App\Models\Category;
 use App\Models\Item;
@@ -43,7 +43,7 @@ class ItemController extends Controller
     {
         Route::resourceRoute($resource_type_id, $resource_id);
 
-        $this->collection_parameters = Get::parameters([
+        $this->collection_parameters = Parameters::fetch([
             'include-categories',
             'include-subcategories',
             'year',
@@ -139,7 +139,7 @@ class ItemController extends Controller
     {
         Route::resourceRoute($resource_type_id, $resource_id);
 
-        $this->collection_parameters = Get::parameters(['year', 'month', 'category', 'subcategory']);
+        $this->collection_parameters = Parameters::fetch(['year', 'month', 'category', 'subcategory']);
 
         $this->setConditionalGetParameters($resource_type_id);
 

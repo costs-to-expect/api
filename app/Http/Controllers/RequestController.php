@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Parameters\Get;
+use App\Validators\Request\Parameters;
 use App\Models\RequestErrorLog;
 use App\Models\RequestLog;
 use App\Models\Transformers\RequestErrorLog as RequestErrorLogTransformer;
@@ -75,7 +75,7 @@ class RequestController extends Controller
     {
         $total = (new RequestLog())->totalCount();
 
-        $this->collection_parameters = Get::parameters(['source']);
+        $this->collection_parameters = Parameters::fetch(['source']);
 
         $pagination = UtilityPagination::init($request->path(), $total, 50)
             ->paging();

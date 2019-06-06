@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Parameters\Get;
+use App\Validators\Request\Parameters;
 use App\Validators\Request\Route;
 use App\Models\Category;
 use App\Models\ResourceType;
@@ -35,7 +35,7 @@ class CategoryController extends Controller
      */
     public function index(Request $request): JsonResponse
     {
-        $this->collection_parameters = Get::parameters(['include-subcategories']);
+        $this->collection_parameters = Parameters::fetch(['include-subcategories']);
 
         $categories = (new Category())->paginatedCollection(
             $this->include_private,
@@ -70,7 +70,7 @@ class CategoryController extends Controller
     {
         Route::categoryRoute($category_id);
 
-        $this->show_parameters = Get::parameters(['include-subcategories']);
+        $this->show_parameters = Parameters::fetch(['include-subcategories']);
 
         $category = (new Category)->single($category_id);
 
@@ -96,7 +96,7 @@ class CategoryController extends Controller
      */
     public function optionsIndex(Request $request): JsonResponse
     {
-        $this->collection_parameters = Get::parameters(['include-subcategories']);
+        $this->collection_parameters = Parameters::fetch(['include-subcategories']);
 
         return $this->generateOptionsForIndex(
             [
