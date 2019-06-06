@@ -37,6 +37,7 @@ class Get
 
                 switch ($parameter) {
                     case 'include-resources';
+                    case 'include-categories':
                     case 'include-subcategories';
                         self::$parameters[$parameter] = General::booleanValue($request_parameters[$parameter]);
                         break;

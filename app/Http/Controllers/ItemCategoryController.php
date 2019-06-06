@@ -7,7 +7,7 @@ use App\Models\Category;
 use App\Models\ItemCategory;
 use App\Models\Transformers\ItemCategory as ItemCategoryTransformer;
 use App\Utilities\Response as UtilityResponse;
-use App\Http\Parameters\Request\Validators\ItemCategory as ItemCategoryValidator;
+use App\Validators\Request\Fields\ItemCategory as ItemCategoryValidator;
 use Exception;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\JsonResponse;

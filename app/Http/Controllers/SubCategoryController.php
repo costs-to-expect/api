@@ -6,7 +6,7 @@ use App\Http\Parameters\Route\Validate;
 use App\Models\SubCategory;
 use App\Models\Transformers\SubCategory as SubCategoryTransformer;
 use App\Utilities\Response as UtilityResponse;
-use App\Http\Parameters\Request\Validators\SubCategory as SubCategoryValidator;
+use App\Validators\Request\Fields\SubCategory as SubCategoryValidator;
 use Exception;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\JsonResponse;

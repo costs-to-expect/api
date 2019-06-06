@@ -10,7 +10,7 @@ use App\Models\SubCategory;
 use App\Models\Transformers\Item as ItemTransformer;
 use App\Utilities\Pagination as UtilityPagination;
 use App\Utilities\Response as UtilityResponse;
-use App\Http\Parameters\Request\Validators\Item as ItemValidator;
+use App\Validators\Request\Fields\Item as ItemValidator;
 use Exception;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\JsonResponse;
