@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Parameters\Get;
-use App\Http\Parameters\Route\Validate;
+use App\Validators\Request\Route;
 use App\Models\Category;
 use App\Models\ResourceType;
 use App\Models\Transformers\Category as CategoryTransformer;
@@ -68,7 +68,7 @@ class CategoryController extends Controller
      */
     public function show(Request $request, $category_id): JsonResponse
     {
-        Validate::categoryRoute($category_id);
+        Route::categoryRoute($category_id);
 
         $this->show_parameters = Get::parameters(['include-subcategories']);
 
@@ -126,7 +126,7 @@ class CategoryController extends Controller
      */
     public function optionsShow(Request $request, string $category_id): JsonResponse
     {
-        Validate::categoryRoute($category_id);
+        Route::categoryRoute($category_id);
 
         return $this->generateOptionsForShow(
             [
@@ -193,7 +193,7 @@ class CategoryController extends Controller
         string $category_id
     ): JsonResponse
     {
-        Validate::categoryRoute($category_id);
+        Route::categoryRoute($category_id);
 
         try {
             (new Category())->find($category_id)->delete();

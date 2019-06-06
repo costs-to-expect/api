@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Parameters\Route\Validate;
+use App\Validators\Request\Route;
 use App\Models\Category;
 use App\Models\ItemCategory;
 use App\Models\Transformers\ItemCategory as ItemCategoryTransformer;
@@ -34,7 +34,7 @@ class ItemCategoryController extends Controller
      */
     public function index(Request $request, string $resource_type_id, string $resource_id, string $item_id): JsonResponse
     {
-        Validate::itemRoute($resource_type_id, $resource_id, $item_id);
+        Route::itemRoute($resource_type_id, $resource_id, $item_id);
 
         $item_category = (new ItemCategory())->paginatedCollection(
             $resource_type_id,
@@ -76,7 +76,7 @@ class ItemCategoryController extends Controller
         string $item_category_id
     ): JsonResponse
     {
-        Validate::itemRoute($resource_type_id, $resource_id, $item_id);
+        Route::itemRoute($resource_type_id, $resource_id, $item_id);
 
         if ($item_category_id === 'nill') {
             UtilityResponse::notFound(trans('entities.item-category'));
@@ -116,7 +116,7 @@ class ItemCategoryController extends Controller
      */
     public function optionsIndex(Request $request, string $resource_type_id, string $resource_id, string $item_id): JsonResponse
     {
-        Validate::itemRoute($resource_type_id, $resource_id, $item_id);
+        Route::itemRoute($resource_type_id, $resource_id, $item_id);
 
         return $this->generateOptionsForIndex(
             [
@@ -155,7 +155,7 @@ class ItemCategoryController extends Controller
         string $item_category_id
     ): JsonResponse
     {
-        Validate::itemRoute($resource_type_id, $resource_id, $item_id);
+        Route::itemRoute($resource_type_id, $resource_id, $item_id);
 
         if ($item_category_id === 'nill') {
             UtilityResponse::notFound(trans('entities.item-category'));
@@ -203,7 +203,7 @@ class ItemCategoryController extends Controller
         string $item_id
     ): JsonResponse
     {
-        Validate::itemRoute($resource_type_id, $resource_id, $item_id);
+        Route::itemRoute($resource_type_id, $resource_id, $item_id);
 
         $validator = (new ItemCategoryValidator)->create($request);
 
@@ -282,7 +282,7 @@ class ItemCategoryController extends Controller
         string $item_category_id
     ): JsonResponse
     {
-        Validate::itemCategory($resource_type_id, $resource_id, $item_id, $item_category_id);
+        Route::itemCategory($resource_type_id, $resource_id, $item_id, $item_category_id);
 
         $item_category = (new ItemCategory())->single(
             $resource_type_id,

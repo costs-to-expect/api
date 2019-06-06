@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Parameters\Get;
-use App\Http\Parameters\Route\Validate;
+use App\Validators\Request\Route;
 use App\Models\Item;
 use App\Models\Transformers\ItemCategorySummary as ItemCategorySummaryTransformer;
 use App\Models\Transformers\ItemMonthSummary as ItemMonthSummaryTransformer;
@@ -37,7 +37,7 @@ class SummaryItemController extends Controller
      */
     public function index(Request $request, string $resource_type_id, string $resource_id): JsonResponse
     {
-        Validate::resourceRoute($resource_type_id, $resource_id);
+        Route::resourceRoute($resource_type_id, $resource_id);
 
         $this->resource_type_id = $resource_type_id;
         $this->resource_id = $resource_id;
@@ -239,7 +239,7 @@ class SummaryItemController extends Controller
      */
     public function categorySummary(int $category_id): JsonResponse
     {
-        Validate::categoryRoute($category_id);
+        Route::categoryRoute($category_id);
 
         $summary = (new Item())->categorySummary(
             $this->resource_type_id,
@@ -267,7 +267,7 @@ class SummaryItemController extends Controller
      */
     public function subcategoriesSummary(int $category_id): JsonResponse
     {
-        Validate::categoryRoute($category_id);
+        Route::categoryRoute($category_id);
 
         $summary = (new Item())->subCategoriesSummary(
             $this->resource_type_id,
@@ -297,7 +297,7 @@ class SummaryItemController extends Controller
      */
     public function subcategorySummary(int $category_id, int $sub_category_id): JsonResponse
     {
-        Validate::subCategoryRoute($category_id, $sub_category_id);
+        Route::subCategoryRoute($category_id, $sub_category_id);
 
         $summary = (new Item())->subCategorySummary(
             $this->resource_type_id,
@@ -326,7 +326,7 @@ class SummaryItemController extends Controller
      */
     public function optionsIndex(Request $request, string $resource_type_id, string $resource_id)
     {
-        Validate::resourceRoute($resource_type_id, $resource_id);
+        Route::resourceRoute($resource_type_id, $resource_id);
 
         return $this->generateOptionsForIndex(
             [

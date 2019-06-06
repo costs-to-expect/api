@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Parameters\Get;
-use App\Http\Parameters\Route\Validate;
+use App\Validators\Request\Route;
 use App\Models\ResourceType;
 use App\Models\Transformers\ResourceType as ResourceTypeTransformer;
 use App\Utilities\Response as UtilityResponse;
@@ -64,7 +64,7 @@ class ResourceTypeController extends Controller
      */
     public function show(Request $request, string $resource_type_id): JsonResponse
     {
-        Validate::resourceTypeRoute($resource_type_id);
+        Route::resourceTypeRoute($resource_type_id);
 
         $this->show_parameters = Get::parameters(['include-resources']);
 
@@ -120,7 +120,7 @@ class ResourceTypeController extends Controller
      */
     public function optionsShow(Request $request, string $resource_type_id): JsonResponse
     {
-        Validate::resourceTypeRoute($resource_type_id);
+        Route::resourceTypeRoute($resource_type_id);
 
         return $this->generateOptionsForShow(
             [
@@ -181,7 +181,7 @@ class ResourceTypeController extends Controller
         string $resource_type_id
     ): JsonResponse
     {
-        Validate::resourceTypeRoute($resource_type_id);
+        Route::resourceTypeRoute($resource_type_id);
 
         try {
             (new ResourceType())->find($resource_type_id)->delete();

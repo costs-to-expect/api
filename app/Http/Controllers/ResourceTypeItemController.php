@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Parameters\Get;
-use App\Http\Parameters\Route\Validate;
+use App\Validators\Request\Route;
 use App\Models\Category;
 use App\Models\ResourceTypeItem;
 use App\Models\SubCategory;
@@ -33,7 +33,7 @@ class ResourceTypeItemController extends Controller
      */
     public function index(Request $request, string $resource_type_id): JsonResponse
     {
-        Validate::resourceTypeRoute($resource_type_id);
+        Route::resourceTypeRoute($resource_type_id);
 
         $collection_parameters = Get::parameters([
             'include-categories',
@@ -91,7 +91,7 @@ class ResourceTypeItemController extends Controller
      */
     public function optionsIndex(Request $request, string $resource_type_id): JsonResponse
     {
-        Validate::resourceTypeRoute($resource_type_id);
+        Route::resourceTypeRoute($resource_type_id);
 
         $this->conditionalGetParameters(
             $resource_type_id,

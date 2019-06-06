@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Parameters\Get;
-use App\Http\Parameters\Route\Validate;
+use App\Validators\Request\Route;
 use App\Models\ResourceTypeItem;
 use App\Models\Transformers\ResourceTypeItemCategorySummary as ResourceTypeItemCategorySummaryTransformer;
 use App\Models\Transformers\ResourceTypeItemMonthSummary as ResourceTypeItemMonthSummaryTransformer;
@@ -36,7 +36,7 @@ class SummaryResourceTypeItemController extends Controller
      */
     public function index(Request $request, string $resource_type_id): JsonResponse
     {
-        Validate::resourceTypeRoute($resource_type_id);
+        Route::resourceTypeRoute($resource_type_id);
 
         $this->resource_type_id = $resource_type_id;
 
@@ -351,7 +351,7 @@ class SummaryResourceTypeItemController extends Controller
      */
     public function optionsIndex(Request $request, string $resource_type_id): JsonResponse
     {
-        Validate::resourceTypeRoute($resource_type_id);
+        Route::resourceTypeRoute($resource_type_id);
 
         return $this->generateOptionsForIndex(
             [

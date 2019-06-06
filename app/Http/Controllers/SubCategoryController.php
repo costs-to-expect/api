@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Parameters\Route\Validate;
+use App\Validators\Request\Route;
 use App\Models\SubCategory;
 use App\Models\Transformers\SubCategory as SubCategoryTransformer;
 use App\Utilities\Response as UtilityResponse;
@@ -31,7 +31,7 @@ class SubCategoryController extends Controller
      */
     public function index(Request $request, string $category_id): JsonResponse
     {
-        Validate::categoryRoute($category_id);
+        Route::categoryRoute($category_id);
 
         $sub_categories = (new SubCategory())->paginatedCollection($category_id);
 
@@ -66,7 +66,7 @@ class SubCategoryController extends Controller
         string $sub_category_id
     ): JsonResponse
     {
-        Validate::subCategoryRoute($category_id, $sub_category_id);
+        Route::subCategoryRoute($category_id, $sub_category_id);
 
         $sub_category = (new SubCategory())->single(
             $category_id,
@@ -96,7 +96,7 @@ class SubCategoryController extends Controller
      */
     public function optionsIndex(Request $request, string $category_id): JsonResponse
     {
-        Validate::categoryRoute($category_id);
+        Route::categoryRoute($category_id);
 
         return $this->generateOptionsForIndex(
             [
@@ -131,7 +131,7 @@ class SubCategoryController extends Controller
         string $sub_category_id
     ): JsonResponse
     {
-        Validate::subCategoryRoute($category_id, $sub_category_id);
+        Route::subCategoryRoute($category_id, $sub_category_id);
 
         return $this->generateOptionsForShow(
             [
@@ -157,7 +157,7 @@ class SubCategoryController extends Controller
      */
     public function create(Request $request, string $category_id): JsonResponse
     {
-        Validate::categoryRoute($category_id);
+        Route::categoryRoute($category_id);
 
         $validator = (new SubCategoryValidator)->create($request, $category_id);
 
@@ -197,7 +197,7 @@ class SubCategoryController extends Controller
         string $sub_category_id
     ): JsonResponse
     {
-        Validate::subCategoryRoute($category_id, $sub_category_id);
+        Route::subCategoryRoute($category_id, $sub_category_id);
 
         $sub_category = (new SubCategory())->single(
             $category_id,

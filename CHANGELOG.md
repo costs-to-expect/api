@@ -19,6 +19,8 @@ The complete changelog for the Costs to Expect REST API, follows the format defi
 - Category, ItemCategorySummary and ItemSubCategorySummary transformers updated to new setup.
 - Up the throttle limit.
 - Don't format numbers in output, leave that to the apps.
+- Moved request fields validators.
+- Moved request route validators.
 
 ### Fixed
 - Collection parameters not passed through to category transformer. 

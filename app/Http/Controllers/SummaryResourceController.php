@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Parameters\Route\Validate;
+use App\Validators\Request\Route;
 use App\Models\Resource;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -26,7 +26,7 @@ class SummaryResourceController extends Controller
      */
     public function index(Request $request, string $resource_type_id): JsonResponse
     {
-        Validate::resourceTypeRoute($resource_type_id);
+        Route::resourceTypeRoute($resource_type_id);
 
         $summary = (new Resource())->totalCount($resource_type_id, $this->include_private);
 
@@ -50,7 +50,7 @@ class SummaryResourceController extends Controller
      */
     public function optionsIndex(Request $request, string $resource_type_id): JsonResponse
     {
-        Validate::resourceTypeRoute($resource_type_id);
+        Route::resourceTypeRoute($resource_type_id);
 
         return $this->generateOptionsForIndex(
             [
