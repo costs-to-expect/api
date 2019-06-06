@@ -9,6 +9,7 @@ The complete changelog for the Costs to Expect REST API, follows the format defi
 - /resource-types/[resource-type]/resources/[resource]/items collection updated to not include unpublished items.
 - /resource-types/[resource-type]/items collection updated to not include unpublished items.
 - /summary/resource-types/d185Q15grY/resources/kw8gLq31VB/items updated to not include unpublished items.
+- /summary/resource-types/d185Q15grY/items updated to not include unpublished items.
 
 ### Changed
 - `description` added to /summary/resource-types/[resource-type]/resources/[resource]/items?categories=true summary

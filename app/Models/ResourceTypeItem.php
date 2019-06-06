@@ -195,6 +195,8 @@ class ResourceTypeItem extends Model
             join('resource', 'item.resource_id', 'resource.id')->
             join('resource_type', 'resource.resource_type_id', 'resource_type.id')->
             where('resource_type.id', '=', $resource_type_id)->
+            whereNull('item.publish_after')->
+            orWhereRaw('item.publish_after < NOW()')->
             get()->
             toArray();
     }
@@ -213,6 +215,8 @@ class ResourceTypeItem extends Model
             join('resource', 'item.resource_id', 'resource.id')->
             join('resource_type', 'resource.resource_type_id', 'resource_type.id')->
             where('resource_type.id', '=', $resource_type_id)->
+            whereNull('item.publish_after')->
+            orWhereRaw('item.publish_after < NOW()')->
             groupBy('resource.id')->
             orderBy('name')->
             get()->
@@ -233,6 +237,8 @@ class ResourceTypeItem extends Model
             join("resource", "resource.id", "item.resource_id")->
             join("resource_type", "resource_type.id", "resource.resource_type_id")->
             where("resource_type.id", "=", $resource_type_id)->
+            whereNull('item.publish_after')->
+            orWhereRaw('item.publish_after < NOW()')->
             groupBy("year")->
             orderBy("year")->
             get()->
@@ -255,6 +261,8 @@ class ResourceTypeItem extends Model
             join("resource_type", "resource_type.id", "resource.resource_type_id")->
             where("resource_type.id", "=", $resource_type_id)->
             where(DB::raw('YEAR(item.effective_date)'), '=', $year)->
+            whereNull('item.publish_after')->
+            orWhereRaw('item.publish_after < NOW()')->
             groupBy("month")->
             orderBy("month")->
             get()->
@@ -279,6 +287,8 @@ class ResourceTypeItem extends Model
             where("resource_type.id", "=", $resource_type_id)->
             where(DB::raw('YEAR(item.effective_date)'), '=', $year)->
             where(DB::raw('MONTH(item.effective_date)'), '=', $month)->
+            whereNull('item.publish_after')->
+            orWhereRaw('item.publish_after < NOW()')->
             groupBy("month")->
             orderBy("month")->
             get()->
@@ -301,6 +311,8 @@ class ResourceTypeItem extends Model
             join("resource_type", "resource_type.id", "resource.resource_type_id")->
             where("resource_type.id", "=", $resource_type_id)->
             where(DB::raw('YEAR(item.effective_date)'), '=', $year)->
+            whereNull('item.publish_after')->
+            orWhereRaw('item.publish_after < NOW()')->
             groupBy("year")->
             orderBy("year")->
             get()->
@@ -328,6 +340,8 @@ class ResourceTypeItem extends Model
             join("category", "category.id", "item_category.category_id")->
             where("category.resource_type_id", "=", $resource_type_id)->
             where("resource_type.id", "=", $resource_type_id)->
+            whereNull('item.publish_after')->
+            orWhereRaw('item.publish_after < NOW()')->
             groupBy("category.id")->
             orderBy("name")->
             get()->
@@ -357,6 +371,8 @@ class ResourceTypeItem extends Model
             where("category.resource_type_id", "=", $resource_type_id)->
             where("resource_type.id", "=", $resource_type_id)->
             where("category.id", '=', $category_id)->
+            whereNull('item.publish_after')->
+            orWhereRaw('item.publish_after < NOW()')->
             groupBy("category.id")->
             orderBy("name")->
             get()->
@@ -388,6 +404,8 @@ class ResourceTypeItem extends Model
             where("category.resource_type_id", "=", $resource_type_id)->
             where("resource_type.id", "=", $resource_type_id)->
             where("category.id", "=", $category_id)->
+            whereNull('item.publish_after')->
+            orWhereRaw('item.publish_after < NOW()')->
             groupBy("sub_category.id")->
             orderBy("name")->
             get()->
@@ -421,6 +439,8 @@ class ResourceTypeItem extends Model
             where("resource_type.id", "=", $resource_type_id)->
             where("category.id", "=", $category_id)->
             where('sub_category.id', '=', $subcategory_id)->
+            whereNull('item.publish_after')->
+            orWhereRaw('item.publish_after < NOW()')->
             groupBy("sub_category.id")->
             orderBy("name")->
             get()->
