@@ -11,6 +11,7 @@ use App\Models\Transformers\Item as ItemTransformer;
 use App\Utilities\Pagination as UtilityPagination;
 use App\Utilities\Response as UtilityResponse;
 use App\Validators\Request\Fields\Item as ItemValidator;
+use App\Validators\Request\SortParameters;
 use Exception;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\JsonResponse;
@@ -49,8 +50,15 @@ class ItemController extends Controller
             'year',
             'month',
             'category',
-            'subcategory',
-            'sort'
+            'subcategory'
+        ]);
+
+        $sort_fields = SortParameters::fetch([
+            'description',
+            'total',
+            'actualised_total',
+            'effective_date',
+            'created'
         ]);
 
         $total = (new Item())->totalCount(
@@ -68,7 +76,8 @@ class ItemController extends Controller
             $resource_id,
             $pagination['offset'],
             $pagination['limit'],
-            $this->collection_parameters
+            $this->collection_parameters,
+            $sort_fields
         );
 
         $headers = [

@@ -22,6 +22,7 @@ The complete changelog for the Costs to Expect REST API, follows the format defi
 - Moved request fields validators.
 - Moved request route validators.
 - Moved class used to fetch GET parameters.
+- Refactored the sort parameters code, added validation and code now resides in its own class, now reusable.
 
 ### Fixed
 - Collection parameters not passed through to category transformer. 

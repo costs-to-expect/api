@@ -147,14 +147,6 @@ class Parameters
                     }
                     break;
 
-                case 'sort':
-                    if (array_key_exists($key, self::$parameters) === true) {
-                        if (strlen(self::$parameters[$key]) < 1) {
-                            unset(self::$parameters[$key]);
-                        }
-                    }
-                    break;
-
                 case 'year':
                     if (array_key_exists($key, self::$parameters) === true) {
                         if (intval(self::$parameters[$key]) < 2013 ||

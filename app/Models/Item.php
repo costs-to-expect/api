@@ -88,7 +88,8 @@ class Item extends Model
         int $resource_id,
         int $offset = 0,
         int $limit = 10,
-        array $parameters_collection = []
+        array $parameters_collection = [],
+        array $sort_fields = []
     ): array
     {
         $select_fields = [
@@ -168,35 +169,16 @@ class Item extends Model
             $collection->where('item_sub_category.sub_category_id', '=', $parameters_collection['subcategory']);
         }
 
-        if (array_key_exists('sort', $parameters_collection) === true) {
-            $sorting_parameters = explode('|', $parameters_collection['sort']);
+        if (count($sort_fields) > 0) {
+            foreach ($sort_fields as $field => $direction) {
+                switch ($field) {
+                    case 'created':
+                        $collection->orderBy('created_at', $direction);
+                        break;
 
-            if (count($sorting_parameters) > 0) {
-                foreach ($sorting_parameters as $sort) {
-                    $sort = explode(':', $sort);
-
-                    if (
-                        is_array($sort) === true &&
-                        count($sort) === 2 &&
-                        in_array($sort[1], ['asc', 'desc']) === true &&
-                        in_array($sort[0], ["description", "total", "actualised_total", "effective_date", "created"]) === true
-                    ) {
-                        switch ($sort[0]) {
-                            case 'description':
-                            case 'total':
-                            case 'actualised_total':
-                            case 'effective_date':
-                                $collection->orderBy($sort[0], $sort[1]);
-                                break;
-
-                            case 'created':
-                                $collection->orderBy('created_at', $sort[1]);
-                                break;
-
-                            default:
-                                break;
-                        }
-                    }
+                    default:
+                        $collection->orderBy($field, $direction);
+                        break;
                 }
             }
         } else {
