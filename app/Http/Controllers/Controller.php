@@ -102,6 +102,7 @@ class Controller extends BaseController
             'parameters_config_string' => null,
             'conditionals_config' => [],
             'sortable_config' => null,
+            'searchable_config' => null,
             'enable_pagination' => true,
             'authentication_required' => false
         ],
@@ -114,6 +115,7 @@ class Controller extends BaseController
     ) {
         $get_parameters = [];
         $get_parameters_sortable = [];
+        $get_parameters_searchable = [];
         $post_fields = [];
 
         if ($get['parameters_config_string'] !== null) {
@@ -133,11 +135,16 @@ class Controller extends BaseController
             $get_parameters_sortable = Config::get($get['sortable_config']);
         }
 
+        if ($get['searchable_config'] !== null) {
+            $get_parameters_searchable = Config::get($get['searchable_config']);
+        }
+
         $routes = [
             'GET' => [
                 'description' => trans($get['description_localisation_string']),
                 'authentication_required' => $get['authentication_required'],
                 'sortable' => $get_parameters_sortable,
+                'searchable' => $get_parameters_searchable,
                 'parameters' => $get_parameters
             ]
         ];

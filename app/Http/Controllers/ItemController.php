@@ -158,6 +158,7 @@ class ItemController extends Controller
                 'parameters_config_string' => 'api.item.parameters.collection',
                 'conditionals_config' => $this->get_parameters,
                 'sortable_config' => 'api.item.sortable',
+                'searchable_config' => 'api.item.searchable',
                 'enable_pagination' => true,
                 'authentication_required' => false
             ],

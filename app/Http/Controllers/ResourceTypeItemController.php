@@ -106,6 +106,7 @@ class ResourceTypeItemController extends Controller
                 'parameters_config_string' => 'api.resource-type-item.parameters.collection',
                 'conditionals_config' => $this->conditional_get_parameters,
                 'sortable_config' => null,
+                'searchable_config' => null,
                 'enable_pagination' => true,
                 'authentication_required' => false
             ]

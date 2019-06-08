@@ -334,6 +334,7 @@ class SummaryItemController extends Controller
                 'parameters_config_string' => 'api.item.summary-parameters.collection',
                 'conditionals_config' => [],
                 'sortable_config' => null,
+                'searchable_config' => null,
                 'enable_pagination' => false,
                 'authentication_required' => false
             ]

@@ -119,6 +119,7 @@ class RequestController extends Controller
                 'parameters_config_string' => 'api.request.parameters.collection',
                 'conditionals_config' => [],
                 'sortable_config' => null,
+                'searchable_config' => null,
                 'enable_pagination' => true,
                 'authentication_required' => false
             ]
@@ -138,6 +139,7 @@ class RequestController extends Controller
                 'parameters_config_string' => [],
                 'conditionals_config' => [],
                 'sortable_config' => null,
+                'searchable_config' => null,
                 'enable_pagination' => false,
                 'authentication_required' => false
             ],

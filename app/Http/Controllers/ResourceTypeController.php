@@ -98,6 +98,7 @@ class ResourceTypeController extends Controller
                 'parameters_config_string' => 'api.resource-type.parameters.collection',
                 'conditionals_config' => [],
                 'sortable_config' => null,
+                'searchable_config' => null,
                 'enable_pagination' => false,
                 'authentication_required' => false
             ],

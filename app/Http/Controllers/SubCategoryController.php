@@ -104,6 +104,7 @@ class SubCategoryController extends Controller
                 'parameters_config_string' => 'api.subcategory.parameters.collection',
                 'conditionals_config' => [],
                 'sortable_config' => null,
+                'searchable_config' => null,
                 'enable_pagination' => false,
                 'authentication_required' => false
             ],

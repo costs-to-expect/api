@@ -12,6 +12,14 @@ return [
             "type" => "string",
             "required" => false
         ],
+        'search' => [
+            "parameter" => "search",
+            "title" => 'searchable.title',
+            "description" => 'searchable.description',
+            "default" => null,
+            "type" => "string",
+            "required" => false
+        ],
         'include-categories' => [
             'field' => 'include-categories',
             'title' => 'resource-type-item/parameters.title-include-categories',
