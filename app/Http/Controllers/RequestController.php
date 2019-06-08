@@ -115,12 +115,12 @@ class RequestController extends Controller
     {
         return $this->generateOptionsForIndex(
             [
-                'description_localisation' => 'route-descriptions.request_GET_access-log',
-                'parameters_config' => 'api.request.parameters.collection',
-                'conditionals' => [],
+                'description_localisation_string' => 'route-descriptions.request_GET_access-log',
+                'parameters_config_string' => 'api.request.parameters.collection',
+                'conditionals_config' => [],
                 'sortable_config' => null,
-                'pagination' => true,
-                'authenticated' => false
+                'enable_pagination' => true,
+                'authentication_required' => false
             ]
         );
     }
@@ -134,18 +134,18 @@ class RequestController extends Controller
     {
         return $this->generateOptionsForIndex(
             [
-                'description_localisation' => 'route-descriptions.request_GET_error_log',
-                'parameters_config' => [],
-                'conditionals' => [],
+                'description_localisation_string' => 'route-descriptions.request_GET_error_log',
+                'parameters_config_string' => [],
+                'conditionals_config' => [],
                 'sortable_config' => null,
-                'pagination' => false,
-                'authenticated' => false
+                'enable_pagination' => false,
+                'authentication_required' => false
             ],
             [
-                'description_localisation' => 'route-descriptions.request_POST',
+                'description_localisation_string' => 'route-descriptions.request_POST',
                 'fields_config' => 'api.request.fields',
-                'conditionals' => [],
-                'authenticated' => false
+                'conditionals_config' => [],
+                'authentication_required' => false
             ]
         );
     }

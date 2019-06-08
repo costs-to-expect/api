@@ -94,18 +94,18 @@ class ResourceTypeController extends Controller
     {
         return $this->generateOptionsForIndex(
             [
-                'description_localisation' => 'route-descriptions.resource_type_GET_index',
-                'parameters_config' => 'api.resource-type.parameters.collection',
-                'conditionals' => [],
+                'description_localisation_string' => 'route-descriptions.resource_type_GET_index',
+                'parameters_config_string' => 'api.resource-type.parameters.collection',
+                'conditionals_config' => [],
                 'sortable_config' => null,
-                'pagination' => false,
-                'authenticated' => false
+                'enable_pagination' => false,
+                'authentication_required' => false
             ],
             [
-                'description_localisation' => 'route-descriptions.resource_type_POST',
+                'description_localisation_string' => 'route-descriptions.resource_type_POST',
                 'fields_config' => 'api.resource-type.fields',
-                'conditionals' => [],
-                'authenticated' => true
+                'conditionals_config' => [],
+                'authentication_required' => true
             ]
         );
     }
@@ -124,14 +124,14 @@ class ResourceTypeController extends Controller
 
         return $this->generateOptionsForShow(
             [
-                'description_localisation' => 'route-descriptions.resource_type_GET_show',
-                'parameters_config' => 'api.resource-type.parameters.item',
-                'conditionals' => [],
-                'authenticated' => false
+                'description_localisation_string' => 'route-descriptions.resource_type_GET_show',
+                'parameters_config_string' => 'api.resource-type.parameters.item',
+                'conditionals_config' => [],
+                'authentication_required' => false
             ],
             [
-                'description_localisation' => 'route-descriptions.resource_type_DELETE',
-                'authenticated' => true
+                'description_localisation_string' => 'route-descriptions.resource_type_DELETE',
+                'authentication_required' => true
             ]
         );
     }

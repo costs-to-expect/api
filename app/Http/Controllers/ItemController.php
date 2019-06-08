@@ -154,18 +154,18 @@ class ItemController extends Controller
 
         return $this->generateOptionsForIndex(
             [
-                'description_localisation' => 'route-descriptions.item_GET_index',
-                'parameters_config' => 'api.item.parameters.collection',
-                'conditionals' => $this->get_parameters,
+                'description_localisation_string' => 'route-descriptions.item_GET_index',
+                'parameters_config_string' => 'api.item.parameters.collection',
+                'conditionals_config' => $this->get_parameters,
                 'sortable_config' => 'api.item.sortable',
-                'pagination' => true,
-                'authenticated' => false
+                'enable_pagination' => true,
+                'authentication_required' => false
             ],
             [
-                'description_localisation' => 'route-descriptions.item_POST',
+                'description_localisation_string' => 'route-descriptions.item_POST',
                 'fields_config' => 'api.item.fields',
-                'conditionals' => [],
-                'authenticated' => true
+                'conditionals_config' => [],
+                'authentication_required' => true
             ]
         );
     }
@@ -197,20 +197,20 @@ class ItemController extends Controller
 
         return $this->generateOptionsForShow(
             [
-                'description_localisation' => 'route-descriptions.item_GET_show',
-                'parameters_config' => 'api.item.parameters.item',
-                'conditionals' => [],
-                'authenticated' => false
+                'description_localisation_string' => 'route-descriptions.item_GET_show',
+                'parameters_config_string' => 'api.item.parameters.item',
+                'conditionals_config' => [],
+                'authentication_required' => false
             ],
             [
-                'description_localisation' => 'route-descriptions.item_DELETE',
-                'authenticated' => true
+                'description_localisation_string' => 'route-descriptions.item_DELETE',
+                'authentication_required' => true
             ],
             [
-                'description_localisation' => 'route-descriptions.item_PATCH',
+                'description_localisation_string' => 'route-descriptions.item_PATCH',
                 'fields_config' => 'api.item.fields',
-                'conditionals' => [],
-                'authenticated' => true
+                'conditionals_config' => [],
+                'authentication_required' => true
             ]
         );
     }
@@ -398,17 +398,15 @@ class ItemController extends Controller
         }
 
         $categories = (new Category())->paginatedCollection($this->include_private, ['resource_type'=>$resource_type_id]);
-        array_map(
-            function($category) {
-                $this->get_parameters['category']['allowed_values'][$this->hash->encode('category', $category['category_id'])] = [
-                    'value' => $this->hash->encode('category', $category['category_id']),
-                    'name' => $category['category_name'],
-                    'description' => trans('resource-type-item/allowed-values.description-prefix-category') .
-                        $category['category_name'] . trans('resource-type-item/allowed-values.description-suffix-category')
-                ];
-            },
-            $categories
-        );
+
+        foreach ($categories as $category) {
+            $this->get_parameters['category']['allowed_values'][$this->hash->encode('category', $category['category_id'])] = [
+                'value' => $this->hash->encode('category', $category['category_id']),
+                'name' => $category['category_name'],
+                'description' => trans('item/allowed-values.description-prefix-category') .
+                    $category['category_name'] . trans('item/allowed-values.description-suffix-category')
+            ];
+        }
 
         if (array_key_exists('category', $this->collection_parameters) === true) {
             (new SubCategory())->paginatedCollection($this->collection_parameters['category'])->map(

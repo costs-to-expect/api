@@ -330,12 +330,12 @@ class SummaryItemController extends Controller
 
         return $this->generateOptionsForIndex(
             [
-                'description_localisation' => 'route-descriptions.summary_GET_resource-type_resource_items',
-                'parameters_config' => 'api.item.summary-parameters.collection',
-                'conditionals' => [],
+                'description_localisation_string' => 'route-descriptions.summary_GET_resource-type_resource_items',
+                'parameters_config_string' => 'api.item.summary-parameters.collection',
+                'conditionals_config' => [],
                 'sortable_config' => null,
-                'pagination' => false,
-                'authenticated' => false
+                'enable_pagination' => false,
+                'authentication_required' => false
             ]
         );
     }

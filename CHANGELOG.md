@@ -23,10 +23,11 @@ The complete changelog for the Costs to Expect REST API, follows the format defi
 - Moved request route validators.
 - Moved class used to fetch GET parameters.
 - Refactored the sort parameters code, added validation and code now resides in its own class, now reusable.
+- General refactoring, never happy with the design.
 
 ### Fixed
 - Collection parameters not passed through to category transformer. 
-- Header indent incorrect for v1.14.3 subheadings.
+- Header indent incorrect for the v1.14.3 changelog subheadings.
 - Description missing from /categories collection.
 
 ## [v1.14.3] - 2019-06-02

@@ -120,18 +120,18 @@ class ItemCategoryController extends Controller
 
         return $this->generateOptionsForIndex(
             [
-                'description_localisation' => 'route-descriptions.item_category_GET_index',
-                'parameters_config' => 'api.item-category.parameters.collection',
-                'conditionals' => [],
+                'description_localisation_string' => 'route-descriptions.item_category_GET_index',
+                'parameters_config_string' => 'api.item-category.parameters.collection',
+                'conditionals_config' => [],
                 'sortable_config' => null,
-                'pagination' => false,
-                'authenticated' => false
+                'enable_pagination' => false,
+                'authentication_required' => false
             ],
             [
-                'description_localisation' => 'route-descriptions.item_category_POST',
+                'description_localisation_string' => 'route-descriptions.item_category_POST',
                 'fields_config' => 'api.item-category.fields',
-                'conditionals' => $this->conditionalPostParameters($resource_type_id),
-                'authenticated' => true
+                'conditionals_config' => $this->conditionalPostParameters($resource_type_id),
+                'authentication_required' => true
             ]
         );
     }
@@ -174,14 +174,14 @@ class ItemCategoryController extends Controller
 
         return $this->generateOptionsForShow(
             [
-                'description_localisation' => 'route-descriptions.item_category_GET_show',
-                'parameters_config' => 'api.item-category.parameters.item',
-                'conditionals' => [],
-                'authenticated' => false
+                'description_localisation_string' => 'route-descriptions.item_category_GET_show',
+                'parameters_config_string' => 'api.item-category.parameters.item',
+                'conditionals_config' => [],
+                'authentication_required' => false
             ],
             [
-                'description_localisation' => 'route-descriptions.item_category_DELETE',
-                'authenticated' => true
+                'description_localisation_string' => 'route-descriptions.item_category_DELETE',
+                'authentication_required' => true
             ]
         );
     }

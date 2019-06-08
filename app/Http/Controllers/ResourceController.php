@@ -97,18 +97,18 @@ class ResourceController extends Controller
 
         return $this->generateOptionsForIndex(
             [
-                'description_localisation' => 'route-descriptions.resource_GET_index',
-                'parameters_config' => 'api.resource.parameters.collection',
-                'conditionals' => [],
+                'description_localisation_string' => 'route-descriptions.resource_GET_index',
+                'parameters_config_string' => 'api.resource.parameters.collection',
+                'conditionals_config' => [],
                 'sortable_config' => null,
-                'pagination' => false,
-                'authenticated' => false
+                'enable_pagination' => false,
+                'authentication_required' => false
             ],
             [
-                'description_localisation' => 'route-descriptions.resource_POST',
+                'description_localisation_string' => 'route-descriptions.resource_POST',
                 'fields_config' => 'api.resource.fields',
-                'conditionals' => [],
-                'authenticated' => true
+                'conditionals_config' => [],
+                'authentication_required' => true
             ]
         );
     }
@@ -137,14 +137,14 @@ class ResourceController extends Controller
 
         return $this->generateOptionsForShow(
             [
-                'description_localisation' => 'route-descriptions.resource_GET_show',
-                'parameters_config' => 'api.resource.parameters.item',
-                'conditionals' => [],
-                'authenticated' => false
+                'description_localisation_string' => 'route-descriptions.resource_GET_show',
+                'parameters_config_string' => 'api.resource.parameters.item',
+                'conditionals_config' => [],
+                'authentication_required' => false
             ],
             [
-                'description_localisation' => 'route-descriptions.resource_DELETE',
-                'authenticated' => true
+                'description_localisation_string' => 'route-descriptions.resource_DELETE',
+                'authentication_required' => true
             ]
         );
     }

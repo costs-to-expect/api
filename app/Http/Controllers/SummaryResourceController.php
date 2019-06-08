@@ -54,12 +54,12 @@ class SummaryResourceController extends Controller
 
         return $this->generateOptionsForIndex(
             [
-                'description_localisation' => 'route-descriptions.summary-resource-GET-index',
-                'parameters_config' => 'api.resource.summary-parameters.collection',
-                'conditionals' => [],
+                'description_localisation_string' => 'route-descriptions.summary-resource-GET-index',
+                'parameters_config_string' => 'api.resource.summary-parameters.collection',
+                'conditionals_config' => [],
                 'sortable_config' => null,
-                'pagination' => false,
-                'authenticated' => false
+                'enable_pagination' => false,
+                'authentication_required' => false
             ]
         );
     }
