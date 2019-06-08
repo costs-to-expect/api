@@ -43,7 +43,8 @@ class Item extends Model
     public function totalCount(
         int $resource_type_id,
         int $resource_id,
-        array $parameters_collection = []
+        array $parameters_collection = [],
+        array $search_conditions = []
     )
     {
         $collection = $this->where('resource_id', '=', $resource_id)
@@ -77,6 +78,12 @@ class Item extends Model
             $collection->where('item_sub_category.sub_category_id', '=', $parameters_collection['subcategory']);
         }
 
+        if (count($search_conditions) > 0) {
+            foreach ($search_conditions as $field => $search_term) {
+                $collection->where('item.' . $field, 'LIKE', '%' . $search_term . '%');
+            }
+        }
+
         $collection->whereNull('item.publish_after')->
             orWhereRaw('item.publish_after < NOW()');
 
@@ -89,7 +96,8 @@ class Item extends Model
         int $offset = 0,
         int $limit = 10,
         array $parameters_collection = [],
-        array $sort_fields = []
+        array $sort_fields = [],
+        array $search_conditions = []
     ): array
     {
         $select_fields = [
@@ -169,6 +177,15 @@ class Item extends Model
             $collection->where('item_sub_category.sub_category_id', '=', $parameters_collection['subcategory']);
         }
 
+        if (count($search_conditions) > 0) {
+            foreach ($search_conditions as $field => $search_term) {
+                $collection->where('item.' . $field, 'LIKE', '%' . $search_term . '%');
+            }
+        }
+
+        $collection->whereNull('item.publish_after')->
+            orWhereRaw('item.publish_after < NOW()');
+
         if (count($sort_fields) > 0) {
             foreach ($sort_fields as $field => $direction) {
                 switch ($field) {
@@ -185,9 +202,6 @@ class Item extends Model
             $collection->orderBy('item.effective_date', 'desc');
             $collection->orderBy('item.created_at', 'desc');
         }
-
-        $collection->whereNull('item.publish_after')->
-            orWhereRaw('item.publish_after < NOW()');
 
         return $collection->select($select_fields)->get()->toArray();
     }

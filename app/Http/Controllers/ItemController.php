@@ -11,6 +11,7 @@ use App\Models\Transformers\Item as ItemTransformer;
 use App\Utilities\Pagination as UtilityPagination;
 use App\Utilities\Response as UtilityResponse;
 use App\Validators\Request\Fields\Item as ItemValidator;
+use App\Validators\Request\SearchParameters;
 use App\Validators\Request\SortParameters;
 use Exception;
 use Illuminate\Database\QueryException;
@@ -61,10 +62,15 @@ class ItemController extends Controller
             'created'
         ]);
 
+        $search_conditions = SearchParameters::fetch([
+            'description'
+        ]);
+
         $total = (new Item())->totalCount(
             $resource_type_id,
             $resource_id,
-            $this->collection_parameters
+            $this->collection_parameters,
+            $search_conditions
         );
 
         $pagination = UtilityPagination::init($request->path(), $total)
@@ -77,7 +83,8 @@ class ItemController extends Controller
             $pagination['offset'],
             $pagination['limit'],
             $this->collection_parameters,
-            $sort_fields
+            $sort_fields,
+            $search_conditions
         );
 
         $headers = [

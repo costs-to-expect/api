@@ -8,8 +8,9 @@ The complete changelog for the Costs to Expect REST API, follows the format defi
 - Tests for POSTMAN, now up to 280 tests.
 - /resource-types/[resource-type]/resources/[resource]/items collection updated to not include unpublished items.
 - /resource-types/[resource-type]/items collection updated to not include unpublished items.
-- /summary/resource-types/d185Q15grY/resources/kw8gLq31VB/items updated to not include unpublished items.
-- /summary/resource-types/d185Q15grY/items updated to not include unpublished items.
+- /summary/resource-types/[resource-type]/resources/[resource]/items updated to not include unpublished items.
+- /summary/resource-types/[resource-type]/items updated to not include unpublished items.
+- search support added to /summary/resource-types/[resource-type]/resources/[resource]/items
 
 ### Changed
 - `description` added to /summary/resource-types/[resource-type]/resources/[resource]/items?categories=true summary
@@ -203,7 +204,7 @@ The complete changelog for the Costs to Expect REST API, follows the format defi
 ### Added
 - Added resource_type GET parameter to /categories route to filter results.
 - Two options for changelog, markdown on GitHub and via API.
-- Added Google Analytics to then landing page.
+- Added Google Analytics to the landing page.
 
 ### Changed
  - Corrected CHANGELOG dates, I'm not from the future.
