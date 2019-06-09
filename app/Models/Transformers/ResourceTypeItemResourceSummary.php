@@ -34,7 +34,7 @@ class ResourceTypeItemResourceSummary extends Transformer
         return [
             'id' => $this->hash->resource()->encode($this->data_to_transform['id']),
             'name' => $this->data_to_transform['name'],
-            'total' => number_format((float) $this->data_to_transform['total'], 2)
+            'total' => number_format((float) $this->data_to_transform['total'], 2, '.', '')
         ];
     }
 }
