@@ -37,7 +37,7 @@ class ItemSubCategorySummary extends Transformer
             'id' => $this->hash->subCategory()->encode($this->data_to_transform['id']),
             'name' => $this->data_to_transform['name'],
             'description' => $this->data_to_transform['description'],
-            'total' => number_format((float) $this->data_to_transform['total'],2)
+            'total' => number_format((float) $this->data_to_transform['total'],2, '.', '')
         ];
     }
 }

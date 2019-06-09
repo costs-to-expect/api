@@ -1,7 +1,7 @@
 <?php
 
 return [
-    'version'=> '1.15.0',
+    'version'=> '1.15.1',
     'prefix' => 'v1',
     'release_date' => '2019-06-09',
     'changelog' => [
