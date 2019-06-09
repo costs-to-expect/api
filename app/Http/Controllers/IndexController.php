@@ -102,6 +102,7 @@ class IndexController extends Controller
 
                     ++$i;
                     $changes[$i]['release'] = trim(str_replace('##', '', $line));
+                    $section = null;
                 }
 
                 if (strpos($line, '###') !== false) {

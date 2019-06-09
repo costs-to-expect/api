@@ -32,6 +32,7 @@ The complete changelog for the Costs to Expect REST API, follows the format defi
 - Description missing from /categories collection.
 - Pagination helper not hashing subcategory value before adding to URI.
 - Sort and search conditions added to pagination URIs.
+- Section value cleared in changelog parser when new release found.
 
 ## [v1.14.3] - 2019-06-02
 ### Added
