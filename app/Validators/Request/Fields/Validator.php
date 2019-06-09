@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Http\Parameters\Request\Validators;
+namespace App\Validators\Request\Fields;
 
 use App\Utilities\Hash;
 use Illuminate\Support\Facades\Config;

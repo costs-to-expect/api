@@ -43,7 +43,8 @@ class Item extends Model
     public function totalCount(
         int $resource_type_id,
         int $resource_id,
-        array $parameters_collection = []
+        array $parameters_collection = [],
+        array $search_conditions = []
     )
     {
         $collection = $this->where('resource_id', '=', $resource_id)
@@ -77,6 +78,15 @@ class Item extends Model
             $collection->where('item_sub_category.sub_category_id', '=', $parameters_collection['subcategory']);
         }
 
+        if (count($search_conditions) > 0) {
+            foreach ($search_conditions as $field => $search_term) {
+                $collection->where('item.' . $field, 'LIKE', '%' . $search_term . '%');
+            }
+        }
+
+        $collection->whereNull('item.publish_after')->
+            orWhereRaw('item.publish_after < NOW()');
+
         return count($collection->get());
     }
 
@@ -85,8 +95,10 @@ class Item extends Model
         int $resource_id,
         int $offset = 0,
         int $limit = 10,
-        array $parameters_collection = []
-    )
+        array $parameters_collection = [],
+        array $sort_fields = [],
+        array $search_conditions = []
+    ): array
     {
         $select_fields = [
             'item.id AS item_id',
@@ -165,35 +177,25 @@ class Item extends Model
             $collection->where('item_sub_category.sub_category_id', '=', $parameters_collection['subcategory']);
         }
 
-        if (array_key_exists('sort', $parameters_collection) === true) {
-            $sorting_parameters = explode('|', $parameters_collection['sort']);
+        if (count($search_conditions) > 0) {
+            foreach ($search_conditions as $field => $search_term) {
+                $collection->where('item.' . $field, 'LIKE', '%' . $search_term . '%');
+            }
+        }
 
-            if (count($sorting_parameters) > 0) {
-                foreach ($sorting_parameters as $sort) {
-                    $sort = explode(':', $sort);
+        $collection->whereNull('item.publish_after')->
+            orWhereRaw('item.publish_after < NOW()');
 
-                    if (
-                        is_array($sort) === true &&
-                        count($sort) === 2 &&
-                        in_array($sort[1], ['asc', 'desc']) === true &&
-                        in_array($sort[0], ["description", "total", "actualised_total", "effective_date", "created"]) === true
-                    ) {
-                        switch ($sort[0]) {
-                            case 'description':
-                            case 'total':
-                            case 'actualised_total':
-                            case 'effective_date':
-                                $collection->orderBy($sort[0], $sort[1]);
-                                break;
+        if (count($sort_fields) > 0) {
+            foreach ($sort_fields as $field => $direction) {
+                switch ($field) {
+                    case 'created':
+                        $collection->orderBy('created_at', $direction);
+                        break;
 
-                            case 'created':
-                                $collection->orderBy('created_at', $sort[1]);
-                                break;
-
-                            default:
-                                break;
-                        }
-                    }
+                    default:
+                        $collection->orderBy($field, $direction);
+                        break;
                 }
             }
         } else {
@@ -204,7 +206,7 @@ class Item extends Model
         return $collection->select($select_fields)->get()->toArray();
     }
 
-    public function single(int $resource_type_id, int $resource_id, int $item_id)
+    public function single(int $resource_type_id, int $resource_id, int $item_id): array
     {
         return $this->where('resource_id', '=', $resource_id)
             ->whereHas('resource', function ($query) use ($resource_type_id) {
@@ -223,20 +225,42 @@ class Item extends Model
             ->toArray();
     }
 
+    public function instance(int $resource_type_id, int $resource_id, int $item_id)
+    {
+        return $this->where('resource_id', '=', $resource_id)
+            ->whereHas('resource', function ($query) use ($resource_type_id) {
+                $query->where('resource_type_id', '=', $resource_type_id);
+            })
+            ->select(
+                'item.id',
+                'item.description',
+                'item.effective_date',
+                'item.publish_after',
+                'item.total',
+                'item.percentage',
+                'item.actualised_total',
+                'item.created_at'
+            )
+            ->find($item_id);
+    }
+
     /**
      * Return the summary for items
      *
      * @param int $resource_type_id
      * @param int $resource_id
-     * @return mixed
+     *
+     * @return array
      */
-    public function summary(int $resource_type_id, int $resource_id)
+    public function summary(int $resource_type_id, int $resource_id): array
     {
         return $this->selectRaw('sum(item.actualised_total) AS actualised_total')
             ->where('resource_id', '=', $resource_id)
             ->whereHas('resource', function ($query) use ($resource_type_id) {
                 $query->where('resource_type_id', '=', $resource_type_id);
             })
+            ->whereNull('item.publish_after')
+            ->orWhereRaw('item.publish_after < NOW()')
             ->get()
             ->toArray();
     }
@@ -248,10 +272,14 @@ class Item extends Model
      * @param int $resource_id
      * @return mixed
      */
-    public function categoriesSummary(int $resource_type_id, int $resource_id)
+    public function categoriesSummary(int $resource_type_id, int $resource_id): array
     {
         return $this->
-            selectRaw("category.id, category.name AS name, SUM(item.actualised_total) AS total")->
+            selectRaw('
+                category.id, 
+                category.name AS name, 
+                category.description AS description,
+                SUM(item.actualised_total) AS total')->
             join("resource", "resource.id", "item.resource_id")->
             join("resource_type", "resource_type.id", "resource.resource_type_id")->
             join("item_category", "item_category.item_id", "item.id")->
@@ -259,15 +287,22 @@ class Item extends Model
             where("category.resource_type_id", "=", $resource_type_id)->
             where("resource_type.id", "=", $resource_type_id)->
             where("resource.id", "=", $resource_id)->
+            whereNull('item.publish_after')->
+            orWhereRaw('item.publish_after < NOW()')->
             groupBy("item_category.category_id")->
             orderBy("name")->
-            get();
+            get()->
+            toArray();
     }
 
-    public function categorySummary(int $resource_type_id, int $resource_id, $category_id)
+    public function categorySummary(int $resource_type_id, int $resource_id, $category_id): array
     {
         return $this->
-            selectRaw("category.id, category.name AS name, SUM(item.actualised_total) AS total")->
+            selectRaw('
+                category.id, 
+                category.name AS name, 
+                category.description AS description, 
+                SUM(item.actualised_total) AS total')->
             join("resource", "resource.id", "item.resource_id")->
             join("resource_type", "resource_type.id", "resource.resource_type_id")->
             join("item_category", "item_category.item_id", "item.id")->
@@ -276,15 +311,22 @@ class Item extends Model
             where("resource_type.id", "=", $resource_type_id)->
             where("resource.id", "=", $resource_id)->
             where("category.id", "=", $category_id)->
+            whereNull('item.publish_after')->
+            orWhereRaw('item.publish_after < NOW()')->
             groupBy("item_category.category_id")->
             orderBy("name")->
-            get();
+            get()->
+            toArray();
     }
 
-    public function subCategoriesSummary(int $resource_type_id, int $resource_id, int $category_id)
+    public function subCategoriesSummary(int $resource_type_id, int $resource_id, int $category_id): array
     {
         return $this->
-            selectRaw("sub_category.id, sub_category.name AS name, SUM(item.actualised_total) AS total")->
+            selectRaw('
+                sub_category.id, 
+                sub_category.name AS name, 
+                sub_category.description AS description,
+                SUM(item.actualised_total) AS total')->
             join("resource", "resource.id", "item.resource_id")->
             join("resource_type", "resource_type.id", "resource.resource_type_id")->
             join("item_category", "item_category.item_id", "item.id")->
@@ -294,15 +336,27 @@ class Item extends Model
             where("resource_type.id", "=", $resource_type_id)->
             where("resource.id", "=", $resource_id)->
             where("category.id", "=", $category_id)->
+            whereNull('item.publish_after')->
+            orWhereRaw('item.publish_after < NOW()')->
             groupBy("item_sub_category.sub_category_id")->
             orderBy("name")->
-            get();
+            get()->
+            toArray();
     }
 
-    public function subCategorySummary(int $resource_type_id, int $resource_id, int $category_id, int $sub_category_id)
+    public function subCategorySummary(
+        int $resource_type_id,
+        int $resource_id,
+        int $category_id,
+        int $sub_category_id
+    ): array
     {
         return $this->
-            selectRaw("sub_category.id, sub_category.name AS name, SUM(item.actualised_total) AS total")->
+            selectRaw('
+                sub_category.id, 
+                sub_category.name AS name, 
+                sub_category.description AS description,
+                SUM(item.actualised_total) AS total')->
             join("resource", "resource.id", "item.resource_id")->
             join("resource_type", "resource_type.id", "resource.resource_type_id")->
             join("item_category", "item_category.item_id", "item.id")->
@@ -313,9 +367,12 @@ class Item extends Model
             where("resource.id", "=", $resource_id)->
             where("category.id", "=", $category_id)->
             where("sub_category.id", "=", $sub_category_id)->
+            whereNull('item.publish_after')->
+            orWhereRaw('item.publish_after < NOW()')->
             groupBy("item_sub_category.sub_category_id")->
             orderBy("name")->
-            get();
+            get()->
+            toArray();
     }
 
     public function yearsSummary(int $resource_type_id, int $resource_id)
@@ -326,6 +383,8 @@ class Item extends Model
             join("resource_type", "resource_type.id", "resource.resource_type_id")->
             where("resource_type.id", "=", $resource_type_id)->
             where("resource.id", "=", $resource_id)->
+            whereNull('item.publish_after')->
+            orWhereRaw('item.publish_after < NOW()')->
             groupBy("year")->
             orderBy("year")->
             get();
@@ -340,6 +399,8 @@ class Item extends Model
             where("resource_type.id", "=", $resource_type_id)->
             where("resource.id", "=", $resource_id)->
             whereRaw(\DB::raw("YEAR(item.effective_date) = '{$year}'"))->
+            whereNull('item.publish_after')->
+            orWhereRaw('item.publish_after < NOW()')->
             groupBy("year")->
             get();
     }
@@ -353,6 +414,8 @@ class Item extends Model
             where("resource_type.id", "=", $resource_type_id)->
             where("resource.id", "=", $resource_id)->
             whereRaw(\DB::raw("YEAR(item.effective_date) = '{$year}'"))->
+            whereNull('item.publish_after')->
+            orWhereRaw('item.publish_after < NOW()')->
             groupBy("month")->
             orderBy("month")->
             get();
@@ -368,30 +431,10 @@ class Item extends Model
             where("resource.id", "=", $resource_id)->
             whereRaw(\DB::raw("YEAR(item.effective_date) = '{$year}'"))->
             whereRaw(\DB::raw("MONTH(item.effective_date) = '{$month}'"))->
+            whereNull('item.publish_after')->
+            orWhereRaw('item.publish_after < NOW()')->
             groupBy("month")->
             orderBy("month")->
-            get();
-    }
-
-    public function expandedCategoriesSummary(int $resource_type_id, int $resource_id)
-    {
-        return $this->
-            selectRaw("`category`.`name` AS `category`")->
-            selectRaw("`sub_category`.`name` AS `sub_category`")->
-            selectRaw("SUM(`item`.`actualised_total`) AS `actualised_total`")->
-            selectRaw("COUNT(`item`.`id`) AS `items`")->
-            join("item_category", "item_category.item_id", "item.id")->
-            join("item_sub_category", "item_sub_category.item_category_id", "item_category.id")->
-            join("category", "item_category.category_id", "category.id")->
-            join("sub_category", "item_sub_category.sub_category_id", "sub_category.id")->
-            join("resource", "item.resource_id", "resource.id")->
-            join("resource_type", "resource.resource_type_id", "resource_type.id")->
-            where('resource_type.id', '=', $resource_type_id)->
-            where('resource.id', '=', $resource_id)->
-            groupBy("sub_category.name")->
-            groupBy("category.name")->
-            orderBy("category.name")->
-            orderBy("sub_category.name")->
             get();
     }
 }

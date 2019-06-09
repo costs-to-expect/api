@@ -26,7 +26,7 @@ class Item extends Transformer
         $item = [
             'id' => $this->hash->item()->encode($this->item['item_id']),
             'description' => $this->item['item_description'],
-            'total' => number_format((float) $this->item['item_total'], 2),
+            'total' => number_format((float) $this->item['item_total'],2),
             'percentage' => $this->item['item_percentage'],
             'actualised_total' => number_format((float) $this->item['item_actualised_total'], 2),
             'effective_date' => $this->item['item_effective_date'],

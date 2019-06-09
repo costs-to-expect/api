@@ -2,13 +2,13 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Parameters\Route\Validate;
+use App\Validators\Request\Route;
 use App\Models\ItemCategory;
 use App\Models\ItemSubCategory;
 use App\Models\SubCategory;
 use App\Models\Transformers\ItemSubCategory as ItemSubCategoryTransformer;
 use App\Utilities\Response as UtilityResponse;
-use App\Http\Parameters\Request\Validators\ItemSubCategory as ItemSubCategoryValidator;
+use App\Validators\Request\Fields\ItemSubCategory as ItemSubCategoryValidator;
 use Exception;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\JsonResponse;
@@ -42,7 +42,7 @@ class ItemSubCategoryController extends Controller
         string $item_category_id
     ): JsonResponse
     {
-        Validate::itemRoute($resource_type_id, $resource_id, $item_id);
+        Route::itemRoute($resource_type_id, $resource_id, $item_id);
 
         if ($item_category_id === 'nill') {
             UtilityResponse::notFound(trans('entities.item-sub-category'));
@@ -91,7 +91,7 @@ class ItemSubCategoryController extends Controller
         string $item_sub_category_id
     ): JsonResponse
     {
-        Validate::itemRoute($resource_type_id, $resource_id, $item_id);
+        Route::itemRoute($resource_type_id, $resource_id, $item_id);
 
         if ($item_category_id === 'nill' || $item_sub_category_id === 'nill') {
             UtilityResponse::notFound(trans('entities.item-sub-category'));
@@ -139,7 +139,7 @@ class ItemSubCategoryController extends Controller
         string $item_category_id
     ): JsonResponse
     {
-        Validate::itemRoute($resource_type_id, $resource_id, $item_id);
+        Route::itemRoute($resource_type_id, $resource_id, $item_id);
 
         if ($item_category_id === 'nill') {
             UtilityResponse::notFound(trans('entities.item-sub-category'));
@@ -152,18 +152,19 @@ class ItemSubCategoryController extends Controller
 
         return $this->generateOptionsForIndex(
             [
-                'description_localisation' => 'route-descriptions.item_sub_category_GET_index',
-                'parameters_config' => 'api.item-subcategory.parameters.collection',
-                'conditionals' => [],
+                'description_localisation_string' => 'route-descriptions.item_sub_category_GET_index',
+                'parameters_config_string' => 'api.item-subcategory.parameters.collection',
+                'conditionals_config' => [],
                 'sortable_config' => null,
-                'pagination' => false,
-                'authenticated' => false
+                'searchable_config' => null,
+                'enable_pagination' => false,
+                'authentication_required' => false
             ],
             [
-                'description_localisation' => 'route-descriptions.item_sub_category_POST',
+                'description_localisation_string' => 'route-descriptions.item_sub_category_POST',
                 'fields_config' => 'api.item-subcategory.fields',
-                'conditionals' => $this->conditionalPostParameters($item_category->category_id),
-                'authenticated' => true
+                'conditionals_config' => $this->conditionalPostParameters($item_category->category_id),
+                'authentication_required' => true
             ]
         );
     }
@@ -189,7 +190,7 @@ class ItemSubCategoryController extends Controller
         string $item_sub_category_id
     ): JsonResponse
     {
-        Validate::itemRoute($resource_type_id, $resource_id, $item_id);
+        Route::itemRoute($resource_type_id, $resource_id, $item_id);
 
         if ($item_category_id === 'nill' || $item_sub_category_id === 'nill') {
             UtilityResponse::notFound(trans('entities.item-sub-category'));
@@ -209,14 +210,14 @@ class ItemSubCategoryController extends Controller
 
         return $this->generateOptionsForShow(
             [
-                'description_localisation' => 'route-descriptions.item_sub_category_GET_show',
-                'parameters_config' => 'api.item-subcategory.parameters.item',
-                'conditionals' => [],
-                'authenticated' => false
+                'description_localisation_string' => 'route-descriptions.item_sub_category_GET_show',
+                'parameters_config_string' => 'api.item-subcategory.parameters.item',
+                'conditionals_config' => [],
+                'authentication_required' => false
             ],
             [
-                'description_localisation' => 'route-descriptions.item_sub_category_DELETE',
-                'authenticated' => true
+                'description_localisation_string' => 'route-descriptions.item_sub_category_DELETE',
+                'authentication_required' => true
             ]
         );
     }
@@ -240,7 +241,7 @@ class ItemSubCategoryController extends Controller
         string $item_category_id
     ): JsonResponse
     {
-        Validate::itemRoute($resource_type_id, $resource_id, $item_id);
+        Route::itemRoute($resource_type_id, $resource_id, $item_id);
 
         if ($item_category_id === 'nill') {
             UtilityResponse::notFound(trans('entities.item-sub-category'));
@@ -296,7 +297,7 @@ class ItemSubCategoryController extends Controller
         $conditional_post_parameters = ['sub_category_id' => []];
 
         foreach ($sub_categories as $sub_category) {
-            $id = $this->hash->encode('sub_category', $sub_category->id);
+            $id = $this->hash->encode('subcategory', $sub_category->id);
 
             if ($id === false) {
                 UtilityResponse::unableToDecode();
@@ -333,7 +334,7 @@ class ItemSubCategoryController extends Controller
         string $item_sub_category_id
     ): JsonResponse
     {
-        Validate::itemRoute($resource_type_id, $resource_id, $item_id);
+        Route::itemRoute($resource_type_id, $resource_id, $item_id);
 
         if ($item_category_id === 'nill' || $item_sub_category_id === 'nill') {
             UtilityResponse::notFound(trans('entities.item-sub-category'));

@@ -2,12 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Parameters\Route\Validate;
+use App\Validators\Request\Route;
 use App\Models\Category;
 use App\Models\ItemCategory;
 use App\Models\Transformers\ItemCategory as ItemCategoryTransformer;
 use App\Utilities\Response as UtilityResponse;
-use App\Http\Parameters\Request\Validators\ItemCategory as ItemCategoryValidator;
+use App\Validators\Request\Fields\ItemCategory as ItemCategoryValidator;
 use Exception;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\JsonResponse;
@@ -34,7 +34,7 @@ class ItemCategoryController extends Controller
      */
     public function index(Request $request, string $resource_type_id, string $resource_id, string $item_id): JsonResponse
     {
-        Validate::itemRoute($resource_type_id, $resource_id, $item_id);
+        Route::itemRoute($resource_type_id, $resource_id, $item_id);
 
         $item_category = (new ItemCategory())->paginatedCollection(
             $resource_type_id,
@@ -76,7 +76,7 @@ class ItemCategoryController extends Controller
         string $item_category_id
     ): JsonResponse
     {
-        Validate::itemRoute($resource_type_id, $resource_id, $item_id);
+        Route::itemRoute($resource_type_id, $resource_id, $item_id);
 
         if ($item_category_id === 'nill') {
             UtilityResponse::notFound(trans('entities.item-category'));
@@ -116,22 +116,23 @@ class ItemCategoryController extends Controller
      */
     public function optionsIndex(Request $request, string $resource_type_id, string $resource_id, string $item_id): JsonResponse
     {
-        Validate::itemRoute($resource_type_id, $resource_id, $item_id);
+        Route::itemRoute($resource_type_id, $resource_id, $item_id);
 
         return $this->generateOptionsForIndex(
             [
-                'description_localisation' => 'route-descriptions.item_category_GET_index',
-                'parameters_config' => 'api.item-category.parameters.collection',
-                'conditionals' => [],
+                'description_localisation_string' => 'route-descriptions.item_category_GET_index',
+                'parameters_config_string' => 'api.item-category.parameters.collection',
+                'conditionals_config' => [],
                 'sortable_config' => null,
-                'pagination' => false,
-                'authenticated' => false
+                'searchable_config' => null,
+                'enable_pagination' => false,
+                'authentication_required' => false
             ],
             [
-                'description_localisation' => 'route-descriptions.item_category_POST',
+                'description_localisation_string' => 'route-descriptions.item_category_POST',
                 'fields_config' => 'api.item-category.fields',
-                'conditionals' => $this->conditionalPostParameters($resource_type_id),
-                'authenticated' => true
+                'conditionals_config' => $this->conditionalPostParameters($resource_type_id),
+                'authentication_required' => true
             ]
         );
     }
@@ -155,7 +156,7 @@ class ItemCategoryController extends Controller
         string $item_category_id
     ): JsonResponse
     {
-        Validate::itemRoute($resource_type_id, $resource_id, $item_id);
+        Route::itemRoute($resource_type_id, $resource_id, $item_id);
 
         if ($item_category_id === 'nill') {
             UtilityResponse::notFound(trans('entities.item-category'));
@@ -174,14 +175,14 @@ class ItemCategoryController extends Controller
 
         return $this->generateOptionsForShow(
             [
-                'description_localisation' => 'route-descriptions.item_category_GET_show',
-                'parameters_config' => 'api.item-category.parameters.item',
-                'conditionals' => [],
-                'authenticated' => false
+                'description_localisation_string' => 'route-descriptions.item_category_GET_show',
+                'parameters_config_string' => 'api.item-category.parameters.item',
+                'conditionals_config' => [],
+                'authentication_required' => false
             ],
             [
-                'description_localisation' => 'route-descriptions.item_category_DELETE',
-                'authenticated' => true
+                'description_localisation_string' => 'route-descriptions.item_category_DELETE',
+                'authentication_required' => true
             ]
         );
     }
@@ -203,7 +204,7 @@ class ItemCategoryController extends Controller
         string $item_id
     ): JsonResponse
     {
-        Validate::itemRoute($resource_type_id, $resource_id, $item_id);
+        Route::itemRoute($resource_type_id, $resource_id, $item_id);
 
         $validator = (new ItemCategoryValidator)->create($request);
 
@@ -282,7 +283,7 @@ class ItemCategoryController extends Controller
         string $item_category_id
     ): JsonResponse
     {
-        Validate::itemCategory($resource_type_id, $resource_id, $item_id, $item_category_id);
+        Route::itemCategory($resource_type_id, $resource_id, $item_id, $item_category_id);
 
         $item_category = (new ItemCategory())->single(
             $resource_type_id,

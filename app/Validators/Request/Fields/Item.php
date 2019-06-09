@@ -1,9 +1,9 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Http\Parameters\Request\Validators;
+namespace App\Validators\Request\Fields;
 
-use App\Http\Parameters\Request\Validators\Validator as BaseValidator;
+use App\Validators\Request\Fields\Validator as BaseValidator;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Config;

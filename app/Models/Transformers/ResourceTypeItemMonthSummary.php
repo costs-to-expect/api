@@ -35,7 +35,7 @@ class ResourceTypeItemMonthSummary extends Transformer
         return [
             'id' => $this->data_to_transform['month'],
             'month' => date("F", mktime(0, 0, 0, $this->data_to_transform['month'], 1)),
-            'total' => number_format((float)$this->data_to_transform['total'], 2, '.', '')
+            'total' => (float)$this->data_to_transform['total']
         ];
     }
 }

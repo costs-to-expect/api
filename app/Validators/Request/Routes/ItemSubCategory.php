@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Http\Parameters\Route\Validators;
+namespace App\Validators\Request\Routes;
 
 use App\Models\ItemSubCategory as ItemSubCategoryModel;
 

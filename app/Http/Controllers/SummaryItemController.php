@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Parameters\Get;
-use App\Http\Parameters\Route\Validate;
+use App\Validators\Request\Parameters;
+use App\Validators\Request\Route;
 use App\Models\Item;
 use App\Models\Transformers\ItemCategorySummary as ItemCategorySummaryTransformer;
 use App\Models\Transformers\ItemMonthSummary as ItemMonthSummaryTransformer;
@@ -37,12 +37,12 @@ class SummaryItemController extends Controller
      */
     public function index(Request $request, string $resource_type_id, string $resource_id): JsonResponse
     {
-        Validate::resourceRoute($resource_type_id, $resource_id);
+        Route::resourceRoute($resource_type_id, $resource_id);
 
         $this->resource_type_id = $resource_type_id;
         $this->resource_id = $resource_id;
 
-        $collection_parameters = Get::parameters([
+        $collection_parameters = Parameters::fetch([
             'year',
             'years',
             'month',
@@ -219,10 +219,11 @@ class SummaryItemController extends Controller
         );
 
         return response()->json(
-            $summary->map(
-                function ($category_summary) {
-                    return (new ItemCategorySummaryTransformer($category_summary))->toArray();
-                }
+            array_map(
+                function($category) {
+                    return (new ItemCategorySummaryTransformer($category))->toArray();
+                },
+                $summary
             ),
             200,
             [ 'X-Total-Count' => count($summary) ]
@@ -238,7 +239,7 @@ class SummaryItemController extends Controller
      */
     public function categorySummary(int $category_id): JsonResponse
     {
-        Validate::categoryRoute($category_id);
+        Route::categoryRoute($category_id);
 
         $summary = (new Item())->categorySummary(
             $this->resource_type_id,
@@ -266,7 +267,7 @@ class SummaryItemController extends Controller
      */
     public function subcategoriesSummary(int $category_id): JsonResponse
     {
-        Validate::categoryRoute($category_id);
+        Route::categoryRoute($category_id);
 
         $summary = (new Item())->subCategoriesSummary(
             $this->resource_type_id,
@@ -275,10 +276,11 @@ class SummaryItemController extends Controller
         );
 
         return response()->json(
-            $summary->map(
-                function ($category_summary) {
-                    return (new ItemSubCategorySummaryTransformer($category_summary))->toArray();
-                }
+            array_map(
+                function($subcategory) {
+                    return (new ItemSubCategorySummaryTransformer($subcategory))->toArray();
+                },
+                $summary
             ),
             200,
             [ 'X-Total-Count' => count($summary) ]
@@ -295,7 +297,7 @@ class SummaryItemController extends Controller
      */
     public function subcategorySummary(int $category_id, int $sub_category_id): JsonResponse
     {
-        Validate::subCategoryRoute($category_id, $sub_category_id);
+        Route::subCategoryRoute($category_id, $sub_category_id);
 
         $summary = (new Item())->subCategorySummary(
             $this->resource_type_id,
@@ -324,16 +326,17 @@ class SummaryItemController extends Controller
      */
     public function optionsIndex(Request $request, string $resource_type_id, string $resource_id)
     {
-        Validate::resourceRoute($resource_type_id, $resource_id);
+        Route::resourceRoute($resource_type_id, $resource_id);
 
         return $this->generateOptionsForIndex(
             [
-                'description_localisation' => 'route-descriptions.summary_GET_resource-type_resource_items',
-                'parameters_config' => 'api.item.summary-parameters.collection',
-                'conditionals' => [],
+                'description_localisation_string' => 'route-descriptions.summary_GET_resource-type_resource_items',
+                'parameters_config_string' => 'api.item.summary-parameters.collection',
+                'conditionals_config' => [],
                 'sortable_config' => null,
-                'pagination' => false,
-                'authenticated' => false
+                'searchable_config' => null,
+                'enable_pagination' => false,
+                'authentication_required' => false
             ]
         );
     }

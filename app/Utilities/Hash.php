@@ -32,7 +32,7 @@ class Hash
         $this->min_length = Config::get('api.hashids.min_length');
 
         $this->hashers['category'] = new Hashids(Config::get('api.hashids.category'), $this->min_length);
-        $this->hashers['sub_category'] = new Hashids(Config::get('api.hashids.sub_category'), $this->min_length);
+        $this->hashers['subcategory'] = new Hashids(Config::get('api.hashids.sub_category'), $this->min_length);
         $this->hashers['resource_type'] = new Hashids(Config::get('api.hashids.resource_type'), $this->min_length);
         $this->hashers['resource'] = new Hashids(Config::get('api.hashids.resource'), $this->min_length);
         $this->hashers['item'] = new Hashids(Config::get('api.hashids.item'), $this->min_length);
@@ -92,7 +92,7 @@ class Hash
      */
     public function subCategory(): Hashids
     {
-        return $this->hashers['sub_category'];
+        return $this->hashers['subcategory'];
     }
 
     /**

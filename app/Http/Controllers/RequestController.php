@@ -2,13 +2,13 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Parameters\Get;
+use App\Validators\Request\Parameters;
 use App\Models\RequestErrorLog;
 use App\Models\RequestLog;
 use App\Models\Transformers\RequestErrorLog as RequestErrorLogTransformer;
 use App\Models\Transformers\RequestLog as RequestLogTransformer;
 use App\Utilities\Pagination as UtilityPagination;
-use App\Http\Parameters\Request\Validators\RequestErrorLog as RequestErrorLogValidator;
+use App\Validators\Request\Fields\RequestErrorLog as RequestErrorLogValidator;
 use App\Utilities\Response as UtilityResponse;
 use Exception;
 use Illuminate\Http\JsonResponse;
@@ -75,7 +75,7 @@ class RequestController extends Controller
     {
         $total = (new RequestLog())->totalCount();
 
-        $this->collection_parameters = Get::parameters(['source']);
+        $this->collection_parameters = Parameters::fetch(['source']);
 
         $pagination = UtilityPagination::init($request->path(), $total, 50)
             ->paging();
@@ -115,12 +115,13 @@ class RequestController extends Controller
     {
         return $this->generateOptionsForIndex(
             [
-                'description_localisation' => 'route-descriptions.request_GET_access-log',
-                'parameters_config' => 'api.request.parameters.collection',
-                'conditionals' => [],
+                'description_localisation_string' => 'route-descriptions.request_GET_access-log',
+                'parameters_config_string' => 'api.request.parameters.collection',
+                'conditionals_config' => [],
                 'sortable_config' => null,
-                'pagination' => true,
-                'authenticated' => false
+                'searchable_config' => null,
+                'enable_pagination' => true,
+                'authentication_required' => false
             ]
         );
     }
@@ -134,18 +135,19 @@ class RequestController extends Controller
     {
         return $this->generateOptionsForIndex(
             [
-                'description_localisation' => 'route-descriptions.request_GET_error_log',
-                'parameters_config' => [],
-                'conditionals' => [],
+                'description_localisation_string' => 'route-descriptions.request_GET_error_log',
+                'parameters_config_string' => [],
+                'conditionals_config' => [],
                 'sortable_config' => null,
-                'pagination' => false,
-                'authenticated' => false
+                'searchable_config' => null,
+                'enable_pagination' => false,
+                'authentication_required' => false
             ],
             [
-                'description_localisation' => 'route-descriptions.request_POST',
+                'description_localisation_string' => 'route-descriptions.request_POST',
                 'fields_config' => 'api.request.fields',
-                'conditionals' => [],
-                'authenticated' => false
+                'conditionals_config' => [],
+                'authentication_required' => false
             ]
         );
     }

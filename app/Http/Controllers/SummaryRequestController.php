@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Parameters\Get;
+use App\Validators\Request\Parameters;
 use App\Models\RequestLog;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -27,7 +27,7 @@ class SummaryRequestController extends Controller
      */
     public function monthlyAccessLog(Request $request): JsonResponse
     {
-        $this->collection_parameters = Get::parameters(['source']);
+        $this->collection_parameters = Parameters::fetch(['source']);
 
         $monthly_summary = (new RequestLog())->monthlyRequests($this->collection_parameters);
 
@@ -51,12 +51,13 @@ class SummaryRequestController extends Controller
     {
         return $this->generateOptionsForIndex(
             [
-                'description_localisation' => 'route-descriptions.summary_GET_request_access-log_monthly',
-                'parameters_config' => 'api.request.parameters.collection',
-                'conditionals' => [],
+                'description_localisation_string' => 'route-descriptions.summary_GET_request_access-log_monthly',
+                'parameters_config_string' => 'api.request.parameters.collection',
+                'conditionals_config' => [],
                 'sortable_config' => null,
-                'pagination' => false,
-                'authenticated' => false
+                'searchable_config' => null,
+                'enable_pagination' => false,
+                'authentication_required' => false
             ]
         );
     }

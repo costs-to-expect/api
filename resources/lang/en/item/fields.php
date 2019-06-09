@@ -9,6 +9,9 @@ return [
     'title-effective_date' => 'Item effective date',
     'description-effective_date' => 'Enter an effective date for the item',
 
+    'title-publish_after' => 'Publish after this date',
+    'description-publish_after' => 'Enter a date to withhold publishing until',
+
     'title-total' => 'Item total',
     'description-total' => 'Enter the total cost for the item',
 

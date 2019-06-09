@@ -17,6 +17,13 @@ return [
         'type' => 'date (yyyy-mm-dd)',
         'required' => true
     ],
+    'publish_after' => [
+        'field' => 'publish_after',
+        'title' => 'item/fields.title-publish_after',
+        'description' => 'item/fields.description-publish_after',
+        'type' => 'date (yyyy-mm-dd)',
+        'required' => false
+    ],
     'total' => [
         'field' => 'total',
         'title' => 'item/fields.title-total',

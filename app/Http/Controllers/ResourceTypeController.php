@@ -2,12 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Parameters\Get;
-use App\Http\Parameters\Route\Validate;
+use App\Validators\Request\Parameters;
+use App\Validators\Request\Route;
 use App\Models\ResourceType;
 use App\Models\Transformers\ResourceType as ResourceTypeTransformer;
 use App\Utilities\Response as UtilityResponse;
-use App\Http\Parameters\Request\Validators\ResourceType as ResourceTypeValidator;
+use App\Validators\Request\Fields\ResourceType as ResourceTypeValidator;
 use Exception;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\JsonResponse;
@@ -36,7 +36,7 @@ class ResourceTypeController extends Controller
     {
         $resource_types = (new ResourceType())->paginatedCollection($this->include_private);
 
-        $this->collection_parameters = Get::parameters(['include-resources']);
+        $this->collection_parameters = Parameters::fetch(['include-resources']);
 
         $headers = [
             'X-Total-Count' => count($resource_types)
@@ -64,9 +64,9 @@ class ResourceTypeController extends Controller
      */
     public function show(Request $request, string $resource_type_id): JsonResponse
     {
-        Validate::resourceTypeRoute($resource_type_id);
+        Route::resourceTypeRoute($resource_type_id);
 
-        $this->show_parameters = Get::parameters(['include-resources']);
+        $this->show_parameters = Parameters::fetch(['include-resources']);
 
         $resource_type = (new ResourceType())->single($resource_type_id, $this->include_private);
 
@@ -94,18 +94,19 @@ class ResourceTypeController extends Controller
     {
         return $this->generateOptionsForIndex(
             [
-                'description_localisation' => 'route-descriptions.resource_type_GET_index',
-                'parameters_config' => 'api.resource-type.parameters.collection',
-                'conditionals' => [],
+                'description_localisation_string' => 'route-descriptions.resource_type_GET_index',
+                'parameters_config_string' => 'api.resource-type.parameters.collection',
+                'conditionals_config' => [],
                 'sortable_config' => null,
-                'pagination' => false,
-                'authenticated' => false
+                'searchable_config' => null,
+                'enable_pagination' => false,
+                'authentication_required' => false
             ],
             [
-                'description_localisation' => 'route-descriptions.resource_type_POST',
+                'description_localisation_string' => 'route-descriptions.resource_type_POST',
                 'fields_config' => 'api.resource-type.fields',
-                'conditionals' => [],
-                'authenticated' => true
+                'conditionals_config' => [],
+                'authentication_required' => true
             ]
         );
     }
@@ -120,18 +121,18 @@ class ResourceTypeController extends Controller
      */
     public function optionsShow(Request $request, string $resource_type_id): JsonResponse
     {
-        Validate::resourceTypeRoute($resource_type_id);
+        Route::resourceTypeRoute($resource_type_id);
 
         return $this->generateOptionsForShow(
             [
-                'description_localisation' => 'route-descriptions.resource_type_GET_show',
-                'parameters_config' => 'api.resource-type.parameters.item',
-                'conditionals' => [],
-                'authenticated' => false
+                'description_localisation_string' => 'route-descriptions.resource_type_GET_show',
+                'parameters_config_string' => 'api.resource-type.parameters.item',
+                'conditionals_config' => [],
+                'authentication_required' => false
             ],
             [
-                'description_localisation' => 'route-descriptions.resource_type_DELETE',
-                'authenticated' => true
+                'description_localisation_string' => 'route-descriptions.resource_type_DELETE',
+                'authentication_required' => true
             ]
         );
     }
@@ -181,7 +182,7 @@ class ResourceTypeController extends Controller
         string $resource_type_id
     ): JsonResponse
     {
-        Validate::resourceTypeRoute($resource_type_id);
+        Route::resourceTypeRoute($resource_type_id);
 
         try {
             (new ResourceType())->find($resource_type_id)->delete();

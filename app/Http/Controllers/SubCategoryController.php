@@ -2,11 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Parameters\Route\Validate;
+use App\Validators\Request\Route;
 use App\Models\SubCategory;
 use App\Models\Transformers\SubCategory as SubCategoryTransformer;
 use App\Utilities\Response as UtilityResponse;
-use App\Http\Parameters\Request\Validators\SubCategory as SubCategoryValidator;
+use App\Validators\Request\Fields\SubCategory as SubCategoryValidator;
 use Exception;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\JsonResponse;
@@ -31,7 +31,7 @@ class SubCategoryController extends Controller
      */
     public function index(Request $request, string $category_id): JsonResponse
     {
-        Validate::categoryRoute($category_id);
+        Route::categoryRoute($category_id);
 
         $sub_categories = (new SubCategory())->paginatedCollection($category_id);
 
@@ -66,7 +66,7 @@ class SubCategoryController extends Controller
         string $sub_category_id
     ): JsonResponse
     {
-        Validate::subCategoryRoute($category_id, $sub_category_id);
+        Route::subCategoryRoute($category_id, $sub_category_id);
 
         $sub_category = (new SubCategory())->single(
             $category_id,
@@ -96,22 +96,23 @@ class SubCategoryController extends Controller
      */
     public function optionsIndex(Request $request, string $category_id): JsonResponse
     {
-        Validate::categoryRoute($category_id);
+        Route::categoryRoute($category_id);
 
         return $this->generateOptionsForIndex(
             [
-                'description_localisation' => 'route-descriptions.sub_category_GET_index',
-                'parameters_config' => 'api.subcategory.parameters.collection',
-                'conditionals' => [],
+                'description_localisation_string' => 'route-descriptions.sub_category_GET_index',
+                'parameters_config_string' => 'api.subcategory.parameters.collection',
+                'conditionals_config' => [],
                 'sortable_config' => null,
-                'pagination' => false,
-                'authenticated' => false
+                'searchable_config' => null,
+                'enable_pagination' => false,
+                'authentication_required' => false
             ],
             [
-                'description_localisation' => 'route-descriptions.sub_category_POST',
+                'description_localisation_string' => 'route-descriptions.sub_category_POST',
                 'fields_config' => 'api.subcategory.fields',
-                'conditionals' => [],
-                'authenticated' => true
+                'conditionals_config' => [],
+                'authentication_required' => true
             ]
         );
     }
@@ -131,18 +132,18 @@ class SubCategoryController extends Controller
         string $sub_category_id
     ): JsonResponse
     {
-        Validate::subCategoryRoute($category_id, $sub_category_id);
+        Route::subCategoryRoute($category_id, $sub_category_id);
 
         return $this->generateOptionsForShow(
             [
-                'description_localisation' => 'route-descriptions.sub_category_GET_show',
-                'parameters_config' => 'api.subcategory.parameters.item',
-                'conditionals' => [],
-                'authenticated' => false
+                'description_localisation_string' => 'route-descriptions.sub_category_GET_show',
+                'parameters_config_string' => 'api.subcategory.parameters.item',
+                'conditionals_config' => [],
+                'authentication_required' => false
             ],
             [
-                'description_localisation' => 'route-descriptions.sub_category_DELETE',
-                'authenticated' => true
+                'description_localisation_string' => 'route-descriptions.sub_category_DELETE',
+                'authentication_required' => true
             ]
         );
     }
@@ -157,7 +158,7 @@ class SubCategoryController extends Controller
      */
     public function create(Request $request, string $category_id): JsonResponse
     {
-        Validate::categoryRoute($category_id);
+        Route::categoryRoute($category_id);
 
         $validator = (new SubCategoryValidator)->create($request, $category_id);
 
@@ -197,7 +198,7 @@ class SubCategoryController extends Controller
         string $sub_category_id
     ): JsonResponse
     {
-        Validate::subCategoryRoute($category_id, $sub_category_id);
+        Route::subCategoryRoute($category_id, $sub_category_id);
 
         $sub_category = (new SubCategory())->single(
             $category_id,

@@ -98,30 +98,32 @@ class Controller extends BaseController
      */
     protected function generateOptionsForIndex(
         array $get = [
-            'description_localisation' => '',
-            'parameters_config' => null,
-            'conditionals' => [],
+            'description_localisation_string' => '',
+            'parameters_config_string' => null,
+            'conditionals_config' => [],
             'sortable_config' => null,
-            'pagination' => true,
-            'authenticated' => false
+            'searchable_config' => null,
+            'enable_pagination' => true,
+            'authentication_required' => false
         ],
         array $post = [
-            'description_localisation' => '',
+            'description_localisation_string' => '',
             'fields_config' => '',
-            'conditionals' => [],
-            'authenticated' => true
+            'conditionals_config' => [],
+            'authentication_required' => true
         ]
     ) {
         $get_parameters = [];
         $get_parameters_sortable = [];
+        $get_parameters_searchable = [];
         $post_fields = [];
 
-        if ($get['parameters_config'] !== null) {
+        if ($get['parameters_config_string'] !== null) {
             foreach (
                 array_merge_recursive(
-                    ($get['pagination'] === true ? Config::get('api.pagination.parameters') : []),
-                    Config::get($get['parameters_config']),
-                    $get['conditionals']
+                    ($get['enable_pagination'] === true ? Config::get('api.pagination.parameters') : []),
+                    Config::get($get['parameters_config_string']),
+                    $get['conditionals_config']
                 ) as $parameter => $detail) {
                 $detail['title'] = trans($detail['title']);
                 $detail['description'] = trans($detail['description']);
@@ -133,25 +135,30 @@ class Controller extends BaseController
             $get_parameters_sortable = Config::get($get['sortable_config']);
         }
 
+        if ($get['searchable_config'] !== null) {
+            $get_parameters_searchable = Config::get($get['searchable_config']);
+        }
+
         $routes = [
             'GET' => [
-                'description' => trans($get['description_localisation']),
-                'authenticated' => $get['authenticated'],
+                'description' => trans($get['description_localisation_string']),
+                'authentication_required' => $get['authentication_required'],
                 'sortable' => $get_parameters_sortable,
+                'searchable' => $get_parameters_searchable,
                 'parameters' => $get_parameters
             ]
         ];
 
-        if (strlen($post['description_localisation']) > 0) {
-            foreach (array_merge_recursive(Config::get($post['fields_config']), $post['conditionals']) as $field => $detail) {
+        if (strlen($post['description_localisation_string']) > 0) {
+            foreach (array_merge_recursive(Config::get($post['fields_config']), $post['conditionals_config']) as $field => $detail) {
                 $detail['title'] = trans($detail['title']);
                 $detail['description'] = trans($detail['description']);
                 $post_fields[$field] = $detail;
             }
 
             $routes['POST'] = [
-                'description' => trans($post['description_localisation']),
-                'authenticated' => $post['authenticated'],
+                'description' => trans($post['description_localisation_string']),
+                'authentication_required' => $post['authentication_required'],
                 'fields' => $post_fields
             ];
         }
@@ -168,26 +175,26 @@ class Controller extends BaseController
      */
     protected function generateOptionsForShow(
         array $get = [
-            'description_localisation' => '',
-            'parameters_config' => '',
-            'conditionals' => [],
-            'authenticated' => false
+            'description_localisation_string' => '',
+            'parameters_config_string' => '',
+            'conditionals_config' => [],
+            'authentication_required' => false
         ],
         array $delete = [
-            'description_localisation' => '',
-            'authenticated' => false
+            'description_localisation_string' => '',
+            'authentication_required' => false
         ],
         array $patch = [
-            'description_localisation' => '',
+            'description_localisation_string' => '',
             'fields_config' => '',
-            'conditionals' => [],
-            'authenticated' => false
+            'conditionals_config' => [],
+            'authentication_required' => false
         ]
     ) {
         $get_parameters = [];
         $patch_fields = [];
 
-        foreach (array_merge_recursive(Config::get($get['parameters_config']), $get['conditionals']) as $parameter => $detail) {
+        foreach (array_merge_recursive(Config::get($get['parameters_config_string']), $get['conditionals_config']) as $parameter => $detail) {
             $detail['title'] = trans($detail['title']);
             $detail['description'] = trans($detail['description']);
             $get_parameters[$parameter] = $detail;
@@ -195,29 +202,29 @@ class Controller extends BaseController
 
         $routes = [
             'GET' => [
-                'description' => trans($get['description_localisation']),
-                'authenticated' => $get['authenticated'],
+                'description' => trans($get['description_localisation_string']),
+                'authentication_required' => $get['authentication_required'],
                 'parameters' => $get_parameters
             ]
         ];
 
-        if (strlen($delete['description_localisation']) > 0) {
+        if (strlen($delete['description_localisation_string']) > 0) {
             $routes['DELETE'] = [
-                'description' => trans($delete['description_localisation']),
-                'authenticated' => $delete['authenticated']
+                'description' => trans($delete['description_localisation_string']),
+                'authentication_required' => $delete['authentication_required']
             ];
         }
 
-        if (strlen($patch['description_localisation']) > 0) {
-            foreach (array_merge_recursive(Config::get($patch['fields_config']), $patch['conditionals']) as $field => $detail) {
+        if (strlen($patch['description_localisation_string']) > 0) {
+            foreach (array_merge_recursive(Config::get($patch['fields_config']), $patch['conditionals_config']) as $field => $detail) {
                 $detail['title'] = trans($detail['title']);
                 $detail['description'] = trans($detail['description']);
                 $patch_fields[$field] = $detail;
             }
 
             $routes['PATCH'] = [
-                'description' => trans($patch['description_localisation']),
-                'authenticated' => $patch['authenticated'],
+                'description' => trans($patch['description_localisation_string']),
+                'authentication_required' => $patch['authentication_required'],
                 'fields' => $patch_fields
             ];
         }

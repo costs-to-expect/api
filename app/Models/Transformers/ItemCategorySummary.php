@@ -3,10 +3,11 @@ declare(strict_types=1);
 
 namespace App\Models\Transformers;
 
-use App\Models\Item as ItemModel;
-
 /**
  * Transform the data returns from Eloquent into the format we want for the API
+ *
+ * This is an updated version of the transformers, the other transformers need to
+ * be updated to operate on an array rather than collections
  *
  * @author Dean Blackborough <dean@g3d-development.com>
  * @copyright Dean Blackborough 2018-2019
@@ -14,26 +15,27 @@ use App\Models\Item as ItemModel;
  */
 class ItemCategorySummary extends Transformer
 {
-    private $category_summary;
+    private $data_to_transform;
 
     /**
      * ResourceType constructor.
      *
-     * @param ItemModel $category_summary
+     * @param array $data_to_transform
      */
-    public function __construct(ItemModel $category_summary)
+    public function __construct(array $data_to_transform)
     {
         parent::__construct();
 
-        $this->category_summary = $category_summary;
+        $this->data_to_transform = $data_to_transform;
     }
 
     public function toArray(): array
     {
         return [
-            'id' => $this->hash->category()->encode($this->category_summary->id),
-            'name' => $this->category_summary->name,
-            'total' => number_format((float) $this->category_summary->total, 2, '.', '')
+            'id' => $this->hash->category()->encode($this->data_to_transform['id']),
+            'name' => $this->data_to_transform['name'],
+            'description' => $this->data_to_transform['description'],
+            'total' => number_format((float) $this->data_to_transform['total'], 2)
         ];
     }
 }

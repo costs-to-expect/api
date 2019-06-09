@@ -2,15 +2,17 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Parameters\Get;
-use App\Http\Parameters\Route\Validate;
+use App\Validators\Request\Parameters;
+use App\Validators\Request\Route;
 use App\Models\Category;
 use App\Models\Item;
 use App\Models\SubCategory;
 use App\Models\Transformers\Item as ItemTransformer;
 use App\Utilities\Pagination as UtilityPagination;
 use App\Utilities\Response as UtilityResponse;
-use App\Http\Parameters\Request\Validators\Item as ItemValidator;
+use App\Validators\Request\Fields\Item as ItemValidator;
+use App\Validators\Request\SearchParameters;
+use App\Validators\Request\SortParameters;
 use Exception;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\JsonResponse;
@@ -41,26 +43,40 @@ class ItemController extends Controller
      */
     public function index(Request $request, string $resource_type_id, string $resource_id): JsonResponse
     {
-        Validate::resourceRoute($resource_type_id, $resource_id);
+        Route::resourceRoute($resource_type_id, $resource_id);
 
-        $this->collection_parameters = Get::parameters([
+        $this->collection_parameters = Parameters::fetch([
             'include-categories',
             'include-subcategories',
             'year',
             'month',
             'category',
-            'subcategory',
-            'sort'
+            'subcategory'
+        ]);
+
+        $sort_fields = SortParameters::fetch([
+            'description',
+            'total',
+            'actualised_total',
+            'effective_date',
+            'created'
+        ]);
+
+        $search_conditions = SearchParameters::fetch([
+            'description'
         ]);
 
         $total = (new Item())->totalCount(
             $resource_type_id,
             $resource_id,
-            $this->collection_parameters
+            $this->collection_parameters,
+            $search_conditions
         );
 
         $pagination = UtilityPagination::init($request->path(), $total)
             ->setParameters($this->collection_parameters)
+            ->setSortParameters($sort_fields)
+            ->setSearchParameters($search_conditions)
             ->paging();
 
         $items = (new Item())->paginatedCollection(
@@ -68,7 +84,9 @@ class ItemController extends Controller
             $resource_id,
             $pagination['offset'],
             $pagination['limit'],
-            $this->collection_parameters
+            $this->collection_parameters,
+            $sort_fields,
+            $search_conditions
         );
 
         $headers = [
@@ -109,7 +127,7 @@ class ItemController extends Controller
         string $item_id
     ): JsonResponse
     {
-        Validate::itemRoute($resource_type_id, $resource_id, $item_id);
+        Route::itemRoute($resource_type_id, $resource_id, $item_id);
 
         $item = (new Item())->single($resource_type_id, $resource_id, $item_id);
 
@@ -137,26 +155,27 @@ class ItemController extends Controller
      */
     public function optionsIndex(Request $request, string $resource_type_id, string $resource_id): JsonResponse
     {
-        Validate::resourceRoute($resource_type_id, $resource_id);
+        Route::resourceRoute($resource_type_id, $resource_id);
 
-        $this->collection_parameters = Get::parameters(['year', 'month', 'category', 'subcategory']);
+        $this->collection_parameters = Parameters::fetch(['year', 'month', 'category', 'subcategory']);
 
         $this->setConditionalGetParameters($resource_type_id);
 
         return $this->generateOptionsForIndex(
             [
-                'description_localisation' => 'route-descriptions.item_GET_index',
-                'parameters_config' => 'api.item.parameters.collection',
-                'conditionals' => $this->get_parameters,
+                'description_localisation_string' => 'route-descriptions.item_GET_index',
+                'parameters_config_string' => 'api.item.parameters.collection',
+                'conditionals_config' => $this->get_parameters,
                 'sortable_config' => 'api.item.sortable',
-                'pagination' => true,
-                'authenticated' => false
+                'searchable_config' => 'api.item.searchable',
+                'enable_pagination' => true,
+                'authentication_required' => false
             ],
             [
-                'description_localisation' => 'route-descriptions.item_POST',
+                'description_localisation_string' => 'route-descriptions.item_POST',
                 'fields_config' => 'api.item.fields',
-                'conditionals' => [],
-                'authenticated' => true
+                'conditionals_config' => [],
+                'authentication_required' => true
             ]
         );
     }
@@ -178,7 +197,7 @@ class ItemController extends Controller
         string $item_id
     ): JsonResponse
     {
-        Validate::itemRoute($resource_type_id, $resource_id, $item_id);
+        Route::itemRoute($resource_type_id, $resource_id, $item_id);
 
         $item = (new Item())->single($resource_type_id, $resource_id, $item_id);
 
@@ -188,20 +207,20 @@ class ItemController extends Controller
 
         return $this->generateOptionsForShow(
             [
-                'description_localisation' => 'route-descriptions.item_GET_show',
-                'parameters_config' => 'api.item.parameters.item',
-                'conditionals' => [],
-                'authenticated' => false
+                'description_localisation_string' => 'route-descriptions.item_GET_show',
+                'parameters_config_string' => 'api.item.parameters.item',
+                'conditionals_config' => [],
+                'authentication_required' => false
             ],
             [
-                'description_localisation' => 'route-descriptions.item_DELETE',
-                'authenticated' => true
+                'description_localisation_string' => 'route-descriptions.item_DELETE',
+                'authentication_required' => true
             ],
             [
-                'description_localisation' => 'route-descriptions.item_PATCH',
+                'description_localisation_string' => 'route-descriptions.item_PATCH',
                 'fields_config' => 'api.item.fields',
-                'conditionals' => [],
-                'authenticated' => true
+                'conditionals_config' => [],
+                'authentication_required' => true
             ]
         );
     }
@@ -217,7 +236,7 @@ class ItemController extends Controller
      */
     public function create(Request $request, string $resource_type_id, string $resource_id): JsonResponse
     {
-        Validate::resourceRoute($resource_type_id, $resource_id);
+        Route::resourceRoute($resource_type_id, $resource_id);
 
         $validator = (new ItemValidator)->create($request);
 
@@ -230,6 +249,7 @@ class ItemController extends Controller
                 'resource_id' => $resource_id,
                 'description' => $request->input('description'),
                 'effective_date' => $request->input('effective_date'),
+                'publish_after' => $request->input('publish_after', null),
                 'total' => $request->input('total'),
                 'percentage' => $request->input('percentage', 100),
                 'user_id' => Auth::user()->id
@@ -240,8 +260,11 @@ class ItemController extends Controller
             UtilityResponse::failedToSaveModelForCreate();
         }
 
+        /**
+         * Fix this hack
+         */
         return response()->json(
-            (new ItemTransformer($item))->toArray(),
+            (new ItemTransformer((new Item())->single($resource_type_id, $resource_id, $item->id)))->toArray(),
             201
         );
     }
@@ -263,7 +286,7 @@ class ItemController extends Controller
         string $item_id
     ): JsonResponse
     {
-        Validate::itemRoute($resource_type_id, $resource_id, $item_id);
+        Route::itemRoute($resource_type_id, $resource_id, $item_id);
 
         if ($this->isThereAnythingToPatchInRequest() === false) {
             UtilityResponse::nothingToPatch();
@@ -279,7 +302,7 @@ class ItemController extends Controller
             UtilityResponse::invalidFieldsInRequest($invalid_fields);
         }
 
-        $item = (new Item())->single($resource_type_id, $resource_id, $item_id);
+        $item = (new Item())->instance($resource_type_id, $resource_id, $item_id);
 
         if ($item === null) {
             UtilityResponse::failedToSelectModelForUpdate();
@@ -293,6 +316,8 @@ class ItemController extends Controller
                 $update_actualised = true;
             }
         }
+
+        //print_r($item); die;
 
         if ($update_actualised === true) {
             $item->setActualisedTotal($item->total, $item->percentage);
@@ -324,7 +349,7 @@ class ItemController extends Controller
         string $item_id
     ): JsonResponse
     {
-        Validate::resourceRoute($resource_type_id, $resource_id);
+        Route::resourceRoute($resource_type_id, $resource_id);
 
         $item = (new Item())->single($resource_type_id, $resource_id, $item_id);
 
@@ -382,24 +407,23 @@ class ItemController extends Controller
             ];
         }
 
-        (new Category())->paginatedCollection($this->include_private, ['resource_type'=>$resource_type_id])->map(
-            function ($category)
-            {
-                $this->get_parameters['category']['allowed_values'][$this->hash->encode('category', $category->category_id)] = [
-                    'value' => $this->hash->encode('category', $category->category_id),
-                    'name' => $category->category_name,
-                    'description' => trans('item/allowed-values.description-prefix-category') .
-                        $category->category_name . trans('item/allowed-values.description-suffix-category')
-                ];
-            }
-        );
+        $categories = (new Category())->paginatedCollection($this->include_private, ['resource_type'=>$resource_type_id]);
+
+        foreach ($categories as $category) {
+            $this->get_parameters['category']['allowed_values'][$this->hash->encode('category', $category['category_id'])] = [
+                'value' => $this->hash->encode('category', $category['category_id']),
+                'name' => $category['category_name'],
+                'description' => trans('item/allowed-values.description-prefix-category') .
+                    $category['category_name'] . trans('item/allowed-values.description-suffix-category')
+            ];
+        }
 
         if (array_key_exists('category', $this->collection_parameters) === true) {
             (new SubCategory())->paginatedCollection($this->collection_parameters['category'])->map(
                 function ($sub_category)
                 {
-                    $this->get_parameters['subcategory']['allowed_values'][$this->hash->encode('sub_category', $sub_category->id)] = [
-                        'value' => $this->hash->encode('sub_category', $sub_category->id),
+                    $this->get_parameters['subcategory']['allowed_values'][$this->hash->encode('subcategory', $sub_category->id)] = [
+                        'value' => $this->hash->encode('subcategory', $sub_category->id),
                         'name' => $sub_category->name,
                         'description' => trans('item/allowed-values.description-prefix-subcategory') .
                             $sub_category->name . trans('item/allowed-values.description-suffix-subcategory')

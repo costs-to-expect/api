@@ -2,12 +2,44 @@
 
 The complete changelog for the Costs to Expect REST API, follows the format defined at https://keepachangelog.com/en/1.0.0/
 
+## [v1.15.0] - 2019-06-09
+### Added
+- `publish_after` field added to item, POST and PATCH updated.
+- Tests for POSTMAN, now up to 280 tests.
+- /resource-types/[resource-type]/resources/[resource]/items collection updated to not include unpublished items.
+- /resource-types/[resource-type]/items collection updated to not include unpublished items.
+- /summary/resource-types/[resource-type]/resources/[resource]/items updated to not include unpublished items.
+- /summary/resource-types/[resource-type]/items updated to not include unpublished items.
+- search support added to /summary/resource-types/[resource-type]/resources/[resource]/items
+
+### Changed
+- `description` added to /summary/resource-types/[resource-type]/resources/[resource]/items?categories=true summary
+- `description` added to /summary/resource-types/[resource-type]/items?categories=true summary
+- `description` added to /summary/resource-types/[resource-type]/resources/[resource]/items?category=[category]&subcategories=true
+- `description` added to /summary/resource-types/[resource-type]/items?category=[category]&subcategories=true
+- Category, ItemCategorySummary and ItemSubCategorySummary transformers updated to new setup.
+- Up the throttle limit.
+- Don't format numbers in output, leave that to the apps.
+- Moved fields validators.
+- Moved route validators.
+- Moved the class used to fetch GET parameters.
+- Refactored the sort parameters code, added validation and the code now resides in its own class, now reusable.
+- General refactoring, never happy with the design.
+
+### Fixed
+- Collection parameters not being passed through to the category transformer. 
+- Header indents incorrect for the v1.14.3 changelog entry.
+- Description missing from /categories collection.
+- Pagination helper not hashing subcategory value before adding to URI.
+- Sort and search conditions added to pagination URIs.
+- Section value cleared in changelog parser when new release found.
+
 ## [v1.14.3] - 2019-06-02
-## Added
+### Added
 - Added Twitter social card summary to the landing page.
 - Added `include-categories` and `include-subcategories` parameters to /resource-types/[resource-type]/resources/[resource]/items collection.
 
-## Changed
+### Changed
 - `postman` is now a supported value for the `source` parameter.
 
 ## [v1.14.2] - 2019-05-31
@@ -175,7 +207,7 @@ The complete changelog for the Costs to Expect REST API, follows the format defi
 ### Added
 - Added resource_type GET parameter to /categories route to filter results.
 - Two options for changelog, markdown on GitHub and via API.
-- Added Google Analytics to then landing page.
+- Added Google Analytics to the landing page.
 
 ### Changed
  - Corrected CHANGELOG dates, I'm not from the future.

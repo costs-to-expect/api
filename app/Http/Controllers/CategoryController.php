@@ -2,13 +2,13 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Parameters\Get;
-use App\Http\Parameters\Route\Validate;
+use App\Validators\Request\Parameters;
+use App\Validators\Request\Route;
 use App\Models\Category;
 use App\Models\ResourceType;
 use App\Models\Transformers\Category as CategoryTransformer;
 use App\Utilities\Response as UtilityResponse;
-use App\Http\Parameters\Request\Validators\Category as CategoryValidator;
+use App\Validators\Request\Fields\Category as CategoryValidator;
 use Exception;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\JsonResponse;
@@ -35,20 +35,23 @@ class CategoryController extends Controller
      */
     public function index(Request $request): JsonResponse
     {
-        $this->collection_parameters = Get::parameters(['include-subcategories']);
+        $this->collection_parameters = Parameters::fetch(['include-subcategories']);
 
-        $categories = (new Category())->paginatedCollection($this->include_private, $this->collection_parameters);
+        $categories = (new Category())->paginatedCollection(
+            $this->include_private,
+            $this->collection_parameters
+        );
 
         $headers = [
             'X-Total-Count' => count($categories)
         ];
 
         return response()->json(
-            $categories->map(
-                function ($category)
-                {
+            array_map(
+                function($category) {
                     return (new CategoryTransformer($category, $this->collection_parameters))->toArray();
-                }
+                },
+                $categories
             ),
             200,
             $headers
@@ -65,9 +68,9 @@ class CategoryController extends Controller
      */
     public function show(Request $request, $category_id): JsonResponse
     {
-        Validate::categoryRoute($category_id);
+        Route::categoryRoute($category_id);
 
-        $this->show_parameters = Get::parameters(['include-subcategories']);
+        $this->show_parameters = Parameters::fetch(['include-subcategories']);
 
         $category = (new Category)->single($category_id);
 
@@ -93,22 +96,23 @@ class CategoryController extends Controller
      */
     public function optionsIndex(Request $request): JsonResponse
     {
-        $this->collection_parameters = Get::parameters(['include-subcategories']);
+        $this->collection_parameters = Parameters::fetch(['include-subcategories']);
 
         return $this->generateOptionsForIndex(
             [
-                'description_localisation' => 'route-descriptions.category_GET_index',
-                'parameters_config' => 'api.category.parameters.collection',
-                'conditionals' => [],
+                'description_localisation_string' => 'route-descriptions.category_GET_index',
+                'parameters_config_string' => 'api.category.parameters.collection',
+                'conditionals_config' => [],
                 'sortable_config' => null,
-                'pagination' => false,
-                'authenticated' => false
+                'searchable_config' => null,
+                'enable_pagination' => false,
+                'authentication_required' => false
             ],
             [
-                'description_localisation' => 'route-descriptions.category_POST',
+                'description_localisation_string' => 'route-descriptions.category_POST',
                 'fields_config' => 'api.category.fields',
-                'conditionals' => $this->conditionalPostParameters(),
-                'authenticated' => true
+                'conditionals_config' => $this->conditionalPostParameters(),
+                'authentication_required' => true
             ]
         );
     }
@@ -123,18 +127,18 @@ class CategoryController extends Controller
      */
     public function optionsShow(Request $request, string $category_id): JsonResponse
     {
-        Validate::categoryRoute($category_id);
+        Route::categoryRoute($category_id);
 
         return $this->generateOptionsForShow(
             [
-                'description_localisation' => 'route-descriptions.category_GET_show',
-                'parameters_config' => 'api.category.parameters.item',
-                'conditionals' => [],
-                'authenticated' => false
+                'description_localisation_string' => 'route-descriptions.category_GET_show',
+                'parameters_config_string' => 'api.category.parameters.item',
+                'conditionals_config' => [],
+                'authentication_required' => false
             ],
             [
-                'description_localisation' => 'route-descriptions.category_DELETE',
-                'authenticated' => true
+                'description_localisation_string' => 'route-descriptions.category_DELETE',
+                'authentication_required' => true
             ]
         );
     }
@@ -190,7 +194,7 @@ class CategoryController extends Controller
         string $category_id
     ): JsonResponse
     {
-        Validate::categoryRoute($category_id);
+        Route::categoryRoute($category_id);
 
         try {
             (new Category())->find($category_id)->delete();

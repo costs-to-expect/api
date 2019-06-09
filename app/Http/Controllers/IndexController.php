@@ -70,7 +70,7 @@ class IndexController extends Controller
             [
                 'GET' => [
                     'description' => trans('route-descriptions.api_GET_index'),
-                    'authenticated' => false,
+                    'authentication_required' => false,
                     'parameters' => []
                 ]
             ]
@@ -102,6 +102,7 @@ class IndexController extends Controller
 
                     ++$i;
                     $changes[$i]['release'] = trim(str_replace('##', '', $line));
+                    $section = null;
                 }
 
                 if (strpos($line, '###') !== false) {
@@ -136,7 +137,7 @@ class IndexController extends Controller
             [
                 'GET' => [
                     'description' => trans('route-descriptions.api_GET_changelog'),
-                    'authenticated' => false,
+                    'authentication_required' => false,
                     'parameters' => []
                 ]
             ]

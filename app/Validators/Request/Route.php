@@ -1,15 +1,15 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Http\Parameters\Route;
+namespace App\Validators\Request;
 
-use App\Http\Parameters\Route\Validators\Category;
-use App\Http\Parameters\Route\Validators\Item;
-use App\Http\Parameters\Route\Validators\ItemCategory;
-use App\Http\Parameters\Route\Validators\ItemSubCategory;
-use App\Http\Parameters\Route\Validators\Resource;
-use App\Http\Parameters\Route\Validators\ResourceType;
-use App\Http\Parameters\Route\Validators\SubCategory;
+use App\Validators\Request\Routes\Category;
+use App\Validators\Request\Routes\Item;
+use App\Validators\Request\Routes\ItemCategory;
+use App\Validators\Request\Routes\ItemSubCategory;
+use App\Validators\Request\Routes\Resource;
+use App\Validators\Request\Routes\ResourceType;
+use App\Validators\Request\Routes\SubCategory;
 use App\Utilities\Response as UtilityResponse;
 
 /**
@@ -19,7 +19,7 @@ use App\Utilities\Response as UtilityResponse;
  * @copyright Dean Blackborough 2018-2019
  * @license https://github.com/costs-to-expect/api/blob/master/LICENSE
  */
-class Validate
+class Route
 {
     static public function categoryRoute($category_id)
     {

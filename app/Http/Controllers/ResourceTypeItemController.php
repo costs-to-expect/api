@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Parameters\Get;
-use App\Http\Parameters\Route\Validate;
+use App\Validators\Request\Parameters;
+use App\Validators\Request\Route;
 use App\Models\Category;
 use App\Models\ResourceTypeItem;
 use App\Models\SubCategory;
@@ -33,9 +33,9 @@ class ResourceTypeItemController extends Controller
      */
     public function index(Request $request, string $resource_type_id): JsonResponse
     {
-        Validate::resourceTypeRoute($resource_type_id);
+        Route::resourceTypeRoute($resource_type_id);
 
-        $collection_parameters = Get::parameters([
+        $collection_parameters = Parameters::fetch([
             'include-categories',
             'include-subcategories',
             'year',
@@ -91,23 +91,24 @@ class ResourceTypeItemController extends Controller
      */
     public function optionsIndex(Request $request, string $resource_type_id): JsonResponse
     {
-        Validate::resourceTypeRoute($resource_type_id);
+        Route::resourceTypeRoute($resource_type_id);
 
         $this->conditionalGetParameters(
             $resource_type_id,
-            Get::parameters([
+            Parameters::fetch([
                 'category',
             ])
         );
 
         return $this->generateOptionsForIndex(
             [
-                'description_localisation' => 'route-descriptions.resource_type_item_GET_index',
-                'parameters_config' => 'api.resource-type-item.parameters.collection',
-                'conditionals' => $this->conditional_get_parameters,
+                'description_localisation_string' => 'route-descriptions.resource_type_item_GET_index',
+                'parameters_config_string' => 'api.resource-type-item.parameters.collection',
+                'conditionals_config' => $this->conditional_get_parameters,
                 'sortable_config' => null,
-                'pagination' => true,
-                'authenticated' => false
+                'searchable_config' => null,
+                'enable_pagination' => true,
+                'authentication_required' => false
             ]
         );
     }
@@ -154,24 +155,25 @@ class ResourceTypeItemController extends Controller
             ];
         }
 
-        (new Category())->paginatedCollection($this->include_private, ['resource_type'=>$resource_type_id])->map(
-            function ($category)
-            {
-                $this->conditional_get_parameters['category']['allowed_values'][$this->hash->encode('category', $category->category_id)] = [
-                    'value' => $this->hash->encode('category', $category->category_id),
-                    'name' => $category->category_name,
+        $categories = (new Category())->paginatedCollection($this->include_private, ['resource_type'=>$resource_type_id]);
+        array_map(
+            function($category) {
+                $this->conditional_get_parameters['category']['allowed_values'][$this->hash->encode('category', $category['category_id'])] = [
+                    'value' => $this->hash->encode('category', $category['category_id']),
+                    'name' => $category['category_name'],
                     'description' => trans('resource-type-item/allowed-values.description-prefix-category') .
-                        $category->category_name . trans('resource-type-item/allowed-values.description-suffix-category')
+                        $category['category_name'] . trans('resource-type-item/allowed-values.description-suffix-category')
                 ];
-            }
+            },
+            $categories
         );
 
         if (array_key_exists('category', $collection_parameters) === true) {
             (new SubCategory())->paginatedCollection($collection_parameters['category'])->map(
                 function ($sub_category)
                 {
-                    $this->conditional_get_parameters['subcategory']['allowed_values'][$this->hash->encode('sub_category', $sub_category->id)] = [
-                        'value' => $this->hash->encode('sub_category', $sub_category->id),
+                    $this->conditional_get_parameters['subcategory']['allowed_values'][$this->hash->encode('subcategory', $sub_category->id)] = [
+                        'value' => $this->hash->encode('subcategory', $sub_category->id),
                         'name' => $sub_category->name,
                         'description' => trans('resource-type-item/allowed-values.description-prefix-subcategory') .
                             $sub_category->name . trans('resource-type-item/allowed-values.description-suffix-subcategory')
