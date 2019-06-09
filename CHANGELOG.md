@@ -30,6 +30,8 @@ The complete changelog for the Costs to Expect REST API, follows the format defi
 - Collection parameters not passed through to category transformer. 
 - Header indent incorrect for the v1.14.3 changelog subheadings.
 - Description missing from /categories collection.
+- Pagination helper not hashing subcategory.
+- Sort and search conditions added to pagination URIs.
 
 ## [v1.14.3] - 2019-06-02
 ### Added

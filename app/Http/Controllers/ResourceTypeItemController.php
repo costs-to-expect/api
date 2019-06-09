@@ -172,8 +172,8 @@ class ResourceTypeItemController extends Controller
             (new SubCategory())->paginatedCollection($collection_parameters['category'])->map(
                 function ($sub_category)
                 {
-                    $this->conditional_get_parameters['subcategory']['allowed_values'][$this->hash->encode('sub_category', $sub_category->id)] = [
-                        'value' => $this->hash->encode('sub_category', $sub_category->id),
+                    $this->conditional_get_parameters['subcategory']['allowed_values'][$this->hash->encode('subcategory', $sub_category->id)] = [
+                        'value' => $this->hash->encode('subcategory', $sub_category->id),
                         'name' => $sub_category->name,
                         'description' => trans('resource-type-item/allowed-values.description-prefix-subcategory') .
                             $sub_category->name . trans('resource-type-item/allowed-values.description-suffix-subcategory')

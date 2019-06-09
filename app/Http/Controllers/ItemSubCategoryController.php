@@ -297,7 +297,7 @@ class ItemSubCategoryController extends Controller
         $conditional_post_parameters = ['sub_category_id' => []];
 
         foreach ($sub_categories as $sub_category) {
-            $id = $this->hash->encode('sub_category', $sub_category->id);
+            $id = $this->hash->encode('subcategory', $sub_category->id);
 
             if ($id === false) {
                 UtilityResponse::unableToDecode();

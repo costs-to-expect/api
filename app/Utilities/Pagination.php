@@ -21,6 +21,14 @@ class Pagination
      */
     private static $parameters;
     /**
+     * @var array
+     */
+    private static $sort_parameters;
+    /**
+     * @var array
+     */
+    private static $search_parameters;
+    /**
      * @var int
      */
     private static $limit;
@@ -57,6 +65,8 @@ class Pagination
         }
 
         self::$parameters = [];
+        self::$sort_parameters = [];
+        self::$search_parameters = [];
         self::$limit = $limit;
         self::$total = $total;
         self::$uri = $uri;
@@ -76,6 +86,34 @@ class Pagination
     public static function setParameters(array $parameters = []): Pagination
     {
         self::$parameters = $parameters;
+
+        return self::$instance;
+    }
+
+    /**
+     * Set any optional sort parameters
+     *
+     * @param array $parameters
+     *
+     * @return Pagination
+     */
+    public static function setSortParameters(array $parameters = []): Pagination
+    {
+        self::$sort_parameters = $parameters;
+
+        return self::$instance;
+    }
+
+    /**
+     * Set any optional search parameters
+     *
+     * @param array $parameters
+     *
+     * @return Pagination
+     */
+    public static function setSearchParameters(array $parameters = []): Pagination
+    {
+        self::$search_parameters = $parameters;
 
         return self::$instance;
     }
@@ -111,7 +149,7 @@ class Pagination
 
                     switch ($parameter) {
                         case 'category':
-                        case 'sub_category':
+                        case 'subcategory':
                             $parameters .= $parameter . '=' .
                                 self::$hash->encode($parameter, $parameter_value);
                             break;
@@ -129,6 +167,44 @@ class Pagination
         }
 
         return $parameters;
+    }
+
+    /**
+     * Process any sort parameters
+     *
+     * @return string
+     */
+    private static function processSortParameters()
+    {
+        $sort_parameters = '';
+        foreach (self::$sort_parameters as $field => $order) {
+            $sort_parameters .= '|' . $field . ':' . $order;
+        }
+
+        if (strlen($sort_parameters) > 0) {
+            $sort_parameters = 'sort=' . ltrim($sort_parameters, '|') . '&';
+        }
+
+        return $sort_parameters;
+    }
+
+    /**
+     * Process any search parameters
+     *
+     * @return string
+     */
+    private static function processSearchParameters()
+    {
+        $search_parameters = '';
+        foreach (self::$search_parameters as $field => $partial_term) {
+            $search_parameters .= '|' . $field . ':' . urlencode($partial_term);
+        }
+
+        if (strlen($search_parameters) > 0) {
+            $search_parameters = 'search=' . ltrim($search_parameters, '|') . '&';
+        }
+
+        return $search_parameters;
     }
 
     /**
@@ -157,18 +233,20 @@ class Pagination
         }
 
         $parameters = self::processParameters();
+        $sort_parameters = self::processSortParameters();
+        $search_parameters = self::processSearchParameters();
 
         self::$uri .= '?';
 
         if ($previous_offset !== null) {
             $uris['previous'] .= Config::get('api.app.url') . '/' . self::$uri .
-                $parameters . 'offset=' . $previous_offset . '&limit=' .
+                $parameters . $sort_parameters . $search_parameters . 'offset=' . $previous_offset . '&limit=' .
                 self::$limit;
         }
 
         if ($next_offset !== null) {
             $uris['next'] .= Config::get('api.app.url') . '/' . self::$uri .
-                $parameters . 'offset=' . $next_offset . '&limit=' .
+                $parameters . $sort_parameters . $search_parameters . 'offset=' . $next_offset . '&limit=' .
                 self::$limit;
         }
 
