@@ -2,7 +2,7 @@
 
 The complete changelog for the Costs to Expect REST API, follows the format defined at https://keepachangelog.com/en/1.0.0/
 
-## [v1.15.0] - 2019-06-xx
+## [v1.15.0] - 2019-06-09
 ### Added
 - `publish_after` field added to item, POST and PATCH updated.
 - Tests for POSTMAN, now up to 280 tests.
@@ -20,17 +20,17 @@ The complete changelog for the Costs to Expect REST API, follows the format defi
 - Category, ItemCategorySummary and ItemSubCategorySummary transformers updated to new setup.
 - Up the throttle limit.
 - Don't format numbers in output, leave that to the apps.
-- Moved request fields validators.
-- Moved request route validators.
-- Moved class used to fetch GET parameters.
-- Refactored the sort parameters code, added validation and code now resides in its own class, now reusable.
+- Moved fields validators.
+- Moved route validators.
+- Moved the class used to fetch GET parameters.
+- Refactored the sort parameters code, added validation and the code now resides in its own class, now reusable.
 - General refactoring, never happy with the design.
 
 ### Fixed
-- Collection parameters not passed through to category transformer. 
-- Header indent incorrect for the v1.14.3 changelog subheadings.
+- Collection parameters not being passed through to the category transformer. 
+- Header indents incorrect for the v1.14.3 changelog entry.
 - Description missing from /categories collection.
-- Pagination helper not hashing subcategory.
+- Pagination helper not hashing subcategory value before adding to URI.
 - Sort and search conditions added to pagination URIs.
 
 ## [v1.14.3] - 2019-06-02
