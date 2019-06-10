@@ -258,7 +258,7 @@ class ItemSubCategoryController extends Controller
         }
 
         try {
-            $sub_category_id = $this->hash->decode('sub_category', $request->input('sub_category_id'));
+            $sub_category_id = $this->hash->decode('subcategory', $request->input('sub_category_id'));
 
             if ($sub_category_id === false) {
                 UtilityResponse::unableToDecode();
