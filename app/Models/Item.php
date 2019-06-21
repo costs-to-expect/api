@@ -110,6 +110,9 @@ class Item extends Model
             'item.created_at AS item_created_at'
         ];
 
+        $category_join = false;
+        $subcategory_join = false;
+
         $collection = $this->where('resource_id', '=', $resource_id)
             ->whereHas('resource', function ($query) use ($resource_type_id) {
                 $query->where('resource_type_id', '=', $resource_type_id);
@@ -123,6 +126,8 @@ class Item extends Model
         ) {
             $collection->join('item_category', 'item.id', 'item_category.item_id')->
                 join('category', 'item_category.category_id', 'category.id');
+
+            $category_join = true;
 
             $select_fields[] = 'category.id AS category_id';
             $select_fields[] = 'category.name AS category_name';
@@ -139,6 +144,8 @@ class Item extends Model
             ) {
                 $collection->join('item_sub_category', 'item_category.id', 'item_sub_category.item_category_id')->
                     join('sub_category', 'item_sub_category.sub_category_id', 'sub_category.id');
+
+                $subcategory_join = true;
 
                 $select_fields[] = 'sub_category.id AS subcategory_id';
                 $select_fields[] = 'sub_category.name AS subcategory_name';
@@ -161,8 +168,11 @@ class Item extends Model
             $collection->whereRaw(\DB::raw("MONTH(item.effective_date) = '{$parameters_collection['month']}'"));
         }
 
-        if (array_key_exists('category', $parameters_collection) === true &&
-            $parameters_collection['category'] !== null) {
+        if (
+            array_key_exists('category', $parameters_collection) === true &&
+            $parameters_collection['category'] !== null &&
+            $category_join === false
+        ) {
             $collection->join("item_category", "item_category.item_id", "item.id");
             $collection->where('item_category.category_id', '=', $parameters_collection['category']);
         }
@@ -171,7 +181,8 @@ class Item extends Model
             array_key_exists('category', $parameters_collection) === true &&
             $parameters_collection['category'] !== null &&
             array_key_exists('subcategory', $parameters_collection) === true &&
-            $parameters_collection['subcategory'] !== null
+            $parameters_collection['subcategory'] !== null &&
+            $subcategory_join === false
         ) {
             $collection->join("item_sub_category", "item_sub_category.item_category_id", "item_category.id");
             $collection->where('item_sub_category.sub_category_id', '=', $parameters_collection['subcategory']);
