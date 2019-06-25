@@ -55,10 +55,19 @@ class Handler extends ExceptionHandler
         $message = $exception->getMessage();
         if (strlen($message) === 0) {
             switch ($status_code) {
-                case '404':
+                case 404:
                     Response::notFound();
                     break;
-                case '500':
+                case 503:
+                    response()->json(
+                        [
+                            'message' => 'Down for maintenance, we should be back very soon'
+                        ],
+                        503
+                    )->send();
+                    exit;
+                    break;
+                case 500:
                     response()->json(
                         [
                             'message' => $exception->getMessage()

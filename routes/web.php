@@ -18,6 +18,7 @@ Route::view(
     '',
     'welcome',
     [
+        'maintenance' => app()->isDownForMaintenance(),
         'version' => Config::get('api.version.version'),
         'date' => Config::get('api.version.release_date')
     ]
