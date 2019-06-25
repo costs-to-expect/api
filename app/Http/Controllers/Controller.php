@@ -122,6 +122,8 @@ class Controller extends BaseController
             foreach (
                 array_merge_recursive(
                     ($get['enable_pagination'] === true ? Config::get('api.pagination.parameters') : []),
+                    ($get['sortable_config'] !== null ? Config::get('api.sortable.parameters') : []),
+                    ($get['searchable_config'] !== null ? Config::get('api.searchable.parameters') : []),
                     Config::get($get['parameters_config_string']),
                     $get['conditionals_config']
                 ) as $parameter => $detail) {

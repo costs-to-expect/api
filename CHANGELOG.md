@@ -2,6 +2,10 @@
 
 The complete changelog for the Costs to Expect REST API, follows the format defined at https://keepachangelog.com/en/1.0.0/
 
+## [v1.16.0] - 2019-06-xx
+### Changed
+- The `sortable` and `searchable` parameters for the OPTIONS request are automatically assigned if they are relevant.
+
 ## [v1.15.3] - 2019-06-21
 ### Fixed
 - Database error when `include-categories` and `category` parameters both set for an item collection.
