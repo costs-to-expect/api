@@ -3,6 +3,11 @@
 The complete changelog for the Costs to Expect REST API, follows the format defined at https://keepachangelog.com/en/1.0.0/
 
 ## [v1.16.0] - 2019-06-xx
+### Added
+- Landing page for the API no longer affected by maintenance mode.
+- We have customised the API response when in maintenance mode.
+- Added an alert to the landing page when the API is in maintenance mode.
+
 ### Changed
 - The `sortable` and `searchable` parameters for the OPTIONS request are automatically assigned if they are relevant.
 
