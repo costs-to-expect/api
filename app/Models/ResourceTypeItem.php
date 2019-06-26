@@ -25,10 +25,15 @@ class ResourceTypeItem extends Model
      *
      * @param integer $resource_type_id
      * @param array $parameters_collection
+     * @param array $search_conditions
      *
      * @return integer
      */
-    public function totalCount(int $resource_type_id, array $parameters_collection = []): int
+    public function totalCount(
+        int $resource_type_id,
+        array $parameters_collection = [],
+        array $search_conditions = []
+    ): int
     {
         $collection = $this->join('resource', 'item.resource_id', 'resource.id')->
             join('resource_type', 'resource.resource_type_id', 'resource_type.id')->
@@ -59,6 +64,12 @@ class ResourceTypeItem extends Model
             }
         }
 
+        if (count($search_conditions) > 0) {
+            foreach ($search_conditions as $field => $search_term) {
+                $collection->where('item.' . $field, 'LIKE', '%' . $search_term . '%');
+            }
+        }
+
         $collection->whereNull('item.publish_after')->
             orWhereRaw('item.publish_after < NOW()');
 
@@ -73,6 +84,8 @@ class ResourceTypeItem extends Model
      * @param int $offset
      * @param int $limit
      * @param array $parameters_collection
+     * @param array $sort_fields
+     * @param array $search_conditions
      *
      * @return array
      */
@@ -80,7 +93,9 @@ class ResourceTypeItem extends Model
         int $resource_type_id,
         int $offset = 0,
         int $limit = 10,
-        array $parameters_collection = []
+        array $parameters_collection = [],
+        array $sort_fields = [],
+        array $search_conditions = []
     ): array
     {
         $select_fields = [
@@ -98,12 +113,7 @@ class ResourceTypeItem extends Model
 
         $collection = $this->join('resource', 'item.resource_id', 'resource.id')->
             join('resource_type', 'resource.resource_type_id', 'resource_type.id')->
-            where('resource_type.id', '=', $resource_type_id)->
-            orderByDesc('item.effective_date')->
-            orderByDesc('item.created_at')->
-            orderBy('item.description')->
-            offset($offset)->
-            limit($limit);
+            where('resource_type.id', '=', $resource_type_id);
 
         $category_join = false; // Check to see if join has taken place
         $subcategory_join = false; // Check to see if join has taken place
@@ -174,9 +184,34 @@ class ResourceTypeItem extends Model
             }
         }
 
+        if (count($search_conditions) > 0) {
+            foreach ($search_conditions as $field => $search_term) {
+                $collection->where('item.' . $field, 'LIKE', '%' . $search_term . '%');
+            }
+        }
+
         $collection->whereNull('item.publish_after')->
             orWhereRaw('item.publish_after < NOW()');
 
+        if (count($sort_fields) > 0) {
+            foreach ($sort_fields as $field => $direction) {
+                switch ($field) {
+                    case 'created':
+                        $collection->orderBy('created_at', $direction);
+                        break;
+
+                    default:
+                        $collection->orderBy($field, $direction);
+                        break;
+                }
+            }
+        } else {
+            $collection->orderBy('item.effective_date', 'desc');
+            $collection->orderBy('item.created_at', 'desc');
+        }
+
+        $collection->offset($offset);
+        $collection->limit($limit);
         $collection->select($select_fields);
 
         return $collection->get()->toArray();

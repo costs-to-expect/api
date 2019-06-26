@@ -9,6 +9,8 @@ use App\Models\ResourceTypeItem;
 use App\Models\SubCategory;
 use App\Models\Transformers\ResourceTypeItem as ResourceTypeItemTransformer;
 use App\Utilities\Pagination as UtilityPagination;
+use App\Validators\Request\SearchParameters;
+use App\Validators\Request\SortParameters;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
@@ -44,9 +46,22 @@ class ResourceTypeItemController extends Controller
             'subcategory'
         ]);
 
+        $sort_fields = SortParameters::fetch([
+            'description',
+            'total',
+            'actualised_total',
+            'effective_date',
+            'created'
+        ]);
+
+        $search_conditions = SearchParameters::fetch([
+            'description'
+        ]);
+
         $total = (new ResourceTypeItem())->totalCount(
             $resource_type_id,
-            $collection_parameters
+            $collection_parameters,
+            $search_conditions
         );
 
         $pagination = UtilityPagination::init($request->path(), $total)
@@ -57,7 +72,9 @@ class ResourceTypeItemController extends Controller
             $resource_type_id,
             $pagination['offset'],
             $pagination['limit'],
-            $collection_parameters
+            $collection_parameters,
+            $sort_fields,
+            $search_conditions
         );
 
         $headers = [
@@ -105,8 +122,8 @@ class ResourceTypeItemController extends Controller
                 'description_localisation_string' => 'route-descriptions.resource_type_item_GET_index',
                 'parameters_config_string' => 'api.resource-type-item.parameters.collection',
                 'conditionals_config' => $this->conditional_get_parameters,
-                'sortable_config' => null,
-                'searchable_config' => null,
+                'sortable_config' => 'api.resource-type-item.sortable',
+                'searchable_config' => 'api.resource-type-item.searchable',
                 'enable_pagination' => true,
                 'authentication_required' => false
             ]

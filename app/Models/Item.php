@@ -48,9 +48,8 @@ class Item extends Model
     )
     {
         $collection = $this->where('resource_id', '=', $resource_id)
-            ->whereHas('resource', function ($query) use ($resource_type_id) {
-                $query->where('resource_type_id', '=', $resource_type_id);
-            });
+            ->join('resource', 'item.resource_id', 'resource.id')
+            ->where('resource.resource_type_id', '=', $resource_type_id);
 
         if (array_key_exists('year', $parameters_collection) === true &&
             $parameters_collection['year'] !== null) {
@@ -114,11 +113,8 @@ class Item extends Model
         $subcategory_join = false;
 
         $collection = $this->where('resource_id', '=', $resource_id)
-            ->whereHas('resource', function ($query) use ($resource_type_id) {
-                $query->where('resource_type_id', '=', $resource_type_id);
-            })
-            ->offset($offset)
-            ->limit($limit);
+            ->join('resource', 'item.resource_id', 'resource.id')
+            ->where('resource.resource_type_id', '=', $resource_type_id);
 
         if (
             array_key_exists('include-categories', $parameters_collection) === true &&
@@ -190,7 +186,7 @@ class Item extends Model
 
         if (count($search_conditions) > 0) {
             foreach ($search_conditions as $field => $search_term) {
-                $collection->where('item.' . $field, 'LIKE', '%' . $search_term . '%');
+                $collection->where('item.' . $field, 'LIKEs', '%' . $search_term . '%');
             }
         }
 
@@ -213,6 +209,9 @@ class Item extends Model
             $collection->orderBy('item.effective_date', 'desc');
             $collection->orderBy('item.created_at', 'desc');
         }
+
+        $collection->offset($offset);
+        $collection->limit($limit);
 
         return $collection->select($select_fields)->get()->toArray();
     }
