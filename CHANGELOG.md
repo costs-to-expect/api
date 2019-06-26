@@ -4,9 +4,11 @@ The complete changelog for the Costs to Expect REST API, follows the format defi
 
 ## [v1.16.0] - 2019-06-xx
 ### Added
-- Landing page for the API no longer affected by maintenance mode.
+- The landing page for the API is no longer affected by maintenance mode.
 - We have customised the API response when in maintenance mode.
 - Added an alert to the landing page when the API is in maintenance mode.
+- The resource type items collection supports sorting via the `sort` parameter.
+- The resource type items collection supports searching via the `search` parameter.
 
 ### Changed
 - The `sortable` and `searchable` parameters for the OPTIONS request are automatically assigned if they are relevant.
