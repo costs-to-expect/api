@@ -114,8 +114,8 @@ class Controller extends BaseController
         ]
     ) {
         $get_parameters = [];
-        $get_parameters_sortable = [];
-        $get_parameters_searchable = [];
+        $get_parameters_sortable = false;
+        $get_parameters_searchable = false;
         $post_fields = [];
 
         if ($get['parameters_config_string'] !== null) {

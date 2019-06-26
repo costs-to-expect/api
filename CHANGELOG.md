@@ -12,6 +12,7 @@ The complete changelog for the Costs to Expect REST API, follows the format defi
 
 ### Changed
 - The `sortable` and `searchable` parameters for the OPTIONS request are automatically assigned if they are relevant.
+- The `sortable` and `searchable` parameters are set to `false` if not relevant for the endpoint.
 
 ## [v1.15.3] - 2019-06-21
 ### Fixed
