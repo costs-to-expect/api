@@ -4,6 +4,13 @@ declare(strict_types=1);
 
 return [
     'collection' => [
+        'include-unpublished' => [
+            'field' => 'include-unpublished',
+            'title' => 'item/summary-parameters.title-include-unpublished',
+            'description' => 'item/summary-parameters.description-include-unpublished',
+            'type' => 'boolean',
+            'required' => false
+        ],
         'year' => [
             "parameter" => "year",
             "title" => 'item/summary-parameters.title-year',

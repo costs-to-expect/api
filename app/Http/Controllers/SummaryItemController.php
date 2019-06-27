@@ -25,6 +25,7 @@ class SummaryItemController extends Controller
 {
     private $resource_type_id;
     private $resource_id;
+    private $include_unpublished = false;
 
     /**
      * Return the TCO for the resource
@@ -43,6 +44,7 @@ class SummaryItemController extends Controller
         $this->resource_id = $resource_id;
 
         $collection_parameters = Parameters::fetch([
+            'include-unpublished',
             'year',
             'years',
             'month',
@@ -52,6 +54,13 @@ class SummaryItemController extends Controller
             'subcategory',
             'subcategories'
         ]);
+
+        if (
+            array_key_exists('include-unpublished', $collection_parameters) === true &&
+            General::booleanValue($collection_parameters['include-unpublished']) === true
+        ) {
+            $this->include_unpublished = true;
+        }
 
         if (array_key_exists('years', $collection_parameters) === true &&
             General::booleanValue($collection_parameters['years']) === true) {
@@ -95,7 +104,11 @@ class SummaryItemController extends Controller
      */
     private function tcoSummary(): JsonResponse
     {
-        $summary = (new Item())->summary($this->resource_type_id, $this->resource_id);
+        $summary = (new Item())->summary(
+            $this->resource_type_id,
+            $this->resource_id,
+            $this->include_unpublished
+        );
 
         return response()->json(
             [
@@ -113,7 +126,11 @@ class SummaryItemController extends Controller
      */
     private function yearsSummary(): JsonResponse
     {
-        $summary = (new Item())->yearsSummary($this->resource_type_id, $this->resource_id);
+        $summary = (new Item())->yearsSummary(
+            $this->resource_type_id,
+            $this->resource_id,
+            $this->include_unpublished
+        );
 
         return response()->json(
             $summary->map(
@@ -138,7 +155,8 @@ class SummaryItemController extends Controller
         $summary = (new Item())->yearSummary(
             $this->resource_type_id,
             $this->resource_id,
-            $year
+            $year,
+            $this->include_unpublished
         );
 
         if (count($summary) !== 1) {
@@ -164,7 +182,8 @@ class SummaryItemController extends Controller
         $summary = (new Item())->monthsSummary(
             $this->resource_type_id,
             $this->resource_id,
-            $year
+            $year,
+            $this->include_unpublished
         );
 
         return response()->json(
@@ -192,7 +211,8 @@ class SummaryItemController extends Controller
             $this->resource_type_id,
             $this->resource_id,
             $year,
-            $month
+            $month,
+            $this->include_unpublished
         );
 
         if (count($summary) !== 1) {
@@ -215,7 +235,8 @@ class SummaryItemController extends Controller
     {
         $summary = (new Item())->categoriesSummary(
             $this->resource_type_id,
-            $this->resource_id
+            $this->resource_id,
+            $this->include_unpublished
         );
 
         return response()->json(
@@ -244,7 +265,8 @@ class SummaryItemController extends Controller
         $summary = (new Item())->categorySummary(
             $this->resource_type_id,
             $this->resource_id,
-            $category_id
+            $category_id,
+            $this->include_unpublished
         );
 
         if (count($summary) !== 1) {
@@ -272,7 +294,8 @@ class SummaryItemController extends Controller
         $summary = (new Item())->subCategoriesSummary(
             $this->resource_type_id,
             $this->resource_id,
-            $category_id
+            $category_id,
+            $this->include_unpublished
         );
 
         return response()->json(
@@ -303,7 +326,8 @@ class SummaryItemController extends Controller
             $this->resource_type_id,
             $this->resource_id,
             $category_id,
-            $sub_category_id
+            $sub_category_id,
+            $this->include_unpublished
         );
 
         if (count($summary) !== 1) {

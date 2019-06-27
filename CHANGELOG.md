@@ -9,6 +9,7 @@ The complete changelog for the Costs to Expect REST API, follows the format defi
 - Added an alert to the landing page when the API is in maintenance mode.
 - The resource type items collection supports sorting via the `sort` parameter.
 - The resource type items collection supports searching via the `search` parameter.
+- Added an `include-unpublished` parameter to items collection and the items summary.
 
 ### Changed
 - The `sortable` and `searchable` parameters for the OPTIONS request are automatically assigned if they are relevant.
@@ -17,6 +18,7 @@ The complete changelog for the Costs to Expect REST API, follows the format defi
 ## Fixed 
 - All item collection and summary queries need to apply the `publish_after` clause via a closure otherwise the braces don't get added correctly in the query.
 - Delete item endpoint, `delete()` is called on an array, not a model instance.
+- References to localisation file.
 
 ## [v1.15.3] - 2019-06-21
 ### Fixed
