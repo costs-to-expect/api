@@ -83,10 +83,14 @@ class Item extends Model
             }
         }
 
-        $collection->where(function ($collection) {
-            $collection->whereNull('item.publish_after')->
-                orWhereRaw('item.publish_after < NOW()');
-        });
+        if (
+            array_key_exists('include-unpublished', $parameters_collection) === false ||
+            General::booleanValue($parameters_collection['include-unpublished']) === false
+        ) {
+            $collection->where(function ($collection) {
+                $collection->whereNull('item.publish_after')->orWhereRaw('item.publish_after < NOW()');
+            });
+        }
 
         return count($collection->get());
     }
@@ -192,10 +196,14 @@ class Item extends Model
             }
         }
 
-        $collection->where(function ($collection) {
-            $collection->whereNull('item.publish_after')->
-                orWhereRaw('item.publish_after < NOW()');
-        });
+        if (
+            array_key_exists('include-unpublished', $parameters_collection) === false ||
+            General::booleanValue($parameters_collection['include-unpublished']) === false
+        ) {
+            $collection->where(function ($collection) {
+                $collection->whereNull('item.publish_after')->orWhereRaw('item.publish_after < NOW()');
+            });
+        }
 
         if (count($sort_fields) > 0) {
             foreach ($sort_fields as $field => $direction) {

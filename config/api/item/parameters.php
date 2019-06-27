@@ -6,15 +6,22 @@ return [
     'collection' => [
         'include-categories' => [
             'field' => 'include-categories',
-            'title' => 'resource-type-item/parameters.title-include-categories',
-            'description' => 'resource-type-item/parameters.description-include-categories',
+            'title' => 'item/parameters.title-include-categories',
+            'description' => 'item/parameters.description-include-categories',
             'type' => 'boolean',
             'required' => false
         ],
         'include-subcategories' => [
             'field' => 'include-subcategories',
-            'title' => 'resource-type-item/parameters.title-include-subcategories',
-            'description' => 'resource-type-item/parameters.description-include-subcategories',
+            'title' => 'item/parameters.title-include-subcategories',
+            'description' => 'item/parameters.description-include-subcategories',
+            'type' => 'boolean',
+            'required' => false
+        ],
+        'include-unpublished' => [
+            'field' => 'include-unpublished',
+            'title' => 'item/parameters.title-include-unpublished',
+            'description' => 'item/parameters.description-include-unpublished',
             'type' => 'boolean',
             'required' => false
         ],
