@@ -16,6 +16,7 @@ The complete changelog for the Costs to Expect REST API, follows the format defi
 
 ## Fixed 
 - All item collection and summary queries need to apply the `publish_after` clause via a closure otherwise the braces don't get added correctly in the query.
+- Delete item endpoint, `delete()` being called on an array, not a model instance.
 
 ## [v1.15.3] - 2019-06-21
 ### Fixed

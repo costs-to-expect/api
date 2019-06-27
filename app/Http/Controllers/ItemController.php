@@ -351,7 +351,7 @@ class ItemController extends Controller
     {
         Route::resourceRoute($resource_type_id, $resource_id);
 
-        $item = (new Item())->single($resource_type_id, $resource_id, $item_id);
+        $item = (new Item())->instance($resource_type_id, $resource_id, $item_id);
 
         if ($item === null) {
             UtilityResponse::notFound(trans('entities.item'));
