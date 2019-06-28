@@ -50,6 +50,8 @@ return [
     'item_sub_category_PATCH' => 'Update the subcategory assigned to the selected item',
     'item_sub_category_DELETE' => 'Delete the subcategory assigned to the selected item',
 
+    'item_move_POST' => 'Move an item to another resource',
+
     'request_GET_access-log' => 'Return the access log, read requests',
     'request_GET_error_log' => 'Return the error log',
     'request_POST' => 'Create an error log report',

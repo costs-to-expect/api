@@ -43,6 +43,11 @@ Route::group(
         );
 
         Route::post(
+            'resource-types/{resource_type_id}/resources/{resource_id}/move',
+            'ItemMoveController@move'
+        );
+
+        Route::post(
             'resource-types/{resource_type_id}/resources/{resource_id}/items/{item_id}/category',
             'ItemCategoryController@create'
         );

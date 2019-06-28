@@ -151,6 +151,11 @@ class Controller extends BaseController
             ]
         ];
 
+        // Minor hack until I come up with a better solution
+        if (strlen($routes['GET']['description']) === 0) {
+            unset($routes['GET']);
+        }
+
         if (strlen($post['description_localisation_string']) > 0) {
             foreach (array_merge_recursive(Config::get($post['fields_config']), $post['conditionals_config']) as $field => $detail) {
                 $detail['title'] = trans($detail['title']);
