@@ -59,4 +59,25 @@ class Item extends BaseValidator
             $messages
         );
     }
+
+    /**
+     * Return the validator object for the move request
+     *
+     * @param Request $request
+     *
+     * @return Validator
+     */
+    public function move(Request $request): Validator
+    {
+        $messages = [];
+        foreach (Config::get('api.item.validation.POST.messages') as $key => $custom_message) {
+            $messages[$key] = trans($custom_message);
+        };
+
+        return ValidatorFacade::make(
+            $request->all(),
+            Config::get('api.item.validation.POST.fields'),
+            $messages
+        );
+    }
 }
