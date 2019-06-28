@@ -40,6 +40,7 @@ class ResourceTypeItemController extends Controller
         $collection_parameters = Parameters::fetch([
             'include-categories',
             'include-subcategories',
+            'include-unpublished',
             'year',
             'month',
             'category',
