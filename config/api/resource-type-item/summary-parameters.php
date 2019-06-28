@@ -4,6 +4,13 @@ declare(strict_types=1);
 
 return [
     'collection' => [
+        'include-unpublished' => [
+            'field' => 'include-unpublished',
+            'title' => 'resource-type-item/summary-parameters.title-include-unpublished',
+            'description' => 'resource-type-item/summary-parameters.description-include-unpublished',
+            'type' => 'boolean',
+            'required' => false
+        ],
         'resources' => [
             "parameter" => "resources",
             "title" => 'resource-type-item/summary-parameters.title-resources',
