@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace App\Models;
 
 use App\Utilities\General;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
 
@@ -383,12 +384,16 @@ class ResourceTypeItem extends Model
      * type grouped by category
      *
      * @param integer $resource_type_id
+     * @param boolean $include_unpublished
      *
      * @return array
      */
-    public function categoriesSummary(int $resource_type_id): array
+    public function categoriesSummary(
+        int $resource_type_id,
+        bool $include_unpublished = false
+    ): array
     {
-        return $this->selectRaw('
+        $collection = $this->selectRaw('
                 category.id, 
                 category.name AS name, 
                 category.description AS description,
@@ -398,12 +403,11 @@ class ResourceTypeItem extends Model
             join("item_category", "item_category.item_id", "item.id")->
             join("category", "category.id", "item_category.category_id")->
             where("category.resource_type_id", "=", $resource_type_id)->
-            where("resource_type.id", "=", $resource_type_id)->
-            where(function ($sql) {
-                $sql->whereNull('item.publish_after')->
-                    orWhereRaw('item.publish_after < NOW()');
-            })->
-            groupBy("category.id")->
+            where("resource_type.id", "=", $resource_type_id);
+
+        $collection = $this->includeUnpublished($collection, $include_unpublished);
+
+        return $collection->groupBy("category.id")->
             orderBy("name")->
             get()->
             toArray();
@@ -415,12 +419,17 @@ class ResourceTypeItem extends Model
      *
      * @param integer $resource_type_id
      * @param integer $category_id
+     * @param boolean $include_unpublished
      *
      * @return array
      */
-    public function categorySummary(int $resource_type_id, int $category_id): array
+    public function categorySummary(
+        int $resource_type_id,
+        int $category_id,
+        bool $include_unpublished = false
+    ): array
     {
-        return $this->selectRaw('
+        $collection = $this->selectRaw('
                 category.id, 
                 category.name AS name, 
                 category.description, 
@@ -431,12 +440,11 @@ class ResourceTypeItem extends Model
             join("category", "category.id", "item_category.category_id")->
             where("category.resource_type_id", "=", $resource_type_id)->
             where("resource_type.id", "=", $resource_type_id)->
-            where("category.id", '=', $category_id)->
-            where(function ($sql) {
-                $sql->whereNull('item.publish_after')->
-                    orWhereRaw('item.publish_after < NOW()');
-            })->
-            groupBy("category.id")->
+            where("category.id", '=', $category_id);
+
+        $collection = $this->includeUnpublished($collection, $include_unpublished);
+
+        return $collection->groupBy("category.id")->
             orderBy("name")->
             get()->
             toArray();
@@ -448,12 +456,17 @@ class ResourceTypeItem extends Model
      *
      * @param int $resource_type_id
      * @param int $category_id
+     * @param boolean $include_unpublished
      *
      * @return array
      */
-    public function subcategoriesSummary(int $resource_type_id, int $category_id): array
+    public function subcategoriesSummary(
+        int $resource_type_id,
+        int $category_id,
+        bool $include_unpublished = false
+    ): array
     {
-        return $this->selectRaw('
+        $collection = $this->selectRaw('
                 sub_category.id, 
                 sub_category.name AS name, 
                 sub_category.description AS description, 
@@ -466,12 +479,11 @@ class ResourceTypeItem extends Model
             join("sub_category", "sub_category.id", "item_sub_category.sub_category_id")->
             where("category.resource_type_id", "=", $resource_type_id)->
             where("resource_type.id", "=", $resource_type_id)->
-            where("category.id", "=", $category_id)->
-            where(function ($sql) {
-                $sql->whereNull('item.publish_after')->
-                    orWhereRaw('item.publish_after < NOW()');
-            })->
-            groupBy("sub_category.id")->
+            where("category.id", "=", $category_id);
+
+        $collection = $this->includeUnpublished($collection, $include_unpublished);
+
+        return $collection->groupBy("sub_category.id")->
             orderBy("name")->
             get()->
             toArray();
@@ -484,12 +496,18 @@ class ResourceTypeItem extends Model
      * @param int $resource_type_id
      * @param int $category_id
      * @param int $subcategory_id
+     * @param boolean $include_unpublished
      *
      * @return array
      */
-    public function subcategorySummary(int $resource_type_id, int $category_id, int $subcategory_id): array
+    public function subcategorySummary(
+        int $resource_type_id,
+        int $category_id,
+        int $subcategory_id,
+        bool $include_unpublished = false
+    ): array
     {
-        return $this->selectRaw('
+        $collection = $this->selectRaw('
                 sub_category.id, 
                 sub_category.name AS name, 
                 sub_category.description AS description, 
@@ -503,14 +521,33 @@ class ResourceTypeItem extends Model
             where("category.resource_type_id", "=", $resource_type_id)->
             where("resource_type.id", "=", $resource_type_id)->
             where("category.id", "=", $category_id)->
-            where('sub_category.id', '=', $subcategory_id)->
-            where(function ($sql) {
-                $sql->whereNull('item.publish_after')->
-                    orWhereRaw('item.publish_after < NOW()');
-            })->
-            groupBy("sub_category.id")->
+            where('sub_category.id', '=', $subcategory_id);
+
+        $collection = $this->includeUnpublished($collection, $include_unpublished);
+
+        return $collection->groupBy("sub_category.id")->
             orderBy("name")->
             get()->
             toArray();
+    }
+
+    /**
+     * Work out if we should be hiding unpublished items, by default we don't show them
+     *
+     * @param Builder $collection
+     * @param boolean $include_unpublished
+     *
+     * @return Builder
+     */
+    private function includeUnpublished(Builder $collection, bool $include_unpublished): Builder
+    {
+        if ($include_unpublished === false) {
+            $collection->where(function ($sql) {
+                $sql->whereNull('item.publish_after')->
+                    orWhereRaw('item.publish_after < NOW()');
+            });
+        }
+
+        return $collection;
     }
 }
