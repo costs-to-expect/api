@@ -2,10 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Item;
 use App\Models\Resource;
 use App\Utilities\Response as UtilityResponse;
 use App\Validators\Request\Fields\ItemMove as ItemMoveValidator;
 use App\Validators\Request\Route;
+use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
@@ -37,7 +39,21 @@ class ItemMoveController extends Controller
             return $this->returnValidationErrors($validator);
         }
 
+        try {
+            $new_resource_id = $this->hash->decode('resource', $request->input('resource_id'));
 
+            if ($new_resource_id === false) {
+                UtilityResponse::unableToDecode();
+            }
+
+            $item = (new Item())->instance($resource_type_id, $resource_id, $item_id);
+            $item->resource_id = $new_resource_id;
+            $item->save();
+        } catch (Exception $e) {
+            UtilityResponse::failedToSaveModelForUpdate();
+        }
+
+        // Endpoint should 404 after request so figure 204 better than redirect or 404
         UtilityResponse::successNoContent();
     }
 

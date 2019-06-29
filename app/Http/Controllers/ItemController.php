@@ -318,8 +318,6 @@ class ItemController extends Controller
             }
         }
 
-        //print_r($item); die;
-
         if ($update_actualised === true) {
             $item->setActualisedTotal($item->total, $item->percentage);
         }
