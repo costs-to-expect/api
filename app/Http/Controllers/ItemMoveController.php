@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Resource;
+use App\Utilities\Response as UtilityResponse;
 use App\Validators\Request\Route;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -56,9 +58,49 @@ class ItemMoveController extends Controller
             [
                 'description_localisation_string' => 'route-descriptions.item_move_POST',
                 'fields_config' => 'api.item-move.fields',
-                'conditionals_config' => [],
+                'conditionals_config' => $this->conditionalPostParameters(
+                    $resource_type_id,
+                    $resource_id
+                ),
                 'authentication_required' => true
             ]
         );
+    }
+
+    /**
+     * Generate any conditional POST parameters, will be merged with the
+     * relevant config/api/[type]/fields.php data array
+     *
+     * @param integer $resource_type_id
+     * @param integer $resource_id
+     *
+     * @return array
+     */
+    private function conditionalPostParameters(
+        int $resource_type_id,
+        int $resource_id
+    ): array
+    {
+        $resources = (new Resource())->resourcesForResourceType(
+            $resource_type_id,
+            $resource_id
+        );
+
+        $conditional_post_parameters = ['resource_id' => []];
+        foreach ($resources as $resource) {
+            $id = $this->hash->encode('resource', $resource['resource_id']);
+
+            if ($id === false) {
+                UtilityResponse::unableToDecode();
+            }
+
+            $conditional_post_parameters['resource_id']['allowed_values'][$id] = [
+                'value' => $id,
+                'name' => $resource['resource_name'],
+                'description' => $resource['resource_description']
+            ];
+        }
+
+        return $conditional_post_parameters;
     }
 }

@@ -61,4 +61,30 @@ class Resource extends Model
         return $this->where('resource_type_id', '=', $resource_type_id)
             ->find($resource_id);
     }
+
+    /**
+     * Return the list of resources for the requested resource type and
+     * optionally exclude the provided resource id
+     *
+     * @param integer $resource_type_id
+     * @param integer|null $exclude_id
+     *
+     * @return array
+     */
+    public function resourcesForResourceType(int $resource_type_id, int $exclude_id = null): array
+    {
+        $collection = $this->where('resource_type_id', '=', $resource_type_id);
+
+        if ($exclude_id !== null) {
+            $collection->where('id', '!=', $exclude_id);
+        }
+
+        return $collection->select(
+                'resource.id AS resource_id',
+                'resource.name AS resource_name',
+                'resource.description AS resource_description'
+            )->
+            get()->
+            toArray();
+    }
 }
