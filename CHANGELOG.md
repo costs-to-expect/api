@@ -2,7 +2,7 @@
 
 The complete changelog for the Costs to Expect REST API, follows the format defined at https://keepachangelog.com/en/1.0.0/
 
-## [v1.16.0] - 2019-06-xx
+## [v1.16.0] - 2019-06-30
 ### Added
 - The landing page for the API is no longer affected by maintenance mode.
 - We have customised the API response when in maintenance mode.
@@ -11,15 +11,18 @@ The complete changelog for the Costs to Expect REST API, follows the format defi
 - The resource type items collection supports searching via the `search` parameter.
 - Added an `include-unpublished` parameter to the items collection and the items summary.
 - Added an `include-unpublished` parameter to the resource type items collection and summary.
+- Added the ability to move items to another resource within the resource type.
 
 ### Changed
 - The `sortable` and `searchable` parameters for the OPTIONS request are automatically assigned if they are relevant.
 - The `sortable` and `searchable` parameters are set to `false` if not relevant for the endpoint.
+- Tweaked the exception handler, throw more friendly error messages in production.
 
-## Fixed 
+### Fixed 
 - All item collection and summary queries need to apply the `publish_after` clause via a closure otherwise the braces don't get added correctly in the query.
 - Delete item endpoint, `delete()` is called on an array, not a model instance.
-- References to localisation file.
+- Corrected references to localisation file.
+- Fixed a spelling error in the responses localisation file.
 
 ## [v1.15.3] - 2019-06-21
 ### Fixed
