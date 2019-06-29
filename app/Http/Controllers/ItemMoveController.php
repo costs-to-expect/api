@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Resource;
 use App\Utilities\Response as UtilityResponse;
+use App\Validators\Request\Fields\ItemMove as ItemMoveValidator;
 use App\Validators\Request\Route;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -30,10 +31,14 @@ class ItemMoveController extends Controller
     {
         Route::itemRoute($resource_type_id, $resource_id, $item_id);
 
-        return response()->json(
-            [],
-            201
-        );
+        $validator = (new ItemMoveValidator)->create($request, $resource_type_id, $resource_id);
+
+        if ($validator->fails() === true) {
+            return $this->returnValidationErrors($validator);
+        }
+
+
+        UtilityResponse::successNoContent();
     }
 
     public function optionsMove(
