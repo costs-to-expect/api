@@ -5,6 +5,7 @@ namespace App\Exceptions;
 use App\Utilities\Response;
 use Exception;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
+use Illuminate\Support\Facades\App;
 
 class Handler extends ExceptionHandler
 {
@@ -53,24 +54,41 @@ class Handler extends ExceptionHandler
         }
 
         $message = $exception->getMessage();
-        if (strlen($message) === 0) {
-            switch ($status_code) {
-                case '404':
-                    Response::notFound();
-                    break;
-                case '500':
-                    response()->json(
-                        [
-                            'message' => $exception->getMessage()
-                        ],
-                        500
-                    )->send();
-                    exit;
-                    break;
-                default:
-                    $message = 'Unknown error';
-                    break;
-            }
+
+        switch ($status_code) {
+            case 404:
+                Response::notFound();
+                break;
+            case 503:
+                response()->json(
+                    [
+                        'message' => 'Down for maintenance, we should be back very soon'
+                    ],
+                    503
+                )->send();
+                exit;
+                break;
+            case 500:
+                if (App::environment() === 'local') {
+                    $response = [
+                        'message' => $exception->getMessage(),
+                        'trace' => $exception->getTraceAsString()
+                    ];
+                } else {
+                    $response = [
+                        'message' => 'Sorry, there has been an error, please try again later'
+                    ];
+                }
+
+                response()->json(
+                    $response,
+                    500
+                )->send();
+                exit;
+                break;
+            default:
+                $message = $exception->getMessage();
+                break;
         }
 
         return response()->json(

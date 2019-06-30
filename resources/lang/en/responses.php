@@ -7,7 +7,7 @@ return [
     'not-found-entity' => 'The requested `:type` entity does not exist.',
     'constraint' => 'Unable to handle your request, dependent data exists.',
     'model-select-failure' => 'Unable to handle your request, an error occurred when selecting the data to complete your request.',
-    'model-save-failure-update' => 'Unable to handle your request, an error occurred when processing our update request.',
+    'model-save-failure-update' => 'Unable to handle your request, an error occurred when processing your update request.',
     'model-save-failure-create' => 'Unable to handle your request, an error occurred when processing your create request.',
     'decode-error' => 'Unable to decode a parameter, a suitable hash class not found or the value is invalid.',
     'patch-empty' => 'Unable to handle your request, please include a request body.',

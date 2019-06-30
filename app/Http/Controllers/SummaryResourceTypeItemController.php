@@ -25,6 +25,7 @@ use Illuminate\Http\Request;
 class SummaryResourceTypeItemController extends Controller
 {
     private $resource_type_id;
+    private $include_unpublished = false;
 
     /**
      * Return the TCO for all the resources within the resource type
@@ -41,6 +42,7 @@ class SummaryResourceTypeItemController extends Controller
         $this->resource_type_id = $resource_type_id;
 
         $collection_parameters = Parameters::fetch([
+            'include-unpublished',
             'resources',
             'year',
             'years',
@@ -51,6 +53,13 @@ class SummaryResourceTypeItemController extends Controller
             'subcategory',
             'subcategories'
         ]);
+
+        if (
+            array_key_exists('include-unpublished', $collection_parameters) === true &&
+            General::booleanValue($collection_parameters['include-unpublished']) === true
+        ) {
+            $this->include_unpublished = true;
+        }
 
         if (array_key_exists('years', $collection_parameters) === true &&
             General::booleanValue($collection_parameters['years']) === true) {
@@ -99,7 +108,10 @@ class SummaryResourceTypeItemController extends Controller
      */
     private function summary(): JsonResponse
     {
-        $summary = (new ResourceTypeItem())->summary($this->resource_type_id);
+        $summary = (new ResourceTypeItem())->summary(
+            $this->resource_type_id,
+            $this->include_unpublished
+        );
 
         return response()->json(
             [
@@ -123,7 +135,10 @@ class SummaryResourceTypeItemController extends Controller
      */
     private function resourcesSummary(): JsonResponse
     {
-        $summary = (new ResourceTypeItem())->resourcesSummary($this->resource_type_id);
+        $summary = (new ResourceTypeItem())->resourcesSummary(
+            $this->resource_type_id,
+            $this->include_unpublished
+        );
 
         return response()->json(
             array_map(
@@ -145,7 +160,10 @@ class SummaryResourceTypeItemController extends Controller
      */
     private function yearsSummary(): JsonResponse
     {
-        $summary = (new ResourceTypeItem())->yearsSummary($this->resource_type_id);
+        $summary = (new ResourceTypeItem())->yearsSummary(
+            $this->resource_type_id,
+            $this->include_unpublished
+        );
 
         return response()->json(
             array_map(
@@ -170,7 +188,8 @@ class SummaryResourceTypeItemController extends Controller
     {
         $summary = (new ResourceTypeItem())->yearSummary(
             $this->resource_type_id,
-            $year
+            $year,
+            $this->include_unpublished
         );
 
         if (count($summary) !== 1) {
@@ -196,7 +215,8 @@ class SummaryResourceTypeItemController extends Controller
     {
         $summary = (new ResourceTypeItem())->monthsSummary(
             $this->resource_type_id,
-            $year
+            $year,
+            $this->include_unpublished
         );
 
         return response()->json(
@@ -225,7 +245,8 @@ class SummaryResourceTypeItemController extends Controller
         $summary = (new ResourceTypeItem())->monthSummary(
             $this->resource_type_id,
             $year,
-            $month
+            $month,
+            $this->include_unpublished
         );
 
         if (count($summary) !== 1) {
@@ -248,7 +269,8 @@ class SummaryResourceTypeItemController extends Controller
     private function categoriesSummary(): JsonResponse
     {
         $summary = (new ResourceTypeItem())->categoriesSummary(
-            $this->resource_type_id
+            $this->resource_type_id,
+            $this->include_unpublished
         );
 
         return response()->json(
@@ -275,7 +297,8 @@ class SummaryResourceTypeItemController extends Controller
     {
         $summary = (new ResourceTypeItem())->categorySummary(
             $this->resource_type_id,
-            $category_id
+            $category_id,
+            $this->include_unpublished
         );
 
         if (count($summary) !== 1) {
@@ -301,7 +324,8 @@ class SummaryResourceTypeItemController extends Controller
     {
         $summary = (new ResourceTypeItem())->subcategoriesSummary(
             $this->resource_type_id,
-            $category_id
+            $category_id,
+            $this->include_unpublished
         );
 
         return response()->json(
@@ -330,7 +354,8 @@ class SummaryResourceTypeItemController extends Controller
         $summary = (new ResourceTypeItem())->subcategorySummary(
             $this->resource_type_id,
             $category_id,
-            $subcategory_id
+            $subcategory_id,
+            $this->include_unpublished
         );
 
         return response()->json(

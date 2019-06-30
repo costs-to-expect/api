@@ -70,6 +70,7 @@ class Parameters
                 case 'include-categories':
                 case 'include-subcategories':
                 case 'include-resources':
+                case 'include-unpublished':
                     if (array_key_exists($key, self::$parameters) === true) {
                         if (General::booleanValue(self::$parameters[$key]) === false) {
                             unset(self::$parameters[$key]);

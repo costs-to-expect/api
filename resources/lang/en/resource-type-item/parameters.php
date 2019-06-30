@@ -9,6 +9,9 @@ return [
     'title-include-subcategories' => 'Include assigned subcategory?',
     'description-include-subcategories' => 'Optionally include the subcategory assigned to each item, include-categories must be set',
 
+    'title-include-unpublished' => 'Include unpublished expenses?',
+    'description-include-unpublished' => 'Optionally include any unpublished expenses',
+
     'title-year' => 'Year',
     'description-year' => 'Show results for the requested year',
 

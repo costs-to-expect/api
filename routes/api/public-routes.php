@@ -144,6 +144,11 @@ Route::group(
             'ItemController@optionsShow'
         );
 
+        Route::options(
+            'resource-types/{resource_type_id}/resources/{resource_id}/items/{item_id}/move',
+            'ItemMoveController@optionsMove'
+        );
+
         Route::get(
             'resource-types/{resource_type_id}/resources/{resource_id}/items/{item_id}/category',
             'ItemCategoryController@index'

@@ -112,6 +112,7 @@ X-Link-Previous and X-Link-Next can be null.
 | OPTIONS  | v1/resource-types/{resource_type_id}/resources/{resource_id}/items/{item_id}/category/{item_category_id}/subcategory |
 | GET/HEAD | v1/resource-types/{resource_type_id}/resources/{resource_id}/items/{item_id}/category/{item_category_id}/subcategory/{item_subcategory_id} |
 | OPTIONS  | v1/resource-types/{resource_type_id}/resources/{resource_id}/items/{item_id}/category/{item_category_id}/subcategory/{item_subcategory_id} |
+| OPTIONS  | v1/resource-types/{resource_type_id}/resources/{resource_id}/items/{item_id}/move |
 
 ## Summary routes
 
@@ -166,3 +167,4 @@ These routes require authorisation.
 | DELETE   | v1/resource-types/{resource_type_id}/resources/{resource_id}/items/{item_id}/category/{item_category_id} |
 | POST     | v1/resource-types/{resource_type_id}/resources/{resource_id}/items/{item_id}/category/{item_category_id}/sub_category |
 | DELETE   | v1/resource-types/{resource_type_id}/resources/{resource_id}/items/{item_id}/category/{item_category_id}/sub_category/{item_subcategory_id} |
+| POST     | v1/resource-types/{resource_type_id}/resources/{resource_id}/items/{item_id}/move |

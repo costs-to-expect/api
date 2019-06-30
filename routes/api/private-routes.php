@@ -52,6 +52,11 @@ Route::group(
             'ItemSubCategoryController@create'
         );
 
+        Route::post(
+            'resource-types/{resource_type_id}/resources/{resource_id}/items/{item_id}/move',
+            'ItemMoveController@move'
+        );
+
         Route::delete(
             'categories/{category_id}',
             'CategoryController@delete'

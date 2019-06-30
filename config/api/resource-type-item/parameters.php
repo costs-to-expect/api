@@ -18,6 +18,13 @@ return [
             'type' => 'boolean',
             'required' => false
         ],
+        'include-unpublished' => [
+            'field' => 'include-unpublished',
+            'title' => 'resource-type-item/parameters.title-include-unpublished',
+            'description' => 'resource-type-item/parameters.description-include-unpublished',
+            'type' => 'boolean',
+            'required' => false
+        ],
         'year' => [
             "parameter" => "year",
             "title" => 'resource-type-item/parameters.title-year',

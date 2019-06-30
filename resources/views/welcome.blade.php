@@ -4,6 +4,11 @@
 
     <main role="main" class="inner cover">
         <h1 class="cover-heading">Costs to Expect API</h1>
+        @if ($maintenance === true)
+        <div class="alert alert-info" role="alert">
+            The Costs to Expect API is down for maintenance, we should be back online soon.
+        </div>
+        @endif
         <p class="lead">This <a href="https://github.com/costs-to-expect/api/blob/master/LICENSE">Open Source</a>
             API is the <a href="https://github.com/costs-to-expect/api">API</a> for the
             <a href="https://www.costs-to-expect.com">Costs to Expect</a> service,

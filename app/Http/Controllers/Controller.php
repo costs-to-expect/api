@@ -114,14 +114,16 @@ class Controller extends BaseController
         ]
     ) {
         $get_parameters = [];
-        $get_parameters_sortable = [];
-        $get_parameters_searchable = [];
+        $get_parameters_sortable = false;
+        $get_parameters_searchable = false;
         $post_fields = [];
 
         if ($get['parameters_config_string'] !== null) {
             foreach (
                 array_merge_recursive(
                     ($get['enable_pagination'] === true ? Config::get('api.pagination.parameters') : []),
+                    ($get['sortable_config'] !== null ? Config::get('api.sortable.parameters') : []),
+                    ($get['searchable_config'] !== null ? Config::get('api.searchable.parameters') : []),
                     Config::get($get['parameters_config_string']),
                     $get['conditionals_config']
                 ) as $parameter => $detail) {
@@ -148,6 +150,11 @@ class Controller extends BaseController
                 'parameters' => $get_parameters
             ]
         ];
+
+        // Minor hack until I come up with a better solution
+        if (strlen($routes['GET']['description']) === 0) {
+            unset($routes['GET']);
+        }
 
         if (strlen($post['description_localisation_string']) > 0) {
             foreach (array_merge_recursive(Config::get($post['fields_config']), $post['conditionals_config']) as $field => $detail) {

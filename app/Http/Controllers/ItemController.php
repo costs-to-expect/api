@@ -48,6 +48,7 @@ class ItemController extends Controller
         $this->collection_parameters = Parameters::fetch([
             'include-categories',
             'include-subcategories',
+            'include-unpublished',
             'year',
             'month',
             'category',
@@ -317,8 +318,6 @@ class ItemController extends Controller
             }
         }
 
-        //print_r($item); die;
-
         if ($update_actualised === true) {
             $item->setActualisedTotal($item->total, $item->percentage);
         }
@@ -351,7 +350,7 @@ class ItemController extends Controller
     {
         Route::resourceRoute($resource_type_id, $resource_id);
 
-        $item = (new Item())->single($resource_type_id, $resource_id, $item_id);
+        $item = (new Item())->instance($resource_type_id, $resource_id, $item_id);
 
         if ($item === null) {
             UtilityResponse::notFound(trans('entities.item'));
