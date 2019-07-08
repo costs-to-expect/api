@@ -17,7 +17,7 @@ use Illuminate\Validation\Rule;
  * @copyright Dean Blackborough 2018-2019
  * @license https://github.com/costs-to-expect/api/blob/master/LICENSE
  */
-class ItemMove extends BaseValidator
+class ItemTransfer extends BaseValidator
 {
     /**
      * Return the validator object for the create request
@@ -53,7 +53,7 @@ class ItemMove extends BaseValidator
                     }),
                 ],
             ],
-            $this->translateMessages('api.item-move.validation.POST.messages')
+            $this->translateMessages('api.item-transfer.validation.POST.messages')
         );
     }
 }
