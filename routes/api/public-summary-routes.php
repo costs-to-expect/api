@@ -54,13 +54,13 @@ Route::group(
         );
 
         Route::get(
-            'summary/request/access-log/monthly',
-            'SummaryRequestController@monthlyAccessLog'
+            'summary/request/access-log',
+            'SummaryRequestController@AccessLog'
         );
 
         Route::options(
-            'summary/request/access-log/monthly',
-            'SummaryRequestController@optionsMonthlyAccessLog'
+            'summary/request/access-log',
+            'SummaryRequestController@optionsAccessLog'
         );
     }
 );

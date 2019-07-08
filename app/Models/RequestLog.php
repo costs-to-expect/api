@@ -54,7 +54,7 @@ class RequestLog extends Model
      *
      * @return array
      */
-    public function monthlyRequests(array $collection_parameters = [])
+    public function monthlyRequests(array $collection_parameters = []): array
     {
         $collection = $this->orderBy(DB::raw("DATE_FORMAT(`request_log`.`created_at`, '%Y-%m')"))
             ->groupBy(DB::raw("DATE_FORMAT(`request_log`.`created_at`, '%Y-%m')"));

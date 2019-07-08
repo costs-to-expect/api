@@ -122,8 +122,8 @@ which allows you to provide year, month, category and subcategory.
 
 | HTTP Verb(s) | Route |
 | :--- | :--- |
-| GET/HEAD | v1/summary/request/access-log/monthly |
-| OPTIONS  | v1/summary/request/access-log/monthly |
+| GET/HEAD | v1/summary/request/access-log |
+| OPTIONS  | v1/summary/request/access-log |
 | GET/HEAD | v1/summary/resource-types |
 | OPTIONS  | v1/summary/resource-types |
 | GET/HEAD | v1/summary/resource-types/{resource_type_id}/items |

@@ -19,20 +19,20 @@ class SummaryRequestController extends Controller
     private $collection_parameters;
 
     /**
-     * Return a summary of the access log, monthly
+     * Return a summary of the access log, requests per year and month
      *
      * @param Request $request
      *
      * @return JsonResponse
      */
-    public function monthlyAccessLog(Request $request): JsonResponse
+    public function accessLog(Request $request): JsonResponse
     {
         $this->collection_parameters = Parameters::fetch(['source']);
 
-        $monthly_summary = (new RequestLog())->monthlyRequests($this->collection_parameters);
+        $request_data = (new RequestLog())->monthlyRequests($this->collection_parameters);
 
         $summary = [];
-        foreach ($monthly_summary as $month) {
+        foreach ($request_data as $month) {
             $summary[$month['year']][] = ['month' => $month['month'], 'requests' => $month['requests']];
         }
 
@@ -47,11 +47,11 @@ class SummaryRequestController extends Controller
      *
      * @param Request $request
      */
-    public function optionsMonthlyAccessLog(Request $request)
+    public function optionsAccessLog(Request $request)
     {
         return $this->generateOptionsForIndex(
             [
-                'description_localisation_string' => 'route-descriptions.summary_GET_request_access-log_monthly',
+                'description_localisation_string' => 'route-descriptions.summary_GET_request_access-log',
                 'parameters_config_string' => 'api.request.parameters.collection',
                 'conditionals_config' => [],
                 'sortable_config' => null,
