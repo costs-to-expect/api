@@ -7,5 +7,5 @@
 /.vagrant
 yarn-error.log
 .env
-/.docker/app
+/.docker/api
 _ide_helper.php

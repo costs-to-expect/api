@@ -9,6 +9,8 @@ The complete changelog for the Costs to Expect REST API, follows the format defi
 
 ### Changed
 - Tweaks to Passport/OAuth.
+- Tweaks to the Docker setup.
+- Upgraded to PHP 7.3.
 
 ### Removed
 - The `/summary/request/access-log/monthly` route removed; there isn't a corresponding API route, the route shouldn't have `monthly` at the end.
