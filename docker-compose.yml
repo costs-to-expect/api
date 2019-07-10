@@ -1,6 +1,6 @@
 version: '3'
 services:
-  app:
+  api:
     build:
       context: .
       dockerfile: .docker/Dockerfile
@@ -8,7 +8,8 @@ services:
     ports:
       - 80:80
     volumes:
-      - .:/.docker/app/php
+      - .:/.docker/api/php
+      - /.docker/api/php/vendor
     links:
       - mysql
     environment:
@@ -26,4 +27,4 @@ services:
       MYSQL_PASSWORD: api_password
       MYSQL_ROOT_PASSWORD: root_password
     volumes:
-      - ./.docker/app/mysql/data:/var/lib/mysql
+      - ./.docker/api/mysql/data:/var/lib/mysql

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\User;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 
@@ -14,43 +15,53 @@ use Illuminate\Support\Facades\Validator;
  */
 class PassportController extends Controller
 {
-    public $successStatus = 200;
-
     /**
-     * login to the API
+     * login to the API and create a token
      *
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
-    public function login(){
-        if(Auth::attempt(['email' => request('email'), 'password' => request('password')])){
+    public function login()
+    {
+        if (
+            Auth::attempt(
+                [
+                    'email' => request('email'),
+                    'password' => request('password')
+                ]
+            ) === true) {
+
             $user = Auth::user();
-            $success['token'] =  $user->createToken('costs-to-expect')->accessToken;
-            return response()->json($success, $this->successStatus);
+            $success['token'] = $user->createToken('costs-to-expect')->accessToken;
+
+            return response()->json($success, 200);
         } else {
-            return response()->json(['message'=>'Unauthorised'], 401);
+            return response()->json(['message' => 'Unauthorised, credentials invalid'], 401);
         }
     }
 
     /**
-     * Register with the API
+     * Register with the API will return the token
      *
-     * @param \Illuminate\Http\Request $request
+     * @param Request $request
      *
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function register(Request $request)
     {
-        $validator = Validator::make($request->all(), [
-            'name' => 'required',
-            'email' => 'required|email',
-            'password' => 'required',
-            'password_confirmation' => 'required|same:password',
-        ]);
+        $validator = Validator::make(
+            $request->all(),
+            [
+                'name' => 'required',
+                'email' => 'required|email',
+                'password' => 'required',
+                'password_confirmation' => 'required|same:password',
+            ]
+        );
 
         if ($validator->fails()) {
             return response()->json(
                 [
-                    'message' => 'Validation error',
+                    'message' => 'Validation error, please review the below',
                     'fields' => $validator->errors()
                 ],
                 422
@@ -58,22 +69,27 @@ class PassportController extends Controller
         }
 
         $input = $request->all();
+
         $input['password'] = bcrypt($input['password']);
         $user = User::create($input);
-        $success['token'] =  $user->createToken('costs-to-expect')->accessToken;
-        $success['name'] =  $user->name;
 
-        return response()->json($success, $this->successStatus);
+        $success = [
+            'token' => $user->createToken('costs-to-expect')->accessToken,
+            'name' => $user->name
+        ];
+
+        return response()->json($success, 200);
     }
 
     /**
      * Return user details
      *
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function user()
     {
         $user = Auth::user();
-        return response()->json($user, $this->successStatus);
+
+        return response()->json($user, 200);
     }
 }

@@ -145,8 +145,8 @@ Route::group(
         );
 
         Route::options(
-            'resource-types/{resource_type_id}/resources/{resource_id}/items/{item_id}/move',
-            'ItemMoveController@optionsMove'
+            'resource-types/{resource_type_id}/resources/{resource_id}/items/{item_id}/transfer',
+            'ItemTransferController@optionsTransfer'
         );
 
         Route::get(

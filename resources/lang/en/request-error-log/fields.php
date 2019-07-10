@@ -14,4 +14,7 @@ return [
 
     'title-request_uri' => 'URI',
     'description-request_uri' => 'Enter the URI that returned the incorrect response code',
+
+    'title-source' => 'Source',
+    'description-source' => 'Source of the error (website,api,legacy,postman)',
 ];

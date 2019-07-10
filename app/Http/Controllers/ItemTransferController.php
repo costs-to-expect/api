@@ -5,26 +5,26 @@ namespace App\Http\Controllers;
 use App\Models\Item;
 use App\Models\Resource;
 use App\Utilities\Response as UtilityResponse;
-use App\Validators\Request\Fields\ItemMove as ItemMoveValidator;
+use App\Validators\Request\Fields\ItemTransfer as ItemTransferValidator;
 use App\Validators\Request\Route;
 use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
 /**
- * Manage items
+ * Transfer items
  *
  * @author Dean Blackborough <dean@g3d-development.com>
  * @copyright Dean Blackborough 2018-2019
  * @license https://github.com/costs-to-expect/api/blob/master/LICENSE
  */
-class ItemMoveController extends Controller
+class ItemTransferController extends Controller
 {
     protected $collection_parameters = [];
     protected $get_parameters = [];
     protected $pagination = [];
 
-    public function move(
+    public function transfer(
         Request $request,
         string $resource_type_id,
         string $resource_id,
@@ -33,7 +33,7 @@ class ItemMoveController extends Controller
     {
         Route::itemRoute($resource_type_id, $resource_id, $item_id);
 
-        $validator = (new ItemMoveValidator)->create($request, $resource_type_id, $resource_id);
+        $validator = (new ItemTransferValidator)->create($request, $resource_type_id, $resource_id);
 
         if ($validator->fails() === true) {
             return $this->returnValidationErrors($validator);
@@ -57,7 +57,7 @@ class ItemMoveController extends Controller
         UtilityResponse::successNoContent();
     }
 
-    public function optionsMove(
+    public function optionsTransfer(
         Request $request,
         string $resource_type_id,
         string $resource_id,
@@ -77,8 +77,8 @@ class ItemMoveController extends Controller
                 'authentication_required' => false
             ],
             [
-                'description_localisation_string' => 'route-descriptions.item_move_POST',
-                'fields_config' => 'api.item-move.fields',
+                'description_localisation_string' => 'route-descriptions.item_transfer_POST',
+                'fields_config' => 'api.item-transfer.fields',
                 'conditionals_config' => $this->conditionalPostParameters(
                     $resource_type_id,
                     $resource_id

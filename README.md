@@ -33,7 +33,7 @@ development setup, go to the project root directory and run the below.
 ### Environment
 
 * Run `docker-compose build`
-* Create the following directories `.docker`, `.docker/app/php`, `.docker/app/mysql` and `.docker/app/mysql/data`
+* Create the following directories `.docker`, `.docker/api/php`, `.docker/api/mysql` and `.docker/api/mysql/data`
 * Run `docker-compose up`
 
 ### App
@@ -41,7 +41,7 @@ development setup, go to the project root directory and run the below.
 We now have a working environment, lets set up the app. There are two Docker services, `app` and `mysql`, we need to 
 exec into the `app` service to set up our app.
 
-First, let us check we are trying to access the right place, run `docker-compose exec app ls`. You should see a list 
+First, let us check we are trying to access the right place, run `docker-compose exec api ls`. You should see a list 
 of the files and directories at the root of our project, if you can see artisan, you are in the right place, 
 otherwise see where you are and adjust accordingly.
 
@@ -49,10 +49,10 @@ Now we need to set up the app by setting our .env, installing our dependencies a
 install Passport.
 
 * Copy the `.env.example` file and name the copy `.env`, set your environment settings
-* `composer install`
-* `docker-compose exec app php artisan key:generate`
-* `docker-compose exec app php artisan migrate`
-* `docker-compose exec app php artisan passport:install`
+* `docker-compose exec api composer install`
+* `docker-compose exec api php artisan key:generate`
+* `docker-compose exec api php artisan migrate`
+* `docker-compose exec api php artisan passport:install`
 * Run an OPTIONS request on `http://[your.domail.local]/v1/resource_types`, you should see a nice OPTIONS request, 
 alternatively a GET request to `http://[your.domail.local]/v1` will show all the routes.
 * You can add a development user by POSTing to `http://[your.domail.local]/v1/auth/register` and then get a bearer by 
@@ -112,7 +112,7 @@ X-Link-Previous and X-Link-Next can be null.
 | OPTIONS  | v1/resource-types/{resource_type_id}/resources/{resource_id}/items/{item_id}/category/{item_category_id}/subcategory |
 | GET/HEAD | v1/resource-types/{resource_type_id}/resources/{resource_id}/items/{item_id}/category/{item_category_id}/subcategory/{item_subcategory_id} |
 | OPTIONS  | v1/resource-types/{resource_type_id}/resources/{resource_id}/items/{item_id}/category/{item_category_id}/subcategory/{item_subcategory_id} |
-| OPTIONS  | v1/resource-types/{resource_type_id}/resources/{resource_id}/items/{item_id}/move |
+| OPTIONS  | v1/resource-types/{resource_type_id}/resources/{resource_id}/items/{item_id}/transfer |
 
 ## Summary routes
 
@@ -122,8 +122,8 @@ which allows you to provide year, month, category and subcategory.
 
 | HTTP Verb(s) | Route |
 | :--- | :--- |
-| GET/HEAD | v1/summary/request/access-log/monthly |
-| OPTIONS  | v1/summary/request/access-log/monthly |
+| GET/HEAD | v1/summary/request/access-log |
+| OPTIONS  | v1/summary/request/access-log |
 | GET/HEAD | v1/summary/resource-types |
 | OPTIONS  | v1/summary/resource-types |
 | GET/HEAD | v1/summary/resource-types/{resource_type_id}/items |
@@ -167,4 +167,4 @@ These routes require authorisation.
 | DELETE   | v1/resource-types/{resource_type_id}/resources/{resource_id}/items/{item_id}/category/{item_category_id} |
 | POST     | v1/resource-types/{resource_type_id}/resources/{resource_id}/items/{item_id}/category/{item_category_id}/sub_category |
 | DELETE   | v1/resource-types/{resource_type_id}/resources/{resource_id}/items/{item_id}/category/{item_category_id}/sub_category/{item_subcategory_id} |
-| POST     | v1/resource-types/{resource_type_id}/resources/{resource_id}/items/{item_id}/move |
+| POST     | v1/resource-types/{resource_type_id}/resources/{resource_id}/items/{item_id}/transfer |
