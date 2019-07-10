@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Utilities\Response;
 use App\Validators\Request\Parameters;
 use App\Models\RequestErrorLog;
 use App\Models\RequestLog;
@@ -116,7 +117,7 @@ class RequestController extends Controller
         return $this->generateOptionsForIndex(
             [
                 'description_localisation_string' => 'route-descriptions.request_GET_access-log',
-                'parameters_config_string' => 'api.request.parameters.collection',
+                'parameters_config_string' => 'api.request-access-log.parameters.collection',
                 'conditionals_config' => [],
                 'sortable_config' => null,
                 'searchable_config' => null,
@@ -145,7 +146,7 @@ class RequestController extends Controller
             ],
             [
                 'description_localisation_string' => 'route-descriptions.request_POST',
-                'fields_config' => 'api.request.fields',
+                'fields_config' => 'api.request-error-log.fields',
                 'conditionals_config' => [],
                 'authentication_required' => false
             ]
@@ -169,22 +170,18 @@ class RequestController extends Controller
         }
 
         try {
-            $request_log = new RequestErrorLog([
+            $request_error_log = new RequestErrorLog([
                 'method' => $request->input('method'),
+                'source' => $request->input('source'),
                 'expected_status_code' => $request->input('expected_status_code'),
                 'returned_status_code' => $request->input('returned_status_code'),
                 'request_uri' => $request->input('request_uri'),
             ]);
-            $request_log->save();
+            $request_error_log->save();
         } catch (Exception $e) {
             UtilityResponse::failedToSaveModelForCreate();
         }
 
-        return response()->json(
-            [
-                'message' => 'API request error log entry created'
-            ],
-            201
-        );
+        return Response::successNoContent();
     }
 }

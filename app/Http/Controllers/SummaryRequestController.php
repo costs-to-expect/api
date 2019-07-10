@@ -52,7 +52,7 @@ class SummaryRequestController extends Controller
         return $this->generateOptionsForIndex(
             [
                 'description_localisation_string' => 'route-descriptions.summary_GET_request_access-log',
-                'parameters_config_string' => 'api.request.parameters.collection',
+                'parameters_config_string' => 'api.request-access-log.parameters.collection',
                 'conditionals_config' => [],
                 'sortable_config' => null,
                 'searchable_config' => null,
