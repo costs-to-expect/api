@@ -2,10 +2,11 @@
 
 The complete changelog for the Costs to Expect REST API, follows the format defined at https://keepachangelog.com/en/1.0.0/
 
-## [v1.16.1] - 2019-07-xx
+## [v1.16.1] - 2019-07-10
 ### Added 
 - `/summary/request/access-log` summary route to replace `/summary/request/access-log/monthly`.
 - `v1/resource-types/{resource_type_id}/resources/{resource_id}/items/{item_id}/transfer` route to replace `v1/resource-types/{resource_type_id}/resources/{resource_id}/items/{item_id}/move`
+- `source` is a required field for the error log.
 
 ### Changed
 - Tweaks to Passport/OAuth.
@@ -16,6 +17,10 @@ The complete changelog for the Costs to Expect REST API, follows the format defi
 ### Removed
 - The `/summary/request/access-log/monthly` route removed; there isn't a corresponding API route, the route shouldn't have `monthly` at the end.
 - The `v1/resource-types/{resource_type_id}/resources/{resource_id}/items/{item_id}/move` route, transfer matches the process better than move and also makes sense for future endpoints, in this case partial-transfer.
+
+### Fixed
+- Heading in the CHANGELOG.
+- Split the `request/error-log` and `request/access-log` configuration and localisation files.
 
 ## [v1.16.0] - 2019-06-30
 ### Added
@@ -99,7 +104,7 @@ The complete changelog for the Costs to Expect REST API, follows the format defi
 - `source` filter added to /request/access-log.
 - `source` filter added to /summary/request/access-log/monthly.
 
-## Changed
+### Changed
 - Upgraded `RequestLog` Transformer, switching to a new system.
 
 ## [v1.14.1] - 2019-05-01
