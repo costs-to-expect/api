@@ -49,7 +49,7 @@ Now we need to set up the app by setting our .env, installing our dependencies a
 install Passport.
 
 * Copy the `.env.example` file and name the copy `.env`, set your environment settings
-* `docker-compose exec api php /usr/local/bin/composer install`
+* `docker-compose exec api composer install`
 * `docker-compose exec api php artisan key:generate`
 * `docker-compose exec api php artisan migrate`
 * `docker-compose exec api php artisan passport:install`

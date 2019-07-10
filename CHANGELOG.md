@@ -10,6 +10,7 @@ The complete changelog for the Costs to Expect REST API, follows the format defi
 ### Changed
 - Tweaks to Passport/OAuth.
 - Tweaks to the Docker setup.
+- Moved composer into the Docker.
 - Upgraded to PHP 7.3.
 
 ### Removed

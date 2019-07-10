@@ -9,6 +9,7 @@ services:
       - 80:80
     volumes:
       - .:/.docker/api/php
+      - /.docker/api/php/vendor
     links:
       - mysql
     environment:
