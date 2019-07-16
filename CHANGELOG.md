@@ -2,6 +2,10 @@
 
 The complete changelog for the Costs to Expect REST API, follows the format defined at https://keepachangelog.com/en/1.0.0/
 
+## [v1.16.2] - 2017-07-xx
+### Changed
+- Tweak to the Docker setup, read values from the .env file. At this time, Docker is for development, that may change in the future; obviously, the passwords in the .env file were not real passwords.
+
 ## [v1.16.1] - 2019-07-10
 ### Added 
 - `/summary/request/access-log` summary route to replace `/summary/request/access-log/monthly`.

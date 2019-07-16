@@ -1,7 +1,7 @@
 FROM php:7.3-apache
 
-COPY . /.docker/api/php
-COPY .docker/vhost.conf /etc/apache2/sites-available/000-default.conf
+COPY . /var/www/html
+COPY .docker/api/vhost.conf /etc/apache2/sites-available/000-default.conf
 
 RUN docker-php-ext-install pdo_mysql bcmath
 RUN apt-get update
@@ -13,7 +13,7 @@ RUN curl -o /tmp/composer-setup.php https://getcomposer.org/installer \
     && php /tmp/composer-setup.php --no-ansi --install-dir=/usr/local/bin --filename=composer \
     && rm -f /tmp/composer-setup.*
 
-RUN chown -R www-data:www-data /.docker/api/php \
+RUN chown -R www-data:www-data /var/www/html \
     && a2enmod rewrite
 
-WORKDIR /.docker/api/php
+WORKDIR /var/www/html

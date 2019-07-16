@@ -3,28 +3,32 @@ services:
   api:
     build:
       context: .
-      dockerfile: .docker/Dockerfile
+      dockerfile: .docker/api/Dockerfile
     image: costs-to-expect
     ports:
       - 80:80
     volumes:
-      - .:/.docker/api/php
-      - /.docker/api/php/vendor
+      - .:/var/www/html
+      ##- /.docker/api/php/vendor
     links:
       - mysql
+    env_file: .env
     environment:
-        DB_HOST: mysql
-        DB_DATABASE: api
-        DB_USERNAME: api_user
-        DB_PASSWORD: api_password
+        DB_HOST: ${DB_CONNECTION}
+        DB_DATABASE: ${DB_DATABASE}
+        DB_USERNAME: ${DB_USERNAME}
+        DB_PASSWORD: ${DB_PASSWORD}
   mysql:
-    image: mysql:5.7
+    build:
+      context: .
+      dockerfile: .docker/mysql/Dockerfile
     ports:
       - 3306:3306
+    env_file: .env
     environment:
-      MYSQL_DATABASE: api
-      MYSQL_USER: api_user
-      MYSQL_PASSWORD: api_password
-      MYSQL_ROOT_PASSWORD: root_password
+      MYSQL_DATABASE: ${DB_DATABASE}
+      MYSQL_USER: ${DB_USERNAME}
+      MYSQL_PASSWORD: ${DB_PASSWORD}
+      MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
     volumes:
-      - ./.docker/api/mysql/data:/var/lib/mysql
+      - ./.docker/mysql/data:/var/lib/mysql

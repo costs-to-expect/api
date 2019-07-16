@@ -7,5 +7,5 @@
 /.vagrant
 yarn-error.log
 .env
-/.docker/api
+/.docker/mysql/data
 _ide_helper.php

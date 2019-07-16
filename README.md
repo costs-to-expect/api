@@ -33,13 +33,12 @@ development setup, go to the project root directory and run the below.
 ### Environment
 
 * Run `docker-compose build`
-* Create the following directories `.docker`, `.docker/api/php`, `.docker/api/mysql` and `.docker/api/mysql/data`
 * Run `docker-compose up`
 
 ### App
 
-We now have a working environment, lets set up the app. There are two Docker services, `app` and `mysql`, we need to 
-exec into the `app` service to set up our app.
+We now have a working environment, lets set up the app. There are two Docker services, `api` and `mysql`, we need to 
+exec into the `api` service to set up our app.
 
 First, let us check we are trying to access the right place, run `docker-compose exec api ls`. You should see a list 
 of the files and directories at the root of our project, if you can see artisan, you are in the right place, 
