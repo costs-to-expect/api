@@ -193,7 +193,7 @@ class Item extends Model
 
         if (count($search_conditions) > 0) {
             foreach ($search_conditions as $field => $search_term) {
-                $collection->where('item.' . $field, 'LIKEs', '%' . $search_term . '%');
+                $collection->where('item.' . $field, 'LIKE', '%' . $search_term . '%');
             }
         }
 
