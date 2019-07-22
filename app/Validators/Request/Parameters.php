@@ -82,7 +82,6 @@ class Parameters
                     if (array_key_exists($key, self::$parameters) === true) {
                         if (intval(self::$parameters[$key]) < 1 ||
                             self::$parameters[$key] > 12) {
-
                             unset(self::$parameters[$key]);
                         }
                     }
