@@ -511,6 +511,46 @@ class Item extends Model
             get();
     }
 
+    public function filteredSummary(
+        int $resource_type_id,
+        int $resource_id,
+        int $category_id = null,
+        int $subcategory_id = null,
+        int $year = null,
+        int $month = null,
+        bool $include_unpublished = false
+    ): array
+    {
+        $collection = $this->
+            selectRaw('SUM(item.actualised_total) AS total')->
+            join("resource", "resource.id", "item.resource_id")->
+            join("resource_type", "resource_type.id", "resource.resource_type_id")->
+            join("item_category", "item_category.item_id", "item.id")->
+            join("item_sub_category", "item_sub_category.item_category_id", "item_category.id")->
+            join("category", "category.id", "item_category.category_id")->
+            join("sub_category", "sub_category.id", "item_sub_category.sub_category_id")->
+            where("resource_type.id", "=", $resource_type_id)->
+            where("resource.id", "=", $resource_id);
+
+        if ($category_id !== null) {
+            $collection->where("category.id", "=", $category_id);
+        }
+        if ($subcategory_id !== null) {
+            $collection->where("sub_category.id", "=", $subcategory_id);
+        }
+        if ($year !== null) {
+            $collection->whereRaw(\DB::raw("YEAR(item.effective_date) = {$year}"));
+        }
+        if ($month !== null) {
+            $collection->whereRaw(\DB::raw("MONTH(item.effective_date) = {$month}"));
+        }
+
+        $collection = $this->includeUnpublished($collection, $include_unpublished);
+
+        return $collection->get()->
+            toArray();
+    }
+
     /**
      * Work out if we should be hiding unpublished items, by default we don't show them
      *

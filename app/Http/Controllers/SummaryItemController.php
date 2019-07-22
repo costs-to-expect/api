@@ -65,7 +65,11 @@ class SummaryItemController extends Controller
         if (array_key_exists('years', $collection_parameters) === true &&
             General::booleanValue($collection_parameters['years']) === true) {
             return $this->yearsSummary();
-        } else if (array_key_exists('year', $collection_parameters) === true) {
+        } else if (
+            array_key_exists('year', $collection_parameters) === true &&
+            array_key_exists('category', $collection_parameters) === false &&
+            array_key_exists('subcategory', $collection_parameters) === false
+        ) {
             if (array_key_exists('months', $collection_parameters) === true &&
                 General::booleanValue($collection_parameters['months']) === true) {
                 return $this->monthsSummary($collection_parameters['year']);
@@ -77,10 +81,16 @@ class SummaryItemController extends Controller
             } else {
                 return $this->yearSummary($collection_parameters['year']);
             }
-        } else if (array_key_exists('categories', $collection_parameters) === true &&
+        }
+
+        if (array_key_exists('categories', $collection_parameters) === true &&
             General::booleanValue($collection_parameters['categories']) === true) {
             return $this->categoriesSummary();
-        } else if (array_key_exists('category', $collection_parameters) === true) {
+        } else if (
+            array_key_exists('category', $collection_parameters) === true &&
+            array_key_exists('year', $collection_parameters) === false &&
+            array_key_exists('month', $collection_parameters) === false
+        ) {
             if (array_key_exists('subcategories', $collection_parameters) === true &&
                 General::booleanValue($collection_parameters['subcategories']) === true) {
                 return $this->subcategoriesSummary($collection_parameters['category']);
@@ -92,9 +102,23 @@ class SummaryItemController extends Controller
             } else {
                 return $this->categorySummary($collection_parameters['category']);
             }
-        } else {
-            return $this->tcoSummary();
         }
+
+        if (
+            array_key_exists('category', $collection_parameters) === true ||
+            array_key_exists('subcategory', $collection_parameters) === true ||
+            array_key_exists('year', $collection_parameters) === true ||
+            array_key_exists('month', $collection_parameters) === true
+        ) {
+            return $this->filteredSummary(
+                (array_key_exists('category', $collection_parameters) ? $collection_parameters['category'] : null),
+                (array_key_exists('subcategory', $collection_parameters) ? $collection_parameters['subcategory'] : null),
+                (array_key_exists('year', $collection_parameters) ? $collection_parameters['year'] : null),
+                (array_key_exists('month', $collection_parameters) ? $collection_parameters['month'] : null)
+            );
+        }
+
+        return $this->tcoSummary();
     }
 
     /**
@@ -248,6 +272,46 @@ class SummaryItemController extends Controller
             ),
             200,
             [ 'X-Total-Count' => count($summary) ]
+        );
+    }
+
+    /**
+     * Return a filtered summary
+     *
+     * @param int|null $category_id
+     * @param int|null $subcategory_id
+     * @param int|null $year
+     * @param int|null $month
+     *
+     * @return JsonResponse
+     */
+    public function filteredSummary(
+        int $category_id = null,
+        int $subcategory_id = null,
+        int $year = null,
+        int $month = null
+    ): JsonResponse
+    {
+        $summary = (new Item())->filteredSummary(
+            $this->resource_type_id,
+            $this->resource_id,
+            $category_id,
+            $subcategory_id,
+            $year,
+            $month,
+            $this->include_unpublished
+        );
+
+        if (count($summary) !== 1) {
+            UtilityResponse::notFound();
+        }
+
+        return response()->json(
+            [
+                'total' => number_format($summary[0]['total'], 2, '.', '')
+            ],
+            200,
+            ['X-Total-Count' => 1]
         );
     }
 
