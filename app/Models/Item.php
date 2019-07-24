@@ -41,52 +41,69 @@ class Item extends Model
         return $this->belongsTo(Resource::class, 'resource_id', 'id');
     }
 
+    /**
+     * Return the total count for the given request, similar to the collection method just
+     * without the sorting and only returning a count
+     *
+     * @param integer $resource_type_id
+     * @param integer $resource_id
+     * @param array $parameters
+     * @param array $search_parameters
+     *
+     * @return integer
+     */
     public function totalCount(
         int $resource_type_id,
         int $resource_id,
-        array $parameters_collection = [],
-        array $search_conditions = []
-    )
+        array $parameters = [],
+        array $search_parameters = []
+    ): int
     {
         $collection = $this->where('resource_id', '=', $resource_id)
             ->join('resource', 'item.resource_id', 'resource.id')
             ->where('resource.resource_type_id', '=', $resource_type_id);
 
-        if (array_key_exists('year', $parameters_collection) === true &&
-            $parameters_collection['year'] !== null) {
-            $collection->whereRaw(\DB::raw("YEAR(item.effective_date) = '{$parameters_collection['year']}'"));
-        }
-
-        if (array_key_exists('month', $parameters_collection) === true &&
-            $parameters_collection['month'] !== null) {
-            $collection->whereRaw(\DB::raw("MONTH(item.effective_date) = '{$parameters_collection['month']}'"));
-        }
-
-        if (array_key_exists('category', $parameters_collection) === true &&
-            $parameters_collection['category'] !== null) {
-            $collection->join("item_category", "item_category.item_id", "item.id");
-            $collection->where('item_category.category_id', '=', $parameters_collection['category']);
+        if (
+            array_key_exists('year', $parameters) === true &&
+            $parameters['year'] !== null
+        ) {
+            $collection->whereRaw(\DB::raw("YEAR(item.effective_date) = '{$parameters['year']}'"));
         }
 
         if (
-            array_key_exists('category', $parameters_collection) === true &&
-            $parameters_collection['category'] !== null &&
-            array_key_exists('subcategory', $parameters_collection) === true &&
-            $parameters_collection['subcategory'] !== null
+            array_key_exists('month', $parameters) === true &&
+            $parameters['month'] !== null
         ) {
-            $collection->join("item_sub_category", "item_sub_category.item_category_id", "item_category.id");
-            $collection->where('item_sub_category.sub_category_id', '=', $parameters_collection['subcategory']);
+            $collection->whereRaw(\DB::raw("MONTH(item.effective_date) = '{$parameters['month']}'"));
         }
 
-        if (count($search_conditions) > 0) {
-            foreach ($search_conditions as $field => $search_term) {
+        if (
+            array_key_exists('category', $parameters) === true &&
+            $parameters['category'] !== null
+        ) {
+            $collection->join("item_category", "item_category.item_id", "item.id");
+            $collection->where('item_category.category_id', '=', $parameters['category']);
+        }
+
+        if (
+            array_key_exists('category', $parameters) === true &&
+            $parameters['category'] !== null &&
+            array_key_exists('subcategory', $parameters) === true &&
+            $parameters['subcategory'] !== null
+        ) {
+            $collection->join("item_sub_category", "item_sub_category.item_category_id", "item_category.id");
+            $collection->where('item_sub_category.sub_category_id', '=', $parameters['subcategory']);
+        }
+
+        if (count($search_parameters) > 0) {
+            foreach ($search_parameters as $field => $search_term) {
                 $collection->where('item.' . $field, 'LIKE', '%' . $search_term . '%');
             }
         }
 
         if (
-            array_key_exists('include-unpublished', $parameters_collection) === false ||
-            General::booleanValue($parameters_collection['include-unpublished']) === false
+            array_key_exists('include-unpublished', $parameters) === false ||
+            General::booleanValue($parameters['include-unpublished']) === false
         ) {
             $collection->where(function ($collection) {
                 $collection->whereNull('item.publish_after')->orWhereRaw('item.publish_after < NOW()');
@@ -96,14 +113,27 @@ class Item extends Model
         return count($collection->get());
     }
 
+    /**
+     * Return the results for the given request based on the supplied parameters
+     *
+     * @param integer $resource_type_id
+     * @param integer $resource_id
+     * @param integer $offset
+     * @param integer $limit
+     * @param array $parameters
+     * @param array $sort_parameters
+     * @param array $search_parameters
+     *
+     * @return array
+     */
     public function paginatedCollection(
         int $resource_type_id,
         int $resource_id,
         int $offset = 0,
         int $limit = 10,
-        array $parameters_collection = [],
-        array $sort_fields = [],
-        array $search_conditions = []
+        array $parameters = [],
+        array $sort_parameters = [],
+        array $search_parameters = []
     ): array
     {
         $select_fields = [
@@ -124,8 +154,8 @@ class Item extends Model
             ->where('resource.resource_type_id', '=', $resource_type_id);
 
         if (
-            array_key_exists('include-categories', $parameters_collection) === true &&
-            General::booleanValue($parameters_collection['include-categories']) === true
+            array_key_exists('include-categories', $parameters) === true &&
+            General::booleanValue($parameters['include-categories']) === true
         ) {
             $collection->join('item_category', 'item.id', 'item_category.item_id')->
                 join('category', 'item_category.category_id', 'category.id');
@@ -136,14 +166,14 @@ class Item extends Model
             $select_fields[] = 'category.name AS category_name';
             $select_fields[] = 'category.description AS category_description';
 
-            if (array_key_exists('category', $parameters_collection) === true &&
-                $parameters_collection['category'] !== null) {
-                $collection->where('item_category.category_id', '=', $parameters_collection['category']);
+            if (array_key_exists('category', $parameters) === true &&
+                $parameters['category'] !== null) {
+                $collection->where('item_category.category_id', '=', $parameters['category']);
             }
 
             if (
-                array_key_exists('include-subcategories', $parameters_collection) === true &&
-                General::booleanValue($parameters_collection['include-subcategories']) === true
+                array_key_exists('include-subcategories', $parameters) === true &&
+                General::booleanValue($parameters['include-subcategories']) === true
             ) {
                 $collection->join('item_sub_category', 'item_category.id', 'item_sub_category.item_category_id')->
                     join('sub_category', 'item_sub_category.sub_category_id', 'sub_category.id');
@@ -154,60 +184,60 @@ class Item extends Model
                 $select_fields[] = 'sub_category.name AS subcategory_name';
                 $select_fields[] = 'sub_category.description AS subcategory_description';
 
-                if (array_key_exists('subcategory', $parameters_collection) === true &&
-                    $parameters_collection['subcategory'] !== null) {
-                    $collection->where('item_sub_category.sub_category_id', '=', $parameters_collection['subcategory']);
+                if (array_key_exists('subcategory', $parameters) === true &&
+                    $parameters['subcategory'] !== null) {
+                    $collection->where('item_sub_category.sub_category_id', '=', $parameters['subcategory']);
                 }
             }
         }
 
-        if (array_key_exists('year', $parameters_collection) === true &&
-            $parameters_collection['year'] !== null) {
-            $collection->whereRaw(\DB::raw("YEAR(item.effective_date) = '{$parameters_collection['year']}'"));
+        if (array_key_exists('year', $parameters) === true &&
+            $parameters['year'] !== null) {
+            $collection->whereRaw(\DB::raw("YEAR(item.effective_date) = '{$parameters['year']}'"));
         }
 
-        if (array_key_exists('month', $parameters_collection) === true &&
-            $parameters_collection['month'] !== null) {
-            $collection->whereRaw(\DB::raw("MONTH(item.effective_date) = '{$parameters_collection['month']}'"));
+        if (array_key_exists('month', $parameters) === true &&
+            $parameters['month'] !== null) {
+            $collection->whereRaw(\DB::raw("MONTH(item.effective_date) = '{$parameters['month']}'"));
         }
 
         if (
-            array_key_exists('category', $parameters_collection) === true &&
-            $parameters_collection['category'] !== null &&
+            array_key_exists('category', $parameters) === true &&
+            $parameters['category'] !== null &&
             $category_join === false
         ) {
             $collection->join("item_category", "item_category.item_id", "item.id");
-            $collection->where('item_category.category_id', '=', $parameters_collection['category']);
+            $collection->where('item_category.category_id', '=', $parameters['category']);
         }
 
         if (
-            array_key_exists('category', $parameters_collection) === true &&
-            $parameters_collection['category'] !== null &&
-            array_key_exists('subcategory', $parameters_collection) === true &&
-            $parameters_collection['subcategory'] !== null &&
+            array_key_exists('category', $parameters) === true &&
+            $parameters['category'] !== null &&
+            array_key_exists('subcategory', $parameters) === true &&
+            $parameters['subcategory'] !== null &&
             $subcategory_join === false
         ) {
             $collection->join("item_sub_category", "item_sub_category.item_category_id", "item_category.id");
-            $collection->where('item_sub_category.sub_category_id', '=', $parameters_collection['subcategory']);
+            $collection->where('item_sub_category.sub_category_id', '=', $parameters['subcategory']);
         }
 
-        if (count($search_conditions) > 0) {
-            foreach ($search_conditions as $field => $search_term) {
+        if (count($search_parameters) > 0) {
+            foreach ($search_parameters as $field => $search_term) {
                 $collection->where('item.' . $field, 'LIKE', '%' . $search_term . '%');
             }
         }
 
         if (
-            array_key_exists('include-unpublished', $parameters_collection) === false ||
-            General::booleanValue($parameters_collection['include-unpublished']) === false
+            array_key_exists('include-unpublished', $parameters) === false ||
+            General::booleanValue($parameters['include-unpublished']) === false
         ) {
             $collection->where(function ($collection) {
                 $collection->whereNull('item.publish_after')->orWhereRaw('item.publish_after < NOW()');
             });
         }
 
-        if (count($sort_fields) > 0) {
-            foreach ($sort_fields as $field => $direction) {
+        if (count($sort_parameters) > 0) {
+            foreach ($sort_parameters as $field => $direction) {
                 switch ($field) {
                     case 'created':
                         $collection->orderBy('created_at', $direction);
@@ -226,7 +256,9 @@ class Item extends Model
         $collection->offset($offset);
         $collection->limit($limit);
 
-        return $collection->select($select_fields)->get()->toArray();
+        return $collection->select($select_fields)->
+            get()->
+            toArray();
     }
 
     public function single(int $resource_type_id, int $resource_id, int $item_id): array

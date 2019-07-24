@@ -45,7 +45,7 @@ class ItemController extends Controller
     {
         Route::resourceRoute($resource_type_id, $resource_id);
 
-        $this->collection_parameters = Parameters::fetch([
+        $parameters = Parameters::fetch([
             'include-categories',
             'include-subcategories',
             'include-unpublished',
@@ -55,7 +55,18 @@ class ItemController extends Controller
             'subcategory'
         ]);
 
-        $sort_fields = SortParameters::fetch([
+        $search_parameters = SearchParameters::fetch([
+            'description'
+        ]);
+
+        $total = (new Item())->totalCount(
+            $resource_type_id,
+            $resource_id,
+            $parameters,
+            $search_parameters
+        );
+
+        $sort_parameters = SortParameters::fetch([
             'description',
             'total',
             'actualised_total',
@@ -63,21 +74,10 @@ class ItemController extends Controller
             'created'
         ]);
 
-        $search_conditions = SearchParameters::fetch([
-            'description'
-        ]);
-
-        $total = (new Item())->totalCount(
-            $resource_type_id,
-            $resource_id,
-            $this->collection_parameters,
-            $search_conditions
-        );
-
         $pagination = UtilityPagination::init($request->path(), $total)
-            ->setParameters($this->collection_parameters)
-            ->setSortParameters($sort_fields)
-            ->setSearchParameters($search_conditions)
+            ->setParameters($parameters)
+            ->setSortParameters($sort_parameters)
+            ->setSearchParameters($search_parameters)
             ->paging();
 
         $items = (new Item())->paginatedCollection(
@@ -85,9 +85,9 @@ class ItemController extends Controller
             $resource_id,
             $pagination['offset'],
             $pagination['limit'],
-            $this->collection_parameters,
-            $sort_fields,
-            $search_conditions
+            $parameters,
+            $sort_parameters,
+            $search_parameters
         );
 
         $headers = [
