@@ -3,7 +3,6 @@ declare(strict_types=1);
 
 namespace App\Models\Transformers;
 
-use App\Models\Category as CategoryModel;
 use App\Models\SubCategory as SubCategoryModel;
 
 /**
