@@ -420,25 +420,22 @@ class ItemController extends Controller
             ];
         }
 
-        // Convert this, anonymous function can't access $conditional parameters array.
-        // Switch to returning an array, no need for the collection or map.
-
         if (array_key_exists('category', $parameters) === true) {
-            (new SubCategory())->paginatedCollection($parameters['category'])->map(
-                function ($sub_category)
-                {
-                    $conditional_parameters['subcategory']['allowed_values'][$this->hash->encode('subcategory', $sub_category->id)] = [
-                        'value' => $this->hash->encode('subcategory', $sub_category->id),
-                        'name' => $sub_category->name,
+
+            $subcategories = (new SubCategory())->paginatedCollection($parameters['category']);
+
+            array_map(
+                function($subcategory) use (&$conditional_parameters) {
+                    $conditional_parameters['subcategory']['allowed_values'][$this->hash->encode('subcategory', $subcategory['id'])] = [
+                        'value' => $this->hash->encode('subcategory', $subcategory['id']),
+                        'name' => $subcategory['name'],
                         'description' => trans('item/allowed-values.description-prefix-subcategory') .
-                            $sub_category->name . trans('item/allowed-values.description-suffix-subcategory')
+                            $subcategory['name'] . trans('item/allowed-values.description-suffix-subcategory')
                     ];
-                }
+                },
+                $subcategories
             );
         }
-
-        print_r($conditional_parameters);
-            die;
 
         return $conditional_parameters;
     }

@@ -187,17 +187,19 @@ class ResourceTypeItemController extends Controller
         );
 
         if (array_key_exists('category', $collection_parameters) === true) {
-            (new SubCategory())->paginatedCollection($collection_parameters['category'])->map(
-                function ($sub_category)
-                {
-                    $this->conditional_get_parameters['subcategory']['allowed_values'][$this->hash->encode('subcategory', $sub_category->id)] = [
-                        'value' => $this->hash->encode('subcategory', $sub_category->id),
-                        'name' => $sub_category->name,
-                        'description' => trans('resource-type-item/allowed-values.description-prefix-subcategory') .
-                            $sub_category->name . trans('resource-type-item/allowed-values.description-suffix-subcategory')
+            $subcategories = (new SubCategory())->paginatedCollection($collection_parameters['category']);
+
+            array_map(
+                function($subcategory) {
+                    $this->conditional_get_parameters['subcategory']['allowed_values'][$this->hash->encode('subcategory', $subcategory['id'])] = [
+                        'value' => $this->hash->encode('subcategory', $subcategory['id']),
+                        'name' => $subcategory['name'],
+                        'description' => trans('item/allowed-values.description-prefix-subcategory') .
+                            $subcategory['name'] . trans('item/allowed-values.description-suffix-subcategory')
                     ];
-                }
+                },
+                $subcategories
             );
-        }
+          }
     }
 }

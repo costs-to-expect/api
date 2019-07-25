@@ -24,17 +24,33 @@ class SubCategory extends Model
         return $this->belongsTo(Category::class, 'category_id', 'id');
     }
 
-    public function paginatedCollection(int $category_id, int $offset = 0, int $limit = 10)
+    /**
+     * @param integer $category_id
+     * @param integer $offset
+     * @param integer $limit
+     *
+     * @return array
+     */
+    public function paginatedCollection(
+        int $category_id,
+        int $offset = 0,
+        int $limit = 10
+    ): array
     {
-        return $this->where('category_id', '=', $category_id)
-            ->orderBy("name")
-            ->get();
+        return $this->where('category_id', '=', $category_id)->
+            orderBy("name")->
+            get()->
+            toArray();
     }
 
-    public function single(int $category_id, int $sub_category_id)
+    public function single(
+        int $category_id,
+        int $sub_category_id
+    ): array
     {
-        return $this->where('category_id', '=', $category_id)
-            ->find($sub_category_id);
+        return $this->where('category_id', '=', $category_id)->
+            find($sub_category_id)->
+            toArray();
     }
 
     public function subCategorySummary(int $resource_type_id, int $resource_id)
