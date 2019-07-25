@@ -263,6 +263,7 @@ class Item extends Model
 
     public function single(int $resource_type_id, int $resource_id, int $item_id): array
     {
+        // Remove the whereHas etc, normally SQL builder
         return $this->where('resource_id', '=', $resource_id)
             ->whereHas('resource', function ($query) use ($resource_type_id) {
                 $query->where('resource_type_id', '=', $resource_type_id);
@@ -282,6 +283,7 @@ class Item extends Model
 
     public function instance(int $resource_type_id, int $resource_id, int $item_id)
     {
+        // Combine with this method somehow, be careful about selected fields etc.
         return $this->where('resource_id', '=', $resource_id)
             ->whereHas('resource', function ($query) use ($resource_type_id) {
                 $query->where('resource_type_id', '=', $resource_type_id);

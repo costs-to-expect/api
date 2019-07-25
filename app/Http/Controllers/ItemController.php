@@ -145,25 +145,27 @@ class ItemController extends Controller
     /**
      * Generate the OPTIONS request for the item list
      *
-     * @param Request $request
      * @param string $resource_type_id
      * @param string $resource_id
      *
      * @return JsonResponse
      */
-    public function optionsIndex(Request $request, string $resource_type_id, string $resource_id): JsonResponse
+    public function optionsIndex(string $resource_type_id, string $resource_id): JsonResponse
     {
         Route::resourceRoute($resource_type_id, $resource_id);
 
-        $this->collection_parameters = Parameters::fetch(['year', 'month', 'category', 'subcategory']);
+        $parameters = Parameters::fetch(['year', 'month', 'category', 'subcategory']);
 
-        $this->setConditionalGetParameters($resource_type_id);
+        $conditional_parameters = $this->conditionalParameters(
+            $resource_type_id,
+            $parameters
+        );
 
         return $this->generateOptionsForIndex(
             [
                 'description_localisation_string' => 'route-descriptions.item_GET_index',
                 'parameters_config_string' => 'api.item.parameters.collection',
-                'conditionals_config' => $this->get_parameters,
+                'conditionals_config' => $conditional_parameters,
                 'sortable_config' => 'api.item.sortable',
                 'searchable_config' => 'api.item.searchable',
                 'enable_pagination' => true,
@@ -369,12 +371,16 @@ class ItemController extends Controller
      * config/api/[item-type]/parameters.php
      *
      * @param integer $resource_type_id
+     * @param array $parameters
      *
-     * @return void
+     * @return array
      */
-    private function setConditionalGetParameters($resource_type_id)
+    private function conditionalParameters(
+        int $resource_type_id,
+        array $parameters
+    ): array
     {
-        $this->get_parameters = [
+        $conditional_parameters = [
             'year' => [
                 'allowed_values' => []
             ],
@@ -387,7 +393,7 @@ class ItemController extends Controller
         ];
 
         for ($i=2013; $i <= intval(date('Y')); $i++) {
-            $this->get_parameters['year']['allowed_values'][$i] = [
+            $conditional_parameters['year']['allowed_values'][$i] = [
                 'value' => $i,
                 'name' => $i,
                 'description' => trans('item/allowed-values.description-prefix-year') . $i
@@ -395,7 +401,7 @@ class ItemController extends Controller
         }
 
         for ($i=1; $i < 13; $i++) {
-            $this->get_parameters['month']['allowed_values'][$i] = [
+            $conditional_parameters['month']['allowed_values'][$i] = [
                 'value' => $i,
                 'name' => date("F", mktime(0, 0, 0, $i, 10)),
                 'description' => trans('item/allowed-values.description-prefix-month') .
@@ -406,7 +412,7 @@ class ItemController extends Controller
         $categories = (new Category())->paginatedCollection($this->include_private, ['resource_type'=>$resource_type_id]);
 
         foreach ($categories as $category) {
-            $this->get_parameters['category']['allowed_values'][$this->hash->encode('category', $category['category_id'])] = [
+            $conditional_parameters['category']['allowed_values'][$this->hash->encode('category', $category['category_id'])] = [
                 'value' => $this->hash->encode('category', $category['category_id']),
                 'name' => $category['category_name'],
                 'description' => trans('item/allowed-values.description-prefix-category') .
@@ -414,11 +420,14 @@ class ItemController extends Controller
             ];
         }
 
-        if (array_key_exists('category', $this->collection_parameters) === true) {
-            (new SubCategory())->paginatedCollection($this->collection_parameters['category'])->map(
+        // Convert this, anonymous function can't access $conditional parameters array.
+        // Switch to returning an array, no need for the collection or map.
+
+        if (array_key_exists('category', $parameters) === true) {
+            (new SubCategory())->paginatedCollection($parameters['category'])->map(
                 function ($sub_category)
                 {
-                    $this->get_parameters['subcategory']['allowed_values'][$this->hash->encode('subcategory', $sub_category->id)] = [
+                    $conditional_parameters['subcategory']['allowed_values'][$this->hash->encode('subcategory', $sub_category->id)] = [
                         'value' => $this->hash->encode('subcategory', $sub_category->id),
                         'name' => $sub_category->name,
                         'description' => trans('item/allowed-values.description-prefix-subcategory') .
@@ -427,5 +436,10 @@ class ItemController extends Controller
                 }
             );
         }
+
+        print_r($conditional_parameters);
+            die;
+
+        return $conditional_parameters;
     }
 }
