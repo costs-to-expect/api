@@ -270,7 +270,6 @@ class ItemController extends Controller
     /**
      * Update the selected item
      *
-     * @param Request $request
      * @param string $resource_type_id
      * @param string $resource_id
      * @param string $item_id
@@ -278,7 +277,6 @@ class ItemController extends Controller
      * @return JsonResponse
      */
     public function update(
-        Request $request,
         string $resource_type_id,
         string $resource_id,
         string $item_id
@@ -290,7 +288,7 @@ class ItemController extends Controller
             UtilityResponse::nothingToPatch();
         }
 
-        $validate = (new ItemValidator)->update($request);
+        $validate = (new ItemValidator)->update(request());
         if ($validate->fails() === true) {
             return $this->returnValidationErrors($validate);
         }
@@ -307,7 +305,7 @@ class ItemController extends Controller
         }
 
         $update_actualised = false;
-        foreach ($request->all() as $key => $value) {
+        foreach (request()->all() as $key => $value) {
             $item->$key = $value;
 
             if (in_array($key, ['total', 'percentage']) === true) {
