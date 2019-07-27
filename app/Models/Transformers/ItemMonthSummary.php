@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace App\Models\Transformers;
 
-use App\Models\Item as ItemModel;
+use App\Models\ItemSummary as ItemModel;
 
 /**
  * Transform the data returns from Eloquent into the format we want for the API
