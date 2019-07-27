@@ -160,7 +160,7 @@ class SubCategoryController extends Controller
     {
         Route::categoryRoute($category_id);
 
-        $validator = (new SubCategoryValidator)->create($request, $category_id);
+        $validator = (new SubCategoryValidator)->create(['category_id' => $category_id]);
 
         if ($validator->fails() === true) {
             return $this->returnValidationErrors($validator);

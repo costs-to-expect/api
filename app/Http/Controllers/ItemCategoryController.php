@@ -206,7 +206,7 @@ class ItemCategoryController extends Controller
     {
         Route::itemRoute($resource_type_id, $resource_id, $item_id);
 
-        $validator = (new ItemCategoryValidator)->create($request);
+        $validator = (new ItemCategoryValidator)->create();
 
         if ($validator->fails() === true) {
             return $this->returnValidationErrors($validator, $this->conditionalPostParameters($resource_type_id));

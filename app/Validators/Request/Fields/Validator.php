@@ -40,4 +40,8 @@ abstract class Validator
 
         return $messages;
     }
+
+    abstract public function create(array $options = []): \Illuminate\Contracts\Validation\Validator;
+
+    abstract public function update(array $options = []): \Illuminate\Contracts\Validation\Validator;
 }

@@ -5,7 +5,6 @@ namespace App\Validators\Request\Fields;
 
 use App\Validators\Request\Fields\Validator as BaseValidator;
 use Illuminate\Contracts\Validation\Validator;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator as ValidatorFacade;
 use Illuminate\Validation\Rule;
 
@@ -22,15 +21,13 @@ class ItemTransfer extends BaseValidator
     /**
      * Return the validator object for the create request
      *
-     * @param Request $request
-     * @param integer $resource_type_id
-     * @param integer $existing_resource_id
+     * @param array $options
      *
      * @return Validator
      */
-    public function create(Request $request, $resource_type_id, $existing_resource_id): Validator
+    public function create(array $options = []): Validator
     {
-        $decode = $this->hash->resource()->decode($request->input('resource_id'));
+        $decode = $this->hash->resource()->decode(request()->input('resource_id'));
         $resource_id = null;
         if (count($decode) === 1) {
             $resource_id = $decode[0];
@@ -38,7 +35,7 @@ class ItemTransfer extends BaseValidator
 
         return ValidatorFacade::make(
             array_merge(
-                $request->all(),
+                request()->all(),
                 [
                     'resource_id' => $resource_id
                 ]
@@ -46,14 +43,24 @@ class ItemTransfer extends BaseValidator
             [
                 'resource_id' => [
                     'required',
-                    Rule::exists('resource', 'id')->where(function ($query) use ($resource_type_id, $existing_resource_id)
+                    Rule::exists('resource', 'id')->where(function ($query) use ($options)
                     {
-                        $query->where('resource_type_id', '=', $resource_type_id)->
-                            where('id', '!=', $existing_resource_id);
+                        $query->where('resource_type_id', '=', $options['resource_type_id'])->
+                            where('id', '!=', $options['existing_resource_id']);
                     }),
                 ],
             ],
             $this->translateMessages('api.item-transfer.validation.POST.messages')
         );
+    }
+
+    /**
+     * @param array $options
+     *
+     * @return Validator
+     */
+    public function update(array $options = []): \Illuminate\Contracts\Validation\Validator
+    {
+        // TODO: Implement update() method.
     }
 }

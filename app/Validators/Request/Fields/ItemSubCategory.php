@@ -5,7 +5,6 @@ namespace App\Validators\Request\Fields;
 
 use App\Validators\Request\Fields\Validator as BaseValidator;
 use Illuminate\Contracts\Validation\Validator;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Validator as ValidatorFacade;
 use Illuminate\Validation\Rule;
@@ -50,14 +49,13 @@ class ItemSubCategory extends BaseValidator
     /**
      * Return the validator object for the create request
      *
-     * @param Request $request
-     * @param integer $category_id
+     * @param array $options
      *
      * @return Validator
      */
-    public function create(Request $request, $category_id): Validator
+    public function create(array $options = []): Validator
     {
-        $decode = $this->hash->subCategory()->decode($request->input('sub_category_id'));
+        $decode = $this->hash->subCategory()->decode(request()->input('sub_category_id'));
         $sub_category_id = null;
         if (count($decode) === 1) {
             $sub_category_id = $decode[0];
@@ -65,8 +63,17 @@ class ItemSubCategory extends BaseValidator
 
         return ValidatorFacade::make(
             ['sub_category_id' => $sub_category_id],
-            self::createRules($category_id),
+            self::createRules(intval($options['category_id'])),
             $this->translateMessages('api.item-subcategory.validation.POST.messages')
         );
+    }
+
+    /**
+     * @param array $options
+     * @return Validator
+     */
+    public function update(array $options = []): Validator
+    {
+        // TODO: Implement update() method.
     }
 }

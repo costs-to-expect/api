@@ -33,7 +33,12 @@ class ItemTransferController extends Controller
     {
         Route::itemRoute($resource_type_id, $resource_id, $item_id);
 
-        $validator = (new ItemTransferValidator)->create($request, $resource_type_id, $resource_id);
+        $validator = (new ItemTransferValidator)->create(
+            [
+                'resource_type_id' => $resource_type_id,
+                'existing_resource_id' => $resource_id
+            ]
+        );
 
         if ($validator->fails() === true) {
             return $this->returnValidationErrors($validator);

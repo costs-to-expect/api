@@ -162,7 +162,7 @@ class ResourceController extends Controller
     {
         Route::resourceTypeRoute($resource_type_id);
 
-        $validator = (new ResourceValidator)->create($request, $resource_type_id);
+        $validator = (new ResourceValidator)->create(['resource_type_id' => $resource_type_id]);
 
         if ($validator->fails() === true) {
             return $this->returnValidationErrors($validator);

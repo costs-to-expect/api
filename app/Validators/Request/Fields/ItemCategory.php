@@ -5,7 +5,6 @@ namespace App\Validators\Request\Fields;
 
 use App\Validators\Request\Fields\Validator as BaseValidator;
 use Illuminate\Contracts\Validation\Validator;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Validator as ValidatorFacade;
 
@@ -21,13 +20,13 @@ class ItemCategory extends BaseValidator
     /**
      * Return the validator object for the create request
      *
-     * @param Request $request
+     * @param array $options
      *
      * @return Validator
      */
-    public function create(Request $request): Validator
+    public function create(array $options = []): Validator
     {
-        $decode = $this->hash->category()->decode($request->input('category_id'));
+        $decode = $this->hash->category()->decode(request()->input('category_id'));
         $category_id = null;
         if (count($decode) === 1) {
             $category_id = $decode[0];
@@ -38,5 +37,15 @@ class ItemCategory extends BaseValidator
             Config::get('api.item-category.validation.POST.fields'),
             $this->translateMessages('api.item-category.validation.POST.messages')
         );
+    }
+
+    /**
+     * @param array $options
+     *
+     * @return Validator
+     */
+    public function update(array $options = []): Validator
+    {
+        // TODO: Implement update() method.
     }
 }

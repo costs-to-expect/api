@@ -42,17 +42,25 @@ class Resource extends BaseValidator
     /**
      * Return the validator object for the create request
      *
-     * @param Request $request
-     * @param integer $resource_type_id
+     * @param array $options
      *
      * @return Validator
      */
-    public function create(Request $request, int $resource_type_id): Validator
+    public function create(array $options = []): Validator
     {
         return ValidatorFacade::make(
-            $request->all(),
-            self::createRules($resource_type_id),
+            request()->all(),
+            self::createRules(intval($options['resource_type_id'])),
             $this->translateMessages('api.resource.validation.POST.messages')
         );
+    }
+
+    /**
+     * @param array $options
+     * @return Validator
+     */
+    public function update(array $options = []): Validator
+    {
+        // TODO: Implement update() method.
     }
 }

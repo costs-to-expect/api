@@ -5,7 +5,6 @@ namespace App\Validators\Request\Fields;
 
 use App\Validators\Request\Fields\Validator as BaseValidator;
 use Illuminate\Contracts\Validation\Validator;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Validator as ValidatorFacade;
 
@@ -21,11 +20,11 @@ class ResourceType extends BaseValidator
     /**
      * Return the validator object for the create request
      *
-     * @param Request $request
+     * @param array $options
      *
      * @return Validator
      */
-    public function create(Request $request): Validator
+    public function create(array $options = []): Validator
     {
         $messages = [];
         foreach (Config::get('api.resource-type.validation.POST.messages') as $key => $custom_message) {
@@ -33,9 +32,19 @@ class ResourceType extends BaseValidator
         };
 
         return ValidatorFacade::make(
-            $request->all(),
+            request()->all(),
             Config::get('api.resource-type.validation.POST.fields'),
             $this->translateMessages('api.resource-type.validation.POST.messages')
         );
+    }
+
+    /**
+     * @param array $options
+     *
+     * @return Validator
+     */
+    public function update(array $options = []): Validator
+    {
+        // TODO: Implement update() method.
     }
 }
