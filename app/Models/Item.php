@@ -296,14 +296,16 @@ class Item extends Model
         }
     }
 
-    public function instance(int $resource_type_id, int $resource_id, int $item_id)
+    public function instance(
+        int $resource_type_id,
+        int $resource_id,
+        int $item_id
+    ): ?Item
     {
-        // Combine with this method somehow, be careful about selected fields etc.
-        return $this->where('resource_id', '=', $resource_id)
-            ->whereHas('resource', function ($query) use ($resource_type_id) {
-                $query->where('resource_type_id', '=', $resource_type_id);
-            })
-            ->select(
+        return $this->where('resource_id', '=', $resource_id)->
+            join('resource', 'item.resource_id', 'resource.id')->
+            where('resource.resource_type_id', '=', $resource_type_id)->
+            select(
                 'item.id',
                 'item.description',
                 'item.effective_date',
@@ -314,6 +316,27 @@ class Item extends Model
                 'item.created_at'
             )
             ->find($item_id);
+    }
+
+    /**
+     * Convert the model instance to an array for use with the transformer
+     *
+     * @param Item
+     *
+     * @return array
+     */
+    public function instanceToArray(Item $item): array
+    {
+        return [
+            'item_id' => $item->id,
+            'item_description' => $item->description,
+            'item_effective_date' => $item->effective_date,
+            'item_publish_after' => $item->publish_after,
+            'item_total' => $item->total,
+            'item_percentage' => $item->percentage,
+            'item_actualised_total' => $item->item_actualised_total,
+            'item_created_at' => $item->created_at->toDateTimeString()
+        ];
     }
 
     /**

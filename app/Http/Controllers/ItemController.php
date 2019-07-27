@@ -261,11 +261,8 @@ class ItemController extends Controller
             UtilityResponse::failedToSaveModelForCreate();
         }
 
-        /**
-         * Fix this hack
-         */
         return response()->json(
-            (new ItemTransformer((new Item())->single($resource_type_id, $resource_id, $item->id)))->toArray(),
+            (new ItemTransformer((new Item())->instanceToArray($item)))->toArray(),
             201
         );
     }
