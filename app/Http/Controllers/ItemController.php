@@ -150,7 +150,10 @@ class ItemController extends Controller
      *
      * @return JsonResponse
      */
-    public function optionsIndex(string $resource_type_id, string $resource_id): JsonResponse
+    public function optionsIndex(
+        string $resource_type_id,
+        string $resource_id
+    ): JsonResponse
     {
         Route::resourceRoute($resource_type_id, $resource_id);
 
@@ -183,7 +186,6 @@ class ItemController extends Controller
     /**
      * Generate the OPTIONS request for a specific item
      *
-     * @param Request $request
      * @param string $resource_id
      * @param string $resource_type_id
      * @param string $item_id
@@ -191,7 +193,6 @@ class ItemController extends Controller
      * @return JsonResponse
      */
     public function optionsShow(
-        Request $request,
         string $resource_type_id,
         string $resource_id,
         string $item_id

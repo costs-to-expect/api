@@ -261,14 +261,24 @@ class Item extends Model
             toArray();
     }
 
-    public function single(int $resource_type_id, int $resource_id, int $item_id): array
+    /**
+     * @param integer $resource_type_id
+     * @param integer $resource_id
+     * @param integer $item_id
+     *
+     * @return array|null
+     */
+    public function single(
+        int $resource_type_id,
+        int $resource_id,
+        int $item_id
+    ): ?array
     {
         // Remove the whereHas etc, normal SQL builder
-        return $this->where('resource_id', '=', $resource_id)
-            ->whereHas('resource', function ($query) use ($resource_type_id) {
-                $query->where('resource_type_id', '=', $resource_type_id);
-            })
-            ->select(
+        $result = $this->where('resource_id', '=', $resource_id)->
+            join('resource', 'item.resource_id', 'resource.id')->
+            where('resource.resource_type_id', '=', $resource_type_id)->
+            select(
                 'item.id AS item_id',
                 'item.description AS item_description',
                 'item.effective_date AS item_effective_date',
@@ -277,8 +287,13 @@ class Item extends Model
                 'item.actualised_total AS item_actualised_total',
                 'item.created_at AS item_created_at'
             )
-            ->find($item_id)
-            ->toArray();
+            ->find($item_id);
+
+        if ($result !== null) {
+            return $result->toArray();
+        } else {
+            return null;
+        }
     }
 
     public function instance(int $resource_type_id, int $resource_id, int $item_id)
