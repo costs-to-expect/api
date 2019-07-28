@@ -27,6 +27,8 @@ class ItemTransfer extends BaseValidator
      */
     public function create(array $options = []): Validator
     {
+        $this->requiredIndexes(['resource_type_id', 'existing_resource_id'], $options);
+
         $decode = $this->hash->resource()->decode(request()->input('resource_id'));
         $resource_id = null;
         if (count($decode) === 1) {

@@ -48,6 +48,8 @@ class SubCategory extends BaseValidator
      */
     public function create(array $options = []): Validator
     {
+        $this->requiredIndexes(['category_id'], $options);
+
         return ValidatorFacade::make(
             request()->all(),
             self::createRules(intval($options['category_id'])),

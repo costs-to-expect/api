@@ -48,6 +48,8 @@ class Resource extends BaseValidator
      */
     public function create(array $options = []): Validator
     {
+        $this->requiredIndexes(['resource_type_id'], $options);
+
         return ValidatorFacade::make(
             request()->all(),
             self::createRules(intval($options['resource_type_id'])),

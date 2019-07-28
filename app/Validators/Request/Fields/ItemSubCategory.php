@@ -55,6 +55,8 @@ class ItemSubCategory extends BaseValidator
      */
     public function create(array $options = []): Validator
     {
+        $this->requiredIndexes(['category_id'], $options);
+
         $decode = $this->hash->subCategory()->decode(request()->input('sub_category_id'));
         $sub_category_id = null;
         if (count($decode) === 1) {
