@@ -11,6 +11,7 @@ use App\Models\Transformers\ItemSubCategorySummary as ItemSubCategorySummaryTran
 use App\Models\Transformers\ItemYearSummary as ItemYearSummaryTransformer;
 use App\Utilities\General;
 use App\Utilities\Response as UtilityResponse;
+use App\Validators\Request\SearchParameters;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
@@ -55,6 +56,10 @@ class SummaryItemController extends Controller
             'subcategories'
         ]);
 
+        $search_parameters = SearchParameters::fetch([
+            'description'
+        ]);
+
         if (
             array_key_exists('include-unpublished', $collection_parameters) === true &&
             General::booleanValue($collection_parameters['include-unpublished']) === true
@@ -68,7 +73,8 @@ class SummaryItemController extends Controller
         } else if (
             array_key_exists('year', $collection_parameters) === true &&
             array_key_exists('category', $collection_parameters) === false &&
-            array_key_exists('subcategory', $collection_parameters) === false
+            array_key_exists('subcategory', $collection_parameters) === false &&
+            count($search_parameters) === 0
         ) {
             if (array_key_exists('months', $collection_parameters) === true &&
                 General::booleanValue($collection_parameters['months']) === true) {
@@ -89,7 +95,8 @@ class SummaryItemController extends Controller
         } else if (
             array_key_exists('category', $collection_parameters) === true &&
             array_key_exists('year', $collection_parameters) === false &&
-            array_key_exists('month', $collection_parameters) === false
+            array_key_exists('month', $collection_parameters) === false &&
+            count($search_parameters) === 0
         ) {
             if (array_key_exists('subcategories', $collection_parameters) === true &&
                 General::booleanValue($collection_parameters['subcategories']) === true) {
@@ -108,13 +115,15 @@ class SummaryItemController extends Controller
             array_key_exists('category', $collection_parameters) === true ||
             array_key_exists('subcategory', $collection_parameters) === true ||
             array_key_exists('year', $collection_parameters) === true ||
-            array_key_exists('month', $collection_parameters) === true
+            array_key_exists('month', $collection_parameters) === true ||
+            count($search_parameters) > 0
         ) {
             return $this->filteredSummary(
                 (array_key_exists('category', $collection_parameters) ? $collection_parameters['category'] : null),
                 (array_key_exists('subcategory', $collection_parameters) ? $collection_parameters['subcategory'] : null),
                 (array_key_exists('year', $collection_parameters) ? $collection_parameters['year'] : null),
-                (array_key_exists('month', $collection_parameters) ? $collection_parameters['month'] : null)
+                (array_key_exists('month', $collection_parameters) ? $collection_parameters['month'] : null),
+                (count($search_parameters) > 0 ? $search_parameters : [])
             );
         }
 
@@ -282,6 +291,7 @@ class SummaryItemController extends Controller
      * @param int|null $subcategory_id
      * @param int|null $year
      * @param int|null $month
+     * @param array $search_parameters
      *
      * @return JsonResponse
      */
@@ -289,7 +299,8 @@ class SummaryItemController extends Controller
         int $category_id = null,
         int $subcategory_id = null,
         int $year = null,
-        int $month = null
+        int $month = null,
+        array $search_parameters = []
     ): JsonResponse
     {
         $summary = (new ItemSummary())->filteredSummary(
@@ -299,6 +310,7 @@ class SummaryItemController extends Controller
             $subcategory_id,
             $year,
             $month,
+            $search_parameters,
             $this->include_unpublished
         );
 
@@ -422,7 +434,7 @@ class SummaryItemController extends Controller
                 'parameters_config_string' => 'api.item.summary-parameters.collection',
                 'conditionals_config' => [],
                 'sortable_config' => null,
-                'searchable_config' => null,
+                'searchable_config' => 'api.item.searchable',
                 'enable_pagination' => false,
                 'authentication_required' => false
             ]

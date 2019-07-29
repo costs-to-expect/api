@@ -89,6 +89,7 @@ class ItemSummary extends Model
         int $subcategory_id = null,
         int $year = null,
         int $month = null,
+        array $search_parameters = [],
         bool $include_unpublished = false
     ): array
     {
@@ -114,6 +115,11 @@ class ItemSummary extends Model
         }
         if ($month !== null) {
             $collection->whereRaw(\DB::raw("MONTH(item.effective_date) = {$month}"));
+        }
+        if (count($search_parameters) > 0) {
+            foreach ($search_parameters as $field => $search_term) {
+                $collection->where('item.' . $field, 'LIKE', '%' . $search_term . '%');
+            }
         }
 
         $collection = $this->includeUnpublished($collection, $include_unpublished);
