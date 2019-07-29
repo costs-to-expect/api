@@ -1,9 +1,9 @@
 <?php
 
 return [
-    'version'=> '1.16.4',
+    'version'=> '1.16.5',
     'prefix' => 'v1',
-    'release_date' => '2019-07-22',
+    'release_date' => '2019-07-29',
     'changelog' => [
         'api' => '/v1/changelog',
         'markdown' => 'https://github.com/costs-to-expect/api/blob/master/CHANGELOG.md'

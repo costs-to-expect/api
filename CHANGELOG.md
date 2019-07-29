@@ -2,11 +2,12 @@
 
 The complete changelog for the Costs to Expect REST API, follows the format defined at https://keepachangelog.com/en/1.0.0/
 
-## [v1.16.5] - 2019-xx-xx
+## [v1.16.5] - 2019-07-29
 ### Added
 - Validation added to validators, check to ensure the required indexes set.
 
 ### Changed
+- The filtered summary (`v1/summary/resource-types/[resource-type]/resources/[resource]/items`) includes search terms; previously, the request silently dropped them.
 - Minor rework of the validator classes, I added abstract methods to the base class.
 - There is no need to pass `$request` around.
 - Removed a query that is executed after `create item`, unnecessary DB request.
