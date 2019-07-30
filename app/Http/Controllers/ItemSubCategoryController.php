@@ -251,7 +251,7 @@ class ItemSubCategoryController extends Controller
             ->where('item_id', '=', $item_id)
             ->find($item_category_id);
 
-        $validator = (new ItemSubCategoryValidator)->create($request, $item_category->category_id);
+        $validator = (new ItemSubCategoryValidator)->create(['category_id' => $item_category->category_id]);
 
         if ($validator->fails() === true) {
             return $this->returnValidationErrors($validator, $this->conditionalPostParameters($item_category_id));

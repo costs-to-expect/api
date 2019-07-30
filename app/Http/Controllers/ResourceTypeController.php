@@ -146,7 +146,7 @@ class ResourceTypeController extends Controller
      */
     public function create(Request $request): JsonResponse
     {
-        $validator = (new ResourceTypeValidator)->create($request, $this->include_private);
+        $validator = (new ResourceTypeValidator)->create();
 
         if ($validator->fails() === true) {
             return $this->returnValidationErrors($validator);

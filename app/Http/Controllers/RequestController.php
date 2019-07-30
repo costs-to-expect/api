@@ -163,7 +163,7 @@ class RequestController extends Controller
      */
     public function createErrorLog(Request $request): JsonResponse
     {
-        $validator = (new RequestErrorLogValidator())->create($request);
+        $validator = (new RequestErrorLogValidator())->create();
 
         if ($validator->fails() === true) {
             return $this->returnValidationErrors($validator);

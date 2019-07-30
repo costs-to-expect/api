@@ -5,7 +5,6 @@ namespace App\Validators\Request\Fields;
 
 use App\Validators\Request\Fields\Validator as BaseValidator;
 use Illuminate\Contracts\Validation\Validator;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Validator as ValidatorFacade;
 
@@ -42,13 +41,13 @@ class Category extends BaseValidator
     /**
      * Return the validator object for the create request
      *
-     * @param Request $request
+     * @param array $options
      *
      * @return Validator
      */
-    public function create(Request $request): Validator
+    public function create(array $options = []): Validator
     {
-        $decode = $this->hash->resourceType()->decode($request->input('resource_type_id'));
+        $decode = $this->hash->resourceType()->decode(request()->input('resource_type_id'));
         $resource_type_id = null;
         if (count($decode) === 1) {
             $resource_type_id = $decode[0];
@@ -56,13 +55,23 @@ class Category extends BaseValidator
 
         return ValidatorFacade::make(
             array_merge(
-                $request->all(),
+                request()->all(),
                 [
                     'resource_type_id' => $resource_type_id
                 ]
             ),
-            $this->createRules($resource_type_id),
+            $this->createRules(intval($resource_type_id)),
             $this->translateMessages('api.category.validation.POST.messages')
         );
+    }
+
+    /**
+     * @param array $options
+     *
+     * @return Validator
+     */
+    public function update(array $options = []): Validator
+    {
+        // TODO: Implement update() method.
     }
 }

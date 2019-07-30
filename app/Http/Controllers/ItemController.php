@@ -35,17 +35,16 @@ class ItemController extends Controller
     /**
      * Return all the items based on the set filter options
      *
-     * @param Request $request
      * @param string $resource_type_id
      * @param string $resource_id
      *
      * @return JsonResponse
      */
-    public function index(Request $request, string $resource_type_id, string $resource_id): JsonResponse
+    public function index(string $resource_type_id, string $resource_id): JsonResponse
     {
         Route::resourceRoute($resource_type_id, $resource_id);
 
-        $this->collection_parameters = Parameters::fetch([
+        $parameters = Parameters::fetch([
             'include-categories',
             'include-subcategories',
             'include-unpublished',
@@ -55,7 +54,18 @@ class ItemController extends Controller
             'subcategory'
         ]);
 
-        $sort_fields = SortParameters::fetch([
+        $search_parameters = SearchParameters::fetch([
+            'description'
+        ]);
+
+        $total = (new Item())->totalCount(
+            $resource_type_id,
+            $resource_id,
+            $parameters,
+            $search_parameters
+        );
+
+        $sort_parameters = SortParameters::fetch([
             'description',
             'total',
             'actualised_total',
@@ -63,21 +73,10 @@ class ItemController extends Controller
             'created'
         ]);
 
-        $search_conditions = SearchParameters::fetch([
-            'description'
-        ]);
-
-        $total = (new Item())->totalCount(
-            $resource_type_id,
-            $resource_id,
-            $this->collection_parameters,
-            $search_conditions
-        );
-
-        $pagination = UtilityPagination::init($request->path(), $total)
-            ->setParameters($this->collection_parameters)
-            ->setSortParameters($sort_fields)
-            ->setSearchParameters($search_conditions)
+        $pagination = UtilityPagination::init(request()->path(), $total)
+            ->setParameters($parameters)
+            ->setSortParameters($sort_parameters)
+            ->setSearchParameters($search_parameters)
             ->paging();
 
         $items = (new Item())->paginatedCollection(
@@ -85,9 +84,9 @@ class ItemController extends Controller
             $resource_id,
             $pagination['offset'],
             $pagination['limit'],
-            $this->collection_parameters,
-            $sort_fields,
-            $search_conditions
+            $parameters,
+            $sort_parameters,
+            $search_parameters
         );
 
         $headers = [
@@ -114,7 +113,6 @@ class ItemController extends Controller
     /**
      * Return a single item
      *
-     * @param Request $request
      * @param string $resource_id
      * @param string $resource_type_id
      * @param string $item_id
@@ -122,7 +120,6 @@ class ItemController extends Controller
      * @return JsonResponse
      */
     public function show(
-        Request $request,
         string $resource_type_id,
         string $resource_id,
         string $item_id
@@ -148,25 +145,30 @@ class ItemController extends Controller
     /**
      * Generate the OPTIONS request for the item list
      *
-     * @param Request $request
      * @param string $resource_type_id
      * @param string $resource_id
      *
      * @return JsonResponse
      */
-    public function optionsIndex(Request $request, string $resource_type_id, string $resource_id): JsonResponse
+    public function optionsIndex(
+        string $resource_type_id,
+        string $resource_id
+    ): JsonResponse
     {
         Route::resourceRoute($resource_type_id, $resource_id);
 
-        $this->collection_parameters = Parameters::fetch(['year', 'month', 'category', 'subcategory']);
+        $parameters = Parameters::fetch(['year', 'month', 'category', 'subcategory']);
 
-        $this->setConditionalGetParameters($resource_type_id);
+        $conditional_parameters = $this->conditionalParameters(
+            $resource_type_id,
+            $parameters
+        );
 
         return $this->generateOptionsForIndex(
             [
                 'description_localisation_string' => 'route-descriptions.item_GET_index',
                 'parameters_config_string' => 'api.item.parameters.collection',
-                'conditionals_config' => $this->get_parameters,
+                'conditionals_config' => $conditional_parameters,
                 'sortable_config' => 'api.item.sortable',
                 'searchable_config' => 'api.item.searchable',
                 'enable_pagination' => true,
@@ -184,7 +186,6 @@ class ItemController extends Controller
     /**
      * Generate the OPTIONS request for a specific item
      *
-     * @param Request $request
      * @param string $resource_id
      * @param string $resource_type_id
      * @param string $item_id
@@ -192,7 +193,6 @@ class ItemController extends Controller
      * @return JsonResponse
      */
     public function optionsShow(
-        Request $request,
         string $resource_type_id,
         string $resource_id,
         string $item_id
@@ -239,7 +239,7 @@ class ItemController extends Controller
     {
         Route::resourceRoute($resource_type_id, $resource_id);
 
-        $validator = (new ItemValidator)->create($request);
+        $validator = (new ItemValidator)->create();
 
         if ($validator->fails() === true) {
             return $this->returnValidationErrors($validator);
@@ -261,11 +261,8 @@ class ItemController extends Controller
             UtilityResponse::failedToSaveModelForCreate();
         }
 
-        /**
-         * Fix this hack
-         */
         return response()->json(
-            (new ItemTransformer((new Item())->single($resource_type_id, $resource_id, $item->id)))->toArray(),
+            (new ItemTransformer((new Item())->instanceToArray($item)))->toArray(),
             201
         );
     }
@@ -273,7 +270,6 @@ class ItemController extends Controller
     /**
      * Update the selected item
      *
-     * @param Request $request
      * @param string $resource_type_id
      * @param string $resource_id
      * @param string $item_id
@@ -281,7 +277,6 @@ class ItemController extends Controller
      * @return JsonResponse
      */
     public function update(
-        Request $request,
         string $resource_type_id,
         string $resource_id,
         string $item_id
@@ -293,7 +288,7 @@ class ItemController extends Controller
             UtilityResponse::nothingToPatch();
         }
 
-        $validate = (new ItemValidator)->update($request);
+        $validate = (new ItemValidator)->update();
         if ($validate->fails() === true) {
             return $this->returnValidationErrors($validate);
         }
@@ -310,7 +305,7 @@ class ItemController extends Controller
         }
 
         $update_actualised = false;
-        foreach ($request->all() as $key => $value) {
+        foreach (request()->all() as $key => $value) {
             $item->$key = $value;
 
             if (in_array($key, ['total', 'percentage']) === true) {
@@ -372,12 +367,16 @@ class ItemController extends Controller
      * config/api/[item-type]/parameters.php
      *
      * @param integer $resource_type_id
+     * @param array $parameters
      *
-     * @return void
+     * @return array
      */
-    private function setConditionalGetParameters($resource_type_id)
+    private function conditionalParameters(
+        int $resource_type_id,
+        array $parameters
+    ): array
     {
-        $this->get_parameters = [
+        $conditional_parameters = [
             'year' => [
                 'allowed_values' => []
             ],
@@ -390,7 +389,7 @@ class ItemController extends Controller
         ];
 
         for ($i=2013; $i <= intval(date('Y')); $i++) {
-            $this->get_parameters['year']['allowed_values'][$i] = [
+            $conditional_parameters['year']['allowed_values'][$i] = [
                 'value' => $i,
                 'name' => $i,
                 'description' => trans('item/allowed-values.description-prefix-year') . $i
@@ -398,7 +397,7 @@ class ItemController extends Controller
         }
 
         for ($i=1; $i < 13; $i++) {
-            $this->get_parameters['month']['allowed_values'][$i] = [
+            $conditional_parameters['month']['allowed_values'][$i] = [
                 'value' => $i,
                 'name' => date("F", mktime(0, 0, 0, $i, 10)),
                 'description' => trans('item/allowed-values.description-prefix-month') .
@@ -409,7 +408,7 @@ class ItemController extends Controller
         $categories = (new Category())->paginatedCollection($this->include_private, ['resource_type'=>$resource_type_id]);
 
         foreach ($categories as $category) {
-            $this->get_parameters['category']['allowed_values'][$this->hash->encode('category', $category['category_id'])] = [
+            $conditional_parameters['category']['allowed_values'][$this->hash->encode('category', $category['category_id'])] = [
                 'value' => $this->hash->encode('category', $category['category_id']),
                 'name' => $category['category_name'],
                 'description' => trans('item/allowed-values.description-prefix-category') .
@@ -417,18 +416,23 @@ class ItemController extends Controller
             ];
         }
 
-        if (array_key_exists('category', $this->collection_parameters) === true) {
-            (new SubCategory())->paginatedCollection($this->collection_parameters['category'])->map(
-                function ($sub_category)
-                {
-                    $this->get_parameters['subcategory']['allowed_values'][$this->hash->encode('subcategory', $sub_category->id)] = [
-                        'value' => $this->hash->encode('subcategory', $sub_category->id),
-                        'name' => $sub_category->name,
+        if (array_key_exists('category', $parameters) === true) {
+
+            $subcategories = (new SubCategory())->paginatedCollection($parameters['category']);
+
+            array_map(
+                function($subcategory) use (&$conditional_parameters) {
+                    $conditional_parameters['subcategory']['allowed_values'][$this->hash->encode('subcategory', $subcategory['id'])] = [
+                        'value' => $this->hash->encode('subcategory', $subcategory['id']),
+                        'name' => $subcategory['name'],
                         'description' => trans('item/allowed-values.description-prefix-subcategory') .
-                            $sub_category->name . trans('item/allowed-values.description-suffix-subcategory')
+                            $subcategory['name'] . trans('item/allowed-values.description-suffix-subcategory')
                     ];
-                }
+                },
+                $subcategories
             );
         }
+
+        return $conditional_parameters;
     }
 }

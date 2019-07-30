@@ -40,4 +40,17 @@ abstract class Validator
 
         return $messages;
     }
+
+    protected function requiredIndexes(array $required = [], array $provided = [])
+    {
+        foreach ($provided as $key => $value) {
+            if (in_array($key, $required) === false) {
+                abort(500, 'Indexes missing in options array for validator');
+            }
+        }
+    }
+
+    abstract public function create(array $options = []): \Illuminate\Contracts\Validation\Validator;
+
+    abstract public function update(array $options = []): \Illuminate\Contracts\Validation\Validator;
 }

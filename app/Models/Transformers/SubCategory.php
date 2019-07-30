@@ -12,22 +12,22 @@ namespace App\Models\Transformers;
  */
 class SubCategory extends Transformer
 {
-    protected $sub_category;
+    protected $data_to_transform;
 
-    public function __construct(\App\Models\SubCategory $sub_category)
+    public function __construct(array $data_to_transform)
     {
         parent::__construct();
 
-        $this->sub_category = $sub_category;
+        $this->data_to_transform = $data_to_transform;
     }
 
     public function toArray(): array
     {
         return [
-            'id' => $this->hash->subCategory()->encode($this->sub_category->id),
-            'name' => $this->sub_category->name,
-            'description' => $this->sub_category->description,
-            'created' => $this->sub_category->created_at->toDateTimeString()
+            'id' => $this->hash->subCategory()->encode($this->data_to_transform['id']),
+            'name' => $this->data_to_transform['name'],
+            'description' => $this->data_to_transform['description'],
+            'created' => $this->data_to_transform['created_at']
         ];
     }
 }

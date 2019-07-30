@@ -33,18 +33,18 @@ class SubCategoryController extends Controller
     {
         Route::categoryRoute($category_id);
 
-        $sub_categories = (new SubCategory())->paginatedCollection($category_id);
+        $subcategories = (new SubCategory())->paginatedCollection($category_id);
 
         $headers = [
-            'X-Total-Count' => count($sub_categories)
+            'X-Total-Count' => count($subcategories)
         ];
 
         return response()->json(
-            $sub_categories->map(
-                function ($sub_category)
-                {
-                    return (new SubCategoryTransformer($sub_category))->toArray();
-                }
+            array_map(
+                function($subcategory) {
+                    return (new SubCategoryTransformer($subcategory))->toArray();
+                },
+                $subcategories
             ),
             200,
             $headers
@@ -68,17 +68,17 @@ class SubCategoryController extends Controller
     {
         Route::subCategoryRoute($category_id, $sub_category_id);
 
-        $sub_category = (new SubCategory())->single(
+        $subcategory = (new SubCategory())->single(
             $category_id,
             $sub_category_id
         );
 
-        if ($sub_category === null) {
+        if ($subcategory === null) {
             UtilityResponse::notFound();
         }
 
         return response()->json(
-            (new SubCategoryTransformer($sub_category))->toArray(),
+            (new SubCategoryTransformer($subcategory))->toArray(),
             200,
             [
                 'X-Total-Count' => 1
@@ -160,7 +160,7 @@ class SubCategoryController extends Controller
     {
         Route::categoryRoute($category_id);
 
-        $validator = (new SubCategoryValidator)->create($request, $category_id);
+        $validator = (new SubCategoryValidator)->create(['category_id' => $category_id]);
 
         if ($validator->fails() === true) {
             return $this->returnValidationErrors($validator);
@@ -178,7 +178,7 @@ class SubCategoryController extends Controller
         }
 
         return response()->json(
-            (new SubCategoryTransformer($sub_category))->toArray(),
+            (new SubCategoryTransformer((new SubCategory())->single($category_id, $sub_category->id)))->toArray(),
             201
         );
     }

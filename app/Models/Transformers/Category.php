@@ -3,7 +3,6 @@ declare(strict_types=1);
 
 namespace App\Models\Transformers;
 
-use App\Models\Category as CategoryModel;
 use App\Models\SubCategory as SubCategoryModel;
 
 /**
@@ -56,14 +55,15 @@ class Category extends Transformer
             isset($this->parameters['include-subcategories']) &&
             $this->parameters['include-subcategories'] === true
         ) {
-            $subCategoriesCollection = (new SubCategoryModel())->paginatedCollection(
+            $subcategories = (new SubCategoryModel())->paginatedCollection(
                 $this->data_to_transform['category_id']
             );
 
-            $subCategoriesCollection->map(
-                function ($sub_category) {
-                    $this->subcategories[] = (new SubCategory($sub_category))->toArray();
-                }
+            array_map(
+                function($subcategory) {
+                    $this->subcategories[] = (new SubCategory($subcategory))->toArray();
+                },
+                $subcategories
             );
 
             $result['subcategories'] = $this->subcategories;

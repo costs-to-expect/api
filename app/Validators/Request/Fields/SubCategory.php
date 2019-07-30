@@ -42,17 +42,27 @@ class SubCategory extends BaseValidator
     /**
      * Return the validator object for the create request
      *
-     * @param Request $request
-     * @param integer category_id
+     * @param array $options
      *
      * @return Validator
      */
-    public function create(Request $request, int $category_id): Validator
+    public function create(array $options = []): Validator
     {
+        $this->requiredIndexes(['category_id'], $options);
+
         return ValidatorFacade::make(
-            $request->all(),
-            self::createRules($category_id),
+            request()->all(),
+            self::createRules(intval($options['category_id'])),
             $this->translateMessages('api.subcategory.validation.POST.messages')
         );
+    }
+
+    /**
+     * @param array $options
+     * @return Validator
+     */
+    public function update(array $options = []): Validator
+    {
+        // TODO: Implement update() method.
     }
 }
