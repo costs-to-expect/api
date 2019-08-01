@@ -2,6 +2,18 @@
 
 The complete changelog for the Costs to Expect REST API, follows the format defined at https://keepachangelog.com/en/1.0.0/
 
+## [v1.17.0] - 2019-08-xx
+### Added 
+- The `v1/summary/resource-types/items` summary supports all the same features as the main `items` summary; you can make a filtered request and even include a search term.
+
+### Changed
+- We have modified the year GET parameter to include 'next' year, we may have unpublished items for next year and don't want to prohibit summarising the data. (The `year` validation should limit based on the existing data, later we will correct this error).
+- Refactoring to remove unnecessary clauses in the base validation switch statement.
+
+### Fixed
+- The resource type items summaries are not using the `include-unpublished` parameter.
+- The response for a summary request that returns no results returns a 200, not a 404, the endpoint is correct it just no longer returns results because of the GET parameters.
+
 ## [v1.16.5] - 2019-07-29
 ### Added
 - Validation added to validators, check to ensure the required indexes set.

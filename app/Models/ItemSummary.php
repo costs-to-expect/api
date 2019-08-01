@@ -310,12 +310,12 @@ class ItemSummary extends Model
     /**
      * Work out if we should be hiding unpublished items, by default we don't show them
      *
-     * @param Builder $collection
+     * @param $collection
      * @param boolean $include_unpublished
      *
      * @return Builder
      */
-    private function includeUnpublished(Builder $collection, bool $include_unpublished): Builder
+    private function includeUnpublished($collection, bool $include_unpublished): Builder
     {
         if ($include_unpublished === false) {
             $collection->where(function ($sql) {
