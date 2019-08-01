@@ -6,11 +6,13 @@ namespace App\Models;
 use App\Utilities\General;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Query\Builder as QueryBuilder;
 use Illuminate\Support\Facades\DB;
 
 /**
  * Item model, fetches data by resource type
  *
+ * @mixin QueryBuilder
  * @author Dean Blackborough <dean@g3d-development.com>
  * @copyright Dean Blackborough 2018-2019
  * @license https://github.com/costs-to-expect/api/blob/master/LICENSE
@@ -281,20 +283,23 @@ class ResourceTypeItem extends Model
      * type grouped by year
      *
      * @param int $resource_type_id
+     * @param boolean $include_unpublished
 
      * @return array
      */
-    public function yearsSummary(int $resource_type_id): array
+    public function yearsSummary(int $resource_type_id, bool $include_unpublished): array
     {
-        return $this->selectRaw("YEAR(item.effective_date) as year, SUM(item.actualised_total) AS total")->
+        $collection = $this->selectRaw("
+                YEAR(item.effective_date) as year,
+                SUM(item.actualised_total) AS total"
+            )->
             join("resource", "resource.id", "item.resource_id")->
             join("resource_type", "resource_type.id", "resource.resource_type_id")->
-            where("resource_type.id", "=", $resource_type_id)->
-            where(function ($sql) {
-                $sql->whereNull('item.publish_after')->
-                    orWhereRaw('item.publish_after < NOW()');
-            })->
-            groupBy("year")->
+            where("resource_type.id", "=", $resource_type_id);
+
+        $collection = $this->includeUnpublished($collection, $include_unpublished);
+
+        return $collection->groupBy("year")->
             orderBy("year")->
             get()->
             toArray();
