@@ -154,6 +154,10 @@ class SummaryResourceTypeItemController extends Controller
             $this->include_unpublished
         );
 
+        if (count($summary) === 0) {
+            UtilityResponse::successEmptyContent(true);
+        }
+
         return response()->json(
             [
                 'total' => number_format(
@@ -181,6 +185,10 @@ class SummaryResourceTypeItemController extends Controller
             $this->include_unpublished
         );
 
+        if (count($summary) === 0) {
+            UtilityResponse::successEmptyContent(true);
+        }
+
         return response()->json(
             array_map(
                 function ($resource) {
@@ -205,6 +213,10 @@ class SummaryResourceTypeItemController extends Controller
             $this->resource_type_id,
             $this->include_unpublished
         );
+
+        if (count($summary) === 0) {
+            UtilityResponse::successEmptyContent(true);
+        }
 
         return response()->json(
             array_map(
@@ -233,8 +245,8 @@ class SummaryResourceTypeItemController extends Controller
             $this->include_unpublished
         );
 
-        if (count($summary) !== 1) {
-            UtilityResponse::notFound();
+        if (count($summary) === 0) {
+            UtilityResponse::successEmptyContent();
         }
 
         return response()->json(
@@ -259,6 +271,10 @@ class SummaryResourceTypeItemController extends Controller
             $year,
             $this->include_unpublished
         );
+
+        if (count($summary) === 0) {
+            UtilityResponse::successEmptyContent(true);
+        }
 
         return response()->json(
             array_map(
@@ -290,8 +306,8 @@ class SummaryResourceTypeItemController extends Controller
             $this->include_unpublished
         );
 
-        if (count($summary) !== 1) {
-            UtilityResponse::notFound();
+        if (count($summary) === 0) {
+            UtilityResponse::successEmptyContent();
         }
 
         return response()->json(
@@ -313,6 +329,10 @@ class SummaryResourceTypeItemController extends Controller
             $this->resource_type_id,
             $this->include_unpublished
         );
+
+        if (count($summary) === 0) {
+            UtilityResponse::successEmptyContent(true);
+        }
 
         return response()->json(
             array_map(
@@ -342,12 +362,54 @@ class SummaryResourceTypeItemController extends Controller
             $this->include_unpublished
         );
 
-        if (count($summary) !== 1) {
-            UtilityResponse::notFound();
+        if (count($summary) === 0) {
+            UtilityResponse::successEmptyContent();
         }
 
         return response()->json(
             (new ResourceTypeItemCategorySummaryTransformer($summary[0]))->toArray(),
+            200,
+            ['X-Total-Count' => 1]
+        );
+    }
+
+    /**
+     * Return a filtered summary
+     *
+     * @param int|null $category_id
+     * @param int|null $subcategory_id
+     * @param int|null $year
+     * @param int|null $month
+     * @param array $search_parameters
+     *
+     * @return JsonResponse
+     */
+    public function filteredSummary(
+        int $category_id = null,
+        int $subcategory_id = null,
+        int $year = null,
+        int $month = null,
+        array $search_parameters = []
+    ): JsonResponse
+    {
+        $summary = (new ResourceTypeItem())->filteredSummary(
+            $this->resource_type_id,
+            $category_id,
+            $subcategory_id,
+            $year,
+            $month,
+            $search_parameters,
+            $this->include_unpublished
+        );
+
+        if (count($summary) === 0) {
+            UtilityResponse::successEmptyContent();
+        }
+
+        return response()->json(
+            [
+                'total' => number_format($summary[0]['total'], 2, '.', '')
+            ],
             200,
             ['X-Total-Count' => 1]
         );
@@ -368,6 +430,10 @@ class SummaryResourceTypeItemController extends Controller
             $category_id,
             $this->include_unpublished
         );
+
+        if (count($summary) === 0) {
+            UtilityResponse::successEmptyContent(true);
+        }
 
         return response()->json(
             array_map(
@@ -399,12 +465,17 @@ class SummaryResourceTypeItemController extends Controller
             $this->include_unpublished
         );
 
+        if (count($summary) === 0) {
+            UtilityResponse::successEmptyContent();
+        }
+
         return response()->json(
             (new ResourceTypeItemSubcategorySummaryTransformer($summary[0]))->toArray(),
             200,
             ['X-Total-Count' => 1]
         );
     }
+
 
     /**
      * Generate the OPTIONS request for items summary route

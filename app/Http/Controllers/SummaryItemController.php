@@ -264,7 +264,7 @@ class SummaryItemController extends Controller
      *
      * @return JsonResponse
      */
-    public function categoriesSummary(): JsonResponse
+    private function categoriesSummary(): JsonResponse
     {
         $summary = (new ItemSummary())->categoriesSummary(
             $this->resource_type_id,
@@ -295,7 +295,7 @@ class SummaryItemController extends Controller
      *
      * @return JsonResponse
      */
-    public function filteredSummary(
+    private function filteredSummary(
         int $category_id = null,
         int $subcategory_id = null,
         int $year = null,
@@ -334,7 +334,7 @@ class SummaryItemController extends Controller
      *
      * @return JsonResponse
      */
-    public function categorySummary(int $category_id): JsonResponse
+    private function categorySummary(int $category_id): JsonResponse
     {
         Route::categoryRoute($category_id);
 
@@ -363,7 +363,7 @@ class SummaryItemController extends Controller
      *
      * @return JsonResponse
      */
-    public function subcategoriesSummary(int $category_id): JsonResponse
+    private function subcategoriesSummary(int $category_id): JsonResponse
     {
         Route::categoryRoute($category_id);
 
@@ -394,7 +394,7 @@ class SummaryItemController extends Controller
      *
      * @return JsonResponse
      */
-    public function subcategorySummary(int $category_id, int $sub_category_id): JsonResponse
+    private function subcategorySummary(int $category_id, int $sub_category_id): JsonResponse
     {
         Route::subCategoryRoute($category_id, $sub_category_id);
 
