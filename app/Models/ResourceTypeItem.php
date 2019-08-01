@@ -234,19 +234,20 @@ class ResourceTypeItem extends Model
      * Return the summary for all items for the resources in the requested resource type
      *
      * @param int $resource_type_id
+     * @param boolean $include_unpublished = false
      *
      * @return array
      */
-    public function summary(int $resource_type_id): array
+    public function summary(int $resource_type_id, bool $include_unpublished): array
     {
-        return $this->selectRaw('sum(item.actualised_total) AS actualised_total')->
+        $collection = $this->selectRaw('sum(item.actualised_total) AS actualised_total')->
             join('resource', 'item.resource_id', 'resource.id')->
             join('resource_type', 'resource.resource_type_id', 'resource_type.id')->
-            where('resource_type.id', '=', $resource_type_id)->
-            where(function ($sql) {
-                $sql->whereNull('item.publish_after')->
-                    orWhereRaw('item.publish_after < NOW()');
-            })->
+            where('resource_type.id', '=', $resource_type_id);
+
+        $collection = $this->includeUnpublished($collection, $include_unpublished);
+
+        return $collection->
             get()->
             toArray();
     }
