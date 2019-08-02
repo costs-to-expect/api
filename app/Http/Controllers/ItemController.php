@@ -29,7 +29,6 @@ use Illuminate\Support\Facades\Auth;
 class ItemController extends Controller
 {
     protected $collection_parameters = [];
-    protected $get_parameters = [];
     protected $pagination = [];
 
     /**
