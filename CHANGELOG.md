@@ -5,6 +5,7 @@ The complete changelog for the Costs to Expect REST API, follows the format defi
 ## [v1.17.0] - 2019-08-xx
 ### Added 
 - The `v1/summary/resource-types/items` summary supports all the same features as the main `items` summary; you can make a filtered request and even include a search term.
+- Added pagination to the `/v1/categories` GET endpoint.
 
 ### Changed
 - We have modified the year GET parameter to include 'next' year, we may have unpublished items for next year and don't want to prohibit summarising the data. (The `year` validation should limit based on the existing data, later we will correct this error).
