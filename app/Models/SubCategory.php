@@ -26,6 +26,20 @@ class SubCategory extends Model
 
     /**
      * @param integer $category_id
+     *
+     * @return array
+     */
+    public function totalCount(
+        int $category_id
+    ): int
+    {
+        return count(
+            $this->where('category_id', '=', $category_id)->get()
+        );
+    }
+
+    /**
+     * @param integer $category_id
      * @param integer $offset
      * @param integer $limit
      *
@@ -39,6 +53,8 @@ class SubCategory extends Model
     {
         return $this->where('category_id', '=', $category_id)->
             orderBy("name")->
+            offset($offset)->
+            limit($limit)->
             get()->
             toArray();
     }

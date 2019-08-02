@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Utilities\Pagination as UtilityPagination;
 use App\Validators\Request\Route;
 use App\Models\SubCategory;
 use App\Models\Transformers\SubCategory as SubCategoryTransformer;
@@ -24,19 +25,32 @@ class SubcategoryController extends Controller
     /**
      * Return all the sub categories assigned to the given category
      *
-     * @param Request $request
      * @param string $category_id
      *
      * @return JsonResponse
      */
-    public function index(Request $request, string $category_id): JsonResponse
+    public function index(string $category_id): JsonResponse
     {
         Route::categoryRoute($category_id);
 
-        $subcategories = (new SubCategory())->paginatedCollection($category_id);
+        $total = (new SubCategory())->totalCount($category_id);
+
+        $pagination = UtilityPagination::init(request()->path(), $total)
+            ->paging();
+
+        $subcategories = (new SubCategory())->paginatedCollection(
+            $category_id,
+            $pagination['offset'],
+            $pagination['limit']
+        );
 
         $headers = [
-            'X-Total-Count' => count($subcategories)
+            'X-Count' => count($subcategories),
+            'X-Total-Count' => $total,
+            'X-Offset' => $pagination['offset'],
+            'X-Limit' => $pagination['limit'],
+            'X-Link-Previous' => $pagination['links']['previous'],
+            'X-Link-Next' => $pagination['links']['next']
         ];
 
         return response()->json(
@@ -89,12 +103,11 @@ class SubcategoryController extends Controller
     /**
      * Generate the OPTIONS request for the sub categories list
      *
-     * @param Request $request
      * @param string $category_id
      *
      * @return JsonResponse
      */
-    public function optionsIndex(Request $request, string $category_id): JsonResponse
+    public function optionsIndex(string $category_id): JsonResponse
     {
         Route::categoryRoute($category_id);
 
@@ -105,7 +118,7 @@ class SubcategoryController extends Controller
                 'conditionals_config' => [],
                 'sortable_config' => null,
                 'searchable_config' => null,
-                'enable_pagination' => false,
+                'enable_pagination' => true,
                 'authentication_required' => false
             ],
             [

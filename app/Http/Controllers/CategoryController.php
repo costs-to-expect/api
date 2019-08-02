@@ -76,12 +76,11 @@ class CategoryController extends Controller
     /**
      * Return a single category
      *
-     * @param Request $request
      * @param string $category_id
      *
      * @return JsonResponse
      */
-    public function show(Request $request, $category_id): JsonResponse
+    public function show($category_id): JsonResponse
     {
         Route::categoryRoute($category_id);
 
