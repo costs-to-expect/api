@@ -19,7 +19,7 @@ use Illuminate\Http\Request;
  * @copyright Dean Blackborough 2018-2019
  * @license https://github.com/costs-to-expect/api/blob/master/LICENSE
  */
-class SubCategoryController extends Controller
+class SubcategoryController extends Controller
 {
     /**
      * Return all the sub categories assigned to the given category
