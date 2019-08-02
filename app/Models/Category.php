@@ -30,10 +30,38 @@ class Category extends Model
     }
 
     /**
+     * @param boolean $include_private
+     * @param array $parameters
+     *
+     * @return integer
+     */
+    public function totalCount(
+        bool $include_private,
+        array $parameters = []
+    ): int
+    {
+        $collection = $this->select('category.id')->
+            join("resource_type", "category.resource_type_id", "resource_type.id");
+
+        if (
+            array_key_exists('resource_type', $parameters) === true &&
+            $parameters['resource_type'] !== null
+        ) {
+            $collection->where('category.resource_type_id', '=', $parameters['resource_type']);
+        }
+
+        if ($include_private === false) {
+            $collection->where('resource_type.private', '=', 0);
+        }
+
+        return count($collection->get());
+    }
+
+    /**
      * Return the paginated collection
      *
      * @param boolean $include_private Should we include private categories?
-     * @param array $collection_parameters
+     * @param array $parameters
      * @param integer $offset
      * @param integer $limit
      *
@@ -41,7 +69,7 @@ class Category extends Model
      */
     public function paginatedCollection(
         bool $include_private,
-        array $collection_parameters,
+        array $parameters = [],
         int $offset = 0,
         int $limit = 10
     ): array {
@@ -66,15 +94,18 @@ class Category extends Model
         )->join("resource_type", "category.resource_type_id", "resource_type.id");
 
         if (
-            array_key_exists('resource_type', $collection_parameters) === true &&
-            $collection_parameters['resource_type'] !== null
+            array_key_exists('resource_type', $parameters) === true &&
+            $parameters['resource_type'] !== null
         ) {
-            $collection->where('category.resource_type_id', '=', $collection_parameters['resource_type']);
+            $collection->where('category.resource_type_id', '=', $parameters['resource_type']);
         }
 
         if ($include_private === false) {
             $collection->where('resource_type.private', '=', 0);
         }
+
+        $collection->offset($offset);
+        $collection->limit($limit);
 
         return $collection->get()->toArray();
     }

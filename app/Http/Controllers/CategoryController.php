@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Utilities\Pagination as UtilityPagination;
 use App\Validators\Request\Parameters;
 use App\Validators\Request\Route;
 use App\Models\Category;
@@ -27,29 +28,43 @@ class CategoryController extends Controller
     protected $show_parameters = [];
 
     /**
-     * Return all the categories
-     *
-     * @param Request $request
+     * Return the categories collection
      *
      * @return JsonResponse
      */
-    public function index(Request $request): JsonResponse
+    public function index(): JsonResponse
     {
-        $this->collection_parameters = Parameters::fetch(['include-subcategories']);
+        $parameters = Parameters::fetch(['include-subcategories']);
+
+        $total = (new Category())->totalCount(
+            $this->include_private,
+            $parameters
+        );
+
+        $pagination = UtilityPagination::init(request()->path(), $total)
+            ->setParameters($parameters)
+            ->paging();
 
         $categories = (new Category())->paginatedCollection(
             $this->include_private,
-            $this->collection_parameters
+            $parameters,
+            $pagination['offset'],
+            $pagination['limit']
         );
 
         $headers = [
-            'X-Total-Count' => count($categories)
+            'X-Count' => count($categories),
+            'X-Total-Count' => $total,
+            'X-Offset' => $pagination['offset'],
+            'X-Limit' => $pagination['limit'],
+            'X-Link-Previous' => $pagination['links']['previous'],
+            'X-Link-Next' => $pagination['links']['next']
         ];
 
         return response()->json(
             array_map(
-                function($category) {
-                    return (new CategoryTransformer($category, $this->collection_parameters))->toArray();
+                function($category) use ($parameters) {
+                    return (new CategoryTransformer($category, $parameters))->toArray();
                 },
                 $categories
             ),
@@ -105,7 +120,7 @@ class CategoryController extends Controller
                 'conditionals_config' => [],
                 'sortable_config' => null,
                 'searchable_config' => null,
-                'enable_pagination' => false,
+                'enable_pagination' => true,
                 'authentication_required' => false
             ],
             [

@@ -28,9 +28,6 @@ use Illuminate\Support\Facades\Auth;
  */
 class ItemController extends Controller
 {
-    protected $collection_parameters = [];
-    protected $pagination = [];
-
     /**
      * Return all the items based on the set filter options
      *
