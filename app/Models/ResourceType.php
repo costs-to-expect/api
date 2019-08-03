@@ -107,12 +107,30 @@ class ResourceType extends Model
         bool $include_private = false
     ): array
     {
+        $collection = $this->select(
+                'resource_type.id AS resource_type_id',
+                'resource_type.name AS resource_type_name',
+                'resource_type.description AS resource_type_description',
+                'resource_type.created_at AS resource_type_created_at',
+                'resource_type.private AS resource_type_private'
+            )->selectRaw('
+                (
+                    SELECT 
+                        COUNT(resource.id) 
+                    FROM 
+                        resource 
+                    WHERE 
+                        resource.resource_type_id = resource_type.id
+                ) AS resource_type_resources'
+            )->
+            leftJoin("resource", "resource_type.id", "resource.id");
+
         if ($include_private === false) {
-            return $this->where('private', '=', 0)->
+            return $collection->where('resource_type.private', '=', 0)->
                 find($resource_type_id)->
                 toArray();
         } else {
-            return $this->find($resource_type_id)->
+            return $collection->find($resource_type_id)->
                 toArray();
         }
     }
