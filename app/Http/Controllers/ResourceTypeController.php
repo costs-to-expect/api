@@ -22,32 +22,29 @@ use Illuminate\Http\Request;
  */
 class ResourceTypeController extends Controller
 {
-    private $collection_parameters = [];
     private $show_parameters = [];
 
     /**
      * Return all the resource types
      *
-     * @param Request $request
-     *
      * @return JsonResponse
      */
-    public function index(Request $request): JsonResponse
+    public function index(): JsonResponse
     {
         $resource_types = (new ResourceType())->paginatedCollection($this->include_private);
 
-        $this->collection_parameters = Parameters::fetch(['include-resources']);
+        $parameters = Parameters::fetch(['include-resources']);
 
         $headers = [
             'X-Total-Count' => count($resource_types)
         ];
 
         return response()->json(
-            $resource_types->map(
-                function ($resource_type)
-                {
-                    return (new ResourceTypeTransformer($resource_type, $this->collection_parameters))->toArray();
-                }
+            array_map(
+                function($resource_type) use ($parameters) {
+                    return (new ResourceTypeTransformer($resource_type, $parameters))->toArray();
+                },
+                $resource_types
             ),
             200,
             $headers
@@ -164,7 +161,7 @@ class ResourceTypeController extends Controller
         }
 
         return response()->json(
-            (new ResourceTypeTransformer($resource_type))->toArray(),
+            (new ResourceTypeTransformer((New ResourceType())->instanceToArray($resource_type)))->toArray(),
             201
         );
     }

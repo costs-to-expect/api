@@ -15,7 +15,8 @@ use App\Models\Transformers\Resource as ResourceTransformer;
  */
 class ResourceType extends Transformer
 {
-    private $resource_type;
+    private $data_to_transform;
+
     private $parameters = [];
 
     private $resources = [];
@@ -23,14 +24,14 @@ class ResourceType extends Transformer
     /**
      * ResourceType constructor.
      *
-     * @param ResourceTypeModel $resource_type
+     * @param array $data_to_transform
      * @param array $parameters
      */
-    public function __construct(ResourceTypeModel $resource_type, array $parameters = [])
+    public function __construct(array $data_to_transform, array $parameters = [])
     {
         parent::__construct();
 
-        $this->resource_type = $resource_type;
+        $this->data_to_transform = $data_to_transform;
         $this->parameters = $parameters;
     }
 
@@ -42,15 +43,18 @@ class ResourceType extends Transformer
     public function toArray(): array
     {
         $result = [
-            'id' => $this->hash->resourceType()->encode($this->resource_type->id),
-            'name' => $this->resource_type->name,
-            'description' => $this->resource_type->description,
-            'created' => $this->resource_type->created_at->toDateTimeString(),
-            'public' => !boolval($this->resource_type->private),
-            'resources-count' => $this->resource_type->resources_count()
+            'id' => $this->hash->resourceType()->encode($this->data_to_transform['resource_type_id']),
+            'name' => $this->data_to_transform['resource_type_name'],
+            'description' => $this->data_to_transform['resource_type_description'],
+            'created' => $this->data_to_transform['resource_type_created_at'],
+            'public' => !boolval($this->data_to_transform['resource_type_private']),
         ];
 
-        if (isset($this->parameters['include-resources']) && $this->parameters['include-resources'] === true) {
+        if (array_key_exists('resource_type_resources', $this->data_to_transform)) {
+            $result['resources-count'] = $this->data_to_transform['resource_type_resources'];
+        }
+
+        /*if (isset($this->parameters['include-resources']) && $this->parameters['include-resources'] === true) {
             $resourcesCollection = $this->resource_type->resources;
 
             $resourcesCollection->map(
@@ -60,7 +64,7 @@ class ResourceType extends Transformer
             );
 
             $result['resources'] = $this->resources;
-        }
+        }*/
 
         return $result;
     }

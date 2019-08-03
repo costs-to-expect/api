@@ -231,7 +231,7 @@ class CategoryController extends Controller
 
         $conditional_post_fields = ['resource_type_id' => []];
         foreach ($resource_types as $resource_type) {
-            $id = $this->hash->encode('resource_type', $resource_type->resource_type_id);
+            $id = $this->hash->encode('resource_type', $resource_type['resource_type_id']);
 
             if ($id === false) {
                 UtilityResponse::unableToDecode();
@@ -239,8 +239,8 @@ class CategoryController extends Controller
 
             $conditional_post_fields['resource_type_id']['allowed_values'][$id] = [
                 'value' => $id,
-                'name' => $resource_type->resource_type_name,
-                'description' => $resource_type->resource_type_description
+                'name' => $resource_type['resource_type_name'],
+                'description' => $resource_type['resource_type_description']
             ];
         }
 

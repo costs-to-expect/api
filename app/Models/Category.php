@@ -3,8 +3,9 @@ declare(strict_types=1);
 
 namespace App\Models;
 
-use DB;
+use Illuminate\Database\Query\Builder as QueryBuilder;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\DB;
 
 /**
  * Category model
@@ -14,6 +15,7 @@ use Illuminate\Database\Eloquent\Model;
  *
  * Categories are private if they are related to a private resource type
  *
+ * @mixin QueryBuilder
  * @author Dean Blackborough <dean@g3d-development.com>
  * @copyright Dean Blackborough 2018-2019
  * @license https://github.com/costs-to-expect/api/blob/master/LICENSE
