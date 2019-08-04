@@ -26,6 +26,8 @@ class ResourceType extends Transformer
      *
      * @param array $data_to_transform
      * @param array $parameters
+     *
+     * @todo Pass in resources data array, let the controller do the work.
      */
     public function __construct(array $data_to_transform, array $parameters = [])
     {

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Utilities\Pagination as UtilityPagination;
 use App\Validators\Request\Parameters;
 use App\Validators\Request\Route;
 use App\Models\ResourceType;
@@ -31,18 +32,39 @@ class ResourceTypeController extends Controller
      */
     public function index(): JsonResponse
     {
-        $resource_types = (new ResourceType())->paginatedCollection($this->include_private);
-
         $parameters = Parameters::fetch(['include-resources']);
 
+        $total = (new ResourceType())->totalCount(
+            $this->include_private
+        );
+
+        $pagination = UtilityPagination::init(request()->path(), $total)
+            ->setParameters($parameters)
+            ->paging();
+
+        $resource_types = (new ResourceType())->paginatedCollection(
+            $this->include_private,
+            $pagination['offset'],
+            $pagination['limit']
+        );
+
+        // Optionally fetch the resources if the get param asks for it
+
         $headers = [
-            'X-Total-Count' => count($resource_types)
+            'X-Count' => count($resource_types),
+            'X-Total-Count' => $total,
+            'X-Offset' => $pagination['offset'],
+            'X-Limit' => $pagination['limit'],
+            'X-Link-Previous' => $pagination['links']['previous'],
+            'X-Link-Next' => $pagination['links']['next']
         ];
 
+        // Don't pass parameters to the transfer, pass resources once we have fetched
+        // it above is necessary
         return response()->json(
             array_map(
-                function($resource_type) use ($parameters) {
-                    return (new ResourceTypeTransformer($resource_type, $parameters))->toArray();
+                function($resource_type) {
+                    return (new ResourceTypeTransformer($resource_type))->toArray();
                 },
                 $resource_types
             ),
@@ -54,12 +76,11 @@ class ResourceTypeController extends Controller
     /**
      * Return a single resource type
      *
-     * @param Request $request
      * @param string $resource_type_id
      *
      * @return JsonResponse
      */
-    public function show(Request $request, string $resource_type_id): JsonResponse
+    public function show(string $resource_type_id): JsonResponse
     {
         Route::resourceTypeRoute($resource_type_id);
 
@@ -83,11 +104,9 @@ class ResourceTypeController extends Controller
     /**
      * Generate the OPTIONS request for the resource type list
      *
-     * @param Request $request
-     *
      * @return JsonResponse
      */
-    public function optionsIndex(Request $request): JsonResponse
+    public function optionsIndex(): JsonResponse
     {
         return $this->generateOptionsForIndex(
             [
@@ -96,7 +115,7 @@ class ResourceTypeController extends Controller
                 'conditionals_config' => [],
                 'sortable_config' => null,
                 'searchable_config' => null,
-                'enable_pagination' => false,
+                'enable_pagination' => true,
                 'authentication_required' => false
             ],
             [
