@@ -49,12 +49,33 @@ class Resource extends Model
         return $this->belongsTo(ResourceType::class, 'resource_type_id', 'id');
     }
 
-    public function paginatedCollection(int $resource_type_id, int $offset = 0, int $limit = 10)
+    public function paginatedCollection(
+        int $resource_type_id,
+        int $offset = 0,
+        int $limit = 10
+    )
     {
         return $this->where('resource_type_id', '=', $resource_type_id)
             ->latest()
             ->get();
     }
+
+    // New method, return resources array
+    /*public function paginatedCollection(
+        int $resource_type_id,
+        int $offset = 0,
+        int $limit = 10
+    ): array
+    {
+        $collection = $this->where('resource_type_id', '=', $resource_type_id)->
+            latest()->
+            offset($offset)->
+            limit($limit)->
+            get()->
+            toArray();
+
+        return $collection;
+    }*/
 
     public function single(int $resource_type_id, int $resource_id)
     {
@@ -71,7 +92,10 @@ class Resource extends Model
      *
      * @return array
      */
-    public function resourcesForResourceType(int $resource_type_id, int $exclude_id = null): array
+    public function resourcesForResourceType(
+        int $resource_type_id,
+        int $exclude_id = null
+    ): array
     {
         $collection = $this->where('resource_type_id', '=', $resource_type_id);
 
