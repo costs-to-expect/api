@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Utilities\Pagination as UtilityPagination;
 use App\Validators\Request\Route;
 use App\Models\Resource;
 use App\Models\Transformers\Resource as ResourceTransformer;
@@ -10,7 +11,6 @@ use App\Validators\Request\Fields\Resource as ResourceValidator;
 use Exception;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Request;
 
 /**
  * Manage resources
@@ -24,27 +24,42 @@ class ResourceController extends Controller
     /**
      * Return all the resources
      *
-     * @param Request $request
      * @param string $resource_type_id
      *
      * @return JsonResponse
      */
-    public function index(Request $request, string $resource_type_id): JsonResponse
+    public function index(string $resource_type_id): JsonResponse
     {
         Route::resourceTypeRoute($resource_type_id);
 
-        $resources = (new Resource)->paginatedCollection($resource_type_id);
+        $total = (new Resource())->totalCount(
+            $this->include_private
+        );
+
+        $pagination = UtilityPagination::init(request()->path(), $total)
+            ->paging();
+
+        $resources = (new Resource)->paginatedCollection(
+            $resource_type_id,
+            $pagination['offset'],
+            $pagination['limit']
+        );
 
         $headers = [
-            'X-Total-Count' => count($resources)
+            'X-Count' => count($resources),
+            'X-Total-Count' => $total,
+            'X-Offset' => $pagination['offset'],
+            'X-Limit' => $pagination['limit'],
+            'X-Link-Previous' => $pagination['links']['previous'],
+            'X-Link-Next' => $pagination['links']['next']
         ];
 
         return response()->json(
-            $resources->map(
-                function ($resource)
-                {
+            array_map(
+                function($resource) {
                     return (new ResourceTransformer($resource))->toArray();
-                }
+                },
+                $resources
             ),
             200,
             $headers
@@ -54,14 +69,12 @@ class ResourceController extends Controller
     /**
      * Return a single resource
      *
-     * @param Request $request
      * @param string $resource_type_id
      * @param string $resource_id
      *
      * @return JsonResponse
      */
     public function show(
-        Request $request,
         string $resource_type_id,
         string $resource_id
     ): JsonResponse
@@ -70,7 +83,7 @@ class ResourceController extends Controller
 
         $resource = (new Resource)->single($resource_type_id, $resource_id);
 
-        if ($resource === null) {
+        if ($resource === 1) {
             UtilityResponse::notFound(trans('entities.resource'));
         }
 
@@ -86,12 +99,11 @@ class ResourceController extends Controller
     /**
      * Generate the OPTIONS request for the resource list
      *
-     * @param Request $request
      * @param string $resource_type_id
      *
      * @return JsonResponse
      */
-    public function optionsIndex(Request $request, string $resource_type_id): JsonResponse
+    public function optionsIndex(string $resource_type_id): JsonResponse
     {
         Route::resourceTypeRoute($resource_type_id);
 
@@ -102,7 +114,7 @@ class ResourceController extends Controller
                 'conditionals_config' => [],
                 'sortable_config' => null,
                 'searchable_config' => null,
-                'enable_pagination' => false,
+                'enable_pagination' => true,
                 'authentication_required' => false
             ],
             [
@@ -117,13 +129,12 @@ class ResourceController extends Controller
     /**
      * Generate the OPTIONS request for a specific category
      *
-     * @param Request $request
      * @param string $resource_type_id
      * @param string $resource_id
      *
      * @return JsonResponse
      */
-    public function optionsShow(Request $request, string $resource_type_id, string $resource_id): JsonResponse
+    public function optionsShow(string $resource_type_id, string $resource_id): JsonResponse
     {
         Route::resourceRoute($resource_type_id, $resource_id);
 
@@ -153,12 +164,11 @@ class ResourceController extends Controller
     /**
      * Create a new resource
      *
-     * @param Request $request
      * @param string $resource_type_id
      *
      * @return JsonResponse
      */
-    public function create(Request $request, string $resource_type_id): JsonResponse
+    public function create(string $resource_type_id): JsonResponse
     {
         Route::resourceTypeRoute($resource_type_id);
 
@@ -171,9 +181,9 @@ class ResourceController extends Controller
         try {
             $resource = new Resource([
                 'resource_type_id' => $resource_type_id,
-                'name' => $request->input('name'),
-                'description' => $request->input('description'),
-                'effective_date' => $request->input('effective_date')
+                'name' => request()->input('name'),
+                'description' => request()->input('description'),
+                'effective_date' => request()->input('effective_date')
             ]);
             $resource->save();
         } catch (Exception $e) {
@@ -181,7 +191,7 @@ class ResourceController extends Controller
         }
 
         return response()->json(
-            (new ResourceTransformer($resource))->toArray(),
+            (new ResourceTransformer((New Resource())->instanceToArray($resource)))->toArray(),
             201
         );
     }
@@ -189,14 +199,12 @@ class ResourceController extends Controller
     /**
      * Delete the requested resource
      *
-     * @param Request $request,
      * @param string $resource_type_id,
      * @param string $resource_id
      *
      * @return JsonResponse
      */
     public function delete(
-        Request $request,
         string $resource_type_id,
         string $resource_id
     ): JsonResponse

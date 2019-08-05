@@ -4,10 +4,12 @@ declare(strict_types=1);
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Query\Builder as QueryBuilder;
 
 /**
  * Resource model
  *
+ * @mixin QueryBuilder
  * @author Dean Blackborough <dean@g3d-development.com>
  * @copyright Dean Blackborough 2018-2019
  * @license https://github.com/costs-to-expect/api/blob/master/LICENSE
@@ -26,7 +28,10 @@ class Resource extends Model
      *
      * @return integer
      */
-    public function totalCount(int $resource_type_id, bool $include_private = false): int
+    public function totalCount(
+        int $resource_type_id,
+        bool $include_private = false
+    ): int
     {
         $collection = $this->select("resource.id")->
             join('resource_type', 'resource.resource_type_id', 'resource_type.id')->
@@ -62,20 +67,27 @@ class Resource extends Model
                 'resource.effective_date AS resource_effective_date',
                 'resource.created_at AS resource_created_at'
             )->
-            where('resource_type_id', '=', $resource_type_id)->
-            latest()->
+            where('resource_type_id', '=', $resource_type_id);
+
+        return $collection->latest()->
             offset($offset)->
             limit($limit)->
             get()->
             toArray();
-
-        return $collection;
     }
 
     public function single(int $resource_type_id, int $resource_id)
     {
-        return $this->where('resource_type_id', '=', $resource_type_id)
-            ->find($resource_id);
+        return $this->select(
+                'resource.id AS resource_id',
+                'resource.name AS resource_name',
+                'resource.description AS resource_description',
+                'resource.effective_date AS resource_effective_date',
+                'resource.created_at AS resource_created_at'
+            )->
+            where('resource_type_id', '=', $resource_type_id)->
+            find($resource_id)->
+            toArray();
     }
 
     /**

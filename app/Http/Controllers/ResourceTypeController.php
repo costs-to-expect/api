@@ -91,7 +91,9 @@ class ResourceTypeController extends Controller
             array_key_exists('include-resources', $parameters) === true &&
             $parameters['include-resources'] === true
         ) {
-            $resources = (new Resource())->paginatedCollection($resource_type_id);
+            $resources = (new Resource())->paginatedCollection(
+                $resource_type_id
+            );
         }
 
         return response()->json(
