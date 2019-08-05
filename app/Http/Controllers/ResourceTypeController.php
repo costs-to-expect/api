@@ -130,12 +130,11 @@ class ResourceTypeController extends Controller
     /**
      * Generate the OPTIONS request fir a specific resource type
      *
-     * @param Request $request
      * @param string $resource_type_id
      *
      * @return JsonResponse
      */
-    public function optionsShow(Request $request, string $resource_type_id): JsonResponse
+    public function optionsShow(string $resource_type_id): JsonResponse
     {
         Route::resourceTypeRoute($resource_type_id);
 
@@ -156,11 +155,9 @@ class ResourceTypeController extends Controller
     /**
      * Create a new resource type
      *
-     * @param Request $request
-     *
      * @return JsonResponse
      */
-    public function create(Request $request): JsonResponse
+    public function create(): JsonResponse
     {
         $validator = (new ResourceTypeValidator)->create();
 
@@ -170,9 +167,9 @@ class ResourceTypeController extends Controller
 
         try {
             $resource_type = new ResourceType([
-                'name' => $request->input('name'),
-                'description' => $request->input('description'),
-                'private' => $request->input('private', 0)
+                'name' => request()->input('name'),
+                'description' => request()->input('description'),
+                'private' => request()->input('private', 0)
             ]);
             $resource_type->save();
         } catch (Exception $e) {
@@ -188,13 +185,11 @@ class ResourceTypeController extends Controller
     /**
      * Delete the requested resource type
      *
-     * @param Request $request,
      * @param string $resource_type_id
      *
      * @return JsonResponse
      */
     public function delete(
-        Request $request,
         string $resource_type_id
     ): JsonResponse
     {
