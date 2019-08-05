@@ -3,7 +3,6 @@ declare(strict_types=1);
 
 namespace App\Models\Transformers;
 
-use App\Models\ResourceType as ResourceTypeModel;
 use App\Models\Transformers\Resource as ResourceTransformer;
 
 /**
@@ -17,24 +16,20 @@ class ResourceType extends Transformer
 {
     private $data_to_transform;
 
-    private $parameters = [];
-
     private $resources = [];
 
     /**
      * ResourceType constructor.
      *
      * @param array $data_to_transform
-     * @param array $parameters
-     *
-     * @todo Pass in resources data array, let the controller do the work.
+     * @param array $resources
      */
-    public function __construct(array $data_to_transform, array $parameters = [])
+    public function __construct(array $data_to_transform, array $resources = [])
     {
         parent::__construct();
 
         $this->data_to_transform = $data_to_transform;
-        $this->parameters = $parameters;
+        $this->resources = $resources;
     }
 
     /**
@@ -56,17 +51,9 @@ class ResourceType extends Transformer
             $result['resources-count'] = $this->data_to_transform['resource_type_resources'];
         }
 
-        /*if (isset($this->parameters['include-resources']) && $this->parameters['include-resources'] === true) {
-            $resourcesCollection = $this->resource_type->resources;
-
-            $resourcesCollection->map(
-                function ($resource_item) {
-                    $this->resources[] = (new ResourceTransformer($resource_item))->toArray();
-                }
-            );
-
-            $result['resources'] = $this->resources;
-        }*/
+        foreach ($this->resources as $resource) {
+            $result['resources'][] = (new ResourceTransformer($resource))->toArray();
+        }
 
         return $result;
     }

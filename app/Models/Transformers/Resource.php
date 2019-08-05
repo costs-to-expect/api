@@ -12,23 +12,23 @@ namespace App\Models\Transformers;
  */
 class Resource extends Transformer
 {
-    protected $resource;
+    private $data_to_transform;
 
-    public function __construct(\App\Models\Resource $resource)
+    public function __construct(array $data_to_transform)
     {
         parent::__construct();
 
-        $this->resource = $resource;
+        $this->data_to_transform = $data_to_transform;
     }
 
     public function toArray(): array
     {
         return [
-            'id' => $this->hash->resource()->encode($this->resource->id),
-            'name' => $this->resource->name,
-            'description' => $this->resource->description,
-            'effective_date' => $this->resource->effective_date,
-            'created' => $this->resource->created_at->toDateTimeString()
+            'id' => $this->hash->resource()->encode($this->data_to_transform['resource_id']),
+            'name' => $this->data_to_transform['resource_name'],
+            'description' => $this->data_to_transform['resource_description'],
+            'effective_date' => $this->data_to_transform['resource_effective_date'],
+            'created' => $this->data_to_transform['resource_created_at']
         ];
     }
 }

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Resource;
 use App\Utilities\Pagination as UtilityPagination;
 use App\Validators\Request\Parameters;
 use App\Validators\Request\Route;
@@ -12,7 +13,6 @@ use App\Validators\Request\Fields\ResourceType as ResourceTypeValidator;
 use Exception;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Request;
 
 /**
  * Manage resource types
@@ -23,8 +23,6 @@ use Illuminate\Http\Request;
  */
 class ResourceTypeController extends Controller
 {
-    private $show_parameters = [];
-
     /**
      * Return all the resource types
      *
@@ -32,14 +30,11 @@ class ResourceTypeController extends Controller
      */
     public function index(): JsonResponse
     {
-        $parameters = Parameters::fetch(['include-resources']);
-
         $total = (new ResourceType())->totalCount(
             $this->include_private
         );
 
         $pagination = UtilityPagination::init(request()->path(), $total)
-            ->setParameters($parameters)
             ->paging();
 
         $resource_types = (new ResourceType())->paginatedCollection(
@@ -47,8 +42,6 @@ class ResourceTypeController extends Controller
             $pagination['offset'],
             $pagination['limit']
         );
-
-        // Optionally fetch the resources if the get param asks for it
 
         $headers = [
             'X-Count' => count($resource_types),
@@ -59,8 +52,6 @@ class ResourceTypeController extends Controller
             'X-Link-Next' => $pagination['links']['next']
         ];
 
-        // Don't pass parameters to the transfer, pass resources once we have fetched
-        // it above is necessary
         return response()->json(
             array_map(
                 function($resource_type) {
@@ -84,16 +75,27 @@ class ResourceTypeController extends Controller
     {
         Route::resourceTypeRoute($resource_type_id);
 
-        $this->show_parameters = Parameters::fetch(['include-resources']);
+        $parameters = Parameters::fetch(['include-resources']);
 
-        $resource_type = (new ResourceType())->single($resource_type_id, $this->include_private);
+        $resource_type = (new ResourceType())->single(
+            $resource_type_id,
+            $this->include_private
+        );
 
         if ($resource_type === null) {
             UtilityResponse::notFound(trans('entities.resource-type'));
         }
 
+        $resources = [];
+        if (
+            array_key_exists('include-resources', $parameters) === true &&
+            $parameters['include-resources'] === true
+        ) {
+            $resources = (new Resource())->paginatedCollection($resource_type_id);
+        }
+
         return response()->json(
-            (new ResourceTypeTransformer($resource_type, $this->show_parameters))->toArray(),
+            (new ResourceTypeTransformer($resource_type, $resources))->toArray(),
             200,
             [
                 'X-Total-Count' => 1
@@ -111,7 +113,7 @@ class ResourceTypeController extends Controller
         return $this->generateOptionsForIndex(
             [
                 'description_localisation_string' => 'route-descriptions.resource_type_GET_index',
-                'parameters_config_string' => 'api.resource-type.parameters.collection',
+                'parameters_config_string' => [],
                 'conditionals_config' => [],
                 'sortable_config' => null,
                 'searchable_config' => null,
@@ -197,7 +199,6 @@ class ResourceTypeController extends Controller
 
         try {
             (new ResourceType())->find($resource_type_id)->delete();
-
             UtilityResponse::successNoContent();
         } catch (QueryException $e) {
             UtilityResponse::foreignKeyConstraintError();

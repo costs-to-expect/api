@@ -53,21 +53,16 @@ class Resource extends Model
         int $resource_type_id,
         int $offset = 0,
         int $limit = 10
-    )
-    {
-        return $this->where('resource_type_id', '=', $resource_type_id)
-            ->latest()
-            ->get();
-    }
-
-    // New method, return resources array
-    /*public function paginatedCollection(
-        int $resource_type_id,
-        int $offset = 0,
-        int $limit = 10
     ): array
     {
-        $collection = $this->where('resource_type_id', '=', $resource_type_id)->
+        $collection = $this->select(
+                'resource.id AS resource_id',
+                'resource.name AS resource_name',
+                'resource.description AS resource_description',
+                'resource.effective_date AS resource_effective_date',
+                'resource.created_at AS resource_created_at'
+            )->
+            where('resource_type_id', '=', $resource_type_id)->
             latest()->
             offset($offset)->
             limit($limit)->
@@ -75,7 +70,7 @@ class Resource extends Model
             toArray();
 
         return $collection;
-    }*/
+    }
 
     public function single(int $resource_type_id, int $resource_id)
     {
@@ -110,5 +105,23 @@ class Resource extends Model
             )->
             get()->
             toArray();
+    }
+
+    /**
+     * Convert the model instance to an array for use with the transformer
+     *
+     * @param Resource
+     *
+     * @return array
+     */
+    public function instanceToArray(Resource $resource): array
+    {
+        return [
+            'resource_id' => $resource->id,
+            'resource_name' => $resource->name,
+            'resource_description' => $resource->description,
+            'resource_effective_date' => $resource->effective_date,
+            'resource_created_at' => $resource->created_at->toDateTimeString()
+        ];
     }
 }

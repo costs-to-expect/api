@@ -137,7 +137,7 @@ class RequestController extends Controller
         return $this->generateOptionsForIndex(
             [
                 'description_localisation_string' => 'route-descriptions.request_GET_error_log',
-                'parameters_config_string' => [],
+                'parameters_config_string' => null,
                 'conditionals_config' => [],
                 'sortable_config' => null,
                 'searchable_config' => null,
