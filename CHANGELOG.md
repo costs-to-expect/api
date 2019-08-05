@@ -9,6 +9,7 @@ The complete changelog for the Costs to Expect REST API, follows the format defi
 - We have added pagination to the `/v1/categories/[category]/subcategories` GET endpoint.
 - We have added pagination to the `/v1/resource-tyes` GET endpoint.
 - We have added pagination to the `/v1/resource-types/[resource-type]/resources` GET endpoint.
+- We have added search to the `/v1/categories` GET endpoint; you can search on `name` and `description`.
 
 ### Changed
 - We have modified the year GET parameter to include 'next' year, we may have unpublished items for next year and don't want to prohibit summarising the data. (The `year` validation should limit based on the existing data, an issue has been created to find a better solution).
