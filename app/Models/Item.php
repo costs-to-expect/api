@@ -7,6 +7,7 @@ use App\Utilities\General;
 use Illuminate\Database\Query\Builder as QueryBuilder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Config;
+use Illuminate\Support\Facades\DB;
 
 /**
  * Item model
@@ -68,14 +69,14 @@ class Item extends Model
             array_key_exists('year', $parameters) === true &&
             $parameters['year'] !== null
         ) {
-            $collection->whereRaw(\DB::raw("YEAR(item.effective_date) = '{$parameters['year']}'"));
+            $collection->whereRaw(DB::raw("YEAR(item.effective_date) = '{$parameters['year']}'"));
         }
 
         if (
             array_key_exists('month', $parameters) === true &&
             $parameters['month'] !== null
         ) {
-            $collection->whereRaw(\DB::raw("MONTH(item.effective_date) = '{$parameters['month']}'"));
+            $collection->whereRaw(DB::raw("MONTH(item.effective_date) = '{$parameters['month']}'"));
         }
 
         if (

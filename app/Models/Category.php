@@ -34,12 +34,14 @@ class Category extends Model
     /**
      * @param boolean $include_private
      * @param array $parameters
+     * @param array $search_parameters
      *
      * @return integer
      */
     public function totalCount(
         bool $include_private,
-        array $parameters = []
+        array $parameters = [],
+        array $search_parameters = []
     ): int
     {
         $collection = $this->select('category.id')->
@@ -56,6 +58,12 @@ class Category extends Model
             $collection->where('resource_type.private', '=', 0);
         }
 
+        if (count($search_parameters) > 0) {
+            foreach ($search_parameters as $field => $search_term) {
+                $collection->where('category.' . $field, 'LIKE', '%' . $search_term . '%');
+            }
+        }
+
         return count($collection->get());
     }
 
@@ -63,17 +71,19 @@ class Category extends Model
      * Return the paginated collection
      *
      * @param boolean $include_private Should we include private categories?
-     * @param array $parameters
      * @param integer $offset
      * @param integer $limit
+     * @param array $parameters
+     * @param array $search_parameters
      *
      * @return array
      */
     public function paginatedCollection(
         bool $include_private,
-        array $parameters = [],
         int $offset = 0,
-        int $limit = 10
+        int $limit = 10,
+        array $parameters = [],
+        array $search_parameters = []
     ): array {
         $collection = $this->select(
             'category.id AS category_id',
@@ -104,6 +114,12 @@ class Category extends Model
 
         if ($include_private === false) {
             $collection->where('resource_type.private', '=', 0);
+        }
+
+        if (count($search_parameters) > 0) {
+            foreach ($search_parameters as $field => $search_term) {
+                $collection->where('category.' . $field, 'LIKE', '%' . $search_term . '%');
+            }
         }
 
         $collection->offset($offset);

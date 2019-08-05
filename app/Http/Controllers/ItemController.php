@@ -401,7 +401,12 @@ class ItemController extends Controller
             ];
         }
 
-        $categories = (new Category())->paginatedCollection($this->include_private, ['resource_type'=>$resource_type_id]);
+        $categories = (new Category())->paginatedCollection(
+            $this->include_private,
+            0,
+            100,
+            ['resource_type'=>$resource_type_id]
+        );
 
         foreach ($categories as $category) {
             $conditional_parameters['category']['allowed_values'][$this->hash->encode('category', $category['category_id'])] = [
