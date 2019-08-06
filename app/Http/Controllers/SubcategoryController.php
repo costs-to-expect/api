@@ -8,6 +8,7 @@ use App\Models\SubCategory;
 use App\Models\Transformers\SubCategory as SubCategoryTransformer;
 use App\Utilities\Response as UtilityResponse;
 use App\Validators\Request\Fields\SubCategory as SubCategoryValidator;
+use App\Validators\Request\SearchParameters;
 use Exception;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\JsonResponse;
@@ -33,15 +34,25 @@ class SubcategoryController extends Controller
     {
         Route::categoryRoute($category_id);
 
-        $total = (new SubCategory())->totalCount($category_id);
+        $search_parameters = SearchParameters::fetch([
+            'name',
+            'description'
+        ]);
 
-        $pagination = UtilityPagination::init(request()->path(), $total)
-            ->paging();
+        $total = (new SubCategory())->totalCount(
+            $category_id,
+            $search_parameters
+        );
+
+        $pagination = UtilityPagination::init(request()->path(), $total)->
+            setSearchParameters($search_parameters)->
+            paging();
 
         $subcategories = (new SubCategory())->paginatedCollection(
             $category_id,
             $pagination['offset'],
-            $pagination['limit']
+            $pagination['limit'],
+            $search_parameters
         );
 
         $headers = [
@@ -117,7 +128,7 @@ class SubcategoryController extends Controller
                 'parameters_config_string' => 'api.subcategory.parameters.collection',
                 'conditionals_config' => [],
                 'sortable_config' => null,
-                'searchable_config' => null,
+                'searchable_config' => 'api.subcategory.searchable',
                 'enable_pagination' => true,
                 'authentication_required' => false
             ],
