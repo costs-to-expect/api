@@ -12,8 +12,9 @@ The complete changelog for the Costs to Expect REST API, follows the format defi
 - We have added search to the `/v1/categories` GET endpoint; you can search on `name` and `description`.
 
 ### Changed
-- We have modified the year GET parameter to include 'next' year, we may have unpublished items for next year and don't want to prohibit summarising the data. (The `year` validation should limit based on the existing data, an issue has been created to find a better solution).
+- We have modified the year GET parameter to include "next" year, we may have unpublished items for next year and don't want to prohibit summarising the data. (The `year` validation should limit based on the existing data, an issue has been created to find a better solution).
 - We have removed unnecessary clauses in the base validation switch statement.
+- We have altered the format of the included resources and subcategories when the `include-resources` or `include-subcategories` parameters exist in the request.
 
 ### Fixed
 - The resource type items summaries are not using the `include-unpublished` parameter.
@@ -21,7 +22,8 @@ The complete changelog for the Costs to Expect REST API, follows the format defi
 - Transformers should not call models, only transform data, corrected the ResourceType transformer.
 
 ### Removed
-- The `include-resources` parameter excluded from the resource type collection, not useful at the collection level and causes unnecessary SQL requests, remains an option when requesting a single resource type.
+- Removed the `include-resources` parameter from the resource type collection, not useful at the collection level and causes unnecessary SQL requests, remains an option when requesting a single resource type.
+- Removed the `include-subcategories` parameter from the categories collection, not useful at the collection level and causes unnecessary SQL requests, remains an option when requesting a single category.
 
 ## [v1.16.5] - 2019-07-29
 ### Added

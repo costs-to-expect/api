@@ -48,11 +48,11 @@ class ResourceType extends Transformer
         ];
 
         if (array_key_exists('resource_type_resources', $this->data_to_transform)) {
-            $result['resources-count'] = $this->data_to_transform['resource_type_resources'];
+            $result['resources']['count'] = $this->data_to_transform['resource_type_resources'];
         }
 
         foreach ($this->resources as $resource) {
-            $result['resources'][] = (new ResourceTransformer($resource))->toArray();
+            $result['resources']['collection'][] = (new ResourceTransformer($resource))->toArray();
         }
 
         return $result;

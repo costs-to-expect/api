@@ -17,9 +17,7 @@ use App\Models\SubCategory as SubCategoryModel;
  */
 class Category extends Transformer
 {
-    protected $data_to_transform;
-
-    private $parameters = [];
+    private $data_to_transform;
 
     private $subcategories = [];
 
@@ -27,14 +25,14 @@ class Category extends Transformer
      * ResourceType constructor.
      *
      * @param array $data_to_transform
-     * @param array $parameters
+     * @param array $subcategories
      */
-    public function __construct(array $data_to_transform, array $parameters = [])
+    public function __construct(array $data_to_transform, array $subcategories = [])
     {
         parent::__construct();
 
         $this->data_to_transform = $data_to_transform;
-        $this->parameters = $parameters;
+        $this->subcategories = $subcategories;
     }
 
     public function toArray(): array
@@ -47,26 +45,15 @@ class Category extends Transformer
             'resource_type' => [
                 'id' => $this->hash->resourceType()->encode($this->data_to_transform['resource_type_id']),
                 'name' => $this->data_to_transform['resource_type_name'],
-            ],
-            'subcategories_count' => $this->data_to_transform['category_sub_categories']
+            ]
         ];
 
-        if (
-            isset($this->parameters['include-subcategories']) &&
-            $this->parameters['include-subcategories'] === true
-        ) {
-            $subcategories = (new SubCategoryModel())->paginatedCollection(
-                $this->data_to_transform['category_id']
-            );
+        if (array_key_exists('category_subcategories', $this->data_to_transform)) {
+            $result['subcategories']['count'] = $this->data_to_transform['category_subcategories'];
+        }
 
-            array_map(
-                function($subcategory) {
-                    $this->subcategories[] = (new SubCategory($subcategory))->toArray();
-                },
-                $subcategories
-            );
-
-            $result['subcategories'] = $this->subcategories;
+        foreach ($this->subcategories as $subcategory) {
+            $result['subcategories']['collection'][] = (new SubCategory($subcategory))->toArray();
         }
 
         return $result;

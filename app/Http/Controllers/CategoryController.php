@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\SubCategory;
 use App\Utilities\Pagination as UtilityPagination;
 use App\Validators\Request\Parameters;
 use App\Validators\Request\Route;
@@ -32,8 +33,6 @@ class CategoryController extends Controller
      */
     public function index(): JsonResponse
     {
-        $parameters = Parameters::fetch(['include-subcategories']);
-
         $search_parameters = SearchParameters::fetch([
             'name',
             'description'
@@ -41,12 +40,11 @@ class CategoryController extends Controller
 
         $total = (new Category())->totalCount(
             $this->include_private,
-            $parameters,
+            [],
             $search_parameters
         );
 
         $pagination = UtilityPagination::init(request()->path(), $total)->
-            setParameters($parameters)->
             setSearchParameters($search_parameters)->
             paging();
 
@@ -54,7 +52,7 @@ class CategoryController extends Controller
             $this->include_private,
             $pagination['offset'],
             $pagination['limit'],
-            $parameters,
+            [],
             $search_parameters
         );
 
@@ -69,8 +67,8 @@ class CategoryController extends Controller
 
         return response()->json(
             array_map(
-                function($category) use ($parameters) {
-                    return (new CategoryTransformer($category, $parameters))->toArray();
+                function($category) {
+                    return (new CategoryTransformer($category))->toArray();
                 },
                 $categories
             ),
@@ -98,8 +96,20 @@ class CategoryController extends Controller
             UtilityResponse::notFound(trans('entities.category'));
         }
 
+        $subcategories = [];
+        if (
+            array_key_exists('include-subcategories', $parameters) === true &&
+            $parameters['include-subcategories'] === true
+        ) {
+            $subcategories = (new SubCategory())->paginatedCollection(
+                $category_id,
+                0,
+                100
+            );
+        }
+
         return response()->json(
-            (new CategoryTransformer($category, $parameters))->toArray(),
+            (new CategoryTransformer($category, $subcategories))->toArray(),
             200,
             [
                 'X-Total-Count' => 1
