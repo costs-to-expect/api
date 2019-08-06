@@ -133,11 +133,11 @@ class Category extends Model
      *
      * @param integer $category_id
      *
-     * @return array
+     * @return array|null
      */
-    public function single(int $category_id): array
+    public function single(int $category_id): ?array
     {
-        return $this->join('resource_type', $this->table . '.resource_type_id', '=', 'resource_type.id')
+        $result = $this->join('resource_type', $this->table . '.resource_type_id', '=', 'resource_type.id')
             ->where('category.id', '=', intval($category_id))
             ->orderBy('category.name')
             ->select(
@@ -150,8 +150,13 @@ class Category extends Model
                 'resource_type.id AS resource_type_id',
                 'resource_type.name AS resource_type_name'
             )
-            ->first()
-            ->toArray();
+            ->first();
+
+        if ($result === null) {
+            return null;
+        } else {
+            return $result->toArray();
+        }
     }
 
     /**
@@ -172,5 +177,23 @@ class Category extends Model
                 'category.description AS category_description'
             )
             ->get();
+    }
+
+    /**
+     * Convert the model instance to an array for use with the transformer
+     *
+     * @param Category $category
+     *
+     * @return array
+     */
+    public function instanceToArray(Category $category): array
+    {
+        return [
+            'category_id' => $category->id,
+            'category_name' => $category->name,
+            'category_description' => $category->description,
+            'category_created_at' => $category->created_at->toDateTimeString(),
+            'resource_type_id' => $category->resource_type_id
+        ];
     }
 }

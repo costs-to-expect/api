@@ -174,11 +174,9 @@ class CategoryController extends Controller
     /**
      * Create a new category
      *
-     * @param Request $request
-     *
      * @return JsonResponse
      */
-    public function create(Request $request): JsonResponse
+    public function create(): JsonResponse
     {
         $validator = (new CategoryValidator)->create();
 
@@ -187,15 +185,15 @@ class CategoryController extends Controller
         }
 
         try {
-            $resource_type_id = $this->hash->decode('resource_type', $request->input('resource_type_id'));
+            $resource_type_id = $this->hash->decode('resource_type', request()->input('resource_type_id'));
 
             if ($resource_type_id === false) {
                 UtilityResponse::unableToDecode();
             }
 
             $category = new Category([
-                'name' => $request->input('name'),
-                'description' => $request->input('description'),
+                'name' => request()->input('name'),
+                'description' => request()->input('description'),
                 'resource_type_id' => $resource_type_id
             ]);
             $category->save();
@@ -204,7 +202,7 @@ class CategoryController extends Controller
         }
 
         return response()->json(
-            (new CategoryTransformer((new Category)->single($category->id)))->toArray(),
+            (new CategoryTransformer((new Category)->instanceToArray($category)))->toArray(),
             201
         );
     }
