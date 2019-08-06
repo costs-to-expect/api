@@ -25,12 +25,14 @@ class Resource extends Model
      *
      * @param integer $resource_type_id
      * @param boolean $include_private Include resources attached to private resource types
+     * @param array $search_parameters
      *
      * @return integer
      */
     public function totalCount(
         int $resource_type_id,
-        bool $include_private = false
+        bool $include_private = false,
+        array $search_parameters = []
     ): int
     {
         $collection = $this->select("resource.id")->
@@ -39,6 +41,12 @@ class Resource extends Model
 
         if ($include_private === false) {
             $collection->where('resource_type.private', '=', 0);
+        }
+
+        if (count($search_parameters) > 0) {
+            foreach ($search_parameters as $field => $search_term) {
+                $collection->where('resource.' . $field, 'LIKE', '%' . $search_term . '%');
+            }
         }
 
         return count($collection->get());
@@ -57,7 +65,8 @@ class Resource extends Model
     public function paginatedCollection(
         int $resource_type_id,
         int $offset = 0,
-        int $limit = 10
+        int $limit = 10,
+        array $search_parameters = []
     ): array
     {
         $collection = $this->select(
@@ -68,6 +77,12 @@ class Resource extends Model
                 'resource.created_at AS resource_created_at'
             )->
             where('resource_type_id', '=', $resource_type_id);
+
+        if (count($search_parameters) > 0) {
+            foreach ($search_parameters as $field => $search_term) {
+                $collection->where('resource.' . $field, 'LIKE', '%' . $search_term . '%');
+            }
+        }
 
         return $collection->latest()->
             offset($offset)->

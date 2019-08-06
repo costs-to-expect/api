@@ -8,6 +8,7 @@ use App\Models\Resource;
 use App\Models\Transformers\Resource as ResourceTransformer;
 use App\Utilities\Response as UtilityResponse;
 use App\Validators\Request\Fields\Resource as ResourceValidator;
+use App\Validators\Request\SearchParameters;
 use Exception;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\JsonResponse;
@@ -32,17 +33,26 @@ class ResourceController extends Controller
     {
         Route::resourceTypeRoute($resource_type_id);
 
+        $search_parameters = SearchParameters::fetch([
+            'name',
+            'description'
+        ]);
+
         $total = (new Resource())->totalCount(
-            $this->include_private
+            $resource_type_id,
+            $this->include_private,
+            $search_parameters
         );
 
-        $pagination = UtilityPagination::init(request()->path(), $total)
-            ->paging();
+        $pagination = UtilityPagination::init(request()->path(), $total)->
+            setSearchParameters($search_parameters)->
+            paging();
 
         $resources = (new Resource)->paginatedCollection(
             $resource_type_id,
             $pagination['offset'],
-            $pagination['limit']
+            $pagination['limit'],
+            $search_parameters
         );
 
         $headers = [
@@ -113,7 +123,7 @@ class ResourceController extends Controller
                 'parameters_config_string' => 'api.resource.parameters.collection',
                 'conditionals_config' => [],
                 'sortable_config' => null,
-                'searchable_config' => null,
+                'searchable_config' => 'api.resources.searchable',
                 'enable_pagination' => true,
                 'authentication_required' => false
             ],
