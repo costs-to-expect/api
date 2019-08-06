@@ -10,6 +10,7 @@ use App\Models\ResourceType;
 use App\Models\Transformers\ResourceType as ResourceTypeTransformer;
 use App\Utilities\Response as UtilityResponse;
 use App\Validators\Request\Fields\ResourceType as ResourceTypeValidator;
+use App\Validators\Request\SearchParameters;
 use Exception;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\JsonResponse;
@@ -30,8 +31,14 @@ class ResourceTypeController extends Controller
      */
     public function index(): JsonResponse
     {
+        $search_parameters = SearchParameters::fetch([
+            'name',
+            'description'
+        ]);
+
         $total = (new ResourceType())->totalCount(
-            $this->include_private
+            $this->include_private,
+            $search_parameters
         );
 
         $pagination = UtilityPagination::init(request()->path(), $total)
@@ -40,7 +47,8 @@ class ResourceTypeController extends Controller
         $resource_types = (new ResourceType())->paginatedCollection(
             $this->include_private,
             $pagination['offset'],
-            $pagination['limit']
+            $pagination['limit'],
+            $search_parameters
         );
 
         $headers = [
@@ -118,7 +126,7 @@ class ResourceTypeController extends Controller
                 'parameters_config_string' => [],
                 'conditionals_config' => [],
                 'sortable_config' => null,
-                'searchable_config' => null,
+                'searchable_config' => 'api.resource-type.searchable',
                 'enable_pagination' => true,
                 'authentication_required' => false
             ],

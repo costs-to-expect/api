@@ -27,14 +27,25 @@ class ResourceType extends Model
      * Return the total number of resource types
      *
      * @param boolean $include_private Include private resource types
+     * @param array $search_parameters
      *
      * @return integer
      */
-    public function totalCount(bool $include_private = false): int
+    public function totalCount(
+        bool $include_private = false,
+        array $search_parameters = []
+    ): int
     {
         $collection = $this->select("resource_type.id");
+
         if ($include_private === false) {
             $collection->where('resource_type.private', '=', 0);
+        }
+
+        if (count($search_parameters) > 0) {
+            foreach ($search_parameters as $field => $search_term) {
+                $collection->where('resource_type.' . $field, 'LIKE', '%' . $search_term . '%');
+            }
         }
 
         return count($collection->get());
@@ -56,13 +67,15 @@ class ResourceType extends Model
      * @param boolean $include_private Also include private resource type
      * @param integer $offset Paging offset
      * @param integer $limit Paging limit
+     * @param array $search_parameters
      *
      * @return array
      */
     public function paginatedCollection(
         bool $include_private = false,
         int $offset = 0,
-        int $limit = 10
+        int $limit = 10,
+        array $search_parameters = []
     ): array
     {
         $collection = $this->select(
@@ -86,6 +99,12 @@ class ResourceType extends Model
 
         if ($include_private === false) {
             $collection->where('private', '=', 0);
+        }
+
+        if (count($search_parameters) > 0) {
+            foreach ($search_parameters as $field => $search_term) {
+                $collection->where('resource_type.' . $field, 'LIKE', '%' . $search_term . '%');
+            }
         }
 
         $collection->offset($offset);
