@@ -28,12 +28,17 @@ class PassportController extends Controller
                     'email' => request('email'),
                     'password' => request('password')
                 ]
-            ) === true) {
+        ) === true) {
+            $token = Auth::user()->createToken('costs-to-expect-api');
 
-            $user = Auth::user();
-            $success['token'] = $user->createToken('costs-to-expect')->accessToken;
-
-            return response()->json($success, 200);
+            return response()->json(
+                [
+                    'type' => 'Bearer',
+                    'token' => $token->accessToken,
+                    'expires' => $token->token->expires_at
+                ],
+                200
+            );
         } else {
             return response()->json(['message' => 'Unauthorised, credentials invalid'], 401);
         }

@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\SubCategory;
+use App\Utilities\Pagination as UtilityPagination;
 use App\Validators\Request\Parameters;
 use App\Validators\Request\Route;
 use App\Models\Category;
@@ -9,6 +11,7 @@ use App\Models\ResourceType;
 use App\Models\Transformers\Category as CategoryTransformer;
 use App\Utilities\Response as UtilityResponse;
 use App\Validators\Request\Fields\Category as CategoryValidator;
+use App\Validators\Request\SearchParameters;
 use Exception;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\JsonResponse;
@@ -23,33 +26,49 @@ use Illuminate\Http\Request;
  */
 class CategoryController extends Controller
 {
-    protected $collection_parameters = [];
-    protected $show_parameters = [];
-
     /**
-     * Return all the categories
-     *
-     * @param Request $request
+     * Return the categories collection
      *
      * @return JsonResponse
      */
-    public function index(Request $request): JsonResponse
+    public function index(): JsonResponse
     {
-        $this->collection_parameters = Parameters::fetch(['include-subcategories']);
+        $search_parameters = SearchParameters::fetch([
+            'name',
+            'description'
+        ]);
+
+        $total = (new Category())->totalCount(
+            $this->include_private,
+            [],
+            $search_parameters
+        );
+
+        $pagination = UtilityPagination::init(request()->path(), $total)->
+            setSearchParameters($search_parameters)->
+            paging();
 
         $categories = (new Category())->paginatedCollection(
             $this->include_private,
-            $this->collection_parameters
+            $pagination['offset'],
+            $pagination['limit'],
+            [],
+            $search_parameters
         );
 
         $headers = [
-            'X-Total-Count' => count($categories)
+            'X-Count' => count($categories),
+            'X-Total-Count' => $total,
+            'X-Offset' => $pagination['offset'],
+            'X-Limit' => $pagination['limit'],
+            'X-Link-Previous' => $pagination['links']['previous'],
+            'X-Link-Next' => $pagination['links']['next']
         ];
 
         return response()->json(
             array_map(
                 function($category) {
-                    return (new CategoryTransformer($category, $this->collection_parameters))->toArray();
+                    return (new CategoryTransformer($category))->toArray();
                 },
                 $categories
             ),
@@ -61,16 +80,15 @@ class CategoryController extends Controller
     /**
      * Return a single category
      *
-     * @param Request $request
      * @param string $category_id
      *
      * @return JsonResponse
      */
-    public function show(Request $request, $category_id): JsonResponse
+    public function show($category_id): JsonResponse
     {
         Route::categoryRoute($category_id);
 
-        $this->show_parameters = Parameters::fetch(['include-subcategories']);
+        $parameters = Parameters::fetch(['include-subcategories']);
 
         $category = (new Category)->single($category_id);
 
@@ -78,8 +96,20 @@ class CategoryController extends Controller
             UtilityResponse::notFound(trans('entities.category'));
         }
 
+        $subcategories = [];
+        if (
+            array_key_exists('include-subcategories', $parameters) === true &&
+            $parameters['include-subcategories'] === true
+        ) {
+            $subcategories = (new SubCategory())->paginatedCollection(
+                $category_id,
+                0,
+                100
+            );
+        }
+
         return response()->json(
-            (new CategoryTransformer($category, $this->show_parameters))->toArray(),
+            (new CategoryTransformer($category, $subcategories))->toArray(),
             200,
             [
                 'X-Total-Count' => 1
@@ -96,16 +126,14 @@ class CategoryController extends Controller
      */
     public function optionsIndex(Request $request): JsonResponse
     {
-        $this->collection_parameters = Parameters::fetch(['include-subcategories']);
-
         return $this->generateOptionsForIndex(
             [
                 'description_localisation_string' => 'route-descriptions.category_GET_index',
                 'parameters_config_string' => 'api.category.parameters.collection',
                 'conditionals_config' => [],
                 'sortable_config' => null,
-                'searchable_config' => null,
-                'enable_pagination' => false,
+                'searchable_config' => 'api.category.searchable',
+                'enable_pagination' => true,
                 'authentication_required' => false
             ],
             [
@@ -217,7 +245,7 @@ class CategoryController extends Controller
 
         $conditional_post_fields = ['resource_type_id' => []];
         foreach ($resource_types as $resource_type) {
-            $id = $this->hash->encode('resource_type', $resource_type->resource_type_id);
+            $id = $this->hash->encode('resource_type', $resource_type['resource_type_id']);
 
             if ($id === false) {
                 UtilityResponse::unableToDecode();
@@ -225,8 +253,8 @@ class CategoryController extends Controller
 
             $conditional_post_fields['resource_type_id']['allowed_values'][$id] = [
                 'value' => $id,
-                'name' => $resource_type->resource_type_name,
-                'description' => $resource_type->resource_type_description
+                'name' => $resource_type['resource_type_name'],
+                'description' => $resource_type['resource_type_description']
             ];
         }
 

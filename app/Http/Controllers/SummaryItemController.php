@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Utilities\Response;
 use App\Validators\Request\Parameters;
 use App\Validators\Request\Route;
 use App\Models\ItemSummary;
@@ -143,6 +144,10 @@ class SummaryItemController extends Controller
             $this->include_unpublished
         );
 
+        if (count($summary) === 0) {
+            Response::successEmptyContent(true);
+        }
+
         return response()->json(
             [
                 'total' => number_format($summary[0]['actualised_total'], 2, '.', '')
@@ -164,6 +169,10 @@ class SummaryItemController extends Controller
             $this->resource_id,
             $this->include_unpublished
         );
+
+        if (count($summary) === 0) {
+            Response::successEmptyContent(true);
+        }
 
         return response()->json(
             $summary->map(
@@ -192,8 +201,8 @@ class SummaryItemController extends Controller
             $this->include_unpublished
         );
 
-        if (count($summary) !== 1) {
-            UtilityResponse::notFound();
+        if (count($summary) === 0) {
+            Response::successEmptyContent();
         }
 
         return response()->json(
@@ -218,6 +227,10 @@ class SummaryItemController extends Controller
             $year,
             $this->include_unpublished
         );
+
+        if (count($summary) === 0) {
+            Response::successEmptyContent(true);
+        }
 
         return response()->json(
             $summary->map(
@@ -248,8 +261,8 @@ class SummaryItemController extends Controller
             $this->include_unpublished
         );
 
-        if (count($summary) !== 1) {
-            UtilityResponse::notFound();
+        if (count($summary) === 0) {
+            Response::successEmptyContent();
         }
 
         return response()->json(
@@ -264,13 +277,17 @@ class SummaryItemController extends Controller
      *
      * @return JsonResponse
      */
-    public function categoriesSummary(): JsonResponse
+    private function categoriesSummary(): JsonResponse
     {
         $summary = (new ItemSummary())->categoriesSummary(
             $this->resource_type_id,
             $this->resource_id,
             $this->include_unpublished
         );
+
+        if (count($summary) === 0) {
+            Response::successEmptyContent(true);
+        }
 
         return response()->json(
             array_map(
@@ -295,7 +312,7 @@ class SummaryItemController extends Controller
      *
      * @return JsonResponse
      */
-    public function filteredSummary(
+    private function filteredSummary(
         int $category_id = null,
         int $subcategory_id = null,
         int $year = null,
@@ -314,8 +331,8 @@ class SummaryItemController extends Controller
             $this->include_unpublished
         );
 
-        if (count($summary) !== 1) {
-            UtilityResponse::notFound();
+        if (count($summary) === 0) {
+            Response::successEmptyContent(true);
         }
 
         return response()->json(
@@ -334,7 +351,7 @@ class SummaryItemController extends Controller
      *
      * @return JsonResponse
      */
-    public function categorySummary(int $category_id): JsonResponse
+    private function categorySummary(int $category_id): JsonResponse
     {
         Route::categoryRoute($category_id);
 
@@ -345,8 +362,8 @@ class SummaryItemController extends Controller
             $this->include_unpublished
         );
 
-        if (count($summary) !== 1) {
-            UtilityResponse::notFound();
+        if (count($summary) === 0) {
+            Response::successEmptyContent();
         }
 
         return response()->json(
@@ -363,7 +380,7 @@ class SummaryItemController extends Controller
      *
      * @return JsonResponse
      */
-    public function subcategoriesSummary(int $category_id): JsonResponse
+    private function subcategoriesSummary(int $category_id): JsonResponse
     {
         Route::categoryRoute($category_id);
 
@@ -373,6 +390,10 @@ class SummaryItemController extends Controller
             $category_id,
             $this->include_unpublished
         );
+
+        if (count($summary) === 0) {
+            Response::successEmptyContent(true);
+        }
 
         return response()->json(
             array_map(
@@ -394,7 +415,7 @@ class SummaryItemController extends Controller
      *
      * @return JsonResponse
      */
-    public function subcategorySummary(int $category_id, int $sub_category_id): JsonResponse
+    private function subcategorySummary(int $category_id, int $sub_category_id): JsonResponse
     {
         Route::subCategoryRoute($category_id, $sub_category_id);
 
@@ -406,8 +427,8 @@ class SummaryItemController extends Controller
             $this->include_unpublished
         );
 
-        if (count($summary) !== 1) {
-            UtilityResponse::notFound();
+        if (count($summary) === 0) {
+            Response::successEmptyContent();
         }
 
         return response()->json(

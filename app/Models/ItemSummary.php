@@ -5,8 +5,10 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Query\Builder as QueryBuilder;
 
 /**
+ * @mixin QueryBuilder
  * @author Dean Blackborough <dean@g3d-development.com>
  * @copyright Dean Blackborough 2018-2019
  * @license https://github.com/costs-to-expect/api/blob/master/LICENSE
@@ -308,12 +310,12 @@ class ItemSummary extends Model
     /**
      * Work out if we should be hiding unpublished items, by default we don't show them
      *
-     * @param Builder $collection
+     * @param $collection
      * @param boolean $include_unpublished
      *
      * @return Builder
      */
-    private function includeUnpublished(Builder $collection, bool $include_unpublished): Builder
+    private function includeUnpublished($collection, bool $include_unpublished): Builder
     {
         if ($include_unpublished === false) {
             $collection->where(function ($sql) {

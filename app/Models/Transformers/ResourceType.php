@@ -3,7 +3,6 @@ declare(strict_types=1);
 
 namespace App\Models\Transformers;
 
-use App\Models\ResourceType as ResourceTypeModel;
 use App\Models\Transformers\Resource as ResourceTransformer;
 
 /**
@@ -15,23 +14,22 @@ use App\Models\Transformers\Resource as ResourceTransformer;
  */
 class ResourceType extends Transformer
 {
-    private $resource_type;
-    private $parameters = [];
+    private $data_to_transform;
 
     private $resources = [];
 
     /**
      * ResourceType constructor.
      *
-     * @param ResourceTypeModel $resource_type
-     * @param array $parameters
+     * @param array $data_to_transform
+     * @param array $resources
      */
-    public function __construct(ResourceTypeModel $resource_type, array $parameters = [])
+    public function __construct(array $data_to_transform, array $resources = [])
     {
         parent::__construct();
 
-        $this->resource_type = $resource_type;
-        $this->parameters = $parameters;
+        $this->data_to_transform = $data_to_transform;
+        $this->resources = $resources;
     }
 
     /**
@@ -42,24 +40,19 @@ class ResourceType extends Transformer
     public function toArray(): array
     {
         $result = [
-            'id' => $this->hash->resourceType()->encode($this->resource_type->id),
-            'name' => $this->resource_type->name,
-            'description' => $this->resource_type->description,
-            'created' => $this->resource_type->created_at->toDateTimeString(),
-            'public' => !boolval($this->resource_type->private),
-            'resources-count' => $this->resource_type->resources_count()
+            'id' => $this->hash->resourceType()->encode($this->data_to_transform['resource_type_id']),
+            'name' => $this->data_to_transform['resource_type_name'],
+            'description' => $this->data_to_transform['resource_type_description'],
+            'created' => $this->data_to_transform['resource_type_created_at'],
+            'public' => !boolval($this->data_to_transform['resource_type_private']),
         ];
 
-        if (isset($this->parameters['include-resources']) && $this->parameters['include-resources'] === true) {
-            $resourcesCollection = $this->resource_type->resources;
+        if (array_key_exists('resource_type_resources', $this->data_to_transform)) {
+            $result['resources']['count'] = $this->data_to_transform['resource_type_resources'];
+        }
 
-            $resourcesCollection->map(
-                function ($resource_item) {
-                    $this->resources[] = (new ResourceTransformer($resource_item))->toArray();
-                }
-            );
-
-            $result['resources'] = $this->resources;
+        foreach ($this->resources as $resource) {
+            $result['resources']['collection'][] = (new ResourceTransformer($resource))->toArray();
         }
 
         return $result;

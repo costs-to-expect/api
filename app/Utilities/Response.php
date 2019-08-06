@@ -128,14 +128,25 @@ class Response
     }
 
     /**
-     * 404 error, unable to decode the selected value, hasher missing or value
-     * invalid
+     * 204, successful request, no content to return, typically a PATCH
      *
      * @return JsonResponse
      */
     static public function successNoContent(): JsonResponse
     {
         response()->json([],204)->send();
+        exit;
+    }
+
+    /**
+     * 200, successful request, no content to return
+     *
+     * @param boolean $array Return empty array, if false empty object
+     * @return JsonResponse
+     */
+    static public function successEmptyContent(bool $array = false): JsonResponse
+    {
+        response()->json(($array === true ? [] : null),200)->send();
         exit;
     }
 

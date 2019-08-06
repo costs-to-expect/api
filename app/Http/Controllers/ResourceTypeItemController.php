@@ -173,7 +173,12 @@ class ResourceTypeItemController extends Controller
             ];
         }
 
-        $categories = (new Category())->paginatedCollection($this->include_private, ['resource_type'=>$resource_type_id]);
+        $categories = (new Category())->paginatedCollection(
+            $this->include_private,
+            0,
+            100,
+            ['resource_type'=>$resource_type_id]
+        );
         array_map(
             function($category) {
                 $this->conditional_get_parameters['category']['allowed_values'][$this->hash->encode('category', $category['category_id'])] = [

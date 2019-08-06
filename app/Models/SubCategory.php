@@ -3,12 +3,14 @@ declare(strict_types=1);
 
 namespace App\Models;
 
+use Illuminate\Database\Query\Builder as QueryBuilder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
 
 /**
  * Sub category model
  *
+ * @mixin QueryBuilder
  * @author Dean Blackborough <dean@g3d-development.com>
  * @copyright Dean Blackborough 2018-2019
  * @license https://github.com/costs-to-expect/api/blob/master/LICENSE
@@ -26,20 +28,54 @@ class SubCategory extends Model
 
     /**
      * @param integer $category_id
+     * @param array $search_parameters
+     *
+     * @return integer
+     */
+    public function totalCount(
+        int $category_id,
+        array $search_parameters = []
+    ): int
+    {
+        $collection = $this->where('category_id', '=', $category_id);
+
+        if (count($search_parameters) > 0) {
+            foreach ($search_parameters as $field => $search_term) {
+                $collection->where('sub_category.' . $field, 'LIKE', '%' . $search_term . '%');
+            }
+        }
+
+        return count($collection->get());
+    }
+
+    /**
+     * @param integer $category_id
      * @param integer $offset
      * @param integer $limit
+     * @param array $search_parameters
      *
      * @return array
      */
     public function paginatedCollection(
         int $category_id,
         int $offset = 0,
-        int $limit = 10
+        int $limit = 10,
+        array $search_parameters = []
     ): array
     {
-        return $this->where('category_id', '=', $category_id)->
-            orderBy("name")->
-            get()->
+        $collection = $this->where('category_id', '=', $category_id);
+
+        if (count($search_parameters) > 0) {
+            foreach ($search_parameters as $field => $search_term) {
+                $collection->where('sub_category.' . $field, 'LIKE', '%' . $search_term . '%');
+            }
+        }
+
+        $collection->orderBy("name")->
+            offset($offset)->
+            limit($limit);
+
+        return $collection->get()->
             toArray();
     }
 

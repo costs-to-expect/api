@@ -12,6 +12,7 @@ use App\Models\Transformers\ResourceTypeItemSubcategorySummary as ResourceTypeIt
 use App\Models\Transformers\ResourceTypeItemYearSummary as ResourceTypeItemYearSummaryTransformer;
 use App\Utilities\General;
 use App\Utilities\Response as UtilityResponse;
+use App\Validators\Request\SearchParameters;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
@@ -54,6 +55,10 @@ class SummaryResourceTypeItemController extends Controller
             'subcategories'
         ]);
 
+        $search_parameters = SearchParameters::fetch([
+            'description'
+        ]);
+
         if (
             array_key_exists('include-unpublished', $collection_parameters) === true &&
             General::booleanValue($collection_parameters['include-unpublished']) === true
@@ -64,24 +69,42 @@ class SummaryResourceTypeItemController extends Controller
         if (array_key_exists('years', $collection_parameters) === true &&
             General::booleanValue($collection_parameters['years']) === true) {
             return $this->yearsSummary();
-        } else if (array_key_exists('year', $collection_parameters) === true) {
-            if (array_key_exists('months', $collection_parameters) === true &&
-                General::booleanValue($collection_parameters['months']) === true) {
+        } else if (
+            array_key_exists('year', $collection_parameters) === true &&
+            array_key_exists('category', $collection_parameters) === false &&
+            array_key_exists('subcategory', $collection_parameters) === false &&
+            count($search_parameters) === 0
+        ) {
+            if (
+                array_key_exists('months', $collection_parameters) === true &&
+                General::booleanValue($collection_parameters['months']) === true
+            ) {
                 return $this->monthsSummary($collection_parameters['year']);
-            } else if (array_key_exists('month', $collection_parameters) === true) {
-                return $this->monthSummary(
-                    $collection_parameters['year'],
-                    $collection_parameters['month']
-                );
             } else {
-                return $this->yearSummary($collection_parameters['year']);
+                if (array_key_exists('month', $collection_parameters) === true) {
+                    return $this->monthSummary(
+                        $collection_parameters['year'],
+                        $collection_parameters['month']
+                    );
+                } else {
+                    return $this->yearSummary($collection_parameters['year']);
+                }
             }
-        } else if (array_key_exists('categories', $collection_parameters) === true &&
+        }
+
+        if (array_key_exists('categories', $collection_parameters) === true &&
             General::booleanValue($collection_parameters['categories']) === true) {
             return $this->categoriesSummary();
-        } else if (array_key_exists('category', $collection_parameters) === true) {
-            if (array_key_exists('subcategories', $collection_parameters) === true &&
-                General::booleanValue($collection_parameters['subcategories']) === true) {
+        } else if (
+            array_key_exists('category', $collection_parameters) === true &&
+            array_key_exists('year', $collection_parameters) === false &&
+            array_key_exists('month', $collection_parameters) === false &&
+            count($search_parameters) === 0
+        ) {
+            if (
+                array_key_exists('subcategories', $collection_parameters) === true &&
+                General::booleanValue($collection_parameters['subcategories']) === true
+            ) {
                 return $this->subcategoriesSummary($collection_parameters['category']);
             } else {
                 if (array_key_exists('subcategory', $collection_parameters) === true) {
@@ -93,12 +116,30 @@ class SummaryResourceTypeItemController extends Controller
                     return $this->categorySummary($collection_parameters['category']);
                 }
             }
-        } else if (array_key_exists('resources', $collection_parameters) === true &&
+        }
+
+        if (array_key_exists('resources', $collection_parameters) === true &&
             General::booleanValue($collection_parameters['resources']) === true) {
             return $this->resourcesSummary();
-        } else {
-            return $this->summary();
         }
+
+        if (
+            array_key_exists('category', $collection_parameters) === true ||
+            array_key_exists('subcategory', $collection_parameters) === true ||
+            array_key_exists('year', $collection_parameters) === true ||
+            array_key_exists('month', $collection_parameters) === true ||
+            count($search_parameters) > 0
+        ) {
+            return $this->filteredSummary(
+                (array_key_exists('category', $collection_parameters) ? $collection_parameters['category'] : null),
+                (array_key_exists('subcategory', $collection_parameters) ? $collection_parameters['subcategory'] : null),
+                (array_key_exists('year', $collection_parameters) ? $collection_parameters['year'] : null),
+                (array_key_exists('month', $collection_parameters) ? $collection_parameters['month'] : null),
+                (count($search_parameters) > 0 ? $search_parameters : [])
+            );
+        }
+
+        return $this->summary();
     }
 
     /**
@@ -112,6 +153,10 @@ class SummaryResourceTypeItemController extends Controller
             $this->resource_type_id,
             $this->include_unpublished
         );
+
+        if (count($summary) === 0) {
+            UtilityResponse::successEmptyContent(true);
+        }
 
         return response()->json(
             [
@@ -140,6 +185,10 @@ class SummaryResourceTypeItemController extends Controller
             $this->include_unpublished
         );
 
+        if (count($summary) === 0) {
+            UtilityResponse::successEmptyContent(true);
+        }
+
         return response()->json(
             array_map(
                 function ($resource) {
@@ -164,6 +213,10 @@ class SummaryResourceTypeItemController extends Controller
             $this->resource_type_id,
             $this->include_unpublished
         );
+
+        if (count($summary) === 0) {
+            UtilityResponse::successEmptyContent(true);
+        }
 
         return response()->json(
             array_map(
@@ -192,8 +245,8 @@ class SummaryResourceTypeItemController extends Controller
             $this->include_unpublished
         );
 
-        if (count($summary) !== 1) {
-            UtilityResponse::notFound();
+        if (count($summary) === 0) {
+            UtilityResponse::successEmptyContent();
         }
 
         return response()->json(
@@ -218,6 +271,10 @@ class SummaryResourceTypeItemController extends Controller
             $year,
             $this->include_unpublished
         );
+
+        if (count($summary) === 0) {
+            UtilityResponse::successEmptyContent(true);
+        }
 
         return response()->json(
             array_map(
@@ -249,8 +306,8 @@ class SummaryResourceTypeItemController extends Controller
             $this->include_unpublished
         );
 
-        if (count($summary) !== 1) {
-            UtilityResponse::notFound();
+        if (count($summary) === 0) {
+            UtilityResponse::successEmptyContent();
         }
 
         return response()->json(
@@ -272,6 +329,10 @@ class SummaryResourceTypeItemController extends Controller
             $this->resource_type_id,
             $this->include_unpublished
         );
+
+        if (count($summary) === 0) {
+            UtilityResponse::successEmptyContent(true);
+        }
 
         return response()->json(
             array_map(
@@ -301,12 +362,54 @@ class SummaryResourceTypeItemController extends Controller
             $this->include_unpublished
         );
 
-        if (count($summary) !== 1) {
-            UtilityResponse::notFound();
+        if (count($summary) === 0) {
+            UtilityResponse::successEmptyContent();
         }
 
         return response()->json(
             (new ResourceTypeItemCategorySummaryTransformer($summary[0]))->toArray(),
+            200,
+            ['X-Total-Count' => 1]
+        );
+    }
+
+    /**
+     * Return a filtered summary
+     *
+     * @param int|null $category_id
+     * @param int|null $subcategory_id
+     * @param int|null $year
+     * @param int|null $month
+     * @param array $search_parameters
+     *
+     * @return JsonResponse
+     */
+    public function filteredSummary(
+        int $category_id = null,
+        int $subcategory_id = null,
+        int $year = null,
+        int $month = null,
+        array $search_parameters = []
+    ): JsonResponse
+    {
+        $summary = (new ResourceTypeItem())->filteredSummary(
+            $this->resource_type_id,
+            $category_id,
+            $subcategory_id,
+            $year,
+            $month,
+            $search_parameters,
+            $this->include_unpublished
+        );
+
+        if (count($summary) === 0) {
+            UtilityResponse::successEmptyContent();
+        }
+
+        return response()->json(
+            [
+                'total' => number_format($summary[0]['total'], 2, '.', '')
+            ],
             200,
             ['X-Total-Count' => 1]
         );
@@ -327,6 +430,10 @@ class SummaryResourceTypeItemController extends Controller
             $category_id,
             $this->include_unpublished
         );
+
+        if (count($summary) === 0) {
+            UtilityResponse::successEmptyContent(true);
+        }
 
         return response()->json(
             array_map(
@@ -358,12 +465,17 @@ class SummaryResourceTypeItemController extends Controller
             $this->include_unpublished
         );
 
+        if (count($summary) === 0) {
+            UtilityResponse::successEmptyContent();
+        }
+
         return response()->json(
             (new ResourceTypeItemSubcategorySummaryTransformer($summary[0]))->toArray(),
             200,
             ['X-Total-Count' => 1]
         );
     }
+
 
     /**
      * Generate the OPTIONS request for items summary route
@@ -384,7 +496,7 @@ class SummaryResourceTypeItemController extends Controller
                 'parameters_config_string' => 'api.resource-type-item.summary-parameters.collection',
                 'conditionals_config' => [],
                 'sortable_config' => null,
-                'searchable_config' => null,
+                'searchable_config' => 'api.resource-type-item.searchable',
                 'enable_pagination' => false,
                 'authentication_required' => false
             ]

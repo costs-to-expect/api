@@ -66,22 +66,22 @@ Route::group(
 
         Route::get(
             'categories/{category_id}/subcategories',
-            'SubCategoryController@index'
+            'SubcategoryController@index'
         );
 
         Route::options(
             'categories/{category_id}/subcategories',
-            'SubCategoryController@optionsIndex'
+            'SubcategoryController@optionsIndex'
         );
 
         Route::get(
             'categories/{category_id}/subcategories/{sub_category_id}',
-            'SubCategoryController@show'
+            'SubcategoryController@show'
         );
 
         Route::options(
             'categories/{category_id}/subcategories/{sub_category_id}',
-            'SubCategoryController@optionsShow'
+            'SubcategoryController@optionsShow'
         );
 
         Route::get(

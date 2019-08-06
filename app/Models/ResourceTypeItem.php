@@ -6,11 +6,13 @@ namespace App\Models;
 use App\Utilities\General;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Query\Builder as QueryBuilder;
 use Illuminate\Support\Facades\DB;
 
 /**
  * Item model, fetches data by resource type
  *
+ * @mixin QueryBuilder
  * @author Dean Blackborough <dean@g3d-development.com>
  * @copyright Dean Blackborough 2018-2019
  * @license https://github.com/costs-to-expect/api/blob/master/LICENSE
@@ -234,19 +236,20 @@ class ResourceTypeItem extends Model
      * Return the summary for all items for the resources in the requested resource type
      *
      * @param int $resource_type_id
+     * @param boolean $include_unpublished = false
      *
      * @return array
      */
-    public function summary(int $resource_type_id): array
+    public function summary(int $resource_type_id, bool $include_unpublished): array
     {
-        return $this->selectRaw('sum(item.actualised_total) AS actualised_total')->
+        $collection = $this->selectRaw('sum(item.actualised_total) AS actualised_total')->
             join('resource', 'item.resource_id', 'resource.id')->
             join('resource_type', 'resource.resource_type_id', 'resource_type.id')->
-            where('resource_type.id', '=', $resource_type_id)->
-            where(function ($sql) {
-                $sql->whereNull('item.publish_after')->
-                    orWhereRaw('item.publish_after < NOW()');
-            })->
+            where('resource_type.id', '=', $resource_type_id);
+
+        $collection = $this->includeUnpublished($collection, $include_unpublished);
+
+        return $collection->
             get()->
             toArray();
     }
@@ -256,20 +259,24 @@ class ResourceTypeItem extends Model
      * type grouped by resource
      *
      * @param int $resource_type_id
+     * @param boolean $include_unpublished
      *
      * @return array
      */
-    public function resourcesSummary(int $resource_type_id): array
+    public function resourcesSummary(int $resource_type_id, bool $include_unpublished): array
     {
-        return $this->selectRaw('resource.id AS id, resource.name AS `name`, SUM(item.actualised_total) AS total')->
+        $collection = $this->selectRaw('
+                resource.id AS id, 
+                resource.name AS `name`, 
+                SUM(item.actualised_total) AS total'
+            )->
             join('resource', 'item.resource_id', 'resource.id')->
             join('resource_type', 'resource.resource_type_id', 'resource_type.id')->
-            where('resource_type.id', '=', $resource_type_id)->
-            where(function ($sql) {
-                $sql->whereNull('item.publish_after')->
-                    orWhereRaw('item.publish_after < NOW()');
-            })->
-            groupBy('resource.id')->
+            where('resource_type.id', '=', $resource_type_id);
+
+        $collection = $this->includeUnpublished($collection, $include_unpublished);
+
+        return $collection->groupBy('resource.id')->
             orderBy('name')->
             get()->
             toArray();
@@ -280,20 +287,23 @@ class ResourceTypeItem extends Model
      * type grouped by year
      *
      * @param int $resource_type_id
+     * @param boolean $include_unpublished
 
      * @return array
      */
-    public function yearsSummary(int $resource_type_id): array
+    public function yearsSummary(int $resource_type_id, bool $include_unpublished): array
     {
-        return $this->selectRaw("YEAR(item.effective_date) as year, SUM(item.actualised_total) AS total")->
+        $collection = $this->selectRaw("
+                YEAR(item.effective_date) as year,
+                SUM(item.actualised_total) AS total"
+            )->
             join("resource", "resource.id", "item.resource_id")->
             join("resource_type", "resource_type.id", "resource.resource_type_id")->
-            where("resource_type.id", "=", $resource_type_id)->
-            where(function ($sql) {
-                $sql->whereNull('item.publish_after')->
-                    orWhereRaw('item.publish_after < NOW()');
-            })->
-            groupBy("year")->
+            where("resource_type.id", "=", $resource_type_id);
+
+        $collection = $this->includeUnpublished($collection, $include_unpublished);
+
+        return $collection->groupBy("year")->
             orderBy("year")->
             get()->
             toArray();
@@ -303,23 +313,26 @@ class ResourceTypeItem extends Model
      * Return the summary for all items for the resources in the requested resource
      * type grouped by month for the requested year
      *
-     * @param integer $year
      * @param integer $resource_type_id
-
+     * @param integer $year
+     * @param boolean $include_unpublished
+     *
      * @return array
      */
-    public function monthsSummary(int $resource_type_id, int $year): array
+    public function monthsSummary(int $resource_type_id, int $year, bool $include_unpublished): array
     {
-        return $this->selectRaw("MONTH(item.effective_date) as month, SUM(item.actualised_total) AS total")->
+        $collection = $this->selectRaw("
+                MONTH(item.effective_date) as month, 
+                SUM(item.actualised_total) AS total"
+            )->
             join("resource", "resource.id", "item.resource_id")->
             join("resource_type", "resource_type.id", "resource.resource_type_id")->
             where("resource_type.id", "=", $resource_type_id)->
-            where(DB::raw('YEAR(item.effective_date)'), '=', $year)->
-            where(function ($sql) {
-                $sql->whereNull('item.publish_after')->
-                    orWhereRaw('item.publish_after < NOW()');
-            })->
-            groupBy("month")->
+            where(DB::raw('YEAR(item.effective_date)'), '=', $year);
+
+        $collection = $this->includeUnpublished($collection, $include_unpublished);
+
+        return $collection->groupBy("month")->
             orderBy("month")->
             get()->
             toArray();
@@ -329,25 +342,33 @@ class ResourceTypeItem extends Model
      * Return the summary for all items for the resources in the requested resource
      * type for a specific year and month
      *
+     * @param integer $resource_type_id
      * @param integer $year
      * @param integer $month
-     * @param int $resource_type_id
-
+     * @param boolean $include_unpublished
+     *
      * @return array
      */
-    public function monthSummary(int $resource_type_id, int $year, int $month): array
+    public function monthSummary(
+        int $resource_type_id,
+        int $year,
+        int $month,
+        bool $include_unpublished
+    ): array
     {
-        return $this->selectRaw("MONTH(item.effective_date) as month, SUM(item.actualised_total) AS total")->
+        $collection = $this->selectRaw("
+                MONTH(item.effective_date) as month, 
+                SUM(item.actualised_total) AS total"
+            )->
             join("resource", "resource.id", "item.resource_id")->
             join("resource_type", "resource_type.id", "resource.resource_type_id")->
             where("resource_type.id", "=", $resource_type_id)->
             where(DB::raw('YEAR(item.effective_date)'), '=', $year)->
-            where(DB::raw('MONTH(item.effective_date)'), '=', $month)->
-            where(function ($sql) {
-                $sql->whereNull('item.publish_after')->
-                    orWhereRaw('item.publish_after < NOW()');
-            })->
-            groupBy("month")->
+            where(DB::raw('MONTH(item.effective_date)'), '=', $month);
+
+        $collection = $this->includeUnpublished($collection, $include_unpublished);
+
+        return $collection->groupBy("month")->
             orderBy("month")->
             get()->
             toArray();
@@ -357,23 +378,26 @@ class ResourceTypeItem extends Model
      * Return the summary for all items for the resources in the requested resource
      * type for a specific year
      *
-     * @param integer $year
      * @param integer $resource_type_id
-
+     * @param integer $year
+     * @param boolean $include_unpublished
+     *
      * @return array
      */
-    public function yearSummary(int $resource_type_id, int $year): array
+    public function yearSummary(int $resource_type_id, int $year, bool $include_unpublished): array
     {
-        return $this->selectRaw("YEAR(item.effective_date) as year, SUM(item.actualised_total) AS total")->
+        $collection = $this->selectRaw("
+                YEAR(item.effective_date) as year, 
+                SUM(item.actualised_total) AS total"
+            )->
             join("resource", "resource.id", "item.resource_id")->
             join("resource_type", "resource_type.id", "resource.resource_type_id")->
             where("resource_type.id", "=", $resource_type_id)->
-            where(DB::raw('YEAR(item.effective_date)'), '=', $year)->
-            where(function ($sql) {
-                $sql->whereNull('item.publish_after')->
-                    orWhereRaw('item.publish_after < NOW()');
-            })->
-            groupBy("year")->
+            where(DB::raw('YEAR(item.effective_date)'), '=', $year);
+
+        $collection = $this->includeUnpublished($collection, $include_unpublished);
+
+        return $collection->groupBy("year")->
             orderBy("year")->
             get()->
             toArray();
@@ -447,6 +471,50 @@ class ResourceTypeItem extends Model
         return $collection->groupBy("category.id")->
             orderBy("name")->
             get()->
+            toArray();
+    }
+
+    public function filteredSummary(
+        int $resource_type_id,
+        int $category_id = null,
+        int $subcategory_id = null,
+        int $year = null,
+        int $month = null,
+        array $search_parameters = [],
+        bool $include_unpublished = false
+    ): array
+    {
+        $collection = $this->
+            selectRaw('SUM(item.actualised_total) AS total')->
+            join("resource", "resource.id", "item.resource_id")->
+            join("resource_type", "resource_type.id", "resource.resource_type_id")->
+            join("item_category", "item_category.item_id", "item.id")->
+            join("item_sub_category", "item_sub_category.item_category_id", "item_category.id")->
+            join("category", "category.id", "item_category.category_id")->
+            join("sub_category", "sub_category.id", "item_sub_category.sub_category_id")->
+            where("resource_type.id", "=", $resource_type_id);
+
+        if ($category_id !== null) {
+            $collection->where("category.id", "=", $category_id);
+        }
+        if ($subcategory_id !== null) {
+            $collection->where("sub_category.id", "=", $subcategory_id);
+        }
+        if ($year !== null) {
+            $collection->whereRaw(\DB::raw("YEAR(item.effective_date) = {$year}"));
+        }
+        if ($month !== null) {
+            $collection->whereRaw(\DB::raw("MONTH(item.effective_date) = {$month}"));
+        }
+        if (count($search_parameters) > 0) {
+            foreach ($search_parameters as $field => $search_term) {
+                $collection->where('item.' . $field, 'LIKE', '%' . $search_term . '%');
+            }
+        }
+
+        $collection = $this->includeUnpublished($collection, $include_unpublished);
+
+        return $collection->get()->
             toArray();
     }
 
@@ -534,12 +602,12 @@ class ResourceTypeItem extends Model
     /**
      * Work out if we should be hiding unpublished items, by default we don't show them
      *
-     * @param Builder $collection
+     * @param $collection
      * @param boolean $include_unpublished
      *
      * @return Builder
      */
-    private function includeUnpublished(Builder $collection, bool $include_unpublished): Builder
+    private function includeUnpublished($collection, bool $include_unpublished): Builder
     {
         if ($include_unpublished === false) {
             $collection->where(function ($sql) {

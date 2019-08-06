@@ -2,11 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Utilities\Pagination as UtilityPagination;
 use App\Validators\Request\Route;
 use App\Models\SubCategory;
 use App\Models\Transformers\SubCategory as SubCategoryTransformer;
 use App\Utilities\Response as UtilityResponse;
 use App\Validators\Request\Fields\SubCategory as SubCategoryValidator;
+use App\Validators\Request\SearchParameters;
 use Exception;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\JsonResponse;
@@ -19,24 +21,47 @@ use Illuminate\Http\Request;
  * @copyright Dean Blackborough 2018-2019
  * @license https://github.com/costs-to-expect/api/blob/master/LICENSE
  */
-class SubCategoryController extends Controller
+class SubcategoryController extends Controller
 {
     /**
      * Return all the sub categories assigned to the given category
      *
-     * @param Request $request
      * @param string $category_id
      *
      * @return JsonResponse
      */
-    public function index(Request $request, string $category_id): JsonResponse
+    public function index(string $category_id): JsonResponse
     {
         Route::categoryRoute($category_id);
 
-        $subcategories = (new SubCategory())->paginatedCollection($category_id);
+        $search_parameters = SearchParameters::fetch([
+            'name',
+            'description'
+        ]);
+
+        $total = (new SubCategory())->totalCount(
+            $category_id,
+            $search_parameters
+        );
+
+        $pagination = UtilityPagination::init(request()->path(), $total)->
+            setSearchParameters($search_parameters)->
+            paging();
+
+        $subcategories = (new SubCategory())->paginatedCollection(
+            $category_id,
+            $pagination['offset'],
+            $pagination['limit'],
+            $search_parameters
+        );
 
         $headers = [
-            'X-Total-Count' => count($subcategories)
+            'X-Count' => count($subcategories),
+            'X-Total-Count' => $total,
+            'X-Offset' => $pagination['offset'],
+            'X-Limit' => $pagination['limit'],
+            'X-Link-Previous' => $pagination['links']['previous'],
+            'X-Link-Next' => $pagination['links']['next']
         ];
 
         return response()->json(
@@ -89,12 +114,11 @@ class SubCategoryController extends Controller
     /**
      * Generate the OPTIONS request for the sub categories list
      *
-     * @param Request $request
      * @param string $category_id
      *
      * @return JsonResponse
      */
-    public function optionsIndex(Request $request, string $category_id): JsonResponse
+    public function optionsIndex(string $category_id): JsonResponse
     {
         Route::categoryRoute($category_id);
 
@@ -104,8 +128,8 @@ class SubCategoryController extends Controller
                 'parameters_config_string' => 'api.subcategory.parameters.collection',
                 'conditionals_config' => [],
                 'sortable_config' => null,
-                'searchable_config' => null,
-                'enable_pagination' => false,
+                'searchable_config' => 'api.subcategory.searchable',
+                'enable_pagination' => true,
                 'authentication_required' => false
             ],
             [

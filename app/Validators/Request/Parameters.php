@@ -87,23 +87,7 @@ class Parameters
                     }
                     break;
 
-                case 'months':
-                    if (array_key_exists($key, self::$parameters) === true) {
-                        if (General::isBooleanValue(self::$parameters[$key]) === false) {
-                            unset(self::$parameters[$key]);
-                        }
-                    }
-                    break;
-
                 case 'resource_type':
-                    if (array_key_exists($key, self::$parameters) === true) {
-                        if ((new ResourceType())->
-                            where('id', '=', self::$parameters[$key])->exists() === false) {
-                            unset(self::$parameters[$key]);
-                        }
-                    }
-                    break;
-
                 case 'resource-type':
                     if (array_key_exists($key, self::$parameters) === true) {
                         if ((new ResourceType())->
@@ -114,18 +98,6 @@ class Parameters
                     break;
 
                 case 'subcategory':
-                    if (array_key_exists($key, self::$parameters) === true) {
-                        if (
-                            (new SubCategory())->
-                            where('sub_category.id', '=', self::$parameters[$key])->
-                            where('sub_category.category_id', '=', self::$parameters['category'])->
-                            exists() === false
-                        ) {
-                            unset(self::$parameters[$key]);
-                        }
-                    }
-                    break;
-
                 case 'sub_category':
                     if (array_key_exists($key, self::$parameters) === true) {
                         if (
@@ -139,7 +111,9 @@ class Parameters
                     }
                     break;
 
+                case 'months':
                 case 'subcategories':
+                case 'years':
                     if (array_key_exists($key, self::$parameters) === true) {
                         if (General::isBooleanValue(self::$parameters[$key]) === false) {
                             unset(self::$parameters[$key]);
@@ -150,16 +124,8 @@ class Parameters
                 case 'year':
                     if (array_key_exists($key, self::$parameters) === true) {
                         if (intval(self::$parameters[$key]) < 2013 ||
-                            self::$parameters[$key] > intval(date('Y'))) {
+                            self::$parameters[$key] > intval(date('Y')) + 1) {
 
-                            unset(self::$parameters[$key]);
-                        }
-                    }
-                    break;
-
-                case 'years':
-                    if (array_key_exists($key, self::$parameters) === true) {
-                        if (General::isBooleanValue(self::$parameters[$key]) === false) {
                             unset(self::$parameters[$key]);
                         }
                     }

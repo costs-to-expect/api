@@ -2,6 +2,32 @@
 
 The complete changelog for the Costs to Expect REST API, follows the format defined at https://keepachangelog.com/en/1.0.0/
 
+## [v1.17.0] - 2019-08-06
+### Added 
+- The `v1/summary/resource-types/items` summary supports all the same features as the main `items` summary; you can make a filtered request and even include a search term.
+- We have added pagination to the `/v1/categories` GET endpoint.
+- We have added pagination to the `/v1/categories/[category]/subcategories` GET endpoint.
+- We have added pagination to the `/v1/resource-tyes` GET endpoint.
+- We have added pagination to the `/v1/resource-types/[resource-type]/resources` GET endpoint.
+- We have added search to the `/v1/categories` GET endpoint; you can search on `name` and `description`.
+- We have added search to the `/v1/resource-types` GET endpoint; you can search on `name` and `description`.
+- We have added search to the `/v1/categories/[category]/subcategories` GET endpoint; you can search on `name` and `description`.
+- We have added search to the `/v1/resource-types/[resource-type]/resources` GET endpoint; you can search on `name` and `description`.
+
+### Changed
+- We have modified the year GET parameter to include "next" year, we may have unpublished items for next year and don't want to prohibit summarising the data. (The `year` validation should limit based on the existing data, an issue has been created to find a better solution).
+- We have removed unnecessary clauses in the base validation switch statement.
+- We have altered the format of the included resources and subcategories when the `include-resources` or `include-subcategories` parameters exist in the request.
+
+### Fixed
+- The resource type items summaries are not using the `include-unpublished` parameter.
+- The response for a summary request that returns no results returns a 200, not a 404, the endpoint is correct it just no longer returns results because of the GET parameters.
+- Transformers should not call models, only transform data, corrected the ResourceType transformer.
+
+### Removed
+- Removed the `include-resources` parameter from the resource type collection, not useful at the collection level and causes unnecessary SQL requests, remains an option when requesting a single resource type.
+- Removed the `include-subcategories` parameter from the categories collection, not useful at the collection level and causes unnecessary SQL requests, remains an option when requesting a single category.
+
 ## [v1.16.5] - 2019-07-29
 ### Added
 - Validation added to validators, check to ensure the required indexes set.

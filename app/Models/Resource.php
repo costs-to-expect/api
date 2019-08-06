@@ -4,10 +4,12 @@ declare(strict_types=1);
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Query\Builder as QueryBuilder;
 
 /**
  * Resource model
  *
+ * @mixin QueryBuilder
  * @author Dean Blackborough <dean@g3d-development.com>
  * @copyright Dean Blackborough 2018-2019
  * @license https://github.com/costs-to-expect/api/blob/master/LICENSE
@@ -23,10 +25,15 @@ class Resource extends Model
      *
      * @param integer $resource_type_id
      * @param boolean $include_private Include resources attached to private resource types
+     * @param array $search_parameters
      *
      * @return integer
      */
-    public function totalCount(int $resource_type_id, bool $include_private = false): int
+    public function totalCount(
+        int $resource_type_id,
+        bool $include_private = false,
+        array $search_parameters = []
+    ): int
     {
         $collection = $this->select("resource.id")->
             join('resource_type', 'resource.resource_type_id', 'resource_type.id')->
@@ -34,6 +41,12 @@ class Resource extends Model
 
         if ($include_private === false) {
             $collection->where('resource_type.private', '=', 0);
+        }
+
+        if (count($search_parameters) > 0) {
+            foreach ($search_parameters as $field => $search_term) {
+                $collection->where('resource.' . $field, 'LIKE', '%' . $search_term . '%');
+            }
         }
 
         return count($collection->get());
@@ -49,17 +62,47 @@ class Resource extends Model
         return $this->belongsTo(ResourceType::class, 'resource_type_id', 'id');
     }
 
-    public function paginatedCollection(int $resource_type_id, int $offset = 0, int $limit = 10)
+    public function paginatedCollection(
+        int $resource_type_id,
+        int $offset = 0,
+        int $limit = 10,
+        array $search_parameters = []
+    ): array
     {
-        return $this->where('resource_type_id', '=', $resource_type_id)
-            ->latest()
-            ->get();
+        $collection = $this->select(
+                'resource.id AS resource_id',
+                'resource.name AS resource_name',
+                'resource.description AS resource_description',
+                'resource.effective_date AS resource_effective_date',
+                'resource.created_at AS resource_created_at'
+            )->
+            where('resource_type_id', '=', $resource_type_id);
+
+        if (count($search_parameters) > 0) {
+            foreach ($search_parameters as $field => $search_term) {
+                $collection->where('resource.' . $field, 'LIKE', '%' . $search_term . '%');
+            }
+        }
+
+        return $collection->latest()->
+            offset($offset)->
+            limit($limit)->
+            get()->
+            toArray();
     }
 
     public function single(int $resource_type_id, int $resource_id)
     {
-        return $this->where('resource_type_id', '=', $resource_type_id)
-            ->find($resource_id);
+        return $this->select(
+                'resource.id AS resource_id',
+                'resource.name AS resource_name',
+                'resource.description AS resource_description',
+                'resource.effective_date AS resource_effective_date',
+                'resource.created_at AS resource_created_at'
+            )->
+            where('resource_type_id', '=', $resource_type_id)->
+            find($resource_id)->
+            toArray();
     }
 
     /**
@@ -71,7 +114,10 @@ class Resource extends Model
      *
      * @return array
      */
-    public function resourcesForResourceType(int $resource_type_id, int $exclude_id = null): array
+    public function resourcesForResourceType(
+        int $resource_type_id,
+        int $exclude_id = null
+    ): array
     {
         $collection = $this->where('resource_type_id', '=', $resource_type_id);
 
@@ -86,5 +132,23 @@ class Resource extends Model
             )->
             get()->
             toArray();
+    }
+
+    /**
+     * Convert the model instance to an array for use with the transformer
+     *
+     * @param Resource
+     *
+     * @return array
+     */
+    public function instanceToArray(Resource $resource): array
+    {
+        return [
+            'resource_id' => $resource->id,
+            'resource_name' => $resource->name,
+            'resource_description' => $resource->description,
+            'resource_effective_date' => $resource->effective_date,
+            'resource_created_at' => $resource->created_at->toDateTimeString()
+        ];
     }
 }

@@ -28,10 +28,6 @@ use Illuminate\Support\Facades\Auth;
  */
 class ItemController extends Controller
 {
-    protected $collection_parameters = [];
-    protected $get_parameters = [];
-    protected $pagination = [];
-
     /**
      * Return all the items based on the set filter options
      *
@@ -405,7 +401,12 @@ class ItemController extends Controller
             ];
         }
 
-        $categories = (new Category())->paginatedCollection($this->include_private, ['resource_type'=>$resource_type_id]);
+        $categories = (new Category())->paginatedCollection(
+            $this->include_private,
+            0,
+            100,
+            ['resource_type'=>$resource_type_id]
+        );
 
         foreach ($categories as $category) {
             $conditional_parameters['category']['allowed_values'][$this->hash->encode('category', $category['category_id'])] = [
