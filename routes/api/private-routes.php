@@ -24,7 +24,7 @@ Route::group(
 
         Route::post(
             'categories/{category_id}/subcategories',
-            'SubCategoryController@create'
+            'SubcategoryController@create'
         );
 
         Route::post(
@@ -64,7 +64,7 @@ Route::group(
 
         Route::delete(
             'categories/{category_id}/sub_categories/{sub_category_id}',
-            'SubCategoryController@delete'
+            'SubcategoryController@delete'
         );
 
         Route::delete(
