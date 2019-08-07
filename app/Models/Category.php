@@ -75,6 +75,7 @@ class Category extends Model
      * @param integer $limit
      * @param array $parameters
      * @param array $search_parameters
+     * @param array $sort_parameters
      *
      * @return array
      */
@@ -83,7 +84,8 @@ class Category extends Model
         int $offset = 0,
         int $limit = 10,
         array $parameters = [],
-        array $search_parameters = []
+        array $search_parameters = [],
+        array $sort_parameters = []
     ): array {
         $collection = $this->select(
             'category.id AS category_id',
@@ -120,6 +122,22 @@ class Category extends Model
             foreach ($search_parameters as $field => $search_term) {
                 $collection->where('category.' . $field, 'LIKE', '%' . $search_term . '%');
             }
+        }
+
+        if (count($sort_parameters) > 0) {
+            foreach ($sort_parameters as $field => $direction) {
+                switch ($field) {
+                    case 'created':
+                        $collection->orderBy('category.created_at', $direction);
+                        break;
+
+                    default:
+                        $collection->orderBy('category.' . $field, $direction);
+                        break;
+                }
+            }
+        } else {
+            $collection->orderBy('category.name', 'asc');
         }
 
         $collection->offset($offset);
