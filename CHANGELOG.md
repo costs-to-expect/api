@@ -2,6 +2,20 @@
 
 The complete changelog for the Costs to Expect REST API, follows the format defined at https://keepachangelog.com/en/1.0.0/
 
+## [v1.18.0] - 2019-08-07
+### Added
+- We have added sorting to the `/v1/resource-types` collection; you can sort on `name`, `description` and date created.
+- We have added sorting to the `/v1/resource-types/[resource-type]/resources` collection; you can sort on `name`, `description`, `effective date` and date created.
+- We have added sorting to the `/v1/categories` collection; you can sort on `name`, `description` and date created. 
+- We have added sorting to the `/v1/categories/[category]/subcategories` collection; you can sort on `name`, `description` and date created.
+
+### Changed
+- We have been busy refactoring again, mainly in the models this time.
+- We have increased the Postman test coverage; we are not yet at full coverage; however, we are approaching full coverage with every release.
+
+### Fixed
+- We have removed a redundant query after the create category request.
+
 ## [v1.17.0] - 2019-08-06
 ### Added 
 - The `v1/summary/resource-types/items` summary supports all the same features as the main `items` summary; you can make a filtered request and even include a search term.

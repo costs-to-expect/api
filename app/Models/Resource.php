@@ -66,7 +66,8 @@ class Resource extends Model
         int $resource_type_id,
         int $offset = 0,
         int $limit = 10,
-        array $search_parameters = []
+        array $search_parameters = [],
+        array $sort_parameters = []
     ): array
     {
         $collection = $this->select(
@@ -84,16 +85,31 @@ class Resource extends Model
             }
         }
 
-        return $collection->latest()->
-            offset($offset)->
+        if (count($sort_parameters) > 0) {
+            foreach ($sort_parameters as $field => $direction) {
+                switch ($field) {
+                    case 'created':
+                        $collection->orderBy('created_at', $direction);
+                        break;
+
+                    default:
+                        $collection->orderBy($field, $direction);
+                        break;
+                }
+            }
+        } else {
+            $collection->latest();
+        }
+
+        return $collection->offset($offset)->
             limit($limit)->
             get()->
             toArray();
     }
 
-    public function single(int $resource_type_id, int $resource_id)
+    public function single(int $resource_type_id, int $resource_id): ?array
     {
-        return $this->select(
+        $result = $this->select(
                 'resource.id AS resource_id',
                 'resource.name AS resource_name',
                 'resource.description AS resource_description',
@@ -101,8 +117,13 @@ class Resource extends Model
                 'resource.created_at AS resource_created_at'
             )->
             where('resource_type_id', '=', $resource_type_id)->
-            find($resource_id)->
-            toArray();
+            find($resource_id);
+
+        if ($result !== null) {
+            return $result->toArray();
+        } else {
+            return null;
+        }
     }
 
     /**

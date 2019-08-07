@@ -53,6 +53,7 @@ class SubCategory extends Model
      * @param integer $offset
      * @param integer $limit
      * @param array $search_parameters
+     * @param array $sort_parameters
      *
      * @return array
      */
@@ -60,10 +61,17 @@ class SubCategory extends Model
         int $category_id,
         int $offset = 0,
         int $limit = 10,
-        array $search_parameters = []
+        array $search_parameters = [],
+        array $sort_parameters = []
     ): array
     {
-        $collection = $this->where('category_id', '=', $category_id);
+        $collection = $this->select(
+                'sub_category.id AS subcategory_id',
+                'sub_category.name AS subcategory_name',
+                'sub_category.description AS subcategory_description',
+                'sub_category.created_at AS subcategory_created_at'
+            )->
+            where('category_id', '=', $category_id);
 
         if (count($search_parameters) > 0) {
             foreach ($search_parameters as $field => $search_term) {
@@ -71,8 +79,23 @@ class SubCategory extends Model
             }
         }
 
-        $collection->orderBy("name")->
-            offset($offset)->
+        if (count($sort_parameters) > 0) {
+            foreach ($sort_parameters as $field => $direction) {
+                switch ($field) {
+                    case 'created':
+                        $collection->orderBy('sub_category.created_at', $direction);
+                        break;
+
+                    default:
+                        $collection->orderBy('sub_category.' . $field, $direction);
+                        break;
+                }
+            }
+        } else {
+            $collection->orderBy('sub_category.name', 'asc');
+        }
+
+        $collection->offset($offset)->
             limit($limit);
 
         return $collection->get()->
@@ -82,65 +105,38 @@ class SubCategory extends Model
     public function single(
         int $category_id,
         int $sub_category_id
-    ): array
+    ): ?array
     {
-        return $this->where('category_id', '=', $category_id)->
-            find($sub_category_id)->
-            toArray();
+        $result = $this->select(
+                'sub_category.id AS subcategory_id',
+                'sub_category.name AS subcategory_name',
+                'sub_category.description AS subcategory_description',
+                'sub_category.created_at AS subcategory_created_at'
+            )->
+            where('category_id', '=', $category_id)->
+            find($sub_category_id);
+
+        if ($result !== null) {
+            return $result->toArray();
+        } else {
+            return null;
+        }
     }
 
-    public function subCategorySummary(int $resource_type_id, int $resource_id)
+    /**
+     * Convert the model instance to an array for use with the transformer
+     *
+     * @param SubCategory $subcategory
+     *
+     * @return array
+     */
+    public function instanceToArray(SubCategory $subcategory): array
     {
-        $query = DB::raw("
-                SELECT 
-                    category.name AS category, 
-                    sub_category.name AS sub_category,
-                    IFNULL(assigned_items.actualised_total, 0) AS actualised_total,
-                    IFNULL(assigned_items.items, 0) AS items
-                FROM 
-                    sub_category
-                INNER JOIN 
-                    category ON 
-                        sub_category.category_id = category.id
-                INNER JOIN 
-                    resource_type ON 
-                        category.resource_type_id = resource_type.id
-                INNER JOIN 
-                    resource ON 
-                        resource_type.id = resource.resource_type_id
-                LEFT JOIN (
-                    SELECT 
-                        item_category.category_id,
-                        item_sub_category.sub_category_id,
-                        SUM(item.actualised_total) AS actualised_total,
-                        COUNT(item.id) AS items
-                    FROM 
-                        item
-                    INNER JOIN 
-                        item_category ON 
-                            item.id = item_category.item_id
-                    INNER JOIN 
-                        item_sub_category ON 
-                            item_category.id = item_sub_category.item_category_id
-                    GROUP BY 
-                        item_sub_category.sub_category_id,
-                        item_category.category_id
-                ) AS assigned_items ON 
-                    assigned_items.sub_category_id = sub_category.id        
-                WHERE 
-                    resource_type.id = :resource_type_id
-                    AND 
-                    resource.id = :resource_id
-                ORDER BY 
-                    category.name ASC, 
-                    sub_category.name ASC")->getValue();
-
-        return DB::select(
-            $query,
-            [
-                'resource_type_id' => $resource_type_id,
-                'resource_id' => $resource_id
-            ]
-        );
+        return [
+            'subcategory_id' => $subcategory->id,
+            'subcategory_name' => $subcategory->name,
+            'subcategory_description' => $subcategory->description,
+            'subcategory_created_at' => $subcategory->created_at->toDateTimeString()
+        ];
     }
 }

@@ -31,7 +31,7 @@ class Route
     static public function subCategoryRoute($category_id, $sub_category_id)
     {
         if (SubCategory::validate($category_id, $sub_category_id) === false) {
-            UtilityResponse::notFound(trans('entities.sub-category'));
+            UtilityResponse::notFound(trans('entities.subcategory'));
         }
     }
 
@@ -88,7 +88,7 @@ class Route
                 $item_sub_category_id
             ) === false
         ) {
-            UtilityResponse::notFound(trans('entities.item-sub-category'));
+            UtilityResponse::notFound(trans('entities.item-subcategory'));
         }
     }
 }

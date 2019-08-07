@@ -56,11 +56,6 @@ class ResourceType extends Model
         return $this->hasMany(Resource::class, 'resource_type_id', 'id');
     }
 
-    public function resources_count()
-    {
-        return $this->hasMany(Resource::class, 'resource_type_id', 'id')->count();
-    }
-
     /**
      * Return the paginated collection
      *
@@ -68,6 +63,7 @@ class ResourceType extends Model
      * @param integer $offset Paging offset
      * @param integer $limit Paging limit
      * @param array $search_parameters
+     * @param array $sort_parameters
      *
      * @return array
      */
@@ -75,55 +71,8 @@ class ResourceType extends Model
         bool $include_private = false,
         int $offset = 0,
         int $limit = 10,
-        array $search_parameters = []
-    ): array
-    {
-        $collection = $this->select(
-                'resource_type.id AS resource_type_id',
-                'resource_type.name AS resource_type_name',
-                'resource_type.description AS resource_type_description',
-                'resource_type.created_at AS resource_type_created_at',
-                'resource_type.private AS resource_type_private'
-            )->selectRaw('
-                (
-                    SELECT 
-                        COUNT(resource.id) 
-                    FROM 
-                        resource 
-                    WHERE 
-                        resource.resource_type_id = resource_type.id
-                ) AS resource_type_resources'
-            )->
-            leftJoin("resource", "resource_type.id", "resource.id")->
-            orderByDesc('resource_type.created_at');
-
-        if ($include_private === false) {
-            $collection->where('private', '=', 0);
-        }
-
-        if (count($search_parameters) > 0) {
-            foreach ($search_parameters as $field => $search_term) {
-                $collection->where('resource_type.' . $field, 'LIKE', '%' . $search_term . '%');
-            }
-        }
-
-        $collection->offset($offset);
-        $collection->limit($limit);
-
-        return $collection->get()->toArray();
-    }
-
-    /**
-     * Return a single item
-     *
-     * @param integer $resource_type_id Resource type to return
-     * @param boolean $include_private Add additional check to ensure we don't return private resource types
-     *
-     * @return array
-     */
-    public function single(
-        int $resource_type_id,
-        bool $include_private = false
+        array $search_parameters = [],
+        array $sort_parameters = []
     ): array
     {
         $collection = $this->select(
@@ -145,13 +94,74 @@ class ResourceType extends Model
             leftJoin("resource", "resource_type.id", "resource.id");
 
         if ($include_private === false) {
-            return $collection->where('resource_type.private', '=', 0)->
-                find($resource_type_id)->
-                toArray();
-        } else {
-            return $collection->find($resource_type_id)->
-                toArray();
+            $collection->where('private', '=', 0);
         }
+
+        if (count($search_parameters) > 0) {
+            foreach ($search_parameters as $field => $search_term) {
+                $collection->where('resource_type.' . $field, 'LIKE', '%' . $search_term . '%');
+            }
+        }
+
+        if (count($sort_parameters) > 0) {
+            foreach ($sort_parameters as $field => $direction) {
+                switch ($field) {
+                    case 'created':
+                        $collection->orderBy('resource_type.created_at', $direction);
+                        break;
+
+                    default:
+                        $collection->orderBy('resource_type.' . $field, $direction);
+                        break;
+                }
+            }
+        } else {
+            $collection->orderByDesc('resource_type.created_at');
+        }
+
+        $collection->offset($offset);
+        $collection->limit($limit);
+
+        return $collection->get()->toArray();
+    }
+
+    /**
+     * Return a single item
+     *
+     * @param integer $resource_type_id Resource type to return
+     * @param boolean $include_private Add additional check to ensure we don't return private resource types
+     *
+     * @return array
+     */
+    public function single(
+        int $resource_type_id,
+        bool $include_private = false
+    ): array
+    {
+        $result = $this->select(
+                'resource_type.id AS resource_type_id',
+                'resource_type.name AS resource_type_name',
+                'resource_type.description AS resource_type_description',
+                'resource_type.created_at AS resource_type_created_at',
+                'resource_type.private AS resource_type_private'
+            )->selectRaw('
+                (
+                    SELECT 
+                        COUNT(resource.id) 
+                    FROM 
+                        resource 
+                    WHERE 
+                        resource.resource_type_id = resource_type.id
+                ) AS resource_type_resources'
+            )->
+            leftJoin("resource", "resource_type.id", "resource.id");
+
+        if ($include_private === false) {
+            $result->where('resource_type.private', '=', 0);
+        }
+
+        return $result->find($resource_type_id)->
+            toArray();
     }
 
     /**

@@ -9,6 +9,7 @@ use App\Models\Transformers\SubCategory as SubCategoryTransformer;
 use App\Utilities\Response as UtilityResponse;
 use App\Validators\Request\Fields\SubCategory as SubCategoryValidator;
 use App\Validators\Request\SearchParameters;
+use App\Validators\Request\SortParameters;
 use Exception;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\JsonResponse;
@@ -44,15 +45,23 @@ class SubcategoryController extends Controller
             $search_parameters
         );
 
+        $sort_parameters = SortParameters::fetch([
+            'name',
+            'description',
+            'created'
+        ]);
+
         $pagination = UtilityPagination::init(request()->path(), $total)->
             setSearchParameters($search_parameters)->
+            setSortParameters($sort_parameters)->
             paging();
 
         $subcategories = (new SubCategory())->paginatedCollection(
             $category_id,
             $pagination['offset'],
             $pagination['limit'],
-            $search_parameters
+            $search_parameters,
+            $sort_parameters
         );
 
         $headers = [
@@ -79,14 +88,12 @@ class SubcategoryController extends Controller
     /**
      * Return a single sub category
      *
-     * @param Request $request
      * @param string $category_id
      * @param string $sub_category_id
      *
      * @return JsonResponse
      */
     public function show(
-        Request $request,
         string $category_id,
         string $sub_category_id
     ): JsonResponse
@@ -127,7 +134,7 @@ class SubcategoryController extends Controller
                 'description_localisation_string' => 'route-descriptions.sub_category_GET_index',
                 'parameters_config_string' => 'api.subcategory.parameters.collection',
                 'conditionals_config' => [],
-                'sortable_config' => null,
+                'sortable_config' => 'api.subcategory.sortable',
                 'searchable_config' => 'api.subcategory.searchable',
                 'enable_pagination' => true,
                 'authentication_required' => false
@@ -144,14 +151,12 @@ class SubcategoryController extends Controller
     /**
      * Generate the OPTIONS request for the specific sub category
      *
-     * @param Request $request
      * @param string $category_id
      * @param string $sub_category_id
      *
      * @return JsonResponse
      */
     public function optionsShow(
-        Request $request,
         string $category_id,
         string $sub_category_id
     ): JsonResponse
@@ -175,12 +180,11 @@ class SubcategoryController extends Controller
     /**
      * Create a new sub category
      *
-     * @param Request $request
      * @param string $category_id
      *
      * @return JsonResponse
      */
-    public function create(Request $request, string $category_id): JsonResponse
+    public function create(string $category_id): JsonResponse
     {
         Route::categoryRoute($category_id);
 
@@ -202,7 +206,7 @@ class SubcategoryController extends Controller
         }
 
         return response()->json(
-            (new SubCategoryTransformer((new SubCategory())->single($category_id, $sub_category->id)))->toArray(),
+            (new SubCategoryTransformer((new SubCategory())->instanceToArray($sub_category)))->toArray(),
             201
         );
     }
@@ -210,14 +214,12 @@ class SubcategoryController extends Controller
     /**
      * Delete the requested sub category
      *
-     * @param Request $request,
-     * @param string $category_id,
+     * @param string $category_id
      * @param string $sub_category_id
      *
      * @return JsonResponse
      */
     public function delete(
-        Request $request,
         string $category_id,
         string $sub_category_id
     ): JsonResponse
@@ -230,7 +232,7 @@ class SubcategoryController extends Controller
         );
 
         if ($sub_category === null) {
-            UtilityResponse::notFound(trans('entities.sub-category'));
+            UtilityResponse::notFound(trans('entities.subcategory'));
         }
 
         try {
@@ -240,7 +242,7 @@ class SubcategoryController extends Controller
         } catch (QueryException $e) {
             UtilityResponse::foreignKeyConstraintError();
         } catch (Exception $e) {
-            UtilityResponse::notFound(trans('entities.sub-category'));
+            UtilityResponse::notFound(trans('entities.subcategory'));
         }
     }
 }

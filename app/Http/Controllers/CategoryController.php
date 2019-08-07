@@ -12,6 +12,7 @@ use App\Models\Transformers\Category as CategoryTransformer;
 use App\Utilities\Response as UtilityResponse;
 use App\Validators\Request\Fields\Category as CategoryValidator;
 use App\Validators\Request\SearchParameters;
+use App\Validators\Request\SortParameters;
 use Exception;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\JsonResponse;
@@ -44,8 +45,15 @@ class CategoryController extends Controller
             $search_parameters
         );
 
+        $sort_parameters = SortParameters::fetch([
+            'name',
+            'description',
+            'created'
+        ]);
+
         $pagination = UtilityPagination::init(request()->path(), $total)->
             setSearchParameters($search_parameters)->
+            setSortParameters($sort_parameters)->
             paging();
 
         $categories = (new Category())->paginatedCollection(
@@ -53,7 +61,8 @@ class CategoryController extends Controller
             $pagination['offset'],
             $pagination['limit'],
             [],
-            $search_parameters
+            $search_parameters,
+            $sort_parameters
         );
 
         $headers = [
@@ -120,18 +129,16 @@ class CategoryController extends Controller
     /**
      * Generate the OPTIONS request for the category list
      *
-     * @param Request $request
-     *
      * @return JsonResponse
      */
-    public function optionsIndex(Request $request): JsonResponse
+    public function optionsIndex(): JsonResponse
     {
         return $this->generateOptionsForIndex(
             [
                 'description_localisation_string' => 'route-descriptions.category_GET_index',
                 'parameters_config_string' => 'api.category.parameters.collection',
                 'conditionals_config' => [],
-                'sortable_config' => null,
+                'sortable_config' => 'api.category.sortable',
                 'searchable_config' => 'api.category.searchable',
                 'enable_pagination' => true,
                 'authentication_required' => false
@@ -148,12 +155,11 @@ class CategoryController extends Controller
     /**
      * Generate the OPTIONS request for a specific category
      *
-     * @param Request $request
      * @param string $category_id
      *
      * @return JsonResponse
      */
-    public function optionsShow(Request $request, string $category_id): JsonResponse
+    public function optionsShow(string $category_id): JsonResponse
     {
         Route::categoryRoute($category_id);
 
@@ -174,11 +180,9 @@ class CategoryController extends Controller
     /**
      * Create a new category
      *
-     * @param Request $request
-     *
      * @return JsonResponse
      */
-    public function create(Request $request): JsonResponse
+    public function create(): JsonResponse
     {
         $validator = (new CategoryValidator)->create();
 
@@ -187,15 +191,15 @@ class CategoryController extends Controller
         }
 
         try {
-            $resource_type_id = $this->hash->decode('resource_type', $request->input('resource_type_id'));
+            $resource_type_id = $this->hash->decode('resource_type', request()->input('resource_type_id'));
 
             if ($resource_type_id === false) {
                 UtilityResponse::unableToDecode();
             }
 
             $category = new Category([
-                'name' => $request->input('name'),
-                'description' => $request->input('description'),
+                'name' => request()->input('name'),
+                'description' => request()->input('description'),
                 'resource_type_id' => $resource_type_id
             ]);
             $category->save();
@@ -204,7 +208,7 @@ class CategoryController extends Controller
         }
 
         return response()->json(
-            (new CategoryTransformer((new Category)->single($category->id)))->toArray(),
+            (new CategoryTransformer((new Category)->instanceToArray($category)))->toArray(),
             201
         );
     }
@@ -212,13 +216,11 @@ class CategoryController extends Controller
     /**
      * Delete the requested category
      *
-     * @param Request $request,
      * @param string $category_id
      *
      * @return JsonResponse
      */
     public function delete(
-        Request $request,
         string $category_id
     ): JsonResponse
     {

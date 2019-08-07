@@ -9,6 +9,7 @@ use App\Models\Transformers\Resource as ResourceTransformer;
 use App\Utilities\Response as UtilityResponse;
 use App\Validators\Request\Fields\Resource as ResourceValidator;
 use App\Validators\Request\SearchParameters;
+use App\Validators\Request\SortParameters;
 use Exception;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\JsonResponse;
@@ -44,15 +45,24 @@ class ResourceController extends Controller
             $search_parameters
         );
 
+        $sort_parameters = SortParameters::fetch([
+            'name',
+            'description',
+            'effective_date',
+            'created'
+        ]);
+
         $pagination = UtilityPagination::init(request()->path(), $total)->
             setSearchParameters($search_parameters)->
+            setSortParameters($sort_parameters)->
             paging();
 
         $resources = (new Resource)->paginatedCollection(
             $resource_type_id,
             $pagination['offset'],
             $pagination['limit'],
-            $search_parameters
+            $search_parameters,
+            $sort_parameters
         );
 
         $headers = [
@@ -93,7 +103,7 @@ class ResourceController extends Controller
 
         $resource = (new Resource)->single($resource_type_id, $resource_id);
 
-        if ($resource === 1) {
+        if ($resource === null) {
             UtilityResponse::notFound(trans('entities.resource'));
         }
 
@@ -122,8 +132,8 @@ class ResourceController extends Controller
                 'description_localisation_string' => 'route-descriptions.resource_GET_index',
                 'parameters_config_string' => 'api.resource.parameters.collection',
                 'conditionals_config' => [],
-                'sortable_config' => null,
-                'searchable_config' => 'api.resources.searchable',
+                'sortable_config' => 'api.resource.sortable',
+                'searchable_config' => 'api.resource.searchable',
                 'enable_pagination' => true,
                 'authentication_required' => false
             ],

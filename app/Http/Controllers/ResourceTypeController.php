@@ -11,6 +11,7 @@ use App\Models\Transformers\ResourceType as ResourceTypeTransformer;
 use App\Utilities\Response as UtilityResponse;
 use App\Validators\Request\Fields\ResourceType as ResourceTypeValidator;
 use App\Validators\Request\SearchParameters;
+use App\Validators\Request\SortParameters;
 use Exception;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\JsonResponse;
@@ -41,14 +42,23 @@ class ResourceTypeController extends Controller
             $search_parameters
         );
 
-        $pagination = UtilityPagination::init(request()->path(), $total)
-            ->paging();
+        $sort_parameters = SortParameters::fetch([
+            'name',
+            'description',
+            'created'
+        ]);
+
+        $pagination = UtilityPagination::init(request()->path(), $total)->
+            setSearchParameters($search_parameters)->
+            setSortParameters($sort_parameters)->
+            paging();
 
         $resource_types = (new ResourceType())->paginatedCollection(
             $this->include_private,
             $pagination['offset'],
             $pagination['limit'],
-            $search_parameters
+            $search_parameters,
+            $sort_parameters
         );
 
         $headers = [
@@ -125,7 +135,7 @@ class ResourceTypeController extends Controller
                 'description_localisation_string' => 'route-descriptions.resource_type_GET_index',
                 'parameters_config_string' => [],
                 'conditionals_config' => [],
-                'sortable_config' => null,
+                'sortable_config' => 'api.resource-type.sortable',
                 'searchable_config' => 'api.resource-type.searchable',
                 'enable_pagination' => true,
                 'authentication_required' => false

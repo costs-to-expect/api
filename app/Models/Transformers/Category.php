@@ -43,10 +43,13 @@ class Category extends Transformer
             'description' => $this->data_to_transform['category_description'],
             'created' => $this->data_to_transform['category_created_at'],
             'resource_type' => [
-                'id' => $this->hash->resourceType()->encode($this->data_to_transform['resource_type_id']),
-                'name' => $this->data_to_transform['resource_type_name'],
+                'id' => $this->hash->resourceType()->encode($this->data_to_transform['resource_type_id'])
             ]
         ];
+
+        if (array_key_exists('resource_type_name', $this->data_to_transform) === true) {
+           $result['resource_type']['name'] = $this->data_to_transform['resource_type_name'];
+        }
 
         if (array_key_exists('category_subcategories', $this->data_to_transform)) {
             $result['subcategories']['count'] = $this->data_to_transform['category_subcategories'];

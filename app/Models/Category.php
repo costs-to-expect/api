@@ -75,6 +75,7 @@ class Category extends Model
      * @param integer $limit
      * @param array $parameters
      * @param array $search_parameters
+     * @param array $sort_parameters
      *
      * @return array
      */
@@ -83,7 +84,8 @@ class Category extends Model
         int $offset = 0,
         int $limit = 10,
         array $parameters = [],
-        array $search_parameters = []
+        array $search_parameters = [],
+        array $sort_parameters = []
     ): array {
         $collection = $this->select(
             'category.id AS category_id',
@@ -122,6 +124,22 @@ class Category extends Model
             }
         }
 
+        if (count($sort_parameters) > 0) {
+            foreach ($sort_parameters as $field => $direction) {
+                switch ($field) {
+                    case 'created':
+                        $collection->orderBy('category.created_at', $direction);
+                        break;
+
+                    default:
+                        $collection->orderBy('category.' . $field, $direction);
+                        break;
+                }
+            }
+        } else {
+            $collection->orderBy('category.name', 'asc');
+        }
+
         $collection->offset($offset);
         $collection->limit($limit);
 
@@ -133,11 +151,11 @@ class Category extends Model
      *
      * @param integer $category_id
      *
-     * @return array
+     * @return array|null
      */
-    public function single(int $category_id): array
+    public function single(int $category_id): ?array
     {
-        return $this->join('resource_type', $this->table . '.resource_type_id', '=', 'resource_type.id')
+        $result = $this->join('resource_type', $this->table . '.resource_type_id', '=', 'resource_type.id')
             ->where('category.id', '=', intval($category_id))
             ->orderBy('category.name')
             ->select(
@@ -150,8 +168,13 @@ class Category extends Model
                 'resource_type.id AS resource_type_id',
                 'resource_type.name AS resource_type_name'
             )
-            ->first()
-            ->toArray();
+            ->first();
+
+        if ($result === null) {
+            return null;
+        } else {
+            return $result->toArray();
+        }
     }
 
     /**
@@ -159,18 +182,37 @@ class Category extends Model
      *
      * @param integer $resource_type_id
      *
-     * @return \Illuminate\Support\Collection
+     * @return array
      */
-    public function categoriesByResourceType(int $resource_type_id)
+    public function categoriesByResourceType(int $resource_type_id): array
     {
-        return $this->join('resource_type', $this->table . '.resource_type_id', '=', 'resource_type.id')
-            ->where('resource_type.id', '=', intval($resource_type_id))
-            ->orderBy('category.name')
-            ->select(
+        return $this->join('resource_type', $this->table . '.resource_type_id', '=', 'resource_type.id')->
+            where('resource_type.id', '=', intval($resource_type_id))->
+            orderBy('category.name')->
+            select(
                 'category.id AS category_id',
                 'category.name AS category_name',
                 'category.description AS category_description'
-            )
-            ->get();
+            )->
+            get()->
+            toArray();
+    }
+
+    /**
+     * Convert the model instance to an array for use with the transformer
+     *
+     * @param Category $category
+     *
+     * @return array
+     */
+    public function instanceToArray(Category $category): array
+    {
+        return [
+            'category_id' => $category->id,
+            'category_name' => $category->name,
+            'category_description' => $category->description,
+            'category_created_at' => $category->created_at->toDateTimeString(),
+            'resource_type_id' => $category->resource_type_id
+        ];
     }
 }
