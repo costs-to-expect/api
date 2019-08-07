@@ -5,7 +5,7 @@ The complete changelog for the Costs to Expect REST API, follows the format defi
 ## [v1.18.0] - 2019-08-07
 ### Added
 - We have added sorting to the `/v1/resource-types` collection; you can sort on `name`, `description` and date created.
-- We have added sorting to the `/v1/resource-types/[resource-type]/resources` collection; you can sort on `name`, `descrption`, `effective date` and date created.
+- We have added sorting to the `/v1/resource-types/[resource-type]/resources` collection; you can sort on `name`, `description`, `effective date` and date created.
 - We have added sorting to the `/v1/categories` collection; you can sort on `name`, `description` and date created. 
 - We have added sorting to the `/v1/categories/[category]/subcategories` collection; you can sort on `name`, `description` and date created.
 
