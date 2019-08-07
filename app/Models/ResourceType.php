@@ -63,6 +63,7 @@ class ResourceType extends Model
      * @param integer $offset Paging offset
      * @param integer $limit Paging limit
      * @param array $search_parameters
+     * @param array $sort_parameters
      *
      * @return array
      */
@@ -70,7 +71,8 @@ class ResourceType extends Model
         bool $include_private = false,
         int $offset = 0,
         int $limit = 10,
-        array $search_parameters = []
+        array $search_parameters = [],
+        array $sort_parameters = []
     ): array
     {
         $collection = $this->select(
@@ -89,8 +91,7 @@ class ResourceType extends Model
                         resource.resource_type_id = resource_type.id
                 ) AS resource_type_resources'
             )->
-            leftJoin("resource", "resource_type.id", "resource.id")->
-            orderByDesc('resource_type.created_at');
+            leftJoin("resource", "resource_type.id", "resource.id");
 
         if ($include_private === false) {
             $collection->where('private', '=', 0);
@@ -100,6 +101,22 @@ class ResourceType extends Model
             foreach ($search_parameters as $field => $search_term) {
                 $collection->where('resource_type.' . $field, 'LIKE', '%' . $search_term . '%');
             }
+        }
+
+        if (count($sort_parameters) > 0) {
+            foreach ($sort_parameters as $field => $direction) {
+                switch ($field) {
+                    case 'created':
+                        $collection->orderBy('resource_type.created_at', $direction);
+                        break;
+
+                    default:
+                        $collection->orderBy('resource_type.' . $field, $direction);
+                        break;
+                }
+            }
+        } else {
+            $collection->orderByDesc('resource_type.created_at');
         }
 
         $collection->offset($offset);
