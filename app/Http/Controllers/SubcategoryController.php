@@ -79,14 +79,12 @@ class SubcategoryController extends Controller
     /**
      * Return a single sub category
      *
-     * @param Request $request
      * @param string $category_id
      * @param string $sub_category_id
      *
      * @return JsonResponse
      */
     public function show(
-        Request $request,
         string $category_id,
         string $sub_category_id
     ): JsonResponse
@@ -144,14 +142,12 @@ class SubcategoryController extends Controller
     /**
      * Generate the OPTIONS request for the specific sub category
      *
-     * @param Request $request
      * @param string $category_id
      * @param string $sub_category_id
      *
      * @return JsonResponse
      */
     public function optionsShow(
-        Request $request,
         string $category_id,
         string $sub_category_id
     ): JsonResponse
@@ -175,12 +171,11 @@ class SubcategoryController extends Controller
     /**
      * Create a new sub category
      *
-     * @param Request $request
      * @param string $category_id
      *
      * @return JsonResponse
      */
-    public function create(Request $request, string $category_id): JsonResponse
+    public function create(string $category_id): JsonResponse
     {
         Route::categoryRoute($category_id);
 
@@ -202,7 +197,7 @@ class SubcategoryController extends Controller
         }
 
         return response()->json(
-            (new SubCategoryTransformer((new SubCategory())->single($category_id, $sub_category->id)))->toArray(),
+            (new SubCategoryTransformer((new SubCategory())->instanceToArray($sub_category)))->toArray(),
             201
         );
     }
@@ -210,14 +205,12 @@ class SubcategoryController extends Controller
     /**
      * Delete the requested sub category
      *
-     * @param Request $request,
-     * @param string $category_id,
+     * @param string $category_id
      * @param string $sub_category_id
      *
      * @return JsonResponse
      */
     public function delete(
-        Request $request,
         string $category_id,
         string $sub_category_id
     ): JsonResponse
@@ -230,7 +223,7 @@ class SubcategoryController extends Controller
         );
 
         if ($sub_category === null) {
-            UtilityResponse::notFound(trans('entities.sub-category'));
+            UtilityResponse::notFound(trans('entities.subcategory'));
         }
 
         try {
@@ -240,7 +233,7 @@ class SubcategoryController extends Controller
         } catch (QueryException $e) {
             UtilityResponse::foreignKeyConstraintError();
         } catch (Exception $e) {
-            UtilityResponse::notFound(trans('entities.sub-category'));
+            UtilityResponse::notFound(trans('entities.subcategory'));
         }
     }
 }

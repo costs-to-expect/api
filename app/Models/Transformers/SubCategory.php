@@ -24,10 +24,10 @@ class SubCategory extends Transformer
     public function toArray(): array
     {
         return [
-            'id' => $this->hash->subCategory()->encode($this->data_to_transform['id']),
-            'name' => $this->data_to_transform['name'],
-            'description' => $this->data_to_transform['description'],
-            'created' => $this->data_to_transform['created_at']
+            'id' => $this->hash->subCategory()->encode($this->data_to_transform['subcategory_id']),
+            'name' => $this->data_to_transform['subcategory_name'],
+            'description' => $this->data_to_transform['subcategory_description'],
+            'created' => $this->data_to_transform['subcategory_created_at']
         ];
     }
 }

@@ -164,19 +164,20 @@ class Category extends Model
      *
      * @param integer $resource_type_id
      *
-     * @return \Illuminate\Support\Collection
+     * @return array
      */
-    public function categoriesByResourceType(int $resource_type_id)
+    public function categoriesByResourceType(int $resource_type_id): array
     {
-        return $this->join('resource_type', $this->table . '.resource_type_id', '=', 'resource_type.id')
-            ->where('resource_type.id', '=', intval($resource_type_id))
-            ->orderBy('category.name')
-            ->select(
+        return $this->join('resource_type', $this->table . '.resource_type_id', '=', 'resource_type.id')->
+            where('resource_type.id', '=', intval($resource_type_id))->
+            orderBy('category.name')->
+            select(
                 'category.id AS category_id',
                 'category.name AS category_name',
                 'category.description AS category_description'
-            )
-            ->get();
+            )->
+            get()->
+            toArray();
     }
 
     /**

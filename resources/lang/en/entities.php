@@ -6,8 +6,8 @@ return [
     'resource-type' => 'Resource Type',
     'resource' => 'Resource',
     'category' => 'Category',
-    'sub-category' => 'Sub Category',
+    'subcategory' => 'Subcategory',
     'item' => 'Item (Expense)',
     'item-category' => 'Assigned Category',
-    'item-sub-category' => 'Assigned Sub Category'
+    'item-sub-category' => 'Assigned Subcategory'
 ];

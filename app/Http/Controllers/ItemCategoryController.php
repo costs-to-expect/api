@@ -248,7 +248,7 @@ class ItemCategoryController extends Controller
 
         $conditional_post_parameters = ['category_id' => []];
         foreach ($categories as $category) {
-            $id = $this->hash->encode('category', $category->category_id);
+            $id = $this->hash->encode('category', $category['category_id']);
 
             if ($id === false) {
                 UtilityResponse::unableToDecode();
@@ -256,8 +256,8 @@ class ItemCategoryController extends Controller
 
             $conditional_post_parameters['category_id']['allowed_values'][$id] = [
                 'value' => $id,
-                'name' => $category->category_name,
-                'description' => $category->category_description
+                'name' => $category['category_name'],
+                'description' => $category['category_description']
             ];
         }
 
