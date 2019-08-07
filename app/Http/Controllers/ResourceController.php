@@ -93,7 +93,7 @@ class ResourceController extends Controller
 
         $resource = (new Resource)->single($resource_type_id, $resource_id);
 
-        if ($resource === 1) {
+        if ($resource === null) {
             UtilityResponse::notFound(trans('entities.resource'));
         }
 

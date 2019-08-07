@@ -56,11 +56,6 @@ class ResourceType extends Model
         return $this->hasMany(Resource::class, 'resource_type_id', 'id');
     }
 
-    public function resources_count()
-    {
-        return $this->hasMany(Resource::class, 'resource_type_id', 'id')->count();
-    }
-
     /**
      * Return the paginated collection
      *
@@ -126,7 +121,7 @@ class ResourceType extends Model
         bool $include_private = false
     ): array
     {
-        $collection = $this->select(
+        $result = $this->select(
                 'resource_type.id AS resource_type_id',
                 'resource_type.name AS resource_type_name',
                 'resource_type.description AS resource_type_description',
@@ -145,13 +140,11 @@ class ResourceType extends Model
             leftJoin("resource", "resource_type.id", "resource.id");
 
         if ($include_private === false) {
-            return $collection->where('resource_type.private', '=', 0)->
-                find($resource_type_id)->
-                toArray();
-        } else {
-            return $collection->find($resource_type_id)->
-                toArray();
+            $result->where('resource_type.private', '=', 0);
         }
+
+        return $result->find($resource_type_id)->
+            toArray();
     }
 
     /**
