@@ -66,7 +66,8 @@ class Resource extends Model
         int $resource_type_id,
         int $offset = 0,
         int $limit = 10,
-        array $search_parameters = []
+        array $search_parameters = [],
+        array $sort_parameters = []
     ): array
     {
         $collection = $this->select(
@@ -84,8 +85,23 @@ class Resource extends Model
             }
         }
 
-        return $collection->latest()->
-            offset($offset)->
+        if (count($sort_parameters) > 0) {
+            foreach ($sort_parameters as $field => $direction) {
+                switch ($field) {
+                    case 'created':
+                        $collection->orderBy('created_at', $direction);
+                        break;
+
+                    default:
+                        $collection->orderBy($field, $direction);
+                        break;
+                }
+            }
+        } else {
+            $collection->latest();
+        }
+
+        return $collection->offset($offset)->
             limit($limit)->
             get()->
             toArray();
