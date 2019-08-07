@@ -9,6 +9,7 @@ use App\Models\Transformers\SubCategory as SubCategoryTransformer;
 use App\Utilities\Response as UtilityResponse;
 use App\Validators\Request\Fields\SubCategory as SubCategoryValidator;
 use App\Validators\Request\SearchParameters;
+use App\Validators\Request\SortParameters;
 use Exception;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\JsonResponse;
@@ -44,15 +45,23 @@ class SubcategoryController extends Controller
             $search_parameters
         );
 
+        $sort_parameters = SortParameters::fetch([
+            'name',
+            'description',
+            'created'
+        ]);
+
         $pagination = UtilityPagination::init(request()->path(), $total)->
             setSearchParameters($search_parameters)->
+            setSortParameters($sort_parameters)->
             paging();
 
         $subcategories = (new SubCategory())->paginatedCollection(
             $category_id,
             $pagination['offset'],
             $pagination['limit'],
-            $search_parameters
+            $search_parameters,
+            $sort_parameters
         );
 
         $headers = [
@@ -125,7 +134,7 @@ class SubcategoryController extends Controller
                 'description_localisation_string' => 'route-descriptions.sub_category_GET_index',
                 'parameters_config_string' => 'api.subcategory.parameters.collection',
                 'conditionals_config' => [],
-                'sortable_config' => null,
+                'sortable_config' => 'api.subcategory.sortable',
                 'searchable_config' => 'api.subcategory.searchable',
                 'enable_pagination' => true,
                 'authentication_required' => false

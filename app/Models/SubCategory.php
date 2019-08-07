@@ -53,6 +53,7 @@ class SubCategory extends Model
      * @param integer $offset
      * @param integer $limit
      * @param array $search_parameters
+     * @param array $sort_parameters
      *
      * @return array
      */
@@ -60,7 +61,8 @@ class SubCategory extends Model
         int $category_id,
         int $offset = 0,
         int $limit = 10,
-        array $search_parameters = []
+        array $search_parameters = [],
+        array $sort_parameters = []
     ): array
     {
         $collection = $this->select(
@@ -77,8 +79,23 @@ class SubCategory extends Model
             }
         }
 
-        $collection->orderBy("name")->
-            offset($offset)->
+        if (count($sort_parameters) > 0) {
+            foreach ($sort_parameters as $field => $direction) {
+                switch ($field) {
+                    case 'created':
+                        $collection->orderBy('sub_category.created_at', $direction);
+                        break;
+
+                    default:
+                        $collection->orderBy('sub_category.' . $field, $direction);
+                        break;
+                }
+            }
+        } else {
+            $collection->orderBy('sub_category.name', 'asc');
+        }
+
+        $collection->offset($offset)->
             limit($limit);
 
         return $collection->get()->
