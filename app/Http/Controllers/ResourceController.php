@@ -13,6 +13,7 @@ use App\Validators\Request\SortParameters;
 use Exception;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\Config;
 
 /**
  * Manage resources
@@ -34,10 +35,9 @@ class ResourceController extends Controller
     {
         Route::resourceTypeRoute($resource_type_id);
 
-        $search_parameters = SearchParameters::fetch([
-            'name',
-            'description'
-        ]);
+        $search_parameters = SearchParameters::fetch(
+            Config::get('api.resource.searchable')
+        );
 
         $total = (new Resource())->totalCount(
             $resource_type_id,
@@ -45,12 +45,9 @@ class ResourceController extends Controller
             $search_parameters
         );
 
-        $sort_parameters = SortParameters::fetch([
-            'name',
-            'description',
-            'effective_date',
-            'created'
-        ]);
+        $sort_parameters = SortParameters::fetch(
+            Config::get('api.resource.sortable')
+        );
 
         $pagination = UtilityPagination::init(request()->path(), $total)->
             setSearchParameters($search_parameters)->
@@ -73,6 +70,16 @@ class ResourceController extends Controller
             'X-Link-Previous' => $pagination['links']['previous'],
             'X-Link-Next' => $pagination['links']['next']
         ];
+
+        $sort_header = SortParameters::xHeader();
+        if ($sort_header !== null) {
+            $headers['X-Sort'] = $sort_header;
+        }
+
+        $search_header = SearchParameters::xHeader();
+        if ($search_header !== null) {
+            $headers['X-Search'] = $search_header;
+        }
 
         return response()->json(
             array_map(
