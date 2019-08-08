@@ -69,4 +69,24 @@ class SortParameters
 
         return self::$sortable_fields;
     }
+
+    /**
+     * Generate the X-Sort header string for the valid sort options
+     *
+     * @return string|null
+     */
+    public static function xHeader(): ?string
+    {
+        $header = '';
+
+        foreach (self::$sortable_fields as $key => $value) {
+            $header .= '|' . $key . ':' . urlencode($value);
+        }
+
+        if (strlen($header) > 0) {
+            return ltrim($header, '|');
+        } else {
+            return null;
+        }
+    }
 }
