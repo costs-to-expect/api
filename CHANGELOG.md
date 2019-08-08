@@ -2,6 +2,18 @@
 
 The complete changelog for the Costs to Expect REST API, follows the format defined at https://keepachangelog.com/en/1.0.0/
 
+## [v1.19.0] - 2019-08-08
+### Added
+- We have added an `X-Sort` header to responses, displays the valid sort options, the applied sort options may differ to the requested sort options.
+- We have added an `X-Search` header to responses, displays the valid search options, the applied search options may differ to the requested search options.
+
+### Changed
+- We have eliminated some code duplication around allowable search and sort options.
+- We have eliminated some code duplication in the models relating to the way search parameters get added to the queries.
+
+### Fixed
+- Sorting the `/v1/resource-type/[resource-type]/resources/[resource]/items` collection by description generates an error, table name missing from sort field causing ambiguity.
+
 ## [v1.18.0] - 2019-08-07
 ### Added
 - We have added sorting to the `/v1/resource-types` collection; you can sort on `name`, `description` and date created.

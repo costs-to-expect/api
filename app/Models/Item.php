@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace App\Models;
 
 use App\Utilities\General;
+use App\Utilities\Model as ModelUtility;
 use Illuminate\Database\Query\Builder as QueryBuilder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Config;
@@ -97,11 +98,7 @@ class Item extends Model
             $collection->where('item_sub_category.sub_category_id', '=', $parameters['subcategory']);
         }
 
-        if (count($search_parameters) > 0) {
-            foreach ($search_parameters as $field => $search_term) {
-                $collection->where('item.' . $field, 'LIKE', '%' . $search_term . '%');
-            }
-        }
+        $collection = ModelUtility::applySearch($collection, $this->table, $search_parameters);
 
         if (
             array_key_exists('include-unpublished', $parameters) === false ||
@@ -223,11 +220,7 @@ class Item extends Model
             $collection->where('item_sub_category.sub_category_id', '=', $parameters['subcategory']);
         }
 
-        if (count($search_parameters) > 0) {
-            foreach ($search_parameters as $field => $search_term) {
-                $collection->where('item.' . $field, 'LIKE', '%' . $search_term . '%');
-            }
-        }
+        $collection = ModelUtility::applySearch($collection, $this->table, $search_parameters);
 
         if (
             array_key_exists('include-unpublished', $parameters) === false ||
@@ -242,11 +235,11 @@ class Item extends Model
             foreach ($sort_parameters as $field => $direction) {
                 switch ($field) {
                     case 'created':
-                        $collection->orderBy('created_at', $direction);
+                        $collection->orderBy('item.created_at', $direction);
                         break;
 
                     default:
-                        $collection->orderBy($field, $direction);
+                        $collection->orderBy('item.' . $field, $direction);
                         break;
                 }
             }
