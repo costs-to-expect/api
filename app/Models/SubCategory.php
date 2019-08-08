@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace App\Models;
 
+use App\Utilities\Model as ModelUtility;
 use Illuminate\Database\Query\Builder as QueryBuilder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
@@ -39,11 +40,7 @@ class SubCategory extends Model
     {
         $collection = $this->where('category_id', '=', $category_id);
 
-        if (count($search_parameters) > 0) {
-            foreach ($search_parameters as $field => $search_term) {
-                $collection->where('sub_category.' . $field, 'LIKE', '%' . $search_term . '%');
-            }
-        }
+        $collection = ModelUtility::applySearch($collection, $this->table, $search_parameters);
 
         return count($collection->get());
     }
@@ -73,11 +70,7 @@ class SubCategory extends Model
             )->
             where('category_id', '=', $category_id);
 
-        if (count($search_parameters) > 0) {
-            foreach ($search_parameters as $field => $search_term) {
-                $collection->where('sub_category.' . $field, 'LIKE', '%' . $search_term . '%');
-            }
-        }
+        $collection = ModelUtility::applySearch($collection, $this->table, $search_parameters);
 
         if (count($sort_parameters) > 0) {
             foreach ($sort_parameters as $field => $direction) {
