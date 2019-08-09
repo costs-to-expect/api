@@ -16,7 +16,6 @@ use App\Validators\Request\SortParameters;
 use Exception;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Config;
 
 /**
@@ -28,6 +27,8 @@ use Illuminate\Support\Facades\Config;
  */
 class CategoryController extends Controller
 {
+    protected $allow_entire_collection = true;
+
     /**
      * Return the categories collection
      *
@@ -49,7 +50,12 @@ class CategoryController extends Controller
             Config::get('api.category.sortable')
         );
 
-        $pagination = UtilityPagination::init(request()->path(), $total)->
+        $pagination = UtilityPagination::init(
+                request()->path(),
+                $total,
+                10,
+                $this->allow_entire_collection
+            )->
             setSearchParameters($search_parameters)->
             setSortParameters($sort_parameters)->
             paging();
@@ -149,6 +155,7 @@ class CategoryController extends Controller
                 'sortable_config' => 'api.category.sortable',
                 'searchable_config' => 'api.category.searchable',
                 'enable_pagination' => true,
+                'allow_entire_collection' => $this->allow_entire_collection,
                 'authentication_required' => false
             ],
             [

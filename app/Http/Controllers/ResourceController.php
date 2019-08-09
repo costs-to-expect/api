@@ -24,6 +24,8 @@ use Illuminate\Support\Facades\Config;
  */
 class ResourceController extends Controller
 {
+    protected $allow_entire_collection = true;
+
     /**
      * Return all the resources
      *
@@ -49,7 +51,12 @@ class ResourceController extends Controller
             Config::get('api.resource.sortable')
         );
 
-        $pagination = UtilityPagination::init(request()->path(), $total)->
+        $pagination = UtilityPagination::init(
+                request()->path(),
+                $total,
+                10,
+                $this->allow_entire_collection
+            )->
             setSearchParameters($search_parameters)->
             setSortParameters($sort_parameters)->
             paging();
@@ -142,6 +149,7 @@ class ResourceController extends Controller
                 'sortable_config' => 'api.resource.sortable',
                 'searchable_config' => 'api.resource.searchable',
                 'enable_pagination' => true,
+                'allow_entire_collection' => $this->allow_entire_collection,
                 'authentication_required' => false
             ],
             [

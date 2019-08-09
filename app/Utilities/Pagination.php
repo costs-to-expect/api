@@ -37,6 +37,14 @@ class Pagination
      */
     private static $offset;
     /**
+     * @var boolean
+     */
+    private static $collection;
+    /**
+     * @var boolean
+     */
+    private static $allow_override;
+    /**
      * @var int
      */
     private static $total;
@@ -55,10 +63,16 @@ class Pagination
      * @param string $uri Set the pagination uri
      * @param int $total Set the total number of items in collection
      * @param int $limit Set the 'per page' limit
+     * @param boolean $allow_override Allow the pagination to be overridden via the collection parameter
      *
      * @return Pagination
      */
-    public static function init(string $uri, int $total, int $limit = 10): Pagination
+    public static function init(
+        string $uri,
+        int $total,
+        int $limit = 10,
+        bool $allow_override = false
+    ): Pagination
     {
         if (self::$instance === null) {
             self::$instance = new Pagination;
@@ -72,6 +86,8 @@ class Pagination
         self::$uri = $uri;
         self::$hash = new Hash();
         self::$offset = 0;
+        self::$allow_override = $allow_override;
+        self::$collection = false;
 
         return self::$instance;
     }
@@ -125,11 +141,21 @@ class Pagination
      */
     public static function paging(): array
     {
-        return [
-            'links' => self::render(),
-            'offset' => self::$offset,
-            'limit' => self::$limit
-        ];
+        $pagination_uris = self::render();
+
+        if (self::$collection === false) {
+            return [
+                'links' => $pagination_uris,
+                'offset' => self::$offset,
+                'limit' => self::$limit
+            ];
+        } else {
+            return [
+                'links' => $pagination_uris,
+                'offset' => 0,
+                'limit' => self::$total
+            ];
+        }
     }
 
     /**
@@ -216,38 +242,44 @@ class Pagination
     {
         self::$offset = intval(request()->query('offset', 0));
         self::$limit = intval(request()->query('limit', self::$limit));
+        if (self::$allow_override === true) {
+            self::$collection = General::booleanValue(request()->query('collection', false));
+        }
 
         $uris = [
             'next' => null,
             'previous' => null
         ];
 
-        $previous_offset = null;
-        $next_offset = null;
+        if (self::$collection === false) {
 
-        if (self::$offset !== 0) {
-            $previous_offset = abs(self::$offset - self::$limit);
-        }
-        if (self::$offset + self::$limit < self::$total) {
-            $next_offset = self::$offset + self::$limit;
-        }
+            $previous_offset = null;
+            $next_offset = null;
 
-        $parameters = self::processParameters();
-        $sort_parameters = self::processSortParameters();
-        $search_parameters = self::processSearchParameters();
+            if (self::$offset !== 0) {
+                $previous_offset = abs(self::$offset - self::$limit);
+            }
+            if (self::$offset + self::$limit < self::$total) {
+                $next_offset = self::$offset + self::$limit;
+            }
 
-        self::$uri .= '?';
+            $parameters = self::processParameters();
+            $sort_parameters = self::processSortParameters();
+            $search_parameters = self::processSearchParameters();
 
-        if ($previous_offset !== null) {
-            $uris['previous'] .= Config::get('api.app.url') . '/' . self::$uri .
-                $parameters . $sort_parameters . $search_parameters . 'offset=' . $previous_offset . '&limit=' .
-                self::$limit;
-        }
+            self::$uri .= '?';
 
-        if ($next_offset !== null) {
-            $uris['next'] .= Config::get('api.app.url') . '/' . self::$uri .
-                $parameters . $sort_parameters . $search_parameters . 'offset=' . $next_offset . '&limit=' .
-                self::$limit;
+            if ($previous_offset !== null) {
+                $uris['previous'] .= Config::get('api.app.url') . '/' . self::$uri .
+                    $parameters . $sort_parameters . $search_parameters . 'offset=' . $previous_offset . '&limit=' .
+                    self::$limit;
+            }
+
+            if ($next_offset !== null) {
+                $uris['next'] .= Config::get('api.app.url') . '/' . self::$uri .
+                    $parameters . $sort_parameters . $search_parameters . 'offset=' . $next_offset . '&limit=' .
+                    self::$limit;
+            }
         }
 
         return $uris;

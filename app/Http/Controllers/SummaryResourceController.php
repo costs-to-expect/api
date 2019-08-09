@@ -60,6 +60,7 @@ class SummaryResourceController extends Controller
                 'sortable_config' => null,
                 'searchable_config' => null,
                 'enable_pagination' => false,
+                'allow_entire_collection' => $this->allow_entire_collection,
                 'authentication_required' => false
             ]
         );
