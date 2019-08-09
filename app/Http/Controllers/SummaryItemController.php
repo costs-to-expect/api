@@ -457,7 +457,7 @@ class SummaryItemController extends Controller
                 'sortable_config' => null,
                 'searchable_config' => 'api.item.searchable',
                 'enable_pagination' => false,
-                'allow_entire_collection' => false,
+                'allow_entire_collection' => $this->allow_entire_collection,
                 'authentication_required' => false
             ]
         );

@@ -41,6 +41,10 @@ class Pagination
      */
     private static $collection;
     /**
+     * @var boolean
+     */
+    private static $allow_override;
+    /**
      * @var int
      */
     private static $total;
@@ -59,10 +63,16 @@ class Pagination
      * @param string $uri Set the pagination uri
      * @param int $total Set the total number of items in collection
      * @param int $limit Set the 'per page' limit
+     * @param boolean $allow_override Allow the pagination to be overridden via the collection parameter
      *
      * @return Pagination
      */
-    public static function init(string $uri, int $total, int $limit = 10): Pagination
+    public static function init(
+        string $uri,
+        int $total,
+        int $limit = 10,
+        bool $allow_override = false
+    ): Pagination
     {
         if (self::$instance === null) {
             self::$instance = new Pagination;
@@ -76,6 +86,8 @@ class Pagination
         self::$uri = $uri;
         self::$hash = new Hash();
         self::$offset = 0;
+        self::$allow_override = $allow_override;
+        self::$collection = false;
 
         return self::$instance;
     }
@@ -230,7 +242,9 @@ class Pagination
     {
         self::$offset = intval(request()->query('offset', 0));
         self::$limit = intval(request()->query('limit', self::$limit));
-        self::$collection = General::booleanValue(request()->query('collection', false));
+        if (self::$allow_override === true) {
+            self::$collection = General::booleanValue(request()->query('collection', false));
+        }
 
         $uris = [
             'next' => null,

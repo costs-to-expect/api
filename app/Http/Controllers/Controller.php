@@ -27,6 +27,11 @@ class Controller extends BaseController
      */
     protected $include_private;
 
+    /**
+     * @var boolean Allow the entire collection to be returned ignoring pagination
+     */
+    protected $allow_entire_collection = false;
+
     public function __construct()
     {
         $this->hash = new Hash();

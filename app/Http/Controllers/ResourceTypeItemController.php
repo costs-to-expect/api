@@ -126,7 +126,7 @@ class ResourceTypeItemController extends Controller
                 'sortable_config' => 'api.resource-type-item.sortable',
                 'searchable_config' => 'api.resource-type-item.searchable',
                 'enable_pagination' => true,
-                'allow_entire_collection' => true,
+                'allow_entire_collection' => $this->allow_entire_collection,
                 'authentication_required' => false
             ]
         );

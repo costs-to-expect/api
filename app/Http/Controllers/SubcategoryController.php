@@ -13,7 +13,6 @@ use App\Validators\Request\SortParameters;
 use Exception;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Config;
 
 /**
@@ -25,6 +24,8 @@ use Illuminate\Support\Facades\Config;
  */
 class SubcategoryController extends Controller
 {
+    protected $allow_entire_collection = true;
+
     /**
      * Return all the sub categories assigned to the given category
      *
@@ -49,7 +50,12 @@ class SubcategoryController extends Controller
             Config::get('api.subcategory.sortable')
         );
 
-        $pagination = UtilityPagination::init(request()->path(), $total)->
+        $pagination = UtilityPagination::init(
+                request()->path(),
+                $total,
+                10,
+                $this->allow_entire_collection
+            )->
             setSearchParameters($search_parameters)->
             setSortParameters($sort_parameters)->
             paging();
@@ -145,7 +151,7 @@ class SubcategoryController extends Controller
                 'sortable_config' => 'api.subcategory.sortable',
                 'searchable_config' => 'api.subcategory.searchable',
                 'enable_pagination' => true,
-                'allow_entire_collection' => true,
+                'allow_entire_collection' => $this->allow_entire_collection,
                 'authentication_required' => false
             ],
             [
