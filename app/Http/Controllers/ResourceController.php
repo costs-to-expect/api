@@ -142,6 +142,7 @@ class ResourceController extends Controller
                 'sortable_config' => 'api.resource.sortable',
                 'searchable_config' => 'api.resource.searchable',
                 'enable_pagination' => true,
+                'allow_entire_collection' => true,
                 'authentication_required' => false
             ],
             [

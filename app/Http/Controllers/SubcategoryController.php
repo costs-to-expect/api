@@ -145,6 +145,7 @@ class SubcategoryController extends Controller
                 'sortable_config' => 'api.subcategory.sortable',
                 'searchable_config' => 'api.subcategory.searchable',
                 'enable_pagination' => true,
+                'allow_entire_collection' => true,
                 'authentication_required' => false
             ],
             [

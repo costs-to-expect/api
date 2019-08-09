@@ -149,6 +149,7 @@ class CategoryController extends Controller
                 'sortable_config' => 'api.category.sortable',
                 'searchable_config' => 'api.category.searchable',
                 'enable_pagination' => true,
+                'allow_entire_collection' => true,
                 'authentication_required' => false
             ],
             [

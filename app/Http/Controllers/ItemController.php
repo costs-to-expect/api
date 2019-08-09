@@ -175,6 +175,7 @@ class ItemController extends Controller
                 'sortable_config' => 'api.item.sortable',
                 'searchable_config' => 'api.item.searchable',
                 'enable_pagination' => true,
+                'allow_entire_collection' => false,
                 'authentication_required' => false
             ],
             [

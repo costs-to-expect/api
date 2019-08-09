@@ -104,6 +104,7 @@ class Controller extends BaseController
             'sortable_config' => null,
             'searchable_config' => null,
             'enable_pagination' => true,
+            'allow_entire_collection' => false,
             'authentication_required' => false
         ],
         array $post = [
@@ -121,7 +122,14 @@ class Controller extends BaseController
         if ($get['parameters_config_string'] !== null) {
             foreach (
                 array_merge_recursive(
-                    ($get['enable_pagination'] === true ? Config::get('api.pagination.parameters') : []),
+                    ($get['enable_pagination'] === true ?
+                        (
+                            $get['allow_entire_collection'] === false ?
+                                Config::get('api.pagination.parameters') :
+                                Config::get('api.pagination.parameters-including-collection')
+                        ) :
+                        []
+                    ),
                     ($get['sortable_config'] !== null ? Config::get('api.sortable.parameters') : []),
                     ($get['searchable_config'] !== null ? Config::get('api.searchable.parameters') : []),
                     Config::get($get['parameters_config_string']),

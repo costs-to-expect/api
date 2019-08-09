@@ -10,5 +10,5 @@ return [
     'description-limit' => 'Number of results to return',
 
     'title-collection' => 'Collection',
-    'description-collection' => 'Override pagination limits and return the entire collection [!USE WITH CARE!]'
+    'description-collection' => 'Override pagination limits and return the entire collection [!USE WITH CARE!]',
 ];

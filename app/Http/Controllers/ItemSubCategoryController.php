@@ -158,6 +158,7 @@ class ItemSubCategoryController extends Controller
                 'sortable_config' => null,
                 'searchable_config' => null,
                 'enable_pagination' => false,
+                'allow_entire_collection' => false,
                 'authentication_required' => false
             ],
             [

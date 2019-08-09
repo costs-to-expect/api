@@ -18,5 +18,13 @@ return [
         'default' => 10,
         'type' => 'integer',
         'required' => false
+    ],
+    'collection' => [
+        'parameter' => 'collection',
+        'title' => 'pagination/parameters.title-collection',
+        'description' => 'pagination/parameters.description-collection',
+        'default' => false,
+        'type' => 'boolean',
+        'required' => false
     ]
 ];
