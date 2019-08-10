@@ -28,7 +28,7 @@ class RequestErrorLog extends Transformer
             'expected_status_code' => $this->data_to_transform['request_error_log_expected_status_code'],
             'returned_status_code' => $this->data_to_transform['request_error_log_returned_status_code'],
             'request_uri' => $this->data_to_transform['request_error_log_request_uri'],
-            //'source' => $this->data_to_transform['request_error_log_source'],
+            'source' => $this->data_to_transform['request_error_log_source'],
             'created' => $this->data_to_transform['request_error_log_created_at']
         ];
     }

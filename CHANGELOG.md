@@ -5,6 +5,7 @@ The complete changelog for the Costs to Expect REST API, follows the format defi
 ## [v1.20.0] - 2019-08-xx
 ### Added 
 - We have added `X-Sort` and `X-Search` headers to the `/v1/resource-types/[resource-type]/items` collection.
+- We have added `source` to the `/v1/request/error-log` collection.
 
 ### Fixed 
 - Sorting the `/v1/resource-type/[resource-type]/items` collection by description generates an error, table name missing from sort field causing ambiguity.
