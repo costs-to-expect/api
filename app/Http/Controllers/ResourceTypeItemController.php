@@ -87,6 +87,16 @@ class ResourceTypeItemController extends Controller
             'X-Link-Next' => $pagination['links']['next']
         ];
 
+        $sort_header = SortParameters::xHeader();
+        if ($sort_header !== null) {
+            $headers['X-Sort'] = $sort_header;
+        }
+
+        $search_header = SearchParameters::xHeader();
+        if ($search_header !== null) {
+            $headers['X-Search'] = $search_header;
+        }
+
         return response()->json(
             array_map(
                 function($item) {
