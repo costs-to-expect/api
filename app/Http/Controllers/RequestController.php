@@ -40,12 +40,13 @@ class RequestController extends Controller
         $pagination = UtilityPagination::init($request->path(), $total, 50)
             ->paging();
 
-        $log = (new RequestErrorLog())->paginatedCollection(
+        $logs = (new RequestErrorLog())->paginatedCollection(
             $pagination['offset'],
             $pagination['limit']
         );
 
         $headers = [
+            'X-Count' => count($logs),
             'X-Total-Count' => $total,
             'X-Offset' => $pagination['offset'],
             'X-Limit' => $pagination['limit'],
@@ -54,11 +55,11 @@ class RequestController extends Controller
         ];
 
         return response()->json(
-            $log->map(
-                function ($log_item)
-                {
-                    return (new RequestErrorLogTransformer($log_item))->toArray();
-                }
+            array_map(
+                function($log) {
+                    return (new RequestErrorLogTransformer($log))->toArray();
+                },
+                $logs
             ),
             200,
             $headers
