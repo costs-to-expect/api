@@ -5,20 +5,27 @@ namespace App\Utilities;
 
 /**
  * Helper class to generate the data required to build the OPTIONS required for
- * a single HTTP Verb
+ * a single HTTP Verb, in this case GET
  *
  * @author Dean Blackborough <dean@g3d-development.com>
  * @copyright Dean Blackborough 2018-2019
  * @license https://github.com/costs-to-expect/api/blob/master/LICENSE
  */
-class OptionVerb
+class OptionGet
 {
     static private $instance;
+    static private $option;
 
-    static public function init(): OptionVerb
+    static private function reset()
+    {
+        // Clear any values, reset them
+    }
+
+    static public function init(): OptionGet
     {
         if (self::$instance === null) {
-            self::$instance = new OptionVerb();
+            self::$instance = new OptionGet();
+            self::$instance->reset();
         }
 
         return self::$instance;
@@ -26,7 +33,7 @@ class OptionVerb
 
     static public function setAuthenticationRequired(
         bool $status = false
-    ): OptionVerb
+    ): OptionGet
     {
 
         return self::$instance;
@@ -34,7 +41,7 @@ class OptionVerb
 
     static public function setConditionalParameters(
         array $parameters = []
-    ): OptionVerb
+    ): OptionGet
     {
 
         return self::$instance;
@@ -42,7 +49,7 @@ class OptionVerb
 
     static public function setDescription(
         string $localisation_path
-    ): OptionVerb
+    ): OptionGet
     {
 
         return self::$instance;
@@ -50,7 +57,7 @@ class OptionVerb
 
     static public function setPagination(
         bool $status = false
-    ): OptionVerb
+    ): OptionGet
     {
 
         return self::$instance;
@@ -58,7 +65,7 @@ class OptionVerb
 
     static public function setPaginationOverride(
         bool $status = false
-    ): OptionVerb
+    ): OptionGet
     {
 
         return self::$instance;
@@ -66,7 +73,7 @@ class OptionVerb
 
     static public function setParameters(
         string $config_path
-    ): OptionVerb
+    ): OptionGet
     {
 
         return self::$instance;
@@ -74,7 +81,7 @@ class OptionVerb
 
     static public function setSearchable(
         string $config_path
-    ): OptionVerb
+    ): OptionGet
     {
 
         return self::$instance;
@@ -82,9 +89,22 @@ class OptionVerb
 
     static public function setSortable(
         string $config_path
-    ): OptionVerb
+    ): OptionGet
     {
 
         return self::$instance;
+    }
+
+    static public function option(): array
+    {
+        return [
+            'GET' => [
+                'description' => null, // These values should come from properties
+                'authentication_required' => false, // All default to sensible values
+                'sortable' => false, // Base class is responsible for working out
+                'searchable' => false, // what null and empty arrays mean
+                'parameters' => [] // etc
+            ]
+        ];
     }
 }
