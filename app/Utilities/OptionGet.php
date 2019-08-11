@@ -148,11 +148,11 @@ class OptionGet
     {
         return [
             'GET' => [
-                'description' => null, // These values should come from properties
-                'authentication_required' => false, // All default to sensible values
-                'sortable' => false, // Base class is responsible for working out
-                'searchable' => false, // what null and empty arrays mean
-                'parameters' => [] // etc
+                'description' => self::$description,
+                'authentication_required' => self::$authentication,
+                'sortable' => self::$sortable,
+                'searchable' => self::$searchable,
+                'parameters' => self::$parameters
             ]
         ];
     }
