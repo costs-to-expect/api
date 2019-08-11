@@ -13,11 +13,61 @@ namespace App\Utilities;
  */
 class OptionGet
 {
+    /**
+     * @var OptionGet
+     */
     static private $instance;
+
+    /**
+     * @var boolean
+     */
+    static private $authentication;
+
+    /**
+     * @var array
+     */
+    static private $conditional_parameters;
+
+    /**
+     * @var string
+     */
+    static private $description;
+
+    /**
+     * @var boolean
+     */
+    static private $pagination;
+
+    /**
+     * @var boolean
+     */
+    static private $pagination_override;
+
+    /**
+     * @var array
+     */
+    static private $parameters;
+
+    /**
+     * @var array
+     */
+    static private $searchable;
+
+    /**
+     * @var array
+     */
+    static private $sortable;
 
     static private function reset()
     {
-        // Clear any values, reset them
+        self::$authentication = false;
+        self::$conditional_parameters = [];
+        self::$description = null;
+        self::$pagination = false;
+        self::$pagination_override = false;
+        self::$parameters = [];
+        self::$searchable = [];
+        self::$sortable = [];
     }
 
     static public function init(): OptionGet
