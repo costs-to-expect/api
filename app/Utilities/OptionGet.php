@@ -36,6 +36,11 @@ class OptionGet
     static private $description;
 
     /**
+     * @var array
+     */
+    static private $localised_parameters;
+
+    /**
      * @var boolean
      */
     static private $pagination;
@@ -75,6 +80,7 @@ class OptionGet
         self::$authentication = false;
         self::$conditional_parameters = [];
         self::$description = null;
+        self::$localised_parameters = [];
         self::$pagination = false;
         self::$pagination_parameters = [];
         self::$parameters = [];
@@ -106,6 +112,7 @@ class OptionGet
         array $parameters = []
     ): OptionGet
     {
+        self::$conditional_parameters = $parameters;
 
         return self::$instance;
     }
@@ -144,7 +151,7 @@ class OptionGet
         string $config_path
     ): OptionGet
     {
-
+        self::$parameters = Config::get($config_path);
         return self::$instance;
     }
 
@@ -168,19 +175,38 @@ class OptionGet
         return self::$instance;
     }
 
+    static private function buildParameters()
+    {
+        self::$localised_parameters = [];
+
+        foreach (
+            array_merge_recursive(
+                self::$pagination_parameters,
+                self::$sortable_parameters,
+                self::$searchable_parameters,
+                self::$parameters,
+                self::$conditional_parameters
+            )
+            as $parameter => $parameter_data
+        ) {
+            $detail['title'] = trans($parameter_data['title']);
+            $detail['description'] = trans($parameter_data['description']);
+
+            self::$localised_parameters[$parameter] = $parameter_data;
+        }
+    }
+
     static public function option(): array
     {
+        self::buildParameters();
+
         return [
             'GET' => [
                 'description' => self::$description,
                 'authentication_required' => self::$authentication,
                 'sortable' => self::$sortable,
                 'searchable' => self::$searchable,
-                'parameters' => array_merge_recursive(
-                    self::$pagination_parameters,
-                    self::$sortable_parameters,
-                    self::$searchable_parameters
-                )
+                'parameters' => self::$localised_parameters
             ]
         ];
     }
