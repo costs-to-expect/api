@@ -3,6 +3,8 @@ declare(strict_types=1);
 
 namespace App\Utilities;
 
+use Illuminate\Support\Facades\Config;
+
 /**
  * Helper class to generate the data required to build the OPTIONS required for
  * a single HTTP Verb, in this case GET
@@ -39,9 +41,9 @@ class OptionGet
     static private $pagination;
 
     /**
-     * @var boolean
+     * @var array
      */
-    static private $pagination_override;
+    static private $pagination_parameters;
 
     /**
      * @var array
@@ -56,6 +58,16 @@ class OptionGet
     /**
      * @var array
      */
+    static private $searchable_parameters;
+
+    /**
+     * @var array
+     */
+    static private $sortable_parameters;
+
+    /**
+     * @var array
+     */
     static private $sortable;
 
     static private function reset()
@@ -64,9 +76,11 @@ class OptionGet
         self::$conditional_parameters = [];
         self::$description = null;
         self::$pagination = false;
-        self::$pagination_override = false;
+        self::$pagination_parameters = [];
         self::$parameters = [];
         self::$searchable = [];
+        self::$searchable_parameters = [];
+        self::$sortable_parameters = [];
         self::$sortable = [];
     }
 
@@ -108,6 +122,9 @@ class OptionGet
         bool $status = false
     ): OptionGet
     {
+        if ($status === true) {
+            self::$pagination_parameters = Config::get('api.pagination.parameters');
+        }
 
         return self::$instance;
     }
@@ -116,6 +133,9 @@ class OptionGet
         bool $status = false
     ): OptionGet
     {
+        if ($status === true) {
+            self::$pagination_parameters = Config::get('api.pagination.parameters-including-collection');
+        }
 
         return self::$instance;
     }
@@ -132,6 +152,8 @@ class OptionGet
         string $config_path
     ): OptionGet
     {
+        self::$searchable = true;
+        self::$searchable_parameters = Config::get($config_path);
 
         return self::$instance;
     }
@@ -140,6 +162,8 @@ class OptionGet
         string $config_path
     ): OptionGet
     {
+        self::$sortable = true;
+        self::$sortable_parameters = Config::get($config_path);
 
         return self::$instance;
     }
@@ -152,7 +176,11 @@ class OptionGet
                 'authentication_required' => self::$authentication,
                 'sortable' => self::$sortable,
                 'searchable' => self::$searchable,
-                'parameters' => self::$parameters
+                'parameters' => array_merge_recursive(
+                    self::$pagination_parameters,
+                    self::$sortable_parameters,
+                    self::$searchable_parameters
+                )
             ]
         ];
     }
