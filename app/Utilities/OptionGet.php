@@ -14,7 +14,6 @@ namespace App\Utilities;
 class OptionGet
 {
     static private $instance;
-    static private $option;
 
     static private function reset()
     {
