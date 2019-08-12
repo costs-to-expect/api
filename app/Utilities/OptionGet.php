@@ -104,6 +104,7 @@ class OptionGet
         bool $status = false
     ): OptionGet
     {
+        self::$authentication = $status;
 
         return self::$instance;
     }
@@ -121,6 +122,7 @@ class OptionGet
         string $localisation_path
     ): OptionGet
     {
+        self::$description = trans($localisation_path);
 
         return self::$instance;
     }
@@ -182,8 +184,8 @@ class OptionGet
         foreach (
             array_merge_recursive(
                 self::$pagination_parameters,
-                self::$sortable_parameters,
-                self::$searchable_parameters,
+                (self::$sortable === true ? Config::get('api.sortable.parameters') : []),
+                (self::$searchable === true ? Config::get('api.searchable.parameters') : []),
                 self::$parameters,
                 self::$conditional_parameters
             )
@@ -204,8 +206,8 @@ class OptionGet
             'GET' => [
                 'description' => self::$description,
                 'authentication_required' => self::$authentication,
-                'sortable' => self::$sortable,
-                'searchable' => self::$searchable,
+                'sortable' => self::$sortable_parameters,
+                'searchable' => self::$searchable_parameters,
                 'parameters' => self::$localised_parameters
             ]
         ];
