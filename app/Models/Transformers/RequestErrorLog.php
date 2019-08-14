@@ -12,23 +12,24 @@ namespace App\Models\Transformers;
  */
 class RequestErrorLog extends Transformer
 {
-    protected $log;
+    protected $data_to_transform;
 
-    public function __construct(\App\Models\RequestErrorLog $log)
+    public function __construct(array $data_to_transform)
     {
         parent::__construct();
 
-        $this->log = $log;
+        $this->data_to_transform = $data_to_transform;
     }
 
     public function toArray(): array
     {
         return [
-            'method' => $this->log->method,
-            'expected_status_code' => $this->log->expected_status_code,
-            'returned_status_code' => $this->log->returned_status_code,
-            'request_uri' => $this->log->request_uri,
-            'created' => $this->log->created_at->toDateTimeString()
+            'method' => $this->data_to_transform['request_error_log_method'],
+            'expected_status_code' => $this->data_to_transform['request_error_log_expected_status_code'],
+            'returned_status_code' => $this->data_to_transform['request_error_log_returned_status_code'],
+            'request_uri' => $this->data_to_transform['request_error_log_request_uri'],
+            'source' => $this->data_to_transform['request_error_log_source'],
+            'created' => $this->data_to_transform['request_error_log_created_at']
         ];
     }
 }

@@ -2,6 +2,20 @@
 
 The complete changelog for the Costs to Expect REST API, follows the format defined at https://keepachangelog.com/en/1.0.0/
 
+## [v1.20.0] - 2019-08-14
+### Added
+- We have added `X-Sort` and `X-Search` headers to the `/v1/resource-types/[resource-type]/items` collection.
+- We have added `source` to the `/v1/request/error-log` collection.
+- We have added listeners to revoke and prune old/unnecessary access tokens.
+- We have added an `OptionGet` class to help generate the GET data array for the OPTIONS requests.
+- We have added an `OptionPost` class to help generate the POST data array for the OPTIONS requests.
+
+### Changed
+- The `/v1/categories`  OPTIONS request is generated using the new Option classes.
+
+### Fixed
+- Sorting the `/v1/resource-type/[resource-type]/items` collection by `description` generates an error, table name missing from sort field causing ambiguity.
+
 ## [v1.19.1] - 2019-08-09
 ### Added
 - We have added a `collection` parameter which is available to some collections. When the `collection` parameter is defined and `true`, it overrides the pagination limits, and we return the entire collection.
@@ -19,7 +33,7 @@ The complete changelog for the Costs to Expect REST API, follows the format defi
 - We have eliminated some code duplication in the models relating to the way search parameters get added to the queries.
 
 ### Fixed
-- Sorting the `/v1/resource-type/[resource-type]/resources/[resource]/items` collection by description generates an error, table name missing from sort field causing ambiguity.
+- Sorting the `/v1/resource-type/[resource-type]/resources/[resource]/items` collection by `description` generates an error, table name missing from sort field causing ambiguity.
 
 ## [v1.18.0] - 2019-08-07
 ### Added

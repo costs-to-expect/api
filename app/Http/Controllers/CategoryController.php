@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\SubCategory;
+use App\Utilities\OptionGet;
+use App\Utilities\OptionPost;
 use App\Utilities\Pagination as UtilityPagination;
 use App\Validators\Request\Parameters;
 use App\Validators\Request\Route;
@@ -147,23 +149,24 @@ class CategoryController extends Controller
      */
     public function optionsIndex(): JsonResponse
     {
-        return $this->generateOptionsForIndex(
-            [
-                'description_localisation_string' => 'route-descriptions.category_GET_index',
-                'parameters_config_string' => 'api.category.parameters.collection',
-                'conditionals_config' => [],
-                'sortable_config' => 'api.category.sortable',
-                'searchable_config' => 'api.category.searchable',
-                'enable_pagination' => true,
-                'allow_entire_collection' => $this->allow_entire_collection,
-                'authentication_required' => false
-            ],
-            [
-                'description_localisation_string' => 'route-descriptions.category_POST',
-                'fields_config' => 'api.category.fields',
-                'conditionals_config' => $this->conditionalPostParameters(),
-                'authentication_required' => true
-            ]
+        $option_get = OptionGet::init()->
+            setDescription('route-descriptions.category_GET_index')->
+            setParameters('api.category.parameters.collection')->
+            setSortable('api.category.sortable')->
+            setSearchable('api.category.searchable')->
+            setPaginationOverride(true)->
+            option();
+
+        $option_post = OptionPost::init()->
+            setDescription('route-descriptions.category_POST')->
+            setAuthenticationRequired(true)->
+            setFields('api.category.fields')->
+            setConditionalFields($this->conditionalPostParameters())->
+            option();
+
+        return $this->optionsResponse(
+            $option_get + $option_post,
+            200
         );
     }
 

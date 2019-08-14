@@ -212,11 +212,11 @@ class ResourceTypeItem extends Model
             foreach ($sort_fields as $field => $direction) {
                 switch ($field) {
                     case 'created':
-                        $collection->orderBy('created_at', $direction);
+                        $collection->orderBy('item.created_at', $direction);
                         break;
 
                     default:
-                        $collection->orderBy($field, $direction);
+                        $collection->orderBy('item.' . $field, $direction);
                         break;
                 }
             }
