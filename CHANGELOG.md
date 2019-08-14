@@ -2,6 +2,17 @@
 
 The complete changelog for the Costs to Expect REST API, follows the format defined at https://keepachangelog.com/en/1.0.0/
 
+## [v1.21.0] - 2019-08-xx
+### Added
+- We have added an `OptionPatch` class to help generate the PATCH data array for the OPTIONS requests.
+- We have added an `OptionDelete` class to help generate the DELETE data array for the OPTIONS requests.
+
+### Changed
+- Updated controllers to use the new `Option` classes to generate the OPTIONS requests for collections.
+
+### Removed
+- Removed the `generateOptionsForIndex()` method from the base controller.
+
 ## [v1.20.0] - 2019-08-14
 ### Added
 - We have added `X-Sort` and `X-Search` headers to the `/v1/resource-types/[resource-type]/items` collection.
@@ -11,7 +22,7 @@ The complete changelog for the Costs to Expect REST API, follows the format defi
 - We have added an `OptionPost` class to help generate the POST data array for the OPTIONS requests.
 
 ### Changed
-- The `/v1/categories`  OPTIONS request is generated using the new Option classes.
+- The `/v1/categories` OPTIONS request is generated using the new Option classes.
 
 ### Fixed
 - Sorting the `/v1/resource-type/[resource-type]/items` collection by `description` generates an error, table name missing from sort field causing ambiguity.
