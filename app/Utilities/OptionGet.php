@@ -191,8 +191,8 @@ class OptionGet
             )
             as $parameter => $parameter_data
         ) {
-            $detail['title'] = trans($parameter_data['title']);
-            $detail['description'] = trans($parameter_data['description']);
+            $parameter_data['title'] = trans($parameter_data['title']);
+            $parameter_data['description'] = trans($parameter_data['description']);
 
             self::$localised_parameters[$parameter] = $parameter_data;
         }

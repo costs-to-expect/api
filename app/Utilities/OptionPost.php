@@ -111,8 +111,8 @@ class OptionPost
             )
             as $field => $field_data
         ) {
-            $detail['title'] = trans($field_data['title']);
-            $detail['description'] = trans($field_data['description']);
+            $field_data['title'] = trans($field_data['title']);
+            $field_data['description'] = trans($field_data['description']);
 
             self::$localised_fields[$field] = $field_data;
         }
