@@ -1,22 +1,22 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Utilities;
+namespace App\Option;
 
 use Illuminate\Support\Facades\Config;
 
 /**
  * Helper class to generate the data required to build the OPTIONS required for
- * a single HTTP Verb, in this case POST
+ * a single HTTP Verb, in this case PATCH
  *
  * @author Dean Blackborough <dean@g3d-development.com>
  * @copyright Dean Blackborough 2018-2019
  * @license https://github.com/costs-to-expect/api/blob/master/LICENSE
  */
-class OptionPost
+class Patch
 {
     /**
-     * @var OptionPost
+     * @var Patch
      */
     static private $instance;
 
@@ -38,12 +38,12 @@ class OptionPost
     /**
      * @var array
      */
-    static private $fields;
+    static private $localised_fields;
 
     /**
      * @var array
      */
-    static private $localised_fields;
+    static private $fields;
 
     static private function reset()
     {
@@ -54,10 +54,10 @@ class OptionPost
         self::$localised_fields = [];
     }
 
-    static public function init(): OptionPost
+    static public function init(): Patch
     {
         if (self::$instance === null) {
-            self::$instance = new OptionPost();
+            self::$instance = new Patch();
             self::$instance->reset();
         }
 
@@ -66,7 +66,7 @@ class OptionPost
 
     static public function setAuthenticationRequired(
         bool $status = false
-    ): OptionPost
+    ): Patch
     {
         self::$authentication = $status;
 
@@ -74,17 +74,17 @@ class OptionPost
     }
 
     static public function setConditionalFields(
-        array $parameters = []
-    ): OptionPost
+        array $fields = []
+    ): Patch
     {
-        self::$conditional_fields = $parameters;
+        self::$conditional_fields = $fields;
 
         return self::$instance;
     }
 
     static public function setDescription(
         string $localisation_path
-    ): OptionPost
+    ): Patch
     {
         self::$description = trans($localisation_path);
 
@@ -93,10 +93,9 @@ class OptionPost
 
     static public function setFields(
         string $config_path
-    ): OptionPost
+    ): Patch
     {
         self::$fields = Config::get($config_path);
-
         return self::$instance;
     }
 
@@ -123,7 +122,7 @@ class OptionPost
         self::buildFields();
 
         return [
-            'POST' => [
+            'GET' => [
                 'description' => self::$description,
                 'authentication_required' => self::$authentication,
                 'fields' => self::$localised_fields
