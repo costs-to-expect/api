@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Option\Get;
+use App\Option\Post;
 use App\Validators\Request\Route;
 use App\Models\Category;
 use App\Models\ItemCategory;
@@ -118,23 +120,21 @@ class ItemCategoryController extends Controller
     {
         Route::itemRoute($resource_type_id, $resource_id, $item_id);
 
-        return $this->generateOptionsForIndex(
-            [
-                'description_localisation_string' => 'route-descriptions.item_category_GET_index',
-                'parameters_config_string' => 'api.item-category.parameters.collection',
-                'conditionals_config' => [],
-                'sortable_config' => null,
-                'searchable_config' => null,
-                'enable_pagination' => false,
-                'allow_entire_collection' => $this->allow_entire_collection,
-                'authentication_required' => false
-            ],
-            [
-                'description_localisation_string' => 'route-descriptions.item_category_POST',
-                'fields_config' => 'api.item-category.fields',
-                'conditionals_config' => $this->conditionalPostParameters($resource_type_id),
-                'authentication_required' => true
-            ]
+        $get = Get::init()->
+            setDescription('route-descriptions.item_category_GET_index')->
+            setParameters('api.item-category.parameters.collection')->
+            option();
+
+        $post = Post::init()->
+            setDescription('route-descriptions.item_category_POST')->
+            setAuthenticationRequired(true)->
+            setFields('api.item-category.fields')->
+            setConditionalFields($this->conditionalPostParameters($resource_type_id))->
+            option();
+
+        return $this->optionsResponse(
+            $get + $post,
+            200
         );
     }
 

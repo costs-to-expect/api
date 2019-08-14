@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Option\Get;
+use App\Option\Post;
 use App\Utilities\Pagination as UtilityPagination;
 use App\Validators\Request\Route;
 use App\Models\Resource;
@@ -141,23 +143,23 @@ class ResourceController extends Controller
     {
         Route::resourceTypeRoute($resource_type_id);
 
-        return $this->generateOptionsForIndex(
-            [
-                'description_localisation_string' => 'route-descriptions.resource_GET_index',
-                'parameters_config_string' => 'api.resource.parameters.collection',
-                'conditionals_config' => [],
-                'sortable_config' => 'api.resource.sortable',
-                'searchable_config' => 'api.resource.searchable',
-                'enable_pagination' => true,
-                'allow_entire_collection' => $this->allow_entire_collection,
-                'authentication_required' => false
-            ],
-            [
-                'description_localisation_string' => 'route-descriptions.resource_POST',
-                'fields_config' => 'api.resource.fields',
-                'conditionals_config' => [],
-                'authentication_required' => true
-            ]
+        $get = Get::init()->
+            setDescription('route-descriptions.resource_GET_index')->
+            setSortable('api.resource.sortable')->
+            setSearchable('api.resource.searchable')->
+            setPaginationOverride(true)->
+            setParameters('api.resource.parameters.collection')->
+            option();
+
+        $post = Post::init()->
+            setDescription('route-descriptions.resource_POST')->
+            setFields('api.resource.fields')->
+            setAuthenticationRequired(true)->
+            option();
+
+        return $this->optionsResponse(
+            $get + $post,
+            200
         );
     }
 

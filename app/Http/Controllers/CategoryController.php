@@ -3,8 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\SubCategory;
-use App\Utilities\OptionGet;
-use App\Utilities\OptionPost;
+use App\Option\Get;
+use App\Option\Post;
 use App\Utilities\Pagination as UtilityPagination;
 use App\Validators\Request\Parameters;
 use App\Validators\Request\Route;
@@ -149,7 +149,7 @@ class CategoryController extends Controller
      */
     public function optionsIndex(): JsonResponse
     {
-        $option_get = OptionGet::init()->
+        $get = Get::init()->
             setDescription('route-descriptions.category_GET_index')->
             setParameters('api.category.parameters.collection')->
             setSortable('api.category.sortable')->
@@ -157,7 +157,7 @@ class CategoryController extends Controller
             setPaginationOverride(true)->
             option();
 
-        $option_post = OptionPost::init()->
+        $post = Post::init()->
             setDescription('route-descriptions.category_POST')->
             setAuthenticationRequired(true)->
             setFields('api.category.fields')->
@@ -165,7 +165,7 @@ class CategoryController extends Controller
             option();
 
         return $this->optionsResponse(
-            $option_get + $option_post,
+            $get + $post,
             200
         );
     }

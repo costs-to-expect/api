@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Option\Get;
+use App\Option\Post;
 use App\Utilities\Pagination as UtilityPagination;
 use App\Validators\Request\Route;
 use App\Models\SubCategory;
@@ -143,23 +145,23 @@ class SubcategoryController extends Controller
     {
         Route::categoryRoute($category_id);
 
-        return $this->generateOptionsForIndex(
-            [
-                'description_localisation_string' => 'route-descriptions.sub_category_GET_index',
-                'parameters_config_string' => 'api.subcategory.parameters.collection',
-                'conditionals_config' => [],
-                'sortable_config' => 'api.subcategory.sortable',
-                'searchable_config' => 'api.subcategory.searchable',
-                'enable_pagination' => true,
-                'allow_entire_collection' => $this->allow_entire_collection,
-                'authentication_required' => false
-            ],
-            [
-                'description_localisation_string' => 'route-descriptions.sub_category_POST',
-                'fields_config' => 'api.subcategory.fields',
-                'conditionals_config' => [],
-                'authentication_required' => true
-            ]
+        $get = Get::init()->
+            setDescription('route-descriptions.sub_category_GET_index')->
+            setSortable('api.subcategory.sortable')->
+            setSearchable('api.subcategory.searchable')->
+            setPaginationOverride(true)->
+            setParameters('api.subcategory.parameters.collection')->
+            option();
+
+        $post = Post::init()->
+            setDescription('route-descriptions.sub_category_POST')->
+            setFields('api.subcategory.fields')->
+            setAuthenticationRequired(true)->
+            option();
+
+        return $this->optionsResponse(
+            $get + $post,
+            200
         );
     }
 

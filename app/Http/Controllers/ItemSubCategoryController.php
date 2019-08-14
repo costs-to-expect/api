@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Option\Get;
+use App\Option\Post;
 use App\Validators\Request\Route;
 use App\Models\ItemCategory;
 use App\Models\ItemSubCategory;
@@ -150,23 +152,21 @@ class ItemSubCategoryController extends Controller
             UtilityResponse::notFound(trans('entities.item-category'));
         }
 
-        return $this->generateOptionsForIndex(
-            [
-                'description_localisation_string' => 'route-descriptions.item_sub_category_GET_index',
-                'parameters_config_string' => 'api.item-subcategory.parameters.collection',
-                'conditionals_config' => [],
-                'sortable_config' => null,
-                'searchable_config' => null,
-                'enable_pagination' => false,
-                'allow_entire_collection' => $this->allow_entire_collection,
-                'authentication_required' => false
-            ],
-            [
-                'description_localisation_string' => 'route-descriptions.item_sub_category_POST',
-                'fields_config' => 'api.item-subcategory.fields',
-                'conditionals_config' => $this->conditionalPostParameters($item_category->category_id),
-                'authentication_required' => true
-            ]
+        $get = Get::init()->
+            setDescription('route-descriptions.item_sub_category_GET_index')->
+            setParameters('api.item-subcategory.parameters.collection')->
+            option();
+
+        $post = Post::init()->
+            setDescription('route-descriptions.item_sub_category_POST')->
+            setFields('api.item-subcategory.fields')->
+            setConditionalFields($this->conditionalPostParameters($item_category->category_id))->
+            setAuthenticationRequired(true)->
+            option();
+
+        return $this->optionsResponse(
+            $get + $post,
+            200
         );
     }
 
