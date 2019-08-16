@@ -122,7 +122,7 @@ class Patch
         self::buildFields();
 
         return [
-            'GET' => [
+            'PATCH' => [
                 'description' => self::$description,
                 'authentication_required' => self::$authentication,
                 'fields' => self::$localised_fields

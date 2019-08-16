@@ -158,7 +158,7 @@ class ResourceTypeController extends Controller
         $post = Post::init()->
             setDescription('route-descriptions.resource_type_POST')->
             setFields('api.resource-type.fields')->
-            setAuthenticationRequired()->
+            setAuthenticationRequired(true)->
             option();
 
         return $this->optionsResponse(

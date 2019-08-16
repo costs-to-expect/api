@@ -81,7 +81,7 @@ class ItemTransferController extends Controller
                     $resource_id
                 )
             )->
-            setAuthenticationRequired()->
+            setAuthenticationRequired(true)->
             option();
 
         return $this->optionsResponse($post, 200);
