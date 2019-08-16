@@ -300,7 +300,6 @@ class ItemCategoryController extends Controller
             UtilityResponse::notFound(trans('entities.item-category'));
         }
 
-
         try {
             $item_category->delete();
 
