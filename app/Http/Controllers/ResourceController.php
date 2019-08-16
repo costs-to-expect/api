@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Option\Delete;
 use App\Option\Get;
 use App\Option\Post;
 use App\Utilities\Pagination as UtilityPagination;
@@ -184,17 +185,19 @@ class ResourceController extends Controller
             UtilityResponse::notFound(trans('entities.resource'));
         }
 
-        return $this->generateOptionsForShow(
-            [
-                'description_localisation_string' => 'route-descriptions.resource_GET_show',
-                'parameters_config_string' => 'api.resource.parameters.item',
-                'conditionals_config' => [],
-                'authentication_required' => false
-            ],
-            [
-                'description_localisation_string' => 'route-descriptions.resource_DELETE',
-                'authentication_required' => true
-            ]
+        $get = Get::init()->
+            setDescription('route-descriptions.resource_GET_show')->
+            setParameters('api.resource.parameters.item')->
+            option();
+
+        $delete = Delete::init()->
+            setDescription('route-descriptions.resource_DELETE')->
+            setAuthenticationRequired(true)->
+            option();
+
+        return $this->optionsResponse(
+            $get + $delete,
+            200
         );
     }
 

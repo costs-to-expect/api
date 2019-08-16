@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Option\Delete;
 use App\Option\Get;
 use App\Option\Post;
 use App\Validators\Request\Route;
@@ -174,17 +175,19 @@ class ItemCategoryController extends Controller
             UtilityResponse::notFound(trans('entities.item-category'));
         }
 
-        return $this->generateOptionsForShow(
-            [
-                'description_localisation_string' => 'route-descriptions.item_category_GET_show',
-                'parameters_config_string' => 'api.item-category.parameters.item',
-                'conditionals_config' => [],
-                'authentication_required' => false
-            ],
-            [
-                'description_localisation_string' => 'route-descriptions.item_category_DELETE',
-                'authentication_required' => true
-            ]
+        $get = Get::init()->
+            setDescription('route-descriptions.item_category_GET_show')->
+            setParameters('api.item-category.parameters.item')->
+            option();
+
+        $delete = Delete::init()->
+            setDescription('route-descriptions.item_category_DELETE')->
+            setAuthenticationRequired(true)->
+            option();
+
+        return $this->optionsResponse(
+            $get + $delete,
+            200
         );
     }
 

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\SubCategory;
+use App\Option\Delete;
 use App\Option\Get;
 use App\Option\Post;
 use App\Utilities\Pagination as UtilityPagination;
@@ -181,17 +182,19 @@ class CategoryController extends Controller
     {
         Route::categoryRoute($category_id);
 
-        return $this->generateOptionsForShow(
-            [
-                'description_localisation_string' => 'route-descriptions.category_GET_show',
-                'parameters_config_string' => 'api.category.parameters.item',
-                'conditionals_config' => [],
-                'authentication_required' => false
-            ],
-            [
-                'description_localisation_string' => 'route-descriptions.category_DELETE',
-                'authentication_required' => true
-            ]
+        $get = Get::init()->
+            setDescription('route-descriptions.category_GET_show')->
+            setParameters('api.category.parameters.item')->
+            option();
+
+        $delete = Delete::init()->
+            setDescription('route-descriptions.category_DELETE')->
+            setAuthenticationRequired(true)->
+            option();
+
+        return $this->optionsResponse(
+            $get + $delete,
+            200
         );
     }
 

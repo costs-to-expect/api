@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Resource;
+use App\Option\Delete;
 use App\Option\Get;
 use App\Option\Post;
 use App\Utilities\Pagination as UtilityPagination;
@@ -177,17 +178,19 @@ class ResourceTypeController extends Controller
     {
         Route::resourceTypeRoute($resource_type_id);
 
-        return $this->generateOptionsForShow(
-            [
-                'description_localisation_string' => 'route-descriptions.resource_type_GET_show',
-                'parameters_config_string' => 'api.resource-type.parameters.item',
-                'conditionals_config' => [],
-                'authentication_required' => false
-            ],
-            [
-                'description_localisation_string' => 'route-descriptions.resource_type_DELETE',
-                'authentication_required' => true
-            ]
+        $get = Get::init()->
+            setDescription('route-descriptions.resource_type_GET_show')->
+            setParameters('api.resource-type.parameters.item')->
+            option();
+
+        $delete = Delete::init()->
+            setDescription('route-descriptions.resource_type_DELETE')->
+            setAuthenticationRequired(true)->
+            option();
+
+        return $this->optionsResponse(
+            $get + $delete,
+            200
         );
     }
 
