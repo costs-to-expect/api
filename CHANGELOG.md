@@ -9,10 +9,16 @@ The complete changelog for the Costs to Expect REST API, follows the format defi
 
 ### Changed
 - Updated all controllers to use the new `Option` classes to generate the OPTIONS requests for collections.
+- We have updated the `ItemYearTransformer` class.
+- We have updated the `ItemCategoryTransformer` class.
+- We have updated the `ItemSubCategoryTransformer` class.
 
 ### Removed
 - Removed the `generateOptionsForIndex()` method from the base controller.
 - Removed the `generateOptionsForShow()` method from the base controller.
+
+### Fixed
+- We have corrected a call the subcategory entity for the not found error.
 
 ## [v1.20.0] - 2019-08-14
 ### Added
