@@ -45,7 +45,7 @@ class ItemCategoryController extends Controller
             $item_id
         );
 
-        if ($item_category === null) {
+        if ($item_category === null || (is_array($item_category) === true && count($item_category) === 0)) {
             UtilityResponse::notFound(trans('entities.item-category'));
         }
 
@@ -233,7 +233,7 @@ class ItemCategoryController extends Controller
         }
 
         return response()->json(
-            (new ItemCategoryTransformer($item_category))->toArray(),
+            (new ItemCategoryTransformer((new ItemCategory())->instanceToArray($item_category)))->toArray(),
             201
         );
     }
@@ -301,7 +301,7 @@ class ItemCategoryController extends Controller
         }
 
         try {
-            $item_category->delete();
+            (new ItemCategory())->find($item_category_id)->delete();
 
             UtilityResponse::successNoContent();
         } catch (QueryException $e) {

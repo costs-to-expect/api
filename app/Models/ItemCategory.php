@@ -87,7 +87,7 @@ class ItemCategory extends Model
         int $resource_id,
         int $item_id,
         int $item_category_id
-    ): ItemCategory
+    ): ?ItemCategory
     {
         return $this->join('category', 'item_category.category_id', 'category.id')->
             join('item', 'item_category.item_id', 'item.id')->
@@ -102,5 +102,22 @@ class ItemCategory extends Model
                 'category.description AS item_category_category_description'
             )->
             find($item_category_id);
+    }
+
+    /**
+     * Convert the model instance to an array for use with the transformer
+     *
+     * @param ItemCategory $item_category
+     *
+     * @return array
+     */
+    public function instanceToArray(ItemCategory $item_category): array
+    {
+        return [
+            'item_category_id' => $item_category->id,
+            'item_category_created_at' => $item_category->created_at->toDateTimeString(),
+            'item_category_category_name' => $item_category->category->name,
+            'item_category_category_description' => $item_category->category->description
+        ];
     }
 }

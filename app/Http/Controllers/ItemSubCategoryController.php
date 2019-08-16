@@ -58,7 +58,7 @@ class ItemSubCategoryController extends Controller
             $item_category_id
         );
 
-        if ($item_sub_category === null) {
+        if ($item_sub_category === null || (is_array($item_sub_category) && count($item_sub_category) === 0)) {
             UtilityResponse::notFound(trans('entities.item-subcategory'));
         }
 
@@ -278,7 +278,7 @@ class ItemSubCategoryController extends Controller
         }
 
         return response()->json(
-            (new ItemSubCategoryTransformer($item_sub_category))->toArray(),
+            (new ItemSubCategoryTransformer((new ItemSubCategory())->instanceToArray($item_sub_category)))->toArray(),
             201
         );
     }
@@ -344,7 +344,7 @@ class ItemSubCategoryController extends Controller
             UtilityResponse::notFound(trans('entities.item-subcategory'));
         }
 
-        $item_sub_category = (new ItemSubCategory())->single(
+        $item_sub_category = (new ItemSubCategory())->instance(
             $resource_type_id,
             $resource_id,
             $item_id,
@@ -356,8 +356,9 @@ class ItemSubCategoryController extends Controller
             UtilityResponse::notFound(trans('entities.item-subcategory'));
         }
 
+
         try {
-            $item_sub_category->delete();
+            (new ItemSubCategory())->find($item_sub_category_id)->delete();
 
             UtilityResponse::successNoContent();
         } catch (QueryException $e) {
