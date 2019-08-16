@@ -135,7 +135,7 @@ class ItemSummary extends Model
         int $resource_id,
         int $year,
         bool $include_unpublished = false
-    )
+    ): array
     {
         $collection = $this->
             selectRaw("MONTH(item.effective_date) as month, SUM(item.actualised_total) AS total")->
@@ -149,7 +149,8 @@ class ItemSummary extends Model
 
         return $collection->groupBy("month")->
             orderBy("month")->
-            get();
+            get()->
+            toArray();
     }
 
     public function monthSummary(
@@ -173,7 +174,8 @@ class ItemSummary extends Model
 
         return $collection->groupBy("month")->
             orderBy("month")->
-            get();
+            get()->
+            toArray();
     }
 
     public function subCategoriesSummary(

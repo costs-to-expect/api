@@ -3,8 +3,6 @@ declare(strict_types=1);
 
 namespace App\Models\Transformers;
 
-use App\Models\ItemSummary as ItemModel;
-
 /**
  * Transform the data returns from Eloquent into the format we want for the API
  *
@@ -14,26 +12,26 @@ use App\Models\ItemSummary as ItemModel;
  */
 class ItemMonthSummary extends Transformer
 {
-    private $month_summary;
+    private $data_to_transform;
 
     /**
      * ResourceType constructor.
      *
-     * @param ItemModel $month_summary
+     * @param array $data_to_transform
      */
-    public function __construct(ItemModel $month_summary)
+    public function __construct(array $data_to_transform)
     {
         parent::__construct();
 
-        $this->month_summary = $month_summary;
+        $this->data_to_transform = $data_to_transform;
     }
 
     public function toArray(): array
     {
         return [
-            'id' => $this->month_summary->month,
-            'month' => date("F", mktime(0, 0, 0, $this->month_summary->month, 1)),
-            'total' => number_format((float) $this->month_summary->total, 2, '.', '')
+            'id' => $this->data_to_transform['month'],
+            'month' => date("F", mktime(0, 0, 0, $this->data_to_transform['month'], 1)),
+            'total' => number_format((float) $this->data_to_transform['total'], 2, '.', '')
         ];
     }
 }

@@ -234,10 +234,11 @@ class SummaryItemController extends Controller
         }
 
         return response()->json(
-            $summary->map(
-                function ($month_summary) {
-                    return (new ItemMonthSummaryTransformer($month_summary))->toArray();
-                }
+            array_map(
+                function($month) {
+                    return (new ItemMonthSummaryTransformer($month))->toArray();
+                },
+                $summary
             ),
             200,
             [ 'X-Total-Count' => count($summary) ]
