@@ -8,10 +8,11 @@ The complete changelog for the Costs to Expect REST API, follows the format defi
 - We have added an `OptionDelete` class to help generate the DELETE data array for the OPTIONS requests.
 
 ### Changed
-- Updated controllers to use the new `Option` classes to generate the OPTIONS requests for collections.
+- Updated all controllers to use the new `Option` classes to generate the OPTIONS requests for collections.
 
 ### Removed
 - Removed the `generateOptionsForIndex()` method from the base controller.
+- Removed the `generateOptionsForShow()` method from the base controller.
 
 ## [v1.20.0] - 2019-08-14
 ### Added
