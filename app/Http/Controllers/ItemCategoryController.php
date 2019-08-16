@@ -54,7 +54,7 @@ class ItemCategoryController extends Controller
         ];
 
         return response()->json(
-            [(new ItemCategoryTransformer($item_category))->toArray()],
+            [(new ItemCategoryTransformer($item_category[0]))->toArray()],
             200,
             $headers
         );
@@ -289,7 +289,7 @@ class ItemCategoryController extends Controller
     {
         Route::itemCategory($resource_type_id, $resource_id, $item_id, $item_category_id);
 
-        $item_category = (new ItemCategory())->single(
+        $item_category = (new ItemCategory())->instance(
             $resource_type_id,
             $resource_id,
             $item_id,

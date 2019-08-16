@@ -269,7 +269,6 @@ class Item extends Model
         int $item_id
     ): ?array
     {
-        // Remove the whereHas etc, normal SQL builder
         $result = $this->where('resource_id', '=', $resource_id)->
             join('resource', 'item.resource_id', 'resource.id')->
             where('resource.resource_type_id', '=', $resource_type_id)->
