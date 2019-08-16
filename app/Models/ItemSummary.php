@@ -270,7 +270,7 @@ class ItemSummary extends Model
         int $resource_type_id,
         int $resource_id,
         bool $include_unpublished = false
-    )
+    ): array
     {
         $collection = $this->
             selectRaw("YEAR(item.effective_date) as year, SUM(item.actualised_total) AS total")->
@@ -283,7 +283,8 @@ class ItemSummary extends Model
 
         return $collection->groupBy("year")->
             orderBy("year")->
-            get();
+            get()->
+            toArray();
     }
 
     public function yearSummary(
@@ -291,7 +292,7 @@ class ItemSummary extends Model
         int $resource_id,
         int $year,
         bool $include_unpublished = false
-    )
+    ): array
     {
         $collection = $this->
             selectRaw("YEAR(item.effective_date) as year, SUM(item.actualised_total) AS total")->
@@ -304,7 +305,8 @@ class ItemSummary extends Model
         $collection = $this->includeUnpublished($collection, $include_unpublished);
 
         return $collection->groupBy("year")->
-            get();
+            get()->
+            toArray();
     }
 
     /**

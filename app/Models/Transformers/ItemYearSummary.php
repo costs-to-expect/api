@@ -14,26 +14,26 @@ use App\Models\ItemSummary as ItemModel;
  */
 class ItemYearSummary extends Transformer
 {
-    private $year_summary;
+    private $data_to_transform;
 
     /**
      * ResourceType constructor.
      *
-     * @param ItemModel $year_summary
+     * @param array $data_to_transform
      */
-    public function __construct(ItemModel $year_summary)
+    public function __construct(array $data_to_transform)
     {
         parent::__construct();
 
-        $this->year_summary = $year_summary;
+        $this->data_to_transform = $data_to_transform;
     }
 
     public function toArray(): array
     {
         return [
-            'id' => $this->year_summary->year,
-            'year' => $this->year_summary->year,
-            'total' => number_format((float) $this->year_summary->total, 2, '.', '')
+            'id' => $this->data_to_transform['year'],
+            'year' => $this->data_to_transform['year'],
+            'total' => number_format((float) $this->data_to_transform['total'], 2, '.', '')
         ];
     }
 }

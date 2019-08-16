@@ -12,7 +12,6 @@ use App\Models\Transformers\ItemMonthSummary as ItemMonthSummaryTransformer;
 use App\Models\Transformers\ItemSubCategorySummary as ItemSubCategorySummaryTransformer;
 use App\Models\Transformers\ItemYearSummary as ItemYearSummaryTransformer;
 use App\Utilities\General;
-use App\Utilities\Response as UtilityResponse;
 use App\Validators\Request\SearchParameters;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -176,10 +175,11 @@ class SummaryItemController extends Controller
         }
 
         return response()->json(
-            $summary->map(
-                function ($annual_summary) {
-                    return (new ItemYearSummaryTransformer($annual_summary))->toArray();
-                }
+            array_map(
+                function($year) {
+                    return (new ItemYearSummaryTransformer($year))->toArray();
+                },
+                $summary
             ),
             200,
             ['X-Total-Count' => count($summary)]
