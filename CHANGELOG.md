@@ -6,6 +6,8 @@ The complete changelog for the Costs to Expect REST API, follows the format defi
 ### Added
 - We have added an `OptionPatch` class to help generate the PATCH data array for the OPTIONS requests.
 - We have added an `OptionDelete` class to help generate the DELETE data array for the OPTIONS requests.
+- We have added an `Event` on request error log entries.
+- We have added a `Listener` to capture the request error log event; the Listener sends a mail.
 
 ### Changed
 - Updated all controllers to use the new `Option` classes to generate the OPTIONS requests for collections.
