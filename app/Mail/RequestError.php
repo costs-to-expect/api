@@ -37,6 +37,6 @@ class RequestError extends Mailable
     {
         return $this->from($this->api_from_mail)->
             view('mail.request-error')->
-            subject('Costs to Expect API Response error');
+            subject('Costs to Expect API: Request error');
     }
 }

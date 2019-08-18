@@ -3,8 +3,11 @@
 namespace App\Listeners;
 
 use App\Events\RequestError;
+use App\Mail\RequestError as RequestErrorMail;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
+use Illuminate\Support\Facades\Config;
+use Illuminate\Support\Facades\Mail;
 
 class CaptureAndSend
 {
@@ -27,8 +30,10 @@ class CaptureAndSend
     public function handle(RequestError $event)
     {
         if (isset($event->request_error) && count($event->request_error) > 0) {
-            // Send an email
-
+            Mail::to(Config::get('api.mail.request-error.to'))->
+                send(
+                    new RequestErrorMail($event->request_error)
+                );
         }
     }
 }

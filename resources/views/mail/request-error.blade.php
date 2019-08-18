@@ -10,7 +10,7 @@
 </head>
 
 <body>
-    <h2>Request Error</h2>
+    <h2>Captured Costs to Expect API Request Error</h2>
 
     <table>
         <tr>
