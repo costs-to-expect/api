@@ -28,7 +28,7 @@ class CaptureAndSend
     {
         if (isset($event->request_error) && count($event->request_error) > 0) {
             // Send an email
-            
+
         }
     }
 }

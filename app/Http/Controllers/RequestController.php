@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Mail\RequestError;
 use App\Option\Get;
 use App\Option\Post;
 use App\Utilities\Response;
@@ -16,6 +17,8 @@ use App\Utilities\Response as UtilityResponse;
 use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Config;
+use Illuminate\Support\Facades\Mail;
 
 /**
  * Manage categories
@@ -175,6 +178,18 @@ class RequestController extends Controller
                 'request_uri' => $request->input('request_uri'),
             ]);
             $request_error_log->save();
+
+            Mail::to(Config::get('api.mail.request-error.to'))->
+                send(
+                    new RequestError([
+                        'method' => $request->input('method'),
+                        'source' => $request->input('source'),
+                        'expected_status_code' => $request->input('expected_status_code'),
+                        'returned_status_code' => $request->input('returned_status_code'),
+                        'request_uri' => $request->input('request_uri'),
+                        'referer' => $request->server('HTTP_REFERER', 'NOT SET!')
+                    ])
+                );
         } catch (Exception $e) {
             UtilityResponse::failedToSaveModelForCreate();
         }
