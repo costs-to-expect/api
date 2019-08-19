@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Option\Get;
 use App\Utilities\Response;
 use App\Validators\Request\Parameters;
 use App\Validators\Request\Route;
@@ -11,7 +12,6 @@ use App\Models\Transformers\ItemMonthSummary as ItemMonthSummaryTransformer;
 use App\Models\Transformers\ItemSubCategorySummary as ItemSubCategorySummaryTransformer;
 use App\Models\Transformers\ItemYearSummary as ItemYearSummaryTransformer;
 use App\Utilities\General;
-use App\Utilities\Response as UtilityResponse;
 use App\Validators\Request\SearchParameters;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -175,10 +175,11 @@ class SummaryItemController extends Controller
         }
 
         return response()->json(
-            $summary->map(
-                function ($annual_summary) {
-                    return (new ItemYearSummaryTransformer($annual_summary))->toArray();
-                }
+            array_map(
+                function($year) {
+                    return (new ItemYearSummaryTransformer($year))->toArray();
+                },
+                $summary
             ),
             200,
             ['X-Total-Count' => count($summary)]
@@ -233,10 +234,11 @@ class SummaryItemController extends Controller
         }
 
         return response()->json(
-            $summary->map(
-                function ($month_summary) {
-                    return (new ItemMonthSummaryTransformer($month_summary))->toArray();
-                }
+            array_map(
+                function($month) {
+                    return (new ItemMonthSummaryTransformer($month))->toArray();
+                },
+                $summary
             ),
             200,
             [ 'X-Total-Count' => count($summary) ]
@@ -444,22 +446,19 @@ class SummaryItemController extends Controller
      * @param Request $request
      * @param string $resource_type_id
      * @param string $resource_id
+     *
+     * @return JsonResponse
      */
     public function optionsIndex(Request $request, string $resource_type_id, string $resource_id)
     {
         Route::resourceRoute($resource_type_id, $resource_id);
 
-        return $this->generateOptionsForIndex(
-            [
-                'description_localisation_string' => 'route-descriptions.summary_GET_resource-type_resource_items',
-                'parameters_config_string' => 'api.item.summary-parameters.collection',
-                'conditionals_config' => [],
-                'sortable_config' => null,
-                'searchable_config' => 'api.item.searchable',
-                'enable_pagination' => false,
-                'allow_entire_collection' => $this->allow_entire_collection,
-                'authentication_required' => false
-            ]
-        );
+        $get = Get::init()->
+            setDescription('route-descriptions.summary_GET_resource-type_resource_items')->
+            setSearchable('api.item.searchable')->
+            setParameters('api.item.summary-parameters.collection')->
+            option();
+
+        return $this->optionsResponse($get, 200);
     }
 }

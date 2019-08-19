@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Option\Get;
 use App\Validators\Request\Parameters;
 use App\Validators\Request\Route;
 use App\Models\ResourceTypeItem;
@@ -490,17 +491,12 @@ class SummaryResourceTypeItemController extends Controller
     {
         Route::resourceTypeRoute($resource_type_id);
 
-        return $this->generateOptionsForIndex(
-            [
-                'description_localisation_string' => 'route-descriptions.summary-resource-type-item-GET-index',
-                'parameters_config_string' => 'api.resource-type-item.summary-parameters.collection',
-                'conditionals_config' => [],
-                'sortable_config' => null,
-                'searchable_config' => 'api.resource-type-item.searchable',
-                'enable_pagination' => false,
-                'allow_entire_collection' => $this->allow_entire_collection,
-                'authentication_required' => false
-            ]
-        );
+        $get = Get::init()->
+            setDescription('route-descriptions.summary-resource-type-item-GET-index')->
+            setSearchable('api.resource-type-item.searchable')->
+            setParameters('api.resource-type-item.summary-parameters.collection')->
+            option();
+
+        return $this->optionsResponse($get, 200);
     }
 }

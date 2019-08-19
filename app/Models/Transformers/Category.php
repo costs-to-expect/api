@@ -3,8 +3,6 @@ declare(strict_types=1);
 
 namespace App\Models\Transformers;
 
-use App\Models\SubCategory as SubCategoryModel;
-
 /**
  * Transform the data returns from Eloquent into the format we want for the API
  *

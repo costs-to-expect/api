@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Option\Get;
 use App\Validators\Request\Parameters;
 use App\Models\RequestLog;
 use Illuminate\Http\JsonResponse;
@@ -46,20 +47,16 @@ class SummaryRequestController extends Controller
      * Generate the OPTIONS request for summary of the access log
      *
      * @param Request $request
+     *
+     * @return JsonResponse
      */
     public function optionsAccessLog(Request $request)
     {
-        return $this->generateOptionsForIndex(
-            [
-                'description_localisation_string' => 'route-descriptions.summary_GET_request_access-log',
-                'parameters_config_string' => 'api.request-access-log.parameters.collection',
-                'conditionals_config' => [],
-                'sortable_config' => null,
-                'searchable_config' => null,
-                'enable_pagination' => false,
-                'allow_entire_collection' => $this->allow_entire_collection,
-                'authentication_required' => false
-            ]
-        );
+        $get = Get::init()->
+            setDescription('route-descriptions.summary_GET_request_access-log')->
+            setParameters('api.request-access-log.parameters.collection')->
+            option();
+
+        return $this->optionsResponse($get, 200);
     }
 }

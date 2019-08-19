@@ -3,6 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\Resource;
+use App\Option\Delete;
+use App\Option\Get;
+use App\Option\Post;
 use App\Utilities\Pagination as UtilityPagination;
 use App\Validators\Request\Parameters;
 use App\Validators\Request\Route;
@@ -145,23 +148,22 @@ class ResourceTypeController extends Controller
      */
     public function optionsIndex(): JsonResponse
     {
-        return $this->generateOptionsForIndex(
-            [
-                'description_localisation_string' => 'route-descriptions.resource_type_GET_index',
-                'parameters_config_string' => [],
-                'conditionals_config' => [],
-                'sortable_config' => 'api.resource-type.sortable',
-                'searchable_config' => 'api.resource-type.searchable',
-                'enable_pagination' => true,
-                'allow_entire_collection' => $this->allow_entire_collection,
-                'authentication_required' => false
-            ],
-            [
-                'description_localisation_string' => 'route-descriptions.resource_type_POST',
-                'fields_config' => 'api.resource-type.fields',
-                'conditionals_config' => [],
-                'authentication_required' => true
-            ]
+        $get = Get::init()->
+            setDescription('route-descriptions.resource_type_GET_index')->
+            setSortable('api.resource-type.sortable')->
+            setSearchable('api.resource-type.searchable')->
+            setPaginationOverride(true)->
+            option();
+
+        $post = Post::init()->
+            setDescription('route-descriptions.resource_type_POST')->
+            setFields('api.resource-type.fields')->
+            setAuthenticationRequired(true)->
+            option();
+
+        return $this->optionsResponse(
+            $get + $post,
+            200
         );
     }
 
@@ -176,17 +178,19 @@ class ResourceTypeController extends Controller
     {
         Route::resourceTypeRoute($resource_type_id);
 
-        return $this->generateOptionsForShow(
-            [
-                'description_localisation_string' => 'route-descriptions.resource_type_GET_show',
-                'parameters_config_string' => 'api.resource-type.parameters.item',
-                'conditionals_config' => [],
-                'authentication_required' => false
-            ],
-            [
-                'description_localisation_string' => 'route-descriptions.resource_type_DELETE',
-                'authentication_required' => true
-            ]
+        $get = Get::init()->
+            setDescription('route-descriptions.resource_type_GET_show')->
+            setParameters('api.resource-type.parameters.item')->
+            option();
+
+        $delete = Delete::init()->
+            setDescription('route-descriptions.resource_type_DELETE')->
+            setAuthenticationRequired(true)->
+            option();
+
+        return $this->optionsResponse(
+            $get + $delete,
+            200
         );
     }
 

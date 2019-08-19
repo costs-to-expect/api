@@ -3,8 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\SubCategory;
-use App\Utilities\OptionGet;
-use App\Utilities\OptionPost;
+use App\Option\Delete;
+use App\Option\Get;
+use App\Option\Post;
 use App\Utilities\Pagination as UtilityPagination;
 use App\Validators\Request\Parameters;
 use App\Validators\Request\Route;
@@ -149,7 +150,7 @@ class CategoryController extends Controller
      */
     public function optionsIndex(): JsonResponse
     {
-        $option_get = OptionGet::init()->
+        $get = Get::init()->
             setDescription('route-descriptions.category_GET_index')->
             setParameters('api.category.parameters.collection')->
             setSortable('api.category.sortable')->
@@ -157,7 +158,7 @@ class CategoryController extends Controller
             setPaginationOverride(true)->
             option();
 
-        $option_post = OptionPost::init()->
+        $post = Post::init()->
             setDescription('route-descriptions.category_POST')->
             setAuthenticationRequired(true)->
             setFields('api.category.fields')->
@@ -165,7 +166,7 @@ class CategoryController extends Controller
             option();
 
         return $this->optionsResponse(
-            $option_get + $option_post,
+            $get + $post,
             200
         );
     }
@@ -181,17 +182,19 @@ class CategoryController extends Controller
     {
         Route::categoryRoute($category_id);
 
-        return $this->generateOptionsForShow(
-            [
-                'description_localisation_string' => 'route-descriptions.category_GET_show',
-                'parameters_config_string' => 'api.category.parameters.item',
-                'conditionals_config' => [],
-                'authentication_required' => false
-            ],
-            [
-                'description_localisation_string' => 'route-descriptions.category_DELETE',
-                'authentication_required' => true
-            ]
+        $get = Get::init()->
+            setDescription('route-descriptions.category_GET_show')->
+            setParameters('api.category.parameters.item')->
+            option();
+
+        $delete = Delete::init()->
+            setDescription('route-descriptions.category_DELETE')->
+            setAuthenticationRequired(true)->
+            option();
+
+        return $this->optionsResponse(
+            $get + $delete,
+            200
         );
     }
 

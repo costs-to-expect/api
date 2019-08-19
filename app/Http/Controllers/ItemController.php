@@ -2,6 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Option\Delete;
+use App\Option\Get;
+use App\Option\Patch;
+use App\Option\Post;
 use App\Validators\Request\Parameters;
 use App\Validators\Request\Route;
 use App\Models\Category;
@@ -167,7 +171,27 @@ class ItemController extends Controller
             $parameters
         );
 
-        return $this->generateOptionsForIndex(
+        $get = Get::init()->
+            setDescription('route-descriptions.item_GET_index')->
+            setPagination(true)->
+            setSortable('api.item.sortable')->
+            setSearchable('api.item.searchable')->
+            setParameters('api.item.parameters.collection')->
+            setConditionalParameters($conditional_parameters)->
+            option();
+
+        $post = Post::init()->
+            setDescription( 'route-descriptions.item_POST')->
+            setAuthenticationRequired(true)->
+            setFields('api.item.fields')->
+            option();
+
+        return $this->optionsResponse(
+            $get + $post,
+            200
+        );
+
+        /*return $this->generateOptionsForIndex(
             [
                 'description_localisation_string' => 'route-descriptions.item_GET_index',
                 'parameters_config_string' => 'api.item.parameters.collection',
@@ -184,7 +208,7 @@ class ItemController extends Controller
                 'conditionals_config' => [],
                 'authentication_required' => true
             ]
-        );
+        );*/
     }
 
     /**
@@ -210,23 +234,25 @@ class ItemController extends Controller
             UtilityResponse::notFound(trans('entities.item'));
         }
 
-        return $this->generateOptionsForShow(
-            [
-                'description_localisation_string' => 'route-descriptions.item_GET_show',
-                'parameters_config_string' => 'api.item.parameters.item',
-                'conditionals_config' => [],
-                'authentication_required' => false
-            ],
-            [
-                'description_localisation_string' => 'route-descriptions.item_DELETE',
-                'authentication_required' => true
-            ],
-            [
-                'description_localisation_string' => 'route-descriptions.item_PATCH',
-                'fields_config' => 'api.item.fields',
-                'conditionals_config' => [],
-                'authentication_required' => true
-            ]
+        $get = Get::init()->
+            setDescription('route-descriptions.item_GET_show')->
+            setParameters('api.item.parameters.item')->
+            option();
+
+        $delete = Delete::init()->
+            setDescription('route-descriptions.item_DELETE')->
+            setAuthenticationRequired(true)->
+            option();
+
+        $patch = Patch::init()->
+            setDescription('route-descriptions.item_PATCH')->
+            setFields('api.item.fields')->
+            setAuthenticationRequired(true)->
+            option();
+
+        return $this->optionsResponse(
+            $get + $delete + $patch,
+            200
         );
     }
 

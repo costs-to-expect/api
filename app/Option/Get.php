@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Utilities;
+namespace App\Option;
 
 use Illuminate\Support\Facades\Config;
 
@@ -13,10 +13,10 @@ use Illuminate\Support\Facades\Config;
  * @copyright Dean Blackborough 2018-2019
  * @license https://github.com/costs-to-expect/api/blob/master/LICENSE
  */
-class OptionGet
+class Get
 {
     /**
-     * @var OptionGet
+     * @var Get
      */
     static private $instance;
 
@@ -90,10 +90,10 @@ class OptionGet
         self::$sortable = [];
     }
 
-    static public function init(): OptionGet
+    static public function init(): Get
     {
         if (self::$instance === null) {
-            self::$instance = new OptionGet();
+            self::$instance = new Get();
             self::$instance->reset();
         }
 
@@ -102,7 +102,7 @@ class OptionGet
 
     static public function setAuthenticationRequired(
         bool $status = false
-    ): OptionGet
+    ): Get
     {
         self::$authentication = $status;
 
@@ -111,7 +111,7 @@ class OptionGet
 
     static public function setConditionalParameters(
         array $parameters = []
-    ): OptionGet
+    ): Get
     {
         self::$conditional_parameters = $parameters;
 
@@ -120,7 +120,7 @@ class OptionGet
 
     static public function setDescription(
         string $localisation_path
-    ): OptionGet
+    ): Get
     {
         self::$description = trans($localisation_path);
 
@@ -129,7 +129,7 @@ class OptionGet
 
     static public function setPagination(
         bool $status = false
-    ): OptionGet
+    ): Get
     {
         if ($status === true) {
             self::$pagination_parameters = Config::get('api.pagination.parameters');
@@ -140,7 +140,7 @@ class OptionGet
 
     static public function setPaginationOverride(
         bool $status = false
-    ): OptionGet
+    ): Get
     {
         if ($status === true) {
             self::$pagination_parameters = Config::get('api.pagination.parameters-including-collection');
@@ -151,7 +151,7 @@ class OptionGet
 
     static public function setParameters(
         string $config_path
-    ): OptionGet
+    ): Get
     {
         self::$parameters = Config::get($config_path);
         return self::$instance;
@@ -159,7 +159,7 @@ class OptionGet
 
     static public function setSearchable(
         string $config_path
-    ): OptionGet
+    ): Get
     {
         self::$searchable = true;
         self::$searchable_parameters = Config::get($config_path);
@@ -169,7 +169,7 @@ class OptionGet
 
     static public function setSortable(
         string $config_path
-    ): OptionGet
+    ): Get
     {
         self::$sortable = true;
         self::$sortable_parameters = Config::get($config_path);

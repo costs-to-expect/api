@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Item;
 use App\Models\Resource;
+use App\Option\Post;
 use App\Utilities\Response as UtilityResponse;
 use App\Validators\Request\Fields\ItemTransfer as ItemTransferValidator;
 use App\Validators\Request\Route;
@@ -71,27 +72,19 @@ class ItemTransferController extends Controller
     {
         Route::itemRoute($resource_type_id, $resource_id, $item_id);
 
-        return $this->generateOptionsForIndex(
-            [
-                'description_localisation_string' => '',
-                'parameters_config_string' => null,
-                'conditionals_config' => null,
-                'sortable_config' => null,
-                'searchable_config' => null,
-                'enable_pagination' => false,
-                'allow_entire_collection' => $this->allow_entire_collection,
-                'authentication_required' => false
-            ],
-            [
-                'description_localisation_string' => 'route-descriptions.item_transfer_POST',
-                'fields_config' => 'api.item-transfer.fields',
-                'conditionals_config' => $this->conditionalPostParameters(
+        $post = Post::init()->
+            setDescription('route-descriptions.item_transfer_POST')->
+            setFields('api.item-transfer.fields')->
+            setConditionalFields(
+                $this->conditionalPostParameters(
                     $resource_type_id,
                     $resource_id
-                ),
-                'authentication_required' => true
-            ]
-        );
+                )
+            )->
+            setAuthenticationRequired(true)->
+            option();
+
+        return $this->optionsResponse($post, 200);
     }
 
     /**

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\ResourceType;
+use App\Option\Get;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
@@ -45,17 +46,11 @@ class SummaryResourceTypeController extends Controller
      */
     public function optionsIndex(Request $request): JsonResponse
     {
-        return $this->generateOptionsForIndex(
-            [
-                'description_localisation_string' => 'route-descriptions.summary-resource-type-GET-index',
-                'parameters_config_string' => 'api.resource-type.summary-parameters.collection',
-                'conditionals_config' => [],
-                'sortable_config' => null,
-                'searchable_config' => null,
-                'enable_pagination' => false,
-                'allow_entire_collection' => $this->allow_entire_collection,
-                'authentication_required' => false
-            ]
-        );
+        $get = Get::init()->
+            setDescription('route-descriptions.summary-resource-type-GET-index')->
+            setParameters('api.resource-type.summary-parameters.collection')->
+            option();
+
+        return $this->optionsResponse($get, 200);
     }
 }

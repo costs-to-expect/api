@@ -9,5 +9,5 @@ return [
     'subcategory' => 'Subcategory',
     'item' => 'Item (Expense)',
     'item-category' => 'Assigned Category',
-    'item-sub-category' => 'Assigned Subcategory'
+    'item-subcategory' => 'Assigned Subcategory'
 ];

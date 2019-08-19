@@ -2,6 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Option\Delete;
+use App\Option\Get;
+use App\Option\Post;
 use App\Validators\Request\Route;
 use App\Models\Category;
 use App\Models\ItemCategory;
@@ -42,7 +45,7 @@ class ItemCategoryController extends Controller
             $item_id
         );
 
-        if ($item_category === null) {
+        if ($item_category === null || (is_array($item_category) === true && count($item_category) === 0)) {
             UtilityResponse::notFound(trans('entities.item-category'));
         }
 
@@ -51,7 +54,7 @@ class ItemCategoryController extends Controller
         ];
 
         return response()->json(
-            [(new ItemCategoryTransformer($item_category))->toArray()],
+            [(new ItemCategoryTransformer($item_category[0]))->toArray()],
             200,
             $headers
         );
@@ -118,23 +121,21 @@ class ItemCategoryController extends Controller
     {
         Route::itemRoute($resource_type_id, $resource_id, $item_id);
 
-        return $this->generateOptionsForIndex(
-            [
-                'description_localisation_string' => 'route-descriptions.item_category_GET_index',
-                'parameters_config_string' => 'api.item-category.parameters.collection',
-                'conditionals_config' => [],
-                'sortable_config' => null,
-                'searchable_config' => null,
-                'enable_pagination' => false,
-                'allow_entire_collection' => $this->allow_entire_collection,
-                'authentication_required' => false
-            ],
-            [
-                'description_localisation_string' => 'route-descriptions.item_category_POST',
-                'fields_config' => 'api.item-category.fields',
-                'conditionals_config' => $this->conditionalPostParameters($resource_type_id),
-                'authentication_required' => true
-            ]
+        $get = Get::init()->
+            setDescription('route-descriptions.item_category_GET_index')->
+            setParameters('api.item-category.parameters.collection')->
+            option();
+
+        $post = Post::init()->
+            setDescription('route-descriptions.item_category_POST')->
+            setAuthenticationRequired(true)->
+            setFields('api.item-category.fields')->
+            setConditionalFields($this->conditionalPostParameters($resource_type_id))->
+            option();
+
+        return $this->optionsResponse(
+            $get + $post,
+            200
         );
     }
 
@@ -174,17 +175,19 @@ class ItemCategoryController extends Controller
             UtilityResponse::notFound(trans('entities.item-category'));
         }
 
-        return $this->generateOptionsForShow(
-            [
-                'description_localisation_string' => 'route-descriptions.item_category_GET_show',
-                'parameters_config_string' => 'api.item-category.parameters.item',
-                'conditionals_config' => [],
-                'authentication_required' => false
-            ],
-            [
-                'description_localisation_string' => 'route-descriptions.item_category_DELETE',
-                'authentication_required' => true
-            ]
+        $get = Get::init()->
+            setDescription('route-descriptions.item_category_GET_show')->
+            setParameters('api.item-category.parameters.item')->
+            option();
+
+        $delete = Delete::init()->
+            setDescription('route-descriptions.item_category_DELETE')->
+            setAuthenticationRequired(true)->
+            option();
+
+        return $this->optionsResponse(
+            $get + $delete,
+            200
         );
     }
 
@@ -230,7 +233,7 @@ class ItemCategoryController extends Controller
         }
 
         return response()->json(
-            (new ItemCategoryTransformer($item_category))->toArray(),
+            (new ItemCategoryTransformer((new ItemCategory())->instanceToArray($item_category)))->toArray(),
             201
         );
     }
@@ -286,7 +289,7 @@ class ItemCategoryController extends Controller
     {
         Route::itemCategory($resource_type_id, $resource_id, $item_id, $item_category_id);
 
-        $item_category = (new ItemCategory())->single(
+        $item_category = (new ItemCategory())->instance(
             $resource_type_id,
             $resource_id,
             $item_id,
@@ -297,9 +300,8 @@ class ItemCategoryController extends Controller
             UtilityResponse::notFound(trans('entities.item-category'));
         }
 
-
         try {
-            $item_category->delete();
+            (new ItemCategory())->find($item_category_id)->delete();
 
             UtilityResponse::successNoContent();
         } catch (QueryException $e) {
