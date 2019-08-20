@@ -2,6 +2,10 @@
 
 The complete changelog for the Costs to Expect REST API, follows the format defined at https://keepachangelog.com/en/1.0.0/
 
+## [v1.21.1] - 2019-08-xx
+### Changed
+
+
 ## [v1.21.0] - 2019-08-19
 ### Added
 - We have added an `OptionPatch` class to help generate the PATCH data array for the OPTIONS requests.
