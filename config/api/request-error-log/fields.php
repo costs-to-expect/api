@@ -37,5 +37,12 @@ return [
         'description' => 'request-error-log/fields.description-source',
         'type' => 'string',
         'required' => true
+    ],
+    'debug' => [
+        'field' => 'debug',
+        'title' => 'request-error-log/fields.title-debug',
+        'description' => 'request-error-log/fields.description-debug',
+        'type' => 'string',
+        'required' => false
     ]
 ];

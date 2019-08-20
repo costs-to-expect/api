@@ -17,4 +17,7 @@ return [
 
     'title-source' => 'Source',
     'description-source' => 'Source of the error (website,api,legacy,postman)',
+
+    'title-debug' => 'Debug',
+    'description-debug' => 'Additional debug data (optional)',
 ];
