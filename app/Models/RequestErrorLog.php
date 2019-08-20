@@ -36,7 +36,8 @@ class RequestErrorLog extends Model
                 'request_error_log.returned_status_code AS request_error_log_returned_status_code',
                 'request_error_log.request_uri AS request_error_log_request_uri',
                 'request_error_log.source AS request_error_log_source',
-                'request_error_log.created_at AS request_error_log_created_at'
+                'request_error_log.created_at AS request_error_log_created_at',
+                'request_error_log.debug AS request_error_log_debug'
             )->
             orderByDesc('created_at')->
             offset($offset)->

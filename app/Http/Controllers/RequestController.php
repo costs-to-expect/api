@@ -174,6 +174,7 @@ class RequestController extends Controller
                 'expected_status_code' => $request->input('expected_status_code'),
                 'returned_status_code' => $request->input('returned_status_code'),
                 'request_uri' => $request->input('request_uri'),
+                'debug' => $request->input('debug')
             ]);
             $request_error_log->save();
 
@@ -183,7 +184,8 @@ class RequestController extends Controller
                 'expected_status_code' => $request->input('expected_status_code'),
                 'returned_status_code' => $request->input('returned_status_code'),
                 'request_uri' => $request->input('request_uri'),
-                'referer' => $request->server('HTTP_REFERER', 'NOT SET!')
+                'referer' => $request->server('HTTP_REFERER', 'NOT SET!'),
+                'debug' => $request->input('debug')
             ]));
 
         } catch (Exception $e) {

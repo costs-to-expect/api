@@ -37,6 +37,10 @@
             <td>Referer (if set):</td>
             <td>{{ $request_error['referer'] }}</td>
         </tr>
+        <tr>
+            <td>Debug information (if set):</td>
+            <td>{{ $request_error['debug'] }}</td>
+        </tr>
     </table>
 </body>
 </html>
