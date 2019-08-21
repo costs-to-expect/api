@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\SubCategory;
 use App\Option\Delete;
 use App\Option\Get;
+use App\Option\Patch;
 use App\Option\Post;
 use App\Utilities\Pagination as UtilityPagination;
 use App\Validators\Request\Parameters;
@@ -192,8 +193,14 @@ class CategoryController extends Controller
             setAuthenticationRequired(true)->
             option();
 
+        $patch = Patch::init()->
+            setDescription('route-descriptions.category_PATCH')->
+            setFields('api.category.fields-patch')->
+            setAuthenticationRequired(true)->
+            option();
+
         return $this->optionsResponse(
-            $get + $delete,
+            $get + $delete + $patch,
             200
         );
     }
@@ -282,5 +289,60 @@ class CategoryController extends Controller
         }
 
         return $conditional_post_fields;
+    }
+
+    /**
+     * Update the selected category
+     *
+     * @param string $category_id
+     *
+     * @return JsonResponse
+     */
+    public function update(
+        string $category_id
+    ): JsonResponse
+    {
+        Route::categoryRoute($category_id);
+
+        $category = (new Category())->instance($category_id);
+
+        if ($category === null) {
+            UtilityResponse::failedToSelectModelForUpdate();
+        }
+
+        if ($this->isThereAnythingToPatchInRequest() === false) {
+            UtilityResponse::nothingToPatch();
+        }
+
+        $validate = (new CategoryValidator)->update([
+            'resource_type_id' => intval($category->resource_type_id),
+            'category_id' => intval($category_id)
+        ]);
+
+        if ($validate->fails() === true) {
+            return $this->returnValidationErrors($validate);
+        }
+
+        $invalid_fields = $this->areThereInvalidFieldsInRequest(
+            array_merge(
+                (new Category())->patchableFields(),
+                (new CategoryValidator)->dynamicDefinedFields()
+            )
+        );
+        if ($invalid_fields !== false) {
+            UtilityResponse::invalidFieldsInRequest($invalid_fields);
+        }
+
+        foreach (request()->all() as $key => $value) {
+            $category->$key = $value;
+        }
+
+        try {
+            $category->save();
+        } catch (Exception $e) {
+            UtilityResponse::failedToSaveModelForUpdate();
+        }
+
+        UtilityResponse::successNoContent();
     }
 }

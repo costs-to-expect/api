@@ -39,6 +39,33 @@ class Category extends BaseValidator
     }
 
     /**
+     * Create the validation rules for the update request
+     *
+     * @param integer $category_id
+     * @param integer $resource_type_id
+     *
+     * @return array
+     */
+    private function updateRules(int $category_id, int $resource_type_id): array
+    {
+        return array_merge(
+            [
+                'name' => [
+                    'sometimes',
+                    'string',
+                    'unique:category,name,'. $category_id . ',id,resource_type_id,' . $resource_type_id
+                ],
+            ],
+            Config::get('api.category.validation.PATCH.fields')
+        );
+    }
+
+    public function dynamicDefinedFields(): array
+    {
+        return ['name'];
+    }
+
+    /**
      * Return the validator object for the create request
      *
      * @param array $options
@@ -72,6 +99,10 @@ class Category extends BaseValidator
      */
     public function update(array $options = []): Validator
     {
-        // TODO: Implement update() method.
+        return ValidatorFacade::make(
+            request()->all(),
+            $this->updateRules($options['resource_type_id'], $options['category_id']),
+            $this->translateMessages('api.category.validation.PATCH.messages')
+        );
     }
 }

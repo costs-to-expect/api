@@ -152,6 +152,7 @@ These routes require authorisation.
 | :--- | :--- |
 | GET/HEAD | v1/auth/user |
 | POST     | v1/categories |
+| PATCH    | v1/categories/{category_id} |
 | DELETE   | v1/categories/{category_id} |
 | POST     | v1/categories/{category_id}/sub_categories |
 | DELETE   | v1/categories/{category_id}/sub_categories/{sub_category_id} |
