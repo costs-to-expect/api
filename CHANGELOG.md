@@ -2,6 +2,10 @@
 
 The complete changelog for the Costs to Expect REST API, follows the format defined at https://keepachangelog.com/en/1.0.0/
 
+## [v1.22.0] - 2019-08-xx
+### Added
+- We have added PATCH support for categories; if authenticated, it is possible to update the selected category.
+
 ## [v1.21.1] - 2019-08-20
 ### Added
 - We have added a `debug` field to the request error log; you can optionally provide information that may be useful in tracking down the error.
