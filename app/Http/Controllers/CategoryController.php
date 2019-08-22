@@ -13,6 +13,7 @@ use App\Validators\Request\Route;
 use App\Models\Category;
 use App\Models\ResourceType;
 use App\Models\Transformers\Category as CategoryTransformer;
+use App\Utilities\Patch as UtilityPatch;
 use App\Utilities\Response as UtilityResponse;
 use App\Validators\Request\Fields\Category as CategoryValidator;
 use App\Validators\Request\SearchParameters;
@@ -323,15 +324,12 @@ class CategoryController extends Controller
             return $this->returnValidationErrors($validate);
         }
 
-        $invalid_fields = $this->areThereInvalidFieldsInRequest(
+        UtilityPatch::checkForInvalidFields(
             array_merge(
                 (new Category())->patchableFields(),
                 (new CategoryValidator)->dynamicDefinedFields()
             )
         );
-        if ($invalid_fields !== false) {
-            UtilityResponse::invalidFieldsInRequest($invalid_fields);
-        }
 
         foreach (request()->all() as $key => $value) {
             $category->$key = $value;

@@ -11,7 +11,6 @@ use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Config;
 
 class Controller extends BaseController
 {
@@ -109,28 +108,5 @@ class Controller extends BaseController
         }
 
         return true;
-    }
-
-    /**
-     * Check to see if there are any invalid fields in the request
-     *
-     * @param array $update_fields An array of fields that can be patched
-     *
-     * @return false|array
-     */
-    protected function areThereInvalidFieldsInRequest(array $update_fields)
-    {
-        $invalid_fields = [];
-        foreach (request()->all() as $key => $value) {
-            if (in_array($key, $update_fields) === false) {
-                $invalid_fields[] = $key;
-            }
-        }
-
-        if (count($invalid_fields) !== 0) {
-            return $invalid_fields;
-        }
-
-        return false;
     }
 }

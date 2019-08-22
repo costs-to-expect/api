@@ -13,6 +13,7 @@ use App\Models\Item;
 use App\Models\SubCategory;
 use App\Models\Transformers\Item as ItemTransformer;
 use App\Utilities\Pagination as UtilityPagination;
+use App\Utilities\Patch as UtilityPatch;
 use App\Utilities\Response as UtilityResponse;
 use App\Validators\Request\Fields\Item as ItemValidator;
 use App\Validators\Request\SearchParameters;
@@ -323,10 +324,7 @@ class ItemController extends Controller
             return $this->returnValidationErrors($validate);
         }
 
-        $invalid_fields = $this->areThereInvalidFieldsInRequest((new Item())->patchableFields());
-        if ($invalid_fields !== false) {
-            UtilityResponse::invalidFieldsInRequest($invalid_fields);
-        }
+        UtilityPatch::checkForInvalidFields((new Item())->patchableFields());
 
         $item = (new Item())->instance($resource_type_id, $resource_id, $item_id);
 
