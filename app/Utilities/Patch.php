@@ -15,6 +15,15 @@ use Illuminate\Http\JsonResponse;
  */
 class Patch
 {
+    /**
+     * Check to see if any of the provided fields are invalid, we throw an error
+     * if there are any invalid fields in the request, simpler to fail hard than
+     * simply ignore invalid values
+     *
+     * @param array $patchable_fields
+     *
+     * @return JsonResponse|null
+     */
     public static function checkForInvalidFields(array $patchable_fields): ?JsonResponse
     {
         $invalid_fields = [];
@@ -26,8 +35,23 @@ class Patch
 
         if (count($invalid_fields) !== 0) {
             return UtilityResponse::invalidFieldsInRequest($invalid_fields);
-        } else {
-            return null;
         }
+
+        return null;
+    }
+
+    /**
+     * Check the request to see if there are any fields in the request, if not
+     * we simply throw an error
+     *
+     * @return JsonResponse|null
+     */
+    public static function checkForEmptyPatch(): ?JsonResponse
+    {
+        if (count(request()->all()) === 0) {
+            return UtilityResponse::nothingToPatch();;
+        }
+
+        return null;
     }
 }

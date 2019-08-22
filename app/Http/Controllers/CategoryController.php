@@ -311,9 +311,7 @@ class CategoryController extends Controller
             UtilityResponse::failedToSelectModelForUpdate();
         }
 
-        if ($this->isThereAnythingToPatchInRequest() === false) {
-            UtilityResponse::nothingToPatch();
-        }
+        UtilityPatch::checkForEmptyPatch();
 
         $validate = (new CategoryValidator)->update([
             'resource_type_id' => intval($category->resource_type_id),

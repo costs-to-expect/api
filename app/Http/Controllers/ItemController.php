@@ -315,16 +315,14 @@ class ItemController extends Controller
     {
         Route::itemRoute($resource_type_id, $resource_id, $item_id);
 
-        if ($this->isThereAnythingToPatchInRequest() === false) {
-            UtilityResponse::nothingToPatch();
-        }
+        UtilityPatch::checkForEmptyPatch();
+
+        UtilityPatch::checkForInvalidFields((new Item())->patchableFields());
 
         $validate = (new ItemValidator)->update();
         if ($validate->fails() === true) {
             return $this->returnValidationErrors($validate);
         }
-
-        UtilityPatch::checkForInvalidFields((new Item())->patchableFields());
 
         $item = (new Item())->instance($resource_type_id, $resource_id, $item_id);
 

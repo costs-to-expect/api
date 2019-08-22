@@ -93,20 +93,4 @@ class Controller extends BaseController
 
         UtilityResponse::validationErrors($validation_errors);
     }
-
-    /**
-     * Check the request to see if there is anything in the PATCH we need to
-     * deal with, checked the entire request for values, assumption being we have
-     * already checked the validity of the submitted data
-     *
-     * @return boolean
-     */
-    protected function isThereAnythingToPatchInRequest(): bool
-    {
-        if (count(request()->all()) === 0) {
-            return false;
-        }
-
-        return true;
-    }
 }
