@@ -7,7 +7,7 @@ namespace App\Validators\Request;
  * Fetch and validate any search parameters
  *
  * @author Dean Blackborough <dean@g3d-development.com>
- * @copyright Dean Blackborough 2018-2019
+ * @copyright G3D Development Limited 2018-2019
  * @license https://github.com/costs-to-expect/api/blob/master/LICENSE
  */
 class SearchParameters

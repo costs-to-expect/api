@@ -21,7 +21,7 @@ use Illuminate\Http\Request;
  * Summary for resource type items route
  *
  * @author Dean Blackborough <dean@g3d-development.com>
- * @copyright Dean Blackborough 2018-2019
+ * @copyright G3D Development Limited 2018-2019
  * @license https://github.com/costs-to-expect/api/blob/master/LICENSE
  */
 class SummaryResourceTypeItemController extends Controller
