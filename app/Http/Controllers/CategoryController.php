@@ -214,10 +214,7 @@ class CategoryController extends Controller
     public function create(): JsonResponse
     {
         $validator = (new CategoryValidator)->create();
-
-        if ($validator->fails() === true) {
-            return $this->returnValidationErrors($validator);
-        }
+        UtilityRequest::validateAndReturnErrors($validator);
 
         try {
             $resource_type_id = $this->hash->decode('resource_type', request()->input('resource_type_id'));

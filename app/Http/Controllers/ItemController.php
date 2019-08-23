@@ -271,10 +271,7 @@ class ItemController extends Controller
         Route::resourceRoute($resource_type_id, $resource_id);
 
         $validator = (new ItemValidator)->create();
-
-        if ($validator->fails() === true) {
-            return $this->returnValidationErrors($validator);
-        }
+        UtilityRequest::validateAndReturnErrors($validator);
 
         try {
             $item = new Item([

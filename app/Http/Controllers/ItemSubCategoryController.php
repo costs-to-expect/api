@@ -10,6 +10,7 @@ use App\Models\ItemCategory;
 use App\Models\ItemSubCategory;
 use App\Models\SubCategory;
 use App\Models\Transformers\ItemSubCategory as ItemSubCategoryTransformer;
+use App\Utilities\Request as UtilityRequest;
 use App\Utilities\Response as UtilityResponse;
 use App\Validators\Request\Fields\ItemSubCategory as ItemSubCategoryValidator;
 use Exception;
@@ -256,10 +257,10 @@ class ItemSubCategoryController extends Controller
             ->find($item_category_id);
 
         $validator = (new ItemSubCategoryValidator)->create(['category_id' => $item_category->category_id]);
-
-        if ($validator->fails() === true) {
-            return $this->returnValidationErrors($validator, $this->conditionalPostParameters($item_category_id));
-        }
+        UtilityRequest::validateAndReturnErrors(
+            $validator,
+            $this->conditionalPostParameters($item_category_id)
+        );
 
         try {
             $sub_category_id = $this->hash->decode('subcategory', $request->input('sub_category_id'));

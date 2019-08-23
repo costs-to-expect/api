@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Events\RequestError;
 use App\Option\Get;
 use App\Option\Post;
+use App\Utilities\Request as UtilityRequest;
 use App\Utilities\Response;
 use App\Validators\Request\Parameters;
 use App\Models\RequestErrorLog;
@@ -162,10 +163,7 @@ class RequestController extends Controller
     public function createErrorLog(Request $request): JsonResponse
     {
         $validator = (new RequestErrorLogValidator())->create();
-
-        if ($validator->fails() === true) {
-            return $this->returnValidationErrors($validator);
-        }
+        UtilityRequest::validateAndReturnErrors($validator);
 
         try {
             $request_error_log = new RequestErrorLog([

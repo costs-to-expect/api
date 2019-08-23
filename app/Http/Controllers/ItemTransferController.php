@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Item;
 use App\Models\Resource;
 use App\Option\Post;
+use App\Utilities\Request as UtilityRequest;
 use App\Utilities\Response as UtilityResponse;
 use App\Validators\Request\Fields\ItemTransfer as ItemTransferValidator;
 use App\Validators\Request\Route;
@@ -40,10 +41,7 @@ class ItemTransferController extends Controller
                 'existing_resource_id' => $resource_id
             ]
         );
-
-        if ($validator->fails() === true) {
-            return $this->returnValidationErrors($validator);
-        }
+        UtilityRequest::validateAndReturnErrors($validator);
 
         try {
             $new_resource_id = $this->hash->decode('resource', $request->input('resource_id'));

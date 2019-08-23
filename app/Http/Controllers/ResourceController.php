@@ -6,6 +6,7 @@ use App\Option\Delete;
 use App\Option\Get;
 use App\Option\Post;
 use App\Utilities\Pagination as UtilityPagination;
+use App\Utilities\Request as UtilityRequest;
 use App\Validators\Request\Route;
 use App\Models\Resource;
 use App\Models\Transformers\Resource as ResourceTransformer;
@@ -213,10 +214,7 @@ class ResourceController extends Controller
         Route::resourceTypeRoute($resource_type_id);
 
         $validator = (new ResourceValidator)->create(['resource_type_id' => $resource_type_id]);
-
-        if ($validator->fails() === true) {
-            return $this->returnValidationErrors($validator);
-        }
+        UtilityRequest::validateAndReturnErrors($validator);
 
         try {
             $resource = new Resource([
