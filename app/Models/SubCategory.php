@@ -6,7 +6,7 @@ namespace App\Models;
 use App\Utilities\Model as ModelUtility;
 use Illuminate\Database\Query\Builder as QueryBuilder;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Config;
 
 /**
  * Sub category model
@@ -25,6 +25,16 @@ class SubCategory extends Model
     public function category()
     {
         return $this->belongsTo(Category::class, 'category_id', 'id');
+    }
+
+    /**
+     * Return an array of the fields that can be PATCHed.
+     *
+     * @return array
+     */
+    public function patchableFields(): array
+    {
+        return array_keys(Config::get('api.subcategory.validation.PATCH.fields'));
     }
 
     /**
@@ -114,6 +124,20 @@ class SubCategory extends Model
         } else {
             return null;
         }
+    }
+
+    public function instance(
+        int $category_id,
+        int $sub_category_id
+    ): ?SubCategory
+    {
+        return $this->select(
+                'sub_category.id',
+                'sub_category.name',
+                'sub_category.description'
+            )->
+            where('category_id', '=', $category_id)->
+            find($sub_category_id);
     }
 
     /**

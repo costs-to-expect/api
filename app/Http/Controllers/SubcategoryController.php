@@ -270,4 +270,53 @@ class SubcategoryController extends Controller
             UtilityResponse::notFound(trans('entities.subcategory'));
         }
     }
+
+    /**
+     * Update the selected category
+     *
+     * @param string $category_id
+     * @param string $subcategory_id
+     *
+     * @return JsonResponse
+     */
+    public function update(
+        string $category_id,
+        string $subcategory_id
+    ): JsonResponse
+    {
+        Route::subCategoryRoute($category_id, $subcategory_id);
+
+        $subcategory = (new SubCategory())->instance($category_id, $subcategory_id);
+
+        if ($subcategory === null) {
+            UtilityResponse::failedToSelectModelForUpdate();
+        }
+
+        UtilityRequest::checkForEmptyPatch();
+
+        $validator = (new SubCategoryValidator())->update([
+            'category_id' => intval($category_id),
+            'subcategory_id' => intval($subcategory_id)
+        ]);
+        UtilityRequest::validateAndReturnErrors($validator);
+
+        UtilityRequest::checkForInvalidFields(
+            array_merge(
+                (new SubCategory())->patchableFields(),
+                (new SubCategoryValidator)->dynamicDefinedFields()
+            )
+        );
+
+        foreach (request()->all() as $key => $value) {
+            $subcategory->$key = $value;
+        }
+
+        try {
+            $subcategory->save();
+        } catch (Exception $e) {
+            UtilityResponse::failedToSaveModelForUpdate();
+        }
+
+        UtilityResponse::successNoContent();
+    }
 }
