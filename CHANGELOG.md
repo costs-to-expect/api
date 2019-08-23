@@ -5,9 +5,13 @@ The complete changelog for the Costs to Expect REST API, follows the format defi
 ## [v1.22.0] - 2019-08-xx
 ### Added
 - We have added PATCH support for categories; if authenticated, it is possible to update the selected category.
+- We have added a Request utility class with helper methods for POST and PATCH request validation.
 
 ### Changed
 - Updated the copyright, should be G3D Development Limited, not me personally.
+- We have removed the protected `areThereInvalidFieldsInRequest` method from the base controller.
+- We have removed the protected `isThereAnythingToPatchInRequest` method from the base controller.
+- We have removed the protected `returnValidationErrors` method from the base controller.
 
 ## [v1.21.1] - 2019-08-20
 ### Added
