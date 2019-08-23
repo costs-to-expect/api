@@ -275,18 +275,18 @@ class SubcategoryController extends Controller
      * Update the selected category
      *
      * @param string $category_id
-     * @param string $subcategory_id
+     * @param string $sub_category_id
      *
      * @return JsonResponse
      */
     public function update(
         string $category_id,
-        string $subcategory_id
+        string $sub_category_id
     ): JsonResponse
     {
-        Route::subCategoryRoute($category_id, $subcategory_id);
+        Route::subCategoryRoute($category_id, $sub_category_id);
 
-        $subcategory = (new SubCategory())->instance($category_id, $subcategory_id);
+        $subcategory = (new SubCategory())->instance($category_id, $sub_category_id);
 
         if ($subcategory === null) {
             UtilityResponse::failedToSelectModelForUpdate();
@@ -296,7 +296,7 @@ class SubcategoryController extends Controller
 
         $validator = (new SubCategoryValidator())->update([
             'category_id' => intval($category_id),
-            'subcategory_id' => intval($subcategory_id)
+            'subcategory_id' => intval($sub_category_id)
         ]);
         UtilityRequest::validateAndReturnErrors($validator);
 
