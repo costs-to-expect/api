@@ -313,14 +313,11 @@ class CategoryController extends Controller
 
         UtilityPatch::checkForEmptyPatch();
 
-        $validate = (new CategoryValidator)->update([
+        $validator = (new CategoryValidator)->update([
             'resource_type_id' => intval($category->resource_type_id),
             'category_id' => intval($category_id)
         ]);
-
-        if ($validate->fails() === true) {
-            return $this->returnValidationErrors($validate);
-        }
+        UtilityPatch::validateAndReturnErrors($validator);
 
         UtilityPatch::checkForInvalidFields(
             array_merge(

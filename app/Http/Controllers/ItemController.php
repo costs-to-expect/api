@@ -319,10 +319,8 @@ class ItemController extends Controller
 
         UtilityPatch::checkForInvalidFields((new Item())->patchableFields());
 
-        $validate = (new ItemValidator)->update();
-        if ($validate->fails() === true) {
-            return $this->returnValidationErrors($validate);
-        }
+        $validator = (new ItemValidator)->update();
+        UtilityPatch::validateAndReturnErrors($validator);
 
         $item = (new Item())->instance($resource_type_id, $resource_id, $item_id);
 

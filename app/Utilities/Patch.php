@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace App\Utilities;
 
 use App\Utilities\Response as UtilityResponse;
+use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Http\JsonResponse;
 
 /**
@@ -50,6 +51,38 @@ class Patch
     {
         if (count(request()->all()) === 0) {
             return UtilityResponse::nothingToPatch();;
+        }
+
+        return null;
+    }
+
+    /**
+     * Return the errors from the validator
+     *
+     * @param Validator $validator
+     * @param array $allowed_values
+     *
+     * @return JsonResponse|null
+     */
+    public static function validateAndReturnErrors(
+        Validator $validator,
+        array $allowed_values = []
+    ): ?JsonResponse
+    {
+        if ($validator->fails() === true) {
+            $validation_errors = [];
+
+            foreach ($validator->errors()->toArray() as $field => $errors) {
+                foreach ($errors as $error) {
+                    $validation_errors[$field]['errors'][] = $error;
+                }
+            }
+
+            if (count($allowed_values) > 0) {
+                $validation_errors = array_merge_recursive($validation_errors, $allowed_values);
+            }
+
+            return UtilityResponse::validationErrors($validation_errors);
         }
 
         return null;
