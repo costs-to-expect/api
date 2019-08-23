@@ -13,6 +13,9 @@ The complete changelog for the Costs to Expect REST API, follows the format defi
 - We have removed the protected `isThereAnythingToPatchInRequest` method from the base controller.
 - We have removed the protected `returnValidationErrors` method from the base controller.
 
+### Fixed 
+- We have corrected some data; the assigned categories and subcategories were missing for six expenses.
+
 ## [v1.21.1] - 2019-08-20
 ### Added
 - We have added a `debug` field to the request error log; you can optionally provide information that may be useful in tracking down the error.
