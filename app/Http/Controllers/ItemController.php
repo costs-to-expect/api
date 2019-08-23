@@ -13,7 +13,7 @@ use App\Models\Item;
 use App\Models\SubCategory;
 use App\Models\Transformers\Item as ItemTransformer;
 use App\Utilities\Pagination as UtilityPagination;
-use App\Utilities\Patch as UtilityPatch;
+use App\Utilities\Request as UtilityRequest;
 use App\Utilities\Response as UtilityResponse;
 use App\Validators\Request\Fields\Item as ItemValidator;
 use App\Validators\Request\SearchParameters;
@@ -315,12 +315,12 @@ class ItemController extends Controller
     {
         Route::itemRoute($resource_type_id, $resource_id, $item_id);
 
-        UtilityPatch::checkForEmptyPatch();
+        UtilityRequest::checkForEmptyPatch();
 
-        UtilityPatch::checkForInvalidFields((new Item())->patchableFields());
+        UtilityRequest::checkForInvalidFields((new Item())->patchableFields());
 
         $validator = (new ItemValidator)->update();
-        UtilityPatch::validateAndReturnErrors($validator);
+        UtilityRequest::validateAndReturnErrors($validator);
 
         $item = (new Item())->instance($resource_type_id, $resource_id, $item_id);
 

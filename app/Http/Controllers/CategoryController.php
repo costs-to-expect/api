@@ -13,7 +13,7 @@ use App\Validators\Request\Route;
 use App\Models\Category;
 use App\Models\ResourceType;
 use App\Models\Transformers\Category as CategoryTransformer;
-use App\Utilities\Patch as UtilityPatch;
+use App\Utilities\Request as UtilityRequest;
 use App\Utilities\Response as UtilityResponse;
 use App\Validators\Request\Fields\Category as CategoryValidator;
 use App\Validators\Request\SearchParameters;
@@ -311,15 +311,15 @@ class CategoryController extends Controller
             UtilityResponse::failedToSelectModelForUpdate();
         }
 
-        UtilityPatch::checkForEmptyPatch();
+        UtilityRequest::checkForEmptyPatch();
 
         $validator = (new CategoryValidator)->update([
             'resource_type_id' => intval($category->resource_type_id),
             'category_id' => intval($category_id)
         ]);
-        UtilityPatch::validateAndReturnErrors($validator);
+        UtilityRequest::validateAndReturnErrors($validator);
 
-        UtilityPatch::checkForInvalidFields(
+        UtilityRequest::checkForInvalidFields(
             array_merge(
                 (new Category())->patchableFields(),
                 (new CategoryValidator)->dynamicDefinedFields()

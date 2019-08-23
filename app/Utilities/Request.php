@@ -8,13 +8,13 @@ use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Http\JsonResponse;
 
 /**
- * PATCH utility class, helper methods to reduce duplication
+ * Request utility class, helper methods for PATCH and POST methods
  *
  * @author Dean Blackborough <dean@g3d-development.com>
  * @copyright G3D Development Limited 2018-2019
  * @license https://github.com/costs-to-expect/api/blob/master/LICENSE
  */
-class Patch
+class Request
 {
     /**
      * Check to see if any of the provided fields are invalid, we throw an error
