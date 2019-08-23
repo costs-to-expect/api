@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Option\Delete;
 use App\Option\Get;
+use App\Option\Patch;
 use App\Option\Post;
 use App\Utilities\Pagination as UtilityPagination;
 use App\Utilities\Request as UtilityRequest;
@@ -192,8 +193,14 @@ class SubcategoryController extends Controller
             setAuthenticationRequired(true)->
             option();
 
+        $patch = Patch::init()->
+            setDescription('route-descriptions.sub_category_PATCH')->
+            setFields('api.subcategory.fields')->
+            setAuthenticationRequired(true)->
+            option();
+
         return $this->optionsResponse(
-            $get + $delete,
+            $get + $delete + $patch,
             200
         );
     }
