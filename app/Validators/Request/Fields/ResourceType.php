@@ -18,6 +18,32 @@ use Illuminate\Support\Facades\Validator as ValidatorFacade;
 class ResourceType extends BaseValidator
 {
     /**
+     * Create the validation rules for the update request
+     *
+     * @param integer $resource_type_id
+     *
+     * @return array
+     */
+    private function updateRules(int $resource_type_id): array
+    {
+        return array_merge(
+            [
+                'name' => [
+                    'sometimes',
+                    'string',
+                    'unique:resource-type,name,'. $resource_type_id . ',id'
+                ],
+            ],
+            Config::get('api.resource-type.validation.PATCH.fields')
+        );
+    }
+
+    public function dynamicDefinedFields(): array
+    {
+        return ['name'];
+    }
+
+    /**
      * Return the validator object for the create request
      *
      * @param array $options
@@ -45,6 +71,10 @@ class ResourceType extends BaseValidator
      */
     public function update(array $options = []): Validator
     {
-        // TODO: Implement update() method.
+        return ValidatorFacade::make(
+            request()->all(),
+            $this->updateRules($options['resource_type_id']),
+            $this->translateMessages('api.category.validation.PATCH.messages')
+        );
     }
 }

@@ -12,5 +12,14 @@ return [
         'messages' => [
             'name.unique' => 'resource-type/validation.name-unique'
         ]
+    ],
+    'PATCH' => [
+        'fields' => [
+            'description' => 'sometimes|string',
+            'private' => 'sometimes|boolean'
+        ],
+        'messages' => [
+            'name.unique' => 'resource-type/validation.name-unique'
+        ]
     ]
 ];

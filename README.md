@@ -155,8 +155,10 @@ These routes require authorisation.
 | PATCH    | v1/categories/{category_id} |
 | DELETE   | v1/categories/{category_id} |
 | POST     | v1/categories/{category_id}/sub_categories |
+| PATCH    | v1/categories/{category_id}/sub_categories/{sub_category_id} |
 | DELETE   | v1/categories/{category_id}/sub_categories/{sub_category_id} |
 | POST     | v1/resource-types |
+| PATCH    | v1/resource-types/{resource_type_id} |
 | DELETE   | v1/resource-types/{resource_type_id} |
 | POST     | v1/resource-types/{resource_type_id}/resources |
 | DELETE   | v1/resource-types/{resource_type_id}/resources/{resource_id} |
