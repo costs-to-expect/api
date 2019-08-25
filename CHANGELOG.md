@@ -2,11 +2,12 @@
 
 The complete changelog for the Costs to Expect REST API, follows the format defined at https://keepachangelog.com/en/1.0.0/
 
-## [v1.22.0] - 2019-08-xx
+## [v1.22.0] - 2019-08-25
 ### Added
 - We have added PATCH support for categories; if authenticated, you can update the selected category.
 - We have added PATCH support for subcategories; if authenticated, you can update the selected subcategory.
 - We have added PATCH support for resource types; if authenticated, you can update the selected resource type.
+- We have added PATCH support for resources; if authenticated, you can update the selected resource.
 - We have added a Request utility class with helper methods for POST and PATCH request validation.
 
 ### Changed
@@ -14,6 +15,7 @@ The complete changelog for the Costs to Expect REST API, follows the format defi
 - We have removed the protected `areThereInvalidFieldsInRequest` method from the base controller.
 - We have removed the protected `isThereAnythingToPatchInRequest` method from the base controller.
 - We have removed the protected `returnValidationErrors` method from the base controller.
+- We have updated the README and added Mailgun.
 
 ### Fixed 
 - We have corrected some data; the assigned categories and subcategories were missing for six expenses.
