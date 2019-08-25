@@ -56,6 +56,8 @@ install Passport.
 alternatively a GET request to `http://[your.domail.local]/v1` will show all the routes.
 * You can add a development user by POSTing to `http://[your.domail.local]/v1/auth/register` and then get a bearer by 
 POSTing to `http://[your.domail.local]/v1/auth/login` - you will need a bearer for all the routes that require authentication.
+* The API is setup to use Mailgun by default, populate `MAILGUN_DOMAIN` and `MAILGUN_SECRET` with values from your account, 
+you will also need to set `MAIL_FROM_ADDRESS` and `MAIL_TO_ADDRESS`. You may need to set `Authorized Recipients` in Mailgun. 
 
 ## Responses
 
