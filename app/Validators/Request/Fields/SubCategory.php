@@ -5,7 +5,6 @@ namespace App\Validators\Request\Fields;
 
 use App\Validators\Request\Fields\Validator as BaseValidator;
 use Illuminate\Contracts\Validation\Validator;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Validator as ValidatorFacade;
 
@@ -13,7 +12,7 @@ use Illuminate\Support\Facades\Validator as ValidatorFacade;
  * Validation helper class for sub categories, returns the generated validator objects
  *
  * @author Dean Blackborough <dean@g3d-development.com>
- * @copyright Dean Blackborough 2018-2019
+ * @copyright G3D Development Limited 2018-2019
  * @license https://github.com/costs-to-expect/api/blob/master/LICENSE
  */
 class SubCategory extends BaseValidator
@@ -40,6 +39,33 @@ class SubCategory extends BaseValidator
     }
 
     /**
+     * Create the validation rules for the update request
+     *
+     * @param integer $category_id
+     * @param integer $subcategory_id
+     *
+     * @return array
+     */
+    private function updateRules(int $category_id, int $subcategory_id): array
+    {
+        return array_merge(
+            [
+                'name' => [
+                    'sometimes',
+                    'string',
+                    'unique:sub_category,name,'. $subcategory_id . ',id,category_id,' . $category_id
+                ],
+            ],
+            Config::get('api.subcategory.validation.PATCH.fields')
+        );
+    }
+
+    public function dynamicDefinedFields(): array
+    {
+        return ['name'];
+    }
+
+    /**
      * Return the validator object for the create request
      *
      * @param array $options
@@ -63,6 +89,10 @@ class SubCategory extends BaseValidator
      */
     public function update(array $options = []): Validator
     {
-        // TODO: Implement update() method.
+        return ValidatorFacade::make(
+            request()->all(),
+            $this->updateRules($options['category_id'], $options['subcategory_id']),
+            $this->translateMessages('api.subcategory.validation.PATCH.messages')
+        );
     }
 }

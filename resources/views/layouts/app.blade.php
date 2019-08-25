@@ -55,7 +55,7 @@
 
         <footer class="mastfoot mt-auto">
             <div class="inner">
-                <p>Copyright &copy; <a href="https://www.deanblackborough.com">Dean Blackborough</a> 2018-{{ date('Y') }}</p>
+                <p>Copyright &copy; <a href="https://www.g3d-development.com">G3D Development Limited</a> 2018-{{ date('Y') }}</p>
                 <p>All code maintained by <a href="https://www.deanblackborough.com">Dean Blackborough</a> and licensed under MIT.</p>
             </div>
         </footer>

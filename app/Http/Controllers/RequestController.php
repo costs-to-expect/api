@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Events\RequestError;
 use App\Option\Get;
 use App\Option\Post;
+use App\Utilities\Request as UtilityRequest;
 use App\Utilities\Response;
 use App\Validators\Request\Parameters;
 use App\Models\RequestErrorLog;
@@ -22,7 +23,7 @@ use Illuminate\Http\Request;
  * Manage categories
  *
  * @author Dean Blackborough <dean@g3d-development.com>
- * @copyright Dean Blackborough 2018-2019
+ * @copyright G3D Development Limited 2018-2019
  * @license https://github.com/costs-to-expect/api/blob/master/LICENSE
  */
 class RequestController extends Controller
@@ -162,10 +163,7 @@ class RequestController extends Controller
     public function createErrorLog(Request $request): JsonResponse
     {
         $validator = (new RequestErrorLogValidator())->create();
-
-        if ($validator->fails() === true) {
-            return $this->returnValidationErrors($validator);
-        }
+        UtilityRequest::validateAndReturnErrors($validator);
 
         try {
             $request_error_log = new RequestErrorLog([

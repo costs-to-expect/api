@@ -11,5 +11,13 @@ return [
         'messages' => [
             'name.unique' => 'category/validation.name-unique'
         ]
+    ],
+    'PATCH' => [
+        'fields' => [
+            'description' => 'sometimes|string'
+        ],
+        'messages' => [
+            'name.unique' => 'category/validation.name-unique'
+        ]
     ]
 ];

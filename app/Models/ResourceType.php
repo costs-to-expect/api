@@ -6,6 +6,7 @@ namespace App\Models;
 use App\Utilities\Model as ModelUtility;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Query\Builder as QueryBuilder;
+use Illuminate\Support\Facades\Config;
 
 /**
  * Resource type model
@@ -15,7 +16,7 @@ use Illuminate\Database\Query\Builder as QueryBuilder;
  *
  * @mixin QueryBuilder
  * @author Dean Blackborough <dean@g3d-development.com>
- * @copyright Dean Blackborough 2018-2019
+ * @copyright G3D Development Limited 2018-2019
  * @license https://github.com/costs-to-expect/api/blob/master/LICENSE
  */
 class ResourceType extends Model
@@ -23,6 +24,16 @@ class ResourceType extends Model
     protected $table = 'resource_type';
 
     protected $guarded = ['id', 'created_at', 'updated_at'];
+
+    /**
+     * Return an array of the fields that can be PATCHed.
+     *
+     * @return array
+     */
+    public function patchableFields(): array
+    {
+        return array_keys(Config::get('api.resource-type.validation.PATCH.fields'));
+    }
 
     /**
      * Return the total number of resource types
@@ -199,5 +210,17 @@ class ResourceType extends Model
             'resource_type_created_at' => $resource_type->created_at->toDateTimeString(),
             'resource_type_private' => $resource_type->private
         ];
+    }
+
+    /**
+     * Return an instance of a resource type
+     *
+     * @param integer $resource_type_id
+     *
+     * @return ResourceType|null
+     */
+    public function instance(int $resource_type_id): ?ResourceType
+    {
+        return $this->find($resource_type_id);
     }
 }

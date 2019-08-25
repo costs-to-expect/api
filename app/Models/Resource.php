@@ -6,13 +6,14 @@ namespace App\Models;
 use App\Utilities\Model as ModelUtility;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Query\Builder as QueryBuilder;
+use Illuminate\Support\Facades\Config;
 
 /**
  * Resource model
  *
  * @mixin QueryBuilder
  * @author Dean Blackborough <dean@g3d-development.com>
- * @copyright Dean Blackborough 2018-2019
+ * @copyright G3D Development Limited 2018-2019
  * @license https://github.com/costs-to-expect/api/blob/master/LICENSE
  */
 class Resource extends Model
@@ -20,6 +21,16 @@ class Resource extends Model
     protected $table = 'resource';
 
     protected $guarded = ['id', 'created_at', 'updated_at'];
+
+    /**
+     * Return an array of the fields that can be PATCHed.
+     *
+     * @return array
+     */
+    public function patchableFields(): array
+    {
+        return array_keys(Config::get('api.resource.validation.PATCH.fields'));
+    }
 
     /**
      * Return the total number of resources
@@ -164,5 +175,20 @@ class Resource extends Model
             'resource_effective_date' => $resource->effective_date,
             'resource_created_at' => $resource->created_at->toDateTimeString()
         ];
+    }
+
+    public function instance(
+        int $resource_type_id,
+        int $resource_id
+    ): ?Resource
+    {
+        return $this->select(
+                'resource.id',
+                'resource.name',
+                'resource.description',
+                'resource.effective_date'
+            )->
+            where('resource_type_id', '=', $resource_type_id)->
+            find($resource_id);
     }
 }

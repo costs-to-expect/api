@@ -9,6 +9,7 @@ use App\Validators\Request\Route;
 use App\Models\Category;
 use App\Models\ItemCategory;
 use App\Models\Transformers\ItemCategory as ItemCategoryTransformer;
+use App\Utilities\Request as UtilityRequest;
 use App\Utilities\Response as UtilityResponse;
 use App\Validators\Request\Fields\ItemCategory as ItemCategoryValidator;
 use Exception;
@@ -20,7 +21,7 @@ use Illuminate\Http\Request;
  * Manage the category for an item row
  *
  * @author Dean Blackborough <dean@g3d-development.com>
- * @copyright Dean Blackborough 2018-2019
+ * @copyright G3D Development Limited 2018-2019
  * @license https://github.com/costs-to-expect/api/blob/master/LICENSE
  */
 class ItemCategoryController extends Controller
@@ -211,10 +212,10 @@ class ItemCategoryController extends Controller
         Route::itemRoute($resource_type_id, $resource_id, $item_id);
 
         $validator = (new ItemCategoryValidator)->create();
-
-        if ($validator->fails() === true) {
-            return $this->returnValidationErrors($validator, $this->conditionalPostParameters($resource_type_id));
-        }
+        UtilityRequest::validateAndReturnErrors(
+            $validator,
+            $this->conditionalPostParameters($resource_type_id)
+        );
 
         try {
             $category_id = $this->hash->decode('category', $request->input('category_id'));

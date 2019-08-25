@@ -6,6 +6,7 @@ namespace App\Models;
 use App\Utilities\Model as ModelUtility;
 use Illuminate\Database\Query\Builder as QueryBuilder;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\DB;
 
 /**
@@ -18,7 +19,7 @@ use Illuminate\Support\Facades\DB;
  *
  * @mixin QueryBuilder
  * @author Dean Blackborough <dean@g3d-development.com>
- * @copyright Dean Blackborough 2018-2019
+ * @copyright G3D Development Limited 2018-2019
  * @license https://github.com/costs-to-expect/api/blob/master/LICENSE
  */
 class Category extends Model
@@ -27,9 +28,21 @@ class Category extends Model
 
     protected $guarded = ['id', 'created_at', 'updated_at'];
 
+    protected $fillable = ['name', 'description'];
+
     public function category()
     {
         return $this->belongsTo(Category::class, 'category_id', 'id');
+    }
+
+    /**
+     * Return an array of the fields that can be PATCHed.
+     *
+     * @return array
+     */
+    public function patchableFields(): array
+    {
+        return array_keys(Config::get('api.category.validation.PATCH.fields'));
     }
 
     /**
@@ -168,6 +181,18 @@ class Category extends Model
         } else {
             return $result->toArray();
         }
+    }
+
+    /**
+     * Return an instance of a Category
+     *
+     * @param integer $category_id
+     *
+     * @return Category|null
+     */
+    public function instance(int $category_id): ?Category
+    {
+        return $this->find($category_id);
     }
 
     /**

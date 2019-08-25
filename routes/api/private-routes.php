@@ -93,6 +93,26 @@ Route::group(
         );
 
         Route::patch(
+            'categories/{category_id}',
+            'CategoryController@update'
+        );
+
+        Route::patch(
+            'categories/{category_id}/subcategories/{sub_category_id}',
+            'SubcategoryController@update'
+        );
+
+        Route::patch(
+            'resource-types/{resource_type_id}',
+            'ResourceTypeController@update'
+        );
+
+        Route::patch(
+            'resource-types/{resource_type_id}/resources/{resource_id}',
+            'ResourceController@update'
+        );
+
+        Route::patch(
             'resource-types/{resource_type_id}/resources/{resource_id}/items/{item_id}',
             'ItemController@update'
         );

@@ -13,6 +13,7 @@ use App\Models\Item;
 use App\Models\SubCategory;
 use App\Models\Transformers\Item as ItemTransformer;
 use App\Utilities\Pagination as UtilityPagination;
+use App\Utilities\Request as UtilityRequest;
 use App\Utilities\Response as UtilityResponse;
 use App\Validators\Request\Fields\Item as ItemValidator;
 use App\Validators\Request\SearchParameters;
@@ -28,7 +29,7 @@ use Illuminate\Support\Facades\Config;
  * Manage items
  *
  * @author Dean Blackborough <dean@g3d-development.com>
- * @copyright Dean Blackborough 2018-2019
+ * @copyright G3D Development Limited 2018-2019
  * @license https://github.com/costs-to-expect/api/blob/master/LICENSE
  */
 class ItemController extends Controller
@@ -270,10 +271,7 @@ class ItemController extends Controller
         Route::resourceRoute($resource_type_id, $resource_id);
 
         $validator = (new ItemValidator)->create();
-
-        if ($validator->fails() === true) {
-            return $this->returnValidationErrors($validator);
-        }
+        UtilityRequest::validateAndReturnErrors($validator);
 
         try {
             $item = new Item([
@@ -314,19 +312,12 @@ class ItemController extends Controller
     {
         Route::itemRoute($resource_type_id, $resource_id, $item_id);
 
-        if ($this->isThereAnythingToPatchInRequest() === false) {
-            UtilityResponse::nothingToPatch();
-        }
+        UtilityRequest::checkForEmptyPatch();
 
-        $validate = (new ItemValidator)->update();
-        if ($validate->fails() === true) {
-            return $this->returnValidationErrors($validate);
-        }
+        UtilityRequest::checkForInvalidFields((new Item())->patchableFields());
 
-        $invalid_fields = $this->areThereInvalidFieldsInRequest((new Item())->patchableFields());
-        if ($invalid_fields !== false) {
-            UtilityResponse::invalidFieldsInRequest($invalid_fields);
-        }
+        $validator = (new ItemValidator)->update();
+        UtilityRequest::validateAndReturnErrors($validator);
 
         $item = (new Item())->instance($resource_type_id, $resource_id, $item_id);
 

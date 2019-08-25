@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\SubCategory;
 use App\Option\Delete;
 use App\Option\Get;
+use App\Option\Patch;
 use App\Option\Post;
 use App\Utilities\Pagination as UtilityPagination;
 use App\Validators\Request\Parameters;
@@ -12,6 +13,7 @@ use App\Validators\Request\Route;
 use App\Models\Category;
 use App\Models\ResourceType;
 use App\Models\Transformers\Category as CategoryTransformer;
+use App\Utilities\Request as UtilityRequest;
 use App\Utilities\Response as UtilityResponse;
 use App\Validators\Request\Fields\Category as CategoryValidator;
 use App\Validators\Request\SearchParameters;
@@ -25,7 +27,7 @@ use Illuminate\Support\Facades\Config;
  * Manage categories
  *
  * @author Dean Blackborough <dean@g3d-development.com>
- * @copyright Dean Blackborough 2018-2019
+ * @copyright G3D Development Limited 2018-2019
  * @license https://github.com/costs-to-expect/api/blob/master/LICENSE
  */
 class CategoryController extends Controller
@@ -192,8 +194,14 @@ class CategoryController extends Controller
             setAuthenticationRequired(true)->
             option();
 
+        $patch = Patch::init()->
+            setDescription('route-descriptions.category_PATCH')->
+            setFields('api.category.fields-patch')->
+            setAuthenticationRequired(true)->
+            option();
+
         return $this->optionsResponse(
-            $get + $delete,
+            $get + $delete + $patch,
             200
         );
     }
@@ -206,10 +214,7 @@ class CategoryController extends Controller
     public function create(): JsonResponse
     {
         $validator = (new CategoryValidator)->create();
-
-        if ($validator->fails() === true) {
-            return $this->returnValidationErrors($validator);
-        }
+        UtilityRequest::validateAndReturnErrors($validator);
 
         try {
             $resource_type_id = $this->hash->decode('resource_type', request()->input('resource_type_id'));
@@ -282,5 +287,52 @@ class CategoryController extends Controller
         }
 
         return $conditional_post_fields;
+    }
+
+    /**
+     * Update the selected category
+     *
+     * @param string $category_id
+     *
+     * @return JsonResponse
+     */
+    public function update(
+        string $category_id
+    ): JsonResponse
+    {
+        Route::categoryRoute($category_id);
+
+        $category = (new Category())->instance($category_id);
+
+        if ($category === null) {
+            UtilityResponse::failedToSelectModelForUpdate();
+        }
+
+        UtilityRequest::checkForEmptyPatch();
+
+        $validator = (new CategoryValidator)->update([
+            'resource_type_id' => intval($category->resource_type_id),
+            'category_id' => intval($category_id)
+        ]);
+        UtilityRequest::validateAndReturnErrors($validator);
+
+        UtilityRequest::checkForInvalidFields(
+            array_merge(
+                (new Category())->patchableFields(),
+                (new CategoryValidator)->dynamicDefinedFields()
+            )
+        );
+
+        foreach (request()->all() as $key => $value) {
+            $category->$key = $value;
+        }
+
+        try {
+            $category->save();
+        } catch (Exception $e) {
+            UtilityResponse::failedToSaveModelForUpdate();
+        }
+
+        UtilityResponse::successNoContent();
     }
 }

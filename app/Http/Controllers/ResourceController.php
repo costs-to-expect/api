@@ -4,8 +4,10 @@ namespace App\Http\Controllers;
 
 use App\Option\Delete;
 use App\Option\Get;
+use App\Option\Patch;
 use App\Option\Post;
 use App\Utilities\Pagination as UtilityPagination;
+use App\Utilities\Request as UtilityRequest;
 use App\Validators\Request\Route;
 use App\Models\Resource;
 use App\Models\Transformers\Resource as ResourceTransformer;
@@ -22,7 +24,7 @@ use Illuminate\Support\Facades\Config;
  * Manage resources
  *
  * @author Dean Blackborough <dean@g3d-development.com>
- * @copyright Dean Blackborough 2018-2019
+ * @copyright G3D Development Limited 2018-2019
  * @license https://github.com/costs-to-expect/api/blob/master/LICENSE
  */
 class ResourceController extends Controller
@@ -195,8 +197,14 @@ class ResourceController extends Controller
             setAuthenticationRequired(true)->
             option();
 
+        $patch = Patch::init()->
+            setDescription('route-descriptions.resource_PATCH')->
+            setFields('api.resource.fields')->
+            setAuthenticationRequired(true)->
+            option();
+
         return $this->optionsResponse(
-            $get + $delete,
+            $get + $delete + $patch,
             200
         );
     }
@@ -213,10 +221,7 @@ class ResourceController extends Controller
         Route::resourceTypeRoute($resource_type_id);
 
         $validator = (new ResourceValidator)->create(['resource_type_id' => $resource_type_id]);
-
-        if ($validator->fails() === true) {
-            return $this->returnValidationErrors($validator);
-        }
+        UtilityRequest::validateAndReturnErrors($validator);
 
         try {
             $resource = new Resource([
@@ -260,5 +265,54 @@ class ResourceController extends Controller
         } catch (Exception $e) {
             UtilityResponse::notFound(trans('entities.resource'));
         }
+    }
+
+    /**
+     * Update the selected resource
+     *
+     * @param string $resource_type_id
+     * @param string $resource_id
+     *
+     * @return JsonResponse
+     */
+    public function update(
+        string $resource_type_id,
+        string $resource_id
+    ): JsonResponse
+    {
+        Route::resourceRoute($resource_type_id, $resource_id);
+
+        $resource = (new Resource())->instance($resource_type_id, $resource_id);
+
+        if ($resource === null) {
+            UtilityResponse::failedToSelectModelForUpdate();
+        }
+
+        UtilityRequest::checkForEmptyPatch();
+
+        $validator = (new ResourceValidator())->update([
+            'resource_type_id' => intval($resource_type_id),
+            'resource_id' => intval($resource_id)
+        ]);
+        UtilityRequest::validateAndReturnErrors($validator);
+
+        UtilityRequest::checkForInvalidFields(
+            array_merge(
+                (new Resource())->patchableFields(),
+                (new ResourceValidator())->dynamicDefinedFields()
+            )
+        );
+
+        foreach (request()->all() as $key => $value) {
+            $resource->$key = $value;
+        }
+
+        try {
+            $resource->save();
+        } catch (Exception $e) {
+            UtilityResponse::failedToSaveModelForUpdate();
+        }
+
+        UtilityResponse::successNoContent();
     }
 }

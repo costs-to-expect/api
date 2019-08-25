@@ -5,8 +5,10 @@ namespace App\Http\Controllers;
 use App\Models\Resource;
 use App\Option\Delete;
 use App\Option\Get;
+use App\Option\Patch;
 use App\Option\Post;
 use App\Utilities\Pagination as UtilityPagination;
+use App\Utilities\Request as UtilityRequest;
 use App\Validators\Request\Parameters;
 use App\Validators\Request\Route;
 use App\Models\ResourceType;
@@ -24,7 +26,7 @@ use Illuminate\Support\Facades\Config;
  * Manage resource types
  *
  * @author Dean Blackborough <dean@g3d-development.com>
- * @copyright Dean Blackborough 2018-2019
+ * @copyright G3D Development Limited 2018-2019
  * @license https://github.com/costs-to-expect/api/blob/master/LICENSE
  */
 class ResourceTypeController extends Controller
@@ -188,8 +190,14 @@ class ResourceTypeController extends Controller
             setAuthenticationRequired(true)->
             option();
 
+        $patch = Patch::init()->
+            setDescription('route-descriptions.resource_type_PATCH')->
+            setFields('api.resource-type.fields')->
+            setAuthenticationRequired(true)->
+            option();
+
         return $this->optionsResponse(
-            $get + $delete,
+            $get + $delete + $patch,
             200
         );
     }
@@ -202,10 +210,7 @@ class ResourceTypeController extends Controller
     public function create(): JsonResponse
     {
         $validator = (new ResourceTypeValidator)->create();
-
-        if ($validator->fails() === true) {
-            return $this->returnValidationErrors($validator);
-        }
+        UtilityRequest::validateAndReturnErrors($validator);
 
         try {
             $resource_type = new ResourceType([
@@ -245,5 +250,51 @@ class ResourceTypeController extends Controller
         } catch (Exception $e) {
             UtilityResponse::notFound(trans('entities.resource-type'));
         }
+    }
+
+    /**
+     * Update the selected category
+     *
+     * @param string $resource_type_id
+     *
+     * @return JsonResponse
+     */
+    public function update(
+        string $resource_type_id
+    ): JsonResponse
+    {
+        Route::resourceTypeRoute($resource_type_id);
+
+        $resource_type = (new ResourceType())->instance($resource_type_id);
+
+        if ($resource_type === null) {
+            UtilityResponse::failedToSelectModelForUpdate();
+        }
+
+        UtilityRequest::checkForEmptyPatch();
+
+        $validator = (new ResourceTypeValidator())->update([
+            'resource_type_id' => intval($resource_type_id)
+        ]);
+        UtilityRequest::validateAndReturnErrors($validator);
+
+        UtilityRequest::checkForInvalidFields(
+            array_merge(
+                (new ResourceType())->patchableFields(),
+                (new ResourceTypeValidator())->dynamicDefinedFields()
+            )
+        );
+
+        foreach (request()->all() as $key => $value) {
+            $resource_type->$key = $value;
+        }
+
+        try {
+            $resource_type->save();
+        } catch (Exception $e) {
+            UtilityResponse::failedToSaveModelForUpdate();
+        }
+
+        UtilityResponse::successNoContent();
     }
 }
