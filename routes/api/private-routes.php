@@ -108,6 +108,11 @@ Route::group(
         );
 
         Route::patch(
+            'resource-types/{resource_type_id}/resources/{resource_id}',
+            'ResourceController@update'
+        );
+
+        Route::patch(
             'resource-types/{resource_type_id}/resources/{resource_id}/items/{item_id}',
             'ItemController@update'
         );

@@ -163,6 +163,7 @@ These routes require authorisation.
 | PATCH    | v1/resource-types/{resource_type_id} |
 | DELETE   | v1/resource-types/{resource_type_id} |
 | POST     | v1/resource-types/{resource_type_id}/resources |
+| PATCH    | v1/resource-types/{resource_type_id}/resources/{resource_id} |
 | DELETE   | v1/resource-types/{resource_type_id}/resources/{resource_id} |
 | POST     | v1/resource-types/{resource_type_id}/resources/{resource_id}/items |
 | PATCH    | v1/resource-types/{resource_type_id}/resources/{resource_id}/items/{item_id} |

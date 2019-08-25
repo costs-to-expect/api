@@ -272,7 +272,7 @@ class SubcategoryController extends Controller
     }
 
     /**
-     * Update the selected category
+     * Update the selected subcategory
      *
      * @param string $category_id
      * @param string $sub_category_id

@@ -266,4 +266,53 @@ class ResourceController extends Controller
             UtilityResponse::notFound(trans('entities.resource'));
         }
     }
+
+    /**
+     * Update the selected resource
+     *
+     * @param string $resource_type_id
+     * @param string $resource_id
+     *
+     * @return JsonResponse
+     */
+    public function update(
+        string $resource_type_id,
+        string $resource_id
+    ): JsonResponse
+    {
+        Route::resourceRoute($resource_type_id, $resource_id);
+
+        $resource = (new Resource())->instance($resource_type_id, $resource_id);
+
+        if ($resource === null) {
+            UtilityResponse::failedToSelectModelForUpdate();
+        }
+
+        UtilityRequest::checkForEmptyPatch();
+
+        $validator = (new ResourceValidator())->update([
+            'resource_type_id' => intval($resource_type_id),
+            'resource_id' => intval($resource_id)
+        ]);
+        UtilityRequest::validateAndReturnErrors($validator);
+
+        UtilityRequest::checkForInvalidFields(
+            array_merge(
+                (new Resource())->patchableFields(),
+                (new ResourceValidator())->dynamicDefinedFields()
+            )
+        );
+
+        foreach (request()->all() as $key => $value) {
+            $resource->$key = $value;
+        }
+
+        try {
+            $resource->save();
+        } catch (Exception $e) {
+            UtilityResponse::failedToSaveModelForUpdate();
+        }
+
+        UtilityResponse::successNoContent();
+    }
 }
