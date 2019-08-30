@@ -32,6 +32,7 @@ class Resource extends BaseValidator
                 'name' => [
                     'required',
                     'string',
+                    'max:255',
                     'unique:resource,name,null,id,resource_type_id,' . $resource_type_id
                 ],
             ],
@@ -54,6 +55,7 @@ class Resource extends BaseValidator
                 'name' => [
                     'sometimes',
                     'string',
+                    'max:255',
                     'unique:resource,name,'. $resource_id . ',id,resource_type_id,' . $resource_type_id
                 ],
             ],

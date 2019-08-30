@@ -7,7 +7,8 @@ return [
         'fields' => [
             'description' => [
                 'required',
-                'string'
+                'string',
+                'max:255'
             ],
             'effective_date' => [
                 'required',
@@ -23,7 +24,8 @@ return [
         'fields' => [
             'description' => [
                 'sometimes',
-                'string'
+                'string',
+                'max:255'
             ],
             'effective_date' => [
                 'sometimes',

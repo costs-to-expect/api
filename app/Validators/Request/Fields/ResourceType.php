@@ -31,6 +31,7 @@ class ResourceType extends BaseValidator
                 'name' => [
                     'sometimes',
                     'string',
+                    'max:255',
                     'unique:resource_type,name,'. $resource_type_id . ',id'
                 ],
             ],

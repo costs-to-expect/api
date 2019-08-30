@@ -125,7 +125,7 @@ class Post
         return [
             'POST' => [
                 'description' => self::$description,
-                'authentication_required' => self::$authentication,
+                'authentication-required' => self::$authentication,
                 'fields' => self::$localised_fields
             ]
         ];

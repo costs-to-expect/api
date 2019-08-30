@@ -8,6 +8,9 @@ return [
         'title' => 'item/fields.title-description',
         'description' => 'item/fields.description-description',
         'type' => 'string',
+        'validation' => [
+            'max-length' => 255
+        ],
         'required' => true
     ],
     'effective_date' => [
@@ -35,7 +38,11 @@ return [
         'field' => 'percentage',
         'title' => 'item/fields.title-percentage',
         'description' => 'item/fields.description-percentage',
-        'type' => 'string',
+        'type' => 'integer',
+        'validation' => [
+            'min' => 1,
+            'max' => 100
+        ],
         'required' => false
     ]
 ];

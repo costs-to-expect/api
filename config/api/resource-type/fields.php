@@ -8,6 +8,9 @@ return [
         'title' => 'resource-type/fields.title-name',
         'description' => 'resource-type/fields.description-name',
         'type' => 'string',
+        'validation' => [
+            'max-length' => 255
+        ],
         'required' => true
     ],
     'description' => [
@@ -15,6 +18,9 @@ return [
         'title' => 'resource-type/fields.title-description',
         'description' => 'resource-type/fields.description-description',
         'type' => 'string',
+        'validation' => [
+            'max-length' => 255
+        ],
         'required' => true
     ],
     'private' => [

@@ -13,6 +13,7 @@ class RequestError extends Mailable
     use Queueable, SerializesModels;
 
     public $api_from_mail;
+    public $api_from_name;
     public $request_error;
 
     /**
@@ -24,7 +25,8 @@ class RequestError extends Mailable
      */
     public function __construct(array $request_error)
     {
-        $this->api_from_mail = Config::get('api.mail.request-error.from');
+        $this->api_from_mail = Config::get('api.mail.request-error.from_mail');
+        $this->api_from_name = Config::get('api.mail.request-error.from_name');
         $this->request_error = $request_error;
     }
 
@@ -35,7 +37,7 @@ class RequestError extends Mailable
      */
     public function build()
     {
-        return $this->from($this->api_from_mail)->
+        return $this->from($this->api_from_mail, $this->api_from_name)->
             view('mail.request-error')->
             subject('Costs to Expect API: Request error');
     }

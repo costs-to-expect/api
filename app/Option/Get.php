@@ -205,7 +205,7 @@ class Get
         return [
             'GET' => [
                 'description' => self::$description,
-                'authentication_required' => self::$authentication,
+                'authentication-required' => self::$authentication,
                 'sortable' => self::$sortable_parameters,
                 'searchable' => self::$searchable_parameters,
                 'parameters' => self::$localised_parameters

@@ -14,7 +14,7 @@ return [
     ],
     'PATCH' => [
         'fields' => [
-            'description' => 'sometimes|string'
+            'description' => 'sometimes|string|max:255'
         ],
         'messages' => [
             'name.unique' => 'category/validation.name-unique'

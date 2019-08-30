@@ -191,25 +191,6 @@ class ItemController extends Controller
             $get + $post,
             200
         );
-
-        /*return $this->generateOptionsForIndex(
-            [
-                'description_localisation_string' => 'route-descriptions.item_GET_index',
-                'parameters_config_string' => 'api.item.parameters.collection',
-                'conditionals_config' => $conditional_parameters,
-                'sortable_config' => 'api.item.sortable',
-                'searchable_config' => 'api.item.searchable',
-                'enable_pagination' => true,
-                'allow_entire_collection' => $this->allow_entire_collection,
-                'authentication_required' => false
-            ],
-            [
-                'description_localisation_string' => 'route-descriptions.item_POST',
-                'fields_config' => 'api.item.fields',
-                'conditionals_config' => [],
-                'authentication_required' => true
-            ]
-        );*/
     }
 
     /**
