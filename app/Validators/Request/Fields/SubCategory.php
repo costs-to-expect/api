@@ -31,6 +31,7 @@ class SubCategory extends BaseValidator
                 'name' => [
                     'required',
                     'string',
+                    'max:255',
                     'unique:sub_category,name,null,id,category_id,' . $category_id
                 ],
             ],
@@ -53,6 +54,7 @@ class SubCategory extends BaseValidator
                 'name' => [
                     'sometimes',
                     'string',
+                    'max:255',
                     'unique:sub_category,name,'. $subcategory_id . ',id,category_id,' . $category_id
                 ],
             ],
