@@ -69,7 +69,7 @@ class Delete
         return [
             'DELETE' => [
                 'description' => self::$description,
-                'authentication_required' => self::$authentication
+                'authentication-required' => self::$authentication
             ]
         ];
     }

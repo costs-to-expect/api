@@ -124,7 +124,7 @@ class Patch
         return [
             'PATCH' => [
                 'description' => self::$description,
-                'authentication_required' => self::$authentication,
+                'authentication-required' => self::$authentication,
                 'fields' => self::$localised_fields
             ]
         ];

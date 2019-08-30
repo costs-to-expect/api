@@ -279,7 +279,7 @@ class CategoryController extends Controller
                 UtilityResponse::unableToDecode();
             }
 
-            $conditional_post_fields['resource_type_id']['allowed_values'][$id] = [
+            $conditional_post_fields['resource_type_id']['allowed-values'][$id] = [
                 'value' => $id,
                 'name' => $resource_type['resource_type_name'],
                 'description' => $resource_type['resource_type_description']

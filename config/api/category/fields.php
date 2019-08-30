@@ -8,6 +8,10 @@ return [
         'title' => 'category/fields.title-name',
         'description' => 'category/fields.description-name',
         'type' => 'string',
+        'validation' => [
+            'unique-for' => 'resource_type_id',
+            'max-length' => 255
+        ],
         'required' => true
     ],
     'description' => [
@@ -15,6 +19,9 @@ return [
         'title' => 'category/fields.title-description',
         'description' => 'category/fields.description-description',
         'type' => 'string',
+        'validation' => [
+            'max-length' => 255
+        ],
         'required' => true
     ],
     'resource_type_id' => [

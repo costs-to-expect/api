@@ -31,6 +31,7 @@ class Category extends BaseValidator
                 'name' => [
                     'required',
                     'string',
+                    'max:255',
                     'unique:category,name,null,id,resource_type_id,' . $resource_type_id
                 ],
             ],
@@ -53,6 +54,7 @@ class Category extends BaseValidator
                 'name' => [
                     'sometimes',
                     'string',
+                    'max:255',
                     'unique:category,name,'. $category_id . ',id,resource_type_id,' . $resource_type_id
                 ],
             ],
