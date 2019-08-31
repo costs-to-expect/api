@@ -5,7 +5,7 @@ The complete changelog for the Costs to Expect REST API, follows the format defi
 ## [v1.22.1] - 2019-09-01
 ### Changed
 - We have updated the domain for Mailgun, now mail.costs-to-expect.com rather than the temp domain.
-- We have updated the OPTIONS requestion, they now show additional validation data if necessary.
+- We have updated the OPTIONS requests, they now show additional validation data if necessary.
 - We have continued to unify information names in the OPTIONS requests; we use dashes instead of underscores.
 - We have updated the from setting for emails so 'on behalf of' doesn't show for sent emails.
 
