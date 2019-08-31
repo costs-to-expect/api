@@ -2,6 +2,9 @@
 
 The complete changelog for the Costs to Expect REST API, follows the format defined at https://keepachangelog.com/en/1.0.0/
 
+## [v1.23.0] - 2019-09-xx
+
+
 ## [v1.22.1] - 2019-09-01
 ### Changed
 - We have updated the domain for Mailgun, now mail.costs-to-expect.com rather than the temp domain.
