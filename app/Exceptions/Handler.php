@@ -2,6 +2,7 @@
 
 namespace App\Exceptions;
 
+use App\Models\ErrorLog;
 use App\Utilities\Response;
 use Exception;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
@@ -75,6 +76,18 @@ class Handler extends ExceptionHandler
                         'trace' => $exception->getTraceAsString()
                     ];
                 } else {
+                    try {
+                        $error = new ErrorLog([
+                            'message' => $exception->getMessage(),
+                            'file' => $exception->getFile(),
+                            'line' => $exception->getLine(),
+                            'trace' => $exception->getTraceAsString()
+                        ]);
+                        $error->save();
+                    } catch (Exception $e) {
+                        // Don't worry for now, we just want to try and log some errors
+                    }
+
                     $response = [
                         'message' => 'Sorry, there has been an error, please try again later'
                     ];
