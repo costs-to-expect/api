@@ -18,8 +18,11 @@ class EventServiceProvider extends ServiceProvider
             'App\Listeners\PruneTokens'
         ],
         'App\Events\RequestError' => [
-            'App\Listeners\CaptureAndSend'
-        ]
+            'App\Listeners\CaptureAndSendRequestError'
+        ],
+        /*'App\Events\InternalError' => [
+            'App\Listeners\CaptureAndSendInternalError'
+        ]*/
     ];
 
     /**

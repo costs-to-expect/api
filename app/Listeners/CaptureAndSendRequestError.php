@@ -9,7 +9,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Mail;
 
-class CaptureAndSend
+class CaptureAndSendRequestError
 {
     /**
      * Create the event listener.
