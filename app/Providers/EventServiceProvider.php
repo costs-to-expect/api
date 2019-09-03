@@ -20,9 +20,9 @@ class EventServiceProvider extends ServiceProvider
         'App\Events\RequestError' => [
             'App\Listeners\CaptureAndSendRequestError'
         ],
-        /*'App\Events\InternalError' => [
+        'App\Events\InternalError' => [
             'App\Listeners\CaptureAndSendInternalError'
-        ]*/
+        ]
     ];
 
     /**

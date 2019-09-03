@@ -2,6 +2,7 @@
 
 namespace App\Exceptions;
 
+use App\Events\InternalError;
 use App\Models\ErrorLog;
 use App\Utilities\Response;
 use Exception;
@@ -77,13 +78,17 @@ class Handler extends ExceptionHandler
                     ];
                 } else {
                     try {
-                        $error = new ErrorLog([
+                        $error_data = [
                             'message' => $exception->getMessage(),
                             'file' => $exception->getFile(),
                             'line' => $exception->getLine(),
                             'trace' => $exception->getTraceAsString()
-                        ]);
+                        ];
+
+                        $error = new ErrorLog($error_data);
                         $error->save();
+
+                        event(new InternalError($error_data));
                     } catch (Exception $e) {
                         // Don't worry for now, we just want to try and log some errors
                     }
