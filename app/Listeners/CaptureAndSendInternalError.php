@@ -2,14 +2,14 @@
 
 namespace App\Listeners;
 
-use App\Events\RequestError;
-use App\Mail\RequestError as RequestErrorMail;
+use App\Events\InternalError;
+use App\Mail\InternalError as InternalErrorMail;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Mail;
 
-class CaptureAndSend
+class CaptureAndSendInternalError
 {
     /**
      * Create the event listener.
@@ -24,15 +24,15 @@ class CaptureAndSend
     /**
      * Handle the event.
      *
-     * @param  RequestError  $event
+     * @param  InternalError  $event
      * @return void
      */
-    public function handle(RequestError $event)
+    public function handle(InternalError $event)
     {
-        if (isset($event->request_error) && count($event->request_error) > 0) {
-            Mail::to(Config::get('api.mail.request-error.to'))->
+        if (isset($event->internal_error) && count($event->internal_error) > 0) {
+            Mail::to(Config::get('api.mail.internal-error.to'))->
                 send(
-                    new RequestErrorMail($event->request_error)
+                    new InternalErrorMail($event->internal_error)
                 );
         }
     }

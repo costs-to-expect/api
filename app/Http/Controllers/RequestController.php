@@ -73,18 +73,15 @@ class RequestController extends Controller
     /**
      * Return the paginated access log
      *
-     * @param Request $request
-     *
      * @return JsonResponse
      */
-    public function accessLog(Request $request): JsonResponse
+    public function accessLog(): JsonResponse
     {
         $total = (new RequestLog())->totalCount();
 
         $this->collection_parameters = Parameters::fetch(['source']);
 
-        $pagination = UtilityPagination::init($request->path(), $total, 50)
-            ->paging();
+        $pagination = UtilityPagination::init(request()->path(), $total, 25)->paging();
 
         $log = (new RequestLog())->paginatedCollection(
             $pagination['offset'],
@@ -94,22 +91,19 @@ class RequestController extends Controller
 
         $headers = [
             'X-Total-Count' => $total,
+            'X-Total' => count($log),
             'X-Offset' => $pagination['offset'],
             'X-Limit' => $pagination['limit'],
             'X-Link-Previous' => $pagination['links']['previous'],
             'X-Link-Next' => $pagination['links']['next'],
         ];
 
-        return response()->json(
-            array_map(
-                function ($access_log_entry) {
-                    return (new RequestLogTransformer($access_log_entry))->toArray();
-                },
-                $log
-            ),
-            200,
-            $headers
-        );
+        $json = [];
+        foreach ($log as $log_item) {
+            $json[] = (new RequestLogTransformer($log_item))->toArray();
+        }
+
+        return response()->json($json, 200, $headers);
     }
 
     /**

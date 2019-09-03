@@ -8,6 +8,9 @@ return [
         'title' => 'item-category/fields.title-category_id',
         'description' => 'item-category/fields.description-category_id',
         'type' => 'string',
+        'validation' => [
+            'length' => 10
+        ],
         'required' => true
     ]
 ];

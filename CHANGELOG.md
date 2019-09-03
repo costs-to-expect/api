@@ -2,10 +2,20 @@
 
 The complete changelog for the Costs to Expect REST API, follows the format defined at https://keepachangelog.com/en/1.0.0/
 
+## [v1.22.2] - 2019-09-03
+### Added
+- We have added an error log database table, initially, for capturing 500 errors.
+- We have added an `InternalError` event and listener. After writing the error to the database, we send an email with the error.
+
+### Changed
+- We have added string length validation for hashed id values; all should be ten characters.
+- We have reduced the `request/access-log` limit to 25, from 50.
+- We have renamed the `CaptureAndSend` listener; it is specific to request errors so the name should be `CaptureAndSendRequestError`.
+
 ## [v1.22.1] - 2019-09-01
 ### Changed
 - We have updated the domain for Mailgun, now mail.costs-to-expect.com rather than the temp domain.
-- We have updated the OPTIONS requestion, they now show additional validation data if necessary.
+- We have updated the OPTIONS requests, they now show additional validation data if necessary.
 - We have continued to unify information names in the OPTIONS requests; we use dashes instead of underscores.
 - We have updated the from setting for emails so 'on behalf of' doesn't show for sent emails.
 
