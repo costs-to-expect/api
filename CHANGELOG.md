@@ -2,6 +2,10 @@
 
 The complete changelog for the Costs to Expect REST API, follows the format defined at https://keepachangelog.com/en/1.0.0/
 
+## [v1.23.0] - 2019-09-xx
+### Changed
+- We have added `X-Count` headers to several endpoints from which they were missing.
+
 ## [v1.22.2] - 2019-09-03
 ### Added
 - We have added an error log database table, initially, for capturing 500 errors.
