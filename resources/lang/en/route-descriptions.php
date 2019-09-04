@@ -56,6 +56,8 @@ return [
     'request_GET_error_log' => 'Return the error log',
     'request_POST' => 'Create an error log report',
 
+    'summary_category_GET_index' => 'Return a summary of the categories',
+
     'summary_GET_request_access-log' => 'Return a summary of the access log, all read requests, grouped by year and month',
 
     'summary-resource-type-GET-index' => 'Return a summary of the resource types',
