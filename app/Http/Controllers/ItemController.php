@@ -145,7 +145,8 @@ class ItemController extends Controller
             (new ItemTransformer($item))->toArray(),
             200,
             [
-                'X-Total-Count' => 1
+                'X-Total-Count' => 1,
+                'X-Count' => 1
             ]
         );
     }

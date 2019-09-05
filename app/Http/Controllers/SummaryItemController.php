@@ -153,7 +153,10 @@ class SummaryItemController extends Controller
                 'total' => number_format($summary[0]['actualised_total'], 2, '.', '')
             ],
             200,
-            ['X-Total-Count' => 1]
+            [
+                'X-Total-Count' => count($summary),
+                'X-Count' => count($summary)
+            ]
         );
     }
 
@@ -182,7 +185,10 @@ class SummaryItemController extends Controller
                 $summary
             ),
             200,
-            ['X-Total-Count' => count($summary)]
+            [
+                'X-Total-Count' => count($summary),
+                'X-Count' => count($summary)
+            ]
         );
     }
 
@@ -209,7 +215,10 @@ class SummaryItemController extends Controller
         return response()->json(
             (new ItemYearSummaryTransformer($summary[0]))->toArray(),
             200,
-            ['X-Total-Count' => 1]
+            [
+                'X-Total-Count' => count($summary),
+                'X-Count' => count($summary)
+            ]
         );
     }
 
@@ -241,7 +250,10 @@ class SummaryItemController extends Controller
                 $summary
             ),
             200,
-            [ 'X-Total-Count' => count($summary) ]
+            [
+                'X-Total-Count' => count($summary),
+                'X-Count' => count($summary)
+            ]
         );
     }
 
@@ -270,7 +282,10 @@ class SummaryItemController extends Controller
         return response()->json(
             (new ItemMonthSummaryTransformer($summary[0]))->toArray(),
             200,
-            [ 'X-Total-Count' => 1 ]
+            [
+                'X-Total-Count' => count($summary),
+                'X-Count' => count($summary)
+            ]
         );
     }
 
@@ -299,7 +314,10 @@ class SummaryItemController extends Controller
                 $summary
             ),
             200,
-            [ 'X-Total-Count' => count($summary) ]
+            [
+                'X-Total-Count' => count($summary),
+                'X-Count' => count($summary)
+            ]
         );
     }
 
@@ -342,7 +360,10 @@ class SummaryItemController extends Controller
                 'total' => number_format($summary[0]['total'], 2, '.', '')
             ],
             200,
-            ['X-Total-Count' => 1]
+            [
+                'X-Total-Count' => count($summary),
+                'X-Count' => count($summary)
+            ]
         );
     }
 
@@ -371,7 +392,10 @@ class SummaryItemController extends Controller
         return response()->json(
             (new ItemCategorySummaryTransformer($summary[0]))->toArray(),
             200,
-            [ 'X-Total-Count' => 1 ]
+            [
+                'X-Total-Count' => count($summary),
+                'X-Count' => count($summary)
+            ]
         );
     }
 
@@ -405,7 +429,10 @@ class SummaryItemController extends Controller
                 $summary
             ),
             200,
-            [ 'X-Total-Count' => count($summary) ]
+            [
+                'X-Total-Count' => count($summary),
+                'X-Count' => count($summary)
+            ]
         );
     }
 
@@ -436,7 +463,10 @@ class SummaryItemController extends Controller
         return response()->json(
             (new ItemSubCategorySummaryTransformer($summary[0]))->toArray(),
             200,
-            [ 'X-Total-Count' => 1 ]
+            [
+                'X-Total-Count' => count($summary),
+                'X-Count' => count($summary)
+            ]
         );
     }
 

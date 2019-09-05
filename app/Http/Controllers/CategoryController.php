@@ -140,7 +140,8 @@ class CategoryController extends Controller
             (new CategoryTransformer($category, $subcategories))->toArray(),
             200,
             [
-                'X-Total-Count' => 1
+                'X-Total-Count' => 1,
+                'X-Count' => 1
             ]
         );
     }

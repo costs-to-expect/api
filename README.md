@@ -117,12 +117,17 @@ X-Link-Previous and X-Link-Next can be null.
 
 ## Summary routes
 
-Eventually there will be a summary route for every API route, till that point the summary routes 
-are details below, some use GET parameters to breakdown the data, one example being items 
-which allows you to provide year, month, category and subcategory.
+Eventually there will be a summary route for every API route, until that point, the summary routes 
+are detailed below. Some use GET parameters to breakdown the data, one example being items 
+which allows you to provide year, month, category and subcategory. A summary route should have the same 
+GET parameters as the non summary route.
 
 | HTTP Verb(s) | Route |
 | :--- | :--- |
+| GET/HEAD | v1/summary/categories |
+| OPTIONS  | v1/summary/categories |
+| GET/HEAD | v1/summary/categories/{category_id}/subcategories |
+| OPTIONS  | v1/summary/categories/{category_id}/subcategories |
 | GET/HEAD | v1/summary/request/access-log |
 | OPTIONS  | v1/summary/request/access-log |
 | GET/HEAD | v1/summary/resource-types |
