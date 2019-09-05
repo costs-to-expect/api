@@ -126,6 +126,8 @@ GET parameters as the non summary route.
 | :--- | :--- |
 | GET/HEAD | v1/summary/categories |
 | OPTIONS  | v1/summary/categories |
+| GET/HEAD | v1/summary/categories/{category_id}/subcategories |
+| OPTIONS  | v1/summary/categories/{category_id}/subcategories |
 | GET/HEAD | v1/summary/request/access-log |
 | OPTIONS  | v1/summary/request/access-log |
 | GET/HEAD | v1/summary/resource-types |

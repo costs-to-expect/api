@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\Models\Category;
 use App\Option\Get;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Request;
 
 /**
  * Summary controller for the categories routes
@@ -17,7 +16,7 @@ use Illuminate\Http\Request;
 class SummaryCategoryController extends Controller
 {
     /**
-     * Return a summary of the resource types
+     * Return a summary of the categories
      *
      * @return JsonResponse
      */

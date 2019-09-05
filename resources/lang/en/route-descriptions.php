@@ -57,6 +57,7 @@ return [
     'request_POST' => 'Create an error log report',
 
     'summary_category_GET_index' => 'Return a summary of the categories',
+    'summary_subcategory_GET_index' => 'Return a summary of the subcategories',
 
     'summary_GET_request_access-log' => 'Return a summary of the access log, all read requests, grouped by year and month',
 
