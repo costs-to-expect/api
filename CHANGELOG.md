@@ -2,6 +2,13 @@
 
 The complete changelog for the Costs to Expect REST API, follows the format defined at https://keepachangelog.com/en/1.0.0/
 
+## [v2.00.0] - 2019-xx-xx
+### Added
+- We have added `updated_by` to the `item` table, records the user who was last to update a record.
+
+### Changed
+- We have updated the `item` table, `user_id` field has been changed to `created_by`.
+
 ## [v1.23.0] - 2019-09-05
 ### Added 
 - We have added a new summary route, `/summary/categories`.
