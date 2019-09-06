@@ -263,7 +263,7 @@ class ItemController extends Controller
                 'publish_after' => $request->input('publish_after', null),
                 'total' => $request->input('total'),
                 'percentage' => $request->input('percentage', 100),
-                'user_id' => Auth::user()->id
+                'created_by' => Auth::user()->id
             ]);
             $item->setActualisedTotal($item->total, $item->percentage);
             $item->save();
@@ -314,6 +314,8 @@ class ItemController extends Controller
             if (in_array($key, ['total', 'percentage']) === true) {
                 $update_actualised = true;
             }
+
+            $item->updated_by = Auth::user()->id;
         }
 
         if ($update_actualised === true) {
