@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\PermittedUser;
 use App\Models\Resource;
 use App\Option\Delete;
 use App\Option\Get;
@@ -20,6 +21,7 @@ use App\Validators\Request\SortParameters;
 use Exception;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Config;
 
 /**
@@ -219,6 +221,12 @@ class ResourceTypeController extends Controller
                 'private' => request()->input('private', 0)
             ]);
             $resource_type->save();
+
+            $permitted_users = new PermittedUser([
+                'resource_type_id' => $resource_type->id,
+                'user_id' => Auth::user()->id
+            ]);
+            $permitted_users->save();
         } catch (Exception $e) {
             UtilityResponse::failedToSaveModelForCreate();
         }
@@ -243,6 +251,7 @@ class ResourceTypeController extends Controller
         Route::resourceTypeRoute($resource_type_id);
 
         try {
+            (new PermittedUser())->instance($resource_type_id, Auth::user()->id)->delete();
             (new ResourceType())->find($resource_type_id)->delete();
             UtilityResponse::successNoContent();
         } catch (QueryException $e) {
