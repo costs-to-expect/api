@@ -6,6 +6,7 @@ The complete changelog for the Costs to Expect REST API, follows the format defi
 ### Added
 - We have added `updated_by` to the `item` table, records the user who was last to update a record.
 - We have added a `permitted_users` table; this is used to link users and resource types.
+- A permitted user record created/removed on addition/removal of a resource type.
 
 ### Changed
 - We have updated the `item` table, `user_id` field has been changed to `created_by`.
