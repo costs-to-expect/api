@@ -56,7 +56,7 @@ class ResourceType extends BaseValidator
                     'sometimes',
                     'string',
                     'max:255',
-                    'unique:resource_type,name,'. $resource_type_id . ',id,user_id,' . $user_id
+                    new ResourceTypeName($user_id, $resource_type_id)
                 ],
             ],
             Config::get('api.resource-type.validation.PATCH.fields')
@@ -82,8 +82,6 @@ class ResourceType extends BaseValidator
             $this->createRules($options['user_id']),
             $this->translateMessages('api.resource-type.validation.POST.messages')
         );
-
-
     }
 
     /**

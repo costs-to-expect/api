@@ -7,9 +7,11 @@ The complete changelog for the Costs to Expect REST API, follows the format defi
 - We have added `updated_by` to the `item` table, records the user who was last to update a record.
 - We have added a `permitted_users` table; this is used to link users and resource types.
 - A permitted user record created/removed on addition/removal of a resource type.
+- We have added a custom validator `ResourceTypeName`; it checks the given name is unique for the user based on the resource types they are permitted to modify.
 
 ### Changed
 - We have updated the `item` table, `user_id` field has been changed to `created_by`.
+- We have updated the validation rules for resource types; now aware of permitted users.
 
 ## [v1.23.0] - 2019-09-05
 ### Added 
