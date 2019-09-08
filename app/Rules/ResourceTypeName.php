@@ -32,11 +32,11 @@ class ResourceTypeName implements Rule
      * @param  mixed  $value
      * @return bool
      */
-    public function passes($attribute, $value)
+    public function passes($attribute, $value): bool
     {
         $where_clauses = [
-            ['permitted_user.user_id', '=', $this->user_id],
-            ['resource_type.name', '=', $value]
+            //['permitted_user.user_id', '=', $this->user_id],
+            //['resource_type.name', '=', $value]
         ];
 
         if ($this->resource_type_id !== null) {
@@ -46,10 +46,15 @@ class ResourceTypeName implements Rule
         }
 
         $count = DB::table('resource_type')->
-            join('permitted_users', 'resource_type.id', '=', 'permitted_user.resource_type_id')->
+            join('permitted_user', 'resource_type.id', '=', 'permitted_user.resource_type_id')->
             where($where_clauses)->
-            count();
+            get();
 
+        print_r($this->user_id);
+        print_r($count);
+
+        print_r(        $where_clauses);
+        die;
         return $count > 0;
     }
 

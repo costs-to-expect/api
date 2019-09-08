@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace App\Validators\Request\Fields;
 
+use App\Rules\ResourceTypeName;
 use App\Validators\Request\Fields\Validator as BaseValidator;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Support\Facades\Config;
@@ -32,7 +33,8 @@ class ResourceType extends BaseValidator
                     'required',
                     'string',
                     'max:255',
-                    'unique:resource_type,name,null,id,user_id,' . $user_id
+                    //'unique:resource_type,name,null,id,user_id,' . $user_id,
+                    new ResourceTypeName($user_id)
                 ],
             ],
             Config::get('api.resource-type.validation.POST.fields')
@@ -81,6 +83,8 @@ class ResourceType extends BaseValidator
             $this->createRules($options['user_id']),
             $this->translateMessages('api.resource-type.validation.POST.messages')
         );
+
+
     }
 
     /**
