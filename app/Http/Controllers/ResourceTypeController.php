@@ -211,7 +211,9 @@ class ResourceTypeController extends Controller
      */
     public function create(): JsonResponse
     {
-        $validator = (new ResourceTypeValidator)->create();
+        $validator = (new ResourceTypeValidator)->create([
+            'user_id' => Auth::user()->id
+        ]);
         UtilityRequest::validateAndReturnErrors($validator);
 
         try {
@@ -283,7 +285,8 @@ class ResourceTypeController extends Controller
         UtilityRequest::checkForEmptyPatch();
 
         $validator = (new ResourceTypeValidator())->update([
-            'resource_type_id' => intval($resource_type_id)
+            'resource_type_id' => intval($resource_type_id),
+            'user_id' => Auth::user()->id
         ]);
         UtilityRequest::validateAndReturnErrors($validator);
 

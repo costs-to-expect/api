@@ -17,7 +17,7 @@ use Illuminate\Support\Facades\DB;
  */
 class PermittedUser extends Model
 {
-    protected $table = 'permitted_users';
+    protected $table = 'permitted_user';
 
     protected $guarded = ['id'];
 
