@@ -33,7 +33,6 @@ class ResourceType extends BaseValidator
                     'required',
                     'string',
                     'max:255',
-                    //'unique:resource_type,name,null,id,user_id,' . $user_id,
                     new ResourceTypeName($user_id)
                 ],
             ],
