@@ -16,7 +16,7 @@ class Controller extends BaseController
     use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
 
     /**
-     * @var \App\Utilities\Hash
+     * @var Hash
      */
     protected $hash;
 
