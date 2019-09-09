@@ -222,7 +222,7 @@ class ResourceTypeController extends Controller
             $resource_type = new ResourceType([
                 'name' => request()->input('name'),
                 'description' => request()->input('description'),
-                'private' => request()->input('private', 0)
+                'public' => request()->input('public', 0)
             ]);
             $resource_type->save();
 
