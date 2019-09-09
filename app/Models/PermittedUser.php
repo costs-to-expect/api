@@ -45,9 +45,17 @@ class PermittedUser extends Model
      */
     public function permittedResourceTypes(int $user_id): array
     {
-        return $this->where('user_id', '=', $user_id)->
+        $permitted = [];
+
+        $results = $this->where('user_id', '=', $user_id)->
             select('resource_type_id')->
             get()->
             toArray();
+
+        foreach ($results as $row) {
+            $permitted[] = $row['resource_type_id'];
+        }
+
+        return $permitted;
     }
 }

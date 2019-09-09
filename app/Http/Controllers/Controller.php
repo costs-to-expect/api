@@ -26,6 +26,11 @@ class Controller extends BaseController
     protected $include_private;
 
     /**
+     * @var boolean Include public content
+     */
+    protected $include_public;
+
+    /**
      * @var array Permitted resource types
      */
     protected $permitted_resource_types = [];
@@ -44,11 +49,21 @@ class Controller extends BaseController
     {
         $this->hash = new Hash();
 
-        if (Auth::guard('api')->check() === true) {
-            $this->user_id = Auth::user()->id;
+        $this->middleware(function ($request, $next) {
+            $this->setHelperProperties();
+
+            return $next($request);
+        });
+    }
+
+    protected function setHelperProperties()
+    {
+        if (auth()->guard('api')->check() === true && auth('api')->user() !== null) {
+            $this->user_id = auth('api')->user()->id;
             $this->permitted_resource_types = (new PermittedUser())->permittedResourceTypes($this->user_id);
         }
 
+        $this->include_public = true;
         $this->include_private = Auth::guard('api')->check();
     }
 

@@ -47,7 +47,8 @@ class ResourceTypeController extends Controller
         );
 
         $total = (new ResourceType())->totalCount(
-            $this->include_private,
+            $this->permitted_resource_types,
+            $this->include_public,
             $search_parameters
         );
 
@@ -66,7 +67,8 @@ class ResourceTypeController extends Controller
             paging();
 
         $resource_types = (new ResourceType())->paginatedCollection(
-            $this->include_private,
+            $this->permitted_resource_types,
+            $this->include_public,
             $pagination['offset'],
             $pagination['limit'],
             $search_parameters,

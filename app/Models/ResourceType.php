@@ -38,21 +38,24 @@ class ResourceType extends Model
     /**
      * Return the total number of resource types
      *
-     * @param boolean $include_private Include private resource types
-     * @param array $search_parameters
+     * @param array $permitted_resource_types
+     * @param boolean $include_public
+     * @param array $search_parameters = []
      *
      * @return integer
      */
     public function totalCount(
-        bool $include_private = false,
+        array $permitted_resource_types = [],
+        bool $include_public = true,
         array $search_parameters = []
     ): int
     {
         $collection = $this->select("resource_type.id");
 
-        if ($include_private === false) {
-            $collection->where('resource_type.private', '=', 0);
-        }
+        $collection->where(function ($collection) use ($permitted_resource_types, $include_public) {
+            $collection->where('resource_type.public', '=', (int) $include_public)->
+                orWhereIn('resource_type.id', $permitted_resource_types);
+        });
 
         $collection = ModelUtility::applySearch($collection, $this->table, $search_parameters);
 
@@ -67,7 +70,8 @@ class ResourceType extends Model
     /**
      * Return the paginated collection
      *
-     * @param boolean $include_private Also include private resource type
+     * @param array $permitted_resource_types
+     * @param boolean $include_public Are we including public resource types
      * @param integer $offset Paging offset
      * @param integer $limit Paging limit
      * @param array $search_parameters
@@ -76,7 +80,8 @@ class ResourceType extends Model
      * @return array
      */
     public function paginatedCollection(
-        bool $include_private = false,
+        array $permitted_resource_types = [],
+        bool $include_public = true,
         int $offset = 0,
         int $limit = 10,
         array $search_parameters = [],
@@ -88,7 +93,7 @@ class ResourceType extends Model
                 'resource_type.name AS resource_type_name',
                 'resource_type.description AS resource_type_description',
                 'resource_type.created_at AS resource_type_created_at',
-                'resource_type.private AS resource_type_private'
+                'resource_type.public AS resource_type_public'
             )->selectRaw('
                 (
                     SELECT 
@@ -101,9 +106,10 @@ class ResourceType extends Model
             )->
             leftJoin("resource", "resource_type.id", "resource.id");
 
-        if ($include_private === false) {
-            $collection->where('private', '=', 0);
-        }
+        $collection->where(function ($collection) use ($permitted_resource_types, $include_public) {
+            $collection->where('resource_type.public', '=', (int) $include_public)->
+                orWhereIn('resource_type.id', $permitted_resource_types);
+        });
 
         $collection = ModelUtility::applySearch($collection, $this->table, $search_parameters);
 
