@@ -141,13 +141,15 @@ class ResourceType extends Model
      * Return a single item
      *
      * @param integer $resource_type_id Resource type to return
-     * @param boolean $include_private Add additional check to ensure we don't return private resource types
+     * @param array $permitted_resource_types
+     * @param boolean $include_public
      *
      * @return array
      */
     public function single(
         int $resource_type_id,
-        bool $include_private = false
+        array $permitted_resource_types = [],
+        bool $include_public = false
     ): array
     {
         $result = $this->select(
@@ -155,7 +157,7 @@ class ResourceType extends Model
                 'resource_type.name AS resource_type_name',
                 'resource_type.description AS resource_type_description',
                 'resource_type.created_at AS resource_type_created_at',
-                'resource_type.private AS resource_type_private'
+                'resource_type.public AS resource_type_public'
             )->selectRaw('
                 (
                     SELECT 
@@ -168,9 +170,10 @@ class ResourceType extends Model
             )->
             leftJoin("resource", "resource_type.id", "resource.id");
 
-        if ($include_private === false) {
-            $result->where('resource_type.private', '=', 0);
-        }
+        $result->where(function ($result) use ($permitted_resource_types, $include_public) {
+            $result->where('resource_type.public', '=', (int) $include_public)->
+                orWhereIn('resource_type.id', $permitted_resource_types);
+        });
 
         return $result->find($resource_type_id)->
             toArray();

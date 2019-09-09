@@ -121,7 +121,8 @@ class ResourceTypeController extends Controller
 
         $resource_type = (new ResourceType())->single(
             $resource_type_id,
-            $this->include_private
+            $this->permitted_resource_types,
+            $this->include_public
         );
 
         if ($resource_type === null) {
