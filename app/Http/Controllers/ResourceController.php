@@ -48,7 +48,8 @@ class ResourceController extends Controller
 
         $total = (new Resource())->totalCount(
             $resource_type_id,
-            $this->include_private,
+            $this->permitted_resource_types,
+            $this->include_public,
             $search_parameters
         );
 

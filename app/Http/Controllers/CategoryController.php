@@ -46,7 +46,8 @@ class CategoryController extends Controller
         );
 
         $total = (new Category())->totalCount(
-            $this->include_private,
+            $this->permitted_resource_types,
+            $this->include_public,
             [],
             $search_parameters
         );
@@ -66,7 +67,8 @@ class CategoryController extends Controller
             paging();
 
         $categories = (new Category())->paginatedCollection(
-            $this->include_private,
+            $this->permitted_resource_types,
+            $this->include_public,
             $pagination['offset'],
             $pagination['limit'],
             [],
@@ -270,7 +272,10 @@ class CategoryController extends Controller
      */
     private function conditionalPostParameters(): array
     {
-        $resource_types = (new ResourceType())->minimisedCollection($this->include_private);
+        $resource_types = (new ResourceType())->minimisedCollection(
+            $this->permitted_resource_types,
+            $this->include_public
+        );
 
         $conditional_post_fields = ['resource_type_id' => []];
         foreach ($resource_types as $resource_type) {

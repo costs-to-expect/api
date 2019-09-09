@@ -22,7 +22,10 @@ class SummaryCategoryController extends Controller
      */
     public function index(): JsonResponse
     {
-        $summary = (new Category())->totalCount($this->include_private);
+        $summary = (new Category())->totalCount(
+            $this->permitted_resource_types,
+            $this->include_public
+        );
 
         return response()->json(
             [

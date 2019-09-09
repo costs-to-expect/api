@@ -29,7 +29,11 @@ class SummaryResourceController extends Controller
     {
         Route::resourceTypeRoute($resource_type_id);
 
-        $summary = (new Resource())->totalCount($resource_type_id, $this->include_private);
+        $summary = (new Resource())->totalCount(
+            $resource_type_id,
+            $this->permitted_resource_types,
+            $this->include_public
+        );
 
         return response()->json(
             [

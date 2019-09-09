@@ -36,14 +36,16 @@ class Resource extends Model
      * Return the total number of resources
      *
      * @param integer $resource_type_id
-     * @param boolean $include_private Include resources attached to private resource types
+     * @param array $permitted_resource_types
+     * @param boolean $include_public Include resources attached to public resource types
      * @param array $search_parameters
      *
      * @return integer
      */
     public function totalCount(
         int $resource_type_id,
-        bool $include_private = false,
+        array $permitted_resource_types,
+        bool $include_public,
         array $search_parameters = []
     ): int
     {
@@ -51,9 +53,11 @@ class Resource extends Model
             join('resource_type', 'resource.resource_type_id', 'resource_type.id')->
             where('resource_type.id', '=', $resource_type_id);
 
-        if ($include_private === false) {
-            $collection->where('resource_type.private', '=', 0);
-        }
+        $collection = ModelUtility::applyResourceTypeCollectionCondition(
+            $collection,
+            $permitted_resource_types,
+            $include_public
+        );
 
         $collection = ModelUtility::applySearch($collection, $this->table, $search_parameters);
 

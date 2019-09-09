@@ -21,11 +21,6 @@ class Controller extends BaseController
     protected $hash;
 
     /**
-     * @var bool Include private content
-     */
-    protected $include_private;
-
-    /**
      * @var boolean Include public content
      */
     protected $include_public;
@@ -64,7 +59,6 @@ class Controller extends BaseController
         }
 
         $this->include_public = true;
-        $this->include_private = Auth::guard('api')->check();
     }
 
     /**

@@ -411,7 +411,8 @@ class ItemController extends Controller
         }
 
         $categories = (new Category())->paginatedCollection(
-            $this->include_private,
+            $this->permitted_resource_types,
+            $this->include_public,
             0,
             100,
             ['resource_type'=>$resource_type_id]
