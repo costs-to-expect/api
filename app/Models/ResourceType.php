@@ -52,10 +52,11 @@ class ResourceType extends Model
     {
         $collection = $this->select("resource_type.id");
 
-        $collection->where(function ($collection) use ($permitted_resource_types, $include_public) {
-            $collection->where('resource_type.public', '=', (int) $include_public)->
-                orWhereIn('resource_type.id', $permitted_resource_types);
-        });
+        $collection = ModelUtility::applyResourceTypeCollectionCondition(
+            $collection,
+            $permitted_resource_types,
+            $include_public
+        );
 
         $collection = ModelUtility::applySearch($collection, $this->table, $search_parameters);
 
@@ -106,10 +107,11 @@ class ResourceType extends Model
             )->
             leftJoin("resource", "resource_type.id", "resource.id");
 
-        $collection->where(function ($collection) use ($permitted_resource_types, $include_public) {
-            $collection->where('resource_type.public', '=', (int) $include_public)->
-                orWhereIn('resource_type.id', $permitted_resource_types);
-        });
+        $collection = ModelUtility::applyResourceTypeCollectionCondition(
+            $collection,
+            $permitted_resource_types,
+            $include_public
+        );
 
         $collection = ModelUtility::applySearch($collection, $this->table, $search_parameters);
 
