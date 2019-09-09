@@ -8,10 +8,16 @@ The complete changelog for the Costs to Expect REST API, follows the format defi
 - We have added a `permitted_users` table; this is used to link users and resource types.
 - A permitted user record created/removed on addition/removal of a resource type.
 - We have added a custom validator `ResourceTypeName`; it checks the given name is unique for the user based on the resource types they are permitted to modify.
+- We have added two useful properties to the base controller, `permitted_resource_types` and `include_public`.
 
 ### Changed
 - We have updated the `item` table, `user_id` field has been changed to `created_by`.
 - We have updated the validation rules for resource types; now aware of permitted users.
+- We have renamed the `private` field in the `resource_type` table; it is now `public`, the flag is no longer used to hide the data so it should be named based on the goal.
+- We have modified all requests to fetch resource types; the queries now take into account the public setting the resource types you are permitted to manage.
+
+### Removed
+- We have removed `include_private` and `resource_type_private` from the code, replaced by `include_public` and `permitted_resources_types`.
 
 ## [v1.23.0] - 2019-09-05
 ### Added 
