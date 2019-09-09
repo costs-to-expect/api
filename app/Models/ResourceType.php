@@ -223,7 +223,7 @@ class ResourceType extends Model
             'resource_type_name' => $resource_type->name,
             'resource_type_description' => $resource_type->description,
             'resource_type_created_at' => $resource_type->created_at->toDateTimeString(),
-            'resource_type_private' => $resource_type->private
+            'resource_type_public' => $resource_type->public
         ];
     }
 
