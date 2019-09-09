@@ -35,4 +35,19 @@ class PermittedUser extends Model
             where('user_id', '=', $user_id)->
             first();
     }
+
+    /**
+     * Fetch all the resource types the user has access to
+     *
+     * @param integer $user_id
+     *
+     * @return array
+     */
+    public function permittedResourceTypes(int $user_id): array
+    {
+        return $this->where('user_id', '=', $user_id)->
+            select('resource_type_id')->
+            get()->
+            toArray();
+    }
 }

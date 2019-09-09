@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\PermittedUser;
 use App\Utilities\Hash;
 use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Http\JsonResponse;
@@ -25,6 +26,16 @@ class Controller extends BaseController
     protected $include_private;
 
     /**
+     * @var array Permitted resource types
+     */
+    protected $permitted_resource_types = [];
+
+    /**
+     * @var integer|null
+     */
+    protected $user_id = null;
+
+    /**
      * @var boolean Allow the entire collection to be returned ignoring pagination
      */
     protected $allow_entire_collection = false;
@@ -32,6 +43,11 @@ class Controller extends BaseController
     public function __construct()
     {
         $this->hash = new Hash();
+
+        if (Auth::guard('api')->check() === true) {
+            $this->user_id = Auth::user()->id;
+            $this->permitted_resource_types = (new PermittedUser())->permittedResourceTypes($this->user_id);
+        }
 
         $this->include_private = Auth::guard('api')->check();
     }
