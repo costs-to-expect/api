@@ -238,4 +238,31 @@ class ResourceType extends Model
     {
         return $this->find($resource_type_id);
     }
+
+    /**
+     * Validate that the resource type exists and is accessible to the user for
+     * viewing, editing
+     *
+     * @param integer $id
+     * @param array $permitted_resource_types
+     * @param string $mode Intended mode, view or manage
+     *
+     * @return boolean
+     */
+    public function existsToUser(
+        int $id,
+        array $permitted_resource_types,
+        $mode = 'view'
+    ): bool
+    {
+        $collection = $this->where('resource_type.id', '=', $id);
+
+        $collection = ModelUtility::applyResourceTypeCollectionCondition(
+            $collection,
+            $permitted_resource_types,
+            ($mode === 'manage') ? false : true
+        );
+
+        return (count($collection->get()) === 1) ? true : false;
+    }
 }

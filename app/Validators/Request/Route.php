@@ -35,10 +35,39 @@ class Route
         }
     }
 
-    static public function resourceTypeRoute($resource_type_id)
+    /**
+     * Validate access to the resource type, there are two modes, viewing, which
+     * includes public resource types and managing which should only allow access
+     * to permitted resource types
+     *
+     * @param $resource_type_id
+     * @param array $permitted_resource_types
+     * @param bool $view Are we requesting the resource type in view mode or manage mode
+     */
+    static public function resourceTypeRoute(
+        $resource_type_id,
+        array $permitted_resource_types,
+        bool $view = true
+    )
     {
-        if (ResourceType::validate($resource_type_id) === false) {
+        if ($view === true) {
+            if (
+                ResourceType::existsToUserForViewing(
+                    $resource_type_id,
+                    $permitted_resource_types
+                ) === false
+            ) {
             UtilityResponse::notFound(trans('entities.resource-type'));
+        }
+        } else {
+            if (
+                ResourceType::existsToUserForManagement(
+                    $resource_type_id,
+                    $permitted_resource_types
+                ) === false
+            ) {
+            UtilityResponse::notFoundOrNotAccessible(trans('entities.resource-type'));
+        }
         }
     }
 
