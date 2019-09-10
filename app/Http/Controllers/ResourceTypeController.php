@@ -115,7 +115,10 @@ class ResourceTypeController extends Controller
      */
     public function show(string $resource_type_id): JsonResponse
     {
-        Route::resourceTypeRoute($resource_type_id);
+        Route::resourceTypeRoute(
+            $resource_type_id,
+            $this->permitted_resource_types
+        );
 
         $parameters = Parameters::fetch(['include-resources']);
 
@@ -183,7 +186,10 @@ class ResourceTypeController extends Controller
      */
     public function optionsShow(string $resource_type_id): JsonResponse
     {
-        Route::resourceTypeRoute($resource_type_id);
+        Route::resourceTypeRoute(
+            $resource_type_id,
+            $this->permitted_resource_types
+        );
 
         $get = Get::init()->
             setDescription('route-descriptions.resource_type_GET_show')->
@@ -253,7 +259,11 @@ class ResourceTypeController extends Controller
         string $resource_type_id
     ): JsonResponse
     {
-        Route::resourceTypeRoute($resource_type_id);
+        Route::resourceTypeRoute(
+            $resource_type_id,
+            $this->permitted_resource_types,
+            false
+        );
 
         try {
             (new PermittedUser())->instance($resource_type_id, Auth::user()->id)->delete();
@@ -277,7 +287,11 @@ class ResourceTypeController extends Controller
         string $resource_type_id
     ): JsonResponse
     {
-        Route::resourceTypeRoute($resource_type_id);
+        Route::resourceTypeRoute(
+            $resource_type_id,
+            $this->permitted_resource_types,
+            false
+        );
 
         $resource_type = (new ResourceType())->instance($resource_type_id);
 

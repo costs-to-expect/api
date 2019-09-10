@@ -40,7 +40,10 @@ class ResourceController extends Controller
      */
     public function index(string $resource_type_id): JsonResponse
     {
-        Route::resourceTypeRoute($resource_type_id);
+        Route::resourceTypeRoute(
+            $resource_type_id,
+            $this->permitted_resource_types
+        );
 
         $search_parameters = SearchParameters::fetch(
             Config::get('api.resource.searchable')
@@ -145,7 +148,10 @@ class ResourceController extends Controller
      */
     public function optionsIndex(string $resource_type_id): JsonResponse
     {
-        Route::resourceTypeRoute($resource_type_id);
+        Route::resourceTypeRoute(
+            $resource_type_id,
+            $this->permitted_resource_types
+        );
 
         $get = Get::init()->
             setDescription('route-descriptions.resource_GET_index')->
@@ -219,7 +225,11 @@ class ResourceController extends Controller
      */
     public function create(string $resource_type_id): JsonResponse
     {
-        Route::resourceTypeRoute($resource_type_id);
+        Route::resourceTypeRoute(
+            $resource_type_id,
+            $this->permitted_resource_types,
+            false
+        );
 
         $validator = (new ResourceValidator)->create(['resource_type_id' => $resource_type_id]);
         UtilityRequest::validateAndReturnErrors($validator);

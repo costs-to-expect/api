@@ -33,10 +33,13 @@ class Model
         bool $include_public
     )
     {
-        $collection->where(function ($collection) use ($permitted_resource_types, $include_public) {
-            $collection->where('resource_type.public', '=', (int) $include_public)->
-                orWhereIn('resource_type.id', $permitted_resource_types);
-        });
+        if ($include_public === true) {
+            $collection->where(function ($collection) use ($permitted_resource_types, $include_public) {
+                $collection->where('resource_type.public', '=', (int)$include_public)->orWhereIn('resource_type.id', $permitted_resource_types);
+            });
+        } else {
+            $collection->WhereIn('resource_type.id', $permitted_resource_types);
+        }
 
         return $collection;
     }

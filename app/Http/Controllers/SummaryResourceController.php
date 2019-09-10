@@ -27,7 +27,10 @@ class SummaryResourceController extends Controller
      */
     public function index(Request $request, string $resource_type_id): JsonResponse
     {
-        Route::resourceTypeRoute($resource_type_id);
+        Route::resourceTypeRoute(
+            $resource_type_id,
+            $this->permitted_resource_types
+        );
 
         $summary = (new Resource())->totalCount(
             $resource_type_id,
@@ -55,7 +58,10 @@ class SummaryResourceController extends Controller
      */
     public function optionsIndex(Request $request, string $resource_type_id): JsonResponse
     {
-        Route::resourceTypeRoute($resource_type_id);
+        Route::resourceTypeRoute(
+            $resource_type_id,
+            $this->permitted_resource_types
+        );
 
         $get = Get::init()->
             setDescription('route-descriptions.summary-resource-GET-index')->

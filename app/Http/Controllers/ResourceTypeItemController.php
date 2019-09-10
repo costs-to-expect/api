@@ -36,7 +36,10 @@ class ResourceTypeItemController extends Controller
      */
     public function index(Request $request, string $resource_type_id): JsonResponse
     {
-        Route::resourceTypeRoute($resource_type_id);
+        Route::resourceTypeRoute(
+            $resource_type_id,
+            $this->permitted_resource_types
+        );
 
         $collection_parameters = Parameters::fetch([
             'include-categories',
@@ -120,7 +123,10 @@ class ResourceTypeItemController extends Controller
      */
     public function optionsIndex(Request $request, string $resource_type_id): JsonResponse
     {
-        Route::resourceTypeRoute($resource_type_id);
+        Route::resourceTypeRoute(
+            $resource_type_id,
+            $this->permitted_resource_types
+        );
 
         $this->conditionalGetParameters(
             $resource_type_id,
