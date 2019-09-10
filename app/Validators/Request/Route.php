@@ -111,7 +111,7 @@ class Route
         }
     }
 
-    static public function itemRoute($resource_type_id, $resource_id, $item_id)
+    static public function item($resource_type_id, $resource_id, $item_id)
     {
         if (Item::validate($resource_type_id, $resource_id, $item_id) === false) {
             UtilityResponse::notFound(trans('entities.item'));
