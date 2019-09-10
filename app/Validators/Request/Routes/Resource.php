@@ -15,28 +15,6 @@ use App\Models\Resource as ResourceModel;
 class Resource
 {
     /**
-     * Validate the route params are valid
-     *
-     * @param string|int $resource_type_id
-     * @param string|int $resource_id
-     *
-     * @return boolean
-     */
-    static public function validate($resource_type_id, $resource_id): bool
-    {
-        if (
-            $resource_type_id === 'nill' ||
-            $resource_id === 'nill' ||
-            (new ResourceModel())->where('resource_type_id', '=', $resource_type_id)
-                ->find($resource_id)->exists() === false
-        ) {
-            return false;
-        }
-
-        return true;
-    }
-
-    /**
      * Validate that the user is able to view the requested resource based
      * on their permitted resource types, needs to be in their group or public
      *
@@ -54,6 +32,7 @@ class Resource
     {
         if (
             $resource_type_id === 'nill' ||
+            $resource_id === 'nill' ||
             (new ResourceModel())->existsToUser(
                 $resource_id,
                 $resource_type_id,
@@ -85,6 +64,7 @@ class Resource
     {
         if (
             $resource_type_id === 'nill' ||
+            $resource_id === 'nill' ||
             (new ResourceModel())->existsToUser(
                 $resource_id,
                 $resource_type_id,

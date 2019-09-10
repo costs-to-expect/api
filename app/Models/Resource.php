@@ -216,7 +216,7 @@ class Resource extends Model
     {
         $collection = $this->join('resource_type', 'resource.resource_type_id', 'resource_type.id')->
             where('resource.resource_type_id', '=', $resource_type_id)->
-            where('resource.ids', '=', $resource_id);
+            where('resource.id', '=', $resource_id);
 
         $collection = ModelUtility::applyResourceTypeCollectionCondition(
             $collection,

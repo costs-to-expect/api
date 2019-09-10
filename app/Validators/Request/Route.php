@@ -88,10 +88,6 @@ class Route
         bool $view = true
     )
     {
-        if (Resource::validate($resource_type_id, $resource_id) === false) {
-            UtilityResponse::notFound(trans('entities.resource'));
-        }
-
         if ($view === true) {
             if (
                 Resource::existsToUserForViewing(
