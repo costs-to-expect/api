@@ -57,8 +57,8 @@ class Route
                     $permitted_resource_types
                 ) === false
             ) {
-            UtilityResponse::notFound(trans('entities.resource-type'));
-        }
+                UtilityResponse::notFound(trans('entities.resource-type'));
+            }
         } else {
             if (
                 ResourceType::existsToUserForManagement(
@@ -66,8 +66,8 @@ class Route
                     $permitted_resource_types
                 ) === false
             ) {
-            UtilityResponse::notFoundOrNotAccessible(trans('entities.resource-type'));
-        }
+                UtilityResponse::notFoundOrNotAccessible(trans('entities.resource-type'));
+            }
         }
     }
 
