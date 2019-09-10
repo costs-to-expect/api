@@ -33,7 +33,13 @@ class ItemTransferController extends Controller
         string $item_id
     ): JsonResponse
     {
-        Route::item($resource_type_id, $resource_id, $item_id);
+        Route::item(
+            $resource_type_id,
+            $resource_id,
+            $item_id,
+            $this->permitted_resource_types,
+            false
+        );
 
         $validator = (new ItemTransferValidator)->create(
             [
@@ -68,7 +74,12 @@ class ItemTransferController extends Controller
         string $item_id
     ): JsonResponse
     {
-        Route::item($resource_type_id, $resource_id, $item_id);
+        Route::item(
+            $resource_type_id,
+            $resource_id,
+            $item_id,
+            $this->permitted_resource_types
+        );
 
         $post = Post::init()->
             setDescription('route-descriptions.item_transfer_POST')->

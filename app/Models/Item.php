@@ -332,4 +332,39 @@ class Item extends Model
             'item_created_at' => $item->created_at->toDateTimeString()
         ];
     }
+
+    /**
+     * Validate that the item exists and is accessible to the user for
+     * viewing, editing etc. based on their permitted resource types
+     *
+     * @param integer $resource_type_id
+     * @param integer $resource_id
+     * @param integer $item_id
+     * @param array $permitted_resource_types
+     * @param string $mode Intended mode, view or manage
+     *
+     * @return boolean
+     */
+    public function existsToUser(
+        int $resource_type_id,
+        int $resource_id,
+        int $item_id,
+        array $permitted_resource_types,
+        $mode = 'view'
+    ): bool
+    {
+        $collection = $this->join('resource', 'item.resource_id', 'resource.id')->
+            join('resource_type', 'resource.resource_type_id', 'resource_type.id')->
+            where('resource.resource_type_id', '=', $resource_type_id)->
+            where('resource.id', '=', $resource_id)->
+            where('item.id', '=', $item_id);
+
+        $collection = ModelUtility::applyResourceTypeCollectionCondition(
+            $collection,
+            $permitted_resource_types,
+            ($mode === 'manage') ? false : true
+        );
+
+        return (count($collection->get()) === 1) ? true : false;
+    }
 }

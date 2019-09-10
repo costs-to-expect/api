@@ -111,10 +111,36 @@ class Route
         }
     }
 
-    static public function item($resource_type_id, $resource_id, $item_id)
+    static public function item(
+        $resource_type_id,
+        $resource_id,
+        $item_id,
+        array $permitted_resource_types,
+        bool $view = true
+    )
     {
-        if (Item::validate($resource_type_id, $resource_id, $item_id) === false) {
-            UtilityResponse::notFound(trans('entities.item'));
+        if ($view === true) {
+            if (
+                Item::existsToUserForViewing(
+                    (int) $resource_type_id,
+                    (int) $resource_id,
+                    (int) $item_id,
+                    $permitted_resource_types
+                ) === false
+            ) {
+                UtilityResponse::notFound(trans('entities.item'));
+            }
+        } else {
+            if (
+                Item::existsToUserForManagement(
+                    (int) $resource_type_id,
+                    (int) $resource_id,
+                    (int) $item_id,
+                    $permitted_resource_types
+                ) === false
+            ) {
+                UtilityResponse::notFoundOrNotAccessible(trans('entities.item'));
+            }
         }
     }
 

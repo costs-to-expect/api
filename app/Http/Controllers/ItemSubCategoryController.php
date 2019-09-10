@@ -46,7 +46,12 @@ class ItemSubCategoryController extends Controller
         string $item_category_id
     ): JsonResponse
     {
-        Route::item($resource_type_id, $resource_id, $item_id);
+        Route::item(
+            $resource_type_id,
+            $resource_id,
+            $item_id,
+            $this->permitted_resource_types
+        );
 
         if ($item_category_id === 'nill') {
             UtilityResponse::notFound(trans('entities.item-subcategory'));
@@ -95,7 +100,12 @@ class ItemSubCategoryController extends Controller
         string $item_sub_category_id
     ): JsonResponse
     {
-        Route::item($resource_type_id, $resource_id, $item_id);
+        Route::item(
+            $resource_type_id,
+            $resource_id,
+            $item_id,
+            $this->permitted_resource_types
+        );
 
         if ($item_category_id === 'nill' || $item_sub_category_id === 'nill') {
             UtilityResponse::notFound(trans('entities.item-subcategory'));
@@ -143,7 +153,12 @@ class ItemSubCategoryController extends Controller
         string $item_category_id
     ): JsonResponse
     {
-        Route::item($resource_type_id, $resource_id, $item_id);
+        Route::item(
+            $resource_type_id,
+            $resource_id,
+            $item_id,
+            $this->permitted_resource_types
+        );
 
         if ($item_category_id === 'nill') {
             UtilityResponse::notFound(trans('entities.item-subcategory'));
@@ -193,7 +208,12 @@ class ItemSubCategoryController extends Controller
         string $item_sub_category_id
     ): JsonResponse
     {
-        Route::item($resource_type_id, $resource_id, $item_id);
+        Route::item(
+            $resource_type_id,
+            $resource_id,
+            $item_id,
+            $this->permitted_resource_types
+        );
 
         if ($item_category_id === 'nill' || $item_sub_category_id === 'nill') {
             UtilityResponse::notFound(trans('entities.item-subcategory'));
@@ -246,7 +266,13 @@ class ItemSubCategoryController extends Controller
         string $item_category_id
     ): JsonResponse
     {
-        Route::item($resource_type_id, $resource_id, $item_id);
+        Route::item(
+            $resource_type_id,
+            $resource_id,
+            $item_id,
+            $this->permitted_resource_types,
+            false
+        );
 
         if ($item_category_id === 'nill') {
             UtilityResponse::notFound(trans('entities.item-subcategory'));
@@ -339,7 +365,13 @@ class ItemSubCategoryController extends Controller
         string $item_sub_category_id
     ): JsonResponse
     {
-        Route::item($resource_type_id, $resource_id, $item_id);
+        Route::item(
+            $resource_type_id,
+            $resource_id,
+            $item_id,
+            $this->permitted_resource_types,
+            false
+        );
 
         if ($item_category_id === 'nill' || $item_sub_category_id === 'nill') {
             UtilityResponse::notFound(trans('entities.item-subcategory'));

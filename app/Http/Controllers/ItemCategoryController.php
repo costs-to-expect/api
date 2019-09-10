@@ -38,7 +38,12 @@ class ItemCategoryController extends Controller
      */
     public function index(Request $request, string $resource_type_id, string $resource_id, string $item_id): JsonResponse
     {
-        Route::item($resource_type_id, $resource_id, $item_id);
+        Route::item(
+            $resource_type_id,
+            $resource_id,
+            $item_id,
+            $this->permitted_resource_types
+        );
 
         $item_category = (new ItemCategory())->paginatedCollection(
             $resource_type_id,
@@ -80,7 +85,12 @@ class ItemCategoryController extends Controller
         string $item_category_id
     ): JsonResponse
     {
-        Route::item($resource_type_id, $resource_id, $item_id);
+        Route::item(
+            $resource_type_id,
+            $resource_id,
+            $item_id,
+            $this->permitted_resource_types
+        );
 
         if ($item_category_id === 'nill') {
             UtilityResponse::notFound(trans('entities.item-category'));
@@ -120,7 +130,12 @@ class ItemCategoryController extends Controller
      */
     public function optionsIndex(Request $request, string $resource_type_id, string $resource_id, string $item_id): JsonResponse
     {
-        Route::item($resource_type_id, $resource_id, $item_id);
+        Route::item(
+            $resource_type_id,
+            $resource_id,
+            $item_id,
+            $this->permitted_resource_types
+        );
 
         $get = Get::init()->
             setDescription('route-descriptions.item_category_GET_index')->
@@ -159,7 +174,12 @@ class ItemCategoryController extends Controller
         string $item_category_id
     ): JsonResponse
     {
-        Route::item($resource_type_id, $resource_id, $item_id);
+        Route::item(
+            $resource_type_id,
+            $resource_id,
+            $item_id,
+            $this->permitted_resource_types
+        );
 
         if ($item_category_id === 'nill') {
             UtilityResponse::notFound(trans('entities.item-category'));
@@ -209,7 +229,13 @@ class ItemCategoryController extends Controller
         string $item_id
     ): JsonResponse
     {
-        Route::item($resource_type_id, $resource_id, $item_id);
+        Route::item(
+            $resource_type_id,
+            $resource_id,
+            $item_id,
+            $this->permitted_resource_types,
+            false
+        );
 
         $validator = (new ItemCategoryValidator)->create();
         UtilityRequest::validateAndReturnErrors(
