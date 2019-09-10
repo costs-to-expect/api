@@ -40,7 +40,11 @@ class SummaryItemController extends Controller
      */
     public function index(Request $request, string $resource_type_id, string $resource_id): JsonResponse
     {
-        Route::resource($resource_type_id, $resource_id);
+        Route::resource(
+            $resource_type_id,
+            $resource_id,
+            $this->permitted_resource_types
+        );
 
         $this->resource_type_id = $resource_type_id;
         $this->resource_id = $resource_id;
@@ -481,7 +485,11 @@ class SummaryItemController extends Controller
      */
     public function optionsIndex(Request $request, string $resource_type_id, string $resource_id)
     {
-        Route::resource($resource_type_id, $resource_id);
+        Route::resource(
+            $resource_type_id,
+            $resource_id,
+            $this->permitted_resource_types
+        );
 
         $get = Get::init()->
             setDescription('route-descriptions.summary_GET_resource-type_resource_items')->

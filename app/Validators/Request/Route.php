@@ -71,10 +71,47 @@ class Route
         }
     }
 
-    static public function resource($resource_type_id, $resource_id)
+    /**
+     * Validate access to the resource, there are two modes, viewing, which
+     * includes public resource types and managing which should only allow access
+     * to permitted resource based on permitted resource types
+     *
+     * @param $resource_type_id
+     * @param $resource_id
+     * @param array $permitted_resource_types
+     * @param bool $view Are we requesting the resource type in view mode or manage mode
+     */
+    static public function resource(
+        $resource_type_id,
+        $resource_id,
+        array $permitted_resource_types,
+        bool $view = true
+    )
     {
         if (Resource::validate($resource_type_id, $resource_id) === false) {
             UtilityResponse::notFound(trans('entities.resource'));
+        }
+
+        if ($view === true) {
+            if (
+                Resource::existsToUserForViewing(
+                    (int) $resource_type_id,
+                    (int) $resource_id,
+                    $permitted_resource_types
+                ) === false
+            ) {
+                UtilityResponse::notFound(trans('entities.resource'));
+            }
+        } else {
+            if (
+                Resource::existsToUserForManagement(
+                    (int) $resource_type_id,
+                    (int) $resource_id,
+                    $permitted_resource_types
+                ) === false
+            ) {
+                UtilityResponse::notFoundOrNotAccessible(trans('entities.resource'));
+            }
         }
     }
 

@@ -122,7 +122,11 @@ class ResourceController extends Controller
         string $resource_id
     ): JsonResponse
     {
-        Route::resource($resource_type_id, $resource_id);
+        Route::resource(
+            $resource_type_id,
+            $resource_id,
+            $this->permitted_resource_types
+        );
 
         $resource = (new Resource)->single($resource_type_id, $resource_id);
 
@@ -183,7 +187,11 @@ class ResourceController extends Controller
      */
     public function optionsShow(string $resource_type_id, string $resource_id): JsonResponse
     {
-        Route::resource($resource_type_id, $resource_id);
+        Route::resource(
+            $resource_type_id,
+            $resource_id,
+            $this->permitted_resource_types
+        );
 
         $resource = (new Resource)->single(
             $resource_type_id,
@@ -265,7 +273,12 @@ class ResourceController extends Controller
         string $resource_id
     ): JsonResponse
     {
-        Route::resource($resource_type_id, $resource_id);
+        Route::resource(
+            $resource_type_id,
+            $resource_id,
+            $this->permitted_resource_types,
+            false
+        );
 
         try {
             (new Resource())->find($resource_id)->delete();
@@ -291,7 +304,12 @@ class ResourceController extends Controller
         string $resource_id
     ): JsonResponse
     {
-        Route::resource($resource_type_id, $resource_id);
+        Route::resource(
+            $resource_type_id,
+            $resource_id,
+            $this->permitted_resource_types,
+            false
+        );
 
         $resource = (new Resource())->instance($resource_type_id, $resource_id);
 
