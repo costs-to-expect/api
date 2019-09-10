@@ -27,7 +27,7 @@ class SummarySubcategoryController extends Controller
      */
     public function index(string $category_id): JsonResponse
     {
-        Route::categoryRoute($category_id);
+        Route::category($category_id);
 
         $summary = (new SubCategory())->totalCount($category_id);
 
@@ -53,7 +53,7 @@ class SummarySubcategoryController extends Controller
      */
     public function optionsIndex(string $category_id): JsonResponse
     {
-        Route::categoryRoute($category_id);
+        Route::category($category_id);
 
         $get = Get::init()->
             setDescription('route-descriptions.summary_subcategory_GET_index')->

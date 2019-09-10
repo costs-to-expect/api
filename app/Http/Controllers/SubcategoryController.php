@@ -40,7 +40,7 @@ class SubcategoryController extends Controller
      */
     public function index(string $category_id): JsonResponse
     {
-        Route::categoryRoute($category_id);
+        Route::category($category_id);
 
         $search_parameters = SearchParameters::fetch(
             Config::get('api.subcategory.searchable')
@@ -117,7 +117,7 @@ class SubcategoryController extends Controller
         string $sub_category_id
     ): JsonResponse
     {
-        Route::subCategoryRoute($category_id, $sub_category_id);
+        Route::subcategory($category_id, $sub_category_id);
 
         $subcategory = (new SubCategory())->single(
             $category_id,
@@ -147,7 +147,7 @@ class SubcategoryController extends Controller
      */
     public function optionsIndex(string $category_id): JsonResponse
     {
-        Route::categoryRoute($category_id);
+        Route::category($category_id);
 
         $get = Get::init()->
             setDescription('route-descriptions.sub_category_GET_index')->
@@ -182,7 +182,7 @@ class SubcategoryController extends Controller
         string $sub_category_id
     ): JsonResponse
     {
-        Route::subCategoryRoute($category_id, $sub_category_id);
+        Route::subcategory($category_id, $sub_category_id);
 
         $get = Get::init()->
             setDescription('route-descriptions.sub_category_GET_show')->
@@ -215,7 +215,7 @@ class SubcategoryController extends Controller
      */
     public function create(string $category_id): JsonResponse
     {
-        Route::categoryRoute($category_id);
+        Route::category($category_id);
 
         $validator = (new SubCategoryValidator)->create(['category_id' => $category_id]);
         UtilityRequest::validateAndReturnErrors($validator);
@@ -250,7 +250,7 @@ class SubcategoryController extends Controller
         string $sub_category_id
     ): JsonResponse
     {
-        Route::subCategoryRoute($category_id, $sub_category_id);
+        Route::subcategory($category_id, $sub_category_id);
 
         $sub_category = (new SubCategory())->single(
             $category_id,
@@ -285,7 +285,7 @@ class SubcategoryController extends Controller
         string $sub_category_id
     ): JsonResponse
     {
-        Route::subCategoryRoute($category_id, $sub_category_id);
+        Route::subcategory($category_id, $sub_category_id);
 
         $subcategory = (new SubCategory())->instance($category_id, $sub_category_id);
 

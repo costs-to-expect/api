@@ -40,7 +40,7 @@ class SummaryItemController extends Controller
      */
     public function index(Request $request, string $resource_type_id, string $resource_id): JsonResponse
     {
-        Route::resourceRoute($resource_type_id, $resource_id);
+        Route::resource($resource_type_id, $resource_id);
 
         $this->resource_type_id = $resource_type_id;
         $this->resource_id = $resource_id;
@@ -376,7 +376,7 @@ class SummaryItemController extends Controller
      */
     private function categorySummary(int $category_id): JsonResponse
     {
-        Route::categoryRoute($category_id);
+        Route::category($category_id);
 
         $summary = (new ItemSummary())->categorySummary(
             $this->resource_type_id,
@@ -408,7 +408,7 @@ class SummaryItemController extends Controller
      */
     private function subcategoriesSummary(int $category_id): JsonResponse
     {
-        Route::categoryRoute($category_id);
+        Route::category($category_id);
 
         $summary = (new ItemSummary())->subCategoriesSummary(
             $this->resource_type_id,
@@ -446,7 +446,7 @@ class SummaryItemController extends Controller
      */
     private function subcategorySummary(int $category_id, int $sub_category_id): JsonResponse
     {
-        Route::subCategoryRoute($category_id, $sub_category_id);
+        Route::subcategory($category_id, $sub_category_id);
 
         $summary = (new ItemSummary())->subCategorySummary(
             $this->resource_type_id,
@@ -481,7 +481,7 @@ class SummaryItemController extends Controller
      */
     public function optionsIndex(Request $request, string $resource_type_id, string $resource_id)
     {
-        Route::resourceRoute($resource_type_id, $resource_id);
+        Route::resource($resource_type_id, $resource_id);
 
         $get = Get::init()->
             setDescription('route-descriptions.summary_GET_resource-type_resource_items')->

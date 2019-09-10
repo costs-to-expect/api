@@ -21,14 +21,14 @@ use App\Utilities\Response as UtilityResponse;
  */
 class Route
 {
-    static public function categoryRoute($category_id)
+    static public function category($category_id)
     {
         if (Category::validate($category_id) === false) {
             UtilityResponse::notFound(trans('entities.category'));
         }
     }
 
-    static public function subCategoryRoute($category_id, $sub_category_id)
+    static public function subcategory($category_id, $sub_category_id)
     {
         if (SubCategory::validate($category_id, $sub_category_id) === false) {
             UtilityResponse::notFound(trans('entities.subcategory'));
@@ -44,7 +44,7 @@ class Route
      * @param array $permitted_resource_types
      * @param bool $view Are we requesting the resource type in view mode or manage mode
      */
-    static public function resourceTypeRoute(
+    static public function resourceType(
         $resource_type_id,
         array $permitted_resource_types,
         bool $view = true
@@ -71,7 +71,7 @@ class Route
         }
     }
 
-    static public function resourceRoute($resource_type_id, $resource_id)
+    static public function resource($resource_type_id, $resource_id)
     {
         if (Resource::validate($resource_type_id, $resource_id) === false) {
             UtilityResponse::notFound(trans('entities.resource'));
@@ -102,7 +102,7 @@ class Route
         }
     }
 
-    static public function itemSubCategory(
+    static public function itemSubcategory(
         $resource_type_id,
         $resource_id,
         $item_id,

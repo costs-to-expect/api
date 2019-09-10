@@ -44,7 +44,7 @@ class ItemController extends Controller
      */
     public function index(string $resource_type_id, string $resource_id): JsonResponse
     {
-        Route::resourceRoute($resource_type_id, $resource_id);
+        Route::resource($resource_type_id, $resource_id);
 
         $parameters = Parameters::fetch([
             'include-categories',
@@ -164,7 +164,7 @@ class ItemController extends Controller
         string $resource_id
     ): JsonResponse
     {
-        Route::resourceRoute($resource_type_id, $resource_id);
+        Route::resource($resource_type_id, $resource_id);
 
         $parameters = Parameters::fetch(['year', 'month', 'category', 'subcategory']);
 
@@ -250,7 +250,7 @@ class ItemController extends Controller
      */
     public function create(Request $request, string $resource_type_id, string $resource_id): JsonResponse
     {
-        Route::resourceRoute($resource_type_id, $resource_id);
+        Route::resource($resource_type_id, $resource_id);
 
         $validator = (new ItemValidator)->create();
         UtilityRequest::validateAndReturnErrors($validator);
@@ -348,7 +348,7 @@ class ItemController extends Controller
         string $item_id
     ): JsonResponse
     {
-        Route::resourceRoute($resource_type_id, $resource_id);
+        Route::resource($resource_type_id, $resource_id);
 
         $item = (new Item())->instance($resource_type_id, $resource_id, $item_id);
 

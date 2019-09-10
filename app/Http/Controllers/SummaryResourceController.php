@@ -27,7 +27,7 @@ class SummaryResourceController extends Controller
      */
     public function index(Request $request, string $resource_type_id): JsonResponse
     {
-        Route::resourceTypeRoute(
+        Route::resourceType(
             $resource_type_id,
             $this->permitted_resource_types
         );
@@ -58,7 +58,7 @@ class SummaryResourceController extends Controller
      */
     public function optionsIndex(Request $request, string $resource_type_id): JsonResponse
     {
-        Route::resourceTypeRoute(
+        Route::resourceType(
             $resource_type_id,
             $this->permitted_resource_types
         );

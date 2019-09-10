@@ -115,7 +115,7 @@ class ResourceTypeController extends Controller
      */
     public function show(string $resource_type_id): JsonResponse
     {
-        Route::resourceTypeRoute(
+        Route::resourceType(
             $resource_type_id,
             $this->permitted_resource_types
         );
@@ -186,7 +186,7 @@ class ResourceTypeController extends Controller
      */
     public function optionsShow(string $resource_type_id): JsonResponse
     {
-        Route::resourceTypeRoute(
+        Route::resourceType(
             $resource_type_id,
             $this->permitted_resource_types
         );
@@ -259,7 +259,7 @@ class ResourceTypeController extends Controller
         string $resource_type_id
     ): JsonResponse
     {
-        Route::resourceTypeRoute(
+        Route::resourceType(
             $resource_type_id,
             $this->permitted_resource_types,
             false
@@ -287,7 +287,7 @@ class ResourceTypeController extends Controller
         string $resource_type_id
     ): JsonResponse
     {
-        Route::resourceTypeRoute(
+        Route::resourceType(
             $resource_type_id,
             $this->permitted_resource_types,
             false

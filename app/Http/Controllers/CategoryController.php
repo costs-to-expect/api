@@ -116,7 +116,7 @@ class CategoryController extends Controller
      */
     public function show($category_id): JsonResponse
     {
-        Route::categoryRoute($category_id);
+        Route::category($category_id);
 
         $parameters = Parameters::fetch(['include-subcategories']);
 
@@ -185,7 +185,7 @@ class CategoryController extends Controller
      */
     public function optionsShow(string $category_id): JsonResponse
     {
-        Route::categoryRoute($category_id);
+        Route::category($category_id);
 
         $get = Get::init()->
             setDescription('route-descriptions.category_GET_show')->
@@ -253,7 +253,7 @@ class CategoryController extends Controller
         string $category_id
     ): JsonResponse
     {
-        Route::categoryRoute($category_id);
+        Route::category($category_id);
 
         try {
             (new Category())->find($category_id)->delete();
@@ -306,7 +306,7 @@ class CategoryController extends Controller
         string $category_id
     ): JsonResponse
     {
-        Route::categoryRoute($category_id);
+        Route::category($category_id);
 
         $category = (new Category())->instance($category_id);
 

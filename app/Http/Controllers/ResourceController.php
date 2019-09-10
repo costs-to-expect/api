@@ -40,7 +40,7 @@ class ResourceController extends Controller
      */
     public function index(string $resource_type_id): JsonResponse
     {
-        Route::resourceTypeRoute(
+        Route::resourceType(
             $resource_type_id,
             $this->permitted_resource_types
         );
@@ -122,7 +122,7 @@ class ResourceController extends Controller
         string $resource_id
     ): JsonResponse
     {
-        Route::resourceRoute($resource_type_id, $resource_id);
+        Route::resource($resource_type_id, $resource_id);
 
         $resource = (new Resource)->single($resource_type_id, $resource_id);
 
@@ -148,7 +148,7 @@ class ResourceController extends Controller
      */
     public function optionsIndex(string $resource_type_id): JsonResponse
     {
-        Route::resourceTypeRoute(
+        Route::resourceType(
             $resource_type_id,
             $this->permitted_resource_types
         );
@@ -183,7 +183,7 @@ class ResourceController extends Controller
      */
     public function optionsShow(string $resource_type_id, string $resource_id): JsonResponse
     {
-        Route::resourceRoute($resource_type_id, $resource_id);
+        Route::resource($resource_type_id, $resource_id);
 
         $resource = (new Resource)->single(
             $resource_type_id,
@@ -225,7 +225,7 @@ class ResourceController extends Controller
      */
     public function create(string $resource_type_id): JsonResponse
     {
-        Route::resourceTypeRoute(
+        Route::resourceType(
             $resource_type_id,
             $this->permitted_resource_types,
             false
@@ -265,7 +265,7 @@ class ResourceController extends Controller
         string $resource_id
     ): JsonResponse
     {
-        Route::resourceRoute($resource_type_id, $resource_id);
+        Route::resource($resource_type_id, $resource_id);
 
         try {
             (new Resource())->find($resource_id)->delete();
@@ -291,7 +291,7 @@ class ResourceController extends Controller
         string $resource_id
     ): JsonResponse
     {
-        Route::resourceRoute($resource_type_id, $resource_id);
+        Route::resource($resource_type_id, $resource_id);
 
         $resource = (new Resource())->instance($resource_type_id, $resource_id);
 
