@@ -272,6 +272,7 @@ class ItemController extends Controller
             $resource_type_id,
             $resource_id,
             $this->permitted_resource_types,
+            false
         );
 
         $validator = (new ItemValidator)->create();
