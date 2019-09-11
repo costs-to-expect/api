@@ -341,7 +341,8 @@ class Item extends Model
      * @param integer $resource_id
      * @param integer $item_id
      * @param array $permitted_resource_types
-     * @param string $mode Intended mode, view or manage
+     * @param boolean $manage Should be exclude public items as we are checking
+     * a management route
      *
      * @return boolean
      */
@@ -350,7 +351,7 @@ class Item extends Model
         int $resource_id,
         int $item_id,
         array $permitted_resource_types,
-        $mode = 'view'
+        $manage = false
     ): bool
     {
         $collection = $this->join('resource', 'item.resource_id', 'resource.id')->
@@ -362,7 +363,7 @@ class Item extends Model
         $collection = ModelUtility::applyResourceTypeCollectionCondition(
             $collection,
             $permitted_resource_types,
-            ($mode === 'manage') ? false : true
+            ($manage === true) ? false : true
         );
 
         return (count($collection->get()) === 1) ? true : false;

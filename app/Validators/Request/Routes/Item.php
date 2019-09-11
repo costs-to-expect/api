@@ -40,8 +40,7 @@ class Item
                 $resource_type_id,
                 $resource_id,
                 $item_id,
-                $permitted_resource_types,
-                'view'
+                $permitted_resource_types
             ) === false
         ) {
             return false;
@@ -77,7 +76,7 @@ class Item
                 $resource_id,
                 $item_id,
                 $permitted_resource_types,
-                'manage'
+                true
             ) === false
         ) {
             return false;

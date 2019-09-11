@@ -139,15 +139,25 @@ class Route
         }
     }
 
+    /**
+     * Validate the route, checks the route parameters based on the users
+     * permitted resource types
+     *
+     * @param $resource_type_id
+     * @param $resource_id
+     * @param $item_id
+     * @param array $permitted_resource_types
+     * @param bool $manage
+     */
     static public function item(
         $resource_type_id,
         $resource_id,
         $item_id,
         array $permitted_resource_types,
-        bool $view = true
+        bool $manage = false
     )
     {
-        if ($view === true) {
+        if ($manage === false) {
             if (
                 Item::existsToUserForViewing(
                     (int) $resource_type_id,

@@ -271,7 +271,7 @@ class ItemSubCategoryController extends Controller
             $resource_id,
             $item_id,
             $this->permitted_resource_types,
-            false
+            true
         );
 
         if ($item_category_id === 'nill') {
@@ -370,7 +370,7 @@ class ItemSubCategoryController extends Controller
             $resource_id,
             $item_id,
             $this->permitted_resource_types,
-            false
+            true
         );
 
         if ($item_category_id === 'nill' || $item_sub_category_id === 'nill') {
