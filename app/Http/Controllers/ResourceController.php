@@ -277,7 +277,7 @@ class ResourceController extends Controller
             $resource_type_id,
             $resource_id,
             $this->permitted_resource_types,
-            false
+            true
         );
 
         try {
@@ -308,7 +308,7 @@ class ResourceController extends Controller
             $resource_type_id,
             $resource_id,
             $this->permitted_resource_types,
-            false
+            true
         );
 
         $resource = (new Resource())->instance($resource_type_id, $resource_id);

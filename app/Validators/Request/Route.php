@@ -100,23 +100,22 @@ class Route
     }
 
     /**
-     * Validate access to the resource, there are two modes, viewing, which
-     * includes public resource types and managing which should only allow access
-     * to permitted resource based on permitted resource types
+     * Validate the route, checks the route parameters based on the users
+     * permitted resource types
      *
      * @param $resource_type_id
      * @param $resource_id
      * @param array $permitted_resource_types
-     * @param bool $view Are we requesting the resource type in view mode or manage mode
+     * @param bool $manage
      */
     static public function resource(
         $resource_type_id,
         $resource_id,
         array $permitted_resource_types,
-        bool $view = true
+        bool $manage = false
     )
     {
-        if ($view === true) {
+        if ($manage === false) {
             if (
                 Resource::existsToUserForViewing(
                     (int) $resource_type_id,
