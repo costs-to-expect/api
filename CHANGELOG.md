@@ -15,6 +15,12 @@ The complete changelog for the Costs to Expect REST API, follows the format defi
 - We have updated the validation rules for resource types; now aware of permitted users.
 - We have renamed the `private` field in the `resource_type` table; it is now `public`, the flag is no longer used to hide the data so it should be named based on the goal.
 - We have modified all requests to fetch resource types; the queries now take into account the public setting the resource types you are permitted to manage.
+- We have reworked the `resource type`, `resource`, `item`, `category`, `subcategory`, `item category` and `item subcategory` route validators. The validators check your permitted resource types, your intended action and the existence of the `item` based on your permissions.
+- We have added additional messages into the language files; API is multi-lingual friendly.
+- We have renamed the route validation helper methods, the class is called `Route`, we don't also need `route` in the name.
+
+### Fixed
+- We now return a more friendly error message for unauthenticated requests.
 
 ### Removed
 - We have removed `include_private` and `resource_type_private` from the code, replaced by `include_public` and `permitted_resources_types`.
