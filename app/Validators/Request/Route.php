@@ -56,10 +56,42 @@ class Route
         }
     }
 
-    static public function subcategory($category_id, $sub_category_id)
+    /**
+     * Validate the route, checks the route parameters based on the users
+     * permitted resource types
+     *
+     * @param $category_id
+     * @param $subcategory_id
+     * @param array $permitted_resource_types
+     * @param bool $manage
+     */
+    static public function subcategory(
+        $category_id,
+        $subcategory_id,
+        array $permitted_resource_types,
+        $manage = false
+    )
     {
-        if (SubCategory::validate($category_id, $sub_category_id) === false) {
-            UtilityResponse::notFound(trans('entities.subcategory'));
+        if ($manage === false) {
+            if (
+                SubCategory::existsToUserForViewing(
+                    (int) $category_id,
+                    (int) $subcategory_id,
+                    $permitted_resource_types
+                ) === false
+            ) {
+                UtilityResponse::notFound(trans('entities.subcategory'));
+            }
+        } else {
+            if (
+                SubCategory::existsToUserForManagement(
+                    (int) $category_id,
+                    (int) $subcategory_id,
+                    $permitted_resource_types
+                ) === false
+            ) {
+                UtilityResponse::notFoundOrNotAccessible(trans('entities.subcategory'));
+            }
         }
     }
 

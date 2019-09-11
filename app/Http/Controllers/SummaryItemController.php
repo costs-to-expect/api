@@ -456,7 +456,11 @@ class SummaryItemController extends Controller
      */
     private function subcategorySummary(int $category_id, int $sub_category_id): JsonResponse
     {
-        Route::subcategory($category_id, $sub_category_id);
+        Route::subcategory(
+            $category_id,
+            $sub_category_id,
+            $this->permitted_resource_types
+        );
 
         $summary = (new ItemSummary())->subCategorySummary(
             $this->resource_type_id,

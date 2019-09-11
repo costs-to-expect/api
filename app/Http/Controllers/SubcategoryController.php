@@ -120,7 +120,11 @@ class SubcategoryController extends Controller
         string $sub_category_id
     ): JsonResponse
     {
-        Route::subcategory($category_id, $sub_category_id);
+        Route::subcategory(
+            $category_id,
+            $sub_category_id,
+            $this->permitted_resource_types
+        );
 
         $subcategory = (new SubCategory())->single(
             $category_id,
@@ -188,7 +192,11 @@ class SubcategoryController extends Controller
         string $sub_category_id
     ): JsonResponse
     {
-        Route::subcategory($category_id, $sub_category_id);
+        Route::subcategory(
+            $category_id,
+            $sub_category_id,
+            $this->permitted_resource_types
+        );
 
         $get = Get::init()->
             setDescription('route-descriptions.sub_category_GET_show')->
@@ -260,7 +268,12 @@ class SubcategoryController extends Controller
         string $sub_category_id
     ): JsonResponse
     {
-        Route::subcategory($category_id, $sub_category_id);
+        Route::subcategory(
+            $category_id,
+            $sub_category_id,
+            $this->permitted_resource_types,
+            true
+        );
 
         $sub_category = (new SubCategory())->single(
             $category_id,
@@ -295,7 +308,12 @@ class SubcategoryController extends Controller
         string $sub_category_id
     ): JsonResponse
     {
-        Route::subcategory($category_id, $sub_category_id);
+        Route::subcategory(
+            $category_id,
+            $sub_category_id,
+            $this->permitted_resource_types,
+            true
+        );
 
         $subcategory = (new SubCategory())->instance($category_id, $sub_category_id);
 

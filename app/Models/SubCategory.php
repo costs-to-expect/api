@@ -156,4 +156,37 @@ class SubCategory extends Model
             'subcategory_created_at' => $subcategory->created_at->toDateTimeString()
         ];
     }
+
+    /**
+     * Validate that the subcategory exists and is accessible to the user for
+     * viewing, editing based on their permitted resource types
+     *
+     * @param integer $category_id
+     * @param integer $subcategory_id
+     * @param array $permitted_resource_types
+     * @param boolean $manage Should be exclude public items as we are checking
+     * a management route
+     *
+     * @return boolean
+     */
+    public function existsToUser(
+        int $category_id,
+        int $subcategory_id,
+        array $permitted_resource_types,
+        $manage = false
+    ): bool
+    {
+        $collection = $this->where('sub_category.id', '=', $subcategory_id)->
+            join('category', 'sub_category.category_id', 'category.id')->
+            join('resource_type', 'category.resource_type_id', 'resource_type.id')->
+            where('sub_category.category_id', '=', $category_id);
+
+        $collection = ModelUtility::applyResourceTypeCollectionCondition(
+            $collection,
+            $permitted_resource_types,
+            ($manage === true) ? false : true
+        );
+
+        return (count($collection->get()) === 1) ? true : false;
+    }
 }
