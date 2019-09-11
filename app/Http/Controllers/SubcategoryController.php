@@ -224,7 +224,7 @@ class SubcategoryController extends Controller
         Route::category(
             $category_id,
             $this->permitted_resource_types,
-            false
+            true
         );
 
         $validator = (new SubCategoryValidator)->create(['category_id' => $category_id]);

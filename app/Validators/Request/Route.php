@@ -21,13 +21,21 @@ use App\Utilities\Response as UtilityResponse;
  */
 class Route
 {
+    /**
+     * Validate the route, checks the route parameters based on the users
+     * permitted resource types
+     *
+     * @param $category_id
+     * @param array $permitted_resource_types
+     * @param bool $manage
+     */
     static public function category(
         $category_id,
         array $permitted_resource_types,
-        bool $view = true
+        bool $manage = false
     )
     {
-        if ($view === true) {
+        if ($manage === false) {
             if (
                 Category::existsToUserForViewing(
                     (int) $category_id,

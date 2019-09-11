@@ -32,8 +32,7 @@ class Category
             $category_id === 'nill' ||
             (new CategoryModel())->existsToUser(
                 $category_id,
-                $permitted_resource_types,
-                'view'
+                $permitted_resource_types
             ) === false
         ) {
             return false;
@@ -61,7 +60,7 @@ class Category
             (new CategoryModel())->existsToUser(
                 $category_id,
                 $permitted_resource_types,
-                'manage'
+                true
             ) === false
         ) {
             return false;

@@ -262,7 +262,7 @@ class CategoryController extends Controller
         Route::category(
             $category_id,
             $this->permitted_resource_types,
-            false
+            true
         );
 
         try {
@@ -319,7 +319,7 @@ class CategoryController extends Controller
         Route::category(
             $category_id,
             $this->permitted_resource_types,
-            false
+            true
         );
 
         $category = (new Category())->instance($category_id);

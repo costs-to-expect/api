@@ -244,18 +244,19 @@ class Category extends Model
 
     /**
      * Validate that the category exists and is accessible to the user for
-     * viewing, editing base on their permitted resource types
+     * viewing, editing based on their permitted resource types
      *
      * @param integer $category_id
      * @param array $permitted_resource_types
-     * @param string $mode Intended mode, view or manage
+     * @param boolean $manage Should be exclude public items as we are checking
+     * a management route
      *
      * @return boolean
      */
     public function existsToUser(
         int $category_id,
         array $permitted_resource_types,
-        $mode = 'view'
+        $manage = false
     ): bool
     {
         $collection = $this->where('category.id', '=', $category_id)->
@@ -264,7 +265,7 @@ class Category extends Model
         $collection = ModelUtility::applyResourceTypeCollectionCondition(
             $collection,
             $permitted_resource_types,
-            ($mode === 'manage') ? false : true
+            ($manage === true) ? false : true
         );
 
         return (count($collection->get()) === 1) ? true : false;
