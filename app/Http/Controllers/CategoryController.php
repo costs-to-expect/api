@@ -116,7 +116,10 @@ class CategoryController extends Controller
      */
     public function show($category_id): JsonResponse
     {
-        Route::category($category_id);
+        Route::category(
+            $category_id,
+            $this->permitted_resource_types
+        );
 
         $parameters = Parameters::fetch(['include-subcategories']);
 
@@ -185,7 +188,10 @@ class CategoryController extends Controller
      */
     public function optionsShow(string $category_id): JsonResponse
     {
-        Route::category($category_id);
+        Route::category(
+            $category_id,
+            $this->permitted_resource_types
+        );
 
         $get = Get::init()->
             setDescription('route-descriptions.category_GET_show')->
@@ -253,7 +259,11 @@ class CategoryController extends Controller
         string $category_id
     ): JsonResponse
     {
-        Route::category($category_id);
+        Route::category(
+            $category_id,
+            $this->permitted_resource_types,
+            false
+        );
 
         try {
             (new Category())->find($category_id)->delete();
@@ -306,7 +316,11 @@ class CategoryController extends Controller
         string $category_id
     ): JsonResponse
     {
-        Route::category($category_id);
+        Route::category(
+            $category_id,
+            $this->permitted_resource_types,
+            false
+        );
 
         $category = (new Category())->instance($category_id);
 

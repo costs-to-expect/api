@@ -380,7 +380,10 @@ class SummaryItemController extends Controller
      */
     private function categorySummary(int $category_id): JsonResponse
     {
-        Route::category($category_id);
+        Route::category(
+            $category_id,
+            $this->permitted_resource_types
+        );
 
         $summary = (new ItemSummary())->categorySummary(
             $this->resource_type_id,
@@ -412,7 +415,10 @@ class SummaryItemController extends Controller
      */
     private function subcategoriesSummary(int $category_id): JsonResponse
     {
-        Route::category($category_id);
+        Route::category(
+            $category_id,
+            $this->permitted_resource_types
+        );
 
         $summary = (new ItemSummary())->subCategoriesSummary(
             $this->resource_type_id,

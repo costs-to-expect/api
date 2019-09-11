@@ -21,10 +21,30 @@ use App\Utilities\Response as UtilityResponse;
  */
 class Route
 {
-    static public function category($category_id)
+    static public function category(
+        $category_id,
+        array $permitted_resource_types,
+        bool $view = true
+    )
     {
-        if (Category::validate($category_id) === false) {
-            UtilityResponse::notFound(trans('entities.category'));
+        if ($view === true) {
+            if (
+                Category::existsToUserForViewing(
+                    (int) $category_id,
+                    $permitted_resource_types
+                ) === false
+            ) {
+                UtilityResponse::notFound(trans('entities.category'));
+            }
+        } else {
+            if (
+                Category::existsToUserForManagement(
+                    (int) $category_id,
+                    $permitted_resource_types
+                ) === false
+            ) {
+                UtilityResponse::notFoundOrNotAccessible(trans('entities.category'));
+            }
         }
     }
 

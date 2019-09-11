@@ -40,7 +40,10 @@ class SubcategoryController extends Controller
      */
     public function index(string $category_id): JsonResponse
     {
-        Route::category($category_id);
+        Route::category(
+            $category_id,
+            $this->permitted_resource_types
+        );
 
         $search_parameters = SearchParameters::fetch(
             Config::get('api.subcategory.searchable')
@@ -147,7 +150,10 @@ class SubcategoryController extends Controller
      */
     public function optionsIndex(string $category_id): JsonResponse
     {
-        Route::category($category_id);
+        Route::category(
+            $category_id,
+            $this->permitted_resource_types
+        );
 
         $get = Get::init()->
             setDescription('route-descriptions.sub_category_GET_index')->
@@ -215,7 +221,11 @@ class SubcategoryController extends Controller
      */
     public function create(string $category_id): JsonResponse
     {
-        Route::category($category_id);
+        Route::category(
+            $category_id,
+            $this->permitted_resource_types,
+            false
+        );
 
         $validator = (new SubCategoryValidator)->create(['category_id' => $category_id]);
         UtilityRequest::validateAndReturnErrors($validator);

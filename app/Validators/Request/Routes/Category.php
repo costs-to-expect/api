@@ -15,15 +15,55 @@ use App\Models\Category as CategoryModel;
 class Category
 {
     /**
-     * Validate the route params are valid
+     * Validate that the user is able to view the requested resource type based
+     * on their permitted resource types, needs to be in their group or public
      *
      * @param string|int $category_id
+     * @param array $permitted_resource_types
      *
      * @return boolean
      */
-    static public function validate($category_id): bool
+    static public function existsToUserForViewing(
+        $category_id,
+        array $permitted_resource_types
+    ): bool
     {
-        if ($category_id === 'nill' || (new CategoryModel)->find($category_id)->exists() === false) {
+        if (
+            $category_id === 'nill' ||
+            (new CategoryModel())->existsToUser(
+                $category_id,
+                $permitted_resource_types,
+                'view'
+            ) === false
+        ) {
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
+     * Validate that the user is able to manage the requested resource type
+     * based on their permitted resource types, needs to be in their group
+     *
+     * @param string|int $category_id
+     * @param array $permitted_resource_types
+     *
+     * @return boolean
+     */
+    static public function existsToUserForManagement(
+        $category_id,
+        array $permitted_resource_types
+    ): bool
+    {
+        if (
+            $category_id === 'nill' ||
+            (new CategoryModel())->existsToUser(
+                $category_id,
+                $permitted_resource_types,
+                'manage'
+            ) === false
+        ) {
             return false;
         }
 

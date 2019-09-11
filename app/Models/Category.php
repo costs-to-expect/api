@@ -241,4 +241,32 @@ class Category extends Model
             'resource_type_id' => $category->resource_type_id
         ];
     }
+
+    /**
+     * Validate that the category exists and is accessible to the user for
+     * viewing, editing base on their permitted resource types
+     *
+     * @param integer $category_id
+     * @param array $permitted_resource_types
+     * @param string $mode Intended mode, view or manage
+     *
+     * @return boolean
+     */
+    public function existsToUser(
+        int $category_id,
+        array $permitted_resource_types,
+        $mode = 'view'
+    ): bool
+    {
+        $collection = $this->where('category.id', '=', $category_id)->
+            join('resource_type', 'category.resource_type_id', 'resource_type.id');
+
+        $collection = ModelUtility::applyResourceTypeCollectionCondition(
+            $collection,
+            $permitted_resource_types,
+            ($mode === 'manage') ? false : true
+        );
+
+        return (count($collection->get()) === 1) ? true : false;
+    }
 }
