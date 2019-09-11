@@ -18,6 +18,7 @@ The complete changelog for the Costs to Expect REST API, follows the format defi
 - We have reworked the `resource type`, `resource`, `item`, `category`, `subcategory`, `item category` and `item subcategory` route validators. The validators check your permitted resource types, your intended action and the existence of the `item` based on your permissions.
 - We have added additional messages into the language files; API is multi-lingual friendly.
 - We have renamed the route validation helper methods, the class is called `Route`, we don't also need `route` in the name.
+- We have renamed any incorrectly spelt subcategory variables, the space between `sub` and `category` needed to go; models, classes and controllers, later.
 
 ### Fixed
 - We now return a more friendly error message for unauthenticated requests.

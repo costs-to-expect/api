@@ -68,7 +68,7 @@ class ItemSubCategory extends Model
         int $resource_id,
         int $item_id,
         int $item_category_id,
-        int $item_sub_category_id
+        int $item_subcategory_id
     ): ?array
     {
         $result = $this->join('sub_category', 'item_sub_category.sub_category_id', 'sub_category.id')->
@@ -85,7 +85,7 @@ class ItemSubCategory extends Model
                 'sub_category.name AS item_sub_category_sub_category_name',
                 'sub_category.description AS item_sub_category_sub_category_description'
             )->
-            find($item_sub_category_id);
+            find($item_subcategory_id);
 
         if ($result !== null) {
             return $result->toArray();
@@ -99,7 +99,7 @@ class ItemSubCategory extends Model
         int $resource_id,
         int $item_id,
         int $item_category_id,
-        int $item_sub_category_id
+        int $item_subcategory_id
     ): ?ItemSubCategory
     {
         return $this->join('sub_category', 'item_sub_category.sub_category_id', 'sub_category.id')->
@@ -116,7 +116,7 @@ class ItemSubCategory extends Model
                 'sub_category.name AS item_sub_category_sub_category_name',
                 'sub_category.description AS item_sub_category_sub_category_description'
             )->
-            find($item_sub_category_id);
+            find($item_subcategory_id);
     }
 
     /**

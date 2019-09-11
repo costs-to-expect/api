@@ -111,24 +111,24 @@ class SubcategoryController extends Controller
      * Return a single sub category
      *
      * @param string $category_id
-     * @param string $sub_category_id
+     * @param string $subcategory_id
      *
      * @return JsonResponse
      */
     public function show(
         string $category_id,
-        string $sub_category_id
+        string $subcategory_id
     ): JsonResponse
     {
         Route::subcategory(
             $category_id,
-            $sub_category_id,
+            $subcategory_id,
             $this->permitted_resource_types
         );
 
         $subcategory = (new SubCategory())->single(
             $category_id,
-            $sub_category_id
+            $subcategory_id
         );
 
         if ($subcategory === null) {
@@ -183,18 +183,18 @@ class SubcategoryController extends Controller
      * Generate the OPTIONS request for the specific sub category
      *
      * @param string $category_id
-     * @param string $sub_category_id
+     * @param string $subcategory_id
      *
      * @return JsonResponse
      */
     public function optionsShow(
         string $category_id,
-        string $sub_category_id
+        string $subcategory_id
     ): JsonResponse
     {
         Route::subcategory(
             $category_id,
-            $sub_category_id,
+            $subcategory_id,
             $this->permitted_resource_types
         );
 
@@ -259,25 +259,25 @@ class SubcategoryController extends Controller
      * Delete the requested sub category
      *
      * @param string $category_id
-     * @param string $sub_category_id
+     * @param string $subcategory_id
      *
      * @return JsonResponse
      */
     public function delete(
         string $category_id,
-        string $sub_category_id
+        string $subcategory_id
     ): JsonResponse
     {
         Route::subcategory(
             $category_id,
-            $sub_category_id,
+            $subcategory_id,
             $this->permitted_resource_types,
             true
         );
 
         $sub_category = (new SubCategory())->single(
             $category_id,
-            $sub_category_id
+            $subcategory_id
         );
 
         if ($sub_category === null) {
@@ -299,23 +299,23 @@ class SubcategoryController extends Controller
      * Update the selected subcategory
      *
      * @param string $category_id
-     * @param string $sub_category_id
+     * @param string $subcategory_id
      *
      * @return JsonResponse
      */
     public function update(
         string $category_id,
-        string $sub_category_id
+        string $subcategory_id
     ): JsonResponse
     {
         Route::subcategory(
             $category_id,
-            $sub_category_id,
+            $subcategory_id,
             $this->permitted_resource_types,
             true
         );
 
-        $subcategory = (new SubCategory())->instance($category_id, $sub_category_id);
+        $subcategory = (new SubCategory())->instance($category_id, $subcategory_id);
 
         if ($subcategory === null) {
             UtilityResponse::failedToSelectModelForUpdate();
@@ -325,7 +325,7 @@ class SubcategoryController extends Controller
 
         $validator = (new SubCategoryValidator())->update([
             'category_id' => intval($category_id),
-            'subcategory_id' => intval($sub_category_id)
+            'subcategory_id' => intval($subcategory_id)
         ]);
         UtilityRequest::validateAndReturnErrors($validator);
 

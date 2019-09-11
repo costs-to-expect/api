@@ -161,9 +161,9 @@ These routes require authorisation.
 | POST     | v2/categories |
 | PATCH    | v2/categories/{category_id} |
 | DELETE   | v2/categories/{category_id} |
-| POST     | v2/categories/{category_id}/sub_categories |
-| PATCH    | v2/categories/{category_id}/sub_categories/{sub_category_id} |
-| DELETE   | v2/categories/{category_id}/sub_categories/{sub_category_id} |
+| POST     | v2/categories/{category_id}/subcategories |
+| PATCH    | v2/categories/{category_id}/subcategories/{subcategory_id} |
+| DELETE   | v2/categories/{category_id}/subcategories/{subcategory_id} |
 | POST     | v2/resource-types |
 | PATCH    | v2/resource-types/{resource_type_id} |
 | DELETE   | v2/resource-types/{resource_type_id} |

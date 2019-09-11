@@ -107,7 +107,7 @@ class SubCategory extends Model
 
     public function single(
         int $category_id,
-        int $sub_category_id
+        int $subcategory_id
     ): ?array
     {
         $result = $this->select(
@@ -117,7 +117,7 @@ class SubCategory extends Model
                 'sub_category.created_at AS subcategory_created_at'
             )->
             where('category_id', '=', $category_id)->
-            find($sub_category_id);
+            find($subcategory_id);
 
         if ($result !== null) {
             return $result->toArray();
@@ -128,7 +128,7 @@ class SubCategory extends Model
 
     public function instance(
         int $category_id,
-        int $sub_category_id
+        int $subcategory_id
     ): ?SubCategory
     {
         return $this->select(
@@ -137,7 +137,7 @@ class SubCategory extends Model
                 'sub_category.description'
             )->
             where('category_id', '=', $category_id)->
-            find($sub_category_id);
+            find($subcategory_id);
     }
 
     /**

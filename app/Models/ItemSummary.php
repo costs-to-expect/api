@@ -213,7 +213,7 @@ class ItemSummary extends Model
         int $resource_type_id,
         int $resource_id,
         int $category_id,
-        int $sub_category_id,
+        int $subcategory_id,
         bool $include_unpublished = false
     ): array
     {
@@ -232,7 +232,7 @@ class ItemSummary extends Model
             where("resource_type.id", "=", $resource_type_id)->
             where("resource.id", "=", $resource_id)->
             where("category.id", "=", $category_id)->
-            where("sub_category.id", "=", $sub_category_id);
+            where("sub_category.id", "=", $subcategory_id);
 
         $collection = $this->includeUnpublished($collection, $include_unpublished);
 

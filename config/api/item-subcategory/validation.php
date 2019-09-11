@@ -5,11 +5,11 @@ declare(strict_types=1);
 return [
     'POST' => [
         'fields' => [
-            'sub_category_id' => 'required|exists:sub_category,id'
+            'subcategory_id' => 'required|exists:subcategory,id'
         ],
         'messages' => [
-            'sub_category_id.required' => 'item-subcategory/validation.sub_category_id-required',
-            'sub_category_id.exists' => 'item-subcategory/validation.sub_category_id-required'
+            'subcategory_id.required' => 'item-subcategory/validation.subcategory_id-required',
+            'subcategory_id.exists' => 'item-subcategory/validation.subcategory_id-required'
         ]
     ]
 ];

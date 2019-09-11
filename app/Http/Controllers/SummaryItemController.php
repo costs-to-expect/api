@@ -450,15 +450,15 @@ class SummaryItemController extends Controller
      * Return the subcategories summary for a category
      *
      * @param integer $category_id
-     * @param integer $sub_category_id
+     * @param integer $subcategory_id
      *
      * @return JsonResponse
      */
-    private function subcategorySummary(int $category_id, int $sub_category_id): JsonResponse
+    private function subcategorySummary(int $category_id, int $subcategory_id): JsonResponse
     {
         Route::subcategory(
             $category_id,
-            $sub_category_id,
+            $subcategory_id,
             $this->permitted_resource_types
         );
 
@@ -466,7 +466,7 @@ class SummaryItemController extends Controller
             $this->resource_type_id,
             $this->resource_id,
             $category_id,
-            $sub_category_id,
+            $subcategory_id,
             $this->include_unpublished
         );
 
