@@ -298,7 +298,6 @@ class ItemCategoryController extends Controller
     /**
      * Delete the assigned category
      *
-     * @param Request $request,
      * @param string $resource_type_id,
      * @param string $resource_id,
      * @param string $item_id,
@@ -307,14 +306,20 @@ class ItemCategoryController extends Controller
      * @return JsonResponse
      */
     public function delete(
-        Request $request,
         string $resource_type_id,
         string $resource_id,
         string $item_id,
         string $item_category_id
     ): JsonResponse
     {
-        Route::itemCategory($resource_type_id, $resource_id, $item_id, $item_category_id);
+        Route::itemCategory(
+            $resource_type_id,
+            $resource_id,
+            $item_id,
+            $item_category_id,
+            $this->permitted_resource_types,
+            true
+        );
 
         $item_category = (new ItemCategory())->instance(
             $resource_type_id,

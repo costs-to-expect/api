@@ -212,20 +212,49 @@ class Route
         }
     }
 
+    /**
+     * Validate the route, checks the route parameters based on the users
+     * permitted resource types
+     *
+     * @param $resource_type_id
+     * @param $resource_id
+     * @param $item_id
+     * @param $item_category_id,
+     * @param array $permitted_resource_types
+     * @param bool $manage
+     */
     static public function itemCategory(
         $resource_type_id,
         $resource_id,
         $item_id,
-        $item_category_id
+        $item_category_id,
+        array $permitted_resource_types,
+        bool $manage = false
     ) {
-        if (ItemCategory::validate(
-                $resource_type_id,
-                $resource_id,
-                $item_id,
-                $item_category_id
-            ) === false
-        ) {
-            UtilityResponse::notFound(trans('entities.item-category'));
+        if ($manage === false) {
+            if (
+                ItemCategory::existsToUserForViewing(
+                    (int) $resource_type_id,
+                    (int) $resource_id,
+                    (int) $item_id,
+                    (int) $item_category_id,
+                    $permitted_resource_types
+                ) === false
+            ) {
+                UtilityResponse::notFound(trans('entities.item-category'));
+            }
+        } else {
+            if (
+                ItemCategory::existsToUserForManagement(
+                    (int) $resource_type_id,
+                    (int) $resource_id,
+                    (int) $item_id,
+                    (int) $item_category_id,
+                    $permitted_resource_types
+                ) === false
+            ) {
+                UtilityResponse::notFoundOrNotAccessible(trans('entities.item-category'));
+            }
         }
     }
 
