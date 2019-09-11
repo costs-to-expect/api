@@ -262,7 +262,7 @@ class ResourceTypeController extends Controller
         Route::resourceType(
             $resource_type_id,
             $this->permitted_resource_types,
-            false
+            true
         );
 
         try {
@@ -290,7 +290,7 @@ class ResourceTypeController extends Controller
         Route::resourceType(
             $resource_type_id,
             $this->permitted_resource_types,
-            false
+            true
         );
 
         $resource_type = (new ResourceType())->instance($resource_type_id);

@@ -32,8 +32,7 @@ class ResourceType
             $resource_type_id === 'nill' ||
             (new ResourceTypeModel())->existsToUser(
                 $resource_type_id,
-                $permitted_resource_types,
-                'view'
+                $permitted_resource_types
             ) === false
         ) {
             return false;
@@ -61,7 +60,7 @@ class ResourceType
             (new ResourceTypeModel())->existsToUser(
                 $resource_type_id,
                 $permitted_resource_types,
-                'manage'
+                true
             ) === false
         ) {
             return false;

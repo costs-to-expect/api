@@ -245,14 +245,15 @@ class ResourceType extends Model
      *
      * @param integer $id
      * @param array $permitted_resource_types
-     * @param string $mode Intended mode, view or manage
+     * @param boolean $manage Should be exclude public items as we are checking
+     * a management route
      *
      * @return boolean
      */
     public function existsToUser(
         int $id,
         array $permitted_resource_types,
-        $mode = 'view'
+        $manage = false
     ): bool
     {
         $collection = $this->where('resource_type.id', '=', $id);
@@ -260,7 +261,7 @@ class ResourceType extends Model
         $collection = ModelUtility::applyResourceTypeCollectionCondition(
             $collection,
             $permitted_resource_types,
-            ($mode === 'manage') ? false : true
+            ($manage === true) ? false : true
         );
 
         return (count($collection->get()) === 1) ? true : false;

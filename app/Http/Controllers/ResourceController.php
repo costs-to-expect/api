@@ -236,7 +236,7 @@ class ResourceController extends Controller
         Route::resourceType(
             $resource_type_id,
             $this->permitted_resource_types,
-            false
+            true
         );
 
         $validator = (new ResourceValidator)->create(['resource_type_id' => $resource_type_id]);
