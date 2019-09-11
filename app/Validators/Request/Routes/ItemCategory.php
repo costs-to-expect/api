@@ -38,6 +38,7 @@ class ItemCategory
             $resource_type_id === 'nill' ||
             $resource_id === 'nill' ||
             $item_id === 'nill' ||
+            $item_category_id === 'nill' ||
             (new ItemCategoryModel())->existsToUser(
                 $resource_type_id,
                 $resource_id,
@@ -76,7 +77,8 @@ class ItemCategory
             $resource_type_id === 'nill' ||
             $resource_id === 'nill' ||
             $item_id === 'nill' ||
-            (new \App\Models\ItemCategory())->existsToUser(
+            $item_category_id === 'nill' ||
+            (new ItemCategoryModel())->existsToUser(
                 $resource_type_id,
                 $resource_id,
                 $item_id,

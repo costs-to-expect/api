@@ -258,22 +258,53 @@ class Route
         }
     }
 
+    /**
+     * Validate the route, checks the route parameters based on the users
+     * permitted resource types
+     *
+     * @param $resource_type_id
+     * @param $resource_id
+     * @param $item_id
+     * @param $item_category_id
+     * @param $item_subcategory_id
+     * @param array $permitted_resource_types
+     * @param bool $manage
+     */
     static public function itemSubcategory(
         $resource_type_id,
         $resource_id,
         $item_id,
         $item_category_id,
-        $item_sub_category_id
+        $item_subcategory_id,
+        array $permitted_resource_types,
+        bool $manage = false
     ) {
-        if (ItemSubCategory::validate(
-                $resource_type_id,
-                $resource_id,
-                $item_id,
-                $item_category_id,
-                $item_sub_category_id
-            ) === false
-        ) {
-            UtilityResponse::notFound(trans('entities.item-subcategory'));
+        if ($manage === false) {
+            if (
+                ItemSubCategory::existsToUserForViewing(
+                    (int) $resource_type_id,
+                    (int) $resource_id,
+                    (int) $item_id,
+                    (int) $item_category_id,
+                    (int) $item_subcategory_id,
+                    $permitted_resource_types
+                ) === false
+            ) {
+                UtilityResponse::notFound(trans('entities.item-subcategory'));
+            }
+        } else {
+            if (
+                ItemSubCategory::existsToUserForManagement(
+                    (int) $resource_type_id,
+                    (int) $resource_id,
+                    (int) $item_id,
+                    (int) $item_category_id,
+                    (int) $item_subcategory_id,
+                    $permitted_resource_types
+                ) === false
+            ) {
+                UtilityResponse::notFoundOrNotAccessible(trans('entities.item-subcategory'));
+            }
         }
     }
 }

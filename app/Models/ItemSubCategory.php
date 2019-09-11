@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace App\Models;
 
+use App\Utilities\Model as ModelUtility;
 use Illuminate\Database\Eloquent\Builder as QueryBuilder;
 use Illuminate\Database\Eloquent\Model;
 
@@ -133,5 +134,49 @@ class ItemSubCategory extends Model
             'item_sub_category_sub_category_name' => $item_sub_category->sub_category->name,
             'item_sub_category_sub_category_description' => $item_sub_category->sub_category->description
         ];
+    }
+
+    /**
+     * Validate that the item exists and is accessible to the user for
+     * viewing, editing etc. based on their permitted resource types
+     *
+     * @param integer $resource_type_id
+     * @param integer $resource_id
+     * @param integer $item_id
+     * @param integer $item_category_id
+     * @param integer $item_subcategory_id
+     * @param array $permitted_resource_types
+     * @param boolean $manage Should be exclude public items as we are checking
+     * a management route
+     *
+     * @return boolean
+     */
+    public function existsToUser(
+        int $resource_type_id,
+        int $resource_id,
+        int $item_id,
+        int $item_category_id,
+        int $item_subcategory_id,
+        array $permitted_resource_types,
+        $manage = false
+    ): bool
+    {
+        $collection = $this->join('item_category', 'item_sub_category.item_category_id', 'item_category.id')->
+            join('item', 'item_category.item_id', 'item.id')->
+            join('resource', 'item.resource_id', 'resource.id')->
+            join('resource_type', 'resource.resource_type_id', 'resource_type.id')->
+            where('resource.resource_type_id', '=', $resource_type_id)->
+            where('resource.id', '=', $resource_id)->
+            where('item.id', '=', $item_id)->
+            where('item_category.id', '=', $item_category_id)->
+            where('item_sub_category.id', '=', $item_subcategory_id);
+
+        $collection = ModelUtility::applyResourceTypeCollectionCondition(
+            $collection,
+            $permitted_resource_types,
+            ($manage === true) ? false : true
+        );
+
+        return (count($collection->get()) === 1) ? true : false;
     }
 }
