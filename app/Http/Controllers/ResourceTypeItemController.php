@@ -136,12 +136,12 @@ class ResourceTypeItemController extends Controller
         );
 
         $get = Get::init()->
-            setDescription('route-descriptions.resource_type_item_GET_index')->
             setSortable('api.resource-type-item.sortable')->
             setSearchable('api.resource-type-item.searchable')->
             setPagination(true)->
             setParameters('api.resource-type-item.parameters.collection')->
             setConditionalParameters($this->conditional_get_parameters)->
+            setDescription('route-descriptions.resource_type_item_GET_index')->
             option();
 
         return $this->optionsResponse($get, 200);

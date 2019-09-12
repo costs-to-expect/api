@@ -138,15 +138,15 @@ class ItemCategoryController extends Controller
         );
 
         $get = Get::init()->
-            setDescription('route-descriptions.item_category_GET_index')->
             setParameters('api.item-category.parameters.collection')->
+            setDescription('route-descriptions.item_category_GET_index')->
             option();
 
         $post = Post::init()->
-            setDescription('route-descriptions.item_category_POST')->
-            setAuthenticationRequired(true)->
             setFields('api.item-category.fields')->
             setConditionalFields($this->conditionalPostParameters($resource_type_id))->
+            setDescription('route-descriptions.item_category_POST')->
+            setAuthenticationRequired(true)->
             option();
 
         return $this->optionsResponse(
@@ -197,8 +197,8 @@ class ItemCategoryController extends Controller
         }
 
         $get = Get::init()->
-            setDescription('route-descriptions.item_category_GET_show')->
             setParameters('api.item-category.parameters.item')->
+            setDescription('route-descriptions.item_category_GET_show')->
             option();
 
         $delete = Delete::init()->

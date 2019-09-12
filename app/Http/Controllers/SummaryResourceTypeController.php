@@ -45,8 +45,8 @@ class SummaryResourceTypeController extends Controller
     public function optionsIndex(): JsonResponse
     {
         $get = Get::init()->
-            setDescription('route-descriptions.summary-resource-type-GET-index')->
             setParameters('api.resource-type.summary-parameters.collection')->
+            setDescription('route-descriptions.summary-resource-type-GET-index')->
             option();
 
         return $this->optionsResponse($get, 200);

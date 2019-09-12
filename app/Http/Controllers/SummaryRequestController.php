@@ -53,8 +53,8 @@ class SummaryRequestController extends Controller
     public function optionsAccessLog(Request $request)
     {
         $get = Get::init()->
-            setDescription('route-descriptions.summary_GET_request_access-log')->
             setParameters('api.request-access-log.parameters.collection')->
+            setDescription('route-descriptions.summary_GET_request_access-log')->
             option();
 
         return $this->optionsResponse($get, 200);

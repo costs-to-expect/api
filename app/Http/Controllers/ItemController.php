@@ -187,18 +187,18 @@ class ItemController extends Controller
         );
 
         $get = Get::init()->
-            setDescription('route-descriptions.item_GET_index')->
-            setPagination(true)->
             setSortable('api.item.sortable')->
             setSearchable('api.item.searchable')->
             setParameters('api.item.parameters.collection')->
             setConditionalParameters($conditional_parameters)->
+            setPagination(true)->
+            setDescription('route-descriptions.item_GET_index')->
             option();
 
         $post = Post::init()->
+            setFields('api.item.fields')->
             setDescription( 'route-descriptions.item_POST')->
             setAuthenticationRequired(true)->
-            setFields('api.item.fields')->
             option();
 
         return $this->optionsResponse(
@@ -236,8 +236,8 @@ class ItemController extends Controller
         }
 
         $get = Get::init()->
-            setDescription('route-descriptions.item_GET_show')->
             setParameters('api.item.parameters.item')->
+            setDescription('route-descriptions.item_GET_show')->
             option();
 
         $delete = Delete::init()->
@@ -246,8 +246,8 @@ class ItemController extends Controller
             option();
 
         $patch = Patch::init()->
-            setDescription('route-descriptions.item_PATCH')->
             setFields('api.item.fields')->
+            setDescription('route-descriptions.item_PATCH')->
             setAuthenticationRequired(true)->
             option();
 

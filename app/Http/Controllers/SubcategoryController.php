@@ -160,16 +160,16 @@ class SubcategoryController extends Controller
         );
 
         $get = Get::init()->
-            setDescription('route-descriptions.sub_category_GET_index')->
             setSortable('api.subcategory.sortable')->
             setSearchable('api.subcategory.searchable')->
             setPaginationOverride(true)->
             setParameters('api.subcategory.parameters.collection')->
+            setDescription('route-descriptions.sub_category_GET_index')->
             option();
 
         $post = Post::init()->
-            setDescription('route-descriptions.sub_category_POST')->
             setFields('api.subcategory.fields')->
+            setDescription('route-descriptions.sub_category_POST')->
             setAuthenticationRequired(true)->
             option();
 
@@ -199,8 +199,8 @@ class SubcategoryController extends Controller
         );
 
         $get = Get::init()->
-            setDescription('route-descriptions.sub_category_GET_show')->
             setParameters('api.subcategory.parameters.item')->
+            setDescription('route-descriptions.sub_category_GET_show')->
             option();
 
         $delete = Delete::init()->
@@ -209,8 +209,8 @@ class SubcategoryController extends Controller
             option();
 
         $patch = Patch::init()->
-            setDescription('route-descriptions.sub_category_PATCH')->
             setFields('api.subcategory.fields')->
+            setDescription('route-descriptions.sub_category_PATCH')->
             setAuthenticationRequired(true)->
             option();
 

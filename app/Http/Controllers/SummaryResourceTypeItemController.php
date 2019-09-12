@@ -498,9 +498,9 @@ class SummaryResourceTypeItemController extends Controller
         );
 
         $get = Get::init()->
-            setDescription('route-descriptions.summary-resource-type-item-GET-index')->
             setSearchable('api.resource-type-item.searchable')->
             setParameters('api.resource-type-item.summary-parameters.collection')->
+            setDescription('route-descriptions.summary-resource-type-item-GET-index')->
             option();
 
         return $this->optionsResponse($get, 200);

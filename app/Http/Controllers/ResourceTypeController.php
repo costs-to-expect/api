@@ -159,15 +159,15 @@ class ResourceTypeController extends Controller
     public function optionsIndex(): JsonResponse
     {
         $get = Get::init()->
-            setDescription('route-descriptions.resource_type_GET_index')->
             setSortable('api.resource-type.sortable')->
             setSearchable('api.resource-type.searchable')->
             setPaginationOverride(true)->
+            setDescription('route-descriptions.resource_type_GET_index')->
             option();
 
         $post = Post::init()->
-            setDescription('route-descriptions.resource_type_POST')->
             setFields('api.resource-type.fields')->
+            setDescription('route-descriptions.resource_type_POST')->
             setAuthenticationRequired(true)->
             option();
 
@@ -192,8 +192,8 @@ class ResourceTypeController extends Controller
         );
 
         $get = Get::init()->
-            setDescription('route-descriptions.resource_type_GET_show')->
             setParameters('api.resource-type.parameters.item')->
+            setDescription('route-descriptions.resource_type_GET_show')->
             option();
 
         $delete = Delete::init()->
@@ -202,8 +202,8 @@ class ResourceTypeController extends Controller
             option();
 
         $patch = Patch::init()->
-            setDescription('route-descriptions.resource_type_PATCH')->
             setFields('api.resource-type.fields')->
+            setDescription('route-descriptions.resource_type_PATCH')->
             setAuthenticationRequired(true)->
             option();
 

@@ -159,18 +159,18 @@ class CategoryController extends Controller
     public function optionsIndex(): JsonResponse
     {
         $get = Get::init()->
-            setDescription('route-descriptions.category_GET_index')->
             setParameters('api.category.parameters.collection')->
             setSortable('api.category.sortable')->
             setSearchable('api.category.searchable')->
             setPaginationOverride(true)->
+            setDescription('route-descriptions.category_GET_index')->
             option();
 
         $post = Post::init()->
-            setDescription('route-descriptions.category_POST')->
-            setAuthenticationRequired(true)->
             setFields('api.category.fields')->
             setConditionalFields($this->conditionalPostParameters())->
+            setAuthenticationRequired(true)->
+            setDescription('route-descriptions.category_POST')->
             option();
 
         return $this->optionsResponse(
@@ -194,18 +194,18 @@ class CategoryController extends Controller
         );
 
         $get = Get::init()->
-            setDescription('route-descriptions.category_GET_show')->
             setParameters('api.category.parameters.item')->
+            setDescription('route-descriptions.category_GET_show')->
             option();
 
         $delete = Delete::init()->
-            setDescription('route-descriptions.category_DELETE')->
             setAuthenticationRequired(true)->
+            setDescription('route-descriptions.category_DELETE')->
             option();
 
         $patch = Patch::init()->
-            setDescription('route-descriptions.category_PATCH')->
             setFields('api.category.fields-patch')->
+            setDescription('route-descriptions.category_PATCH')->
             setAuthenticationRequired(true)->
             option();
 

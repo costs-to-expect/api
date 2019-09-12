@@ -502,9 +502,9 @@ class SummaryItemController extends Controller
         );
 
         $get = Get::init()->
-            setDescription('route-descriptions.summary_GET_resource-type_resource_items')->
-            setSearchable('api.item.searchable')->
             setParameters('api.item.summary-parameters.collection')->
+            setSearchable('api.item.searchable')->
+            setDescription('route-descriptions.summary_GET_resource-type_resource_items')->
             option();
 
         return $this->optionsResponse($get, 200);

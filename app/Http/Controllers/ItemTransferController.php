@@ -82,7 +82,6 @@ class ItemTransferController extends Controller
         );
 
         $post = Post::init()->
-            setDescription('route-descriptions.item_transfer_POST')->
             setFields('api.item-transfer.fields')->
             setConditionalFields(
                 $this->conditionalPostParameters(
@@ -90,6 +89,7 @@ class ItemTransferController extends Controller
                     $resource_id
                 )
             )->
+            setDescription('route-descriptions.item_transfer_POST')->
             setAuthenticationRequired(true)->
             option();
 

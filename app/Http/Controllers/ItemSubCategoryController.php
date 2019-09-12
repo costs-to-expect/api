@@ -170,14 +170,14 @@ class ItemSubCategoryController extends Controller
         }
 
         $get = Get::init()->
-            setDescription('route-descriptions.item_sub_category_GET_index')->
             setParameters('api.item-subcategory.parameters.collection')->
+            setDescription('route-descriptions.item_sub_category_GET_index')->
             option();
 
         $post = Post::init()->
-            setDescription('route-descriptions.item_sub_category_POST')->
             setFields('api.item-subcategory.fields')->
             setConditionalFields($this->conditionalPostParameters($item_category->category_id))->
+            setDescription('route-descriptions.item_sub_category_POST')->
             setAuthenticationRequired(true)->
             option();
 
@@ -232,8 +232,8 @@ class ItemSubCategoryController extends Controller
         }
 
         $get = Get::init()->
-            setDescription('route-descriptions.item_sub_category_GET_show')->
             setParameters('api.item-subcategory.parameters.item')->
+            setDescription('route-descriptions.item_sub_category_GET_show')->
             option();
 
         $delete = Delete::init()->

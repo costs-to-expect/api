@@ -158,16 +158,16 @@ class ResourceController extends Controller
         );
 
         $get = Get::init()->
-            setDescription('route-descriptions.resource_GET_index')->
             setSortable('api.resource.sortable')->
             setSearchable('api.resource.searchable')->
             setPaginationOverride(true)->
             setParameters('api.resource.parameters.collection')->
+            setDescription('route-descriptions.resource_GET_index')->
             option();
 
         $post = Post::init()->
-            setDescription('route-descriptions.resource_POST')->
             setFields('api.resource.fields')->
+            setDescription('route-descriptions.resource_POST')->
             setAuthenticationRequired(true)->
             option();
 
@@ -203,8 +203,8 @@ class ResourceController extends Controller
         }
 
         $get = Get::init()->
-            setDescription('route-descriptions.resource_GET_show')->
             setParameters('api.resource.parameters.item')->
+            setDescription('route-descriptions.resource_GET_show')->
             option();
 
         $delete = Delete::init()->
@@ -213,8 +213,8 @@ class ResourceController extends Controller
             option();
 
         $patch = Patch::init()->
-            setDescription('route-descriptions.resource_PATCH')->
             setFields('api.resource.fields')->
+            setDescription('route-descriptions.resource_PATCH')->
             setAuthenticationRequired(true)->
             option();
 

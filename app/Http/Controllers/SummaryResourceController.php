@@ -64,8 +64,8 @@ class SummaryResourceController extends Controller
         );
 
         $get = Get::init()->
-            setDescription('route-descriptions.summary-resource-GET-index')->
             setParameters('api.resource.summary-parameters.collection')->
+            setDescription('route-descriptions.summary-resource-GET-index')->
             option();
 
         return $this->optionsResponse($get, 200);
