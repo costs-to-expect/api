@@ -170,7 +170,10 @@ class Get extends Option
         return [
             'GET' => [
                 'description' => self::$description,
-                'authentication-required' => self::$authentication,
+                'authentication' => [
+                    'required' => self::$authentication,
+                    'authenticated' => self::$authenticated
+                ],
                 'sortable' => self::$sortable_parameters,
                 'searchable' => self::$searchable_parameters,
                 'parameters' => self::$localised_parameters

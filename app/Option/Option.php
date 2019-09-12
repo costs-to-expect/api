@@ -20,6 +20,11 @@ abstract class Option
     static protected $authentication;
 
     /**
+     * @var boolean
+     */
+    static protected $authenticated;
+
+    /**
      * @var string
      */
     static protected $description;
@@ -27,6 +32,7 @@ abstract class Option
     static protected function resetBase()
     {
         self::$authentication = false;
+        self::$authenticated = false;
         self::$description = null;
     }
 
@@ -35,6 +41,15 @@ abstract class Option
     ): Option
     {
         self::$authentication = $status;
+
+        return self::$instance;
+    }
+
+    static public function setAuthenticationStatus(
+        bool $status = false
+    ): Option
+    {
+        self::$authenticated = $status;
 
         return self::$instance;
     }

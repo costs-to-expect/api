@@ -39,7 +39,10 @@ class Delete extends Option
         return [
             'DELETE' => [
                 'description' => self::$description,
-                'authentication-required' => self::$authentication
+                'authentication' => [
+                    'required' => self::$authentication,
+                    'authenticated' => self::$authenticated
+                ]
             ]
         ];
     }

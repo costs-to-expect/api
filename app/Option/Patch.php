@@ -90,7 +90,10 @@ class Patch extends Option
         return [
             'PATCH' => [
                 'description' => self::$description,
-                'authentication-required' => self::$authentication,
+                'authentication' => [
+                    'required' => self::$authentication,
+                    'authenticated' => self::$authenticated
+                ],
                 'fields' => self::$localised_fields
             ]
         ];
