@@ -74,7 +74,7 @@ class ItemTransferController extends Controller
         string $item_id
     ): JsonResponse
     {
-        Route::item(
+        $authenticated = Route::item(
             $resource_type_id,
             $resource_id,
             $item_id,
@@ -90,6 +90,7 @@ class ItemTransferController extends Controller
                 )
             )->
             setDescription('route-descriptions.item_transfer_POST')->
+            setAuthenticationStatus($authenticated)->
             setAuthenticationRequired(true)->
             option();
 

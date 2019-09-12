@@ -55,6 +55,7 @@ class SummaryRequestController extends Controller
         $get = Get::init()->
             setParameters('api.request-access-log.parameters.collection')->
             setDescription('route-descriptions.summary_GET_request_access-log')->
+            setAuthenticationStatus(($this->user_id !== null) ? true : false)->
             option();
 
         return $this->optionsResponse($get, 200);

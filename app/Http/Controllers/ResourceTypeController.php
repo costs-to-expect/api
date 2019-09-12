@@ -163,11 +163,13 @@ class ResourceTypeController extends Controller
             setSearchable('api.resource-type.searchable')->
             setPaginationOverride(true)->
             setDescription('route-descriptions.resource_type_GET_index')->
+            setAuthenticationStatus(($this->user_id !== null) ? true : false)->
             option();
 
         $post = Post::init()->
             setFields('api.resource-type.fields')->
             setDescription('route-descriptions.resource_type_POST')->
+            setAuthenticationStatus(($this->user_id !== null) ? true : false)->
             setAuthenticationRequired(true)->
             option();
 
@@ -186,7 +188,7 @@ class ResourceTypeController extends Controller
      */
     public function optionsShow(string $resource_type_id): JsonResponse
     {
-        Route::resourceType(
+        $authenticated = Route::resourceType(
             $resource_type_id,
             $this->permitted_resource_types
         );
@@ -194,17 +196,20 @@ class ResourceTypeController extends Controller
         $get = Get::init()->
             setParameters('api.resource-type.parameters.item')->
             setDescription('route-descriptions.resource_type_GET_show')->
+            setAuthenticationStatus($authenticated)->
             option();
 
         $delete = Delete::init()->
             setDescription('route-descriptions.resource_type_DELETE')->
             setAuthenticationRequired(true)->
+            setAuthenticationStatus($authenticated)->
             option();
 
         $patch = Patch::init()->
             setFields('api.resource-type.fields')->
             setDescription('route-descriptions.resource_type_PATCH')->
             setAuthenticationRequired(true)->
+            setAuthenticationStatus($authenticated)->
             option();
 
         return $this->optionsResponse(

@@ -47,6 +47,7 @@ class SummaryResourceTypeController extends Controller
         $get = Get::init()->
             setParameters('api.resource-type.summary-parameters.collection')->
             setDescription('route-descriptions.summary-resource-type-GET-index')->
+            setAuthenticationStatus(($this->user_id !== null) ? true : false)->
             option();
 
         return $this->optionsResponse($get, 200);

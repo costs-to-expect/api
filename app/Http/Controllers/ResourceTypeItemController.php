@@ -123,7 +123,7 @@ class ResourceTypeItemController extends Controller
      */
     public function optionsIndex(Request $request, string $resource_type_id): JsonResponse
     {
-        Route::resourceType(
+        $authenticated = Route::resourceType(
             $resource_type_id,
             $this->permitted_resource_types
         );
@@ -142,6 +142,7 @@ class ResourceTypeItemController extends Controller
             setParameters('api.resource-type-item.parameters.collection')->
             setConditionalParameters($this->conditional_get_parameters)->
             setDescription('route-descriptions.resource_type_item_GET_index')->
+            setAuthenticationStatus($authenticated)->
             option();
 
         return $this->optionsResponse($get, 200);

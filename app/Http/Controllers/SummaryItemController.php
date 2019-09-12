@@ -505,6 +505,7 @@ class SummaryItemController extends Controller
             setParameters('api.item.summary-parameters.collection')->
             setSearchable('api.item.searchable')->
             setDescription('route-descriptions.summary_GET_resource-type_resource_items')->
+            setAuthenticationStatus(($this->user_id !== null) ? true : false)->
             option();
 
         return $this->optionsResponse($get, 200);

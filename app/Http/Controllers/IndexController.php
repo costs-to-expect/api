@@ -70,7 +70,10 @@ class IndexController extends Controller
             [
                 'GET' => [
                     'description' => trans('route-descriptions.api_GET_index'),
-                    'authentication-required' => false,
+                    'authentication' => [
+                        'required' => false,
+                        'authenticated' => ($this->user_id !== null) ? true : false
+                    ],
                     'parameters' => []
                 ]
             ]
@@ -137,7 +140,10 @@ class IndexController extends Controller
             [
                 'GET' => [
                     'description' => trans('route-descriptions.api_GET_changelog'),
-                    'authentication-required' => false,
+                    'authentication' => [
+                        'required' => false,
+                        'authenticated' => ($this->user_id !== null) ? true : false
+                    ],
                     'parameters' => []
                 ]
             ]

@@ -154,7 +154,7 @@ class SubcategoryController extends Controller
      */
     public function optionsIndex(string $category_id): JsonResponse
     {
-        Route::category(
+        $authenticated = Route::category(
             $category_id,
             $this->permitted_resource_types
         );
@@ -165,12 +165,14 @@ class SubcategoryController extends Controller
             setPaginationOverride(true)->
             setParameters('api.subcategory.parameters.collection')->
             setDescription('route-descriptions.sub_category_GET_index')->
+            setAuthenticationStatus($authenticated)->
             option();
 
         $post = Post::init()->
             setFields('api.subcategory.fields')->
             setDescription('route-descriptions.sub_category_POST')->
             setAuthenticationRequired(true)->
+            setAuthenticationStatus($authenticated)->
             option();
 
         return $this->optionsResponse(
@@ -192,7 +194,7 @@ class SubcategoryController extends Controller
         string $subcategory_id
     ): JsonResponse
     {
-        Route::subcategory(
+        $authenticated = Route::subcategory(
             $category_id,
             $subcategory_id,
             $this->permitted_resource_types
@@ -201,17 +203,20 @@ class SubcategoryController extends Controller
         $get = Get::init()->
             setParameters('api.subcategory.parameters.item')->
             setDescription('route-descriptions.sub_category_GET_show')->
+            setAuthenticationStatus($authenticated)->
             option();
 
         $delete = Delete::init()->
             setDescription('route-descriptions.sub_category_DELETE')->
             setAuthenticationRequired(true)->
+            setAuthenticationStatus($authenticated)->
             option();
 
         $patch = Patch::init()->
             setFields('api.subcategory.fields')->
             setDescription('route-descriptions.sub_category_PATCH')->
             setAuthenticationRequired(true)->
+            setAuthenticationStatus($authenticated)->
             option();
 
         return $this->optionsResponse(

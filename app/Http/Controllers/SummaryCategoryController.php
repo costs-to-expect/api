@@ -49,6 +49,7 @@ class SummaryCategoryController extends Controller
     {
         $get = Get::init()->
             setDescription('route-descriptions.summary_category_GET_index')->
+            setAuthenticationStatus(($this->user_id !== null) ? true : false)->
             option();
 
         return $this->optionsResponse($get, 200);

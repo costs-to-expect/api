@@ -173,7 +173,7 @@ class ItemController extends Controller
         string $resource_id
     ): JsonResponse
     {
-        Route::resource(
+        $authenticated = Route::resource(
             $resource_type_id,
             $resource_id,
             $this->permitted_resource_types,
@@ -192,6 +192,7 @@ class ItemController extends Controller
             setParameters('api.item.parameters.collection')->
             setConditionalParameters($conditional_parameters)->
             setPagination(true)->
+            setAuthenticationStatus($authenticated)->
             setDescription('route-descriptions.item_GET_index')->
             option();
 
@@ -199,6 +200,7 @@ class ItemController extends Controller
             setFields('api.item.fields')->
             setDescription( 'route-descriptions.item_POST')->
             setAuthenticationRequired(true)->
+            setAuthenticationStatus($authenticated)->
             option();
 
         return $this->optionsResponse(
@@ -222,7 +224,7 @@ class ItemController extends Controller
         string $item_id
     ): JsonResponse
     {
-        Route::item(
+        $authenticated = Route::item(
             $resource_type_id,
             $resource_id,
             $item_id,
@@ -237,17 +239,20 @@ class ItemController extends Controller
 
         $get = Get::init()->
             setParameters('api.item.parameters.item')->
+            setAuthenticationStatus($authenticated)->
             setDescription('route-descriptions.item_GET_show')->
             option();
 
         $delete = Delete::init()->
             setDescription('route-descriptions.item_DELETE')->
+            setAuthenticationStatus($authenticated)->
             setAuthenticationRequired(true)->
             option();
 
         $patch = Patch::init()->
             setFields('api.item.fields')->
             setDescription('route-descriptions.item_PATCH')->
+            setAuthenticationStatus($authenticated)->
             setAuthenticationRequired(true)->
             option();
 

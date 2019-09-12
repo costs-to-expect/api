@@ -152,7 +152,7 @@ class ResourceController extends Controller
      */
     public function optionsIndex(string $resource_type_id): JsonResponse
     {
-        Route::resourceType(
+        $authenticated = Route::resourceType(
             $resource_type_id,
             $this->permitted_resource_types
         );
@@ -162,12 +162,14 @@ class ResourceController extends Controller
             setSearchable('api.resource.searchable')->
             setPaginationOverride(true)->
             setParameters('api.resource.parameters.collection')->
+            setAuthenticationStatus($authenticated)->
             setDescription('route-descriptions.resource_GET_index')->
             option();
 
         $post = Post::init()->
             setFields('api.resource.fields')->
             setDescription('route-descriptions.resource_POST')->
+            setAuthenticationStatus($authenticated)->
             setAuthenticationRequired(true)->
             option();
 
@@ -187,7 +189,7 @@ class ResourceController extends Controller
      */
     public function optionsShow(string $resource_type_id, string $resource_id): JsonResponse
     {
-        Route::resource(
+        $authenticated = Route::resource(
             $resource_type_id,
             $resource_id,
             $this->permitted_resource_types
@@ -204,18 +206,21 @@ class ResourceController extends Controller
 
         $get = Get::init()->
             setParameters('api.resource.parameters.item')->
+            setAuthenticationStatus($authenticated)->
             setDescription('route-descriptions.resource_GET_show')->
             option();
 
         $delete = Delete::init()->
             setDescription('route-descriptions.resource_DELETE')->
             setAuthenticationRequired(true)->
+            setAuthenticationStatus($authenticated)->
             option();
 
         $patch = Patch::init()->
             setFields('api.resource.fields')->
             setDescription('route-descriptions.resource_PATCH')->
             setAuthenticationRequired(true)->
+            setAuthenticationStatus($authenticated)->
             option();
 
         return $this->optionsResponse(

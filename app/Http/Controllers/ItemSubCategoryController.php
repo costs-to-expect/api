@@ -153,7 +153,7 @@ class ItemSubCategoryController extends Controller
         string $item_category_id
     ): JsonResponse
     {
-        Route::item(
+        $authenticated = Route::item(
             $resource_type_id,
             $resource_id,
             $item_id,
@@ -171,6 +171,7 @@ class ItemSubCategoryController extends Controller
 
         $get = Get::init()->
             setParameters('api.item-subcategory.parameters.collection')->
+            setAuthenticationStatus($authenticated)->
             setDescription('route-descriptions.item_sub_category_GET_index')->
             option();
 
@@ -178,6 +179,7 @@ class ItemSubCategoryController extends Controller
             setFields('api.item-subcategory.fields')->
             setConditionalFields($this->conditionalPostParameters($item_category->category_id))->
             setDescription('route-descriptions.item_sub_category_POST')->
+            setAuthenticationStatus($authenticated)->
             setAuthenticationRequired(true)->
             option();
 
@@ -208,7 +210,7 @@ class ItemSubCategoryController extends Controller
         string $item_subcategory_id
     ): JsonResponse
     {
-        Route::item(
+        $authenticated = Route::item(
             $resource_type_id,
             $resource_id,
             $item_id,
@@ -233,11 +235,13 @@ class ItemSubCategoryController extends Controller
 
         $get = Get::init()->
             setParameters('api.item-subcategory.parameters.item')->
+            setAuthenticationStatus($authenticated)->
             setDescription('route-descriptions.item_sub_category_GET_show')->
             option();
 
         $delete = Delete::init()->
             setDescription('route-descriptions.item_sub_category_DELETE')->
+            setAuthenticationStatus($authenticated)->
             setAuthenticationRequired(true)->
             option();
 

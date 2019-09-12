@@ -163,6 +163,7 @@ class CategoryController extends Controller
             setSortable('api.category.sortable')->
             setSearchable('api.category.searchable')->
             setPaginationOverride(true)->
+            setAuthenticationStatus(($this->user_id !== null) ? true : false)->
             setDescription('route-descriptions.category_GET_index')->
             option();
 
@@ -170,6 +171,7 @@ class CategoryController extends Controller
             setFields('api.category.fields')->
             setConditionalFields($this->conditionalPostParameters())->
             setAuthenticationRequired(true)->
+            setAuthenticationStatus(($this->user_id !== null) ? true : false)->
             setDescription('route-descriptions.category_POST')->
             option();
 
@@ -188,24 +190,27 @@ class CategoryController extends Controller
      */
     public function optionsShow(string $category_id): JsonResponse
     {
-        Route::category(
+        $authenticated = Route::category(
             $category_id,
             $this->permitted_resource_types
         );
 
         $get = Get::init()->
             setParameters('api.category.parameters.item')->
+            setAuthenticationStatus($authenticated)->
             setDescription('route-descriptions.category_GET_show')->
             option();
 
         $delete = Delete::init()->
             setAuthenticationRequired(true)->
+            setAuthenticationStatus($authenticated)->
             setDescription('route-descriptions.category_DELETE')->
             option();
 
         $patch = Patch::init()->
             setFields('api.category.fields-patch')->
             setDescription('route-descriptions.category_PATCH')->
+            setAuthenticationStatus($authenticated)->
             setAuthenticationRequired(true)->
             option();
 

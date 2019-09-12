@@ -117,6 +117,7 @@ class RequestController extends Controller
         $get = Get::init()->
             setParameters('api.request-access-log.parameters.collection')->
             setPagination(true)->
+            setAuthenticationStatus(($this->user_id !== null) ? true : false)->
             setDescription('route-descriptions.request_GET_access-log')->
             option();
 
@@ -133,11 +134,13 @@ class RequestController extends Controller
     {
         $get = Get::init()->
             setDescription('route-descriptions.request_GET_error_log')->
+            setAuthenticationStatus(($this->user_id !== null) ? true : false)->
             option();
 
         $post = Post::init()->
             setFields('api.request-error-log.fields')->
             setDescription('route-descriptions.request_POST')->
+            setAuthenticationStatus(($this->user_id !== null) ? true : false)->
             option();
 
         return $this->optionsResponse(
