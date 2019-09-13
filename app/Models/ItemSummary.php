@@ -38,7 +38,8 @@ class ItemSummary extends Model
                 category.id, 
                 category.name AS name, 
                 category.description AS description,
-                SUM(item.actualised_total) AS total')->
+                SUM(item_type_allocated_expense.actualised_total) AS total')->
+            join('item_type_allocated_expense', 'item.id', 'item_type_allocated_expense.item_id')->
             join("resource", "resource.id", "item.resource_id")->
             join("resource_type", "resource_type.id", "resource.resource_type_id")->
             join("item_category", "item_category.item_id", "item.id")->
@@ -257,9 +258,10 @@ class ItemSummary extends Model
         bool $include_unpublished = false
     ): array
     {
-        $collection = $this->selectRaw('sum(item.actualised_total) AS actualised_total')->
-            where('resource_id', '=', $resource_id)->
+        $collection = $this->selectRaw('sum(item_type_allocated_expense.actualised_total) AS actualised_total')->
+            join('item_type_allocated_expense', 'item.id', 'item_type_allocated_expense.item_id')->
             join('resource', 'item.resource_id', 'resource.id')->
+            where('resource_id', '=', $resource_id)->
             where('resource.resource_type_id', '=', $resource_type_id);
 
         $collection = $this->includeUnpublished($collection, $include_unpublished);
@@ -323,8 +325,8 @@ class ItemSummary extends Model
     {
         if ($include_unpublished === false) {
             $collection->where(function ($sql) {
-                $sql->whereNull('item.publish_after')->
-                    orWhereRaw('item.publish_after < NOW()');
+                $sql->whereNull('item_type_allocated_expense.publish_after')->
+                    orWhereRaw('item_type_allocated_expense.publish_after < NOW()');
             });
         }
 

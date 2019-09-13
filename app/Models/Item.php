@@ -62,22 +62,23 @@ class Item extends Model
         array $search_parameters = []
     ): int
     {
-        $collection = $this->where('resource_id', '=', $resource_id)
-            ->join('resource', 'item.resource_id', 'resource.id')
-            ->where('resource.resource_type_id', '=', $resource_type_id);
+        $collection = $this->where('resource_id', '=', $resource_id)->
+            join('item_type_allocated_expense', 'item.id', 'item_type_allocated_expense.item_id')->
+            join('resource', 'item.resource_id', 'resource.id')->
+            where('resource.resource_type_id', '=', $resource_type_id);
 
         if (
             array_key_exists('year', $parameters) === true &&
             $parameters['year'] !== null
         ) {
-            $collection->whereRaw(DB::raw("YEAR(item.effective_date) = '{$parameters['year']}'"));
+            $collection->whereRaw(DB::raw("YEAR(item_type_allocated_expense.effective_date) = '{$parameters['year']}'"));
         }
 
         if (
             array_key_exists('month', $parameters) === true &&
             $parameters['month'] !== null
         ) {
-            $collection->whereRaw(DB::raw("MONTH(item.effective_date) = '{$parameters['month']}'"));
+            $collection->whereRaw(DB::raw("MONTH(item_type_allocated_expense.effective_date) = '{$parameters['month']}'"));
         }
 
         if (
@@ -105,7 +106,7 @@ class Item extends Model
             General::booleanValue($parameters['include-unpublished']) === false
         ) {
             $collection->where(function ($collection) {
-                $collection->whereNull('item.publish_after')->orWhereRaw('item.publish_after < NOW()');
+                $collection->whereNull('item_type_allocated_expense.publish_after')->orWhereRaw('item_type_allocated_expense.publish_after < NOW()');
             });
         }
 
@@ -137,20 +138,21 @@ class Item extends Model
     {
         $select_fields = [
             'item.id AS item_id',
-            'item.description AS item_description',
-            'item.effective_date AS item_effective_date',
-            'item.total AS item_total',
-            'item.percentage AS item_percentage',
-            'item.actualised_total AS item_actualised_total',
+            'item_type_allocated_expense.description AS item_description',
+            'item_type_allocated_expense.effective_date AS item_effective_date',
+            'item_type_allocated_expense.total AS item_total',
+            'item_type_allocated_expense.percentage AS item_percentage',
+            'item_type_allocated_expense.actualised_total AS item_actualised_total',
             'item.created_at AS item_created_at'
         ];
 
         $category_join = false;
         $subcategory_join = false;
 
-        $collection = $this->where('resource_id', '=', $resource_id)
-            ->join('resource', 'item.resource_id', 'resource.id')
-            ->where('resource.resource_type_id', '=', $resource_type_id);
+        $collection = $this->where('resource_id', '=', $resource_id)->
+            join('item_type_allocated_expense', 'item.id', 'item_type_allocated_expense.item_id')->
+            join('resource', 'item.resource_id', 'resource.id')->
+            where('resource.resource_type_id', '=', $resource_type_id);
 
         if (
             array_key_exists('include-categories', $parameters) === true &&
@@ -192,12 +194,12 @@ class Item extends Model
 
         if (array_key_exists('year', $parameters) === true &&
             $parameters['year'] !== null) {
-            $collection->whereRaw(\DB::raw("YEAR(item.effective_date) = '{$parameters['year']}'"));
+            $collection->whereRaw(\DB::raw("YEAR(item_type_allocated_expense.effective_date) = '{$parameters['year']}'"));
         }
 
         if (array_key_exists('month', $parameters) === true &&
             $parameters['month'] !== null) {
-            $collection->whereRaw(\DB::raw("MONTH(item.effective_date) = '{$parameters['month']}'"));
+            $collection->whereRaw(\DB::raw("MONTH(item_type_allocated_expense.effective_date) = '{$parameters['month']}'"));
         }
 
         if (
@@ -227,7 +229,7 @@ class Item extends Model
             General::booleanValue($parameters['include-unpublished']) === false
         ) {
             $collection->where(function ($collection) {
-                $collection->whereNull('item.publish_after')->orWhereRaw('item.publish_after < NOW()');
+                $collection->whereNull('item_type_allocated_expense.publish_after')->orWhereRaw('item_type_allocated_expense.publish_after < NOW()');
             });
         }
 
@@ -238,13 +240,20 @@ class Item extends Model
                         $collection->orderBy('item.created_at', $direction);
                         break;
 
+                    case 'actualised_total':
+                    case 'description':
+                    case 'effective_date':
+                    case 'total':
+                        $collection->orderBy('item_type_allocated_expense.' . $field, $direction);
+                        break;
+
                     default:
                         $collection->orderBy('item.' . $field, $direction);
                         break;
                 }
             }
         } else {
-            $collection->orderBy('item.effective_date', 'desc');
+            $collection->orderBy('item_type_allocated_expense.effective_date', 'desc');
             $collection->orderBy('item.created_at', 'desc');
         }
 
