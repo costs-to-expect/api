@@ -19,6 +19,11 @@ The complete changelog for the Costs to Expect REST API, follows the format defi
 - We have added additional messages into the language files; API is multi-lingual friendly.
 - We have renamed the route validation helper methods, the class is called `Route`, we don't also need `route` in the name.
 - We have renamed any incorrectly spelt subcategory variables, the space between `sub` and `category` needed to go; models, classes and controllers, later.
+- We have renamed the `sub_category` field for the `GET/resource-types/[resource-type]/resources/[resource]/items/[item]/category[category]/subcategory` collection and item.
+- We have updated the authentication field in the OPTIONS requests; we now show if authentications required for the HTTP verb and what your current authentication status is.
+- We have added a base class for the `Option` classes to remove code duplication.
+- We have updated the `Option` classes; they now return the current authentication status for the current request.
+- We have renamed the `sub_category` field for the `GET/resource-types/[resource-type]/resources/[resource]/items/[item]/category[category]/subcategory` collection and item.
 
 ### Fixed
 - We now return a more friendly error message for unauthenticated requests.
