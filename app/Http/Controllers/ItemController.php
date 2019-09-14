@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\ItemTypeAllocatedExpense;
 use App\Option\Delete;
 use App\Option\Get;
 use App\Option\Patch;
@@ -286,15 +287,22 @@ class ItemController extends Controller
         try {
             $item = new Item([
                 'resource_id' => $resource_id,
+                'created_by' => Auth::user()->id
+            ]);
+
+            $item_type = new ItemTypeAllocatedExpense([
+                'name' => $request->input('description'), // Fix later
                 'description' => $request->input('description'),
                 'effective_date' => $request->input('effective_date'),
                 'publish_after' => $request->input('publish_after', null),
                 'total' => $request->input('total'),
                 'percentage' => $request->input('percentage', 100),
-                'created_by' => Auth::user()->id
             ]);
-            $item->setActualisedTotal($item->total, $item->percentage);
+
+            $item_type->setActualisedTotal($item_type->total, $item_type->percentage);
+
             $item->save();
+            $item_type->save();
         } catch (Exception $e) {
             UtilityResponse::failedToSaveModelForCreate();
         }

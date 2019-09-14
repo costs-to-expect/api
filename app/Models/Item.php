@@ -279,15 +279,16 @@ class Item extends Model
     ): ?array
     {
         $result = $this->where('resource_id', '=', $resource_id)->
+            join('item_type_allocated_expense', 'item.id', 'item_type_allocated_expense.item_id')->
             join('resource', 'item.resource_id', 'resource.id')->
             where('resource.resource_type_id', '=', $resource_type_id)->
             select(
                 'item.id AS item_id',
-                'item.description AS item_description',
-                'item.effective_date AS item_effective_date',
-                'item.total AS item_total',
-                'item.percentage AS item_percentage',
-                'item.actualised_total AS item_actualised_total',
+                'item_type_allocated_expense.description AS item_description',
+                'item_type_allocated_expense.effective_date AS item_effective_date',
+                'item_type_allocated_expense.total AS item_total',
+                'item_type_allocated_expense.percentage AS item_percentage',
+                'item_type_allocated_expense.actualised_total AS item_actualised_total',
                 'item.created_at AS item_created_at'
             )
             ->find($item_id);
@@ -306,16 +307,17 @@ class Item extends Model
     ): ?Item
     {
         return $this->where('resource_id', '=', $resource_id)->
+            join('item_type_allocated_expense', 'item.id', 'item_type_allocated_expense.item_id')->
             join('resource', 'item.resource_id', 'resource.id')->
             where('resource.resource_type_id', '=', $resource_type_id)->
             select(
                 'item.id',
-                'item.description',
-                'item.effective_date',
-                'item.publish_after',
-                'item.total',
-                'item.percentage',
-                'item.actualised_total',
+                'item_type_allocated_expense.description',
+                'item_type_allocated_expense.effective_date',
+                'item_type_allocated_expense.publish_after',
+                'item_type_allocated_expense.total',
+                'item_type_allocated_expense.percentage',
+                'item_type_allocated_expense.actualised_total',
                 'item.created_at'
             )
             ->find($item_id);
@@ -324,20 +326,21 @@ class Item extends Model
     /**
      * Convert the model instance to an array for use with the transformer
      *
-     * @param Item
+     * @param Item $item
+     * @param ItemTypeAllocatedExpense $item_type
      *
      * @return array
      */
-    public function instanceToArray(Item $item): array
+    public function instanceToArray(Item $item, ItemTypeAllocatedExpense $item_type): array
     {
         return [
             'item_id' => $item->id,
-            'item_description' => $item->description,
-            'item_effective_date' => $item->effective_date,
-            'item_publish_after' => $item->publish_after,
-            'item_total' => $item->total,
-            'item_percentage' => $item->percentage,
-            'item_actualised_total' => $item->item_actualised_total,
+            'item_description' => $item_type->description,
+            'item_effective_date' => $item_type->effective_date,
+            'item_publish_after' => $item_type->publish_after,
+            'item_total' => $item_type->total,
+            'item_percentage' => $item_type->percentage,
+            'item_actualised_total' => $item_type->item_actualised_total,
             'item_created_at' => $item->created_at->toDateTimeString()
         ];
     }
