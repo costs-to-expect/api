@@ -343,7 +343,7 @@ class ResourceTypeItem extends Model
             join("resource", "resource.id", "item.resource_id")->
             join("resource_type", "resource_type.id", "resource.resource_type_id")->
             where("resource_type.id", "=", $resource_type_id)->
-            where(DB::raw('YEAR(item.effective_date)'), '=', $year);
+            where(DB::raw('YEAR(item_type_allocated_expense.effective_date)'), '=', $year);
 
         $collection = $this->includeUnpublished($collection, $include_unpublished);
 
@@ -379,8 +379,8 @@ class ResourceTypeItem extends Model
             join("resource", "resource.id", "item.resource_id")->
             join("resource_type", "resource_type.id", "resource.resource_type_id")->
             where("resource_type.id", "=", $resource_type_id)->
-            where(DB::raw('YEAR(item.effective_date)'), '=', $year)->
-            where(DB::raw('MONTH(item.effective_date)'), '=', $month);
+            where(DB::raw('YEAR(item_type_allocated_expense.effective_date)'), '=', $year)->
+            where(DB::raw('MONTH(item_type_allocated_expense.effective_date)'), '=', $month);
 
         $collection = $this->includeUnpublished($collection, $include_unpublished);
 
