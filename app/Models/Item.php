@@ -99,7 +99,7 @@ class Item extends Model
             $collection->where('item_sub_category.sub_category_id', '=', $parameters['subcategory']);
         }
 
-        $collection = ModelUtility::applySearch($collection, $this->table, $search_parameters);
+        $collection = ModelUtility::applySearch($collection, 'item_type_allocated_expense', $search_parameters);
 
         if (
             array_key_exists('include-unpublished', $parameters) === false ||
@@ -194,12 +194,12 @@ class Item extends Model
 
         if (array_key_exists('year', $parameters) === true &&
             $parameters['year'] !== null) {
-            $collection->whereRaw(\DB::raw("YEAR(item_type_allocated_expense.effective_date) = '{$parameters['year']}'"));
+            $collection->whereRaw(DB::raw("YEAR(item_type_allocated_expense.effective_date) = '{$parameters['year']}'"));
         }
 
         if (array_key_exists('month', $parameters) === true &&
             $parameters['month'] !== null) {
-            $collection->whereRaw(\DB::raw("MONTH(item_type_allocated_expense.effective_date) = '{$parameters['month']}'"));
+            $collection->whereRaw(DB::raw("MONTH(item_type_allocated_expense.effective_date) = '{$parameters['month']}'"));
         }
 
         if (
@@ -222,7 +222,7 @@ class Item extends Model
             $collection->where('item_sub_category.sub_category_id', '=', $parameters['subcategory']);
         }
 
-        $collection = ModelUtility::applySearch($collection, $this->table, $search_parameters);
+        $collection = ModelUtility::applySearch($collection, 'item_type_allocated_expense', $search_parameters);
 
         if (
             array_key_exists('include-unpublished', $parameters) === false ||

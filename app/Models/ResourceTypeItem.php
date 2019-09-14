@@ -280,7 +280,7 @@ class ResourceTypeItem extends Model
         $collection = $this->selectRaw('
                 resource.id AS id, 
                 resource.name AS `name`, 
-                SUM(item.item_type_allocated_expense) AS total'
+                SUM(item_type_allocated_expense.actualised_total) AS total'
             )->
             join('item_type_allocated_expense', 'item.id', 'item_type_allocated_expense.item_id')->
             join('resource', 'item.resource_id', 'resource.id')->
@@ -410,7 +410,7 @@ class ResourceTypeItem extends Model
             join("resource", "resource.id", "item.resource_id")->
             join("resource_type", "resource_type.id", "resource.resource_type_id")->
             where("resource_type.id", "=", $resource_type_id)->
-            where(DB::raw('YEAR(item.effective_date)'), '=', $year);
+            where(DB::raw('YEAR(item_type_allocated_expense.effective_date)'), '=', $year);
 
         $collection = $this->includeUnpublished($collection, $include_unpublished);
 
