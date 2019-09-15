@@ -289,8 +289,10 @@ class ItemController extends Controller
                 'resource_id' => $resource_id,
                 'created_by' => Auth::user()->id
             ]);
+            $item->save();
 
             $item_type = new ItemTypeAllocatedExpense([
+                'item_id' => $item->id,
                 'name' => $request->input('description'), // Fix later
                 'description' => $request->input('description'),
                 'effective_date' => $request->input('effective_date'),
@@ -299,16 +301,19 @@ class ItemController extends Controller
                 'percentage' => $request->input('percentage', 100),
             ]);
 
-            $item_type->setActualisedTotal($item_type->total, $item_type->percentage);
+            $item_type->setActualisedTotal(
+                $request->input('total'),
+                $request->input('percentage', 100)
+            );
 
-            $item->save();
             $item_type->save();
+
         } catch (Exception $e) {
             UtilityResponse::failedToSaveModelForCreate();
         }
 
         return response()->json(
-            (new ItemTransformer((new Item())->instanceToArray($item)))->toArray(),
+            (new ItemTransformer((new Item())->instanceToArray($item, $item_type)))->toArray(),
             201
         );
     }

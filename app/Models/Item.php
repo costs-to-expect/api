@@ -34,11 +34,6 @@ class Item extends Model
         return array_keys(Config::get('api.item.validation.PATCH.fields'));
     }
 
-    public function setActualisedTotal($total, $percentage)
-    {
-        $this->attributes['actualised_total'] = ($percentage === 100) ? $total : $total * ($percentage/100);
-    }
-
     public function resource()
     {
         return $this->belongsTo(Resource::class, 'resource_id', 'id');
@@ -340,7 +335,7 @@ class Item extends Model
             'item_publish_after' => $item_type->publish_after,
             'item_total' => $item_type->total,
             'item_percentage' => $item_type->percentage,
-            'item_actualised_total' => $item_type->item_actualised_total,
+            'item_actualised_total' => $item_type->actualised_total,
             'item_created_at' => $item->created_at->toDateTimeString()
         ];
     }

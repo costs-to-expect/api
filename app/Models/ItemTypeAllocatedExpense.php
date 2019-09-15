@@ -18,7 +18,7 @@ class ItemTypeAllocatedExpense extends Model
 {
     protected $table = 'item_type_allocated_expense';
 
-    protected $guarded = ['id', 'item_id'];
+    protected $guarded = ['id', 'actualised_total'];
 
     public function setActualisedTotal($total, $percentage)
     {
