@@ -31,7 +31,12 @@ class Item extends Model
      */
     public function patchableFields(): array
     {
-        return array_keys(Config::get('api.item.validation.PATCH.fields'));
+        return array_keys(
+            array_merge(
+                Config::get('api.item.validation.PATCH.fields'),
+                Config::get('api.item-type-allocated-expense.validation.PATCH.fields'),
+            )
+        );
     }
 
     public function resource()
