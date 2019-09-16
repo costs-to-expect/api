@@ -2,13 +2,14 @@
 
 The complete changelog for the Costs to Expect REST API, follows the format defined at https://keepachangelog.com/en/1.0.0/
 
-## [v2.00.0] - 2019-xx-xx
+## [v2.00.0] - 2019-09-17
 ### Added
 - We have added `updated_by` to the `item` table, records the user who was last to update a record.
 - We have added a `permitted_users` table; this is used to link users and resource types.
 - A permitted user record created/removed on addition/removal of a resource type.
 - We have added a custom validator `ResourceTypeName`; it checks the given name is unique for the user based on the resource types they are permitted to modify.
 - We have added two useful properties to the base controller, `permitted_resource_types` and `include_public`.
+- There are now two item types, allocated expense and simple expense. We have split the item table; there is the base item data and then the data for the specific item type.
 
 ### Changed
 - We have updated the `item` table, `user_id` field has been changed to `created_by`.
@@ -19,11 +20,11 @@ The complete changelog for the Costs to Expect REST API, follows the format defi
 - We have added additional messages into the language files; API is multi-lingual friendly.
 - We have renamed the route validation helper methods, the class is called `Route`, we don't also need `route` in the name.
 - We have renamed any incorrectly spelt subcategory variables, the space between `sub` and `category` needed to go; models, classes and controllers, later.
-- We have renamed the `sub_category` field for the `GET/resource-types/[resource-type]/resources/[resource]/items/[item]/category[category]/subcategory` collection and item.
 - We have updated the authentication field in the OPTIONS requests; we now show if authentications required for the HTTP verb and what your current authentication status is.
 - We have added a base class for the `Option` classes to remove code duplication.
 - We have updated the `Option` classes; they now return the current authentication status for the current request.
 - We have renamed the `sub_category` field for the `GET/resource-types/[resource-type]/resources/[resource]/items/[item]/category[category]/subcategory` collection and item.
+- We have recreated the migration files for new installs. NOTE: you cannot upgrade from v1 to v2 with the included migrations. I have an upgrade SQL file if you need help converting to the new schema.
 
 ### Fixed
 - We now return a more friendly error message for unauthenticated requests.
