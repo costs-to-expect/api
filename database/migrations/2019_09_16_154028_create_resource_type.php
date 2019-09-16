@@ -19,9 +19,10 @@ class CreateResourceType extends Migration
 
             $table->bigIncrements('id');
             $table->unsignedTinyInteger('public')->default(0);
-            $table->string('name');
+            $table->string('name')->unique();
             $table->string('description');
             $table->timestamps();
+            $table->index('public');
         });
     }
 

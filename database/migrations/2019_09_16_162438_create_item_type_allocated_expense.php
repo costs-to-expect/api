@@ -22,7 +22,7 @@ class CreateItemTypeAllocatedExpense extends Migration
             $table->string('name');
             $table->string('description');
             $table->date('effective_date');
-            $table->date('published_after')->nullable();
+            $table->date('publish_after')->nullable();
             $table->decimal('total', 10, 2);
             $table->unsignedTinyInteger('percentage');
             $table->decimal('actualised_total', 10, 2);

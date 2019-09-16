@@ -23,6 +23,7 @@ class CreateItemCategory extends Migration
             $table->timestamps();
             $table->foreign('item_id')->references('id')->on('item');
             $table->foreign('category_id')->references('id')->on('category');
+            $table->unique(['item_id', 'category_id']);
         });
     }
 

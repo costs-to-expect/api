@@ -23,6 +23,7 @@ class CreateItemSubCategory extends Migration
             $table->timestamps();
             $table->foreign('item_category_id')->references('id')->on('item_category');
             $table->foreign('sub_category_id')->references('id')->on('sub_category');
+            $table->unique(['item_category_id', 'sub_category_id']);
         });
     }
 

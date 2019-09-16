@@ -21,6 +21,7 @@ class CreateItemType extends Migration
             $table->string('name', 255);
             $table->string('description');
             $table->timestamps();
+            $table->index('name');
         });
     }
 
