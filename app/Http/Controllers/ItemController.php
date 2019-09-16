@@ -404,13 +404,15 @@ class ItemController extends Controller
             true
         );
 
+        $item_type = (new ItemTypeAllocatedExpense())->instance($item_id);
         $item = (new Item())->instance($resource_type_id, $resource_id, $item_id);
 
-        if ($item === null) {
+        if ($item === null || $item_type === null) {
             UtilityResponse::notFound(trans('entities.item'));
         }
 
         try {
+            $item_type->delete();
             $item->delete();
 
             UtilityResponse::successNoContent();

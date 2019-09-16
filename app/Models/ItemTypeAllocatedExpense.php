@@ -24,4 +24,13 @@ class ItemTypeAllocatedExpense extends Model
     {
         $this->attributes['actualised_total'] = ($percentage === 100) ? $total : $total * ($percentage/100);
     }
+
+    public function instance(int $item_id): ?ItemTypeAllocatedExpense
+    {
+        return $this->where('item_id', '=', $item_id)->
+            select(
+                'item_type_allocated_expense.id'
+            )->
+            first();
+    }
 }
