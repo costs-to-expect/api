@@ -198,7 +198,7 @@ class ItemController extends Controller
             option();
 
         $post = Post::init()->
-            setFields('api.item.fields')->
+            setFields('api.item-type-allocated-expense.fields')->
             setDescription( 'route-descriptions.item_POST')->
             setAuthenticationRequired(true)->
             setAuthenticationStatus($authenticated)->
@@ -251,7 +251,7 @@ class ItemController extends Controller
             option();
 
         $patch = Patch::init()->
-            setFields('api.item.fields')->
+            setFields('api.item-type-allocated-expense.fields')->
             setDescription('route-descriptions.item_PATCH')->
             setAuthenticationStatus($authenticated)->
             setAuthenticationRequired(true)->
