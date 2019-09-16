@@ -27,13 +27,13 @@ class Item extends BaseValidator
     public function create(array $options = []): Validator
     {
         $messages = [];
-        foreach (Config::get('api.item.validation.POST.messages') as $key => $custom_message) {
+        foreach (Config::get('api.item-type-allocated-expense.validation.POST.messages') as $key => $custom_message) {
             $messages[$key] = trans($custom_message);
         };
 
         return ValidatorFacade::make(
             request()->all(),
-            Config::get('api.item.validation.POST.fields'),
+            Config::get('api.item-type-allocated-expense.validation.POST.fields'),
             $messages
         );
     }
@@ -48,13 +48,13 @@ class Item extends BaseValidator
     public function update(array $options = []): Validator
     {
         $messages = [];
-        foreach (Config::get('api.item.validation.PATCH.messages') as $key => $custom_message) {
+        foreach (Config::get('api.item-type-allocated-expense.validation.PATCH.messages') as $key => $custom_message) {
             $messages[$key] = trans($custom_message);
         };
 
         return ValidatorFacade::make(
             request()->all(),
-            Config::get('api.item.validation.PATCH.fields'),
+            Config::get('api.item-type-allocated-expense.validation.PATCH.fields'),
             $messages
         );
     }

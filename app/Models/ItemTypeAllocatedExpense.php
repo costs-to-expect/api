@@ -29,7 +29,9 @@ class ItemTypeAllocatedExpense extends Model
     {
         return $this->where('item_id', '=', $item_id)->
             select(
-                'item_type_allocated_expense.id'
+                'item_type_allocated_expense.id',
+                'item_type_allocated_expense.percentage',
+                'item_type_allocated_expense.total'
             )->
             first();
     }

@@ -351,14 +351,15 @@ class ItemController extends Controller
         UtilityRequest::validateAndReturnErrors($validator);
 
         $item = (new Item())->instance($resource_type_id, $resource_id, $item_id);
+        $item_type = (new ItemTypeAllocatedExpense())->instance($item_id);
 
-        if ($item === null) {
+        if ($item === null || $item_type === null) {
             UtilityResponse::failedToSelectModelForUpdate();
         }
 
         $update_actualised = false;
         foreach (request()->all() as $key => $value) {
-            $item->$key = $value;
+            $item_type->$key = $value;
 
             if (in_array($key, ['total', 'percentage']) === true) {
                 $update_actualised = true;
@@ -368,11 +369,12 @@ class ItemController extends Controller
         }
 
         if ($update_actualised === true) {
-            $item->setActualisedTotal($item->total, $item->percentage);
+            $item_type->setActualisedTotal($item_type->total, $item_type->percentage);
         }
 
         try {
             $item->save();
+            $item_type->save();
         } catch (Exception $e) {
             UtilityResponse::failedToSaveModelForUpdate();
         }
