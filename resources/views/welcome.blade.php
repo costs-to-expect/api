@@ -16,7 +16,7 @@
             and I are tracking the expenses to raise our two children to
             adulthood, 18.</p>
         <p class="lead">
-            <a href="/v1" class="btn btn-lg btn-primary mb-1">The API</a>&nbsp;
+            <a href="/v2" class="btn btn-lg btn-primary mb-1">The API</a>&nbsp;
             <a href="https://www.costs-to-expect.com" class="btn btn-lg btn-primary mb-1">The Website</a>
         </p>
         <p class="lead">
