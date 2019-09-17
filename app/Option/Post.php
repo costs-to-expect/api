@@ -13,27 +13,12 @@ use Illuminate\Support\Facades\Config;
  * @copyright G3D Development Limited 2018-2019
  * @license https://github.com/costs-to-expect/api/blob/master/LICENSE
  */
-class Post
+class Post extends Option
 {
-    /**
-     * @var Post
-     */
-    static private $instance;
-
-    /**
-     * @var boolean
-     */
-    static private $authentication;
-
     /**
      * @var array
      */
     static private $conditional_fields;
-
-    /**
-     * @var string
-     */
-    static private $description;
 
     /**
      * @var array
@@ -47,28 +32,17 @@ class Post
 
     static private function reset()
     {
-        self::$authentication = false;
+        self::resetBase();
+
         self::$conditional_fields = [];
-        self::$description = null;
         self::$fields = [];
         self::$localised_fields = [];
     }
 
     static public function init(): Post
     {
-        if (self::$instance === null) {
-            self::$instance = new Post();
-            self::$instance->reset();
-        }
-
-        return self::$instance;
-    }
-
-    static public function setAuthenticationRequired(
-        bool $status = false
-    ): Post
-    {
-        self::$authentication = $status;
+        self::$instance = new Post();
+        self::$instance->reset();
 
         return self::$instance;
     }
@@ -82,15 +56,6 @@ class Post
         return self::$instance;
     }
 
-    static public function setDescription(
-        string $localisation_path
-    ): Post
-    {
-        self::$description = trans($localisation_path);
-
-        return self::$instance;
-    }
-
     static public function setFields(
         string $config_path
     ): Post
@@ -100,7 +65,7 @@ class Post
         return self::$instance;
     }
 
-    static private function buildFields()
+    static protected function build()
     {
         self::$localised_fields = [];
 
@@ -120,12 +85,15 @@ class Post
 
     static public function option(): array
     {
-        self::buildFields();
+        self::build();
 
         return [
             'POST' => [
                 'description' => self::$description,
-                'authentication-required' => self::$authentication,
+                'authentication' => [
+                    'required' => self::$authentication,
+                    'authenticated' => self::$authenticated
+                ],
                 'fields' => self::$localised_fields
             ]
         ];

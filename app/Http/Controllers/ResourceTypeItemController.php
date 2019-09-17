@@ -36,7 +36,10 @@ class ResourceTypeItemController extends Controller
      */
     public function index(Request $request, string $resource_type_id): JsonResponse
     {
-        Route::resourceTypeRoute($resource_type_id);
+        Route::resourceType(
+            $resource_type_id,
+            $this->permitted_resource_types
+        );
 
         $collection_parameters = Parameters::fetch([
             'include-categories',
@@ -120,7 +123,10 @@ class ResourceTypeItemController extends Controller
      */
     public function optionsIndex(Request $request, string $resource_type_id): JsonResponse
     {
-        Route::resourceTypeRoute($resource_type_id);
+        $authenticated = Route::resourceType(
+            $resource_type_id,
+            $this->permitted_resource_types
+        );
 
         $this->conditionalGetParameters(
             $resource_type_id,
@@ -130,12 +136,13 @@ class ResourceTypeItemController extends Controller
         );
 
         $get = Get::init()->
-            setDescription('route-descriptions.resource_type_item_GET_index')->
             setSortable('api.resource-type-item.sortable')->
             setSearchable('api.resource-type-item.searchable')->
             setPagination(true)->
             setParameters('api.resource-type-item.parameters.collection')->
             setConditionalParameters($this->conditional_get_parameters)->
+            setDescription('route-descriptions.resource_type_item_GET_index')->
+            setAuthenticationStatus($authenticated)->
             option();
 
         return $this->optionsResponse($get, 200);
@@ -184,7 +191,8 @@ class ResourceTypeItemController extends Controller
         }
 
         $categories = (new Category())->paginatedCollection(
-            $this->include_private,
+            $this->permitted_resource_types,
+            $this->include_public,
             0,
             100,
             ['resource_type'=>$resource_type_id]

@@ -27,7 +27,10 @@ class SummarySubcategoryController extends Controller
      */
     public function index(string $category_id): JsonResponse
     {
-        Route::categoryRoute($category_id);
+        Route::category(
+            $category_id,
+            $this->permitted_resource_types
+        );
 
         $summary = (new SubCategory())->totalCount($category_id);
 
@@ -53,10 +56,14 @@ class SummarySubcategoryController extends Controller
      */
     public function optionsIndex(string $category_id): JsonResponse
     {
-        Route::categoryRoute($category_id);
+        Route::category(
+            $category_id,
+            $this->permitted_resource_types
+        );
 
         $get = Get::init()->
             setDescription('route-descriptions.summary_subcategory_GET_index')->
+            setAuthenticationStatus(($this->user_id !== null) ? true : false)->
             option();
 
         return $this->optionsResponse($get, 200);

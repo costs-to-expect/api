@@ -13,27 +13,12 @@ use Illuminate\Support\Facades\Config;
  * @copyright G3D Development Limited 2018-2019
  * @license https://github.com/costs-to-expect/api/blob/master/LICENSE
  */
-class Get
+class Get extends Option
 {
-    /**
-     * @var Get
-     */
-    static private $instance;
-
-    /**
-     * @var boolean
-     */
-    static private $authentication;
-
     /**
      * @var array
      */
     static private $conditional_parameters;
-
-    /**
-     * @var string
-     */
-    static private $description;
 
     /**
      * @var array
@@ -77,9 +62,9 @@ class Get
 
     static private function reset()
     {
-        self::$authentication = false;
+        self::resetBase();;
+
         self::$conditional_parameters = [];
-        self::$description = null;
         self::$localised_parameters = [];
         self::$pagination = false;
         self::$pagination_parameters = [];
@@ -92,19 +77,8 @@ class Get
 
     static public function init(): Get
     {
-        if (self::$instance === null) {
-            self::$instance = new Get();
-            self::$instance->reset();
-        }
-
-        return self::$instance;
-    }
-
-    static public function setAuthenticationRequired(
-        bool $status = false
-    ): Get
-    {
-        self::$authentication = $status;
+        self::$instance = new Get();
+        self::$instance->reset();
 
         return self::$instance;
     }
@@ -114,15 +88,6 @@ class Get
     ): Get
     {
         self::$conditional_parameters = $parameters;
-
-        return self::$instance;
-    }
-
-    static public function setDescription(
-        string $localisation_path
-    ): Get
-    {
-        self::$description = trans($localisation_path);
 
         return self::$instance;
     }
@@ -177,7 +142,7 @@ class Get
         return self::$instance;
     }
 
-    static private function buildParameters()
+    static protected function build()
     {
         self::$localised_parameters = [];
 
@@ -200,12 +165,15 @@ class Get
 
     static public function option(): array
     {
-        self::buildParameters();
+        self::build();
 
         return [
             'GET' => [
                 'description' => self::$description,
-                'authentication-required' => self::$authentication,
+                'authentication' => [
+                    'required' => self::$authentication,
+                    'authenticated' => self::$authenticated
+                ],
                 'sortable' => self::$sortable_parameters,
                 'searchable' => self::$searchable_parameters,
                 'parameters' => self::$localised_parameters

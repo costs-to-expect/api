@@ -36,6 +36,25 @@ class Response
     }
 
     /**
+     * Return not found, 404
+     *
+     * @param string|null $type Entity type that cannot be found
+     *
+     * @return JsonResponse
+     */
+    static public function notFoundOrNotAccessible(?string $type = null): JsonResponse
+    {
+        response()->json(
+            [
+                'message' => ($type !== null) ? trans('responses.not-found-or-not-accessible-entity', ['type'=>$type]) :
+                    trans('responses.not-found')
+            ],
+            404
+        )->send();
+        exit;
+    }
+
+    /**
      * Return a foreign key constraint error, 500
      *
      * @param string $message Custom message for error

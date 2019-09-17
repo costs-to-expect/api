@@ -6,6 +6,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Query\Builder as QueryBuilder;
+use Illuminate\Support\Facades\DB;
 
 /**
  * @mixin QueryBuilder
@@ -38,7 +39,8 @@ class ItemSummary extends Model
                 category.id, 
                 category.name AS name, 
                 category.description AS description,
-                SUM(item.actualised_total) AS total')->
+                SUM(item_type_allocated_expense.actualised_total) AS total')->
+            join('item_type_allocated_expense', 'item.id', 'item_type_allocated_expense.item_id')->
             join("resource", "resource.id", "item.resource_id")->
             join("resource_type", "resource_type.id", "resource.resource_type_id")->
             join("item_category", "item_category.item_id", "item.id")->
@@ -66,7 +68,8 @@ class ItemSummary extends Model
                 category.id, 
                 category.name AS name, 
                 category.description AS description, 
-                SUM(item.actualised_total) AS total')->
+                SUM(item_type_allocated_expense.actualised_total) AS total')->
+            join('item_type_allocated_expense', 'item.id', 'item_type_allocated_expense.item_id')->
             join("resource", "resource.id", "item.resource_id")->
             join("resource_type", "resource_type.id", "resource.resource_type_id")->
             join("item_category", "item_category.item_id", "item.id")->
@@ -96,7 +99,8 @@ class ItemSummary extends Model
     ): array
     {
         $collection = $this->
-            selectRaw('SUM(item.actualised_total) AS total')->
+            selectRaw('SUM(item_type_allocated_expense.actualised_total) AS total')->
+            join('item_type_allocated_expense', 'item.id', 'item_type_allocated_expense.item_id')->
             join("resource", "resource.id", "item.resource_id")->
             join("resource_type", "resource_type.id", "resource.resource_type_id")->
             join("item_category", "item_category.item_id", "item.id")->
@@ -113,14 +117,14 @@ class ItemSummary extends Model
             $collection->where("sub_category.id", "=", $subcategory_id);
         }
         if ($year !== null) {
-            $collection->whereRaw(\DB::raw("YEAR(item.effective_date) = {$year}"));
+            $collection->whereRaw(\DB::raw("YEAR(item_type_allocated_expense.effective_date) = {$year}"));
         }
         if ($month !== null) {
-            $collection->whereRaw(\DB::raw("MONTH(item.effective_date) = {$month}"));
+            $collection->whereRaw(\DB::raw("MONTH(item_type_allocated_expense.effective_date) = {$month}"));
         }
         if (count($search_parameters) > 0) {
             foreach ($search_parameters as $field => $search_term) {
-                $collection->where('item.' . $field, 'LIKE', '%' . $search_term . '%');
+                $collection->where('item_type_allocated_expense.' . $field, 'LIKE', '%' . $search_term . '%');
             }
         }
 
@@ -138,12 +142,13 @@ class ItemSummary extends Model
     ): array
     {
         $collection = $this->
-            selectRaw("MONTH(item.effective_date) as month, SUM(item.actualised_total) AS total")->
+            selectRaw("MONTH(item_type_allocated_expense.effective_date) as month, SUM(item_type_allocated_expense.actualised_total) AS total")->
+            join('item_type_allocated_expense', 'item.id', 'item_type_allocated_expense.item_id')->
             join("resource", "resource.id", "item.resource_id")->
             join("resource_type", "resource_type.id", "resource.resource_type_id")->
             where("resource_type.id", "=", $resource_type_id)->
             where("resource.id", "=", $resource_id)->
-            whereRaw(\DB::raw("YEAR(item.effective_date) = '{$year}'"));
+            whereRaw(\DB::raw("YEAR(item_type_allocated_expense.effective_date) = '{$year}'"));
 
         $collection = $this->includeUnpublished($collection, $include_unpublished);
 
@@ -162,13 +167,14 @@ class ItemSummary extends Model
     )
     {
         $collection = $this->
-            selectRaw("MONTH(item.effective_date) as month, SUM(item.actualised_total) AS total")->
+            selectRaw("MONTH(item_type_allocated_expense.effective_date) as month, SUM(item_type_allocated_expense.actualised_total) AS total")->
+            join('item_type_allocated_expense', 'item.id', 'item_type_allocated_expense.item_id')->
             join("resource", "resource.id", "item.resource_id")->
             join("resource_type", "resource_type.id", "resource.resource_type_id")->
             where("resource_type.id", "=", $resource_type_id)->
             where("resource.id", "=", $resource_id)->
-            whereRaw(\DB::raw("YEAR(item.effective_date) = '{$year}'"))->
-            whereRaw(\DB::raw("MONTH(item.effective_date) = '{$month}'"));
+            whereRaw(DB::raw("YEAR(item_type_allocated_expense.effective_date) = '{$year}'"))->
+            whereRaw(DB::raw("MONTH(item_type_allocated_expense.effective_date) = '{$month}'"));
 
         $collection = $this->includeUnpublished($collection, $include_unpublished);
 
@@ -190,7 +196,8 @@ class ItemSummary extends Model
                 sub_category.id, 
                 sub_category.name AS name, 
                 sub_category.description AS description,
-                SUM(item.actualised_total) AS total')->
+                SUM(item_type_allocated_expense.actualised_total) AS total')->
+            join('item_type_allocated_expense', 'item.id', 'item_type_allocated_expense.item_id')->
             join("resource", "resource.id", "item.resource_id")->
             join("resource_type", "resource_type.id", "resource.resource_type_id")->
             join("item_category", "item_category.item_id", "item.id")->
@@ -213,7 +220,7 @@ class ItemSummary extends Model
         int $resource_type_id,
         int $resource_id,
         int $category_id,
-        int $sub_category_id,
+        int $subcategory_id,
         bool $include_unpublished = false
     ): array
     {
@@ -222,7 +229,8 @@ class ItemSummary extends Model
                 sub_category.id, 
                 sub_category.name AS name, 
                 sub_category.description AS description,
-                SUM(item.actualised_total) AS total')->
+                SUM(item_type_allocated_expense.actualised_total) AS total')->
+            join('item_type_allocated_expense', 'item.id', 'item_type_allocated_expense.item_id')->
             join("resource", "resource.id", "item.resource_id")->
             join("resource_type", "resource_type.id", "resource.resource_type_id")->
             join("item_category", "item_category.item_id", "item.id")->
@@ -232,7 +240,7 @@ class ItemSummary extends Model
             where("resource_type.id", "=", $resource_type_id)->
             where("resource.id", "=", $resource_id)->
             where("category.id", "=", $category_id)->
-            where("sub_category.id", "=", $sub_category_id);
+            where("sub_category.id", "=", $subcategory_id);
 
         $collection = $this->includeUnpublished($collection, $include_unpublished);
 
@@ -257,9 +265,10 @@ class ItemSummary extends Model
         bool $include_unpublished = false
     ): array
     {
-        $collection = $this->selectRaw('sum(item.actualised_total) AS actualised_total')->
-            where('resource_id', '=', $resource_id)->
+        $collection = $this->selectRaw('sum(item_type_allocated_expense.actualised_total) AS actualised_total')->
+            join('item_type_allocated_expense', 'item.id', 'item_type_allocated_expense.item_id')->
             join('resource', 'item.resource_id', 'resource.id')->
+            where('resource_id', '=', $resource_id)->
             where('resource.resource_type_id', '=', $resource_type_id);
 
         $collection = $this->includeUnpublished($collection, $include_unpublished);
@@ -275,7 +284,8 @@ class ItemSummary extends Model
     ): array
     {
         $collection = $this->
-            selectRaw("YEAR(item.effective_date) as year, SUM(item.actualised_total) AS total")->
+            selectRaw("YEAR(item_type_allocated_expense.effective_date) as year, SUM(item_type_allocated_expense.actualised_total) AS total")->
+            join('item_type_allocated_expense', 'item.id', 'item_type_allocated_expense.item_id')->
             join("resource", "resource.id", "item.resource_id")->
             join("resource_type", "resource_type.id", "resource.resource_type_id")->
             where("resource_type.id", "=", $resource_type_id)->
@@ -297,12 +307,13 @@ class ItemSummary extends Model
     ): array
     {
         $collection = $this->
-            selectRaw("YEAR(item.effective_date) as year, SUM(item.actualised_total) AS total")->
+            selectRaw("YEAR(item_type_allocated_expense.effective_date) as year, SUM(item_type_allocated_expense.actualised_total) AS total")->
+            join('item_type_allocated_expense', 'item.id', 'item_type_allocated_expense.item_id')->
             join("resource", "resource.id", "item.resource_id")->
             join("resource_type", "resource_type.id", "resource.resource_type_id")->
             where("resource_type.id", "=", $resource_type_id)->
             where("resource.id", "=", $resource_id)->
-            whereRaw(\DB::raw("YEAR(item.effective_date) = '{$year}'"));
+            whereRaw(DB::raw("YEAR(item_type_allocated_expense.effective_date) = '{$year}'"));
 
         $collection = $this->includeUnpublished($collection, $include_unpublished);
 
@@ -323,8 +334,8 @@ class ItemSummary extends Model
     {
         if ($include_unpublished === false) {
             $collection->where(function ($sql) {
-                $sql->whereNull('item.publish_after')->
-                    orWhereRaw('item.publish_after < NOW()');
+                $sql->whereNull('item_type_allocated_expense.publish_after')->
+                    orWhereRaw('item_type_allocated_expense.publish_after < NOW()');
             });
         }
 

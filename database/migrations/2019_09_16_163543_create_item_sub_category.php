@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateResourceTypeTable extends Migration
+class CreateItemSubCategory extends Migration
 {
     /**
      * Run the migrations.
@@ -13,14 +13,17 @@ class CreateResourceTypeTable extends Migration
      */
     public function up()
     {
-        Schema::create('resource_type', function (Blueprint $table) {
+        Schema::create('item_sub_category', function (Blueprint $table) {
             $table->charset = 'utf8mb4';
             $table->collation = 'utf8mb4_unicode_ci';
 
             $table->bigIncrements('id');
-            $table->string('name')->unique();
-            $table->string('description');
+            $table->unsignedBigInteger('item_category_id');
+            $table->unsignedBigInteger('sub_category_id');
             $table->timestamps();
+            $table->foreign('item_category_id')->references('id')->on('item_category');
+            $table->foreign('sub_category_id')->references('id')->on('sub_category');
+            $table->unique(['item_category_id', 'sub_category_id']);
         });
     }
 
@@ -31,6 +34,6 @@ class CreateResourceTypeTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('resource_type');
+        Schema::dropIfExists('item_sub_category');
     }
 }

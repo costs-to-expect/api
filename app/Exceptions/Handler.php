@@ -6,6 +6,7 @@ use App\Events\InternalError;
 use App\Models\ErrorLog;
 use App\Utilities\Response;
 use Exception;
+use Illuminate\Auth\AuthenticationException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Illuminate\Support\Facades\App;
 
@@ -50,6 +51,25 @@ class Handler extends ExceptionHandler
      */
     public function render($request, Exception $exception)
     {
+        if ($exception instanceof AuthenticationException) {
+            if (App::environment() === 'local') {
+                return response()->json(
+                    [
+                        'message' => 'Unauthenticated',
+                        'trace' => $exception->getTraceAsString()
+                    ],
+                    403
+                );
+            } else {
+                return response()->json(
+                    [
+                        'message' => trans('responses.authentication-required')
+                    ],
+                    403
+                );
+            }
+        }
+
         $status_code = 500;
         if (method_exists($exception, 'getStatusCode') === true) {
             $status_code = $exception->getStatusCode();
@@ -64,7 +84,7 @@ class Handler extends ExceptionHandler
             case 503:
                 response()->json(
                     [
-                        'message' => 'Down for maintenance, we should be back very soon'
+                        'message' => trans('responses.maintenance')
                     ],
                     503
                 )->send();
@@ -94,7 +114,7 @@ class Handler extends ExceptionHandler
                     }
 
                     $response = [
-                        'message' => 'Sorry, there has been an error, please try again later'
+                        'message' => trans('responses.error')
                     ];
                 }
 

@@ -31,12 +31,9 @@ class Item extends Model
      */
     public function patchableFields(): array
     {
-        return array_keys(Config::get('api.item.validation.PATCH.fields'));
-    }
-
-    public function setActualisedTotal($total, $percentage)
-    {
-        $this->attributes['actualised_total'] = ($percentage === 100) ? $total : $total * ($percentage/100);
+        return array_keys(
+            Config::get('api.item-type-allocated-expense.validation.PATCH.fields'),
+        );
     }
 
     public function resource()
@@ -62,22 +59,23 @@ class Item extends Model
         array $search_parameters = []
     ): int
     {
-        $collection = $this->where('resource_id', '=', $resource_id)
-            ->join('resource', 'item.resource_id', 'resource.id')
-            ->where('resource.resource_type_id', '=', $resource_type_id);
+        $collection = $this->where('resource_id', '=', $resource_id)->
+            join('item_type_allocated_expense', 'item.id', 'item_type_allocated_expense.item_id')->
+            join('resource', 'item.resource_id', 'resource.id')->
+            where('resource.resource_type_id', '=', $resource_type_id);
 
         if (
             array_key_exists('year', $parameters) === true &&
             $parameters['year'] !== null
         ) {
-            $collection->whereRaw(DB::raw("YEAR(item.effective_date) = '{$parameters['year']}'"));
+            $collection->whereRaw(DB::raw("YEAR(item_type_allocated_expense.effective_date) = '{$parameters['year']}'"));
         }
 
         if (
             array_key_exists('month', $parameters) === true &&
             $parameters['month'] !== null
         ) {
-            $collection->whereRaw(DB::raw("MONTH(item.effective_date) = '{$parameters['month']}'"));
+            $collection->whereRaw(DB::raw("MONTH(item_type_allocated_expense.effective_date) = '{$parameters['month']}'"));
         }
 
         if (
@@ -98,14 +96,14 @@ class Item extends Model
             $collection->where('item_sub_category.sub_category_id', '=', $parameters['subcategory']);
         }
 
-        $collection = ModelUtility::applySearch($collection, $this->table, $search_parameters);
+        $collection = ModelUtility::applySearch($collection, 'item_type_allocated_expense', $search_parameters);
 
         if (
             array_key_exists('include-unpublished', $parameters) === false ||
             General::booleanValue($parameters['include-unpublished']) === false
         ) {
             $collection->where(function ($collection) {
-                $collection->whereNull('item.publish_after')->orWhereRaw('item.publish_after < NOW()');
+                $collection->whereNull('item_type_allocated_expense.publish_after')->orWhereRaw('item_type_allocated_expense.publish_after < NOW()');
             });
         }
 
@@ -137,20 +135,21 @@ class Item extends Model
     {
         $select_fields = [
             'item.id AS item_id',
-            'item.description AS item_description',
-            'item.effective_date AS item_effective_date',
-            'item.total AS item_total',
-            'item.percentage AS item_percentage',
-            'item.actualised_total AS item_actualised_total',
+            'item_type_allocated_expense.description AS item_description',
+            'item_type_allocated_expense.effective_date AS item_effective_date',
+            'item_type_allocated_expense.total AS item_total',
+            'item_type_allocated_expense.percentage AS item_percentage',
+            'item_type_allocated_expense.actualised_total AS item_actualised_total',
             'item.created_at AS item_created_at'
         ];
 
         $category_join = false;
         $subcategory_join = false;
 
-        $collection = $this->where('resource_id', '=', $resource_id)
-            ->join('resource', 'item.resource_id', 'resource.id')
-            ->where('resource.resource_type_id', '=', $resource_type_id);
+        $collection = $this->where('resource_id', '=', $resource_id)->
+            join('item_type_allocated_expense', 'item.id', 'item_type_allocated_expense.item_id')->
+            join('resource', 'item.resource_id', 'resource.id')->
+            where('resource.resource_type_id', '=', $resource_type_id);
 
         if (
             array_key_exists('include-categories', $parameters) === true &&
@@ -192,12 +191,12 @@ class Item extends Model
 
         if (array_key_exists('year', $parameters) === true &&
             $parameters['year'] !== null) {
-            $collection->whereRaw(\DB::raw("YEAR(item.effective_date) = '{$parameters['year']}'"));
+            $collection->whereRaw(DB::raw("YEAR(item_type_allocated_expense.effective_date) = '{$parameters['year']}'"));
         }
 
         if (array_key_exists('month', $parameters) === true &&
             $parameters['month'] !== null) {
-            $collection->whereRaw(\DB::raw("MONTH(item.effective_date) = '{$parameters['month']}'"));
+            $collection->whereRaw(DB::raw("MONTH(item_type_allocated_expense.effective_date) = '{$parameters['month']}'"));
         }
 
         if (
@@ -220,14 +219,14 @@ class Item extends Model
             $collection->where('item_sub_category.sub_category_id', '=', $parameters['subcategory']);
         }
 
-        $collection = ModelUtility::applySearch($collection, $this->table, $search_parameters);
+        $collection = ModelUtility::applySearch($collection, 'item_type_allocated_expense', $search_parameters);
 
         if (
             array_key_exists('include-unpublished', $parameters) === false ||
             General::booleanValue($parameters['include-unpublished']) === false
         ) {
             $collection->where(function ($collection) {
-                $collection->whereNull('item.publish_after')->orWhereRaw('item.publish_after < NOW()');
+                $collection->whereNull('item_type_allocated_expense.publish_after')->orWhereRaw('item_type_allocated_expense.publish_after < NOW()');
             });
         }
 
@@ -238,13 +237,20 @@ class Item extends Model
                         $collection->orderBy('item.created_at', $direction);
                         break;
 
+                    case 'actualised_total':
+                    case 'description':
+                    case 'effective_date':
+                    case 'total':
+                        $collection->orderBy('item_type_allocated_expense.' . $field, $direction);
+                        break;
+
                     default:
                         $collection->orderBy('item.' . $field, $direction);
                         break;
                 }
             }
         } else {
-            $collection->orderBy('item.effective_date', 'desc');
+            $collection->orderBy('item_type_allocated_expense.effective_date', 'desc');
             $collection->orderBy('item.created_at', 'desc');
         }
 
@@ -270,15 +276,16 @@ class Item extends Model
     ): ?array
     {
         $result = $this->where('resource_id', '=', $resource_id)->
+            join('item_type_allocated_expense', 'item.id', 'item_type_allocated_expense.item_id')->
             join('resource', 'item.resource_id', 'resource.id')->
             where('resource.resource_type_id', '=', $resource_type_id)->
             select(
                 'item.id AS item_id',
-                'item.description AS item_description',
-                'item.effective_date AS item_effective_date',
-                'item.total AS item_total',
-                'item.percentage AS item_percentage',
-                'item.actualised_total AS item_actualised_total',
+                'item_type_allocated_expense.description AS item_description',
+                'item_type_allocated_expense.effective_date AS item_effective_date',
+                'item_type_allocated_expense.total AS item_total',
+                'item_type_allocated_expense.percentage AS item_percentage',
+                'item_type_allocated_expense.actualised_total AS item_actualised_total',
                 'item.created_at AS item_created_at'
             )
             ->find($item_id);
@@ -297,16 +304,17 @@ class Item extends Model
     ): ?Item
     {
         return $this->where('resource_id', '=', $resource_id)->
+            join('item_type_allocated_expense', 'item.id', 'item_type_allocated_expense.item_id')->
             join('resource', 'item.resource_id', 'resource.id')->
             where('resource.resource_type_id', '=', $resource_type_id)->
             select(
                 'item.id',
-                'item.description',
-                'item.effective_date',
-                'item.publish_after',
-                'item.total',
-                'item.percentage',
-                'item.actualised_total',
+                'item_type_allocated_expense.description',
+                'item_type_allocated_expense.effective_date',
+                'item_type_allocated_expense.publish_after',
+                'item_type_allocated_expense.total',
+                'item_type_allocated_expense.percentage',
+                'item_type_allocated_expense.actualised_total',
                 'item.created_at'
             )
             ->find($item_id);
@@ -315,21 +323,58 @@ class Item extends Model
     /**
      * Convert the model instance to an array for use with the transformer
      *
-     * @param Item
+     * @param Item $item
+     * @param ItemTypeAllocatedExpense $item_type
      *
      * @return array
      */
-    public function instanceToArray(Item $item): array
+    public function instanceToArray(Item $item, ItemTypeAllocatedExpense $item_type): array
     {
         return [
             'item_id' => $item->id,
-            'item_description' => $item->description,
-            'item_effective_date' => $item->effective_date,
-            'item_publish_after' => $item->publish_after,
-            'item_total' => $item->total,
-            'item_percentage' => $item->percentage,
-            'item_actualised_total' => $item->item_actualised_total,
+            'item_description' => $item_type->description,
+            'item_effective_date' => $item_type->effective_date,
+            'item_publish_after' => $item_type->publish_after,
+            'item_total' => $item_type->total,
+            'item_percentage' => $item_type->percentage,
+            'item_actualised_total' => $item_type->actualised_total,
             'item_created_at' => $item->created_at->toDateTimeString()
         ];
+    }
+
+    /**
+     * Validate that the item exists and is accessible to the user for
+     * viewing, editing etc. based on their permitted resource types
+     *
+     * @param integer $resource_type_id
+     * @param integer $resource_id
+     * @param integer $item_id
+     * @param array $permitted_resource_types
+     * @param boolean $manage Should be exclude public items as we are checking
+     * a management route
+     *
+     * @return boolean
+     */
+    public function existsToUser(
+        int $resource_type_id,
+        int $resource_id,
+        int $item_id,
+        array $permitted_resource_types,
+        $manage = false
+    ): bool
+    {
+        $collection = $this->join('resource', 'item.resource_id', 'resource.id')->
+            join('resource_type', 'resource.resource_type_id', 'resource_type.id')->
+            where('resource.resource_type_id', '=', $resource_type_id)->
+            where('resource.id', '=', $resource_id)->
+            where('item.id', '=', $item_id);
+
+        $collection = ModelUtility::applyResourceTypeCollectionCondition(
+            $collection,
+            $permitted_resource_types,
+            ($manage === true) ? false : true
+        );
+
+        return (count($collection->get()) === 1) ? true : false;
     }
 }

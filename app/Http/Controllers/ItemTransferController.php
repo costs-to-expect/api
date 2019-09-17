@@ -33,7 +33,13 @@ class ItemTransferController extends Controller
         string $item_id
     ): JsonResponse
     {
-        Route::itemRoute($resource_type_id, $resource_id, $item_id);
+        Route::item(
+            $resource_type_id,
+            $resource_id,
+            $item_id,
+            $this->permitted_resource_types,
+            true
+        );
 
         $validator = (new ItemTransferValidator)->create(
             [
@@ -68,10 +74,14 @@ class ItemTransferController extends Controller
         string $item_id
     ): JsonResponse
     {
-        Route::itemRoute($resource_type_id, $resource_id, $item_id);
+        $authenticated = Route::item(
+            $resource_type_id,
+            $resource_id,
+            $item_id,
+            $this->permitted_resource_types
+        );
 
         $post = Post::init()->
-            setDescription('route-descriptions.item_transfer_POST')->
             setFields('api.item-transfer.fields')->
             setConditionalFields(
                 $this->conditionalPostParameters(
@@ -79,6 +89,8 @@ class ItemTransferController extends Controller
                     $resource_id
                 )
             )->
+            setDescription('route-descriptions.item_transfer_POST')->
+            setAuthenticationStatus($authenticated)->
             setAuthenticationRequired(true)->
             option();
 

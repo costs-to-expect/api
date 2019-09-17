@@ -40,7 +40,10 @@ class ResourceController extends Controller
      */
     public function index(string $resource_type_id): JsonResponse
     {
-        Route::resourceTypeRoute($resource_type_id);
+        Route::resourceType(
+            $resource_type_id,
+            $this->permitted_resource_types
+        );
 
         $search_parameters = SearchParameters::fetch(
             Config::get('api.resource.searchable')
@@ -48,7 +51,8 @@ class ResourceController extends Controller
 
         $total = (new Resource())->totalCount(
             $resource_type_id,
-            $this->include_private,
+            $this->permitted_resource_types,
+            $this->include_public,
             $search_parameters
         );
 
@@ -118,7 +122,11 @@ class ResourceController extends Controller
         string $resource_id
     ): JsonResponse
     {
-        Route::resourceRoute($resource_type_id, $resource_id);
+        Route::resource(
+            $resource_type_id,
+            $resource_id,
+            $this->permitted_resource_types
+        );
 
         $resource = (new Resource)->single($resource_type_id, $resource_id);
 
@@ -144,19 +152,24 @@ class ResourceController extends Controller
      */
     public function optionsIndex(string $resource_type_id): JsonResponse
     {
-        Route::resourceTypeRoute($resource_type_id);
+        $authenticated = Route::resourceType(
+            $resource_type_id,
+            $this->permitted_resource_types
+        );
 
         $get = Get::init()->
-            setDescription('route-descriptions.resource_GET_index')->
             setSortable('api.resource.sortable')->
             setSearchable('api.resource.searchable')->
             setPaginationOverride(true)->
             setParameters('api.resource.parameters.collection')->
+            setAuthenticationStatus($authenticated)->
+            setDescription('route-descriptions.resource_GET_index')->
             option();
 
         $post = Post::init()->
-            setDescription('route-descriptions.resource_POST')->
             setFields('api.resource.fields')->
+            setDescription('route-descriptions.resource_POST')->
+            setAuthenticationStatus($authenticated)->
             setAuthenticationRequired(true)->
             option();
 
@@ -176,7 +189,11 @@ class ResourceController extends Controller
      */
     public function optionsShow(string $resource_type_id, string $resource_id): JsonResponse
     {
-        Route::resourceRoute($resource_type_id, $resource_id);
+        $authenticated = Route::resource(
+            $resource_type_id,
+            $resource_id,
+            $this->permitted_resource_types
+        );
 
         $resource = (new Resource)->single(
             $resource_type_id,
@@ -188,19 +205,22 @@ class ResourceController extends Controller
         }
 
         $get = Get::init()->
-            setDescription('route-descriptions.resource_GET_show')->
             setParameters('api.resource.parameters.item')->
+            setAuthenticationStatus($authenticated)->
+            setDescription('route-descriptions.resource_GET_show')->
             option();
 
         $delete = Delete::init()->
             setDescription('route-descriptions.resource_DELETE')->
             setAuthenticationRequired(true)->
+            setAuthenticationStatus($authenticated)->
             option();
 
         $patch = Patch::init()->
-            setDescription('route-descriptions.resource_PATCH')->
             setFields('api.resource.fields')->
+            setDescription('route-descriptions.resource_PATCH')->
             setAuthenticationRequired(true)->
+            setAuthenticationStatus($authenticated)->
             option();
 
         return $this->optionsResponse(
@@ -218,7 +238,11 @@ class ResourceController extends Controller
      */
     public function create(string $resource_type_id): JsonResponse
     {
-        Route::resourceTypeRoute($resource_type_id);
+        Route::resourceType(
+            $resource_type_id,
+            $this->permitted_resource_types,
+            true
+        );
 
         $validator = (new ResourceValidator)->create(['resource_type_id' => $resource_type_id]);
         UtilityRequest::validateAndReturnErrors($validator);
@@ -254,7 +278,12 @@ class ResourceController extends Controller
         string $resource_id
     ): JsonResponse
     {
-        Route::resourceRoute($resource_type_id, $resource_id);
+        Route::resource(
+            $resource_type_id,
+            $resource_id,
+            $this->permitted_resource_types,
+            true
+        );
 
         try {
             (new Resource())->find($resource_id)->delete();
@@ -280,7 +309,12 @@ class ResourceController extends Controller
         string $resource_id
     ): JsonResponse
     {
-        Route::resourceRoute($resource_type_id, $resource_id);
+        Route::resource(
+            $resource_type_id,
+            $resource_id,
+            $this->permitted_resource_types,
+            true
+        );
 
         $resource = (new Resource())->instance($resource_type_id, $resource_id);
 

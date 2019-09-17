@@ -22,7 +22,10 @@ class SummaryCategoryController extends Controller
      */
     public function index(): JsonResponse
     {
-        $summary = (new Category())->totalCount($this->include_private);
+        $summary = (new Category())->totalCount(
+            $this->permitted_resource_types,
+            $this->include_public
+        );
 
         return response()->json(
             [
@@ -46,6 +49,7 @@ class SummaryCategoryController extends Controller
     {
         $get = Get::init()->
             setDescription('route-descriptions.summary_category_GET_index')->
+            setAuthenticationStatus(($this->user_id !== null) ? true : false)->
             option();
 
         return $this->optionsResponse($get, 200);

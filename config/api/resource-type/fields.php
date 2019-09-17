@@ -23,10 +23,10 @@ return [
         ],
         'required' => true
     ],
-    'private' => [
-        'field' => 'private',
-        'title' => 'resource-type/fields.title-private',
-        'description' => 'resource-type/fields.description-private',
+    'public' => [
+        'field' => 'public',
+        'title' => 'resource-type/fields.title-public',
+        'description' => 'resource-type/fields.description-public',
         'type' => 'boolean',
         'required' => true
     ]

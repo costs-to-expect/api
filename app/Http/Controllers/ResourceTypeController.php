@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\PermittedUser;
 use App\Models\Resource;
 use App\Option\Delete;
 use App\Option\Get;
@@ -20,6 +21,7 @@ use App\Validators\Request\SortParameters;
 use Exception;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Config;
 
 /**
@@ -45,7 +47,8 @@ class ResourceTypeController extends Controller
         );
 
         $total = (new ResourceType())->totalCount(
-            $this->include_private,
+            $this->permitted_resource_types,
+            $this->include_public,
             $search_parameters
         );
 
@@ -64,7 +67,8 @@ class ResourceTypeController extends Controller
             paging();
 
         $resource_types = (new ResourceType())->paginatedCollection(
-            $this->include_private,
+            $this->permitted_resource_types,
+            $this->include_public,
             $pagination['offset'],
             $pagination['limit'],
             $search_parameters,
@@ -111,13 +115,17 @@ class ResourceTypeController extends Controller
      */
     public function show(string $resource_type_id): JsonResponse
     {
-        Route::resourceTypeRoute($resource_type_id);
+        Route::resourceType(
+            $resource_type_id,
+            $this->permitted_resource_types
+        );
 
         $parameters = Parameters::fetch(['include-resources']);
 
         $resource_type = (new ResourceType())->single(
             $resource_type_id,
-            $this->include_private
+            $this->permitted_resource_types,
+            $this->include_public
         );
 
         if ($resource_type === null) {
@@ -151,15 +159,17 @@ class ResourceTypeController extends Controller
     public function optionsIndex(): JsonResponse
     {
         $get = Get::init()->
-            setDescription('route-descriptions.resource_type_GET_index')->
             setSortable('api.resource-type.sortable')->
             setSearchable('api.resource-type.searchable')->
             setPaginationOverride(true)->
+            setDescription('route-descriptions.resource_type_GET_index')->
+            setAuthenticationStatus(($this->user_id !== null) ? true : false)->
             option();
 
         $post = Post::init()->
-            setDescription('route-descriptions.resource_type_POST')->
             setFields('api.resource-type.fields')->
+            setDescription('route-descriptions.resource_type_POST')->
+            setAuthenticationStatus(($this->user_id !== null) ? true : false)->
             setAuthenticationRequired(true)->
             option();
 
@@ -178,22 +188,28 @@ class ResourceTypeController extends Controller
      */
     public function optionsShow(string $resource_type_id): JsonResponse
     {
-        Route::resourceTypeRoute($resource_type_id);
+        $authenticated = Route::resourceType(
+            $resource_type_id,
+            $this->permitted_resource_types
+        );
 
         $get = Get::init()->
-            setDescription('route-descriptions.resource_type_GET_show')->
             setParameters('api.resource-type.parameters.item')->
+            setDescription('route-descriptions.resource_type_GET_show')->
+            setAuthenticationStatus($authenticated)->
             option();
 
         $delete = Delete::init()->
             setDescription('route-descriptions.resource_type_DELETE')->
             setAuthenticationRequired(true)->
+            setAuthenticationStatus($authenticated)->
             option();
 
         $patch = Patch::init()->
-            setDescription('route-descriptions.resource_type_PATCH')->
             setFields('api.resource-type.fields')->
+            setDescription('route-descriptions.resource_type_PATCH')->
             setAuthenticationRequired(true)->
+            setAuthenticationStatus($authenticated)->
             option();
 
         return $this->optionsResponse(
@@ -209,16 +225,24 @@ class ResourceTypeController extends Controller
      */
     public function create(): JsonResponse
     {
-        $validator = (new ResourceTypeValidator)->create();
+        $validator = (new ResourceTypeValidator)->create([
+            'user_id' => Auth::user()->id
+        ]);
         UtilityRequest::validateAndReturnErrors($validator);
 
         try {
             $resource_type = new ResourceType([
                 'name' => request()->input('name'),
                 'description' => request()->input('description'),
-                'private' => request()->input('private', 0)
+                'public' => request()->input('public', 0)
             ]);
             $resource_type->save();
+
+            $permitted_users = new PermittedUser([
+                'resource_type_id' => $resource_type->id,
+                'user_id' => Auth::user()->id
+            ]);
+            $permitted_users->save();
         } catch (Exception $e) {
             UtilityResponse::failedToSaveModelForCreate();
         }
@@ -240,9 +264,14 @@ class ResourceTypeController extends Controller
         string $resource_type_id
     ): JsonResponse
     {
-        Route::resourceTypeRoute($resource_type_id);
+        Route::resourceType(
+            $resource_type_id,
+            $this->permitted_resource_types,
+            true
+        );
 
         try {
+            (new PermittedUser())->instance($resource_type_id, Auth::user()->id)->delete();
             (new ResourceType())->find($resource_type_id)->delete();
             UtilityResponse::successNoContent();
         } catch (QueryException $e) {
@@ -263,7 +292,11 @@ class ResourceTypeController extends Controller
         string $resource_type_id
     ): JsonResponse
     {
-        Route::resourceTypeRoute($resource_type_id);
+        Route::resourceType(
+            $resource_type_id,
+            $this->permitted_resource_types,
+            true
+        );
 
         $resource_type = (new ResourceType())->instance($resource_type_id);
 
@@ -274,7 +307,8 @@ class ResourceTypeController extends Controller
         UtilityRequest::checkForEmptyPatch();
 
         $validator = (new ResourceTypeValidator())->update([
-            'resource_type_id' => intval($resource_type_id)
+            'resource_type_id' => intval($resource_type_id),
+            'user_id' => Auth::user()->id
         ]);
         UtilityRequest::validateAndReturnErrors($validator);
 

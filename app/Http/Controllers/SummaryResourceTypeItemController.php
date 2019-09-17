@@ -39,7 +39,10 @@ class SummaryResourceTypeItemController extends Controller
      */
     public function index(Request $request, string $resource_type_id): JsonResponse
     {
-        Route::resourceTypeRoute($resource_type_id);
+        Route::resourceType(
+            $resource_type_id,
+            $this->permitted_resource_types
+        );
 
         $this->resource_type_id = $resource_type_id;
 
@@ -489,12 +492,16 @@ class SummaryResourceTypeItemController extends Controller
      */
     public function optionsIndex(Request $request, string $resource_type_id): JsonResponse
     {
-        Route::resourceTypeRoute($resource_type_id);
+        Route::resourceType(
+            $resource_type_id,
+            $this->permitted_resource_types
+        );
 
         $get = Get::init()->
-            setDescription('route-descriptions.summary-resource-type-item-GET-index')->
             setSearchable('api.resource-type-item.searchable')->
             setParameters('api.resource-type-item.summary-parameters.collection')->
+            setDescription('route-descriptions.summary-resource-type-item-GET-index')->
+            setAuthenticationStatus(($this->user_id !== null) ? true : false)->
             option();
 
         return $this->optionsResponse($get, 200);

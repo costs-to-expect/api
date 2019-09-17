@@ -28,12 +28,12 @@ class ConvertRouteParameters
 
         $route_params = [
             'category_id' => new Hashids(Config::get('api.hashids.category'), $min_length),
-            'sub_category_id' => new Hashids(Config::get('api.hashids.sub_category'), $min_length),
+            'subcategory_id' => new Hashids(Config::get('api.hashids.subcategory'), $min_length),
             'resource_type_id' => new Hashids(Config::get('api.hashids.resource_type'), $min_length),
             'resource_id' => new Hashids(Config::get('api.hashids.resource'), $min_length),
             'item_id' => new Hashids(Config::get('api.hashids.item'), $min_length),
             'item_category_id' => new Hashids(Config::get('api.hashids.item_category'), $min_length),
-            'item_sub_category_id' => new Hashids(Config::get('api.hashids.item_sub_category'), $min_length),
+            'item_subcategory_id' => new Hashids(Config::get('api.hashids.item_subcategory'), $min_length),
         ];
 
         foreach ($route_params as $param => $hasher) {

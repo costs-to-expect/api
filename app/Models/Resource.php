@@ -36,14 +36,16 @@ class Resource extends Model
      * Return the total number of resources
      *
      * @param integer $resource_type_id
-     * @param boolean $include_private Include resources attached to private resource types
+     * @param array $permitted_resource_types
+     * @param boolean $include_public Include resources attached to public resource types
      * @param array $search_parameters
      *
      * @return integer
      */
     public function totalCount(
         int $resource_type_id,
-        bool $include_private = false,
+        array $permitted_resource_types,
+        bool $include_public,
         array $search_parameters = []
     ): int
     {
@@ -51,9 +53,11 @@ class Resource extends Model
             join('resource_type', 'resource.resource_type_id', 'resource_type.id')->
             where('resource_type.id', '=', $resource_type_id);
 
-        if ($include_private === false) {
-            $collection->where('resource_type.private', '=', 0);
-        }
+        $collection = ModelUtility::applyResourceTypeCollectionCondition(
+            $collection,
+            $permitted_resource_types,
+            $include_public
+        );
 
         $collection = ModelUtility::applySearch($collection, $this->table, $search_parameters);
 
@@ -190,5 +194,37 @@ class Resource extends Model
             )->
             where('resource_type_id', '=', $resource_type_id)->
             find($resource_id);
+    }
+
+    /**
+     * Validate that the resource exists and is accessible to the user for
+     * viewing, editing etc. based on their permitted resource types
+     *
+     * @param integer $resource_id
+     * @param integer $resource_type_id
+     * @param array $permitted_resource_types
+     * @param boolean $manage Should be exclude public items as we are checking
+     * a management route
+     *
+     * @return boolean
+     */
+    public function existsToUser(
+        int $resource_id,
+        int $resource_type_id,
+        array $permitted_resource_types,
+        $manage = false
+    ): bool
+    {
+        $collection = $this->join('resource_type', 'resource.resource_type_id', 'resource_type.id')->
+            where('resource.resource_type_id', '=', $resource_type_id)->
+            where('resource.id', '=', $resource_id);
+
+        $collection = ModelUtility::applyResourceTypeCollectionCondition(
+            $collection,
+            $permitted_resource_types,
+            ($manage === true) ? false : true
+        );
+
+        return (count($collection->get()) === 1) ? true : false;
     }
 }

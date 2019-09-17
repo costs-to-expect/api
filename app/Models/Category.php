@@ -46,14 +46,16 @@ class Category extends Model
     }
 
     /**
-     * @param boolean $include_private
+     * @param array $permitted_resource_types
+     * @param boolean $include_public
      * @param array $parameters
      * @param array $search_parameters
      *
      * @return integer
      */
     public function totalCount(
-        bool $include_private,
+        array $permitted_resource_types,
+        bool $include_public,
         array $parameters = [],
         array $search_parameters = []
     ): int
@@ -68,9 +70,11 @@ class Category extends Model
             $collection->where('category.resource_type_id', '=', $parameters['resource_type']);
         }
 
-        if ($include_private === false) {
-            $collection->where('resource_type.private', '=', 0);
-        }
+        $collection = ModelUtility::applyResourceTypeCollectionCondition(
+            $collection,
+            $permitted_resource_types,
+            $include_public
+        );
 
         $collection = ModelUtility::applySearch($collection, $this->table, $search_parameters);
 
@@ -80,7 +84,8 @@ class Category extends Model
     /**
      * Return the paginated collection
      *
-     * @param boolean $include_private Should we include private categories?
+     * @param array $permitted_resource_types
+     * @param boolean $include_public Should we include categories assigned to public resources
      * @param integer $offset
      * @param integer $limit
      * @param array $parameters
@@ -90,7 +95,8 @@ class Category extends Model
      * @return array
      */
     public function paginatedCollection(
-        bool $include_private,
+        array $permitted_resource_types,
+        bool $include_public,
         int $offset = 0,
         int $limit = 10,
         array $parameters = [],
@@ -124,9 +130,11 @@ class Category extends Model
             $collection->where('category.resource_type_id', '=', $parameters['resource_type']);
         }
 
-        if ($include_private === false) {
-            $collection->where('resource_type.private', '=', 0);
-        }
+        $collection = ModelUtility::applyResourceTypeCollectionCondition(
+            $collection,
+            $permitted_resource_types,
+            $include_public
+        );
 
         $collection = ModelUtility::applySearch($collection, $this->table, $search_parameters);
 
@@ -232,5 +240,34 @@ class Category extends Model
             'category_created_at' => $category->created_at->toDateTimeString(),
             'resource_type_id' => $category->resource_type_id
         ];
+    }
+
+    /**
+     * Validate that the category exists and is accessible to the user for
+     * viewing, editing based on their permitted resource types
+     *
+     * @param integer $category_id
+     * @param array $permitted_resource_types
+     * @param boolean $manage Should be exclude public items as we are checking
+     * a management route
+     *
+     * @return boolean
+     */
+    public function existsToUser(
+        int $category_id,
+        array $permitted_resource_types,
+        $manage = false
+    ): bool
+    {
+        $collection = $this->where('category.id', '=', $category_id)->
+            join('resource_type', 'category.resource_type_id', 'resource_type.id');
+
+        $collection = ModelUtility::applyResourceTypeCollectionCondition(
+            $collection,
+            $permitted_resource_types,
+            ($manage === true) ? false : true
+        );
+
+        return (count($collection->get()) === 1) ? true : false;
     }
 }

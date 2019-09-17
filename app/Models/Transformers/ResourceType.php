@@ -44,7 +44,7 @@ class ResourceType extends Transformer
             'name' => $this->data_to_transform['resource_type_name'],
             'description' => $this->data_to_transform['resource_type_description'],
             'created' => $this->data_to_transform['resource_type_created_at'],
-            'public' => !boolval($this->data_to_transform['resource_type_private']),
+            'public' => boolval($this->data_to_transform['resource_type_public']),
         ];
 
         if (array_key_exists('resource_type_resources', $this->data_to_transform)) {

@@ -46,7 +46,8 @@ class CategoryController extends Controller
         );
 
         $total = (new Category())->totalCount(
-            $this->include_private,
+            $this->permitted_resource_types,
+            $this->include_public,
             [],
             $search_parameters
         );
@@ -66,7 +67,8 @@ class CategoryController extends Controller
             paging();
 
         $categories = (new Category())->paginatedCollection(
-            $this->include_private,
+            $this->permitted_resource_types,
+            $this->include_public,
             $pagination['offset'],
             $pagination['limit'],
             [],
@@ -114,7 +116,10 @@ class CategoryController extends Controller
      */
     public function show($category_id): JsonResponse
     {
-        Route::categoryRoute($category_id);
+        Route::category(
+            $category_id,
+            $this->permitted_resource_types
+        );
 
         $parameters = Parameters::fetch(['include-subcategories']);
 
@@ -154,18 +159,20 @@ class CategoryController extends Controller
     public function optionsIndex(): JsonResponse
     {
         $get = Get::init()->
-            setDescription('route-descriptions.category_GET_index')->
             setParameters('api.category.parameters.collection')->
             setSortable('api.category.sortable')->
             setSearchable('api.category.searchable')->
             setPaginationOverride(true)->
+            setAuthenticationStatus(($this->user_id !== null) ? true : false)->
+            setDescription('route-descriptions.category_GET_index')->
             option();
 
         $post = Post::init()->
-            setDescription('route-descriptions.category_POST')->
-            setAuthenticationRequired(true)->
             setFields('api.category.fields')->
             setConditionalFields($this->conditionalPostParameters())->
+            setAuthenticationRequired(true)->
+            setAuthenticationStatus(($this->user_id !== null) ? true : false)->
+            setDescription('route-descriptions.category_POST')->
             option();
 
         return $this->optionsResponse(
@@ -183,21 +190,27 @@ class CategoryController extends Controller
      */
     public function optionsShow(string $category_id): JsonResponse
     {
-        Route::categoryRoute($category_id);
+        $authenticated = Route::category(
+            $category_id,
+            $this->permitted_resource_types
+        );
 
         $get = Get::init()->
-            setDescription('route-descriptions.category_GET_show')->
             setParameters('api.category.parameters.item')->
+            setAuthenticationStatus($authenticated)->
+            setDescription('route-descriptions.category_GET_show')->
             option();
 
         $delete = Delete::init()->
-            setDescription('route-descriptions.category_DELETE')->
             setAuthenticationRequired(true)->
+            setAuthenticationStatus($authenticated)->
+            setDescription('route-descriptions.category_DELETE')->
             option();
 
         $patch = Patch::init()->
-            setDescription('route-descriptions.category_PATCH')->
             setFields('api.category.fields-patch')->
+            setDescription('route-descriptions.category_PATCH')->
+            setAuthenticationStatus($authenticated)->
             setAuthenticationRequired(true)->
             option();
 
@@ -251,7 +264,11 @@ class CategoryController extends Controller
         string $category_id
     ): JsonResponse
     {
-        Route::categoryRoute($category_id);
+        Route::category(
+            $category_id,
+            $this->permitted_resource_types,
+            true
+        );
 
         try {
             (new Category())->find($category_id)->delete();
@@ -270,7 +287,10 @@ class CategoryController extends Controller
      */
     private function conditionalPostParameters(): array
     {
-        $resource_types = (new ResourceType())->minimisedCollection($this->include_private);
+        $resource_types = (new ResourceType())->minimisedCollection(
+            $this->permitted_resource_types,
+            $this->include_public
+        );
 
         $conditional_post_fields = ['resource_type_id' => []];
         foreach ($resource_types as $resource_type) {
@@ -301,7 +321,11 @@ class CategoryController extends Controller
         string $category_id
     ): JsonResponse
     {
-        Route::categoryRoute($category_id);
+        Route::category(
+            $category_id,
+            $this->permitted_resource_types,
+            true
+        );
 
         $category = (new Category())->instance($category_id);
 

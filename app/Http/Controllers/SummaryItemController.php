@@ -40,7 +40,11 @@ class SummaryItemController extends Controller
      */
     public function index(Request $request, string $resource_type_id, string $resource_id): JsonResponse
     {
-        Route::resourceRoute($resource_type_id, $resource_id);
+        Route::resource(
+            $resource_type_id,
+            $resource_id,
+            $this->permitted_resource_types
+        );
 
         $this->resource_type_id = $resource_type_id;
         $this->resource_id = $resource_id;
@@ -376,7 +380,10 @@ class SummaryItemController extends Controller
      */
     private function categorySummary(int $category_id): JsonResponse
     {
-        Route::categoryRoute($category_id);
+        Route::category(
+            $category_id,
+            $this->permitted_resource_types
+        );
 
         $summary = (new ItemSummary())->categorySummary(
             $this->resource_type_id,
@@ -408,7 +415,10 @@ class SummaryItemController extends Controller
      */
     private function subcategoriesSummary(int $category_id): JsonResponse
     {
-        Route::categoryRoute($category_id);
+        Route::category(
+            $category_id,
+            $this->permitted_resource_types
+        );
 
         $summary = (new ItemSummary())->subCategoriesSummary(
             $this->resource_type_id,
@@ -440,19 +450,23 @@ class SummaryItemController extends Controller
      * Return the subcategories summary for a category
      *
      * @param integer $category_id
-     * @param integer $sub_category_id
+     * @param integer $subcategory_id
      *
      * @return JsonResponse
      */
-    private function subcategorySummary(int $category_id, int $sub_category_id): JsonResponse
+    private function subcategorySummary(int $category_id, int $subcategory_id): JsonResponse
     {
-        Route::subCategoryRoute($category_id, $sub_category_id);
+        Route::subcategory(
+            $category_id,
+            $subcategory_id,
+            $this->permitted_resource_types
+        );
 
         $summary = (new ItemSummary())->subCategorySummary(
             $this->resource_type_id,
             $this->resource_id,
             $category_id,
-            $sub_category_id,
+            $subcategory_id,
             $this->include_unpublished
         );
 
@@ -481,12 +495,17 @@ class SummaryItemController extends Controller
      */
     public function optionsIndex(Request $request, string $resource_type_id, string $resource_id)
     {
-        Route::resourceRoute($resource_type_id, $resource_id);
+        Route::resource(
+            $resource_type_id,
+            $resource_id,
+            $this->permitted_resource_types
+        );
 
         $get = Get::init()->
-            setDescription('route-descriptions.summary_GET_resource-type_resource_items')->
-            setSearchable('api.item.searchable')->
             setParameters('api.item.summary-parameters.collection')->
+            setSearchable('api.item.searchable')->
+            setDescription('route-descriptions.summary_GET_resource-type_resource_items')->
+            setAuthenticationStatus(($this->user_id !== null) ? true : false)->
             option();
 
         return $this->optionsResponse($get, 200);

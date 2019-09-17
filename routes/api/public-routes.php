@@ -75,12 +75,12 @@ Route::group(
         );
 
         Route::get(
-            'categories/{category_id}/subcategories/{sub_category_id}',
+            'categories/{category_id}/subcategories/{subcategory_id}',
             'SubcategoryController@show'
         );
 
         Route::options(
-            'categories/{category_id}/subcategories/{sub_category_id}',
+            'categories/{category_id}/subcategories/{subcategory_id}',
             'SubcategoryController@optionsShow'
         );
 
@@ -180,12 +180,12 @@ Route::group(
         );
 
         Route::get(
-            'resource-types/{resource_type_id}/resources/{resource_id}/items/{item_id}/category/{item_category_id}/subcategory/{item_sub_category_id}',
+            'resource-types/{resource_type_id}/resources/{resource_id}/items/{item_id}/category/{item_category_id}/subcategory/{item_subcategory_id}',
             'ItemSubCategoryController@show'
         );
 
         Route::options(
-            'resource-types/{resource_type_id}/resources/{resource_id}/items/{item_id}/category/{item_category_id}/subcategory/{item_sub_category_id}',
+            'resource-types/{resource_type_id}/resources/{resource_id}/items/{item_id}/category/{item_category_id}/subcategory/{item_subcategory_id}',
             'ItemSubCategoryController@optionsShow'
         );
 

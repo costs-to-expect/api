@@ -33,7 +33,7 @@ class ItemSubCategory extends BaseValidator
 
         return array_merge(
             [
-                'sub_category_id' => [
+                'subcategory_id' => [
                     'required',
                     Rule::exists('sub_category', 'id')->where(function ($query)
                     {
@@ -57,14 +57,14 @@ class ItemSubCategory extends BaseValidator
     {
         $this->requiredIndexes(['category_id'], $options);
 
-        $decode = $this->hash->subCategory()->decode(request()->input('sub_category_id'));
-        $sub_category_id = null;
+        $decode = $this->hash->subCategory()->decode(request()->input('subcategory_id'));
+        $subcategory_id = null;
         if (count($decode) === 1) {
-            $sub_category_id = $decode[0];
+            $subcategory_id = $decode[0];
         }
 
         return ValidatorFacade::make(
-            ['sub_category_id' => $sub_category_id],
+            ['subcategory_id' => $subcategory_id],
             self::createRules(intval($options['category_id'])),
             $this->translateMessages('api.item-subcategory.validation.POST.messages')
         );

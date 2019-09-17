@@ -3,10 +3,10 @@
 declare(strict_types=1);
 
 return [
-    'sub_category_id' => [
-        'field' => 'sub_category_id',
-        'title' => 'item-subcategory/fields.title-sub_category_id',
-        'description' => 'item-subcategory/fields.description-sub_category_id',
+    'subcategory_id' => [
+        'field' => 'subcategory_id',
+        'title' => 'item-subcategory/fields.title-subcategory_id',
+        'description' => 'item-subcategory/fields.description-subcategory_id',
         'type' => 'string',
         'validation' => [
             'length' => 10

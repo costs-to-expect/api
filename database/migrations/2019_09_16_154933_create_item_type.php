@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateItemTable extends Migration
+class CreateItemType extends Migration
 {
     /**
      * Run the migrations.
@@ -13,19 +13,15 @@ class CreateItemTable extends Migration
      */
     public function up()
     {
-        Schema::create('item', function (Blueprint $table) {
+        Schema::create('item_type', function (Blueprint $table) {
             $table->charset = 'utf8mb4';
             $table->collation = 'utf8mb4_unicode_ci';
 
-            $table->bigIncrements('id');
-            $table->unsignedBigInteger('resource_id');
+            $table->tinyIncrements('id');
+            $table->string('name', 255);
             $table->string('description');
-            $table->date('effective_date');
-            $table->decimal('total', 10, 2);
-            $table->tinyInteger('percentage', false, true)->default(100);
-            $table->decimal('actualised_total', 10, 2);
             $table->timestamps();
-            $table->foreign('resource_id')->references('id')->on('resource');
+            $table->index('name');
         });
     }
 
@@ -36,6 +32,6 @@ class CreateItemTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('item');
+        Schema::dropIfExists('item_type');
     }
 }

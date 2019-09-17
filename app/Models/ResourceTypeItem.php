@@ -38,18 +38,19 @@ class ResourceTypeItem extends Model
         array $search_conditions = []
     ): int
     {
-        $collection = $this->join('resource', 'item.resource_id', 'resource.id')->
+        $collection = $this->join('item_type_allocated_expense', 'item.id', 'item_type_allocated_expense.item_id')->
+            join('resource', 'item.resource_id', 'resource.id')->
             join('resource_type', 'resource.resource_type_id', 'resource_type.id')->
             where('resource_type.id', '=', $resource_type_id);
 
         if (array_key_exists('year', $parameters_collection) === true &&
             $parameters_collection['year'] !== null) {
-            $collection->where(DB::raw('YEAR(item.effective_date)'), '=', $parameters_collection['year']);
+            $collection->where(DB::raw('YEAR(item_type_allocated_expense.effective_date)'), '=', $parameters_collection['year']);
         }
 
         if (array_key_exists('month', $parameters_collection) === true &&
             $parameters_collection['month'] !== null) {
-            $collection->where(DB::raw('MONTH(item.effective_date)'), '=', $parameters_collection['month']);
+            $collection->where(DB::raw('MONTH(item_type_allocated_expense.effective_date)'), '=', $parameters_collection['month']);
         }
 
         if (array_key_exists('category', $parameters_collection) === true &&
@@ -69,7 +70,7 @@ class ResourceTypeItem extends Model
 
         if (count($search_conditions) > 0) {
             foreach ($search_conditions as $field => $search_term) {
-                $collection->where('item.' . $field, 'LIKE', '%' . $search_term . '%');
+                $collection->where('item_type_allocated_expense.' . $field, 'LIKE', '%' . $search_term . '%');
             }
         }
 
@@ -78,7 +79,8 @@ class ResourceTypeItem extends Model
             $parameters_collection['include-unpublished'] === false
         ) {
             $collection->where(function ($collection) {
-                $collection->whereNull('item.publish_after')->orWhereRaw('item.publish_after < NOW()');
+                $collection->whereNull('item_type_allocated_expense.publish_after')->
+                    orWhereRaw('item_type_allocated_expense.publish_after < NOW()');
             });
         }
 
@@ -93,7 +95,7 @@ class ResourceTypeItem extends Model
      * @param int $offset
      * @param int $limit
      * @param array $parameters_collection
-     * @param array $sort_fields
+     * @param array $sort_parameters
      * @param array $search_conditions
      *
      * @return array
@@ -103,7 +105,7 @@ class ResourceTypeItem extends Model
         int $offset = 0,
         int $limit = 10,
         array $parameters_collection = [],
-        array $sort_fields = [],
+        array $sort_parameters = [],
         array $search_conditions = []
     ): array
     {
@@ -112,15 +114,16 @@ class ResourceTypeItem extends Model
             'resource.name AS resource_name',
             'resource.description AS resource_description',
             'item.id AS item_id',
-            'item.description AS item_description',
-            'item.effective_date AS item_effective_date',
-            'item.total AS item_total',
-            'item.percentage AS item_percentage',
-            'item.actualised_total AS item_actualised_total',
+            'item_type_allocated_expense.description AS item_description',
+            'item_type_allocated_expense.effective_date AS item_effective_date',
+            'item_type_allocated_expense.total AS item_total',
+            'item_type_allocated_expense.percentage AS item_percentage',
+            'item_type_allocated_expense.actualised_total AS item_actualised_total',
             'item.created_at AS item_created_at'
         ];
 
-        $collection = $this->join('resource', 'item.resource_id', 'resource.id')->
+        $collection = $this->join('item_type_allocated_expense', 'item.id', 'item_type_allocated_expense.item_id')->
+            join('resource', 'item.resource_id', 'resource.id')->
             join('resource_type', 'resource.resource_type_id', 'resource_type.id')->
             where('resource_type.id', '=', $resource_type_id);
 
@@ -167,12 +170,12 @@ class ResourceTypeItem extends Model
 
         if (array_key_exists('year', $parameters_collection) === true &&
             $parameters_collection['year'] !== null) {
-            $collection->where(DB::raw('YEAR(item.effective_date)'), '=', $parameters_collection['year']);
+            $collection->where(DB::raw('YEAR(item_type_allocated_expense.effective_date)'), '=', $parameters_collection['year']);
         }
 
         if (array_key_exists('month', $parameters_collection) === true &&
             $parameters_collection['month'] !== null) {
-            $collection->where(DB::raw('MONTH(item.effective_date)'), '=', $parameters_collection['month']);
+            $collection->where(DB::raw('MONTH(item_type_allocated_expense.effective_date)'), '=', $parameters_collection['month']);
         }
 
         if (array_key_exists('category', $parameters_collection) === true &&
@@ -195,7 +198,7 @@ class ResourceTypeItem extends Model
 
         if (count($search_conditions) > 0) {
             foreach ($search_conditions as $field => $search_term) {
-                $collection->where('item.' . $field, 'LIKE', '%' . $search_term . '%');
+                $collection->where('item_type_allocated_expense.' . $field, 'LIKE', '%' . $search_term . '%');
             }
         }
 
@@ -204,15 +207,23 @@ class ResourceTypeItem extends Model
             $parameters_collection['include-unpublished'] === false
         ) {
             $collection->where(function ($collection) {
-                $collection->whereNull('item.publish_after')->orWhereRaw('item.publish_after < NOW()');
+                $collection->whereNull('item_type_allocated_expense.publish_after')->
+                    orWhereRaw('item_type_allocated_expense.publish_after < NOW()');
             });
         }
 
-        if (count($sort_fields) > 0) {
-            foreach ($sort_fields as $field => $direction) {
+        if (count($sort_parameters) > 0) {
+            foreach ($sort_parameters as $field => $direction) {
                 switch ($field) {
                     case 'created':
                         $collection->orderBy('item.created_at', $direction);
+                        break;
+
+                    case 'actualised_total':
+                    case 'description':
+                    case 'effective_date':
+                    case 'total':
+                        $collection->orderBy('item_type_allocated_expense.' . $field, $direction);
                         break;
 
                     default:
@@ -221,7 +232,7 @@ class ResourceTypeItem extends Model
                 }
             }
         } else {
-            $collection->orderBy('item.effective_date', 'desc');
+            $collection->orderBy('item_type_allocated_expense.effective_date', 'desc');
             $collection->orderBy('item.created_at', 'desc');
         }
 
@@ -242,7 +253,8 @@ class ResourceTypeItem extends Model
      */
     public function summary(int $resource_type_id, bool $include_unpublished): array
     {
-        $collection = $this->selectRaw('sum(item.actualised_total) AS actualised_total')->
+        $collection = $this->selectRaw('sum(item_type_allocated_expense.actualised_total) AS actualised_total')->
+            join('item_type_allocated_expense', 'item.id', 'item_type_allocated_expense.item_id')->
             join('resource', 'item.resource_id', 'resource.id')->
             join('resource_type', 'resource.resource_type_id', 'resource_type.id')->
             where('resource_type.id', '=', $resource_type_id);
@@ -268,8 +280,9 @@ class ResourceTypeItem extends Model
         $collection = $this->selectRaw('
                 resource.id AS id, 
                 resource.name AS `name`, 
-                SUM(item.actualised_total) AS total'
+                SUM(item_type_allocated_expense.actualised_total) AS total'
             )->
+            join('item_type_allocated_expense', 'item.id', 'item_type_allocated_expense.item_id')->
             join('resource', 'item.resource_id', 'resource.id')->
             join('resource_type', 'resource.resource_type_id', 'resource_type.id')->
             where('resource_type.id', '=', $resource_type_id);
@@ -294,9 +307,10 @@ class ResourceTypeItem extends Model
     public function yearsSummary(int $resource_type_id, bool $include_unpublished): array
     {
         $collection = $this->selectRaw("
-                YEAR(item.effective_date) as year,
-                SUM(item.actualised_total) AS total"
+                YEAR(item_type_allocated_expense.effective_date) as year,
+                SUM(item_type_allocated_expense.actualised_total) AS total"
             )->
+            join('item_type_allocated_expense', 'item.id', 'item_type_allocated_expense.item_id')->
             join("resource", "resource.id", "item.resource_id")->
             join("resource_type", "resource_type.id", "resource.resource_type_id")->
             where("resource_type.id", "=", $resource_type_id);
@@ -322,13 +336,14 @@ class ResourceTypeItem extends Model
     public function monthsSummary(int $resource_type_id, int $year, bool $include_unpublished): array
     {
         $collection = $this->selectRaw("
-                MONTH(item.effective_date) as month, 
-                SUM(item.actualised_total) AS total"
+                MONTH(item_type_allocated_expense.effective_date) as month, 
+                SUM(item_type_allocated_expense.actualised_total) AS total"
             )->
+            join('item_type_allocated_expense', 'item.id', 'item_type_allocated_expense.item_id')->
             join("resource", "resource.id", "item.resource_id")->
             join("resource_type", "resource_type.id", "resource.resource_type_id")->
             where("resource_type.id", "=", $resource_type_id)->
-            where(DB::raw('YEAR(item.effective_date)'), '=', $year);
+            where(DB::raw('YEAR(item_type_allocated_expense.effective_date)'), '=', $year);
 
         $collection = $this->includeUnpublished($collection, $include_unpublished);
 
@@ -357,14 +372,15 @@ class ResourceTypeItem extends Model
     ): array
     {
         $collection = $this->selectRaw("
-                MONTH(item.effective_date) as month, 
-                SUM(item.actualised_total) AS total"
+                MONTH(item_type_allocated_expense.effective_date) as month, 
+                SUM(item_type_allocated_expense.actualised_total) AS total"
             )->
+            join('item_type_allocated_expense', 'item.id', 'item_type_allocated_expense.item_id')->
             join("resource", "resource.id", "item.resource_id")->
             join("resource_type", "resource_type.id", "resource.resource_type_id")->
             where("resource_type.id", "=", $resource_type_id)->
-            where(DB::raw('YEAR(item.effective_date)'), '=', $year)->
-            where(DB::raw('MONTH(item.effective_date)'), '=', $month);
+            where(DB::raw('YEAR(item_type_allocated_expense.effective_date)'), '=', $year)->
+            where(DB::raw('MONTH(item_type_allocated_expense.effective_date)'), '=', $month);
 
         $collection = $this->includeUnpublished($collection, $include_unpublished);
 
@@ -387,13 +403,14 @@ class ResourceTypeItem extends Model
     public function yearSummary(int $resource_type_id, int $year, bool $include_unpublished): array
     {
         $collection = $this->selectRaw("
-                YEAR(item.effective_date) as year, 
-                SUM(item.actualised_total) AS total"
+                YEAR(item_type_allocated_expense.effective_date) as year, 
+                SUM(item_type_allocated_expense.actualised_total) AS total"
             )->
+            join('item_type_allocated_expense', 'item.id', 'item_type_allocated_expense.item_id')->
             join("resource", "resource.id", "item.resource_id")->
             join("resource_type", "resource_type.id", "resource.resource_type_id")->
             where("resource_type.id", "=", $resource_type_id)->
-            where(DB::raw('YEAR(item.effective_date)'), '=', $year);
+            where(DB::raw('YEAR(item_type_allocated_expense.effective_date)'), '=', $year);
 
         $collection = $this->includeUnpublished($collection, $include_unpublished);
 
@@ -421,7 +438,8 @@ class ResourceTypeItem extends Model
                 category.id, 
                 category.name AS name, 
                 category.description AS description,
-                SUM(item.actualised_total) AS total')->
+                SUM(item_type_allocated_expense.actualised_total) AS total')->
+            join('item_type_allocated_expense', 'item.id', 'item_type_allocated_expense.item_id')->
             join("resource", "resource.id", "item.resource_id")->
             join("resource_type", "resource_type.id", "resource.resource_type_id")->
             join("item_category", "item_category.item_id", "item.id")->
@@ -457,7 +475,8 @@ class ResourceTypeItem extends Model
                 category.id, 
                 category.name AS name, 
                 category.description, 
-                SUM(item.actualised_total) AS total')->
+                SUM(item_type_allocated_expense.actualised_total) AS total')->
+            join('item_type_allocated_expense', 'item.id', 'item_type_allocated_expense.item_id')->
             join("resource", "resource.id", "item.resource_id")->
             join("resource_type", "resource_type.id", "resource.resource_type_id")->
             join("item_category", "item_category.item_id", "item.id")->
@@ -485,7 +504,8 @@ class ResourceTypeItem extends Model
     ): array
     {
         $collection = $this->
-            selectRaw('SUM(item.actualised_total) AS total')->
+            selectRaw('SUM(item_type_allocated_expense.actualised_total) AS total')->
+            join('item_type_allocated_expense', 'item.id', 'item_type_allocated_expense.item_id')->
             join("resource", "resource.id", "item.resource_id")->
             join("resource_type", "resource_type.id", "resource.resource_type_id")->
             join("item_category", "item_category.item_id", "item.id")->
@@ -501,14 +521,14 @@ class ResourceTypeItem extends Model
             $collection->where("sub_category.id", "=", $subcategory_id);
         }
         if ($year !== null) {
-            $collection->whereRaw(\DB::raw("YEAR(item.effective_date) = {$year}"));
+            $collection->whereRaw(DB::raw("YEAR(item_type_allocated_expense.effective_date) = {$year}"));
         }
         if ($month !== null) {
-            $collection->whereRaw(\DB::raw("MONTH(item.effective_date) = {$month}"));
+            $collection->whereRaw(DB::raw("MONTH(item_type_allocated_expense.effective_date) = {$month}"));
         }
         if (count($search_parameters) > 0) {
             foreach ($search_parameters as $field => $search_term) {
-                $collection->where('item.' . $field, 'LIKE', '%' . $search_term . '%');
+                $collection->where('item_type_allocated_expense.' . $field, 'LIKE', '%' . $search_term . '%');
             }
         }
 
@@ -538,7 +558,8 @@ class ResourceTypeItem extends Model
                 sub_category.id, 
                 sub_category.name AS name, 
                 sub_category.description AS description, 
-                SUM(item.actualised_total) AS total')->
+                SUM(item_type_allocated_expense.actualised_total) AS total')->
+            join('item_type_allocated_expense', 'item.id', 'item_type_allocated_expense.item_id')->
             join("resource", "resource.id", "item.resource_id")->
             join("resource_type", "resource_type.id", "resource.resource_type_id")->
             join("item_category", "item_category.item_id", "item.id")->
@@ -579,7 +600,8 @@ class ResourceTypeItem extends Model
                 sub_category.id, 
                 sub_category.name AS name, 
                 sub_category.description AS description, 
-                SUM(item.actualised_total) AS total')->
+                SUM(item_type_allocated_expense.actualised_total) AS total')->
+            join('item_type_allocated_expense', 'item.id', 'item_type_allocated_expense.item_id')->
             join("resource", "resource.id", "item.resource_id")->
             join("resource_type", "resource_type.id", "resource.resource_type_id")->
             join("item_category", "item_category.item_id", "item.id")->
@@ -611,8 +633,8 @@ class ResourceTypeItem extends Model
     {
         if ($include_unpublished === false) {
             $collection->where(function ($sql) {
-                $sql->whereNull('item.publish_after')->
-                    orWhereRaw('item.publish_after < NOW()');
+                $sql->whereNull('item_type_allocated_expense.publish_after')->
+                    orWhereRaw('item_type_allocated_expense.publish_after < NOW()');
             });
         }
 

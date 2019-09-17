@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace App\Validators\Request\Fields;
 
+use App\Rules\ResourceTypeName;
 use App\Validators\Request\Fields\Validator as BaseValidator;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Support\Facades\Config;
@@ -18,13 +19,36 @@ use Illuminate\Support\Facades\Validator as ValidatorFacade;
 class ResourceType extends BaseValidator
 {
     /**
-     * Create the validation rules for the update request
+     * Create the validation rules for the create request
      *
-     * @param integer $resource_type_id
+     * @param integer $user_id
      *
      * @return array
      */
-    private function updateRules(int $resource_type_id): array
+    private function createRules(int $user_id): array
+    {
+        return array_merge(
+            [
+                'name' => [
+                    'required',
+                    'string',
+                    'max:255',
+                    new ResourceTypeName($user_id)
+                ],
+            ],
+            Config::get('api.resource-type.validation.POST.fields')
+        );
+    }
+
+    /**
+     * Create the validation rules for the update request
+     *
+     * @param integer $resource_type_id
+     * @param integer $user_id
+     *
+     * @return array
+     */
+    private function updateRules(int $resource_type_id, int $user_id): array
     {
         return array_merge(
             [
@@ -32,7 +56,7 @@ class ResourceType extends BaseValidator
                     'sometimes',
                     'string',
                     'max:255',
-                    'unique:resource_type,name,'. $resource_type_id . ',id'
+                    new ResourceTypeName($user_id, $resource_type_id)
                 ],
             ],
             Config::get('api.resource-type.validation.PATCH.fields')
@@ -53,14 +77,9 @@ class ResourceType extends BaseValidator
      */
     public function create(array $options = []): Validator
     {
-        $messages = [];
-        foreach (Config::get('api.resource-type.validation.POST.messages') as $key => $custom_message) {
-            $messages[$key] = trans($custom_message);
-        };
-
         return ValidatorFacade::make(
             request()->all(),
-            Config::get('api.resource-type.validation.POST.fields'),
+            $this->createRules($options['user_id']),
             $this->translateMessages('api.resource-type.validation.POST.messages')
         );
     }
@@ -74,7 +93,7 @@ class ResourceType extends BaseValidator
     {
         return ValidatorFacade::make(
             request()->all(),
-            $this->updateRules($options['resource_type_id']),
+            $this->updateRules($options['resource_type_id'], $options['user_id']),
             $this->translateMessages('api.resource-type.validation.PATCH.messages')
         );
     }

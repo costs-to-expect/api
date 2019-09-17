@@ -3,8 +3,6 @@ declare(strict_types=1);
 
 namespace App\Option;
 
-use Illuminate\Support\Facades\Config;
-
 /**
  * Helper class to generate the data required to build the OPTIONS required for
  * a single HTTP Verb, in this case DELETE
@@ -13,55 +11,27 @@ use Illuminate\Support\Facades\Config;
  * @copyright G3D Development Limited 2018-2019
  * @license https://github.com/costs-to-expect/api/blob/master/LICENSE
  */
-class Delete
+class Delete extends Option
 {
-    /**
-     * @var Delete
-     */
-    static private $instance;
-
-    /**
-     * @var boolean
-     */
-    static private $authentication;
-
-    /**
-     * @var string
-     */
-    static private $description;
-
     static private function reset()
     {
+        self::resetBase();
+
         self::$authentication = false;
         self::$description = null;
     }
 
     static public function init(): Delete
     {
-        if (self::$instance === null) {
-            self::$instance = new Delete();
-            self::$instance->reset();
-        }
+        self::$instance = new Delete();
+        self::$instance->reset();
 
         return self::$instance;
     }
 
-    static public function setAuthenticationRequired(
-        bool $status = false
-    ): Delete
+    static protected function build()
     {
-        self::$authentication = $status;
-
-        return self::$instance;
-    }
-
-    static public function setDescription(
-        string $localisation_path
-    ): Delete
-    {
-        self::$description = trans($localisation_path);
-
-        return self::$instance;
+        // Not necessary for this simple Option
     }
 
     static public function option(): array
@@ -69,7 +39,10 @@ class Delete
         return [
             'DELETE' => [
                 'description' => self::$description,
-                'authentication-required' => self::$authentication
+                'authentication' => [
+                    'required' => self::$authentication,
+                    'authenticated' => self::$authenticated
+                ]
             ]
         ];
     }

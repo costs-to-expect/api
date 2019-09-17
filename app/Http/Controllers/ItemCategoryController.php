@@ -38,7 +38,12 @@ class ItemCategoryController extends Controller
      */
     public function index(Request $request, string $resource_type_id, string $resource_id, string $item_id): JsonResponse
     {
-        Route::itemRoute($resource_type_id, $resource_id, $item_id);
+        Route::item(
+            $resource_type_id,
+            $resource_id,
+            $item_id,
+            $this->permitted_resource_types
+        );
 
         $item_category = (new ItemCategory())->paginatedCollection(
             $resource_type_id,
@@ -80,7 +85,12 @@ class ItemCategoryController extends Controller
         string $item_category_id
     ): JsonResponse
     {
-        Route::itemRoute($resource_type_id, $resource_id, $item_id);
+        Route::item(
+            $resource_type_id,
+            $resource_id,
+            $item_id,
+            $this->permitted_resource_types
+        );
 
         if ($item_category_id === 'nill') {
             UtilityResponse::notFound(trans('entities.item-category'));
@@ -120,18 +130,25 @@ class ItemCategoryController extends Controller
      */
     public function optionsIndex(Request $request, string $resource_type_id, string $resource_id, string $item_id): JsonResponse
     {
-        Route::itemRoute($resource_type_id, $resource_id, $item_id);
+        $authenticated = Route::item(
+            $resource_type_id,
+            $resource_id,
+            $item_id,
+            $this->permitted_resource_types
+        );
 
         $get = Get::init()->
-            setDescription('route-descriptions.item_category_GET_index')->
             setParameters('api.item-category.parameters.collection')->
+            setAuthenticationStatus($authenticated)->
+            setDescription('route-descriptions.item_category_GET_index')->
             option();
 
         $post = Post::init()->
-            setDescription('route-descriptions.item_category_POST')->
-            setAuthenticationRequired(true)->
             setFields('api.item-category.fields')->
             setConditionalFields($this->conditionalPostParameters($resource_type_id))->
+            setDescription('route-descriptions.item_category_POST')->
+            setAuthenticationStatus($authenticated)->
+            setAuthenticationRequired(true)->
             option();
 
         return $this->optionsResponse(
@@ -159,7 +176,12 @@ class ItemCategoryController extends Controller
         string $item_category_id
     ): JsonResponse
     {
-        Route::itemRoute($resource_type_id, $resource_id, $item_id);
+        $authenticated = Route::item(
+            $resource_type_id,
+            $resource_id,
+            $item_id,
+            $this->permitted_resource_types
+        );
 
         if ($item_category_id === 'nill') {
             UtilityResponse::notFound(trans('entities.item-category'));
@@ -177,12 +199,14 @@ class ItemCategoryController extends Controller
         }
 
         $get = Get::init()->
-            setDescription('route-descriptions.item_category_GET_show')->
             setParameters('api.item-category.parameters.item')->
+            setAuthenticationStatus($authenticated)->
+            setDescription('route-descriptions.item_category_GET_show')->
             option();
 
         $delete = Delete::init()->
             setDescription('route-descriptions.item_category_DELETE')->
+            setAuthenticationStatus($authenticated)->
             setAuthenticationRequired(true)->
             option();
 
@@ -209,7 +233,13 @@ class ItemCategoryController extends Controller
         string $item_id
     ): JsonResponse
     {
-        Route::itemRoute($resource_type_id, $resource_id, $item_id);
+        Route::item(
+            $resource_type_id,
+            $resource_id,
+            $item_id,
+            $this->permitted_resource_types,
+            true
+        );
 
         $validator = (new ItemCategoryValidator)->create();
         UtilityRequest::validateAndReturnErrors(
@@ -272,7 +302,6 @@ class ItemCategoryController extends Controller
     /**
      * Delete the assigned category
      *
-     * @param Request $request,
      * @param string $resource_type_id,
      * @param string $resource_id,
      * @param string $item_id,
@@ -281,14 +310,20 @@ class ItemCategoryController extends Controller
      * @return JsonResponse
      */
     public function delete(
-        Request $request,
         string $resource_type_id,
         string $resource_id,
         string $item_id,
         string $item_category_id
     ): JsonResponse
     {
-        Route::itemCategory($resource_type_id, $resource_id, $item_id, $item_category_id);
+        Route::itemCategory(
+            $resource_type_id,
+            $resource_id,
+            $item_id,
+            $item_category_id,
+            $this->permitted_resource_types,
+            true
+        );
 
         $item_category = (new ItemCategory())->instance(
             $resource_type_id,

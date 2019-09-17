@@ -115,9 +115,10 @@ class RequestController extends Controller
     public function optionsAccessLog(Request $request)
     {
         $get = Get::init()->
-            setDescription('route-descriptions.request_GET_access-log')->
             setParameters('api.request-access-log.parameters.collection')->
             setPagination(true)->
+            setAuthenticationStatus(($this->user_id !== null) ? true : false)->
+            setDescription('route-descriptions.request_GET_access-log')->
             option();
 
         return $this->optionsResponse($get, 200);
@@ -133,11 +134,13 @@ class RequestController extends Controller
     {
         $get = Get::init()->
             setDescription('route-descriptions.request_GET_error_log')->
+            setAuthenticationStatus(($this->user_id !== null) ? true : false)->
             option();
 
         $post = Post::init()->
-            setDescription('route-descriptions.request_POST')->
             setFields('api.request-error-log.fields')->
+            setDescription('route-descriptions.request_POST')->
+            setAuthenticationStatus(($this->user_id !== null) ? true : false)->
             option();
 
         return $this->optionsResponse(

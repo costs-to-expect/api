@@ -40,7 +40,10 @@ class SubcategoryController extends Controller
      */
     public function index(string $category_id): JsonResponse
     {
-        Route::categoryRoute($category_id);
+        Route::category(
+            $category_id,
+            $this->permitted_resource_types
+        );
 
         $search_parameters = SearchParameters::fetch(
             Config::get('api.subcategory.searchable')
@@ -108,20 +111,24 @@ class SubcategoryController extends Controller
      * Return a single sub category
      *
      * @param string $category_id
-     * @param string $sub_category_id
+     * @param string $subcategory_id
      *
      * @return JsonResponse
      */
     public function show(
         string $category_id,
-        string $sub_category_id
+        string $subcategory_id
     ): JsonResponse
     {
-        Route::subCategoryRoute($category_id, $sub_category_id);
+        Route::subcategory(
+            $category_id,
+            $subcategory_id,
+            $this->permitted_resource_types
+        );
 
         $subcategory = (new SubCategory())->single(
             $category_id,
-            $sub_category_id
+            $subcategory_id
         );
 
         if ($subcategory === null) {
@@ -147,20 +154,25 @@ class SubcategoryController extends Controller
      */
     public function optionsIndex(string $category_id): JsonResponse
     {
-        Route::categoryRoute($category_id);
+        $authenticated = Route::category(
+            $category_id,
+            $this->permitted_resource_types
+        );
 
         $get = Get::init()->
-            setDescription('route-descriptions.sub_category_GET_index')->
             setSortable('api.subcategory.sortable')->
             setSearchable('api.subcategory.searchable')->
             setPaginationOverride(true)->
             setParameters('api.subcategory.parameters.collection')->
+            setDescription('route-descriptions.sub_category_GET_index')->
+            setAuthenticationStatus($authenticated)->
             option();
 
         $post = Post::init()->
-            setDescription('route-descriptions.sub_category_POST')->
             setFields('api.subcategory.fields')->
+            setDescription('route-descriptions.sub_category_POST')->
             setAuthenticationRequired(true)->
+            setAuthenticationStatus($authenticated)->
             option();
 
         return $this->optionsResponse(
@@ -173,31 +185,38 @@ class SubcategoryController extends Controller
      * Generate the OPTIONS request for the specific sub category
      *
      * @param string $category_id
-     * @param string $sub_category_id
+     * @param string $subcategory_id
      *
      * @return JsonResponse
      */
     public function optionsShow(
         string $category_id,
-        string $sub_category_id
+        string $subcategory_id
     ): JsonResponse
     {
-        Route::subCategoryRoute($category_id, $sub_category_id);
+        $authenticated = Route::subcategory(
+            $category_id,
+            $subcategory_id,
+            $this->permitted_resource_types
+        );
 
         $get = Get::init()->
-            setDescription('route-descriptions.sub_category_GET_show')->
             setParameters('api.subcategory.parameters.item')->
+            setDescription('route-descriptions.sub_category_GET_show')->
+            setAuthenticationStatus($authenticated)->
             option();
 
         $delete = Delete::init()->
             setDescription('route-descriptions.sub_category_DELETE')->
             setAuthenticationRequired(true)->
+            setAuthenticationStatus($authenticated)->
             option();
 
         $patch = Patch::init()->
-            setDescription('route-descriptions.sub_category_PATCH')->
             setFields('api.subcategory.fields')->
+            setDescription('route-descriptions.sub_category_PATCH')->
             setAuthenticationRequired(true)->
+            setAuthenticationStatus($authenticated)->
             option();
 
         return $this->optionsResponse(
@@ -215,7 +234,11 @@ class SubcategoryController extends Controller
      */
     public function create(string $category_id): JsonResponse
     {
-        Route::categoryRoute($category_id);
+        Route::category(
+            $category_id,
+            $this->permitted_resource_types,
+            true
+        );
 
         $validator = (new SubCategoryValidator)->create(['category_id' => $category_id]);
         UtilityRequest::validateAndReturnErrors($validator);
@@ -241,20 +264,25 @@ class SubcategoryController extends Controller
      * Delete the requested sub category
      *
      * @param string $category_id
-     * @param string $sub_category_id
+     * @param string $subcategory_id
      *
      * @return JsonResponse
      */
     public function delete(
         string $category_id,
-        string $sub_category_id
+        string $subcategory_id
     ): JsonResponse
     {
-        Route::subCategoryRoute($category_id, $sub_category_id);
+        Route::subcategory(
+            $category_id,
+            $subcategory_id,
+            $this->permitted_resource_types,
+            true
+        );
 
         $sub_category = (new SubCategory())->single(
             $category_id,
-            $sub_category_id
+            $subcategory_id
         );
 
         if ($sub_category === null) {
@@ -276,18 +304,23 @@ class SubcategoryController extends Controller
      * Update the selected subcategory
      *
      * @param string $category_id
-     * @param string $sub_category_id
+     * @param string $subcategory_id
      *
      * @return JsonResponse
      */
     public function update(
         string $category_id,
-        string $sub_category_id
+        string $subcategory_id
     ): JsonResponse
     {
-        Route::subCategoryRoute($category_id, $sub_category_id);
+        Route::subcategory(
+            $category_id,
+            $subcategory_id,
+            $this->permitted_resource_types,
+            true
+        );
 
-        $subcategory = (new SubCategory())->instance($category_id, $sub_category_id);
+        $subcategory = (new SubCategory())->instance($category_id, $subcategory_id);
 
         if ($subcategory === null) {
             UtilityResponse::failedToSelectModelForUpdate();
@@ -297,7 +330,7 @@ class SubcategoryController extends Controller
 
         $validator = (new SubCategoryValidator())->update([
             'category_id' => intval($category_id),
-            'subcategory_id' => intval($sub_category_id)
+            'subcategory_id' => intval($subcategory_id)
         ]);
         UtilityRequest::validateAndReturnErrors($validator);
 

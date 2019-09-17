@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\ItemTypeAllocatedExpense;
 use App\Option\Delete;
 use App\Option\Get;
 use App\Option\Patch;
@@ -44,7 +45,11 @@ class ItemController extends Controller
      */
     public function index(string $resource_type_id, string $resource_id): JsonResponse
     {
-        Route::resourceRoute($resource_type_id, $resource_id);
+        Route::resource(
+            $resource_type_id,
+            $resource_id,
+            $this->permitted_resource_types,
+        );
 
         $parameters = Parameters::fetch([
             'include-categories',
@@ -133,7 +138,12 @@ class ItemController extends Controller
         string $item_id
     ): JsonResponse
     {
-        Route::itemRoute($resource_type_id, $resource_id, $item_id);
+        Route::item(
+            $resource_type_id,
+            $resource_id,
+            $item_id,
+            $this->permitted_resource_types
+        );
 
         $item = (new Item())->single($resource_type_id, $resource_id, $item_id);
 
@@ -164,7 +174,11 @@ class ItemController extends Controller
         string $resource_id
     ): JsonResponse
     {
-        Route::resourceRoute($resource_type_id, $resource_id);
+        $authenticated = Route::resource(
+            $resource_type_id,
+            $resource_id,
+            $this->permitted_resource_types,
+        );
 
         $parameters = Parameters::fetch(['year', 'month', 'category', 'subcategory']);
 
@@ -174,18 +188,20 @@ class ItemController extends Controller
         );
 
         $get = Get::init()->
-            setDescription('route-descriptions.item_GET_index')->
-            setPagination(true)->
             setSortable('api.item.sortable')->
             setSearchable('api.item.searchable')->
             setParameters('api.item.parameters.collection')->
             setConditionalParameters($conditional_parameters)->
+            setPagination(true)->
+            setAuthenticationStatus($authenticated)->
+            setDescription('route-descriptions.item_GET_index')->
             option();
 
         $post = Post::init()->
+            setFields('api.item-type-allocated-expense.fields')->
             setDescription( 'route-descriptions.item_POST')->
             setAuthenticationRequired(true)->
-            setFields('api.item.fields')->
+            setAuthenticationStatus($authenticated)->
             option();
 
         return $this->optionsResponse(
@@ -209,7 +225,12 @@ class ItemController extends Controller
         string $item_id
     ): JsonResponse
     {
-        Route::itemRoute($resource_type_id, $resource_id, $item_id);
+        $authenticated = Route::item(
+            $resource_type_id,
+            $resource_id,
+            $item_id,
+            $this->permitted_resource_types
+        );
 
         $item = (new Item())->single($resource_type_id, $resource_id, $item_id);
 
@@ -218,18 +239,21 @@ class ItemController extends Controller
         }
 
         $get = Get::init()->
-            setDescription('route-descriptions.item_GET_show')->
             setParameters('api.item.parameters.item')->
+            setAuthenticationStatus($authenticated)->
+            setDescription('route-descriptions.item_GET_show')->
             option();
 
         $delete = Delete::init()->
             setDescription('route-descriptions.item_DELETE')->
+            setAuthenticationStatus($authenticated)->
             setAuthenticationRequired(true)->
             option();
 
         $patch = Patch::init()->
+            setFields('api.item-type-allocated-expense.fields')->
             setDescription('route-descriptions.item_PATCH')->
-            setFields('api.item.fields')->
+            setAuthenticationStatus($authenticated)->
             setAuthenticationRequired(true)->
             option();
 
@@ -250,7 +274,12 @@ class ItemController extends Controller
      */
     public function create(Request $request, string $resource_type_id, string $resource_id): JsonResponse
     {
-        Route::resourceRoute($resource_type_id, $resource_id);
+        Route::resource(
+            $resource_type_id,
+            $resource_id,
+            $this->permitted_resource_types,
+            true
+        );
 
         $validator = (new ItemValidator)->create();
         UtilityRequest::validateAndReturnErrors($validator);
@@ -258,21 +287,33 @@ class ItemController extends Controller
         try {
             $item = new Item([
                 'resource_id' => $resource_id,
+                'created_by' => Auth::user()->id
+            ]);
+            $item->save();
+
+            $item_type = new ItemTypeAllocatedExpense([
+                'item_id' => $item->id,
+                'name' => $request->input('description'), // Fix later
                 'description' => $request->input('description'),
                 'effective_date' => $request->input('effective_date'),
                 'publish_after' => $request->input('publish_after', null),
                 'total' => $request->input('total'),
                 'percentage' => $request->input('percentage', 100),
-                'user_id' => Auth::user()->id
             ]);
-            $item->setActualisedTotal($item->total, $item->percentage);
-            $item->save();
+
+            $item_type->setActualisedTotal(
+                $request->input('total'),
+                $request->input('percentage', 100)
+            );
+
+            $item_type->save();
+
         } catch (Exception $e) {
             UtilityResponse::failedToSaveModelForCreate();
         }
 
         return response()->json(
-            (new ItemTransformer((new Item())->instanceToArray($item)))->toArray(),
+            (new ItemTransformer((new Item())->instanceToArray($item, $item_type)))->toArray(),
             201
         );
     }
@@ -292,36 +333,48 @@ class ItemController extends Controller
         string $item_id
     ): JsonResponse
     {
-        Route::itemRoute($resource_type_id, $resource_id, $item_id);
+        Route::item(
+            $resource_type_id,
+            $resource_id,
+            $item_id,
+            $this->permitted_resource_types,
+            true
+        );
 
         UtilityRequest::checkForEmptyPatch();
 
-        UtilityRequest::checkForInvalidFields((new Item())->patchableFields());
+        UtilityRequest::checkForInvalidFields(
+            (new Item())->patchableFields()
+        );
 
         $validator = (new ItemValidator)->update();
         UtilityRequest::validateAndReturnErrors($validator);
 
         $item = (new Item())->instance($resource_type_id, $resource_id, $item_id);
+        $item_type = (new ItemTypeAllocatedExpense())->instance($item_id);
 
-        if ($item === null) {
+        if ($item === null || $item_type === null) {
             UtilityResponse::failedToSelectModelForUpdate();
         }
 
         $update_actualised = false;
         foreach (request()->all() as $key => $value) {
-            $item->$key = $value;
+            $item_type->$key = $value;
 
             if (in_array($key, ['total', 'percentage']) === true) {
                 $update_actualised = true;
             }
+
+            $item->updated_by = Auth::user()->id;
         }
 
         if ($update_actualised === true) {
-            $item->setActualisedTotal($item->total, $item->percentage);
+            $item_type->setActualisedTotal($item_type->total, $item_type->percentage);
         }
 
         try {
             $item->save();
+            $item_type->save();
         } catch (Exception $e) {
             UtilityResponse::failedToSaveModelForUpdate();
         }
@@ -346,15 +399,22 @@ class ItemController extends Controller
         string $item_id
     ): JsonResponse
     {
-        Route::resourceRoute($resource_type_id, $resource_id);
+        Route::resource(
+            $resource_type_id,
+            $resource_id,
+            $this->permitted_resource_types,
+            true
+        );
 
+        $item_type = (new ItemTypeAllocatedExpense())->instance($item_id);
         $item = (new Item())->instance($resource_type_id, $resource_id, $item_id);
 
-        if ($item === null) {
+        if ($item === null || $item_type === null) {
             UtilityResponse::notFound(trans('entities.item'));
         }
 
         try {
+            $item_type->delete();
             $item->delete();
 
             UtilityResponse::successNoContent();
@@ -409,7 +469,8 @@ class ItemController extends Controller
         }
 
         $categories = (new Category())->paginatedCollection(
-            $this->include_private,
+            $this->permitted_resource_types,
+            $this->include_public,
             0,
             100,
             ['resource_type'=>$resource_type_id]

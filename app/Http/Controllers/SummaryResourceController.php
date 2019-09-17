@@ -27,9 +27,16 @@ class SummaryResourceController extends Controller
      */
     public function index(Request $request, string $resource_type_id): JsonResponse
     {
-        Route::resourceTypeRoute($resource_type_id);
+        Route::resourceType(
+            $resource_type_id,
+            $this->permitted_resource_types
+        );
 
-        $summary = (new Resource())->totalCount($resource_type_id, $this->include_private);
+        $summary = (new Resource())->totalCount(
+            $resource_type_id,
+            $this->permitted_resource_types,
+            $this->include_public
+        );
 
         return response()->json(
             [
@@ -51,11 +58,15 @@ class SummaryResourceController extends Controller
      */
     public function optionsIndex(Request $request, string $resource_type_id): JsonResponse
     {
-        Route::resourceTypeRoute($resource_type_id);
+        Route::resourceType(
+            $resource_type_id,
+            $this->permitted_resource_types
+        );
 
         $get = Get::init()->
-            setDescription('route-descriptions.summary-resource-GET-index')->
             setParameters('api.resource.summary-parameters.collection')->
+            setDescription('route-descriptions.summary-resource-GET-index')->
+            setAuthenticationStatus(($this->user_id !== null) ? true : false)->
             option();
 
         return $this->optionsResponse($get, 200);
