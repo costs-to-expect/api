@@ -301,7 +301,7 @@ class ItemSubCategoryController extends Controller
 
             $item_sub_category = new ItemSubCategory([
                 'item_category_id' => $item_category_id,
-                'subcategory_id' => $subcategory_id
+                'sub_category_id' => $subcategory_id
             ]);
             $item_sub_category->save();
         } catch (Exception $e) {

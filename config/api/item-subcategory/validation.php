@@ -5,7 +5,7 @@ declare(strict_types=1);
 return [
     'POST' => [
         'fields' => [
-            'subcategory_id' => 'required|exists:subcategory,id'
+            'subcategory_id' => 'required|exists:sub_category,id'
         ],
         'messages' => [
             'subcategory_id.required' => 'item-subcategory/validation.subcategory_id-required',
