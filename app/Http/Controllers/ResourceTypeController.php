@@ -11,6 +11,7 @@ use App\Option\Post;
 use App\Utilities\Header;
 use App\Utilities\Pagination as UtilityPagination;
 use App\Utilities\Request as UtilityRequest;
+use App\Utilities\RoutePermission;
 use App\Validators\Request\Parameters;
 use App\Validators\Request\Route;
 use App\Models\ResourceType;
@@ -184,7 +185,12 @@ class ResourceTypeController extends Controller
      */
     public function optionsShow(string $resource_type_id): JsonResponse
     {
-        $authenticated = Route::resourceType(
+        Route::resourceType(
+            $resource_type_id,
+            $this->permitted_resource_types
+        );
+
+        $permissions = RoutePermission::resourceType(
             $resource_type_id,
             $this->permitted_resource_types
         );
@@ -192,20 +198,20 @@ class ResourceTypeController extends Controller
         $get = Get::init()->
             setParameters('api.resource-type.parameters.item')->
             setDescription('route-descriptions.resource_type_GET_show')->
-            setAuthenticationStatus($authenticated)->
+            setAuthenticationStatus($permissions['view'])->
             option();
 
         $delete = Delete::init()->
             setDescription('route-descriptions.resource_type_DELETE')->
             setAuthenticationRequired(true)->
-            setAuthenticationStatus($authenticated)->
+            setAuthenticationStatus($permissions['manage'])->
             option();
 
         $patch = Patch::init()->
             setFields('api.resource-type.fields')->
             setDescription('route-descriptions.resource_type_PATCH')->
             setAuthenticationRequired(true)->
-            setAuthenticationStatus($authenticated)->
+            setAuthenticationStatus($permissions['manage'])->
             option();
 
         return $this->optionsResponse(

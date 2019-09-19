@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Option\Get;
 use App\Utilities\Header;
 use App\Utilities\Response;
+use App\Utilities\RoutePermission;
 use App\Validators\Request\Parameters;
 use App\Validators\Request\Route;
 use App\Models\ItemSummary;
@@ -512,11 +513,17 @@ class SummaryItemController extends Controller
             $this->permitted_resource_types
         );
 
+        $permissions = RoutePermission::resource(
+            $resource_type_id,
+            $resource_id,
+            $this->permitted_resource_types
+        );
+
         $get = Get::init()->
             setParameters('api.item.summary-parameters.collection')->
             setSearchable('api.item.searchable')->
             setDescription('route-descriptions.summary_GET_resource-type_resource_items')->
-            setAuthenticationStatus(($this->user_id !== null) ? true : false)->
+            setAuthenticationStatus($permissions['view'])->
             option();
 
         return $this->optionsResponse($get, 200);

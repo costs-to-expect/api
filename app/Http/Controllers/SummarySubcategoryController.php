@@ -6,6 +6,7 @@ use App\Models\Category;
 use App\Models\SubCategory;
 use App\Option\Get;
 use App\Utilities\Header;
+use App\Utilities\RoutePermission;
 use App\Validators\Request\Route;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -63,9 +64,14 @@ class SummarySubcategoryController extends Controller
             $this->permitted_resource_types
         );
 
+        $permissions = RoutePermission::category(
+            $category_id,
+            $this->permitted_resource_types
+        );
+
         $get = Get::init()->
             setDescription('route-descriptions.summary_subcategory_GET_index')->
-            setAuthenticationStatus(($this->user_id !== null) ? true : false)->
+            setAuthenticationStatus($permissions['view'])->
             option();
 
         return $this->optionsResponse($get, 200);

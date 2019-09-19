@@ -8,6 +8,7 @@ use App\Option\Get;
 use App\Option\Patch;
 use App\Option\Post;
 use App\Utilities\Header;
+use App\Utilities\RoutePermission;
 use App\Validators\Request\Parameters;
 use App\Validators\Request\Route;
 use App\Models\Category;
@@ -169,7 +170,13 @@ class ItemController extends Controller
         string $resource_id
     ): JsonResponse
     {
-        $authenticated = Route::resource(
+        Route::resource(
+            $resource_type_id,
+            $resource_id,
+            $this->permitted_resource_types,
+        );
+
+        $permissions = RoutePermission::resource(
             $resource_type_id,
             $resource_id,
             $this->permitted_resource_types,
@@ -188,7 +195,7 @@ class ItemController extends Controller
             setParameters('api.item.parameters.collection')->
             setConditionalParameters($conditional_parameters)->
             setPagination(true)->
-            setAuthenticationStatus($authenticated)->
+            setAuthenticationStatus($permissions['view'])->
             setDescription('route-descriptions.item_GET_index')->
             option();
 
@@ -196,7 +203,7 @@ class ItemController extends Controller
             setFields('api.item-type-allocated-expense.fields')->
             setDescription( 'route-descriptions.item_POST')->
             setAuthenticationRequired(true)->
-            setAuthenticationStatus($authenticated)->
+            setAuthenticationStatus($permissions['manage'])->
             option();
 
         return $this->optionsResponse(
@@ -220,11 +227,18 @@ class ItemController extends Controller
         string $item_id
     ): JsonResponse
     {
-        $authenticated = Route::item(
+        Route::item(
             $resource_type_id,
             $resource_id,
             $item_id,
             $this->permitted_resource_types
+        );
+
+        $permissions = RoutePermission::item(
+            $resource_type_id,
+            $resource_id,
+            $item_id,
+            $this->permitted_resource_types,
         );
 
         $item = (new Item())->single($resource_type_id, $resource_id, $item_id);
@@ -235,20 +249,20 @@ class ItemController extends Controller
 
         $get = Get::init()->
             setParameters('api.item.parameters.item')->
-            setAuthenticationStatus($authenticated)->
+            setAuthenticationStatus($permissions['view'])->
             setDescription('route-descriptions.item_GET_show')->
             option();
 
         $delete = Delete::init()->
             setDescription('route-descriptions.item_DELETE')->
-            setAuthenticationStatus($authenticated)->
+            setAuthenticationStatus($permissions['manage'])->
             setAuthenticationRequired(true)->
             option();
 
         $patch = Patch::init()->
             setFields('api.item-type-allocated-expense.fields')->
             setDescription('route-descriptions.item_PATCH')->
-            setAuthenticationStatus($authenticated)->
+            setAuthenticationStatus($permissions['manage'])->
             setAuthenticationRequired(true)->
             option();
 

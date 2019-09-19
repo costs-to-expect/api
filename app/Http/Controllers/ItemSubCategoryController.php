@@ -6,6 +6,7 @@ use App\Option\Delete;
 use App\Option\Get;
 use App\Option\Post;
 use App\Utilities\Header;
+use App\Utilities\RoutePermission;
 use App\Validators\Request\Route;
 use App\Models\ItemCategory;
 use App\Models\ItemSubCategory;
@@ -137,7 +138,6 @@ class ItemSubCategoryController extends Controller
     /**
      * Generate the OPTIONS request for the item list
      *
-     * @param Request $request
      * @param string $resource_type_id
      * @param string $resource_id
      * @param string $item_id
@@ -146,14 +146,20 @@ class ItemSubCategoryController extends Controller
      * @return JsonResponse
      */
     public function optionsIndex(
-        Request $request,
         string $resource_type_id,
         string $resource_id,
         string $item_id,
         string $item_category_id
     ): JsonResponse
     {
-        $authenticated = Route::item(
+        Route::item(
+            $resource_type_id,
+            $resource_id,
+            $item_id,
+            $this->permitted_resource_types
+        );
+
+        $permissions = RoutePermission::item(
             $resource_type_id,
             $resource_id,
             $item_id,
@@ -171,7 +177,7 @@ class ItemSubCategoryController extends Controller
 
         $get = Get::init()->
             setParameters('api.item-subcategory.parameters.collection')->
-            setAuthenticationStatus($authenticated)->
+            setAuthenticationStatus($permissions['view'])->
             setDescription('route-descriptions.item_sub_category_GET_index')->
             option();
 
@@ -179,7 +185,7 @@ class ItemSubCategoryController extends Controller
             setFields('api.item-subcategory.fields')->
             setConditionalFields($this->conditionalPostParameters($item_category->category_id))->
             setDescription('route-descriptions.item_sub_category_POST')->
-            setAuthenticationStatus($authenticated)->
+            setAuthenticationStatus($permissions['manage'])->
             setAuthenticationRequired(true)->
             option();
 
@@ -192,7 +198,6 @@ class ItemSubCategoryController extends Controller
     /**
      * Generate the OPTIONS request for a specific item
      *
-     * @param Request $request
      * @param string $resource_id
      * @param string $resource_type_id
      * @param string $item_id
@@ -202,7 +207,6 @@ class ItemSubCategoryController extends Controller
      * @return JsonResponse
      */
     public function optionsShow(
-        Request $request,
         string $resource_type_id,
         string $resource_id,
         string $item_id,
@@ -210,7 +214,14 @@ class ItemSubCategoryController extends Controller
         string $item_subcategory_id
     ): JsonResponse
     {
-        $authenticated = Route::item(
+        Route::item(
+            $resource_type_id,
+            $resource_id,
+            $item_id,
+            $this->permitted_resource_types
+        );
+
+        $permissions = RoutePermission::item(
             $resource_type_id,
             $resource_id,
             $item_id,
@@ -235,13 +246,13 @@ class ItemSubCategoryController extends Controller
 
         $get = Get::init()->
             setParameters('api.item-subcategory.parameters.item')->
-            setAuthenticationStatus($authenticated)->
+            setAuthenticationStatus($permissions['view'])->
             setDescription('route-descriptions.item_sub_category_GET_show')->
             option();
 
         $delete = Delete::init()->
             setDescription('route-descriptions.item_sub_category_DELETE')->
-            setAuthenticationStatus($authenticated)->
+            setAuthenticationStatus($permissions['manage'])->
             setAuthenticationRequired(true)->
             option();
 

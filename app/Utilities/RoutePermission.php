@@ -27,7 +27,7 @@ class RoutePermission
      * @param $category_id
      * @param array $permitted_resource_types
      *
-     * @return array Two indexes, read and manage, values for both boolean
+     * @return array Two indexes, view and manage, values for both boolean
      */
     static public function category(
         $category_id,
@@ -48,14 +48,14 @@ class RoutePermission
 
 
     /**
-     * Returns the `read` and `manage` permission for the current user, checks
+     * Returns the `view` and `manage` permission for the current user, checks
      * against their permitted resource types
      *
      * @param $category_id
      * @param $subcategory_id
      * @param array $permitted_resource_types
      *
-     * @return array Two indexes, read and manage, values for both boolean
+     * @return array Two indexes, view and manage, values for both boolean
      */
     static public function subcategory(
         $category_id,
@@ -64,7 +64,7 @@ class RoutePermission
     ): array
     {
         return [
-            'read' => SubCategory::existsToUserForViewing(
+            'view' => SubCategory::existsToUserForViewing(
                 (int) $category_id,
                 (int) $subcategory_id,
                 $permitted_resource_types
@@ -78,13 +78,13 @@ class RoutePermission
     }
 
     /**
-     * Returns the `read` and `manage` permission for the current user, checks
+     * Returns the `view` and `manage` permission for the current user, checks
      * against their permitted resource types
      *
      * @param $resource_type_id
      * @param array $permitted_resource_types
      *
-     * @return array Two indexes, read and manage, values for both boolean
+     * @return array Two indexes, view and manage, values for both boolean
      */
     static public function resourceType(
         $resource_type_id,
@@ -104,14 +104,14 @@ class RoutePermission
     }
 
     /**
-     * Returns the `read` and `manage` permission for the current user, checks
+     * Returns the `view` and `manage` permission for the current user, checks
      * against their permitted resource types
      *
      * @param $resource_type_id
      * @param $resource_id
      * @param array $permitted_resource_types
      *
-     * @return array Two indexes, read and manage, values for both boolean
+     * @return array Two indexes, view and manage, values for both boolean
      */
     static public function resource(
         $resource_type_id,
@@ -134,7 +134,7 @@ class RoutePermission
     }
 
     /**
-     * Returns the `read` and `manage` permission for the current user, checks
+     * Returns the `view` and `manage` permission for the current user, checks
      * against their permitted resource types
      *
      * @param $resource_type_id
@@ -142,7 +142,7 @@ class RoutePermission
      * @param $item_id
      * @param array $permitted_resource_types
      *
-     * @return array Two indexes, read and manage, values for both boolean
+     * @return array Two indexes, view and manage, values for both boolean
      */
     static public function item(
         $resource_type_id,
@@ -168,7 +168,7 @@ class RoutePermission
     }
 
     /**
-     * Returns the `read` and `manage` permission for the current user, checks
+     * Returns the `view` and `manage` permission for the current user, checks
      * against their permitted resource types
      *
      * @param $resource_type_id
@@ -177,7 +177,7 @@ class RoutePermission
      * @param $item_category_id,
      * @param array $permitted_resource_types
      *
-     * @return array Two indexes, read and manage, values for both boolean
+     * @return array Two indexes, view and manage, values for both boolean
      */
     static public function itemCategory(
         $resource_type_id,
@@ -206,7 +206,7 @@ class RoutePermission
     }
 
     /**
-     * Returns the `read` and `manage` permission for the current user, checks
+     * Returns the `view` and `manage` permission for the current user, checks
      * against their permitted resource types
      *
      * @param $resource_type_id
@@ -216,7 +216,7 @@ class RoutePermission
      * @param $item_subcategory_id
      * @param array $permitted_resource_types
      *
-     * @return array Two indexes, read and manage, values for both boolean
+     * @return array Two indexes, view and manage, values for both boolean
      */
     static public function itemSubcategory(
         $resource_type_id,

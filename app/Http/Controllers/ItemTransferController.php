@@ -7,6 +7,7 @@ use App\Models\Resource;
 use App\Option\Post;
 use App\Utilities\Request as UtilityRequest;
 use App\Utilities\Response as UtilityResponse;
+use App\Utilities\RoutePermission;
 use App\Validators\Request\Fields\ItemTransfer as ItemTransferValidator;
 use App\Validators\Request\Route;
 use Exception;
@@ -25,7 +26,6 @@ class ItemTransferController extends Controller
     protected $pagination = [];
 
     public function transfer(
-        Request $request,
         string $resource_type_id,
         string $resource_id,
         string $item_id
@@ -48,7 +48,7 @@ class ItemTransferController extends Controller
         UtilityRequest::validateAndReturnErrors($validator);
 
         try {
-            $new_resource_id = $this->hash->decode('resource', $request->input('resource_id'));
+            $new_resource_id = $this->hash->decode('resource', request()->input('resource_id'));
 
             if ($new_resource_id === false) {
                 UtilityResponse::unableToDecode();
@@ -66,13 +66,19 @@ class ItemTransferController extends Controller
     }
 
     public function optionsTransfer(
-        Request $request,
         string $resource_type_id,
         string $resource_id,
         string $item_id
     ): JsonResponse
     {
-        $authenticated = Route::item(
+        Route::item(
+            $resource_type_id,
+            $resource_id,
+            $item_id,
+            $this->permitted_resource_types
+        );
+
+        $permissions = RoutePermission::item(
             $resource_type_id,
             $resource_id,
             $item_id,
@@ -88,7 +94,7 @@ class ItemTransferController extends Controller
                 )
             )->
             setDescription('route-descriptions.item_transfer_POST')->
-            setAuthenticationStatus($authenticated)->
+            setAuthenticationStatus($permissions['manage'])->
             setAuthenticationRequired(true)->
             option();
 

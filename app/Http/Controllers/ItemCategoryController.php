@@ -6,6 +6,7 @@ use App\Option\Delete;
 use App\Option\Get;
 use App\Option\Post;
 use App\Utilities\Header;
+use App\Utilities\RoutePermission;
 use App\Validators\Request\Route;
 use App\Models\Category;
 use App\Models\ItemCategory;
@@ -130,7 +131,14 @@ class ItemCategoryController extends Controller
      */
     public function optionsIndex(Request $request, string $resource_type_id, string $resource_id, string $item_id): JsonResponse
     {
-        $authenticated = Route::item(
+        Route::item(
+            $resource_type_id,
+            $resource_id,
+            $item_id,
+            $this->permitted_resource_types
+        );
+
+        $permissions = RoutePermission::item(
             $resource_type_id,
             $resource_id,
             $item_id,
@@ -139,7 +147,7 @@ class ItemCategoryController extends Controller
 
         $get = Get::init()->
             setParameters('api.item-category.parameters.collection')->
-            setAuthenticationStatus($authenticated)->
+            setAuthenticationStatus($permissions['view'])->
             setDescription('route-descriptions.item_category_GET_index')->
             option();
 
@@ -147,7 +155,7 @@ class ItemCategoryController extends Controller
             setFields('api.item-category.fields')->
             setConditionalFields($this->conditionalPostParameters($resource_type_id))->
             setDescription('route-descriptions.item_category_POST')->
-            setAuthenticationStatus($authenticated)->
+            setAuthenticationStatus($permissions['manage'])->
             setAuthenticationRequired(true)->
             option();
 
@@ -176,7 +184,14 @@ class ItemCategoryController extends Controller
         string $item_category_id
     ): JsonResponse
     {
-        $authenticated = Route::item(
+        Route::item(
+            $resource_type_id,
+            $resource_id,
+            $item_id,
+            $this->permitted_resource_types
+        );
+
+        $permissions = RoutePermission::item(
             $resource_type_id,
             $resource_id,
             $item_id,
@@ -200,13 +215,13 @@ class ItemCategoryController extends Controller
 
         $get = Get::init()->
             setParameters('api.item-category.parameters.item')->
-            setAuthenticationStatus($authenticated)->
+            setAuthenticationStatus($permissions['view'])->
             setDescription('route-descriptions.item_category_GET_show')->
             option();
 
         $delete = Delete::init()->
             setDescription('route-descriptions.item_category_DELETE')->
-            setAuthenticationStatus($authenticated)->
+            setAuthenticationStatus($permissions['manage'])->
             setAuthenticationRequired(true)->
             option();
 

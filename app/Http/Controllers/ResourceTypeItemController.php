@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Option\Get;
 use App\Utilities\Header;
+use App\Utilities\RoutePermission;
 use App\Validators\Request\Parameters;
 use App\Validators\Request\Route;
 use App\Models\Category;
@@ -111,14 +112,18 @@ class ResourceTypeItemController extends Controller
     /**
      * Generate the OPTIONS request for the items list
      *
-     * @param Request $request
      * @param string $resource_type_id
      *
      * @return JsonResponse
      */
-    public function optionsIndex(Request $request, string $resource_type_id): JsonResponse
+    public function optionsIndex(string $resource_type_id): JsonResponse
     {
-        $authenticated = Route::resourceType(
+        Route::resourceType(
+            $resource_type_id,
+            $this->permitted_resource_types
+        );
+
+        $permissions = RoutePermission::resourceType(
             $resource_type_id,
             $this->permitted_resource_types
         );
@@ -137,7 +142,7 @@ class ResourceTypeItemController extends Controller
             setParameters('api.resource-type-item.parameters.collection')->
             setConditionalParameters($this->conditional_get_parameters)->
             setDescription('route-descriptions.resource_type_item_GET_index')->
-            setAuthenticationStatus($authenticated)->
+            setAuthenticationStatus($permissions['view'])->
             option();
 
         return $this->optionsResponse($get, 200);
