@@ -9,6 +9,7 @@ use App\Option\Patch;
 use App\Option\Post;
 use App\Utilities\Header;
 use App\Utilities\Pagination as UtilityPagination;
+use App\Utilities\RoutePermission;
 use App\Validators\Request\Parameters;
 use App\Validators\Request\Route;
 use App\Models\Category;
@@ -185,27 +186,31 @@ class CategoryController extends Controller
      */
     public function optionsShow(string $category_id): JsonResponse
     {
-        $authenticated = Route::category(
+        Route::category(
+            $category_id,
+            $this->permitted_resource_types
+        );
+
+        $permissions = RoutePermission::category(
             $category_id,
             $this->permitted_resource_types
         );
 
         $get = Get::init()->
             setParameters('api.category.parameters.item')->
-            setAuthenticationStatus($authenticated)->
             setDescription('route-descriptions.category_GET_show')->
             option();
 
         $delete = Delete::init()->
             setAuthenticationRequired(true)->
-            setAuthenticationStatus($authenticated)->
+            setAuthenticationStatus($permissions['manage'])->
             setDescription('route-descriptions.category_DELETE')->
             option();
 
         $patch = Patch::init()->
             setFields('api.category.fields-patch')->
             setDescription('route-descriptions.category_PATCH')->
-            setAuthenticationStatus($authenticated)->
+            setAuthenticationStatus($permissions['manage'])->
             setAuthenticationRequired(true)->
             option();
 
