@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Validators\Request;
+namespace App\Utilities;
 
 use App\Validators\Request\Routes\Category;
 use App\Validators\Request\Routes\Item;
