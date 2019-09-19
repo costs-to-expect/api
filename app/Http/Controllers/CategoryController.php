@@ -136,13 +136,13 @@ class CategoryController extends Controller
             );
         }
 
+        $headers = new Header();
+        $headers->item();
+
         return response()->json(
             (new CategoryTransformer($category, $subcategories))->toArray(),
             200,
-            [
-                'X-Total-Count' => 1,
-                'X-Count' => 1
-            ]
+            $headers->headers()
         );
     }
 

@@ -189,6 +189,8 @@ class Route
                 return true;
             }
         }
+
+        return true;
     }
 
     /**

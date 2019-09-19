@@ -130,13 +130,13 @@ class SubcategoryController extends Controller
             UtilityResponse::notFound();
         }
 
+        $headers = new Header();
+        $headers->item();
+
         return response()->json(
             (new SubCategoryTransformer($subcategory))->toArray(),
             200,
-            [
-                'X-Total-Count' => 1,
-                'X-Count' => 1
-            ]
+            $headers->headers()
         );
     }
 

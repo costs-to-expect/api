@@ -108,14 +108,13 @@ class ItemCategoryController extends Controller
             UtilityResponse::notFound(trans('entities.item-category'));
         }
 
-        $headers = [
-            'X-Total-Count' => 1
-        ];
+        $headers = new Header();
+        $headers->item();
 
         return response()->json(
             (new ItemCategoryTransformer($item_category))->toArray(),
             200,
-            $headers
+            $headers->headers()
         );
     }
 

@@ -146,13 +146,13 @@ class ItemController extends Controller
             UtilityResponse::notFound(trans('entities.item'));
         }
 
+        $headers = new Header();
+        $headers->item();
+
         return response()->json(
             (new ItemTransformer($item))->toArray(),
             200,
-            [
-                'X-Total-Count' => 1,
-                'X-Count' => 1
-            ]
+            $headers->headers()
         );
     }
 

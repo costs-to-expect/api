@@ -55,17 +55,30 @@ class Header
     }
 
     /**
+     * Generate the initial headers necessary for an item
+     *
+     * @return Header
+     */
+    public function item(): Header
+    {
+        $this->add('X-Total-Count', 1);
+        $this->add('X-Count', 1);
+
+        return $this;
+    }
+
+    /**
      * Add a header to the headers array, does not check to see if the header
      * already exists, overwrites if previously set
      *
      * @param string $name Header name
-     * @param string $value Header value
+     * @param mixed $value Header value
      *
      * @return Header
      */
     public function add(
         string $name,
-        string $value
+        $value
     ): Header
     {
         $this->headers[$name] = $value;
@@ -76,11 +89,11 @@ class Header
     /**
      * Add the X-Sort header
      *
-     * @param string $value
+     * @param mixed $value
      *
      * @return Header
      */
-    public function addSort(string $value): Header
+    public function addSort($value): Header
     {
         return $this->add('X-Sort', $value);
     }
@@ -88,11 +101,11 @@ class Header
     /**
      * Add the X-Search header
      *
-     * @param string $value
+     * @param mixed $value
      *
      * @return Header
      */
-    public function addSearch(string $value): Header
+    public function addSearch($value): Header
     {
         return $this->add('X-Search', $value);
     }

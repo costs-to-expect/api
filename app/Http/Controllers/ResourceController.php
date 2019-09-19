@@ -129,12 +129,13 @@ class ResourceController extends Controller
             UtilityResponse::notFound(trans('entities.resource'));
         }
 
+        $headers = new Header();
+        $headers->item();
+
         return response()->json(
             (new ResourceTransformer($resource))->toArray(),
             200,
-            [
-                'X-Total-Count' => 1
-            ]
+            $headers->headers()
         );
     }
 

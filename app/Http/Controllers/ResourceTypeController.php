@@ -137,12 +137,13 @@ class ResourceTypeController extends Controller
             );
         }
 
+        $headers = new Header();
+        $headers->item();
+
         return response()->json(
             (new ResourceTypeTransformer($resource_type, $resources))->toArray(),
             200,
-            [
-                'X-Total-Count' => 1
-            ]
+            $headers->headers()
         );
     }
 

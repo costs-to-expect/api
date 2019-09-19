@@ -124,14 +124,13 @@ class ItemSubCategoryController extends Controller
             UtilityResponse::notFound(trans('entities.item-subcategory'));
         }
 
-        $headers = [
-            'X-Total-Count' => 1
-        ];
+        $headers = new Header();
+        $headers->item();
 
         return response()->json(
             (new ItemSubCategoryTransformer($item_sub_category))->toArray(),
             200,
-            $headers
+            $headers->headers()
         );
     }
 
