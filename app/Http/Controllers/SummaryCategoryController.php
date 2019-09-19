@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Category;
 use App\Option\Get;
+use App\Utilities\Header;
 use Illuminate\Http\JsonResponse;
 
 /**
@@ -27,15 +28,16 @@ class SummaryCategoryController extends Controller
             $this->include_public
         );
 
+        $headers = new Header();
+        $headers->add('X-Total-Count', $summary);
+        $headers->add('X-Count', $summary);
+
         return response()->json(
             [
                 'categories' => $summary
             ],
             200,
-            [
-                'X-Total-Count' => $summary,
-                'X-Count' => $summary
-            ]
+            $headers->headers()
         );
     }
 

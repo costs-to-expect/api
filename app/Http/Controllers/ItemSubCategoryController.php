@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Option\Delete;
 use App\Option\Get;
 use App\Option\Post;
+use App\Utilities\Header;
 use App\Validators\Request\Route;
 use App\Models\ItemCategory;
 use App\Models\ItemSubCategory;
@@ -68,14 +69,14 @@ class ItemSubCategoryController extends Controller
             UtilityResponse::notFound(trans('entities.item-subcategory'));
         }
 
-        $headers = [
-            'X-Total-Count' => 1
-        ];
+        $headers = new Header();
+        $headers->add('X-Total-Count', 1);
+        $headers->add('X-Count', 1);
 
         return response()->json(
             [(new ItemSubCategoryTransformer($item_sub_category[0]))->toArray()],
             200,
-            $headers
+            $headers->headers()
         );
     }
 

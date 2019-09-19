@@ -22,8 +22,6 @@ use Illuminate\Http\Request;
  */
 class ItemTransferController extends Controller
 {
-    protected $collection_parameters = [];
-    protected $get_parameters = [];
     protected $pagination = [];
 
     public function transfer(

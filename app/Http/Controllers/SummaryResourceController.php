@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Option\Get;
+use App\Utilities\Header;
 use App\Validators\Request\Route;
 use App\Models\Resource;
 use Illuminate\Http\JsonResponse;
@@ -38,12 +39,16 @@ class SummaryResourceController extends Controller
             $this->include_public
         );
 
+        $headers = new Header();
+        $headers->add('X-Total-Count', $summary);
+        $headers->add('X-Count', $summary);
+
         return response()->json(
             [
                 'resources' => $summary
             ],
             200,
-            ['X-Total-Count' => $summary]
+            $headers->headers()
         );
     }
 

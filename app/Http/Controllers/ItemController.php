@@ -7,6 +7,7 @@ use App\Option\Delete;
 use App\Option\Get;
 use App\Option\Patch;
 use App\Option\Post;
+use App\Utilities\Header;
 use App\Validators\Request\Parameters;
 use App\Validators\Request\Route;
 use App\Models\Category;
@@ -92,23 +93,17 @@ class ItemController extends Controller
             $search_parameters
         );
 
-        $headers = [
-            'X-Count' => count($items),
-            'X-Total-Count' => $total,
-            'X-Offset' => $pagination['offset'],
-            'X-Limit' => $pagination['limit'],
-            'X-Link-Previous' => $pagination['links']['previous'],
-            'X-Link-Next' => $pagination['links']['next']
-        ];
+        $headers = new Header();
+        $headers->collection($pagination, count($items), $total);
 
         $sort_header = SortParameters::xHeader();
         if ($sort_header !== null) {
-            $headers['X-Sort'] = $sort_header;
+            $headers->addSort($sort_header);
         }
 
         $search_header = SearchParameters::xHeader();
         if ($search_header !== null) {
-            $headers['X-Search'] = $search_header;
+            $headers->addSearch($search_header);
         }
 
         return response()->json(
@@ -119,7 +114,7 @@ class ItemController extends Controller
                 $items
             ),
             200,
-            $headers
+            $headers->headers()
         );
     }
 

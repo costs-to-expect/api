@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Category;
 use App\Models\SubCategory;
 use App\Option\Get;
+use App\Utilities\Header;
 use App\Validators\Request\Route;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -34,15 +35,16 @@ class SummarySubcategoryController extends Controller
 
         $summary = (new SubCategory())->totalCount($category_id);
 
+        $headers = new Header();
+        $headers->add('X-Total-Count', $summary);
+        $headers->add('X-Count', $summary);
+
         return response()->json(
             [
                 'subcategories' => $summary
             ],
             200,
-            [
-                'X-Total-Count' => $summary,
-                'X-Count' => $summary
-            ]
+            $headers->headers()
         );
     }
 

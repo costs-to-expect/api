@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Option\Get;
+use App\Utilities\Header;
 use App\Utilities\Response;
 use App\Validators\Request\Parameters;
 use App\Validators\Request\Route;
@@ -152,15 +153,16 @@ class SummaryItemController extends Controller
             Response::successEmptyContent(true);
         }
 
+        $headers = new Header();
+        $headers->add('X-Total-Count', 1);
+        $headers->add('X-Count', 1);
+
         return response()->json(
             [
                 'total' => number_format($summary[0]['actualised_total'], 2, '.', '')
             ],
             200,
-            [
-                'X-Total-Count' => count($summary),
-                'X-Count' => count($summary)
-            ]
+            $headers->headers()
         );
     }
 
@@ -181,6 +183,10 @@ class SummaryItemController extends Controller
             Response::successEmptyContent(true);
         }
 
+        $headers = new Header();
+        $headers->add('X-Total-Count', count($summary));
+        $headers->add('X-Count', count($summary));
+
         return response()->json(
             array_map(
                 function($year) {
@@ -189,10 +195,7 @@ class SummaryItemController extends Controller
                 $summary
             ),
             200,
-            [
-                'X-Total-Count' => count($summary),
-                'X-Count' => count($summary)
-            ]
+            $headers->headers()
         );
     }
 
@@ -216,13 +219,14 @@ class SummaryItemController extends Controller
             Response::successEmptyContent();
         }
 
+        $headers = new Header();
+        $headers->add('X-Total-Count', count($summary));
+        $headers->add('X-Count', count($summary));
+
         return response()->json(
             (new ItemYearSummaryTransformer($summary[0]))->toArray(),
             200,
-            [
-                'X-Total-Count' => count($summary),
-                'X-Count' => count($summary)
-            ]
+            $headers->headers()
         );
     }
 
@@ -246,6 +250,10 @@ class SummaryItemController extends Controller
             Response::successEmptyContent(true);
         }
 
+        $headers = new Header();
+        $headers->add('X-Total-Count', count($summary));
+        $headers->add('X-Count', count($summary));
+
         return response()->json(
             array_map(
                 function($month) {
@@ -254,10 +262,7 @@ class SummaryItemController extends Controller
                 $summary
             ),
             200,
-            [
-                'X-Total-Count' => count($summary),
-                'X-Count' => count($summary)
-            ]
+            $headers->headers()
         );
     }
 
@@ -283,13 +288,14 @@ class SummaryItemController extends Controller
             Response::successEmptyContent();
         }
 
+        $headers = new Header();
+        $headers->add('X-Total-Count', count($summary));
+        $headers->add('X-Count', count($summary));
+
         return response()->json(
             (new ItemMonthSummaryTransformer($summary[0]))->toArray(),
             200,
-            [
-                'X-Total-Count' => count($summary),
-                'X-Count' => count($summary)
-            ]
+            $headers->headers()
         );
     }
 
@@ -310,6 +316,10 @@ class SummaryItemController extends Controller
             Response::successEmptyContent(true);
         }
 
+        $headers = new Header();
+        $headers->add('X-Total-Count', count($summary));
+        $headers->add('X-Count', count($summary));
+
         return response()->json(
             array_map(
                 function($category) {
@@ -318,10 +328,7 @@ class SummaryItemController extends Controller
                 $summary
             ),
             200,
-            [
-                'X-Total-Count' => count($summary),
-                'X-Count' => count($summary)
-            ]
+            $headers->headers()
         );
     }
 
@@ -359,15 +366,16 @@ class SummaryItemController extends Controller
             Response::successEmptyContent(true);
         }
 
+        $headers = new Header();
+        $headers->add('X-Total-Count', count($summary));
+        $headers->add('X-Count', count($summary));
+
         return response()->json(
             [
                 'total' => number_format($summary[0]['total'], 2, '.', '')
             ],
             200,
-            [
-                'X-Total-Count' => count($summary),
-                'X-Count' => count($summary)
-            ]
+            $headers->headers()
         );
     }
 
@@ -396,13 +404,14 @@ class SummaryItemController extends Controller
             Response::successEmptyContent();
         }
 
+        $headers = new Header();
+        $headers->add('X-Total-Count', count($summary));
+        $headers->add('X-Count', count($summary));
+
         return response()->json(
             (new ItemCategorySummaryTransformer($summary[0]))->toArray(),
             200,
-            [
-                'X-Total-Count' => count($summary),
-                'X-Count' => count($summary)
-            ]
+            $headers->headers()
         );
     }
 
@@ -431,6 +440,10 @@ class SummaryItemController extends Controller
             Response::successEmptyContent(true);
         }
 
+        $headers = new Header();
+        $headers->add('X-Total-Count', count($summary));
+        $headers->add('X-Count', count($summary));
+
         return response()->json(
             array_map(
                 function($subcategory) {
@@ -439,10 +452,7 @@ class SummaryItemController extends Controller
                 $summary
             ),
             200,
-            [
-                'X-Total-Count' => count($summary),
-                'X-Count' => count($summary)
-            ]
+            $headers->headers()
         );
     }
 
@@ -474,13 +484,14 @@ class SummaryItemController extends Controller
             Response::successEmptyContent();
         }
 
+        $headers = new Header();
+        $headers->add('X-Total-Count', count($summary));
+        $headers->add('X-Count', count($summary));
+
         return response()->json(
             (new ItemSubCategorySummaryTransformer($summary[0]))->toArray(),
             200,
-            [
-                'X-Total-Count' => count($summary),
-                'X-Count' => count($summary)
-            ]
+            $headers->headers()
         );
     }
 
