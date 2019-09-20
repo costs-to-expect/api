@@ -191,11 +191,11 @@ class ResourceTypeItemController extends Controller
         }
 
         $categories = (new Category())->paginatedCollection(
+            (int) $resource_type_id,
             $this->permitted_resource_types,
             $this->include_public,
             0,
-            100,
-            ['resource_type'=>$resource_type_id]
+            100
         );
         array_map(
             function($category) {

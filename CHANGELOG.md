@@ -20,6 +20,7 @@ The complete changelog for the Costs to Expect REST API, follows the format defi
 - We have removed the category routes; they are now available below resource types.
 - We have removed the category summary routes; they are now available below the resource types summary.
 - We have removed the subcategory routes; they are now available below resource types.
+- We have removed the subcategory summary routes; they are now available below the resource types summary.
 
 ## [v2.00.1] - 2019-09-17
 ### Fixed

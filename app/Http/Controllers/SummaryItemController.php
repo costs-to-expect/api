@@ -34,13 +34,12 @@ class SummaryItemController extends Controller
     /**
      * Return the TCO for the resource
      *
-     * @param Request $request
      * @param string $resource_type_id
      * @param string $resource_id
      *
      * @return JsonResponse
      */
-    public function index(Request $request, string $resource_type_id, string $resource_id): JsonResponse
+    public function index(string $resource_type_id, string $resource_id): JsonResponse
     {
         Route::resource(
             $resource_type_id,
@@ -107,14 +106,21 @@ class SummaryItemController extends Controller
         ) {
             if (array_key_exists('subcategories', $collection_parameters) === true &&
                 General::booleanValue($collection_parameters['subcategories']) === true) {
-                return $this->subcategoriesSummary($collection_parameters['category']);
+                return $this->subcategoriesSummary(
+                    $resource_type_id,
+                    $collection_parameters['category']
+                );
             } else if (array_key_exists('subcategory', $collection_parameters) === true) {
                 return $this->subcategorySummary(
+                    $resource_type_id,
                     $collection_parameters['category'],
                     $collection_parameters['subcategory']
                 );
             } else {
-                return $this->categorySummary($collection_parameters['category']);
+                return $this->categorySummary(
+                    $resource_type_id,
+                    $collection_parameters['category']
+                );
             }
         }
 
@@ -383,13 +389,15 @@ class SummaryItemController extends Controller
     /**
      * Return the category summary for a resource
      *
+     * @param integer $resource_type_id
      * @param integer $category_id
      *
      * @return JsonResponse
      */
-    private function categorySummary(int $category_id): JsonResponse
+    private function categorySummary(int $resource_type_id, int $category_id): JsonResponse
     {
         Route::category(
+            $resource_type_id,
             $category_id,
             $this->permitted_resource_types
         );
@@ -419,13 +427,15 @@ class SummaryItemController extends Controller
     /**
      * Return the subcategories summary for a category
      *
+     * @param integer $resource_type_id
      * @param integer $category_id
      *
      * @return JsonResponse
      */
-    private function subcategoriesSummary(int $category_id): JsonResponse
+    private function subcategoriesSummary(int $resource_type_id, int $category_id): JsonResponse
     {
         Route::category(
+            $resource_type_id,
             $category_id,
             $this->permitted_resource_types
         );
@@ -460,14 +470,20 @@ class SummaryItemController extends Controller
     /**
      * Return the subcategories summary for a category
      *
+     * @param integer $resource_type_id
      * @param integer $category_id
      * @param integer $subcategory_id
      *
      * @return JsonResponse
      */
-    private function subcategorySummary(int $category_id, int $subcategory_id): JsonResponse
+    private function subcategorySummary(
+        int $resource_type_id,
+        int $category_id,
+        int $subcategory_id
+    ): JsonResponse
     {
         Route::subcategory(
+            $resource_type_id,
             $category_id,
             $subcategory_id,
             $this->permitted_resource_types

@@ -23,18 +23,23 @@ class SummarySubcategoryController extends Controller
     /**
      * Return a summary of the subcategories
      *
-     * @param string $category_id
+     * @param $resource_type_id
+     * @param $category_id
      *
      * @return JsonResponse
      */
-    public function index(string $category_id): JsonResponse
+    public function index($resource_type_id, $category_id): JsonResponse
     {
         Route::category(
+            $resource_type_id,
             $category_id,
             $this->permitted_resource_types
         );
 
-        $summary = (new SubCategory())->totalCount($category_id);
+        $summary = (new SubCategory())->totalCount(
+            $resource_type_id,
+            $category_id
+        );
 
         $headers = new Header();
         $headers->add('X-Total-Count', $summary);
@@ -53,18 +58,21 @@ class SummarySubcategoryController extends Controller
     /**
      * Generate the OPTIONS request for the subcategories summary
      *
-     * @param string $category_id
+     * @param $resource_type_id
+     * @param $category_id
      *
      * @return JsonResponse
      */
-    public function optionsIndex(string $category_id): JsonResponse
+    public function optionsIndex($resource_type_id, $category_id): JsonResponse
     {
         Route::category(
+            $resource_type_id,
             $category_id,
             $this->permitted_resource_types
         );
 
         $permissions = RoutePermission::category(
+            $resource_type_id,
             $category_id,
             $this->permitted_resource_types
         );
