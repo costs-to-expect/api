@@ -44,7 +44,7 @@ class CategoryController extends Controller
     public function index($resource_type_id): JsonResponse
     {
         Route::resourceType(
-            $resource_type_id,
+            (int) $resource_type_id,
             $this->permitted_resource_types
         );
 
@@ -111,20 +111,25 @@ class CategoryController extends Controller
     /**
      * Return a single category
      *
-     * @param string $category_id
+     * @param $resource_type_id
+     * @param $category_id
      *
      * @return JsonResponse
      */
-    public function show($category_id): JsonResponse
+    public function show($resource_type_id, $category_id): JsonResponse
     {
         Route::category(
-            $category_id,
+            (int) $resource_type_id,
+            (int) $category_id,
             $this->permitted_resource_types
         );
 
         $parameters = Parameters::fetch(['include-subcategories']);
 
-        $category = (new Category)->single($category_id);
+        $category = (new Category)->single(
+            (int) $resource_type_id,
+            (int) $category_id
+        );
 
         if ($category === null) {
             UtilityResponse::notFound(trans('entities.category'));
@@ -136,7 +141,8 @@ class CategoryController extends Controller
             $parameters['include-subcategories'] === true
         ) {
             $subcategories = (new SubCategory())->paginatedCollection(
-                $category_id,
+                (int) $resource_type_id,
+                (int) $category_id,
                 0,
                 100
             );
@@ -162,12 +168,12 @@ class CategoryController extends Controller
     public function optionsIndex($resource_type_id): JsonResponse
     {
         Route::resourceType(
-            $resource_type_id,
+            (int) $resource_type_id,
             $this->permitted_resource_types
         );
 
         $permissions = RoutePermission::resourceType(
-            $resource_type_id,
+            (int) $resource_type_id,
             $this->permitted_resource_types
         );
 
@@ -182,7 +188,6 @@ class CategoryController extends Controller
 
         $post = Post::init()->
             setFields('api.category.fields')->
-            setConditionalFields($this->conditionalPostParameters())->
             setAuthenticationRequired(true)->
             setAuthenticationStatus($permissions['manage'])->
             setDescription('route-descriptions.category_POST')->
@@ -205,18 +210,21 @@ class CategoryController extends Controller
     public function optionsShow($resource_type_id, $category_id): JsonResponse
     {
         Route::category(
-            $category_id,
+            (int) $resource_type_id,
+            (int) $category_id,
             $this->permitted_resource_types
         );
 
         $permissions = RoutePermission::category(
-            $category_id,
+            (int) $resource_type_id,
+            (int) $category_id,
             $this->permitted_resource_types
         );
 
         $get = Get::init()->
             setParameters('api.category.parameters.item')->
             setDescription('route-descriptions.category_GET_show')->
+            setAuthenticationStatus($permissions['view'])->
             option();
 
         $delete = Delete::init()->
@@ -241,29 +249,32 @@ class CategoryController extends Controller
     /**
      * Create a new category
      *
+     * @param $resource_type_id
+     *
      * @return JsonResponse
      */
-    public function create(): JsonResponse
+    public function create($resource_type_id): JsonResponse
     {
-        $validator = (new CategoryValidator)->create();
+        Route::resourceType(
+            (int) $resource_type_id,
+            $this->permitted_resource_types
+        );
+
+        $validator = (new CategoryValidator)->create([
+            'resource_type_id' => $resource_type_id
+        ]);
         UtilityRequest::validateAndReturnErrors($validator);
 
-        try {
-            $resource_type_id = $this->hash->decode('resource_type', request()->input('resource_type_id'));
-
-            if ($resource_type_id === false) {
-                UtilityResponse::unableToDecode();
-            }
-
+        //try {
             $category = new Category([
                 'name' => request()->input('name'),
                 'description' => request()->input('description'),
                 'resource_type_id' => $resource_type_id
             ]);
             $category->save();
-        } catch (Exception $e) {
-            UtilityResponse::failedToSaveModelForCreate();
-        }
+        //} catch (Exception $e) {
+          //  UtilityResponse::failedToSaveModelForCreate();
+        //}
 
         return response()->json(
             (new CategoryTransformer((new Category)->instanceToArray($category)))->toArray(),
@@ -274,16 +285,19 @@ class CategoryController extends Controller
     /**
      * Delete the requested category
      *
-     * @param string $category_id
+     * @param $resource_type_id
+     * @param $category_id
      *
      * @return JsonResponse
      */
     public function delete(
-        string $category_id
+        $resource_type_id,
+        $category_id
     ): JsonResponse
     {
         Route::category(
-            $category_id,
+            (int) $resource_type_id,
+            (int) $category_id,
             $this->permitted_resource_types,
             true
         );
@@ -300,47 +314,18 @@ class CategoryController extends Controller
     }
 
     /**
-     * Define any conditional POST parameters/allowed values, will be passed into
-     * the relevant options method to merge with the definition array
-     */
-    private function conditionalPostParameters(): array
-    {
-        $resource_types = (new ResourceType())->minimisedCollection(
-            $this->permitted_resource_types,
-            $this->include_public
-        );
-
-        $conditional_post_fields = ['resource_type_id' => []];
-        foreach ($resource_types as $resource_type) {
-            $id = $this->hash->encode('resource_type', $resource_type['resource_type_id']);
-
-            if ($id === false) {
-                UtilityResponse::unableToDecode();
-            }
-
-            $conditional_post_fields['resource_type_id']['allowed-values'][$id] = [
-                'value' => $id,
-                'name' => $resource_type['resource_type_name'],
-                'description' => $resource_type['resource_type_description']
-            ];
-        }
-
-        return $conditional_post_fields;
-    }
-
-    /**
      * Update the selected category
      *
-     * @param string $category_id
+     * @param $resource_type_id
+     * @param $category_id
      *
      * @return JsonResponse
      */
-    public function update(
-        string $category_id
-    ): JsonResponse
+    public function update($resource_type_id, $category_id): JsonResponse
     {
         Route::category(
-            $category_id,
+            (int) $resource_type_id,
+            (int) $category_id,
             $this->permitted_resource_types,
             true
         );

@@ -25,11 +25,13 @@ class Route
      * Validate the route, checks the route parameters based on the users
      * permitted resource types
      *
-     * @param $category_id
+     * @param int $resource_type_id
+     * @param int $category_id
      * @param array $permitted_resource_types
      * @param bool $manage
      */
     static public function category(
+        $resource_type_id,
         $category_id,
         array $permitted_resource_types,
         bool $manage = false
@@ -38,7 +40,8 @@ class Route
         if ($manage === false) {
             if (
                 Category::existsToUserForViewing(
-                    (int) $category_id,
+                    $resource_type_id,
+                    $category_id,
                     $permitted_resource_types
                 ) === false
             ) {
@@ -47,7 +50,8 @@ class Route
         } else {
             if (
                 Category::existsToUserForManagement(
-                    (int) $category_id,
+                    $resource_type_id,
+                    $category_id,
                     $permitted_resource_types
                 ) === false
             ) {

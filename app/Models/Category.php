@@ -28,7 +28,7 @@ class Category extends Model
 
     protected $guarded = ['id', 'created_at', 'updated_at'];
 
-    protected $fillable = ['name', 'description'];
+    protected $fillable = ['name', 'description', 'resource_type_id'];
 
     public function category()
     {
@@ -153,16 +153,18 @@ class Category extends Model
     /**
      * Return a single item
      *
+     * @param integer $resource_type_id
      * @param integer $category_id
      *
      * @return array|null
      */
-    public function single(int $category_id): ?array
+    public function single(int $resource_type_id, int $category_id): ?array
     {
-        $result = $this->join('resource_type', $this->table . '.resource_type_id', '=', 'resource_type.id')
-            ->where('category.id', '=', intval($category_id))
-            ->orderBy('category.name')
-            ->select(
+        $result = $this->join('resource_type', $this->table . '.resource_type_id', '=', 'resource_type.id')->
+            where('category.id', '=', $category_id)->
+            where('category.resource_type_id', '=', $resource_type_id)->
+            orderBy('category.name')->
+            select(
                 'category.id AS category_id',
                 'category.name AS category_name',
                 'category.description AS category_description',
@@ -171,8 +173,8 @@ class Category extends Model
                 DB::raw('(SELECT COUNT(sub_category.id) FROM sub_category WHERE sub_category.category_id = category.id) AS category_subcategories'),
                 'resource_type.id AS resource_type_id',
                 'resource_type.name AS resource_type_name'
-            )
-            ->first();
+            )->
+            first();
 
         if ($result === null) {
             return null;
@@ -236,6 +238,7 @@ class Category extends Model
      * Validate that the category exists and is accessible to the user for
      * viewing, editing based on their permitted resource types
      *
+     * @param integer $resource_type_id
      * @param integer $category_id
      * @param array $permitted_resource_types
      * @param boolean $manage Should be exclude public items as we are checking
@@ -244,13 +247,15 @@ class Category extends Model
      * @return boolean
      */
     public function existsToUser(
+        int $resource_type_id,
         int $category_id,
         array $permitted_resource_types,
         $manage = false
     ): bool
     {
         $collection = $this->where('category.id', '=', $category_id)->
-            join('resource_type', 'category.resource_type_id', 'resource_type.id');
+            join('resource_type', 'category.resource_type_id', 'resource_type.id')->
+            where('category.resource_type_id', '=', $resource_type_id);
 
         $collection = ModelUtility::applyResourceTypeCollectionCondition(
             $collection,

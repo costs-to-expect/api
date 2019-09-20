@@ -24,22 +24,26 @@ class RoutePermission
      * Returns the `read` and `manage` permission for the current user, checks
      * against their permitted resource types
      *
-     * @param $category_id
+     * @param integer $resource_type_id
+     * @param integer $category_id
      * @param array $permitted_resource_types
      *
      * @return array Two indexes, view and manage, values for both boolean
      */
     static public function category(
+        $resource_type_id,
         $category_id,
         array $permitted_resource_types
     ): array
     {
         return [
             'view' => Category::existsToUserForViewing(
+                (int) $resource_type_id,
                 (int) $category_id,
                 $permitted_resource_types
             ),
             'manage' => Category::existsToUserForManagement(
+                (int) $resource_type_id,
                 (int) $category_id,
                 $permitted_resource_types
             )
