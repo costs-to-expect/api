@@ -15,6 +15,9 @@ The complete changelog for the Costs to Expect REST API, follows the format defi
 - We have fixed the item subcategory route; the field name for POST was incorrect, still had the underscore.
 - We have corrected the query for the request/access-log, rather than return the entire collection and count the results, probably easier to let MySQL count the results, doh!
 
+### Removed
+- We have removed the category routes; they are now available below resource types.
+
 ## [v2.00.1] - 2019-09-17
 ### Fixed
 - Links on welcome page incorrect.
