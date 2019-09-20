@@ -35,16 +35,6 @@ Route::group(
         );
 
         Route::get(
-            'categories',
-            'CategoryController@index'
-        );
-
-        Route::options(
-            'categories',
-            'CategoryController@optionsIndex'
-        );
-
-        Route::get(
             'resource-types',
             'ResourceTypeController@index'
         );
@@ -55,36 +45,6 @@ Route::group(
         );
 
         Route::get(
-            'categories/{category_id}',
-            'CategoryController@show'
-        );
-
-        Route::options(
-            'categories/{category_id}',
-            'CategoryController@optionsShow'
-        );
-
-        Route::get(
-            'categories/{category_id}/subcategories',
-            'SubcategoryController@index'
-        );
-
-        Route::options(
-            'categories/{category_id}/subcategories',
-            'SubcategoryController@optionsIndex'
-        );
-
-        Route::get(
-            'categories/{category_id}/subcategories/{subcategory_id}',
-            'SubcategoryController@show'
-        );
-
-        Route::options(
-            'categories/{category_id}/subcategories/{subcategory_id}',
-            'SubcategoryController@optionsShow'
-        );
-
-        Route::get(
             'resource-types/{resource_type_id}',
             'ResourceTypeController@show'
         );
@@ -92,6 +52,46 @@ Route::group(
         Route::options(
             'resource-types/{resource_type_id}',
             'ResourceTypeController@optionsShow'
+        );
+
+        Route::get(
+            'resource-types/{resource_type_id}/categories',
+            'CategoryController@index'
+        );
+
+        Route::options(
+            'resource-types/{resource_type_id}/categories',
+            'CategoryController@optionsIndex'
+        );
+
+        Route::get(
+            'resource-types/{resource_type_id}/categories/{category_id}',
+            'CategoryController@show'
+        );
+
+        Route::options(
+            'resource-types/{resource_type_id}/categories/{category_id}',
+            'CategoryController@optionsShow'
+        );
+
+        Route::get(
+            'resource-types/{resource_type_id}/categories/{category_id}/subcategories',
+            'SubcategoryController@index'
+        );
+
+        Route::options(
+            'resource-types/{resource_type_id}/categories/{category_id}/subcategories',
+            'SubcategoryController@optionsIndex'
+        );
+
+        Route::get(
+            'resource-types/{resource_type_id}/categories/{category_id}/subcategories/{subcategory_id}',
+            'SubcategoryController@show'
+        );
+
+        Route::options(
+            'resource-types/{resource_type_id}/categories/{category_id}/subcategories/{subcategory_id}',
+            'SubcategoryController@optionsShow'
         );
 
         Route::get(

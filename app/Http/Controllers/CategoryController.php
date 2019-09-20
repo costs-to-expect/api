@@ -26,8 +26,6 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Config;
 
 /**
- * Manage categories
- *
  * @author Dean Blackborough <dean@g3d-development.com>
  * @copyright G3D Development Limited 2018-2019
  * @license https://github.com/costs-to-expect/api/blob/master/LICENSE
@@ -39,18 +37,25 @@ class CategoryController extends Controller
     /**
      * Return the categories collection
      *
+     * @param string $resource_type_id
+     *
      * @return JsonResponse
      */
-    public function index(): JsonResponse
+    public function index($resource_type_id): JsonResponse
     {
+        Route::resourceType(
+            $resource_type_id,
+            $this->permitted_resource_types
+        );
+
         $search_parameters = SearchParameters::fetch(
             Config::get('api.category.searchable')
         );
 
         $total = (new Category())->totalCount(
+            (int) $resource_type_id,
             $this->permitted_resource_types,
             $this->include_public,
-            [],
             $search_parameters
         );
 
@@ -69,11 +74,11 @@ class CategoryController extends Controller
             paging();
 
         $categories = (new Category())->paginatedCollection(
+            (int) $resource_type_id,
             $this->permitted_resource_types,
             $this->include_public,
             $pagination['offset'],
             $pagination['limit'],
-            [],
             $search_parameters,
             $sort_parameters
         );
@@ -150,16 +155,28 @@ class CategoryController extends Controller
     /**
      * Generate the OPTIONS request for the category list
      *
+     * @param $resource_type_id
+     *
      * @return JsonResponse
      */
-    public function optionsIndex(): JsonResponse
+    public function optionsIndex($resource_type_id): JsonResponse
     {
+        Route::resourceType(
+            $resource_type_id,
+            $this->permitted_resource_types
+        );
+
+        $permissions = RoutePermission::resourceType(
+            $resource_type_id,
+            $this->permitted_resource_types
+        );
+
         $get = Get::init()->
             setParameters('api.category.parameters.collection')->
             setSortable('api.category.sortable')->
             setSearchable('api.category.searchable')->
             setPaginationOverride(true)->
-            setAuthenticationStatus(($this->user_id !== null) ? true : false)->
+            setAuthenticationStatus($permissions['view'])->
             setDescription('route-descriptions.category_GET_index')->
             option();
 
@@ -167,7 +184,7 @@ class CategoryController extends Controller
             setFields('api.category.fields')->
             setConditionalFields($this->conditionalPostParameters())->
             setAuthenticationRequired(true)->
-            setAuthenticationStatus(($this->user_id !== null) ? true : false)->
+            setAuthenticationStatus($permissions['manage'])->
             setDescription('route-descriptions.category_POST')->
             option();
 
@@ -180,11 +197,12 @@ class CategoryController extends Controller
     /**
      * Generate the OPTIONS request for a specific category
      *
-     * @param string $category_id
+     * @param $resource_type_id
+     * @param $category_id
      *
      * @return JsonResponse
      */
-    public function optionsShow(string $category_id): JsonResponse
+    public function optionsShow($resource_type_id, $category_id): JsonResponse
     {
         Route::category(
             $category_id,

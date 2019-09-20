@@ -83,8 +83,6 @@ X-Link-Previous and X-Link-Next can be null.
 | OPTIONS  | v2/ | 
 | POST     | v2/auth/login |
 | POST     | v2/auth/register (Removed in production) |
-| GET/HEAD | v2/categories |
-| OPTIONS  | v2/categories |
 | GET/HEAD | v2/categories/{category_id} |
 | OPTIONS  | v2/categories/{category_id} |
 | GET/HEAD | v2/categories/{category_id}/subcategories |
@@ -94,7 +92,9 @@ X-Link-Previous and X-Link-Next can be null.
 | GET/HEAD | v2/resource-types |
 | OPTIONS  | v2/resource-types |
 | GET/HEAD | v2/resource-types/{resource_type_id} |
-| OPTIONS  | v2/resource-types/{resource_type_id} | 
+| OPTIONS  | v2/resource-types/{resource_type_id} |
+| GET/HEAD | v2/resource-types/{resource_type_id}/categories |
+| OPTIONS  | v2/resource-types/{resource_type_id}/categories |
 | GET/HEAD | v2/resource-types/{resource_type_id}/items |
 | OPTIONS  | v2/resource-types/{resource_type_id}/items |
 | GET/HEAD | v2/resource-types/{resource_type_id}/resources |

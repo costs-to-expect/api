@@ -46,29 +46,23 @@ class Category extends Model
     }
 
     /**
+     * @param integer $resource_type_id
      * @param array $permitted_resource_types
      * @param boolean $include_public
-     * @param array $parameters
      * @param array $search_parameters
      *
      * @return integer
      */
     public function totalCount(
+        int $resource_type_id,
         array $permitted_resource_types,
         bool $include_public,
-        array $parameters = [],
         array $search_parameters = []
     ): int
     {
         $collection = $this->select('category.id')->
-            join("resource_type", "category.resource_type_id", "resource_type.id");
-
-        if (
-            array_key_exists('resource_type', $parameters) === true &&
-            $parameters['resource_type'] !== null
-        ) {
-            $collection->where('category.resource_type_id', '=', $parameters['resource_type']);
-        }
+            join("resource_type", "category.resource_type_id", "resource_type.id")->
+            where('category.resource_type_id', '=', $resource_type_id);
 
         $collection = ModelUtility::applyResourceTypeCollectionCondition(
             $collection,
@@ -84,22 +78,22 @@ class Category extends Model
     /**
      * Return the paginated collection
      *
+     * @param integer $resource_type_id
      * @param array $permitted_resource_types
      * @param boolean $include_public Should we include categories assigned to public resources
      * @param integer $offset
      * @param integer $limit
-     * @param array $parameters
      * @param array $search_parameters
      * @param array $sort_parameters
      *
      * @return array
      */
     public function paginatedCollection(
+        int $resource_type_id,
         array $permitted_resource_types,
         bool $include_public,
         int $offset = 0,
         int $limit = 10,
-        array $parameters = [],
         array $search_parameters = [],
         array $sort_parameters = []
     ): array {
@@ -112,7 +106,8 @@ class Category extends Model
             'resource_type.id AS resource_type_id',
             'resource_type.name AS resource_type_name',
             'resource_type.name AS resource_type_name'
-        )->selectRaw('
+        )->
+        selectRaw('
             (
                 SELECT 
                     COUNT(`sub_category`.`id`) 
@@ -121,14 +116,9 @@ class Category extends Model
                 WHERE 
                     `sub_category`.`category_id` = `category`.`id`
             ) AS `category_subcategories`'
-        )->join("resource_type", "category.resource_type_id", "resource_type.id");
-
-        if (
-            array_key_exists('resource_type', $parameters) === true &&
-            $parameters['resource_type'] !== null
-        ) {
-            $collection->where('category.resource_type_id', '=', $parameters['resource_type']);
-        }
+        )->
+        join("resource_type", "category.resource_type_id", "resource_type.id")->
+        where('category.resource_type_id', '=', $resource_type_id);
 
         $collection = ModelUtility::applyResourceTypeCollectionCondition(
             $collection,
