@@ -14,16 +14,6 @@ Route::group(
     ],
     function () {
         Route::get(
-            'summary/categories',
-            'SummaryCategoryController@index'
-        );
-
-        Route::options(
-            'summary/categories',
-            'SummaryCategoryController@optionsIndex'
-        );
-
-        Route::get(
             'summary/categories/{category_id}/subcategories',
             'SummarySubcategoryController@index'
         );
@@ -41,6 +31,16 @@ Route::group(
         Route::options(
             'summary/resource-types',
             'SummaryResourceTypeController@optionsIndex'
+        );
+
+        Route::get(
+            'summary/resource-types/{resource_type_id}/categories',
+            'SummaryCategoryController@index'
+        );
+
+        Route::options(
+            'summary/resource-types/{resource_type_id}/categories',
+            'SummaryCategoryController@optionsIndex'
         );
 
         Route::get(

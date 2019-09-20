@@ -124,14 +124,14 @@ GET parameters as the non summary route.
 
 | HTTP Verb(s) | Route |
 | :--- | :--- |
-| GET/HEAD | v2/summary/categories |
-| OPTIONS  | v2/summary/categories |
 | GET/HEAD | v2/summary/categories/{category_id}/subcategories |
 | OPTIONS  | v2/summary/categories/{category_id}/subcategories |
 | GET/HEAD | v2/summary/request/access-log |
 | OPTIONS  | v2/summary/request/access-log |
 | GET/HEAD | v2/summary/resource-types |
 | OPTIONS  | v2/summary/resource-types |
+| GET/HEAD | v2/summary/resource-types/{resource_type_id}/categories |
+| OPTIONS  | v2/summary/resource-types/{resource_type_id}/categories |
 | GET/HEAD | v2/summary/resource-types/{resource_type_id}/items |
 | OPTIONS  | v2/summary/resource-types/{resource_type_id}/items |
 | GET/HEAD | v2/summary/resource-types/{resource_type_id}/resources |
