@@ -55,6 +55,7 @@ class RoutePermission
      * Returns the `view` and `manage` permission for the current user, checks
      * against their permitted resource types
      *
+     * @param $resource_type_id
      * @param $category_id
      * @param $subcategory_id
      * @param array $permitted_resource_types
@@ -62,6 +63,7 @@ class RoutePermission
      * @return array Two indexes, view and manage, values for both boolean
      */
     static public function subcategory(
+        $resource_type_id,
         $category_id,
         $subcategory_id,
         array $permitted_resource_types
@@ -69,11 +71,13 @@ class RoutePermission
     {
         return [
             'view' => SubCategory::existsToUserForViewing(
+                (int) $resource_type_id,
                 (int) $category_id,
                 (int) $subcategory_id,
                 $permitted_resource_types
             ),
             'manage' => SubCategory::existsToUserForManagement(
+                (int) $resource_type_id,
                 (int) $category_id,
                 (int) $subcategory_id,
                 $permitted_resource_types

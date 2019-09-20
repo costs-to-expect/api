@@ -36,14 +36,16 @@ class SubcategoryController extends Controller
     /**
      * Return all the sub categories assigned to the given category
      *
-     * @param string $category_id
+     * @param $resource_type_id
+     * @param $category_id
      *
      * @return JsonResponse
      */
-    public function index(string $category_id): JsonResponse
+    public function index($resource_type_id, $category_id): JsonResponse
     {
         Route::category(
-            $category_id,
+            (int) $resource_type_id,
+            (int) $category_id,
             $this->permitted_resource_types
         );
 
@@ -52,7 +54,8 @@ class SubcategoryController extends Controller
         );
 
         $total = (new SubCategory())->totalCount(
-            $category_id,
+            (int) $resource_type_id,
+            (int) $category_id,
             $search_parameters
         );
 
@@ -61,17 +64,18 @@ class SubcategoryController extends Controller
         );
 
         $pagination = UtilityPagination::init(
-                request()->path(),
-                $total,
-                10,
-                $this->allow_entire_collection
-            )->
-            setSearchParameters($search_parameters)->
-            setSortParameters($sort_parameters)->
-            paging();
+            request()->path(),
+            $total,
+            10,
+            $this->allow_entire_collection
+        )->
+        setSearchParameters($search_parameters)->
+        setSortParameters($sort_parameters)->
+        paging();
 
         $subcategories = (new SubCategory())->paginatedCollection(
-            $category_id,
+            (int) $resource_type_id,
+            (int) $category_id,
             $pagination['offset'],
             $pagination['limit'],
             $search_parameters,
@@ -106,19 +110,22 @@ class SubcategoryController extends Controller
     /**
      * Return a single sub category
      *
-     * @param string $category_id
-     * @param string $subcategory_id
+     * @param $resource_type_id
+     * @param $category_id
+     * @param $subcategory_id
      *
      * @return JsonResponse
      */
     public function show(
-        string $category_id,
-        string $subcategory_id
+        $resource_type_id,
+        $category_id,
+        $subcategory_id
     ): JsonResponse
     {
         Route::subcategory(
-            $category_id,
-            $subcategory_id,
+            (int) $resource_type_id,
+            (int) $category_id,
+            (int) $subcategory_id,
             $this->permitted_resource_types
         );
 
@@ -144,19 +151,22 @@ class SubcategoryController extends Controller
     /**
      * Generate the OPTIONS request for the sub categories list
      *
-     * @param string $category_id
+     * @param $resource_type_id
+     * @param $category_id
      *
      * @return JsonResponse
      */
-    public function optionsIndex(string $category_id): JsonResponse
+    public function optionsIndex($resource_type_id, $category_id): JsonResponse
     {
         Route::category(
-            $category_id,
+            (int) $resource_type_id,
+            (int) $category_id,
             $this->permitted_resource_types
         );
 
         $permissions = RoutePermission::category(
-            $category_id,
+            (int) $resource_type_id,
+            (int) $category_id,
             $this->permitted_resource_types
         );
 
@@ -185,25 +195,29 @@ class SubcategoryController extends Controller
     /**
      * Generate the OPTIONS request for the specific sub category
      *
-     * @param string $category_id
-     * @param string $subcategory_id
+     * @param $resource_type_id
+     * @param $category_id
+     * @param $subcategory_id
      *
      * @return JsonResponse
      */
     public function optionsShow(
-        string $category_id,
-        string $subcategory_id
+        $resource_type_id,
+        $category_id,
+        $subcategory_id
     ): JsonResponse
     {
         Route::subcategory(
-            $category_id,
-            $subcategory_id,
+            (int) $resource_type_id,
+            (int) $category_id,
+            (int) $subcategory_id,
             $this->permitted_resource_types
         );
 
         $permissions = RoutePermission::subcategory(
-            $category_id,
-            $subcategory_id,
+            (int) $resource_type_id,
+            (int) $category_id,
+            (int) $subcategory_id,
             $this->permitted_resource_types
         );
 
@@ -235,14 +249,16 @@ class SubcategoryController extends Controller
     /**
      * Create a new sub category
      *
-     * @param string $category_id
+     * @param $resource_type_id
+     * @param $category_id
      *
      * @return JsonResponse
      */
-    public function create(string $category_id): JsonResponse
+    public function create($resource_type_id, $category_id): JsonResponse
     {
         Route::category(
-            $category_id,
+            (int) $resource_type_id,
+            (int) $category_id,
             $this->permitted_resource_types,
             true
         );
@@ -270,24 +286,27 @@ class SubcategoryController extends Controller
     /**
      * Delete the requested sub category
      *
-     * @param string $category_id
-     * @param string $subcategory_id
+     * @param $resource_type_id
+     * @param $category_id
+     * @param $subcategory_id
      *
      * @return JsonResponse
      */
     public function delete(
-        string $category_id,
-        string $subcategory_id
+        $resource_type_id,
+        $category_id,
+        $subcategory_id
     ): JsonResponse
     {
         Route::subcategory(
-            $category_id,
-            $subcategory_id,
+            (int) $resource_type_id,
+            (int) $category_id,
+            (int) $subcategory_id,
             $this->permitted_resource_types,
             true
         );
 
-        $sub_category = (new SubCategory())->single(
+        $sub_category = (new SubCategory())->instance(
             $category_id,
             $subcategory_id
         );
@@ -310,19 +329,22 @@ class SubcategoryController extends Controller
     /**
      * Update the selected subcategory
      *
-     * @param string $category_id
-     * @param string $subcategory_id
+     * @param $resource_type_id
+     * @param $category_id
+     * @param $subcategory_id
      *
      * @return JsonResponse
      */
     public function update(
-        string $category_id,
-        string $subcategory_id
+        $resource_type_id,
+        $category_id,
+        $subcategory_id
     ): JsonResponse
     {
         Route::subcategory(
-            $category_id,
-            $subcategory_id,
+            (int) $resource_type_id,
+            (int) $category_id,
+            (int) $subcategory_id,
             $this->permitted_resource_types,
             true
         );

@@ -25,14 +25,14 @@ class Route
      * Validate the route, checks the route parameters based on the users
      * permitted resource types
      *
-     * @param int $resource_type_id
-     * @param int $category_id
+     * @param integer $resource_type_id
+     * @param integer $category_id
      * @param array $permitted_resource_types
      * @param bool $manage
      */
     static public function category(
-        $resource_type_id,
-        $category_id,
+        int $resource_type_id,
+        int $category_id,
         array $permitted_resource_types,
         bool $manage = false
     )
@@ -65,14 +65,16 @@ class Route
      * Validate the route, checks the route parameters based on the users
      * permitted resource types
      *
-     * @param $category_id
-     * @param $subcategory_id
+     * @param integer $resource_type_id
+     * @param integer $category_id
+     * @param integer $subcategory_id
      * @param array $permitted_resource_types
      * @param bool $manage
      */
     static public function subcategory(
-        $category_id,
-        $subcategory_id,
+        int $resource_type_id,
+        int $category_id,
+        int $subcategory_id,
         array $permitted_resource_types,
         $manage = false
     )
@@ -80,8 +82,9 @@ class Route
         if ($manage === false) {
             if (
                 SubCategory::existsToUserForViewing(
-                    (int) $category_id,
-                    (int) $subcategory_id,
+                    $resource_type_id,
+                    $category_id,
+                    $subcategory_id,
                     $permitted_resource_types
                 ) === false
             ) {
@@ -90,6 +93,7 @@ class Route
         } else {
             if (
                 SubCategory::existsToUserForManagement(
+                    (int) $resource_type_id,
                     (int) $category_id,
                     (int) $subcategory_id,
                     $permitted_resource_types
