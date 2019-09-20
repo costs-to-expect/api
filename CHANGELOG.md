@@ -14,10 +14,12 @@ The complete changelog for the Costs to Expect REST API, follows the format defi
 ### Fixed
 - We have fixed the item subcategory route; the field name for POST was incorrect, still had the underscore.
 - We have corrected the query for the request/access-log, rather than return the entire collection and count the results, probably easier to let MySQL count the results, doh!
+- Unable to delete a subcategory because an instance was not being returned from the model.
 
 ### Removed
 - We have removed the category routes; they are now available below resource types.
 - We have removed the category summary routes; they are now available below the resource types summary.
+- We have removed the subcategory routes; they are now available below resource types.
 
 ## [v2.00.1] - 2019-09-17
 ### Fixed
