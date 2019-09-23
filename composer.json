@@ -1,16 +1,21 @@
 {
     "name": "costs-to-expect/api",
     "description": "The API for https://api.costs-to-expect.com",
-    "keywords": ["api", "laravel", "child cost"],
+    "keywords": [
+        "api",
+        "laravel",
+        "child cost"
+    ],
     "license": "MIT",
     "type": "project",
     "require": {
         "php": "^7.3",
         "ext-json": "*",
+        "doctrine/dbal": "^2.9",
         "fideloper/proxy": "^4.0",
         "guzzlehttp/guzzle": "^6.3",
         "hashids/hashids": "^3.0",
-        "laravel/framework": "5.7.*",
+        "laravel/framework": "^5.8.0",
         "laravel/passport": "^7.0",
         "laravel/tinker": "^1.0"
     },
@@ -37,8 +42,7 @@
     },
     "extra": {
         "laravel": {
-            "dont-discover": [
-            ]
+            "dont-discover": []
         }
     },
     "scripts": {
