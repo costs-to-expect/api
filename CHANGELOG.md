@@ -2,7 +2,9 @@
 
 The complete changelog for the Costs to Expect REST API, follows the format defined at https://keepachangelog.com/en/1.0.0/
 
-## [v2.01.0] - 2019-09-xx
+## [v2.02.0] - 2019-10-xx
+
+## [v2.01.0] - 2019-09-27
 ### Added
 - We have added a `Header` utility class that can be used to generate the expected headers for collection and item requests.
 - We have added a `RoutePermission` class which returns the view and manage permission for each route.
