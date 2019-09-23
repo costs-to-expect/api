@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Option\Get;
+use App\Utilities\Header;
 use App\Utilities\Response;
+use App\Utilities\RoutePermission;
 use App\Validators\Request\Parameters;
 use App\Validators\Request\Route;
 use App\Models\ItemSummary;
@@ -32,13 +34,12 @@ class SummaryItemController extends Controller
     /**
      * Return the TCO for the resource
      *
-     * @param Request $request
      * @param string $resource_type_id
      * @param string $resource_id
      *
      * @return JsonResponse
      */
-    public function index(Request $request, string $resource_type_id, string $resource_id): JsonResponse
+    public function index(string $resource_type_id, string $resource_id): JsonResponse
     {
         Route::resource(
             $resource_type_id,
@@ -105,14 +106,21 @@ class SummaryItemController extends Controller
         ) {
             if (array_key_exists('subcategories', $collection_parameters) === true &&
                 General::booleanValue($collection_parameters['subcategories']) === true) {
-                return $this->subcategoriesSummary($collection_parameters['category']);
+                return $this->subcategoriesSummary(
+                    $resource_type_id,
+                    $collection_parameters['category']
+                );
             } else if (array_key_exists('subcategory', $collection_parameters) === true) {
                 return $this->subcategorySummary(
+                    $resource_type_id,
                     $collection_parameters['category'],
                     $collection_parameters['subcategory']
                 );
             } else {
-                return $this->categorySummary($collection_parameters['category']);
+                return $this->categorySummary(
+                    $resource_type_id,
+                    $collection_parameters['category']
+                );
             }
         }
 
@@ -152,15 +160,16 @@ class SummaryItemController extends Controller
             Response::successEmptyContent(true);
         }
 
+        $headers = new Header();
+        $headers->add('X-Total-Count', 1);
+        $headers->add('X-Count', 1);
+
         return response()->json(
             [
                 'total' => number_format($summary[0]['actualised_total'], 2, '.', '')
             ],
             200,
-            [
-                'X-Total-Count' => count($summary),
-                'X-Count' => count($summary)
-            ]
+            $headers->headers()
         );
     }
 
@@ -181,6 +190,10 @@ class SummaryItemController extends Controller
             Response::successEmptyContent(true);
         }
 
+        $headers = new Header();
+        $headers->add('X-Total-Count', count($summary));
+        $headers->add('X-Count', count($summary));
+
         return response()->json(
             array_map(
                 function($year) {
@@ -189,10 +202,7 @@ class SummaryItemController extends Controller
                 $summary
             ),
             200,
-            [
-                'X-Total-Count' => count($summary),
-                'X-Count' => count($summary)
-            ]
+            $headers->headers()
         );
     }
 
@@ -216,13 +226,14 @@ class SummaryItemController extends Controller
             Response::successEmptyContent();
         }
 
+        $headers = new Header();
+        $headers->add('X-Total-Count', count($summary));
+        $headers->add('X-Count', count($summary));
+
         return response()->json(
             (new ItemYearSummaryTransformer($summary[0]))->toArray(),
             200,
-            [
-                'X-Total-Count' => count($summary),
-                'X-Count' => count($summary)
-            ]
+            $headers->headers()
         );
     }
 
@@ -246,6 +257,10 @@ class SummaryItemController extends Controller
             Response::successEmptyContent(true);
         }
 
+        $headers = new Header();
+        $headers->add('X-Total-Count', count($summary));
+        $headers->add('X-Count', count($summary));
+
         return response()->json(
             array_map(
                 function($month) {
@@ -254,10 +269,7 @@ class SummaryItemController extends Controller
                 $summary
             ),
             200,
-            [
-                'X-Total-Count' => count($summary),
-                'X-Count' => count($summary)
-            ]
+            $headers->headers()
         );
     }
 
@@ -283,13 +295,14 @@ class SummaryItemController extends Controller
             Response::successEmptyContent();
         }
 
+        $headers = new Header();
+        $headers->add('X-Total-Count', count($summary));
+        $headers->add('X-Count', count($summary));
+
         return response()->json(
             (new ItemMonthSummaryTransformer($summary[0]))->toArray(),
             200,
-            [
-                'X-Total-Count' => count($summary),
-                'X-Count' => count($summary)
-            ]
+            $headers->headers()
         );
     }
 
@@ -310,6 +323,10 @@ class SummaryItemController extends Controller
             Response::successEmptyContent(true);
         }
 
+        $headers = new Header();
+        $headers->add('X-Total-Count', count($summary));
+        $headers->add('X-Count', count($summary));
+
         return response()->json(
             array_map(
                 function($category) {
@@ -318,10 +335,7 @@ class SummaryItemController extends Controller
                 $summary
             ),
             200,
-            [
-                'X-Total-Count' => count($summary),
-                'X-Count' => count($summary)
-            ]
+            $headers->headers()
         );
     }
 
@@ -359,28 +373,31 @@ class SummaryItemController extends Controller
             Response::successEmptyContent(true);
         }
 
+        $headers = new Header();
+        $headers->add('X-Total-Count', count($summary));
+        $headers->add('X-Count', count($summary));
+
         return response()->json(
             [
                 'total' => number_format($summary[0]['total'], 2, '.', '')
             ],
             200,
-            [
-                'X-Total-Count' => count($summary),
-                'X-Count' => count($summary)
-            ]
+            $headers->headers()
         );
     }
 
     /**
      * Return the category summary for a resource
      *
+     * @param integer $resource_type_id
      * @param integer $category_id
      *
      * @return JsonResponse
      */
-    private function categorySummary(int $category_id): JsonResponse
+    private function categorySummary(int $resource_type_id, int $category_id): JsonResponse
     {
         Route::category(
+            $resource_type_id,
             $category_id,
             $this->permitted_resource_types
         );
@@ -396,26 +413,29 @@ class SummaryItemController extends Controller
             Response::successEmptyContent();
         }
 
+        $headers = new Header();
+        $headers->add('X-Total-Count', count($summary));
+        $headers->add('X-Count', count($summary));
+
         return response()->json(
             (new ItemCategorySummaryTransformer($summary[0]))->toArray(),
             200,
-            [
-                'X-Total-Count' => count($summary),
-                'X-Count' => count($summary)
-            ]
+            $headers->headers()
         );
     }
 
     /**
      * Return the subcategories summary for a category
      *
+     * @param integer $resource_type_id
      * @param integer $category_id
      *
      * @return JsonResponse
      */
-    private function subcategoriesSummary(int $category_id): JsonResponse
+    private function subcategoriesSummary(int $resource_type_id, int $category_id): JsonResponse
     {
         Route::category(
+            $resource_type_id,
             $category_id,
             $this->permitted_resource_types
         );
@@ -431,6 +451,10 @@ class SummaryItemController extends Controller
             Response::successEmptyContent(true);
         }
 
+        $headers = new Header();
+        $headers->add('X-Total-Count', count($summary));
+        $headers->add('X-Count', count($summary));
+
         return response()->json(
             array_map(
                 function($subcategory) {
@@ -439,24 +463,27 @@ class SummaryItemController extends Controller
                 $summary
             ),
             200,
-            [
-                'X-Total-Count' => count($summary),
-                'X-Count' => count($summary)
-            ]
+            $headers->headers()
         );
     }
 
     /**
      * Return the subcategories summary for a category
      *
+     * @param integer $resource_type_id
      * @param integer $category_id
      * @param integer $subcategory_id
      *
      * @return JsonResponse
      */
-    private function subcategorySummary(int $category_id, int $subcategory_id): JsonResponse
+    private function subcategorySummary(
+        int $resource_type_id,
+        int $category_id,
+        int $subcategory_id
+    ): JsonResponse
     {
         Route::subcategory(
+            $resource_type_id,
             $category_id,
             $subcategory_id,
             $this->permitted_resource_types
@@ -474,13 +501,14 @@ class SummaryItemController extends Controller
             Response::successEmptyContent();
         }
 
+        $headers = new Header();
+        $headers->add('X-Total-Count', count($summary));
+        $headers->add('X-Count', count($summary));
+
         return response()->json(
             (new ItemSubCategorySummaryTransformer($summary[0]))->toArray(),
             200,
-            [
-                'X-Total-Count' => count($summary),
-                'X-Count' => count($summary)
-            ]
+            $headers->headers()
         );
     }
 
@@ -501,11 +529,17 @@ class SummaryItemController extends Controller
             $this->permitted_resource_types
         );
 
+        $permissions = RoutePermission::resource(
+            $resource_type_id,
+            $resource_id,
+            $this->permitted_resource_types
+        );
+
         $get = Get::init()->
             setParameters('api.item.summary-parameters.collection')->
             setSearchable('api.item.searchable')->
             setDescription('route-descriptions.summary_GET_resource-type_resource_items')->
-            setAuthenticationStatus(($this->user_id !== null) ? true : false)->
+            setAuthenticationStatus($permissions['view'])->
             option();
 
         return $this->optionsResponse($get, 200);

@@ -34,12 +34,7 @@ class ItemSubCategory extends BaseValidator
         return array_merge(
             [
                 'subcategory_id' => [
-                    'required',
-                    Rule::exists('sub_category', 'id')->where(function ($query)
-                    {
-                        $query->where('category_id', '=', $this->category_id);
-                    }),
-
+                    'required'
                 ],
             ],
             Config::get('api.item-subcategory.validation.POST.fields')

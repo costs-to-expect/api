@@ -18,18 +18,18 @@ Route::group(
         );
 
         Route::post(
-            'categories',
+            'resource-types',
+            'ResourceTypeController@create'
+        );
+
+        Route::post(
+            'resource-types/{resource_type_id}/categories',
             'CategoryController@create'
         );
 
         Route::post(
-            'categories/{category_id}/subcategories',
+            'resource-types/{resource_type_id}/categories/{category_id}/subcategories',
             'SubcategoryController@create'
-        );
-
-        Route::post(
-            'resource-types',
-            'ResourceTypeController@create'
         );
 
         Route::post(
@@ -58,18 +58,18 @@ Route::group(
         );
 
         Route::delete(
-            'categories/{category_id}',
+            'resource-types/{resource_type_id}',
+            'ResourceTypeController@delete'
+        );
+
+        Route::delete(
+            'resource-types/{resource_type_id}/categories/{category_id}',
             'CategoryController@delete'
         );
 
         Route::delete(
-            'categories/{category_id}/sub_categories/{subcategory_id}',
+            'resource-types/{resource_type_id}/categories/{category_id}/subcategories/{subcategory_id}',
             'SubcategoryController@delete'
-        );
-
-        Route::delete(
-            'resource-types/{resource_type_id}',
-            'ResourceTypeController@delete'
         );
 
         Route::delete(
@@ -93,18 +93,18 @@ Route::group(
         );
 
         Route::patch(
-            'categories/{category_id}',
+            'resource-types/{resource_type_id}',
+            'ResourceTypeController@update'
+        );
+
+        Route::patch(
+            'resource-types/{resource_type_id}/categories/{category_id}',
             'CategoryController@update'
         );
 
         Route::patch(
-            'categories/{category_id}/subcategories/{subcategory_id}',
+            'resource-types/{resource_type_id}/categories/{category_id}/subcategories/{subcategory_id}',
             'SubcategoryController@update'
-        );
-
-        Route::patch(
-            'resource-types/{resource_type_id}',
-            'ResourceTypeController@update'
         );
 
         Route::patch(

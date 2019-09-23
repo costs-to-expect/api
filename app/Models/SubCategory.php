@@ -38,17 +38,21 @@ class SubCategory extends Model
     }
 
     /**
+     * @param integer $resource_type_id
      * @param integer $category_id
      * @param array $search_parameters
      *
      * @return integer
      */
     public function totalCount(
+        int $resource_type_id,
         int $category_id,
         array $search_parameters = []
     ): int
     {
-        $collection = $this->where('category_id', '=', $category_id);
+        $collection = $this->join('category', 'sub_category.category_id', 'category.id')->
+            where('sub_category.category_id', '=', $category_id)->
+            where('category.resource_type_id', '=', $resource_type_id);
 
         $collection = ModelUtility::applySearch($collection, $this->table, $search_parameters);
 
@@ -56,6 +60,7 @@ class SubCategory extends Model
     }
 
     /**
+     * @param integer $resource_type_id
      * @param integer $category_id
      * @param integer $offset
      * @param integer $limit
@@ -65,6 +70,7 @@ class SubCategory extends Model
      * @return array
      */
     public function paginatedCollection(
+        int $resource_type_id,
         int $category_id,
         int $offset = 0,
         int $limit = 10,
@@ -78,7 +84,9 @@ class SubCategory extends Model
                 'sub_category.description AS subcategory_description',
                 'sub_category.created_at AS subcategory_created_at'
             )->
-            where('category_id', '=', $category_id);
+            join('category', 'sub_category.category_id', 'category.id')->
+            where('sub_category.category_id', '=', $category_id)->
+            where('category.resource_type_id', '=', $resource_type_id);
 
         $collection = ModelUtility::applySearch($collection, $this->table, $search_parameters);
 
@@ -161,6 +169,7 @@ class SubCategory extends Model
      * Validate that the subcategory exists and is accessible to the user for
      * viewing, editing based on their permitted resource types
      *
+     * @param integer $resource_type_id
      * @param integer $category_id
      * @param integer $subcategory_id
      * @param array $permitted_resource_types
@@ -170,6 +179,7 @@ class SubCategory extends Model
      * @return boolean
      */
     public function existsToUser(
+        int $resource_type_id,
         int $category_id,
         int $subcategory_id,
         array $permitted_resource_types,
@@ -179,7 +189,8 @@ class SubCategory extends Model
         $collection = $this->where('sub_category.id', '=', $subcategory_id)->
             join('category', 'sub_category.category_id', 'category.id')->
             join('resource_type', 'category.resource_type_id', 'resource_type.id')->
-            where('sub_category.category_id', '=', $category_id);
+            where('sub_category.category_id', '=', $category_id)->
+            where('category.resource_type_id', '=', $resource_type_id);
 
         $collection = ModelUtility::applyResourceTypeCollectionCondition(
             $collection,

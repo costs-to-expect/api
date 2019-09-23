@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Option\Get;
+use App\Utilities\Header;
+use App\Utilities\RoutePermission;
 use App\Validators\Request\Parameters;
 use App\Validators\Request\Route;
 use App\Models\Category;
@@ -82,23 +84,17 @@ class ResourceTypeItemController extends Controller
             $search_conditions
         );
 
-        $headers = [
-            'X-Count' => count($items),
-            'X-Total-Count' => $total,
-            'X-Offset' => $pagination['offset'],
-            'X-Limit' => $pagination['limit'],
-            'X-Link-Previous' => $pagination['links']['previous'],
-            'X-Link-Next' => $pagination['links']['next']
-        ];
+        $headers = new Header();
+        $headers->collection($pagination, count($items), $total);
 
         $sort_header = SortParameters::xHeader();
         if ($sort_header !== null) {
-            $headers['X-Sort'] = $sort_header;
+            $headers->addSort($sort_header);
         }
 
         $search_header = SearchParameters::xHeader();
         if ($search_header !== null) {
-            $headers['X-Search'] = $search_header;
+            $headers->addSearch($search_header);
         }
 
         return response()->json(
@@ -109,21 +105,25 @@ class ResourceTypeItemController extends Controller
                 $items
             ),
             200,
-            $headers
+            $headers->headers()
         );
     }
 
     /**
      * Generate the OPTIONS request for the items list
      *
-     * @param Request $request
      * @param string $resource_type_id
      *
      * @return JsonResponse
      */
-    public function optionsIndex(Request $request, string $resource_type_id): JsonResponse
+    public function optionsIndex(string $resource_type_id): JsonResponse
     {
-        $authenticated = Route::resourceType(
+        Route::resourceType(
+            $resource_type_id,
+            $this->permitted_resource_types
+        );
+
+        $permissions = RoutePermission::resourceType(
             $resource_type_id,
             $this->permitted_resource_types
         );
@@ -142,7 +142,7 @@ class ResourceTypeItemController extends Controller
             setParameters('api.resource-type-item.parameters.collection')->
             setConditionalParameters($this->conditional_get_parameters)->
             setDescription('route-descriptions.resource_type_item_GET_index')->
-            setAuthenticationStatus($authenticated)->
+            setAuthenticationStatus($permissions['view'])->
             option();
 
         return $this->optionsResponse($get, 200);
@@ -191,11 +191,11 @@ class ResourceTypeItemController extends Controller
         }
 
         $categories = (new Category())->paginatedCollection(
+            (int) $resource_type_id,
             $this->permitted_resource_types,
             $this->include_public,
             0,
-            100,
-            ['resource_type'=>$resource_type_id]
+            100
         );
         array_map(
             function($category) {

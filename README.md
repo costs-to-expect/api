@@ -83,18 +83,18 @@ X-Link-Previous and X-Link-Next can be null.
 | OPTIONS  | v2/ | 
 | POST     | v2/auth/login |
 | POST     | v2/auth/register (Removed in production) |
-| GET/HEAD | v2/categories |
-| OPTIONS  | v2/categories |
-| GET/HEAD | v2/categories/{category_id} |
-| OPTIONS  | v2/categories/{category_id} |
-| GET/HEAD | v2/categories/{category_id}/subcategories |
-| OPTIONS  | v2/categories/{category_id}/subcategories |
-| GET/HEAD | v2/categories/{category_id}/subcategories/{subcategory_id} |
-| OPTIONS  | v2/categories/{category_id}/subcategories/{subcategory_id} |
 | GET/HEAD | v2/resource-types |
 | OPTIONS  | v2/resource-types |
 | GET/HEAD | v2/resource-types/{resource_type_id} |
-| OPTIONS  | v2/resource-types/{resource_type_id} | 
+| OPTIONS  | v2/resource-types/{resource_type_id} |
+| GET/HEAD | v2/resource-types/{resource_type_id}/categories |
+| OPTIONS  | v2/resource-types/{resource_type_id}/categories |
+| GET/HEAD | v2/resource-types/{resource_type_id}/categories/{category_id} |
+| OPTIONS  | v2/resource-types/{resource_type_id}/categories/{category_id} |
+| GET/HEAD | v2/resource-types/{resource_type_id}/categories/{category_id}/subcategories |
+| OPTIONS  | v2/resource-types/{resource_type_id}/categories/{category_id}/subcategories |
+| GET/HEAD | v2/resource-types/{resource_type_id}/categories/{category_id}/subcategories/{subcategory_id} |
+| OPTIONS  | v2/resource-types/{resource_type_id}/categories/{category_id}/subcategories/{subcategory_id} |
 | GET/HEAD | v2/resource-types/{resource_type_id}/items |
 | OPTIONS  | v2/resource-types/{resource_type_id}/items |
 | GET/HEAD | v2/resource-types/{resource_type_id}/resources |
@@ -117,21 +117,21 @@ X-Link-Previous and X-Link-Next can be null.
 
 ## Summary routes
 
-Eventually there will be a summary route for every API route, until that point, the summary routes 
+Eventually there will be a summary route for every API GET endpoint, until that point, the summary routes 
 are detailed below. Some use GET parameters to breakdown the data, one example being items 
 which allows you to provide year, month, category and subcategory. A summary route should have the same 
 GET parameters as the non summary route.
 
 | HTTP Verb(s) | Route |
 | :--- | :--- |
-| GET/HEAD | v2/summary/categories |
-| OPTIONS  | v2/summary/categories |
-| GET/HEAD | v2/summary/categories/{category_id}/subcategories |
-| OPTIONS  | v2/summary/categories/{category_id}/subcategories |
 | GET/HEAD | v2/summary/request/access-log |
 | OPTIONS  | v2/summary/request/access-log |
 | GET/HEAD | v2/summary/resource-types |
 | OPTIONS  | v2/summary/resource-types |
+| GET/HEAD | v2/summary/resource-types/{resource_type_id}/categories |
+| OPTIONS  | v2/summary/resource-types/{resource_type_id}/categories |
+| GET/HEAD | v2/summary/resource-types/{resource_type_id}/categories/{category_id}/subcategories |
+| OPTIONS  | v2/summary/resource-types/{resource_type_id}/categories/{category_id}/subcategories |
 | GET/HEAD | v2/summary/resource-types/{resource_type_id}/items |
 | OPTIONS  | v2/summary/resource-types/{resource_type_id}/items |
 | GET/HEAD | v2/summary/resource-types/{resource_type_id}/resources |

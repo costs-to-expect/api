@@ -25,14 +25,14 @@ class Route
      * Validate the route, checks the route parameters based on the users
      * permitted resource types
      *
-     * @param $category_id
+     * @param integer $resource_type_id
+     * @param integer $category_id
      * @param array $permitted_resource_types
      * @param bool $manage
-     *
-     * @return bool
      */
     static public function category(
-        $category_id,
+        int $resource_type_id,
+        int $category_id,
         array $permitted_resource_types,
         bool $manage = false
     )
@@ -40,7 +40,8 @@ class Route
         if ($manage === false) {
             if (
                 Category::existsToUserForViewing(
-                    (int) $category_id,
+                    $resource_type_id,
+                    $category_id,
                     $permitted_resource_types
                 ) === false
             ) {
@@ -49,33 +50,31 @@ class Route
         } else {
             if (
                 Category::existsToUserForManagement(
-                    (int) $category_id,
+                    $resource_type_id,
+                    $category_id,
                     $permitted_resource_types
                 ) === false
             ) {
                 UtilityResponse::notFoundOrNotAccessible(trans('entities.category'));
-            } else {
-                return true;
             }
         }
-
-        return false;
     }
+
 
     /**
      * Validate the route, checks the route parameters based on the users
      * permitted resource types
      *
-     * @param $category_id
-     * @param $subcategory_id
+     * @param integer $resource_type_id
+     * @param integer $category_id
+     * @param integer $subcategory_id
      * @param array $permitted_resource_types
      * @param bool $manage
-     *
-     * @return bool
      */
     static public function subcategory(
-        $category_id,
-        $subcategory_id,
+        int $resource_type_id,
+        int $category_id,
+        int $subcategory_id,
         array $permitted_resource_types,
         $manage = false
     )
@@ -83,8 +82,9 @@ class Route
         if ($manage === false) {
             if (
                 SubCategory::existsToUserForViewing(
-                    (int) $category_id,
-                    (int) $subcategory_id,
+                    $resource_type_id,
+                    $category_id,
+                    $subcategory_id,
                     $permitted_resource_types
                 ) === false
             ) {
@@ -93,18 +93,15 @@ class Route
         } else {
             if (
                 SubCategory::existsToUserForManagement(
+                    (int) $resource_type_id,
                     (int) $category_id,
                     (int) $subcategory_id,
                     $permitted_resource_types
                 ) === false
             ) {
                 UtilityResponse::notFoundOrNotAccessible(trans('entities.subcategory'));
-            } else {
-                return true;
             }
         }
-
-        return false;
     }
 
     /**
@@ -114,8 +111,6 @@ class Route
      * @param $resource_type_id
      * @param array $permitted_resource_types
      * @param bool $manage
-     *
-     * @return bool
      */
     static public function resourceType(
         $resource_type_id,
@@ -140,12 +135,8 @@ class Route
                 ) === false
             ) {
                 UtilityResponse::notFoundOrNotAccessible(trans('entities.resource-type'));
-            } else {
-                return true;
             }
         }
-
-        return false;
     }
 
     /**
@@ -156,8 +147,6 @@ class Route
      * @param $resource_id
      * @param array $permitted_resource_types
      * @param bool $manage
-     *
-     * @return bool
      */
     static public function resource(
         $resource_type_id,
@@ -185,12 +174,8 @@ class Route
                 ) === false
             ) {
                 UtilityResponse::notFoundOrNotAccessible(trans('entities.resource'));
-            } else {
-                return true;
             }
         }
-
-        return false;
     }
 
     /**
@@ -202,8 +187,6 @@ class Route
      * @param $item_id
      * @param array $permitted_resource_types
      * @param bool $manage
-     *
-     * @return bool
      */
     static public function item(
         $resource_type_id,
@@ -234,12 +217,8 @@ class Route
                 ) === false
             ) {
                 UtilityResponse::notFoundOrNotAccessible(trans('entities.item'));
-            } else {
-                return true;
             }
         }
-
-        return false;
     }
 
     /**
@@ -252,8 +231,6 @@ class Route
      * @param $item_category_id,
      * @param array $permitted_resource_types
      * @param bool $manage
-     *
-     * @return bool
      */
     static public function itemCategory(
         $resource_type_id,
@@ -286,12 +263,8 @@ class Route
                 ) === false
             ) {
                 UtilityResponse::notFoundOrNotAccessible(trans('entities.item-category'));
-            } else {
-                return true;
             }
         }
-
-        return false;
     }
 
     /**
@@ -305,8 +278,6 @@ class Route
      * @param $item_subcategory_id
      * @param array $permitted_resource_types
      * @param bool $manage
-     *
-     * @return bool
      */
     static public function itemSubcategory(
         $resource_type_id,
@@ -342,11 +313,7 @@ class Route
                 ) === false
             ) {
                 UtilityResponse::notFoundOrNotAccessible(trans('entities.item-subcategory'));
-            } else {
-                return true;
             }
         }
-
-        return false;
     }
 }

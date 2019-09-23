@@ -76,20 +76,11 @@ class Category extends BaseValidator
      */
     public function create(array $options = []): Validator
     {
-        $decode = $this->hash->resourceType()->decode(request()->input('resource_type_id'));
-        $resource_type_id = null;
-        if (count($decode) === 1) {
-            $resource_type_id = $decode[0];
-        }
+        $this->requiredIndexes(['resource_type_id'], $options);
 
         return ValidatorFacade::make(
-            array_merge(
-                request()->all(),
-                [
-                    'resource_type_id' => $resource_type_id
-                ]
-            ),
-            $this->createRules(intval($resource_type_id)),
+            request()->all(),
+            $this->createRules(intval($options['resource_type_id'])),
             $this->translateMessages('api.category.validation.POST.messages')
         );
     }

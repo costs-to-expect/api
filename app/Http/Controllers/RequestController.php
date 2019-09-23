@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Events\RequestError;
 use App\Option\Get;
 use App\Option\Post;
+use App\Utilities\Header;
 use App\Utilities\Request as UtilityRequest;
 use App\Utilities\Response;
 use App\Validators\Request\Parameters;
@@ -77,7 +78,7 @@ class RequestController extends Controller
      */
     public function accessLog(): JsonResponse
     {
-        $total = (new RequestLog())->totalCount();
+        $total = (new RequestLog())->totalCount()[0]['total'];
 
         $this->collection_parameters = Parameters::fetch(['source']);
 
@@ -89,21 +90,15 @@ class RequestController extends Controller
             $this->collection_parameters
         );
 
-        $headers = [
-            'X-Total-Count' => $total,
-            'X-Total' => count($log),
-            'X-Offset' => $pagination['offset'],
-            'X-Limit' => $pagination['limit'],
-            'X-Link-Previous' => $pagination['links']['previous'],
-            'X-Link-Next' => $pagination['links']['next'],
-        ];
+        $headers = new Header();
+        $headers->collection($pagination, count($log), $total);
 
         $json = [];
         foreach ($log as $log_item) {
             $json[] = (new RequestLogTransformer($log_item))->toArray();
         }
 
-        return response()->json($json, 200, $headers);
+        return response()->json($json, 200, $headers->headers());
     }
 
     /**

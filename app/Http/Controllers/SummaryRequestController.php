@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Option\Get;
+use App\Utilities\Header;
 use App\Validators\Request\Parameters;
 use App\Models\RequestLog;
 use Illuminate\Http\JsonResponse;
@@ -37,9 +38,14 @@ class SummaryRequestController extends Controller
             $summary[$month['year']][] = ['month' => $month['month'], 'requests' => $month['requests']];
         }
 
+        $headers = new Header();
+        $headers->add('X-Total-Count', count($summary));
+        $headers->add('X-Count', count($summary));
+
         return response()->json(
             $summary,
-            200
+            200,
+            $headers->headers()
         );
     }
 

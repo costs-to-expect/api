@@ -2,6 +2,26 @@
 
 The complete changelog for the Costs to Expect REST API, follows the format defined at https://keepachangelog.com/en/1.0.0/
 
+## [v2.01.0] - 2019-09-xx
+### Added
+- We have added a `Header` utility class that can be used to generate the expected headers for collection and item requests.
+- We have added a `RoutePermission` class which returns the view and manage permission for each route.
+
+### Changed
+- We have updated all routes to use the new `Header`, utility class.
+- We have updated all the `Options` requests to use the new `RoutePermissions` class.
+
+### Fixed
+- We have fixed the item subcategory route; the field name for POST was incorrect, still had the underscore.
+- We have corrected the query for the request/access-log, rather than return the entire collection and count the results, probably easier to let MySQL count the results, doh!
+- Unable to delete a subcategory because an instance was not being returned from the model.
+
+### Removed
+- We have removed the category routes; they are now available below resource types.
+- We have removed the category summary routes; they are now available below the resource types summary.
+- We have removed the subcategory routes; they are now available below resource types.
+- We have removed the subcategory summary routes; they are now available below the resource types summary.
+
 ## [v2.00.1] - 2019-09-17
 ### Fixed
 - Links on welcome page incorrect.

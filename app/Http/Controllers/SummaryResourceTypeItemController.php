@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Option\Get;
+use App\Utilities\Header;
+use App\Utilities\RoutePermission;
 use App\Validators\Request\Parameters;
 use App\Validators\Request\Route;
 use App\Models\ResourceTypeItem;
@@ -162,6 +164,10 @@ class SummaryResourceTypeItemController extends Controller
             UtilityResponse::successEmptyContent(true);
         }
 
+        $headers = new Header();
+        $headers->add('X-Total-Count', count($summary));
+        $headers->add('X-Count', count($summary));
+
         return response()->json(
             [
                 'total' => number_format(
@@ -172,7 +178,7 @@ class SummaryResourceTypeItemController extends Controller
                 )
             ],
             200,
-            ['X-Total-Count' => 1]
+            $headers->headers()
         );
     }
 
@@ -193,6 +199,10 @@ class SummaryResourceTypeItemController extends Controller
             UtilityResponse::successEmptyContent(true);
         }
 
+        $headers = new Header();
+        $headers->add('X-Total-Count', count($summary));
+        $headers->add('X-Count', count($summary));
+
         return response()->json(
             array_map(
                 function ($resource) {
@@ -201,7 +211,7 @@ class SummaryResourceTypeItemController extends Controller
                 $summary
             ),
             200,
-            ['X-Total-Count' => count($summary)]
+            $headers->headers()
         );
     }
 
@@ -222,6 +232,10 @@ class SummaryResourceTypeItemController extends Controller
             UtilityResponse::successEmptyContent(true);
         }
 
+        $headers = new Header();
+        $headers->add('X-Total-Count', count($summary));
+        $headers->add('X-Count', count($summary));
+
         return response()->json(
             array_map(
                 function ($year) {
@@ -230,7 +244,7 @@ class SummaryResourceTypeItemController extends Controller
                 $summary
             ),
             200,
-            ['X-Total-Count' => count($summary)]
+            $headers->headers()
         );
     }
 
@@ -253,10 +267,14 @@ class SummaryResourceTypeItemController extends Controller
             UtilityResponse::successEmptyContent();
         }
 
+        $headers = new Header();
+        $headers->add('X-Total-Count', count($summary));
+        $headers->add('X-Count', count($summary));
+
         return response()->json(
             (new ResourceTypeItemYearSummaryTransformer($summary[0]))->toArray(),
             200,
-            ['X-Total-Count' => count($summary)]
+            $headers->headers()
         );
     }
 
@@ -280,6 +298,10 @@ class SummaryResourceTypeItemController extends Controller
             UtilityResponse::successEmptyContent(true);
         }
 
+        $headers = new Header();
+        $headers->add('X-Total-Count', count($summary));
+        $headers->add('X-Count', count($summary));
+
         return response()->json(
             array_map(
                 function ($month) {
@@ -288,7 +310,7 @@ class SummaryResourceTypeItemController extends Controller
                 $summary
             ),
             200,
-            ['X-Total-Count' => count($summary)]
+            $headers->headers()
         );
     }
 
@@ -314,10 +336,14 @@ class SummaryResourceTypeItemController extends Controller
             UtilityResponse::successEmptyContent();
         }
 
+        $headers = new Header();
+        $headers->add('X-Total-Count', count($summary));
+        $headers->add('X-Count', count($summary));
+
         return response()->json(
             (new ResourceTypeItemMonthSummaryTransformer($summary[0]))->toArray(),
             200,
-            ['X-Total-Count' => 1]
+            $headers->headers()
         );
     }
 
@@ -338,6 +364,10 @@ class SummaryResourceTypeItemController extends Controller
             UtilityResponse::successEmptyContent(true);
         }
 
+        $headers = new Header();
+        $headers->add('X-Total-Count', count($summary));
+        $headers->add('X-Count', count($summary));
+
         return response()->json(
             array_map(
                 function ($category) {
@@ -346,7 +376,7 @@ class SummaryResourceTypeItemController extends Controller
                 $summary
             ),
             200,
-            ['X-Total-Count' => count($summary)]
+            $headers->headers()
         );
     }
 
@@ -370,10 +400,14 @@ class SummaryResourceTypeItemController extends Controller
             UtilityResponse::successEmptyContent();
         }
 
+        $headers = new Header();
+        $headers->add('X-Total-Count', count($summary));
+        $headers->add('X-Count', count($summary));
+
         return response()->json(
             (new ResourceTypeItemCategorySummaryTransformer($summary[0]))->toArray(),
             200,
-            ['X-Total-Count' => 1]
+            $headers->headers()
         );
     }
 
@@ -410,12 +444,16 @@ class SummaryResourceTypeItemController extends Controller
             UtilityResponse::successEmptyContent();
         }
 
+        $headers = new Header();
+        $headers->add('X-Total-Count', count($summary));
+        $headers->add('X-Count', count($summary));
+
         return response()->json(
             [
                 'total' => number_format($summary[0]['total'], 2, '.', '')
             ],
             200,
-            ['X-Total-Count' => 1]
+            $headers->headers()
         );
     }
 
@@ -439,6 +477,10 @@ class SummaryResourceTypeItemController extends Controller
             UtilityResponse::successEmptyContent(true);
         }
 
+        $headers = new Header();
+        $headers->add('X-Total-Count', count($summary));
+        $headers->add('X-Count', count($summary));
+
         return response()->json(
             array_map(
                 function ($category) {
@@ -447,7 +489,7 @@ class SummaryResourceTypeItemController extends Controller
                 $summary
             ),
             200,
-            ['X-Total-Count' => count($summary)]
+            $headers->headers()
         );
     }
 
@@ -473,10 +515,14 @@ class SummaryResourceTypeItemController extends Controller
             UtilityResponse::successEmptyContent();
         }
 
+        $headers = new Header();
+        $headers->add('X-Total-Count', count($summary));
+        $headers->add('X-Count', count($summary));
+
         return response()->json(
             (new ResourceTypeItemSubcategorySummaryTransformer($summary[0]))->toArray(),
             200,
-            ['X-Total-Count' => 1]
+            $headers->headers()
         );
     }
 
@@ -484,15 +530,19 @@ class SummaryResourceTypeItemController extends Controller
     /**
      * Generate the OPTIONS request for items summary route
      *
-     * @param Request $request
      * @param string $resource_type_id
      *
      * @return JsonResponse
      *
      */
-    public function optionsIndex(Request $request, string $resource_type_id): JsonResponse
+    public function optionsIndex(string $resource_type_id): JsonResponse
     {
         Route::resourceType(
+            $resource_type_id,
+            $this->permitted_resource_types
+        );
+
+        $permissions = RoutePermission::resourceType(
             $resource_type_id,
             $this->permitted_resource_types
         );
@@ -501,7 +551,7 @@ class SummaryResourceTypeItemController extends Controller
             setSearchable('api.resource-type-item.searchable')->
             setParameters('api.resource-type-item.summary-parameters.collection')->
             setDescription('route-descriptions.summary-resource-type-item-GET-index')->
-            setAuthenticationStatus(($this->user_id !== null) ? true : false)->
+            setAuthenticationStatus($permissions['view'])->
             option();
 
         return $this->optionsResponse($get, 200);

@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Option\Get;
+use App\Utilities\Header;
+use App\Utilities\RoutePermission;
 use App\Validators\Request\Route;
 use App\Models\Resource;
 use Illuminate\Http\JsonResponse;
@@ -38,12 +40,16 @@ class SummaryResourceController extends Controller
             $this->include_public
         );
 
+        $headers = new Header();
+        $headers->add('X-Total-Count', $summary);
+        $headers->add('X-Count', $summary);
+
         return response()->json(
             [
                 'resources' => $summary
             ],
             200,
-            ['X-Total-Count' => $summary]
+            $headers->headers()
         );
     }
 
@@ -63,10 +69,15 @@ class SummaryResourceController extends Controller
             $this->permitted_resource_types
         );
 
+        $permissions = RoutePermission::resourceType(
+            $resource_type_id,
+            $this->permitted_resource_types
+        );
+
         $get = Get::init()->
             setParameters('api.resource.summary-parameters.collection')->
             setDescription('route-descriptions.summary-resource-GET-index')->
-            setAuthenticationStatus(($this->user_id !== null) ? true : false)->
+            setAuthenticationStatus($permissions['view'])->
             option();
 
         return $this->optionsResponse($get, 200);

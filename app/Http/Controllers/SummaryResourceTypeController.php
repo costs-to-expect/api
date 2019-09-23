@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\ResourceType;
 use App\Option\Get;
+use App\Utilities\Header;
 use Illuminate\Http\JsonResponse;
 
 /**
@@ -27,12 +28,16 @@ class SummaryResourceTypeController extends Controller
             $this->include_public
         );
 
+        $headers = new Header();
+        $headers->add('X-Total-Count', $summary);
+        $headers->add('X-Count', $summary);
+
         return response()->json(
             [
                 'resource_types' => $summary
             ],
             200,
-            ['X-Total-Count' => $summary]
+            $headers->headers()
         );
     }
 

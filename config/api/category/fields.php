@@ -23,15 +23,5 @@ return [
             'max-length' => 255
         ],
         'required' => true
-    ],
-    'resource_type_id' => [
-        'field' => 'resource_type_id',
-        'title' => 'category/fields.title-resource_type_id',
-        'description' => 'category/fields.description-resource_type_id',
-        'type' => 'string',
-        'validation' => [
-            'length' => 10
-        ],
-        'required' => true
     ]
 ];
