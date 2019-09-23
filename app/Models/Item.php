@@ -135,6 +135,7 @@ class Item extends Model
     {
         $select_fields = [
             'item.id AS item_id',
+            'item_type_allocated_expense.name AS item_name',
             'item_type_allocated_expense.description AS item_description',
             'item_type_allocated_expense.effective_date AS item_effective_date',
             'item_type_allocated_expense.total AS item_total',
@@ -281,6 +282,7 @@ class Item extends Model
             where('resource.resource_type_id', '=', $resource_type_id)->
             select(
                 'item.id AS item_id',
+                'item_type_allocated_expense.name AS item_name',
                 'item_type_allocated_expense.description AS item_description',
                 'item_type_allocated_expense.effective_date AS item_effective_date',
                 'item_type_allocated_expense.total AS item_total',
@@ -332,6 +334,7 @@ class Item extends Model
     {
         return [
             'item_id' => $item->id,
+            'item_name' => $item->name,
             'item_description' => $item_type->description,
             'item_effective_date' => $item_type->effective_date,
             'item_publish_after' => $item_type->publish_after,

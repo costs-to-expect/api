@@ -5,7 +5,8 @@ declare(strict_types=1);
 return [
     'POST' => [
         'fields' => [
-            'description' => 'required|string|max:255',
+            'name' => 'required|string|max:255',
+            'description' => 'sometimes|string|max:255',
             'effective_date' => 'required|date_format:Y-m-d',
             'publish_after' => 'sometimes|date_format:Y-m-d',
             'total' => 'required|string|regex:/^\d+\.\d{2}$/',
@@ -17,7 +18,8 @@ return [
     ],
     'PATCH' => [
         'fields' => [
-            'description' => 'sometimes|string',
+            'name' => 'sometimes|string|max:255',
+            'description' => 'sometimes|string|max:255',
             'effective_date' => 'sometimes|date_format:Y-m-d',
             'publish_after' => 'sometimes|date_format:Y-m-d',
             'total' => 'sometimes|string|regex:/^\d+\.\d{2}$/',
