@@ -98,9 +98,9 @@ class Parameters
                     break;
 
                 case 'subcategory':
-                case 'sub_category':
                     if (array_key_exists($key, self::$parameters) === true) {
                         if (
+                            array_key_exists('category', self::$parameters) === false ||
                             (new SubCategory())->
                             where('sub_category.id', '=', self::$parameters[$key])->
                             where('sub_category.category_id', '=', self::$parameters['category'])->

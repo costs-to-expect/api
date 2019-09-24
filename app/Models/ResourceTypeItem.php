@@ -223,6 +223,7 @@ class ResourceTypeItem extends Model
                     case 'actualised_total':
                     case 'description':
                     case 'effective_date':
+                    case 'name':
                     case 'total':
                         $collection->orderBy('item_type_allocated_expense.' . $field, $direction);
                         break;

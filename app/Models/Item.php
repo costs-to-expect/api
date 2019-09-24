@@ -241,6 +241,7 @@ class Item extends Model
                     case 'actualised_total':
                     case 'description':
                     case 'effective_date':
+                    case 'name':
                     case 'total':
                         $collection->orderBy('item_type_allocated_expense.' . $field, $direction);
                         break;
@@ -334,7 +335,7 @@ class Item extends Model
     {
         return [
             'item_id' => $item->id,
-            'item_name' => $item->name,
+            'item_name' => $item_type->name,
             'item_description' => $item_type->description,
             'item_effective_date' => $item_type->effective_date,
             'item_publish_after' => $item_type->publish_after,
