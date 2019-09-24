@@ -3,6 +3,16 @@
 declare(strict_types=1);
 
 return [
+    'name' => [
+        'field' => 'name',
+        'title' => 'item-type-allocated-expense/fields.title-name',
+        'description' => 'item-type-allocated-expense/fields.name-description',
+        'type' => 'string',
+        'validation' => [
+            'max-length' => 255
+        ],
+        'required' => false
+    ],
     'description' => [
         'field' => 'description',
         'title' => 'item-type-allocated-expense/fields.title-description',
@@ -11,7 +21,7 @@ return [
         'validation' => [
             'max-length' => 255
         ],
-        'required' => true
+        'required' => false
     ],
     'effective_date' => [
         'field' => 'effective_date',

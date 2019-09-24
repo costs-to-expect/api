@@ -275,13 +275,15 @@ class ItemController extends Controller
     /**
      * Create a new item
      *
-     * @param Request $request
      * @param string $resource_type_id
      * @param string $resource_id
      *
      * @return JsonResponse
      */
-    public function create(Request $request, string $resource_type_id, string $resource_id): JsonResponse
+    public function create(
+        string $resource_type_id,
+        string $resource_id
+    ): JsonResponse
     {
         Route::resource(
             $resource_type_id,
@@ -302,17 +304,17 @@ class ItemController extends Controller
 
             $item_type = new ItemTypeAllocatedExpense([
                 'item_id' => $item->id,
-                'name' => $request->input('description'), // Fix later
-                'description' => $request->input('description'),
-                'effective_date' => $request->input('effective_date'),
-                'publish_after' => $request->input('publish_after', null),
-                'total' => $request->input('total'),
-                'percentage' => $request->input('percentage', 100),
+                'name' => request()->input('name'),
+                'description' => request()->input('description', null),
+                'effective_date' => request()->input('effective_date'),
+                'publish_after' => request()->input('publish_after', null),
+                'total' => request()->input('total'),
+                'percentage' => request()->input('percentage', 100),
             ]);
 
             $item_type->setActualisedTotal(
-                $request->input('total'),
-                $request->input('percentage', 100)
+                request()->input('total'),
+                request()->input('percentage', 100)
             );
 
             $item_type->save();
@@ -394,7 +396,6 @@ class ItemController extends Controller
     /**
      * Delete the assigned item
      *
-     * @param Request $request,
      * @param string $resource_type_id,
      * @param string $resource_id,
      * @param string $item_id
@@ -402,7 +403,6 @@ class ItemController extends Controller
      * @return JsonResponse
      */
     public function delete(
-        Request $request,
         string $resource_type_id,
         string $resource_id,
         string $item_id
