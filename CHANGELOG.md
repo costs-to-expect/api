@@ -2,9 +2,16 @@
 
 The complete changelog for the Costs to Expect REST API, follows the format defined at https://keepachangelog.com/en/1.0.0/
 
-## [v2.02.0] - 2019-10-xx
+## [v2.01.1] - 2019-09-24
+### Changed
+- The `description` field in the `item_type` tables is now nullable.
+- We have updated the `item_type` tables; all descriptions are now null.
+- We have upgraded to version 5.8 of the Laravel framework.
 
-## [v2.01.0] - 2019-09-27
+### Fixed
+- The subcategory parameter is only passed through to the relevant controller if the category parameter is also valid.
+
+## [v2.01.0] - 2019-09-22
 ### Added
 - We have added a `Header` utility class that can be used to generate the expected headers for collection and item requests.
 - We have added a `RoutePermission` class which returns the view and manage permission for each route.
