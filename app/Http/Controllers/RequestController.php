@@ -78,7 +78,7 @@ class RequestController extends Controller
      */
     public function accessLog(): JsonResponse
     {
-        $total = (new RequestLog())->totalCount()[0]['total'];
+        $total = (new RequestLog())->totalCount();
 
         $this->collection_parameters = Parameters::fetch(['source']);
 
@@ -92,6 +92,11 @@ class RequestController extends Controller
 
         $headers = new Header();
         $headers->collection($pagination, count($log), $total);
+
+        $parameters_header = Parameters::xHeader();
+        if ($parameters_header !== null) {
+            $headers->addParameters($parameters_header);
+        }
 
         $json = [];
         foreach ($log as $log_item) {

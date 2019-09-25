@@ -69,11 +69,23 @@ you will also need to set `MAIL_FROM_ADDRESS` and `MAIL_TO_ADDRESS`. You may nee
 * Non 2xx results will return an object with a message field and optionally a fields array, in the 
 case of a validation error, 422, the fields array will contain the validation errors.
 
-## Pagination
+## Headers
 
-You will notice that pagination links and total counts are in the HEADERS, I don't return an 
-envelope with counts etc. Specifically, X-Total-Count, X-Link-Previous and X-Link-Next. 
-X-Link-Previous and X-Link-Next can be null.
+Response will include multiple headers, the table details the purpose behind each header.
+
+| Header | Purpose |
+| :--- | :--- |
+| X-Total-Count | Pagination: Total number of result |
+| X-Count | Pagination: Number of results returned |
+| X-Limit | Pagination: Limit value applied to request after validation |
+| X-Offset | Pagination: Offset value applied to request after validation |
+| X-Offset | Pagination: Offset value applied to request after validation |
+| X-Link-Previous | Pagination: URI for previous result set if relevant |
+| X-Link-Next | Pagination: URI for next result set if relevant |
+| X-Link-Next | Pagination: URI for next result set if relevant |
+| X-Sort | Sort options applied to request after validation |
+| X-Search | Search options applied to request after validation |
+| X-Parameters | Request parameters applied to request after validation |
 
 ## Data routes
 

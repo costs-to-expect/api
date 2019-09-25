@@ -23,7 +23,7 @@ class RequestLog extends Model
 
     public function totalCount()
     {
-        return $this->selectRaw('COUNT(id) AS total')->get()->toArray();
+       return $this->count();
     }
 
     /**

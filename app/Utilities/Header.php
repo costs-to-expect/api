@@ -87,6 +87,18 @@ class Header
     }
 
     /**
+     * Add the X-Parameters header
+     *
+     * @param mixed $value
+     *
+     * @return Header
+     */
+    public function addParameters($value): Header
+    {
+        return $this->add('X-Parameters', $value);
+    }
+
+    /**
      * Add the X-Sort header
      *
      * @param mixed $value

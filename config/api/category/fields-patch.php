@@ -12,7 +12,7 @@ return [
             'unique-for' => 'resource_type_id',
             'max-length' => 255
         ],
-        'required' => true
+        'required' => false
     ],
     'description' => [
         'field' => 'description',
@@ -22,6 +22,6 @@ return [
         'validation' => [
             'max-length' => 255
         ],
-        'required' => true
+        'required' => false
     ]
 ];

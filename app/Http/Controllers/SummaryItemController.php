@@ -164,6 +164,11 @@ class SummaryItemController extends Controller
         $headers->add('X-Total-Count', 1);
         $headers->add('X-Count', 1);
 
+        $parameters_header = Parameters::xHeader();
+        if ($parameters_header !== null) {
+            $headers->addParameters($parameters_header);
+        }
+
         return response()->json(
             [
                 'total' => number_format($summary[0]['actualised_total'], 2, '.', '')
@@ -193,6 +198,11 @@ class SummaryItemController extends Controller
         $headers = new Header();
         $headers->add('X-Total-Count', count($summary));
         $headers->add('X-Count', count($summary));
+
+        $parameters_header = Parameters::xHeader();
+        if ($parameters_header !== null) {
+            $headers->addParameters($parameters_header);
+        }
 
         return response()->json(
             array_map(
@@ -230,6 +240,11 @@ class SummaryItemController extends Controller
         $headers->add('X-Total-Count', count($summary));
         $headers->add('X-Count', count($summary));
 
+        $parameters_header = Parameters::xHeader();
+        if ($parameters_header !== null) {
+            $headers->addParameters($parameters_header);
+        }
+
         return response()->json(
             (new ItemYearSummaryTransformer($summary[0]))->toArray(),
             200,
@@ -260,6 +275,11 @@ class SummaryItemController extends Controller
         $headers = new Header();
         $headers->add('X-Total-Count', count($summary));
         $headers->add('X-Count', count($summary));
+
+        $parameters_header = Parameters::xHeader();
+        if ($parameters_header !== null) {
+            $headers->addParameters($parameters_header);
+        }
 
         return response()->json(
             array_map(
@@ -299,6 +319,11 @@ class SummaryItemController extends Controller
         $headers->add('X-Total-Count', count($summary));
         $headers->add('X-Count', count($summary));
 
+        $parameters_header = Parameters::xHeader();
+        if ($parameters_header !== null) {
+            $headers->addParameters($parameters_header);
+        }
+
         return response()->json(
             (new ItemMonthSummaryTransformer($summary[0]))->toArray(),
             200,
@@ -326,6 +351,11 @@ class SummaryItemController extends Controller
         $headers = new Header();
         $headers->add('X-Total-Count', count($summary));
         $headers->add('X-Count', count($summary));
+
+        $parameters_header = Parameters::xHeader();
+        if ($parameters_header !== null) {
+            $headers->addParameters($parameters_header);
+        }
 
         return response()->json(
             array_map(
@@ -377,6 +407,11 @@ class SummaryItemController extends Controller
         $headers->add('X-Total-Count', count($summary));
         $headers->add('X-Count', count($summary));
 
+        $parameters_header = Parameters::xHeader();
+        if ($parameters_header !== null) {
+            $headers->addParameters($parameters_header);
+        }
+
         return response()->json(
             [
                 'total' => number_format($summary[0]['total'], 2, '.', '')
@@ -417,6 +452,11 @@ class SummaryItemController extends Controller
         $headers->add('X-Total-Count', count($summary));
         $headers->add('X-Count', count($summary));
 
+        $parameters_header = Parameters::xHeader();
+        if ($parameters_header !== null) {
+            $headers->addParameters($parameters_header);
+        }
+
         return response()->json(
             (new ItemCategorySummaryTransformer($summary[0]))->toArray(),
             200,
@@ -454,6 +494,11 @@ class SummaryItemController extends Controller
         $headers = new Header();
         $headers->add('X-Total-Count', count($summary));
         $headers->add('X-Count', count($summary));
+
+        $parameters_header = Parameters::xHeader();
+        if ($parameters_header !== null) {
+            $headers->addParameters($parameters_header);
+        }
 
         return response()->json(
             array_map(
@@ -504,6 +549,11 @@ class SummaryItemController extends Controller
         $headers = new Header();
         $headers->add('X-Total-Count', count($summary));
         $headers->add('X-Count', count($summary));
+
+        $parameters_header = Parameters::xHeader();
+        if ($parameters_header !== null) {
+            $headers->addParameters($parameters_header);
+        }
 
         return response()->json(
             (new ItemSubCategorySummaryTransformer($summary[0]))->toArray(),

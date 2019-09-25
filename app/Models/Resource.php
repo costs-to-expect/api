@@ -61,7 +61,7 @@ class Resource extends Model
 
         $collection = ModelUtility::applySearch($collection, $this->table, $search_parameters);
 
-        return count($collection->get());
+        return $collection->count();
     }
 
     public function items()

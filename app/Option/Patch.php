@@ -78,6 +78,7 @@ class Patch extends Option
         ) {
             $field_data['title'] = trans($field_data['title']);
             $field_data['description'] = trans($field_data['description']);
+            $field_data['required'] = false;
 
             self::$localised_fields[$field] = $field_data;
         }

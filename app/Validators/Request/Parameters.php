@@ -87,7 +87,6 @@ class Parameters
                     }
                     break;
 
-                case 'resource_type':
                 case 'resource-type':
                     if (array_key_exists($key, self::$parameters) === true) {
                         if ((new ResourceType())->
@@ -162,5 +161,35 @@ class Parameters
         self::validate();
 
         return self::$parameters;
+    }
+
+    /**
+     * Generate the X-Parameters header string for the valid request parameters
+     *
+     * @return string|null
+     */
+    public static function xHeader(): ?string
+    {
+        $header = '';
+
+        foreach (self::$parameters as $key => $value) {
+            switch ($key) {
+                case 'category':
+                case 'resource-type':
+                case 'subcategory':
+                    $header .= '|' . $key . ':' . urlencode((string) $_GET[$key]);
+                    break;
+
+                default:
+                    $header .= '|' . $key . ':' . urlencode((string) $value);
+                    break;
+            }
+        }
+
+        if (strlen($header) > 0) {
+            return ltrim($header, '|');
+        } else {
+            return null;
+        }
     }
 }
