@@ -78,7 +78,7 @@ class RequestController extends Controller
      */
     public function accessLog(): JsonResponse
     {
-        $total = (new RequestLog())->totalCount()[0]['total'];
+        $total = (new RequestLog())->totalCount();
 
         $this->collection_parameters = Parameters::fetch(['source']);
 

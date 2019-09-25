@@ -84,7 +84,7 @@ class ResourceTypeItem extends Model
             });
         }
 
-        return count($collection->get());
+        return $collection->count();
     }
 
     /**

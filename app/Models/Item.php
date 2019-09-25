@@ -59,7 +59,8 @@ class Item extends Model
         array $search_parameters = []
     ): int
     {
-        $collection = $this->where('resource_id', '=', $resource_id)->
+        $collection = $this->select()->
+            where('resource_id', '=', $resource_id)->
             join('item_type_allocated_expense', 'item.id', 'item_type_allocated_expense.item_id')->
             join('resource', 'item.resource_id', 'resource.id')->
             where('resource.resource_type_id', '=', $resource_type_id);
@@ -107,7 +108,7 @@ class Item extends Model
             });
         }
 
-        return count($collection->get());
+        return $collection->count();
     }
 
     /**

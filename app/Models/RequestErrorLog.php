@@ -22,7 +22,7 @@ class RequestErrorLog extends Model
 
     public function totalCount()
     {
-        return count($this->select('id')->get());
+        return $this->count();
     }
 
     public function paginatedCollection(
