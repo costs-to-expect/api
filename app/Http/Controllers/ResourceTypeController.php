@@ -141,6 +141,11 @@ class ResourceTypeController extends Controller
         $headers = new Header();
         $headers->item();
 
+        $parameters_header = Parameters::xHeader();
+        if ($parameters_header !== null) {
+            $headers->addParameters($parameters_header);
+        }
+
         return response()->json(
             (new ResourceTypeTransformer($resource_type, $resources))->toArray(),
             200,

@@ -42,6 +42,11 @@ class SummaryRequestController extends Controller
         $headers->add('X-Total-Count', count($summary));
         $headers->add('X-Count', count($summary));
 
+        $parameters_header = Parameters::xHeader();
+        if ($parameters_header !== null) {
+            $headers->addParameters($parameters_header);
+        }
+
         return response()->json(
             $summary,
             200,

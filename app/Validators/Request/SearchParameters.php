@@ -70,7 +70,7 @@ class SearchParameters
     }
 
     /**
-     * Generate the X-Search header string for the valid sort options
+     * Generate the X-Search header string for the valid search options
      *
      * @return string|null
      */

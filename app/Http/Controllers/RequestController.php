@@ -93,6 +93,11 @@ class RequestController extends Controller
         $headers = new Header();
         $headers->collection($pagination, count($log), $total);
 
+        $parameters_header = Parameters::xHeader();
+        if ($parameters_header !== null) {
+            $headers->addParameters($parameters_header);
+        }
+
         $json = [];
         foreach ($log as $log_item) {
             $json[] = (new RequestLogTransformer($log_item))->toArray();

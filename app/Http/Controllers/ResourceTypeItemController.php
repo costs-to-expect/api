@@ -97,6 +97,11 @@ class ResourceTypeItemController extends Controller
             $headers->addSearch($search_header);
         }
 
+        $parameters_header = Parameters::xHeader();
+        if ($parameters_header !== null) {
+            $headers->addParameters($parameters_header);
+        }
+
         return response()->json(
             array_map(
                 function($item) {
