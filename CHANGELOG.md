@@ -2,6 +2,18 @@
 
 The complete changelog for the Costs to Expect REST API, follows the format defined at https://keepachangelog.com/en/1.0.0/
 
+## [v2.01.2] - 2019-09-25
+### Added
+- We have added an `X-Parameters` header; it contains the validated parameters for the request.
+
+### Changed
+- We have updated the README; we have added a Headers section detailing the purpose of each Header.
+- Requests are now only logged when the app is not in development mode.
+
+### Fixed
+- The `required` value is incorrectly set to `true` for fields in the PATCH section of the options request.
+- We have corrected the queries for the total counts.
+
 ## [v2.01.1] - 2019-09-24
 ### Changed
 - The `description` field in the `item_type` tables is now nullable.
