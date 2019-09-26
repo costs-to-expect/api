@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Item\ItemFactory;
 use App\Models\ItemTypeAllocatedExpense;
 use App\Option\Delete;
 use App\Option\Get;
@@ -24,7 +25,6 @@ use App\Validators\Request\SortParameters;
 use Exception;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Config;
 
@@ -37,6 +37,23 @@ use Illuminate\Support\Facades\Config;
  */
 class ItemController extends Controller
 {
+    private $item_interface = null;
+
+    /**
+     * Make a call to the item interface factory and set the relevant item
+     * interface
+     *
+     * @param integer $resource_type_id
+     */
+    protected function setItemInterface(int $resource_type_id)
+    {
+        try {
+            $this->item_interface = ItemFactory::getItemInterface($resource_type_id);
+        } catch (Exception $e) {
+            abort(500, $e->getMessage());
+        }
+    }
+
     /**
      * Return all the items based on the set filter options
      *
@@ -52,6 +69,8 @@ class ItemController extends Controller
             $resource_id,
             $this->permitted_resource_types,
         );
+
+        $this->setItemInterface($resource_type_id);
 
         $parameters = Parameters::fetch([
             'include-categories',
