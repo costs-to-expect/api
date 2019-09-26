@@ -88,6 +88,16 @@ class AllocatedExpense extends AbstractItem
      */
     public function sortParameters(): array
     {
-        // TODO: Implement sortParameters() method.
+        return Config::get($this->sortParametersConfig());
+    }
+
+    /**
+     * Return the sort parameters config string specific to the item type
+     *
+     * @return string
+     */
+    public function sortParametersConfig(): string
+    {
+        return 'api.item-type-allocated-expense.sortable';
     }
 }

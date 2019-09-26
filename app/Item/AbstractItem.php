@@ -67,4 +67,11 @@ abstract class AbstractItem
      * @return array
      */
     abstract public function sortParameters(): array;
+
+    /**
+     * Return the sort parameters config string specific to the item type
+     *
+     * @return string
+     */
+    abstract public function sortParametersConfig(): string;
 }
