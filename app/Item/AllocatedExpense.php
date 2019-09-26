@@ -15,7 +15,6 @@ use Illuminate\Database\Eloquent\Model;
  */
 class AllocatedExpense extends AbstractItem
 {
-
     /**
      * Return the collection parameters specific to the item type, these will
      * be merged with the default collection parameters
