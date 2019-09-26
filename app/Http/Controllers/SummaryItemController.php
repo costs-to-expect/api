@@ -565,19 +565,20 @@ class SummaryItemController extends Controller
     /**
      * Generate the OPTIONS request for items route
      *
-     * @param Request $request
      * @param string $resource_type_id
      * @param string $resource_id
      *
      * @return JsonResponse
      */
-    public function optionsIndex(Request $request, string $resource_type_id, string $resource_id)
+    public function optionsIndex(string $resource_type_id, string $resource_id)
     {
         Route::resource(
             $resource_type_id,
             $resource_id,
             $this->permitted_resource_types
         );
+
+        $this->setItemInterface($resource_type_id);
 
         $permissions = RoutePermission::resource(
             $resource_type_id,
@@ -587,7 +588,7 @@ class SummaryItemController extends Controller
 
         $get = Get::init()->
             setParameters('api.item.summary-parameters.collection')->
-            setSearchable('api.item.searchable')->
+            setSearchable($this->item_interface->searchParametersConfig())->
             setDescription('route-descriptions.summary_GET_resource-type_resource_items')->
             setAuthenticationStatus($permissions['view'])->
             option();

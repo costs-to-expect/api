@@ -54,6 +54,13 @@ abstract class AbstractItem
     abstract public function searchParameters(): array;
 
     /**
+     * Return the search parameters config string specific to the item type
+     *
+     * @return string
+     */
+    abstract public function searchParametersConfig(): string;
+
+    /**
      * Return the sort parameters specific to the item type, these will be
      * merged with any default sort parameters
      *

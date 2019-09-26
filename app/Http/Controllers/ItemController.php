@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Item\AbstractItem;
 use App\Item\ItemFactory;
 use App\Models\ItemTypeAllocatedExpense;
 use App\Option\Delete;
@@ -37,8 +38,6 @@ use Illuminate\Support\Facades\Config;
  */
 class ItemController extends Controller
 {
-    private $item_interface = null;
-
     /**
      * Make a call to the item interface factory and set the relevant item
      * interface
@@ -83,7 +82,7 @@ class ItemController extends Controller
         ]);
 
         $search_parameters = SearchParameters::fetch(
-            Config::get('api.item.searchable')
+            $this->item_interface->searchParameters()
         );
 
         $total = (new Item())->totalCount(
@@ -200,6 +199,8 @@ class ItemController extends Controller
             $this->permitted_resource_types,
         );
 
+        $this->setItemInterface($resource_type_id);
+
         $permissions = RoutePermission::resource(
             $resource_type_id,
             $resource_id,
@@ -215,7 +216,7 @@ class ItemController extends Controller
 
         $get = Get::init()->
             setSortable('api.item.sortable')->
-            setSearchable('api.item.searchable')->
+            setSearchable($this->item_interface->searchParametersConfig())->
             setParameters('api.item.parameters.collection')->
             setConditionalParameters($conditional_parameters)->
             setPagination(true)->
