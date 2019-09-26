@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace App\Item;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Config;
 
 /**
  * Base class for each item type, contains the required methods
@@ -51,7 +52,10 @@ abstract class AbstractItem
      *
      * @return array
      */
-    abstract public function searchParameters(): array;
+    public function searchParameters(): array
+    {
+        return Config::get($this->searchParametersConfig());
+    }
 
     /**
      * Return the search parameters config string specific to the item type
@@ -66,7 +70,10 @@ abstract class AbstractItem
      *
      * @return array
      */
-    abstract public function sortParameters(): array;
+    public function sortParameters(): array
+    {
+        return Config::get($this->sortParametersConfig());
+    }
 
     /**
      * Return the sort parameters config string specific to the item type

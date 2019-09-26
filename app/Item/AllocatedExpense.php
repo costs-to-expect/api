@@ -4,7 +4,6 @@ declare(strict_types=1);
 namespace App\Item;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Facades\Config;
 
 /**
  * The Interface for dealing with allocated expenses, everything should be
@@ -60,17 +59,6 @@ class AllocatedExpense extends AbstractItem
     }
 
     /**
-     * Return the search parameters specific to the item type, these will be
-     * merged with any default search parameters
-     *
-     * @return array
-     */
-    public function searchParameters(): array
-    {
-        return Config::get($this->searchParametersConfig());
-    }
-
-    /**
      * Return the search parameters config string specific to the item type
      *
      * @return string
@@ -78,17 +66,6 @@ class AllocatedExpense extends AbstractItem
     public function searchParametersConfig(): string
     {
         return 'api.item-type-allocated-expense.searchable';
-    }
-
-    /**
-     * Return the sort parameters specific to the item type, these will be
-     * merged with any default sort parameters
-     *
-     * @return array
-     */
-    public function sortParameters(): array
-    {
-        return Config::get($this->sortParametersConfig());
     }
 
     /**
