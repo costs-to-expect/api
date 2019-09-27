@@ -21,7 +21,17 @@ abstract class AbstractItem
      *
      * @return array
      */
-    abstract public function collectionParameters(): array;
+    public function collectionParameters(): array
+    {
+         return Config::get($this->collectionParametersConfig());
+    }
+
+    /**
+     * Return the parameters config string specific to the item type
+     *
+     * @return string
+     */
+    abstract public function collectionParametersConfig(): string;
 
     /**
      * Return the model instance for the item type

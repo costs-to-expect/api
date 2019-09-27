@@ -18,29 +18,6 @@ return [
             'type' => 'boolean',
             'required' => false
         ],
-        'include-unpublished' => [
-            'field' => 'include-unpublished',
-            'title' => 'item/parameters.title-include-unpublished',
-            'description' => 'item/parameters.description-include-unpublished',
-            'type' => 'boolean',
-            'required' => false
-        ],
-        'year' => [
-            "parameter" => "year",
-            "title" => 'item/parameters.title-year',
-            "description" => 'item/parameters.description-year',
-            "default" => null,
-            "type" => "integer",
-            "required" => false
-        ],
-        'month' => [
-            "parameter" => "month",
-            "title" => 'item/parameters.title-month',
-            "description" => 'item/parameters.description-month',
-            "default" => null,
-            "type" => "integer",
-            "required" => false
-        ],
         'category' => [
             "parameter" => "category",
             "title" => 'item/parameters.title-category',

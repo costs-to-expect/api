@@ -37,21 +37,6 @@ use Illuminate\Support\Facades\Auth;
 class ItemController extends Controller
 {
     /**
-     * Make a call to the item interface factory and set the relevant item
-     * interface
-     *
-     * @param integer $resource_type_id
-     */
-    protected function setItemInterface(int $resource_type_id)
-    {
-        try {
-            $this->item_interface = ItemFactory::getItemInterface($resource_type_id);
-        } catch (Exception $e) {
-            abort(500, $e->getMessage());
-        }
-    }
-
-    /**
      * Return all the items based on the set filter options
      *
      * @param string $resource_type_id
@@ -79,11 +64,13 @@ class ItemController extends Controller
             'subcategory'
         ]);
 
+        $item_model = $this->item_interface->model();
+
         $search_parameters = SearchParameters::fetch(
             $this->item_interface->searchParameters()
         );
 
-        $total = (new Item())->totalCount(
+        $total = $item_model->totalCount(
             $resource_type_id,
             $resource_id,
             $parameters,
@@ -100,7 +87,7 @@ class ItemController extends Controller
             ->setSearchParameters($search_parameters)
             ->paging();
 
-        $items = (new Item())->paginatedCollection(
+        $items = $item_model->paginatedCollection(
             $resource_type_id,
             $resource_id,
             $pagination['offset'],
@@ -215,7 +202,7 @@ class ItemController extends Controller
         $get = Get::init()->
             setSortable($this->item_interface->sortParametersConfig())->
             setSearchable($this->item_interface->searchParametersConfig())->
-            setParameters('api.item.parameters.collection')->
+            setParameters($this->item_interface->collectionParametersConfig())->
             setConditionalParameters($conditional_parameters)->
             setPagination(true)->
             setAuthenticationStatus($permissions['view'])->
@@ -487,7 +474,7 @@ class ItemController extends Controller
             $conditional_parameters['year']['allowed_values'][$i] = [
                 'value' => $i,
                 'name' => $i,
-                'description' => trans('item/allowed-values.description-prefix-year') . $i
+                'description' => trans('item-type-allocated-expense/allowed-values.description-prefix-year') . $i
             ];
         }
 
@@ -495,7 +482,7 @@ class ItemController extends Controller
             $conditional_parameters['month']['allowed_values'][$i] = [
                 'value' => $i,
                 'name' => date("F", mktime(0, 0, 0, $i, 10)),
-                'description' => trans('item/allowed-values.description-prefix-month') .
+                'description' => trans('item-type-allocated-expense/allowed-values.description-prefix-month') .
                     date("F", mktime(0, 0, 0, $i, 1))
             ];
         }

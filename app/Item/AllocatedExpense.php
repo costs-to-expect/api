@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace App\Item;
 
+use App\Models\ItemTypeAllocatedExpense;
 use Illuminate\Database\Eloquent\Model;
 
 /**
@@ -16,14 +17,13 @@ use Illuminate\Database\Eloquent\Model;
 class AllocatedExpense extends AbstractItem
 {
     /**
-     * Return the collection parameters specific to the item type, these will
-     * be merged with the default collection parameters
+     * Return the parameters config string specific to the item type
      *
-     * @return array
+     * @return string
      */
-    public function collectionParameters(): array
+    public function collectionParametersConfig(): string
     {
-        // TODO: Implement collectionParameters() method.
+        return 'api.item-type-allocated-expense.parameters.collection';
     }
 
     /**
@@ -33,7 +33,7 @@ class AllocatedExpense extends AbstractItem
      */
     public function model(): Model
     {
-        // TODO: Implement model() method.
+        return new ItemTypeAllocatedExpense();
     }
 
     /**

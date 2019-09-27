@@ -118,7 +118,12 @@ class Get extends Option
         string $config_path
     ): Get
     {
-        self::$parameters = Config::get($config_path);
+        self::$parameters =
+            array_merge(
+                Config::get('api.item.parameters.collection'),
+                Config::get($config_path)
+            );
+
         return self::$instance;
     }
 

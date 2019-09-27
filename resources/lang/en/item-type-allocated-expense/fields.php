@@ -3,6 +3,9 @@
 declare(strict_types=1);
 
 return [
+    'title-name' => 'Item description',
+    'description-name' => 'Enter a description for the item',
+
     'title-description' => 'Item description',
     'description-description' => 'Enter a description for the item',
 

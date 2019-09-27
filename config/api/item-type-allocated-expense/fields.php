@@ -6,7 +6,7 @@ return [
     'name' => [
         'field' => 'name',
         'title' => 'item-type-allocated-expense/fields.title-name',
-        'description' => 'item-type-allocated-expense/fields.name-description',
+        'description' => 'item-type-allocated-expense/fields.description-name',
         'type' => 'string',
         'validation' => [
             'max-length' => 255
