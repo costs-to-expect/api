@@ -54,7 +54,17 @@ abstract class AbstractItem
      *
      * @return array
      */
-    abstract public function postFields(): array;
+    public function postFields(): array
+    {
+        return Config::get($this->postFieldsConfig());
+    }
+
+    /**
+     * Return the post fields config string specific to the item type
+     *
+     * @return string
+     */
+    abstract public function postFieldsConfig(): string;
 
     /**
      * Return the search parameters specific to the item type, these will be
@@ -73,6 +83,24 @@ abstract class AbstractItem
      * @return string
      */
     abstract public function searchParametersConfig(): string;
+
+    /**
+     * Return the show parameters specific to the item type, these will
+     * be merged with the default show parameters
+     *
+     * @return array
+     */
+    public function showParameters(): array
+    {
+         return Config::get($this->showParametersConfig());
+    }
+
+    /**
+     * Return the show parameters config string specific to the item type
+     *
+     * @return string
+     */
+    abstract public function showParametersConfig(): string;
 
     /**
      * Return the sort parameters specific to the item type, these will be

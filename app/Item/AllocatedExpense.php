@@ -48,14 +48,13 @@ class AllocatedExpense extends AbstractItem
     }
 
     /**
-     * Return the post fields specific to the item type, these will be merged
-     * with any default post fields
+     * Return the post fields config string specific to the item type
      *
-     * @return array
+     * @return string
      */
-    public function postFields(): array
+    public function postFieldsConfig(): string
     {
-        // TODO: Implement postFields() method.
+        return 'api.item-type-allocated-expense.fields';
     }
 
     /**
@@ -66,6 +65,16 @@ class AllocatedExpense extends AbstractItem
     public function searchParametersConfig(): string
     {
         return 'api.item-type-allocated-expense.searchable';
+    }
+
+    /**
+     * Return the show parameters config string specific to the item type
+     *
+     * @return string
+     */
+    public function showParametersConfig(): string
+    {
+        return 'api.item-type-allocated-expense.parameters.item';
     }
 
     /**

@@ -210,7 +210,7 @@ class ItemController extends Controller
             option();
 
         $post = Post::init()->
-            setFields('api.item-type-allocated-expense.fields')->
+            setFields($this->item_interface->postFieldsConfig())->
             setDescription( 'route-descriptions.item_POST')->
             setAuthenticationRequired(true)->
             setAuthenticationStatus($permissions['manage'])->
@@ -251,6 +251,8 @@ class ItemController extends Controller
             $this->permitted_resource_types,
         );
 
+        $this->setItemInterface($resource_type_id);
+
         $item = (new Item())->single($resource_type_id, $resource_id, $item_id);
 
         if ($item === null) {
@@ -258,7 +260,7 @@ class ItemController extends Controller
         }
 
         $get = Get::init()->
-            setParameters('api.item.parameters.item')->
+            setParameters($this->item_interface->showParametersConfig())->
             setAuthenticationStatus($permissions['view'])->
             setDescription('route-descriptions.item_GET_show')->
             option();
@@ -270,7 +272,7 @@ class ItemController extends Controller
             option();
 
         $patch = Patch::init()->
-            setFields('api.item-type-allocated-expense.fields')->
+            setFields($this->item_interface->postFieldsConfig())->
             setDescription('route-descriptions.item_PATCH')->
             setAuthenticationStatus($permissions['manage'])->
             setAuthenticationRequired(true)->
