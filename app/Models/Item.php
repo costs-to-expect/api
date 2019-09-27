@@ -104,11 +104,11 @@ class Item extends Model
      * Convert the model instance to an array for use with the transformer
      *
      * @param Item $item
-     * @param ItemTypeAllocatedExpense $item_type
+     * @param Model $item_type
      *
      * @return array
      */
-    public function instanceToArray(Item $item, ItemTypeAllocatedExpense $item_type): array
+    public function instanceToArray(Item $item, Model $item_type): array
     {
         return [
             'item_id' => $item->id,

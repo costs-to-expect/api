@@ -27,6 +27,15 @@ abstract class AbstractItem
     }
 
     /**
+     * Create an save the item type data
+     *
+     * @param integer $id
+     *
+     * @return Model
+     */
+    abstract public function create($id): Model;
+
+    /**
      * Return the parameters config string specific to the item type
      *
      * @return string

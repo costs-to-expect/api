@@ -27,6 +27,35 @@ class AllocatedExpense extends AbstractItem
     }
 
     /**
+     * Create an save the item type data
+     *
+     * @param integer $id
+     *
+     * @return Model
+     */
+    public function create($id): Model
+    {
+        $item_type = new ItemTypeAllocatedExpense([
+            'item_id' => $id,
+            'name' => request()->input('name'),
+            'description' => request()->input('description', null),
+            'effective_date' => request()->input('effective_date'),
+            'publish_after' => request()->input('publish_after', null),
+            'total' => request()->input('total'),
+            'percentage' => request()->input('percentage', 100),
+        ]);
+
+        $item_type->setActualisedTotal(
+            request()->input('total'),
+            request()->input('percentage', 100)
+        );
+
+        $item_type->save();
+
+        return $item_type;
+    }
+
+    /**
      * Return the model instance for the item type
      *
      * @return Model

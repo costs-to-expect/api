@@ -115,12 +115,13 @@ class Get extends Option
     }
 
     static public function setParameters(
-        string $config_path
+        string $config_path,
+        bool $include_base_item_collection_parameters = false
     ): Get
     {
         self::$parameters =
             array_merge(
-                Config::get('api.item.parameters.collection'),
+                ($include_base_item_collection_parameters === true) ? Config::get('api.item.parameters.collection') : [],
                 Config::get($config_path)
             );
 

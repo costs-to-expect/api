@@ -202,7 +202,10 @@ class ItemController extends Controller
         $get = Get::init()->
             setSortable($this->item_interface->sortParametersConfig())->
             setSearchable($this->item_interface->searchParametersConfig())->
-            setParameters($this->item_interface->collectionParametersConfig())->
+            setParameters(
+                $this->item_interface->collectionParametersConfig(),
+                true
+            )->
             setConditionalParameters($conditional_parameters)->
             setPagination(true)->
             setAuthenticationStatus($permissions['view'])->
@@ -304,6 +307,8 @@ class ItemController extends Controller
             true
         );
 
+        $this->setItemInterface($resource_type_id);
+
         $validator = (new ItemValidator)->create();
         UtilityRequest::validateAndReturnErrors($validator);
 
@@ -314,22 +319,7 @@ class ItemController extends Controller
             ]);
             $item->save();
 
-            $item_type = new ItemTypeAllocatedExpense([
-                'item_id' => $item->id,
-                'name' => request()->input('name'),
-                'description' => request()->input('description', null),
-                'effective_date' => request()->input('effective_date'),
-                'publish_after' => request()->input('publish_after', null),
-                'total' => request()->input('total'),
-                'percentage' => request()->input('percentage', 100),
-            ]);
-
-            $item_type->setActualisedTotal(
-                request()->input('total'),
-                request()->input('percentage', 100)
-            );
-
-            $item_type->save();
+            $item_type = $this->item_interface->create((int) $item->id);
 
         } catch (Exception $e) {
             UtilityResponse::failedToSaveModelForCreate();
