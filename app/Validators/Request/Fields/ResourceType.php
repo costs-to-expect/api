@@ -77,6 +77,12 @@ class ResourceType extends BaseValidator
      */
     public function create(array $options = []): Validator
     {
+        $decode = $this->hash->itemType()->decode(request()->input('item_type_id'));
+        $item_type_id = null;
+        if (count($decode) === 1) {
+            $item_type_id = $decode[0];
+        }
+
         return ValidatorFacade::make(
             request()->all(),
             $this->createRules($options['user_id']),
