@@ -6,8 +6,7 @@ return [
     'POST' => [
         'fields' => [
             'description' => 'required|string|max:255',
-            'public' => 'sometimes|boolean',
-            'item_type_id' => 'required|exists:item_type,id'
+            'public' => 'sometimes|boolean'
         ],
         'messages' => [
             'name.unique' => 'resource-type/validation.name-unique'
