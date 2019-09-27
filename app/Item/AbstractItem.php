@@ -46,7 +46,17 @@ abstract class AbstractItem
      *
      * @return array
      */
-    abstract public function patchFields(): array;
+    public function patchFields(): array
+    {
+        return Config::get($this->patchFields());
+    }
+
+    /**
+     * Return the patch fields config string specific to the item type
+     *
+     * @return string
+     */
+    abstract public function patchFieldsConfig(): string;
 
     /**
      * Return the post fields specific to the item type, these will be merged
@@ -119,4 +129,74 @@ abstract class AbstractItem
      * @return string
      */
     abstract public function sortParametersConfig(): string;
+
+    /**
+     * Return the validation patch field message for the specific item type
+     *
+     * @return array
+     */
+    public function validationPatchFieldMessages(): array
+    {
+        return Config::get($this->validationPatchFieldMessagesConfig());
+    }
+
+    /**
+     * Return the validation patch field messages config for the specific item
+     * type
+     *
+     * @return string
+     */
+    abstract public function validationPatchFieldMessagesConfig(): string;
+
+    /**
+     * Return the validation patch fields for the specific item type
+     *
+     * @return array
+     */
+    public function validationPatchFields(): array
+    {
+        return Config::get($this->validationPatchFieldsConfig());
+    }
+
+    /**
+     * Return the validation patch fields config for the specific item type
+     *
+     * @return string
+     */
+    abstract public function validationPatchFieldsConfig(): string;
+
+    /**
+     * Return the validation post field message for the specific item type
+     *
+     * @return array
+     */
+    public function validationPostFieldMessages(): array
+    {
+        return Config::get($this->validationPatchFieldMessagesConfig());
+    }
+
+    /**
+     * Return the validation post field messages config for the specific item
+     * type
+     *
+     * @return string
+     */
+    abstract public function validationPostFieldMessagesConfig(): string;
+
+    /**
+     * Return the validation post fields for the specific item type
+     *
+     * @return array
+     */
+    public function validationPostFields(): array
+    {
+        return Config::get($this->validationPostFieldsConfig());
+    }
+
+    /**
+     * Return the validation post fields config for the specific item type
+     *
+     * @return string
+     */
+    abstract public function validationPostFieldsConfig(): string;
 }

@@ -37,14 +37,13 @@ class AllocatedExpense extends AbstractItem
     }
 
     /**
-     * Return the patch fields specific to the item type, these will be merged
-     * with any default patch fields
+     * Return the patch fields config string specific to the item type
      *
-     * @return array
+     * @return string
      */
-    public function patchFields(): array
+    public function patchFieldsConfig(): string
     {
-        // TODO: Implement patchFields() method.
+        return 'api.item-type-allocated-expense.fields';
     }
 
     /**
@@ -85,5 +84,47 @@ class AllocatedExpense extends AbstractItem
     public function sortParametersConfig(): string
     {
         return 'api.item-type-allocated-expense.sortable';
+    }
+
+    /**
+     * Return the validation patch field messages config for the specific item
+     * type
+     *
+     * @return string
+     */
+    public function validationPatchFieldMessagesConfig(): string
+    {
+        // TODO: Implement validationPatchFieldMessagesConfig() method.
+    }
+
+    /**
+     * Return the validation patch fields config for the specific item type
+     *
+     * @return string
+     */
+    public function validationPatchFieldsConfig(): string
+    {
+        // TODO: Implement validationPatchFieldsConfig() method.
+    }
+
+    /**
+     * Return the validation post field messages config for the specific item
+     * type
+     *
+     * @return string
+     */
+    public function validationPostFieldMessagesConfig(): string
+    {
+        // TODO: Implement validationPostFieldMessagesConfig() method.
+    }
+
+    /**
+     * Return the validation post fields config for the specific item type
+     *
+     * @return string
+     */
+    public function validationPostFieldsConfig(): string
+    {
+        // TODO: Implement validationPostFieldsConfig() method.
     }
 }
