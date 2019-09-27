@@ -56,6 +56,18 @@ class AllocatedExpense extends AbstractItem
     }
 
     /**
+     * Fetch an instance of the item type model
+     *
+     * @param integer $id
+     *
+     * @return Model
+     */
+    public function instance(int $id): Model
+    {
+        return (new ItemTypeAllocatedExpense())->instance($id);
+    }
+
+    /**
      * Return the model instance for the item type
      *
      * @return Model
@@ -113,6 +125,32 @@ class AllocatedExpense extends AbstractItem
     public function sortParametersConfig(): string
     {
         return 'api.item-type-allocated-expense.sortable';
+    }
+
+    /**
+     * Update the item type data
+     *
+     * @param array $request
+     * @param Model $instance
+     *
+     * @return bool
+     */
+    public function update(array $request, Model $instance): bool
+    {
+        $update_actualised = false;
+        foreach ($request as $key => $value) {
+            $instance->$key = $value;
+
+            if (in_array($key, ['total', 'percentage']) === true) {
+                $update_actualised = true;
+            }
+        }
+
+        if ($update_actualised === true) {
+            $instance->setActualisedTotal($instance->total, $instance->percentage);
+        }
+
+        return $instance->save();
     }
 
     /**

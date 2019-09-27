@@ -354,6 +354,8 @@ class ItemController extends Controller
             true
         );
 
+        $this->setItemInterface($resource_type_id);
+
         UtilityRequest::checkForEmptyPatch();
 
         UtilityRequest::checkForInvalidFields(
@@ -364,30 +366,18 @@ class ItemController extends Controller
         UtilityRequest::validateAndReturnErrors($validator);
 
         $item = (new Item())->instance($resource_type_id, $resource_id, $item_id);
-        $item_type = (new ItemTypeAllocatedExpense())->instance($item_id);
+        $item_type = $this->item_interface->instance((int) $item_id);
 
         if ($item === null || $item_type === null) {
             UtilityResponse::failedToSelectModelForUpdate();
         }
 
-        $update_actualised = false;
-        foreach (request()->all() as $key => $value) {
-            $item_type->$key = $value;
-
-            if (in_array($key, ['total', 'percentage']) === true) {
-                $update_actualised = true;
-            }
-
-            $item->updated_by = Auth::user()->id;
-        }
-
-        if ($update_actualised === true) {
-            $item_type->setActualisedTotal($item_type->total, $item_type->percentage);
-        }
-
         try {
-            $item->save();
-            $item_type->save();
+            $item->updated_by = Auth::user()->id;
+
+            if ($item->save() === true) {
+                $this->item_interface->update(request()->all(), $item_type);
+            }
         } catch (Exception $e) {
             UtilityResponse::failedToSaveModelForUpdate();
         }

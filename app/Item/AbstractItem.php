@@ -27,6 +27,13 @@ abstract class AbstractItem
     }
 
     /**
+     * Return the parameters config string specific to the item type
+     *
+     * @return string
+     */
+    abstract public function collectionParametersConfig(): string;
+
+    /**
      * Create an save the item type data
      *
      * @param integer $id
@@ -36,11 +43,13 @@ abstract class AbstractItem
     abstract public function create($id): Model;
 
     /**
-     * Return the parameters config string specific to the item type
+     * Fetch an instance of the item type model
      *
-     * @return string
+     * @param integer $id
+     *
+     * @return Model
      */
-    abstract public function collectionParametersConfig(): string;
+    abstract public function instance(int $id): Model;
 
     /**
      * Return the model instance for the item type
@@ -138,6 +147,16 @@ abstract class AbstractItem
      * @return string
      */
     abstract public function sortParametersConfig(): string;
+
+    /**
+     * Update the item type data
+     *
+     * @param array $request
+     * @param Model $instance
+     *
+     * @return bool
+     */
+    abstract public function update(array $request, Model $instance): bool;
 
     /**
      * Return the validation patch field message for the specific item type
