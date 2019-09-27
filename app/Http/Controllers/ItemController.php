@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Item\AbstractItem;
 use App\Item\ItemFactory;
 use App\Models\ItemTypeAllocatedExpense;
 use App\Option\Delete;
@@ -27,7 +26,6 @@ use Exception;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Config;
 
 /**
  * Manage items
@@ -93,7 +91,7 @@ class ItemController extends Controller
         );
 
         $sort_parameters = SortParameters::fetch(
-            Config::get('api.item.sortable')
+            $this->item_interface->sortParameters()
         );
 
         $pagination = UtilityPagination::init(request()->path(), $total)
@@ -215,7 +213,7 @@ class ItemController extends Controller
         );
 
         $get = Get::init()->
-            setSortable('api.item.sortable')->
+            setSortable($this->item_interface->sortParametersConfig())->
             setSearchable($this->item_interface->searchParametersConfig())->
             setParameters('api.item.parameters.collection')->
             setConditionalParameters($conditional_parameters)->
