@@ -2,14 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Category;
 use App\Models\SubCategory;
 use App\Option\Get;
 use App\Utilities\Header;
 use App\Utilities\RoutePermission;
 use App\Validators\Request\Route;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Request;
 
 /**
  * Summary controller for the subcategories routes

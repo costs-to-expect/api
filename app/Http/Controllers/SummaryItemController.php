@@ -16,7 +16,6 @@ use App\Models\Transformers\ItemYearSummary as ItemYearSummaryTransformer;
 use App\Utilities\General;
 use App\Validators\Request\SearchParameters;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Request;
 
 /**
  * Summary for the items route

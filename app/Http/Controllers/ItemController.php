@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Item\ItemFactory;
 use App\Models\ItemTypeAllocatedExpense;
 use App\Option\Delete;
 use App\Option\Get;

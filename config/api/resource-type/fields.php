@@ -23,6 +23,16 @@ return [
         ],
         'required' => true
     ],
+    'item_type_id' => [
+        'field' => 'item_type_id',
+        'title' => 'resource-type/fields.title-item_type_id',
+        'description' => 'resource-type/fields.description-item_type_id',
+        'type' => 'string',
+        'validation' => [
+            'length' => 10
+        ],
+        'required' => true
+    ],
     'public' => [
         'field' => 'public',
         'title' => 'resource-type/fields.title-public',
