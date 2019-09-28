@@ -216,7 +216,7 @@ class ResourceTypeController extends Controller
             option();
 
         $patch = Patch::init()->
-            setFields('api.resource-type.fields')->
+            setFields('api.resource-type.fields-patch')->
             setDescription('route-descriptions.resource_type_PATCH')->
             setAuthenticationRequired(true)->
             setAuthenticationStatus($permissions['manage'])->
@@ -293,6 +293,7 @@ class ResourceTypeController extends Controller
         );
 
         try {
+            (new ResourceTypeItemType())->instance($resource_type_id)->delete();
             (new PermittedUser())->instance($resource_type_id, Auth::user()->id)->delete();
             (new ResourceType())->find($resource_type_id)->delete();
             UtilityResponse::successNoContent();

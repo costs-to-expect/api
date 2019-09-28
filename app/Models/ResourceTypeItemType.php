@@ -42,4 +42,17 @@ class ResourceTypeItemType extends Model
             return null;
         }
     }
+
+    /**
+     * Return an instance of the resource type item type
+     *
+     * @param integer $resource_type_id
+     *
+     * @return PermittedUser|null
+     */
+    public function instance(int $resource_type_id): ?ResourceTypeItemType
+    {
+        return $this->where('resource_type_id', '=', $resource_type_id)->
+            first();
+    }
 }
