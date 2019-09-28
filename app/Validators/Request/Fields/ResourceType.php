@@ -37,8 +37,6 @@ class ResourceType extends BaseValidator
                 ],
                 'item_type_id' => [
                     'required',
-                    'string',
-                    'length:10',
                     'exists:item_type,id'
                 ]
             ],

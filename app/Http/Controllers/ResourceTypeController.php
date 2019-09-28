@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\ItemType;
 use App\Models\PermittedUser;
 use App\Models\Resource;
 use App\Option\Delete;
@@ -170,6 +171,7 @@ class ResourceTypeController extends Controller
 
         $post = Post::init()->
             setFields('api.resource-type.fields')->
+            setConditionalFields($this->conditionalPostParameters())->
             setDescription('route-descriptions.resource_type_POST')->
             setAuthenticationStatus(($this->user_id !== null) ? true : false)->
             setAuthenticationRequired(true)->
@@ -337,5 +339,33 @@ class ResourceTypeController extends Controller
         }
 
         UtilityResponse::successNoContent();
+    }
+
+    /**
+     * Generate any conditional POST parameters, will be merged with the relevant
+     * config/api/[type]/fields.php data array
+     *
+     * @return array
+     */
+    private function conditionalPostParameters(): array
+    {
+        $item_types = (new ItemType())->minimisedCollection();
+
+        $parameters = ['item_type_id' => []];
+        foreach ($item_types as $item_type) {
+            $id = $this->hash->encode('item_type', $item_type['item_type_id']);
+
+            if ($id === false) {
+                UtilityResponse::unableToDecode();
+            }
+
+            $parameters['item_type_id']['allowed_values'][$id] = [
+                'value' => $id,
+                'name' => $item_type['item_type_name'],
+                'description' => $item_type['item_type_description']
+            ];
+        }
+
+        return $parameters;
     }
 }

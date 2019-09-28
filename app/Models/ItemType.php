@@ -21,5 +21,19 @@ class ItemType extends Model
 
     protected $guarded = ['id', 'name', 'description', 'created_at', 'updated_at'];
 
-    
+    /**
+     * Fetch the item types, id, name and description only
+     *
+     * @return array
+     */
+    public function minimisedCollection(): array
+    {
+        return $this->select(
+                'item_type.id AS item_type_id',
+                'item_type.name AS item_type_name',
+                'item_type.description AS item_type_description'
+            )->
+            get()->
+            toArray();
+    }
 }
