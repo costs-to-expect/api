@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\ItemType;
 use App\Models\PermittedUser;
 use App\Models\Resource;
+use App\Models\ResourceTypeItemType;
 use App\Option\Delete;
 use App\Option\Get;
 use App\Option\Patch;
@@ -252,6 +253,18 @@ class ResourceTypeController extends Controller
                 'user_id' => Auth::user()->id
             ]);
             $permitted_users->save();
+
+            $item_type_id = $this->hash->decode('item_type', request()->input('item_type_id'));
+
+            if ($item_type_id === false) {
+                UtilityResponse::unableToDecode();
+            }
+
+            $resource_type_item_type = new ResourceTypeItemType([
+                'resource_type_id' => $resource_type->id,
+                'item_type_id' => $item_type_id
+            ]);
+            $resource_type_item_type->save();
         } catch (Exception $e) {
             UtilityResponse::failedToSaveModelForCreate();
         }

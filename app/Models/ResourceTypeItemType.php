@@ -18,7 +18,7 @@ class ResourceTypeItemType extends Model
 {
     protected $table = 'resource_type_item_type';
 
-    protected $guarded = ['id', 'resource_type_id', 'item_type_id', 'created_at', 'updated_at'];
+    protected $guarded = ['id', 'created_at', 'updated_at'];
 
     /**
      * Fetch the item type assigned to the requested resource type
