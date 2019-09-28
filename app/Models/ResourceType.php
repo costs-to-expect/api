@@ -94,7 +94,10 @@ class ResourceType extends Model
                 'resource_type.name AS resource_type_name',
                 'resource_type.description AS resource_type_description',
                 'resource_type.created_at AS resource_type_created_at',
-                'resource_type.public AS resource_type_public'
+                'resource_type.public AS resource_type_public',
+                'item_type.id AS resource_type_item_type_id',
+                'item_type.name AS resource_type_item_type_name',
+                'item_type.description AS resource_type_item_type_description'
             )->selectRaw('
                 (
                     SELECT 
@@ -105,6 +108,8 @@ class ResourceType extends Model
                         resource.resource_type_id = resource_type.id
                 ) AS resource_type_resources'
             )->
+            join('resource_type_item_type', 'resource_type.id', 'resource_type_item_type.resource_type_id')->
+            join('item_type', 'resource_type_item_type.item_type_id', 'item_type.id')->
             leftJoin("resource", "resource_type.id", "resource.id");
 
         $collection = ModelUtility::applyResourceTypeCollectionCondition(
@@ -157,7 +162,10 @@ class ResourceType extends Model
                 'resource_type.name AS resource_type_name',
                 'resource_type.description AS resource_type_description',
                 'resource_type.created_at AS resource_type_created_at',
-                'resource_type.public AS resource_type_public'
+                'resource_type.public AS resource_type_public',
+                'item_type.id AS resource_type_item_type_id',
+                'item_type.name AS resource_type_item_type_name',
+                'item_type.description AS resource_type_item_type_description'
             )->selectRaw('
                 (
                     SELECT 
@@ -168,6 +176,8 @@ class ResourceType extends Model
                         resource.resource_type_id = resource_type.id
                 ) AS resource_type_resources'
             )->
+            join('resource_type_item_type', 'resource_type.id', 'resource_type_item_type.resource_type_id')->
+            join('item_type', 'resource_type_item_type.item_type_id', 'item_type.id')->
             leftJoin("resource", "resource_type.id", "resource.id");
 
         $result->where(function ($result) use ($permitted_resource_types, $include_public) {
