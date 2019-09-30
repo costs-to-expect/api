@@ -25,6 +25,7 @@ use Exception;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Config;
 
 /**
  * Manage items
@@ -53,15 +54,12 @@ class ItemController extends Controller
 
         $this->setItemInterface($resource_type_id);
 
-        $parameters = Parameters::fetch([
-            'include-categories',
-            'include-subcategories',
-            'include-unpublished',
-            'year',
-            'month',
-            'category',
-            'subcategory'
-        ]);
+        $parameters = Parameters::fetch(
+            array_merge(
+                array_keys(Config::get('api.item.parameters.collection')),
+                array_keys($this->item_interface->collectionParameters())
+            )
+        );
 
         $item_model = $this->item_interface->model();
 
@@ -191,7 +189,12 @@ class ItemController extends Controller
             $this->permitted_resource_types,
         );
 
-        $parameters = Parameters::fetch(['year', 'month', 'category', 'subcategory']);
+        $parameters = Parameters::fetch(
+            array_merge(
+                array_keys(Config::get('api.item.parameters.collection')),
+                array_keys($this->item_interface->collectionParameters())
+            )
+        );
 
         $conditional_parameters = $this->conditionalParameters(
             $resource_type_id,
