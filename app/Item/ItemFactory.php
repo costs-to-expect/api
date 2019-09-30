@@ -36,6 +36,10 @@ class ItemFactory
                     return new AllocatedExpense();
                     break;
 
+                case 'simple-expense':
+                    return new SimpleExpense();
+                    break;
+
                 default:
                     throw new Exception('Unable to load the relevant item type', 500);
                     break;
