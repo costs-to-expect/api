@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace App\Item;
 
-use App\Models\ItemTypeAllocatedExpense;
+use App\Models\ItemTypeSimpleExpense;
 use Illuminate\Database\Eloquent\Model;
 
 /**
@@ -35,20 +35,13 @@ class SimpleExpense extends AbstractItem
      */
     public function create($id): Model
     {
-        $item_type = new ItemTypeAllocatedExpense([
+        $item_type = new ItemTypeSimpleExpense([
             'item_id' => $id,
             'name' => request()->input('name'),
             'description' => request()->input('description', null),
             'effective_date' => request()->input('effective_date'),
-            'publish_after' => request()->input('publish_after', null),
             'total' => request()->input('total'),
-            'percentage' => request()->input('percentage', 100),
         ]);
-
-        $item_type->setActualisedTotal(
-            request()->input('total'),
-            request()->input('percentage', 100)
-        );
 
         $item_type->save();
 
@@ -64,7 +57,7 @@ class SimpleExpense extends AbstractItem
      */
     public function instance(int $id): Model
     {
-        return (new ItemTypeAllocatedExpense())->instance($id);
+        return (new ItemTypeSimpleExpense())->instance($id);
     }
 
     /**
@@ -74,7 +67,7 @@ class SimpleExpense extends AbstractItem
      */
     public function model(): Model
     {
-        return new ItemTypeAllocatedExpense();
+        return new ItemTypeSimpleExpense();
     }
 
     /**
@@ -137,17 +130,8 @@ class SimpleExpense extends AbstractItem
      */
     public function update(array $request, Model $instance): bool
     {
-        $update_actualised = false;
         foreach ($request as $key => $value) {
             $instance->$key = $value;
-
-            if (in_array($key, ['total', 'percentage']) === true) {
-                $update_actualised = true;
-            }
-        }
-
-        if ($update_actualised === true) {
-            $instance->setActualisedTotal($instance->total, $instance->percentage);
         }
 
         return $instance->save();
