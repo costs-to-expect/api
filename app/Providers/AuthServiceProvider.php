@@ -2,6 +2,8 @@
 
 namespace App\Providers;
 
+use DateInterval;
+use DateTime;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
 use Laravel\Passport\Passport;
 
@@ -20,6 +22,7 @@ class AuthServiceProvider extends ServiceProvider
      * Register any authentication / authorization services.
      *
      * @return void
+     * @throws \Exception
      */
     public function boot()
     {
@@ -27,6 +30,10 @@ class AuthServiceProvider extends ServiceProvider
 
         Passport::routes();
 
-        Passport::personalAccessTokensExpireIn(now()->addMonths(3));
+        Passport::personalAccessTokensExpireIn(
+            (new DateTime())->add(
+                new DateInterval('P3M')
+            )
+        );
     }
 }

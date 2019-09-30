@@ -35,6 +35,8 @@ class PassportController extends Controller
                 [
                     'type' => 'Bearer',
                     'token' => $token->accessToken,
+                    'created' => $token->token->created_at,
+                    'updated' => $token->token->updated_at,
                     'expires' => $token->token->expires_at
                 ],
                 200
@@ -78,12 +80,19 @@ class PassportController extends Controller
         $input['password'] = bcrypt($input['password']);
         $user = User::create($input);
 
+        $token = Auth::user()->createToken('costs-to-expect-api');
+
         $success = [
-            'token' => $user->createToken('costs-to-expect')->accessToken,
-            'name' => $user->name
+            'token' => [
+                'type' => 'Bearer',
+                'token' => $token->accessToken,
+                'created' => $token->token->created_at,
+                'updated' => $token->token->updated_at,
+                'expires' => $token->token->expires_at
+            ]
         ];
 
-        return response()->json($success, 200);
+        return response()->json($success, 201);
     }
 
     /**
