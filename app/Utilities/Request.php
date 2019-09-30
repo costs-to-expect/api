@@ -63,7 +63,7 @@ class Request
     /**
      * Return the errors from the validator
      *
-     * @param Validator $validator
+     * @param $validator
      * @param array $allowed_values
      *
      * @return JsonResponse|null

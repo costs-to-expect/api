@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace App\Item;
 
+use App\Validators\Request\Fields\Validator;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Config;
 
@@ -159,72 +160,9 @@ abstract class AbstractItem
     abstract public function update(array $request, Model $instance): bool;
 
     /**
-     * Return the validation patch field message for the specific item type
+     * Return the validator to use for the validation checks
      *
-     * @return array
+     * @return Validator
      */
-    public function validationPatchFieldMessages(): array
-    {
-        return Config::get($this->validationPatchFieldMessagesConfig());
-    }
-
-    /**
-     * Return the validation patch field messages config for the specific item
-     * type
-     *
-     * @return string
-     */
-    abstract public function validationPatchFieldMessagesConfig(): string;
-
-    /**
-     * Return the validation patch fields for the specific item type
-     *
-     * @return array
-     */
-    public function validationPatchFields(): array
-    {
-        return Config::get($this->validationPatchFieldsConfig());
-    }
-
-    /**
-     * Return the validation patch fields config for the specific item type
-     *
-     * @return string
-     */
-    abstract public function validationPatchFieldsConfig(): string;
-
-    /**
-     * Return the validation post field message for the specific item type
-     *
-     * @return array
-     */
-    public function validationPostFieldMessages(): array
-    {
-        return Config::get($this->validationPatchFieldMessagesConfig());
-    }
-
-    /**
-     * Return the validation post field messages config for the specific item
-     * type
-     *
-     * @return string
-     */
-    abstract public function validationPostFieldMessagesConfig(): string;
-
-    /**
-     * Return the validation post fields for the specific item type
-     *
-     * @return array
-     */
-    public function validationPostFields(): array
-    {
-        return Config::get($this->validationPostFieldsConfig());
-    }
-
-    /**
-     * Return the validation post fields config for the specific item type
-     *
-     * @return string
-     */
-    abstract public function validationPostFieldsConfig(): string;
+    abstract public function validator(): Validator;
 }

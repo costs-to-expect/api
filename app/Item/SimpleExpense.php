@@ -4,6 +4,8 @@ declare(strict_types=1);
 namespace App\Item;
 
 use App\Models\ItemTypeSimpleExpense;
+use App\Validators\Request\Fields\ItemTypeSimpleExpense as ItemTypeSimpleExpenseValidator;
+use App\Validators\Request\Fields\Validator;
 use Illuminate\Database\Eloquent\Model;
 
 /**
@@ -138,44 +140,12 @@ class SimpleExpense extends AbstractItem
     }
 
     /**
-     * Return the validation patch field messages config for the specific item
-     * type
+     * Return the validator to use for the validation checks
      *
-     * @return string
+     * @return Validator
      */
-    public function validationPatchFieldMessagesConfig(): string
+    public function validator(): Validator
     {
-        // TODO: Implement validationPatchFieldMessagesConfig() method.
-    }
-
-    /**
-     * Return the validation patch fields config for the specific item type
-     *
-     * @return string
-     */
-    public function validationPatchFieldsConfig(): string
-    {
-        // TODO: Implement validationPatchFieldsConfig() method.
-    }
-
-    /**
-     * Return the validation post field messages config for the specific item
-     * type
-     *
-     * @return string
-     */
-    public function validationPostFieldMessagesConfig(): string
-    {
-        // TODO: Implement validationPostFieldMessagesConfig() method.
-    }
-
-    /**
-     * Return the validation post fields config for the specific item type
-     *
-     * @return string
-     */
-    public function validationPostFieldsConfig(): string
-    {
-        // TODO: Implement validationPostFieldsConfig() method.
+        return new ItemTypeSimpleExpenseValidator();
     }
 }

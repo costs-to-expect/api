@@ -311,10 +311,11 @@ class ItemController extends Controller
 
         $this->setItemInterface($resource_type_id);
 
-        $validator = (new ItemValidator)->create();
+        $validator_factory = $this->item_interface->validator();
+        $validator = $validator_factory->create();
         UtilityRequest::validateAndReturnErrors($validator);
 
-        try {
+        //try {
             $item = new Item([
                 'resource_id' => $resource_id,
                 'created_by' => Auth::user()->id
@@ -323,9 +324,9 @@ class ItemController extends Controller
 
             $item_type = $this->item_interface->create((int) $item->id);
 
-        } catch (Exception $e) {
-            UtilityResponse::failedToSaveModelForCreate();
-        }
+        //} catch (Exception $e) {
+          //  UtilityResponse::failedToSaveModelForCreate();
+        //}
 
         return response()->json(
             (new ItemTransformer((new Item())->instanceToArray($item, $item_type)))->toArray(),
