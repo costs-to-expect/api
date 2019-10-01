@@ -24,18 +24,6 @@ class Item extends Model
 
     protected $guarded = ['id', 'actualised_total', 'created_at', 'updated_at'];
 
-    /**
-     * Return an array of the fields that can be PATCHed.
-     *
-     * @return array
-     */
-    public function patchableFields(): array
-    {
-        return array_keys(
-            Config::get('api.item-type-allocated-expense.validation.PATCH.fields'),
-        );
-    }
-
     public function resource()
     {
         return $this->belongsTo(Resource::class, 'resource_id', 'id');

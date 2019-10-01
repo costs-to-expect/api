@@ -7,6 +7,7 @@ use App\Utilities\General;
 use App\Utilities\Model as ModelUtility;
 use Illuminate\Database\Query\Builder as QueryBuilder;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\DB;
 
 /**
@@ -57,6 +58,8 @@ class ItemTypeAllocatedExpense extends Model
             join('resource', 'item.resource_id', 'resource.id')->
             where('resource_id', '=', $resource_id)->
             where('resource.resource_type_id', '=', $resource_type_id)->
+            where('item_type_simple_expense.item_id', '=', $item_id)->
+            where('item.id', '=', $item_id)->
             select(
                 'item.id AS item_id',
                 'item_type_allocated_expense.name AS item_name',

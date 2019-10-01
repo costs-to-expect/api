@@ -8,6 +8,7 @@ use App\Models\Transformers\Transformer;
 use App\Validators\Request\Fields\ItemTypeAllocatedExpense as ItemTypeAllocatedExpenseValidator;
 use App\Validators\Request\Fields\Validator;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Config;
 
 /**
  * The Interface for dealing with allocated expenses, everything should be
@@ -78,6 +79,18 @@ class AllocatedExpense extends AbstractItem
     public function model(): Model
     {
         return new ItemTypeAllocatedExpense();
+    }
+
+    /**
+     * Return an array of the fields that can be PATCHed.
+     *
+     * @return array
+     */
+    public function patchableFields(): array
+    {
+        return array_keys(
+            Config::get('api.item-type-allocated-expense.validation.PATCH.fields'),
+        );
     }
 
     /**

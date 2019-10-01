@@ -8,6 +8,7 @@ use App\Models\Transformers\Transformer;
 use App\Validators\Request\Fields\ItemTypeSimpleExpense as ItemTypeSimpleExpenseValidator;
 use App\Validators\Request\Fields\Validator;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Config;
 
 /**
  * The Interface for dealing with simple expenses, everything should be
@@ -71,6 +72,18 @@ class SimpleExpense extends AbstractItem
     public function model(): Model
     {
         return new ItemTypeSimpleExpense();
+    }
+
+    /**
+     * Return an array of the fields that can be PATCHed.
+     *
+     * @return array
+     */
+    public function patchableFields(): array
+    {
+        return array_keys(
+            Config::get('api.item-type-simple-expense.validation.PATCH.fields'),
+        );
     }
 
     /**

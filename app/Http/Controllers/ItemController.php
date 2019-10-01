@@ -369,11 +369,10 @@ class ItemController extends Controller
 
         UtilityRequest::checkForEmptyPatch();
 
-        UtilityRequest::checkForInvalidFields(
-            (new Item())->patchableFields()
-        );
+        UtilityRequest::checkForInvalidFields($this->item_interface->patchableFields());
 
-        $validator = (new ItemValidator)->update();
+        $validator_factory = $this->item_interface->validator();
+        $validator = $validator_factory->update();
         UtilityRequest::validateAndReturnErrors($validator);
 
         $item = (new Item())->instance($resource_type_id, $resource_id, $item_id);

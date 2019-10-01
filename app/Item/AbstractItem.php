@@ -61,6 +61,13 @@ abstract class AbstractItem
     abstract public function model(): Model;
 
     /**
+     * Return an array of the fields that can be PATCHed.
+     *
+     * @return array
+     */
+    abstract public function patchableFields(): array;
+
+    /**
      * Return the patch fields specific to the item type, these will be merged
      * with any default patch fields
      *
