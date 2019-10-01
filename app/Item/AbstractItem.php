@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace App\Item;
 
+use App\Models\Transformers\Transformer;
 use App\Validators\Request\Fields\Validator;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Config;
@@ -148,6 +149,15 @@ abstract class AbstractItem
      * @return string
      */
     abstract public function sortParametersConfig(): string;
+
+    /**
+     * Return the transformer for the specific item type
+     *
+     * @param array $data_to_transform
+     *
+     * @return Transformer
+     */
+    abstract public function transformer(array $data_to_transform): Transformer;
 
     /**
      * Update the item type data

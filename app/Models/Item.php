@@ -41,42 +41,6 @@ class Item extends Model
         return $this->belongsTo(Resource::class, 'resource_id', 'id');
     }
 
-    /**
-     * @param integer $resource_type_id
-     * @param integer $resource_id
-     * @param integer $item_id
-     *
-     * @return array|null
-     */
-    public function single(
-        int $resource_type_id,
-        int $resource_id,
-        int $item_id
-    ): ?array
-    {
-        $result = $this->where('resource_id', '=', $resource_id)->
-            join('item_type_allocated_expense', 'item.id', 'item_type_allocated_expense.item_id')->
-            join('resource', 'item.resource_id', 'resource.id')->
-            where('resource.resource_type_id', '=', $resource_type_id)->
-            select(
-                'item.id AS item_id',
-                'item_type_allocated_expense.name AS item_name',
-                'item_type_allocated_expense.description AS item_description',
-                'item_type_allocated_expense.effective_date AS item_effective_date',
-                'item_type_allocated_expense.total AS item_total',
-                'item_type_allocated_expense.percentage AS item_percentage',
-                'item_type_allocated_expense.actualised_total AS item_actualised_total',
-                'item.created_at AS item_created_at'
-            )
-            ->find($item_id);
-
-        if ($result !== null) {
-            return $result->toArray();
-        } else {
-            return null;
-        }
-    }
-
     public function instance(
         int $resource_type_id,
         int $resource_id,
@@ -98,29 +62,6 @@ class Item extends Model
                 'item.created_at'
             )
             ->find($item_id);
-    }
-
-    /**
-     * Convert the model instance to an array for use with the transformer
-     *
-     * @param Item $item
-     * @param Model $item_type
-     *
-     * @return array
-     */
-    public function instanceToArray(Item $item, Model $item_type): array
-    {
-        return [
-            'item_id' => $item->id,
-            'item_name' => $item_type->name,
-            'item_description' => $item_type->description,
-            'item_effective_date' => $item_type->effective_date,
-            'item_publish_after' => $item_type->publish_after,
-            'item_total' => $item_type->total,
-            'item_percentage' => $item_type->percentage,
-            'item_actualised_total' => $item_type->actualised_total,
-            'item_created_at' => $item->created_at->toDateTimeString()
-        ];
     }
 
     /**

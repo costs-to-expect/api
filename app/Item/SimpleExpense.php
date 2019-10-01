@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace App\Item;
 
 use App\Models\ItemTypeSimpleExpense;
+use App\Models\Transformers\Transformer;
 use App\Validators\Request\Fields\ItemTypeSimpleExpense as ItemTypeSimpleExpenseValidator;
 use App\Validators\Request\Fields\Validator;
 use Illuminate\Database\Eloquent\Model;
@@ -120,6 +121,18 @@ class SimpleExpense extends AbstractItem
     public function sortParametersConfig(): string
     {
         return 'api.item-type-simple-expense.sortable';
+    }
+
+    /**
+     * Return the transformer for the specific item type
+     *
+     * @param array $data_to_transform
+     *
+     * @return Transformer
+     */
+    public function transformer(array $data_to_transform): Transformer
+    {
+        return new \App\Models\Transformers\ItemTypeSimpleExpense($data_to_transform);
     }
 
     /**

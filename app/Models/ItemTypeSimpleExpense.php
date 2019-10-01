@@ -33,6 +33,61 @@ class ItemTypeSimpleExpense extends Model
     }
 
     /**
+     * Convert the model instance to an array for use with the transformer
+     *
+     * @param Item $item
+     * @param Model $item_type
+     *
+     * @return array
+     */
+    public function instanceToArray(Item $item, Model $item_type): array
+    {
+        return [
+            'item_id' => $item->id,
+            'item_name' => $item_type->name,
+            'item_description' => $item_type->description,
+            'item_effective_date' => $item_type->effective_date,
+            'item_total' => $item_type->total,
+            'item_created_at' => $item->created_at->toDateTimeString()
+        ];
+    }
+
+    /**
+     * @param integer $resource_type_id
+     * @param integer $resource_id
+     * @param integer $item_id
+     *
+     * @return array|null
+     */
+    public function single(
+        int $resource_type_id,
+        int $resource_id,
+        int $item_id
+    ): ?array
+    {
+        $result = $this->from('item')->
+            join('item_type_simple_expense', 'item.id', 'item_type_simple_expense.item_id')->
+            join('resource', 'item.resource_id', 'resource.id')->
+            where('item.resource_id', '=', $resource_id)->
+            where('resource.resource_type_id', '=', $resource_type_id)->
+            select(
+                'item.id AS item_id',
+                'item_type_simple_expense.name AS item_name',
+                'item_type_simple_expense.description AS item_description',
+                'item_type_simple_expense.effective_date AS item_effective_date',
+                'item_type_simple_expense.total AS item_total',
+                'item.created_at AS item_created_at'
+            )->
+            first();
+
+        if ($result !== null) {
+            return $result->toArray();
+        } else {
+            return null;
+        }
+    }
+
+    /**
      * Return the total count for the given request, similar to the collection
      * method just without the sorting and only returning a count
      *

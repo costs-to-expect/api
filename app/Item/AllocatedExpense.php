@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace App\Item;
 
 use App\Models\ItemTypeAllocatedExpense;
+use App\Models\Transformers\Transformer;
 use App\Validators\Request\Fields\ItemTypeAllocatedExpense as ItemTypeAllocatedExpenseValidator;
 use App\Validators\Request\Fields\Validator;
 use Illuminate\Database\Eloquent\Model;
@@ -127,6 +128,18 @@ class AllocatedExpense extends AbstractItem
     public function sortParametersConfig(): string
     {
         return 'api.item-type-allocated-expense.sortable';
+    }
+
+    /**
+     * Return the transformer for the specific item type
+     *
+     * @param array $data_to_transform
+     *
+     * @return Transformer
+     */
+    public function transformer(array $data_to_transform): Transformer
+    {
+        return new \App\Models\Transformers\ItemTypeAllocatedExpense($data_to_transform);
     }
 
     /**

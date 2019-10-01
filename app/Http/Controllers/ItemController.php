@@ -115,7 +115,7 @@ class ItemController extends Controller
         return response()->json(
             array_map(
                 function($item) {
-                    return (new ItemTransformer($item))->toArray();
+                    return $this->item_interface->transformer($item)->toArray();
                 },
                 $items
             ),
@@ -146,7 +146,11 @@ class ItemController extends Controller
             $this->permitted_resource_types
         );
 
-        $item = (new Item())->single($resource_type_id, $resource_id, $item_id);
+        $this->setItemInterface($resource_type_id);
+
+        $item_model = $this->item_interface->model();
+
+        $item = $item_model->single($resource_type_id, $resource_id, $item_id);
 
         if ($item === null) {
             UtilityResponse::notFound(trans('entities.item'));
@@ -156,7 +160,7 @@ class ItemController extends Controller
         $headers->item();
 
         return response()->json(
-            (new ItemTransformer($item))->toArray(),
+            $this->item_interface->transformer($item)->toArray(),
             200,
             $headers->headers()
         );
@@ -258,7 +262,9 @@ class ItemController extends Controller
 
         $this->setItemInterface($resource_type_id);
 
-        $item = (new Item())->single($resource_type_id, $resource_id, $item_id);
+        $item_model = $this->item_interface->model();
+
+        $item = $item_model->single($resource_type_id, $resource_id, $item_id);
 
         if ($item === null) {
             UtilityResponse::notFound(trans('entities.item'));
@@ -315,7 +321,9 @@ class ItemController extends Controller
         $validator = $validator_factory->create();
         UtilityRequest::validateAndReturnErrors($validator);
 
-        //try {
+        $model = $this->item_interface->model();
+
+        try {
             $item = new Item([
                 'resource_id' => $resource_id,
                 'created_by' => Auth::user()->id
@@ -324,12 +332,12 @@ class ItemController extends Controller
 
             $item_type = $this->item_interface->create((int) $item->id);
 
-        //} catch (Exception $e) {
-          //  UtilityResponse::failedToSaveModelForCreate();
-        //}
+        } catch (Exception $e) {
+            UtilityResponse::failedToSaveModelForCreate();
+        }
 
         return response()->json(
-            (new ItemTransformer((new Item())->instanceToArray($item, $item_type)))->toArray(),
+            $this->item_interface->transformer($model->instanceToArray($item, $item_type))->toArray(),
             201
         );
     }
@@ -410,7 +418,10 @@ class ItemController extends Controller
             true
         );
 
-        $item_type = (new ItemTypeAllocatedExpense())->instance($item_id);
+        $this->setItemInterface($resource_type_id);
+        $item_model = $this->item_interface->model();
+
+        $item_type = $item_model->instance($item_id);
         $item = (new Item())->instance($resource_type_id, $resource_id, $item_id);
 
         if ($item === null || $item_type === null) {
