@@ -16,6 +16,7 @@ use App\Validators\Request\SearchParameters;
 use App\Validators\Request\SortParameters;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Config;
 
 /**
  * View items for all resources for a resource type
@@ -43,29 +44,28 @@ class ResourceTypeItemController extends Controller
             $this->permitted_resource_types
         );
 
-        $collection_parameters = Parameters::fetch([
-            'include-categories',
-            'include-subcategories',
-            'include-unpublished',
-            'year',
-            'month',
-            'category',
-            'subcategory'
-        ]);
+        $this->setItemInterface($resource_type_id);
+        $item_model = $this->item_interface->model();
 
-        $sort_fields = SortParameters::fetch([
-            'description',
-            'total',
-            'actualised_total',
-            'effective_date',
-            'created'
-        ]);
+        $collection_parameters = Parameters::fetch(
+            array_merge(
+                array_keys(Config::get('api.item.parameters.collection')),
+                array_keys($this->item_interface->collectionParameters())
+            )
+        );
 
-        $search_conditions = SearchParameters::fetch([
-            'description'
-        ]);
+        $sort_fields = SortParameters::fetch(
+            $this->item_interface->sortParameters()
+        );
 
-        $total = (new ResourceTypeItem())->totalCount(
+        $search_conditions = SearchParameters::fetch(
+            $this->item_interface->searchParameters()
+        );
+
+        /* This method needs to be moved into base models as something like
+        totalCountForResourceType and paginatedCollectionForResourceType */
+
+        $total = $item_model->totalCount(
             $resource_type_id,
             $collection_parameters,
             $search_conditions
@@ -75,7 +75,7 @@ class ResourceTypeItemController extends Controller
             ->setParameters()
             ->paging();
 
-        $items = (new ResourceTypeItem())->paginatedCollection(
+        $items = $item_model->paginatedCollection(
             $resource_type_id,
             $pagination['offset'],
             $pagination['limit'],
