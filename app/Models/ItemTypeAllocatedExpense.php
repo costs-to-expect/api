@@ -58,7 +58,7 @@ class ItemTypeAllocatedExpense extends Model
             join('resource', 'item.resource_id', 'resource.id')->
             where('resource_id', '=', $resource_id)->
             where('resource.resource_type_id', '=', $resource_type_id)->
-            where('item_type_simple_expense.item_id', '=', $item_id)->
+            where('item_type_allocated_expense.item_id', '=', $item_id)->
             where('item.id', '=', $item_id)->
             select(
                 'item.id AS item_id',
