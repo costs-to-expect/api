@@ -52,7 +52,7 @@ class ResourceType extends Transformer
             array_key_exists('resource_type_item_type_name', $this->data_to_transform) === true &&
             array_key_exists('resource_type_item_type_description', $this->data_to_transform) === true
         ) {
-            $result['itemType'] = [
+            $result['item_type'] = [
                 'id' => $this->hash->itemType()->encode($this->data_to_transform['resource_type_item_type_id']),
                 'name' => $this->data_to_transform['resource_type_item_type_name'],
                 'description' => $this->data_to_transform['resource_type_item_type_description']
