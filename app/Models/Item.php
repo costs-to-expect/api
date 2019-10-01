@@ -22,7 +22,7 @@ class Item extends Model
 {
     protected $table = 'item';
 
-    protected $guarded = ['id', 'actualised_total', 'created_at', 'updated_at'];
+    protected $guarded = ['id', 'created_at', 'updated_at'];
 
     public function resource()
     {
@@ -36,18 +36,10 @@ class Item extends Model
     ): ?Item
     {
         return $this->where('resource_id', '=', $resource_id)->
-            join('item_type_allocated_expense', 'item.id', 'item_type_allocated_expense.item_id')->
             join('resource', 'item.resource_id', 'resource.id')->
             where('resource.resource_type_id', '=', $resource_type_id)->
             select(
-                'item.id',
-                'item_type_allocated_expense.description',
-                'item_type_allocated_expense.effective_date',
-                'item_type_allocated_expense.publish_after',
-                'item_type_allocated_expense.total',
-                'item_type_allocated_expense.percentage',
-                'item_type_allocated_expense.actualised_total',
-                'item.created_at'
+                'item.id'
             )
             ->find($item_id);
     }
