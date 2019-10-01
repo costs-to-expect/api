@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\ItemTypeAllocatedExpense;
 use App\Option\Delete;
 use App\Option\Get;
 use App\Option\Patch;
@@ -14,11 +13,9 @@ use App\Validators\Request\Route;
 use App\Models\Category;
 use App\Models\Item;
 use App\Models\SubCategory;
-use App\Models\Transformers\Item as ItemTransformer;
 use App\Utilities\Pagination as UtilityPagination;
 use App\Utilities\Request as UtilityRequest;
 use App\Utilities\Response as UtilityResponse;
-use App\Validators\Request\Fields\Item as ItemValidator;
 use App\Validators\Request\SearchParameters;
 use App\Validators\Request\SortParameters;
 use Exception;
