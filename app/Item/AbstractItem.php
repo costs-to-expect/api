@@ -104,6 +104,76 @@ abstract class AbstractItem
     abstract public function postFieldsConfig(): string;
 
     /**
+     * Return the collection parameters specific to the item type, these will
+     * be merged with the default collection parameters
+     *
+     * @return array
+     */
+    public function resourceTypeItemCollectionParameters(): array
+    {
+         return Config::get($this->resourceTypeItemCollectionParametersConfig());
+    }
+
+    /**
+     * Return the parameters config string specific to the item type
+     *
+     * @return string
+     */
+    abstract public function resourceTypeItemCollectionParametersConfig(): string;
+
+    /**
+     * Return the model instance for resource type item type
+     *
+     * @return Model
+     */
+    abstract public function resourceTypeItemModel(): Model;
+
+    /**
+     * Return the search parameters specific to the item type, these will be
+     * merged with any default search parameters
+     *
+     * @return array
+     */
+    public function resourceTypeItemSearchParameters(): array
+    {
+        return Config::get($this->resourceTypeItemSearchParametersConfig());
+    }
+
+    /**
+     * Return the search parameters config string specific to the item type
+     *
+     * @return string
+     */
+    abstract public function resourceTypeItemSearchParametersConfig(): string;
+
+    /**
+     * Return the sort parameters specific to the item type, these will be
+     * merged with any default sort parameters
+     *
+     * @return array
+     */
+    public function resourceTypeItemSortParameters(): array
+    {
+        return Config::get($this->resourceTypeItemSortParametersConfig());
+    }
+
+    /**
+     * Return the sort parameters config string specific to the item type
+     *
+     * @return string
+     */
+    abstract public function resourceTypeItemSortParametersConfig(): string;
+
+    /**
+     * Return the transformer for the specific item type
+     *
+     * @param array $data_to_transform
+     *
+     * @return Transformer
+     */
+    abstract public function resourceTypeItemTransformer(array $data_to_transform): Transformer;
+
+    /**
      * Return the search parameters specific to the item type, these will be
      * merged with any default search parameters
      *

@@ -176,7 +176,7 @@ class SummaryResourceTypeItemController extends Controller
         return response()->json(
             [
                 'total' => number_format(
-                    $summary[0]['actualised_total'],
+                    $summary[0]['total'],
                     2,
                     '.',
                     ''

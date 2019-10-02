@@ -45,7 +45,7 @@ class ResourceTypeItemController extends Controller
         );
 
         $this->setItemInterface($resource_type_id);
-        $item_model = $this->item_interface->model();
+        $resource_type_item_model = $this->item_interface->resourceTypeItemModel();
 
         $collection_parameters = Parameters::fetch(
             array_merge(
@@ -62,10 +62,7 @@ class ResourceTypeItemController extends Controller
             $this->item_interface->searchParameters()
         );
 
-        /* This method needs to be moved into base models as something like
-        totalCountForResourceType and paginatedCollectionForResourceType */
-
-        $total = $item_model->totalCount(
+        $total = $resource_type_item_model->totalCount(
             $resource_type_id,
             $collection_parameters,
             $search_conditions
@@ -75,7 +72,7 @@ class ResourceTypeItemController extends Controller
             ->setParameters()
             ->paging();
 
-        $items = $item_model->paginatedCollection(
+        $items = $resource_type_item_model->paginatedCollection(
             $resource_type_id,
             $pagination['offset'],
             $pagination['limit'],
@@ -105,7 +102,7 @@ class ResourceTypeItemController extends Controller
         return response()->json(
             array_map(
                 function($item) {
-                    return (new ResourceTypeItemTransformer($item))->toArray();
+                    return $this->item_interface->resourceTypeItemTransformer($item)->toArray();
                 },
                 $items
             ),
@@ -128,6 +125,8 @@ class ResourceTypeItemController extends Controller
             $this->permitted_resource_types
         );
 
+        $this->setItemInterface($resource_type_id);
+
         $permissions = RoutePermission::resourceType(
             $resource_type_id,
             $this->permitted_resource_types
@@ -141,7 +140,7 @@ class ResourceTypeItemController extends Controller
         );
 
         $get = Get::init()->
-            setSortable('api.resource-type-item.sortable')->
+            setSortable( 'api.resource-type-item.sortable')->
             setSearchable('api.resource-type-item.searchable')->
             setPagination(true)->
             setParameters('api.resource-type-item.parameters.collection')->

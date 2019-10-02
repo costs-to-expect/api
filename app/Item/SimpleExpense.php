@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace App\Item;
 
 use App\Models\ItemTypeSimpleExpense;
+use App\Models\ResourceTypeItemTypeSimpleExpense;
 use App\Models\Transformers\Transformer;
 use App\Validators\Request\Fields\ItemTypeSimpleExpense as ItemTypeSimpleExpenseValidator;
 use App\Validators\Request\Fields\Validator;
@@ -104,6 +105,28 @@ class SimpleExpense extends AbstractItem
     public function postFieldsConfig(): string
     {
         return 'api.item-type-simple-expense.fields';
+    }
+
+    /**
+     * Return the model instance for resource type item type
+     *
+     * @return Model
+     */
+    public function resourceTypeItemModel(): Model
+    {
+        return new ResourceTypeItemTypeSimpleExpense();
+    }
+
+    /**
+     * Return the transformer for the specific item type
+     *
+     * @param array $data_to_transform
+     *
+     * @return Transformer
+     */
+    public function resourceTypeItemTransformer(array $data_to_transform): Transformer
+    {
+        return new \App\Models\Transformers\ResourceTypeItemTypeSimpleExpense($data_to_transform);
     }
 
     /**
