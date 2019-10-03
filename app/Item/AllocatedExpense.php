@@ -115,6 +115,16 @@ class AllocatedExpense extends AbstractItem
     }
 
     /**
+     * Return the parameters config string specific to the item type
+     *
+     * @return string
+     */
+    public function resourceTypeItemCollectionParametersConfig(): string
+    {
+        return 'api.item-type-allocated-expense.parameters.collection';
+    }
+
+    /**
      * Return the model instance for resource type item type
      *
      * @return Model
@@ -134,6 +144,26 @@ class AllocatedExpense extends AbstractItem
     public function resourceTypeItemTransformer(array $data_to_transform): Transformer
     {
         return new \App\Models\Transformers\ResourceTypeItemTypeAllocatedExpense($data_to_transform);
+    }
+
+    /**
+     * Return the search parameters config string specific to the item type
+     *
+     * @return string
+     */
+    public function resourceTypeItemSearchParametersConfig(): string
+    {
+        return 'api.item-type-allocated-expense.searchable';
+    }
+
+    /**
+     * Return the sort parameters config string specific to the item type
+     *
+     * @return string
+     */
+    public function resourceTypeItemSortParametersConfig(): string
+    {
+        return 'api.item-type-allocated-expense.sortable';
     }
 
     /**

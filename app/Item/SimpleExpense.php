@@ -108,6 +108,16 @@ class SimpleExpense extends AbstractItem
     }
 
     /**
+     * Return the parameters config string specific to the item type
+     *
+     * @return string
+     */
+    public function resourceTypeItemCollectionParametersConfig(): string
+    {
+        return 'api.item-type-simple-expense.parameters.collection';
+    }
+
+    /**
      * Return the model instance for resource type item type
      *
      * @return Model
@@ -127,6 +137,26 @@ class SimpleExpense extends AbstractItem
     public function resourceTypeItemTransformer(array $data_to_transform): Transformer
     {
         return new \App\Models\Transformers\ResourceTypeItemTypeSimpleExpense($data_to_transform);
+    }
+
+    /**
+     * Return the search parameters config string specific to the item type
+     *
+     * @return string
+     */
+    public function resourceTypeItemSearchParametersConfig(): string
+    {
+        return 'api.item-type-simple-expense.searchable';
+    }
+
+    /**
+     * Return the sort parameters config string specific to the item type
+     *
+     * @return string
+     */
+    public function resourceTypeItemSortParametersConfig(): string
+    {
+        return 'api.item-type-simple-expense.searchable';
     }
 
     /**
