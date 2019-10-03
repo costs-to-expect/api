@@ -155,7 +155,7 @@ class SummaryResourceTypeItemController extends Controller
      */
     private function summary(): JsonResponse
     {
-        $summary = (new ResourceTypeItem())->summary(
+        $summary = (new \App\Models\ResourceTypeItemTypeAllocatedExpense())->summary(
             $this->resource_type_id,
             $this->include_unpublished
         );
