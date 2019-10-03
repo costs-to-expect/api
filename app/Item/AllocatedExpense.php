@@ -121,7 +121,7 @@ class AllocatedExpense extends AbstractItem
      */
     public function resourceTypeItemCollectionParametersConfig(): string
     {
-        return 'api.item-type-allocated-expense.parameters.collection';
+        return 'api.resource-type-item-type-allocated-expense.parameters.collection';
     }
 
     /**
@@ -153,7 +153,7 @@ class AllocatedExpense extends AbstractItem
      */
     public function resourceTypeItemSearchParametersConfig(): string
     {
-        return 'api.item-type-allocated-expense.searchable';
+        return 'api.resource-type-item-type-allocated-expense.searchable';
     }
 
     /**
@@ -163,7 +163,7 @@ class AllocatedExpense extends AbstractItem
      */
     public function resourceTypeItemSortParametersConfig(): string
     {
-        return 'api.item-type-allocated-expense.sortable';
+        return 'api.resource-type-item-type-allocated-expense.sortable';
     }
 
     /**

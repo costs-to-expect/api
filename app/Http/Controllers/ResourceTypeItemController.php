@@ -134,16 +134,14 @@ class ResourceTypeItemController extends Controller
 
         $this->conditionalGetParameters(
             $resource_type_id,
-            Parameters::fetch([
-                'category',
-            ])
+            ['category']
         );
 
         $get = Get::init()->
-            setSortable( 'api.resource-type-item.sortable')->
-            setSearchable('api.resource-type-item.searchable')->
+            setSortable( $this->item_interface->resourceTypeItemSortParametersConfig())->
+            setSearchable($this->item_interface->resourceTypeItemSearchParametersConfig())->
             setPagination(true)->
-            setParameters('api.resource-type-item.parameters.collection')->
+            setParameters($this->item_interface->resourceTypeItemCollectionParametersConfig())->
             setConditionalParameters($this->conditional_get_parameters)->
             setDescription('route-descriptions.resource_type_item_GET_index')->
             setAuthenticationStatus($permissions['view'])->

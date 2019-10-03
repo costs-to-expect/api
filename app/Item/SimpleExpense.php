@@ -114,7 +114,7 @@ class SimpleExpense extends AbstractItem
      */
     public function resourceTypeItemCollectionParametersConfig(): string
     {
-        return 'api.item-type-simple-expense.parameters.collection';
+        return 'api.resource-type-item-type-simple-expense.parameters.collection';
     }
 
     /**
@@ -146,7 +146,7 @@ class SimpleExpense extends AbstractItem
      */
     public function resourceTypeItemSearchParametersConfig(): string
     {
-        return 'api.item-type-simple-expense.searchable';
+        return 'api.resource-type-item-type-simple-expense.searchable';
     }
 
     /**
@@ -156,7 +156,7 @@ class SimpleExpense extends AbstractItem
      */
     public function resourceTypeItemSortParametersConfig(): string
     {
-        return 'api.item-type-simple-expense.searchable';
+        return 'api.resource-type-item-type-simple-expense.sortable';
     }
 
     /**

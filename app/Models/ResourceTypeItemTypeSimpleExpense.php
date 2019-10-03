@@ -197,8 +197,6 @@ class ResourceTypeItemTypeSimpleExpense extends Model
                     case 'created':
                         $collection->orderBy('item.created_at', $direction);
                         break;
-
-                    case 'actualised_total':
                     case 'description':
                     case 'effective_date':
                     case 'name':
