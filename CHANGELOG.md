@@ -2,7 +2,7 @@
 
 The complete changelog for the Costs to Expect REST API, follows the format defined at https://keepachangelog.com/en/1.0.0/
 
-## [v2.02.0] - 2019-10-xx
+## [v2.02.0] - 2019-10-06
 ### Added
 - We have updated create resource type. It is now possible to set the item type to use; there are two expense types, "allocated expense" and "simple expense".
 - Supported item types exposed in the resource types OPTIONS request. 
