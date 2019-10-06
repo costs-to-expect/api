@@ -3,7 +3,7 @@
 return [
     'version'=> '2.02.0',
     'prefix' => 'v2',
-    'release_date' => '2019-10-06',
+    'release_date' => '2019-10-07',
     'changelog' => [
         'api' => '/v2/changelog',
         'markdown' => 'https://github.com/costs-to-expect/api/blob/master/CHANGELOG.md'
