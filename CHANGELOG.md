@@ -2,6 +2,10 @@
 
 The complete changelog for the Costs to Expect REST API, follows the format defined at https://keepachangelog.com/en/1.0.0/
 
+## [v2.03.0] - 2019-10-xx
+### Changed
+- We have updated the landing page; the focus was previously only about the website; the API is the backbone of the entire service.
+
 ## [v2.02.0] - 2019-10-07
 ### Added
 - We have updated the create resource type route. It is now possible to set the item type that you want to use. There are two expense types, "allocated expense" and "simple expense". An allocated expense allows you to allocated a percentage of the total cost; a simple expense only has a total, no allocation rate.
