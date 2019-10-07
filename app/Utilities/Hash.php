@@ -42,6 +42,7 @@ class Hash
         $this->hashers['item'] = new Hashids(Config::get('api.hashids.item'), $this->min_length);
         $this->hashers['item_category'] = new Hashids(Config::get('api.hashids.item_category'), $this->min_length);
         $this->hashers['item_sub_category'] = new Hashids(Config::get('api.hashids.item_subcategory'), $this->min_length);
+        $this->hashers['item_type'] = new Hashids(Config::get('api.hashids.item_type'), $this->min_length);
     }
 
     /**
@@ -147,5 +148,15 @@ class Hash
     public function itemSubCategory(): Hashids
     {
         return $this->hashers['item_sub_category'];
+    }
+
+    /**
+     * Helper method to return the item type
+     *
+     * @return Hashids
+     */
+    public function itemType(): Hashids
+    {
+        return $this->hashers['item_type'];
     }
 }

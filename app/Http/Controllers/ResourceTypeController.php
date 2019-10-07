@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\ItemType;
 use App\Models\PermittedUser;
 use App\Models\Resource;
+use App\Models\ResourceTypeItemType;
 use App\Option\Delete;
 use App\Option\Get;
 use App\Option\Patch;
@@ -170,6 +172,7 @@ class ResourceTypeController extends Controller
 
         $post = Post::init()->
             setFields('api.resource-type.fields')->
+            setConditionalFields($this->conditionalPostParameters())->
             setDescription('route-descriptions.resource_type_POST')->
             setAuthenticationStatus(($this->user_id !== null) ? true : false)->
             setAuthenticationRequired(true)->
@@ -213,7 +216,7 @@ class ResourceTypeController extends Controller
             option();
 
         $patch = Patch::init()->
-            setFields('api.resource-type.fields')->
+            setFields('api.resource-type.fields-patch')->
             setDescription('route-descriptions.resource_type_PATCH')->
             setAuthenticationRequired(true)->
             setAuthenticationStatus($permissions['manage'])->
@@ -250,6 +253,18 @@ class ResourceTypeController extends Controller
                 'user_id' => Auth::user()->id
             ]);
             $permitted_users->save();
+
+            $item_type_id = $this->hash->decode('item_type', request()->input('item_type_id'));
+
+            if ($item_type_id === false) {
+                UtilityResponse::unableToDecode();
+            }
+
+            $resource_type_item_type = new ResourceTypeItemType([
+                'resource_type_id' => $resource_type->id,
+                'item_type_id' => $item_type_id
+            ]);
+            $resource_type_item_type->save();
         } catch (Exception $e) {
             UtilityResponse::failedToSaveModelForCreate();
         }
@@ -278,6 +293,7 @@ class ResourceTypeController extends Controller
         );
 
         try {
+            (new ResourceTypeItemType())->instance($resource_type_id)->delete();
             (new PermittedUser())->instance($resource_type_id, Auth::user()->id)->delete();
             (new ResourceType())->find($resource_type_id)->delete();
             UtilityResponse::successNoContent();
@@ -337,5 +353,33 @@ class ResourceTypeController extends Controller
         }
 
         UtilityResponse::successNoContent();
+    }
+
+    /**
+     * Generate any conditional POST parameters, will be merged with the relevant
+     * config/api/[type]/fields.php data array
+     *
+     * @return array
+     */
+    private function conditionalPostParameters(): array
+    {
+        $item_types = (new ItemType())->minimisedCollection();
+
+        $parameters = ['item_type_id' => []];
+        foreach ($item_types as $item_type) {
+            $id = $this->hash->encode('item_type', $item_type['item_type_id']);
+
+            if ($id === false) {
+                UtilityResponse::unableToDecode();
+            }
+
+            $parameters['item_type_id']['allowed_values'][$id] = [
+                'value' => $id,
+                'name' => $item_type['item_type_name'],
+                'description' => $item_type['item_type_description']
+            ];
+        }
+
+        return $parameters;
     }
 }

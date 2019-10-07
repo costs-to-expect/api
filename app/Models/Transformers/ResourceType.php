@@ -47,6 +47,18 @@ class ResourceType extends Transformer
             'public' => boolval($this->data_to_transform['resource_type_public']),
         ];
 
+        if (
+            array_key_exists('resource_type_item_type_id', $this->data_to_transform) === true &&
+            array_key_exists('resource_type_item_type_name', $this->data_to_transform) === true &&
+            array_key_exists('resource_type_item_type_description', $this->data_to_transform) === true
+        ) {
+            $result['item_type'] = [
+                'id' => $this->hash->itemType()->encode($this->data_to_transform['resource_type_item_type_id']),
+                'name' => $this->data_to_transform['resource_type_item_type_name'],
+                'description' => $this->data_to_transform['resource_type_item_type_description']
+            ];
+        }
+
         if (array_key_exists('resource_type_resources', $this->data_to_transform)) {
             $result['resources']['count'] = $this->data_to_transform['resource_type_resources'];
         }
@@ -54,6 +66,7 @@ class ResourceType extends Transformer
         foreach ($this->resources as $resource) {
             $result['resources']['collection'][] = (new ResourceTransformer($resource))->toArray();
         }
+
 
         return $result;
     }

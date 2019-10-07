@@ -2,6 +2,21 @@
 
 The complete changelog for the Costs to Expect REST API, follows the format defined at https://keepachangelog.com/en/1.0.0/
 
+## [v2.02.0] - 2019-10-07
+### Added
+- We have updated the create resource type route. It is now possible to set the item type that you want to use. There are two expense types, "allocated expense" and "simple expense". An allocated expense allows you to allocated a percentage of the total cost; a simple expense only has a total, no allocation rate.
+- The supported item types exposed in the resource types OPTIONS request, additional item types will be added over time.
+- We have added an item type hasher to hash the ids for item types.
+- We have added support for simple expenses, create a simple expense resource type and off you go, "simple expenses" instead of "allocated expenses".
+
+### Changed
+- We have added an interface to use when interacting with items; it works out the item type by looking at the resource and then returns the relevant models and configuration data.
+- We have updated numerous sections of the API to dynamically expose the relevant fields, sort parameters and search parameters etc. based on the current item type.
+- We have moved several `item` based configuration files into the relevant item type folder.
+
+### Fixed
+- Localisation missing for allocated expense name.
+
 ## [v2.01.2] - 2019-09-25
 ### Added
 - We have added an `X-Parameters` header; it contains the validated parameters for the request.

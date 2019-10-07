@@ -35,6 +35,10 @@ class ResourceType extends BaseValidator
                     'max:255',
                     new ResourceTypeName($user_id)
                 ],
+                'item_type_id' => [
+                    'required',
+                    'exists:item_type,id'
+                ]
             ],
             Config::get('api.resource-type.validation.POST.fields')
         );
@@ -57,7 +61,7 @@ class ResourceType extends BaseValidator
                     'string',
                     'max:255',
                     new ResourceTypeName($user_id, $resource_type_id)
-                ],
+                ]
             ],
             Config::get('api.resource-type.validation.PATCH.fields')
         );
@@ -77,8 +81,17 @@ class ResourceType extends BaseValidator
      */
     public function create(array $options = []): Validator
     {
+        $decode = $this->hash->itemType()->decode(request()->input('item_type_id'));
+        $item_type_id = null;
+        if (count($decode) === 1) {
+            $item_type_id = $decode[0];
+        }
+
         return ValidatorFacade::make(
-            request()->all(),
+            array_merge(
+                request()->all(),
+                ['item_type_id' => $item_type_id]
+            ),
             $this->createRules($options['user_id']),
             $this->translateMessages('api.resource-type.validation.POST.messages')
         );

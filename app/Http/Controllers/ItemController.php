@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\ItemTypeAllocatedExpense;
 use App\Option\Delete;
 use App\Option\Get;
 use App\Option\Patch;
@@ -14,17 +13,14 @@ use App\Validators\Request\Route;
 use App\Models\Category;
 use App\Models\Item;
 use App\Models\SubCategory;
-use App\Models\Transformers\Item as ItemTransformer;
 use App\Utilities\Pagination as UtilityPagination;
 use App\Utilities\Request as UtilityRequest;
 use App\Utilities\Response as UtilityResponse;
-use App\Validators\Request\Fields\Item as ItemValidator;
 use App\Validators\Request\SearchParameters;
 use App\Validators\Request\SortParameters;
 use Exception;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Config;
 
@@ -53,21 +49,22 @@ class ItemController extends Controller
             $this->permitted_resource_types,
         );
 
-        $parameters = Parameters::fetch([
-            'include-categories',
-            'include-subcategories',
-            'include-unpublished',
-            'year',
-            'month',
-            'category',
-            'subcategory'
-        ]);
+        $this->setItemInterface($resource_type_id);
 
-        $search_parameters = SearchParameters::fetch(
-            Config::get('api.item.searchable')
+        $parameters = Parameters::fetch(
+            array_merge(
+                array_keys(Config::get('api.item.parameters.collection')),
+                array_keys($this->item_interface->collectionParameters())
+            )
         );
 
-        $total = (new Item())->totalCount(
+        $item_model = $this->item_interface->model();
+
+        $search_parameters = SearchParameters::fetch(
+            $this->item_interface->searchParameters()
+        );
+
+        $total = $item_model->totalCount(
             $resource_type_id,
             $resource_id,
             $parameters,
@@ -75,7 +72,7 @@ class ItemController extends Controller
         );
 
         $sort_parameters = SortParameters::fetch(
-            Config::get('api.item.sortable')
+            $this->item_interface->sortParameters()
         );
 
         $pagination = UtilityPagination::init(request()->path(), $total)
@@ -84,7 +81,7 @@ class ItemController extends Controller
             ->setSearchParameters($search_parameters)
             ->paging();
 
-        $items = (new Item())->paginatedCollection(
+        $items = $item_model->paginatedCollection(
             $resource_type_id,
             $resource_id,
             $pagination['offset'],
@@ -115,7 +112,7 @@ class ItemController extends Controller
         return response()->json(
             array_map(
                 function($item) {
-                    return (new ItemTransformer($item))->toArray();
+                    return $this->item_interface->transformer($item)->toArray();
                 },
                 $items
             ),
@@ -146,7 +143,11 @@ class ItemController extends Controller
             $this->permitted_resource_types
         );
 
-        $item = (new Item())->single($resource_type_id, $resource_id, $item_id);
+        $this->setItemInterface($resource_type_id);
+
+        $item_model = $this->item_interface->model();
+
+        $item = $item_model->single($resource_type_id, $resource_id, $item_id);
 
         if ($item === null) {
             UtilityResponse::notFound(trans('entities.item'));
@@ -156,7 +157,7 @@ class ItemController extends Controller
         $headers->item();
 
         return response()->json(
-            (new ItemTransformer($item))->toArray(),
+            $this->item_interface->transformer($item)->toArray(),
             200,
             $headers->headers()
         );
@@ -181,13 +182,20 @@ class ItemController extends Controller
             $this->permitted_resource_types,
         );
 
+        $this->setItemInterface($resource_type_id);
+
         $permissions = RoutePermission::resource(
             $resource_type_id,
             $resource_id,
             $this->permitted_resource_types,
         );
 
-        $parameters = Parameters::fetch(['year', 'month', 'category', 'subcategory']);
+        $parameters = Parameters::fetch(
+            array_merge(
+                array_keys(Config::get('api.item.parameters.collection')),
+                array_keys($this->item_interface->collectionParameters())
+            )
+        );
 
         $conditional_parameters = $this->conditionalParameters(
             $resource_type_id,
@@ -195,9 +203,12 @@ class ItemController extends Controller
         );
 
         $get = Get::init()->
-            setSortable('api.item.sortable')->
-            setSearchable('api.item.searchable')->
-            setParameters('api.item.parameters.collection')->
+            setSortable($this->item_interface->sortParametersConfig())->
+            setSearchable($this->item_interface->searchParametersConfig())->
+            setParameters(
+                $this->item_interface->collectionParametersConfig(),
+                true
+            )->
             setConditionalParameters($conditional_parameters)->
             setPagination(true)->
             setAuthenticationStatus($permissions['view'])->
@@ -205,7 +216,7 @@ class ItemController extends Controller
             option();
 
         $post = Post::init()->
-            setFields('api.item-type-allocated-expense.fields')->
+            setFields($this->item_interface->postFieldsConfig())->
             setDescription( 'route-descriptions.item_POST')->
             setAuthenticationRequired(true)->
             setAuthenticationStatus($permissions['manage'])->
@@ -246,14 +257,18 @@ class ItemController extends Controller
             $this->permitted_resource_types,
         );
 
-        $item = (new Item())->single($resource_type_id, $resource_id, $item_id);
+        $this->setItemInterface($resource_type_id);
+
+        $item_model = $this->item_interface->model();
+
+        $item = $item_model->single($resource_type_id, $resource_id, $item_id);
 
         if ($item === null) {
             UtilityResponse::notFound(trans('entities.item'));
         }
 
         $get = Get::init()->
-            setParameters('api.item.parameters.item')->
+            setParameters($this->item_interface->showParametersConfig())->
             setAuthenticationStatus($permissions['view'])->
             setDescription('route-descriptions.item_GET_show')->
             option();
@@ -265,7 +280,7 @@ class ItemController extends Controller
             option();
 
         $patch = Patch::init()->
-            setFields('api.item-type-allocated-expense.fields')->
+            setFields($this->item_interface->postFieldsConfig())->
             setDescription('route-descriptions.item_PATCH')->
             setAuthenticationStatus($permissions['manage'])->
             setAuthenticationRequired(true)->
@@ -297,8 +312,13 @@ class ItemController extends Controller
             true
         );
 
-        $validator = (new ItemValidator)->create();
+        $this->setItemInterface($resource_type_id);
+
+        $validator_factory = $this->item_interface->validator();
+        $validator = $validator_factory->create();
         UtilityRequest::validateAndReturnErrors($validator);
+
+        $model = $this->item_interface->model();
 
         try {
             $item = new Item([
@@ -307,29 +327,14 @@ class ItemController extends Controller
             ]);
             $item->save();
 
-            $item_type = new ItemTypeAllocatedExpense([
-                'item_id' => $item->id,
-                'name' => request()->input('name'),
-                'description' => request()->input('description', null),
-                'effective_date' => request()->input('effective_date'),
-                'publish_after' => request()->input('publish_after', null),
-                'total' => request()->input('total'),
-                'percentage' => request()->input('percentage', 100),
-            ]);
-
-            $item_type->setActualisedTotal(
-                request()->input('total'),
-                request()->input('percentage', 100)
-            );
-
-            $item_type->save();
+            $item_type = $this->item_interface->create((int) $item->id);
 
         } catch (Exception $e) {
             UtilityResponse::failedToSaveModelForCreate();
         }
 
         return response()->json(
-            (new ItemTransformer((new Item())->instanceToArray($item, $item_type)))->toArray(),
+            $this->item_interface->transformer($model->instanceToArray($item, $item_type))->toArray(),
             201
         );
     }
@@ -357,40 +362,29 @@ class ItemController extends Controller
             true
         );
 
+        $this->setItemInterface($resource_type_id);
+
         UtilityRequest::checkForEmptyPatch();
 
-        UtilityRequest::checkForInvalidFields(
-            (new Item())->patchableFields()
-        );
+        UtilityRequest::checkForInvalidFields($this->item_interface->patchableFields());
 
-        $validator = (new ItemValidator)->update();
+        $validator_factory = $this->item_interface->validator();
+        $validator = $validator_factory->update();
         UtilityRequest::validateAndReturnErrors($validator);
 
         $item = (new Item())->instance($resource_type_id, $resource_id, $item_id);
-        $item_type = (new ItemTypeAllocatedExpense())->instance($item_id);
+        $item_type = $this->item_interface->instance((int) $item_id);
 
         if ($item === null || $item_type === null) {
             UtilityResponse::failedToSelectModelForUpdate();
         }
 
-        $update_actualised = false;
-        foreach (request()->all() as $key => $value) {
-            $item_type->$key = $value;
-
-            if (in_array($key, ['total', 'percentage']) === true) {
-                $update_actualised = true;
-            }
-
-            $item->updated_by = Auth::user()->id;
-        }
-
-        if ($update_actualised === true) {
-            $item_type->setActualisedTotal($item_type->total, $item_type->percentage);
-        }
-
         try {
-            $item->save();
-            $item_type->save();
+            $item->updated_by = Auth::user()->id;
+
+            if ($item->save() === true) {
+                $this->item_interface->update(request()->all(), $item_type);
+            }
         } catch (Exception $e) {
             UtilityResponse::failedToSaveModelForUpdate();
         }
@@ -420,7 +414,10 @@ class ItemController extends Controller
             true
         );
 
-        $item_type = (new ItemTypeAllocatedExpense())->instance($item_id);
+        $this->setItemInterface($resource_type_id);
+        $item_model = $this->item_interface->model();
+
+        $item_type = $item_model->instance($item_id);
         $item = (new Item())->instance($resource_type_id, $resource_id, $item_id);
 
         if ($item === null || $item_type === null) {
@@ -469,7 +466,7 @@ class ItemController extends Controller
             $conditional_parameters['year']['allowed_values'][$i] = [
                 'value' => $i,
                 'name' => $i,
-                'description' => trans('item/allowed-values.description-prefix-year') . $i
+                'description' => trans('item-type-allocated-expense/allowed-values.description-prefix-year') . $i
             ];
         }
 
@@ -477,7 +474,7 @@ class ItemController extends Controller
             $conditional_parameters['month']['allowed_values'][$i] = [
                 'value' => $i,
                 'name' => date("F", mktime(0, 0, 0, $i, 10)),
-                'description' => trans('item/allowed-values.description-prefix-month') .
+                'description' => trans('item-type-allocated-expense/allowed-values.description-prefix-month') .
                     date("F", mktime(0, 0, 0, $i, 1))
             ];
         }

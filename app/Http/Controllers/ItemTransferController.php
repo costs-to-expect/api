@@ -12,7 +12,6 @@ use App\Validators\Request\Fields\ItemTransfer as ItemTransferValidator;
 use App\Validators\Request\Route;
 use Exception;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Request;
 
 /**
  * Transfer items

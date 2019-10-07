@@ -16,6 +16,7 @@ use App\Validators\Request\SearchParameters;
 use App\Validators\Request\SortParameters;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Config;
 
 /**
  * View items for all resources for a resource type
@@ -43,29 +44,25 @@ class ResourceTypeItemController extends Controller
             $this->permitted_resource_types
         );
 
-        $collection_parameters = Parameters::fetch([
-            'include-categories',
-            'include-subcategories',
-            'include-unpublished',
-            'year',
-            'month',
-            'category',
-            'subcategory'
-        ]);
+        $this->setItemInterface($resource_type_id);
+        $resource_type_item_model = $this->item_interface->resourceTypeItemModel();
 
-        $sort_fields = SortParameters::fetch([
-            'description',
-            'total',
-            'actualised_total',
-            'effective_date',
-            'created'
-        ]);
+        $collection_parameters = Parameters::fetch(
+            array_merge(
+                array_keys(Config::get('api.item.parameters.collection')),
+                array_keys($this->item_interface->collectionParameters())
+            )
+        );
 
-        $search_conditions = SearchParameters::fetch([
-            'description'
-        ]);
+        $sort_fields = SortParameters::fetch(
+            $this->item_interface->sortParameters()
+        );
 
-        $total = (new ResourceTypeItem())->totalCount(
+        $search_conditions = SearchParameters::fetch(
+            $this->item_interface->searchParameters()
+        );
+
+        $total = $resource_type_item_model->totalCount(
             $resource_type_id,
             $collection_parameters,
             $search_conditions
@@ -75,7 +72,7 @@ class ResourceTypeItemController extends Controller
             ->setParameters()
             ->paging();
 
-        $items = (new ResourceTypeItem())->paginatedCollection(
+        $items = $resource_type_item_model->paginatedCollection(
             $resource_type_id,
             $pagination['offset'],
             $pagination['limit'],
@@ -105,7 +102,7 @@ class ResourceTypeItemController extends Controller
         return response()->json(
             array_map(
                 function($item) {
-                    return (new ResourceTypeItemTransformer($item))->toArray();
+                    return $this->item_interface->resourceTypeItemTransformer($item)->toArray();
                 },
                 $items
             ),
@@ -128,6 +125,8 @@ class ResourceTypeItemController extends Controller
             $this->permitted_resource_types
         );
 
+        $this->setItemInterface($resource_type_id);
+
         $permissions = RoutePermission::resourceType(
             $resource_type_id,
             $this->permitted_resource_types
@@ -135,16 +134,14 @@ class ResourceTypeItemController extends Controller
 
         $this->conditionalGetParameters(
             $resource_type_id,
-            Parameters::fetch([
-                'category',
-            ])
+            ['category']
         );
 
         $get = Get::init()->
-            setSortable('api.resource-type-item.sortable')->
-            setSearchable('api.resource-type-item.searchable')->
+            setSortable( $this->item_interface->resourceTypeItemSortParametersConfig())->
+            setSearchable($this->item_interface->resourceTypeItemSearchParametersConfig())->
             setPagination(true)->
-            setParameters('api.resource-type-item.parameters.collection')->
+            setParameters($this->item_interface->resourceTypeItemCollectionParametersConfig())->
             setConditionalParameters($this->conditional_get_parameters)->
             setDescription('route-descriptions.resource_type_item_GET_index')->
             setAuthenticationStatus($permissions['view'])->

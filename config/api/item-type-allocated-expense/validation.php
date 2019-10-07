@@ -13,7 +13,7 @@ return [
             'percentage' => 'sometimes|required|integer|between:1,100'
         ],
         'messages' => [
-            'total.regex' => 'item/validation.total-regex'
+            'total.regex' => 'item-type-allocated-expense/validation.total-regex'
         ]
     ],
     'PATCH' => [
@@ -26,7 +26,7 @@ return [
             'percentage' => 'sometimes|integer|between:1,100'
         ],
         'messages' => [
-            'total.regex' => 'item/validation.total-regex'
+            'total.regex' => 'item-type-allocated-expense/validation.total-regex'
         ]
     ]
 ];
