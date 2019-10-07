@@ -37,12 +37,12 @@
         gtag('config', 'UA-64736-10');
     </script>
 </head>
-    <body class="text-center">
+    <body>
 
     <div class="cover-container d-flex w-100 h-100 p-3 mx-auto flex-column">
         <header class="masthead mb-auto">
             <div class="inner">
-                <h3 class="masthead-brand">Costs to Expect</h3>
+                <h3 class="masthead-brand d-none d-sm-none d-md-block">Costs to Expect</h3>
                 <nav class="nav nav-masthead justify-content-center">
                     <a class="nav-link" href="https://www.costs-to-expect.com">Website</a>
                     <a class="nav-link" href="#">App (Coming soon!)</a>
@@ -54,14 +54,13 @@
 
         @yield('content')
 
-        <footer class="mastfoot mt-auto">
+        <footer class="mastfoot mt-auto text-center">
             <div class="inner">
                 <p>Copyright &copy; <a href="https://www.g3d-development.com">G3D Development Limited</a> 2018-{{ date('Y') }}</p>
                 <p>All code maintained by <a href="https://www.deanblackborough.com">Dean Blackborough</a> and licensed under MIT.</p>
             </div>
         </footer>
     </div>
-
         <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
         <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
