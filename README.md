@@ -2,28 +2,12 @@
 
 ## Overview
 
-What does it cost to raise a child in the UK?
+Costs to Expect is a service which focuses on tracking and forecasting expenses. 
+The Costs to Expect API is the backbone of the service and is not going to be 
+limited to expenses; however, we figured that is was an excellent place to start. 
 
-[Costs to Expect](https://www.costs-to-expect.com) is a long-term personal project, my wife and I are tracking 
-the expenses to raise our children to, adulthood, 18.
-
-### Why?
-
-There are two core reasons as to why we are doing this. I love data, and over the last twenty years, 
-it appears to have become accepted knowledge that it costs £250k to raise a child in the UK. 
-
-If you think about the number, it becomes apparent quickly that it can't be right, on average over 
-£10k a year?
-
-This API will show the costs to raise our children; obviously, every family is different, these costs only 
-relate to our family, more details will appear on [Costs to Expect](https://www.costs-to-expect.com) as development 
-on the site continues.
-
-## The API
-
-This Laravel app is the RESTful API for the [Costs to Expect](https://www.costs-to-expect.com) service, 
-the API will be consumed by the [Costs to Expect](https://www.costs-to-expect.com) website and the iOS app which 
-I'm creating to assist my wife with data input.
+A small part of the service is tracking the costs to raise a child in the UK, 
+more detail can be found at [Costs to Expect](https://www.costs-to-expect.com).
 
 ## Set up
 
@@ -61,7 +45,7 @@ you will also need to set `MAIL_FROM_ADDRESS` and `MAIL_TO_ADDRESS`. You may nee
 
 ## Responses
 
-* Collections will return an array and 200.
+* Collections will return an array and a 200.
 * Items will return a single object and a 200.
 * Successful POST requests will return a single object and a 201.
 * Successful PATCH requests will return 204.
@@ -71,7 +55,8 @@ case of a validation error, 422, the fields array will contain the validation er
 
 ## Headers
 
-Response will include multiple headers, the table details the purpose behind each header.
+Responses will include multiple headers, the table details the purpose behind some of the 
+custom headers.
 
 | Header | Purpose |
 | :--- | :--- |
@@ -90,7 +75,7 @@ Response will include multiple headers, the table details the purpose behind eac
 ## Routes
 
 Access to a route will be limited based upon your permitted resource types. When you 
-create a resource type you have fill access to everything below, additionally, the same 
+create a resource type you have full access to everything below, additionally, the same 
 is true if you are assigned to a resource type.
 
 | HTTP Verb(s) | Route |
