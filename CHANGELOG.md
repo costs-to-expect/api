@@ -5,6 +5,11 @@ The complete changelog for the Costs to Expect REST API, follows the format defi
 ## [v2.03.0] - 2019-10-xx
 ### Changed
 - We have updated the landing page; the focus was previously only about the website; the API is the backbone of the entire service.
+- We have moved the summary controllers; we should use namespaces to organise the code, not filenames.
+- We have merged the authorised and general API routes section, the README details the API routes and the API summary routes in two tables.
+
+### Fixed
+- We have corrected the category summary routes in the README.
 
 ## [v2.02.0] - 2019-10-07
 ### Added
