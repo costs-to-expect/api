@@ -163,22 +163,22 @@ GET parameters as the non summary route.
 | GET/HEAD | v2/request/access-log |
 | OPTIONS  | v2/request/access-log |
 
-## Private routes
+## Authorised routes
 
 These routes require authorisation.
 
 | HTTP Verb(s) | Route |
 | :--- | :--- |
 | GET/HEAD | v2/auth/user |
-| POST     | v2/categories |
-| PATCH    | v2/categories/{category_id} |
-| DELETE   | v2/categories/{category_id} |
-| POST     | v2/categories/{category_id}/subcategories |
-| PATCH    | v2/categories/{category_id}/subcategories/{subcategory_id} |
-| DELETE   | v2/categories/{category_id}/subcategories/{subcategory_id} |
 | POST     | v2/resource-types |
 | PATCH    | v2/resource-types/{resource_type_id} |
 | DELETE   | v2/resource-types/{resource_type_id} |
+| POST     | v2/resource-types/{resource_type_id}/categories |
+| PATCH    | v2/resource-types/{resource_type_id}/categories/{category_id} |
+| DELETE   | v2/resource-types/{resource_type_id}/categories/{category_id} |
+| POST     | v2/resource-types/{resource_type_id}/categories/{category_id}/subcategories |
+| PATCH    | v2/resource-types/{resource_type_id}/categories/{category_id}/subcategories/{subcategory_id} |
+| DELETE   | v2/resource-types/{resource_type_id}/categories/{category_id}/subcategories/{subcategory_id} |
 | POST     | v2/resource-types/{resource_type_id}/resources |
 | PATCH    | v2/resource-types/{resource_type_id}/resources/{resource_id} |
 | DELETE   | v2/resource-types/{resource_type_id}/resources/{resource_id} |
