@@ -1,7 +1,8 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Summary;
 
+use App\Http\Controllers\Controller;
 use App\Option\Get;
 use App\Utilities\Header;
 use App\Utilities\Response;
@@ -24,7 +25,7 @@ use Illuminate\Http\JsonResponse;
  * @copyright G3D Development Limited 2018-2019
  * @license https://github.com/costs-to-expect/api/blob/master/LICENSE
  */
-class SummaryItemController extends Controller
+class ItemController extends Controller
 {
     private $resource_type_id;
     private $resource_id;

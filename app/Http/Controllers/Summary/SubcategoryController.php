@@ -1,8 +1,9 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Summary;
 
-use App\Models\Category;
+use App\Http\Controllers\Controller;
+use App\Models\SubCategory;
 use App\Option\Get;
 use App\Utilities\Header;
 use App\Utilities\RoutePermission;
@@ -10,32 +11,33 @@ use App\Validators\Request\Route;
 use Illuminate\Http\JsonResponse;
 
 /**
- * Summary controller for the categories routes
+ * Summary controller for the subcategories routes
  *
  * @author Dean Blackborough <dean@g3d-development.com>
  * @copyright G3D Development Limited 2018-2019
  * @license https://github.com/costs-to-expect/api/blob/master/LICENSE
  */
-class SummaryCategoryController extends Controller
+class SubcategoryController extends Controller
 {
     /**
-     * Return a summary of the categories
+     * Return a summary of the subcategories
      *
      * @param $resource_type_id
+     * @param $category_id
      *
      * @return JsonResponse
      */
-    public function index($resource_type_id): JsonResponse
+    public function index($resource_type_id, $category_id): JsonResponse
     {
-        Route::resourceType(
+        Route::category(
             $resource_type_id,
+            $category_id,
             $this->permitted_resource_types
         );
 
-        $summary = (new Category())->totalCount(
+        $summary = (new SubCategory())->totalCount(
             $resource_type_id,
-            $this->permitted_resource_types,
-            $this->include_public
+            $category_id
         );
 
         $headers = new Header();
@@ -44,7 +46,7 @@ class SummaryCategoryController extends Controller
 
         return response()->json(
             [
-                'categories' => $summary
+                'subcategories' => $summary
             ],
             200,
             $headers->headers()
@@ -53,26 +55,29 @@ class SummaryCategoryController extends Controller
 
 
     /**
-     * Generate the OPTIONS request for the categories summary
+     * Generate the OPTIONS request for the subcategories summary
      *
      * @param $resource_type_id
+     * @param $category_id
      *
      * @return JsonResponse
      */
-    public function optionsIndex($resource_type_id): JsonResponse
+    public function optionsIndex($resource_type_id, $category_id): JsonResponse
     {
-        Route::resourceType(
+        Route::category(
             $resource_type_id,
+            $category_id,
             $this->permitted_resource_types
         );
 
-        $permissions = RoutePermission::resourceType(
+        $permissions = RoutePermission::category(
             $resource_type_id,
+            $category_id,
             $this->permitted_resource_types
         );
 
         $get = Get::init()->
-            setDescription('route-descriptions.summary_category_GET_index')->
+            setDescription('route-descriptions.summary_subcategory_GET_index')->
             setAuthenticationStatus($permissions['view'])->
             option();
 

@@ -1,7 +1,8 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Summary;
 
+use App\Http\Controllers\Controller;
 use App\Option\Get;
 use App\Utilities\Header;
 use App\Validators\Request\Parameters;
@@ -16,7 +17,7 @@ use Illuminate\Http\Request;
  * @copyright G3D Development Limited 2018-2019
  * @license https://github.com/costs-to-expect/api/blob/master/LICENSE
  */
-class SummaryRequestController extends Controller
+class RequestController extends Controller
 {
     private $collection_parameters;
 

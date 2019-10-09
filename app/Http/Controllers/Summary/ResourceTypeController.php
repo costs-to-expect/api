@@ -1,7 +1,8 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Summary;
 
+use App\Http\Controllers\Controller;
 use App\Models\ResourceType;
 use App\Option\Get;
 use App\Utilities\Header;
@@ -14,7 +15,7 @@ use Illuminate\Http\JsonResponse;
  * @copyright G3D Development Limited 2018-2019
  * @license https://github.com/costs-to-expect/api/blob/master/LICENSE
  */
-class SummaryResourceTypeController extends Controller
+class ResourceTypeController extends Controller
 {
     /**
      * Return a summary of the resource types
