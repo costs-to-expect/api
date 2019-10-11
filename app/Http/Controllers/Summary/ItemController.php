@@ -10,10 +10,10 @@ use App\Utilities\RoutePermission;
 use App\Validators\Request\Parameters;
 use App\Validators\Request\Route;
 use App\Models\ItemSummary;
-use App\Models\Transformers\ItemCategorySummary as ItemCategorySummaryTransformer;
-use App\Models\Transformers\ItemMonthSummary as ItemMonthSummaryTransformer;
+use App\Models\Transformers\Summary\ItemCategory as ItemCategoryTransformer;
+use App\Models\Transformers\Summary\ItemMonth as ItemMonthTransformer;
 use App\Models\Transformers\Summary\ItemSubCategory as ItemSubCategoryTransformer;
-use App\Models\Transformers\ItemYearSummary as ItemYearSummaryTransformer;
+use App\Models\Transformers\Summary\ItemYear as ItemYearTransformer;
 use App\Utilities\General;
 use App\Validators\Request\SearchParameters;
 use Illuminate\Http\JsonResponse;
@@ -207,7 +207,7 @@ class ItemController extends Controller
         return response()->json(
             array_map(
                 function($year) {
-                    return (new ItemYearSummaryTransformer($year))->toArray();
+                    return (new ItemYearTransformer($year))->toArray();
                 },
                 $summary
             ),
@@ -246,7 +246,7 @@ class ItemController extends Controller
         }
 
         return response()->json(
-            (new ItemYearSummaryTransformer($summary[0]))->toArray(),
+            (new ItemYearTransformer($summary[0]))->toArray(),
             200,
             $headers->headers()
         );
@@ -284,7 +284,7 @@ class ItemController extends Controller
         return response()->json(
             array_map(
                 function($month) {
-                    return (new ItemMonthSummaryTransformer($month))->toArray();
+                    return (new ItemMonthTransformer($month))->toArray();
                 },
                 $summary
             ),
@@ -325,7 +325,7 @@ class ItemController extends Controller
         }
 
         return response()->json(
-            (new ItemMonthSummaryTransformer($summary[0]))->toArray(),
+            (new ItemMonthTransformer($summary[0]))->toArray(),
             200,
             $headers->headers()
         );
@@ -360,7 +360,7 @@ class ItemController extends Controller
         return response()->json(
             array_map(
                 function($category) {
-                    return (new ItemCategorySummaryTransformer($category))->toArray();
+                    return (new ItemCategoryTransformer($category))->toArray();
                 },
                 $summary
             ),
@@ -458,7 +458,7 @@ class ItemController extends Controller
         }
 
         return response()->json(
-            (new ItemCategorySummaryTransformer($summary[0]))->toArray(),
+            (new ItemCategoryTransformer($summary[0]))->toArray(),
             200,
             $headers->headers()
         );
