@@ -11,7 +11,7 @@ use App\Validators\Request\Route;
 use App\Models\ItemCategory;
 use App\Models\ItemSubCategory;
 use App\Models\SubCategory;
-use App\Models\Transformers\ItemSubCategory as ItemSubCategoryTransformer;
+use App\Models\Transformers\ItemSubcategory as ItemSubcategoryTransformer;
 use App\Utilities\Request as UtilityRequest;
 use App\Utilities\Response as UtilityResponse;
 use App\Validators\Request\Fields\ItemSubCategory as ItemSubCategoryValidator;
@@ -75,7 +75,7 @@ class ItemSubCategoryController extends Controller
         $headers->add('X-Count', 1);
 
         return response()->json(
-            [(new ItemSubCategoryTransformer($item_sub_category[0]))->toArray()],
+            [(new ItemSubcategoryTransformer($item_sub_category[0]))->toArray()],
             200,
             $headers->headers()
         );
@@ -129,7 +129,7 @@ class ItemSubCategoryController extends Controller
         $headers->item();
 
         return response()->json(
-            (new ItemSubCategoryTransformer($item_sub_category))->toArray(),
+            (new ItemSubcategoryTransformer($item_sub_category))->toArray(),
             200,
             $headers->headers()
         );
@@ -320,7 +320,7 @@ class ItemSubCategoryController extends Controller
         }
 
         return response()->json(
-            (new ItemSubCategoryTransformer((new ItemSubCategory())->instanceToArray($item_sub_category)))->toArray(),
+            (new ItemSubcategoryTransformer((new ItemSubCategory())->instanceToArray($item_sub_category)))->toArray(),
             201
         );
     }
