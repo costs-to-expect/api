@@ -27,7 +27,7 @@ use Illuminate\Http\Request;
  * @copyright G3D Development Limited 2018-2019
  * @license https://github.com/costs-to-expect/api/blob/master/LICENSE
  */
-class ItemSubCategoryController extends Controller
+class ItemSubcategoryController extends Controller
 {
     /**
      * Return the sub category assigned to an item

@@ -171,22 +171,22 @@ Route::group(
 
         Route::get(
             'resource-types/{resource_type_id}/resources/{resource_id}/items/{item_id}/category/{item_category_id}/subcategory',
-            'ItemSubCategoryController@index'
+            'ItemSubcategoryController@index'
         );
 
         Route::options(
             'resource-types/{resource_type_id}/resources/{resource_id}/items/{item_id}/category/{item_category_id}/subcategory',
-            'ItemSubCategoryController@optionsIndex'
+            'ItemSubcategoryController@optionsIndex'
         );
 
         Route::get(
             'resource-types/{resource_type_id}/resources/{resource_id}/items/{item_id}/category/{item_category_id}/subcategory/{item_subcategory_id}',
-            'ItemSubCategoryController@show'
+            'ItemSubcategoryController@show'
         );
 
         Route::options(
             'resource-types/{resource_type_id}/resources/{resource_id}/items/{item_id}/category/{item_category_id}/subcategory/{item_subcategory_id}',
-            'ItemSubCategoryController@optionsShow'
+            'ItemSubcategoryController@optionsShow'
         );
 
         // Request access and error logs
