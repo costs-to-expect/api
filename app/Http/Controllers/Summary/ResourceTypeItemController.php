@@ -9,10 +9,10 @@ use App\Utilities\RoutePermission;
 use App\Validators\Request\Parameters;
 use App\Validators\Request\Route;
 use App\Models\ResourceTypeItem;
-use App\Models\Transformers\ResourceTypeItemCategorySummary as ResourceTypeItemCategorySummaryTransformer;
-use App\Models\Transformers\ResourceTypeItemMonthSummary as ResourceTypeItemMonthSummaryTransformer;
-use App\Models\Transformers\ResourceTypeItemResourceSummary as ResourceTypeItemResourceSummaryTransformer;
-use App\Models\Transformers\ResourceTypeItemSubcategorySummary as ResourceTypeItemSubcategorySummaryTransformer;
+use App\Models\Transformers\Summary\ResourceTypeItemCategory as ResourceTypeItemCategoryTransformer;
+use App\Models\Transformers\Summary\ResourceTypeItemMonth as ResourceTypeItemMonthTransformer;
+use App\Models\Transformers\Summary\ResourceTypeItemResource as ResourceTypeItemResourceTransformer;
+use App\Models\Transformers\Summary\ResourceTypeItemSubcategory as ResourceTypeItemSubcategoryTransformer;
 use App\Models\Transformers\Summary\ResourceTypeItemYear as ResourceTypeItemYearTransformer;
 use App\Utilities\General;
 use App\Utilities\Response as UtilityResponse;
@@ -217,7 +217,7 @@ class ResourceTypeItemController extends Controller
         return response()->json(
             array_map(
                 function ($resource) {
-                    return (new ResourceTypeItemResourceSummaryTransformer($resource))->toArray();
+                    return (new ResourceTypeItemResourceTransformer($resource))->toArray();
                 },
                 $summary
             ),
@@ -331,7 +331,7 @@ class ResourceTypeItemController extends Controller
         return response()->json(
             array_map(
                 function ($month) {
-                    return (new ResourceTypeItemMonthSummaryTransformer($month))->toArray();
+                    return (new ResourceTypeItemMonthTransformer($month))->toArray();
                 },
                 $summary
             ),
@@ -372,7 +372,7 @@ class ResourceTypeItemController extends Controller
         }
 
         return response()->json(
-            (new ResourceTypeItemMonthSummaryTransformer($summary[0]))->toArray(),
+            (new ResourceTypeItemMonthTransformer($summary[0]))->toArray(),
             200,
             $headers->headers()
         );
@@ -407,7 +407,7 @@ class ResourceTypeItemController extends Controller
         return response()->json(
             array_map(
                 function ($category) {
-                    return (new ResourceTypeItemCategorySummaryTransformer($category))->toArray();
+                    return (new ResourceTypeItemCategoryTransformer($category))->toArray();
                 },
                 $summary
             ),
@@ -446,7 +446,7 @@ class ResourceTypeItemController extends Controller
         }
 
         return response()->json(
-            (new ResourceTypeItemCategorySummaryTransformer($summary[0]))->toArray(),
+            (new ResourceTypeItemCategoryTransformer($summary[0]))->toArray(),
             200,
             $headers->headers()
         );
@@ -535,7 +535,7 @@ class ResourceTypeItemController extends Controller
         return response()->json(
             array_map(
                 function ($category) {
-                    return (new ResourceTypeItemSubcategorySummaryTransformer($category))->toArray();
+                    return (new ResourceTypeItemSubcategoryTransformer($category))->toArray();
                 },
                 $summary
             ),
@@ -576,7 +576,7 @@ class ResourceTypeItemController extends Controller
         }
 
         return response()->json(
-            (new ResourceTypeItemSubcategorySummaryTransformer($summary[0]))->toArray(),
+            (new ResourceTypeItemSubcategoryTransformer($summary[0]))->toArray(),
             200,
             $headers->headers()
         );

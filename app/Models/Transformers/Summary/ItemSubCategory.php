@@ -1,19 +1,18 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Models\Transformers;
+namespace App\Models\Transformers\Summary;
+
+use App\Models\Transformers\Transformer;
 
 /**
- * Transform the data array into the format we require for the API
- *
- * This is an updated version of the transformers, the other transformers need to
- * be updated to operate on array rather than collections
+ * Transform the data returns from Eloquent into the format we want for the API
  *
  * @author Dean Blackborough <dean@g3d-development.com>
  * @copyright G3D Development Limited 2018-2019
  * @license https://github.com/costs-to-expect/api/blob/master/LICENSE
  */
-class ResourceTypeItemResourceSummary extends Transformer
+class ItemSubCategory extends Transformer
 {
     private $data_to_transform;
 
@@ -32,9 +31,10 @@ class ResourceTypeItemResourceSummary extends Transformer
     public function toArray(): array
     {
         return [
-            'id' => $this->hash->resource()->encode($this->data_to_transform['id']),
+            'id' => $this->hash->subCategory()->encode($this->data_to_transform['id']),
             'name' => $this->data_to_transform['name'],
-            'total' => number_format((float) $this->data_to_transform['total'], 2, '.', '')
+            'description' => $this->data_to_transform['description'],
+            'total' => number_format((float) $this->data_to_transform['total'],2, '.', '')
         ];
     }
 }
