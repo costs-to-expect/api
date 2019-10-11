@@ -13,7 +13,7 @@ use App\Models\Transformers\ResourceTypeItemCategorySummary as ResourceTypeItemC
 use App\Models\Transformers\ResourceTypeItemMonthSummary as ResourceTypeItemMonthSummaryTransformer;
 use App\Models\Transformers\ResourceTypeItemResourceSummary as ResourceTypeItemResourceSummaryTransformer;
 use App\Models\Transformers\ResourceTypeItemSubcategorySummary as ResourceTypeItemSubcategorySummaryTransformer;
-use App\Models\Transformers\ResourceTypeItemYearSummary as ResourceTypeItemYearSummaryTransformer;
+use App\Models\Transformers\Summary\ResourceTypeItemYear as ResourceTypeItemYearTransformer;
 use App\Utilities\General;
 use App\Utilities\Response as UtilityResponse;
 use App\Validators\Request\SearchParameters;
@@ -255,7 +255,7 @@ class ResourceTypeItemController extends Controller
         return response()->json(
             array_map(
                 function ($year) {
-                    return (new ResourceTypeItemYearSummaryTransformer($year))->toArray();
+                    return (new ResourceTypeItemYearTransformer($year))->toArray();
                 },
                 $summary
             ),
@@ -293,7 +293,7 @@ class ResourceTypeItemController extends Controller
         }
 
         return response()->json(
-            (new ResourceTypeItemYearSummaryTransformer($summary[0]))->toArray(),
+            (new ResourceTypeItemYearTransformer($summary[0]))->toArray(),
             200,
             $headers->headers()
         );

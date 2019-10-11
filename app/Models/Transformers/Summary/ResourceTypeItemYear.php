@@ -2,19 +2,18 @@
 
 declare(strict_types=1);
 
-namespace App\Models\Transformers;
+namespace App\Models\Transformers\Summary;
+
+use App\Models\Transformers\Transformer;
 
 /**
  * Transform the data array into the format we require for the API
- *
- * This is an updated version of the transformers, the other transformers need to
- * be updated to operate on array rather than collections
  *
  * @author Dean Blackborough <dean@g3d-development.com>
  * @copyright G3D Development Limited 2018-2019
  * @license https://github.com/costs-to-expect/api/blob/master/LICENSE
  */
-class ResourceTypeItemYearSummary extends Transformer
+class ResourceTypeItemYear extends Transformer
 {
     private $year_summary;
 
