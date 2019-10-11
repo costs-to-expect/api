@@ -12,7 +12,7 @@ use App\Validators\Request\Route;
 use App\Models\ItemSummary;
 use App\Models\Transformers\Summary\ItemCategory as ItemCategoryTransformer;
 use App\Models\Transformers\Summary\ItemMonth as ItemMonthTransformer;
-use App\Models\Transformers\Summary\ItemSubCategory as ItemSubCategoryTransformer;
+use App\Models\Transformers\Summary\ItemSubcategory as ItemSubcategoryTransformer;
 use App\Models\Transformers\Summary\ItemYear as ItemYearTransformer;
 use App\Utilities\General;
 use App\Validators\Request\SearchParameters;
@@ -503,7 +503,7 @@ class ItemController extends Controller
         return response()->json(
             array_map(
                 function($subcategory) {
-                    return (new ItemSubCategoryTransformer($subcategory))->toArray();
+                    return (new ItemSubcategoryTransformer($subcategory))->toArray();
                 },
                 $summary
             ),
@@ -556,7 +556,7 @@ class ItemController extends Controller
         }
 
         return response()->json(
-            (new ItemSubCategoryTransformer($summary[0]))->toArray(),
+            (new ItemSubcategoryTransformer($summary[0]))->toArray(),
             200,
             $headers->headers()
         );
