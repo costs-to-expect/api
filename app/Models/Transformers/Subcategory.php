@@ -10,7 +10,7 @@ namespace App\Models\Transformers;
  * @copyright G3D Development Limited 2018-2019
  * @license https://github.com/costs-to-expect/api/blob/master/LICENSE
  */
-class SubCategory extends Transformer
+class Subcategory extends Transformer
 {
     protected $data_to_transform;
 

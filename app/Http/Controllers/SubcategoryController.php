@@ -12,7 +12,7 @@ use App\Utilities\Request as UtilityRequest;
 use App\Utilities\RoutePermission;
 use App\Validators\Request\Route;
 use App\Models\SubCategory;
-use App\Models\Transformers\SubCategory as SubCategoryTransformer;
+use App\Models\Transformers\Subcategory as SubcategoryTransformer;
 use App\Utilities\Response as UtilityResponse;
 use App\Validators\Request\Fields\SubCategory as SubCategoryValidator;
 use App\Validators\Request\SearchParameters;
@@ -98,7 +98,7 @@ class SubcategoryController extends Controller
         return response()->json(
             array_map(
                 function($subcategory) {
-                    return (new SubCategoryTransformer($subcategory))->toArray();
+                    return (new SubcategoryTransformer($subcategory))->toArray();
                 },
                 $subcategories
             ),
@@ -142,7 +142,7 @@ class SubcategoryController extends Controller
         $headers->item();
 
         return response()->json(
-            (new SubCategoryTransformer($subcategory))->toArray(),
+            (new SubcategoryTransformer($subcategory))->toArray(),
             200,
             $headers->headers()
         );
@@ -278,7 +278,7 @@ class SubcategoryController extends Controller
         }
 
         return response()->json(
-            (new SubCategoryTransformer((new SubCategory())->instanceToArray($sub_category)))->toArray(),
+            (new SubcategoryTransformer((new SubCategory())->instanceToArray($sub_category)))->toArray(),
             201
         );
     }
