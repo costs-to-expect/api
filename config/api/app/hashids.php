@@ -8,5 +8,6 @@ return [
     'resource' => env('APP_HASH_SALT_RESOURCE'),
     'item' => env('APP_HASH_SALT_ITEM'),
     'item_category' => env('APP_HASH_SALT_ITEM_CATEGORY'),
-    'item_subcategory' => env('APP_HASH_SALT_ITEM_SUBCATEGORY')
+    'item_subcategory' => env('APP_HASH_SALT_ITEM_SUBCATEGORY'),
+    'item_type' => null
 ];
