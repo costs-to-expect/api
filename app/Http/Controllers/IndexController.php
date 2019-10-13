@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Str;
 use SplFileObject;
 
 /**
@@ -27,8 +28,10 @@ class IndexController extends Controller
     {
         $routes_to_display = array();
 
+        $config = Config::get('api.app.version');
+
         foreach (Route::getRoutes() as $route) {
-            if (starts_with($route->uri, Config::get('api.version.prefix') ) === true) {
+            if (Str::startsWith($route->uri, $config['prefix']) === true) {
                 if (isset($routes_to_display[$route->uri]['methods'])) {
                     $routes_to_display[$route->uri]['methods'] = array_merge(
                         $route->methods,
@@ -47,11 +50,11 @@ class IndexController extends Controller
         return response()->json(
             [
                 'api' => [
-                    'version' => Config::get('api.version.version'),
-                    'prefix' => Config::get('api.version.prefix'),
-                    'release_date' => Config::get('api.version.release_date'),
-                    'changelog' => Config::get('api.version.changelog'),
-                    'readme' => Config::get('api.version.readme')
+                    'version' => $config['version'],
+                    'prefix' => $config['prefix'],
+                    'release_date' => $config['release_date'],
+                    'changelog' => $config['changelog'],
+                    'readme' => $config['readme']
                 ],
                 'routes' => $routes_to_display
             ],

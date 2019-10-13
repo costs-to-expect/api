@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 return [
     'min_length' => env('APP_HASH_MIN_LENGTH'),
     'category' => env('APP_HASH_SALT_CATEGORY'),

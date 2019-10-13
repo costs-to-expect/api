@@ -5,7 +5,7 @@ use Illuminate\Support\Facades\Route;
 
 Route::group(
     [
-        'prefix' => Config::get('api.version.prefix'),
+        'prefix' => Config::get('api.app.version.prefix'),
         'middleware' => [
             'convert.route.parameters',
             'convert.get.parameters',

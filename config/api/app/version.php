@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 return [
     'version'=> '2.03.0',
     'prefix' => 'v2',
