@@ -97,7 +97,7 @@ class Get extends Option
     ): Get
     {
         if ($status === true) {
-            self::$pagination_parameters = Config::get('api.pagination.parameters');
+            self::$pagination_parameters = Config::get('api.app.pagination-parameters');
         }
 
         return self::$instance;
@@ -108,7 +108,7 @@ class Get extends Option
     ): Get
     {
         if ($status === true) {
-            self::$pagination_parameters = Config::get('api.pagination.parameters-including-collection');
+            self::$pagination_parameters = Config::get('api.app.pagination-parameters-including-collection');
         }
 
         return self::$instance;
@@ -155,8 +155,8 @@ class Get extends Option
         foreach (
             array_merge_recursive(
                 self::$pagination_parameters,
-                (self::$sortable === true ? Config::get('api.sortable.parameters') : []),
-                (self::$searchable === true ? Config::get('api.searchable.parameters') : []),
+                (self::$sortable === true ? Config::get('api.app.sortable-parameters') : []),
+                (self::$searchable === true ? Config::get('api.app.searchable-parameters') : []),
                 self::$parameters,
                 self::$conditional_parameters
             )
