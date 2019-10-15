@@ -4,13 +4,18 @@ The complete changelog for the Costs to Expect REST API, follows the format defi
 
 ## [v2.03.0] - 2019-10-xx
 ### Changed
-- We have updated the landing page; the focus was previously only about the website; the API is the backbone of the entire service.
+- We have updated the landing page; the focus was previously only on the website; the API is the backbone of the entire service; the site is ancillary.
 - We have moved the summary controllers; we should use namespaces to organise the code, not filenames.
 - We have moved the summary transformers; we should use namespaces to organise the code, not filenames.
 - We have merged the authorised and general API routes section, the README details the API routes and the API summary routes in two tables.
+- We have moved some configuration files. Odd how some were outside of folders; additionally, config files should only be in folders if there can be multiple files for the 'section'.
+- We have moved localisation files to match their config partners.
 
 ### Fixed
 - We have corrected the category summary routes in the README.
+- We have corrected the name of a few transformers, incorrect capitalisation.
+- We have corrected the name of a few controllers, incorrect capitalisation.
+- Set the salt for the item type hasher.
 
 ## [v2.02.0] - 2019-10-07
 ### Added
