@@ -18,6 +18,9 @@ return [
     'sub_category_PATCH' => 'Update the selected subcategory',
     'sub_category_DELETE' => 'Delete the selected subcategory',
 
+    'item_type_GET_index' => 'Return all the item types supported in the API',
+    'item_type_GET_show' => 'Return the selected item type',
+
     'resource_type_GET_index' => 'Return all the public resource types, optionally, with authorisation include any private resource types',
     'resource_type_GET_show' => 'Return the selected resource type',
     'resource_type_POST' => 'Create a new resource type',

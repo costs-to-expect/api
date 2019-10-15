@@ -7,6 +7,7 @@ use App\Validators\Request\Routes\Category;
 use App\Validators\Request\Routes\Item;
 use App\Validators\Request\Routes\ItemCategory;
 use App\Validators\Request\Routes\ItemSubCategory;
+use App\Validators\Request\Routes\ItemType;
 use App\Validators\Request\Routes\Resource;
 use App\Validators\Request\Routes\ResourceType;
 use App\Validators\Request\Routes\SubCategory;
@@ -264,6 +265,21 @@ class Route
             ) {
                 UtilityResponse::notFoundOrNotAccessible(trans('entities.item-category'));
             }
+        }
+    }
+
+    /**
+     * Validate the route, checks the route parameters based on the users
+     * permitted resource types
+     *
+     * (In this case that doesn't happen as anyone can see the item type)
+     *
+     * @param $item_type_id
+     */
+    static public function itemType($item_type_id)
+    {
+        if (ItemType::existsToUserForViewing((int) $item_type_id) === false) {
+            UtilityResponse::notFound(trans('entities.item-type'));
         }
     }
 
