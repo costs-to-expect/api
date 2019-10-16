@@ -36,6 +36,7 @@ class ConvertRouteParameters
             'item_id' => new Hashids($config['item'], $min_length),
             'item_category_id' => new Hashids($config['item_category'], $min_length),
             'item_subcategory_id' => new Hashids($config['item_subcategory'], $min_length),
+            'item_type_id' => new Hashids($config['item_type'], $min_length),
         ];
 
         foreach ($route_params as $param => $hasher) {
