@@ -47,12 +47,7 @@ class ResourceTypeItemController extends Controller
         $this->setItemInterface($resource_type_id);
         $resource_type_item_model = $this->item_interface->resourceTypeItemModel();
 
-        $collection_parameters = Parameters::fetch(
-            array_merge(
-                array_keys(Config::get('api.item.parameters.collection')),
-                array_keys($this->item_interface->collectionParameters())
-            )
-        );
+        $collection_parameters = Parameters::fetch(array_keys($this->item_interface->collectionParameters()));
 
         $sort_fields = SortParameters::fetch(
             $this->item_interface->sortParameters()

@@ -51,12 +51,7 @@ class ItemController extends Controller
 
         $this->setItemInterface($resource_type_id);
 
-        $parameters = Parameters::fetch(
-            array_merge(
-                array_keys(Config::get('api.item.parameters.collection')),
-                array_keys($this->item_interface->collectionParameters())
-            )
-        );
+        $parameters = Parameters::fetch(array_keys($this->item_interface->collectionParameters()));
 
         $item_model = $this->item_interface->model();
 
@@ -190,12 +185,7 @@ class ItemController extends Controller
             $this->permitted_resource_types,
         );
 
-        $parameters = Parameters::fetch(
-            array_merge(
-                array_keys(Config::get('api.item.parameters.collection')),
-                array_keys($this->item_interface->collectionParameters())
-            )
-        );
+        $parameters = Parameters::fetch(array_keys($this->item_interface->collectionParameters()));
 
         $conditional_parameters = $this->conditionalParameters(
             $resource_type_id,
@@ -205,10 +195,7 @@ class ItemController extends Controller
         $get = Get::init()->
             setSortable($this->item_interface->sortParametersConfig())->
             setSearchable($this->item_interface->searchParametersConfig())->
-            setParameters(
-                $this->item_interface->collectionParametersConfig(),
-                true
-            )->
+            setParameters($this->item_interface->collectionParametersConfig())->
             setConditionalParameters($conditional_parameters)->
             setPagination(true)->
             setAuthenticationStatus($permissions['view'])->

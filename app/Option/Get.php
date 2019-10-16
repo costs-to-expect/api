@@ -119,11 +119,7 @@ class Get extends Option
         bool $include_base_item_collection_parameters = false
     ): Get
     {
-        self::$parameters =
-            array_merge(
-                ($include_base_item_collection_parameters === true) ? Config::get('api.item.parameters.collection') : [],
-                Config::get($config_path)
-            );
+        self::$parameters = Config::get($config_path);
 
         return self::$instance;
     }
