@@ -87,6 +87,10 @@ is true if you are assigned to a resource type.
 | GET/HEAD | v2/auth/user |
 | GET/HEAD | v2/changelog |
 | OPTIONS  | v2/changelog |
+| GET/HEAD | v2/item-types |
+| OPTIONS  | v2/item-types |
+| GET/HEAD | v2/item-types/{item_type_id} |
+| OPTIONS  | v2/item-types/{item_type_id} |
 | GET/HEAD | v2/resource-types |
 | OPTIONS  | v2/resource-types |
 | POST     | v2/resource-types |
