@@ -478,8 +478,8 @@ class ItemController extends Controller
             $conditional_parameters['category']['allowed_values'][$this->hash->encode('category', $category['category_id'])] = [
                 'value' => $this->hash->encode('category', $category['category_id']),
                 'name' => $category['category_name'],
-                'description' => trans('item/allowed-values.description-prefix-category') .
-                    $category['category_name'] . trans('item/allowed-values.description-suffix-category')
+                'description' => trans('item-type-allocated-expense/allowed-values.description-prefix-category') .
+                    $category['category_name'] . trans('item-type-allocated-expense/allowed-values.description-suffix-category')
             ];
         }
 
@@ -492,8 +492,8 @@ class ItemController extends Controller
                     $conditional_parameters['subcategory']['allowed_values'][$this->hash->encode('subcategory', $subcategory['id'])] = [
                         'value' => $this->hash->encode('subcategory', $subcategory['id']),
                         'name' => $subcategory['name'],
-                        'description' => trans('item/allowed-values.description-prefix-subcategory') .
-                            $subcategory['name'] . trans('item/allowed-values.description-suffix-subcategory')
+                        'description' => trans('item-type-allocated-expense/allowed-values.description-prefix-subcategory') .
+                            $subcategory['name'] . trans('item-type-allocated-expense/allowed-values.description-suffix-subcategory')
                     ];
                 },
                 $subcategories

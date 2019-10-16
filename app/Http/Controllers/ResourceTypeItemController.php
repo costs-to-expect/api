@@ -214,8 +214,8 @@ class ResourceTypeItemController extends Controller
                     $this->conditional_get_parameters['subcategory']['allowed_values'][$this->hash->encode('subcategory', $subcategory['id'])] = [
                         'value' => $this->hash->encode('subcategory', $subcategory['id']),
                         'name' => $subcategory['name'],
-                        'description' => trans('item/allowed-values.description-prefix-subcategory') .
-                            $subcategory['name'] . trans('item/allowed-values.description-suffix-subcategory')
+                        'description' => trans('item-type-allocated-expense/allowed-values.description-prefix-subcategory') .
+                            $subcategory['name'] . trans('item-type-allocated-expense/allowed-values.description-suffix-subcategory')
                     ];
                 },
                 $subcategories

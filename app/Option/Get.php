@@ -115,8 +115,7 @@ class Get extends Option
     }
 
     static public function setParameters(
-        string $config_path,
-        bool $include_base_item_collection_parameters = false
+        string $config_path
     ): Get
     {
         self::$parameters = Config::get($config_path);
