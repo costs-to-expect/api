@@ -35,6 +35,26 @@ Route::group(
         );
 
         Route::get(
+            'item-types',
+            'ItemTypeController@index'
+        );
+
+        Route::options(
+            'item-types',
+            'ItemTypeController@optionsIndex'
+        );
+
+        Route::get(
+            'item-types/{item_type_id}',
+            'ItemTypeController@show'
+        );
+
+        Route::options(
+            'item-types/{item_type_id}',
+            'ItemTypeController@optionsShow'
+        );
+
+        Route::get(
             'resource-types',
             'ResourceTypeController@index'
         );
