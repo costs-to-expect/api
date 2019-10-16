@@ -3,6 +3,9 @@
 The complete changelog for the Costs to Expect REST API, follows the format defined at https://keepachangelog.com/en/1.0.0/
 
 ## [v2.03.0] - 2019-10-xx
+### Added
+- We have added a new route, `item-types`, the route shows the item types supported by the API.
+
 ### Changed
 - We have updated the landing page; the focus was previously only on the website; the API is the backbone of the entire service; the site is ancillary.
 - We have moved the summary controllers; we should use namespaces to organise the code, not filenames.
