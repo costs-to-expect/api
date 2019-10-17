@@ -13,7 +13,7 @@ use Exception;
  * @copyright G3D Development Limited 2018-2019
  * @license https://github.com/costs-to-expect/api/blob/master/LICENSE
  */
-class ItemFactory
+class ItemInterfaceFactory
 {
     /**
      * Return the relevant item instance based on the provided resource type id,
@@ -24,7 +24,7 @@ class ItemFactory
      * @return AbstractItem
      * @throws Exception
      */
-    static public function getItemInterface(
+    static protected function itemInterface(
         int $resource_type_id
     ): AbstractItem
     {
@@ -58,7 +58,7 @@ class ItemFactory
      * @return ResourceTypeItem\AbstractItem
      * @throws Exception
      */
-    static public function getResourceTypeItemInterface(
+    static protected function resourceTypeItemInterface(
         int $resource_type_id
     ): ResourceTypeItem\AbstractItem
     {
@@ -80,6 +80,38 @@ class ItemFactory
             }
         } else {
             throw New Exception('No relevant resource type item type defined for the resource type', 500);
+        }
+    }
+
+    /**
+     * Return the relevant item interface
+     *
+     * @param integer $resource_type_id
+     *
+     * @return AbstractItem
+     */
+    static public function item(int $resource_type_id): AbstractItem
+    {
+        try {
+            return self::itemInterface($resource_type_id);
+        } catch (Exception $e) {
+            abort(500, $e->getMessage());
+        }
+    }
+
+    /**
+     * Return the relevant resource type item interface
+     *
+     * @param integer $resource_type_id
+     *
+     * @return \App\Item\ResourceTypeItem\AbstractItem
+     */
+    static public function resourceTypeItem(int $resource_type_id): \App\Item\ResourceTypeItem\AbstractItem
+    {
+        try {
+            return self::resourceTypeItemInterface($resource_type_id);
+        } catch (Exception $e) {
+            abort(500, $e->getMessage());
         }
     }
 }
