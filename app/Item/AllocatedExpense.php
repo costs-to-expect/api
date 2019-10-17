@@ -4,7 +4,6 @@ declare(strict_types=1);
 namespace App\Item;
 
 use App\Models\ItemTypeAllocatedExpense;
-use App\Models\ResourceTypeItemTypeAllocatedExpense;
 use App\Models\Transformers\Transformer;
 use App\Validators\Request\Fields\ItemTypeAllocatedExpense as ItemTypeAllocatedExpenseValidator;
 use App\Validators\Request\Fields\Validator;
@@ -112,58 +111,6 @@ class AllocatedExpense extends AbstractItem
     public function postFieldsConfig(): string
     {
         return 'api.item-type-allocated-expense.fields';
-    }
-
-    /**
-     * Return the parameters config string specific to the item type
-     *
-     * @return string
-     */
-    public function resourceTypeItemCollectionParametersConfig(): string
-    {
-        return 'api.resource-type-item-type-allocated-expense.parameters.collection';
-    }
-
-    /**
-     * Return the model instance for resource type item type
-     *
-     * @return Model
-     */
-    public function resourceTypeItemModel(): Model
-    {
-        return new ResourceTypeItemTypeAllocatedExpense();
-    }
-
-    /**
-     * Return the transformer for the specific item type
-     *
-     * @param array $data_to_transform
-     *
-     * @return Transformer
-     */
-    public function resourceTypeItemTransformer(array $data_to_transform): Transformer
-    {
-        return new \App\Models\Transformers\ResourceTypeItemTypeAllocatedExpense($data_to_transform);
-    }
-
-    /**
-     * Return the search parameters config string specific to the item type
-     *
-     * @return string
-     */
-    public function resourceTypeItemSearchParametersConfig(): string
-    {
-        return 'api.resource-type-item-type-allocated-expense.searchable';
-    }
-
-    /**
-     * Return the sort parameters config string specific to the item type
-     *
-     * @return string
-     */
-    public function resourceTypeItemSortParametersConfig(): string
-    {
-        return 'api.resource-type-item-type-allocated-expense.sortable';
     }
 
     /**

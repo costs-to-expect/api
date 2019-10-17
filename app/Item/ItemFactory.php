@@ -48,4 +48,38 @@ class ItemFactory
             throw New Exception('No relevant item type defined for the resource type', 500);
         }
     }
+
+    /**
+     * Return the relevant item instance based on the provided resource type id,
+     * throws an exception if the item type interface cannot be returned
+     *
+     * @param integer $resource_type_id
+     *
+     * @return ResourceTypeItem\AbstractItem
+     * @throws Exception
+     */
+    static public function getResourceTypeItemInterface(
+        int $resource_type_id
+    ): ResourceTypeItem\AbstractItem
+    {
+        $item_type = (new ResourceTypeItemType())->itemType($resource_type_id);
+
+        if ($item_type !== null) {
+            switch ($item_type) {
+                case 'allocated-expense':
+                    return new ResourceTypeItem\AllocatedExpense();
+                    break;
+
+                case 'simple-expense':
+                    return new ResourceTypeItem\SimpleExpense();
+                    break;
+
+                default:
+                    throw new Exception('Unable to load the relevant resource type item type', 500);
+                    break;
+            }
+        } else {
+            throw New Exception('No relevant resource type item type defined for the resource type', 500);
+        }
+    }
 }
