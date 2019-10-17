@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Summary;
 
 use App\Http\Controllers\Controller;
+use App\Item\ItemInterfaceFactory;
 use App\Option\Get;
 use App\Utilities\Header;
 use App\Utilities\Response;
@@ -578,7 +579,7 @@ class ItemController extends Controller
             $this->permitted_resource_types
         );
 
-        $this->setItemInterface($resource_type_id);
+        $item_interface = ItemInterfaceFactory::item($resource_type_id);
 
         $permissions = RoutePermission::resource(
             $resource_type_id,
@@ -588,7 +589,7 @@ class ItemController extends Controller
 
         $get = Get::init()->
             setParameters('api.item.summary-parameters.collection')->
-            setSearchable($this->item_interface->searchParametersConfig())->
+            setSearchable($item_interface->searchParametersConfig())->
             setDescription('route-descriptions.summary_GET_resource-type_resource_items')->
             setAuthenticationStatus($permissions['view'])->
             option();

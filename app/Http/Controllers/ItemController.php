@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Item\AbstractItem;
+use App\Item\ItemInterfaceFactory;
 use App\Option\Delete;
 use App\Option\Get;
 use App\Option\Patch;
@@ -48,14 +50,14 @@ class ItemController extends Controller
             $this->permitted_resource_types,
         );
 
-        $this->setItemInterface($resource_type_id);
+        $item_interface = ItemInterfaceFactory::item($resource_type_id);
 
-        $parameters = Parameters::fetch(array_keys($this->item_interface->collectionParameters()));
+        $parameters = Parameters::fetch(array_keys($item_interface->collectionParameters()));
 
-        $item_model = $this->item_interface->model();
+        $item_model = $item_interface->model();
 
         $search_parameters = SearchParameters::fetch(
-            $this->item_interface->searchParameters()
+            $item_interface->searchParameters()
         );
 
         $total = $item_model->totalCount(
@@ -66,7 +68,7 @@ class ItemController extends Controller
         );
 
         $sort_parameters = SortParameters::fetch(
-            $this->item_interface->sortParameters()
+            $item_interface->sortParameters()
         );
 
         $pagination = UtilityPagination::init(request()->path(), $total)
@@ -105,8 +107,8 @@ class ItemController extends Controller
 
         return response()->json(
             array_map(
-                function($item) {
-                    return $this->item_interface->transformer($item)->toArray();
+                function($item) use ($item_interface) {
+                    return $item_interface->transformer($item)->toArray();
                 },
                 $items
             ),
@@ -137,9 +139,9 @@ class ItemController extends Controller
             $this->permitted_resource_types
         );
 
-        $this->setItemInterface($resource_type_id);
+        $item_interface = ItemInterfaceFactory::item($resource_type_id);
 
-        $item_model = $this->item_interface->model();
+        $item_model = $item_interface->model();
 
         $item = $item_model->single($resource_type_id, $resource_id, $item_id);
 
@@ -151,7 +153,7 @@ class ItemController extends Controller
         $headers->item();
 
         return response()->json(
-            $this->item_interface->transformer($item)->toArray(),
+            $item_interface->transformer($item)->toArray(),
             200,
             $headers->headers()
         );
@@ -176,7 +178,7 @@ class ItemController extends Controller
             $this->permitted_resource_types,
         );
 
-        $this->setItemInterface($resource_type_id);
+        $item_interface = ItemInterfaceFactory::item($resource_type_id);
 
         $permissions = RoutePermission::resource(
             $resource_type_id,
@@ -184,7 +186,7 @@ class ItemController extends Controller
             $this->permitted_resource_types,
         );
 
-        $parameters = Parameters::fetch(array_keys($this->item_interface->collectionParameters()));
+        $parameters = Parameters::fetch(array_keys($item_interface->collectionParameters()));
 
         $conditional_parameters = $this->conditionalParameters(
             $resource_type_id,
@@ -192,9 +194,9 @@ class ItemController extends Controller
         );
 
         $get = Get::init()->
-            setSortable($this->item_interface->sortParametersConfig())->
-            setSearchable($this->item_interface->searchParametersConfig())->
-            setParameters($this->item_interface->collectionParametersConfig())->
+            setSortable($item_interface->sortParametersConfig())->
+            setSearchable($item_interface->searchParametersConfig())->
+            setParameters($item_interface->collectionParametersConfig())->
             setConditionalParameters($conditional_parameters)->
             setPagination(true)->
             setAuthenticationStatus($permissions['view'])->
@@ -202,7 +204,7 @@ class ItemController extends Controller
             option();
 
         $post = Post::init()->
-            setFields($this->item_interface->postFieldsConfig())->
+            setFields($item_interface->postFieldsConfig())->
             setDescription( 'route-descriptions.item_POST')->
             setAuthenticationRequired(true)->
             setAuthenticationStatus($permissions['manage'])->
@@ -243,9 +245,9 @@ class ItemController extends Controller
             $this->permitted_resource_types,
         );
 
-        $this->setItemInterface($resource_type_id);
+        $item_interface = ItemInterfaceFactory::item($resource_type_id);
 
-        $item_model = $this->item_interface->model();
+        $item_model = $item_interface->model();
 
         $item = $item_model->single($resource_type_id, $resource_id, $item_id);
 
@@ -254,7 +256,7 @@ class ItemController extends Controller
         }
 
         $get = Get::init()->
-            setParameters($this->item_interface->showParametersConfig())->
+            setParameters($item_interface->showParametersConfig())->
             setAuthenticationStatus($permissions['view'])->
             setDescription('route-descriptions.item_GET_show')->
             option();
@@ -266,7 +268,7 @@ class ItemController extends Controller
             option();
 
         $patch = Patch::init()->
-            setFields($this->item_interface->postFieldsConfig())->
+            setFields($item_interface->postFieldsConfig())->
             setDescription('route-descriptions.item_PATCH')->
             setAuthenticationStatus($permissions['manage'])->
             setAuthenticationRequired(true)->
@@ -298,13 +300,13 @@ class ItemController extends Controller
             true
         );
 
-        $this->setItemInterface($resource_type_id);
+        $item_interface = ItemInterfaceFactory::item($resource_type_id);
 
-        $validator_factory = $this->item_interface->validator();
+        $validator_factory = $item_interface->validator();
         $validator = $validator_factory->create();
         UtilityRequest::validateAndReturnErrors($validator);
 
-        $model = $this->item_interface->model();
+        $model = $item_interface->model();
 
         try {
             $item = new Item([
@@ -313,14 +315,14 @@ class ItemController extends Controller
             ]);
             $item->save();
 
-            $item_type = $this->item_interface->create((int) $item->id);
+            $item_type = $item_interface->create((int) $item->id);
 
         } catch (Exception $e) {
             UtilityResponse::failedToSaveModelForCreate();
         }
 
         return response()->json(
-            $this->item_interface->transformer($model->instanceToArray($item, $item_type))->toArray(),
+            $item_interface->transformer($model->instanceToArray($item, $item_type))->toArray(),
             201
         );
     }
@@ -348,18 +350,18 @@ class ItemController extends Controller
             true
         );
 
-        $this->setItemInterface($resource_type_id);
+        $item_interface = ItemInterfaceFactory::item($resource_type_id);
 
         UtilityRequest::checkForEmptyPatch();
 
-        UtilityRequest::checkForInvalidFields($this->item_interface->patchableFields());
+        UtilityRequest::checkForInvalidFields($item_interface->patchableFields());
 
-        $validator_factory = $this->item_interface->validator();
+        $validator_factory = $item_interface->validator();
         $validator = $validator_factory->update();
         UtilityRequest::validateAndReturnErrors($validator);
 
         $item = (new Item())->instance($resource_type_id, $resource_id, $item_id);
-        $item_type = $this->item_interface->instance((int) $item_id);
+        $item_type = $item_interface->instance((int) $item_id);
 
         if ($item === null || $item_type === null) {
             UtilityResponse::failedToSelectModelForUpdate();
@@ -369,7 +371,7 @@ class ItemController extends Controller
             $item->updated_by = Auth::user()->id;
 
             if ($item->save() === true) {
-                $this->item_interface->update(request()->all(), $item_type);
+                $item_interface->update(request()->all(), $item_type);
             }
         } catch (Exception $e) {
             UtilityResponse::failedToSaveModelForUpdate();
@@ -400,8 +402,9 @@ class ItemController extends Controller
             true
         );
 
-        $this->setItemInterface($resource_type_id);
-        $item_model = $this->item_interface->model();
+        $item_interface = ItemInterfaceFactory::item($resource_type_id);
+
+        $item_model = $item_interface->model();
 
         $item_type = $item_model->instance($item_id);
         $item = (new Item())->instance($resource_type_id, $resource_id, $item_id);
@@ -484,7 +487,10 @@ class ItemController extends Controller
 
         if (array_key_exists('category', $parameters) === true) {
 
-            $subcategories = (new SubCategory())->paginatedCollection($parameters['category']);
+            $subcategories = (new SubCategory())->paginatedCollection(
+                $resource_type_id,
+                $parameters['category']
+            );
 
             array_map(
                 function($subcategory) use (&$conditional_parameters) {

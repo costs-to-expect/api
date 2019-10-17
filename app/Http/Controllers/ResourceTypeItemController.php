@@ -2,21 +2,20 @@
 
 namespace App\Http\Controllers;
 
+use App\Item\ItemInterfaceFactory;
+use App\Item\ResourceTypeItem\AbstractItem;
 use App\Option\Get;
 use App\Utilities\Header;
 use App\Utilities\RoutePermission;
 use App\Validators\Request\Parameters;
 use App\Validators\Request\Route;
 use App\Models\Category;
-use App\Models\ResourceTypeItem;
 use App\Models\SubCategory;
-use App\Models\Transformers\ResourceTypeItem as ResourceTypeItemTransformer;
 use App\Utilities\Pagination as UtilityPagination;
 use App\Validators\Request\SearchParameters;
 use App\Validators\Request\SortParameters;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Config;
 
 /**
  * View items for all resources for a resource type
@@ -44,17 +43,18 @@ class ResourceTypeItemController extends Controller
             $this->permitted_resource_types
         );
 
-        $this->setItemInterface($resource_type_id);
-        $resource_type_item_model = $this->item_interface->resourceTypeItemModel();
+        $item_interface = ItemInterfaceFactory::resourceTypeItem($resource_type_id);
 
-        $collection_parameters = Parameters::fetch(array_keys($this->item_interface->collectionParameters()));
+        $resource_type_item_model = $item_interface->model();
+
+        $collection_parameters = Parameters::fetch(array_keys($item_interface->collectionParameters()));
 
         $sort_fields = SortParameters::fetch(
-            $this->item_interface->sortParameters()
+            $item_interface->sortParameters()
         );
 
         $search_conditions = SearchParameters::fetch(
-            $this->item_interface->searchParameters()
+            $item_interface->searchParameters()
         );
 
         $total = $resource_type_item_model->totalCount(
@@ -96,8 +96,8 @@ class ResourceTypeItemController extends Controller
 
         return response()->json(
             array_map(
-                function($item) {
-                    return $this->item_interface->resourceTypeItemTransformer($item)->toArray();
+                function($item) use ($item_interface) {
+                    return $item_interface->transformer($item)->toArray();
                 },
                 $items
             ),
@@ -120,7 +120,7 @@ class ResourceTypeItemController extends Controller
             $this->permitted_resource_types
         );
 
-        $this->setItemInterface($resource_type_id);
+        $item_interface = ItemInterfaceFactory::resourceTypeItem($resource_type_id);
 
         $permissions = RoutePermission::resourceType(
             $resource_type_id,
@@ -133,10 +133,10 @@ class ResourceTypeItemController extends Controller
         );
 
         $get = Get::init()->
-            setSortable( $this->item_interface->resourceTypeItemSortParametersConfig())->
-            setSearchable($this->item_interface->resourceTypeItemSearchParametersConfig())->
+            setSortable($item_interface->sortParametersConfig())->
+            setSearchable($item_interface->sortParametersConfig())->
             setPagination(true)->
-            setParameters($this->item_interface->resourceTypeItemCollectionParametersConfig())->
+            setParameters($item_interface->collectionParametersConfig())->
             setConditionalParameters($this->conditional_get_parameters)->
             setDescription('route-descriptions.resource_type_item_GET_index')->
             setAuthenticationStatus($permissions['view'])->
@@ -207,7 +207,10 @@ class ResourceTypeItemController extends Controller
         );
 
         if (array_key_exists('category', $collection_parameters) === true) {
-            $subcategories = (new SubCategory())->paginatedCollection($collection_parameters['category']);
+            $subcategories = (new SubCategory())->paginatedCollection(
+                $resource_type_id,
+                $collection_parameters['category']
+            );
 
             array_map(
                 function($subcategory) {

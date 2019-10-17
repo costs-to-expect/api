@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Item\AbstractItem;
 use App\Models\PermittedUser;
 use App\Utilities\Hash;
 use Illuminate\Foundation\Bus\DispatchesJobs;
@@ -39,11 +38,6 @@ class Controller extends BaseController
      * @var boolean Allow the entire collection to be returned ignoring pagination
      */
     protected $allow_entire_collection = false;
-
-    /**
-     * @var AbstractItem
-     */
-    protected $item_interface = null;
 
     public function __construct()
     {

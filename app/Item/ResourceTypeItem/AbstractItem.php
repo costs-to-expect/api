@@ -24,7 +24,7 @@ abstract class AbstractItem
      */
     public function collectionParameters(): array
     {
-         return Config::get($this->resourceTypeItemCollectionParametersConfig());
+         return Config::get($this->collectionParametersConfig());
     }
 
     /**
@@ -49,7 +49,7 @@ abstract class AbstractItem
      */
     public function searchParameters(): array
     {
-        return Config::get($this->resourceTypeItemSearchParametersConfig());
+        return Config::get($this->searchParametersConfig());
     }
 
     /**
