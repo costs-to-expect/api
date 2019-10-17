@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Item\ItemInterfaceFactory;
-use App\Item\ResourceTypeItem\AbstractItem;
 use App\Option\Get;
 use App\Utilities\Header;
 use App\Utilities\RoutePermission;
@@ -134,7 +133,7 @@ class ResourceTypeItemController extends Controller
 
         $get = Get::init()->
             setSortable($item_interface->sortParametersConfig())->
-            setSearchable($item_interface->sortParametersConfig())->
+            setSearchable($item_interface->searchParametersConfig())->
             setPagination(true)->
             setParameters($item_interface->collectionParametersConfig())->
             setConditionalParameters($this->conditional_get_parameters)->

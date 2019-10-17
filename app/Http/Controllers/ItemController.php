@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Item\AbstractItem;
 use App\Item\ItemInterfaceFactory;
 use App\Option\Delete;
 use App\Option\Get;
