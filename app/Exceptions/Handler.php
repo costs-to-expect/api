@@ -129,12 +129,14 @@ class Handler extends ExceptionHandler
                 break;
         }
 
-        return response()->json(
-            [
-                'message' => $message,
-                'trace' => $exception->getTraceAsString()
-            ],
-            $status_code
-        );
+        $response = [
+            'message' => $message
+        ];
+
+        if (App::environment() === 'local') {
+            $response['trace'] = $exception->getTraceAsString();
+        }
+
+        return response()->json($response, $status_code);
     }
 }
