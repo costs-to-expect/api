@@ -19,6 +19,7 @@ The complete changelog for the Costs to Expect REST API, follows the format defi
 - We have corrected the name of a few transformers, incorrect capitalisation.
 - We have corrected the name of a few controllers, incorrect capitalisation.
 - Set the salt for the item type hasher.
+- For uncaught exceptions, we return the trace when the API is in development mode.
 
 ## [v2.02.0] - 2019-10-07
 ### Added
