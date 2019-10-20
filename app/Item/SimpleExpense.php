@@ -31,6 +31,30 @@ class SimpleExpense extends AbstractItem
     }
 
     /**
+     * Return the minimum year for the conditional year filter, reviews the
+     * item type data and returns the min value, if no data exists, defaults to
+     * the current year
+     *
+     * @return integer
+     */
+    public function conditionalParameterMinYear(): int
+    {
+        return 2013;
+    }
+
+    /**
+     * Return the minimum year for the conditional year filter, reviews the
+     * item type data and returns the min value, if no data exists, defaults to
+     * the current year
+     *
+     * @return integer
+     */
+    public function conditionalParameterMaxYear(): int
+    {
+        return 2019;
+    }
+
+    /**
      * Create an save the item type data
      *
      * @param integer $id
@@ -146,6 +170,16 @@ class SimpleExpense extends AbstractItem
     public function transformer(array $data_to_transform): Transformer
     {
         return new \App\Models\Transformers\ItemTypeSimpleExpense($data_to_transform);
+    }
+
+    /**
+     * Return the item type identifier
+     *
+     * @return string
+     */
+    public function type(): string
+    {
+        return 'simple-expense';
     }
 
     /**
