@@ -425,8 +425,11 @@ class ItemController extends Controller
     }
 
     /**
-     * Set any conditional GET parameters, these will be merged with the data arrays defined in
-     * config/api/[item-type]/parameters.php
+     * Set the allowed values for any conditional parameters, these will be
+     * merged with the data arrays defined in config/api/[item-type]/parameters.php
+     *
+     * Checks to see if a parameter requiring conditional values exists, if it
+     * does, populate the values
      *
      * @param integer $resource_type_id
      * @param array $parameters
@@ -438,6 +441,8 @@ class ItemController extends Controller
         array $parameters
     ): array
     {
+        $item_interface = ItemInterfaceFactory::item($resource_type_id);
+
         $conditional_parameters = [
             'year' => [
                 'allowed_values' => []
