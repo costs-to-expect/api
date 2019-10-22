@@ -35,6 +35,22 @@ abstract class AbstractItem
     abstract public function collectionParametersConfig(): string;
 
     /**
+     * Return the collection parameters specific to the item type, these will
+     * be merged with the default collection parameters
+     *
+     * @return array
+     */
+    public function collectionParametersKeys(): array
+    {
+        $params = [];
+        foreach (Config::get($this->collectionParametersConfig()) as $key => $param) {
+            $params[$param['parameter']] = null;
+        }
+
+        return $params;
+    }
+
+    /**
      * Return the minimum year for the conditional year filter, reviews the
      * item type data and returns the min value, if no data exists, defaults to
      * the current year
@@ -103,4 +119,11 @@ abstract class AbstractItem
      * @return Transformer
      */
     abstract public function transformer(array $data_to_transform): Transformer;
+
+    /**
+     * Return the item type identifier
+     *
+     * @return string
+     */
+    abstract public function type(): string;
 }

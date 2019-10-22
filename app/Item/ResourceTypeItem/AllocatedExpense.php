@@ -74,6 +74,16 @@ class AllocatedExpense extends AbstractItem
     }
 
     /**
+     * Return the item type identifier
+     *
+     * @return string
+     */
+    public function type(): string
+    {
+        return 'allocated-expense';
+    }
+
+    /**
      * Return the search parameters config string specific to the item type
      *
      * @return string

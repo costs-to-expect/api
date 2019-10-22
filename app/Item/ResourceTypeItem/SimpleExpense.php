@@ -74,6 +74,16 @@ class SimpleExpense extends AbstractItem
     }
 
     /**
+     * Return the item type identifier
+     *
+     * @return string
+     */
+    public function type(): string
+    {
+        return 'simple-expense';
+    }
+
+    /**
      * Return the search parameters config string specific to the item type
      *
      * @return string

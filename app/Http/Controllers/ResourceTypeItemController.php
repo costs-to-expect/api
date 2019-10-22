@@ -126,9 +126,14 @@ class ResourceTypeItemController extends Controller
             $this->permitted_resource_types
         );
 
-        $this->conditionalGetParameters(
+        $defined_parameters = Parameters::fetch(array_keys($item_interface->collectionParameters()));
+
+        $conditional_parameters = $this->conditionalGetParameters(
             $resource_type_id,
-            ['category']
+            array_merge(
+                $item_interface->collectionParametersKeys(),
+                $defined_parameters
+            )
         );
 
         $get = Get::init()->
@@ -136,7 +141,7 @@ class ResourceTypeItemController extends Controller
             setSearchable($item_interface->searchParametersConfig())->
             setPagination(true)->
             setParameters($item_interface->collectionParametersConfig())->
-            setConditionalParameters($this->conditional_get_parameters)->
+            setConditionalParameters($conditional_parameters)->
             setDescription('route-descriptions.resource_type_item_GET_index')->
             setAuthenticationStatus($permissions['view'])->
             option();
@@ -145,83 +150,104 @@ class ResourceTypeItemController extends Controller
     }
 
     /**
-     * Fetch the conditional GET parameters reasy to be be merged with the
-     * GET parameters data array, useful for defining dynamic values such as
-     * allowed values
+     * Fetch the conditional GET parameters allowed values, ready to be be
+     * merged with the GET parameters data array, useful for defining dynamic
+     * values such as allowed values
      *
      * @param integer $resource_type_id
-     * @param array $collection_parameters
+     * @param array $parameters
+     *
+     * @return array
      */
-    private function conditionalGetParameters($resource_type_id, array $collection_parameters)
+    private function conditionalGetParameters(
+        $resource_type_id,
+        array $parameters
+    ): array
     {
-        $this->conditional_get_parameters = [
-            'year' => [
-                'allowed_values' => []
-            ],
-            'month' => [
-                'allowed_values' => []
-            ],
-            'category' => [
-                'allowed_values' => []
-            ],
-            'subcategory' => [
-                'allowed_values' => []
-            ]
-        ];
+        $item_interface = ItemInterfaceFactory::resourceTypeItem($resource_type_id);
 
-        for ($i=2013; $i <= intval(date('Y')); $i++) {
-            $this->conditional_get_parameters['year']['allowed_values'][$i] = [
-                'value' => $i,
-                'name' => $i,
-                'description' => trans('resource-type-item/allowed-values.description-prefix-year') . $i
-            ];
+        $conditional_parameters = [];
+
+        if (array_key_exists('year', $parameters) === true) {
+            $conditional_parameters['year']['allowed_values'] = [];
+
+            for (
+                $i = $item_interface->conditionalParameterMinYear();
+                $i <= $item_interface->conditionalParameterMaxYear();
+                $i++
+            ) {
+                $conditional_parameters['year']['allowed_values'][$i] = [
+                    'value' => $i,
+                    'name' => $i,
+                    'description' => trans('resource-type-item-type-' . $item_interface->type() .
+                            '/allowed-values.description-prefix-year') . $i
+                ];
+            }
         }
 
-        for ($i=1; $i < 13; $i++) {
-            $this->conditional_get_parameters['month']['allowed_values'][$i] = [
-                'value' => $i,
-                'name' => date("F", mktime(0, 0, 0, $i, 10)),
-                'description' => trans('resource-type-item/allowed-values.description-prefix-month') .
-                    date("F", mktime(0, 0, 0, $i, 1))
-            ];
+        if (array_key_exists('month', $parameters) === true) {
+            $conditional_parameters['month']['allowed_values'] = [];
+
+            for ($i=1; $i < 13; $i++) {
+                $conditional_parameters['month']['allowed_values'][$i] = [
+                    'value' => $i,
+                    'name' => date("F", mktime(0, 0, 0, $i, 10)),
+                    'description' => trans('resource-type-item-type-' . $item_interface->type() .
+                        '/allowed-values.description-prefix-month') .
+                        date("F", mktime(0, 0, 0, $i, 1))
+                ];
+            }
         }
 
-        $categories = (new Category())->paginatedCollection(
-            (int) $resource_type_id,
-            $this->permitted_resource_types,
-            $this->include_public,
-            0,
-            100
-        );
-        array_map(
-            function($category) {
-                $this->conditional_get_parameters['category']['allowed_values'][$this->hash->encode('category', $category['category_id'])] = [
+        if (array_key_exists('category', $parameters) === true) {
+            $conditional_parameters['category']['allowed_values'] = [];
+
+            $categories = (new Category())->paginatedCollection(
+                (int) $resource_type_id,
+                $this->permitted_resource_types,
+                $this->include_public,
+                0,
+                100
+            );
+
+            foreach ($categories as $category) {
+                $conditional_parameters['category']['allowed_values'][$this->hash->encode('category', $category['category_id'])] = [
                     'value' => $this->hash->encode('category', $category['category_id']),
                     'name' => $category['category_name'],
-                    'description' => trans('resource-type-item/allowed-values.description-prefix-category') .
-                        $category['category_name'] . trans('resource-type-item/allowed-values.description-suffix-category')
+                    'description' => trans('resource-type-item-type-' . $item_interface->type() .
+                            '/allowed-values.description-prefix-category') .
+                        $category['category_name'] .
+                        trans('resource-type-item-type-' . $item_interface->type() .
+                            '/allowed-values.description-suffix-category')
                 ];
-            },
-            $categories
-        );
+            }
+        }
 
-        if (array_key_exists('category', $collection_parameters) === true) {
+        if (
+            array_key_exists('category', $parameters) === true &&
+            $parameters['category'] !== null &&
+            array_key_exists('subcategory', $parameters) === true
+        ) {
+            $conditional_parameters['subcategory']['allowed_values'] = [];
+
             $subcategories = (new SubCategory())->paginatedCollection(
                 $resource_type_id,
-                $collection_parameters['category']
+                $parameters['category']
             );
 
             array_map(
-                function($subcategory) {
-                    $this->conditional_get_parameters['subcategory']['allowed_values'][$this->hash->encode('subcategory', $subcategory['id'])] = [
-                        'value' => $this->hash->encode('subcategory', $subcategory['id']),
-                        'name' => $subcategory['name'],
-                        'description' => trans('item-type-allocated-expense/allowed-values.description-prefix-subcategory') .
-                            $subcategory['name'] . trans('item-type-allocated-expense/allowed-values.description-suffix-subcategory')
+                function($subcategory) use (&$conditional_parameters, $item_interface) {
+                    $conditional_parameters['subcategory']['allowed_values'][$this->hash->encode('subcategory', $subcategory['subcategory_id'])] = [
+                        'value' => $this->hash->encode('subcategory', $subcategory['subcategory_id']),
+                        'name' => $subcategory['subcategory_name'],
+                        'description' => trans('resource-type-item-type-' . $item_interface->type() . '/allowed-values.description-prefix-subcategory') .
+                            $subcategory['subcategory_name'] . trans('item-type-' . $item_interface->type() . '/allowed-values.description-suffix-subcategory')
                     ];
                 },
                 $subcategories
             );
-          }
+        }
+
+        return $conditional_parameters;
     }
 }
