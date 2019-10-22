@@ -190,6 +190,7 @@ class ItemController extends Controller
 
         $conditional_parameters = $this->conditionalParameters(
             $resource_type_id,
+            $resource_id,
             array_merge(
                 $item_interface->collectionParametersKeys(),
                 $defined_parameters
@@ -436,6 +437,7 @@ class ItemController extends Controller
      * does, populate the values
      *
      * @param integer $resource_type_id
+     * @param integer $resource_id
      * @param array $parameters Merged array of definable parameters and any
      * set values
      *
@@ -443,6 +445,7 @@ class ItemController extends Controller
      */
     private function conditionalParameters(
         int $resource_type_id,
+        int $resource_id,
         array $parameters
     ): array
     {
@@ -455,8 +458,8 @@ class ItemController extends Controller
             $conditional_parameters['year']['allowed_values'] = [];
 
             for (
-                $i = $item_interface->conditionalParameterMinYear();
-                $i <= $item_interface->conditionalParameterMaxYear();
+                $i = $item_interface->conditionalParameterMinYear($resource_id);
+                $i <= $item_interface->conditionalParameterMaxYear($resource_id);
                 $i++
             ) {
                 $conditional_parameters['year']['allowed_values'][$i] = [

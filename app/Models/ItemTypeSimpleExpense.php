@@ -151,6 +151,51 @@ class ItemTypeSimpleExpense extends Model
     }
 
     /**
+     * Work out the maximum effective date year for the requested resource id,
+     * defaults to the current year if no data exists
+     *
+     * @param integer $resource_id
+     *
+     * @return integer
+     */
+    public function maximumEffectiveDateYear(int $resource_id): int
+    {
+        $result = $this->join('item', 'item_type_simple_expense.item_id', 'item.id')->
+            where('item.resource_id', '=', $resource_id)->
+            selectRaw('YEAR(MAX(`item_type_simple_expense`.`effective_date`)) AS `year_limit`')->
+            first();
+
+        if ($result === null) {
+            return intval(date('Y'));
+        } else {
+            return intval($result->year_limit);
+        }
+
+    }
+
+    /**
+     * Work out the minimum effective date year for the requested resource id,
+     * defaults to the current year if no data exists
+     *
+     * @param integer $resource_id
+     *
+     * @return integer
+     */
+    public function minimumEffectiveDateYear(int $resource_id): int
+    {
+        $result = $this->join('item', 'item_type_simple_expense.item_id', 'item.id')->
+            where('item.resource_id', '=', $resource_id)->
+            selectRaw('YEAR(MIN(`item_type_simple_expense`.`effective_date`)) AS `year_limit`')->
+            first();
+
+        if ($result === null) {
+            return intval(date('Y'));
+        } else {
+            return intval($result->year_limit);
+        }
+    }
+
+    /**
      * Return the results for the given request based on the supplied parameters
      *
      * @param integer $resource_type_id

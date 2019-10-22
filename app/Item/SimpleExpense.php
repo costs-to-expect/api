@@ -35,11 +35,13 @@ class SimpleExpense extends AbstractItem
      * item type data and returns the min value, if no data exists, defaults to
      * the current year
      *
+     * @param integer $resource_id
+     *
      * @return integer
      */
-    public function conditionalParameterMinYear(): int
+    public function conditionalParameterMinYear(int $resource_id): int
     {
-        return 2013;
+        return (new ItemTypeSimpleExpense())->minimumEffectiveDateYear($resource_id);
     }
 
     /**
@@ -47,11 +49,13 @@ class SimpleExpense extends AbstractItem
      * item type data and returns the min value, if no data exists, defaults to
      * the current year
      *
+     * @param integer $resource_id
+     *
      * @return integer
      */
-    public function conditionalParameterMaxYear(): int
+    public function conditionalParameterMaxYear(int $resource_id): int
     {
-        return 2019;
+        return (new ItemTypeSimpleExpense())->maximumEffectiveDateYear($resource_id);
     }
 
     /**
