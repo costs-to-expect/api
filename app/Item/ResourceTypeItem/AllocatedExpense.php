@@ -38,7 +38,7 @@ class AllocatedExpense extends AbstractItem
      */
     public function conditionalParameterMinYear(int $resource_type_id): int
     {
-        return 2013;
+        return (new ResourceTypeItemTypeAllocatedExpense())->minimumEffectiveDateYear($resource_type_id);
     }
 
     /**
@@ -52,7 +52,7 @@ class AllocatedExpense extends AbstractItem
      */
     public function conditionalParameterMaxYear(int $resource_type_id): int
     {
-        return 2019;
+        return (new ResourceTypeItemTypeAllocatedExpense())->maximumEffectiveDateYear($resource_type_id);
     }
 
     /**
