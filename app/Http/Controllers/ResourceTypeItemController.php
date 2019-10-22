@@ -44,7 +44,10 @@ class ResourceTypeItemController extends Controller
 
         $resource_type_item_model = $item_interface->model();
 
-        $collection_parameters = Parameters::fetch(array_keys($item_interface->collectionParameters()));
+        $collection_parameters = Parameters::fetch(
+            array_keys($item_interface->collectionParameters()),
+            $resource_type_id
+        );
 
         $sort_fields = SortParameters::fetch(
             $item_interface->sortParameters()
@@ -124,7 +127,10 @@ class ResourceTypeItemController extends Controller
             $this->permitted_resource_types
         );
 
-        $defined_parameters = Parameters::fetch(array_keys($item_interface->collectionParameters()));
+        $defined_parameters = Parameters::fetch(
+            array_keys($item_interface->collectionParameters()),
+            $resource_type_id
+        );
 
         $conditional_parameters = $this->conditionalGetParameters(
             $resource_type_id,

@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace App\Validators\Request;
 
+use App\Item\ItemInterfaceFactory;
 use App\Models\Category;
 use App\Models\ResourceType;
 use App\Models\SubCategory;
@@ -51,10 +52,13 @@ class Parameters
     }
 
     /**
-     * Validate the valid parameters array, checking the set value to see if it is
-     * valid, invalid values are silently removed from the collections array
+     * Validate the parameters array, check the set value to see if it is
+     * valid, invalid values are silently removed from the parameters array
+     *
+     * @param integer|null $resource_type_id
+     * @param integer|null $resource_id
      */
-    private static function validate()
+    private static function validate(?int $resource_type_id, ?int $resource_id)
     {
         foreach (array_keys(self::$parameters) as $key) {
             switch ($key) {
@@ -121,9 +125,24 @@ class Parameters
                     break;
 
                 case 'year':
+                    $min_year_limit = intval(Date('Y'));
+                    $max_year_limit = intval(Date('Y'));
+
+                    if ($resource_type_id !== null && $resource_id === null) {
+                        $item_interface = ItemInterfaceFactory::resourceTypeItem($resource_type_id);
+                        $min_year_limit = $item_interface->conditionalParameterMinYear($resource_type_id);
+                        $max_year_limit = $item_interface->conditionalParameterMaxYear($resource_type_id);
+                    }
+
+                    if ($resource_type_id !== null && $resource_id !== null) {
+                        $item_interface = ItemInterfaceFactory::item($resource_type_id);
+                        $min_year_limit = $item_interface->conditionalParameterMinYear($resource_id);
+                        $max_year_limit = $item_interface->conditionalParameterMaxYear($resource_id);
+                    }
+
                     if (array_key_exists($key, self::$parameters) === true) {
-                        if (intval(self::$parameters[$key]) < 2013 ||
-                            self::$parameters[$key] > intval(date('Y')) + 1) {
+                        if (intval(self::$parameters[$key]) < $min_year_limit ||
+                            self::$parameters[$key] >= $max_year_limit + 1) {
 
                             unset(self::$parameters[$key]);
                         }
@@ -152,13 +171,19 @@ class Parameters
      * Return all the valid collection parameters
      *
      * @param array $parameter_names
+     * @param integer|null $resource_type_id
+     * @param integer|null $resource_id
      *
      * @return array
      */
-    public static function fetch(array $parameter_names = []): array
+    public static function fetch(
+        array $parameter_names = [],
+        ?int $resource_type_id = null,
+        ?int $resource_id = null
+    ): array
     {
         self::find($parameter_names);
-        self::validate();
+        self::validate($resource_type_id, $resource_id);
 
         return self::$parameters;
     }

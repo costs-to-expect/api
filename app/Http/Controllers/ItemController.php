@@ -52,7 +52,11 @@ class ItemController extends Controller
 
         $item_interface = ItemInterfaceFactory::item($resource_type_id);
 
-        $parameters = Parameters::fetch(array_keys($item_interface->collectionParameters()));
+        $parameters = Parameters::fetch(
+            array_keys($item_interface->collectionParameters()),
+            (int) $resource_type_id,
+            (int) $resource_id
+        );
 
         $item_model = $item_interface->model();
 
@@ -186,7 +190,11 @@ class ItemController extends Controller
             $this->permitted_resource_types,
         );
 
-        $defined_parameters = Parameters::fetch(array_keys($item_interface->collectionParameters()));
+        $defined_parameters = Parameters::fetch(
+            array_keys($item_interface->collectionParameters()),
+            (int) $resource_type_id,
+            (int) $resource_id
+        );
 
         $conditional_parameters = $this->conditionalParameters(
             $resource_type_id,
