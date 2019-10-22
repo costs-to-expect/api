@@ -326,6 +326,54 @@ class ResourceTypeItemTypeAllocatedExpense extends Model
     }
 
     /**
+     * Work out the maximum effective date year for the requested
+     * resource type id, defaults to the current year if no data exists
+     *
+     * @param integer $resource_type_id
+     *
+     * @return integer
+     */
+    public function maximumEffectiveDateYear(int $resource_type_id): int
+    {
+        $result = $this->from('item_type_allocated_expense')->
+            join('item', 'item_type_allocated_expense.item_id', 'item.id')->
+            join('resource', 'item.resource_id', 'resource.id')->
+            where('resource.resource_type_id', '=', $resource_type_id)->
+            selectRaw('YEAR(MAX(`item_type_allocated_expense`.`effective_date`)) AS `year_limit`')->
+            first();
+
+        if ($result === null) {
+            return intval(date('Y'));
+        } else {
+            return intval($result->year_limit);
+        }
+    }
+
+    /**
+     * Work out the minimum effective date year for the requested
+     * resource type id, defaults to the current year if no data exists
+     *
+     * @param integer $resource_type_id
+     *
+     * @return integer
+     */
+    public function minimumEffectiveDateYear(int $resource_type_id): int
+    {
+        $result = $this->from('item_type_allocated_expense')->
+            join('item', 'item_type_allocated_expense.item_id', 'item.id')->
+            join('resource', 'item.resource_id', 'resource.id')->
+            where('resource.resource_type_id', '=', $resource_type_id)->
+            selectRaw('YEAR(MAX(`item_type_allocated_expense`.`effective_date`)) AS `year_limit`')->
+            first();
+
+        if ($result === null) {
+            return intval(date('Y'));
+        } else {
+            return intval($result->year_limit);
+        }
+    }
+
+    /**
      * Return the summary for all items for the resources in the requested resource
      * type grouped by month for the requested year
      *

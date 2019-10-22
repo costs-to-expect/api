@@ -4,7 +4,6 @@ declare(strict_types=1);
 namespace App\Models;
 
 use App\Utilities\General;
-use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Query\Builder as QueryBuilder;
 use Illuminate\Support\Facades\DB;
@@ -290,6 +289,54 @@ class ResourceTypeItemTypeSimpleExpense extends Model
             orderBy("year")->
             get()->
             toArray();
+    }
+
+    /**
+     * Work out the maximum effective date year for the requested
+     * resource type id, defaults to the current year if no data exists
+     *
+     * @param integer $resource_type_id
+     *
+     * @return integer
+     */
+    public function maximumEffectiveDateYear(int $resource_type_id): int
+    {
+        $result = $this->from('item_type_simple_expense')->
+            join('item', 'item_type_simple_expense.item_id', 'item.id')->
+            join('resource', 'item.resource_id', 'resource.id')->
+            where('resource.resource_type_id', '=', $resource_type_id)->
+            selectRaw('YEAR(MAX(`item_type_simple_expense`.`effective_date`)) AS `year_limit`')->
+            first();
+
+        if ($result === null) {
+            return intval(date('Y'));
+        } else {
+            return intval($result->year_limit);
+        }
+    }
+
+    /**
+     * Work out the minimum effective date year for the requested
+     * resource type id, defaults to the current year if no data exists
+     *
+     * @param integer $resource_type_id
+     *
+     * @return integer
+     */
+    public function minimumEffectiveDateYear(int $resource_type_id): int
+    {
+        $result = $this->from('item_type_simple_expense')->
+            join('item', 'item_type_simple_expense.item_id', 'item.id')->
+            join('resource', 'item.resource_id', 'resource.id')->
+            where('resource.resource_type_id', '=', $resource_type_id)->
+            selectRaw('YEAR(MAX(`item_type_simple_expense`.`effective_date`)) AS `year_limit`')->
+            first();
+
+        if ($result === null) {
+            return intval(date('Y'));
+        } else {
+            return intval($result->year_limit);
+        }
     }
 
     /**

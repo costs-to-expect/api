@@ -55,18 +55,22 @@ abstract class AbstractItem
      * item type data and returns the min value, if no data exists, defaults to
      * the current year
      *
+     * @param integer $resource_type_id
+     *
      * @return integer
      */
-    abstract public function conditionalParameterMinYear(): int;
+    abstract public function conditionalParameterMinYear(int $resource_type_id): int;
 
     /**
      * Return the minimum year for the conditional year filter, reviews the
      * item type data and returns the min value, if no data exists, defaults to
      * the current year
      *
+     * @param integer $resource_type_id
+     *
      * @return integer
      */
-    abstract public function conditionalParameterMaxYear(): int;
+    abstract public function conditionalParameterMaxYear(int $resource_type_id): int;
 
     /**
      * Return the model instance for resource type item type

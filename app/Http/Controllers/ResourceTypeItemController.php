@@ -170,8 +170,8 @@ class ResourceTypeItemController extends Controller
             $conditional_parameters['year']['allowed_values'] = [];
 
             for (
-                $i = $item_interface->conditionalParameterMinYear();
-                $i <= $item_interface->conditionalParameterMaxYear();
+                $i = $item_interface->conditionalParameterMinYear($resource_type_id);
+                $i <= $item_interface->conditionalParameterMaxYear($resource_type_id);
                 $i++
             ) {
                 $conditional_parameters['year']['allowed_values'][$i] = [

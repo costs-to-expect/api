@@ -32,9 +32,11 @@ class AllocatedExpense extends AbstractItem
      * item type data and returns the min value, if no data exists, defaults to
      * the current year
      *
+     * @param integer $resource_type_id
+     *
      * @return integer
      */
-    public function conditionalParameterMinYear(): int
+    public function conditionalParameterMinYear(int $resource_type_id): int
     {
         return 2013;
     }
@@ -44,9 +46,11 @@ class AllocatedExpense extends AbstractItem
      * item type data and returns the min value, if no data exists, defaults to
      * the current year
      *
+     * @param integer $resource_type_id
+     *
      * @return integer
      */
-    public function conditionalParameterMaxYear(): int
+    public function conditionalParameterMaxYear(int $resource_type_id): int
     {
         return 2019;
     }
