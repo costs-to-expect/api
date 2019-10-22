@@ -28,6 +28,30 @@ class SimpleExpense extends AbstractItem
     }
 
     /**
+     * Return the minimum year for the conditional year filter, reviews the
+     * item type data and returns the min value, if no data exists, defaults to
+     * the current year
+     *
+     * @return integer
+     */
+    public function conditionalParameterMinYear(): int
+    {
+        return 2013;
+    }
+
+    /**
+     * Return the minimum year for the conditional year filter, reviews the
+     * item type data and returns the min value, if no data exists, defaults to
+     * the current year
+     *
+     * @return integer
+     */
+    public function conditionalParameterMaxYear(): int
+    {
+        return 2019;
+    }
+
+    /**
      * Return the model instance for resource type item type
      *
      * @return Model

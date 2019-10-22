@@ -35,6 +35,24 @@ abstract class AbstractItem
     abstract public function collectionParametersConfig(): string;
 
     /**
+     * Return the minimum year for the conditional year filter, reviews the
+     * item type data and returns the min value, if no data exists, defaults to
+     * the current year
+     *
+     * @return integer
+     */
+    abstract public function conditionalParameterMinYear(): int;
+
+    /**
+     * Return the minimum year for the conditional year filter, reviews the
+     * item type data and returns the min value, if no data exists, defaults to
+     * the current year
+     *
+     * @return integer
+     */
+    abstract public function conditionalParameterMaxYear(): int;
+
+    /**
      * Return the model instance for resource type item type
      *
      * @return Model
