@@ -25,8 +25,6 @@ use Illuminate\Http\Request;
  */
 class ResourceTypeItemController extends Controller
 {
-    private $conditional_get_parameters = [];
-
     /**
      * Return all the items based on the set filter options
      *
@@ -241,7 +239,7 @@ class ResourceTypeItemController extends Controller
                         'value' => $this->hash->encode('subcategory', $subcategory['subcategory_id']),
                         'name' => $subcategory['subcategory_name'],
                         'description' => trans('resource-type-item-type-' . $item_interface->type() . '/allowed-values.description-prefix-subcategory') .
-                            $subcategory['subcategory_name'] . trans('item-type-' . $item_interface->type() . '/allowed-values.description-suffix-subcategory')
+                            $subcategory['subcategory_name'] . trans('resource-type-item-type-' . $item_interface->type() . '/allowed-values.description-suffix-subcategory')
                     ];
                 },
                 $subcategories
