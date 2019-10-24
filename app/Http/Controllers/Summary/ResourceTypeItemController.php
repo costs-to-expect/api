@@ -35,12 +35,11 @@ class ResourceTypeItemController extends Controller
     /**
      * Return the TCO for all the resources within the resource type
      *
-     * @param Request $request
      * @param string $resource_type_id
      *
      * @return JsonResponse
      */
-    public function index(Request $request, string $resource_type_id): JsonResponse
+    public function index(string $resource_type_id): JsonResponse
     {
         Route::resourceType(
             $resource_type_id,

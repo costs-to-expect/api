@@ -363,7 +363,7 @@ class ResourceTypeItemTypeAllocatedExpense extends Model
             join('item', 'item_type_allocated_expense.item_id', 'item.id')->
             join('resource', 'item.resource_id', 'resource.id')->
             where('resource.resource_type_id', '=', $resource_type_id)->
-            selectRaw('YEAR(MAX(`item_type_allocated_expense`.`effective_date`)) AS `year_limit`')->
+            selectRaw('YEAR(MIN(`item_type_allocated_expense`.`effective_date`)) AS `year_limit`')->
             first();
 
         if ($result === null) {
