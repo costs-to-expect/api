@@ -49,18 +49,21 @@ class ResourceTypeItemController extends Controller
 
         $this->resource_type_id = $resource_type_id;
 
-        $collection_parameters = Parameters::fetch([
-            'include-unpublished',
-            'resources',
-            'year',
-            'years',
-            'month',
-            'months',
-            'category',
-            'categories',
-            'subcategory',
-            'subcategories'
-        ]);
+        $collection_parameters = Parameters::fetch(
+            [
+                'include-unpublished',
+                'resources',
+                'year',
+                'years',
+                'month',
+                'months',
+                'category',
+                'categories',
+                'subcategory',
+                'subcategories'
+            ],
+            $resource_type_id
+        );
 
         $search_parameters = SearchParameters::fetch([
             'description'
