@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Models;
+namespace App\Models\Summary;
 
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
@@ -14,7 +14,7 @@ use Illuminate\Support\Facades\DB;
  * @copyright G3D Development Limited 2018-2019
  * @license https://github.com/costs-to-expect/api/blob/master/LICENSE
  */
-class ItemSummary extends Model
+class Item extends Model
 {
     protected $guarded = ['id', 'actualised_total', 'created_at', 'updated_at'];
     protected $table = 'item';

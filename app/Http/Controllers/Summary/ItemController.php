@@ -10,7 +10,7 @@ use App\Utilities\Response;
 use App\Utilities\RoutePermission;
 use App\Validators\Request\Parameters;
 use App\Validators\Request\Route;
-use App\Models\ItemSummary;
+use App\Models\Summary\Item;
 use App\Models\Transformers\Summary\ItemCategory as ItemCategoryTransformer;
 use App\Models\Transformers\Summary\ItemMonth as ItemMonthTransformer;
 use App\Models\Transformers\Summary\ItemSubcategory as ItemSubcategoryTransformer;
@@ -151,7 +151,7 @@ class ItemController extends Controller
      */
     private function tcoSummary(): JsonResponse
     {
-        $summary = (new ItemSummary())->summary(
+        $summary = (new Item())->summary(
             $this->resource_type_id,
             $this->resource_id,
             $this->include_unpublished
@@ -186,7 +186,7 @@ class ItemController extends Controller
      */
     private function yearsSummary(): JsonResponse
     {
-        $summary = (new ItemSummary())->yearsSummary(
+        $summary = (new Item())->yearsSummary(
             $this->resource_type_id,
             $this->resource_id,
             $this->include_unpublished
@@ -226,7 +226,7 @@ class ItemController extends Controller
      */
     private function yearSummary(int $year): JsonResponse
     {
-        $summary = (new ItemSummary())->yearSummary(
+        $summary = (new Item())->yearSummary(
             $this->resource_type_id,
             $this->resource_id,
             $year,
@@ -262,7 +262,7 @@ class ItemController extends Controller
      */
     private function monthsSummary(int $year): JsonResponse
     {
-        $summary = (new ItemSummary())->monthsSummary(
+        $summary = (new Item())->monthsSummary(
             $this->resource_type_id,
             $this->resource_id,
             $year,
@@ -304,7 +304,7 @@ class ItemController extends Controller
      */
     private function monthSummary(int $year, int $month): JsonResponse
     {
-        $summary = (new ItemSummary())->monthSummary(
+        $summary = (new Item())->monthSummary(
             $this->resource_type_id,
             $this->resource_id,
             $year,
@@ -339,7 +339,7 @@ class ItemController extends Controller
      */
     private function categoriesSummary(): JsonResponse
     {
-        $summary = (new ItemSummary())->categoriesSummary(
+        $summary = (new Item())->categoriesSummary(
             $this->resource_type_id,
             $this->resource_id,
             $this->include_unpublished
@@ -389,7 +389,7 @@ class ItemController extends Controller
         array $search_parameters = []
     ): JsonResponse
     {
-        $summary = (new ItemSummary())->filteredSummary(
+        $summary = (new Item())->filteredSummary(
             $this->resource_type_id,
             $this->resource_id,
             $category_id,
@@ -438,7 +438,7 @@ class ItemController extends Controller
             $this->permitted_resource_types
         );
 
-        $summary = (new ItemSummary())->categorySummary(
+        $summary = (new Item())->categorySummary(
             $this->resource_type_id,
             $this->resource_id,
             $category_id,
@@ -481,7 +481,7 @@ class ItemController extends Controller
             $this->permitted_resource_types
         );
 
-        $summary = (new ItemSummary())->subCategoriesSummary(
+        $summary = (new Item())->subCategoriesSummary(
             $this->resource_type_id,
             $this->resource_id,
             $category_id,
@@ -535,7 +535,7 @@ class ItemController extends Controller
             $this->permitted_resource_types
         );
 
-        $summary = (new ItemSummary())->subCategorySummary(
+        $summary = (new Item())->subCategorySummary(
             $this->resource_type_id,
             $this->resource_id,
             $category_id,
