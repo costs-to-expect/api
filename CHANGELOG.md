@@ -2,24 +2,28 @@
 
 The complete changelog for the Costs to Expect REST API, follows the format defined at https://keepachangelog.com/en/1.0.0/
 
-## [v2.03.0] - 2019-10-xx
+## [v2.03.0] - 2019-10-27
 ### Added
 - We have added a new route, `item-types`, the route shows the item types supported by the API.
 
 ### Changed
-- We have updated the landing page; the focus was previously only on the website; the API is the backbone of the entire service; the site is ancillary.
+- We have updated the landing page; the focus was previously on the website; the API is the backbone of the entire service; the site is ancillary.
 - We have moved the summary controllers; we should use namespaces to organise the code, not filenames.
 - We have moved the summary transformers; we should use namespaces to organise the code, not filenames.
+- We have started to move the summary models; we should use namespaces to organise the code, not filenames.
 - We have merged the authorised and general API routes section, the README details the API routes and the API summary routes in two tables.
-- We have moved some configuration files. Odd how some were outside of folders; additionally, config files should only be in folders if there can be multiple files for the 'section'.
+- We have moved some configuration files. We thought it was odd how some were outside of folders; additionally, config files should only be in folders if there can be multiple files for the 'section'.
 - We have moved localisation files to match their config partners.
+- We have updated the allowed values for the `year` GET parameter; we derive the values from the data; the limit for Jack should be 2013 to 2019, for Niall te limit should be 2019.
+- We have updated the GET parameter validator; supplied values validated against values defined in the OPTIONS request.
 
 ### Fixed
 - We have corrected the category summary routes in the README.
 - We have corrected the name of a few transformers, incorrect capitalisation.
 - We have corrected the name of a few controllers, incorrect capitalisation.
-- Set the salt for the item type hasher.
+- We have set the salt for the item type hasher.
 - For uncaught exceptions, we return the trace when the API is in development mode.
+- We have updated the code to generate conditional GET parameters; the item type defines which parameters exist.
 
 ## [v2.02.0] - 2019-10-07
 ### Added
