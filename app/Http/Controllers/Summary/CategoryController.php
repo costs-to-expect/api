@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Summary;
 
 use App\Http\Controllers\Controller;
-use App\Models\Category;
+use App\Models\Summary\Category;
 use App\Option\Get;
 use App\Utilities\Header;
 use App\Utilities\RoutePermission;
@@ -33,7 +33,7 @@ class CategoryController extends Controller
             $this->permitted_resource_types
         );
 
-        $summary = (new Category())->totalCount(
+        $summary = (new Category())->total(
             $resource_type_id,
             $this->permitted_resource_types,
             $this->include_public

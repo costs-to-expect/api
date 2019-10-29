@@ -12,11 +12,6 @@ use Illuminate\Support\Facades\DB;
 /**
  * Category model
  *
- * Single() exists in this model to be consistent with all the other models, it
- * is simply a synonym for find().
- *
- * Categories are private if they are related to a private resource type
- *
  * @mixin QueryBuilder
  * @author Dean Blackborough <dean@g3d-development.com>
  * @copyright G3D Development Limited 2018-2019
@@ -53,7 +48,7 @@ class Category extends Model
      *
      * @return integer
      */
-    public function totalCount(
+    public function total(
         int $resource_type_id,
         array $permitted_resource_types,
         bool $include_public,

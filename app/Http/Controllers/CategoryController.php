@@ -51,7 +51,7 @@ class CategoryController extends Controller
             Config::get('api.category.searchable')
         );
 
-        $total = (new Category())->totalCount(
+        $total = (new Category())->total(
             (int) $resource_type_id,
             $this->permitted_resource_types,
             $this->include_public,
