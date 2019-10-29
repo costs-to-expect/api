@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Models;
+namespace App\Models\ItemType;
 
 use App\Utilities\General;
 use App\Utilities\Model as ModelUtility;
@@ -17,7 +17,7 @@ use Illuminate\Support\Facades\DB;
  * @copyright G3D Development Limited 2018-2019
  * @license https://github.com/costs-to-expect/api/blob/master/LICENSE
  */
-class ItemTypeAllocatedExpense extends Model
+class AllocatedExpense extends Model
 {
     protected $table = 'item_type_allocated_expense';
 
@@ -28,7 +28,7 @@ class ItemTypeAllocatedExpense extends Model
         $this->attributes['actualised_total'] = ($percentage === 100) ? $total : $total * ($percentage/100);
     }
 
-    public function instance(int $item_id): ?ItemTypeAllocatedExpense
+    public function instance(int $item_id): ?AllocatedExpense
     {
         return $this->where('item_id', '=', $item_id)->
             select(
@@ -126,12 +126,12 @@ class ItemTypeAllocatedExpense extends Model
     /**
      * Convert the model instance to an array for use with the transformer
      *
-     * @param Item $item
+     * @param $item
      * @param Model $item_type
      *
      * @return array
      */
-    public function instanceToArray(Item $item, Model $item_type): array
+    public function instanceToArray($item, Model $item_type): array
     {
         return [
             'item_id' => $item->id,

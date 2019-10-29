@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace App\Item;
 
-use App\Models\ItemTypeAllocatedExpense;
+use App\Models\ItemType\AllocatedExpense as ItemModel;
 use App\Models\Transformers\Transformer;
 use App\Validators\Request\Fields\ItemTypeAllocatedExpense as ItemTypeAllocatedExpenseValidator;
 use App\Validators\Request\Fields\Validator;
@@ -41,7 +41,7 @@ class AllocatedExpense extends AbstractItem
      */
     public function conditionalParameterMinYear(int $resource_id): int
     {
-        return (new ItemTypeAllocatedExpense())->minimumEffectiveDateYear($resource_id);
+        return (new ItemModel())->minimumEffectiveDateYear($resource_id);
     }
 
     /**
@@ -55,7 +55,7 @@ class AllocatedExpense extends AbstractItem
      */
     public function conditionalParameterMaxYear(int $resource_id): int
     {
-        return (new ItemTypeAllocatedExpense())->maximumEffectiveDateYear($resource_id);
+        return (new ItemModel())->maximumEffectiveDateYear($resource_id);
     }
 
     /**
@@ -67,7 +67,7 @@ class AllocatedExpense extends AbstractItem
      */
     public function create($id): Model
     {
-        $item_type = new ItemTypeAllocatedExpense([
+        $item_type = new ItemModel([
             'item_id' => $id,
             'name' => request()->input('name'),
             'description' => request()->input('description', null),
@@ -96,7 +96,7 @@ class AllocatedExpense extends AbstractItem
      */
     public function instance(int $id): Model
     {
-        return (new ItemTypeAllocatedExpense())->instance($id);
+        return (new ItemModel())->instance($id);
     }
 
     /**
@@ -106,7 +106,7 @@ class AllocatedExpense extends AbstractItem
      */
     public function model(): Model
     {
-        return new ItemTypeAllocatedExpense();
+        return new ItemModel();
     }
 
     /**

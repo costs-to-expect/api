@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace App\Item\ResourceTypeItem;
 
-use App\Models\ResourceTypeItemTypeAllocatedExpense;
+use App\Models\ResourceTypeItemType\AllocatedExpense as ItemModel;
 use App\Models\Transformers\Transformer;
 use Illuminate\Database\Eloquent\Model;
 
@@ -38,7 +38,7 @@ class AllocatedExpense extends AbstractItem
      */
     public function conditionalParameterMinYear(int $resource_type_id): int
     {
-        return (new ResourceTypeItemTypeAllocatedExpense())->minimumEffectiveDateYear($resource_type_id);
+        return (new ItemModel())->minimumEffectiveDateYear($resource_type_id);
     }
 
     /**
@@ -52,7 +52,7 @@ class AllocatedExpense extends AbstractItem
      */
     public function conditionalParameterMaxYear(int $resource_type_id): int
     {
-        return (new ResourceTypeItemTypeAllocatedExpense())->maximumEffectiveDateYear($resource_type_id);
+        return (new ItemModel())->maximumEffectiveDateYear($resource_type_id);
     }
 
     /**
@@ -62,7 +62,7 @@ class AllocatedExpense extends AbstractItem
      */
     public function model(): Model
     {
-        return new ResourceTypeItemTypeAllocatedExpense();
+        return new ItemModel();
     }
 
     /**

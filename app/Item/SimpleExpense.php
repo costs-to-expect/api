@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace App\Item;
 
-use App\Models\ItemTypeSimpleExpense;
+use App\Models\ItemType\SimpleExpense as ItemModel;
 use App\Models\Transformers\Transformer;
 use App\Validators\Request\Fields\ItemTypeSimpleExpense as ItemTypeSimpleExpenseValidator;
 use App\Validators\Request\Fields\Validator;
@@ -41,7 +41,7 @@ class SimpleExpense extends AbstractItem
      */
     public function conditionalParameterMinYear(int $resource_id): int
     {
-        return (new ItemTypeSimpleExpense())->minimumEffectiveDateYear($resource_id);
+        return (new ItemModel())->minimumEffectiveDateYear($resource_id);
     }
 
     /**
@@ -55,7 +55,7 @@ class SimpleExpense extends AbstractItem
      */
     public function conditionalParameterMaxYear(int $resource_id): int
     {
-        return (new ItemTypeSimpleExpense())->maximumEffectiveDateYear($resource_id);
+        return (new ItemModel())->maximumEffectiveDateYear($resource_id);
     }
 
     /**
@@ -67,7 +67,7 @@ class SimpleExpense extends AbstractItem
      */
     public function create($id): Model
     {
-        $item_type = new ItemTypeSimpleExpense([
+        $item_type = new ItemModel([
             'item_id' => $id,
             'name' => request()->input('name'),
             'description' => request()->input('description', null),
@@ -89,7 +89,7 @@ class SimpleExpense extends AbstractItem
      */
     public function instance(int $id): Model
     {
-        return (new ItemTypeSimpleExpense())->instance($id);
+        return (new ItemModel())->instance($id);
     }
 
     /**
@@ -99,7 +99,7 @@ class SimpleExpense extends AbstractItem
      */
     public function model(): Model
     {
-        return new ItemTypeSimpleExpense();
+        return new ItemModel();
     }
 
     /**
