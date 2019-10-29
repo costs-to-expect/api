@@ -123,7 +123,7 @@ class CategoryController extends Controller
             $this->permitted_resource_types
         );
 
-        $parameters = Parameters::fetch(['include-subcategories']);
+        $parameters = Parameters::fetch(array_keys(Config::get('api.category.parameters.item')));
 
         $category = (new Category)->single(
             (int) $resource_type_id,

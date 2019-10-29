@@ -19,6 +19,7 @@ use App\Utilities\Response as UtilityResponse;
 use App\Validators\Request\SearchParameters;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Config;
 
 /**
  * Summary for resource type items route
@@ -49,18 +50,7 @@ class ResourceTypeItemController extends Controller
         $this->resource_type_id = $resource_type_id;
 
         $collection_parameters = Parameters::fetch(
-            [
-                'include-unpublished',
-                'resources',
-                'year',
-                'years',
-                'month',
-                'months',
-                'category',
-                'categories',
-                'subcategory',
-                'subcategories'
-            ],
+            array_keys(Config::get('api.resource-type-item.summary-parameters.collection')),
             $resource_type_id
         );
 

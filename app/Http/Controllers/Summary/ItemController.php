@@ -18,6 +18,7 @@ use App\Models\Transformers\Summary\ItemYear as ItemYearTransformer;
 use App\Utilities\General;
 use App\Validators\Request\SearchParameters;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\Config;
 
 /**
  * Summary for the items route
@@ -52,17 +53,7 @@ class ItemController extends Controller
         $this->resource_id = $resource_id;
 
         $collection_parameters = Parameters::fetch(
-            [
-                'include-unpublished',
-                'year',
-                'years',
-                'month',
-                'months',
-                'category',
-                'categories',
-                'subcategory',
-                'subcategories'
-            ],
+            array_keys(Config::get('api.item.summary-parameters.collection')),
             (int) $resource_type_id,
             (int) $resource_id
         );

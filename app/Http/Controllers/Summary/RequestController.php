@@ -9,6 +9,7 @@ use App\Validators\Request\Parameters;
 use App\Models\RequestLog;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Config;
 
 /**
  * Manage categories
@@ -30,7 +31,7 @@ class RequestController extends Controller
      */
     public function accessLog(Request $request): JsonResponse
     {
-        $this->collection_parameters = Parameters::fetch(['source']);
+        $this->collection_parameters = Parameters::fetch(array_keys(Config::get('api.request-access-log.summary-parameters.collection')));
 
         $request_data = (new RequestLog())->monthlyRequests($this->collection_parameters);
 

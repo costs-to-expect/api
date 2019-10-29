@@ -118,7 +118,7 @@ class ResourceTypeController extends Controller
             $this->permitted_resource_types
         );
 
-        $parameters = Parameters::fetch(['include-resources']);
+        $parameters = Parameters::fetch(array_keys(Config::get('api.resource-type.parameters.item')));
 
         $resource_type = (new ResourceType())->single(
             $resource_type_id,
