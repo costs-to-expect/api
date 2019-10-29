@@ -74,7 +74,7 @@ class SimpleExpense extends AbstractItem
      */
     public function transformer(array $data_to_transform): Transformer
     {
-        return new \App\Models\Transformers\ResourceTypeItemTypeSimpleExpense($data_to_transform);
+        return new \App\Models\Transformers\ResourceTypeItemType\SimpleExpense($data_to_transform);
     }
 
     /**

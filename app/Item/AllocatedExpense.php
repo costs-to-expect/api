@@ -180,7 +180,7 @@ class AllocatedExpense extends AbstractItem
      */
     public function transformer(array $data_to_transform): Transformer
     {
-        return new \App\Models\Transformers\ItemTypeAllocatedExpense($data_to_transform);
+        return new \App\Models\Transformers\ItemType\AllocatedExpense($data_to_transform);
     }
 
     /**

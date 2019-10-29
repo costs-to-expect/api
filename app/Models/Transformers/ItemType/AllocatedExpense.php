@@ -1,7 +1,9 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Models\Transformers;
+namespace App\Models\Transformers\ItemType;
+
+use App\Models\Transformers\Transformer;
 
 /**
  * Transform the data returns from Eloquent into the format we want for the API
@@ -10,7 +12,7 @@ namespace App\Models\Transformers;
  * @copyright G3D Development Limited 2018-2019
  * @license https://github.com/costs-to-expect/api/blob/master/LICENSE
  */
-class ItemTypeSimpleExpense extends Transformer
+class AllocatedExpense extends Transformer
 {
     protected $item;
 
@@ -28,6 +30,8 @@ class ItemTypeSimpleExpense extends Transformer
             'name' => $this->item['item_name'],
             'description' => $this->item['item_description'],
             'total' => number_format((float) $this->item['item_total'],2, '.', ''),
+            'percentage' => $this->item['item_percentage'],
+            'actualised_total' => number_format((float) $this->item['item_actualised_total'], 2, '.', ''),
             'effective_date' => $this->item['item_effective_date'],
             'created' => $this->item['item_created_at']
         ];
