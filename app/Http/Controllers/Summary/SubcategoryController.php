@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Summary;
 
 use App\Http\Controllers\Controller;
-use App\Models\SubCategory;
+use App\Models\Summary\SubCategory;
 use App\Option\Get;
 use App\Utilities\Header;
 use App\Utilities\RoutePermission;

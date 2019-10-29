@@ -11,9 +11,6 @@ use Illuminate\Support\Facades\Config;
 /**
  * Resource type model
  *
- * Single() exists in this model to be consistent with all the other models, it is
- * simply a synonym for find()
- *
  * @mixin QueryBuilder
  * @author Dean Blackborough <dean@g3d-development.com>
  * @copyright G3D Development Limited 2018-2019

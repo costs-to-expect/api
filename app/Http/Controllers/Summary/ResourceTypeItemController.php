@@ -18,7 +18,6 @@ use App\Utilities\General;
 use App\Utilities\Response as UtilityResponse;
 use App\Validators\Request\SearchParameters;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Config;
 
 /**

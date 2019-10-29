@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Summary;
 
 use App\Http\Controllers\Controller;
-use App\Models\ResourceType;
+use App\Models\Summary\ResourceType;
 use App\Option\Get;
 use App\Utilities\Header;
 use Illuminate\Http\JsonResponse;
