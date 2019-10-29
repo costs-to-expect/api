@@ -6,9 +6,8 @@ use App\Http\Controllers\Controller;
 use App\Option\Get;
 use App\Utilities\Header;
 use App\Validators\Request\Parameters;
-use App\Models\RequestLog;
+use App\Models\Summary\RequestLog;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Config;
 
 /**
@@ -25,11 +24,9 @@ class RequestController extends Controller
     /**
      * Return a summary of the access log, requests per year and month
      *
-     * @param Request $request
-     *
      * @return JsonResponse
      */
-    public function accessLog(Request $request): JsonResponse
+    public function accessLog(): JsonResponse
     {
         $this->collection_parameters = Parameters::fetch(array_keys(Config::get('api.request-access-log.summary-parameters.collection')));
 
@@ -59,11 +56,9 @@ class RequestController extends Controller
     /**
      * Generate the OPTIONS request for summary of the access log
      *
-     * @param Request $request
-     *
      * @return JsonResponse
      */
-    public function optionsAccessLog(Request $request)
+    public function optionsAccessLog()
     {
         $get = Get::init()->
             setParameters('api.request-access-log.parameters.collection')->
