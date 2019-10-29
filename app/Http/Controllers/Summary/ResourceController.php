@@ -7,9 +7,8 @@ use App\Option\Get;
 use App\Utilities\Header;
 use App\Utilities\RoutePermission;
 use App\Validators\Request\Route;
-use App\Models\Resource;
+use App\Models\Summary\Resource;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Request;
 
 /**
  * Summary controller for the resource routes
@@ -23,12 +22,11 @@ class ResourceController extends Controller
     /**
      * Return a summary of the resources
      *
-     * @param Request $request
      * @param string $resource_type_id
      *
      * @return JsonResponse
      */
-    public function index(Request $request, string $resource_type_id): JsonResponse
+    public function index(string $resource_type_id): JsonResponse
     {
         Route::resourceType(
             $resource_type_id,
@@ -58,12 +56,11 @@ class ResourceController extends Controller
     /**
      * Generate the OPTIONS request for the resource summary
      *
-     * @param Request $request
      * @param string $resource_type_id
      *
      * @return JsonResponse
      */
-    public function optionsIndex(Request $request, string $resource_type_id): JsonResponse
+    public function optionsIndex(string $resource_type_id): JsonResponse
     {
         Route::resourceType(
             $resource_type_id,
