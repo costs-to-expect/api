@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace App\Validators\Request\Routes;
 
-use App\Models\ResourceType as ResourceTypeModel;
+use App\Models\PermittedUser;
 
 /**
  * Validate the route params to a resource type
@@ -30,7 +30,7 @@ class ResourceType
     {
         if (
             $resource_type_id === 'nill' ||
-            (new ResourceTypeModel())->existsToUser(
+            (new PermittedUser())->resourceTypeExistsToUser(
                 $resource_type_id,
                 $permitted_resource_types
             ) === false
@@ -57,7 +57,7 @@ class ResourceType
     {
         if (
             $resource_type_id === 'nill' ||
-            (new ResourceTypeModel())->existsToUser(
+            (new PermittedUser())->resourceTypeExistsToUser(
                 $resource_type_id,
                 $permitted_resource_types,
                 true

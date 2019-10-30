@@ -106,20 +106,6 @@ class ItemType extends Model
     }
 
     /**
-     * Validate that the item type exists
-     *
-     * @param integer $id
-     *
-     * @return boolean
-     */
-    public function existsToUser(int $id): bool
-    {
-        $collection = $this->where('item_type.id', '=', $id);
-
-        return (count($collection->get()) === 1) ? true : false;
-    }
-
-    /**
      * Return the total number of item types
      *
      * @param array $search_parameters = []

@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace App\Validators\Request\Routes;
 
-use App\Models\ItemCategory as ItemCategoryModel;
+use App\Models\PermittedUser;
 
 /**
  * Validate the route params to an item category
@@ -39,7 +39,7 @@ class ItemCategory
             $resource_id === 'nill' ||
             $item_id === 'nill' ||
             $item_category_id === 'nill' ||
-            (new ItemCategoryModel())->existsToUser(
+            (new PermittedUser())->itemCategoryExistsToUser(
                 $resource_type_id,
                 $resource_id,
                 $item_id,
@@ -78,7 +78,7 @@ class ItemCategory
             $resource_id === 'nill' ||
             $item_id === 'nill' ||
             $item_category_id === 'nill' ||
-            (new ItemCategoryModel())->existsToUser(
+            (new PermittedUser())->itemCategoryExistsToUser(
                 $resource_type_id,
                 $resource_id,
                 $item_id,

@@ -228,36 +228,4 @@ class Category extends Model
             'resource_type_id' => $category->resource_type_id
         ];
     }
-
-    /**
-     * Validate that the category exists and is accessible to the user for
-     * viewing, editing based on their permitted resource types
-     *
-     * @param integer $resource_type_id
-     * @param integer $category_id
-     * @param array $permitted_resource_types
-     * @param boolean $manage Should be exclude public items as we are checking
-     * a management route
-     *
-     * @return boolean
-     */
-    public function existsToUser(
-        int $resource_type_id,
-        int $category_id,
-        array $permitted_resource_types,
-        $manage = false
-    ): bool
-    {
-        $collection = $this->where('category.id', '=', $category_id)->
-            join('resource_type', 'category.resource_type_id', 'resource_type.id')->
-            where('category.resource_type_id', '=', $resource_type_id);
-
-        $collection = ModelUtility::applyResourceTypeCollectionCondition(
-            $collection,
-            $permitted_resource_types,
-            ($manage === true) ? false : true
-        );
-
-        return (count($collection->get()) === 1) ? true : false;
-    }
 }

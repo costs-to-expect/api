@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace App\Validators\Request\Routes;
 
+use App\Models\PermittedUser;
 use App\Models\SubCategory as SubCategoryModel;
 
 /**
@@ -36,7 +37,7 @@ class SubCategory
             $resource_type_id === 'nill' ||
             $category_id === 'nill' ||
             $subcategory_id === 'nill' ||
-            (new SubCategoryModel())->existsToUser(
+            (new PermittedUser())->subcategoryExistsToUser(
                 $resource_type_id,
                 $category_id,
                 $subcategory_id,
@@ -71,7 +72,7 @@ class SubCategory
             $resource_type_id === 'nill' ||
             $category_id === 'nill' ||
             $subcategory_id === 'nill' ||
-            (new SubCategoryModel())->existsToUser(
+            (new PermittedUser())->subcategoryExistsToUser(
                 $resource_type_id,
                 $category_id,
                 $subcategory_id,

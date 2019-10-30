@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace App\Validators\Request\Routes;
 
-use App\Models\ItemType as ItemTypeModel;
+use App\Models\PermittedUser;
 
 /**
  * Validate the route params to an item type
@@ -25,7 +25,7 @@ class ItemType
     {
         if (
             $item_type_id === 'nill' ||
-            (new ItemTypeModel())->existsToUser($item_type_id) === false
+            (new PermittedUser())->itemTypeExistsToUser($item_type_id) === false
         ) {
             return false;
         }

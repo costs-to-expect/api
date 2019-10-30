@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace App\Validators\Request\Routes;
 
-use App\Models\Category as CategoryModel;
+use App\Models\PermittedUser;
 
 /**
  * Validate the route params to a category
@@ -32,7 +32,7 @@ class Category
     {
         if (
             $category_id === 'nill' ||
-            (new CategoryModel())->existsToUser(
+            (new PermittedUser())->categoryExistsToUser(
                 $resource_type_id,
                 $category_id,
                 $permitted_resource_types
@@ -62,7 +62,7 @@ class Category
     {
         if (
             $category_id === 'nill' ||
-            (new CategoryModel())->existsToUser(
+            (new PermittedUser())->categoryExistsToUser(
                 $resource_type_id,
                 $category_id,
                 $permitted_resource_types,

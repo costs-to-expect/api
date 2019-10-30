@@ -121,44 +121,4 @@ class ItemCategory extends Model
             'item_category_category_description' => $item_category->category->description
         ];
     }
-
-    /**
-     * Validate that the item exists and is accessible to the user for
-     * viewing, editing etc. based on their permitted resource types
-     *
-     * @param integer $resource_type_id
-     * @param integer $resource_id
-     * @param integer $item_id
-     * @param integer $item_category_id
-     * @param array $permitted_resource_types
-     * @param boolean $manage Should be exclude public items as we are checking
-     * a management route
-     *
-     * @return boolean
-     */
-    public function existsToUser(
-        int $resource_type_id,
-        int $resource_id,
-        int $item_id,
-        int $item_category_id,
-        array $permitted_resource_types,
-        $manage = false
-    ): bool
-    {
-        $collection = $this->join('item', 'item_category.item_id', 'item.id')->
-            join('resource', 'item.resource_id', 'resource.id')->
-            join('resource_type', 'resource.resource_type_id', 'resource_type.id')->
-            where('resource.resource_type_id', '=', $resource_type_id)->
-            where('resource.id', '=', $resource_id)->
-            where('item.id', '=', $item_id)->
-            where('item_category.id', '=', $item_category_id);
-
-        $collection = ModelUtility::applyResourceTypeCollectionCondition(
-            $collection,
-            $permitted_resource_types,
-            ($manage === true) ? false : true
-        );
-
-        return (count($collection->get()) === 1) ? true : false;
-    }
 }
