@@ -23,7 +23,7 @@ class ItemSubCategory extends Model
 
     public function sub_category()
     {
-        return $this->hasOne(SubCategory::class, 'id', 'sub_category_id');
+        return $this->hasOne(Subcategory::class, 'id', 'sub_category_id');
     }
 
     public function item()

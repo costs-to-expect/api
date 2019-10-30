@@ -13,7 +13,7 @@ use App\Validators\Request\Parameters;
 use App\Validators\Request\Route;
 use App\Models\Category;
 use App\Models\Item;
-use App\Models\SubCategory;
+use App\Models\Subcategory;
 use App\Utilities\Pagination as UtilityPagination;
 use App\Utilities\Request as UtilityRequest;
 use App\Utilities\Response as UtilityResponse;
@@ -524,7 +524,7 @@ class ItemController extends Controller
         ) {
             $conditional_parameters['subcategory']['allowed_values'] = [];
 
-            $subcategories = (new SubCategory())->paginatedCollection(
+            $subcategories = (new Subcategory())->paginatedCollection(
                 $resource_type_id,
                 $parameters['category']
             );

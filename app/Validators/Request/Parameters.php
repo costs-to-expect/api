@@ -6,7 +6,7 @@ namespace App\Validators\Request;
 use App\Item\ItemInterfaceFactory;
 use App\Models\Category;
 use App\Models\ResourceType;
-use App\Models\SubCategory;
+use App\Models\Subcategory;
 use App\Utilities\General;
 
 /**
@@ -104,7 +104,7 @@ class Parameters
                     if (array_key_exists($key, self::$parameters) === true) {
                         if (
                             array_key_exists('category', self::$parameters) === false ||
-                            (new SubCategory())->
+                            (new Subcategory())->
                             where('sub_category.id', '=', self::$parameters[$key])->
                             where('sub_category.category_id', '=', self::$parameters['category'])->
                             exists() === false

@@ -4,7 +4,6 @@ declare(strict_types=1);
 namespace App\Validators\Request\Routes;
 
 use App\Models\PermittedUser;
-use App\Models\SubCategory as SubCategoryModel;
 
 /**
  * Validate the route params to a sub category

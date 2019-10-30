@@ -10,7 +10,7 @@ use App\Utilities\RoutePermission;
 use App\Validators\Request\Route;
 use App\Models\ItemCategory;
 use App\Models\ItemSubCategory;
-use App\Models\SubCategory;
+use App\Models\Subcategory;
 use App\Models\Transformers\ItemSubcategory as ItemSubcategoryTransformer;
 use App\Utilities\Request as UtilityRequest;
 use App\Utilities\Response as UtilityResponse;
@@ -335,7 +335,7 @@ class ItemSubcategoryController extends Controller
      */
     private function conditionalPostParameters($category_id): array
     {
-        $sub_categories = (new SubCategory())
+        $sub_categories = (new Subcategory())
             ->select('id', 'name', 'description')
             ->where('category_id', '=', $category_id)
             ->get();

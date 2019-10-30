@@ -16,7 +16,7 @@ use Illuminate\Support\Facades\Config;
  * @copyright G3D Development Limited 2018-2019
  * @license https://github.com/costs-to-expect/api/blob/master/LICENSE
  */
-class SubCategory extends Model
+class Subcategory extends Model
 {
     protected $table = 'sub_category';
 
@@ -137,7 +137,7 @@ class SubCategory extends Model
     public function instance(
         int $category_id,
         int $subcategory_id
-    ): ?SubCategory
+    ): ?Subcategory
     {
         return $this->select(
                 'sub_category.id',
@@ -151,11 +151,11 @@ class SubCategory extends Model
     /**
      * Convert the model instance to an array for use with the transformer
      *
-     * @param SubCategory $subcategory
+     * @param Subcategory $subcategory
      *
      * @return array
      */
-    public function instanceToArray(SubCategory $subcategory): array
+    public function instanceToArray(Subcategory $subcategory): array
     {
         return [
             'subcategory_id' => $subcategory->id,

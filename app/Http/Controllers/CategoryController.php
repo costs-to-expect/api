@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\SubCategory;
+use App\Models\Subcategory;
 use App\Option\Delete;
 use App\Option\Get;
 use App\Option\Patch;
@@ -139,7 +139,7 @@ class CategoryController extends Controller
             array_key_exists('include-subcategories', $parameters) === true &&
             $parameters['include-subcategories'] === true
         ) {
-            $subcategories = (new SubCategory())->paginatedCollection(
+            $subcategories = (new Subcategory())->paginatedCollection(
                 (int) $resource_type_id,
                 (int) $category_id,
                 0,
