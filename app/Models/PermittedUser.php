@@ -55,7 +55,8 @@ class PermittedUser extends Model
         $manage = false
     ): bool
     {
-        $collection = $this->where('category.id', '=', $category_id)->
+        $collection = $this->from('category')->
+            where('category.id', '=', $category_id)->
             join('resource_type', 'category.resource_type_id', 'resource_type.id')->
             where('category.resource_type_id', '=', $resource_type_id);
 
@@ -91,7 +92,8 @@ class PermittedUser extends Model
         $manage = false
     ): bool
     {
-        $collection = $this->join('item', 'item_category.item_id', 'item.id')->
+        $collection = $this->from('item_category')->
+            join('item', 'item_category.item_id', 'item.id')->
             join('resource', 'item.resource_id', 'resource.id')->
             join('resource_type', 'resource.resource_type_id', 'resource_type.id')->
             where('resource.resource_type_id', '=', $resource_type_id)->
@@ -129,7 +131,8 @@ class PermittedUser extends Model
         $manage = false
     ): bool
     {
-        $collection = $this->join('resource', 'item.resource_id', 'resource.id')->
+        $collection = $this->from('item')->
+            join('resource', 'item.resource_id', 'resource.id')->
             join('resource_type', 'resource.resource_type_id', 'resource_type.id')->
             where('resource.resource_type_id', '=', $resource_type_id)->
             where('resource.id', '=', $resource_id)->
@@ -169,7 +172,8 @@ class PermittedUser extends Model
         $manage = false
     ): bool
     {
-        $collection = $this->join('item_category', 'item_sub_category.item_category_id', 'item_category.id')->
+        $collection = $this->from('item_sub_category')->
+            join('item_category', 'item_sub_category.item_category_id', 'item_category.id')->
             join('item', 'item_category.item_id', 'item.id')->
             join('resource', 'item.resource_id', 'resource.id')->
             join('resource_type', 'resource.resource_type_id', 'resource_type.id')->
@@ -197,7 +201,8 @@ class PermittedUser extends Model
      */
     public function itemTypeExistsToUser(int $id): bool
     {
-        $collection = $this->where('item_type.id', '=', $id);
+        $collection = $this->from('item_type')->
+            where('item_type.id', '=', $id);
 
         return (count($collection->get()) === 1) ? true : false;
     }
@@ -244,7 +249,8 @@ class PermittedUser extends Model
         $manage = false
     ): bool
     {
-        $collection = $this->join('resource_type', 'resource.resource_type_id', 'resource_type.id')->
+        $collection = $this->from('resource')->
+            join('resource_type', 'resource.resource_type_id', 'resource_type.id')->
             where('resource.resource_type_id', '=', $resource_type_id)->
             where('resource.id', '=', $resource_id);
 
@@ -274,7 +280,8 @@ class PermittedUser extends Model
         $manage = false
     ): bool
     {
-        $collection = $this->where('resource_type.id', '=', $id);
+        $collection = $this->from('resource_type')->
+            where('resource_type.id', '=', $id);
 
         $collection = ModelUtility::applyResourceTypeCollectionCondition(
             $collection,
@@ -306,7 +313,8 @@ class PermittedUser extends Model
         $manage = false
     ): bool
     {
-        $collection = $this->where('sub_category.id', '=', $subcategory_id)->
+        $collection = $this->from('sub_category')->
+            where('sub_category.id', '=', $subcategory_id)->
             join('category', 'sub_category.category_id', 'category.id')->
             join('resource_type', 'category.resource_type_id', 'resource_type.id')->
             where('sub_category.category_id', '=', $category_id)->
