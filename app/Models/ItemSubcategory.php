@@ -3,7 +3,6 @@ declare(strict_types=1);
 
 namespace App\Models;
 
-use App\Utilities\Model as ModelUtility;
 use Illuminate\Database\Eloquent\Builder as QueryBuilder;
 use Illuminate\Database\Eloquent\Model;
 
@@ -15,7 +14,7 @@ use Illuminate\Database\Eloquent\Model;
  * @copyright G3D Development Limited 2018-2019
  * @license https://github.com/costs-to-expect/api/blob/master/LICENSE
  */
-class ItemSubCategory extends Model
+class ItemSubcategory extends Model
 {
     protected $table = 'item_sub_category';
 
@@ -100,7 +99,7 @@ class ItemSubCategory extends Model
         int $item_id,
         int $item_category_id,
         int $item_subcategory_id
-    ): ?ItemSubCategory
+    ): ?ItemSubcategory
     {
         return $this->join('sub_category', 'item_sub_category.sub_category_id', 'sub_category.id')->
             join('item_category', 'item_sub_category.item_category_id', 'item_category.id')->
@@ -122,11 +121,11 @@ class ItemSubCategory extends Model
     /**
      * Convert the model instance to an array for use with the transformer
      *
-     * @param ItemSubCategory $item_sub_category
+     * @param ItemSubcategory $item_sub_category
      *
      * @return array
      */
-    public function instanceToArray(ItemSubCategory $item_sub_category): array
+    public function instanceToArray(ItemSubcategory $item_sub_category): array
     {
         return [
             'item_sub_category_id' => $item_sub_category->id,

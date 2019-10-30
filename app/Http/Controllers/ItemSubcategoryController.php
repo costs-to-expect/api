@@ -9,7 +9,7 @@ use App\Utilities\Header;
 use App\Utilities\RoutePermission;
 use App\Validators\Request\Route;
 use App\Models\ItemCategory;
-use App\Models\ItemSubCategory;
+use App\Models\ItemSubcategory;
 use App\Models\Subcategory;
 use App\Models\Transformers\ItemSubcategory as ItemSubcategoryTransformer;
 use App\Utilities\Request as UtilityRequest;
@@ -59,7 +59,7 @@ class ItemSubcategoryController extends Controller
             UtilityResponse::notFound(trans('entities.item-subcategory'));
         }
 
-        $item_sub_category = (new ItemSubCategory())->paginatedCollection(
+        $item_sub_category = (new ItemSubcategory())->paginatedCollection(
             $resource_type_id,
             $resource_id,
             $item_id,
@@ -113,7 +113,7 @@ class ItemSubcategoryController extends Controller
             UtilityResponse::notFound(trans('entities.item-subcategory'));
         }
 
-        $item_sub_category = (new ItemSubCategory())->single(
+        $item_sub_category = (new ItemSubcategory())->single(
             $resource_type_id,
             $resource_id,
             $item_id,
@@ -232,7 +232,7 @@ class ItemSubcategoryController extends Controller
             UtilityResponse::notFound(trans('entities.item-subcategory'));
         }
 
-        $item_sub_category = (new ItemSubCategory())->single(
+        $item_sub_category = (new ItemSubcategory())->single(
             $resource_type_id,
             $resource_id,
             $item_id,
@@ -310,7 +310,7 @@ class ItemSubcategoryController extends Controller
                 UtilityResponse::unableToDecode();
             }
 
-            $item_sub_category = new ItemSubCategory([
+            $item_sub_category = new ItemSubcategory([
                 'item_category_id' => $item_category_id,
                 'sub_category_id' => $subcategory_id
             ]);
@@ -320,7 +320,7 @@ class ItemSubcategoryController extends Controller
         }
 
         return response()->json(
-            (new ItemSubcategoryTransformer((new ItemSubCategory())->instanceToArray($item_sub_category)))->toArray(),
+            (new ItemSubcategoryTransformer((new ItemSubcategory())->instanceToArray($item_sub_category)))->toArray(),
             201
         );
     }
@@ -392,7 +392,7 @@ class ItemSubcategoryController extends Controller
             UtilityResponse::notFound(trans('entities.item-subcategory'));
         }
 
-        $item_sub_category = (new ItemSubCategory())->instance(
+        $item_sub_category = (new ItemSubcategory())->instance(
             $resource_type_id,
             $resource_id,
             $item_id,
@@ -406,7 +406,7 @@ class ItemSubcategoryController extends Controller
 
 
         try {
-            (new ItemSubCategory())->find($item_subcategory_id)->delete();
+            (new ItemSubcategory())->find($item_subcategory_id)->delete();
 
             UtilityResponse::successNoContent();
         } catch (QueryException $e) {
