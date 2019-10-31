@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace App\Utilities;
 
+use App;
 use Exception;
 use Illuminate\Http\JsonResponse;
 
@@ -21,6 +22,21 @@ use Illuminate\Http\JsonResponse;
  */
 class Response
 {
+
+    static protected function addException(array $response, ?Exception $e = null): array
+    {
+        if (App::environment() !== 'production' && $e !== null) {
+            $response['exception'] = [
+                'message' => $e->getMessage(),
+                'file' => $e->getFile(),
+                'line' => $e->getLine(),
+                'trace' => $e->getTraceAsString()
+            ];
+        }
+
+        return $response;
+    }
+
     /**
      * Return not found, 404
      *
@@ -35,6 +51,8 @@ class Response
             'message' => ($type !== null) ? trans('responses.not-found-entity', ['type'=>$type]) :
                 trans('responses.not-found')
         ];
+
+        $response = self::addException($response, $e);
 
         response()->json(
             $response,
@@ -58,6 +76,8 @@ class Response
                 trans('responses.not-found')
         ];
 
+        $response = self::addException($response, $e);
+
         response()->json(
             $response,
             404
@@ -78,6 +98,8 @@ class Response
         $response = [
             'message' => (strlen($message) > 0) ? $message : trans('responses.constraint')
         ];
+
+        $response = self::addException($response, $e);
 
         response()->json(
             $response,
@@ -102,6 +124,8 @@ class Response
             'message' => trans('responses.model-select-failure'),
         ];
 
+        $response = self::addException($response, $e);
+
         response()->json(
             $response,
             500
@@ -125,6 +149,8 @@ class Response
             'message' => trans('responses.model-save-failure-update'),
         ];
 
+        $response = self::addException($response, $e);
+
         response()->json(
             $response,
             500
@@ -144,6 +170,8 @@ class Response
         $response = [
             'message' => trans('responses.authentication-required')
         ];
+
+        $response = self::addException($response, $e);
 
         response()->json(
             $response,
@@ -168,6 +196,8 @@ class Response
             'message' => trans('responses.model-save-failure-create'),
         ];
 
+        $response = self::addException($response, $e);
+
         response()->json(
             $response,
             500
@@ -189,6 +219,8 @@ class Response
             'message' => trans('responses.decode-error')
         ];
 
+        $response = self::addException($response, $e);
+
         response()->json(
             $response,
             500
@@ -207,6 +239,8 @@ class Response
     {
         $response = [];
 
+        $response = self::addException($response, $e);
+
         response()->json($response,204)->send();
         exit;
     }
@@ -222,6 +256,8 @@ class Response
     static public function successEmptyContent(bool $array = false, ?Exception $e = null): JsonResponse
     {
         $response = ($array === true ? [] : null);
+
+        $response = self::addException($response, $e);
 
         response()->json($response,200)->send();
         exit;
@@ -239,6 +275,8 @@ class Response
         $response = [
             'message' => trans('responses.patch-empty')
         ];
+
+        $response = self::addException($response, $e);
 
         response()->json(
             $response,
@@ -262,6 +300,8 @@ class Response
             'fields' => $invalid_fields
         ];
 
+        $response = self::addException($response, $e);
+
         response()->json(
             $response,
             400
@@ -281,6 +321,8 @@ class Response
         $response = [
             'message' => trans('responses.maintenance')
         ];
+
+        $response = self::addException($response, $e);
 
         response()->json(
             $response,
@@ -303,6 +345,8 @@ class Response
             'message' => trans('responses.validation'),
             'fields' => $validation_errors
         ];
+
+        $response = self::addException($response, $e);
 
         response()->json(
             $response,
