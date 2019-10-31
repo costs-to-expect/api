@@ -74,6 +74,11 @@ Route::group(
             'ResourceTypeController@optionsShow'
         );
 
+        Route::options(
+            'resource-types/{resource_type_id}/permitted-users',
+            'PermittedUserController@optionsIndex'
+        );
+
         Route::get(
             'resource-types/{resource_type_id}/categories',
             'CategoryController@index'

@@ -55,6 +55,9 @@ return [
 
     'item_transfer_POST' => 'Transfer an item to another resource',
 
+    'permitted_user_GET_index' => 'Return the permitted users',
+    'permitted_user_POST' => 'Assign a permitted user',
+
     'request_GET_access-log' => 'Return the access log, read requests',
     'request_GET_error_log' => 'Return the error log',
     'request_POST' => 'Create an error log report',
