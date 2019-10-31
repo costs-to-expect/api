@@ -114,6 +114,7 @@ is true if you are assigned to a resource type.
 | DELETE   | v2/resource-types/{resource_type_id}/categories/{category_id}/subcategories/{subcategory_id} |
 | GET/HEAD | v2/resource-types/{resource_type_id}/items |
 | OPTIONS  | v2/resource-types/{resource_type_id}/items |
+| OPTIONS  | v2/resource-types/{resource_type_id}/permitted-users |
 | GET/HEAD | v2/resource-types/{resource_type_id}/resources |
 | OPTIONS  | v2/resource-types/{resource_type_id}/resources |
 | POST     | v2/resource-types/{resource_type_id}/resources |
