@@ -15,7 +15,7 @@ use Illuminate\Support\Facades\Validator as ValidatorFacade;
  * @copyright G3D Development Limited 2018-2019
  * @license https://github.com/costs-to-expect/api/blob/master/LICENSE
  */
-class SubCategory extends BaseValidator
+class Subcategory extends BaseValidator
 {
     /**
      * Create the validation rules for the create (POST) request

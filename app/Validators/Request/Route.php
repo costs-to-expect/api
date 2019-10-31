@@ -6,11 +6,11 @@ namespace App\Validators\Request;
 use App\Validators\Request\Routes\Category;
 use App\Validators\Request\Routes\Item;
 use App\Validators\Request\Routes\ItemCategory;
-use App\Validators\Request\Routes\ItemSubCategory;
+use App\Validators\Request\Routes\ItemSubcategory;
 use App\Validators\Request\Routes\ItemType;
 use App\Validators\Request\Routes\Resource;
 use App\Validators\Request\Routes\ResourceType;
-use App\Validators\Request\Routes\SubCategory;
+use App\Validators\Request\Routes\Subcategory;
 use App\Utilities\Response as UtilityResponse;
 
 /**
@@ -82,7 +82,7 @@ class Route
     {
         if ($manage === false) {
             if (
-                SubCategory::existsToUserForViewing(
+                Subcategory::existsToUserForViewing(
                     $resource_type_id,
                     $category_id,
                     $subcategory_id,
@@ -93,7 +93,7 @@ class Route
             }
         } else {
             if (
-                SubCategory::existsToUserForManagement(
+                Subcategory::existsToUserForManagement(
                     (int) $resource_type_id,
                     (int) $category_id,
                     (int) $subcategory_id,
@@ -306,7 +306,7 @@ class Route
     ) {
         if ($manage === false) {
             if (
-                ItemSubCategory::existsToUserForViewing(
+                ItemSubcategory::existsToUserForViewing(
                     (int) $resource_type_id,
                     (int) $resource_id,
                     (int) $item_id,
@@ -319,7 +319,7 @@ class Route
             }
         } else {
             if (
-                ItemSubCategory::existsToUserForManagement(
+                ItemSubcategory::existsToUserForManagement(
                     (int) $resource_type_id,
                     (int) $resource_id,
                     (int) $item_id,

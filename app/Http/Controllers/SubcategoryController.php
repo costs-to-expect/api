@@ -14,7 +14,7 @@ use App\Validators\Request\Route;
 use App\Models\Subcategory;
 use App\Models\Transformers\Subcategory as SubcategoryTransformer;
 use App\Utilities\Response as UtilityResponse;
-use App\Validators\Request\Fields\SubCategory as SubCategoryValidator;
+use App\Validators\Request\Fields\Subcategory as SubcategoryValidator;
 use App\Validators\Request\SearchParameters;
 use App\Validators\Request\SortParameters;
 use Exception;
@@ -263,7 +263,7 @@ class SubcategoryController extends Controller
             true
         );
 
-        $validator = (new SubCategoryValidator)->create(['category_id' => $category_id]);
+        $validator = (new SubcategoryValidator)->create(['category_id' => $category_id]);
         UtilityRequest::validateAndReturnErrors($validator);
 
         try {
@@ -357,7 +357,7 @@ class SubcategoryController extends Controller
 
         UtilityRequest::checkForEmptyPatch();
 
-        $validator = (new SubCategoryValidator())->update([
+        $validator = (new SubcategoryValidator())->update([
             'category_id' => intval($category_id),
             'subcategory_id' => intval($subcategory_id)
         ]);
@@ -366,7 +366,7 @@ class SubcategoryController extends Controller
         UtilityRequest::checkForInvalidFields(
             array_merge(
                 (new Subcategory())->patchableFields(),
-                (new SubCategoryValidator)->dynamicDefinedFields()
+                (new SubcategoryValidator)->dynamicDefinedFields()
             )
         );
 

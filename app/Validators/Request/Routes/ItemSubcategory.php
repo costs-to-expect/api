@@ -12,7 +12,7 @@ use App\Models\PermittedUser;
  * @copyright G3D Development Limited 2018-2019
  * @license https://github.com/costs-to-expect/api/blob/master/LICENSE
  */
-class ItemSubCategory
+class ItemSubcategory
 {
     /**
      * Validate that the user is able to view the requested item subcategory

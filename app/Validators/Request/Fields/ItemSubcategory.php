@@ -7,7 +7,6 @@ use App\Validators\Request\Fields\Validator as BaseValidator;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Validator as ValidatorFacade;
-use Illuminate\Validation\Rule;
 
 /**
  * Validation helper class for item sub category, returns the generated validator objects
@@ -16,7 +15,7 @@ use Illuminate\Validation\Rule;
  * @copyright G3D Development Limited 2018-2019
  * @license https://github.com/costs-to-expect/api/blob/master/LICENSE
  */
-class ItemSubCategory extends BaseValidator
+class ItemSubcategory extends BaseValidator
 {
     private $category_id;
 

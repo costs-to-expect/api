@@ -14,7 +14,7 @@ use App\Models\Subcategory;
 use App\Models\Transformers\ItemSubcategory as ItemSubcategoryTransformer;
 use App\Utilities\Request as UtilityRequest;
 use App\Utilities\Response as UtilityResponse;
-use App\Validators\Request\Fields\ItemSubCategory as ItemSubCategoryValidator;
+use App\Validators\Request\Fields\ItemSubcategory as ItemSubcategoryValidator;
 use Exception;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\JsonResponse;
@@ -297,7 +297,7 @@ class ItemSubcategoryController extends Controller
             ->where('item_id', '=', $item_id)
             ->find($item_category_id);
 
-        $validator = (new ItemSubCategoryValidator)->create(['category_id' => $item_category->category_id]);
+        $validator = (new ItemSubcategoryValidator)->create(['category_id' => $item_category->category_id]);
         UtilityRequest::validateAndReturnErrors(
             $validator,
             $this->conditionalPostParameters($item_category_id)
