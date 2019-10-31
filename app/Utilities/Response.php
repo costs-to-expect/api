@@ -115,6 +115,22 @@ class Response
     }
 
     /**
+     * 403 error, authentication required
+     *
+     * @return JsonResponse
+     */
+    static public function authenticationRequired(): JsonResponse
+    {
+        response()->json(
+            [
+                'message' => trans('responses.authentication-required')
+            ],
+            403
+        )->send();
+        exit();
+    }
+
+    /**
      * 500 error, failed to save the model.
      *
      * Until we add logging this is an unknown server error, later we will
@@ -204,6 +220,22 @@ class Response
                 'fields' => $invalid_fields
             ],
             400
+        )->send();
+        exit();
+    }
+
+    /**
+     * 503, maintenance
+     *
+     * @return JsonResponse
+     */
+    static public function maintenance(): JsonResponse
+    {
+        response()->json(
+            [
+                'message' => trans('responses.maintenance')
+            ],
+            503
         )->send();
         exit();
     }
