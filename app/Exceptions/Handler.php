@@ -64,7 +64,7 @@ class Handler extends ExceptionHandler
 
         switch ($status_code) {
             case 404:
-                Response::notFound();
+                Response::notFound($exception);
                 break;
             case 503:
                 Response::maintenance();

@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace App\Utilities;
 
+use Exception;
 use Illuminate\Http\JsonResponse;
 
 /**
@@ -24,16 +25,19 @@ class Response
      * Return not found, 404
      *
      * @param string|null $type Entity type that cannot be found
+     * @param Exception|null $e
      *
      * @return JsonResponse
      */
-    static public function notFound(?string $type = null): JsonResponse
+    static public function notFound(?string $type = null, ?Exception $e = null): JsonResponse
     {
+        $response = [
+            'message' => ($type !== null) ? trans('responses.not-found-entity', ['type'=>$type]) :
+                trans('responses.not-found')
+        ];
+
         response()->json(
-            [
-                'message' => ($type !== null) ? trans('responses.not-found-entity', ['type'=>$type]) :
-                    trans('responses.not-found')
-            ],
+            $response,
             404
         )->send();
         exit;
@@ -43,16 +47,19 @@ class Response
      * Return not found, 404
      *
      * @param string|null $type Entity type that cannot be found
+     * @param Exception|null $e
      *
      * @return JsonResponse
      */
-    static public function notFoundOrNotAccessible(?string $type = null): JsonResponse
+    static public function notFoundOrNotAccessible(?string $type = null, ?Exception $e = null): JsonResponse
     {
+        $response = [
+            'message' => ($type !== null) ? trans('responses.not-found-or-not-accessible-entity', ['type'=>$type]) :
+                trans('responses.not-found')
+        ];
+
         response()->json(
-            [
-                'message' => ($type !== null) ? trans('responses.not-found-or-not-accessible-entity', ['type'=>$type]) :
-                    trans('responses.not-found')
-            ],
+            $response,
             404
         )->send();
         exit;
@@ -62,15 +69,18 @@ class Response
      * Return a foreign key constraint error, 500
      *
      * @param string $message Custom message for error
+     * @param Exception|null $e
      *
      * @return JsonResponse
      */
-    static public function foreignKeyConstraintError($message = ''): JsonResponse
+    static public function foreignKeyConstraintError($message = '', ?Exception $e = null): JsonResponse
     {
+        $response = [
+            'message' => (strlen($message) > 0) ? $message : trans('responses.constraint')
+        ];
+
         response()->json(
-            [
-                'message' => (strlen($message) > 0) ? $message : trans('responses.constraint')
-            ],
+            $response,
             500
         )->send();
         exit;
@@ -82,14 +92,18 @@ class Response
      * Until we add logging this is an unknown server error, later we will
      * add MySQL error logging
      *
+     * @param Exception|null $e
+     *
      * @return JsonResponse
      */
-    static public function failedToSelectModelForUpdate(): JsonResponse
+    static public function failedToSelectModelForUpdate(?Exception $e = null): JsonResponse
     {
+        $response = [
+            'message' => trans('responses.model-select-failure'),
+        ];
+
         response()->json(
-            [
-                'message' => trans('responses.model-select-failure'),
-            ],
+            $response,
             500
         )->send();
         exit();
@@ -101,14 +115,18 @@ class Response
      * Until we add logging this is an unknown server error, later we will
      * add MySQL error logging
      *
+     * @param Exception|null $e
+     *
      * @return JsonResponse
      */
-    static public function failedToSaveModelForUpdate(): JsonResponse
+    static public function failedToSaveModelForUpdate(?Exception $e = null): JsonResponse
     {
+        $response = [
+            'message' => trans('responses.model-save-failure-update'),
+        ];
+
         response()->json(
-            [
-                'message' => trans('responses.model-save-failure-update'),
-            ],
+            $response,
             500
         )->send();
         exit();
@@ -117,14 +135,18 @@ class Response
     /**
      * 403 error, authentication required
      *
+     * @param Exception|null $e
+     *
      * @return JsonResponse
      */
-    static public function authenticationRequired(): JsonResponse
+    static public function authenticationRequired(?Exception $e = null): JsonResponse
     {
+        $response = [
+            'message' => trans('responses.authentication-required')
+        ];
+
         response()->json(
-            [
-                'message' => trans('responses.authentication-required')
-            ],
+            $response,
             403
         )->send();
         exit();
@@ -136,14 +158,18 @@ class Response
      * Until we add logging this is an unknown server error, later we will
      * add MySQL error logging
      *
+     * @param Exception|null $e
+     *
      * @return JsonResponse
      */
-    static public function failedToSaveModelForCreate(): JsonResponse
+    static public function failedToSaveModelForCreate(?Exception $e = null): JsonResponse
     {
+        $response = [
+            'message' => trans('responses.model-save-failure-create'),
+        ];
+
         response()->json(
-            [
-                'message' => trans('responses.model-save-failure-create'),
-            ],
+            $response,
             500
         )->send();
         exit();
@@ -153,14 +179,18 @@ class Response
      * 404 error, unable to decode the selected value, hasher missing or value
      * invalid
      *
+     * @param Exception|null $e
+     *
      * @return JsonResponse
      */
-    static public function unableToDecode(): JsonResponse
+    static public function unableToDecode(?Exception $e = null): JsonResponse
     {
+        $response = [
+            'message' => trans('responses.decode-error')
+        ];
+
         response()->json(
-            [
-                'message' => trans('responses.decode-error')
-            ],
+            $response,
             500
         )->send();
         exit;
@@ -169,11 +199,15 @@ class Response
     /**
      * 204, successful request, no content to return, typically a PATCH
      *
+     * @param Exception|null $e
+     *
      * @return JsonResponse
      */
-    static public function successNoContent(): JsonResponse
+    static public function successNoContent(?Exception $e = null): JsonResponse
     {
-        response()->json([],204)->send();
+        $response = [];
+
+        response()->json($response,204)->send();
         exit;
     }
 
@@ -181,25 +215,33 @@ class Response
      * 200, successful request, no content to return
      *
      * @param boolean $array Return empty array, if false empty object
+     * @param Exception|null $e
+     *
      * @return JsonResponse
      */
-    static public function successEmptyContent(bool $array = false): JsonResponse
+    static public function successEmptyContent(bool $array = false, ?Exception $e = null): JsonResponse
     {
-        response()->json(($array === true ? [] : null),200)->send();
+        $response = ($array === true ? [] : null);
+
+        response()->json($response,200)->send();
         exit;
     }
 
     /**
      * 400 error, nothing to PATCH, bad request
      *
+     * @param Exception|null $e
+     *
      * @return JsonResponse
      */
-    static public function nothingToPatch()
+    static public function nothingToPatch(?Exception $e = null)
     {
+        $response = [
+            'message' => trans('responses.patch-empty')
+        ];
+
         response()->json(
-            [
-                'message' => trans('responses.patch-empty')
-            ],
+            $response,
             400
         )->send();
         exit();
@@ -209,16 +251,19 @@ class Response
      * 400 error, invalid fields in the request, therefore bad request
      *
      * @param array $invalid_fields An array of invalid fields
+     * @param Exception|null $e
      *
      * @return JsonResponse
      */
-    static public function invalidFieldsInRequest(array $invalid_fields): JsonResponse
+    static public function invalidFieldsInRequest(array $invalid_fields, ?Exception $e = null): JsonResponse
     {
+        $response = [
+            'message' => trans('responses.patch-invalid'),
+            'fields' => $invalid_fields
+        ];
+
         response()->json(
-            [
-                'message' => trans('responses.patch-invalid'),
-                'fields' => $invalid_fields
-            ],
+            $response,
             400
         )->send();
         exit();
@@ -227,14 +272,18 @@ class Response
     /**
      * 503, maintenance
      *
+     * @param Exception|null $e
+     *
      * @return JsonResponse
      */
-    static public function maintenance(): JsonResponse
+    static public function maintenance(?Exception $e = null): JsonResponse
     {
+        $response = [
+            'message' => trans('responses.maintenance')
+        ];
+
         response()->json(
-            [
-                'message' => trans('responses.maintenance')
-            ],
+            $response,
             503
         )->send();
         exit();
@@ -244,16 +293,19 @@ class Response
      * 422 error, validation error
      *
      * @param array $validation_errors
+     * @param Exception|null $e
      *
      * @return JsonResponse
      */
-    static public function validationErrors(array $validation_errors): JsonResponse
+    static public function validationErrors(array $validation_errors, ?Exception $e = null): JsonResponse
     {
+        $response = [
+            'message' => trans('responses.validation'),
+            'fields' => $validation_errors
+        ];
+
         response()->json(
-            [
-                'message' => trans('responses.validation'),
-                'fields' => $validation_errors
-            ],
+            $response,
             422
         )->send();
         exit();

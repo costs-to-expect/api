@@ -313,7 +313,7 @@ class CategoryController extends Controller
         } catch (QueryException $e) {
             UtilityResponse::foreignKeyConstraintError();
         } catch (Exception $e) {
-            UtilityResponse::notFound(trans('entities.category'));
+            UtilityResponse::notFound(trans('entities.category'), $e);
         }
     }
 
