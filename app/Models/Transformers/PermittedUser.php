@@ -24,7 +24,7 @@ class PermittedUser extends Transformer
     public function toArray(): array
     {
         return [
-            'id' => $this->hash->resource()->encode($this->data_to_transform['permitted_user_id']),
+            'id' => $this->hash->permittedUser()->encode($this->data_to_transform['permitted_user_id']),
             'name' => $this->data_to_transform['permitted_user_name'],
             'email' => $this->data_to_transform['permitted_user_email'],
             'created' => $this->data_to_transform['permitted_user_created_at']

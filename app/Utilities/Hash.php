@@ -44,6 +44,7 @@ class Hash
         $this->hashers['item_category'] = new Hashids($config['item_category'], $min_length);
         $this->hashers['item_sub_category'] = new Hashids($config['item_subcategory'], $min_length);
         $this->hashers['item_type'] = new Hashids($config['item_type'], $min_length);
+        $this->hashers['permitted_user'] = new Hashids($config['permitted_user'], $min_length);
     }
 
     /**
@@ -159,5 +160,15 @@ class Hash
     public function itemType(): Hashids
     {
         return $this->hashers['item_type'];
+    }
+
+    /**
+     * Helper method to return the permitted user
+     *
+     * @return Hashids
+     */
+    public function permittedUser(): Hashids
+    {
+        return $this->hashers['permitted_user'];
     }
 }
