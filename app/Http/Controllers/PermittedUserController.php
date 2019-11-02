@@ -2,11 +2,18 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\PermittedUser;
+use App\Models\Transformers\PermittedUser as PermittedUserTransformer;
 use App\Option\Get;
 use App\Option\Post;
+use App\Utilities\Header;
+use App\Utilities\Pagination as UtilityPagination;
 use App\Utilities\RoutePermission;
 use App\Validators\Request\Route;
+use App\Validators\Request\SearchParameters;
+use App\Validators\Request\SortParameters;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\Config;
 
 /**
  * Manage permitted users
@@ -20,7 +27,77 @@ class PermittedUserController extends Controller
     protected $allow_entire_collection = true;
 
     /**
-     * Generate the OPTIONS request for the resource list
+     * Return all the permitted users for the given resource type
+     *
+     * @param string $resource_type_id
+     *
+     * @return JsonResponse
+     */
+    public function index(string $resource_type_id): JsonResponse
+    {
+        Route::resourceType(
+            $resource_type_id,
+            $this->permitted_resource_types
+        );
+
+        $search_parameters = SearchParameters::fetch(
+            Config::get('api.permitted-user.searchable')
+        );
+
+        $total = (new PermittedUser())->totalCount(
+            $resource_type_id,
+            $search_parameters
+        );
+
+        $sort_parameters = SortParameters::fetch(
+            Config::get('api.resource.sortable')
+        );
+
+        $pagination = UtilityPagination::init(
+                request()->path(),
+                $total,
+                10,
+                $this->allow_entire_collection
+            )->
+            setSearchParameters($search_parameters)->
+            setSortParameters($sort_parameters)->
+            paging();
+
+        $permitted_users = (new PermittedUser())->paginatedCollection(
+            $resource_type_id,
+            $pagination['offset'],
+            $pagination['limit'],
+            $search_parameters,
+            $sort_parameters
+        );
+
+        $headers = new Header();
+        $headers->collection($pagination, count($permitted_users), $total);
+
+        $sort_header = SortParameters::xHeader();
+        if ($sort_header !== null) {
+            $headers->addSort($sort_header);
+        }
+
+        $search_header = SearchParameters::xHeader();
+        if ($search_header !== null) {
+            $headers->addSearch($search_header);
+        }
+
+        return response()->json(
+            array_map(
+                function($permitted_user) {
+                    return (new PermittedUserTransformer($permitted_user))->toArray();
+                },
+                $permitted_users
+            ),
+            200,
+            $headers->headers()
+        );
+    }
+
+    /**
+     * Generate the OPTIONS request for the permitted users collection
      *
      * @param string $resource_type_id
      *
