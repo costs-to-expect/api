@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace App\Validators\Request\Routes;
 
-use App\Models\PermittedUser;
+use App\Models\ResourceTypeAccess;
 
 /**
  * Validate the route params to an item category
@@ -43,7 +43,7 @@ class ItemSubcategory
             $item_id === 'nill' ||
             $item_category_id === 'nill' ||
             $item_subcategory_id === 'nill' ||
-            (new PermittedUser())->itemSubcategoryExistsToUser(
+            (new ResourceTypeAccess())->itemSubcategoryExistsToUser(
                 $resource_type_id,
                 $resource_id,
                 $item_id,
@@ -86,7 +86,7 @@ class ItemSubcategory
             $item_id === 'nill' ||
             $item_category_id === 'nill' ||
             $item_subcategory_id === 'nill' ||
-            (new PermittedUser())->itemSubcategoryExistsToUser(
+            (new ResourceTypeAccess())->itemSubcategoryExistsToUser(
                 $resource_type_id,
                 $resource_id,
                 $item_id,

@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\ItemType;
-use App\Models\PermittedUser;
+use App\Models\ResourceTypeAccess;
 use App\Models\Resource;
 use App\Models\ResourceTypeItemType;
 use App\Option\Delete;
@@ -248,7 +248,7 @@ class ResourceTypeController extends Controller
             ]);
             $resource_type->save();
 
-            $permitted_users = new PermittedUser([
+            $permitted_users = new ResourceTypeAccess([
                 'resource_type_id' => $resource_type->id,
                 'user_id' => Auth::user()->id
             ]);
@@ -294,7 +294,7 @@ class ResourceTypeController extends Controller
 
         try {
             (new ResourceTypeItemType())->instance($resource_type_id)->delete();
-            (new PermittedUser())->instance($resource_type_id, Auth::user()->id)->delete();
+            (new ResourceTypeAccess())->instance($resource_type_id, Auth::user()->id)->delete();
             (new ResourceType())->find($resource_type_id)->delete();
             UtilityResponse::successNoContent();
         } catch (QueryException $e) {

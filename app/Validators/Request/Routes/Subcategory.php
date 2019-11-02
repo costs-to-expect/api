@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace App\Validators\Request\Routes;
 
-use App\Models\PermittedUser;
+use App\Models\ResourceTypeAccess;
 
 /**
  * Validate the route params to a sub category
@@ -36,7 +36,7 @@ class Subcategory
             $resource_type_id === 'nill' ||
             $category_id === 'nill' ||
             $subcategory_id === 'nill' ||
-            (new PermittedUser())->subcategoryExistsToUser(
+            (new ResourceTypeAccess())->subcategoryExistsToUser(
                 $resource_type_id,
                 $category_id,
                 $subcategory_id,
@@ -71,7 +71,7 @@ class Subcategory
             $resource_type_id === 'nill' ||
             $category_id === 'nill' ||
             $subcategory_id === 'nill' ||
-            (new PermittedUser())->subcategoryExistsToUser(
+            (new ResourceTypeAccess())->subcategoryExistsToUser(
                 $resource_type_id,
                 $category_id,
                 $subcategory_id,

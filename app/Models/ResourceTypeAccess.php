@@ -15,7 +15,7 @@ use Illuminate\Database\Query\Builder as QueryBuilder;
  * @copyright G3D Development Limited 2018-2019
  * @license https://github.com/costs-to-expect/api/blob/master/LICENSE
  */
-class PermittedUser extends Model
+class ResourceTypeAccess extends Model
 {
     protected $table = 'permitted_user';
 
@@ -27,9 +27,9 @@ class PermittedUser extends Model
      * @param integer $resource_type_id
      * @param integer $user_id
      *
-     * @return PermittedUser|null
+     * @return ResourceTypeAccess|null
      */
-    public function instance(int $resource_type_id, int $user_id): ?PermittedUser
+    public function instance(int $resource_type_id, int $user_id): ?ResourceTypeAccess
     {
         return $this->where('resource_type_id', '=', $resource_type_id)->
             where('user_id', '=', $user_id)->

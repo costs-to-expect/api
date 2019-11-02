@@ -48,7 +48,7 @@ class ResourceTypeItemType extends Model
      *
      * @param integer $resource_type_id
      *
-     * @return PermittedUser|null
+     * @return ResourceTypeAccess|null
      */
     public function instance(int $resource_type_id): ?ResourceTypeItemType
     {

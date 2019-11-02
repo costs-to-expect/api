@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace App\Validators\Request\Routes;
 
-use App\Models\PermittedUser;
+use App\Models\ResourceTypeAccess;
 
 /**
  * Validate the route params to an item
@@ -36,7 +36,7 @@ class Item
             $resource_type_id === 'nill' ||
             $resource_id === 'nill' ||
             $item_id === 'nill' ||
-            (new PermittedUser())->itemExistsToUser(
+            (new ResourceTypeAccess())->itemExistsToUser(
                 $resource_type_id,
                 $resource_id,
                 $item_id,
@@ -71,7 +71,7 @@ class Item
             $resource_type_id === 'nill' ||
             $resource_id === 'nill' ||
             $item_id === 'nill' ||
-            (new PermittedUser())->itemExistsToUser(
+            (new ResourceTypeAccess())->itemExistsToUser(
                 $resource_type_id,
                 $resource_id,
                 $item_id,

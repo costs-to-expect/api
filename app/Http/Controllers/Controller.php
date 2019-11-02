@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\PermittedUser;
+use App\Models\ResourceTypeAccess;
 use App\Utilities\Hash;
 use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Http\JsonResponse;
@@ -54,7 +54,7 @@ class Controller extends BaseController
     {
         if (auth()->guard('api')->check() === true && auth('api')->user() !== null) {
             $this->user_id = auth('api')->user()->id;
-            $this->permitted_resource_types = (new PermittedUser())->permittedResourceTypes($this->user_id);
+            $this->permitted_resource_types = (new ResourceTypeAccess())->permittedResourceTypes($this->user_id);
         }
 
         $this->include_public = true;
