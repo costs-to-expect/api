@@ -50,7 +50,7 @@ class PermittedUserController extends Controller
         );
 
         $sort_parameters = SortParameters::fetch(
-            Config::get('api.resource.sortable')
+            Config::get('api.permitted-user.sortable')
         );
 
         $pagination = UtilityPagination::init(
