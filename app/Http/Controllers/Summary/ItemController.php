@@ -167,7 +167,7 @@ class ItemController extends Controller
 
         return response()->json(
             [
-                'total' => number_format($summary[0]['actualised_total'], 2, '.', '')
+                'total' => number_format($summary[0]['total'], 2, '.', '')
             ],
             200,
             $headers->headers()
