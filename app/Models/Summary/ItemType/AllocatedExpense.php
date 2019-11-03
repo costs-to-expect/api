@@ -24,8 +24,8 @@ class AllocatedExpense extends Model
     /**
      * Return the summary of items, grouped by category
      *
-     * @param integer $resource_type_id
-     * @param integer $resource_id
+     * @param int $resource_type_id
+     * @param int $resource_id
      * @param array $parameters
      *
      * @return array
@@ -62,16 +62,17 @@ class AllocatedExpense extends Model
     /**
      * Return the summary for a specific category
      *
-     * @param integer $resource_type_id
-     * @param integer $resource_id
-     * @param integer $category_id
+     * @param int $resource_type_id
+     * @param int $resource_id
+     * @param int $category_id
      * @param array $parameters
      *
      * @return array
      */
     public function categorySummary(
         int $resource_type_id,
-        int $resource_id, $category_id,
+        int $resource_id,
+        int $category_id,
         array $parameters = []
     ): array
     {
@@ -102,12 +103,12 @@ class AllocatedExpense extends Model
     /**
      * Return a filter summary
      *
-     * @param integer $resource_type_id
-     * @param integer $resource_id
-     * @param integer|null $category_id
-     * @param integer|null $subcategory_id
-     * @param integer|null $year
-     * @param integer|null $month
+     * @param int $resource_type_id
+     * @param int $resource_id
+     * @param int|null $category_id
+     * @param int|null $subcategory_id
+     * @param int|null $year
+     * @param int|null $month
      * @param array $parameters
      * @param array $search_parameters
      *
@@ -163,9 +164,9 @@ class AllocatedExpense extends Model
     /**
      * Return a monthly summary
      *
-     * @param integer $resource_type_id
-     * @param integer $resource_id
-     * @param integer $year
+     * @param int $resource_type_id
+     * @param int $resource_id
+     * @param int $year
      * @param array $parameters
      *
      * @return array
@@ -197,10 +198,10 @@ class AllocatedExpense extends Model
     /**
      * Return a summary for a specific month
      *
-     * @param integer $resource_type_id
-     * @param integer $resource_id
-     * @param integer $year
-     * @param integer $month
+     * @param int $resource_type_id
+     * @param int $resource_id
+     * @param int $year
+     * @param int $month
      * @param array $parameters
      *
      * @return array
