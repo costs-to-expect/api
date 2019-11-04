@@ -28,12 +28,11 @@ use Illuminate\Http\JsonResponse;
  */
 class ItemController extends Controller
 {
-    private $resource_type_id;
-    private $resource_id;
     private $model;
 
     /**
-     * Return the TCO for the resource
+     * Return the TCO for the resource or pass the request off to the relevant
+     * method
      *
      * @param string $resource_type_id
      * @param string $resource_id
@@ -49,9 +48,7 @@ class ItemController extends Controller
         );
 
         $item_interface = ItemInterfaceFactory::summaryItem($resource_type_id);
-
-        $this->resource_type_id = $resource_type_id;
-        $this->resource_id = $resource_id;
+        $this->model = $item_interface->model();
 
         $collection_parameters = Parameters::fetch(
             $item_interface->collectionParametersKeys(),
@@ -65,7 +62,11 @@ class ItemController extends Controller
 
         if (array_key_exists('years', $collection_parameters) === true &&
             General::booleanValue($collection_parameters['years']) === true) {
-            return $this->yearsSummary();
+            return $this->yearsSummary(
+                (int) $resource_type_id,
+                (int) $resource_id,
+                $collection_parameters
+            );
         } else if (
             array_key_exists('year', $collection_parameters) === true &&
             array_key_exists('category', $collection_parameters) === false &&
@@ -74,20 +75,37 @@ class ItemController extends Controller
         ) {
             if (array_key_exists('months', $collection_parameters) === true &&
                 General::booleanValue($collection_parameters['months']) === true) {
-                return $this->monthsSummary($collection_parameters['year']);
+                return $this->monthsSummary(
+                    (int) $resource_type_id,
+                    (int) $resource_id,
+                    (int) $collection_parameters['year'],
+                    $collection_parameters
+                );
             } else if (array_key_exists('month', $collection_parameters) === true) {
                 return $this->monthSummary(
-                    $collection_parameters['year'],
-                    $collection_parameters['month']
+                    (int) $resource_type_id,
+                    (int) $resource_id,
+                    (int) $collection_parameters['year'],
+                    (int) $collection_parameters['month'],
+                    $collection_parameters
                 );
             } else {
-                return $this->yearSummary($collection_parameters['year']);
+                return $this->yearSummary(
+                    (int) $resource_type_id,
+                    (int) $resource_id,
+                    (int) $collection_parameters['year'],
+                    $collection_parameters
+                );
             }
         }
 
         if (array_key_exists('categories', $collection_parameters) === true &&
             General::booleanValue($collection_parameters['categories']) === true) {
-            return $this->categoriesSummary();
+            return $this->categoriesSummary(
+                (int) $resource_type_id,
+                (int) $resource_id,
+                $collection_parameters
+            );
         } else if (
             array_key_exists('category', $collection_parameters) === true &&
             array_key_exists('year', $collection_parameters) === false &&
@@ -97,19 +115,25 @@ class ItemController extends Controller
             if (array_key_exists('subcategories', $collection_parameters) === true &&
                 General::booleanValue($collection_parameters['subcategories']) === true) {
                 return $this->subcategoriesSummary(
-                    $resource_type_id,
-                    $collection_parameters['category']
+                    (int) $resource_type_id,
+                    (int) $resource_id,
+                    (int) $collection_parameters['category'],
+                    $collection_parameters
                 );
             } else if (array_key_exists('subcategory', $collection_parameters) === true) {
                 return $this->subcategorySummary(
-                    $resource_type_id,
-                    $collection_parameters['category'],
-                    $collection_parameters['subcategory']
+                    (int) $resource_type_id,
+                    (int) $resource_id,
+                    (int) $collection_parameters['category'],
+                    (int) $collection_parameters['subcategory'],
+                    $collection_parameters
                 );
             } else {
                 return $this->categorySummary(
-                    $resource_type_id,
-                    $collection_parameters['category']
+                    (int) $resource_type_id,
+                    (int) $resource_id,
+                    (int) $collection_parameters['category'],
+                    $collection_parameters
                 );
             }
         }
@@ -122,28 +146,43 @@ class ItemController extends Controller
             count($search_parameters) > 0
         ) {
             return $this->filteredSummary(
+                (int) $resource_type_id,
+                (int) $resource_id,
                 (array_key_exists('category', $collection_parameters) ? $collection_parameters['category'] : null),
                 (array_key_exists('subcategory', $collection_parameters) ? $collection_parameters['subcategory'] : null),
                 (array_key_exists('year', $collection_parameters) ? $collection_parameters['year'] : null),
                 (array_key_exists('month', $collection_parameters) ? $collection_parameters['month'] : null),
+                $collection_parameters,
                 (count($search_parameters) > 0 ? $search_parameters : [])
             );
         }
 
-        return $this->tcoSummary();
+        return $this->tcoSummary(
+            (int) $resource_type_id,
+            (int) $resource_id,
+            $collection_parameters
+        );
     }
 
     /**
      * Return the total summary for a resource, total cost of ownership
      *
+     * @param int $resource_type_id
+     * @param int $resource_id
+     * @param array $parameters
+     *
      * @return JsonResponse
      */
-    private function tcoSummary(): JsonResponse
+    private function tcoSummary(
+        int $resource_type_id,
+        int $resource_id,
+        array $parameters
+    ): JsonResponse
     {
         $summary = (new Item())->summary(
-            $this->resource_type_id,
-            $this->resource_id,
-            $this->include_unpublished
+            $resource_type_id,
+            $resource_id,
+            $parameters
         );
 
         if (count($summary) === 0) {
@@ -171,14 +210,22 @@ class ItemController extends Controller
     /**
      * Return the annualised summary for a resource
      *
+     * @param int $resource_type_id
+     * @param int $resource_id
+     * @param array $parameters
+     *
      * @return JsonResponse
      */
-    private function yearsSummary(): JsonResponse
+    private function yearsSummary(
+        int $resource_type_id,
+        int $resource_id,
+        array $parameters
+    ): JsonResponse
     {
         $summary = (new Item())->yearsSummary(
-            $this->resource_type_id,
-            $this->resource_id,
-            $this->include_unpublished
+            $resource_type_id,
+            $resource_id,
+            $parameters
         );
 
         if (count($summary) === 0) {
@@ -209,17 +256,25 @@ class ItemController extends Controller
     /**
      * Return the total cost for a specific year
      *
-     * @param integer $year
+     * @param int $resource_type_id,
+     * @param int $resource_id
+     * @param int $year
+     * @param array $parameters
      *
      * @return JsonResponse
      */
-    private function yearSummary(int $year): JsonResponse
+    private function yearSummary(
+        int $resource_type_id,
+        int $resource_id,
+        int $year,
+        array $parameters
+    ): JsonResponse
     {
         $summary = (new Item())->yearSummary(
-            $this->resource_type_id,
-            $this->resource_id,
+            $resource_type_id,
+            $resource_id,
             $year,
-            $this->include_unpublished
+            $parameters
         );
 
         if (count($summary) === 0) {
@@ -245,17 +300,25 @@ class ItemController extends Controller
     /**
      * Return the monthly summary for a specific year
      *
-     * @param integer $year
+     * @param int $resource_type_id
+     * @param int $resource_id
+     * @param int $year
+     * @param array $parameters
      *
      * @return JsonResponse
      */
-    private function monthsSummary(int $year): JsonResponse
+    private function monthsSummary(
+        int $resource_type_id,
+        int $resource_id,
+        int $year,
+        array $parameters
+    ): JsonResponse
     {
         $summary = (new Item())->monthsSummary(
-            $this->resource_type_id,
-            $this->resource_id,
+            $resource_type_id,
+            $resource_id,
             $year,
-            $this->include_unpublished
+            $parameters
         );
 
         if (count($summary) === 0) {
@@ -286,19 +349,28 @@ class ItemController extends Controller
     /**
      * Return the month summary for a specific year and month
      *
-     * @param integer $year
-     * @param integer $month
+     * @param int $resource_type_id
+     * @param int $resource_id
+     * @param int $year
+     * @param int $month
+     * @param array $parameters
      *
      * @return JsonResponse
      */
-    private function monthSummary(int $year, int $month): JsonResponse
+    private function monthSummary(
+        int $resource_type_id,
+        int $resource_id,
+        int $year,
+        int $month,
+        array $parameters
+    ): JsonResponse
     {
         $summary = (new Item())->monthSummary(
-            $this->resource_type_id,
-            $this->resource_id,
+            $resource_type_id,
+            $resource_id,
             $year,
             $month,
-            $this->include_unpublished
+            $parameters
         );
 
         if (count($summary) === 0) {
@@ -324,14 +396,22 @@ class ItemController extends Controller
     /**
      * Return the categories summary for a resource
      *
+     * @param int $resource_type_id
+     * @param int $resource_id
+     * @param array $parameters
+     *
      * @return JsonResponse
      */
-    private function categoriesSummary(): JsonResponse
+    private function categoriesSummary(
+        int $resource_type_id,
+        int $resource_id,
+        array $parameters
+    ): JsonResponse
     {
         $summary = (new Item())->categoriesSummary(
-            $this->resource_type_id,
-            $this->resource_id,
-            $this->include_unpublished
+            $resource_type_id,
+            $resource_id,
+            $parameters
         );
 
         if (count($summary) === 0) {
@@ -362,31 +442,37 @@ class ItemController extends Controller
     /**
      * Return a filtered summary
      *
+     * @param int $resource_type_id
+     * @param int $resource_id
      * @param int|null $category_id
      * @param int|null $subcategory_id
      * @param int|null $year
      * @param int|null $month
+     * @param array $parameters
      * @param array $search_parameters
      *
      * @return JsonResponse
      */
     private function filteredSummary(
+        int $resource_type_id,
+        int $resource_id,
         int $category_id = null,
         int $subcategory_id = null,
         int $year = null,
         int $month = null,
+        array $parameters = [],
         array $search_parameters = []
     ): JsonResponse
     {
         $summary = (new Item())->filteredSummary(
-            $this->resource_type_id,
-            $this->resource_id,
+            $resource_type_id,
+            $resource_id,
             $category_id,
             $subcategory_id,
             $year,
             $month,
+            $parameters,
             $search_parameters,
-            $this->include_unpublished
         );
 
         if (count($summary) === 0) {
@@ -414,24 +500,25 @@ class ItemController extends Controller
     /**
      * Return the category summary for a resource
      *
-     * @param integer $resource_type_id
-     * @param integer $category_id
+     * @param int $resource_type_id
+     * @param int $resource_id
+     * @param int $category_id
+     * @param array $parameters
      *
      * @return JsonResponse
      */
-    private function categorySummary(int $resource_type_id, int $category_id): JsonResponse
+    private function categorySummary(
+        int $resource_type_id,
+        int $resource_id,
+        int $category_id,
+        array $parameters
+    ): JsonResponse
     {
-        Route::category(
+         $summary = (new Item())->categorySummary(
             $resource_type_id,
+            $resource_id,
             $category_id,
-            $this->permitted_resource_types
-        );
-
-        $summary = (new Item())->categorySummary(
-            $this->resource_type_id,
-            $this->resource_id,
-            $category_id,
-            $this->include_unpublished
+            $parameters
         );
 
         if (count($summary) === 0) {
@@ -457,24 +544,25 @@ class ItemController extends Controller
     /**
      * Return the subcategories summary for a category
      *
-     * @param integer $resource_type_id
-     * @param integer $category_id
+     * @param int $resource_type_id
+     * @param int $resource_id
+     * @param int $category_id
+     * @param array $parameters
      *
      * @return JsonResponse
      */
-    private function subcategoriesSummary(int $resource_type_id, int $category_id): JsonResponse
+    private function subcategoriesSummary(
+        int $resource_type_id,
+        int $resource_id,
+        int $category_id,
+        array $parameters
+    ): JsonResponse
     {
-        Route::category(
-            $resource_type_id,
-            $category_id,
-            $this->permitted_resource_types
-        );
-
         $summary = (new Item())->subCategoriesSummary(
-            $this->resource_type_id,
-            $this->resource_id,
+            $resource_type_id,
+            $resource_id,
             $category_id,
-            $this->include_unpublished
+            $parameters
         );
 
         if (count($summary) === 0) {
@@ -505,31 +593,28 @@ class ItemController extends Controller
     /**
      * Return the subcategories summary for a category
      *
-     * @param integer $resource_type_id
-     * @param integer $category_id
-     * @param integer $subcategory_id
+     * @param int $resource_type_id
+     * @param int $resource_id
+     * @param int $category_id
+     * @param int $subcategory_id
+     * @param array $parameters
      *
      * @return JsonResponse
      */
     private function subcategorySummary(
         int $resource_type_id,
+        int $resource_id,
         int $category_id,
-        int $subcategory_id
+        int $subcategory_id,
+        array $parameters
     ): JsonResponse
     {
-        Route::subcategory(
-            $resource_type_id,
-            $category_id,
-            $subcategory_id,
-            $this->permitted_resource_types
-        );
-
         $summary = (new Item())->subCategorySummary(
-            $this->resource_type_id,
-            $this->resource_id,
+            $resource_type_id,
+            $resource_id,
             $category_id,
             $subcategory_id,
-            $this->include_unpublished
+            $parameters
         );
 
         if (count($summary) === 0) {
@@ -568,7 +653,7 @@ class ItemController extends Controller
             $this->permitted_resource_types
         );
 
-        $item_interface = ItemInterfaceFactory::item($resource_type_id);
+        $item_interface = ItemInterfaceFactory::summaryItem($resource_type_id);
 
         $permissions = RoutePermission::resource(
             $resource_type_id,
@@ -577,7 +662,7 @@ class ItemController extends Controller
         );
 
         $get = Get::init()->
-            setParameters('api.item.summary-parameters.collection')->
+            setParameters($item_interface->collectionParametersConfig())->
             setSearchable($item_interface->searchParametersConfig())->
             setDescription('route-descriptions.summary_GET_resource-type_resource_items')->
             setAuthenticationStatus($permissions['view'])->
