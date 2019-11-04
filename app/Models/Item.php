@@ -3,12 +3,8 @@ declare(strict_types=1);
 
 namespace App\Models;
 
-use App\Utilities\General;
-use App\Utilities\Model as ModelUtility;
 use Illuminate\Database\Query\Builder as QueryBuilder;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Facades\Config;
-use Illuminate\Support\Facades\DB;
 
 /**
  * Item model
