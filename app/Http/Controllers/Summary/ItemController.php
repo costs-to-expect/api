@@ -55,102 +55,158 @@ class ItemController extends Controller
             (int) $resource_id
         );
 
+        $years = false;
+        $months = false;
+        $categories = false;
+        $subcategories = false;
+        $year = null;
+        $month = null;
+        $category = null;
+        $subcategory = null;
+
+        if (
+            array_key_exists('years', $collection_parameters) === true &&
+            General::booleanValue($collection_parameters['years']) === true
+        ) {
+            $years = true;
+        }
+
+        if (
+            array_key_exists('months', $collection_parameters) === true &&
+            General::booleanValue($collection_parameters['months']) === true
+        ) {
+            $months = true;
+        }
+
+        if (array_key_exists('categories', $collection_parameters) === true &&
+            General::booleanValue($collection_parameters['categories']) === true) {
+            $categories = true;
+        }
+
+        if (array_key_exists('subcategories', $collection_parameters) === true &&
+                General::booleanValue($collection_parameters['subcategories']) === true) {
+            $subcategories = true;
+        }
+
+        if (array_key_exists('year', $collection_parameters) === true) {
+            $year = (int) $collection_parameters['year'];
+        }
+
+        if (array_key_exists('month', $collection_parameters) === true) {
+            $month = (int) $collection_parameters['month'];
+        }
+
+        if (array_key_exists('category', $collection_parameters) === true) {
+            $category = (int) $collection_parameters['category'];
+        }
+
+        if (array_key_exists('subcategory', $collection_parameters) === true) {
+            $subcategory = (int) $collection_parameters['subcategory'];
+        }
+
+        unset(
+            $collection_parameters['years'],
+            $collection_parameters['year'],
+            $collection_parameters['months'],
+            $collection_parameters['month'],
+            $collection_parameters['categories'],
+            $collection_parameters['category'],
+            $collection_parameters['subcategories'],
+            $collection_parameters['subcategory']
+        );
+
         $search_parameters = SearchParameters::fetch(
             $item_interface->searchParameters()
         );
 
-        if (array_key_exists('years', $collection_parameters) === true &&
-            General::booleanValue($collection_parameters['years']) === true) {
+        if ($years === true) {
             return $this->yearsSummary(
                 (int) $resource_type_id,
                 (int) $resource_id,
                 $collection_parameters
             );
         } else if (
-            array_key_exists('year', $collection_parameters) === true &&
-            array_key_exists('category', $collection_parameters) === false &&
-            array_key_exists('subcategory', $collection_parameters) === false &&
+            $year !== null &&
+            $category === null &&
+            $subcategory === null &&
             count($search_parameters) === 0
         ) {
-            if (array_key_exists('months', $collection_parameters) === true &&
-                General::booleanValue($collection_parameters['months']) === true) {
+            if ($months === true) {
                 return $this->monthsSummary(
                     (int) $resource_type_id,
                     (int) $resource_id,
-                    (int) $collection_parameters['year'],
+                    $year,
                     $collection_parameters
                 );
-            } else if (array_key_exists('month', $collection_parameters) === true) {
+            } else if ($month === true) {
                 return $this->monthSummary(
                     (int) $resource_type_id,
                     (int) $resource_id,
-                    (int) $collection_parameters['year'],
-                    (int) $collection_parameters['month'],
+                    $year,
+                    $month,
                     $collection_parameters
                 );
             } else {
                 return $this->yearSummary(
                     (int) $resource_type_id,
                     (int) $resource_id,
-                    (int) $collection_parameters['year'],
+                    $year,
                     $collection_parameters
                 );
             }
         }
 
-        if (array_key_exists('categories', $collection_parameters) === true &&
-            General::booleanValue($collection_parameters['categories']) === true) {
+        if ($categories === true) {
             return $this->categoriesSummary(
                 (int) $resource_type_id,
                 (int) $resource_id,
                 $collection_parameters
             );
         } else if (
-            array_key_exists('category', $collection_parameters) === true &&
-            array_key_exists('year', $collection_parameters) === false &&
-            array_key_exists('month', $collection_parameters) === false &&
+            $category !== null &&
+            $year === null &&
+            $month === null &&
             count($search_parameters) === 0
         ) {
-            if (array_key_exists('subcategories', $collection_parameters) === true &&
-                General::booleanValue($collection_parameters['subcategories']) === true) {
+            if ($subcategories === true) {
                 return $this->subcategoriesSummary(
                     (int) $resource_type_id,
                     (int) $resource_id,
-                    (int) $collection_parameters['category'],
+                    $category,
                     $collection_parameters
                 );
-            } else if (array_key_exists('subcategory', $collection_parameters) === true) {
+            } else if ($subcategory !== null) {
                 return $this->subcategorySummary(
                     (int) $resource_type_id,
                     (int) $resource_id,
-                    (int) $collection_parameters['category'],
-                    (int) $collection_parameters['subcategory'],
+                    $category,
+                    $subcategory,
                     $collection_parameters
                 );
             } else {
                 return $this->categorySummary(
                     (int) $resource_type_id,
                     (int) $resource_id,
-                    (int) $collection_parameters['category'],
+                    $category,
                     $collection_parameters
                 );
             }
         }
 
         if (
-            array_key_exists('category', $collection_parameters) === true ||
-            array_key_exists('subcategory', $collection_parameters) === true ||
-            array_key_exists('year', $collection_parameters) === true ||
-            array_key_exists('month', $collection_parameters) === true ||
+            $category !== null ||
+            $subcategory !== null ||
+            $year !== null ||
+            $month !== null ||
             count($search_parameters) > 0
         ) {
             return $this->filteredSummary(
                 (int) $resource_type_id,
                 (int) $resource_id,
-                (array_key_exists('category', $collection_parameters) ? $collection_parameters['category'] : null),
-                (array_key_exists('subcategory', $collection_parameters) ? $collection_parameters['subcategory'] : null),
-                (array_key_exists('year', $collection_parameters) ? $collection_parameters['year'] : null),
-                (array_key_exists('month', $collection_parameters) ? $collection_parameters['month'] : null),
+                $category,
+                $subcategory,
+                $year,
+                $month,
                 $collection_parameters,
                 (count($search_parameters) > 0 ? $search_parameters : [])
             );

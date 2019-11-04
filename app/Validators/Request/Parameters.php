@@ -114,6 +114,7 @@ class Parameters
                     }
                     break;
 
+                case 'categories':
                 case 'months':
                 case 'subcategories':
                 case 'years':

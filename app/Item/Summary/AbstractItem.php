@@ -28,8 +28,7 @@ abstract class AbstractItem
     }
 
     /**
-     * Return the collection parameters specific to the item type, these will
-     * be merged with the default collection parameters
+     * Return the collection parameters specific to the item type
      *
      * @return array
      */
@@ -37,7 +36,7 @@ abstract class AbstractItem
     {
         $params = [];
         foreach (Config::get($this->collectionParametersConfig()) as $key => $param) {
-            $params[$param['parameter']] = null;
+            $params[] = $param['parameter'];
         }
 
         return $params;
