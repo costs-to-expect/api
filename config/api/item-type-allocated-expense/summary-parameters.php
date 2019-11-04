@@ -5,7 +5,7 @@ declare(strict_types=1);
 return [
     'collection' => [
         'include-unpublished' => [
-            'field' => 'include-unpublished',
+            'parameter' => 'include-unpublished',
             'title' => 'item-type-allocated-expense/summary-parameters.title-include-unpublished',
             'description' => 'item-type-allocated-expense/summary-parameters.description-include-unpublished',
             'type' => 'boolean',
