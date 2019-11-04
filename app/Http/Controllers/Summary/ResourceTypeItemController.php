@@ -183,13 +183,19 @@ class ResourceTypeItemController extends Controller
      * Return the total summary for all the resources in the resource type
      * grouped by resource
      *
+     * @param int $resource_type_id
+     * @param array $parameters
+     *
      * @return JsonResponse
      */
-    private function resourcesSummary(): JsonResponse
+    private function resourcesSummary(
+        int $resource_type_id,
+        array $parameters
+    ): JsonResponse
     {
         $summary = (new ResourceTypeItem())->resourcesSummary(
-            $this->resource_type_id,
-            $this->include_unpublished
+            $resource_type_id,
+            $parameters
         );
 
         if (count($summary) === 0) {
@@ -221,13 +227,19 @@ class ResourceTypeItemController extends Controller
      * Return the total summary for all the resources in the resource type
      * grouped by year
      *
+     * @param int $resource_type_id
+     * @param array $parameters
+     *
      * @return JsonResponse
      */
-    private function yearsSummary(): JsonResponse
+    private function yearsSummary(
+        int $resource_type_id,
+        array $parameters
+    ): JsonResponse
     {
         $summary = (new ResourceTypeItem())->yearsSummary(
-            $this->resource_type_id,
-            $this->include_unpublished
+            $resource_type_id,
+            $parameters
         );
 
         if (count($summary) === 0) {
@@ -259,15 +271,22 @@ class ResourceTypeItemController extends Controller
      * Return the total summary for all the resources in the resource type
      * for the requested year
      *
-     * @param integer $year
+     * @param int $resource_type_id
+     * @param int $year
+     * @param array $parameters
+     *
      * @return JsonResponse
      */
-    private function yearSummary($year): JsonResponse
+    private function yearSummary(
+        int $resource_type_id,
+        int $year,
+        array $parameters
+    ): JsonResponse
     {
         $summary = (new ResourceTypeItem())->yearSummary(
-            $this->resource_type_id,
+            $resource_type_id,
             $year,
-            $this->include_unpublished
+            $parameters
         );
 
         if (count($summary) === 0) {
@@ -294,16 +313,22 @@ class ResourceTypeItemController extends Controller
      * Return the total summary for all the resources in the resource type
      * grouped by year
      *
-     * @param integer $year
+     * @param int $resource_type_id
+     * @param int $year
+     * @param array $parameters
      *
      * @return JsonResponse
      */
-    private function monthsSummary(int $year): JsonResponse
+    private function monthsSummary(
+        int $resource_type_id,
+        int $year,
+        array $parameters
+    ): JsonResponse
     {
         $summary = (new ResourceTypeItem())->monthsSummary(
-            $this->resource_type_id,
+            $resource_type_id,
             $year,
-            $this->include_unpublished
+            $parameters
         );
 
         if (count($summary) === 0) {
@@ -335,18 +360,25 @@ class ResourceTypeItemController extends Controller
      * Return the total summary for all the resources in the resource type
      * for a specific month
      *
-     * @param integer $year
-     * @param integer $month
+     * @param int $resource_type_id
+     * @param int $year
+     * @param int $month
+     * @param array $parameters
      *
      * @return JsonResponse
      */
-    private function monthSummary(int $year, int $month): JsonResponse
+    private function monthSummary(
+        int $resource_type_id,
+        int $year,
+        int $month,
+        array $parameters
+    ): JsonResponse
     {
         $summary = (new ResourceTypeItem())->monthSummary(
-            $this->resource_type_id,
+            $resource_type_id,
             $year,
             $month,
-            $this->include_unpublished
+            $parameters
         );
 
         if (count($summary) === 0) {
@@ -373,13 +405,19 @@ class ResourceTypeItemController extends Controller
      * Return the total summary for all the resources in the resource type
      * grouped by category
      *
+     * @param int $resource_type_id
+     * @param array $parameters
+     *
      * @return JsonResponse
      */
-    private function categoriesSummary(): JsonResponse
+    private function categoriesSummary(
+        int $resource_type_id,
+        array $parameters
+    ): JsonResponse
     {
         $summary = (new ResourceTypeItem())->categoriesSummary(
-            $this->resource_type_id,
-            $this->include_unpublished
+            $resource_type_id,
+            $parameters
         );
 
         if (count($summary) === 0) {
@@ -411,16 +449,22 @@ class ResourceTypeItemController extends Controller
      * Return the total summary for all the resources in the resource type
      * for a specific category
      *
-     * @param integer $category_id
+     * @param int $resource_type_id
+     * @param int $category_id
+     * @param array $parameters
      *
      * @return JsonResponse
      */
-    private function categorySummary(int $category_id): JsonResponse
+    private function categorySummary(
+        int $resource_type_id,
+        int $category_id,
+        array $parameters
+    ): JsonResponse
     {
         $summary = (new ResourceTypeItem())->categorySummary(
-            $this->resource_type_id,
+            $resource_type_id,
             $category_id,
-            $this->include_unpublished
+            $parameters
         );
 
         if (count($summary) === 0) {
@@ -446,30 +490,34 @@ class ResourceTypeItemController extends Controller
     /**
      * Return a filtered summary
      *
+     * @param int $resource_type_id
      * @param int|null $category_id
      * @param int|null $subcategory_id
      * @param int|null $year
      * @param int|null $month
+     * @param array $parameters
      * @param array $search_parameters
      *
      * @return JsonResponse
      */
-    public function filteredSummary(
+    protected function filteredSummary(
+        int $resource_type_id,
         int $category_id = null,
         int $subcategory_id = null,
         int $year = null,
         int $month = null,
+        array $parameters = [],
         array $search_parameters = []
     ): JsonResponse
     {
         $summary = (new ResourceTypeItem())->filteredSummary(
-            $this->resource_type_id,
+            $resource_type_id,
             $category_id,
             $subcategory_id,
             $year,
             $month,
             $search_parameters,
-            $this->include_unpublished
+            $parameters
         );
 
         if (count($summary) === 0) {
@@ -498,16 +546,22 @@ class ResourceTypeItemController extends Controller
      * Return the total summary for all the resources in the resource type
      * and category grouped by subcategory
      *
-     * @param integer $category_id
+     * @param int $resource_type_id
+     * @param int $category_id
+     * @param array $parameters
      *
      * @return JsonResponse
      */
-    private function subcategoriesSummary(int $category_id): JsonResponse
+    private function subcategoriesSummary(
+        int $resource_type_id,
+        int $category_id,
+        array $parameters
+    ): JsonResponse
     {
         $summary = (new ResourceTypeItem())->subcategoriesSummary(
-            $this->resource_type_id,
+            $resource_type_id,
             $category_id,
-            $this->include_unpublished
+            $parameters
         );
 
         if (count($summary) === 0) {
@@ -539,18 +593,25 @@ class ResourceTypeItemController extends Controller
      * Return the total summary for all the resources in the resource type
      * for a specific category and subcategory
      *
-     * @param integer $category_id
-     * @param integer $subcategory_id
+     * @param int $resource_type_id
+     * @param int $category_id
+     * @param int $subcategory_id
+     * @param array $parameters
      *
      * @return JsonResponse
      */
-    private function subcategorySummary(int $category_id, int $subcategory_id): JsonResponse
+    private function subcategorySummary(
+        int $resource_type_id,
+        int $category_id,
+        int $subcategory_id,
+        array $parameters
+    ): JsonResponse
     {
         $summary = (new ResourceTypeItem())->subcategorySummary(
-            $this->resource_type_id,
+            $resource_type_id,
             $category_id,
             $subcategory_id,
-            $this->include_unpublished
+            $parameters
         );
 
         if (count($summary) === 0) {
@@ -585,7 +646,7 @@ class ResourceTypeItemController extends Controller
     public function optionsIndex(string $resource_type_id): JsonResponse
     {
         Route::resourceType(
-            $resource_type_id,
+            (int) $resource_type_id,
             $this->permitted_resource_types
         );
 
