@@ -50,6 +50,40 @@ class ItemInterfaceFactory
     }
 
     /**
+     * Return the relevant item summary instance based on the provided resource
+     * type id, throws an exception if the item type interface cannot be returned
+     *
+     * @param integer $resource_type_id
+     *
+     * @return Summary\AbstractItem
+     * @throws Exception
+     */
+    static protected function itemSummaryInterface(
+        int $resource_type_id
+    ): Summary\AbstractItem
+    {
+        $item_type = (new ResourceTypeItemType())->itemType($resource_type_id);
+
+        if ($item_type !== null) {
+            switch ($item_type) {
+                case 'allocated-expense':
+                    return new Summary\AllocatedExpense();
+                    break;
+
+                /*case 'simple-expense':
+                    return new SimpleExpense();
+                    break;*/
+
+                default:
+                    throw new Exception('Unable to load the relevant summary item type', 500);
+                    break;
+            }
+        } else {
+            throw New Exception('No relevant summary item type defined for the resource type', 500);
+        }
+    }
+
+    /**
      * Return the relevant item instance based on the provided resource type id,
      * throws an exception if the item type interface cannot be returned
      *
@@ -94,6 +128,22 @@ class ItemInterfaceFactory
     {
         try {
             return self::itemInterface($resource_type_id);
+        } catch (Exception $e) {
+            abort(500, $e->getMessage());
+        }
+    }
+
+    /**
+     * Return the relevant item interface
+     *
+     * @param integer $resource_type_id
+     *
+     * @return Summary\AbstractItem
+     */
+    static public function summaryItem(int $resource_type_id): Summary\AbstractItem
+    {
+        try {
+            return self::itemSummaryInterface($resource_type_id);
         } catch (Exception $e) {
             abort(500, $e->getMessage());
         }

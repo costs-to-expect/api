@@ -18,7 +18,6 @@ use App\Models\Transformers\Summary\ItemYear as ItemYearTransformer;
 use App\Utilities\General;
 use App\Validators\Request\SearchParameters;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Support\Facades\Config;
 
 /**
  * Summary for the items route
@@ -31,7 +30,7 @@ class ItemController extends Controller
 {
     private $resource_type_id;
     private $resource_id;
-    private $include_unpublished = false;
+    private $model;
 
     /**
      * Return the TCO for the resource
@@ -49,25 +48,20 @@ class ItemController extends Controller
             $this->permitted_resource_types
         );
 
+        $item_interface = ItemInterfaceFactory::summaryItem($resource_type_id);
+
         $this->resource_type_id = $resource_type_id;
         $this->resource_id = $resource_id;
 
         $collection_parameters = Parameters::fetch(
-            array_keys(Config::get('api.item.summary-parameters.collection')),
+            $item_interface->collectionParametersKeys(),
             (int) $resource_type_id,
             (int) $resource_id
         );
 
-        $search_parameters = SearchParameters::fetch([
-            'description'
-        ]);
-
-        if (
-            array_key_exists('include-unpublished', $collection_parameters) === true &&
-            General::booleanValue($collection_parameters['include-unpublished']) === true
-        ) {
-            $this->include_unpublished = true;
-        }
+        $search_parameters = SearchParameters::fetch(
+            $item_interface->searchParameters()
+        );
 
         if (array_key_exists('years', $collection_parameters) === true &&
             General::booleanValue($collection_parameters['years']) === true) {
