@@ -49,7 +49,7 @@ class ItemController extends Controller
         $item_interface = ItemInterfaceFactory::summaryItem($resource_type_id);
         $this->model = $item_interface->model();
 
-        $collection_parameters = Parameters::fetch(
+        $parameters = Parameters::fetch(
             $item_interface->collectionParametersKeys(),
             (int) $resource_type_id,
             (int) $resource_id
@@ -65,54 +65,54 @@ class ItemController extends Controller
         $subcategory = null;
 
         if (
-            array_key_exists('years', $collection_parameters) === true &&
-            General::booleanValue($collection_parameters['years']) === true
+            array_key_exists('years', $parameters) === true &&
+            General::booleanValue($parameters['years']) === true
         ) {
             $years = true;
         }
 
         if (
-            array_key_exists('months', $collection_parameters) === true &&
-            General::booleanValue($collection_parameters['months']) === true
+            array_key_exists('months', $parameters) === true &&
+            General::booleanValue($parameters['months']) === true
         ) {
             $months = true;
         }
 
-        if (array_key_exists('categories', $collection_parameters) === true &&
-            General::booleanValue($collection_parameters['categories']) === true) {
+        if (array_key_exists('categories', $parameters) === true &&
+            General::booleanValue($parameters['categories']) === true) {
             $categories = true;
         }
 
-        if (array_key_exists('subcategories', $collection_parameters) === true &&
-                General::booleanValue($collection_parameters['subcategories']) === true) {
+        if (array_key_exists('subcategories', $parameters) === true &&
+                General::booleanValue($parameters['subcategories']) === true) {
             $subcategories = true;
         }
 
-        if (array_key_exists('year', $collection_parameters) === true) {
-            $year = (int) $collection_parameters['year'];
+        if (array_key_exists('year', $parameters) === true) {
+            $year = (int) $parameters['year'];
         }
 
-        if (array_key_exists('month', $collection_parameters) === true) {
-            $month = (int) $collection_parameters['month'];
+        if (array_key_exists('month', $parameters) === true) {
+            $month = (int) $parameters['month'];
         }
 
-        if (array_key_exists('category', $collection_parameters) === true) {
-            $category = (int) $collection_parameters['category'];
+        if (array_key_exists('category', $parameters) === true) {
+            $category = (int) $parameters['category'];
         }
 
-        if (array_key_exists('subcategory', $collection_parameters) === true) {
-            $subcategory = (int) $collection_parameters['subcategory'];
+        if (array_key_exists('subcategory', $parameters) === true) {
+            $subcategory = (int) $parameters['subcategory'];
         }
 
         unset(
-            $collection_parameters['years'],
-            $collection_parameters['year'],
-            $collection_parameters['months'],
-            $collection_parameters['month'],
-            $collection_parameters['categories'],
-            $collection_parameters['category'],
-            $collection_parameters['subcategories'],
-            $collection_parameters['subcategory']
+            $parameters['years'],
+            $parameters['year'],
+            $parameters['months'],
+            $parameters['month'],
+            $parameters['categories'],
+            $parameters['category'],
+            $parameters['subcategories'],
+            $parameters['subcategory']
         );
 
         $search_parameters = SearchParameters::fetch(
@@ -123,7 +123,7 @@ class ItemController extends Controller
             return $this->yearsSummary(
                 (int) $resource_type_id,
                 (int) $resource_id,
-                $collection_parameters
+                $parameters
             );
         } else if (
             $year !== null &&
@@ -136,22 +136,22 @@ class ItemController extends Controller
                     (int) $resource_type_id,
                     (int) $resource_id,
                     $year,
-                    $collection_parameters
+                    $parameters
                 );
-            } else if ($month === true) {
+            } else if ($month !== null) {
                 return $this->monthSummary(
                     (int) $resource_type_id,
                     (int) $resource_id,
                     $year,
                     $month,
-                    $collection_parameters
+                    $parameters
                 );
             } else {
                 return $this->yearSummary(
                     (int) $resource_type_id,
                     (int) $resource_id,
                     $year,
-                    $collection_parameters
+                    $parameters
                 );
             }
         }
@@ -160,7 +160,7 @@ class ItemController extends Controller
             return $this->categoriesSummary(
                 (int) $resource_type_id,
                 (int) $resource_id,
-                $collection_parameters
+                $parameters
             );
         } else if (
             $category !== null &&
@@ -173,7 +173,7 @@ class ItemController extends Controller
                     (int) $resource_type_id,
                     (int) $resource_id,
                     $category,
-                    $collection_parameters
+                    $parameters
                 );
             } else if ($subcategory !== null) {
                 return $this->subcategorySummary(
@@ -181,14 +181,14 @@ class ItemController extends Controller
                     (int) $resource_id,
                     $category,
                     $subcategory,
-                    $collection_parameters
+                    $parameters
                 );
             } else {
                 return $this->categorySummary(
                     (int) $resource_type_id,
                     (int) $resource_id,
                     $category,
-                    $collection_parameters
+                    $parameters
                 );
             }
         }
@@ -207,7 +207,7 @@ class ItemController extends Controller
                 $subcategory,
                 $year,
                 $month,
-                $collection_parameters,
+                $parameters,
                 (count($search_parameters) > 0 ? $search_parameters : [])
             );
         }
@@ -215,7 +215,7 @@ class ItemController extends Controller
         return $this->tcoSummary(
             (int) $resource_type_id,
             (int) $resource_id,
-            $collection_parameters
+            $parameters
         );
     }
 
