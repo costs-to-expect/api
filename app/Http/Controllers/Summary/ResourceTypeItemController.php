@@ -29,9 +29,6 @@ use Illuminate\Support\Facades\Config;
  */
 class ResourceTypeItemController extends Controller
 {
-    private $resource_type_id;
-    private $include_unpublished = false;
-
     /**
      * Return the TCO for all the resources within the resource type
      *
@@ -46,93 +43,175 @@ class ResourceTypeItemController extends Controller
             $this->permitted_resource_types
         );
 
-        $this->resource_type_id = $resource_type_id;
-
-        $collection_parameters = Parameters::fetch(
+        $parameters = Parameters::fetch(
             array_keys(Config::get('api.resource-type-item.summary-parameters.collection')),
             $resource_type_id
+        );
+
+        $resources = false;
+        $years = false;
+        $months = false;
+        $categories = false;
+        $subcategories = false;
+        $year = null;
+        $month = null;
+        $category = null;
+        $subcategory = null;
+
+        if (
+            array_key_exists('resources', $parameters) === true &&
+            General::booleanValue($parameters['resources']) === true
+        ) {
+            $resources = true;
+        }
+
+        if (
+            array_key_exists('years', $parameters) === true &&
+            General::booleanValue($parameters['years']) === true
+        ) {
+            $years = true;
+        }
+
+        if (
+            array_key_exists('months', $parameters) === true &&
+            General::booleanValue($parameters['months']) === true
+        ) {
+            $months = true;
+        }
+
+        if (array_key_exists('categories', $parameters) === true &&
+            General::booleanValue($parameters['categories']) === true) {
+            $categories = true;
+        }
+
+        if (array_key_exists('subcategories', $parameters) === true &&
+                General::booleanValue($parameters['subcategories']) === true) {
+            $subcategories = true;
+        }
+
+        if (array_key_exists('year', $parameters) === true) {
+            $year = (int) $parameters['year'];
+        }
+
+        if (array_key_exists('month', $parameters) === true) {
+            $month = (int) $parameters['month'];
+        }
+
+        if (array_key_exists('category', $parameters) === true) {
+            $category = (int) $parameters['category'];
+        }
+
+        if (array_key_exists('subcategory', $parameters) === true) {
+            $subcategory = (int) $parameters['subcategory'];
+        }
+
+        unset(
+            $parameters['resources'],
+            $parameters['years'],
+            $parameters['year'],
+            $parameters['months'],
+            $parameters['month'],
+            $parameters['categories'],
+            $parameters['category'],
+            $parameters['subcategories'],
+            $parameters['subcategory']
         );
 
         $search_parameters = SearchParameters::fetch([
             'description'
         ]);
 
-        if (
-            array_key_exists('include-unpublished', $collection_parameters) === true &&
-            General::booleanValue($collection_parameters['include-unpublished']) === true
-        ) {
-            $this->include_unpublished = true;
-        }
-
-        if (array_key_exists('years', $collection_parameters) === true &&
-            General::booleanValue($collection_parameters['years']) === true) {
-            return $this->yearsSummary();
+        if ($years === true) {
+            return $this->yearsSummary(
+                $resource_type_id,
+                $parameters
+            );
         } else if (
-            array_key_exists('year', $collection_parameters) === true &&
-            array_key_exists('category', $collection_parameters) === false &&
-            array_key_exists('subcategory', $collection_parameters) === false &&
+            $years === true &&
+            $category === null &&
+            $subcategory === null &&
             count($search_parameters) === 0
         ) {
-            if (
-                array_key_exists('months', $collection_parameters) === true &&
-                General::booleanValue($collection_parameters['months']) === true
-            ) {
-                return $this->monthsSummary($collection_parameters['year']);
+            if ($months === true) {
+                return $this->monthsSummary(
+                    $resource_type_id,
+                    $year,
+                    $parameters
+                );
             } else {
-                if (array_key_exists('month', $collection_parameters) === true) {
+                if ($month !== null) {
                     return $this->monthSummary(
-                        $collection_parameters['year'],
-                        $collection_parameters['month']
+                        $resource_type_id,
+                        $year,
+                        $month,
+                        $parameters
                     );
                 } else {
-                    return $this->yearSummary($collection_parameters['year']);
+                    return $this->yearSummary(
+                        $resource_type_id,
+                        $year,
+                        $parameters
+                    );
                 }
             }
         }
 
-        if (array_key_exists('categories', $collection_parameters) === true &&
-            General::booleanValue($collection_parameters['categories']) === true) {
-            return $this->categoriesSummary();
+        if ($categories === true) {
+            return $this->categoriesSummary(
+                $resource_type_id,
+                $parameters
+            );
         } else if (
-            array_key_exists('category', $collection_parameters) === true &&
-            array_key_exists('year', $collection_parameters) === false &&
-            array_key_exists('month', $collection_parameters) === false &&
+            $category !== null &&
+            $year === null &&
+            $month === null &&
             count($search_parameters) === 0
         ) {
-            if (
-                array_key_exists('subcategories', $collection_parameters) === true &&
-                General::booleanValue($collection_parameters['subcategories']) === true
-            ) {
-                return $this->subcategoriesSummary($collection_parameters['category']);
+            if ($subcategories === true) {
+                return $this->subcategoriesSummary(
+                    $resource_type_id,
+                    $category,
+                    $parameters
+                );
             } else {
-                if (array_key_exists('subcategory', $collection_parameters) === true) {
+                if ($subcategory !== null) {
                     return $this->subcategorySummary(
-                        $collection_parameters['category'],
-                        $collection_parameters['subcategory']
+                        $resource_type_id,
+                        $category,
+                        $subcategory,
+                        $parameters
                     );
                 } else {
-                    return $this->categorySummary($collection_parameters['category']);
+                    return $this->categorySummary(
+                        $resource_type_id,
+                        $category,
+                        $parameters
+                    );
                 }
             }
         }
 
-        if (array_key_exists('resources', $collection_parameters) === true &&
-            General::booleanValue($collection_parameters['resources']) === true) {
-            return $this->resourcesSummary();
+        if ($resources === true) {
+            return $this->resourcesSummary(
+                $resource_type_id,
+                $parameters
+            );
         }
 
         if (
-            array_key_exists('category', $collection_parameters) === true ||
-            array_key_exists('subcategory', $collection_parameters) === true ||
-            array_key_exists('year', $collection_parameters) === true ||
-            array_key_exists('month', $collection_parameters) === true ||
+            $category === true ||
+            $subcategory === true ||
+            $year === true ||
+            $month === true ||
             count($search_parameters) > 0
         ) {
             return $this->filteredSummary(
-                (array_key_exists('category', $collection_parameters) ? $collection_parameters['category'] : null),
-                (array_key_exists('subcategory', $collection_parameters) ? $collection_parameters['subcategory'] : null),
-                (array_key_exists('year', $collection_parameters) ? $collection_parameters['year'] : null),
-                (array_key_exists('month', $collection_parameters) ? $collection_parameters['month'] : null),
+                $resource_type_id,
+                $category,
+                $subcategory,
+                $year,
+                $month,
+                $parameters,
                 (count($search_parameters) > 0 ? $search_parameters : [])
             );
         }
@@ -143,13 +222,19 @@ class ResourceTypeItemController extends Controller
     /**
      * Return the total summary for all the resources in the resource type
      *
+     * @param int $resource_type_id
+     * @param array $parameters
+     *
      * @return JsonResponse
      */
-    private function summary(): JsonResponse
+    private function summary(
+        int $resource_type_id,
+        array $parameters
+    ): JsonResponse
     {
         $summary = (new \App\Models\ResourceTypeItemType\AllocatedExpense())->summary(
-            $this->resource_type_id,
-            $this->include_unpublished
+            $resource_type_id,
+            $parameters
         );
 
         if (count($summary) === 0) {
