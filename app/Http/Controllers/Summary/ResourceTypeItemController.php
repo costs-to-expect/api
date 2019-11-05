@@ -232,7 +232,7 @@ class ResourceTypeItemController extends Controller
         array $parameters
     ): JsonResponse
     {
-        $summary = (new \App\Models\ResourceTypeItemType\AllocatedExpense())->summary(
+        $summary = (new \App\Models\ResourceTypeItemType\Summary\AllocatedExpense())->summary(
             $resource_type_id,
             $parameters
         );
