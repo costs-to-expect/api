@@ -3,7 +3,19 @@
 The complete changelog for the Costs to Expect REST API, follows the format defined at https://keepachangelog.com/en/1.0.0/
 
 ## [v2.04.0] - 2019-11-xx
+### Added
+- We have added a GitHub callout to the top right corner of the website, courtesy of https://github.com/tholman/github-corners.
 
+### Changed
+- We have updated the code to ensure the data arrays in the config files get used whenever possible; minor data arrays for parameters defined in two locations.
+- We have added additional summary models.
+- We have moved the item and resource type item models, now organised by namespace, not filename.
+- We have moved the item and resource type item transformers, now organised by namespace, not the filename.
+- We have moved all the `existsToUser` methods out of the `item` models and into the `PermittedUser` model.
+- We have updated the `item` and `resource type item `summary routes; they respect the chosen resource type (Allocated expenses and Simple expenses) and provide the relevant summary.
+
+### Fixed
+- We have corrected several more class names, incorrect capitalisation.
 
 ## [v2.03.0] - 2019-10-27
 ### Added
