@@ -106,33 +106,11 @@ abstract class AbstractItem
     abstract public function patchableFields(): array;
 
     /**
-     * Return the patch fields specific to the item type, these will be merged
-     * with any default patch fields
-     *
-     * @return array
-     */
-    public function patchFields(): array
-    {
-        return Config::get($this->patchFields());
-    }
-
-    /**
      * Return the patch fields config string specific to the item type
      *
      * @return string
      */
     abstract public function patchFieldsConfig(): string;
-
-    /**
-     * Return the post fields specific to the item type, these will be merged
-     * with any default post fields
-     *
-     * @return array
-     */
-    public function postFields(): array
-    {
-        return Config::get($this->postFieldsConfig());
-    }
 
     /**
      * Return the post fields config string specific to the item type
@@ -158,17 +136,6 @@ abstract class AbstractItem
      * @return string
      */
     abstract public function searchParametersConfig(): string;
-
-    /**
-     * Return the show parameters specific to the item type, these will
-     * be merged with the default show parameters
-     *
-     * @return array
-     */
-    public function showParameters(): array
-    {
-         return Config::get($this->showParametersConfig());
-    }
 
     /**
      * Return the show parameters config string specific to the item type

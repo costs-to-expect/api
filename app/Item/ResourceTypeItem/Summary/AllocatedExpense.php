@@ -4,7 +4,6 @@ declare(strict_types=1);
 namespace App\Item\ResourceTypeItem\Summary;
 
 use App\Models\ResourceTypeItemType\Summary\AllocatedExpense as ItemModel;
-use App\Models\Transformers\Transformer;
 use Illuminate\Database\Eloquent\Model;
 
 class AllocatedExpense extends AbstractItem
@@ -18,34 +17,6 @@ class AllocatedExpense extends AbstractItem
     public function collectionParametersConfig(): string
     {
         return 'api.resource-type-item-type-allocated-expense.summary-parameters.collection';
-    }
-
-    /**
-     * Return the minimum year for the conditional year filter, reviews the
-     * item type data and returns the min value, if no data exists, defaults to
-     * the current year
-     *
-     * @param integer $resource_id
-     *
-     * @return integer
-     */
-    public function conditionalParameterMinYear(int $resource_id): int
-    {
-        // TODO: Implement conditionalParameterMinYear() method.
-    }
-
-    /**
-     * Return the minimum year for the conditional year filter, reviews the
-     * item type data and returns the min value, if no data exists, defaults to
-     * the current year
-     *
-     * @param integer $resource_id
-     *
-     * @return integer
-     */
-    public function conditionalParameterMaxYear(int $resource_id): int
-    {
-        // TODO: Implement conditionalParameterMaxYear() method.
     }
 
     /**
@@ -66,27 +37,5 @@ class AllocatedExpense extends AbstractItem
     public function searchParametersConfig(): string
     {
         return 'api.resource-type-item-type-allocated-expense.summary-searchable';
-    }
-
-    /**
-     * Return the transformer for the specific item type
-     *
-     * @param array $data_to_transform
-     *
-     * @return Transformer
-     */
-    public function transformer(array $data_to_transform): Transformer
-    {
-        // TODO: Implement transformer() method.
-    }
-
-    /**
-     * Return the item type identifier
-     *
-     * @return string
-     */
-    public function type(): string
-    {
-        // TODO: Implement type() method.
     }
 }
