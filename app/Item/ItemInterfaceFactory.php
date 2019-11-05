@@ -118,6 +118,40 @@ class ItemInterfaceFactory
     }
 
     /**
+     * Return the relevant item instance based on the provided resource type id,
+     * throws an exception if the item type interface cannot be returned
+     *
+     * @param integer $resource_type_id
+     *
+     * @return ResourceTypeItem\Summary\AbstractItem
+     * @throws Exception
+     */
+    static protected function resourceTypeItemSummaryInterface(
+        int $resource_type_id
+    ): ResourceTypeItem\Summary\AbstractItem
+    {
+        $item_type = (new ResourceTypeItemType())->itemType($resource_type_id);
+
+        if ($item_type !== null) {
+            switch ($item_type) {
+                case 'allocated-expense':
+                    return new ResourceTypeItem\Summary\AllocatedExpense();
+                    break;
+
+                /*case 'simple-expense':
+                    return new ResourceTypeItem\SimpleExpense();
+                    break;*/
+
+                default:
+                    throw new Exception('Unable to load the relevant resource type item summary type', 500);
+                    break;
+            }
+        } else {
+            throw New Exception('No relevant resource type item summary type defined for the resource type', 500);
+        }
+    }
+
+    /**
      * Return the relevant item interface
      *
      * @param integer $resource_type_id
@@ -160,6 +194,22 @@ class ItemInterfaceFactory
     {
         try {
             return self::resourceTypeItemInterface($resource_type_id);
+        } catch (Exception $e) {
+            abort(500, $e->getMessage());
+        }
+    }
+
+    /**
+     * Return the relevant resource type item summary interface
+     *
+     * @param integer $resource_type_id
+     *
+     * @return \App\Item\ResourceTypeItem\Summary\AbstractItem
+     */
+    static public function summaryResourceTypeItem(int $resource_type_id): \App\Item\ResourceTypeItem\Summary\AbstractItem
+    {
+        try {
+            return self::resourceTypeItemSummaryInterface($resource_type_id);
         } catch (Exception $e) {
             abort(500, $e->getMessage());
         }

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Summary;
 
 use App\Http\Controllers\Controller;
+use App\Item\ItemInterfaceFactory;
 use App\Option\Get;
 use App\Utilities\Header;
 use App\Utilities\RoutePermission;
@@ -17,7 +18,6 @@ use App\Utilities\General;
 use App\Utilities\Response as UtilityResponse;
 use App\Validators\Request\SearchParameters;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Support\Facades\Config;
 
 /**
  * Summary for resource type items route
@@ -44,13 +44,11 @@ class ResourceTypeItemController extends Controller
             $this->permitted_resource_types
         );
 
-        /*$item_interface = ItemInterfaceFactory::summaryItem($resource_type_id);
-        $this->model = $item_interface->model();*/
-
-        $this->model = new \App\Models\ResourceTypeItemType\Summary\AllocatedExpense();
+        $item_interface = ItemInterfaceFactory::summaryResourceTypeItem($resource_type_id);
+        $this->model = $item_interface->model();
 
         $parameters = Parameters::fetch(
-            array_keys(Config::get('api.resource-type-item.summary-parameters.collection')),
+            $item_interface->collectionParametersKeys(),
             $resource_type_id
         );
 
@@ -123,9 +121,9 @@ class ResourceTypeItemController extends Controller
             $parameters['subcategory']
         );
 
-        $search_parameters = SearchParameters::fetch([
-            'description'
-        ]);
+        $search_parameters = SearchParameters::fetch(
+            $item_interface->searchParameters()
+        );
 
         if ($years === true) {
             return $this->yearsSummary(
@@ -133,7 +131,7 @@ class ResourceTypeItemController extends Controller
                 $parameters
             );
         } else if (
-            $years === true &&
+            $year !== null &&
             $category === null &&
             $subcategory === null &&
             count($search_parameters) === 0
@@ -744,14 +742,16 @@ class ResourceTypeItemController extends Controller
             $this->permitted_resource_types
         );
 
+        $item_interface = ItemInterfaceFactory::summaryResourceTypeItem($resource_type_id);
+
         $permissions = RoutePermission::resourceType(
             $resource_type_id,
             $this->permitted_resource_types
         );
 
         $get = Get::init()->
-            setSearchable('api.resource-type-item.searchable')->
-            setParameters('api.resource-type-item.summary-parameters.collection')->
+            setSearchable($item_interface->searchParametersConfig())->
+            setParameters($item_interface->collectionParametersConfig())->
             setDescription('route-descriptions.summary-resource-type-item-GET-index')->
             setAuthenticationStatus($permissions['view'])->
             option();

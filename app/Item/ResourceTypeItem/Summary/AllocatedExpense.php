@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace App\Item\ResourceTypeItem\Summary;
 
-use App\Models\Summary\ItemType\AllocatedExpense as ItemModel;
+use App\Models\ResourceTypeItemType\Summary\AllocatedExpense as ItemModel;
 use App\Models\Transformers\Transformer;
 use Illuminate\Database\Eloquent\Model;
 
