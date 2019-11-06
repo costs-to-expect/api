@@ -592,7 +592,7 @@ class ResourceTypeItemController extends Controller
      *
      * @return JsonResponse
      */
-    protected function filteredSummary(
+    private function filteredSummary(
         int $resource_type_id,
         int $category_id = null,
         int $subcategory_id = null,

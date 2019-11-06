@@ -143,7 +143,7 @@ class Parameters
 
                     if (array_key_exists($key, self::$parameters) === true) {
                         if (intval(self::$parameters[$key]) < $min_year_limit ||
-                            self::$parameters[$key] >= $max_year_limit + 1) {
+                            self::$parameters[$key] > $max_year_limit + 1) {
                             unset(self::$parameters[$key]);
                         }
                     }
