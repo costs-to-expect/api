@@ -16,11 +16,11 @@ use Illuminate\Support\Facades\DB;
  * @copyright G3D Development Limited 2018-2019
  * @license https://github.com/costs-to-expect/api/blob/master/LICENSE
  */
-class AllocatedExpense extends Model
+class SimpleExpense extends Model
 {
-    protected $guarded = ['id', 'actualised_total', 'created_at', 'updated_at'];
+    protected $guarded = ['id', 'created_at', 'updated_at'];
     protected $table = 'item';
-    protected $sub_table = 'item_type_allocated_expense';
+    protected $sub_table = 'item_type_simple_expense';
 
     /**
      * Return the summary for all items for the resources in the requested resource type
@@ -35,13 +35,11 @@ class AllocatedExpense extends Model
         array $parameters
     ): array
     {
-        $collection = $this->selectRaw("sum({$this->sub_table}.actualised_total) AS total")->
+        $collection = $this->selectRaw("sum({$this->sub_table}.total) AS total")->
             join($this->sub_table, 'item.id', "{$this->sub_table}.item_id")->
             join('resource', 'item.resource_id', 'resource.id')->
             join('resource_type', 'resource.resource_type_id', 'resource_type.id')->
             where('resource_type.id', '=', $resource_type_id);
-
-        $collection = $this->includeUnpublished($collection, $parameters);
 
         return $collection->
             get()->
@@ -65,14 +63,12 @@ class AllocatedExpense extends Model
         $collection = $this->selectRaw("
                 resource.id AS id, 
                 resource.name AS `name`, 
-                SUM({$this->sub_table}.actualised_total) AS total"
+                SUM({$this->sub_table}.total) AS total"
             )->
             join($this->sub_table, 'item.id', "{$this->sub_table}.item_id")->
             join('resource', 'item.resource_id', 'resource.id')->
             join('resource_type', 'resource.resource_type_id', 'resource_type.id')->
             where('resource_type.id', '=', $resource_type_id);
-
-        $collection = $this->includeUnpublished($collection, $parameters);
 
         return $collection->groupBy('resource.id')->
             orderBy('name')->
@@ -96,14 +92,12 @@ class AllocatedExpense extends Model
     {
         $collection = $this->selectRaw("
                 YEAR({$this->sub_table}.effective_date) as year,
-                SUM({$this->sub_table}.actualised_total) AS total"
+                SUM({$this->sub_table}.total) AS total"
             )->
             join($this->sub_table, 'item.id', "{$this->sub_table}.item_id")->
             join("resource", "resource.id", "item.resource_id")->
             join("resource_type", "resource_type.id", "resource.resource_type_id")->
             where("resource_type.id", "=", $resource_type_id);
-
-        $collection = $this->includeUnpublished($collection, $parameters);
 
         return $collection->groupBy("year")->
             orderBy("year")->
@@ -129,15 +123,13 @@ class AllocatedExpense extends Model
     {
         $collection = $this->selectRaw("
                 MONTH({$this->sub_table}.effective_date) as month, 
-                SUM({$this->sub_table}.actualised_total) AS total"
+                SUM({$this->sub_table}.total) AS total"
             )->
             join($this->sub_table, 'item.id', "{$this->sub_table}.item_id")->
             join("resource", "resource.id", "item.resource_id")->
             join("resource_type", "resource_type.id", "resource.resource_type_id")->
             where("resource_type.id", "=", $resource_type_id)->
             where(DB::raw("YEAR({$this->sub_table}.effective_date)"), '=', $year);
-
-        $collection = $this->includeUnpublished($collection, $parameters);
 
         return $collection->groupBy("month")->
             orderBy("month")->
@@ -165,7 +157,7 @@ class AllocatedExpense extends Model
     {
         $collection = $this->selectRaw("
                 MONTH({$this->sub_table}.effective_date) as month, 
-                SUM({$this->sub_table}.actualised_total) AS total"
+                SUM({$this->sub_table}.total) AS total"
             )->
             join($this->sub_table, 'item.id', "{$this->sub_table}.item_id")->
             join("resource", "resource.id", "item.resource_id")->
@@ -173,8 +165,6 @@ class AllocatedExpense extends Model
             where("resource_type.id", "=", $resource_type_id)->
             where(DB::raw("YEAR({$this->sub_table}.effective_date)"), '=', $year)->
             where(DB::raw("MONTH({$this->sub_table}.effective_date)"), '=', $month);
-
-        $collection = $this->includeUnpublished($collection, $parameters);
 
         return $collection->groupBy("month")->
             orderBy("month")->
@@ -200,15 +190,13 @@ class AllocatedExpense extends Model
     {
         $collection = $this->selectRaw("
                 YEAR({$this->sub_table}.effective_date) as year, 
-                SUM({$this->sub_table}.actualised_total) AS total"
+                SUM({$this->sub_table}.total) AS total"
             )->
             join($this->sub_table, 'item.id', "{$this->sub_table}.item_id")->
             join("resource", "resource.id", "item.resource_id")->
             join("resource_type", "resource_type.id", "resource.resource_type_id")->
             where("resource_type.id", "=", $resource_type_id)->
             where(DB::raw("YEAR({$this->sub_table}.effective_date)"), '=', $year);
-
-        $collection = $this->includeUnpublished($collection, $parameters);
 
         return $collection->groupBy("year")->
             orderBy("year")->
@@ -234,7 +222,7 @@ class AllocatedExpense extends Model
                 category.id, 
                 category.name AS name, 
                 category.description AS description,
-                SUM({$this->sub_table}.actualised_total) AS total")->
+                SUM({$this->sub_table}.total) AS total")->
             join($this->sub_table, 'item.id', "{$this->sub_table}.item_id")->
             join("resource", "resource.id", "item.resource_id")->
             join("resource_type", "resource_type.id", "resource.resource_type_id")->
@@ -242,8 +230,6 @@ class AllocatedExpense extends Model
             join("category", "category.id", "item_category.category_id")->
             where("category.resource_type_id", "=", $resource_type_id)->
             where("resource_type.id", "=", $resource_type_id);
-
-        $collection = $this->includeUnpublished($collection, $parameters);
 
         return $collection->groupBy("category.id")->
             orderBy("name")->
@@ -271,7 +257,7 @@ class AllocatedExpense extends Model
                 category.id, 
                 category.name AS name, 
                 category.description, 
-                SUM({$this->sub_table}.actualised_total) AS total")->
+                SUM({$this->sub_table}.total) AS total")->
             join($this->sub_table, 'item.id', "{$this->sub_table}.item_id")->
             join("resource", "resource.id", "item.resource_id")->
             join("resource_type", "resource_type.id", "resource.resource_type_id")->
@@ -280,8 +266,6 @@ class AllocatedExpense extends Model
             where("category.resource_type_id", "=", $resource_type_id)->
             where("resource_type.id", "=", $resource_type_id)->
             where("category.id", '=', $category_id);
-
-        $collection = $this->includeUnpublished($collection, $parameters);
 
         return $collection->groupBy("category.id")->
             orderBy("name")->
@@ -310,7 +294,7 @@ class AllocatedExpense extends Model
     ): array
     {
         $collection = $this->
-            selectRaw("SUM({$this->sub_table}.actualised_total) AS total")->
+            selectRaw("SUM({$this->sub_table}.total) AS total")->
             join($this->sub_table, 'item.id', "{$this->sub_table}.item_id")->
             join("resource", "resource.id", "item.resource_id")->
             join("resource_type", "resource_type.id", "resource.resource_type_id")->
@@ -338,8 +322,6 @@ class AllocatedExpense extends Model
             }
         }
 
-        $collection = $this->includeUnpublished($collection, $parameters);
-
         return $collection->get()->
             toArray();
     }
@@ -364,7 +346,7 @@ class AllocatedExpense extends Model
                 sub_category.id, 
                 sub_category.name AS name, 
                 sub_category.description AS description, 
-                SUM({$this->sub_table}.actualised_total) AS total")->
+                SUM({$this->sub_table}.total) AS total")->
             join($this->sub_table, 'item.id', "{$this->sub_table}.item_id")->
             join("resource", "resource.id", "item.resource_id")->
             join("resource_type", "resource_type.id", "resource.resource_type_id")->
@@ -375,8 +357,6 @@ class AllocatedExpense extends Model
             where("category.resource_type_id", "=", $resource_type_id)->
             where("resource_type.id", "=", $resource_type_id)->
             where("category.id", "=", $category_id);
-
-        $collection = $this->includeUnpublished($collection, $parameters);
 
         return $collection->groupBy("sub_category.id")->
             orderBy("name")->
@@ -406,7 +386,7 @@ class AllocatedExpense extends Model
                 sub_category.id, 
                 sub_category.name AS name, 
                 sub_category.description AS description, 
-                SUM($this->sub_table.actualised_total) AS total")->
+                SUM($this->sub_table.total) AS total")->
             join($this->sub_table, 'item.id', "{$this->sub_table}.item_id")->
             join("resource", "resource.id", "item.resource_id")->
             join("resource_type", "resource_type.id", "resource.resource_type_id")->
@@ -419,34 +399,9 @@ class AllocatedExpense extends Model
             where("category.id", "=", $category_id)->
             where('sub_category.id', '=', $subcategory_id);
 
-        $collection = $this->includeUnpublished($collection, $parameters);
-
         return $collection->groupBy("sub_category.id")->
             orderBy("name")->
             get()->
             toArray();
-    }
-
-    /**
-     * Work out if we should be hiding unpublished items, by default we don't show them
-     *
-     * @param $collection
-     * @param array $parameters
-     *
-     * @return Builder
-     */
-    private function includeUnpublished($collection, array $parameters): Builder
-    {
-        if (
-            array_key_exists('include-unpublished', $parameters) === true &&
-            $parameters['include-unpublished'] === true
-        ) {
-            $collection->where(function ($sql) {
-                $sql->whereNull('item_type_allocated_expense.publish_after')->
-                    orWhereRaw('item_type_allocated_expense.publish_after < NOW()');
-            });
-        }
-
-        return $collection;
     }
 }

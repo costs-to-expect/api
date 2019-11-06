@@ -16,6 +16,16 @@ use Exception;
 class ItemInterfaceFactory
 {
     /**
+     * @param int $resource_type_id
+     *
+     * @return string
+     */
+    static protected function itemType(int $resource_type_id)
+    {
+        return (new ResourceTypeItemType())->itemType($resource_type_id);
+    }
+
+    /**
      * Return the relevant item instance based on the provided resource type id,
      * throws an exception if the item type interface cannot be returned
      *
@@ -28,7 +38,7 @@ class ItemInterfaceFactory
         int $resource_type_id
     ): AbstractItem
     {
-        $item_type = (new ResourceTypeItemType())->itemType($resource_type_id);
+        $item_type = self::itemType($resource_type_id);
 
         if ($item_type !== null) {
             switch ($item_type) {
@@ -62,7 +72,7 @@ class ItemInterfaceFactory
         int $resource_type_id
     ): Summary\AbstractItem
     {
-        $item_type = (new ResourceTypeItemType())->itemType($resource_type_id);
+        $item_type = self::itemType($resource_type_id);
 
         if ($item_type !== null) {
             switch ($item_type) {
@@ -70,9 +80,9 @@ class ItemInterfaceFactory
                     return new Summary\AllocatedExpense();
                     break;
 
-                /*case 'simple-expense':
-                    return new SimpleExpense();
-                    break;*/
+                case 'simple-expense':
+                    return new Summary\SimpleExpense();
+                    break;
 
                 default:
                     throw new Exception('Unable to load the relevant summary item type', 500);
@@ -96,7 +106,7 @@ class ItemInterfaceFactory
         int $resource_type_id
     ): ResourceTypeItem\AbstractItem
     {
-        $item_type = (new ResourceTypeItemType())->itemType($resource_type_id);
+        $item_type = self::itemType($resource_type_id);
 
         if ($item_type !== null) {
             switch ($item_type) {
@@ -130,7 +140,7 @@ class ItemInterfaceFactory
         int $resource_type_id
     ): ResourceTypeItem\Summary\AbstractItem
     {
-        $item_type = (new ResourceTypeItemType())->itemType($resource_type_id);
+        $item_type = self::itemType($resource_type_id);
 
         if ($item_type !== null) {
             switch ($item_type) {
@@ -138,9 +148,9 @@ class ItemInterfaceFactory
                     return new ResourceTypeItem\Summary\AllocatedExpense();
                     break;
 
-                /*case 'simple-expense':
-                    return new ResourceTypeItem\SimpleExpense();
-                    break;*/
+                case 'simple-expense':
+                    return new ResourceTypeItem\Summary\SimpleExpense();
+                    break;
 
                 default:
                     throw new Exception('Unable to load the relevant resource type item summary type', 500);
