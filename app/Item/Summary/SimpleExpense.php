@@ -16,7 +16,7 @@ class SimpleExpense extends AbstractItem
      */
     public function collectionParametersConfig(): string
     {
-        return 'api.item-type-allocated-expense.summary-parameters.collection';
+        return 'api.item-type-simple-expense.summary-parameters.collection';
     }
 
     /**
@@ -36,6 +36,6 @@ class SimpleExpense extends AbstractItem
      */
     public function searchParametersConfig(): string
     {
-        return 'api.item-type-allocated-expense.summary-searchable';
+        return 'api.item-type-simple-expense.summary-searchable';
     }
 }
