@@ -121,7 +121,7 @@ class SimpleExpense extends Model
     {
         $collection = $this->
             selectRaw("SUM({$this->sub_table}.total) AS total")->
-            join($this->sub_table, 'item.id', 'item_type_allocated_expense.item_id')->
+            join($this->sub_table, 'item.id', "{$this->sub_table}.item_id")->
             join("resource", "resource.id", "item.resource_id")->
             join("resource_type", "resource_type.id", "resource.resource_type_id")->
             join("item_category", "item_category.item_id", "item.id")->
