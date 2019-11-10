@@ -420,8 +420,8 @@ class AllocatedExpense extends Model
     private function includeUnpublished($collection, array $parameters): Builder
     {
         if (
-            array_key_exists('include-unpublished', $parameters) === true &&
-            $parameters['include-unpublished'] === true
+            array_key_exists('include-unpublished', $parameters) === false ||
+            $parameters['include-unpublished'] === false
         ) {
             $collection->where(function ($sql) {
                 $sql->whereNull('item_type_allocated_expense.publish_after')->
