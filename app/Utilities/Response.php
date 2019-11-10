@@ -52,7 +52,9 @@ class Response
                 trans('responses.not-found')
         ];
 
-        $response = self::addException($response, $e);
+        if ($e instanceOf Exception) {
+            $response = self::addException($response, $e);
+        }
 
         response()->json(
             $response,
@@ -76,7 +78,9 @@ class Response
                 trans('responses.not-found')
         ];
 
-        $response = self::addException($response, $e);
+        if ($e instanceOf Exception) {
+            $response = self::addException($response, $e);
+        }
 
         response()->json(
             $response,
@@ -99,7 +103,9 @@ class Response
             'message' => (strlen($message) > 0) ? $message : trans('responses.constraint')
         ];
 
-        $response = self::addException($response, $e);
+        if ($e instanceOf Exception) {
+            $response = self::addException($response, $e);
+        }
 
         response()->json(
             $response,
@@ -124,7 +130,9 @@ class Response
             'message' => trans('responses.model-select-failure'),
         ];
 
-        $response = self::addException($response, $e);
+        if ($e instanceOf Exception) {
+            $response = self::addException($response, $e);
+        }
 
         response()->json(
             $response,
@@ -149,7 +157,9 @@ class Response
             'message' => trans('responses.model-save-failure-update'),
         ];
 
-        $response = self::addException($response, $e);
+        if ($e instanceOf Exception) {
+            $response = self::addException($response, $e);
+        }
 
         response()->json(
             $response,
@@ -171,7 +181,9 @@ class Response
             'message' => trans('responses.authentication-required')
         ];
 
-        $response = self::addException($response, $e);
+        if ($e instanceOf Exception) {
+            $response = self::addException($response, $e);
+        }
 
         response()->json(
             $response,
@@ -196,7 +208,9 @@ class Response
             'message' => trans('responses.model-save-failure-create'),
         ];
 
-        $response = self::addException($response, $e);
+        if ($e instanceOf Exception) {
+            $response = self::addException($response, $e);
+        }
 
         response()->json(
             $response,
@@ -219,7 +233,9 @@ class Response
             'message' => trans('responses.decode-error')
         ];
 
-        $response = self::addException($response, $e);
+        if ($e instanceOf Exception) {
+            $response = self::addException($response, $e);
+        }
 
         response()->json(
             $response,
@@ -239,7 +255,9 @@ class Response
     {
         $response = [];
 
-        $response = self::addException($response, $e);
+        if ($e instanceOf Exception) {
+            $response = self::addException($response, $e);
+        }
 
         response()->json($response,204)->send();
         exit;
@@ -257,7 +275,9 @@ class Response
     {
         $response = ($array === true ? [] : null);
 
-        $response = self::addException($response, $e);
+        if ($e instanceOf Exception) {
+            $response = self::addException($response, $e);
+        }
 
         response()->json($response,200)->send();
         exit;
@@ -276,7 +296,9 @@ class Response
             'message' => trans('responses.patch-empty')
         ];
 
-        $response = self::addException($response, $e);
+        if ($e instanceOf Exception) {
+            $response = self::addException($response, $e);
+        }
 
         response()->json(
             $response,
@@ -300,7 +322,9 @@ class Response
             'fields' => $invalid_fields
         ];
 
-        $response = self::addException($response, $e);
+        if ($e instanceOf Exception) {
+            $response = self::addException($response, $e);
+        }
 
         response()->json(
             $response,
@@ -322,7 +346,9 @@ class Response
             'message' => trans('responses.maintenance')
         ];
 
-        $response = self::addException($response, $e);
+        if ($e instanceOf Exception) {
+            $response = self::addException($response, $e);
+        }
 
         response()->json(
             $response,
@@ -346,7 +372,9 @@ class Response
             'fields' => $validation_errors
         ];
 
-        $response = self::addException($response, $e);
+        if ($e instanceOf Exception) {
+            $response = self::addException($response, $e);
+        }
 
         response()->json(
             $response,

@@ -3,7 +3,6 @@ declare(strict_types=1);
 
 namespace App\Models\ResourceTypeItemType\Summary;
 
-use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Query\Builder as QueryBuilder;
 use Illuminate\Support\Facades\DB;
