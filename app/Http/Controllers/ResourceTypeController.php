@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\ItemType;
 use App\Models\PermittedUser;
+use App\Models\ResourceTypeAccess;
 use App\Models\Resource;
 use App\Models\ResourceTypeItemType;
 use App\Option\Delete;
@@ -118,7 +119,7 @@ class ResourceTypeController extends Controller
             $this->permitted_resource_types
         );
 
-        $parameters = Parameters::fetch(['include-resources']);
+        $parameters = Parameters::fetch(array_keys(Config::get('api.resource-type.parameters.item')));
 
         $resource_type = (new ResourceType())->single(
             $resource_type_id,
@@ -300,7 +301,7 @@ class ResourceTypeController extends Controller
         } catch (QueryException $e) {
             UtilityResponse::foreignKeyConstraintError();
         } catch (Exception $e) {
-            UtilityResponse::notFound(trans('entities.resource-type'));
+            UtilityResponse::notFound(trans('entities.resource-type'), $e);
         }
     }
 

@@ -5,7 +5,7 @@ use Illuminate\Support\Facades\Route;
 
 Route::group(
     [
-        'prefix' => Config::get('api.version.prefix'),
+        'prefix' => Config::get('api.app.version.prefix'),
         'middleware' => [
             'convert.route.parameters',
             'convert.get.parameters',
@@ -35,6 +35,26 @@ Route::group(
         );
 
         Route::get(
+            'item-types',
+            'ItemTypeController@index'
+        );
+
+        Route::options(
+            'item-types',
+            'ItemTypeController@optionsIndex'
+        );
+
+        Route::get(
+            'item-types/{item_type_id}',
+            'ItemTypeController@show'
+        );
+
+        Route::options(
+            'item-types/{item_type_id}',
+            'ItemTypeController@optionsShow'
+        );
+
+        Route::get(
             'resource-types',
             'ResourceTypeController@index'
         );
@@ -52,6 +72,16 @@ Route::group(
         Route::options(
             'resource-types/{resource_type_id}',
             'ResourceTypeController@optionsShow'
+        );
+
+        Route::get(
+            'resource-types/{resource_type_id}/permitted-users',
+            'PermittedUserController@index'
+        );
+
+        Route::options(
+            'resource-types/{resource_type_id}/permitted-users',
+            'PermittedUserController@optionsIndex'
         );
 
         Route::get(
@@ -171,22 +201,22 @@ Route::group(
 
         Route::get(
             'resource-types/{resource_type_id}/resources/{resource_id}/items/{item_id}/category/{item_category_id}/subcategory',
-            'ItemSubCategoryController@index'
+            'ItemSubcategoryController@index'
         );
 
         Route::options(
             'resource-types/{resource_type_id}/resources/{resource_id}/items/{item_id}/category/{item_category_id}/subcategory',
-            'ItemSubCategoryController@optionsIndex'
+            'ItemSubcategoryController@optionsIndex'
         );
 
         Route::get(
             'resource-types/{resource_type_id}/resources/{resource_id}/items/{item_id}/category/{item_category_id}/subcategory/{item_subcategory_id}',
-            'ItemSubCategoryController@show'
+            'ItemSubcategoryController@show'
         );
 
         Route::options(
             'resource-types/{resource_type_id}/resources/{resource_id}/items/{item_id}/category/{item_category_id}/subcategory/{item_subcategory_id}',
-            'ItemSubCategoryController@optionsShow'
+            'ItemSubcategoryController@optionsShow'
         );
 
         // Request access and error logs

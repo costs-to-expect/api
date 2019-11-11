@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\SubCategory;
+use App\Models\Subcategory;
 use App\Option\Delete;
 use App\Option\Get;
 use App\Option\Patch;
@@ -51,7 +51,7 @@ class CategoryController extends Controller
             Config::get('api.category.searchable')
         );
 
-        $total = (new Category())->totalCount(
+        $total = (new Category())->total(
             (int) $resource_type_id,
             $this->permitted_resource_types,
             $this->include_public,
@@ -123,7 +123,7 @@ class CategoryController extends Controller
             $this->permitted_resource_types
         );
 
-        $parameters = Parameters::fetch(['include-subcategories']);
+        $parameters = Parameters::fetch(array_keys(Config::get('api.category.parameters.item')));
 
         $category = (new Category)->single(
             (int) $resource_type_id,
@@ -139,7 +139,7 @@ class CategoryController extends Controller
             array_key_exists('include-subcategories', $parameters) === true &&
             $parameters['include-subcategories'] === true
         ) {
-            $subcategories = (new SubCategory())->paginatedCollection(
+            $subcategories = (new Subcategory())->paginatedCollection(
                 (int) $resource_type_id,
                 (int) $category_id,
                 0,
@@ -313,7 +313,7 @@ class CategoryController extends Controller
         } catch (QueryException $e) {
             UtilityResponse::foreignKeyConstraintError();
         } catch (Exception $e) {
-            UtilityResponse::notFound(trans('entities.category'));
+            UtilityResponse::notFound(trans('entities.category'), $e);
         }
     }
 

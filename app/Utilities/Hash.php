@@ -19,7 +19,6 @@ use Illuminate\Support\Facades\Config;
  */
 class Hash
 {
-    private $min_length;
     private $hashers;
 
     public function __construct()
@@ -33,16 +32,19 @@ class Hash
 
     private function setUp()
     {
-        $this->min_length = Config::get('api.hashids.min_length');
+        $config = Config::get('api.app.hashids');
 
-        $this->hashers['category'] = new Hashids(Config::get('api.hashids.category'), $this->min_length);
-        $this->hashers['subcategory'] = new Hashids(Config::get('api.hashids.subcategory'), $this->min_length);
-        $this->hashers['resource_type'] = new Hashids(Config::get('api.hashids.resource_type'), $this->min_length);
-        $this->hashers['resource'] = new Hashids(Config::get('api.hashids.resource'), $this->min_length);
-        $this->hashers['item'] = new Hashids(Config::get('api.hashids.item'), $this->min_length);
-        $this->hashers['item_category'] = new Hashids(Config::get('api.hashids.item_category'), $this->min_length);
-        $this->hashers['item_sub_category'] = new Hashids(Config::get('api.hashids.item_subcategory'), $this->min_length);
-        $this->hashers['item_type'] = new Hashids(Config::get('api.hashids.item_type'), $this->min_length);
+        $min_length = $config['min_length'];
+
+        $this->hashers['category'] = new Hashids($config['category'], $min_length);
+        $this->hashers['subcategory'] = new Hashids($config['subcategory'], $min_length);
+        $this->hashers['resource_type'] = new Hashids($config['resource_type'], $min_length);
+        $this->hashers['resource'] = new Hashids($config['resource'], $min_length);
+        $this->hashers['item'] = new Hashids($config['item'], $min_length);
+        $this->hashers['item_category'] = new Hashids($config['item_category'], $min_length);
+        $this->hashers['item_sub_category'] = new Hashids($config['item_subcategory'], $min_length);
+        $this->hashers['item_type'] = new Hashids($config['item_type'], $min_length);
+        $this->hashers['permitted_user'] = new Hashids($config['permitted_user'], $min_length);
     }
 
     /**
@@ -158,5 +160,15 @@ class Hash
     public function itemType(): Hashids
     {
         return $this->hashers['item_type'];
+    }
+
+    /**
+     * Helper method to return the permitted user
+     *
+     * @return Hashids
+     */
+    public function permittedUser(): Hashids
+    {
+        return $this->hashers['permitted_user'];
     }
 }

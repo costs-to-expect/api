@@ -5,7 +5,6 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Query\Builder as QueryBuilder;
-use Illuminate\Support\Facades\DB;
 
 /**
  * Request log
@@ -49,29 +48,5 @@ class RequestLog extends Model
             limit($limit)->
             get()->
             toArray();
-    }
-
-    /**
-     * @param array $collection_parameters
-     *
-     * @return array
-     */
-    public function monthlyRequests(array $collection_parameters = []): array
-    {
-        $collection = $this->orderBy(DB::raw("DATE_FORMAT(`request_log`.`created_at`, '%Y-%m')"))
-            ->groupBy(DB::raw("DATE_FORMAT(`request_log`.`created_at`, '%Y-%m')"));
-
-        if (array_key_exists('source', $collection_parameters) === true) {
-            $collection->where("source", '=', $collection_parameters['source']);
-        }
-
-        $collection->select(
-            DB::raw("DATE_FORMAT(`request_log`.`created_at`, '%Y-%m')"),
-            DB::raw("COUNT(`request_log`.`id`) AS `requests`"),
-            DB::raw("ANY_VALUE(DATE_FORMAT(`request_log`.`created_at`, '%Y')) AS `year`"),
-            DB::raw("ANY_VALUE(DATE_FORMAT(`request_log`.`created_at`, '%M')) AS `month`")
-        );
-
-        return $collection->get()->toArray();
     }
 }

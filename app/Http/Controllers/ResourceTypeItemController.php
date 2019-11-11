@@ -2,21 +2,19 @@
 
 namespace App\Http\Controllers;
 
+use App\Item\ItemInterfaceFactory;
 use App\Option\Get;
 use App\Utilities\Header;
 use App\Utilities\RoutePermission;
 use App\Validators\Request\Parameters;
 use App\Validators\Request\Route;
 use App\Models\Category;
-use App\Models\ResourceTypeItem;
-use App\Models\SubCategory;
-use App\Models\Transformers\ResourceTypeItem as ResourceTypeItemTransformer;
+use App\Models\Subcategory;
 use App\Utilities\Pagination as UtilityPagination;
 use App\Validators\Request\SearchParameters;
 use App\Validators\Request\SortParameters;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Config;
 
 /**
  * View items for all resources for a resource type
@@ -27,8 +25,6 @@ use Illuminate\Support\Facades\Config;
  */
 class ResourceTypeItemController extends Controller
 {
-    private $conditional_get_parameters = [];
-
     /**
      * Return all the items based on the set filter options
      *
@@ -44,22 +40,21 @@ class ResourceTypeItemController extends Controller
             $this->permitted_resource_types
         );
 
-        $this->setItemInterface($resource_type_id);
-        $resource_type_item_model = $this->item_interface->resourceTypeItemModel();
+        $item_interface = ItemInterfaceFactory::resourceTypeItem($resource_type_id);
+
+        $resource_type_item_model = $item_interface->model();
 
         $collection_parameters = Parameters::fetch(
-            array_merge(
-                array_keys(Config::get('api.item.parameters.collection')),
-                array_keys($this->item_interface->collectionParameters())
-            )
+            array_keys($item_interface->collectionParameters()),
+            $resource_type_id
         );
 
         $sort_fields = SortParameters::fetch(
-            $this->item_interface->sortParameters()
+            $item_interface->sortParameters()
         );
 
         $search_conditions = SearchParameters::fetch(
-            $this->item_interface->searchParameters()
+            $item_interface->searchParameters()
         );
 
         $total = $resource_type_item_model->totalCount(
@@ -101,8 +96,8 @@ class ResourceTypeItemController extends Controller
 
         return response()->json(
             array_map(
-                function($item) {
-                    return $this->item_interface->resourceTypeItemTransformer($item)->toArray();
+                function($item) use ($item_interface) {
+                    return $item_interface->transformer($item)->toArray();
                 },
                 $items
             ),
@@ -125,24 +120,32 @@ class ResourceTypeItemController extends Controller
             $this->permitted_resource_types
         );
 
-        $this->setItemInterface($resource_type_id);
+        $item_interface = ItemInterfaceFactory::resourceTypeItem($resource_type_id);
 
         $permissions = RoutePermission::resourceType(
             $resource_type_id,
             $this->permitted_resource_types
         );
 
-        $this->conditionalGetParameters(
+        $defined_parameters = Parameters::fetch(
+            array_keys($item_interface->collectionParameters()),
+            $resource_type_id
+        );
+
+        $conditional_parameters = $this->conditionalGetParameters(
             $resource_type_id,
-            ['category']
+            array_merge(
+                $item_interface->collectionParametersKeys(),
+                $defined_parameters
+            )
         );
 
         $get = Get::init()->
-            setSortable( $this->item_interface->resourceTypeItemSortParametersConfig())->
-            setSearchable($this->item_interface->resourceTypeItemSearchParametersConfig())->
+            setSortable($item_interface->sortParametersConfig())->
+            setSearchable($item_interface->searchParametersConfig())->
             setPagination(true)->
-            setParameters($this->item_interface->resourceTypeItemCollectionParametersConfig())->
-            setConditionalParameters($this->conditional_get_parameters)->
+            setParameters($item_interface->collectionParametersConfig())->
+            setConditionalParameters($conditional_parameters)->
             setDescription('route-descriptions.resource_type_item_GET_index')->
             setAuthenticationStatus($permissions['view'])->
             option();
@@ -151,80 +154,104 @@ class ResourceTypeItemController extends Controller
     }
 
     /**
-     * Fetch the conditional GET parameters reasy to be be merged with the
-     * GET parameters data array, useful for defining dynamic values such as
-     * allowed values
+     * Fetch the conditional GET parameters allowed values, ready to be be
+     * merged with the GET parameters data array, useful for defining dynamic
+     * values such as allowed values
      *
      * @param integer $resource_type_id
-     * @param array $collection_parameters
+     * @param array $parameters
+     *
+     * @return array
      */
-    private function conditionalGetParameters($resource_type_id, array $collection_parameters)
+    private function conditionalGetParameters(
+        $resource_type_id,
+        array $parameters
+    ): array
     {
-        $this->conditional_get_parameters = [
-            'year' => [
-                'allowed_values' => []
-            ],
-            'month' => [
-                'allowed_values' => []
-            ],
-            'category' => [
-                'allowed_values' => []
-            ],
-            'subcategory' => [
-                'allowed_values' => []
-            ]
-        ];
+        $item_interface = ItemInterfaceFactory::resourceTypeItem($resource_type_id);
 
-        for ($i=2013; $i <= intval(date('Y')); $i++) {
-            $this->conditional_get_parameters['year']['allowed_values'][$i] = [
-                'value' => $i,
-                'name' => $i,
-                'description' => trans('resource-type-item/allowed-values.description-prefix-year') . $i
-            ];
+        $conditional_parameters = [];
+
+        if (array_key_exists('year', $parameters) === true) {
+            $conditional_parameters['year']['allowed_values'] = [];
+
+            for (
+                $i = $item_interface->conditionalParameterMinYear($resource_type_id);
+                $i <= $item_interface->conditionalParameterMaxYear($resource_type_id);
+                $i++
+            ) {
+                $conditional_parameters['year']['allowed_values'][$i] = [
+                    'value' => $i,
+                    'name' => $i,
+                    'description' => trans('resource-type-item-type-' . $item_interface->type() .
+                            '/allowed-values.description-prefix-year') . $i
+                ];
+            }
         }
 
-        for ($i=1; $i < 13; $i++) {
-            $this->conditional_get_parameters['month']['allowed_values'][$i] = [
-                'value' => $i,
-                'name' => date("F", mktime(0, 0, 0, $i, 10)),
-                'description' => trans('resource-type-item/allowed-values.description-prefix-month') .
-                    date("F", mktime(0, 0, 0, $i, 1))
-            ];
+        if (array_key_exists('month', $parameters) === true) {
+            $conditional_parameters['month']['allowed_values'] = [];
+
+            for ($i=1; $i < 13; $i++) {
+                $conditional_parameters['month']['allowed_values'][$i] = [
+                    'value' => $i,
+                    'name' => date("F", mktime(0, 0, 0, $i, 10)),
+                    'description' => trans('resource-type-item-type-' . $item_interface->type() .
+                        '/allowed-values.description-prefix-month') .
+                        date("F", mktime(0, 0, 0, $i, 1))
+                ];
+            }
         }
 
-        $categories = (new Category())->paginatedCollection(
-            (int) $resource_type_id,
-            $this->permitted_resource_types,
-            $this->include_public,
-            0,
-            100
-        );
-        array_map(
-            function($category) {
-                $this->conditional_get_parameters['category']['allowed_values'][$this->hash->encode('category', $category['category_id'])] = [
+        if (array_key_exists('category', $parameters) === true) {
+            $conditional_parameters['category']['allowed_values'] = [];
+
+            $categories = (new Category())->paginatedCollection(
+                (int) $resource_type_id,
+                $this->permitted_resource_types,
+                $this->include_public,
+                0,
+                100
+            );
+
+            foreach ($categories as $category) {
+                $conditional_parameters['category']['allowed_values'][$this->hash->encode('category', $category['category_id'])] = [
                     'value' => $this->hash->encode('category', $category['category_id']),
                     'name' => $category['category_name'],
-                    'description' => trans('resource-type-item/allowed-values.description-prefix-category') .
-                        $category['category_name'] . trans('resource-type-item/allowed-values.description-suffix-category')
+                    'description' => trans('resource-type-item-type-' . $item_interface->type() .
+                            '/allowed-values.description-prefix-category') .
+                        $category['category_name'] .
+                        trans('resource-type-item-type-' . $item_interface->type() .
+                            '/allowed-values.description-suffix-category')
                 ];
-            },
-            $categories
-        );
+            }
+        }
 
-        if (array_key_exists('category', $collection_parameters) === true) {
-            $subcategories = (new SubCategory())->paginatedCollection($collection_parameters['category']);
+        if (
+            array_key_exists('category', $parameters) === true &&
+            $parameters['category'] !== null &&
+            array_key_exists('subcategory', $parameters) === true
+        ) {
+            $conditional_parameters['subcategory']['allowed_values'] = [];
+
+            $subcategories = (new Subcategory())->paginatedCollection(
+                $resource_type_id,
+                $parameters['category']
+            );
 
             array_map(
-                function($subcategory) {
-                    $this->conditional_get_parameters['subcategory']['allowed_values'][$this->hash->encode('subcategory', $subcategory['id'])] = [
-                        'value' => $this->hash->encode('subcategory', $subcategory['id']),
-                        'name' => $subcategory['name'],
-                        'description' => trans('item/allowed-values.description-prefix-subcategory') .
-                            $subcategory['name'] . trans('item/allowed-values.description-suffix-subcategory')
+                function($subcategory) use (&$conditional_parameters, $item_interface) {
+                    $conditional_parameters['subcategory']['allowed_values'][$this->hash->encode('subcategory', $subcategory['subcategory_id'])] = [
+                        'value' => $this->hash->encode('subcategory', $subcategory['subcategory_id']),
+                        'name' => $subcategory['subcategory_name'],
+                        'description' => trans('resource-type-item-type-' . $item_interface->type() . '/allowed-values.description-prefix-subcategory') .
+                            $subcategory['subcategory_name'] . trans('resource-type-item-type-' . $item_interface->type() . '/allowed-values.description-suffix-subcategory')
                     ];
                 },
                 $subcategories
             );
-          }
+        }
+
+        return $conditional_parameters;
     }
 }

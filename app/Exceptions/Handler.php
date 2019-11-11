@@ -52,22 +52,7 @@ class Handler extends ExceptionHandler
     public function render($request, Exception $exception)
     {
         if ($exception instanceof AuthenticationException) {
-            if (App::environment() === 'local') {
-                return response()->json(
-                    [
-                        'message' => 'Unauthenticated',
-                        'trace' => $exception->getTraceAsString()
-                    ],
-                    403
-                );
-            } else {
-                return response()->json(
-                    [
-                        'message' => trans('responses.authentication-required')
-                    ],
-                    403
-                );
-            }
+            Response::authenticationRequired();
         }
 
         $status_code = 500;
@@ -79,16 +64,10 @@ class Handler extends ExceptionHandler
 
         switch ($status_code) {
             case 404:
-                Response::notFound();
+                Response::notFound($exception);
                 break;
             case 503:
-                response()->json(
-                    [
-                        'message' => trans('responses.maintenance')
-                    ],
-                    503
-                )->send();
-                exit;
+                Response::maintenance();
                 break;
             case 500:
                 if (App::environment() === 'local') {
@@ -129,12 +108,14 @@ class Handler extends ExceptionHandler
                 break;
         }
 
-        return response()->json(
-            [
-                'message' => $message,
-                'trace' => $exception->getTraceAsString()
-            ],
-            $status_code
-        );
+        $response = [
+            'message' => $message
+        ];
+
+        if (App::environment() === 'local') {
+            $response['trace'] = $exception->getTraceAsString();
+        }
+
+        return response()->json($response, $status_code);
     }
 }

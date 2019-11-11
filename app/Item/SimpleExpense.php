@@ -3,10 +3,9 @@ declare(strict_types=1);
 
 namespace App\Item;
 
-use App\Models\ItemTypeSimpleExpense;
-use App\Models\ResourceTypeItemTypeSimpleExpense;
+use App\Models\ItemType\SimpleExpense as ItemModel;
 use App\Models\Transformers\Transformer;
-use App\Validators\Request\Fields\ItemTypeSimpleExpense as ItemTypeSimpleExpenseValidator;
+use App\Validators\Request\Fields\ItemType\SimpleExpense as ItemTypeSimpleExpenseValidator;
 use App\Validators\Request\Fields\Validator;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Config;
@@ -32,6 +31,34 @@ class SimpleExpense extends AbstractItem
     }
 
     /**
+     * Return the minimum year for the conditional year filter, reviews the
+     * item type data and returns the min value, if no data exists, defaults to
+     * the current year
+     *
+     * @param integer $resource_id
+     *
+     * @return integer
+     */
+    public function conditionalParameterMinYear(int $resource_id): int
+    {
+        return (new ItemModel())->minimumEffectiveDateYear($resource_id);
+    }
+
+    /**
+     * Return the minimum year for the conditional year filter, reviews the
+     * item type data and returns the min value, if no data exists, defaults to
+     * the current year
+     *
+     * @param integer $resource_id
+     *
+     * @return integer
+     */
+    public function conditionalParameterMaxYear(int $resource_id): int
+    {
+        return (new ItemModel())->maximumEffectiveDateYear($resource_id);
+    }
+
+    /**
      * Create an save the item type data
      *
      * @param integer $id
@@ -40,7 +67,7 @@ class SimpleExpense extends AbstractItem
      */
     public function create($id): Model
     {
-        $item_type = new ItemTypeSimpleExpense([
+        $item_type = new ItemModel([
             'item_id' => $id,
             'name' => request()->input('name'),
             'description' => request()->input('description', null),
@@ -62,7 +89,7 @@ class SimpleExpense extends AbstractItem
      */
     public function instance(int $id): Model
     {
-        return (new ItemTypeSimpleExpense())->instance($id);
+        return (new ItemModel())->instance($id);
     }
 
     /**
@@ -72,7 +99,7 @@ class SimpleExpense extends AbstractItem
      */
     public function model(): Model
     {
-        return new ItemTypeSimpleExpense();
+        return new ItemModel();
     }
 
     /**
@@ -105,58 +132,6 @@ class SimpleExpense extends AbstractItem
     public function postFieldsConfig(): string
     {
         return 'api.item-type-simple-expense.fields';
-    }
-
-    /**
-     * Return the parameters config string specific to the item type
-     *
-     * @return string
-     */
-    public function resourceTypeItemCollectionParametersConfig(): string
-    {
-        return 'api.resource-type-item-type-simple-expense.parameters.collection';
-    }
-
-    /**
-     * Return the model instance for resource type item type
-     *
-     * @return Model
-     */
-    public function resourceTypeItemModel(): Model
-    {
-        return new ResourceTypeItemTypeSimpleExpense();
-    }
-
-    /**
-     * Return the transformer for the specific item type
-     *
-     * @param array $data_to_transform
-     *
-     * @return Transformer
-     */
-    public function resourceTypeItemTransformer(array $data_to_transform): Transformer
-    {
-        return new \App\Models\Transformers\ResourceTypeItemTypeSimpleExpense($data_to_transform);
-    }
-
-    /**
-     * Return the search parameters config string specific to the item type
-     *
-     * @return string
-     */
-    public function resourceTypeItemSearchParametersConfig(): string
-    {
-        return 'api.resource-type-item-type-simple-expense.searchable';
-    }
-
-    /**
-     * Return the sort parameters config string specific to the item type
-     *
-     * @return string
-     */
-    public function resourceTypeItemSortParametersConfig(): string
-    {
-        return 'api.resource-type-item-type-simple-expense.sortable';
     }
 
     /**
@@ -198,7 +173,17 @@ class SimpleExpense extends AbstractItem
      */
     public function transformer(array $data_to_transform): Transformer
     {
-        return new \App\Models\Transformers\ItemTypeSimpleExpense($data_to_transform);
+        return new \App\Models\Transformers\ItemType\SimpleExpense($data_to_transform);
+    }
+
+    /**
+     * Return the item type identifier
+     *
+     * @return string
+     */
+    public function type(): string
+    {
+        return 'simple-expense';
     }
 
     /**

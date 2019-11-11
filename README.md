@@ -2,28 +2,12 @@
 
 ## Overview
 
-What does it cost to raise a child in the UK?
+Costs to Expect is a service which focuses on tracking and forecasting expenses. 
+The Costs to Expect API is the backbone of the service and is not going to be 
+limited to expenses; however, we figured that is was an excellent place to start. 
 
-[Costs to Expect](https://www.costs-to-expect.com) is a long-term personal project, my wife and I are tracking 
-the expenses to raise our children to, adulthood, 18.
-
-### Why?
-
-There are two core reasons as to why we are doing this. I love data, and over the last twenty years, 
-it appears to have become accepted knowledge that it costs £250k to raise a child in the UK. 
-
-If you think about the number, it becomes apparent quickly that it can't be right, on average over 
-£10k a year?
-
-This API will show the costs to raise our children; obviously, every family is different, these costs only 
-relate to our family, more details will appear on [Costs to Expect](https://www.costs-to-expect.com) as development 
-on the site continues.
-
-## The API
-
-This Laravel app is the RESTful API for the [Costs to Expect](https://www.costs-to-expect.com) service, 
-the API will be consumed by the [Costs to Expect](https://www.costs-to-expect.com) website and the iOS app which 
-I'm creating to assist my wife with data input.
+A small part of the service is tracking the costs to raise a child in the UK, 
+more detail can be found at [Costs to Expect](https://www.costs-to-expect.com).
 
 ## Set up
 
@@ -61,7 +45,7 @@ you will also need to set `MAIL_FROM_ADDRESS` and `MAIL_TO_ADDRESS`. You may nee
 
 ## Responses
 
-* Collections will return an array and 200.
+* Collections will return an array and a 200.
 * Items will return a single object and a 200.
 * Successful POST requests will return a single object and a 201.
 * Successful PATCH requests will return 204.
@@ -71,7 +55,8 @@ case of a validation error, 422, the fields array will contain the validation er
 
 ## Headers
 
-Response will include multiple headers, the table details the purpose behind each header.
+Responses will include multiple headers, the table details the purpose behind some of the 
+custom headers.
 
 | Header | Purpose |
 | :--- | :--- |
@@ -87,52 +72,89 @@ Response will include multiple headers, the table details the purpose behind eac
 | X-Search | Search options applied to request after validation |
 | X-Parameters | Request parameters applied to request after validation |
 
-## Data routes
+## Routes
+
+Access to a route will be limited based upon your permitted resource types. When you 
+create a resource type you have full access to everything below, additionally, the same 
+is true if you are assigned to a resource type.
 
 | HTTP Verb(s) | Route |
 | :--- | :--- |
 | GET/HEAD | v2/ |
 | OPTIONS  | v2/ | 
 | POST     | v2/auth/login |
-| POST     | v2/auth/register (Removed in production) |
+| POST     | v2/auth/register  |
+| GET/HEAD | v2/auth/user |
+| GET/HEAD | v2/changelog |
+| OPTIONS  | v2/changelog |
+| GET/HEAD | v2/item-types |
+| OPTIONS  | v2/item-types |
+| GET/HEAD | v2/item-types/{item_type_id} |
+| OPTIONS  | v2/item-types/{item_type_id} |
 | GET/HEAD | v2/resource-types |
 | OPTIONS  | v2/resource-types |
+| POST     | v2/resource-types |
 | GET/HEAD | v2/resource-types/{resource_type_id} |
 | OPTIONS  | v2/resource-types/{resource_type_id} |
+| PATCH    | v2/resource-types/{resource_type_id} |
+| DELETE   | v2/resource-types/{resource_type_id} |
 | GET/HEAD | v2/resource-types/{resource_type_id}/categories |
 | OPTIONS  | v2/resource-types/{resource_type_id}/categories |
+| POST     | v2/resource-types/{resource_type_id}/categories |
+| PATCH    | v2/resource-types/{resource_type_id}/categories/{category_id} |
+| DELETE   | v2/resource-types/{resource_type_id}/categories/{category_id} |
 | GET/HEAD | v2/resource-types/{resource_type_id}/categories/{category_id} |
 | OPTIONS  | v2/resource-types/{resource_type_id}/categories/{category_id} |
 | GET/HEAD | v2/resource-types/{resource_type_id}/categories/{category_id}/subcategories |
 | OPTIONS  | v2/resource-types/{resource_type_id}/categories/{category_id}/subcategories |
+| POST     | v2/resource-types/{resource_type_id}/categories/{category_id}/subcategories |
 | GET/HEAD | v2/resource-types/{resource_type_id}/categories/{category_id}/subcategories/{subcategory_id} |
 | OPTIONS  | v2/resource-types/{resource_type_id}/categories/{category_id}/subcategories/{subcategory_id} |
+| PATCH    | v2/resource-types/{resource_type_id}/categories/{category_id}/subcategories/{subcategory_id} |
+| DELETE   | v2/resource-types/{resource_type_id}/categories/{category_id}/subcategories/{subcategory_id} |
 | GET/HEAD | v2/resource-types/{resource_type_id}/items |
 | OPTIONS  | v2/resource-types/{resource_type_id}/items |
+| OPTIONS  | v2/resource-types/{resource_type_id}/permitted-users |
 | GET/HEAD | v2/resource-types/{resource_type_id}/resources |
 | OPTIONS  | v2/resource-types/{resource_type_id}/resources |
+| POST     | v2/resource-types/{resource_type_id}/resources |
 | GET/HEAD | v2/resource-types/{resource_type_id}/resources/{resource_id} |
 | OPTIONS  | v2/resource-types/{resource_type_id}/resources/{resource_id} |
+| PATCH    | v2/resource-types/{resource_type_id}/resources/{resource_id} |
+| DELETE   | v2/resource-types/{resource_type_id}/resources/{resource_id} |
 | GET/HEAD | v2/resource-types/{resource_type_id}/resources/{resource_id}/items |
 | OPTIONS  | v2/resource-types/{resource_type_id}/resources/{resource_id}/items |
+| POST     | v2/resource-types/{resource_type_id}/resources/{resource_id}/items |
 | GET/HEAD | v2/resource-types/{resource_type_id}/resources/{resource_id}/items/{item_id} |
 | OPTIONS  | v2/resource-types/{resource_type_id}/resources/{resource_id}/items/{item_id} |
+| PATCH    | v2/resource-types/{resource_type_id}/resources/{resource_id}/items/{item_id} |
+| DELETE   | v2/resource-types/{resource_type_id}/resources/{resource_id}/items/{item_id} |
 | GET/HEAD | v2/resource-types/{resource_type_id}/resources/{resource_id}/items/{item_id}/category |
 | OPTIONS  | v2/resource-types/{resource_type_id}/resources/{resource_id}/items/{item_id}/category |
+| POST     | v2/resource-types/{resource_type_id}/resources/{resource_id}/items/{item_id}/category |
 | GET/HEAD | v2/resource-types/{resource_type_id}/resources/{resource_id}/items/{item_id}/category/{item_category_id} |
 | OPTIONS  | v2/resource-types/{resource_type_id}/resources/{resource_id}/items/{item_id}/category/{item_category_id} |
+| DELETE   | v2/resource-types/{resource_type_id}/resources/{resource_id}/items/{item_id}/category/{item_category_id} |
 | GET/HEAD | v2/resource-types/{resource_type_id}/resources/{resource_id}/items/{item_id}/category/{item_category_id}/subcategory |
 | OPTIONS  | v2/resource-types/{resource_type_id}/resources/{resource_id}/items/{item_id}/category/{item_category_id}/subcategory |
+| POST     | v2/resource-types/{resource_type_id}/resources/{resource_id}/items/{item_id}/category/{item_category_id}/sub_category |
 | GET/HEAD | v2/resource-types/{resource_type_id}/resources/{resource_id}/items/{item_id}/category/{item_category_id}/subcategory/{item_subcategory_id} |
 | OPTIONS  | v2/resource-types/{resource_type_id}/resources/{resource_id}/items/{item_id}/category/{item_category_id}/subcategory/{item_subcategory_id} |
+| DELETE   | v2/resource-types/{resource_type_id}/resources/{resource_id}/items/{item_id}/category/{item_category_id}/sub_category/{item_subcategory_id} |
 | OPTIONS  | v2/resource-types/{resource_type_id}/resources/{resource_id}/items/{item_id}/transfer |
+| POST     | v2/resource-types/{resource_type_id}/resources/{resource_id}/items/{item_id}/transfer |
+| GET/HEAD | v2/request/error-log |
+| OPTIONS  | v2/request/error-log |
+| POST     | v2/request/error-log |
+| GET/HEAD | v2/request/access-log |
+| OPTIONS  | v2/request/access-log |
 
 ## Summary routes
 
-Eventually there will be a summary route for every API GET endpoint, until that point, the summary routes 
-are detailed below. Some use GET parameters to breakdown the data, one example being items 
-which allows you to provide year, month, category and subcategory. A summary route should have the same 
-GET parameters as the non summary route.
+Eventually, there will be a summary route for every API GET endpoint. Until that point, the summary routes 
+that exists are detailed below. Some use GET parameters to breakdown the data, one example being 
+`v2/summary/resource-types/{resource_type_id}/items`. Review the OPTIONS request for each summary 
+route to see the supported parameters, these should largely match the non summary route.
 
 | HTTP Verb(s) | Route |
 | :--- | :--- |
@@ -150,43 +172,3 @@ GET parameters as the non summary route.
 | OPTIONS  | v2/summary/resource-types/{resource_type_id}/resources |
 | GET/HEAD | v2/summary/resource-types/{resource_type_id}/resources/{resource_id}/items |
 | OPTIONS  | v2/summary/resource-types/{resource_type_id}/resources/{resource_id}/items |
-
-## Misc routes
-
-| HTTP Verb(s) | Route |
-| :--- | :--- |
-| GET/HEAD | v2/changelog |
-| OPTIONS  | v2/changelog |
-| GET/HEAD | v2/request/error-log |
-| OPTIONS  | v2/request/error-log |
-| POST     | v2/request/error-log |
-| GET/HEAD | v2/request/access-log |
-| OPTIONS  | v2/request/access-log |
-
-## Private routes
-
-These routes require authorisation.
-
-| HTTP Verb(s) | Route |
-| :--- | :--- |
-| GET/HEAD | v2/auth/user |
-| POST     | v2/categories |
-| PATCH    | v2/categories/{category_id} |
-| DELETE   | v2/categories/{category_id} |
-| POST     | v2/categories/{category_id}/subcategories |
-| PATCH    | v2/categories/{category_id}/subcategories/{subcategory_id} |
-| DELETE   | v2/categories/{category_id}/subcategories/{subcategory_id} |
-| POST     | v2/resource-types |
-| PATCH    | v2/resource-types/{resource_type_id} |
-| DELETE   | v2/resource-types/{resource_type_id} |
-| POST     | v2/resource-types/{resource_type_id}/resources |
-| PATCH    | v2/resource-types/{resource_type_id}/resources/{resource_id} |
-| DELETE   | v2/resource-types/{resource_type_id}/resources/{resource_id} |
-| POST     | v2/resource-types/{resource_type_id}/resources/{resource_id}/items |
-| PATCH    | v2/resource-types/{resource_type_id}/resources/{resource_id}/items/{item_id} |
-| DELETE   | v2/resource-types/{resource_type_id}/resources/{resource_id}/items/{item_id} |
-| POST     | v2/resource-types/{resource_type_id}/resources/{resource_id}/items/{item_id}/category |
-| DELETE   | v2/resource-types/{resource_type_id}/resources/{resource_id}/items/{item_id}/category/{item_category_id} |
-| POST     | v2/resource-types/{resource_type_id}/resources/{resource_id}/items/{item_id}/category/{item_category_id}/sub_category |
-| DELETE   | v2/resource-types/{resource_type_id}/resources/{resource_id}/items/{item_id}/category/{item_category_id}/sub_category/{item_subcategory_id} |
-| POST     | v2/resource-types/{resource_type_id}/resources/{resource_id}/items/{item_id}/transfer |

@@ -11,10 +11,10 @@ use App\Utilities\Pagination as UtilityPagination;
 use App\Utilities\Request as UtilityRequest;
 use App\Utilities\RoutePermission;
 use App\Validators\Request\Route;
-use App\Models\SubCategory;
-use App\Models\Transformers\SubCategory as SubCategoryTransformer;
+use App\Models\Subcategory;
+use App\Models\Transformers\Subcategory as SubcategoryTransformer;
 use App\Utilities\Response as UtilityResponse;
-use App\Validators\Request\Fields\SubCategory as SubCategoryValidator;
+use App\Validators\Request\Fields\Subcategory as SubcategoryValidator;
 use App\Validators\Request\SearchParameters;
 use App\Validators\Request\SortParameters;
 use Exception;
@@ -53,7 +53,7 @@ class SubcategoryController extends Controller
             Config::get('api.subcategory.searchable')
         );
 
-        $total = (new SubCategory())->totalCount(
+        $total = (new Subcategory())->totalCount(
             (int) $resource_type_id,
             (int) $category_id,
             $search_parameters
@@ -73,7 +73,7 @@ class SubcategoryController extends Controller
         setSortParameters($sort_parameters)->
         paging();
 
-        $subcategories = (new SubCategory())->paginatedCollection(
+        $subcategories = (new Subcategory())->paginatedCollection(
             (int) $resource_type_id,
             (int) $category_id,
             $pagination['offset'],
@@ -98,7 +98,7 @@ class SubcategoryController extends Controller
         return response()->json(
             array_map(
                 function($subcategory) {
-                    return (new SubCategoryTransformer($subcategory))->toArray();
+                    return (new SubcategoryTransformer($subcategory))->toArray();
                 },
                 $subcategories
             ),
@@ -129,7 +129,7 @@ class SubcategoryController extends Controller
             $this->permitted_resource_types
         );
 
-        $subcategory = (new SubCategory())->single(
+        $subcategory = (new Subcategory())->single(
             $category_id,
             $subcategory_id
         );
@@ -142,7 +142,7 @@ class SubcategoryController extends Controller
         $headers->item();
 
         return response()->json(
-            (new SubCategoryTransformer($subcategory))->toArray(),
+            (new SubcategoryTransformer($subcategory))->toArray(),
             200,
             $headers->headers()
         );
@@ -263,11 +263,11 @@ class SubcategoryController extends Controller
             true
         );
 
-        $validator = (new SubCategoryValidator)->create(['category_id' => $category_id]);
+        $validator = (new SubcategoryValidator)->create(['category_id' => $category_id]);
         UtilityRequest::validateAndReturnErrors($validator);
 
         try {
-            $sub_category = new SubCategory([
+            $sub_category = new Subcategory([
                 'category_id' => $category_id,
                 'name' => request()->input('name'),
                 'description' => request()->input('description')
@@ -278,7 +278,7 @@ class SubcategoryController extends Controller
         }
 
         return response()->json(
-            (new SubCategoryTransformer((new SubCategory())->instanceToArray($sub_category)))->toArray(),
+            (new SubcategoryTransformer((new Subcategory())->instanceToArray($sub_category)))->toArray(),
             201
         );
     }
@@ -306,7 +306,7 @@ class SubcategoryController extends Controller
             true
         );
 
-        $sub_category = (new SubCategory())->instance(
+        $sub_category = (new Subcategory())->instance(
             $category_id,
             $subcategory_id
         );
@@ -322,7 +322,7 @@ class SubcategoryController extends Controller
         } catch (QueryException $e) {
             UtilityResponse::foreignKeyConstraintError();
         } catch (Exception $e) {
-            UtilityResponse::notFound(trans('entities.subcategory'));
+            UtilityResponse::notFound(trans('entities.subcategory'), $e);
         }
     }
 
@@ -349,7 +349,7 @@ class SubcategoryController extends Controller
             true
         );
 
-        $subcategory = (new SubCategory())->instance($category_id, $subcategory_id);
+        $subcategory = (new Subcategory())->instance($category_id, $subcategory_id);
 
         if ($subcategory === null) {
             UtilityResponse::failedToSelectModelForUpdate();
@@ -357,7 +357,7 @@ class SubcategoryController extends Controller
 
         UtilityRequest::checkForEmptyPatch();
 
-        $validator = (new SubCategoryValidator())->update([
+        $validator = (new SubcategoryValidator())->update([
             'category_id' => intval($category_id),
             'subcategory_id' => intval($subcategory_id)
         ]);
@@ -365,8 +365,8 @@ class SubcategoryController extends Controller
 
         UtilityRequest::checkForInvalidFields(
             array_merge(
-                (new SubCategory())->patchableFields(),
-                (new SubCategoryValidator)->dynamicDefinedFields()
+                (new Subcategory())->patchableFields(),
+                (new SubcategoryValidator)->dynamicDefinedFields()
             )
         );
 

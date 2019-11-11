@@ -7,7 +7,6 @@ a,
 a:focus,
 a:hover {
     color: #d0378b;
-    font-weight: bold;
 }
 
 /* Custom default button */
@@ -25,9 +24,8 @@ a:hover {
  * Base structure
  */
 
-html,
-body {
-    height: 100%;
+html, body
+{
     background-color: #64317a;
 }
 
@@ -35,15 +33,14 @@ body {
     display: -ms-flexbox;
     display: flex;
     color: #fff;
-    text-shadow: 0 .05rem .1rem rgba(0, 0, 0, .5);
-    box-shadow: inset 0 0 5rem rgba(0, 0, 0, .5);
 }
 
 .cover-container {
     max-width: 42em;
 }
 .cover-heading {
-    font-size: 3.5rem;
+    margin-top: 3rem;
+    font-size: 3rem;
 }
 
 
@@ -96,11 +93,6 @@ body {
 .cover {
     padding: 0 1.5rem;
 }
-.cover .btn-lg {
-    padding: .75rem 1.25rem;
-    font-weight: 700;
-}
-
 
 /*
  * Footer

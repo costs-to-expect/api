@@ -11,9 +11,6 @@ use Illuminate\Support\Facades\Config;
 /**
  * Resource type model
  *
- * Single() exists in this model to be consistent with all the other models, it is
- * simply a synonym for find()
- *
  * @mixin QueryBuilder
  * @author Dean Blackborough <dean@g3d-development.com>
  * @copyright G3D Development Limited 2018-2019
@@ -247,33 +244,5 @@ class ResourceType extends Model
     public function instance(int $resource_type_id): ?ResourceType
     {
         return $this->find($resource_type_id);
-    }
-
-    /**
-     * Validate that the resource type exists and is accessible to the user for
-     * viewing, editing
-     *
-     * @param integer $id
-     * @param array $permitted_resource_types
-     * @param boolean $manage Should be exclude public items as we are checking
-     * a management route
-     *
-     * @return boolean
-     */
-    public function existsToUser(
-        int $id,
-        array $permitted_resource_types,
-        $manage = false
-    ): bool
-    {
-        $collection = $this->where('resource_type.id', '=', $id);
-
-        $collection = ModelUtility::applyResourceTypeCollectionCondition(
-            $collection,
-            $permitted_resource_types,
-            ($manage === true) ? false : true
-        );
-
-        return (count($collection->get()) === 1) ? true : false;
     }
 }

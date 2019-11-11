@@ -5,7 +5,7 @@ use Illuminate\Support\Facades\Route;
 
 Route::group(
     [
-        'prefix' => Config::get('api.version.prefix'),
+        'prefix' => Config::get('api.app.version.prefix'),
         'middleware' => [
             'auth:api',
             'convert.route.parameters'
@@ -49,7 +49,7 @@ Route::group(
 
         Route::post(
             'resource-types/{resource_type_id}/resources/{resource_id}/items/{item_id}/category/{item_category_id}/subcategory',
-            'ItemSubCategoryController@create'
+            'ItemSubcategoryController@create'
         );
 
         Route::post(
@@ -89,7 +89,7 @@ Route::group(
 
         Route::delete(
             'resource-types/{resource_type_id}/resources/{resource_id}/items/{item_id}/category/{item_category_id}/subcategory/{item_subcategory_id}',
-            'ItemSubCategoryController@delete'
+            'ItemSubcategoryController@delete'
         );
 
         Route::patch(

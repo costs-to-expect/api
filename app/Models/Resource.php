@@ -195,36 +195,4 @@ class Resource extends Model
             where('resource_type_id', '=', $resource_type_id)->
             find($resource_id);
     }
-
-    /**
-     * Validate that the resource exists and is accessible to the user for
-     * viewing, editing etc. based on their permitted resource types
-     *
-     * @param integer $resource_id
-     * @param integer $resource_type_id
-     * @param array $permitted_resource_types
-     * @param boolean $manage Should be exclude public items as we are checking
-     * a management route
-     *
-     * @return boolean
-     */
-    public function existsToUser(
-        int $resource_id,
-        int $resource_type_id,
-        array $permitted_resource_types,
-        $manage = false
-    ): bool
-    {
-        $collection = $this->join('resource_type', 'resource.resource_type_id', 'resource_type.id')->
-            where('resource.resource_type_id', '=', $resource_type_id)->
-            where('resource.id', '=', $resource_id);
-
-        $collection = ModelUtility::applyResourceTypeCollectionCondition(
-            $collection,
-            $permitted_resource_types,
-            ($manage === true) ? false : true
-        );
-
-        return (count($collection->get()) === 1) ? true : false;
-    }
 }

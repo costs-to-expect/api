@@ -6,10 +6,10 @@ namespace App\Utilities;
 use App\Validators\Request\Routes\Category;
 use App\Validators\Request\Routes\Item;
 use App\Validators\Request\Routes\ItemCategory;
-use App\Validators\Request\Routes\ItemSubCategory;
+use App\Validators\Request\Routes\ItemSubcategory;
 use App\Validators\Request\Routes\Resource;
 use App\Validators\Request\Routes\ResourceType;
-use App\Validators\Request\Routes\SubCategory;
+use App\Validators\Request\Routes\Subcategory;
 
 /**
  * Work out the permissions for each route, permissions are read and manage
@@ -70,13 +70,13 @@ class RoutePermission
     ): array
     {
         return [
-            'view' => SubCategory::existsToUserForViewing(
+            'view' => Subcategory::existsToUserForViewing(
                 (int) $resource_type_id,
                 (int) $category_id,
                 (int) $subcategory_id,
                 $permitted_resource_types
             ),
-            'manage' => SubCategory::existsToUserForManagement(
+            'manage' => Subcategory::existsToUserForManagement(
                 (int) $resource_type_id,
                 (int) $category_id,
                 (int) $subcategory_id,
@@ -236,7 +236,7 @@ class RoutePermission
     ): array
     {
         return [
-        'view' => ItemSubCategory::existsToUserForViewing(
+        'view' => ItemSubcategory::existsToUserForViewing(
                 (int) $resource_type_id,
                 (int) $resource_id,
                 (int) $item_id,
@@ -244,7 +244,7 @@ class RoutePermission
                 (int) $item_subcategory_id,
                 $permitted_resource_types
             ),
-        'manage' => ItemSubCategory::existsToUserForManagement(
+        'manage' => ItemSubcategory::existsToUserForManagement(
                 (int) $resource_type_id,
                 (int) $resource_id,
                 (int) $item_id,

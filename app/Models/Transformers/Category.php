@@ -54,7 +54,7 @@ class Category extends Transformer
         }
 
         foreach ($this->subcategories as $subcategory) {
-            $result['subcategories']['collection'][] = (new SubCategory($subcategory))->toArray();
+            $result['subcategories']['collection'][] = (new Subcategory($subcategory))->toArray();
         }
 
         return $result;

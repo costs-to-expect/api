@@ -24,16 +24,19 @@ class ConvertRouteParameters
      */
     public function handle($request, Closure $next)
     {
-        $min_length = Config::get('api.hashids.min_length');
+        $config = Config::get('api.app.hashids');
+
+        $min_length = $config['min_length'];
 
         $route_params = [
-            'category_id' => new Hashids(Config::get('api.hashids.category'), $min_length),
-            'subcategory_id' => new Hashids(Config::get('api.hashids.subcategory'), $min_length),
-            'resource_type_id' => new Hashids(Config::get('api.hashids.resource_type'), $min_length),
-            'resource_id' => new Hashids(Config::get('api.hashids.resource'), $min_length),
-            'item_id' => new Hashids(Config::get('api.hashids.item'), $min_length),
-            'item_category_id' => new Hashids(Config::get('api.hashids.item_category'), $min_length),
-            'item_subcategory_id' => new Hashids(Config::get('api.hashids.item_subcategory'), $min_length),
+            'category_id' => new Hashids($config['category'], $min_length),
+            'subcategory_id' => new Hashids($config['subcategory'], $min_length),
+            'resource_type_id' => new Hashids($config['resource_type'], $min_length),
+            'resource_id' => new Hashids($config['resource'], $min_length),
+            'item_id' => new Hashids($config['item'], $min_length),
+            'item_category_id' => new Hashids($config['item_category'], $min_length),
+            'item_subcategory_id' => new Hashids($config['item_subcategory'], $min_length),
+            'item_type_id' => new Hashids($config['item_type'], $min_length),
         ];
 
         foreach ($route_params as $param => $hasher) {

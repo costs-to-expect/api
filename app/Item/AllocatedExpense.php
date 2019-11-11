@@ -3,10 +3,9 @@ declare(strict_types=1);
 
 namespace App\Item;
 
-use App\Models\ItemTypeAllocatedExpense;
-use App\Models\ResourceTypeItemTypeAllocatedExpense;
+use App\Models\ItemType\AllocatedExpense as ItemModel;
 use App\Models\Transformers\Transformer;
-use App\Validators\Request\Fields\ItemTypeAllocatedExpense as ItemTypeAllocatedExpenseValidator;
+use App\Validators\Request\Fields\ItemType\AllocatedExpense as ItemTypeAllocatedExpenseValidator;
 use App\Validators\Request\Fields\Validator;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Config;
@@ -32,6 +31,34 @@ class AllocatedExpense extends AbstractItem
     }
 
     /**
+     * Return the minimum year for the conditional year filter, reviews the
+     * item type data and returns the min value, if no data exists, defaults to
+     * the current year
+     *
+     * @param integer $resource_id
+     *
+     * @return integer
+     */
+    public function conditionalParameterMinYear(int $resource_id): int
+    {
+        return (new ItemModel())->minimumEffectiveDateYear($resource_id);
+    }
+
+    /**
+     * Return the minimum year for the conditional year filter, reviews the
+     * item type data and returns the min value, if no data exists, defaults to
+     * the current year
+     *
+     * @param integer $resource_id
+     *
+     * @return integer
+     */
+    public function conditionalParameterMaxYear(int $resource_id): int
+    {
+        return (new ItemModel())->maximumEffectiveDateYear($resource_id);
+    }
+
+    /**
      * Create an save the item type data
      *
      * @param integer $id
@@ -40,7 +67,7 @@ class AllocatedExpense extends AbstractItem
      */
     public function create($id): Model
     {
-        $item_type = new ItemTypeAllocatedExpense([
+        $item_type = new ItemModel([
             'item_id' => $id,
             'name' => request()->input('name'),
             'description' => request()->input('description', null),
@@ -69,7 +96,7 @@ class AllocatedExpense extends AbstractItem
      */
     public function instance(int $id): Model
     {
-        return (new ItemTypeAllocatedExpense())->instance($id);
+        return (new ItemModel())->instance($id);
     }
 
     /**
@@ -79,7 +106,7 @@ class AllocatedExpense extends AbstractItem
      */
     public function model(): Model
     {
-        return new ItemTypeAllocatedExpense();
+        return new ItemModel();
     }
 
     /**
@@ -112,58 +139,6 @@ class AllocatedExpense extends AbstractItem
     public function postFieldsConfig(): string
     {
         return 'api.item-type-allocated-expense.fields';
-    }
-
-    /**
-     * Return the parameters config string specific to the item type
-     *
-     * @return string
-     */
-    public function resourceTypeItemCollectionParametersConfig(): string
-    {
-        return 'api.resource-type-item-type-allocated-expense.parameters.collection';
-    }
-
-    /**
-     * Return the model instance for resource type item type
-     *
-     * @return Model
-     */
-    public function resourceTypeItemModel(): Model
-    {
-        return new ResourceTypeItemTypeAllocatedExpense();
-    }
-
-    /**
-     * Return the transformer for the specific item type
-     *
-     * @param array $data_to_transform
-     *
-     * @return Transformer
-     */
-    public function resourceTypeItemTransformer(array $data_to_transform): Transformer
-    {
-        return new \App\Models\Transformers\ResourceTypeItemTypeAllocatedExpense($data_to_transform);
-    }
-
-    /**
-     * Return the search parameters config string specific to the item type
-     *
-     * @return string
-     */
-    public function resourceTypeItemSearchParametersConfig(): string
-    {
-        return 'api.resource-type-item-type-allocated-expense.searchable';
-    }
-
-    /**
-     * Return the sort parameters config string specific to the item type
-     *
-     * @return string
-     */
-    public function resourceTypeItemSortParametersConfig(): string
-    {
-        return 'api.resource-type-item-type-allocated-expense.sortable';
     }
 
     /**
@@ -205,7 +180,17 @@ class AllocatedExpense extends AbstractItem
      */
     public function transformer(array $data_to_transform): Transformer
     {
-        return new \App\Models\Transformers\ItemTypeAllocatedExpense($data_to_transform);
+        return new \App\Models\Transformers\ItemType\AllocatedExpense($data_to_transform);
+    }
+
+    /**
+     * Return the item type identifier
+     *
+     * @return string
+     */
+    public function type(): string
+    {
+        return 'allocated-expense';
     }
 
     /**

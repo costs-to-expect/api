@@ -3,12 +3,8 @@ declare(strict_types=1);
 
 namespace App\Models;
 
-use App\Utilities\General;
-use App\Utilities\Model as ModelUtility;
 use Illuminate\Database\Query\Builder as QueryBuilder;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Facades\Config;
-use Illuminate\Support\Facades\DB;
 
 /**
  * Item model
@@ -42,41 +38,5 @@ class Item extends Model
                 'item.id'
             )
             ->find($item_id);
-    }
-
-    /**
-     * Validate that the item exists and is accessible to the user for
-     * viewing, editing etc. based on their permitted resource types
-     *
-     * @param integer $resource_type_id
-     * @param integer $resource_id
-     * @param integer $item_id
-     * @param array $permitted_resource_types
-     * @param boolean $manage Should be exclude public items as we are checking
-     * a management route
-     *
-     * @return boolean
-     */
-    public function existsToUser(
-        int $resource_type_id,
-        int $resource_id,
-        int $item_id,
-        array $permitted_resource_types,
-        $manage = false
-    ): bool
-    {
-        $collection = $this->join('resource', 'item.resource_id', 'resource.id')->
-            join('resource_type', 'resource.resource_type_id', 'resource_type.id')->
-            where('resource.resource_type_id', '=', $resource_type_id)->
-            where('resource.id', '=', $resource_id)->
-            where('item.id', '=', $item_id);
-
-        $collection = ModelUtility::applyResourceTypeCollectionCondition(
-            $collection,
-            $permitted_resource_types,
-            ($manage === true) ? false : true
-        );
-
-        return (count($collection->get()) === 1) ? true : false;
     }
 }

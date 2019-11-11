@@ -29,11 +29,49 @@ abstract class AbstractItem
     }
 
     /**
+     * Return the collection parameters specific to the item type, these will
+     * be merged with the default collection parameters
+     *
+     * @return array
+     */
+    public function collectionParametersKeys(): array
+    {
+        $params = [];
+        foreach (Config::get($this->collectionParametersConfig()) as $key => $param) {
+            $params[$param['parameter']] = null;
+        }
+
+        return $params;
+    }
+
+    /**
      * Return the parameters config string specific to the item type
      *
      * @return string
      */
     abstract public function collectionParametersConfig(): string;
+
+    /**
+     * Return the minimum year for the conditional year filter, reviews the
+     * item type data and returns the min value, if no data exists, defaults to
+     * the current year
+     *
+     * @param integer $resource_id
+     *
+     * @return integer
+     */
+    abstract public function conditionalParameterMinYear(int $resource_id): int;
+
+    /**
+     * Return the minimum year for the conditional year filter, reviews the
+     * item type data and returns the min value, if no data exists, defaults to
+     * the current year
+     *
+     * @param integer $resource_id
+     *
+     * @return integer
+     */
+    abstract public function conditionalParameterMaxYear(int $resource_id): int;
 
     /**
      * Create an save the item type data
@@ -68,17 +106,6 @@ abstract class AbstractItem
     abstract public function patchableFields(): array;
 
     /**
-     * Return the patch fields specific to the item type, these will be merged
-     * with any default patch fields
-     *
-     * @return array
-     */
-    public function patchFields(): array
-    {
-        return Config::get($this->patchFields());
-    }
-
-    /**
      * Return the patch fields config string specific to the item type
      *
      * @return string
@@ -86,92 +113,11 @@ abstract class AbstractItem
     abstract public function patchFieldsConfig(): string;
 
     /**
-     * Return the post fields specific to the item type, these will be merged
-     * with any default post fields
-     *
-     * @return array
-     */
-    public function postFields(): array
-    {
-        return Config::get($this->postFieldsConfig());
-    }
-
-    /**
      * Return the post fields config string specific to the item type
      *
      * @return string
      */
     abstract public function postFieldsConfig(): string;
-
-    /**
-     * Return the collection parameters specific to the item type, these will
-     * be merged with the default collection parameters
-     *
-     * @return array
-     */
-    public function resourceTypeItemCollectionParameters(): array
-    {
-         return Config::get($this->resourceTypeItemCollectionParametersConfig());
-    }
-
-    /**
-     * Return the parameters config string specific to the item type
-     *
-     * @return string
-     */
-    abstract public function resourceTypeItemCollectionParametersConfig(): string;
-
-    /**
-     * Return the model instance for resource type item type
-     *
-     * @return Model
-     */
-    abstract public function resourceTypeItemModel(): Model;
-
-    /**
-     * Return the search parameters specific to the item type, these will be
-     * merged with any default search parameters
-     *
-     * @return array
-     */
-    public function resourceTypeItemSearchParameters(): array
-    {
-        return Config::get($this->resourceTypeItemSearchParametersConfig());
-    }
-
-    /**
-     * Return the search parameters config string specific to the item type
-     *
-     * @return string
-     */
-    abstract public function resourceTypeItemSearchParametersConfig(): string;
-
-    /**
-     * Return the sort parameters specific to the item type, these will be
-     * merged with any default sort parameters
-     *
-     * @return array
-     */
-    public function resourceTypeItemSortParameters(): array
-    {
-        return Config::get($this->resourceTypeItemSortParametersConfig());
-    }
-
-    /**
-     * Return the sort parameters config string specific to the item type
-     *
-     * @return string
-     */
-    abstract public function resourceTypeItemSortParametersConfig(): string;
-
-    /**
-     * Return the transformer for the specific item type
-     *
-     * @param array $data_to_transform
-     *
-     * @return Transformer
-     */
-    abstract public function resourceTypeItemTransformer(array $data_to_transform): Transformer;
 
     /**
      * Return the search parameters specific to the item type, these will be
@@ -190,17 +136,6 @@ abstract class AbstractItem
      * @return string
      */
     abstract public function searchParametersConfig(): string;
-
-    /**
-     * Return the show parameters specific to the item type, these will
-     * be merged with the default show parameters
-     *
-     * @return array
-     */
-    public function showParameters(): array
-    {
-         return Config::get($this->showParametersConfig());
-    }
 
     /**
      * Return the show parameters config string specific to the item type
@@ -235,6 +170,13 @@ abstract class AbstractItem
      * @return Transformer
      */
     abstract public function transformer(array $data_to_transform): Transformer;
+
+    /**
+     * Return the item type identifier
+     *
+     * @return string
+     */
+    abstract public function type(): string;
 
     /**
      * Update the item type data

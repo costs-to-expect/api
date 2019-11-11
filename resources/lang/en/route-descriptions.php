@@ -18,6 +18,9 @@ return [
     'sub_category_PATCH' => 'Update the selected subcategory',
     'sub_category_DELETE' => 'Delete the selected subcategory',
 
+    'item_type_GET_index' => 'Return all the item types supported in the API',
+    'item_type_GET_show' => 'Return the selected item type',
+
     'resource_type_GET_index' => 'Return all the public resource types, optionally, with authorisation include any private resource types',
     'resource_type_GET_show' => 'Return the selected resource type',
     'resource_type_POST' => 'Create a new resource type',
@@ -51,6 +54,9 @@ return [
     'item_sub_category_DELETE' => 'Delete the subcategory assigned to the selected item',
 
     'item_transfer_POST' => 'Transfer an item to another resource',
+
+    'permitted_user_GET_index' => 'Return the permitted users',
+    'permitted_user_POST' => 'Assign a permitted user',
 
     'request_GET_access-log' => 'Return the access log, read requests',
     'request_GET_error_log' => 'Return the error log',

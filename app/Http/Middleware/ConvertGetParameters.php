@@ -24,12 +24,14 @@ class ConvertGetParameters
      */
     public function handle($request, Closure $next)
     {
-        $min_length = Config::get('api.hashids.min_length');
+        $config = Config::get('api.app.hashids');
+
+        $min_length = $config['min_length'];
 
         $parameters = [
-            'category' => new Hashids(Config::get('api.hashids.category'), $min_length),
-            'subcategory' => new Hashids(Config::get('api.hashids.subcategory'), $min_length),
-            'resource-type' => new Hashids(Config::get('api.hashids.resource_type'), $min_length),
+            'category' => new Hashids($config['category'], $min_length),
+            'subcategory' => new Hashids($config['subcategory'], $min_length),
+            'resource-type' => new Hashids($config['resource_type'], $min_length),
         ];
 
         foreach ($parameters as $param => $hasher) {

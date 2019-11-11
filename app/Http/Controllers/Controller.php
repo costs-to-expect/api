@@ -2,11 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\Item\AbstractItem;
-use App\Item\ItemFactory;
-use App\Models\PermittedUser;
+use App\Models\ResourceTypeAccess;
 use App\Utilities\Hash;
-use Exception;
 use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Routing\Controller as BaseController;
@@ -42,11 +39,6 @@ class Controller extends BaseController
      */
     protected $allow_entire_collection = false;
 
-    /**
-     * @var AbstractItem
-     */
-    protected $item_interface = null;
-
     public function __construct()
     {
         $this->hash = new Hash();
@@ -62,7 +54,7 @@ class Controller extends BaseController
     {
         if (auth()->guard('api')->check() === true && auth('api')->user() !== null) {
             $this->user_id = auth('api')->user()->id;
-            $this->permitted_resource_types = (new PermittedUser())->permittedResourceTypes($this->user_id);
+            $this->permitted_resource_types = (new ResourceTypeAccess())->permittedResourceTypes($this->user_id);
         }
 
         $this->include_public = true;
@@ -99,20 +91,5 @@ class Controller extends BaseController
             $options['headers']
         )->send();
         exit;
-    }
-
-    /**
-     * Make a call to the item interface factory and set the relevant item
-     * interface
-     *
-     * @param integer $resource_type_id
-     */
-    protected function setItemInterface(int $resource_type_id)
-    {
-        try {
-            $this->item_interface = ItemFactory::getItemInterface($resource_type_id);
-        } catch (Exception $e) {
-            abort(500, $e->getMessage());
-        }
     }
 }

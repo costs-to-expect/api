@@ -12,11 +12,6 @@ use Illuminate\Support\Facades\DB;
 /**
  * Category model
  *
- * Single() exists in this model to be consistent with all the other models, it
- * is simply a synonym for find().
- *
- * Categories are private if they are related to a private resource type
- *
  * @mixin QueryBuilder
  * @author Dean Blackborough <dean@g3d-development.com>
  * @copyright G3D Development Limited 2018-2019
@@ -53,7 +48,7 @@ class Category extends Model
      *
      * @return integer
      */
-    public function totalCount(
+    public function total(
         int $resource_type_id,
         array $permitted_resource_types,
         bool $include_public,
@@ -232,37 +227,5 @@ class Category extends Model
             'category_created_at' => $category->created_at->toDateTimeString(),
             'resource_type_id' => $category->resource_type_id
         ];
-    }
-
-    /**
-     * Validate that the category exists and is accessible to the user for
-     * viewing, editing based on their permitted resource types
-     *
-     * @param integer $resource_type_id
-     * @param integer $category_id
-     * @param array $permitted_resource_types
-     * @param boolean $manage Should be exclude public items as we are checking
-     * a management route
-     *
-     * @return boolean
-     */
-    public function existsToUser(
-        int $resource_type_id,
-        int $category_id,
-        array $permitted_resource_types,
-        $manage = false
-    ): bool
-    {
-        $collection = $this->where('category.id', '=', $category_id)->
-            join('resource_type', 'category.resource_type_id', 'resource_type.id')->
-            where('category.resource_type_id', '=', $resource_type_id);
-
-        $collection = ModelUtility::applyResourceTypeCollectionCondition(
-            $collection,
-            $permitted_resource_types,
-            ($manage === true) ? false : true
-        );
-
-        return (count($collection->get()) === 1) ? true : false;
     }
 }
