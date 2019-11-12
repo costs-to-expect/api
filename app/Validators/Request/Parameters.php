@@ -83,8 +83,12 @@ class Parameters
                     break;
 
                 case 'month':
-                    if (array_key_exists($key, self::$parameters) === true) {
-                        if (intval(self::$parameters[$key]) < 1 ||
+                    if (array_key_exists($key, self::$parameters) === true &&
+                        intval(self::$parameters[$key] > 0)) {
+
+                        self::$parameters[$key] = intval(self::$parameters[$key]);
+
+                        if (self::$parameters[$key] < 1 ||
                             self::$parameters[$key] > 12) {
                             unset(self::$parameters[$key]);
                         }
@@ -126,26 +130,32 @@ class Parameters
                     break;
 
                 case 'year':
-                    $min_year_limit = intval(Date('Y'));
-                    $max_year_limit = intval(Date('Y'));
+                    if (array_key_exists($key, self::$parameters) === true &&
+                        intval(self::$parameters[$key] > 0)) {
 
-                    if ($resource_type_id !== null && $resource_id === null) {
-                        $item_interface = ItemInterfaceFactory::resourceTypeItem($resource_type_id);
-                        $min_year_limit = $item_interface->conditionalParameterMinYear($resource_type_id);
-                        $max_year_limit = $item_interface->conditionalParameterMaxYear($resource_type_id);
-                    }
+                        self::$parameters[$key] = intval(self::$parameters[$key]);
 
-                    if ($resource_type_id !== null && $resource_id !== null) {
-                        $item_interface = ItemInterfaceFactory::item($resource_type_id);
-                        $min_year_limit = $item_interface->conditionalParameterMinYear($resource_id);
-                        $max_year_limit = $item_interface->conditionalParameterMaxYear($resource_id);
-                    }
+                        $min_year_limit = intval(Date('Y'));
+                        $max_year_limit = intval(Date('Y'));
 
-                    if (array_key_exists($key, self::$parameters) === true) {
-                        if (intval(self::$parameters[$key]) < $min_year_limit ||
+                        if ($resource_type_id !== null && $resource_id === null) {
+                            $item_interface = ItemInterfaceFactory::resourceTypeItem($resource_type_id);
+                            $min_year_limit = $item_interface->conditionalParameterMinYear($resource_type_id);
+                            $max_year_limit = $item_interface->conditionalParameterMaxYear($resource_type_id);
+                        }
+
+                        if ($resource_type_id !== null && $resource_id !== null) {
+                            $item_interface = ItemInterfaceFactory::item($resource_type_id);
+                            $min_year_limit = $item_interface->conditionalParameterMinYear($resource_id);
+                            $max_year_limit = $item_interface->conditionalParameterMaxYear($resource_id);
+                        }
+
+                        if (self::$parameters[$key] < $min_year_limit ||
                             self::$parameters[$key] > $max_year_limit + 1) {
                             unset(self::$parameters[$key]);
                         }
+                    } else {
+                        unset(self::$parameters[$key]);
                     }
                     break;
 
