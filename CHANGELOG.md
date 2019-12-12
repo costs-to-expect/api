@@ -2,6 +2,12 @@
 
 The complete changelog for the Costs to Expect REST API, follows the format defined at https://keepachangelog.com/en/1.0.0/
 
+## [v2.04.1] - 2019-12-12
+### Changed
+- We have switched to database caching.
+- We have updated the parameters helper, it now throws away more invalid requests.
+- Dependencies updated.
+
 ## [v2.04.0] - 2019-11-11
 ### Added
 - We have added a GitHub callout to the top right corner of the API landing page, courtesy of https://github.com/tholman/github-corners.
