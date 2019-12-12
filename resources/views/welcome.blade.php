@@ -32,10 +32,12 @@
             <li>The API is the backbone of the service; it is
                 <a href="https://github.com/costs-to-expect/api/blob/master/LICENSE">Open Source</a>
                 and available under the MIT license.</li>
-            <li>The <a href="https://www.costs-to-expect.com">Website</a> is a long-term personal project; my wife and I
+            <li>The <a href="https://www.costs-to-expect.com">Website</a> is a
+                long-term personal project; my wife and I
                 are tracking the expenses to raise our two
-                children to adulthood, 18. The Website is Open Source and
-                available under the MIT license.</li>
+                children to adulthood, 18. The Website is
+                <a href="https://github.com/costs-to-expect/website/blob/master/LICENSE">Open Source</a>
+                and available under the MIT license.</li>
             <li>The <a href="https://www.costs-to-expect.com">website</a> is a
                 long-term personal project; my wife and I are tracking the expenses
                 to raise our two children to adulthood, 18. The Website is Open
