@@ -10,24 +10,38 @@
         </div>
         @endif
 
-        <p class="lead mb-5">
-            Costs to Expect is a service that primarily focuses on providing tools
-            for tracking and forecasting expenses. Long-term the service will not be
-            limited to expenses; initially, however, expenses are the primary focus.
-            There are three parts to the service, the Open Source
-            <a href="https://github.com/costs-to-expect/api">API</a>, the
-            app and the <a href="https://www.costs-to-expect.com">website</a>.
+        <p class="lead mt-5">
+            Costs to Expect is a service which primarily focuses on the tracking
+            and forecasting of expenses; it grew from an offhand comment I made
+            to my wife before we had our first child,
+            <em>"There is no way the average child costs £250,000 to raise!"</em>
         </p>
 
-        <ul class="mb-5">
+        <p>
+            Medium-term the service will not be limited to expenses, the project
+            grew from a personal expenses tracking project, so it makes sense to
+            focus initially on expenses.
+        </p>
+
+        <p>
+            There are three parts to the service, two Open Source and one soon to
+            be commercial product.
+        </p>
+
+        <ul class="mb-5 mt-5">
             <li>The API is the backbone of the service; it is
                 <a href="https://github.com/costs-to-expect/api/blob/master/LICENSE">Open Source</a>
                 and available under the MIT license.</li>
+            <li>The <a href="https://www.costs-to-expect.com">Website</a> is a long-term personal project; my wife and I
+                are tracking the expenses to raise our two
+                children to adulthood, 18. The Website is Open Source and
+                available under the MIT license.</li>
             <li>The <a href="https://www.costs-to-expect.com">website</a> is a
                 long-term personal project; my wife and I are tracking the expenses
-                to raise our two children to adulthood, 18.</li>
-            <li>The app is going to be the public side of the service; we are
-                hoping to have a version ready by the end of the year.</li>
+                to raise our two children to adulthood, 18. The Website is Open
+                Source and available under the MIT license.</li>
+            <li>The App will become our commercial product; we are hoping to
+                have an alpha ready for the end of the year.</li>
         </ul>
 
         <p class="text-center mt-3">

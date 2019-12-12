@@ -7,6 +7,7 @@ The complete changelog for the Costs to Expect REST API, follows the format defi
 - We have switched to database caching.
 - We have updated the parameters helper, it now throws away more invalid requests.
 - Dependencies updated.
+- We have updated the landing page content.
 
 ## [v2.04.0] - 2019-11-11
 ### Added
