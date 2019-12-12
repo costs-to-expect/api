@@ -5,12 +5,12 @@
     <main role="main" class="inner cover">
         <h1 class="cover-heading text-center">Costs to Expect API</h1>
         @if ($maintenance === true)
-        <div class="alert alert-info" role="alert">
+        <div class="alert alert-info mt-4" role="alert">
             The Costs to Expect API is down for maintenance, we should be back online soon.
         </div>
         @endif
 
-        <p class="lead mt-5">
+        <p class="lead mt-4">
             Costs to Expect is a service which primarily focuses on the tracking
             and forecasting of expenses; it grew from an offhand comment I made
             to my wife before we had our first child,
