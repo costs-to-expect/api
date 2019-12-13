@@ -8,6 +8,7 @@ The complete changelog for the Costs to Expect REST API, follows the format defi
 - We have updated the parameters helper, it now throws away more invalid requests.
 - Dependencies updated.
 - We have updated the landing page content.
+- We have corrected the response for login, 201 (Bearer created) rather than 200.
 
 ## [v2.04.0] - 2019-11-11
 ### Added
