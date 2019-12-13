@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use App\User;
 use Illuminate\Http\Request;
-use Illuminate\Http\Response;
+use Illuminate\Http;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 
@@ -18,7 +18,7 @@ class PassportController extends Controller
     /**
      * login to the API and create a token
      *
-     * @return Response
+     * @return Http\JsonResponse
      */
     public function login()
     {
@@ -39,7 +39,7 @@ class PassportController extends Controller
                     'updated' => $token->token->updated_at,
                     'expires' => $token->token->expires_at
                 ],
-                200
+                201
             );
         } else {
             return response()->json(['message' => 'Unauthorised, credentials invalid'], 401);
@@ -51,7 +51,7 @@ class PassportController extends Controller
      *
      * @param Request $request
      *
-     * @return Response
+     * @return Http\JsonResponse
      */
     public function register(Request $request)
     {
@@ -78,7 +78,7 @@ class PassportController extends Controller
         $input = $request->all();
 
         $input['password'] = bcrypt($input['password']);
-        $user = User::create($input);
+        User::create($input);
 
         $token = Auth::user()->createToken('costs-to-expect-api');
 
@@ -98,7 +98,7 @@ class PassportController extends Controller
     /**
      * Return user details
      *
-     * @return Response
+     * @return Http\JsonResponse
      */
     public function user()
     {
