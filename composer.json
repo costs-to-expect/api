@@ -60,7 +60,7 @@
     "config": {
         "preferred-install": "dist",
         "sort-packages": true,
-        "optimize-autoloader": true
+        "classmap-authoritative": true
     },
     "minimum-stability": "dev",
     "prefer-stable": true
