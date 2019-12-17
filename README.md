@@ -9,6 +9,10 @@ limited to expenses; however, we figured that is was an excellent place to start
 A small part of the service is tracking the costs to raise a child in the UK, 
 more detail can be found at [Costs to Expect](https://www.costs-to-expect.com).
 
+The [alpha](https://app.costs-to-expect.com) for the service is online, we are 
+ hoping to have a beta ready or early 2020, please check 
+ [app.costs-to-expect.com](https://app.costs-to-expect.com) 
+
 ## Set up
 
 I'm going to assume you are using Docker, if not you should be able to work out what you need to run for your 
