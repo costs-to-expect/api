@@ -5,7 +5,7 @@ namespace App\Http\Middleware;
 use App\Models\RequestLog;
 use Closure;
 use Exception;
-use Illuminate\Support\Facades\App;
+use Illuminate\Http\Request;
 
 /**
  * Log requests to the API
@@ -19,8 +19,9 @@ class LogRequests
     /**
      * Handle an incoming request.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \Closure  $next
+     * @param  Request  $request
+     * @param  Closure  $next
+     *
      * @return mixed
      */
     public function handle($request, Closure $next)
@@ -29,28 +30,22 @@ class LogRequests
     }
 
     /**
-     * @param \Illuminate\Http\Request $request
+     * @param Request $request
      * @param $response
-     * @return \Illuminate\Http\JsonResponse
+     *
+     * @return void
      */
     public function terminate($request, $response)
     {
-        if (App::environment() !== 'local') {
-            try {
-                $log = new RequestLog([
-                    'method' => $request->method(),
-                    'request' => $request->fullUrl(),
-                    'source' => $request->header('X-Source', 'api')
-                ]);
-                $log->save();
-            } catch (Exception $e) {
-                return response()->json(
-                    [
-                        'message' => 'Error logging request'
-                    ],
-                    500
-                );
-            }
+        try {
+            $log = new RequestLog([
+                'method' => $request->method(),
+                'request' => $request->fullUrl(),
+                'source' => $request->header('X-Source', 'api')
+            ]);
+            $log->save();
+        } catch (Exception $e) {
+            // We don't care for now
         }
     }
 }
