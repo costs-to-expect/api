@@ -45,7 +45,7 @@
                 <h3 class="masthead-brand d-none d-sm-none d-md-block">Costs to Expect</h3>
                 <nav class="nav nav-masthead justify-content-center">
                     <a class="nav-link" href="https://www.costs-to-expect.com">Website</a>
-                    <a class="nav-link" href="#">App (Soon!)</a>
+                    <a class="nav-link" href="https://app.costs-to-expect.com">App</a>
                     <a class="nav-link" href="/v2">API</a>
                     <a class="nav-link" href="/v2/changelog">Changelog</a>
                 </nav>

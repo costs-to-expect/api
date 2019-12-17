@@ -16,7 +16,7 @@ return [
     'description-request_uri' => 'Enter the URI that returned the incorrect response code',
 
     'title-source' => 'Source',
-    'description-source' => 'Source of the error (website,api,legacy,postman)',
+    'description-source' => 'Source of the error (website,api,app,legacy,postman)',
 
     'title-debug' => 'Debug',
     'description-debug' => 'Additional debug data (optional)',

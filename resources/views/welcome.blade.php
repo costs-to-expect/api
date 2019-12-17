@@ -42,8 +42,10 @@
                 long-term personal project; my wife and I are tracking the expenses
                 to raise our two children to adulthood, 18. The Website is Open
                 Source and available under the MIT license.</li>
-            <li>The App will become our commercial product; we are hoping to
-                have an alpha ready for the end of the year.</li>
+            <li>The <a href="https://app.costs-to-expect.com">App</a> is the
+                beginnings of our commercial product; we are hoping to
+                have an alpha ready for the end of the year with betas in early
+                2020.</li>
         </ul>
 
         <p class="text-center mt-3">
@@ -52,7 +54,7 @@
         </p>
         <p class="text-center">
             <a href="https://github.com/costs-to-expect" class="btn btn-md btn-primary">The API on GitHub</a>
-            <a href="#" class="btn btn-dm btn-primary disabled">The app</a>
+            <a href="https://app.costs-to-expect.com" class="btn btn-dm btn-primary">The app</a>
         </p>
 
         <p class="text-center"><small>Latest release: {{ $version }} ({{ $date }})</small></p>
