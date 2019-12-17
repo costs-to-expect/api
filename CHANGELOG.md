@@ -2,7 +2,14 @@
 
 The complete changelog for the Costs to Expect REST API, follows the format defined at https://keepachangelog.com/en/1.0.0/
 
-## [v2.04.2] - 2019-12-19
+## [v2.04.3] - 2019-12-17
+### Changed
+- We have added links to the Costs to Expect app.
+- We have added 'app' as a source for the request log and error log.
+- We have removed three traits from the base controller.
+- We have removed the exception code for the failed request entry.
+
+## [v2.04.2] - 2019-12-12
 ### Changed
 - We have switched to database session driver.
 - Removed routes we aren't using.
