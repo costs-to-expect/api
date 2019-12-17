@@ -81,7 +81,9 @@ class RequestController extends Controller
     {
         $total = (new RequestLog())->totalCount();
 
-        $this->collection_parameters = Parameters::fetch(array_keys(Config::get('api.request-access-log.parameters.collection')));
+        $this->collection_parameters = Parameters::fetch(
+            array_keys(Config::get('api.request-access-log.parameters.collection'))
+        );
 
         $pagination = UtilityPagination::init(request()->path(), $total, 25)->paging();
 
