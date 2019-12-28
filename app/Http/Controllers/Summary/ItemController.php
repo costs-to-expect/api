@@ -245,7 +245,7 @@ class ItemController extends Controller
         }
 
         $headers = new Header();
-        $headers->add('X-Total-Count', 1);
+        $headers->add('X-Total-Count', $summary[0]['total_count']);
         $headers->add('X-Count', 1);
 
         $parameters_header = Parameters::xHeader();
@@ -337,7 +337,7 @@ class ItemController extends Controller
         }
 
         $headers = new Header();
-        $headers->add('X-Total-Count', count($summary));
+        $headers->add('X-Total-Count', $summary[0]['total_count']);
         $headers->add('X-Count', count($summary));
 
         $parameters_header = Parameters::xHeader();
@@ -433,7 +433,7 @@ class ItemController extends Controller
         }
 
         $headers = new Header();
-        $headers->add('X-Total-Count', count($summary));
+        $headers->add('X-Total-Count', $summary[0]['total_count']);
         $headers->add('X-Count', count($summary));
 
         $parameters_header = Parameters::xHeader();
@@ -535,7 +535,7 @@ class ItemController extends Controller
         }
 
         $headers = new Header();
-        $headers->add('X-Total-Count', count($summary));
+        $headers->add('X-Total-Count', $summary[0]['total_count']);
         $headers->add('X-Count', count($summary));
 
         $parameters_header = Parameters::xHeader();
@@ -581,7 +581,7 @@ class ItemController extends Controller
         }
 
         $headers = new Header();
-        $headers->add('X-Total-Count', count($summary));
+        $headers->add('X-Total-Count', $summary[0]['total_count']);
         $headers->add('X-Count', count($summary));
 
         $parameters_header = Parameters::xHeader();
@@ -677,7 +677,7 @@ class ItemController extends Controller
         }
 
         $headers = new Header();
-        $headers->add('X-Total-Count', count($summary));
+        $headers->add('X-Total-Count', $summary[0]['total_count']);
         $headers->add('X-Count', count($summary));
 
         $parameters_header = Parameters::xHeader();
