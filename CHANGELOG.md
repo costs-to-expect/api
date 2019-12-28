@@ -2,6 +2,14 @@
 
 The complete changelog for the Costs to Expect REST API, follows the format defined at https://keepachangelog.com/en/1.0.0/
 
+## [v2.05.0] - 2019-12-28
+### Added 
+- We have added an X-Last-Updated header to the item summaries. It is only relevant and applied to the summaries which return a single item. Summaries that return a collection do not include the header.
+
+### Changed
+- We have updated the X-Total-Count header for summaries which return a single item; the header is now the total number of 'items' in the result.
+- We have tweaked the server config and no longer return some default server headers.
+
 ## [v2.04.3] - 2019-12-17
 ### Changed
 - We have added links to the Costs to Expect app.
