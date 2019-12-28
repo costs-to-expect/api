@@ -247,6 +247,7 @@ class ItemController extends Controller
         $headers = new Header();
         $headers->add('X-Total-Count', $summary[0]['total_count']);
         $headers->add('X-Count', 1);
+        $headers->add('X-Last-Updated', $summary[0]['last_updated']);
 
         $parameters_header = Parameters::xHeader();
         if ($parameters_header !== null) {
@@ -339,6 +340,7 @@ class ItemController extends Controller
         $headers = new Header();
         $headers->add('X-Total-Count', $summary[0]['total_count']);
         $headers->add('X-Count', count($summary));
+        $headers->add('X-Last-Updated', $summary[0]['last_updated']);
 
         $parameters_header = Parameters::xHeader();
         if ($parameters_header !== null) {
@@ -435,6 +437,7 @@ class ItemController extends Controller
         $headers = new Header();
         $headers->add('X-Total-Count', $summary[0]['total_count']);
         $headers->add('X-Count', count($summary));
+        $headers->add('X-Last-Updated', $summary[0]['last_updated']);
 
         $parameters_header = Parameters::xHeader();
         if ($parameters_header !== null) {
@@ -537,6 +540,7 @@ class ItemController extends Controller
         $headers = new Header();
         $headers->add('X-Total-Count', $summary[0]['total_count']);
         $headers->add('X-Count', count($summary));
+        $headers->add('X-Last-Updated', $summary[0]['last_updated']);
 
         $parameters_header = Parameters::xHeader();
         if ($parameters_header !== null) {
@@ -583,6 +587,7 @@ class ItemController extends Controller
         $headers = new Header();
         $headers->add('X-Total-Count', $summary[0]['total_count']);
         $headers->add('X-Count', count($summary));
+        $headers->add('X-Last-Updated', $summary[0]['last_updated']);
 
         $parameters_header = Parameters::xHeader();
         if ($parameters_header !== null) {
@@ -679,6 +684,7 @@ class ItemController extends Controller
         $headers = new Header();
         $headers->add('X-Total-Count', $summary[0]['total_count']);
         $headers->add('X-Count', count($summary));
+        $headers->add('X-Last-Updated', $summary[0]['last_updated']);
 
         $parameters_header = Parameters::xHeader();
         if ($parameters_header !== null) {

@@ -78,7 +78,8 @@ class SimpleExpense extends Model
                 category.name AS name, 
                 category.description AS description, 
                 SUM({$this->sub_table}.total) AS total, 
-                COUNT({$this->sub_table}.item_id) AS total_count
+                COUNT({$this->sub_table}.item_id) AS total_count, 
+                MAX({$this->sub_table}.effective_date) AS last_updated
             ")->
             join($this->sub_table, 'item.id', "{$this->sub_table}.item_id")->
             join("resource", "resource.id", "item.resource_id")->
@@ -124,7 +125,8 @@ class SimpleExpense extends Model
         $collection = $this->
             selectRaw("
                 SUM({$this->sub_table}.total) AS total, 
-                COUNT({$this->sub_table}.item_id) AS total_count
+                COUNT({$this->sub_table}.item_id) AS total_count, 
+                MAX({$this->sub_table}.effective_date) AS last_updated
             ")->
             join($this->sub_table, 'item.id', "{$this->sub_table}.item_id")->
             join("resource", "resource.id", "item.resource_id")->
@@ -213,7 +215,8 @@ class SimpleExpense extends Model
             selectRaw("
                 MONTH({$this->sub_table}.effective_date) as month, 
                 SUM({$this->sub_table}.total) AS total, 
-                COUNT({$this->sub_table}.item_id) AS total_count
+                COUNT({$this->sub_table}.item_id) AS total_count, 
+                MAX({$this->sub_table}.effective_date) AS last_updated
             ")->
             join($this->sub_table, 'item.id', "{$this->sub_table}.item_id")->
             join("resource", "resource.id", "item.resource_id")->
@@ -294,7 +297,8 @@ class SimpleExpense extends Model
                 sub_category.name AS name, 
                 sub_category.description AS description,
                 SUM({$this->sub_table}.total) AS total, 
-                COUNT({$this->sub_table}.item_id) AS total_count
+                COUNT({$this->sub_table}.item_id) AS total_count, 
+                MAX({$this->sub_table}.effective_date) AS last_updated
             ")->
             join($this->sub_table, 'item.id', "{$this->sub_table}.item_id")->
             join("resource", "resource.id", "item.resource_id")->
@@ -331,7 +335,8 @@ class SimpleExpense extends Model
     {
         $collection = $this->selectRaw("
                 SUM({$this->sub_table}.total) AS total, 
-                COUNT({$this->sub_table}.item_id) AS total_count
+                COUNT({$this->sub_table}.item_id) AS total_count, 
+                MAX({$this->sub_table}.effective_date) AS last_updated
             ")->
             join($this->sub_table, 'item.id', "{$this->sub_table}.item_id")->
             join('resource', 'item.resource_id', 'resource.id')->
@@ -395,7 +400,8 @@ class SimpleExpense extends Model
             selectRaw("
                 YEAR({$this->sub_table}.effective_date) as year, 
                 SUM({$this->sub_table}.total) AS total, 
-                COUNT({$this->sub_table}.item_id) AS total_count
+                COUNT({$this->sub_table}.item_id) AS total_count, 
+                MAX({$this->sub_table}.effective_date) AS last_updated
             ")->
             join($this->sub_table, 'item.id', "{$this->sub_table}.item_id")->
             join("resource", "resource.id", "item.resource_id")->
