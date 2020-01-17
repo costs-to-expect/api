@@ -99,52 +99,40 @@
             <div class="row">
                 <div class="col-12">
 
-                    <h2>Our privacy policy <small>(19th December 2019)</small></h2>
+                    <h2>In short</h2>
 
-                    <p>Your privacy is important to us. It is our
-                        policy to respect your privacy regarding any information
-                        we may collect from you across our website,
-                        <a href="https://app.costs-to-expect.com">https://app.costs-to-expect.com</a>,
-                        and other sites we own and operate.</p>
+                    <p class="lead">Costs to Expect is a service which primarily focuses on the
+                        tracking and forecasting of expenses.</p>
 
-                    <p>We only ask for personal information when we truly need
-                        it to provide a service to you. We collect it by fair
-                        and lawful means, with your knowledge and consent.
-                        We also let you know why we’re collecting it and how
-                        it will be used.</p>
+                    <h3>History</h3>
 
-                    <p>We only retain collected information for as long as
-                        necessary to provide you with your requested service.
-                        What data we store, we’ll protect within commercially
-                        acceptable means to prevent loss and theft, as well
-                        as unauthorised access, disclosure, copying, use or
-                        modification.</p>
+                    <p>Costs to Expect grew from an offhand comment I made to
+                        my wife before we had our first child, "There is no way
+                        the average child costs &pound;250,000 to raise!"</p>
 
-                    <p>We don’t share any personally identifying information
-                        publicly or with third-parties, except when required
-                        to by law.</p>
+                    <h3>Our plans (Medium term)</h3>
 
-                    <p>Our website may link to external sites that are not
-                        operated by us. Please be aware that we have no
-                        control over the content and practices of these sites,
-                        and cannot accept responsibility or liability for
-                        their respective privacy policies.</p>
+                    <p>Medium-term the service will not be limited to expenses,
+                        the project grew from a personal expenses tracking project,
+                        so it makes sense to focus initially on expenses.</p>
 
-                    <p>You are free to refuse our request for your
-                        personal information, with the understanding that we
-                        may be unable to provide you with some of your desired
-                        services.</p>
+                    <h2>The service</h2>
 
-                    <p>Your continued use of our website will be regarded as
-                        acceptance of our practices around privacy and personal
-                        information. If you have any questions about how we
-                        handle user data and personal information, feel free
-                        to contact us.</p>
+                    <p>There are three parts to the service, two Open Source
+                        and one soon to be commercial product. </p>
 
-                    <p>This policy is effective as of <strong>19th December 2019</strong>.</p>
+                    <ul>
+                        <li>The API is the backbone of the service; it is Open Source and available under the MIT license.</li>
+                        <li>The App is the beginnings of our commercial product; we are hoping to have an alpha ready for the end of the year with betas in early 2020.</li>
+                        <li>The website is a long-term personal project; my wife and I are tracking the expenses to raise our two children to adulthood, 18. The Website is Open Source and available under the MIT license.</li>
+                    </ul>
 
-                    <p><strong>Dean Blackborough</strong></p>
-
+                    <p class=" text-center mt-3">
+                        <a href="/v2" class="btn btn-md btn-primary">Access the API</a>
+                        <a href="https://app.costs-to-expect.com" class="btn btn-md btn-outline-secondary">The App</a>
+                        <a href="https://www.costs-to-expect.com" class="btn btn-md btn-outline-secondary">The Website</a>
+                        <a href="https://github.com/costs-to-expect" class="btn btn-md btn-outline-secondary">The API on GitHub</a>
+                    </p>
                 </div>
             </div>
 
@@ -153,9 +141,10 @@
                     <p class="text-center text-muted">
                         Copyright © <a href="https://www.deanblackborough.com">Dean Blackborough 2018 - {{ date('Y') }}</a><br>
                         <a href="https://app.costs-to-expect.com">The App</a> |
-                        <a href="https://status.costs-to-expect.com/">Status</a>
-                        <small>v1.00.0 released [Approaching]</small>
+                        <a href="https://status.costs-to-expect.com/">Status</a> |
+                        Latest release: {{ $version }} ({{ $date }})
                     </p>
+                    <p class="text-center text-muted">All code maintained by <a href="https://www.deanblackborough.com">Dean Blackborough</a> and licensed under MIT.</p>
                 </div>
             </div>
         </div>
