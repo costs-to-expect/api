@@ -100,6 +100,16 @@
             <div class="row">
                 <div class="col-12">
 
+                    @if ($maintenance === true)
+                        <div class="alert alert-info mt-2" role="alert">
+                            The Costs to Expect API is down for maintenance, we
+                            should be back online soon. Please check our
+                            <a href="https://status.costs-to-expect.com">status</a>
+                            page for more information.
+                        </div>
+
+                    @endif
+
                     <h2>Overview</h2>
 
                     <p>Costs to Expect is a service focused on tracking and
@@ -127,8 +137,8 @@
 
                     <ul>
                         <li>The Costs to Expect API: Our REST API is Open Source and available under the MIT license.</li>
-                        <li>The Costs to Expect App: Our App is our commercial offering. Our App makes tracking and forecasting expenses and costs simple as well as acting as a friendly interface to the API.</li>
-                        <li>The Costs to Expect Website: Our website is a long term social experiment. My wife and I are tracking the expenses to raise our children to the age of 18.</li>
+                        <li>The Costs to Expect App: Our <a href="https://app.costs-to-expect.com">App</a> is our commercial offering. Our App makes tracking and forecasting expenses and costs simple as well as acting as a friendly interface to the API.</li>
+                        <li>The Costs to Expect Website: Our <a href="https://www.costs-to-expect.com">Website</a> is a long term social experiment. My wife and I are tracking the expenses to raise our children to the age of 18.</li>
                     </ul>
 
                     <hr />
@@ -136,7 +146,9 @@
                     <h2>Latest release</h2>
 
                     <p>The latest release of the Costs to Expect API is
-                        {{ $version }}; we released it on the {{ $date }}.</p>
+                        {{ $version }}; we released it on the {{ date('jS M Y', strtotime($date)) }}.
+                        Review our changelog(s) to see the history of all our
+                        releases.</p>
 
                     <h3>Added</h3>
 
@@ -168,7 +180,7 @@
                         Copyright © <a href="https://www.deanblackborough.com">Dean Blackborough 2018 - {{ date('Y') }}</a><br>
                         <a href="https://app.costs-to-expect.com">The App</a> |
                         <a href="https://status.costs-to-expect.com/">Status</a> |
-                        Latest release: {{ $version }} ({{ $date }})
+                        Latest release: {{ $version }} ({{ date('jS M Y', strtotime($date)) }})
                     </p>
                     <p class="text-center text-muted">All code maintained by <a href="https://www.deanblackborough.com">Dean Blackborough</a> and licensed under MIT.</p>
                 </div>
