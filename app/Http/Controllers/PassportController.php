@@ -6,6 +6,7 @@ use App\User;
 use Illuminate\Http\Request;
 use Illuminate\Http;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 
 /**
@@ -77,22 +78,15 @@ class PassportController extends Controller
 
         $input = $request->all();
 
-        $input['password'] = bcrypt($input['password']);
-        User::create($input);
+        $input['password'] = Hash::make($input['password']);
 
-        $token = Auth::user()->createToken('costs-to-expect-api');
+        try {
+            User::create($input);
+        } catch (\Exception $e) {
+            return response()->json(['error' => 'Unable to create user'], 500);
+        }
 
-        $success = [
-            'token' => [
-                'type' => 'Bearer',
-                'token' => $token->accessToken,
-                'created' => $token->token->created_at,
-                'updated' => $token->token->updated_at,
-                'expires' => $token->token->expires_at
-            ]
-        ];
-
-        return response()->json($success, 201);
+        return response()->json([], 204);
     }
 
     /**

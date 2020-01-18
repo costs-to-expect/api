@@ -1,6 +1,20 @@
 # Changelog
 
-The complete changelog for the Costs to Expect REST API, follows the format defined at https://keepachangelog.com/en/1.0.0/
+The complete changelog for the Costs to Expect REST API, our changelog follows the format defined at https://keepachangelog.com/en/1.0.0/
+
+## [v2.06.0] - 2020-01-18
+### Added 
+- We have added a configuration option to control API registrations.
+
+### Changed
+- We have made adjustments to the registration process; we return status code 204. Please sign-in to get your Bearer.
+- We have updated the maintenance message to include a link to the status page for the Costs to Expect service.
+- Dependencies updated.
+- We have added a new landing page; the design matches the rest of the service.
+
+### Fixed
+- Correction to a migration, `updated_by` field nullable.
+- Correction to a migration file, a data type was incorrect.
 
 ## [v2.05.0] - 2019-12-28
 ### Added 

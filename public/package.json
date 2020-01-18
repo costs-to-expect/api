@@ -1,0 +1,14 @@
+{
+    "name": "costs-to-expect-api",
+    "version": "2",
+    "description": "The Costs to Expect API",
+    "dependencies": {
+        "bootstrap": "^4.3",
+        "jquery": "^3.4",
+        "open-iconic": "^1.1.1",
+        "popper.js": "^1.16"
+    },
+    "main": "index.php",
+    "repository": "https://github.com/costs-to-expect/api.git",
+    "author": "Dean Blackborough"
+}

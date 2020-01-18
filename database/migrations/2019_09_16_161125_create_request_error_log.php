@@ -21,8 +21,8 @@ class CreateRequestErrorLog extends Migration
             $table->char('method', 8);
             $table->string('source', 25)->default('api');
             $table->string('debug')->nullable();
-            $table->unsignedTinyInteger('expected_status_code');
-            $table->unsignedTinyInteger('returned_status_code');
+            $table->unsignedSmallInteger('expected_status_code');
+            $table->unsignedSmallInteger('returned_status_code');
             $table->string('request_uri');
             $table->index('source');
             $table->timestamps();

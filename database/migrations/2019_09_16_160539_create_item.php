@@ -20,7 +20,7 @@ class CreateItem extends Migration
             $table->bigIncrements('id');
             $table->unsignedBigInteger('resource_id');
             $table->unsignedBigInteger('created_by');
-            $table->unsignedBigInteger('updated_by');
+            $table->unsignedBigInteger('updated_by')->nullable();
             $table->timestamps();
             $table->foreign('resource_id')->references('id')->on('resource');
             $table->foreign('created_by')->references('id')->on('users');
