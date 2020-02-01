@@ -34,6 +34,7 @@ class PassportController extends Controller
 
             return response()->json(
                 [
+                    'id' => Auth::id(),
                     'type' => 'Bearer',
                     'token' => $token->accessToken,
                     'created' => $token->token->created_at,
@@ -45,6 +46,11 @@ class PassportController extends Controller
         } else {
             return response()->json(['message' => 'Unauthorised, credentials invalid'], 401);
         }
+    }
+
+    public function check()
+    {
+        return response()->json(['auth' => Auth::guard('api')->check()], 200);
     }
 
     /**

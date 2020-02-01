@@ -13,9 +13,14 @@ Route::group(
             'PassportController@login'
         );
 
-        Route::post(
+        Route::get(
             'auth/user',
             'PassportController@user'
+        );
+
+        Route::get(
+            'auth/check',
+            'PassportController@check'
         );
 
         if (Config::get('api.app.config.registrations') === true) {

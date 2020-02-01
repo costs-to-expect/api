@@ -88,6 +88,7 @@ is true if you are assigned to a resource type.
 | OPTIONS  | v2/ | 
 | POST     | v2/auth/login |
 | POST     | v2/auth/register  |
+| GET/HEAD | v2/auth/check |
 | GET/HEAD | v2/auth/user |
 | GET/HEAD | v2/changelog |
 | OPTIONS  | v2/changelog |
