@@ -6,34 +6,41 @@ Costs to Expect is a service which focuses on tracking and forecasting expenses.
 The Costs to Expect API is the backbone of the service and is not going to be 
 limited to expenses; however, we figured that is was an excellent place to start. 
 
+### The App
+The [alpha](https://app.costs-to-expect.com) for the service is online, we are 
+ hoping to release the public alpha at the start of April 2020. Please check 
+ the [app.costs-to-expect.com/roadmap](https://app.costs-to-expect.com/roadmap) 
+ and changelog to see how we are getting on 
+ [app.costs-to-expect.com/changelog](https://app.costs-to-expect.com/changelog) 
+
+### The Website
 A small part of the service is tracking the costs to raise a child in the UK, 
 more detail can be found at [Costs to Expect](https://www.costs-to-expect.com).
 
-The [alpha](https://app.costs-to-expect.com) for the service is online, we are 
- hoping to have a beta ready or early 2020, please check 
- [app.costs-to-expect.com](https://app.costs-to-expect.com) 
-
 ## Set up
 
-I'm going to assume you are using Docker, if not you should be able to work out what you need to run for your 
-development setup, go to the project root directory and run the below.
+I'm going to assume you are using Docker, if not you should be able to work out 
+what you need to run for your development setup, go to the project root 
+directory and run the below.
 
 ### Environment
 
 * Run `docker-compose build`
 * Run `docker-compose up`
 
-### App
+### API
 
-We now have a working environment, lets set up the app. There are two Docker services, `api` and `mysql`, we need to 
-exec into the `api` service to set up our app.
+We now have a working environment, lets set up the app. There are two Docker 
+services, `api` and `mysql`, we need to exec into the `api` service to set up 
+our app.
 
-First, let us check we are trying to access the right place, run `docker-compose exec api ls`. You should see a list 
-of the files and directories at the root of our project, if you can see artisan, you are in the right place, 
-otherwise see where you are and adjust accordingly.
+First, let us check we are trying to access the right place, 
+run `docker-compose exec api ls`. You should see a list of the files and 
+directories at the root of our project, if you can see artisan, you are in 
+the right place, otherwise see where you are and adjust accordingly.
 
-Now we need to set up the app by setting our .env, installing our dependencies and then running any migrations and 
-install Passport.
+Now we need to set up the app by setting our .env, installing our dependencies 
+and then running any migrations and install Passport.
 
 * Copy the `.env.example` file and name the copy `.env`, set your environment settings
 * `docker-compose exec api composer install`
@@ -59,8 +66,8 @@ case of a validation error, 422, the fields array will contain the validation er
 
 ## Headers
 
-Responses will include multiple headers, the table details the purpose behind some of the 
-custom headers.
+Responses will include multiple headers, the table details the purpose behind 
+some of the custom headers.
 
 | Header | Purpose |
 | :--- | :--- |
@@ -78,9 +85,9 @@ custom headers.
 
 ## Routes
 
-Access to a route will be limited based upon your permitted resource types. When you 
-create a resource type you have full access to everything below, additionally, the same 
-is true if you are assigned to a resource type.
+Access to a route will be limited based upon your permitted resource types. 
+When you create a resource type you have full access to everything below, 
+additionally, the same is true if you are assigned to a resource type.
 
 | HTTP Verb(s) | Route |
 | :--- | :--- |
@@ -156,10 +163,12 @@ is true if you are assigned to a resource type.
 
 ## Summary routes
 
-Eventually, there will be a summary route for every API GET endpoint. Until that point, the summary routes 
-that exists are detailed below. Some use GET parameters to breakdown the data, one example being 
-`v2/summary/resource-types/{resource_type_id}/items`. Review the OPTIONS request for each summary 
-route to see the supported parameters, these should largely match the non summary route.
+Eventually, there will be a summary route for every API GET endpoint. Until 
+that point, the summary routes that exists are detailed below. Some use GET 
+parameters to breakdown the data, one example being 
+`v2/summary/resource-types/{resource_type_id}/items`. Review the OPTIONS 
+request for each summary route to see the supported parameters, these should 
+largely match the non summary route.
 
 | HTTP Verb(s) | Route |
 | :--- | :--- |
