@@ -39,9 +39,12 @@ class ConvertRouteParameters
             'item_type_id' => new Hashids($config['item_type'], $min_length),
         ];
 
-        foreach ($route_params as $param => $hasher) {
-            if ($request->route($param) !== null) {
-                $id = $hasher->decode($request->route($param));
+        $params_to_convert = array_keys($route_params);
+
+        foreach ($params_to_convert as $param) {
+            $param_value = $request->route($param);
+            if ($param_value !== null) {
+                $id = $route_params[$param]->decode($param_value);
                 if (is_array($id) && array_key_exists(0, $id)) {
                     $request->route()->setParameter($param, $id[0]);
                 } else {
