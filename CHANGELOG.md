@@ -2,6 +2,20 @@
 
 The complete changelog for the Costs to Expect REST API, our changelog follows the format defined at https://keepachangelog.com/en/1.0.0/
 
+## [v2.07.0] - 2020-02-01
+### Added
+- We have added a GET 'auth/check' endpoint; faster check for the Costs to Expect App.
+
+### Changed 
+- We have updated the dependencies for the API.
+- We have enabled URL compression.
+- We now return the user id on sign-in, saves a second request for the Costs to Expect App.
+- We have updated the README, adding links to the App `readme` and `changelog`.
+- We have tweaked two middleware classes to improve performance slightly.
+
+### Fixed
+- The HTTP verb was incorrect for the 'auth/user' endpoint.
+
 ## [v2.06.0] - 2020-01-18
 ### Added 
 - We have added a configuration option to control API registrations.

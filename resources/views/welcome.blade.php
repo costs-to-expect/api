@@ -143,7 +143,7 @@
 
                     <hr />
 
-                    <h2>Latest release</h2>
+                    <h2>Latest release [v2.07.0]</h2>
 
                     <p>The latest release of the Costs to Expect API is
                         {{ $version }}; we released it on the {{ date('jS M Y', strtotime($date)) }}.
@@ -153,22 +153,23 @@
                     <h3>Added</h3>
 
                     <ul>
-                        <li>We have added a configuration option to control API registrations.</li>
+                        <li>We have added a GET 'auth/check' endpoint; faster check for the Costs to Expect App.</li>
                     </ul>
 
                     <h3>Changed</h3>
 
                     <ul>
-                        <li>We have made adjustments to the registration process; we return status code 204. Please sign-in to get your Bearer.</li>
-                        <li>We have updated the maintenance message to include a link to the status page for the Costs to Expect service.</li>
-                        <li>Dependencies updated.</li>
+                        <li>We have updated the dependencies for the API.</li>
+                        <li>We have enabled URL compression.</li>
+                        <li>We now return the user id on sign-in, saves a second request for the Costs to Expect App.</li>
+                        <li>We have updated the README, adding links to the App `readme` and `changelog`.</li>
+                        <li>We have tweaked two middleware classes to improve performance slightly.</li>
                     </ul>
 
                     <h3>Fixed</h3>
 
                     <ul>
-                        <li>Correction to a migration, `updated_by` field nullable.</li>
-                        <li>Correction to a migration file, a data type was incorrect.</li>
+                        <li>The HTTP verb was incorrect for the 'auth/user' endpoint.</li>
                     </ul>
                 </div>
             </div>
