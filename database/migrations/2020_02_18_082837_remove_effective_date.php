@@ -14,7 +14,7 @@ class RemoveEffectiveDate extends Migration
     public function up()
     {
         Schema::table('item_type_simple_expense', function (Blueprint $table) {
-            $table->removeColumn('effective_date');
+            $table->dropColumn('effective_date');
         });
     }
 
