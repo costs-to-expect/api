@@ -17,7 +17,7 @@ use App\Utilities\Response as UtilityResponse;
  * Validate the set route parameters, redirect to 404 if invalid
  *
  * @author Dean Blackborough <dean@g3d-development.com>
- * @copyright G3D Development Limited 2018-2019
+ * @copyright Dean Blackborough 2018-2020
  * @license https://github.com/costs-to-expect/api/blob/master/LICENSE
  */
 class Route
