@@ -23,13 +23,6 @@ return [
         ],
         'required' => false
     ],
-    'effective_date' => [
-        'field' => 'effective_date',
-        'title' => 'item-type-simple-expense/fields.title-effective_date',
-        'description' => 'item-type-simple-expense/fields.description-effective_date',
-        'type' => 'date (yyyy-mm-dd)',
-        'required' => true
-    ],
     'total' => [
         'field' => 'total',
         'title' => 'item-type-simple-expense/fields.title-total',
