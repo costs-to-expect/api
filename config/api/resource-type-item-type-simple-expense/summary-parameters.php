@@ -12,38 +12,6 @@ return [
             "type" => "boolean",
             "required" => false
         ],
-        'year' => [
-            "parameter" => "year",
-            "title" => 'resource-type-item-type-simple-expense/summary-parameters.title-year',
-            "description" => 'resource-type-item-type-simple-expense/summary-parameters.description-year',
-            "default" => null,
-            "type" => "integer",
-            "required" => false
-        ],
-        'years' => [
-            "parameter" => "years",
-            "title" => 'resource-type-item-type-simple-expense/summary-parameters.title-years',
-            "description" => 'resource-type-item-type-simple-expense/summary-parameters.description-years',
-            "default" => false,
-            "type" => "boolean",
-            "required" => false
-        ],
-        'month' => [
-            "parameter" => "month",
-            "title" => 'resource-type-item-type-simple-expense/summary-parameters.title-month',
-            "description" => 'resource-type-item-type-simple-expense/summary-parameters.description-month',
-            "default" => null,
-            "type" => "integer",
-            "required" => false
-        ],
-        'months' => [
-            "parameter" => "months",
-            "title" => 'resource-type-item-type-simple-expense/summary-parameters.title-months',
-            "description" => 'resource-type-item-type-simple-expense/summary-parameters.description-months',
-            "default" => false,
-            "type" => "boolean",
-            "required" => false
-        ],
         'category' => [
             "parameter" => "category",
             "title" => 'resource-type-item-type-simple-expense/summary-parameters.title-category',

@@ -254,7 +254,8 @@ class SimpleExpense extends Model
     {
         $collection = $this->selectRaw("
                 SUM({$this->sub_table}.total) AS total, 
-                COUNT({$this->sub_table}.item_id) AS total_count
+                COUNT({$this->sub_table}.item_id) AS total_count,
+                MAX({$this->sub_table}.created_at) AS last_updated
             ")->
             join($this->sub_table, 'item.id', "{$this->sub_table}.item_id")->
             join('resource', 'item.resource_id', 'resource.id')->
