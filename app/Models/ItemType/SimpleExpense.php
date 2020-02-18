@@ -7,7 +7,6 @@ use App\Utilities\General;
 use App\Utilities\Model as ModelUtility;
 use Illuminate\Database\Query\Builder as QueryBuilder;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Facades\DB;
 
 /**
  * Item type model
@@ -46,7 +45,6 @@ class SimpleExpense extends Model
             'item_id' => $item->id,
             'item_name' => $item_type->name,
             'item_description' => $item_type->description,
-            'item_effective_date' => $item_type->effective_date,
             'item_total' => $item_type->total,
             'item_created_at' => $item->created_at->toDateTimeString()
         ];
@@ -76,7 +74,6 @@ class SimpleExpense extends Model
                 'item.id AS item_id',
                 'item_type_simple_expense.name AS item_name',
                 'item_type_simple_expense.description AS item_description',
-                'item_type_simple_expense.effective_date AS item_effective_date',
                 'item_type_simple_expense.total AS item_total',
                 'item.created_at AS item_created_at'
             )->
@@ -114,20 +111,6 @@ class SimpleExpense extends Model
             where('resource.resource_type_id', '=', $resource_type_id);
 
         if (
-            array_key_exists('year', $parameters) === true &&
-            $parameters['year'] !== null
-        ) {
-            $collection->whereRaw(DB::raw("YEAR(item_type_simple_expense.effective_date) = '{$parameters['year']}'"));
-        }
-
-        if (
-            array_key_exists('month', $parameters) === true &&
-            $parameters['month'] !== null
-        ) {
-            $collection->whereRaw(DB::raw("MONTH(item_type_simple_expense.effective_date) = '{$parameters['month']}'"));
-        }
-
-        if (
             array_key_exists('category', $parameters) === true &&
             $parameters['category'] !== null
         ) {
@@ -148,51 +131,6 @@ class SimpleExpense extends Model
         $collection = ModelUtility::applySearch($collection, 'item_type_simple_expense', $search_parameters);
 
         return $collection->count();
-    }
-
-    /**
-     * Work out the maximum effective date year for the requested resource id,
-     * defaults to the current year if no data exists
-     *
-     * @param integer $resource_id
-     *
-     * @return integer
-     */
-    public function maximumEffectiveDateYear(int $resource_id): int
-    {
-        $result = $this->join('item', 'item_type_simple_expense.item_id', 'item.id')->
-            where('item.resource_id', '=', $resource_id)->
-            selectRaw('YEAR(MAX(`item_type_simple_expense`.`effective_date`)) AS `year_limit`')->
-            first();
-
-        if ($result === null) {
-            return intval(date('Y'));
-        } else {
-            return intval($result->year_limit);
-        }
-
-    }
-
-    /**
-     * Work out the minimum effective date year for the requested resource id,
-     * defaults to the current year if no data exists
-     *
-     * @param integer $resource_id
-     *
-     * @return integer
-     */
-    public function minimumEffectiveDateYear(int $resource_id): int
-    {
-        $result = $this->join('item', 'item_type_simple_expense.item_id', 'item.id')->
-            where('item.resource_id', '=', $resource_id)->
-            selectRaw('YEAR(MIN(`item_type_simple_expense`.`effective_date`)) AS `year_limit`')->
-            first();
-
-        if ($result === null) {
-            return intval(date('Y'));
-        } else {
-            return intval($result->year_limit);
-        }
     }
 
     /**
@@ -222,7 +160,6 @@ class SimpleExpense extends Model
             'item.id AS item_id',
             'item_type_simple_expense.name AS item_name',
             'item_type_simple_expense.description AS item_description',
-            'item_type_simple_expense.effective_date AS item_effective_date',
             'item_type_simple_expense.total AS item_total',
             'item.created_at AS item_created_at'
         ];
@@ -274,16 +211,6 @@ class SimpleExpense extends Model
             }
         }
 
-        if (array_key_exists('year', $parameters) === true &&
-            $parameters['year'] !== null) {
-            $collection->whereRaw(DB::raw("YEAR(item_type_simple_expense.effective_date) = '{$parameters['year']}'"));
-        }
-
-        if (array_key_exists('month', $parameters) === true &&
-            $parameters['month'] !== null) {
-            $collection->whereRaw(DB::raw("MONTH(item_type_simple_expense.effective_date) = '{$parameters['month']}'"));
-        }
-
         if (
             array_key_exists('category', $parameters) === true &&
             $parameters['category'] !== null &&
@@ -314,7 +241,6 @@ class SimpleExpense extends Model
                         break;
 
                     case 'description':
-                    case 'effective_date':
                     case 'name':
                     case 'total':
                         $collection->orderBy('item_type_simple_expense.' . $field, $direction);
@@ -326,7 +252,6 @@ class SimpleExpense extends Model
                 }
             }
         } else {
-            $collection->orderBy('item_type_simple_expense.effective_date', 'desc');
             $collection->orderBy('item.created_at', 'desc');
         }
 

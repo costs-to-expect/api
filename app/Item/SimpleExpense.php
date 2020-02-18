@@ -31,34 +31,6 @@ class SimpleExpense extends AbstractItem
     }
 
     /**
-     * Return the minimum year for the conditional year filter, reviews the
-     * item type data and returns the min value, if no data exists, defaults to
-     * the current year
-     *
-     * @param integer $resource_id
-     *
-     * @return integer
-     */
-    public function conditionalParameterMinYear(int $resource_id): int
-    {
-        return (new ItemModel())->minimumEffectiveDateYear($resource_id);
-    }
-
-    /**
-     * Return the minimum year for the conditional year filter, reviews the
-     * item type data and returns the min value, if no data exists, defaults to
-     * the current year
-     *
-     * @param integer $resource_id
-     *
-     * @return integer
-     */
-    public function conditionalParameterMaxYear(int $resource_id): int
-    {
-        return (new ItemModel())->maximumEffectiveDateYear($resource_id);
-    }
-
-    /**
      * Create an save the item type data
      *
      * @param integer $id
@@ -71,7 +43,6 @@ class SimpleExpense extends AbstractItem
             'item_id' => $id,
             'name' => request()->input('name'),
             'description' => request()->input('description', null),
-            'effective_date' => request()->input('effective_date'),
             'total' => request()->input('total'),
         ]);
 

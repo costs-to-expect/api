@@ -78,8 +78,7 @@ class SimpleExpense extends Model
                 category.name AS name, 
                 category.description AS description, 
                 SUM({$this->sub_table}.total) AS total, 
-                COUNT({$this->sub_table}.item_id) AS total_count, 
-                MAX({$this->sub_table}.effective_date) AS last_updated
+                COUNT({$this->sub_table}.item_id) AS total_count
             ")->
             join($this->sub_table, 'item.id', "{$this->sub_table}.item_id")->
             join("resource", "resource.id", "item.resource_id")->
@@ -125,8 +124,7 @@ class SimpleExpense extends Model
         $collection = $this->
             selectRaw("
                 SUM({$this->sub_table}.total) AS total, 
-                COUNT({$this->sub_table}.item_id) AS total_count, 
-                MAX({$this->sub_table}.effective_date) AS last_updated
+                COUNT({$this->sub_table}.item_id) AS total_count
             ")->
             join($this->sub_table, 'item.id', "{$this->sub_table}.item_id")->
             join("resource", "resource.id", "item.resource_id")->
@@ -144,12 +142,6 @@ class SimpleExpense extends Model
         if ($subcategory_id !== null) {
             $collection->where("sub_category.id", "=", $subcategory_id);
         }
-        if ($year !== null) {
-            $collection->whereRaw(DB::raw("YEAR({$this->sub_table}.effective_date) = {$year}"));
-        }
-        if ($month !== null) {
-            $collection->whereRaw(DB::raw("MONTH({$this->sub_table}.effective_date) = {$month}"));
-        }
         if (count($search_parameters) > 0) {
             foreach ($search_parameters as $field => $search_term) {
                 $collection->where("{$this->sub_table}." . $field, 'LIKE', '%' . $search_term . '%');
@@ -157,78 +149,6 @@ class SimpleExpense extends Model
         }
 
         return $collection->get()->
-            toArray();
-    }
-
-    /**
-     * Return a monthly summary
-     *
-     * @param int $resource_type_id
-     * @param int $resource_id
-     * @param int $year
-     * @param array $parameters
-     *
-     * @return array
-     */
-    public function monthsSummary(
-        int $resource_type_id,
-        int $resource_id,
-        int $year,
-        array $parameters = []
-    ): array
-    {
-        $collection = $this->
-            selectRaw("MONTH({$this->sub_table}.effective_date) as month, SUM({$this->sub_table}.total) AS total")->
-            join($this->sub_table, 'item.id', "{$this->sub_table}.item_id")->
-            join("resource", "resource.id", "item.resource_id")->
-            join("resource_type", "resource_type.id", "resource.resource_type_id")->
-            where("resource_type.id", "=", $resource_type_id)->
-            where("resource.id", "=", $resource_id)->
-            whereRaw(DB::raw("YEAR({$this->sub_table}.effective_date) = '{$year}'"));
-
-        return $collection->groupBy("month")->
-            orderBy("month")->
-            get()->
-            toArray();
-    }
-
-    /**
-     * Return a summary for a specific month
-     *
-     * @param int $resource_type_id
-     * @param int $resource_id
-     * @param int $year
-     * @param int $month
-     * @param array $parameters
-     *
-     * @return array
-     */
-    public function monthSummary(
-        int $resource_type_id,
-        int $resource_id,
-        int $year,
-        int $month,
-        array $parameters = []
-    ): array
-    {
-        $collection = $this->
-            selectRaw("
-                MONTH({$this->sub_table}.effective_date) as month, 
-                SUM({$this->sub_table}.total) AS total, 
-                COUNT({$this->sub_table}.item_id) AS total_count, 
-                MAX({$this->sub_table}.effective_date) AS last_updated
-            ")->
-            join($this->sub_table, 'item.id', "{$this->sub_table}.item_id")->
-            join("resource", "resource.id", "item.resource_id")->
-            join("resource_type", "resource_type.id", "resource.resource_type_id")->
-            where("resource_type.id", "=", $resource_type_id)->
-            where("resource.id", "=", $resource_id)->
-            whereRaw(DB::raw("YEAR({$this->sub_table}.effective_date) = '{$year}'"))->
-            whereRaw(DB::raw("MONTH({$this->sub_table}.effective_date) = '{$month}'"));
-
-        return $collection->groupBy("month")->
-            orderBy("month")->
-            get()->
             toArray();
     }
 
@@ -297,8 +217,7 @@ class SimpleExpense extends Model
                 sub_category.name AS name, 
                 sub_category.description AS description,
                 SUM({$this->sub_table}.total) AS total, 
-                COUNT({$this->sub_table}.item_id) AS total_count, 
-                MAX({$this->sub_table}.effective_date) AS last_updated
+                COUNT({$this->sub_table}.item_id) AS total_count
             ")->
             join($this->sub_table, 'item.id', "{$this->sub_table}.item_id")->
             join("resource", "resource.id", "item.resource_id")->
@@ -335,8 +254,7 @@ class SimpleExpense extends Model
     {
         $collection = $this->selectRaw("
                 SUM({$this->sub_table}.total) AS total, 
-                COUNT({$this->sub_table}.item_id) AS total_count, 
-                MAX({$this->sub_table}.effective_date) AS last_updated
+                COUNT({$this->sub_table}.item_id) AS total_count
             ")->
             join($this->sub_table, 'item.id', "{$this->sub_table}.item_id")->
             join('resource', 'item.resource_id', 'resource.id')->
@@ -345,73 +263,5 @@ class SimpleExpense extends Model
 
         return $collection->get()
             ->toArray();
-    }
-
-    /**
-     * Return the summary grouped by years
-     *
-     * @param int $resource_type_id
-     * @param int $resource_id
-     * @param array $parameters
-     *
-     * @return array
-     */
-    public function yearsSummary(
-        int $resource_type_id,
-        int $resource_id,
-        array $parameters = []
-    ): array
-    {
-        $collection = $this->
-            selectRaw("
-                YEAR({$this->sub_table}.effective_date) as year, 
-                SUM({$this->sub_table}.total) AS total
-            ")->
-            join($this->sub_table, 'item.id', "{$this->sub_table}.item_id")->
-            join("resource", "resource.id", "item.resource_id")->
-            join("resource_type", "resource_type.id", "resource.resource_type_id")->
-            where("resource_type.id", "=", $resource_type_id)->
-            where("resource.id", "=", $resource_id);
-
-        return $collection->groupBy("year")->
-            orderBy("year")->
-            get()->
-            toArray();
-    }
-
-    /**
-     * Return a summary for a specific year
-     *
-     * @param int $resource_type_id
-     * @param int $resource_id
-     * @param int $year
-     * @param array $parameters
-     *
-     * @return array
-     */
-    public function yearSummary(
-        int $resource_type_id,
-        int $resource_id,
-        int $year,
-        array $parameters = []
-    ): array
-    {
-        $collection = $this->
-            selectRaw("
-                YEAR({$this->sub_table}.effective_date) as year, 
-                SUM({$this->sub_table}.total) AS total, 
-                COUNT({$this->sub_table}.item_id) AS total_count, 
-                MAX({$this->sub_table}.effective_date) AS last_updated
-            ")->
-            join($this->sub_table, 'item.id', "{$this->sub_table}.item_id")->
-            join("resource", "resource.id", "item.resource_id")->
-            join("resource_type", "resource_type.id", "resource.resource_type_id")->
-            where("resource_type.id", "=", $resource_type_id)->
-            where("resource.id", "=", $resource_id)->
-            whereRaw(DB::raw("YEAR({$this->sub_table}.effective_date) = '{$year}'"));
-
-        return $collection->groupBy("year")->
-            get()->
-            toArray();
     }
 }
