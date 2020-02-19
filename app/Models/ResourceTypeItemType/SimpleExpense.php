@@ -42,16 +42,6 @@ class SimpleExpense extends Model
             join('resource_type', 'resource.resource_type_id', 'resource_type.id')->
             where('resource_type.id', '=', $resource_type_id);
 
-        if (array_key_exists('year', $parameters_collection) === true &&
-            $parameters_collection['year'] !== null) {
-            $collection->where(DB::raw('YEAR(item_type_simple_expense.effective_date)'), '=', $parameters_collection['year']);
-        }
-
-        if (array_key_exists('month', $parameters_collection) === true &&
-            $parameters_collection['month'] !== null) {
-            $collection->where(DB::raw('MONTH(item_type_simple_expense.effective_date)'), '=', $parameters_collection['month']);
-        }
-
         if (array_key_exists('category', $parameters_collection) === true &&
             $parameters_collection['category'] !== null) {
             $collection->join("item_category", "item_category.item_id", "item.id");
@@ -105,7 +95,6 @@ class SimpleExpense extends Model
             'item.id AS item_id',
             'item_type_simple_expense.name AS item_name',
             'item_type_simple_expense.description AS item_description',
-            'item_type_simple_expense.effective_date AS item_effective_date',
             'item_type_simple_expense.total AS item_total',
             'item.created_at AS item_created_at'
         ];
@@ -154,16 +143,6 @@ class SimpleExpense extends Model
                     $collection->where('item_sub_category.sub_category_id', '=', $parameters_collection['subcategory']);
                 }
             }
-        }
-
-        if (array_key_exists('year', $parameters_collection) === true &&
-            $parameters_collection['year'] !== null) {
-            $collection->where(DB::raw('YEAR(item_type_simple_expense.effective_date)'), '=', $parameters_collection['year']);
-        }
-
-        if (array_key_exists('month', $parameters_collection) === true &&
-            $parameters_collection['month'] !== null) {
-            $collection->where(DB::raw('MONTH(item_type_simple_expense.effective_date)'), '=', $parameters_collection['month']);
         }
 
         if (array_key_exists('category', $parameters_collection) === true &&
