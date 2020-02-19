@@ -176,7 +176,6 @@ class SimpleExpense extends Model
                         $collection->orderBy('item.created_at', $direction);
                         break;
                     case 'description':
-                    case 'effective_date':
                     case 'name':
                     case 'total':
                         $collection->orderBy('item_type_simple_expense.' . $field, $direction);
@@ -188,7 +187,6 @@ class SimpleExpense extends Model
                 }
             }
         } else {
-            $collection->orderBy('item_type_simple_expense.effective_date', 'desc');
             $collection->orderBy('item.created_at', 'desc');
         }
 
@@ -241,166 +239,6 @@ class SimpleExpense extends Model
 
         return $collection->groupBy('resource.id')->
             orderBy('name')->
-            get()->
-            toArray();
-    }
-
-    /**
-     * Return the summary for all items for the resources in the requested resource
-     * type grouped by year
-     *
-     * @param int $resource_type_id
-
-     * @return array
-     */
-    public function yearsSummary(int $resource_type_id): array
-    {
-        $collection = $this->selectRaw("
-                YEAR(item_type_simple_expense.effective_date) as year,
-                SUM(item_type_simple_expense.total) AS total"
-            )->
-            join('item_type_simple_expense', 'item.id', 'item_type_simple_expense.item_id')->
-            join("resource", "resource.id", "item.resource_id")->
-            join("resource_type", "resource_type.id", "resource.resource_type_id")->
-            where("resource_type.id", "=", $resource_type_id);
-
-        return $collection->groupBy("year")->
-            orderBy("year")->
-            get()->
-            toArray();
-    }
-
-    /**
-     * Work out the maximum effective date year for the requested
-     * resource type id, defaults to the current year if no data exists
-     *
-     * @param integer $resource_type_id
-     *
-     * @return integer
-     */
-    public function maximumEffectiveDateYear(int $resource_type_id): int
-    {
-        $result = $this->from('item_type_simple_expense')->
-            join('item', 'item_type_simple_expense.item_id', 'item.id')->
-            join('resource', 'item.resource_id', 'resource.id')->
-            where('resource.resource_type_id', '=', $resource_type_id)->
-            selectRaw('YEAR(MAX(`item_type_simple_expense`.`effective_date`)) AS `year_limit`')->
-            first();
-
-        if ($result === null) {
-            return intval(date('Y'));
-        } else {
-            return intval($result->year_limit);
-        }
-    }
-
-    /**
-     * Work out the minimum effective date year for the requested
-     * resource type id, defaults to the current year if no data exists
-     *
-     * @param integer $resource_type_id
-     *
-     * @return integer
-     */
-    public function minimumEffectiveDateYear(int $resource_type_id): int
-    {
-        $result = $this->from('item_type_simple_expense')->
-            join('item', 'item_type_simple_expense.item_id', 'item.id')->
-            join('resource', 'item.resource_id', 'resource.id')->
-            where('resource.resource_type_id', '=', $resource_type_id)->
-            selectRaw('YEAR(MAX(`item_type_simple_expense`.`effective_date`)) AS `year_limit`')->
-            first();
-
-        if ($result === null) {
-            return intval(date('Y'));
-        } else {
-            return intval($result->year_limit);
-        }
-    }
-
-    /**
-     * Return the summary for all items for the resources in the requested resource
-     * type grouped by month for the requested year
-     *
-     * @param integer $resource_type_id
-     * @param integer $year
-     *
-     * @return array
-     */
-    public function monthsSummary(int $resource_type_id, int $year): array
-    {
-        $collection = $this->selectRaw("
-                MONTH(item_type_simple_expense.effective_date) as month, 
-                SUM(item_type_simple_expense.total) AS total"
-            )->
-            join('item_type_simple_expense', 'item.id', 'item_type_simple_expense.item_id')->
-            join("resource", "resource.id", "item.resource_id")->
-            join("resource_type", "resource_type.id", "resource.resource_type_id")->
-            where("resource_type.id", "=", $resource_type_id)->
-            where(DB::raw('YEAR(item_type_simple_expense.effective_date)'), '=', $year);
-
-        return $collection->groupBy("month")->
-            orderBy("month")->
-            get()->
-            toArray();
-    }
-
-    /**
-     * Return the summary for all items for the resources in the requested resource
-     * type for a specific year and month
-     *
-     * @param integer $resource_type_id
-     * @param integer $year
-     * @param integer $month
-     *
-     * @return array
-     */
-    public function monthSummary(
-        int $resource_type_id,
-        int $year,
-        int $month
-    ): array
-    {
-        $collection = $this->selectRaw("
-                MONTH(item_type_simple_expense.effective_date) as month, 
-                SUM(item_type_simple_expense.total) AS total"
-            )->
-            join('item_type_simple_expense', 'item.id', 'item_type_simple_expense.item_id')->
-            join("resource", "resource.id", "item.resource_id")->
-            join("resource_type", "resource_type.id", "resource.resource_type_id")->
-            where("resource_type.id", "=", $resource_type_id)->
-            where(DB::raw('YEAR(item_type_simple_expense.effective_date)'), '=', $year)->
-            where(DB::raw('MONTH(item_type_simple_expense.effective_date)'), '=', $month);
-
-        return $collection->groupBy("month")->
-            orderBy("month")->
-            get()->
-            toArray();
-    }
-
-    /**
-     * Return the summary for all items for the resources in the requested resource
-     * type for a specific year
-     *
-     * @param integer $resource_type_id
-     * @param integer $year
-     *
-     * @return array
-     */
-    public function yearSummary(int $resource_type_id, int $year): array
-    {
-        $collection = $this->selectRaw("
-                YEAR(item_type_simple_expense.effective_date) as year, 
-                SUM(item_type_simple_expense.total) AS total"
-            )->
-            join('item_type_simple_expense', 'item.id', 'item_type_simple_expense.item_id')->
-            join("resource", "resource.id", "item.resource_id")->
-            join("resource_type", "resource_type.id", "resource.resource_type_id")->
-            where("resource_type.id", "=", $resource_type_id)->
-            where(DB::raw('YEAR(item_type_simple_expense.effective_date)'), '=', $year);
-
-        return $collection->groupBy("year")->
-            orderBy("year")->
             get()->
             toArray();
     }
@@ -495,12 +333,6 @@ class SimpleExpense extends Model
         }
         if ($subcategory_id !== null) {
             $collection->where("sub_category.id", "=", $subcategory_id);
-        }
-        if ($year !== null) {
-            $collection->whereRaw(DB::raw("YEAR(item_type_simple_expense.effective_date) = {$year}"));
-        }
-        if ($month !== null) {
-            $collection->whereRaw(DB::raw("MONTH(item_type_simple_expense.effective_date) = {$month}"));
         }
         if (count($search_parameters) > 0) {
             foreach ($search_parameters as $field => $search_term) {
