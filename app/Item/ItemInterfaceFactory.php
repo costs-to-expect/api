@@ -162,7 +162,8 @@ class ItemInterfaceFactory
     }
 
     /**
-     * Return the relevant item interface
+     * Return the relevant item interface based on the item type asigned to the
+     * given resource id
      *
      * @param integer $resource_type_id
      *
