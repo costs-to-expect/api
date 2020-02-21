@@ -23,7 +23,6 @@ use Exception;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Config;
 
 /**
  * Manage items
@@ -35,14 +34,18 @@ use Illuminate\Support\Facades\Config;
 class ItemController extends Controller
 {
     /**
-     * Return all the items based on the set filter options
+     * Return all the items for the resource type and resource applying
+     * any filtering, pagination and ordering
      *
      * @param string $resource_type_id
      * @param string $resource_id
      *
      * @return JsonResponse
      */
-    public function index(string $resource_type_id, string $resource_id): JsonResponse
+    public function index(
+        string $resource_type_id,
+        string $resource_id
+    ): JsonResponse
     {
         Route::resource(
             $resource_type_id,
