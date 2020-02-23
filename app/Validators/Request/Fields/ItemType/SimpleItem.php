@@ -12,11 +12,11 @@ use App\Validators\Request\Fields\Validator as BaseValidator;
  * @copyright Dean Blackborough 2018-2020
  * @license https://github.com/costs-to-expect/api/blob/master/LICENSE
  */
-class AllocatedExpense extends BaseValidator
+class SimpleItem extends BaseValidator
 {
     public function __construct()
     {
-        $this->item = new \App\Item\AllocatedExpense();
+        $this->item = new \App\Item\SimpleItem();
 
         parent::__construct();
     }
