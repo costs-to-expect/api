@@ -118,6 +118,10 @@ class ItemInterfaceFactory
                     return new ResourceTypeItem\SimpleExpense();
                     break;
 
+                case 'simple-item':
+                    return new ResourceTypeItem\SimpleItem();
+                    break;
+
                 default:
                     throw new Exception('Unable to load the relevant resource type item type', 500);
                     break;
