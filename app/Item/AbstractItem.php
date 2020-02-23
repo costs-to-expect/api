@@ -34,7 +34,7 @@ abstract class AbstractItem
      *
      * @return array
      */
-    public function collectionParametersKeys(): array
+    public function collectionParametersNames(): array
     {
         $params = [];
         foreach (Config::get($this->collectionParametersConfig()) as $key => $param) {
@@ -81,21 +81,14 @@ abstract class AbstractItem
      *
      * @return array
      */
-    abstract public function patchableFields(): array;
+    abstract public function patchableFieldNames(): array;
 
     /**
-     * Return the patch fields config string specific to the item type
+     * Return the fields config string specific to the item type
      *
      * @return string
      */
-    abstract public function patchFieldsConfig(): string;
-
-    /**
-     * Return the post fields config string specific to the item type
-     *
-     * @return string
-     */
-    abstract public function postFieldsConfig(): string;
+    abstract public function fieldsConfig(): string;
 
     /**
      * Return the search parameters specific to the item type, these will be

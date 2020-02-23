@@ -114,7 +114,7 @@ class AllocatedExpense extends AbstractItem
      *
      * @return array
      */
-    public function patchableFields(): array
+    public function patchableFieldNames(): array
     {
         return array_keys(
             Config::get('api.item-type-allocated-expense.validation.PATCH.fields'),
@@ -122,21 +122,11 @@ class AllocatedExpense extends AbstractItem
     }
 
     /**
-     * Return the patch fields config string specific to the item type
-     *
-     * @return string
-     */
-    public function patchFieldsConfig(): string
-    {
-        return 'api.item-type-allocated-expense.fields';
-    }
-
-    /**
      * Return the post fields config string specific to the item type
      *
      * @return string
      */
-    public function postFieldsConfig(): string
+    public function fieldsConfig(): string
     {
         return 'api.item-type-allocated-expense.fields';
     }

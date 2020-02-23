@@ -3,9 +3,9 @@ declare(strict_types=1);
 
 namespace App\Item;
 
-##use App\Models\ItemType\SimpleExpense as ItemModel;
+use App\Models\ItemType\SimpleItem as ItemModel;
 use App\Models\Transformers\Transformer;
-##use App\Validators\Request\Fields\ItemType\SimpleExpense as ItemTypeSimpleExpenseValidator;
+use App\Validators\Request\Fields\ItemType\SimpleItem as ItemTypeSimpleItemValidator;
 use App\Validators\Request\Fields\Validator;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Config;
@@ -27,7 +27,7 @@ class SimpleItem extends AbstractItem
      */
     public function collectionParametersConfig(): string
     {
-        return 'api.item-type-simple-expense.parameters.collection';
+        return 'api.item-type-simple-item.parameters.collection';
     }
 
     /**
@@ -43,7 +43,7 @@ class SimpleItem extends AbstractItem
             'item_id' => $id,
             'name' => request()->input('name'),
             'description' => request()->input('description', null),
-            'total' => request()->input('total'),
+            'quantity' => request()->input('quantity', 1),
         ]);
 
         $item_type->save();
@@ -78,21 +78,11 @@ class SimpleItem extends AbstractItem
      *
      * @return array
      */
-    public function patchableFields(): array
+    public function patchableFieldNames(): array
     {
         return array_keys(
-            Config::get('api.item-type-simple-expense.validation.PATCH.fields'),
+            Config::get('api.item-type-simple-item.validation.PATCH.fields'),
         );
-    }
-
-    /**
-     * Return the patch fields config string specific to the item type
-     *
-     * @return string
-     */
-    public function patchFieldsConfig(): string
-    {
-        return 'api.item-type-simple-expense.fields';
     }
 
     /**
@@ -100,9 +90,9 @@ class SimpleItem extends AbstractItem
      *
      * @return string
      */
-    public function postFieldsConfig(): string
+    public function fieldsConfig(): string
     {
-        return 'api.item-type-simple-expense.fields';
+        return 'api.item-type-simple-item.fields';
     }
 
     /**
@@ -112,7 +102,7 @@ class SimpleItem extends AbstractItem
      */
     public function searchParametersConfig(): string
     {
-        return 'api.item-type-simple-expense.searchable';
+        return 'api.item-type-simple-item.searchable';
     }
 
     /**
@@ -122,7 +112,7 @@ class SimpleItem extends AbstractItem
      */
     public function showParametersConfig(): string
     {
-        return 'api.item-type-simple-expense.parameters.item';
+        return 'api.item-type-simple-item.parameters.item';
     }
 
     /**
@@ -132,7 +122,7 @@ class SimpleItem extends AbstractItem
      */
     public function sortParametersConfig(): string
     {
-        return 'api.item-type-simple-expense.sortable';
+        return 'api.item-type-simple-item.sortable';
     }
 
     /**
@@ -154,7 +144,7 @@ class SimpleItem extends AbstractItem
      */
     public function type(): string
     {
-        return 'simple-expense';
+        return 'simple-item';
     }
 
     /**
@@ -181,6 +171,6 @@ class SimpleItem extends AbstractItem
      */
     public function validator(): Validator
     {
-        return new ItemTypeSimpleExpenseValidator();
+        return new ItemTypeSimpleItemValidator();
     }
 }

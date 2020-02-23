@@ -203,7 +203,7 @@ class ItemController extends Controller
             $resource_type_id,
             $resource_id,
             array_merge(
-                $item_interface->collectionParametersKeys(),
+                $item_interface->collectionParametersNames(),
                 $defined_parameters
             )
         );
@@ -219,7 +219,7 @@ class ItemController extends Controller
             option();
 
         $post = Post::init()->
-            setFields($item_interface->postFieldsConfig())->
+            setFields($item_interface->fieldsConfig())->
             setDescription( 'route-descriptions.item_POST')->
             setAuthenticationRequired(true)->
             setAuthenticationStatus($permissions['manage'])->
@@ -283,7 +283,7 @@ class ItemController extends Controller
             option();
 
         $patch = Patch::init()->
-            setFields($item_interface->postFieldsConfig())->
+            setFields($item_interface->fieldsConfig())->
             setDescription('route-descriptions.item_PATCH')->
             setAuthenticationStatus($permissions['manage'])->
             setAuthenticationRequired(true)->
@@ -369,7 +369,7 @@ class ItemController extends Controller
 
         UtilityRequest::checkForEmptyPatch();
 
-        UtilityRequest::checkForInvalidFields($item_interface->patchableFields());
+        UtilityRequest::checkForInvalidFields($item_interface->patchableFieldNames());
 
         $validator_factory = $item_interface->validator();
         $validator = $validator_factory->update();
