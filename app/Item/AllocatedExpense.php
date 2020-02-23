@@ -110,18 +110,6 @@ class AllocatedExpense extends AbstractItem
     }
 
     /**
-     * Return an array of the fields that can be PATCHed.
-     *
-     * @return array
-     */
-    public function patchableFieldNames(): array
-    {
-        return array_keys(
-            Config::get('api.item-type-allocated-expense.validation.PATCH.fields'),
-        );
-    }
-
-    /**
      * Return the post fields config string specific to the item type
      *
      * @return string
@@ -207,6 +195,46 @@ class AllocatedExpense extends AbstractItem
         }
 
         return $instance->save();
+    }
+
+    /**
+     * Return an array of the validation messages for the patchable fields
+     *
+     * @return array
+     */
+    public function validationPatchableFieldMessages(): array
+    {
+        return Config::get('api.item-type-allocated-expense.validation.PATCH.messages');
+    }
+
+    /**
+     * Return an array of the fields that can be PATCHed.
+     *
+     * @return array
+     */
+    public function validationPatchableFields(): array
+    {
+        return Config::get('api.item-type-allocated-expense.validation.PATCH.fields');
+    }
+
+    /**
+     * Return an array of the validation messages for the postable fields
+     *
+     * @return array
+     */
+    public function validationPostableFieldMessages(): array
+    {
+        return Config::get('api.item-type-allocated-expense.validation.POST.messages');
+    }
+
+    /**
+     * Return an array of the fields that can be POSTed.
+     *
+     * @return array
+     */
+    public function validationPostableFields(): array
+    {
+        return Config::get('api.item-type-allocated-expense.validation.POST.fields');
     }
 
     /**

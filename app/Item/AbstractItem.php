@@ -77,13 +77,6 @@ abstract class AbstractItem
     abstract public function model(): Model;
 
     /**
-     * Return an array of the fields that can be PATCHed.
-     *
-     * @return array
-     */
-    abstract public function patchableFieldNames(): array;
-
-    /**
      * Return the fields config string specific to the item type
      *
      * @return string
@@ -158,6 +151,58 @@ abstract class AbstractItem
      * @return bool
      */
     abstract public function update(array $request, Model $instance): bool;
+
+    /**
+     * Return an array of the validation messages for the patchable fields
+     *
+     * @return array
+     */
+    abstract public function validationPatchableFieldMessages(): array;
+
+    /**
+     * Return an array of the fields that can be PATCHed.
+     *
+     * @return array
+     */
+    abstract public function validationPatchableFields(): array;
+
+    /**
+     * Return an array of the fields names that can be PATCHed.
+     *
+     * @return array
+     */
+    public function validationPatchableFieldNames(): array
+    {
+        return array_keys(
+            $this->validationPatchableFields()
+        );
+    }
+
+    /**
+     * Return an array of the validation messages for the postable fields
+     *
+     * @return array
+     */
+    abstract public function validationPostableFieldMessages(): array;
+
+    /**
+     * Return an array of the fields that can be POSTed.
+     *
+     * @return array
+     */
+    abstract public function validationPostableFields(): array;
+
+    /**
+     * Return an array of the fields names that can be POSTed.
+     *
+     * @return array
+     */
+    public function validationPostableFieldNames(): array
+    {
+        return array_keys(
+            $this->validationPostableFields()
+        );
+    }
 
     /**
      * Return the validator to use for the validation checks
