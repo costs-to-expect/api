@@ -145,7 +145,7 @@ class SimpleItem extends Model
             'item.id AS item_id',
             "{$this->table}.name AS item_name",
             "{$this->table}.description AS item_description",
-            "{$this->table}.total AS item_total",
+            "{$this->table}.quantity AS item_quantity",
             'item.created_at AS item_created_at'
         ];
 
