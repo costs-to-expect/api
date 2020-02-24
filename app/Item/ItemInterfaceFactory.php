@@ -50,6 +50,10 @@ class ItemInterfaceFactory
                     return new SimpleExpense();
                     break;
 
+                case 'simple-item':
+                    return new SimpleItem();
+                    break;
+
                 default:
                     throw new Exception('Unable to load the relevant item type', 500);
                     break;

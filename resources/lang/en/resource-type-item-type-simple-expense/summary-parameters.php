@@ -6,18 +6,6 @@ return [
     'title-resources' => 'Resource',
     'description-resources' => 'Return the items summary grouped by resource',
 
-    'title-year' => 'Year',
-    'description-year' => 'Return the items summary for the requested year',
-
-    'title-years' => 'Years',
-    'description-years' => 'Return the items summary grouped by years',
-
-    'title-month' => 'Month',
-    'description-month' => 'Return the items summary for the requested month, only applicable if year option set',
-
-    'title-months' => 'Months',
-    'description-months' => 'Return the items summary grouped by month, only applicable if year option set',
-
     'title-category' => 'Category',
     'description-category' => 'Return the items summary for the requested category',
 
