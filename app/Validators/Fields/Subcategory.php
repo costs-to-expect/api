@@ -1,31 +1,30 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Validators\Request\Fields;
+namespace App\Validators\Fields;
 
-use App\Validators\Request\Fields\Validator as BaseValidator;
+use App\Validators\Fields\Validator as BaseValidator;
 use Illuminate\Contracts\Validation\Validator;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Validator as ValidatorFacade;
 
 /**
- * Validation helper class for resources, returns the generated validator objects
+ * Validation helper class for sub categories, returns the generated validator objects
  *
  * @author Dean Blackborough <dean@g3d-development.com>
  * @copyright Dean Blackborough 2018-2020
  * @license https://github.com/costs-to-expect/api/blob/master/LICENSE
  */
-class Resource extends BaseValidator
+class Subcategory extends BaseValidator
 {
     /**
-     * Create the validation rules for the create request
+     * Create the validation rules for the create (POST) request
      *
-     * @param integer $resource_type_id
+     * @param integer $category_id
      *
      * @return array
      */
-    private function createRules(int $resource_type_id): array
+    private function createRules(int $category_id): array
     {
         return array_merge(
             [
@@ -33,22 +32,22 @@ class Resource extends BaseValidator
                     'required',
                     'string',
                     'max:255',
-                    'unique:resource,name,null,id,resource_type_id,' . $resource_type_id
+                    'unique:sub_category,name,null,id,category_id,' . $category_id
                 ],
             ],
-            Config::get('api.resource.validation.POST.fields')
+            Config::get('api.subcategory.validation.POST.fields')
         );
     }
 
     /**
      * Create the validation rules for the update request
      *
-     * @param integer $resource_type_id
-     * @param integer $resource_id
+     * @param integer $category_id
+     * @param integer $subcategory_id
      *
      * @return array
      */
-    private function updateRules(int $resource_type_id, int $resource_id): array
+    private function updateRules(int $category_id, int $subcategory_id): array
     {
         return array_merge(
             [
@@ -56,10 +55,10 @@ class Resource extends BaseValidator
                     'sometimes',
                     'string',
                     'max:255',
-                    'unique:resource,name,'. $resource_id . ',id,resource_type_id,' . $resource_type_id
+                    'unique:sub_category,name,'. $subcategory_id . ',id,category_id,' . $category_id
                 ],
             ],
-            Config::get('api.resource.validation.PATCH.fields')
+            Config::get('api.subcategory.validation.PATCH.fields')
         );
     }
 
@@ -77,12 +76,12 @@ class Resource extends BaseValidator
      */
     public function create(array $options = []): Validator
     {
-        $this->requiredIndexes(['resource_type_id'], $options);
+        $this->requiredIndexes(['category_id'], $options);
 
         return ValidatorFacade::make(
             request()->all(),
-            self::createRules(intval($options['resource_type_id'])),
-            $this->translateMessages('api.resource.validation.POST.messages')
+            self::createRules(intval($options['category_id'])),
+            $this->translateMessages('api.subcategory.validation.POST.messages')
         );
     }
 
@@ -94,8 +93,8 @@ class Resource extends BaseValidator
     {
         return ValidatorFacade::make(
             request()->all(),
-            $this->updateRules($options['resource_type_id'], $options['resource_id']),
-            $this->translateMessages('api.resource.validation.PATCH.messages')
+            $this->updateRules($options['category_id'], $options['subcategory_id']),
+            $this->translateMessages('api.subcategory.validation.PATCH.messages')
         );
     }
 }

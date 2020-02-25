@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Validators\Request\Fields;
+namespace App\Validators\Fields;
 
 use App\Item\AbstractItem;
 use App\Utilities\Hash;

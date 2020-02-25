@@ -1,9 +1,9 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Validators\Request\Fields\ItemType;
+namespace App\Validators\Fields\ItemType;
 
-use App\Validators\Request\Fields\Validator as BaseValidator;
+use App\Validators\Fields\Validator as BaseValidator;
 
 /**
  * Validation helper class for items, returns the generated validator objects
@@ -12,11 +12,11 @@ use App\Validators\Request\Fields\Validator as BaseValidator;
  * @copyright Dean Blackborough 2018-2020
  * @license https://github.com/costs-to-expect/api/blob/master/LICENSE
  */
-class SimpleItem extends BaseValidator
+class AllocatedExpense extends BaseValidator
 {
     public function __construct()
     {
-        $this->item = new \App\Item\SimpleItem();
+        $this->item = new \App\Item\AllocatedExpense();
 
         parent::__construct();
     }

@@ -5,7 +5,7 @@ namespace App\Http\Controllers\Summary;
 use App\Http\Controllers\Controller;
 use App\Option\Get;
 use App\Utilities\Header;
-use App\Validators\Request\Parameters;
+use App\Validators\Parameters;
 use App\Models\Summary\RequestLog;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Config;

@@ -6,7 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Option\Get;
 use App\Utilities\Header;
 use App\Utilities\RoutePermission;
-use App\Validators\Request\Route;
+use App\Validators\Route;
 use App\Models\Summary\Resource;
 use Illuminate\Http\JsonResponse;
 

@@ -6,13 +6,13 @@ use App\ResourceTypeItem\Factory;
 use App\Option\Get;
 use App\Utilities\Header;
 use App\Utilities\RoutePermission;
-use App\Validators\Request\Parameters;
-use App\Validators\Request\Route;
+use App\Validators\Parameters;
+use App\Validators\Route;
 use App\Models\Category;
 use App\Models\Subcategory;
 use App\Utilities\Pagination as UtilityPagination;
-use App\Validators\Request\SearchParameters;
-use App\Validators\Request\SortParameters;
+use App\Validators\SearchParameters;
+use App\Validators\SortParameters;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 

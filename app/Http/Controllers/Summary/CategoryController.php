@@ -7,7 +7,7 @@ use App\Models\Summary\Category;
 use App\Option\Get;
 use App\Utilities\Header;
 use App\Utilities\RoutePermission;
-use App\Validators\Request\Route;
+use App\Validators\Route;
 use Illuminate\Http\JsonResponse;
 
 /**

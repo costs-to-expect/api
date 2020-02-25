@@ -7,8 +7,8 @@ use App\ResourceTypeItem\Factory;
 use App\Option\Get;
 use App\Utilities\Header;
 use App\Utilities\RoutePermission;
-use App\Validators\Request\Parameters;
-use App\Validators\Request\Route;
+use App\Validators\Parameters;
+use App\Validators\Route;
 use App\Models\Transformers\Summary\ResourceTypeItemCategory as ResourceTypeItemCategoryTransformer;
 use App\Models\Transformers\Summary\ResourceTypeItemMonth as ResourceTypeItemMonthTransformer;
 use App\Models\Transformers\Summary\ResourceTypeItemResource as ResourceTypeItemResourceTransformer;
@@ -16,7 +16,7 @@ use App\Models\Transformers\Summary\ResourceTypeItemSubcategory as ResourceTypeI
 use App\Models\Transformers\Summary\ResourceTypeItemYear as ResourceTypeItemYearTransformer;
 use App\Utilities\General;
 use App\Utilities\Response as UtilityResponse;
-use App\Validators\Request\SearchParameters;
+use App\Validators\SearchParameters;
 use Illuminate\Http\JsonResponse;
 
 /**

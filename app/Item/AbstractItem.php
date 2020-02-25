@@ -4,7 +4,7 @@ declare(strict_types=1);
 namespace App\Item;
 
 use App\Models\Transformers\Transformer;
-use App\Validators\Request\Fields\Validator;
+use App\Validators\Fields\Validator;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Config;
 

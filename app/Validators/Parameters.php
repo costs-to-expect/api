@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Validators\Request;
+namespace App\Validators;
 
 use App\ResourceTypeItem\Factory;
 use App\Models\Category;

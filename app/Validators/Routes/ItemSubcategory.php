@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Validators\Request\Routes;
+namespace App\Validators\Routes;
 
 use App\Models\ResourceTypeAccess;
 

@@ -8,8 +8,8 @@ use App\Option\Post;
 use App\Utilities\Request as UtilityRequest;
 use App\Utilities\Response as UtilityResponse;
 use App\Utilities\RoutePermission;
-use App\Validators\Request\Fields\ItemTransfer as ItemTransferValidator;
-use App\Validators\Request\Route;
+use App\Validators\Fields\ItemTransfer as ItemTransferValidator;
+use App\Validators\Route;
 use Exception;
 use Illuminate\Http\JsonResponse;
 

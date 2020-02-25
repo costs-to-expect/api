@@ -5,8 +5,8 @@ namespace App\Item;
 
 use App\Models\ItemType\AllocatedExpense as ItemModel;
 use App\Models\Transformers\Transformer;
-use App\Validators\Request\Fields\ItemType\AllocatedExpense as ItemTypeAllocatedExpenseValidator;
-use App\Validators\Request\Fields\Validator;
+use App\Validators\Fields\ItemType\AllocatedExpense as ItemTypeAllocatedExpenseValidator;
+use App\Validators\Fields\Validator;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Config;
 

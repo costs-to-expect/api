@@ -1,16 +1,16 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Validators\Request;
+namespace App\Validators;
 
-use App\Validators\Request\Routes\Category;
-use App\Validators\Request\Routes\Item;
-use App\Validators\Request\Routes\ItemCategory;
-use App\Validators\Request\Routes\ItemSubcategory;
-use App\Validators\Request\Routes\ItemType;
-use App\Validators\Request\Routes\Resource;
-use App\Validators\Request\Routes\ResourceType;
-use App\Validators\Request\Routes\Subcategory;
+use App\Validators\Routes\Category;
+use App\Validators\Routes\Item;
+use App\Validators\Routes\ItemCategory;
+use App\Validators\Routes\ItemSubcategory;
+use App\Validators\Routes\ItemType;
+use App\Validators\Routes\Resource;
+use App\Validators\Routes\ResourceType;
+use App\Validators\Routes\Subcategory;
 use App\Utilities\Response as UtilityResponse;
 
 /**
