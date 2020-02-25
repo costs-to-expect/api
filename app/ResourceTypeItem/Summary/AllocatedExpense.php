@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Item\ResourceTypeItem\Summary;
+namespace App\ResourceTypeItem\Summary;
 
 use App\Models\ResourceTypeItemType\Summary\AllocatedExpense as ItemModel;
 use Illuminate\Database\Eloquent\Model;

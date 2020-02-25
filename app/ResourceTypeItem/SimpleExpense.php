@@ -1,21 +1,21 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Item\ResourceTypeItem;
+namespace App\ResourceTypeItem;
 
-use App\Models\ResourceTypeItemType\AllocatedExpense as ItemModel;
+use App\Models\ResourceTypeItemType\SimpleExpense as ItemModel;
 use App\Models\Transformers\Transformer;
 use Illuminate\Database\Eloquent\Model;
 
 /**
- * The Interface for dealing with allocated expenses, everything should be
+ * The Interface for dealing with simple expenses, everything should be
  * funneled through an instance of this class
  *
  * @author Dean Blackborough <dean@g3d-development.com>
  * @copyright Dean Blackborough 2018-2020
  * @license https://github.com/costs-to-expect/api/blob/master/LICENSE
  */
-class AllocatedExpense extends AbstractItem
+class SimpleExpense extends AbstractItem
 {
     /**
      * Return the parameters config string specific to the item type
@@ -24,7 +24,7 @@ class AllocatedExpense extends AbstractItem
      */
     public function collectionParametersConfig(): string
     {
-        return 'api.resource-type-item-type-allocated-expense.parameters.collection';
+        return 'api.resource-type-item-type-simple-expense.parameters.collection';
     }
 
     /**
@@ -74,7 +74,7 @@ class AllocatedExpense extends AbstractItem
      */
     public function transformer(array $data_to_transform): Transformer
     {
-        return new \App\Models\Transformers\ResourceTypeItemType\AllocatedExpense($data_to_transform);
+        return new \App\Models\Transformers\ResourceTypeItemType\SimpleExpense($data_to_transform);
     }
 
     /**
@@ -84,7 +84,7 @@ class AllocatedExpense extends AbstractItem
      */
     public function type(): string
     {
-        return 'allocated-expense';
+        return 'simple-expense';
     }
 
     /**
@@ -94,7 +94,7 @@ class AllocatedExpense extends AbstractItem
      */
     public function searchParametersConfig(): string
     {
-        return 'api.resource-type-item-type-allocated-expense.searchable';
+        return 'api.resource-type-item-type-simple-expense.searchable';
     }
 
     /**
@@ -104,6 +104,6 @@ class AllocatedExpense extends AbstractItem
      */
     public function sortParametersConfig(): string
     {
-        return 'api.resource-type-item-type-allocated-expense.sortable';
+        return 'api.resource-type-item-type-simple-expense.sortable';
     }
 }

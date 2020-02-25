@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Item\ResourceTypeItem;
+namespace App\ResourceTypeItem;
 
 use App\Models\Transformers\Transformer;
 use Illuminate\Database\Eloquent\Model;

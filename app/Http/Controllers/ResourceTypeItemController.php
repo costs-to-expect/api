@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Item\ItemInterfaceFactory;
+use App\Item\Factory;
 use App\Option\Get;
 use App\Utilities\Header;
 use App\Utilities\RoutePermission;
@@ -40,7 +40,7 @@ class ResourceTypeItemController extends Controller
             $this->permitted_resource_types
         );
 
-        $item_interface = ItemInterfaceFactory::resourceTypeItem($resource_type_id);
+        $item_interface = Factory::resourceTypeItem($resource_type_id);
 
         $resource_type_item_model = $item_interface->model();
 
@@ -120,7 +120,7 @@ class ResourceTypeItemController extends Controller
             $this->permitted_resource_types
         );
 
-        $item_interface = ItemInterfaceFactory::resourceTypeItem($resource_type_id);
+        $item_interface = Factory::resourceTypeItem($resource_type_id);
 
         $permissions = RoutePermission::resourceType(
             $resource_type_id,
@@ -168,7 +168,7 @@ class ResourceTypeItemController extends Controller
         array $parameters
     ): array
     {
-        $item_interface = ItemInterfaceFactory::resourceTypeItem($resource_type_id);
+        $item_interface = Factory::resourceTypeItem($resource_type_id);
 
         $conditional_parameters = [];
 

@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Item\ItemInterfaceFactory;
+use App\Item\Factory;
 use App\Option\Delete;
 use App\Option\Get;
 use App\Option\Patch;
@@ -53,7 +53,7 @@ class ItemController extends Controller
             $this->permitted_resource_types,
         );
 
-        $item_interface = ItemInterfaceFactory::item($resource_type_id);
+        $item_interface = Factory::item($resource_type_id);
 
         $parameters = Parameters::fetch(
             array_keys($item_interface->collectionParameters()),
@@ -146,7 +146,7 @@ class ItemController extends Controller
             $this->permitted_resource_types
         );
 
-        $item_interface = ItemInterfaceFactory::item($resource_type_id);
+        $item_interface = Factory::item($resource_type_id);
 
         $item_model = $item_interface->model();
 
@@ -185,7 +185,7 @@ class ItemController extends Controller
             $this->permitted_resource_types,
         );
 
-        $item_interface = ItemInterfaceFactory::item($resource_type_id);
+        $item_interface = Factory::item($resource_type_id);
 
         $permissions = RoutePermission::resource(
             $resource_type_id,
@@ -260,7 +260,7 @@ class ItemController extends Controller
             $this->permitted_resource_types,
         );
 
-        $item_interface = ItemInterfaceFactory::item($resource_type_id);
+        $item_interface = Factory::item($resource_type_id);
 
         $item_model = $item_interface->model();
 
@@ -315,7 +315,7 @@ class ItemController extends Controller
             true
         );
 
-        $item_interface = ItemInterfaceFactory::item($resource_type_id);
+        $item_interface = Factory::item($resource_type_id);
 
         $validator_factory = $item_interface->validator();
         $validator = $validator_factory->create();
@@ -365,7 +365,7 @@ class ItemController extends Controller
             true
         );
 
-        $item_interface = ItemInterfaceFactory::item($resource_type_id);
+        $item_interface = Factory::item($resource_type_id);
 
         UtilityRequest::checkForEmptyPatch();
 
@@ -417,7 +417,7 @@ class ItemController extends Controller
             true
         );
 
-        $item_interface = ItemInterfaceFactory::item($resource_type_id);
+        $item_interface = Factory::item($resource_type_id);
 
         $item_model = $item_interface->model();
 
@@ -461,7 +461,7 @@ class ItemController extends Controller
     ): array
     {
 
-        $item_interface = ItemInterfaceFactory::item($resource_type_id);
+        $item_interface = Factory::item($resource_type_id);
 
         $conditional_parameters = [];
 

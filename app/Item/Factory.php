@@ -13,7 +13,7 @@ use Exception;
  * @copyright Dean Blackborough 2018-2020
  * @license https://github.com/costs-to-expect/api/blob/master/LICENSE
  */
-class ItemInterfaceFactory
+class Factory
 {
     /**
      * @param int $resource_type_id
@@ -107,27 +107,27 @@ class ItemInterfaceFactory
      *
      * @param integer $resource_type_id
      *
-     * @return ResourceTypeItem\AbstractItem
+     * @return \App\ResourceTypeItem\AbstractItem
      * @throws Exception
      */
     static protected function resourceTypeItemInterface(
         int $resource_type_id
-    ): ResourceTypeItem\AbstractItem
+    ): \App\ResourceTypeItem\AbstractItem
     {
         $item_type = self::itemType($resource_type_id);
 
         if ($item_type !== null) {
             switch ($item_type) {
                 case 'allocated-expense':
-                    return new ResourceTypeItem\AllocatedExpense();
+                    return new \App\ResourceTypeItem\AllocatedExpense();
                     break;
 
                 case 'simple-expense':
-                    return new ResourceTypeItem\SimpleExpense();
+                    return new \App\ResourceTypeItem\SimpleExpense();
                     break;
 
                 case 'simple-item':
-                    return new ResourceTypeItem\SimpleItem();
+                    return new \App\ResourceTypeItem\SimpleItem();
                     break;
 
                 default:
@@ -145,27 +145,27 @@ class ItemInterfaceFactory
      *
      * @param integer $resource_type_id
      *
-     * @return ResourceTypeItem\Summary\AbstractItem
+     * @return \App\ResourceTypeItem\Summary\AbstractItem
      * @throws Exception
      */
     static protected function resourceTypeItemSummaryInterface(
         int $resource_type_id
-    ): ResourceTypeItem\Summary\AbstractItem
+    ): \App\ResourceTypeItem\Summary\AbstractItem
     {
         $item_type = self::itemType($resource_type_id);
 
         if ($item_type !== null) {
             switch ($item_type) {
                 case 'allocated-expense':
-                    return new ResourceTypeItem\Summary\AllocatedExpense();
+                    return new \App\ResourceTypeItem\Summary\AllocatedExpense();
                     break;
 
                 case 'simple-expense':
-                    return new ResourceTypeItem\Summary\SimpleExpense();
+                    return new \App\ResourceTypeItem\Summary\SimpleExpense();
                     break;
 
                 case 'simple-item':
-                    return new ResourceTypeItem\Summary\SimpleItem();
+                    return new \App\ResourceTypeItem\Summary\SimpleItem();
                     break;
 
                 default:
@@ -215,9 +215,9 @@ class ItemInterfaceFactory
      *
      * @param integer $resource_type_id
      *
-     * @return \App\Item\ResourceTypeItem\AbstractItem
+     * @return \App\ResourceTypeItem\AbstractItem
      */
-    static public function resourceTypeItem(int $resource_type_id): \App\Item\ResourceTypeItem\AbstractItem
+    static public function resourceTypeItem(int $resource_type_id): \App\ResourceTypeItem\AbstractItem
     {
         try {
             return self::resourceTypeItemInterface($resource_type_id);
@@ -231,9 +231,9 @@ class ItemInterfaceFactory
      *
      * @param integer $resource_type_id
      *
-     * @return \App\Item\ResourceTypeItem\Summary\AbstractItem
+     * @return \App\ResourceTypeItem\Summary\AbstractItem
      */
-    static public function summaryResourceTypeItem(int $resource_type_id): \App\Item\ResourceTypeItem\Summary\AbstractItem
+    static public function summaryResourceTypeItem(int $resource_type_id): \App\ResourceTypeItem\Summary\AbstractItem
     {
         try {
             return self::resourceTypeItemSummaryInterface($resource_type_id);

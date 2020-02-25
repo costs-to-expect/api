@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Summary;
 
 use App\Http\Controllers\Controller;
-use App\Item\ItemInterfaceFactory;
+use App\Item\Factory;
 use App\Option\Get;
 use App\Utilities\Header;
 use App\Utilities\Response;
@@ -46,7 +46,7 @@ class ItemController extends Controller
             $this->permitted_resource_types
         );
 
-        $item_interface = ItemInterfaceFactory::summaryItem($resource_type_id);
+        $item_interface = Factory::summaryItem($resource_type_id);
         $this->model = $item_interface->model();
 
         $parameters = Parameters::fetch(
@@ -714,7 +714,7 @@ class ItemController extends Controller
             $this->permitted_resource_types
         );
 
-        $item_interface = ItemInterfaceFactory::summaryItem($resource_type_id);
+        $item_interface = Factory::summaryItem($resource_type_id);
 
         $permissions = RoutePermission::resource(
             $resource_type_id,

@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Item\ResourceTypeItem\Summary;
+namespace App\ResourceTypeItem\Summary;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Config;
