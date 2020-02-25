@@ -88,6 +88,10 @@ class ItemInterfaceFactory
                     return new Summary\SimpleExpense();
                     break;
 
+                case 'simple-item':
+                    return new Summary\SimpleItem();
+                    break;
+
                 default:
                     throw new Exception('Unable to load the relevant summary item type', 500);
                     break;
