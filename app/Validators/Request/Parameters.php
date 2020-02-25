@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace App\Validators\Request;
 
-use App\Item\Factory;
+use App\ResourceTypeItem\Factory;
 use App\Models\Category;
 use App\Models\ResourceType;
 use App\Models\Subcategory;
@@ -139,7 +139,7 @@ class Parameters
                         $max_year_limit = intval(Date('Y'));
 
                         if ($resource_type_id !== null && $resource_id === null) {
-                            $item_interface = Factory::resourceTypeItem($resource_type_id);
+                            $item_interface = Factory::item($resource_type_id);
                             $min_year_limit = $item_interface->conditionalParameterMinYear($resource_type_id);
                             $max_year_limit = $item_interface->conditionalParameterMaxYear($resource_type_id);
                         }

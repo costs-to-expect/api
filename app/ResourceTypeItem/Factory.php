@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Item;
+namespace App\ResourceTypeItem;
 
 use App\Models\ResourceTypeItemType;
 use Exception;
@@ -55,17 +55,17 @@ class Factory
                     break;
 
                 default:
-                    throw new Exception('Unable to load the relevant item type', 500);
+                    throw new Exception('Unable to load the relevant resource type item type', 500);
                     break;
             }
         } else {
-            throw New Exception('No relevant item type defined for the resource type', 500);
+            throw New Exception('No relevant resource type item type defined for the resource type', 500);
         }
     }
 
     /**
-     * Return the relevant item summary instance based on the provided resource
-     * type id, throws an exception if the item type interface cannot be returned
+     * Return the relevant item instance based on the provided resource type id,
+     * throws an exception if the item type interface cannot be returned
      *
      * @param integer $resource_type_id
      *
@@ -93,82 +93,6 @@ class Factory
                     break;
 
                 default:
-                    throw new Exception('Unable to load the relevant summary item type', 500);
-                    break;
-            }
-        } else {
-            throw New Exception('No relevant summary item type defined for the resource type', 500);
-        }
-    }
-
-    /**
-     * Return the relevant item instance based on the provided resource type id,
-     * throws an exception if the item type interface cannot be returned
-     *
-     * @param integer $resource_type_id
-     *
-     * @return \App\ResourceTypeItem\AbstractItem
-     * @throws Exception
-     */
-    static protected function resourceTypeItemInterface(
-        int $resource_type_id
-    ): \App\ResourceTypeItem\AbstractItem
-    {
-        $item_type = self::itemType($resource_type_id);
-
-        if ($item_type !== null) {
-            switch ($item_type) {
-                case 'allocated-expense':
-                    return new \App\ResourceTypeItem\AllocatedExpense();
-                    break;
-
-                case 'simple-expense':
-                    return new \App\ResourceTypeItem\SimpleExpense();
-                    break;
-
-                case 'simple-item':
-                    return new \App\ResourceTypeItem\SimpleItem();
-                    break;
-
-                default:
-                    throw new Exception('Unable to load the relevant resource type item type', 500);
-                    break;
-            }
-        } else {
-            throw New Exception('No relevant resource type item type defined for the resource type', 500);
-        }
-    }
-
-    /**
-     * Return the relevant item instance based on the provided resource type id,
-     * throws an exception if the item type interface cannot be returned
-     *
-     * @param integer $resource_type_id
-     *
-     * @return \App\ResourceTypeItem\Summary\AbstractItem
-     * @throws Exception
-     */
-    static protected function resourceTypeItemSummaryInterface(
-        int $resource_type_id
-    ): \App\ResourceTypeItem\Summary\AbstractItem
-    {
-        $item_type = self::itemType($resource_type_id);
-
-        if ($item_type !== null) {
-            switch ($item_type) {
-                case 'allocated-expense':
-                    return new \App\ResourceTypeItem\Summary\AllocatedExpense();
-                    break;
-
-                case 'simple-expense':
-                    return new \App\ResourceTypeItem\Summary\SimpleExpense();
-                    break;
-
-                case 'simple-item':
-                    return new \App\ResourceTypeItem\Summary\SimpleItem();
-                    break;
-
-                default:
                     throw new Exception('Unable to load the relevant resource type item summary type', 500);
                     break;
             }
@@ -178,8 +102,7 @@ class Factory
     }
 
     /**
-     * Return the relevant item interface based on the item type asigned to the
-     * given resource id
+     * Return the relevant resource type item interface
      *
      * @param integer $resource_type_id
      *
@@ -195,7 +118,7 @@ class Factory
     }
 
     /**
-     * Return the relevant item interface
+     * Return the relevant resource type item summary interface
      *
      * @param integer $resource_type_id
      *
