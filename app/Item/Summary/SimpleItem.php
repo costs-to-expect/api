@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace App\Item\Summary;
 
-use App\Models\Summary\ItemType\SimpleItem as ItemModel;
+use App\Models\ItemType\Summary\SimpleItem as ItemModel;
 use Illuminate\Database\Eloquent\Model;
 
 class SimpleItem extends AbstractItem
