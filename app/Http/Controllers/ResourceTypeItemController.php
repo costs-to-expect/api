@@ -2,17 +2,17 @@
 
 namespace App\Http\Controllers;
 
-use App\Item\ItemInterfaceFactory;
+use App\ResourceTypeItem\Factory;
 use App\Option\Get;
 use App\Utilities\Header;
 use App\Utilities\RoutePermission;
-use App\Validators\Request\Parameters;
-use App\Validators\Request\Route;
+use App\Validators\Parameters;
+use App\Validators\Route;
 use App\Models\Category;
 use App\Models\Subcategory;
 use App\Utilities\Pagination as UtilityPagination;
-use App\Validators\Request\SearchParameters;
-use App\Validators\Request\SortParameters;
+use App\Validators\SearchParameters;
+use App\Validators\SortParameters;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
@@ -20,7 +20,7 @@ use Illuminate\Http\Request;
  * View items for all resources for a resource type
  *
  * @author Dean Blackborough <dean@g3d-development.com>
- * @copyright G3D Development Limited 2018-2019
+ * @copyright Dean Blackborough 2018-2020
  * @license https://github.com/costs-to-expect/api/blob/master/LICENSE
  */
 class ResourceTypeItemController extends Controller
@@ -40,7 +40,7 @@ class ResourceTypeItemController extends Controller
             $this->permitted_resource_types
         );
 
-        $item_interface = ItemInterfaceFactory::resourceTypeItem($resource_type_id);
+        $item_interface = Factory::item($resource_type_id);
 
         $resource_type_item_model = $item_interface->model();
 
@@ -120,7 +120,7 @@ class ResourceTypeItemController extends Controller
             $this->permitted_resource_types
         );
 
-        $item_interface = ItemInterfaceFactory::resourceTypeItem($resource_type_id);
+        $item_interface = Factory::item($resource_type_id);
 
         $permissions = RoutePermission::resourceType(
             $resource_type_id,
@@ -168,7 +168,7 @@ class ResourceTypeItemController extends Controller
         array $parameters
     ): array
     {
-        $item_interface = ItemInterfaceFactory::resourceTypeItem($resource_type_id);
+        $item_interface = Factory::item($resource_type_id);
 
         $conditional_parameters = [];
 

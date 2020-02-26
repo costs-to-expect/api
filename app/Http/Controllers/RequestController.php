@@ -8,13 +8,13 @@ use App\Option\Post;
 use App\Utilities\Header;
 use App\Utilities\Request as UtilityRequest;
 use App\Utilities\Response;
-use App\Validators\Request\Parameters;
+use App\Validators\Parameters;
 use App\Models\RequestErrorLog;
 use App\Models\RequestLog;
 use App\Models\Transformers\RequestErrorLog as RequestErrorLogTransformer;
 use App\Models\Transformers\RequestLog as RequestLogTransformer;
 use App\Utilities\Pagination as UtilityPagination;
-use App\Validators\Request\Fields\RequestErrorLog as RequestErrorLogValidator;
+use App\Validators\Fields\RequestErrorLog as RequestErrorLogValidator;
 use App\Utilities\Response as UtilityResponse;
 use Exception;
 use Illuminate\Http\JsonResponse;
@@ -25,7 +25,7 @@ use Illuminate\Support\Facades\Config;
  * Manage categories
  *
  * @author Dean Blackborough <dean@g3d-development.com>
- * @copyright G3D Development Limited 2018-2019
+ * @copyright Dean Blackborough 2018-2020
  * @license https://github.com/costs-to-expect/api/blob/master/LICENSE
  */
 class RequestController extends Controller

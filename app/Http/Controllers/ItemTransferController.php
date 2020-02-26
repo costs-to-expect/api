@@ -8,8 +8,8 @@ use App\Option\Post;
 use App\Utilities\Request as UtilityRequest;
 use App\Utilities\Response as UtilityResponse;
 use App\Utilities\RoutePermission;
-use App\Validators\Request\Fields\ItemTransfer as ItemTransferValidator;
-use App\Validators\Request\Route;
+use App\Validators\Fields\ItemTransfer as ItemTransferValidator;
+use App\Validators\Route;
 use Exception;
 use Illuminate\Http\JsonResponse;
 
@@ -17,7 +17,7 @@ use Illuminate\Http\JsonResponse;
  * Transfer items
  *
  * @author Dean Blackborough <dean@g3d-development.com>
- * @copyright G3D Development Limited 2018-2019
+ * @copyright Dean Blackborough 2018-2020
  * @license https://github.com/costs-to-expect/api/blob/master/LICENSE
  */
 class ItemTransferController extends Controller

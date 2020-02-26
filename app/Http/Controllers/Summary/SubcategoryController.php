@@ -7,14 +7,14 @@ use App\Models\Summary\SubCategory;
 use App\Option\Get;
 use App\Utilities\Header;
 use App\Utilities\RoutePermission;
-use App\Validators\Request\Route;
+use App\Validators\Route;
 use Illuminate\Http\JsonResponse;
 
 /**
  * Summary controller for the subcategories routes
  *
  * @author Dean Blackborough <dean@g3d-development.com>
- * @copyright G3D Development Limited 2018-2019
+ * @copyright Dean Blackborough 2018-2020
  * @license https://github.com/costs-to-expect/api/blob/master/LICENSE
  */
 class SubcategoryController extends Controller

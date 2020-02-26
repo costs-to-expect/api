@@ -3,12 +3,12 @@
 namespace App\Http\Controllers\Summary;
 
 use App\Http\Controllers\Controller;
-use App\Item\ItemInterfaceFactory;
+use App\ResourceTypeItem\Factory;
 use App\Option\Get;
 use App\Utilities\Header;
 use App\Utilities\RoutePermission;
-use App\Validators\Request\Parameters;
-use App\Validators\Request\Route;
+use App\Validators\Parameters;
+use App\Validators\Route;
 use App\Models\Transformers\Summary\ResourceTypeItemCategory as ResourceTypeItemCategoryTransformer;
 use App\Models\Transformers\Summary\ResourceTypeItemMonth as ResourceTypeItemMonthTransformer;
 use App\Models\Transformers\Summary\ResourceTypeItemResource as ResourceTypeItemResourceTransformer;
@@ -16,14 +16,14 @@ use App\Models\Transformers\Summary\ResourceTypeItemSubcategory as ResourceTypeI
 use App\Models\Transformers\Summary\ResourceTypeItemYear as ResourceTypeItemYearTransformer;
 use App\Utilities\General;
 use App\Utilities\Response as UtilityResponse;
-use App\Validators\Request\SearchParameters;
+use App\Validators\SearchParameters;
 use Illuminate\Http\JsonResponse;
 
 /**
  * Summary for resource type items route
  *
  * @author Dean Blackborough <dean@g3d-development.com>
- * @copyright G3D Development Limited 2018-2019
+ * @copyright Dean Blackborough 2018-2020
  * @license https://github.com/costs-to-expect/api/blob/master/LICENSE
  */
 class ResourceTypeItemController extends Controller
@@ -44,7 +44,7 @@ class ResourceTypeItemController extends Controller
             $this->permitted_resource_types
         );
 
-        $item_interface = ItemInterfaceFactory::summaryResourceTypeItem($resource_type_id);
+        $item_interface = Factory::summaryItem($resource_type_id);
         $this->model = $item_interface->model();
 
         $parameters = Parameters::fetch(
@@ -742,7 +742,7 @@ class ResourceTypeItemController extends Controller
             $this->permitted_resource_types
         );
 
-        $item_interface = ItemInterfaceFactory::summaryResourceTypeItem($resource_type_id);
+        $item_interface = Factory::summaryItem($resource_type_id);
 
         $permissions = RoutePermission::resourceType(
             $resource_type_id,

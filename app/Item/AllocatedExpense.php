@@ -5,8 +5,8 @@ namespace App\Item;
 
 use App\Models\ItemType\AllocatedExpense as ItemModel;
 use App\Models\Transformers\Transformer;
-use App\Validators\Request\Fields\ItemType\AllocatedExpense as ItemTypeAllocatedExpenseValidator;
-use App\Validators\Request\Fields\Validator;
+use App\Validators\Fields\ItemType\AllocatedExpense as ItemTypeAllocatedExpenseValidator;
+use App\Validators\Fields\Validator;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Config;
 
@@ -15,7 +15,7 @@ use Illuminate\Support\Facades\Config;
  * funneled through an instance of this class
  *
  * @author Dean Blackborough <dean@g3d-development.com>
- * @copyright G3D Development Limited 2018-2019
+ * @copyright Dean Blackborough 2018-2020
  * @license https://github.com/costs-to-expect/api/blob/master/LICENSE
  */
 class AllocatedExpense extends AbstractItem
@@ -110,33 +110,11 @@ class AllocatedExpense extends AbstractItem
     }
 
     /**
-     * Return an array of the fields that can be PATCHed.
-     *
-     * @return array
-     */
-    public function patchableFields(): array
-    {
-        return array_keys(
-            Config::get('api.item-type-allocated-expense.validation.PATCH.fields'),
-        );
-    }
-
-    /**
-     * Return the patch fields config string specific to the item type
-     *
-     * @return string
-     */
-    public function patchFieldsConfig(): string
-    {
-        return 'api.item-type-allocated-expense.fields';
-    }
-
-    /**
      * Return the post fields config string specific to the item type
      *
      * @return string
      */
-    public function postFieldsConfig(): string
+    public function fieldsConfig(): string
     {
         return 'api.item-type-allocated-expense.fields';
     }
@@ -217,6 +195,46 @@ class AllocatedExpense extends AbstractItem
         }
 
         return $instance->save();
+    }
+
+    /**
+     * Return an array of the validation messages for the patchable fields
+     *
+     * @return array
+     */
+    public function validationPatchableFieldMessages(): array
+    {
+        return Config::get('api.item-type-allocated-expense.validation.PATCH.messages');
+    }
+
+    /**
+     * Return an array of the fields that can be PATCHed.
+     *
+     * @return array
+     */
+    public function validationPatchableFields(): array
+    {
+        return Config::get('api.item-type-allocated-expense.validation.PATCH.fields');
+    }
+
+    /**
+     * Return an array of the validation messages for the postable fields
+     *
+     * @return array
+     */
+    public function validationPostableFieldMessages(): array
+    {
+        return Config::get('api.item-type-allocated-expense.validation.POST.messages');
+    }
+
+    /**
+     * Return an array of the fields that can be POSTed.
+     *
+     * @return array
+     */
+    public function validationPostableFields(): array
+    {
+        return Config::get('api.item-type-allocated-expense.validation.POST.fields');
     }
 
     /**

@@ -7,14 +7,14 @@ use App\Option\Get;
 use App\Option\Post;
 use App\Utilities\Header;
 use App\Utilities\RoutePermission;
-use App\Validators\Request\Route;
+use App\Validators\Route;
 use App\Models\ItemCategory;
 use App\Models\ItemSubcategory;
 use App\Models\Subcategory;
 use App\Models\Transformers\ItemSubcategory as ItemSubcategoryTransformer;
 use App\Utilities\Request as UtilityRequest;
 use App\Utilities\Response as UtilityResponse;
-use App\Validators\Request\Fields\ItemSubcategory as ItemSubcategoryValidator;
+use App\Validators\Fields\ItemSubcategory as ItemSubcategoryValidator;
 use Exception;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\JsonResponse;
@@ -24,7 +24,7 @@ use Illuminate\Http\Request;
  * Manage the category for an item row
  *
  * @author Dean Blackborough <dean@g3d-development.com>
- * @copyright G3D Development Limited 2018-2019
+ * @copyright Dean Blackborough 2018-2020
  * @license https://github.com/costs-to-expect/api/blob/master/LICENSE
  */
 class ItemSubcategoryController extends Controller

@@ -3,26 +3,26 @@
 namespace App\Http\Controllers\Summary;
 
 use App\Http\Controllers\Controller;
-use App\Item\ItemInterfaceFactory;
+use App\Item\Factory;
 use App\Option\Get;
 use App\Utilities\Header;
 use App\Utilities\Response;
 use App\Utilities\RoutePermission;
-use App\Validators\Request\Parameters;
-use App\Validators\Request\Route;
+use App\Validators\Parameters;
+use App\Validators\Route;
 use App\Models\Transformers\Summary\ItemCategory as ItemCategoryTransformer;
 use App\Models\Transformers\Summary\ItemMonth as ItemMonthTransformer;
 use App\Models\Transformers\Summary\ItemSubcategory as ItemSubcategoryTransformer;
 use App\Models\Transformers\Summary\ItemYear as ItemYearTransformer;
 use App\Utilities\General;
-use App\Validators\Request\SearchParameters;
+use App\Validators\SearchParameters;
 use Illuminate\Http\JsonResponse;
 
 /**
  * Summary for the items route
  *
  * @author Dean Blackborough <dean@g3d-development.com>
- * @copyright G3D Development Limited 2018-2019
+ * @copyright Dean Blackborough 2018-2020
  * @license https://github.com/costs-to-expect/api/blob/master/LICENSE
  */
 class ItemController extends Controller
@@ -46,7 +46,7 @@ class ItemController extends Controller
             $this->permitted_resource_types
         );
 
-        $item_interface = ItemInterfaceFactory::summaryItem($resource_type_id);
+        $item_interface = Factory::summaryItem($resource_type_id);
         $this->model = $item_interface->model();
 
         $parameters = Parameters::fetch(
@@ -714,7 +714,7 @@ class ItemController extends Controller
             $this->permitted_resource_types
         );
 
-        $item_interface = ItemInterfaceFactory::summaryItem($resource_type_id);
+        $item_interface = Factory::summaryItem($resource_type_id);
 
         $permissions = RoutePermission::resource(
             $resource_type_id,

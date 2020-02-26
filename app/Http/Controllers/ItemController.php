@@ -2,47 +2,50 @@
 
 namespace App\Http\Controllers;
 
-use App\Item\ItemInterfaceFactory;
+use App\Item\Factory;
 use App\Option\Delete;
 use App\Option\Get;
 use App\Option\Patch;
 use App\Option\Post;
 use App\Utilities\Header;
 use App\Utilities\RoutePermission;
-use App\Validators\Request\Parameters;
-use App\Validators\Request\Route;
+use App\Validators\Parameters;
+use App\Validators\Route;
 use App\Models\Category;
 use App\Models\Item;
 use App\Models\Subcategory;
 use App\Utilities\Pagination as UtilityPagination;
 use App\Utilities\Request as UtilityRequest;
 use App\Utilities\Response as UtilityResponse;
-use App\Validators\Request\SearchParameters;
-use App\Validators\Request\SortParameters;
+use App\Validators\SearchParameters;
+use App\Validators\SortParameters;
 use Exception;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Config;
 
 /**
  * Manage items
  *
  * @author Dean Blackborough <dean@g3d-development.com>
- * @copyright G3D Development Limited 2018-2019
+ * @copyright Dean Blackborough 2018-2020
  * @license https://github.com/costs-to-expect/api/blob/master/LICENSE
  */
 class ItemController extends Controller
 {
     /**
-     * Return all the items based on the set filter options
+     * Return all the items for the resource type and resource applying
+     * any filtering, pagination and ordering
      *
      * @param string $resource_type_id
      * @param string $resource_id
      *
      * @return JsonResponse
      */
-    public function index(string $resource_type_id, string $resource_id): JsonResponse
+    public function index(
+        string $resource_type_id,
+        string $resource_id
+    ): JsonResponse
     {
         Route::resource(
             $resource_type_id,
@@ -50,7 +53,7 @@ class ItemController extends Controller
             $this->permitted_resource_types,
         );
 
-        $item_interface = ItemInterfaceFactory::item($resource_type_id);
+        $item_interface = Factory::item($resource_type_id);
 
         $parameters = Parameters::fetch(
             array_keys($item_interface->collectionParameters()),
@@ -143,7 +146,7 @@ class ItemController extends Controller
             $this->permitted_resource_types
         );
 
-        $item_interface = ItemInterfaceFactory::item($resource_type_id);
+        $item_interface = Factory::item($resource_type_id);
 
         $item_model = $item_interface->model();
 
@@ -182,7 +185,7 @@ class ItemController extends Controller
             $this->permitted_resource_types,
         );
 
-        $item_interface = ItemInterfaceFactory::item($resource_type_id);
+        $item_interface = Factory::item($resource_type_id);
 
         $permissions = RoutePermission::resource(
             $resource_type_id,
@@ -200,7 +203,7 @@ class ItemController extends Controller
             $resource_type_id,
             $resource_id,
             array_merge(
-                $item_interface->collectionParametersKeys(),
+                $item_interface->collectionParametersNames(),
                 $defined_parameters
             )
         );
@@ -216,7 +219,7 @@ class ItemController extends Controller
             option();
 
         $post = Post::init()->
-            setFields($item_interface->postFieldsConfig())->
+            setFields($item_interface->fieldsConfig())->
             setDescription( 'route-descriptions.item_POST')->
             setAuthenticationRequired(true)->
             setAuthenticationStatus($permissions['manage'])->
@@ -257,7 +260,7 @@ class ItemController extends Controller
             $this->permitted_resource_types,
         );
 
-        $item_interface = ItemInterfaceFactory::item($resource_type_id);
+        $item_interface = Factory::item($resource_type_id);
 
         $item_model = $item_interface->model();
 
@@ -280,7 +283,7 @@ class ItemController extends Controller
             option();
 
         $patch = Patch::init()->
-            setFields($item_interface->postFieldsConfig())->
+            setFields($item_interface->fieldsConfig())->
             setDescription('route-descriptions.item_PATCH')->
             setAuthenticationStatus($permissions['manage'])->
             setAuthenticationRequired(true)->
@@ -312,7 +315,7 @@ class ItemController extends Controller
             true
         );
 
-        $item_interface = ItemInterfaceFactory::item($resource_type_id);
+        $item_interface = Factory::item($resource_type_id);
 
         $validator_factory = $item_interface->validator();
         $validator = $validator_factory->create();
@@ -362,11 +365,11 @@ class ItemController extends Controller
             true
         );
 
-        $item_interface = ItemInterfaceFactory::item($resource_type_id);
+        $item_interface = Factory::item($resource_type_id);
 
         UtilityRequest::checkForEmptyPatch();
 
-        UtilityRequest::checkForInvalidFields($item_interface->patchableFields());
+        UtilityRequest::checkForInvalidFields($item_interface->validationPatchableFieldNames());
 
         $validator_factory = $item_interface->validator();
         $validator = $validator_factory->update();
@@ -414,7 +417,7 @@ class ItemController extends Controller
             true
         );
 
-        $item_interface = ItemInterfaceFactory::item($resource_type_id);
+        $item_interface = Factory::item($resource_type_id);
 
         $item_model = $item_interface->model();
 
@@ -458,7 +461,7 @@ class ItemController extends Controller
     ): array
     {
 
-        $item_interface = ItemInterfaceFactory::item($resource_type_id);
+        $item_interface = Factory::item($resource_type_id);
 
         $conditional_parameters = [];
 

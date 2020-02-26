@@ -9,12 +9,6 @@ return [
     'title-include-subcategories' => 'Include assigned subcategory?',
     'description-include-subcategories' => 'Optionally include the subcategory assigned to each item, include-categories must be set',
 
-    'title-year' => 'Year',
-    'description-year' => 'Show results for the requested year',
-
-    'title-month' => 'Month',
-    'description-month' => 'Show results fo the requested month',
-
     'title-category' => 'Category',
     'description-category' => 'Show results for the requested category',
 

@@ -5,8 +5,8 @@ namespace App\Item;
 
 use App\Models\ItemType\SimpleExpense as ItemModel;
 use App\Models\Transformers\Transformer;
-use App\Validators\Request\Fields\ItemType\SimpleExpense as ItemTypeSimpleExpenseValidator;
-use App\Validators\Request\Fields\Validator;
+use App\Validators\Fields\ItemType\SimpleExpense as ItemTypeSimpleExpenseValidator;
+use App\Validators\Fields\Validator;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Config;
 
@@ -15,7 +15,7 @@ use Illuminate\Support\Facades\Config;
  * funneled through an instance of this class
  *
  * @author Dean Blackborough <dean@g3d-development.com>
- * @copyright G3D Development Limited 2018-2019
+ * @copyright Dean Blackborough 2018-2020
  * @license https://github.com/costs-to-expect/api/blob/master/LICENSE
  */
 class SimpleExpense extends AbstractItem
@@ -31,34 +31,6 @@ class SimpleExpense extends AbstractItem
     }
 
     /**
-     * Return the minimum year for the conditional year filter, reviews the
-     * item type data and returns the min value, if no data exists, defaults to
-     * the current year
-     *
-     * @param integer $resource_id
-     *
-     * @return integer
-     */
-    public function conditionalParameterMinYear(int $resource_id): int
-    {
-        return (new ItemModel())->minimumEffectiveDateYear($resource_id);
-    }
-
-    /**
-     * Return the minimum year for the conditional year filter, reviews the
-     * item type data and returns the min value, if no data exists, defaults to
-     * the current year
-     *
-     * @param integer $resource_id
-     *
-     * @return integer
-     */
-    public function conditionalParameterMaxYear(int $resource_id): int
-    {
-        return (new ItemModel())->maximumEffectiveDateYear($resource_id);
-    }
-
-    /**
      * Create an save the item type data
      *
      * @param integer $id
@@ -71,7 +43,6 @@ class SimpleExpense extends AbstractItem
             'item_id' => $id,
             'name' => request()->input('name'),
             'description' => request()->input('description', null),
-            'effective_date' => request()->input('effective_date'),
             'total' => request()->input('total'),
         ]);
 
@@ -103,33 +74,11 @@ class SimpleExpense extends AbstractItem
     }
 
     /**
-     * Return an array of the fields that can be PATCHed.
-     *
-     * @return array
-     */
-    public function patchableFields(): array
-    {
-        return array_keys(
-            Config::get('api.item-type-simple-expense.validation.PATCH.fields'),
-        );
-    }
-
-    /**
-     * Return the patch fields config string specific to the item type
-     *
-     * @return string
-     */
-    public function patchFieldsConfig(): string
-    {
-        return 'api.item-type-simple-expense.fields';
-    }
-
-    /**
      * Return the post fields config string specific to the item type
      *
      * @return string
      */
-    public function postFieldsConfig(): string
+    public function fieldsConfig(): string
     {
         return 'api.item-type-simple-expense.fields';
     }
@@ -201,6 +150,46 @@ class SimpleExpense extends AbstractItem
         }
 
         return $instance->save();
+    }
+
+    /**
+     * Return an array of the fields that can be PATCHed.
+     *
+     * @return array
+     */
+    public function validationPatchableFieldMessages(): array
+    {
+        return Config::get('api.item-type-simple-expense.validation.PATCH.messages');
+    }
+
+    /**
+     * Return an array of the fields that can be PATCHed.
+     *
+     * @return array
+     */
+    public function validationPatchableFields(): array
+    {
+        return Config::get('api.item-type-simple-expense.validation.PATCH.fields');
+    }
+
+    /**
+     * Return an array of the fields that can be POSTed.
+     *
+     * @return array
+     */
+    public function validationPostableFieldMessages(): array
+    {
+        return Config::get('api.item-type-simple-expense.validation.POST.messages');
+    }
+
+    /**
+     * Return an array of the fields that can be POSTed.
+     *
+     * @return array
+     */
+    public function validationPostableFields(): array
+    {
+        return Config::get('api.item-type-simple-expense.validation.POST.fields');
     }
 
     /**

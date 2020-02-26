@@ -10,13 +10,13 @@ use App\Utilities\Header;
 use App\Utilities\Pagination as UtilityPagination;
 use App\Utilities\Request as UtilityRequest;
 use App\Utilities\RoutePermission;
-use App\Validators\Request\Route;
+use App\Validators\Route;
 use App\Models\Resource;
 use App\Models\Transformers\Resource as ResourceTransformer;
 use App\Utilities\Response as UtilityResponse;
-use App\Validators\Request\Fields\Resource as ResourceValidator;
-use App\Validators\Request\SearchParameters;
-use App\Validators\Request\SortParameters;
+use App\Validators\Fields\Resource as ResourceValidator;
+use App\Validators\SearchParameters;
+use App\Validators\SortParameters;
 use Exception;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\JsonResponse;
@@ -26,7 +26,7 @@ use Illuminate\Support\Facades\Config;
  * Manage resources
  *
  * @author Dean Blackborough <dean@g3d-development.com>
- * @copyright G3D Development Limited 2018-2019
+ * @copyright Dean Blackborough 2018-2020
  * @license https://github.com/costs-to-expect/api/blob/master/LICENSE
  */
 class ResourceController extends Controller

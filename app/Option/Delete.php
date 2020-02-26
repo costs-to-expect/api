@@ -8,7 +8,7 @@ namespace App\Option;
  * a single HTTP Verb, in this case DELETE
  *
  * @author Dean Blackborough <dean@g3d-development.com>
- * @copyright G3D Development Limited 2018-2019
+ * @copyright Dean Blackborough 2018-2020
  * @license https://github.com/costs-to-expect/api/blob/master/LICENSE
  */
 class Delete extends Option

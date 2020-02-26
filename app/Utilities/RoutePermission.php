@@ -3,19 +3,19 @@ declare(strict_types=1);
 
 namespace App\Utilities;
 
-use App\Validators\Request\Routes\Category;
-use App\Validators\Request\Routes\Item;
-use App\Validators\Request\Routes\ItemCategory;
-use App\Validators\Request\Routes\ItemSubcategory;
-use App\Validators\Request\Routes\Resource;
-use App\Validators\Request\Routes\ResourceType;
-use App\Validators\Request\Routes\Subcategory;
+use App\Validators\Routes\Category;
+use App\Validators\Routes\Item;
+use App\Validators\Routes\ItemCategory;
+use App\Validators\Routes\ItemSubcategory;
+use App\Validators\Routes\Resource;
+use App\Validators\Routes\ResourceType;
+use App\Validators\Routes\Subcategory;
 
 /**
  * Work out the permissions for each route, permissions are read and manage
  *
  * @author Dean Blackborough <dean@g3d-development.com>
- * @copyright G3D Development Limited 2018-2019
+ * @copyright Dean Blackborough 2018-2020
  * @license https://github.com/costs-to-expect/api/blob/master/LICENSE
  */
 class RoutePermission

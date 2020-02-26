@@ -9,7 +9,7 @@ use App\Models\Transformers\Transformer;
  * Transform the data returns from Eloquent into the format we want for the API
  *
  * @author Dean Blackborough <dean@g3d-development.com>
- * @copyright G3D Development Limited 2018-2019
+ * @copyright Dean Blackborough 2018-2020
  * @license https://github.com/costs-to-expect/api/blob/master/LICENSE
  */
 class SimpleExpense extends Transformer
@@ -30,7 +30,6 @@ class SimpleExpense extends Transformer
             'name' => $this->item['item_name'],
             'description' => $this->item['item_description'],
             'total' => number_format((float) $this->item['item_total'],2, '.', ''),
-            'effective_date' => $this->item['item_effective_date'],
             'created' => $this->item['item_created_at']
         ];
 

@@ -18,22 +18,6 @@ return [
             'type' => 'boolean',
             'required' => false
         ],
-        'year' => [
-            "parameter" => "year",
-            "title" => 'resource-type-item-type-simple-expense/parameters.title-year',
-            "description" => 'resource-type-item-type-simple-expense/parameters.description-year',
-            "default" => null,
-            "type" => "integer",
-            "required" => false
-        ],
-        'month' => [
-            "parameter" => "month",
-            "title" => 'resource-type-item-type-simple-expense/parameters.title-month',
-            "description" => 'resource-type-item-type-simple-expense/parameters.description-month',
-            "default" => null,
-            "type" => "integer",
-            "required" => false
-        ],
         'category' => [
             "parameter" => "category",
             "title" => 'resource-type-item-type-simple-expense/parameters.title-category',

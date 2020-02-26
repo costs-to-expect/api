@@ -2,6 +2,23 @@
 
 The complete changelog for the Costs to Expect REST API, our changelog follows the format defined at https://keepachangelog.com/en/1.0.0/
 
+## [v2.08.0] - 2020-02-26
+### Added 
+- We have added a new item type, `simple item`. We intend that the 'simple item' type is useful for managing collections. The API will now allow you to list, add, edit and delete them.
+- We have updated the summary routes to calculate the correct summaries for the `simple item` type.
+
+### Changed
+- We have removed the effective date from simple expenses. Our intention is simple expenses are bucket based, not time-based.
+- We have updated the copyright for the API. 
+- We have moved additional methods in the base `item` classes to reduce configuration code duplication.
+- We have simplified the validation classes for `item` create and update requests.
+- We have renamed some of the methods on the `item` class to make the intent of the method names more clear.
+- We have renamed the item interface class.
+- We have moved the `resource type item` classes; they are below the`item` class; there is no need for them to be so low in the structure.
+- We have moved the factory class for `resource type` items.
+- We have moved the validation classes.
+- We have moved the `item` model classes; we have grouped all classes of the same type.
+
 ## [v2.07.0] - 2020-02-01
 ### Added
 - We have added a GET 'auth/check' endpoint; faster check for the Costs to Expect App.

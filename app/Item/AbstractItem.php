@@ -4,7 +4,7 @@ declare(strict_types=1);
 namespace App\Item;
 
 use App\Models\Transformers\Transformer;
-use App\Validators\Request\Fields\Validator;
+use App\Validators\Fields\Validator;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Config;
 
@@ -12,7 +12,7 @@ use Illuminate\Support\Facades\Config;
  * Base class for each item type, contains the required methods
  *
  * @author Dean Blackborough <dean@g3d-development.com>
- * @copyright G3D Development Limited 2018-2019
+ * @copyright Dean Blackborough 2018-2020
  * @license https://github.com/costs-to-expect/api/blob/master/LICENSE
  */
 abstract class AbstractItem
@@ -34,7 +34,7 @@ abstract class AbstractItem
      *
      * @return array
      */
-    public function collectionParametersKeys(): array
+    public function collectionParametersNames(): array
     {
         $params = [];
         foreach (Config::get($this->collectionParametersConfig()) as $key => $param) {
@@ -50,28 +50,6 @@ abstract class AbstractItem
      * @return string
      */
     abstract public function collectionParametersConfig(): string;
-
-    /**
-     * Return the minimum year for the conditional year filter, reviews the
-     * item type data and returns the min value, if no data exists, defaults to
-     * the current year
-     *
-     * @param integer $resource_id
-     *
-     * @return integer
-     */
-    abstract public function conditionalParameterMinYear(int $resource_id): int;
-
-    /**
-     * Return the minimum year for the conditional year filter, reviews the
-     * item type data and returns the min value, if no data exists, defaults to
-     * the current year
-     *
-     * @param integer $resource_id
-     *
-     * @return integer
-     */
-    abstract public function conditionalParameterMaxYear(int $resource_id): int;
 
     /**
      * Create an save the item type data
@@ -99,25 +77,11 @@ abstract class AbstractItem
     abstract public function model(): Model;
 
     /**
-     * Return an array of the fields that can be PATCHed.
-     *
-     * @return array
-     */
-    abstract public function patchableFields(): array;
-
-    /**
-     * Return the patch fields config string specific to the item type
+     * Return the fields config string specific to the item type
      *
      * @return string
      */
-    abstract public function patchFieldsConfig(): string;
-
-    /**
-     * Return the post fields config string specific to the item type
-     *
-     * @return string
-     */
-    abstract public function postFieldsConfig(): string;
+    abstract public function fieldsConfig(): string;
 
     /**
      * Return the search parameters specific to the item type, these will be
@@ -187,6 +151,58 @@ abstract class AbstractItem
      * @return bool
      */
     abstract public function update(array $request, Model $instance): bool;
+
+    /**
+     * Return an array of the validation messages for the patchable fields
+     *
+     * @return array
+     */
+    abstract public function validationPatchableFieldMessages(): array;
+
+    /**
+     * Return an array of the fields that can be PATCHed.
+     *
+     * @return array
+     */
+    abstract public function validationPatchableFields(): array;
+
+    /**
+     * Return an array of the fields names that can be PATCHed.
+     *
+     * @return array
+     */
+    public function validationPatchableFieldNames(): array
+    {
+        return array_keys(
+            $this->validationPatchableFields()
+        );
+    }
+
+    /**
+     * Return an array of the validation messages for the postable fields
+     *
+     * @return array
+     */
+    abstract public function validationPostableFieldMessages(): array;
+
+    /**
+     * Return an array of the fields that can be POSTed.
+     *
+     * @return array
+     */
+    abstract public function validationPostableFields(): array;
+
+    /**
+     * Return an array of the fields names that can be POSTed.
+     *
+     * @return array
+     */
+    public function validationPostableFieldNames(): array
+    {
+        return array_keys(
+            $this->validationPostableFields()
+        );
+    }
 
     /**
      * Return the validator to use for the validation checks
