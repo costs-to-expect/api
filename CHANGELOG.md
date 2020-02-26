@@ -17,7 +17,7 @@ The complete changelog for the Costs to Expect REST API, our changelog follows t
 - We have moved the `resource type item` classes; they are below the`item` class; there is no need for them to be so low in the structure.
 - We have moved the factory class for `resource type` items.
 - We have moved the validation classes.
-- We have moved the `item` model classes, all classes of the same type are grouped.
+- We have moved the `item` model classes; we have grouped all classes of the same type.
 
 ## [v2.07.0] - 2020-02-01
 ### Added
