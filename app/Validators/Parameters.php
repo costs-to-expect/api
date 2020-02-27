@@ -3,7 +3,8 @@ declare(strict_types=1);
 
 namespace App\Validators;
 
-use App\ResourceTypeItem\Factory;
+use App\ResourceTypeItem\Factory as ResourceTypeItemFactory;
+use App\Item\Factory as ItemFactory;
 use App\Models\Category;
 use App\Models\ResourceType;
 use App\Models\Subcategory;
@@ -29,6 +30,7 @@ class Parameters
     private static function find(array $parameter_names = [])
     {
         $request_parameters = request()->all();
+
         self::$parameters = [];
 
         foreach ($parameter_names as $parameter) {
@@ -139,13 +141,13 @@ class Parameters
                         $max_year_limit = intval(Date('Y'));
 
                         if ($resource_type_id !== null && $resource_id === null) {
-                            $item_interface = Factory::item($resource_type_id);
+                            $item_interface = ResourceTypeItemFactory::item($resource_type_id);
                             $min_year_limit = $item_interface->conditionalParameterMinYear($resource_type_id);
                             $max_year_limit = $item_interface->conditionalParameterMaxYear($resource_type_id);
                         }
 
                         if ($resource_type_id !== null && $resource_id !== null) {
-                            $item_interface = Factory::item($resource_type_id);
+                            $item_interface = ItemFactory::item($resource_type_id);
                             $min_year_limit = $item_interface->conditionalParameterMinYear($resource_id);
                             $max_year_limit = $item_interface->conditionalParameterMaxYear($resource_id);
                         }

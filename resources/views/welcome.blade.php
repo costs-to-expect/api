@@ -31,7 +31,7 @@
             <div class="row">
                 <div class="col-12">
                     <div class="logo">
-                        <a href="/dashboard"><img src="https://app.costs-to-expect.com/images/theme/logo-190.png" width="64" height="64" alt="Costs to Expect Logo"
+                        <a href="/"><img src="{{ asset('images/theme/logo-190.png') }}" width="64" height="64" alt="Costs to Expect Logo"
                                                   title="Back to the dashboard"/><span class="d-none">C</span>osts to Expect.com</a>
                     </div>
 
