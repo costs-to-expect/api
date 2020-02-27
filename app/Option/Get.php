@@ -43,6 +43,16 @@ class Get extends Option
     /**
      * @var array
      */
+    static private $filterable;
+
+    /**
+     * @var array
+     */
+    static private $filterable_parameters;
+
+    /**
+     * @var array
+     */
     static private $searchable;
 
     /**
@@ -53,12 +63,12 @@ class Get extends Option
     /**
      * @var array
      */
-    static private $sortable_parameters;
+    static private $sortable;
 
     /**
      * @var array
      */
-    static private $sortable;
+    static private $sortable_parameters;
 
     static private function reset()
     {
@@ -69,10 +79,12 @@ class Get extends Option
         self::$pagination = false;
         self::$pagination_parameters = [];
         self::$parameters = [];
+        self::$filterable = [];
+        self::$filterable_parameters = [];
         self::$searchable = [];
         self::$searchable_parameters = [];
-        self::$sortable_parameters = [];
         self::$sortable = [];
+        self::$sortable_parameters = [];
     }
 
     static public function init(): Get
