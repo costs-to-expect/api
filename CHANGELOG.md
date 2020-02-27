@@ -2,6 +2,11 @@
 
 The complete changelog for the Costs to Expect REST API, our changelog follows the format defined at https://keepachangelog.com/en/1.0.0/
 
+## [v2.08.1] - 2020-02-27
+### Fixed
+- Select the correct year when validating the min and max year for year validation.
+- The logo on the welcome page will redirect you to the API, not the app dashboard.
+
 ## [v2.08.0] - 2020-02-26
 ### Added 
 - We have added a new item type, `simple item`. We intend that the 'simple item' type is useful for managing collections. The API will now allow you to list, add, edit and delete them.
