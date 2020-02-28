@@ -9892,11 +9892,22 @@ html, body {
   background-color: #F5F5F8;
 }
 
+dl a {
+  color: #212529;
+}
+dl a:hover {
+  color: #A8369B;
+  text-decoration: none;
+}
+dl a span {
+  padding-right: 0.5rem;
+}
+
 a {
   color: #A8369B;
 }
 a:hover {
-  color: #A8369B;
+  color: #732877;
 }
 
 .green {
@@ -9973,9 +9984,6 @@ a:hover {
 
 .container-right {
   padding-top: 1rem;
-}
-.container-right a {
-  color: #A8369B;
 }
 .container-right h2 {
   color: #732877;

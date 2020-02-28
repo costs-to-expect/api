@@ -34,11 +34,26 @@ html, body {
     background-color: $cte-light-grey;
 }
 
+dl {
+    a {
+        color: $text;
+
+        &:hover {
+            color: $cte-pink;
+            text-decoration: none;
+        }
+
+        & span {
+            padding-right: 0.5rem;
+        }
+    }
+}
+
 a {
     color: $cte-pink;
 
     &:hover {
-        color: $cte-pink;
+        color: $cte-purple;
     }
 }
 
@@ -132,10 +147,6 @@ a {
 
 .container-right {
     padding-top: 1rem;
-
-    a {
-        color: $cte-pink;
-    }
 
     h2 {
         color: $cte-purple;
