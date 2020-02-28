@@ -9892,14 +9892,14 @@ html, body {
   background-color: #F5F5F8;
 }
 
-dl a {
+dt a {
   color: #212529;
 }
-dl a:hover {
+dt a:hover {
   color: #A8369B;
   text-decoration: none;
 }
-dl a span {
+dt a span {
   padding-right: 0.5rem;
 }
 

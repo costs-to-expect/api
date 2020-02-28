@@ -115,7 +115,7 @@
 
                     <p>Costs to Expect is a service focused on tracking and
                         forecasting expenses. We are trying to simplify
-                        your budgets. There are three core parts of the
+                        your budgets. There are three core products in the
                         service; the Open Source REST API, our App and an Open
                         Source website showing the costs to raise our children
                         to adulthood.</p>
@@ -132,7 +132,7 @@
 
                     <hr />
 
-                    <h2>Costs to Expect</h2>
+                    <h2>Our Products</h2>
 
                     <p>There are multiple products within the Costs to Expect
                         service, the major products being our API and App, below
@@ -145,8 +145,10 @@
                             API
                             </a>
                         </dt>
-                        <dd class="col-sm-9 col-md-10 col-xl-11">The Open Source REST API, available under
-                            the MIT license, the API drives the entire service.</dd>
+                        <dd class="col-sm-9 col-md-10 col-xl-11">
+                            <p>Our <a href="https://github.com/costs-to-expect/api/blob/master/LICENSE">Open Source</a>
+                            REST <a href="https://api.costs-to-expect.com/v2">API</a>, available under
+                                the MIT license, the API drives the entire service.</p></dd>
 
                         <dt class="col-sm-3 col-md-2 col-xl-1">
                             <a href="https://app.costs-to-expect.com">
@@ -154,9 +156,10 @@
                             App
                             </a>
                         </dt>
-                        <dd class="col-sm-9 col-md-10 col-xl-11">Our App is the commercial offering for Costs to Expect,
-                            we are working towards the public alpha, out aim is to make tracking and
-                            forecasting expenses as simple as possible.</dd>
+                        <dd class="col-sm-9 col-md-10 col-xl-11"><p>Our <a href="https://app.costs-to-expect.com/">App</a> is the
+                            commercial offering for Costs to Expect,
+                            we are <a href="https://app.costs-to-expect.com/roadmap">working</a> towards the public alpha, out aim is to make tracking and
+                                forecasting expenses as simple as possible.</p></dd>
 
                         <dt class="col-sm-3 col-md-2 col-xl-1">
                             <a href="https://www.costs-to-expect.com">
@@ -164,8 +167,9 @@
                             Website
                             </a>
                         </dt>
-                        <dd class="col-sm-9 col-md-10 col-xl-11">Our website is a long-term social project. My wife
-                            and I are tracking all the expenses to raise our child to adulthood.</dd>
+                        <dd class="col-sm-9 col-md-10 col-xl-11"><p>Our <a href="https://www.costs-to-expect.com">website</a>
+                                is a long-term social project. My wife
+                                and I are tracking all the expenses to raise our child to adulthood.</p></dd>
 
                         {{--<dt class="col-sm-3 col-md-2 col-xl-1">
                             <a href="https://blog.costs-to-expect.com">
@@ -173,9 +177,9 @@
                             Blog
                             </a>
                         </dt>
-                        <dd class="col-sm-9 col-md-10 col-xl-11">Our blog acts as a central repository to list all updates,
+                        <dd class="col-sm-9 col-md-10 col-xl-11"><p>Our blog acts as a central repository to list all updates,
                             explains why we are doing what we are and acts as a place for us to talk about
-                            our products and service.</dd>--}}
+                            our products and service.</p></dd>--}}
                     </dl>
 
                     <hr />
