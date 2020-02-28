@@ -18,11 +18,6 @@ class Get extends Option
     /**
      * @var array
      */
-    static private $conditional_parameters;
-
-    /**
-     * @var array
-     */
     static private $localised_parameters;
 
     /**
@@ -39,6 +34,11 @@ class Get extends Option
      * @var array
      */
     static private $parameters;
+
+    /**
+     * @var array
+     */
+    static private $parameters_data;
 
     /**
      * @var array
@@ -74,16 +74,18 @@ class Get extends Option
     {
         self::resetBase();;
 
-        self::$conditional_parameters = [];
         self::$localised_parameters = [];
+
         self::$pagination = false;
         self::$pagination_parameters = [];
+
         self::$parameters = [];
-        self::$filterable = [];
+        self::$parameters_data = [];
+        self::$filterable = false;
         self::$filterable_parameters = [];
-        self::$searchable = [];
+        self::$searchable = false;
         self::$searchable_parameters = [];
-        self::$sortable = [];
+        self::$sortable = false;
         self::$sortable_parameters = [];
     }
 
@@ -140,7 +142,7 @@ class Get extends Option
         array $parameters = []
     ): Get
     {
-        self::$conditional_parameters = $parameters;
+        self::$parameters_data = $parameters;
 
         return self::$instance;
     }
@@ -174,8 +176,9 @@ class Get extends Option
                 self::$pagination_parameters,
                 (self::$sortable === true ? Config::get('api.app.sortable-parameters') : []),
                 (self::$searchable === true ? Config::get('api.app.searchable-parameters') : []),
+                (self::$filterable === true ? Config::get('api.app.filterable-parameters') : []),
                 self::$parameters,
-                self::$conditional_parameters
+                self::$parameters_data
             )
             as $parameter => $parameter_data
         ) {
@@ -199,6 +202,7 @@ class Get extends Option
                 ],
                 'sortable' => self::$sortable_parameters,
                 'searchable' => self::$searchable_parameters,
+                'filterable' => self::$filterable_parameters,
                 'parameters' => self::$localised_parameters
             ]
         ];
