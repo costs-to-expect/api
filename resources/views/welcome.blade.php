@@ -126,7 +126,7 @@
                         product matures.</p>
 
                     <p>
-                        <a href="/v2" class="btn btn-primary btn-lg" role="button" aria-pressed="true">Access our API</a>
+                        <a href="/v2" class="btn btn-primary btn-lg" role="button" aria-pressed="true">Access API</a>
                         <a href="https://github.com/costs-to-expect/api" class="btn btn-primary alter btn-lg" role="button" aria-pressed="true">View our API on Github</a>
                     </p>
 
@@ -139,45 +139,45 @@
                         is a quick overview of each product.</p>
 
                     <dl class="row">
-                        <dt class="col-sm-3 col-md-2 col-xl-1">
+                        <dt class="col-sm-4 col-md-4 col-lg-3 col-xl-2">
                             <a href="/v2">
                             <span class="oi oi-key" title="Costs to Expect API" aria-hidden="true"></span>
-                            API
+                            Our API
                             </a>
                         </dt>
-                        <dd class="col-sm-9 col-md-10 col-xl-11">
+                        <dd class="col-sm-8 col-md-8 col-lg-9 col-xl-10">
                             <p>Our <a href="https://github.com/costs-to-expect/api/blob/master/LICENSE">Open Source</a>
                             REST <a href="https://api.costs-to-expect.com/v2">API</a>, available under
                                 the MIT license, the API drives the entire service.</p></dd>
 
-                        <dt class="col-sm-3 col-md-2 col-xl-1">
+                        <dt class="col-sm-4 col-md-4 col-lg-3 col-xl-2">
                             <a href="https://app.costs-to-expect.com">
                             <span class="oi oi-spreadsheet" title="Costs to Expect App" aria-hidden="true"></span>
-                            App
+                            Our App
                             </a>
                         </dt>
-                        <dd class="col-sm-9 col-md-10 col-xl-11"><p>Our <a href="https://app.costs-to-expect.com/">App</a> is the
+                        <dd class="col-sm-8 col-md-8 col-lg-9 col-xl-10"><p>Our <a href="https://app.costs-to-expect.com/">App</a> is the
                             commercial offering for Costs to Expect,
                             we are <a href="https://app.costs-to-expect.com/roadmap">working</a> towards the public alpha, out aim is to make tracking and
                                 forecasting expenses as simple as possible.</p></dd>
 
-                        <dt class="col-sm-3 col-md-2 col-xl-1">
+                        <dt class="col-sm-4 col-md-4 col-lg-3 col-xl-2">
                             <a href="https://www.costs-to-expect.com">
                             <span class="oi oi-monitor" title="Costs to Expect Website" aria-hidden="true"></span>
-                            Website
+                            Our Website
                             </a>
                         </dt>
-                        <dd class="col-sm-9 col-md-10 col-xl-11"><p>Our <a href="https://www.costs-to-expect.com">website</a>
+                        <dd class="col-sm-8 col-md-8 col-lg-9 col-xl-10"><p>Our <a href="https://www.costs-to-expect.com">website</a>
                                 is a long-term social project. My wife
                                 and I are tracking all the expenses to raise our child to adulthood.</p></dd>
 
-                        {{--<dt class="col-sm-3 col-md-2 col-xl-1">
+                        {{--<dt class="col-sm-4 col-md-4 col-lg-3 col-xl-2">
                             <a href="https://blog.costs-to-expect.com">
                             <span class="oi oi-copywriting" title="Costs to Expect Blog" aria-hidden="true"></span>
                             Blog
                             </a>
                         </dt>
-                        <dd class="col-sm-9 col-md-10 col-xl-11"><p>Our blog acts as a central repository to list all updates,
+                        <dd class="col-sm-8 col-md-8 col-lg-9 col-xl-10"><p>Our blog acts as a central repository to list all updates,
                             explains why we are doing what we are and acts as a place for us to talk about
                             our products and service.</p></dd>--}}
                     </dl>

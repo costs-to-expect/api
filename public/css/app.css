@@ -9892,6 +9892,11 @@ html, body {
   background-color: #F5F5F8;
 }
 
+dt {
+  font-weight: normal;
+  font-size: 1.2rem;
+  line-height: 1rem;
+}
 dt a {
   color: #212529;
 }
