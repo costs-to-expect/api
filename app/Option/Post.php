@@ -47,7 +47,7 @@ class Post extends Option
         return self::$instance;
     }
 
-    static public function setConditionalFields(
+    static public function setFieldsData(
         array $parameters = []
     ): Post
     {

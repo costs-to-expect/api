@@ -95,11 +95,12 @@ class Get extends Option
         return self::$instance;
     }
 
-    static public function setConditionalParameters(
-        array $parameters = []
+    static public function setFilterable(
+        string $config_path
     ): Get
     {
-        self::$conditional_parameters = $parameters;
+        self::$filterable = true;
+        self::$filterable_parameters = Config::get($config_path);
 
         return self::$instance;
     }
@@ -131,6 +132,15 @@ class Get extends Option
     ): Get
     {
         self::$parameters = Config::get($config_path);
+
+        return self::$instance;
+    }
+
+    static public function setParametersData(
+        array $parameters = []
+    ): Get
+    {
+        self::$conditional_parameters = $parameters;
 
         return self::$instance;
     }

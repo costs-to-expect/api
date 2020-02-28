@@ -199,7 +199,7 @@ class ItemController extends Controller
             (int) $resource_id
         );
 
-        $conditional_parameters = $this->conditionalParameters(
+        $parameters_data = $this->parametersData(
             $resource_type_id,
             $resource_id,
             array_merge(
@@ -212,7 +212,7 @@ class ItemController extends Controller
             setSortable($item_interface->sortParametersConfig())->
             setSearchable($item_interface->searchParametersConfig())->
             setParameters($item_interface->collectionParametersConfig())->
-            setConditionalParameters($conditional_parameters)->
+            setParametersData($parameters_data)->
             setPagination(true)->
             setAuthenticationStatus($permissions['view'])->
             setDescription('route-descriptions.item_GET_index')->
@@ -454,7 +454,7 @@ class ItemController extends Controller
      *
      * @return array
      */
-    private function conditionalParameters(
+    private function parametersData(
         int $resource_type_id,
         int $resource_id,
         array $parameters

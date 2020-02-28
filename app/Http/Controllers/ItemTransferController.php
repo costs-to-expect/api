@@ -86,8 +86,8 @@ class ItemTransferController extends Controller
 
         $post = Post::init()->
             setFields('api.item-transfer.fields')->
-            setConditionalFields(
-                $this->conditionalPostParameters(
+            setFieldsData(
+                $this->fieldsData(
                     $resource_type_id,
                     $resource_id
                 )
@@ -109,7 +109,7 @@ class ItemTransferController extends Controller
      *
      * @return array
      */
-    private function conditionalPostParameters(
+    private function fieldsData(
         int $resource_type_id,
         int $resource_id
     ): array

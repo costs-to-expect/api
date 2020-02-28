@@ -48,7 +48,7 @@ class Patch extends Option
         return self::$instance;
     }
 
-    static public function setConditionalFields(
+    static public function setFieldsData(
         array $fields = []
     ): Patch
     {

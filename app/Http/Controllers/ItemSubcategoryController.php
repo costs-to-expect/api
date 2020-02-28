@@ -183,7 +183,7 @@ class ItemSubcategoryController extends Controller
 
         $post = Post::init()->
             setFields('api.item-subcategory.fields')->
-            setConditionalFields($this->conditionalPostParameters($item_category->category_id))->
+            setFieldsData($this->fieldsData($item_category->category_id))->
             setDescription('route-descriptions.item_sub_category_POST')->
             setAuthenticationStatus($permissions['manage'])->
             setAuthenticationRequired(true)->
@@ -300,7 +300,7 @@ class ItemSubcategoryController extends Controller
         $validator = (new ItemSubcategoryValidator)->create(['category_id' => $item_category->category_id]);
         UtilityRequest::validateAndReturnErrors(
             $validator,
-            $this->conditionalPostParameters($item_category_id)
+            $this->fieldsData($item_category_id)
         );
 
         try {
@@ -333,7 +333,7 @@ class ItemSubcategoryController extends Controller
      *
      * @return array
      */
-    private function conditionalPostParameters($category_id): array
+    private function fieldsData($category_id): array
     {
         $sub_categories = (new Subcategory())
             ->select('id', 'name', 'description')

@@ -132,7 +132,7 @@ class ResourceTypeItemController extends Controller
             $resource_type_id
         );
 
-        $conditional_parameters = $this->conditionalGetParameters(
+        $parameters_data = $this->parametersData(
             $resource_type_id,
             array_merge(
                 $item_interface->collectionParametersKeys(),
@@ -145,7 +145,7 @@ class ResourceTypeItemController extends Controller
             setSearchable($item_interface->searchParametersConfig())->
             setPagination(true)->
             setParameters($item_interface->collectionParametersConfig())->
-            setConditionalParameters($conditional_parameters)->
+            setParametersData($parameters_data)->
             setDescription('route-descriptions.resource_type_item_GET_index')->
             setAuthenticationStatus($permissions['view'])->
             option();
@@ -163,7 +163,7 @@ class ResourceTypeItemController extends Controller
      *
      * @return array
      */
-    private function conditionalGetParameters(
+    private function parametersData(
         $resource_type_id,
         array $parameters
     ): array

@@ -153,7 +153,7 @@ class ItemCategoryController extends Controller
 
         $post = Post::init()->
             setFields('api.item-category.fields')->
-            setConditionalFields($this->conditionalPostParameters($resource_type_id))->
+            setFieldsData($this->fieldsData($resource_type_id))->
             setDescription('route-descriptions.item_category_POST')->
             setAuthenticationStatus($permissions['manage'])->
             setAuthenticationRequired(true)->
@@ -259,7 +259,7 @@ class ItemCategoryController extends Controller
         $validator = (new ItemCategoryValidator)->create();
         UtilityRequest::validateAndReturnErrors(
             $validator,
-            $this->conditionalPostParameters($resource_type_id)
+            $this->fieldsData($resource_type_id)
         );
 
         try {
@@ -292,7 +292,7 @@ class ItemCategoryController extends Controller
      *
      * @return array
      */
-    private function conditionalPostParameters($resource_type_id): array
+    private function fieldsData($resource_type_id): array
     {
         $categories = (new Category())->categoriesByResourceType($resource_type_id);
 
