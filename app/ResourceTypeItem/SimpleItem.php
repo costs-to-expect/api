@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace App\ResourceTypeItem;
 
+use App\Interfaces\ResourceTypeItemModel;
 use App\Models\ResourceTypeItemType\SimpleItem as ItemModel;
 use App\Models\Transformers\Transformer;
 use Illuminate\Database\Eloquent\Model;
@@ -28,11 +29,19 @@ class SimpleItem extends AbstractItem
     }
 
     /**
+     * Return the filter parameters config
+     */
+    public function filterParametersConfig(): string
+    {
+        return 'api.resource-type-item-type-simple-item.filterable';
+    }
+
+    /**
      * Return the model instance for resource type item type
      *
-     * @return Model
+     * @return ResourceTypeItemModel
      */
-    public function model(): Model
+    public function model(): ResourceTypeItemModel
     {
         return new ItemModel();
     }

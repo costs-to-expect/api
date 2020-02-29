@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace App\ResourceTypeItem;
 
+use App\Interfaces\ResourceTypeItemModel;
 use App\Models\Transformers\Transformer;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Config;
@@ -51,11 +52,28 @@ abstract class AbstractItem
     }
 
     /**
+     * Return the filter parameters specific to the item type
+     *
+     * @return array
+     */
+    public function filterParameters(): array
+    {
+        return Config::get($this->filterParametersConfig());
+    }
+
+    /**
+     * Return the filter parameters config string specific to the item type
+     *
+     * @return string
+     */
+    abstract public function filterParametersConfig(): string;
+
+    /**
      * Return the model instance for resource type item type
      *
-     * @return Model
+     * @return ResourceTypeItemModel
      */
-    abstract public function model(): Model;
+    abstract public function model(): ResourceTypeItemModel;
 
     /**
      * Return the search parameters specific to the item type, these will be

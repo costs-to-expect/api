@@ -3,7 +3,9 @@ declare(strict_types=1);
 
 namespace App\Models\ResourceTypeItemType;
 
+use App\Interfaces\ResourceTypeItemModel;
 use App\Utilities\General;
+use App\Utilities\Model as ModelUtility;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Query\Builder as QueryBuilder;
 
@@ -15,9 +17,11 @@ use Illuminate\Database\Query\Builder as QueryBuilder;
  * @copyright Dean Blackborough 2018-2020
  * @license https://github.com/costs-to-expect/api/blob/master/LICENSE
  */
-class SimpleExpense extends Model
+class SimpleExpense extends Model implements ResourceTypeItemModel
 {
     protected $table = 'item';
+
+    protected $item_table = 'item_type_simple_expense';
 
     protected $guarded = ['id', 'created_at', 'updated_at'];
 
@@ -26,14 +30,16 @@ class SimpleExpense extends Model
      *
      * @param integer $resource_type_id
      * @param array $parameters_collection
-     * @param array $search_conditions
+     * @param array $search_parameters
+     * @param array $filter_parameters
      *
      * @return integer
      */
     public function totalCount(
         int $resource_type_id,
         array $parameters_collection = [],
-        array $search_conditions = []
+        array $search_parameters = [],
+        array $filter_parameters = []
     ): int
     {
         $collection = $this->join('item_type_simple_expense', 'item.id', 'item_type_simple_expense.item_id')->
@@ -56,11 +62,17 @@ class SimpleExpense extends Model
             }
         }
 
-        if (count($search_conditions) > 0) {
-            foreach ($search_conditions as $field => $search_term) {
-                $collection->where('item_type_simple_expense.' . $field, 'LIKE', '%' . $search_term . '%');
-            }
-        }
+        $collection = ModelUtility::applySearch(
+            $collection,
+            $this->item_table,
+            $search_parameters
+        );
+
+        $collection = ModelUtility::applyFiltering(
+            $collection,
+            $this->item_table,
+            $filter_parameters
+        );
 
         return $collection->count();
     }
@@ -74,7 +86,8 @@ class SimpleExpense extends Model
      * @param int $limit
      * @param array $parameters_collection
      * @param array $sort_parameters
-     * @param array $search_conditions
+     * @param array $search_parameters
+     * @param array $filter_parameters
      *
      * @return array
      */
@@ -84,7 +97,8 @@ class SimpleExpense extends Model
         int $limit = 10,
         array $parameters_collection = [],
         array $sort_parameters = [],
-        array $search_conditions = []
+        array $search_parameters = [],
+        array $filter_parameters = []
     ): array
     {
         $select_fields = [
@@ -162,11 +176,17 @@ class SimpleExpense extends Model
             }
         }
 
-        if (count($search_conditions) > 0) {
-            foreach ($search_conditions as $field => $search_term) {
-                $collection->where('item_type_simple_expense.' . $field, 'LIKE', '%' . $search_term . '%');
-            }
-        }
+        $collection = ModelUtility::applySearch(
+            $collection,
+            $this->item_table,
+            $search_parameters
+        );
+
+        $collection = ModelUtility::applyFiltering(
+            $collection,
+            $this->item_table,
+            $filter_parameters
+        );
 
         if (count($sort_parameters) > 0) {
             foreach ($sort_parameters as $field => $direction) {
@@ -194,51 +214,5 @@ class SimpleExpense extends Model
         $collection->select($select_fields);
 
         return $collection->get()->toArray();
-    }
-
-    /**
-     * Return the summary for all items for the resources in the requested resource type
-     *
-     * @param int $resource_type_id
-     *
-     * @return array
-     */
-    public function summary(int $resource_type_id): array
-    {
-        $collection = $this->selectRaw('sum(item_type_simple_expense.total) AS total')->
-            join('item_type_simple_expense', 'item.id', 'item_type_simple_expense.item_id')->
-            join('resource', 'item.resource_id', 'resource.id')->
-            join('resource_type', 'resource.resource_type_id', 'resource_type.id')->
-            where('resource_type.id', '=', $resource_type_id);
-
-        return $collection->
-            get()->
-            toArray();
-    }
-
-    /**
-     * Return the summary for all items for the resources in the requested resource
-     * type grouped by resource
-     *
-     * @param int $resource_type_id
-     *
-     * @return array
-     */
-    public function resourcesSummary(int $resource_type_id): array
-    {
-        $collection = $this->selectRaw('
-                resource.id AS id, 
-                resource.name AS `name`, 
-                SUM(item_type_simple_expense.total) AS total'
-            )->
-            join('item_type_simple_expense', 'item.id', 'item_type_simple_expense.item_id')->
-            join('resource', 'item.resource_id', 'resource.id')->
-            join('resource_type', 'resource.resource_type_id', 'resource_type.id')->
-            where('resource_type.id', '=', $resource_type_id);
-
-        return $collection->groupBy('resource.id')->
-            orderBy('name')->
-            get()->
-            toArray();
     }
 }

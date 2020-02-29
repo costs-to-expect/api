@@ -3,7 +3,9 @@ declare(strict_types=1);
 
 namespace App\Models\ResourceTypeItemType;
 
+use App\Interfaces\ResourceTypeItemModel;
 use App\Utilities\General;
+use App\Utilities\Model as ModelUtility;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Query\Builder as QueryBuilder;
@@ -17,9 +19,11 @@ use Illuminate\Support\Facades\DB;
  * @copyright Dean Blackborough 2018-2020
  * @license https://github.com/costs-to-expect/api/blob/master/LICENSE
  */
-class AllocatedExpense extends Model
+class AllocatedExpense extends Model implements ResourceTypeItemModel
 {
     protected $table = 'item';
+
+    protected $item_table = 'item_type_allocated_expense';
 
     protected $guarded = ['id', 'actualised_total', 'created_at', 'updated_at'];
 
@@ -28,14 +32,16 @@ class AllocatedExpense extends Model
      *
      * @param integer $resource_type_id
      * @param array $parameters_collection
-     * @param array $search_conditions
+     * @param array $search_parameters
+     * @param array $filter_parameters
      *
      * @return integer
      */
     public function totalCount(
         int $resource_type_id,
         array $parameters_collection = [],
-        array $search_conditions = []
+        array $search_parameters = [],
+        array $filter_parameters = []
     ): int
     {
         $collection = $this->join('item_type_allocated_expense', 'item.id', 'item_type_allocated_expense.item_id')->
@@ -68,11 +74,17 @@ class AllocatedExpense extends Model
             }
         }
 
-        if (count($search_conditions) > 0) {
-            foreach ($search_conditions as $field => $search_term) {
-                $collection->where('item_type_allocated_expense.' . $field, 'LIKE', '%' . $search_term . '%');
-            }
-        }
+        $collection = ModelUtility::applySearch(
+            $collection,
+            $this->item_table,
+            $search_parameters
+        );
+
+        $collection = ModelUtility::applyFiltering(
+            $collection,
+            $this->item_table,
+            $filter_parameters
+        );
 
         if (
             array_key_exists('include-unpublished', $parameters_collection) === false ||
@@ -96,7 +108,8 @@ class AllocatedExpense extends Model
      * @param int $limit
      * @param array $parameters_collection
      * @param array $sort_parameters
-     * @param array $search_conditions
+     * @param array $search_parameters
+     * @param array $filter_parameters
      *
      * @return array
      */
@@ -106,7 +119,8 @@ class AllocatedExpense extends Model
         int $limit = 10,
         array $parameters_collection = [],
         array $sort_parameters = [],
-        array $search_conditions = []
+        array $search_parameters = [],
+        array $filter_parameters = []
     ): array
     {
         $select_fields = [
@@ -197,11 +211,17 @@ class AllocatedExpense extends Model
             }
         }
 
-        if (count($search_conditions) > 0) {
-            foreach ($search_conditions as $field => $search_term) {
-                $collection->where('item_type_allocated_expense.' . $field, 'LIKE', '%' . $search_term . '%');
-            }
-        }
+        $collection = ModelUtility::applySearch(
+            $collection,
+            $this->item_table,
+            $search_parameters
+        );
+
+        $collection = ModelUtility::applyFiltering(
+            $collection,
+            $this->item_table,
+            $filter_parameters
+        );
 
         if (
             array_key_exists('include-unpublished', $parameters_collection) === false ||

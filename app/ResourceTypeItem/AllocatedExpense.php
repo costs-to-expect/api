@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace App\ResourceTypeItem;
 
+use App\Interfaces\ResourceTypeItemModel;
 use App\Models\ResourceTypeItemType\AllocatedExpense as ItemModel;
 use App\Models\Transformers\Transformer;
 use Illuminate\Database\Eloquent\Model;
@@ -42,6 +43,14 @@ class AllocatedExpense extends AbstractItem
     }
 
     /**
+     * Return the filter parameters config
+     */
+    public function filterParametersConfig(): string
+    {
+        return 'api.resource-type-item-type-allocated-expense.filterable';
+    }
+
+    /**
      * Return the minimum year for the conditional year filter, reviews the
      * item type data and returns the min value, if no data exists, defaults to
      * the current year
@@ -58,9 +67,9 @@ class AllocatedExpense extends AbstractItem
     /**
      * Return the model instance for resource type item type
      *
-     * @return Model
+     * @return ResourceTypeItemModel
      */
-    public function model(): Model
+    public function model(): ResourceTypeItemModel
     {
         return new ItemModel();
     }
