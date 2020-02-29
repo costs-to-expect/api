@@ -21,7 +21,7 @@ use Illuminate\Support\Facades\Config;
 class AllocatedExpense extends AbstractItem
 {
     /**
-     * Return the parameters config string specific to the item type
+     * Return the parameters config
      *
      * @return string
      */
@@ -59,7 +59,7 @@ class AllocatedExpense extends AbstractItem
     }
 
     /**
-     * Create an save the item type data
+     * Create and save the item and item type data
      *
      * @param integer $id
      *
@@ -110,7 +110,7 @@ class AllocatedExpense extends AbstractItem
     }
 
     /**
-     * Return the post fields config string specific to the item type
+     * Return the post fields config
      *
      * @return string
      */
@@ -120,7 +120,15 @@ class AllocatedExpense extends AbstractItem
     }
 
     /**
-     * Return the search parameters config string specific to the item type
+     * Return the filter parameters config
+     */
+    public function filterParametersConfig(): string
+    {
+        return 'api.item-type-allocated-expense.filterable';
+    }
+
+    /**
+     * Return the search parameters config
      *
      * @return string
      */
@@ -130,7 +138,7 @@ class AllocatedExpense extends AbstractItem
     }
 
     /**
-     * Return the show parameters config string specific to the item type
+     * Return the show parameters config
      *
      * @return string
      */
@@ -140,7 +148,7 @@ class AllocatedExpense extends AbstractItem
     }
 
     /**
-     * Return the sort parameters config string specific to the item type
+     * Return the sort parameters config
      *
      * @return string
      */
@@ -150,7 +158,7 @@ class AllocatedExpense extends AbstractItem
     }
 
     /**
-     * Return the transformer for the specific item type
+     * Return the transformer
      *
      * @param array $data_to_transform
      *
@@ -162,7 +170,7 @@ class AllocatedExpense extends AbstractItem
     }
 
     /**
-     * Return the item type identifier
+     * Return the identifier
      *
      * @return string
      */
@@ -172,7 +180,7 @@ class AllocatedExpense extends AbstractItem
     }
 
     /**
-     * Update the item type data
+     * Update the data for the item type
      *
      * @param array $request
      * @param Model $instance
@@ -198,7 +206,7 @@ class AllocatedExpense extends AbstractItem
     }
 
     /**
-     * Return an array of the validation messages for the patchable fields
+     * Return an array of the validation messages for the PATCHable fields
      *
      * @return array
      */
@@ -218,7 +226,7 @@ class AllocatedExpense extends AbstractItem
     }
 
     /**
-     * Return an array of the validation messages for the postable fields
+     * Return an array of the validation messages for the POSTable fields
      *
      * @return array
      */

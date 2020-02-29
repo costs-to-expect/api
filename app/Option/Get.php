@@ -101,8 +101,11 @@ class Get extends Option
         string $config_path
     ): Get
     {
-        self::$filterable = true;
-        self::$filterable_parameters = Config::get($config_path);
+        $parameters = Config::get($config_path);
+        if (count($parameters) > 0) {
+            self::$filterable = true;
+            self::$filterable_parameters = $parameters;
+        }
 
         return self::$instance;
     }
@@ -151,8 +154,11 @@ class Get extends Option
         string $config_path
     ): Get
     {
-        self::$searchable = true;
-        self::$searchable_parameters = Config::get($config_path);
+        $parameters = Config::get($config_path);
+        if (count($parameters) > 0) {
+            self::$searchable = true;
+            self::$searchable_parameters = $parameters;
+        }
 
         return self::$instance;
     }
@@ -161,8 +167,11 @@ class Get extends Option
         string $config_path
     ): Get
     {
-        self::$sortable = true;
-        self::$sortable_parameters = Config::get($config_path);
+        $parameters = Config::get($config_path);
+        if (count($parameters) > 0) {
+            self::$sortable = true;
+            self::$sortable_parameters = $parameters;
+        }
 
         return self::$instance;
     }

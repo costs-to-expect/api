@@ -84,6 +84,14 @@ class SimpleExpense extends AbstractItem
     }
 
     /**
+     * Return the filter parameters config
+     */
+    public function filterParametersConfig(): string
+    {
+        return 'api.item-type-simple-expense.filterable';
+    }
+
+    /**
      * Return the search parameters config string specific to the item type
      *
      * @return string
