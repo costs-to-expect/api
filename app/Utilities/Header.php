@@ -87,6 +87,18 @@ class Header
     }
 
     /**
+     * Add the X-Filter header
+     *
+     * @param mixed $value
+     *
+     * @return Header
+     */
+    public function addFilter($value): Header
+    {
+        return $this->add('X-Filter', $value);
+    }
+
+    /**
      * Add the X-Parameters header
      *
      * @param mixed $value

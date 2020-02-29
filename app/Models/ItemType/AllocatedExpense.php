@@ -154,6 +154,7 @@ class AllocatedExpense extends Model
      * @param integer $resource_id
      * @param array $parameters
      * @param array $search_parameters
+     * @param array $filter_parameters
      *
      * @return integer
      */
@@ -161,7 +162,8 @@ class AllocatedExpense extends Model
         int $resource_type_id,
         int $resource_id,
         array $parameters = [],
-        array $search_parameters = []
+        array $search_parameters = [],
+        array $filter_parameters = []
     ): int
     {
         $collection = $this->from('item')->
@@ -202,7 +204,16 @@ class AllocatedExpense extends Model
             $collection->where('item_sub_category.sub_category_id', '=', $parameters['subcategory']);
         }
 
-        $collection = ModelUtility::applySearch($collection, 'item_type_allocated_expense', $search_parameters);
+        $collection = ModelUtility::applySearch(
+            $collection,
+            $this->table,
+            $search_parameters
+        );
+        $collection = ModelUtility::applyFiltering(
+            $collection,
+            $this->table,
+            $filter_parameters
+        );
 
         if (
             array_key_exists('include-unpublished', $parameters) === false ||
@@ -236,7 +247,8 @@ class AllocatedExpense extends Model
         int $limit = 10,
         array $parameters = [],
         array $sort_parameters = [],
-        array $search_parameters = []
+        array $search_parameters = [],
+        array $filter_parameters = []
     ): array
     {
         $select_fields = [
@@ -328,6 +340,7 @@ class AllocatedExpense extends Model
         }
 
         $collection = ModelUtility::applySearch($collection, 'item_type_allocated_expense', $search_parameters);
+        $collection = ModelUtility::applyFiltering($collection, 'item_type_allocated_expense', $filter_parameters);
 
         if (
             array_key_exists('include-unpublished', $parameters) === false ||

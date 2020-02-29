@@ -93,6 +93,7 @@ class SimpleItem extends Model
      * @param integer $resource_id
      * @param array $parameters
      * @param array $search_parameters
+     * @param array $filter_parameters
      *
      * @return integer
      */
@@ -100,7 +101,8 @@ class SimpleItem extends Model
         int $resource_type_id,
         int $resource_id,
         array $parameters = [],
-        array $search_parameters = []
+        array $search_parameters = [],
+        array $filter_parameters = []
     ): int
     {
         $collection = $this->from('item')->
@@ -113,6 +115,11 @@ class SimpleItem extends Model
             $collection,
             $this->table,
             $search_parameters
+        );
+        $collection = ModelUtility::applyFiltering(
+            $collection,
+            $this->table,
+            $filter_parameters
         );
 
         return $collection->count();
@@ -128,6 +135,7 @@ class SimpleItem extends Model
      * @param array $parameters
      * @param array $sort_parameters
      * @param array $search_parameters
+     * @param array $filter_parameters
      *
      * @return array
      */
@@ -138,7 +146,8 @@ class SimpleItem extends Model
         int $limit = 10,
         array $parameters = [],
         array $sort_parameters = [],
-        array $search_parameters = []
+        array $search_parameters = [],
+        array $filter_parameters = []
     ): array
     {
         $select_fields = [
@@ -159,6 +168,11 @@ class SimpleItem extends Model
             $collection,
             $this->table,
             $search_parameters
+        );
+        $collection = ModelUtility::applyFiltering(
+            $collection,
+            $this->table,
+            $filter_parameters
         );
 
         if (count($sort_parameters) > 0) {

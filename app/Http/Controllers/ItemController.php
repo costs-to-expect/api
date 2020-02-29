@@ -9,6 +9,7 @@ use App\Option\Patch;
 use App\Option\Post;
 use App\Utilities\Header;
 use App\Utilities\RoutePermission;
+use App\Validators\FilterParameters;
 use App\Validators\Parameters;
 use App\Validators\Route;
 use App\Models\Category;
@@ -61,17 +62,21 @@ class ItemController extends Controller
             (int) $resource_id
         );
 
-        $item_model = $item_interface->model();
-
         $search_parameters = SearchParameters::fetch(
             $item_interface->searchParameters()
         );
 
+        $filter_parameters = FilterParameters::fetch(
+            $item_interface->filterParameters()
+        );
+
+        $item_model = $item_interface->model();
         $total = $item_model->totalCount(
             $resource_type_id,
             $resource_id,
             $parameters,
-            $search_parameters
+            $search_parameters,
+            $filter_parameters
         );
 
         $sort_parameters = SortParameters::fetch(
@@ -91,11 +96,17 @@ class ItemController extends Controller
             $pagination['limit'],
             $parameters,
             $sort_parameters,
-            $search_parameters
+            $search_parameters,
+            $filter_parameters
         );
 
         $headers = new Header();
         $headers->collection($pagination, count($items), $total);
+
+        $filter_header = FilterParameters::xHeader();
+        if ($filter_header !== null) {
+            $headers->addFilter($filter_header);
+        }
 
         $sort_header = SortParameters::xHeader();
         if ($sort_header !== null) {
