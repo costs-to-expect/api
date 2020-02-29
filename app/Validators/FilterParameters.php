@@ -35,6 +35,8 @@ class FilterParameters
                     count($filter) === 3
                 ) {
                     if (
+                        strlen($filter[1]) === 10 &&
+                        strlen($filter[2]) === 10 &&
                         self::validateDate($filter[1]) === true &&
                         self::validateDate($filter[2]) === true
                     ) {
@@ -57,7 +59,7 @@ class FilterParameters
     private static function validate(array $filterable_parameters)
     {
         foreach (array_keys(self::$parameters) as $key) {
-            if (in_array($key, $filterable_parameters) === false) {
+            if (array_key_exists($key, $filterable_parameters) === false) {
                 unset(self::$parameters[$key]);
             }
         }
