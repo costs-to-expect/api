@@ -168,30 +168,4 @@ class SimpleItem extends Model
             get()->
             toArray();
     }
-
-    public function filteredSummary(
-        int $resource_type_id,
-        int $category_id = null,
-        int $subcategory_id = null,
-        int $year = null,
-        int $month = null,
-        array $search_parameters = []
-    ): array
-    {
-        $collection = $this->
-            selectRaw("SUM({$this->item_table}.quantity) AS total")->
-            join($this->item_table, 'item.id', "{$this->item_table}.item_id")->
-            join("resource", "resource.id", "item.resource_id")->
-            join("resource_type", "resource_type.id", "resource.resource_type_id")->
-            where("resource_type.id", "=", $resource_type_id);
-
-        if (count($search_parameters) > 0) {
-            foreach ($search_parameters as $field => $search_term) {
-                $collection->where($this->item_table . '.' . $field, 'LIKE', '%' . $search_term . '%');
-            }
-        }
-
-        return $collection->get()->
-            toArray();
-    }
 }
