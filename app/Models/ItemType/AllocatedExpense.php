@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace App\Models\ItemType;
 
+use App\Interfaces\ItemModel;
 use App\Utilities\General;
 use App\Utilities\Model as ModelUtility;
 use Illuminate\Database\Query\Builder as QueryBuilder;
@@ -17,7 +18,7 @@ use Illuminate\Support\Facades\DB;
  * @copyright Dean Blackborough 2018-2020
  * @license https://github.com/costs-to-expect/api/blob/master/LICENSE
  */
-class AllocatedExpense extends Model
+class AllocatedExpense extends Model implements ItemModel
 {
     protected $table = 'item_type_allocated_expense';
 
@@ -28,7 +29,7 @@ class AllocatedExpense extends Model
         $this->attributes['actualised_total'] = ($percentage === 100) ? $total : $total * ($percentage/100);
     }
 
-    public function instance(int $item_id): ?AllocatedExpense
+    public function instance(int $item_id): ?Model
     {
         return $this->where('item_id', '=', $item_id)->
             select(
@@ -126,12 +127,12 @@ class AllocatedExpense extends Model
     /**
      * Convert the model instance to an array for use with the transformer
      *
-     * @param $item
+     * @param Model $item
      * @param Model $item_type
      *
      * @return array
      */
-    public function instanceToArray($item, Model $item_type): array
+    public function instanceToArray(Model $item, Model $item_type): array
     {
         return [
             'item_id' => $item->id,

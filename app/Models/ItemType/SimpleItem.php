@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace App\Models\ItemType;
 
+use App\Interfaces\ItemModel;
 use App\Utilities\Model as ModelUtility;
 use Illuminate\Database\Query\Builder as QueryBuilder;
 use Illuminate\Database\Eloquent\Model;
@@ -15,13 +16,13 @@ use Illuminate\Database\Eloquent\Model;
  * @copyright Dean Blackborough 2018-2020
  * @license https://github.com/costs-to-expect/api/blob/master/LICENSE
  */
-class SimpleItem extends Model
+class SimpleItem extends Model implements ItemModel
 {
     protected $table = 'item_type_simple_item';
 
     protected $guarded = ['id', 'updated_at', 'created_at'];
 
-    public function instance(int $item_id): ?SimpleItem
+    public function instance(int $item_id): ?Model
     {
         return $this->where('item_id', '=', $item_id)->
             select(
@@ -33,12 +34,12 @@ class SimpleItem extends Model
     /**
      * Convert the model instance to an array for use with the item transformer
      *
-     * @param $item
+     * @param Model $item
      * @param Model $item_type
      *
      * @return array
      */
-    public function instanceToArray($item, Model $item_type): array
+    public function instanceToArray(Model $item, Model $item_type): array
     {
         return [
             'item_id' => $item->id,
