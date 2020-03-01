@@ -20,6 +20,16 @@ class SimpleExpense extends AbstractItem
     }
 
     /**
+     * Return the filter parameters config string specific to the item type
+     *
+     * @return string
+     */
+    public function filterParametersConfig(): string
+    {
+        return 'api.item-type-allocated-expense.summary-filterable';
+    }
+
+    /**
      * Return the model instance for the item type
      *
      * @return Model

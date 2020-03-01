@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace App\Models\ItemType\Summary;
 
+use App\Utilities\Model as ModelUtility;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Query\Builder as QueryBuilder;
 
@@ -107,6 +108,7 @@ class SimpleExpense extends Model
      * @param int|null $month
      * @param array $parameters
      * @param array $search_parameters
+     * @param array $filter_parameters
      *
      * @return array
      */
@@ -118,7 +120,8 @@ class SimpleExpense extends Model
         int $year = null,
         int $month = null,
         array $parameters = [],
-        array $search_parameters = []
+        array $search_parameters = [],
+        array $filter_parameters = []
     ): array
     {
         $collection = $this->
@@ -142,11 +145,17 @@ class SimpleExpense extends Model
         if ($subcategory_id !== null) {
             $collection->where("sub_category.id", "=", $subcategory_id);
         }
-        if (count($search_parameters) > 0) {
-            foreach ($search_parameters as $field => $search_term) {
-                $collection->where("{$this->sub_table}." . $field, 'LIKE', '%' . $search_term . '%');
-            }
-        }
+
+        $collection = ModelUtility::applySearch(
+            $collection,
+            $this->sub_table,
+            $search_parameters
+        );
+        $collection = ModelUtility::applyFiltering(
+            $collection,
+            $this->sub_table,
+            $filter_parameters
+        );
 
         return $collection->get()->
             toArray();
