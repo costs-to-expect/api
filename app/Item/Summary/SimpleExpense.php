@@ -26,7 +26,7 @@ class SimpleExpense extends AbstractItem
      */
     public function filterParametersConfig(): string
     {
-        return 'api.item-type-allocated-expense.summary-filterable';
+        return 'api.item-type-simple-expense.summary-filterable';
     }
 
     /**
