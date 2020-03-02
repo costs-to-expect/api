@@ -5,6 +5,20 @@ namespace App\Interfaces;
 
 interface ResourceTypeItemModel
 {
+    /**
+     * Return an array of the item results based on the requested
+     * parameters
+     *
+     * @param int $resource_type_id
+     * @param int $offset
+     * @param int $limit
+     * @param array $parameters
+     * @param array $sort_parameters
+     * @param array $search_parameters
+     * @param array $filter_parameters
+     *
+     * @return array
+     */
     public function paginatedCollection(
         int $resource_type_id,
         int $offset = 0,
@@ -15,6 +29,16 @@ interface ResourceTypeItemModel
         array $filter_parameters = []
     ): array;
 
+    /**
+     * Return the total number of items that match the requested parameters
+     *
+     * @param int $resource_type_id
+     * @param array $parameters
+     * @param array $search_parameters
+     * @param array $filter_parameters
+     *
+     * @return int
+     */
     public function totalCount(
         int $resource_type_id,
         array $parameters = [],

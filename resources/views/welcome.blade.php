@@ -42,7 +42,7 @@
                                 <li><a class="nav-link " href="/v2/changelog"><span class="oi oi-script" title="Our changelog" aria-hidden="true"></span>Changelog (API)</a></li>
                                 <li><a class="nav-link" href="https://www.costs-to-expect.com" title="The Costs to Expect Website"><span class="oi oi-monitor" title="The Costs to Expect Website" aria-hidden="true"></span>The Website</a></li>
                                 <li><a class="nav-link" href="https://app.costs-to-expect.com" title="The Costs to Expect App"><span class="oi oi-spreadsheet" title="The Costs to Expect App" aria-hidden="true"></span>The App</a></li>
-                                {{--<li><a class="nav-link" href="https://blog.costs-to-expect.com" title="The Costs to Expect Blog"><span class="oi oi-copywriting" title="The Costs to Expect Blog" aria-hidden="true"></span>The Blog</a></li>--}}
+                                <li><a class="nav-link" href="https://blog.costs-to-expect.com" title="The Costs to Expect Blog"><span class="oi oi-copywriting" title="The Costs to Expect Blog" aria-hidden="true"></span>The Blog</a></li>
                             </ul>
                         </li>
                     </ul>
@@ -71,7 +71,7 @@
                                         <li><a class="nav-link " href="/v2/changelog"><span class="oi oi-script" title="Our changelog" aria-hidden="true"></span>Changelog (API)</a></li>
                                         <li><a class="nav-link" href="https://www.costs-to-expect.com" title="The Costs to Expect Website"><span class="oi oi-monitor" title="The Costs to Expect Website" aria-hidden="true"></span>The Website</a></li>
                                         <li><a class="nav-link" href="https://app.costs-to-expect.com" title="The Costs to Expect App"><span class="oi oi-spreadsheet" title="The Costs to Expect App" aria-hidden="true"></span>The App</a></li>
-                                        {{--<li><a class="nav-link" href="https://blog.costs-to-expect.com" title="The Costs to Expect Blog"><span class="oi oi-copywriting" title="The Costs to Expect Blog" aria-hidden="true"></span>The Blog</a></li>--}}
+                                        <li><a class="nav-link" href="https://blog.costs-to-expect.com" title="The Costs to Expect Blog"><span class="oi oi-copywriting" title="The Costs to Expect Blog" aria-hidden="true"></span>The Blog</a></li>
                                     </ul>
                                 </li>
                             </ul>
@@ -171,15 +171,15 @@
                                 is a long-term social project. My wife
                                 and I are tracking all the expenses to raise our child to adulthood.</p></dd>
 
-                        {{--<dt class="col-sm-4 col-md-4 col-lg-3 col-xl-2">
+                        <dt class="col-sm-4 col-md-4 col-lg-3 col-xl-2">
                             <a href="https://blog.costs-to-expect.com">
                             <span class="oi oi-copywriting" title="Costs to Expect Blog" aria-hidden="true"></span>
-                            Blog
+                            Our Blog
                             </a>
                         </dt>
                         <dd class="col-sm-8 col-md-8 col-lg-9 col-xl-10"><p>Our blog acts as a central repository to list all updates,
                             explains why we are doing what we are and acts as a place for us to talk about
-                            our products and service.</p></dd>--}}
+                            our products and the service.</p></dd>
                     </dl>
 
                     <hr />
@@ -233,7 +233,7 @@
                         Copyright © <a href="https://www.deanblackborough.com">Dean Blackborough 2018 - {{ date('Y') }}</a><br>
                         <a href="https://app.costs-to-expect.com">Our App</a> |
                         <a href="https://www.costs-to-expect.com/">Our Website</a> |
-                        {{--<a href="https://blog.costs-to-expect.com/">Our Blog</a> |--}}
+                        <a href="https://blog.costs-to-expect.com/">Our Blog</a> |
                         <a href="https://status.costs-to-expect.com/">Status</a>
                     </p>
                     <p class="text-center text-muted">Latest release: {{ $version }} ({{ date('jS M Y', strtotime($date)) }})</p>
