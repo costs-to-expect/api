@@ -184,7 +184,7 @@
 
                     <hr />
 
-                    <h2>Latest feature release [v2.08.0]</h2>
+                    <h2>Latest feature release [v2.09.0]</h2>
 
                     <p>The latest release of the Costs to Expect API is
                         {{ $version }}; we released it on the {{ date('jS M Y', strtotime($date)) }}.</p>
@@ -195,33 +195,34 @@
                     <h3>Added</h3>
 
                     <ul>
-                        <li></li>
-                        <li></li>
-                        <li></li>
+                        <li>We have added range filtering to the `items` collection; initially, we have added support for filtering for the `effective_date` of `allocated expense` items.</li>
+                        <li>We have added range filtering to the resource type `items` collection; as above, we have added `effective_date` filtering.</li>
+                        <li>We have added support for range filtering to the `items` and `resource type item` summary routes.</li>
+                        <li>We have added an X-Filter header to show the valid filters applied to a collection.</li>
+                        <li>We have added a link to Costs to Expect blog; the blog is a central repository for all product updates and somewhere to talk about our products.</li>
+                        <li>We have added a `FilterParameters` class to fetch any filter parameters from the URI and validate the format and values.</li>
                     </ul>
 
                     <h3>Changed</h3>
 
                     <ul>
-                        <li></li>
-                        <li></li>
-                        <li></li>
+                        <li>We have refreshed the landing page, we have added updated text for each of the products within the service.</li>
+                        <li>We have tweaked the stying for the landing page.</li>
+                        <li>We have renamed the data methods in the `Option` subclasses, the conditional prefix is confusing.</li>
+                        <li>We have added an `interface` for the item model classes.</li>
+                        <li>We have added an `interface` for the resource type item model classes.</li>
                     </ul>
 
                     <h3>Fixed</h3>
 
                     <ul>
-                        <li></li>
-                        <li></li>
-                        <li></li>
+                        <li>We have updated the `Option/Get` class, the `sort`, `search` and `filter` parameters will only display if there are viable parameters.</li>
                     </ul>
 
                     <h3>Removed</h3>
 
                     <ul>
-                        <li></li>
-                        <li></li>
-                        <li></li>
+                        <li>We have removed the layout file, not used as there is only one view file for the API.</li>
                     </ul>
                 </div>
             </div>

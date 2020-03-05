@@ -2,6 +2,28 @@
 
 The complete changelog for the Costs to Expect REST API, our changelog follows the format defined at https://keepachangelog.com/en/1.0.0/
 
+## [v2.09.0] - 2020-03-05
+### Added
+- We have added range filtering to the `items` collection; initially, we have added support for filtering for the `effective_date` of `allocated expense` items.
+- We have added range filtering to the resource type `items` collection; as above, we have added `effective_date` filtering.
+- We have added support for range filtering to the `items` and `resource type item` summary routes.
+- We have added an X-Filter header to show the valid filters applied to a collection.
+- We have added a link to Costs to Expect blog; the blog is a central repository for all product updates and somewhere to talk about our products.
+- We have added a `FilterParameters` class to fetch any filter parameters from the URI and validate the format and values.
+
+### Changed
+- We have refreshed the landing page, we have added updated text for each of the products within the service.
+- We have tweaked the stying for the landing page.
+- We have renamed the data methods in the `Option` subclasses, the conditional prefix is confusing.
+- We have added an `interface` for the item model classes.
+- We have added an `interface` for the resource type item model classes.
+
+### Fixed
+- We have updated the `Option/Get` class, the `sort`, `search` and `filter` parameters will only display if there are viable parameters.
+
+### Removed
+- We have removed the layout file, not used as there is only one view file for the API.
+
 ## [v2.08.1] - 2020-02-27
 ### Fixed
 - Select the correct year when validating the min and max year for year validation.
