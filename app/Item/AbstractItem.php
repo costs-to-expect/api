@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace App\Item;
 
+use App\Interfaces\ItemModel;
 use App\Models\Transformers\Transformer;
 use App\Validators\Fields\Validator;
 use Illuminate\Database\Eloquent\Model;
@@ -72,9 +73,9 @@ abstract class AbstractItem
     /**
      * Return the model instance for the item type
      *
-     * @return Model
+     * @return ItemModel
      */
-    abstract public function model(): Model;
+    abstract public function model(): ItemModel;
 
     /**
      * Return the fields config string specific to the item type
@@ -84,8 +85,24 @@ abstract class AbstractItem
     abstract public function fieldsConfig(): string;
 
     /**
-     * Return the search parameters specific to the item type, these will be
-     * merged with any default search parameters
+     * Return the filter parameters specific to the item type
+     *
+     * @return array
+     */
+    public function filterParameters(): array
+    {
+        return Config::get($this->filterParametersConfig());
+    }
+
+    /**
+     * Return the filter parameters config string specific to the item type
+     *
+     * @return string
+     */
+    abstract public function filterParametersConfig(): string;
+
+    /**
+     * Return the search parameters specific to the item type
      *
      * @return array
      */
@@ -109,8 +126,7 @@ abstract class AbstractItem
     abstract public function showParametersConfig(): string;
 
     /**
-     * Return the sort parameters specific to the item type, these will be
-     * merged with any default sort parameters
+     * Return the sort parameters specific to the item type
      *
      * @return array
      */

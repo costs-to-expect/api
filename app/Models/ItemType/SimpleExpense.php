@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace App\Models\ItemType;
 
+use App\Interfaces\ItemModel;
 use App\Utilities\General;
 use App\Utilities\Model as ModelUtility;
 use Illuminate\Database\Query\Builder as QueryBuilder;
@@ -16,13 +17,13 @@ use Illuminate\Database\Eloquent\Model;
  * @copyright Dean Blackborough 2018-2020
  * @license https://github.com/costs-to-expect/api/blob/master/LICENSE
  */
-class SimpleExpense extends Model
+class SimpleExpense extends Model implements ItemModel
 {
     protected $table = 'item_type_simple_expense';
 
     protected $guarded = ['id', 'updated_at', 'created_at'];
 
-    public function instance(int $item_id): ?SimpleExpense
+    public function instance(int $item_id): ?Model
     {
         return $this->where('item_id', '=', $item_id)->
             select(
@@ -34,12 +35,12 @@ class SimpleExpense extends Model
     /**
      * Convert the model instance to an array for use with the transformer
      *
-     * @param $item
+     * @param Model $item
      * @param Model $item_type
      *
      * @return array
      */
-    public function instanceToArray($item, Model $item_type): array
+    public function instanceToArray(Model $item, Model $item_type): array
     {
         return [
             'item_id' => $item->id,
@@ -94,6 +95,7 @@ class SimpleExpense extends Model
      * @param integer $resource_id
      * @param array $parameters
      * @param array $search_parameters
+     * @param array $filter_parameters
      *
      * @return integer
      */
@@ -101,7 +103,8 @@ class SimpleExpense extends Model
         int $resource_type_id,
         int $resource_id,
         array $parameters = [],
-        array $search_parameters = []
+        array $search_parameters = [],
+        array $filter_parameters = []
     ): int
     {
         $collection = $this->from('item')->
@@ -128,7 +131,16 @@ class SimpleExpense extends Model
             $collection->where('item_sub_category.sub_category_id', '=', $parameters['subcategory']);
         }
 
-        $collection = ModelUtility::applySearch($collection, 'item_type_simple_expense', $search_parameters);
+        $collection = ModelUtility::applySearch(
+            $collection,
+            $this->table,
+            $search_parameters
+        );
+        $collection = ModelUtility::applyFiltering(
+            $collection,
+            $this->table,
+            $filter_parameters
+        );
 
         return $collection->count();
     }
@@ -143,6 +155,7 @@ class SimpleExpense extends Model
      * @param array $parameters
      * @param array $sort_parameters
      * @param array $search_parameters
+     * @param array $filter_parameters
      *
      * @return array
      */
@@ -153,7 +166,8 @@ class SimpleExpense extends Model
         int $limit = 10,
         array $parameters = [],
         array $sort_parameters = [],
-        array $search_parameters = []
+        array $search_parameters = [],
+        array $filter_parameters = []
     ): array
     {
         $select_fields = [
@@ -231,7 +245,16 @@ class SimpleExpense extends Model
             $collection->where('item_sub_category.sub_category_id', '=', $parameters['subcategory']);
         }
 
-        $collection = ModelUtility::applySearch($collection, 'item_type_simple_expense', $search_parameters);
+        $collection = ModelUtility::applySearch(
+            $collection,
+            $this->table,
+            $search_parameters
+        );
+        $collection = ModelUtility::applyFiltering(
+            $collection,
+            $this->table,
+            $filter_parameters
+        );
 
         if (count($sort_parameters) > 0) {
             foreach ($sort_parameters as $field => $direction) {

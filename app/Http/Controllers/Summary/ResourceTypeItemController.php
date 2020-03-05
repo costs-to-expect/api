@@ -7,6 +7,7 @@ use App\ResourceTypeItem\Factory;
 use App\Option\Get;
 use App\Utilities\Header;
 use App\Utilities\RoutePermission;
+use App\Validators\FilterParameters;
 use App\Validators\Parameters;
 use App\Validators\Route;
 use App\Models\Transformers\Summary\ResourceTypeItemCategory as ResourceTypeItemCategoryTransformer;
@@ -125,6 +126,10 @@ class ResourceTypeItemController extends Controller
             $item_interface->searchParameters()
         );
 
+        $filter_parameters = FilterParameters::fetch(
+            $item_interface->filterParameters()
+        );
+
         if ($years === true) {
             return $this->yearsSummary(
                 $resource_type_id,
@@ -207,7 +212,8 @@ class ResourceTypeItemController extends Controller
             $subcategory === true ||
             $year === true ||
             $month === true ||
-            count($search_parameters) > 0
+            count($search_parameters) > 0 ||
+            count($filter_parameters) > 0
         ) {
             return $this->filteredSummary(
                 $resource_type_id,
@@ -216,7 +222,8 @@ class ResourceTypeItemController extends Controller
                 $year,
                 $month,
                 $parameters,
-                (count($search_parameters) > 0 ? $search_parameters : [])
+                (count($search_parameters) > 0 ? $search_parameters : []),
+                (count($filter_parameters) > 0 ? $filter_parameters : []),
             );
         }
 
@@ -589,6 +596,7 @@ class ResourceTypeItemController extends Controller
      * @param int|null $month
      * @param array $parameters
      * @param array $search_parameters
+     * @param array $filter_parameters
      *
      * @return JsonResponse
      */
@@ -599,7 +607,8 @@ class ResourceTypeItemController extends Controller
         int $year = null,
         int $month = null,
         array $parameters = [],
-        array $search_parameters = []
+        array $search_parameters = [],
+        array $filter_parameters = []
     ): JsonResponse
     {
         $summary = $this->model->filteredSummary(
@@ -608,8 +617,9 @@ class ResourceTypeItemController extends Controller
             $subcategory_id,
             $year,
             $month,
+            $parameters,
             $search_parameters,
-            $parameters
+            $filter_parameters
         );
 
         if (count($summary) === 0) {
@@ -752,6 +762,7 @@ class ResourceTypeItemController extends Controller
         $get = Get::init()->
             setSearchable($item_interface->searchParametersConfig())->
             setParameters($item_interface->collectionParametersConfig())->
+            setFilterable($item_interface->filterParametersConfig())->
             setDescription('route-descriptions.summary-resource-type-item-GET-index')->
             setAuthenticationStatus($permissions['view'])->
             option();

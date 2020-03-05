@@ -18,11 +18,6 @@ class Get extends Option
     /**
      * @var array
      */
-    static private $conditional_parameters;
-
-    /**
-     * @var array
-     */
     static private $localised_parameters;
 
     /**
@@ -43,6 +38,21 @@ class Get extends Option
     /**
      * @var array
      */
+    static private $parameters_data;
+
+    /**
+     * @var array
+     */
+    static private $filterable;
+
+    /**
+     * @var array
+     */
+    static private $filterable_parameters;
+
+    /**
+     * @var array
+     */
     static private $searchable;
 
     /**
@@ -53,26 +63,30 @@ class Get extends Option
     /**
      * @var array
      */
-    static private $sortable_parameters;
+    static private $sortable;
 
     /**
      * @var array
      */
-    static private $sortable;
+    static private $sortable_parameters;
 
     static private function reset()
     {
         self::resetBase();;
 
-        self::$conditional_parameters = [];
         self::$localised_parameters = [];
+
         self::$pagination = false;
         self::$pagination_parameters = [];
+
         self::$parameters = [];
-        self::$searchable = [];
+        self::$parameters_data = [];
+        self::$filterable = false;
+        self::$filterable_parameters = [];
+        self::$searchable = false;
         self::$searchable_parameters = [];
+        self::$sortable = false;
         self::$sortable_parameters = [];
-        self::$sortable = [];
     }
 
     static public function init(): Get
@@ -83,11 +97,15 @@ class Get extends Option
         return self::$instance;
     }
 
-    static public function setConditionalParameters(
-        array $parameters = []
+    static public function setFilterable(
+        string $config_path
     ): Get
     {
-        self::$conditional_parameters = $parameters;
+        $parameters = Config::get($config_path);
+        if (count($parameters) > 0) {
+            self::$filterable = true;
+            self::$filterable_parameters = $parameters;
+        }
 
         return self::$instance;
     }
@@ -123,12 +141,24 @@ class Get extends Option
         return self::$instance;
     }
 
+    static public function setParametersData(
+        array $parameters = []
+    ): Get
+    {
+        self::$parameters_data = $parameters;
+
+        return self::$instance;
+    }
+
     static public function setSearchable(
         string $config_path
     ): Get
     {
-        self::$searchable = true;
-        self::$searchable_parameters = Config::get($config_path);
+        $parameters = Config::get($config_path);
+        if (count($parameters) > 0) {
+            self::$searchable = true;
+            self::$searchable_parameters = $parameters;
+        }
 
         return self::$instance;
     }
@@ -137,8 +167,11 @@ class Get extends Option
         string $config_path
     ): Get
     {
-        self::$sortable = true;
-        self::$sortable_parameters = Config::get($config_path);
+        $parameters = Config::get($config_path);
+        if (count($parameters) > 0) {
+            self::$sortable = true;
+            self::$sortable_parameters = $parameters;
+        }
 
         return self::$instance;
     }
@@ -152,8 +185,9 @@ class Get extends Option
                 self::$pagination_parameters,
                 (self::$sortable === true ? Config::get('api.app.sortable-parameters') : []),
                 (self::$searchable === true ? Config::get('api.app.searchable-parameters') : []),
+                (self::$filterable === true ? Config::get('api.app.filterable-parameters') : []),
                 self::$parameters,
-                self::$conditional_parameters
+                self::$parameters_data
             )
             as $parameter => $parameter_data
         ) {
@@ -177,6 +211,7 @@ class Get extends Option
                 ],
                 'sortable' => self::$sortable_parameters,
                 'searchable' => self::$searchable_parameters,
+                'filterable' => self::$filterable_parameters,
                 'parameters' => self::$localised_parameters
             ]
         ];

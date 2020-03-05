@@ -1,4 +1,3 @@
-
 <!doctype html>
 <html lang="en">
 <head>
@@ -38,11 +37,12 @@
                     <ul class="menu list-unstyled">
                         <li><strong>Costs to Expect</strong>
                             <ul class="submenu">
-                                <li><a class="nav-link  active " href="/v2"><span class="oi oi-shield" title="Our privacy policy" aria-hidden="true"></span>The API</a></li>
+                                <li><a class="nav-link  active " href="/v2"><span class="oi oi-key" title="The Costs to Expect API" aria-hidden="true"></span>The API</a></li>
                                 <li><a class="nav-link " href="https://github.com/costs-to-expect/api/blob/master/CHANGELOG.md"><span class="oi oi-script" title="Our changelog" aria-hidden="true"></span>Changelog (Github)</a></li>
                                 <li><a class="nav-link " href="/v2/changelog"><span class="oi oi-script" title="Our changelog" aria-hidden="true"></span>Changelog (API)</a></li>
                                 <li><a class="nav-link" href="https://www.costs-to-expect.com" title="The Costs to Expect Website"><span class="oi oi-monitor" title="The Costs to Expect Website" aria-hidden="true"></span>The Website</a></li>
-                                <li><a class="nav-link" href="https://app.costs-to-expect.com" title="The Costs to Expect App"><span class="oi oi-monitor" title="The Costs to Expect App" aria-hidden="true"></span>The App</a></li>
+                                <li><a class="nav-link" href="https://app.costs-to-expect.com" title="The Costs to Expect App"><span class="oi oi-spreadsheet" title="The Costs to Expect App" aria-hidden="true"></span>The App</a></li>
+                                <li><a class="nav-link" href="https://blog.costs-to-expect.com" title="The Costs to Expect Blog"><span class="oi oi-copywriting" title="The Costs to Expect Blog" aria-hidden="true"></span>The Blog</a></li>
                             </ul>
                         </li>
                     </ul>
@@ -66,11 +66,12 @@
                             <ul class="menu list-unstyled">
                                 <li><strong>Costs to Expect</strong>
                                     <ul class="submenu">
-                                        <li><a class="nav-link  active " href="/v2"><span class="oi oi-shield" title="Our privacy policy" aria-hidden="true"></span>The API</a></li>
+                                        <li><a class="nav-link  active " href="/v2"><span class="oi oi-key" title="The Costs to Expect API" aria-hidden="true"></span>The API</a></li>
                                         <li><a class="nav-link " href="https://github.com/costs-to-expect/api/blob/master/CHANGELOG.md"><span class="oi oi-script" title="Our changelog" aria-hidden="true"></span>Changelog (Github)</a></li>
                                         <li><a class="nav-link " href="/v2/changelog"><span class="oi oi-script" title="Our changelog" aria-hidden="true"></span>Changelog (API)</a></li>
                                         <li><a class="nav-link" href="https://www.costs-to-expect.com" title="The Costs to Expect Website"><span class="oi oi-monitor" title="The Costs to Expect Website" aria-hidden="true"></span>The Website</a></li>
-                                        <li><a class="nav-link" href="https://app.costs-to-expect.com" title="The Costs to Expect App"><span class="oi oi-monitor" title="The Costs to Expect App" aria-hidden="true"></span>The App</a></li>
+                                        <li><a class="nav-link" href="https://app.costs-to-expect.com" title="The Costs to Expect App"><span class="oi oi-spreadsheet" title="The Costs to Expect App" aria-hidden="true"></span>The App</a></li>
+                                        <li><a class="nav-link" href="https://blog.costs-to-expect.com" title="The Costs to Expect Blog"><span class="oi oi-copywriting" title="The Costs to Expect Blog" aria-hidden="true"></span>The Blog</a></li>
                                     </ul>
                                 </li>
                             </ul>
@@ -89,7 +90,7 @@
                             Welcome to Costs to Expect
                         </div>
                         <div class="title">
-                            <h1>The Costs to Expect API</h1>
+                            <h1>Our REST API</h1>
                         </div>
 
                         <hr />
@@ -113,63 +114,115 @@
                     <h2>Overview</h2>
 
                     <p>Costs to Expect is a service focused on tracking and
-                        forecasting expenses. There are three parts to the
+                        forecasting expenses. We are trying to simplify
+                        your budgets. There are three core products in the
                         service; the Open Source REST API, our App and an Open
                         Source website showing the costs to raise our children
                         to adulthood.</p>
 
-                    <p>The API is the backbone to our service and is available
-                        to anyone who wants it. Our API focuses on expenses;
-                        however, that will change as the product matures.</p>
+                    <p>Our API is the backbone of the service, everything depends
+                        on it. Our API is available to anyone who wants to use it.
+                        Our focus is expenses, however, that will change as the
+                        product matures.</p>
 
                     <p>
-                        <a href="/v2" class="btn btn-primary btn-lg" role="button" aria-pressed="true">Access the API</a>
-                        <a href="https://github.com/costs-to-expect/api" class="btn btn-primary alter btn-lg" role="button" aria-pressed="true">View the API on Github</a>
+                        <a href="/v2" class="btn btn-primary btn-lg" role="button" aria-pressed="true">Access API</a>
+                        <a href="https://github.com/costs-to-expect/api" class="btn btn-primary alter btn-lg" role="button" aria-pressed="true">View our API on Github</a>
                     </p>
 
                     <hr />
 
-                    <h2>Costs to Expect</h2>
+                    <h2>Our Products</h2>
 
-                    <p>There are three parts to the Costs to Expect service;
-                        two are Open Source, the third is Closed Sourced and
-                        our commercial product.</p>
+                    <p>There are multiple products within the Costs to Expect
+                        service, the major products being our API and App, below
+                        is a quick overview of each product.</p>
 
-                    <ul>
-                        <li>The Costs to Expect API: Our REST API is Open Source and available under the MIT license.</li>
-                        <li>The Costs to Expect App: Our <a href="https://app.costs-to-expect.com">App</a> is our commercial offering. Our App makes tracking and forecasting expenses and costs simple as well as acting as a friendly interface to the API.</li>
-                        <li>The Costs to Expect Website: Our <a href="https://www.costs-to-expect.com">Website</a> is a long term social experiment. My wife and I are tracking the expenses to raise our children to the age of 18.</li>
-                    </ul>
+                    <dl class="row">
+                        <dt class="col-sm-4 col-md-4 col-lg-3 col-xl-2">
+                            <a href="/v2">
+                            <span class="oi oi-key" title="Costs to Expect API" aria-hidden="true"></span>
+                            Our API
+                            </a>
+                        </dt>
+                        <dd class="col-sm-8 col-md-8 col-lg-9 col-xl-10">
+                            <p>Our <a href="https://github.com/costs-to-expect/api/blob/master/LICENSE">Open Source</a>
+                            REST <a href="https://api.costs-to-expect.com/v2">API</a>, available under
+                                the MIT license, the API drives the entire service.</p></dd>
+
+                        <dt class="col-sm-4 col-md-4 col-lg-3 col-xl-2">
+                            <a href="https://app.costs-to-expect.com">
+                            <span class="oi oi-spreadsheet" title="Costs to Expect App" aria-hidden="true"></span>
+                            Our App
+                            </a>
+                        </dt>
+                        <dd class="col-sm-8 col-md-8 col-lg-9 col-xl-10"><p>Our <a href="https://app.costs-to-expect.com/">App</a> is the
+                            commercial offering for Costs to Expect,
+                            we are <a href="https://app.costs-to-expect.com/roadmap">working</a> towards the public alpha, out aim is to make tracking and
+                                forecasting expenses as simple as possible.</p></dd>
+
+                        <dt class="col-sm-4 col-md-4 col-lg-3 col-xl-2">
+                            <a href="https://www.costs-to-expect.com">
+                            <span class="oi oi-monitor" title="Costs to Expect Website" aria-hidden="true"></span>
+                            Our Website
+                            </a>
+                        </dt>
+                        <dd class="col-sm-8 col-md-8 col-lg-9 col-xl-10"><p>Our <a href="https://www.costs-to-expect.com">website</a>
+                                is a long-term social project. My wife
+                                and I are tracking all the expenses to raise our child to adulthood.</p></dd>
+
+                        <dt class="col-sm-4 col-md-4 col-lg-3 col-xl-2">
+                            <a href="https://blog.costs-to-expect.com">
+                            <span class="oi oi-copywriting" title="Costs to Expect Blog" aria-hidden="true"></span>
+                            Our Blog
+                            </a>
+                        </dt>
+                        <dd class="col-sm-8 col-md-8 col-lg-9 col-xl-10"><p>Our blog acts as a central repository to list all updates,
+                            explains why we are doing what we are and acts as a place for us to talk about
+                            our products and the service.</p></dd>
+                    </dl>
 
                     <hr />
 
-                    <h2>Latest release [v2.07.0]</h2>
+                    <h2>Latest feature release [v2.09.0]</h2>
 
                     <p>The latest release of the Costs to Expect API is
-                        {{ $version }}; we released it on the {{ date('jS M Y', strtotime($date)) }}.
-                        Review our changelog(s) to see the history of all our
-                        releases.</p>
+                        {{ $version }}; we released it on the {{ date('jS M Y', strtotime($date)) }}.</p>
+
+                    <p>The combined changelog below shows all the fixes and improvements we have made to the
+                        API since the last feature release.</p>
 
                     <h3>Added</h3>
 
                     <ul>
-                        <li>We have added a GET 'auth/check' endpoint; faster check for the Costs to Expect App.</li>
+                        <li>We have added range filtering to the `items` collection; initially, we have added support for filtering for the `effective_date` of `allocated expense` items.</li>
+                        <li>We have added range filtering to the resource type `items` collection; as above, we have added `effective_date` filtering.</li>
+                        <li>We have added support for range filtering to the `items` and `resource type item` summary routes.</li>
+                        <li>We have added an X-Filter header to show the valid filters applied to a collection.</li>
+                        <li>We have added a link to Costs to Expect blog; the blog is a central repository for all product updates and somewhere to talk about our products.</li>
+                        <li>We have added a `FilterParameters` class to fetch any filter parameters from the URI and validate the format and values.</li>
                     </ul>
 
                     <h3>Changed</h3>
 
                     <ul>
-                        <li>We have updated the dependencies for the API.</li>
-                        <li>We have enabled URL compression.</li>
-                        <li>We now return the user id on sign-in, saves a second request for the Costs to Expect App.</li>
-                        <li>We have updated the README, adding links to the App `readme` and `changelog`.</li>
-                        <li>We have tweaked two middleware classes to improve performance slightly.</li>
+                        <li>We have refreshed the landing page, we have added updated text for each of the products within the service.</li>
+                        <li>We have tweaked the stying for the landing page.</li>
+                        <li>We have renamed the data methods in the `Option` subclasses, the conditional prefix is confusing.</li>
+                        <li>We have added an `interface` for the item model classes.</li>
+                        <li>We have added an `interface` for the resource type item model classes.</li>
                     </ul>
 
                     <h3>Fixed</h3>
 
                     <ul>
-                        <li>The HTTP verb was incorrect for the 'auth/user' endpoint.</li>
+                        <li>We have updated the `Option/Get` class, the `sort`, `search` and `filter` parameters will only display if there are viable parameters.</li>
+                    </ul>
+
+                    <h3>Removed</h3>
+
+                    <ul>
+                        <li>We have removed the layout file, not used as there is only one view file for the API.</li>
                     </ul>
                 </div>
             </div>
@@ -179,11 +232,13 @@
                     <hr />
                     <p class="text-center text-muted">
                         Copyright © <a href="https://www.deanblackborough.com">Dean Blackborough 2018 - {{ date('Y') }}</a><br>
-                        <a href="https://app.costs-to-expect.com">The App</a> |
-                        <a href="https://status.costs-to-expect.com/">Status</a> |
-                        Latest release: {{ $version }} ({{ date('jS M Y', strtotime($date)) }})
+                        <a href="https://app.costs-to-expect.com">Our App</a> |
+                        <a href="https://www.costs-to-expect.com/">Our Website</a> |
+                        <a href="https://blog.costs-to-expect.com/">Our Blog</a> |
+                        <a href="https://status.costs-to-expect.com/">Status</a>
                     </p>
-                    <p class="text-center text-muted">All code maintained by <a href="https://www.deanblackborough.com">Dean Blackborough</a> and licensed under MIT.</p>
+                    <p class="text-center text-muted">Latest release: {{ $version }} ({{ date('jS M Y', strtotime($date)) }})</p>
+                    <p class="text-center text-muted">All code maintained by <a href="https://www.deanblackborough.com">Dean Blackborough</a> and released under the MIT license.</p>
                 </div>
             </div>
         </div>

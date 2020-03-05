@@ -173,7 +173,7 @@ class ResourceTypeController extends Controller
 
         $post = Post::init()->
             setFields('api.resource-type.fields')->
-            setConditionalFields($this->conditionalPostParameters())->
+            setFieldsData($this->fieldsData())->
             setDescription('route-descriptions.resource_type_POST')->
             setAuthenticationStatus(($this->user_id !== null) ? true : false)->
             setAuthenticationRequired(true)->
@@ -362,7 +362,7 @@ class ResourceTypeController extends Controller
      *
      * @return array
      */
-    private function conditionalPostParameters(): array
+    private function fieldsData(): array
     {
         $item_types = (new ItemType())->minimisedCollection();
 

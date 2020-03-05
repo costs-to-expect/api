@@ -6,6 +6,7 @@ use App\ResourceTypeItem\Factory;
 use App\Option\Get;
 use App\Utilities\Header;
 use App\Utilities\RoutePermission;
+use App\Validators\FilterParameters;
 use App\Validators\Parameters;
 use App\Validators\Route;
 use App\Models\Category;
@@ -53,14 +54,19 @@ class ResourceTypeItemController extends Controller
             $item_interface->sortParameters()
         );
 
-        $search_conditions = SearchParameters::fetch(
+        $search_parameters = SearchParameters::fetch(
             $item_interface->searchParameters()
+        );
+
+        $filter_parameters = FilterParameters::fetch(
+            $item_interface->filterParameters()
         );
 
         $total = $resource_type_item_model->totalCount(
             $resource_type_id,
             $collection_parameters,
-            $search_conditions
+            $search_parameters,
+            $filter_parameters
         );
 
         $pagination = UtilityPagination::init($request->path(), $total)
@@ -73,11 +79,17 @@ class ResourceTypeItemController extends Controller
             $pagination['limit'],
             $collection_parameters,
             $sort_fields,
-            $search_conditions
+            $search_parameters,
+            $filter_parameters
         );
 
         $headers = new Header();
         $headers->collection($pagination, count($items), $total);
+
+        $filter_header = FilterParameters::xHeader();
+        if ($filter_header !== null) {
+            $headers->addFilter($filter_header);
+        }
 
         $sort_header = SortParameters::xHeader();
         if ($sort_header !== null) {
@@ -132,7 +144,7 @@ class ResourceTypeItemController extends Controller
             $resource_type_id
         );
 
-        $conditional_parameters = $this->conditionalGetParameters(
+        $parameters_data = $this->parametersData(
             $resource_type_id,
             array_merge(
                 $item_interface->collectionParametersKeys(),
@@ -145,7 +157,7 @@ class ResourceTypeItemController extends Controller
             setSearchable($item_interface->searchParametersConfig())->
             setPagination(true)->
             setParameters($item_interface->collectionParametersConfig())->
-            setConditionalParameters($conditional_parameters)->
+            setParametersData($parameters_data)->
             setDescription('route-descriptions.resource_type_item_GET_index')->
             setAuthenticationStatus($permissions['view'])->
             option();
@@ -163,7 +175,7 @@ class ResourceTypeItemController extends Controller
      *
      * @return array
      */
-    private function conditionalGetParameters(
+    private function parametersData(
         $resource_type_id,
         array $parameters
     ): array

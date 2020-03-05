@@ -66,9 +66,9 @@ class SimpleExpense extends AbstractItem
     /**
      * Return the model instance for the item type
      *
-     * @return Model
+     * @return \App\Interfaces\ItemModel
      */
-    public function model(): Model
+    public function model(): \App\Interfaces\ItemModel
     {
         return new ItemModel();
     }
@@ -81,6 +81,14 @@ class SimpleExpense extends AbstractItem
     public function fieldsConfig(): string
     {
         return 'api.item-type-simple-expense.fields';
+    }
+
+    /**
+     * Return the filter parameters config
+     */
+    public function filterParametersConfig(): string
+    {
+        return 'api.item-type-simple-expense.filterable';
     }
 
     /**

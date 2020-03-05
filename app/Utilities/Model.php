@@ -31,6 +31,22 @@ class Model
         return $collection;
     }
 
+    public static function applyFiltering(
+        $collection,
+        string $table,
+        array $filter_parameters = []
+    )
+    {
+        if (count($filter_parameters) > 0) {
+            foreach ($filter_parameters as $field => $range) {
+                $collection->where($table . '.' . $field, '>=', $range['from']);
+                $collection->where($table . '.' . $field, '<=', $range['to']);
+            }
+        }
+
+        return $collection;
+    }
+
     public static function applyResourceTypeCollectionCondition(
         $collection,
         array $permitted_resource_types,

@@ -9892,11 +9892,27 @@ html, body {
   background-color: #F5F5F8;
 }
 
+dt {
+  font-weight: normal;
+  font-size: 1.2rem;
+  line-height: 1rem;
+}
+dt a {
+  color: #212529;
+}
+dt a:hover {
+  color: #A8369B;
+  text-decoration: none;
+}
+dt a span {
+  padding-right: 0.5rem;
+}
+
 a {
   color: #A8369B;
 }
 a:hover {
-  color: #A8369B;
+  color: #732877;
 }
 
 .green {
@@ -9973,9 +9989,6 @@ a:hover {
 
 .container-right {
   padding-top: 1rem;
-}
-.container-right a {
-  color: #A8369B;
 }
 .container-right h2 {
   color: #732877;

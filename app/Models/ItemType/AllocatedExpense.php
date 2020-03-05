@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace App\Models\ItemType;
 
+use App\Interfaces\ItemModel;
 use App\Utilities\General;
 use App\Utilities\Model as ModelUtility;
 use Illuminate\Database\Query\Builder as QueryBuilder;
@@ -17,7 +18,7 @@ use Illuminate\Support\Facades\DB;
  * @copyright Dean Blackborough 2018-2020
  * @license https://github.com/costs-to-expect/api/blob/master/LICENSE
  */
-class AllocatedExpense extends Model
+class AllocatedExpense extends Model implements ItemModel
 {
     protected $table = 'item_type_allocated_expense';
 
@@ -28,7 +29,7 @@ class AllocatedExpense extends Model
         $this->attributes['actualised_total'] = ($percentage === 100) ? $total : $total * ($percentage/100);
     }
 
-    public function instance(int $item_id): ?AllocatedExpense
+    public function instance(int $item_id): ?Model
     {
         return $this->where('item_id', '=', $item_id)->
             select(
@@ -126,12 +127,12 @@ class AllocatedExpense extends Model
     /**
      * Convert the model instance to an array for use with the transformer
      *
-     * @param $item
+     * @param Model $item
      * @param Model $item_type
      *
      * @return array
      */
-    public function instanceToArray($item, Model $item_type): array
+    public function instanceToArray(Model $item, Model $item_type): array
     {
         return [
             'item_id' => $item->id,
@@ -154,6 +155,7 @@ class AllocatedExpense extends Model
      * @param integer $resource_id
      * @param array $parameters
      * @param array $search_parameters
+     * @param array $filter_parameters
      *
      * @return integer
      */
@@ -161,7 +163,8 @@ class AllocatedExpense extends Model
         int $resource_type_id,
         int $resource_id,
         array $parameters = [],
-        array $search_parameters = []
+        array $search_parameters = [],
+        array $filter_parameters = []
     ): int
     {
         $collection = $this->from('item')->
@@ -202,7 +205,16 @@ class AllocatedExpense extends Model
             $collection->where('item_sub_category.sub_category_id', '=', $parameters['subcategory']);
         }
 
-        $collection = ModelUtility::applySearch($collection, 'item_type_allocated_expense', $search_parameters);
+        $collection = ModelUtility::applySearch(
+            $collection,
+            $this->table,
+            $search_parameters
+        );
+        $collection = ModelUtility::applyFiltering(
+            $collection,
+            $this->table,
+            $filter_parameters
+        );
 
         if (
             array_key_exists('include-unpublished', $parameters) === false ||
@@ -236,7 +248,8 @@ class AllocatedExpense extends Model
         int $limit = 10,
         array $parameters = [],
         array $sort_parameters = [],
-        array $search_parameters = []
+        array $search_parameters = [],
+        array $filter_parameters = []
     ): array
     {
         $select_fields = [
@@ -328,6 +341,7 @@ class AllocatedExpense extends Model
         }
 
         $collection = ModelUtility::applySearch($collection, 'item_type_allocated_expense', $search_parameters);
+        $collection = ModelUtility::applyFiltering($collection, 'item_type_allocated_expense', $filter_parameters);
 
         if (
             array_key_exists('include-unpublished', $parameters) === false ||

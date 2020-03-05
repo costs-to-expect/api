@@ -8,6 +8,7 @@ use App\Option\Get;
 use App\Utilities\Header;
 use App\Utilities\Response;
 use App\Utilities\RoutePermission;
+use App\Validators\FilterParameters;
 use App\Validators\Parameters;
 use App\Validators\Route;
 use App\Models\Transformers\Summary\ItemCategory as ItemCategoryTransformer;
@@ -119,6 +120,10 @@ class ItemController extends Controller
             $item_interface->searchParameters()
         );
 
+        $filter_parameters = FilterParameters::fetch(
+            $item_interface->filterParameters()
+        );
+
         if ($years === true) {
             return $this->yearsSummary(
                 (int) $resource_type_id,
@@ -198,7 +203,8 @@ class ItemController extends Controller
             $subcategory !== null ||
             $year !== null ||
             $month !== null ||
-            count($search_parameters) > 0
+            count($search_parameters) > 0 ||
+            count($filter_parameters) > 0
         ) {
             return $this->filteredSummary(
                 (int) $resource_type_id,
@@ -208,7 +214,8 @@ class ItemController extends Controller
                 $year,
                 $month,
                 $parameters,
-                (count($search_parameters) > 0 ? $search_parameters : [])
+                (count($search_parameters) > 0 ? $search_parameters : []),
+                (count($filter_parameters) > 0 ? $filter_parameters : [])
             );
         }
 
@@ -508,6 +515,7 @@ class ItemController extends Controller
      * @param int|null $month
      * @param array $parameters
      * @param array $search_parameters
+     * @param array $filter_parameters
      *
      * @return JsonResponse
      */
@@ -519,7 +527,8 @@ class ItemController extends Controller
         int $year = null,
         int $month = null,
         array $parameters = [],
-        array $search_parameters = []
+        array $search_parameters = [],
+        array $filter_parameters = []
     ): JsonResponse
     {
         $summary = $this->model->filteredSummary(
@@ -531,6 +540,7 @@ class ItemController extends Controller
             $month,
             $parameters,
             $search_parameters,
+            $filter_parameters
         );
 
         if (count($summary) === 0) {
@@ -725,6 +735,7 @@ class ItemController extends Controller
         $get = Get::init()->
             setParameters($item_interface->collectionParametersConfig())->
             setSearchable($item_interface->searchParametersConfig())->
+            setFilterable($item_interface->filterParametersConfig())->
             setDescription('route-descriptions.summary_GET_resource-type_resource_items')->
             setAuthenticationStatus($permissions['view'])->
             option();
