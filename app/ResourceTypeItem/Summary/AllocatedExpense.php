@@ -20,6 +20,16 @@ class AllocatedExpense extends AbstractItem
     }
 
     /**
+     * Return the filter parameters config string
+     *
+     * @return string
+     */
+    public function filterParametersConfig(): string
+    {
+        return 'api.resource-type-item-type-allocated-expense.summary-filterable';
+    }
+
+    /**
      * Return the model instance for the item type
      *
      * @return Model

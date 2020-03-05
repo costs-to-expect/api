@@ -38,6 +38,23 @@ abstract class AbstractItem
     abstract public function collectionParametersConfig(): string;
 
     /**
+     * Return the filter parameters
+     *
+     * @return array
+     */
+    public function filterParameters(): array
+    {
+        return Config::get($this->filterParametersConfig());
+    }
+
+    /**
+     * Return the filter parameters config string
+     *
+     * @return string
+     */
+    abstract public function filterParametersConfig(): string;
+
+    /**
      * Return the model instance for the item type
      *
      * @return Model
