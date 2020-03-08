@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Models\ItemType\Summary;
+namespace App\Models\Item\Summary;
 
 use App\Interfaces\Item\ISummaryModel\ISummaryModel;
 use App\Utilities\Model as ModelUtility;

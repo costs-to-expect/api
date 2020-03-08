@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Models\ItemType;
+namespace App\Models\Item;
 
 use App\Interfaces\Item\IModel;
 use App\Utilities\General;

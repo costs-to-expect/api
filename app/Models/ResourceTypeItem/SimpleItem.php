@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Models\ResourceTypeItemType;
+namespace App\Models\ResourceTypeItem;
 
 use App\Interfaces\ResourceTypeItem\IModel;
 use App\Utilities\Model as ModelUtility;

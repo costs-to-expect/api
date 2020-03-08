@@ -4,7 +4,7 @@ declare(strict_types=1);
 namespace App\Item;
 
 use App\Interfaces\Item\IModel;
-use App\Models\ItemType\AllocatedExpense as ItemModel;
+use App\Models\Item\AllocatedExpense as ItemModel;
 use App\Models\Transformers\Transformer;
 use App\Validators\Fields\ItemType\AllocatedExpense as ItemTypeAllocatedExpenseValidator;
 use App\Validators\Fields\Validator;

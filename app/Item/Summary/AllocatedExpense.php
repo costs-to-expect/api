@@ -4,7 +4,7 @@ declare(strict_types=1);
 namespace App\Item\Summary;
 
 use App\Interfaces\Item\ISummaryModel\ISummaryModel;
-use App\Models\ItemType\Summary\AllocatedExpense as ItemModel;
+use App\Models\Item\Summary\AllocatedExpense as ItemModel;
 
 class AllocatedExpense extends AbstractItem
 {

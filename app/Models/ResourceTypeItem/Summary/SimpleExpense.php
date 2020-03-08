@@ -1,15 +1,12 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Models\ResourceTypeItemType\Summary;
+namespace App\Models\ResourceTypeItem\Summary;
 
 use App\Interfaces\ResourceTypeItem\ISummaryModelCategories;
 use App\Interfaces\ResourceTypeItemType\ISummaryModel;
-use App\Utilities\Model as ModelUtility;
-use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Query\Builder as QueryBuilder;
-use Illuminate\Support\Facades\DB;
 
 /**
  * Item model when fetching data by resource type
@@ -19,11 +16,11 @@ use Illuminate\Support\Facades\DB;
  * @copyright Dean Blackborough 2018-2020
  * @license https://github.com/costs-to-expect/api/blob/master/LICENSE
  */
-class AllocatedExpense extends Model implements ISummaryModel, ISummaryModelCategories
+class SimpleExpense extends Model implements ISummaryModel, ISummaryModelCategories
 {
-    protected $guarded = ['id', 'actualised_total', 'created_at', 'updated_at'];
+    protected $guarded = ['id', 'created_at', 'updated_at'];
     protected $table = 'item';
-    protected $sub_table = 'item_type_allocated_expense';
+    protected $sub_table = 'item_type_simple_expense';
 
     /**
      * Return the summary for all items for the resources in the requested resource type
@@ -38,13 +35,11 @@ class AllocatedExpense extends Model implements ISummaryModel, ISummaryModelCate
         array $parameters
     ): array
     {
-        $collection = $this->selectRaw("sum({$this->sub_table}.actualised_total) AS total")->
+        $collection = $this->selectRaw("sum({$this->sub_table}.total) AS total")->
             join($this->sub_table, 'item.id', "{$this->sub_table}.item_id")->
             join('resource', 'item.resource_id', 'resource.id')->
             join('resource_type', 'resource.resource_type_id', 'resource_type.id')->
             where('resource_type.id', '=', $resource_type_id);
-
-        $collection = $this->includeUnpublished($collection, $parameters);
 
         return $collection->
             get()->
@@ -68,153 +63,15 @@ class AllocatedExpense extends Model implements ISummaryModel, ISummaryModelCate
         $collection = $this->selectRaw("
                 resource.id AS id, 
                 resource.name AS `name`, 
-                SUM({$this->sub_table}.actualised_total) AS total"
+                SUM({$this->sub_table}.total) AS total"
             )->
             join($this->sub_table, 'item.id', "{$this->sub_table}.item_id")->
             join('resource', 'item.resource_id', 'resource.id')->
             join('resource_type', 'resource.resource_type_id', 'resource_type.id')->
             where('resource_type.id', '=', $resource_type_id);
 
-        $collection = $this->includeUnpublished($collection, $parameters);
-
         return $collection->groupBy('resource.id')->
             orderBy('name')->
-            get()->
-            toArray();
-    }
-
-    /**
-     * Return the summary for all items for the resources in the requested resource
-     * type grouped by year
-     *
-     * @param int $resource_type_id
-     * @param array $parameters
-
-     * @return array
-     */
-    public function yearsSummary(
-        int $resource_type_id,
-        array $parameters
-    ): array
-    {
-        $collection = $this->selectRaw("
-                YEAR({$this->sub_table}.effective_date) as year,
-                SUM({$this->sub_table}.actualised_total) AS total"
-            )->
-            join($this->sub_table, 'item.id', "{$this->sub_table}.item_id")->
-            join("resource", "resource.id", "item.resource_id")->
-            join("resource_type", "resource_type.id", "resource.resource_type_id")->
-            where("resource_type.id", "=", $resource_type_id);
-
-        $collection = $this->includeUnpublished($collection, $parameters);
-
-        return $collection->groupBy("year")->
-            orderBy("year")->
-            get()->
-            toArray();
-    }
-
-    /**
-     * Return the summary for all items for the resources in the requested resource
-     * type grouped by month for the requested year
-     *
-     * @param integer $resource_type_id
-     * @param integer $year
-     * @param array $parameters
-     *
-     * @return array
-     */
-    public function monthsSummary(
-        int $resource_type_id,
-        int $year,
-        array $parameters
-    ): array
-    {
-        $collection = $this->selectRaw("
-                MONTH({$this->sub_table}.effective_date) as month, 
-                SUM({$this->sub_table}.actualised_total) AS total"
-            )->
-            join($this->sub_table, 'item.id', "{$this->sub_table}.item_id")->
-            join("resource", "resource.id", "item.resource_id")->
-            join("resource_type", "resource_type.id", "resource.resource_type_id")->
-            where("resource_type.id", "=", $resource_type_id)->
-            where(DB::raw("YEAR({$this->sub_table}.effective_date)"), '=', $year);
-
-        $collection = $this->includeUnpublished($collection, $parameters);
-
-        return $collection->groupBy("month")->
-            orderBy("month")->
-            get()->
-            toArray();
-    }
-
-    /**
-     * Return the summary for all items for the resources in the requested resource
-     * type for a specific year and month
-     *
-     * @param integer $resource_type_id
-     * @param integer $year
-     * @param integer $month
-     * @param array $parameters
-     *
-     * @return array
-     */
-    public function monthSummary(
-        int $resource_type_id,
-        int $year,
-        int $month,
-        array $parameters
-    ): array
-    {
-        $collection = $this->selectRaw("
-                MONTH({$this->sub_table}.effective_date) as month, 
-                SUM({$this->sub_table}.actualised_total) AS total"
-            )->
-            join($this->sub_table, 'item.id', "{$this->sub_table}.item_id")->
-            join("resource", "resource.id", "item.resource_id")->
-            join("resource_type", "resource_type.id", "resource.resource_type_id")->
-            where("resource_type.id", "=", $resource_type_id)->
-            where(DB::raw("YEAR({$this->sub_table}.effective_date)"), '=', $year)->
-            where(DB::raw("MONTH({$this->sub_table}.effective_date)"), '=', $month);
-
-        $collection = $this->includeUnpublished($collection, $parameters);
-
-        return $collection->groupBy("month")->
-            orderBy("month")->
-            get()->
-            toArray();
-    }
-
-    /**
-     * Return the summary for all items for the resources in the requested resource
-     * type for a specific year
-     *
-     * @param integer $resource_type_id
-     * @param integer $year
-     * @param array $parameters
-     *
-     * @return array
-     */
-    public function yearSummary(
-        int $resource_type_id,
-        int $year,
-        array $parameters
-    ): array
-    {
-        $collection = $this->selectRaw("
-                YEAR({$this->sub_table}.effective_date) as year, 
-                SUM({$this->sub_table}.actualised_total) AS total"
-            )->
-            join($this->sub_table, 'item.id', "{$this->sub_table}.item_id")->
-            join("resource", "resource.id", "item.resource_id")->
-            join("resource_type", "resource_type.id", "resource.resource_type_id")->
-            where("resource_type.id", "=", $resource_type_id)->
-            where(DB::raw("YEAR({$this->sub_table}.effective_date)"), '=', $year);
-
-        $collection = $this->includeUnpublished($collection, $parameters);
-
-        return $collection->groupBy("year")->
-            orderBy("year")->
             get()->
             toArray();
     }
@@ -237,7 +94,7 @@ class AllocatedExpense extends Model implements ISummaryModel, ISummaryModelCate
                 category.id, 
                 category.name AS name, 
                 category.description AS description,
-                SUM({$this->sub_table}.actualised_total) AS total")->
+                SUM({$this->sub_table}.total) AS total")->
             join($this->sub_table, 'item.id', "{$this->sub_table}.item_id")->
             join("resource", "resource.id", "item.resource_id")->
             join("resource_type", "resource_type.id", "resource.resource_type_id")->
@@ -245,8 +102,6 @@ class AllocatedExpense extends Model implements ISummaryModel, ISummaryModelCate
             join("category", "category.id", "item_category.category_id")->
             where("category.resource_type_id", "=", $resource_type_id)->
             where("resource_type.id", "=", $resource_type_id);
-
-        $collection = $this->includeUnpublished($collection, $parameters);
 
         return $collection->groupBy("category.id")->
             orderBy("name")->
@@ -274,7 +129,7 @@ class AllocatedExpense extends Model implements ISummaryModel, ISummaryModelCate
                 category.id, 
                 category.name AS name, 
                 category.description, 
-                SUM({$this->sub_table}.actualised_total) AS total")->
+                SUM({$this->sub_table}.total) AS total")->
             join($this->sub_table, 'item.id', "{$this->sub_table}.item_id")->
             join("resource", "resource.id", "item.resource_id")->
             join("resource_type", "resource_type.id", "resource.resource_type_id")->
@@ -283,8 +138,6 @@ class AllocatedExpense extends Model implements ISummaryModel, ISummaryModelCate
             where("category.resource_type_id", "=", $resource_type_id)->
             where("resource_type.id", "=", $resource_type_id)->
             where("category.id", '=', $category_id);
-
-        $collection = $this->includeUnpublished($collection, $parameters);
 
         return $collection->groupBy("category.id")->
             orderBy("name")->
@@ -300,7 +153,6 @@ class AllocatedExpense extends Model implements ISummaryModel, ISummaryModelCate
      * @param int|null $month
      * @param array $parameters
      * @param array $search_parameters
-     * @param array $filter_parameters
      * @return array
      */
     public function filteredSummary(
@@ -310,12 +162,11 @@ class AllocatedExpense extends Model implements ISummaryModel, ISummaryModelCate
         int $year = null,
         int $month = null,
         array $parameters = [],
-        array $search_parameters = [],
-        array $filter_parameters = []
+        array $search_parameters = []
     ): array
     {
         $collection = $this->
-            selectRaw("SUM({$this->sub_table}.actualised_total) AS total")->
+            selectRaw("SUM({$this->sub_table}.total) AS total")->
             join($this->sub_table, 'item.id', "{$this->sub_table}.item_id")->
             join("resource", "resource.id", "item.resource_id")->
             join("resource_type", "resource_type.id", "resource.resource_type_id")->
@@ -331,26 +182,11 @@ class AllocatedExpense extends Model implements ISummaryModel, ISummaryModelCate
         if ($subcategory_id !== null) {
             $collection->where("sub_category.id", "=", $subcategory_id);
         }
-        if ($year !== null) {
-            $collection->whereRaw(DB::raw("YEAR({$this->sub_table}.effective_date) = {$year}"));
+        if (count($search_parameters) > 0) {
+            foreach ($search_parameters as $field => $search_term) {
+                $collection->where("{$this->sub_table}." . $field, 'LIKE', '%' . $search_term . '%');
+            }
         }
-        if ($month !== null) {
-            $collection->whereRaw(DB::raw("MONTH({$this->sub_table}.effective_date) = {$month}"));
-        }
-
-        $collection = ModelUtility::applySearch(
-            $collection,
-            $this->sub_table,
-            $search_parameters
-        );
-
-        $collection = ModelUtility::applyFiltering(
-            $collection,
-            $this->sub_table,
-            $filter_parameters
-        );
-
-        $collection = $this->includeUnpublished($collection, $parameters);
 
         return $collection->get()->
             toArray();
@@ -376,7 +212,7 @@ class AllocatedExpense extends Model implements ISummaryModel, ISummaryModelCate
                 sub_category.id, 
                 sub_category.name AS name, 
                 sub_category.description AS description, 
-                SUM({$this->sub_table}.actualised_total) AS total")->
+                SUM({$this->sub_table}.total) AS total")->
             join($this->sub_table, 'item.id', "{$this->sub_table}.item_id")->
             join("resource", "resource.id", "item.resource_id")->
             join("resource_type", "resource_type.id", "resource.resource_type_id")->
@@ -387,8 +223,6 @@ class AllocatedExpense extends Model implements ISummaryModel, ISummaryModelCate
             where("category.resource_type_id", "=", $resource_type_id)->
             where("resource_type.id", "=", $resource_type_id)->
             where("category.id", "=", $category_id);
-
-        $collection = $this->includeUnpublished($collection, $parameters);
 
         return $collection->groupBy("sub_category.id")->
             orderBy("name")->
@@ -418,7 +252,7 @@ class AllocatedExpense extends Model implements ISummaryModel, ISummaryModelCate
                 sub_category.id, 
                 sub_category.name AS name, 
                 sub_category.description AS description, 
-                SUM($this->sub_table.actualised_total) AS total")->
+                SUM($this->sub_table.total) AS total")->
             join($this->sub_table, 'item.id', "{$this->sub_table}.item_id")->
             join("resource", "resource.id", "item.resource_id")->
             join("resource_type", "resource_type.id", "resource.resource_type_id")->
@@ -431,34 +265,9 @@ class AllocatedExpense extends Model implements ISummaryModel, ISummaryModelCate
             where("category.id", "=", $category_id)->
             where('sub_category.id', '=', $subcategory_id);
 
-        $collection = $this->includeUnpublished($collection, $parameters);
-
         return $collection->groupBy("sub_category.id")->
             orderBy("name")->
             get()->
             toArray();
-    }
-
-    /**
-     * Work out if we should be hiding unpublished items, by default we don't show them
-     *
-     * @param $collection
-     * @param array $parameters
-     *
-     * @return Builder
-     */
-    private function includeUnpublished($collection, array $parameters): Builder
-    {
-        if (
-            array_key_exists('include-unpublished', $parameters) === false ||
-            $parameters['include-unpublished'] === false
-        ) {
-            $collection->where(function ($sql) {
-                $sql->whereNull('item_type_allocated_expense.publish_after')->
-                    orWhereRaw('item_type_allocated_expense.publish_after < NOW()');
-            });
-        }
-
-        return $collection;
     }
 }

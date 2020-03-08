@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace App\ResourceTypeItem\Summary;
 
-use App\Models\ResourceTypeItemType\Summary\AllocatedExpense as ItemModel;
+use App\Models\ResourceTypeItem\Summary\AllocatedExpense as ItemModel;
 use Illuminate\Database\Eloquent\Model;
 
 class AllocatedExpense extends AbstractItem

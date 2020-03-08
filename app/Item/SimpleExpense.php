@@ -4,7 +4,7 @@ declare(strict_types=1);
 namespace App\Item;
 
 use App\Interfaces\Item\IModel;
-use App\Models\ItemType\SimpleExpense as ItemModel;
+use App\Models\Item\SimpleExpense as ItemModel;
 use App\Models\Transformers\Transformer;
 use App\Validators\Fields\ItemType\SimpleExpense as ItemTypeSimpleExpenseValidator;
 use App\Validators\Fields\Validator;

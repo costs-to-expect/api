@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Models\ResourceTypeItemType\Summary;
+namespace App\Models\ResourceTypeItem\Summary;
 
 use App\Interfaces\ResourceTypeItemType\ISummaryModel;
 use Illuminate\Database\Eloquent\Model;

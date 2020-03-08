@@ -4,7 +4,7 @@ declare(strict_types=1);
 namespace App\Item\Summary;
 
 use App\Interfaces\Item\ISummaryModel\ISummaryModel;
-use App\Models\ItemType\Summary\SimpleItem as ItemModel;
+use App\Models\Item\Summary\SimpleItem as ItemModel;
 
 class SimpleItem extends AbstractItem
 {

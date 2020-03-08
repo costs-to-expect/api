@@ -4,7 +4,7 @@ declare(strict_types=1);
 namespace App\ResourceTypeItem;
 
 use App\Interfaces\ResourceTypeItem\IModel;
-use App\Models\ResourceTypeItemType\SimpleItem as ItemModel;
+use App\Models\ResourceTypeItem\SimpleItem as ItemModel;
 use App\Models\Transformers\Transformer;
 
 /**

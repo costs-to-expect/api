@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace App\ResourceTypeItem\Summary;
 
-use App\Models\ResourceTypeItemType\Summary\SimpleExpense as ItemModel;
+use App\Models\ResourceTypeItem\Summary\SimpleExpense as ItemModel;
 use Illuminate\Database\Eloquent\Model;
 
 class SimpleExpense extends AbstractItem
