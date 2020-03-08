@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace App\Models\ResourceTypeItemType\Summary;
 
+use App\Interfaces\ResourceTypeItemType\ISummaryModel;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Query\Builder as QueryBuilder;
 
@@ -14,7 +15,7 @@ use Illuminate\Database\Query\Builder as QueryBuilder;
  * @copyright Dean Blackborough 2018-2020
  * @license https://github.com/costs-to-expect/api/blob/master/LICENSE
  */
-class SimpleItem extends Model
+class SimpleItem extends Model implements ISummaryModel
 {
     protected $guarded = ['id', 'created_at', 'updated_at'];
     protected $table = 'item';

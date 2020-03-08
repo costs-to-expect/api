@@ -3,9 +3,10 @@ declare(strict_types=1);
 
 namespace App\Models\ResourceTypeItemType\Summary;
 
+use App\Interfaces\ResourceTypeItem\ISummaryModelCategories;
+use App\Interfaces\ResourceTypeItemType\ISummaryModel;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Query\Builder as QueryBuilder;
-use Illuminate\Support\Facades\DB;
 
 /**
  * Item model when fetching data by resource type
@@ -15,7 +16,7 @@ use Illuminate\Support\Facades\DB;
  * @copyright Dean Blackborough 2018-2020
  * @license https://github.com/costs-to-expect/api/blob/master/LICENSE
  */
-class SimpleExpense extends Model
+class SimpleExpense extends Model implements ISummaryModel, ISummaryModelCategories
 {
     protected $guarded = ['id', 'created_at', 'updated_at'];
     protected $table = 'item';

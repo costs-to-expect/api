@@ -3,8 +3,8 @@ declare(strict_types=1);
 
 namespace App\Item\Summary;
 
+use App\Interfaces\Item\ISummaryModel\ISummaryModel;
 use App\Models\ItemType\Summary\SimpleExpense as ItemModel;
-use Illuminate\Database\Eloquent\Model;
 
 class SimpleExpense extends AbstractItem
 {
@@ -32,9 +32,9 @@ class SimpleExpense extends AbstractItem
     /**
      * Return the model instance for the item type
      *
-     * @return Model
+     * @return ISummaryModel
      */
-    public function model(): Model
+    public function model(): ISummaryModel
     {
         return new ItemModel;
     }

@@ -3,6 +3,8 @@ declare(strict_types=1);
 
 namespace App\Models\ItemType\Summary;
 
+use App\Interfaces\Item\ISummaryModelCategories;
+use App\Interfaces\Item\ISummaryModel\ISummaryModel;
 use App\Utilities\Model as ModelUtility;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
@@ -15,7 +17,7 @@ use Illuminate\Support\Facades\DB;
  * @copyright Dean Blackborough 2018-2020
  * @license https://github.com/costs-to-expect/api/blob/master/LICENSE
  */
-class AllocatedExpense extends Model
+class AllocatedExpense extends Model implements ISummaryModel, ISummaryModelCategories
 {
     protected $guarded = ['id', 'actualised_total', 'created_at', 'updated_at'];
     protected $table = 'item';

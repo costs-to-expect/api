@@ -5,6 +5,11 @@ namespace App\Interfaces\Item;
 
 use Illuminate\Database\Eloquent\Model;
 
+/**
+ * @author Dean Blackborough <dean@g3d-development.com>
+ * @copyright Dean Blackborough 2018-2020
+ * @license https://github.com/costs-to-expect/api/blob/master/LICENSE
+ */
 interface IModel
 {
     /**
