@@ -3,9 +3,8 @@ declare(strict_types=1);
 
 namespace App\ResourceTypeItem;
 
-use App\Interfaces\ResourceTypeItemModel;
+use App\Interfaces\ResourceTypeItem\IModel;
 use App\Models\Transformers\Transformer;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Config;
 
 /**
@@ -71,9 +70,9 @@ abstract class AbstractItem
     /**
      * Return the model instance for resource type item type
      *
-     * @return ResourceTypeItemModel
+     * @return IModel
      */
-    abstract public function model(): ResourceTypeItemModel;
+    abstract public function model(): IModel;
 
     /**
      * Return the search parameters specific to the item type, these will be

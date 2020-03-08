@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace App\Item;
 
+use App\Interfaces\Item\IModel;
 use App\Models\ItemType\AllocatedExpense as ItemModel;
 use App\Models\Transformers\Transformer;
 use App\Validators\Fields\ItemType\AllocatedExpense as ItemTypeAllocatedExpenseValidator;
@@ -102,9 +103,9 @@ class AllocatedExpense extends AbstractItem
     /**
      * Return the model instance for the item type
      *
-     * @return \App\Interfaces\ItemModel
+     * @return IModel
      */
-    public function model(): \App\Interfaces\ItemModel
+    public function model(): IModel
     {
         return new ItemModel();
     }

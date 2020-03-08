@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace App\Models\ResourceTypeItemType;
 
-use App\Interfaces\ResourceTypeItemModel;
+use App\Interfaces\ResourceTypeItem\IModel;
 use App\Utilities\General;
 use App\Utilities\Model as ModelUtility;
 use Illuminate\Database\Eloquent\Builder;
@@ -19,7 +19,7 @@ use Illuminate\Support\Facades\DB;
  * @copyright Dean Blackborough 2018-2020
  * @license https://github.com/costs-to-expect/api/blob/master/LICENSE
  */
-class AllocatedExpense extends Model implements ResourceTypeItemModel
+class AllocatedExpense extends Model implements IModel
 {
     protected $table = 'item';
 

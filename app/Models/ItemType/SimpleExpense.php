@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace App\Models\ItemType;
 
-use App\Interfaces\ItemModel;
+use App\Interfaces\Item\IModel;
 use App\Utilities\General;
 use App\Utilities\Model as ModelUtility;
 use Illuminate\Database\Query\Builder as QueryBuilder;
@@ -17,7 +17,7 @@ use Illuminate\Database\Eloquent\Model;
  * @copyright Dean Blackborough 2018-2020
  * @license https://github.com/costs-to-expect/api/blob/master/LICENSE
  */
-class SimpleExpense extends Model implements ItemModel
+class SimpleExpense extends Model implements IModel
 {
     protected $table = 'item_type_simple_expense';
 
