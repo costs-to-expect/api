@@ -73,7 +73,7 @@ class ResourceController extends Controller
         );
 
         $get = Get::init()->
-            setParameters('api.resource.summary-parameters.collection')->
+            setParameters('api.resource.summary-parameters')->
             setDescription('route-descriptions.summary-resource-GET-index')->
             setAuthenticationStatus($permissions['view'])->
             option();

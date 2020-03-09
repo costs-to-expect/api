@@ -16,7 +16,7 @@ class SimpleExpense extends AbstractItem
      */
     public function collectionParametersConfig(): string
     {
-        return 'api.resource-type-item-type-simple-expense.summary-parameters.collection';
+        return 'api.resource-type-item-type-simple-expense.summary-parameters';
     }
 
     /**

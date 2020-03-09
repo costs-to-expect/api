@@ -16,7 +16,7 @@ class SimpleItem extends AbstractItem
      */
     public function collectionParametersConfig(): string
     {
-        return 'api.item-type-simple-item.summary-parameters.collection';
+        return 'api.item-type-simple-item.summary-parameters';
     }
 
     /**
