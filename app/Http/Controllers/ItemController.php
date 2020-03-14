@@ -95,9 +95,9 @@ class ItemController extends Controller
             $pagination['offset'],
             $pagination['limit'],
             $parameters,
-            $sort_parameters,
             $search_parameters,
-            $filter_parameters
+            $filter_parameters,
+            $sort_parameters
         );
 
         $headers = new Header();
