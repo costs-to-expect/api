@@ -2,6 +2,14 @@
 
 The complete changelog for the Costs to Expect REST API, our changelog follows the format defined at https://keepachangelog.com/en/1.0.0/
 
+## [v2.09.1] - 2020-02-14
+### Changed
+- We have renamed the existing Interfaces, more straightforward names.
+- We have added additional Interfaces interfaces for the summary models.
+- We have refactored several model classes to again, simplify the naming.
+- We have corrected multiple summary config files, unnecessary structure.
+- We have unified the parameters for related item methods.
+
 ## [v2.09.0] - 2020-03-05
 ### Added
 - We have added range filtering to the `items` collection; initially, we have added support for filtering for the `effective_date` of `allocated expense` items.
