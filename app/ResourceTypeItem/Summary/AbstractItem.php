@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace App\ResourceTypeItem\Summary;
 
-use Illuminate\Database\Eloquent\Model;
+use App\Interfaces\ResourceTypeItem\ISummaryModel;
 use Illuminate\Support\Facades\Config;
 
 /**
@@ -57,9 +57,9 @@ abstract class AbstractItem
     /**
      * Return the model instance for the item type
      *
-     * @return Model
+     * @return ISummaryModel
      */
-    abstract public function model(): Model;
+    abstract public function model(): ISummaryModel;
 
     /**
      * Return the search parameters specific to the item type, these will be

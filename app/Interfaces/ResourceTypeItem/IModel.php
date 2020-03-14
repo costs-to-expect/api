@@ -18,9 +18,9 @@ interface IModel
      * @param int $offset
      * @param int $limit
      * @param array $parameters
-     * @param array $sort_parameters
      * @param array $search_parameters
      * @param array $filter_parameters
+     * @param array $sort_parameters
      *
      * @return array
      */
@@ -29,9 +29,9 @@ interface IModel
         int $offset = 0,
         int $limit = 10,
         array $parameters = [],
-        array $sort_parameters = [],
         array $search_parameters = [],
-        array $filter_parameters = []
+        array $filter_parameters = [],
+        array $sort_parameters = []
     ): array;
 
     /**

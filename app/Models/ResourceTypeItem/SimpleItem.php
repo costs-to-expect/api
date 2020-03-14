@@ -69,9 +69,9 @@ class SimpleItem extends Model implements IModel
      * @param int $offset
      * @param int $limit
      * @param array $parameters_collection
-     * @param array $sort_parameters
      * @param array $search_parameters
      * @param array $filter_parameters
+     * @param array $sort_parameters
      *
      * @return array
      */
@@ -80,9 +80,9 @@ class SimpleItem extends Model implements IModel
         int $offset = 0,
         int $limit = 10,
         array $parameters_collection = [],
-        array $sort_parameters = [],
         array $search_parameters = [],
-        array $filter_parameters = []
+        array $filter_parameters = [],
+        array $sort_parameters = []
     ): array
     {
         $select_fields = [

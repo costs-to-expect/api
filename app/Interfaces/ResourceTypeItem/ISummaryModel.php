@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Interfaces\ResourceTypeItemType;
+namespace App\Interfaces\ResourceTypeItem;
 
 /**
  * @author Dean Blackborough <dean@g3d-development.com>

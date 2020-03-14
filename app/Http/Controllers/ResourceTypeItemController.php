@@ -78,9 +78,9 @@ class ResourceTypeItemController extends Controller
             $pagination['offset'],
             $pagination['limit'],
             $collection_parameters,
-            $sort_fields,
             $search_parameters,
-            $filter_parameters
+            $filter_parameters,
+            $sort_fields
         );
 
         $headers = new Header();

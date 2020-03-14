@@ -4,7 +4,7 @@ declare(strict_types=1);
 namespace App\Models\ResourceTypeItem\Summary;
 
 use App\Interfaces\ResourceTypeItem\ISummaryModelCategories;
-use App\Interfaces\ResourceTypeItemType\ISummaryModel;
+use App\Interfaces\ResourceTypeItem\ISummaryModel;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Query\Builder as QueryBuilder;
 

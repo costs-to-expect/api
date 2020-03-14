@@ -3,8 +3,8 @@ declare(strict_types=1);
 
 namespace App\ResourceTypeItem\Summary;
 
+use App\Interfaces\ResourceTypeItem\ISummaryModel;
 use App\Models\ResourceTypeItem\Summary\SimpleItem as ItemModel;
-use Illuminate\Database\Eloquent\Model;
 
 class SimpleItem extends AbstractItem
 {
@@ -32,9 +32,9 @@ class SimpleItem extends AbstractItem
     /**
      * Return the model instance for the item type
      *
-     * @return Model
+     * @return ISummaryModel
      */
-    public function model(): Model
+    public function model(): ISummaryModel
     {
         return new ItemModel;
     }
