@@ -23,7 +23,9 @@ class Header
 
     public function __construct()
     {
-        $this->headers = [];
+        $this->headers = [
+            'Content-Language' => app()->getLocale()
+        ];
     }
 
     /**
@@ -42,14 +44,17 @@ class Header
         int $total_count
     ): Header
     {
-        $this->headers = [
-            'X-Count' => $count,
-            'X-Total-Count' => $total_count,
-            'X-Offset' => $pagination['offset'],
-            'X-Limit' => $pagination['limit'],
-            'X-Link-Previous' => $pagination['links']['previous'],
-            'X-Link-Next' => $pagination['links']['next']
-        ];
+        $this->headers = array_merge(
+            $this->headers,
+            [
+                'X-Count' => $count,
+                'X-Total-Count' => $total_count,
+                'X-Offset' => $pagination['offset'],
+                'X-Limit' => $pagination['limit'],
+                'X-Link-Previous' => $pagination['links']['previous'],
+                'X-Link-Next' => $pagination['links']['next']
+            ]
+        );
 
         return $this;
     }
@@ -61,8 +66,13 @@ class Header
      */
     public function item(): Header
     {
-        $this->add('X-Total-Count', 1);
-        $this->add('X-Count', 1);
+        $this->headers = array_merge(
+            $this->headers,
+            [
+                'X-Total-Count' => 1,
+                'X-Count' => 1
+            ]
+        );
 
         return $this;
     }

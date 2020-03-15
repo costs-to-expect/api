@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Utilities\Header;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Route;
@@ -47,6 +48,8 @@ class IndexController extends Controller
 
         ksort($routes_to_display);
 
+        $headers = new Header();
+
         return response()->json(
             [
                 'api' => [
@@ -58,7 +61,8 @@ class IndexController extends Controller
                 ],
                 'routes' => $routes_to_display
             ],
-            200
+            200,
+            $headers->headers()
         );
     }
 
