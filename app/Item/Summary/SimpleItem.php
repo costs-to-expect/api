@@ -3,8 +3,8 @@ declare(strict_types=1);
 
 namespace App\Item\Summary;
 
-use App\Models\ItemType\Summary\SimpleItem as ItemModel;
-use Illuminate\Database\Eloquent\Model;
+use App\Interfaces\Item\ISummaryModel\ISummaryModel;
+use App\Models\Item\Summary\SimpleItem as ItemModel;
 
 class SimpleItem extends AbstractItem
 {
@@ -16,7 +16,7 @@ class SimpleItem extends AbstractItem
      */
     public function collectionParametersConfig(): string
     {
-        return 'api.item-type-simple-item.summary-parameters.collection';
+        return 'api.item-type-simple-item.summary-parameters';
     }
 
     /**
@@ -32,9 +32,9 @@ class SimpleItem extends AbstractItem
     /**
      * Return the model instance for the item type
      *
-     * @return Model
+     * @return ISummaryModel
      */
-    public function model(): Model
+    public function model(): ISummaryModel
     {
         return new ItemModel;
     }

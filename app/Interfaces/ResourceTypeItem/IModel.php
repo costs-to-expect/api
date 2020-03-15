@@ -1,9 +1,14 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Interfaces;
+namespace App\Interfaces\ResourceTypeItem;
 
-interface ResourceTypeItemModel
+/**
+ * @author Dean Blackborough <dean@g3d-development.com>
+ * @copyright Dean Blackborough 2018-2020
+ * @license https://github.com/costs-to-expect/api/blob/master/LICENSE
+ */
+interface IModel
 {
     /**
      * Return an array of the item results based on the requested
@@ -13,9 +18,9 @@ interface ResourceTypeItemModel
      * @param int $offset
      * @param int $limit
      * @param array $parameters
-     * @param array $sort_parameters
      * @param array $search_parameters
      * @param array $filter_parameters
+     * @param array $sort_parameters
      *
      * @return array
      */
@@ -24,9 +29,9 @@ interface ResourceTypeItemModel
         int $offset = 0,
         int $limit = 10,
         array $parameters = [],
-        array $sort_parameters = [],
         array $search_parameters = [],
-        array $filter_parameters = []
+        array $filter_parameters = [],
+        array $sort_parameters = []
     ): array;
 
     /**

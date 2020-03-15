@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace App\Item;
 
-use App\Interfaces\ItemModel;
+use App\Interfaces\Item\IModel;
 use App\Models\Transformers\Transformer;
 use App\Validators\Fields\Validator;
 use Illuminate\Database\Eloquent\Model;
@@ -73,9 +73,9 @@ abstract class AbstractItem
     /**
      * Return the model instance for the item type
      *
-     * @return ItemModel
+     * @return IModel
      */
-    abstract public function model(): ItemModel;
+    abstract public function model(): IModel;
 
     /**
      * Return the fields config string specific to the item type

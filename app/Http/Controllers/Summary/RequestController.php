@@ -28,7 +28,7 @@ class RequestController extends Controller
      */
     public function accessLog(): JsonResponse
     {
-        $this->collection_parameters = Parameters::fetch(array_keys(Config::get('api.request-access-log.summary-parameters.collection')));
+        $this->collection_parameters = Parameters::fetch(array_keys(Config::get('api.request-access-log.summary-parameters')));
 
         $request_data = (new RequestLog())->monthlyRequests($this->collection_parameters);
 

@@ -51,7 +51,7 @@ class ResourceTypeController extends Controller
     public function optionsIndex(): JsonResponse
     {
         $get = Get::init()->
-            setParameters('api.resource-type.summary-parameters.collection')->
+            setParameters('api.resource-type.summary-parameters')->
             setDescription('route-descriptions.summary-resource-type-GET-index')->
             setAuthenticationStatus(($this->user_id !== null) ? true : false)->
             option();

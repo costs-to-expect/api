@@ -3,7 +3,8 @@ declare(strict_types=1);
 
 namespace App\Item;
 
-use App\Models\ItemType\SimpleExpense as ItemModel;
+use App\Interfaces\Item\IModel;
+use App\Models\Item\SimpleExpense as ItemModel;
 use App\Models\Transformers\Transformer;
 use App\Validators\Fields\ItemType\SimpleExpense as ItemTypeSimpleExpenseValidator;
 use App\Validators\Fields\Validator;
@@ -66,9 +67,9 @@ class SimpleExpense extends AbstractItem
     /**
      * Return the model instance for the item type
      *
-     * @return \App\Interfaces\ItemModel
+     * @return IModel
      */
-    public function model(): \App\Interfaces\ItemModel
+    public function model(): IModel
     {
         return new ItemModel();
     }

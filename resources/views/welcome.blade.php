@@ -211,6 +211,11 @@
                         <li>We have renamed the data methods in the `Option` subclasses, the conditional prefix is confusing.</li>
                         <li>We have added an `interface` for the item model classes.</li>
                         <li>We have added an `interface` for the resource type item model classes.</li>
+                        <li>We have renamed the existing Interfaces, more straightforward names.</li>
+                        <li>We have added additional Interfaces interfaces for the summary models.</li>
+                        <li>We have refactored several model classes to again, simplify the naming.</li>
+                        <li>We have corrected multiple summary config files, unnecessary structure.</li>
+                        <li>We have unified the parameters for related item methods.</li>
                     </ul>
 
                     <h3>Fixed</h3>

@@ -1,95 +1,43 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Models\ResourceTypeItemType\Summary;
+namespace App\Models\Item\Summary;
 
+use App\Interfaces\Item\ISummaryModelCategories;
+use App\Interfaces\Item\ISummaryModel\ISummaryModel;
+use App\Utilities\Model as ModelUtility;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Query\Builder as QueryBuilder;
-use Illuminate\Support\Facades\DB;
 
 /**
- * Item model when fetching data by resource type
- *
  * @mixin QueryBuilder
  * @author Dean Blackborough <dean@g3d-development.com>
  * @copyright Dean Blackborough 2018-2020
  * @license https://github.com/costs-to-expect/api/blob/master/LICENSE
  */
-class SimpleExpense extends Model
+class SimpleExpense extends Model implements ISummaryModel, ISummaryModelCategories
 {
     protected $guarded = ['id', 'created_at', 'updated_at'];
     protected $table = 'item';
     protected $sub_table = 'item_type_simple_expense';
 
     /**
-     * Return the summary for all items for the resources in the requested resource type
+     * Return the summary of items, grouped by category
      *
      * @param int $resource_type_id
-     * @param array $parameters
-     *
-     * @return array
-     */
-    public function summary(
-        int $resource_type_id,
-        array $parameters
-    ): array
-    {
-        $collection = $this->selectRaw("sum({$this->sub_table}.total) AS total")->
-            join($this->sub_table, 'item.id', "{$this->sub_table}.item_id")->
-            join('resource', 'item.resource_id', 'resource.id')->
-            join('resource_type', 'resource.resource_type_id', 'resource_type.id')->
-            where('resource_type.id', '=', $resource_type_id);
-
-        return $collection->
-            get()->
-            toArray();
-    }
-
-    /**
-     * Return the summary for all items for the resources in the requested resource
-     * type grouped by resource
-     *
-     * @param int $resource_type_id
-     * @param array $parameters
-     *
-     * @return array
-     */
-    public function resourcesSummary(
-        int $resource_type_id,
-        array $parameters
-    ): array
-    {
-        $collection = $this->selectRaw("
-                resource.id AS id, 
-                resource.name AS `name`, 
-                SUM({$this->sub_table}.total) AS total"
-            )->
-            join($this->sub_table, 'item.id', "{$this->sub_table}.item_id")->
-            join('resource', 'item.resource_id', 'resource.id')->
-            join('resource_type', 'resource.resource_type_id', 'resource_type.id')->
-            where('resource_type.id', '=', $resource_type_id);
-
-        return $collection->groupBy('resource.id')->
-            orderBy('name')->
-            get()->
-            toArray();
-    }
-
-    /**
-     * Return the summary for all items for the resources in the requested resource
-     * type grouped by category
-     *
-     * @param integer $resource_type_id
+     * @param int $resource_id
      * @param array $parameters
      *
      * @return array
      */
     public function categoriesSummary(
         int $resource_type_id,
-        array $parameters
+        int $resource_id,
+        array $parameters = []
     ): array
     {
-        $collection = $this->selectRaw("
+        $collection = $this->
+            selectRaw("
                 category.id, 
                 category.name AS name, 
                 category.description AS description,
@@ -100,35 +48,41 @@ class SimpleExpense extends Model
             join("item_category", "item_category.item_id", "item.id")->
             join("category", "category.id", "item_category.category_id")->
             where("category.resource_type_id", "=", $resource_type_id)->
-            where("resource_type.id", "=", $resource_type_id);
+            where("resource_type.id", "=", $resource_type_id)->
+            where("resource.id", "=", $resource_id);
 
-        return $collection->groupBy("category.id")->
+        return $collection->groupBy("item_category.category_id")->
             orderBy("name")->
             get()->
             toArray();
     }
 
     /**
-     * Return the summary for all items for the resources in the requested resource
-     * type for the requested category
+     * Return the summary for a specific category
      *
-     * @param integer $resource_type_id
-     * @param integer $category_id
+     * @param int $resource_type_id
+     * @param int $resource_id
+     * @param int $category_id
      * @param array $parameters
      *
      * @return array
      */
     public function categorySummary(
         int $resource_type_id,
+        int $resource_id,
         int $category_id,
-        array $parameters
+        array $parameters = []
     ): array
     {
-        $collection = $this->selectRaw("
+        $collection = $this->
+            selectRaw("
                 category.id, 
                 category.name AS name, 
-                category.description, 
-                SUM({$this->sub_table}.total) AS total")->
+                category.description AS description, 
+                SUM({$this->sub_table}.total) AS total, 
+                COUNT({$this->sub_table}.item_id) AS total_count,
+                MAX({$this->sub_table}.created_at) AS last_updated
+            ")->
             join($this->sub_table, 'item.id', "{$this->sub_table}.item_id")->
             join("resource", "resource.id", "item.resource_id")->
             join("resource_type", "resource_type.id", "resource.resource_type_id")->
@@ -136,36 +90,47 @@ class SimpleExpense extends Model
             join("category", "category.id", "item_category.category_id")->
             where("category.resource_type_id", "=", $resource_type_id)->
             where("resource_type.id", "=", $resource_type_id)->
-            where("category.id", '=', $category_id);
+            where("resource.id", "=", $resource_id)->
+            where("category.id", "=", $category_id);
 
-        return $collection->groupBy("category.id")->
+        return $collection->groupBy("item_category.category_id")->
             orderBy("name")->
             get()->
             toArray();
     }
 
     /**
+     * Return a filter summary
+     *
      * @param int $resource_type_id
+     * @param int $resource_id
      * @param int|null $category_id
      * @param int|null $subcategory_id
      * @param int|null $year
      * @param int|null $month
      * @param array $parameters
      * @param array $search_parameters
+     * @param array $filter_parameters
+     *
      * @return array
      */
     public function filteredSummary(
         int $resource_type_id,
+        int $resource_id,
         int $category_id = null,
         int $subcategory_id = null,
         int $year = null,
         int $month = null,
         array $parameters = [],
-        array $search_parameters = []
+        array $search_parameters = [],
+        array $filter_parameters = []
     ): array
     {
         $collection = $this->
-            selectRaw("SUM({$this->sub_table}.total) AS total")->
+            selectRaw("
+                SUM({$this->sub_table}.total) AS total, 
+                COUNT({$this->sub_table}.item_id) AS total_count
+            ")->
             join($this->sub_table, 'item.id', "{$this->sub_table}.item_id")->
             join("resource", "resource.id", "item.resource_id")->
             join("resource_type", "resource_type.id", "resource.resource_type_id")->
@@ -173,7 +138,8 @@ class SimpleExpense extends Model
             join("item_sub_category", "item_sub_category.item_category_id", "item_category.id")->
             join("category", "category.id", "item_category.category_id")->
             join("sub_category", "sub_category.id", "item_sub_category.sub_category_id")->
-            where("resource_type.id", "=", $resource_type_id);
+            where("resource_type.id", "=", $resource_type_id)->
+            where("resource.id", "=", $resource_id);
 
         if ($category_id !== null) {
             $collection->where("category.id", "=", $category_id);
@@ -181,21 +147,27 @@ class SimpleExpense extends Model
         if ($subcategory_id !== null) {
             $collection->where("sub_category.id", "=", $subcategory_id);
         }
-        if (count($search_parameters) > 0) {
-            foreach ($search_parameters as $field => $search_term) {
-                $collection->where("{$this->sub_table}." . $field, 'LIKE', '%' . $search_term . '%');
-            }
-        }
+
+        $collection = ModelUtility::applySearch(
+            $collection,
+            $this->sub_table,
+            $search_parameters
+        );
+        $collection = ModelUtility::applyFiltering(
+            $collection,
+            $this->sub_table,
+            $filter_parameters
+        );
 
         return $collection->get()->
             toArray();
     }
 
     /**
-     * Return the summary for all items for the resources in the requested resource
-     * type and category grouped by subcategory
+     * Subcategories summary
      *
      * @param int $resource_type_id
+     * @param int $resource_id
      * @param int $category_id
      * @param array $parameters
      *
@@ -203,14 +175,16 @@ class SimpleExpense extends Model
      */
     public function subcategoriesSummary(
         int $resource_type_id,
+        int $resource_id,
         int $category_id,
-        array $parameters
+        array $parameters = []
     ): array
     {
-        $collection = $this->selectRaw("
+        $collection = $this->
+            selectRaw("
                 sub_category.id, 
                 sub_category.name AS name, 
-                sub_category.description AS description, 
+                sub_category.description AS description,
                 SUM({$this->sub_table}.total) AS total")->
             join($this->sub_table, 'item.id', "{$this->sub_table}.item_id")->
             join("resource", "resource.id", "item.resource_id")->
@@ -219,21 +193,21 @@ class SimpleExpense extends Model
             join("item_sub_category", "item_sub_category.item_category_id", "item_category.id")->
             join("category", "category.id", "item_category.category_id")->
             join("sub_category", "sub_category.id", "item_sub_category.sub_category_id")->
-            where("category.resource_type_id", "=", $resource_type_id)->
             where("resource_type.id", "=", $resource_type_id)->
+            where("resource.id", "=", $resource_id)->
             where("category.id", "=", $category_id);
 
-        return $collection->groupBy("sub_category.id")->
+        return $collection->groupBy("item_sub_category.sub_category_id")->
             orderBy("name")->
             get()->
             toArray();
     }
 
     /**
-     * Return the summary for all items for the resources in the requested resource
-     * type and category and subcategory
+     * Subcategory summary
      *
      * @param int $resource_type_id
+     * @param int $resource_id
      * @param int $category_id
      * @param int $subcategory_id
      * @param array $parameters
@@ -242,16 +216,21 @@ class SimpleExpense extends Model
      */
     public function subcategorySummary(
         int $resource_type_id,
+        int $resource_id,
         int $category_id,
         int $subcategory_id,
-        array $parameters
+        array $parameters = []
     ): array
     {
-        $collection = $this->selectRaw("
+        $collection = $this->
+            selectRaw("
                 sub_category.id, 
                 sub_category.name AS name, 
-                sub_category.description AS description, 
-                SUM($this->sub_table.total) AS total")->
+                sub_category.description AS description,
+                SUM({$this->sub_table}.total) AS total, 
+                COUNT({$this->sub_table}.item_id) AS total_count,
+                MAX({$this->sub_table}.created_at) AS last_updated
+            ")->
             join($this->sub_table, 'item.id', "{$this->sub_table}.item_id")->
             join("resource", "resource.id", "item.resource_id")->
             join("resource_type", "resource_type.id", "resource.resource_type_id")->
@@ -259,14 +238,43 @@ class SimpleExpense extends Model
             join("item_sub_category", "item_sub_category.item_category_id", "item_category.id")->
             join("category", "category.id", "item_category.category_id")->
             join("sub_category", "sub_category.id", "item_sub_category.sub_category_id")->
-            where("category.resource_type_id", "=", $resource_type_id)->
             where("resource_type.id", "=", $resource_type_id)->
+            where("resource.id", "=", $resource_id)->
             where("category.id", "=", $category_id)->
-            where('sub_category.id', '=', $subcategory_id);
+            where("sub_category.id", "=", $subcategory_id);
 
-        return $collection->groupBy("sub_category.id")->
+        return $collection->groupBy("item_sub_category.sub_category_id")->
             orderBy("name")->
             get()->
             toArray();
+    }
+
+    /**
+     * Return the total summary for all items
+     *
+     * @param int $resource_type_id
+     * @param int $resource_id
+     * @param array $parameters
+     *
+     * @return array
+     */
+    public function summary(
+        int $resource_type_id,
+        int $resource_id,
+        array $parameters = []
+    ): array
+    {
+        $collection = $this->selectRaw("
+                SUM({$this->sub_table}.total) AS total, 
+                COUNT({$this->sub_table}.item_id) AS total_count,
+                MAX({$this->sub_table}.created_at) AS last_updated
+            ")->
+            join($this->sub_table, 'item.id', "{$this->sub_table}.item_id")->
+            join('resource', 'item.resource_id', 'resource.id')->
+            where('resource_id', '=', $resource_id)->
+            where('resource.resource_type_id', '=', $resource_type_id);
+
+        return $collection->get()
+            ->toArray();
     }
 }

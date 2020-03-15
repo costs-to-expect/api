@@ -3,10 +3,9 @@ declare(strict_types=1);
 
 namespace App\ResourceTypeItem;
 
-use App\Interfaces\ResourceTypeItemModel;
-use App\Models\ResourceTypeItemType\SimpleItem as ItemModel;
+use App\Interfaces\ResourceTypeItem\IModel;
+use App\Models\ResourceTypeItem\SimpleItem as ItemModel;
 use App\Models\Transformers\Transformer;
-use Illuminate\Database\Eloquent\Model;
 
 /**
  * The Interface for dealing with simple item, everything should be
@@ -39,9 +38,9 @@ class SimpleItem extends AbstractItem
     /**
      * Return the model instance for resource type item type
      *
-     * @return ResourceTypeItemModel
+     * @return IModel
      */
-    public function model(): ResourceTypeItemModel
+    public function model(): IModel
     {
         return new ItemModel();
     }

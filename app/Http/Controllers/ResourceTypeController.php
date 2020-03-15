@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Models\ItemType;
 use App\Models\PermittedUser;
-use App\Models\ResourceTypeAccess;
 use App\Models\Resource;
 use App\Models\ResourceTypeItemType;
 use App\Option\Delete;

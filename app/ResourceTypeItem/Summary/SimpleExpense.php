@@ -3,8 +3,8 @@ declare(strict_types=1);
 
 namespace App\ResourceTypeItem\Summary;
 
-use App\Models\ResourceTypeItemType\Summary\SimpleExpense as ItemModel;
-use Illuminate\Database\Eloquent\Model;
+use App\Interfaces\ResourceTypeItem\ISummaryModel;
+use App\Models\ResourceTypeItem\Summary\SimpleExpense as ItemModel;
 
 class SimpleExpense extends AbstractItem
 {
@@ -16,7 +16,7 @@ class SimpleExpense extends AbstractItem
      */
     public function collectionParametersConfig(): string
     {
-        return 'api.resource-type-item-type-simple-expense.summary-parameters.collection';
+        return 'api.resource-type-item-type-simple-expense.summary-parameters';
     }
 
     /**
@@ -32,9 +32,9 @@ class SimpleExpense extends AbstractItem
     /**
      * Return the model instance for the item type
      *
-     * @return Model
+     * @return ISummaryModel
      */
-    public function model(): Model
+    public function model(): ISummaryModel
     {
         return new ItemModel;
     }

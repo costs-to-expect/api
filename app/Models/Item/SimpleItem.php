@@ -1,9 +1,9 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Models\ItemType;
+namespace App\Models\Item;
 
-use App\Interfaces\ItemModel;
+use App\Interfaces\Item\IModel;
 use App\Utilities\Model as ModelUtility;
 use Illuminate\Database\Query\Builder as QueryBuilder;
 use Illuminate\Database\Eloquent\Model;
@@ -16,7 +16,7 @@ use Illuminate\Database\Eloquent\Model;
  * @copyright Dean Blackborough 2018-2020
  * @license https://github.com/costs-to-expect/api/blob/master/LICENSE
  */
-class SimpleItem extends Model implements ItemModel
+class SimpleItem extends Model implements IModel
 {
     protected $table = 'item_type_simple_item';
 
@@ -134,9 +134,9 @@ class SimpleItem extends Model implements ItemModel
      * @param integer $offset
      * @param integer $limit
      * @param array $parameters
-     * @param array $sort_parameters
      * @param array $search_parameters
      * @param array $filter_parameters
+     * @param array $sort_parameters
      *
      * @return array
      */
@@ -146,9 +146,9 @@ class SimpleItem extends Model implements ItemModel
         int $offset = 0,
         int $limit = 10,
         array $parameters = [],
-        array $sort_parameters = [],
         array $search_parameters = [],
-        array $filter_parameters = []
+        array $filter_parameters = [],
+        array $sort_parameters = []
     ): array
     {
         $select_fields = [

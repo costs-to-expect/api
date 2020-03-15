@@ -1,9 +1,9 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Models\ResourceTypeItemType;
+namespace App\Models\ResourceTypeItem;
 
-use App\Interfaces\ResourceTypeItemModel;
+use App\Interfaces\ResourceTypeItem\IModel;
 use App\Utilities\Model as ModelUtility;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Query\Builder as QueryBuilder;
@@ -16,7 +16,7 @@ use Illuminate\Database\Query\Builder as QueryBuilder;
  * @copyright Dean Blackborough 2018-2020
  * @license https://github.com/costs-to-expect/api/blob/master/LICENSE
  */
-class SimpleItem extends Model implements ResourceTypeItemModel
+class SimpleItem extends Model implements IModel
 {
     protected $table = 'item';
 
@@ -69,9 +69,9 @@ class SimpleItem extends Model implements ResourceTypeItemModel
      * @param int $offset
      * @param int $limit
      * @param array $parameters_collection
-     * @param array $sort_parameters
      * @param array $search_parameters
      * @param array $filter_parameters
+     * @param array $sort_parameters
      *
      * @return array
      */
@@ -80,9 +80,9 @@ class SimpleItem extends Model implements ResourceTypeItemModel
         int $offset = 0,
         int $limit = 10,
         array $parameters_collection = [],
-        array $sort_parameters = [],
         array $search_parameters = [],
-        array $filter_parameters = []
+        array $filter_parameters = [],
+        array $sort_parameters = []
     ): array
     {
         $select_fields = [
