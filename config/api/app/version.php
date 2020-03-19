@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 return [
-    'version'=> '2.09.1',
+    'version'=> '2.09.2',
     'prefix' => 'v2',
     'release_date' => '2020-03-14',
     'changelog' => [
