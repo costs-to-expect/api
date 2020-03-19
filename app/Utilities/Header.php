@@ -24,7 +24,10 @@ class Header
     public function __construct()
     {
         $this->headers = [
-            'Content-Language' => app()->getLocale()
+            'Content-Language' => app()->getLocale(),
+            'Content-Security-Policy' => 'default-src \'none\'',
+            'Access-Control-Allow-Origin' => '*',
+            'Access-Control-Allow-Header' => 'X-Requested-With, Origin, Content-Type, Accept, Authorization',
         ];
     }
 

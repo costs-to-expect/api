@@ -125,6 +125,8 @@ class IndexController extends Controller
             }
         }
 
+        $headers = new Header();
+
         return response()->json(
             [
                 'releases' => array_values($changes)
@@ -132,7 +134,8 @@ class IndexController extends Controller
             200,
             [
                 'X-Total-Count' => ($i + 1)
-            ]
+            ],
+            $headers->headers()
         );
     }
 

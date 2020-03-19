@@ -69,10 +69,12 @@ class Controller extends BaseController
             'verbs' => [],
             'http_status_code' => $http_status_code,
             'headers' => [
+                'Content-Security-Policy' => 'default-src \'none\'',
                 'Access-Control-Allow-Origin' => '*',
                 'Access-Control-Allow-Header' => 'X-Requested-With, Origin, Content-Type, Accept, Authorization',
                 'Access-Control-Allow-Methods' => implode(', ', array_keys($verbs)) . ', OPTIONS',
-                'Content-Type' => 'application/json'
+                'Content-Type' => 'application/json',
+                'Content-Language' => app()->getLocale()
             ]
         ];
 
