@@ -8,6 +8,7 @@
     <meta name="author" content="Dean Blackborough">
     <meta name="copyright" content="Dean Blackborough 2018-{{ date('Y') }}">
     <link href="{{ asset('node_modules/open-iconic/font/css/open-iconic-bootstrap.css') }}" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Quicksand&display=swap" rel="stylesheet">
     <link rel="shortcut icon" href="{{ asset('images/theme/favicon.ico') }}">
     <link rel="icon" sizes="16x16 32x32 64x64" href="{{ asset('images/theme/favicon.ico') }}">
     <link rel="icon" type="image/png" sizes="196x196" href="{{ asset('images/theme/favicon-192.png') }}">
