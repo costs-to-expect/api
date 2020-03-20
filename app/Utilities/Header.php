@@ -24,10 +24,12 @@ class Header
     public function __construct()
     {
         $this->headers = [
-            'Content-Language' => app()->getLocale(),
             'Content-Security-Policy' => 'default-src \'none\'',
-            'Access-Control-Allow-Origin' => '*',
-            'Access-Control-Allow-Header' => 'X-Requested-With, Origin, Content-Type, Accept, Authorization',
+            'Strict-Transport-Security' => 'max-age=31536000;',
+            'Content-Type' => 'application/json',
+            'Content-Language' => app()->getLocale(),
+            'Referrer-Policy' => 'origin-when-cross-origin',
+            'X-Content-Type-Options' => 'nosniff'
         ];
     }
 
