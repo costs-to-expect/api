@@ -15,9 +15,28 @@
     <link rel="apple-touch-icon" sizes="180x180" href="{{ asset('images/theme/favicon-180.png') }}">
     <meta name="msapplication-TileColor" content="#FFFFFF">
     <meta name="msapplication-TileImage" content="{{ asset('images/theme/favicon-144.png') }}">
+    <meta name="twitter:image:src" content="{{ asset('images/theme/favicon-192.png') }}" />
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:site" content="@coststoexpect" />
+    <meta name="twitter:title" content="Costs to Expect API" />
+    <meta name="twitter:description" content="The Open Source API for the Costs to Expect service, expense tracking and forecasting" />
+    <meta property="og:image" content="{{ asset('images/theme/favicon-192.png') }}" />
+    <meta property="og:site_name" content="Costs to Expect API" />
+    <meta property="og:type" content="object" />
+    <meta property="og:title" content="Costs to Expect API" />
+    <meta property="og:url" content="https://api.costs-to-expect.com" />
+    <meta property="og:description" content="The Open Source API for the Costs to Expect service, expense tracking and forecasting" />
     <title>Costs to Expect API</title>
 
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-64736-10"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'UA-64736-10');
+    </script>
 </head>
 <body>
 <div class="container-fluid">
@@ -217,12 +236,19 @@
                         <li>We have refactored several model classes to again, simplify the naming.</li>
                         <li>We have corrected multiple summary config files, unnecessary structure.</li>
                         <li>We have unified the parameters for related item methods.</li>
+                        <li>We have switched to a new font; the font is more legible at small screen sizes, and, it looks cool.</li>
+                        <li>We have reviewed our HTTP headers; Content-Language missing along with other expected headers.</li>
+                        <li>We log the id of the user that added a user to the 'permitted_user' table; this is to help later with permitted user management.</li>
+                        <li>We have updated the API to the most recent version of Laravel 6.</li>
                     </ul>
 
                     <h3>Fixed</h3>
 
                     <ul>
                         <li>We have updated the `Option/Get` class, the `sort`, `search` and `filter` parameters will only display if there are viable parameters.</li>
+                        <li>The `description` field for the `simple-item` type should be nullable.</li>
+                        <li>Card data missing from head.</li>
+                        <li>Google analytics missing.</li>
                     </ul>
 
                     <h3>Removed</h3>
