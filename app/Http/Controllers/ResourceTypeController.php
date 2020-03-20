@@ -235,8 +235,10 @@ class ResourceTypeController extends Controller
      */
     public function create(): JsonResponse
     {
+        $user_id = Auth::user()->id;
+
         $validator = (new ResourceTypeValidator)->create([
-            'user_id' => Auth::user()->id
+            'user_id' => $user_id
         ]);
         UtilityRequest::validateAndReturnErrors($validator);
 
@@ -250,7 +252,8 @@ class ResourceTypeController extends Controller
 
             $permitted_users = new PermittedUser([
                 'resource_type_id' => $resource_type->id,
-                'user_id' => Auth::user()->id
+                'user_id' => $user_id,
+                'added_by' => $user_id
             ]);
             $permitted_users->save();
 

@@ -132,10 +132,12 @@ class IndexController extends Controller
                 'releases' => array_values($changes)
             ],
             200,
-            [
-                'X-Total-Count' => ($i + 1)
-            ],
-            $headers->headers()
+            array_merge(
+                [
+                    'X-Total-Count' => ($i + 1)
+                ],
+                $headers->headers()
+            )
         );
     }
 
