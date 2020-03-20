@@ -73,7 +73,7 @@ class Controller extends BaseController
                 'Strict-Transport-Security' => 'max-age=31536000;',
                 'Content-Type' => 'application/json',
                 'Content-Language' => app()->getLocale(),
-                'Referrer-Policy' => 'origin-when-cross-origin',
+                'Referrer-Policy' => 'strict-origin-when-cross-origin',
                 'X-Content-Type-Options' => 'nosniff'
             ]
         ];
