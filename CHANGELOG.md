@@ -2,6 +2,18 @@
 
 The complete changelog for the Costs to Expect REST API, our changelog follows the format defined at https://keepachangelog.com/en/1.0.0/
 
+## [v2.09.2] - 2020-03-20
+### Changed
+- We have switched to a new font; the font is more legible at small screen sizes, and, it looks cool.
+- We have reviewed our HTTP headers; Content-Language missing along with other expected headers.
+- We log the id of the user that added a user to the 'permitted_user' table; this is to help later with permitted user management.
+- We have updated the API to the most recent version of Laravel 6.
+
+### Fixed
+- The `description` field for the `simple-item` type should be nullable.
+- Card data missing from head.
+- Google analytics missing.
+
 ## [v2.09.1] - 2020-03-14
 ### Changed
 - We have renamed the existing Interfaces, more straightforward names.
