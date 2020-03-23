@@ -119,6 +119,16 @@ abstract class AbstractItem
     abstract public function searchParametersConfig(): string;
 
     /**
+     * Return the show parameters specific to the item type
+     *
+     * @return array
+     */
+    public function showParameters(): array
+    {
+        return Config::get($this->showParametersConfig());
+    }
+
+    /**
      * Return the show parameters config string specific to the item type
      *
      * @return string
