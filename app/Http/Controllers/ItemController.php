@@ -159,9 +159,20 @@ class ItemController extends Controller
 
         $item_interface = Factory::item($resource_type_id);
 
+        $parameters = Parameters::fetch(
+            array_keys($item_interface->showParameters()),
+            (int) $resource_type_id,
+            (int) $resource_id
+        );
+
         $item_model = $item_interface->model();
 
-        $item = $item_model->single($resource_type_id, $resource_id, $item_id);
+        $item = $item_model->single(
+            $resource_type_id,
+            $resource_id,
+            $item_id,
+            $parameters
+        );
 
         if ($item === null) {
             UtilityResponse::notFound(trans('entities.item'));

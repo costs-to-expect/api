@@ -67,13 +67,15 @@ interface IModel
      * @param int $resource_type_id
      * @param int $resource_id
      * @param int $item_id
+     * @param array $parameters
      *
      * @return array|null
      */
     public function single(
         int $resource_type_id,
         int $resource_id,
-        int $item_id
+        int $item_id,
+        array $parameters = []
     ): ?array;
 
     /**

@@ -55,13 +55,15 @@ class SimpleExpense extends Model implements IModel
      * @param integer $resource_type_id
      * @param integer $resource_id
      * @param integer $item_id
+     * @param array $parameters
      *
      * @return array|null
      */
     public function single(
         int $resource_type_id,
         int $resource_id,
-        int $item_id
+        int $item_id,
+        array $parameters = []
     ): ?array
     {
         $result = $this->from('item')->
