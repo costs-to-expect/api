@@ -66,24 +66,50 @@ class SimpleExpense extends Model implements IModel
         array $parameters = []
     ): ?array
     {
+        $fields = [
+            'item.id AS item_id',
+            "{$this->table}.name AS item_name",
+            "{$this->table}.description AS item_description",
+            "{$this->table}.total AS item_total",
+            'item.created_at AS item_created_at'
+        ];
+
         $result = $this->from('item')->
             join('item_type_simple_expense', 'item.id', 'item_type_simple_expense.item_id')->
             join('resource', 'item.resource_id', 'resource.id')->
             where('item.resource_id', '=', $resource_id)->
             where('resource.resource_type_id', '=', $resource_type_id)->
             where('item_type_simple_expense.item_id', '=', $item_id)->
-            where('item.id', '=', $item_id)->
-            select(
-                'item.id AS item_id',
-                'item_type_simple_expense.name AS item_name',
-                'item_type_simple_expense.description AS item_description',
-                'item_type_simple_expense.total AS item_total',
-                'item.created_at AS item_created_at'
-            )->
-            first();
+            where('item.id', '=', $item_id);
 
-        if ($result !== null) {
-            return $result->toArray();
+        if (
+            array_key_exists('include-categories', $parameters) === true &&
+            General::booleanValue($parameters['include-categories']) === true
+        ) {
+            $result->join('item_category', 'item.id', 'item_category.item_id')->
+            join('category', 'item_category.category_id', 'category.id');
+
+            $fields[] = 'category.id AS category_id';
+            $fields[] = 'category.name AS category_name';
+            $fields[] = 'category.description AS category_description';
+
+            if (
+                array_key_exists('include-subcategories', $parameters) === true &&
+                General::booleanValue($parameters['include-subcategories']) === true
+            ) {
+                $result->join('item_sub_category', 'item_category.id', 'item_sub_category.item_category_id')->
+                join('sub_category', 'item_sub_category.sub_category_id', 'sub_category.id');
+
+                $fields[] = 'sub_category.id AS subcategory_id';
+                $fields[] = 'sub_category.name AS subcategory_name';
+                $fields[] = 'sub_category.description AS subcategory_description';
+            }
+        }
+
+        $item = $result->select($fields)->first();
+
+        if ($item !== null) {
+            return $item->toArray();
         } else {
             return null;
         }
