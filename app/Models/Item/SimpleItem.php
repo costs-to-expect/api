@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace App\Models\Item;
 
 use App\Interfaces\Item\IModel;
+use App\Utilities\General;
 use App\Utilities\Model as ModelUtility;
 use Illuminate\Database\Query\Builder as QueryBuilder;
 use Illuminate\Database\Eloquent\Model;
@@ -54,33 +55,37 @@ class SimpleItem extends Model implements IModel
      * @param integer $resource_type_id
      * @param integer $resource_id
      * @param integer $item_id
+     * @param array $parameters
      *
      * @return array|null
      */
     public function single(
         int $resource_type_id,
         int $resource_id,
-        int $item_id
+        int $item_id,
+        array $parameters = []
     ): ?array
     {
+        $fields = [
+            'item.id AS item_id',
+            "{$this->table}.name AS item_name",
+            "{$this->table}.description AS item_description",
+            "{$this->table}.quantity AS item_quantity",
+            'item.created_at AS item_created_at'
+        ];
+
         $result = $this->from('item')->
             join($this->table, 'item.id', "{$this->table}.item_id")->
             join('resource', 'item.resource_id', 'resource.id')->
             where('item.resource_id', '=', $resource_id)->
             where('resource.resource_type_id', '=', $resource_type_id)->
             where("{$this->table}.item_id", '=', $item_id)->
-            where('item.id', '=', $item_id)->
-            select(
-                'item.id AS item_id',
-                "{$this->table}.name AS item_name",
-                "{$this->table}.description AS item_description",
-                "{$this->table}.quantity AS item_quantity",
-                'item.created_at AS item_created_at'
-            )->
-            first();
+            where('item.id', '=', $item_id);
 
-        if ($result !== null) {
-            return $result->toArray();
+        $item = $result->select($fields)->first();
+
+        if ($item !== null) {
+            return $item->toArray();
         } else {
             return null;
         }
