@@ -2,6 +2,10 @@
 
 The complete changelog for the Costs to Expect REST API, our changelog follows the format defined at https://keepachangelog.com/en/1.0.0/
 
+## [v2.09.3] - 2020-03-24
+### Changed
+- We have updated the `resource-types/[id]/resources/[id]/items/[id]` GET endpoint; the `include-categories` and `include-subcategories` can be included in the request for 'allocated-expense' and 'simple-expense' type items.
+
 ## [v2.09.2] - 2020-03-20
 ### Changed
 - We have switched to a new font; the font is more legible at small screen sizes, and, it looks cool.
