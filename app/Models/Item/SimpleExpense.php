@@ -226,6 +226,7 @@ class SimpleExpense extends Model implements IModel
 
             $category_join = true;
 
+            $select_fields[] = 'item_category.id AS item_category_id';
             $select_fields[] = 'category.id AS category_id';
             $select_fields[] = 'category.name AS category_name';
             $select_fields[] = 'category.description AS category_description';
@@ -244,6 +245,7 @@ class SimpleExpense extends Model implements IModel
 
                 $subcategory_join = true;
 
+                $select_fields[] = 'item_sub_category.id AS item_subcategory_id';
                 $select_fields[] = 'sub_category.id AS subcategory_id';
                 $select_fields[] = 'sub_category.name AS subcategory_name';
                 $select_fields[] = 'sub_category.description AS subcategory_description';
