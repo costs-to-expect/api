@@ -53,7 +53,8 @@ class SimpleExpense extends Transformer
             $item['category'] = [
                 'id' => $this->hash->category()->encode($this->item['category_id']),
                 'name' => $this->item['category_name'],
-                'description' => $this->item['category_description']
+                'description' => $this->item['category_description'],
+                'uri' => '/category/' . $this->hash->itemCategory()->encode($this->item['item_category_id'])
             ];
 
             if (
@@ -63,7 +64,10 @@ class SimpleExpense extends Transformer
                 $item['subcategory'] = [
                     'id' => $this->hash->subCategory()->encode($this->item['subcategory_id']),
                     'name' => $this->item['subcategory_name'],
-                    'description' => $this->item['subcategory_description']
+                    'description' => $this->item['subcategory_description'],
+                    'uri' => '/category/' .
+                        $this->hash->itemCategory()->encode($this->item['item_category_id']) .
+                        '/subcategory/' . $this->hash->itemSubCategory()->encode($this->item['item_subcategory_id'])
                 ];
             }
         }

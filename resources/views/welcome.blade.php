@@ -241,6 +241,7 @@
                         <li>We log the id of the user that added a user to the 'permitted_user' table; this is to help later with permitted user management.</li>
                         <li>We have updated the API to the most recent version of Laravel 6.</li>
                         <li>We have updated the `resource-types/[id]/resources/[id]/items/[id]` GET endpoint; the `include-categories` and `include-subcategories` can be included in the request for 'allocated-expense' and 'simple-expense' type items.</li>
+                        <li>When a response includes additional data via the include parameters, we include the URI fragment for that data.</li>
                     </ul>
 
                     <h3>Fixed</h3>
