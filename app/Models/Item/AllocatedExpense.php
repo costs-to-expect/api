@@ -81,6 +81,7 @@ class AllocatedExpense extends Model implements IModel
             $result->join('item_category', 'item.id', 'item_category.item_id')->
                 join('category', 'item_category.category_id', 'category.id');
 
+            $fields[] = 'item_category.id AS item_category_id';
             $fields[] = 'category.id AS category_id';
             $fields[] = 'category.name AS category_name';
             $fields[] = 'category.description AS category_description';
@@ -92,6 +93,7 @@ class AllocatedExpense extends Model implements IModel
                 $result->join('item_sub_category', 'item_category.id', 'item_sub_category.item_category_id')->
                 join('sub_category', 'item_sub_category.sub_category_id', 'sub_category.id');
 
+                $fields[] = 'item_sub_category.id AS item_subcategory_id';
                 $fields[] = 'sub_category.id AS subcategory_id';
                 $fields[] = 'sub_category.name AS subcategory_name';
                 $fields[] = 'sub_category.description AS subcategory_description';
