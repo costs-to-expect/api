@@ -5,7 +5,10 @@ declare(strict_types=1);
 return [
     'POST' => [
         'fields' => [
-            'category_id' => 'required|exists:category,id'
+            'category_id' => [
+                'required',
+                'exists:category,id'
+            ]
         ],
         'messages' => [
             'category_id.required' => 'item-category/validation.category_id-required',
