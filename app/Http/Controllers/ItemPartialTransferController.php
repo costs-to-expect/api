@@ -8,19 +8,19 @@ use App\Option\Post;
 use App\Utilities\Request as UtilityRequest;
 use App\Utilities\Response as UtilityResponse;
 use App\Utilities\RoutePermission;
-use App\Validators\Fields\ItemTransfer as ItemTransferValidator;
+use App\Validators\Fields\ItemPartialTransfer as ItemPartialTransferValidator;
 use App\Validators\Route;
 use Exception;
 use Illuminate\Http\JsonResponse;
 
 /**
- * Transfer items
+ * Partial transfer of items
  *
  * @author Dean Blackborough <dean@g3d-development.com>
  * @copyright Dean Blackborough 2018-2020
  * @license https://github.com/costs-to-expect/api/blob/master/LICENSE
  */
-class ItemTransferController extends Controller
+class ItemPartialTransferController extends Controller
 {
     public function transfer(
         string $resource_type_id,
@@ -36,7 +36,7 @@ class ItemTransferController extends Controller
             true
         );
 
-        $validator = (new ItemTransferValidator)->create(
+        $validator = (new ItemPartialTransferValidator)->create(
             [
                 'resource_type_id' => $resource_type_id,
                 'existing_resource_id' => $resource_id
@@ -83,14 +83,14 @@ class ItemTransferController extends Controller
         );
 
         $post = Post::init()->
-            setFields('api.item-transfer.fields')->
+            setFields('api.item-partial-transfer.fields')->
             setFieldsData(
                 $this->fieldsData(
                     $resource_type_id,
                     $resource_id
                 )
             )->
-            setDescription('route-descriptions.item_transfer_POST')->
+            setDescription('route-descriptions.item_partial_transfer_POST')->
             setAuthenticationStatus($permissions['manage'])->
             setAuthenticationRequired(true)->
             option();

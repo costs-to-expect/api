@@ -175,6 +175,11 @@ Route::group(
         );
 
         Route::options(
+            'resource-types/{resource_type_id}/resources/{resource_id}/items/{item_id}/partial-transfer',
+            'ItemPartialTransferController@optionsTransfer'
+        );
+
+        Route::options(
             'resource-types/{resource_type_id}/resources/{resource_id}/items/{item_id}/transfer',
             'ItemTransferController@optionsTransfer'
         );

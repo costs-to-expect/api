@@ -53,6 +53,11 @@ Route::group(
         );
 
         Route::post(
+            'resource-types/{resource_type_id}/resources/{resource_id}/items/{item_id}/partial-transfer',
+            'ItemPartialTransferController@transfer'
+        );
+
+        Route::post(
             'resource-types/{resource_type_id}/resources/{resource_id}/items/{item_id}/transfer',
             'ItemTransferController@transfer'
         );

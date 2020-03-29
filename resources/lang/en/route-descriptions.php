@@ -55,6 +55,8 @@ return [
 
     'item_transfer_POST' => 'Transfer an item to another resource',
 
+    'item_partial_transfer_POST' => 'Portion a percentage of the costs for an item to another resource',
+
     'permitted_user_GET_index' => 'Return the permitted users',
     'permitted_user_POST' => 'Assign a permitted user',
 
