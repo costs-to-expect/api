@@ -3,9 +3,9 @@ declare(strict_types=1);
 
 namespace App\Utilities;
 
-use App;
 use Exception;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\App;
 
 /**
  * Utility class to return default responses, we want some consistency
@@ -109,7 +109,7 @@ class Response
 
         response()->json(
             $response,
-            500
+            409
         )->send();
         exit;
     }
