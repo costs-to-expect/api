@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreatePartialTransfer extends Migration
+class CreateItemPartialTransfer extends Migration
 {
     /**
      * Run the migrations.
@@ -13,7 +13,7 @@ class CreatePartialTransfer extends Migration
      */
     public function up()
     {
-        Schema::create('partial_transfer', function (Blueprint $table) {
+        Schema::create('item_partial_transfer', function (Blueprint $table) {
             $table->charset = 'utf8mb4';
             $table->collation = 'utf8mb4_unicode_ci';
 
@@ -30,7 +30,7 @@ class CreatePartialTransfer extends Migration
             $table->foreign('to')->references('id')->on('resource');
             $table->foreign('item_id')->references('id')->on('item');
             $table->foreign('transferred_by')->references('id')->on('users');
-            $table->unique(['resource_type_id', 'from', 'item_id'], 'unique_partial_transfer');
+            $table->unique(['resource_type_id', 'from', 'item_id'], 'unique_item_partial_transfer');
         });
     }
 
