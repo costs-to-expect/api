@@ -415,7 +415,7 @@ class ItemController extends Controller
             UtilityResponse::failedToSaveModelForUpdate();
         }
 
-        UtilityResponse::successNoContent();
+        return UtilityResponse::successNoContent();
     }
 
     /**

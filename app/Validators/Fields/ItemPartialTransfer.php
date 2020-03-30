@@ -5,6 +5,7 @@ namespace App\Validators\Fields;
 
 use App\Validators\Fields\Validator as BaseValidator;
 use Illuminate\Contracts\Validation\Validator;
+use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Validator as ValidatorFacade;
 use Illuminate\Validation\Rule;
 
@@ -48,16 +49,19 @@ class ItemPartialTransfer extends BaseValidator
                     'resource_id' => $resource_id,
                 ]
             ),
-            [
-                'resource_id' => [
-                    'required',
-                    Rule::exists('resource', 'id')->where(function ($query) use ($options)
-                    {
-                        $query->where('resource_type_id', '=', $options['resource_type_id'])->
-                            where('id', '!=', $options['existing_resource_id']);
-                    }),
+            array_merge(
+                [
+                    'resource_id' => [
+                        'required',
+                        Rule::exists('resource', 'id')->where(function ($query) use ($options)
+                        {
+                            $query->where('resource_type_id', '=', $options['resource_type_id'])->
+                                where('id', '!=', $options['existing_resource_id']);
+                        }),
+                    ],
                 ],
-            ],
+                Config::get('api.item-partial-transfer.validation.POST.fields')
+            ),
             $this->translateMessages('api.item-partial-transfer.validation.POST.messages')
         );
     }

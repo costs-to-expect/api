@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Item;
+use App\Models\ItemPartialTransfer;
 use App\Models\Resource;
 use App\Option\Post;
 use App\Utilities\Request as UtilityRequest;
@@ -11,7 +12,9 @@ use App\Utilities\RoutePermission;
 use App\Validators\Fields\ItemPartialTransfer as ItemPartialTransferValidator;
 use App\Validators\Route;
 use Exception;
+use Illuminate\Database\QueryException;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\Auth;
 
 /**
  * Partial transfer of items
@@ -44,22 +47,29 @@ class ItemPartialTransferController extends Controller
         );
         UtilityRequest::validateAndReturnErrors($validator);
 
-        try {
-            $new_resource_id = $this->hash->decode('resource', request()->input('resource_id'));
+        $new_resource_id = $this->hash->decode('resource', request()->input('resource_id'));
 
-            if ($new_resource_id === false) {
-                UtilityResponse::unableToDecode();
-            }
-
-            $item = (new Item())->instance($resource_type_id, $resource_id, $item_id);
-            $item->resource_id = $new_resource_id;
-            $item->save();
-        } catch (Exception $e) {
-            UtilityResponse::failedToSaveModelForUpdate();
+        if ($new_resource_id === false) {
+            UtilityResponse::unableToDecode();
         }
 
-        // Endpoint should 404 after request so figure 204 better than redirect or 404
-        UtilityResponse::successNoContent();
+        try {
+            $partial_transfer = new ItemPartialTransfer([
+                'resource_type_id' => $resource_type_id,
+                'from' => intval($resource_id),
+                'to' => $new_resource_id,
+                'item_id' => $item_id,
+                'percentage' => request()->input('percentage'),
+                'transferred_by' => Auth::user()->id
+            ]);
+            $partial_transfer->save();
+        } catch (QueryException $e) {
+            UtilityResponse::foreignKeyConstraintError();
+        } catch (Exception $e) {
+            UtilityResponse::failedToSaveModelForCreate();
+        }
+
+        return UtilityResponse::successNoContent();
     }
 
     public function optionsTransfer(
