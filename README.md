@@ -153,6 +153,8 @@ additionally, the same is true if you are assigned to a resource type.
 | GET/HEAD | v2/resource-types/{resource_type_id}/resources/{resource_id}/items/{item_id}/category/{item_category_id}/subcategory/{item_subcategory_id} |
 | OPTIONS  | v2/resource-types/{resource_type_id}/resources/{resource_id}/items/{item_id}/category/{item_category_id}/subcategory/{item_subcategory_id} |
 | DELETE   | v2/resource-types/{resource_type_id}/resources/{resource_id}/items/{item_id}/category/{item_category_id}/sub_category/{item_subcategory_id} |
+| OPTIONS  | v2/resource-types/{resource_type_id}/resources/{resource_id}/items/{item_id}/partial-transfer |
+| POST     | v2/resource-types/{resource_type_id}/resources/{resource_id}/items/{item_id}/partial-transfer |
 | OPTIONS  | v2/resource-types/{resource_type_id}/resources/{resource_id}/items/{item_id}/transfer |
 | POST     | v2/resource-types/{resource_type_id}/resources/{resource_id}/items/{item_id}/transfer |
 | GET/HEAD | v2/request/error-log |
