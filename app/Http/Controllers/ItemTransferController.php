@@ -70,7 +70,7 @@ class ItemTransferController extends Controller
 
         return response()->json(
             array_map(
-                function($transfer) {
+                static function($transfer) {
                     return (new ItemTransfer($transfer))->toArray();
                 },
                 $transfers
@@ -100,10 +100,10 @@ class ItemTransferController extends Controller
         );
 
         $get = Get::init()->
-        setPagination(true)->
-        setAuthenticationStatus($permissions['view'])->
-        setDescription('route-descriptions.item_transfer_GET_index')->
-        option();
+            setPagination(true)->
+            setAuthenticationStatus($permissions['view'])->
+            setDescription('route-descriptions.item_transfer_GET_index')->
+            option();
 
         return $this->optionsResponse(
             $get,
@@ -132,9 +132,9 @@ class ItemTransferController extends Controller
         );
 
         $get = Get::init()->
-        setDescription('route-descriptions.item_transfer_GET_show')->
-        setAuthenticationStatus($permissions['view'])->
-        option();
+            setDescription('route-descriptions.item_transfer_GET_show')->
+            setAuthenticationStatus($permissions['view'])->
+            option();
 
         return $this->optionsResponse(
             $get,
@@ -163,17 +163,17 @@ class ItemTransferController extends Controller
         );
 
         $post = Post::init()->
-        setFields('api.item-transfer.fields')->
-        setFieldsData(
-            $this->fieldsData(
-                $resource_type_id,
-                $resource_id
-            )
-        )->
-        setDescription('route-descriptions.item_transfer_POST')->
-        setAuthenticationStatus($permissions['manage'])->
-        setAuthenticationRequired(true)->
-        option();
+            setFields('api.item-transfer.fields')->
+            setFieldsData(
+                $this->fieldsData(
+                    $resource_type_id,
+                    $resource_id
+                )
+            )->
+            setDescription('route-descriptions.item_transfer_POST')->
+            setAuthenticationStatus($permissions['manage'])->
+            setAuthenticationRequired(true)->
+            option();
 
         return $this->optionsResponse($post, 200);
     }
@@ -245,12 +245,16 @@ class ItemTransferController extends Controller
             }
 
             $item = (new Item())->instance($resource_type_id, $resource_id, $item_id);
-            $item->resource_id = $new_resource_id;
-            $item->save();
+            if ($item !== null) {
+                $item->resource_id = $new_resource_id;
+                $item->save();
+            } else {
+                UtilityResponse::failedToSelectModelForUpdate();
+            }
 
             $item_transfer = new ItemTransfer([
                 'resource_type_id' => $resource_type_id,
-                'from' => intval($resource_id),
+                'from' => (int) $resource_id,
                 'to' => $new_resource_id,
                 'item_id' => $item_id,
                 'transferred_by' => Auth::user()->id
@@ -262,8 +266,7 @@ class ItemTransferController extends Controller
             UtilityResponse::failedToSaveModelForUpdate();
         }
 
-        // Endpoint should 404 after request so figure 204 better than redirect or 404
-        UtilityResponse::successNoContent();
+        return UtilityResponse::successNoContent();
     }
 
     /**

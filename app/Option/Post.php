@@ -30,7 +30,7 @@ class Post extends Option
      */
     static private $localised_fields;
 
-    static private function reset()
+    private static function reset(): void
     {
         self::resetBase();
 
@@ -39,15 +39,15 @@ class Post extends Option
         self::$localised_fields = [];
     }
 
-    static public function init(): Post
+    public static function init(): Post
     {
-        self::$instance = new Post();
-        self::$instance->reset();
+        self::$instance = new self();
+        self::$instance::reset();
 
         return self::$instance;
     }
 
-    static public function setFieldsData(
+    public static function setFieldsData(
         array $parameters = []
     ): Post
     {
@@ -56,7 +56,7 @@ class Post extends Option
         return self::$instance;
     }
 
-    static public function setFields(
+    public static function setFields(
         string $config_path
     ): Post
     {
@@ -65,7 +65,7 @@ class Post extends Option
         return self::$instance;
     }
 
-    static protected function build()
+    protected static function build()
     {
         self::$localised_fields = [];
 
@@ -83,7 +83,7 @@ class Post extends Option
         }
     }
 
-    static public function option(): array
+    public static function option(): array
     {
         self::build();
 

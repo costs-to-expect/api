@@ -60,9 +60,9 @@ class Hash
     {
         if (array_key_exists($type, $this->hashers) === true) {
             return $this->hashers[$type]->encode($parameter);
-        } else {
-            return false;
         }
+
+        return false;
     }
 
     /**
@@ -76,13 +76,13 @@ class Hash
         if (array_key_exists($type, $this->hashers) === true) {
             $id = $this->hashers[$type]->decode($parameter);
             if (is_array($id) && array_key_exists(0, $id)) {
-                return intval($id[0]);
-            } else {
-                return false;
+                return (int) $id[0];
             }
-        } else {
+
             return false;
         }
+
+        return false;
     }
 
     /**

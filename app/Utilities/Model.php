@@ -3,6 +3,8 @@ declare(strict_types=1);
 
 namespace App\Utilities;
 
+use Illuminate\Database\Query\Builder as QueryBuilder;
+
 /**
  * Model helper class
  *
@@ -10,6 +12,7 @@ namespace App\Utilities;
  * they gain more than a few functions and the creation of a library makes
  * sense.
  *
+ * @mixin QueryBuilder
  * @author Dean Blackborough <dean@g3d-development.com>
  * @copyright Dean Blackborough 2018-2020
  * @license https://github.com/costs-to-expect/api/blob/master/LICENSE

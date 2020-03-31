@@ -69,7 +69,7 @@ class ItemPartialTransferController extends Controller
 
         return response()->json(
             array_map(
-                function($transfer) {
+                static function($transfer) {
                     return (new ItemPartialTransferTransformer($transfer))->toArray();
                 },
                 $transfers
@@ -147,7 +147,7 @@ class ItemPartialTransferController extends Controller
         try {
             $partial_transfer = new ItemPartialTransfer([
                 'resource_type_id' => $resource_type_id,
-                'from' => intval($resource_id),
+                'from' => (int) $resource_id,
                 'to' => $new_resource_id,
                 'item_id' => $item_id,
                 'percentage' => request()->input('percentage'),

@@ -30,7 +30,7 @@ class Patch extends Option
      */
     static private $fields;
 
-    static private function reset()
+    private static function reset(): void
     {
         self::resetBase();
 
@@ -39,16 +39,16 @@ class Patch extends Option
         self::$localised_fields = [];
     }
 
-    static public function init(): Patch
+    public static function init(): Patch
     {
 
-        self::$instance = new Patch();
-        self::$instance->reset();
+        self::$instance = new self();
+        self::$instance::reset();
 
         return self::$instance;
     }
 
-    static public function setFieldsData(
+    public static function setFieldsData(
         array $fields = []
     ): Patch
     {
@@ -57,7 +57,7 @@ class Patch extends Option
         return self::$instance;
     }
 
-    static public function setFields(
+    public static function setFields(
         string $config_path
     ): Patch
     {
@@ -65,7 +65,7 @@ class Patch extends Option
         return self::$instance;
     }
 
-    static protected function build()
+    protected static function build()
     {
         self::$localised_fields = [];
 
@@ -84,7 +84,7 @@ class Patch extends Option
         }
     }
 
-    static public function option(): array
+    public static function option(): array
     {
         self::build();
 

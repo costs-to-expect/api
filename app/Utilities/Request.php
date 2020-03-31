@@ -33,7 +33,7 @@ class Request
     {
         $invalid_fields = [];
         foreach (request()->all() as $key => $value) {
-            if (in_array($key, $patchable_fields) === false) {
+            if (in_array($key, $patchable_fields, true) === false) {
                 $invalid_fields[] = $key;
             }
         }
@@ -54,7 +54,7 @@ class Request
     public static function checkForEmptyPatch(): ?JsonResponse
     {
         if (count(request()->all()) === 0) {
-            return UtilityResponse::nothingToPatch();;
+            return UtilityResponse::nothingToPatch();
         }
 
         return null;

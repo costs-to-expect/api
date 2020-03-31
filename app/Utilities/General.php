@@ -22,13 +22,9 @@ class General
      *
      * @return bool
      */
-    static public function booleanValue($value): bool
+    public static function booleanValue($value): bool
     {
-        if (filter_var($value, FILTER_VALIDATE_BOOLEAN) === true) {
-            return true;
-        }
-
-        return false;
+        return filter_var($value, FILTER_VALIDATE_BOOLEAN) === true;
     }
 
     /**
@@ -40,14 +36,10 @@ class General
      *
      * @return bool
      */
-    static public function isBooleanValue($value): bool
+    public static function isBooleanValue($value): bool
     {
         $filtered = filter_var($value, FILTER_VALIDATE_BOOLEAN,FILTER_NULL_ON_FAILURE);
 
-        if ($filtered === true || $filtered === false) {
-            return true;
-        }
-
-        return false;
+        return $filtered === true || $filtered === false;
     }
 }
