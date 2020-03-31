@@ -42,7 +42,14 @@ class ItemPartialTransfer extends Model
         $collection = $this->select(
             $this->table . '.id',
             $this->table . '.percentage',
-            $this->table . '.created_at'
+            $this->table . '.item_id',
+            $this->table . '.created_at',
+            'from_resource.id AS from_resource_id',
+            'from_resource.name AS from_resource_name',
+            'to_resource.id AS to_resource_id',
+            'to_resource.name AS to_resource_name',
+            'users.id AS user_id',
+            'users.name AS user_name'
         )->
         join("resource_type",$this->table . ".resource_type_id","resource_type.id")->
         join("resource AS from_resource",$this->table . ".from","from_resource.id")->

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\ItemPartialTransfer;
 use App\Models\Resource;
+use App\Models\Transformers\ItemPartialTransfer as ItemPartialTransferTransformer;
 use App\Option\Get;
 use App\Option\Post;
 use App\Utilities\Header;
@@ -66,19 +67,16 @@ class ItemPartialTransferController extends Controller
         $headers = new Header();
         $headers->collection($pagination, count($transfers), $total);
 
-        var_dump($transfers);
-        die;
-
-        /*return response()->json(
+        return response()->json(
             array_map(
-                function($category) {
-                    return (new CategoryTransformer($category))->toArray();
+                function($transfer) {
+                    return (new ItemPartialTransferTransformer($transfer))->toArray();
                 },
-                $categories
+                $transfers
             ),
             200,
             $headers->headers()
-        );*/
+        );
     }
 
     public function transfer(

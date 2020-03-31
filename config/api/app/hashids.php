@@ -10,7 +10,10 @@ return [
     'resource' => env('APP_HASH_SALT_RESOURCE'),
     'item' => env('APP_HASH_SALT_ITEM'),
     'item_category' => env('APP_HASH_SALT_ITEM_CATEGORY'),
+    'item_partial_transfer' => env('APP_HASH_SALT_ITEM_PARTIAL_TRANSFER'),
     'item_subcategory' => env('APP_HASH_SALT_ITEM_SUBCATEGORY'),
+    'item_transfer' => env('APP_HASH_SALT_ITEM_TRANSFER'),
     'item_type' => env('APP_HASH_SALT_ITEM_TYPE'),
-    'permitted_user' => env('APP_HASH_SALT_PERMITTED_USER')
+    'permitted_user' => env('APP_HASH_SALT_PERMITTED_USER'),
+    'user' => env('APP_HASH_SALT_USER')
 ];
