@@ -29,16 +29,16 @@ class Route
      * @param integer $resource_type_id
      * @param integer $category_id
      * @param array $permitted_resource_types
-     * @param bool $manage
+     * @param bool $write
      */
     static public function category(
         int $resource_type_id,
         int $category_id,
         array $permitted_resource_types,
-        bool $manage = false
+        bool $write = false
     )
     {
-        if ($manage === false) {
+        if ($write === false) {
             if (
                 Category::existsToUserForViewing(
                     $resource_type_id,
@@ -70,17 +70,17 @@ class Route
      * @param integer $category_id
      * @param integer $subcategory_id
      * @param array $permitted_resource_types
-     * @param bool $manage
+     * @param bool $write
      */
     static public function subcategory(
         int $resource_type_id,
         int $category_id,
         int $subcategory_id,
         array $permitted_resource_types,
-        $manage = false
+        $write = false
     )
     {
-        if ($manage === false) {
+        if ($write === false) {
             if (
                 Subcategory::existsToUserForViewing(
                     $resource_type_id,
@@ -111,15 +111,15 @@ class Route
      *
      * @param $resource_type_id
      * @param array $permitted_resource_types
-     * @param bool $manage
+     * @param bool $write
      */
     static public function resourceType(
         $resource_type_id,
         array $permitted_resource_types,
-        bool $manage = false
+        bool $write = false
     )
     {
-         if ($manage === false) {
+         if ($write === false) {
             if (
                 ResourceType::existsToUserForViewing(
                     (int) $resource_type_id,
@@ -147,16 +147,16 @@ class Route
      * @param $resource_type_id
      * @param $resource_id
      * @param array $permitted_resource_types
-     * @param bool $manage
+     * @param bool $write
      */
     static public function resource(
         $resource_type_id,
         $resource_id,
         array $permitted_resource_types,
-        bool $manage = false
+        bool $write = false
     )
     {
-        if ($manage === false) {
+        if ($write === false) {
             if (
                 Resource::existsToUserForViewing(
                     (int) $resource_type_id,
@@ -187,17 +187,17 @@ class Route
      * @param $resource_id
      * @param $item_id
      * @param array $permitted_resource_types
-     * @param bool $manage
+     * @param bool $write
      */
     static public function item(
         $resource_type_id,
         $resource_id,
         $item_id,
         array $permitted_resource_types,
-        bool $manage = false
+        bool $write = false
     )
     {
-        if ($manage === false) {
+        if ($write === false) {
             if (
                 Item::existsToUserForViewing(
                     (int) $resource_type_id,
@@ -231,7 +231,7 @@ class Route
      * @param $item_id
      * @param $item_category_id,
      * @param array $permitted_resource_types
-     * @param bool $manage
+     * @param bool $write
      */
     static public function itemCategory(
         $resource_type_id,
@@ -239,9 +239,9 @@ class Route
         $item_id,
         $item_category_id,
         array $permitted_resource_types,
-        bool $manage = false
+        bool $write = false
     ) {
-        if ($manage === false) {
+        if ($write === false) {
             if (
                 ItemCategory::existsToUserForViewing(
                     (int) $resource_type_id,
@@ -293,7 +293,7 @@ class Route
      * @param $item_category_id
      * @param $item_subcategory_id
      * @param array $permitted_resource_types
-     * @param bool $manage
+     * @param bool $write
      */
     static public function itemSubcategory(
         $resource_type_id,
@@ -302,9 +302,9 @@ class Route
         $item_category_id,
         $item_subcategory_id,
         array $permitted_resource_types,
-        bool $manage = false
+        bool $write = false
     ) {
-        if ($manage === false) {
+        if ($write === false) {
             if (
                 ItemSubcategory::existsToUserForViewing(
                     (int) $resource_type_id,
