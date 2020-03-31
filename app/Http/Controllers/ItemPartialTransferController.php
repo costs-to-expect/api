@@ -164,7 +164,7 @@ class ItemPartialTransferController extends Controller
     }
 
     /**
-     * Generate the OPTIONS request for the category list
+     * Generate the OPTIONS request for the partial transfers collection
      *
      * @param $resource_type_id
      *
@@ -195,14 +195,14 @@ class ItemPartialTransferController extends Controller
     }
 
     /**
-     * Generate the OPTIONS request for a specific category
+     * Generate the OPTIONS request for a specific item partial transfer
      *
      * @param $resource_type_id
-     * @param $category_id
+     * @param $item_partial_transfer_id
      *
      * @return JsonResponse
      */
-    public function optionsShow($resource_type_id, $category_id): JsonResponse
+    public function optionsShow($resource_type_id, $item_partial_transfer_id): JsonResponse
     {
         Route::resourceType(
             (int) $resource_type_id,
