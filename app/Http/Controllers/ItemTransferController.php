@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Item;
+use App\Models\ItemTransfer;
 use App\Models\Resource;
 use App\Option\Post;
 use App\Utilities\Request as UtilityRequest;
@@ -11,7 +12,9 @@ use App\Utilities\RoutePermission;
 use App\Validators\Fields\ItemTransfer as ItemTransferValidator;
 use App\Validators\Route;
 use Exception;
+use Illuminate\Database\QueryException;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\Auth;
 
 /**
  * Transfer items
@@ -54,6 +57,17 @@ class ItemTransferController extends Controller
             $item = (new Item())->instance($resource_type_id, $resource_id, $item_id);
             $item->resource_id = $new_resource_id;
             $item->save();
+
+            $item_transfer = new ItemTransfer([
+                'resource_type_id' => $resource_type_id,
+                'from' => intval($resource_id),
+                'to' => $new_resource_id,
+                'item_id' => $item_id,
+                'transferred_by' => Auth::user()->id
+            ]);
+            $item_transfer->save();
+        } catch (QueryException $e) {
+            UtilityResponse::foreignKeyConstraintError();
         } catch (Exception $e) {
             UtilityResponse::failedToSaveModelForUpdate();
         }
