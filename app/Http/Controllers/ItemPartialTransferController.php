@@ -2,10 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Item;
 use App\Models\ItemPartialTransfer;
 use App\Models\Resource;
+use App\Option\Get;
 use App\Option\Post;
+use App\Utilities\Header;
+use App\Utilities\Pagination as UtilityPagination;
 use App\Utilities\Request as UtilityRequest;
 use App\Utilities\Response as UtilityResponse;
 use App\Utilities\RoutePermission;
@@ -25,6 +27,60 @@ use Illuminate\Support\Facades\Auth;
  */
 class ItemPartialTransferController extends Controller
 {
+    /**
+     * Return the categories collection
+     *
+     * @param string $resource_type_id
+     *
+     * @return JsonResponse
+     */
+    public function index($resource_type_id): JsonResponse
+    {
+        Route::resourceType(
+            (int) $resource_type_id,
+            $this->permitted_resource_types
+        );
+
+        $total = (new ItemPartialTransfer())->total(
+            (int) $resource_type_id,
+            $this->permitted_resource_types,
+            $this->include_public
+        );
+
+        $pagination = UtilityPagination::init(
+                request()->path(),
+                $total,
+                10,
+                $this->allow_entire_collection
+            )->
+            paging();
+
+        $transfers = (new ItemPartialTransfer())->paginatedCollection(
+            (int) $resource_type_id,
+            $this->permitted_resource_types,
+            $this->include_public,
+            $pagination['offset'],
+            $pagination['limit']
+        );
+
+        $headers = new Header();
+        $headers->collection($pagination, count($transfers), $total);
+
+        var_dump($transfers);
+        die;
+
+        /*return response()->json(
+            array_map(
+                function($category) {
+                    return (new CategoryTransformer($category))->toArray();
+                },
+                $categories
+            ),
+            200,
+            $headers->headers()
+        );*/
+    }
+
     public function transfer(
         string $resource_type_id,
         string $resource_id,
@@ -70,6 +126,37 @@ class ItemPartialTransferController extends Controller
         }
 
         return UtilityResponse::successNoContent();
+    }
+
+    /**
+     * Generate the OPTIONS request for the category list
+     *
+     * @param $resource_type_id
+     *
+     * @return JsonResponse
+     */
+    public function optionsIndex($resource_type_id): JsonResponse
+    {
+        Route::resourceType(
+            (int) $resource_type_id,
+            $this->permitted_resource_types
+        );
+
+        $permissions = RoutePermission::resourceType(
+            (int) $resource_type_id,
+            $this->permitted_resource_types
+        );
+
+        $get = Get::init()->
+            setPagination(true)->
+            setAuthenticationStatus($permissions['view'])->
+            setDescription('route-descriptions.item_partial_transfer_GET')->
+            option();
+
+        return $this->optionsResponse(
+            $get,
+            200
+        );
     }
 
     public function optionsTransfer(

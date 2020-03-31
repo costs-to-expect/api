@@ -75,16 +75,6 @@ Route::group(
         );
 
         Route::get(
-            'resource-types/{resource_type_id}/permitted-users',
-            'PermittedUserController@index'
-        );
-
-        Route::options(
-            'resource-types/{resource_type_id}/permitted-users',
-            'PermittedUserController@optionsIndex'
-        );
-
-        Route::get(
             'resource-types/{resource_type_id}/categories',
             'CategoryController@index'
         );
@@ -132,6 +122,26 @@ Route::group(
         Route::options(
             'resource-types/{resource_type_id}/items',
             'ResourceTypeItemController@optionsIndex'
+        );
+
+        Route::get(
+            'resource-types/{resource_type_id}/partial-transfers',
+            'ItemPartialTransferController@index'
+        );
+
+        Route::options(
+            'resource-types/{resource_type_id}/partial-transfers',
+            'ItemPartialTransferController@optionsIndex'
+        );
+
+        Route::get(
+            'resource-types/{resource_type_id}/permitted-users',
+            'PermittedUserController@index'
+        );
+
+        Route::options(
+            'resource-types/{resource_type_id}/permitted-users',
+            'PermittedUserController@optionsIndex'
         );
 
         Route::get(
