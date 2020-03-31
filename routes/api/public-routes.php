@@ -244,6 +244,16 @@ Route::group(
             'ItemSubcategoryController@optionsShow'
         );
 
+        Route::options(
+            'resource-types/{resource_type_id}/transfers',
+            'ItemTransferController@optionsIndex'
+        );
+
+        Route::get(
+            'resource-types/{resource_type_id}/transfers/{item_transfer_id}',
+            'ItemTransferController@show'
+        );
+
         // Request access and error logs
         Route::options(
             'request/error-log',

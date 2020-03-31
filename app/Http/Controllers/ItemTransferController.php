@@ -5,7 +5,11 @@ namespace App\Http\Controllers;
 use App\Models\Item;
 use App\Models\ItemTransfer;
 use App\Models\Resource;
+use App\Models\Transformers\ItemTransfer as ItemTransferTransformer;
+use App\Option\Get;
 use App\Option\Post;
+use App\Utilities\Header;
+use App\Utilities\Pagination as UtilityPagination;
 use App\Utilities\Request as UtilityRequest;
 use App\Utilities\Response as UtilityResponse;
 use App\Utilities\RoutePermission;
@@ -25,6 +29,192 @@ use Illuminate\Support\Facades\Auth;
  */
 class ItemTransferController extends Controller
 {
+    /**
+     * Return the item transfers collection
+     *
+     * @param string $resource_type_id
+     *
+     * @return JsonResponse
+     */
+    public function index($resource_type_id): JsonResponse
+    {
+        Route::resourceType(
+            (int) $resource_type_id,
+            $this->permitted_resource_types
+        );
+
+        $total = (new ItemTransfer())->total(
+            (int) $resource_type_id,
+            $this->permitted_resource_types,
+            $this->include_public
+        );
+
+        $pagination = UtilityPagination::init(
+            request()->path(),
+            $total,
+            10,
+            $this->allow_entire_collection
+        )->
+        paging();
+
+        $transfers = (new ItemTransfer())->paginatedCollection(
+            (int) $resource_type_id,
+            $this->permitted_resource_types,
+            $this->include_public,
+            $pagination['offset'],
+            $pagination['limit']
+        );
+
+        $headers = new Header();
+        $headers->collection($pagination, count($transfers), $total);
+
+        return response()->json(
+            array_map(
+                function($transfer) {
+                    return (new ItemTransfer($transfer))->toArray();
+                },
+                $transfers
+            ),
+            200,
+            $headers->headers()
+        );
+    }
+
+    /**
+     * Generate the OPTIONS request for the transfers collection
+     *
+     * @param $resource_type_id
+     *
+     * @return JsonResponse
+     */
+    public function optionsIndex($resource_type_id): JsonResponse
+    {
+        Route::resourceType(
+            (int) $resource_type_id,
+            $this->permitted_resource_types
+        );
+
+        $permissions = RoutePermission::resourceType(
+            (int) $resource_type_id,
+            $this->permitted_resource_types
+        );
+
+        $get = Get::init()->
+        setPagination(true)->
+        setAuthenticationStatus($permissions['view'])->
+        setDescription('route-descriptions.item_transfer_GET_index')->
+        option();
+
+        return $this->optionsResponse(
+            $get,
+            200
+        );
+    }
+
+    /**
+     * Generate the OPTIONS request for a specific item transfer
+     *
+     * @param $resource_type_id
+     * @param $item_transfer_id
+     *
+     * @return JsonResponse
+     */
+    public function optionsShow($resource_type_id, $item_transfer_id): JsonResponse
+    {
+        Route::resourceType(
+            (int) $resource_type_id,
+            $this->permitted_resource_types
+        );
+
+        $permissions = RoutePermission::resourceType(
+            (int) $resource_type_id,
+            $this->permitted_resource_types
+        );
+
+        $get = Get::init()->
+        setDescription('route-descriptions.item_transfer_GET_show')->
+        setAuthenticationStatus($permissions['view'])->
+        option();
+
+        return $this->optionsResponse(
+            $get,
+            200
+        );
+    }
+
+    public function optionsTransfer(
+        string $resource_type_id,
+        string $resource_id,
+        string $item_id
+    ): JsonResponse
+    {
+        Route::item(
+            $resource_type_id,
+            $resource_id,
+            $item_id,
+            $this->permitted_resource_types
+        );
+
+        $permissions = RoutePermission::item(
+            $resource_type_id,
+            $resource_id,
+            $item_id,
+            $this->permitted_resource_types
+        );
+
+        $post = Post::init()->
+        setFields('api.item-transfer.fields')->
+        setFieldsData(
+            $this->fieldsData(
+                $resource_type_id,
+                $resource_id
+            )
+        )->
+        setDescription('route-descriptions.item_transfer_POST')->
+        setAuthenticationStatus($permissions['manage'])->
+        setAuthenticationRequired(true)->
+        option();
+
+        return $this->optionsResponse($post, 200);
+    }
+
+    /**
+     * Return a single item transfer
+     *
+     * @param $resource_type_id
+     * @param $item_transfer_id
+     *
+     * @return JsonResponse
+     */
+    public function show(
+        $resource_type_id,
+        $item_transfer_id
+    ): JsonResponse
+    {
+        Route::resourceType(
+            (int) $resource_type_id,
+            $this->permitted_resource_types
+        );
+
+        $item_transfer = (new ItemTransfer())->single(
+            (int) $resource_type_id,
+            (int) $item_transfer_id
+        );
+
+        if ($item_transfer === null) {
+            UtilityResponse::notFound(trans('entities.item_transfer'));
+        }
+
+        $headers = new Header();
+        $headers->item();
+
+        return response()->json(
+            (new ItemTransferTransformer($item_transfer))->toArray(),
+            200,
+            $headers->headers()
+        );
+    }
+
     public function transfer(
         string $resource_type_id,
         string $resource_id,
@@ -74,42 +264,6 @@ class ItemTransferController extends Controller
 
         // Endpoint should 404 after request so figure 204 better than redirect or 404
         UtilityResponse::successNoContent();
-    }
-
-    public function optionsTransfer(
-        string $resource_type_id,
-        string $resource_id,
-        string $item_id
-    ): JsonResponse
-    {
-        Route::item(
-            $resource_type_id,
-            $resource_id,
-            $item_id,
-            $this->permitted_resource_types
-        );
-
-        $permissions = RoutePermission::item(
-            $resource_type_id,
-            $resource_id,
-            $item_id,
-            $this->permitted_resource_types
-        );
-
-        $post = Post::init()->
-            setFields('api.item-transfer.fields')->
-            setFieldsData(
-                $this->fieldsData(
-                    $resource_type_id,
-                    $resource_id
-                )
-            )->
-            setDescription('route-descriptions.item_transfer_POST')->
-            setAuthenticationStatus($permissions['manage'])->
-            setAuthenticationRequired(true)->
-            option();
-
-        return $this->optionsResponse($post, 200);
     }
 
     /**

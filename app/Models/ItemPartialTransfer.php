@@ -26,7 +26,7 @@ class ItemPartialTransfer extends Model
      *
      * @param integer $resource_type_id
      * @param array $permitted_resource_types
-     * @param boolean $include_public Should we include categories assigned to public resources
+     * @param boolean $include_public
      * @param integer $offset
      * @param integer $limit
      *
