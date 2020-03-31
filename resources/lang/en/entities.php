@@ -9,6 +9,7 @@ return [
     'subcategory' => 'Subcategory',
     'item' => 'Item (Expense)',
     'item-category' => 'Assigned Category',
+    'item-partial-transfer' => 'Item Partial Transfer',
     'item-subcategory' => 'Assigned Subcategory',
     'item-type' => 'Item type'
 ];

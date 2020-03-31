@@ -79,6 +79,43 @@ class ItemPartialTransferController extends Controller
         );
     }
 
+    /**
+     * Return a single item partial transfer
+     *
+     * @param $resource_type_id
+     * @param $item_partial_transfer_id
+     *
+     * @return JsonResponse
+     */
+    public function show(
+        $resource_type_id,
+        $item_partial_transfer_id
+    ): JsonResponse
+    {
+        Route::resourceType(
+            (int) $resource_type_id,
+            $this->permitted_resource_types
+        );
+
+        $item_partial_transfer = (new ItemPartialTransfer())->single(
+            (int) $resource_type_id,
+            (int) $item_partial_transfer_id
+        );
+
+        if ($item_partial_transfer === null) {
+            UtilityResponse::notFound(trans('entities.item_partial_transfer'));
+        }
+
+        $headers = new Header();
+        $headers->item();
+
+        return response()->json(
+            (new ItemPartialTransferTransformer($item_partial_transfer))->toArray(),
+            200,
+            $headers->headers()
+        );
+    }
+
     public function transfer(
         string $resource_type_id,
         string $resource_id,
@@ -148,8 +185,39 @@ class ItemPartialTransferController extends Controller
         $get = Get::init()->
             setPagination(true)->
             setAuthenticationStatus($permissions['view'])->
-            setDescription('route-descriptions.item_partial_transfer_GET')->
+            setDescription('route-descriptions.item_partial_transfer_GET_index')->
             option();
+
+        return $this->optionsResponse(
+            $get,
+            200
+        );
+    }
+
+    /**
+     * Generate the OPTIONS request for a specific category
+     *
+     * @param $resource_type_id
+     * @param $category_id
+     *
+     * @return JsonResponse
+     */
+    public function optionsShow($resource_type_id, $category_id): JsonResponse
+    {
+        Route::resourceType(
+            (int) $resource_type_id,
+            $this->permitted_resource_types
+        );
+
+        $permissions = RoutePermission::resourceType(
+            (int) $resource_type_id,
+            $this->permitted_resource_types
+        );
+
+        $get = Get::init()->
+        setDescription('route-descriptions.item_partial_transfer_GET_show')->
+        setAuthenticationStatus($permissions['view'])->
+        option();
 
         return $this->optionsResponse(
             $get,
