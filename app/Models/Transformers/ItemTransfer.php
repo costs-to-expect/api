@@ -24,7 +24,7 @@ class ItemTransfer extends Transformer
     public function toArray(): array
     {
         return [
-            'id' => $this->hash->itemPartialTransfer()->encode($this->data_to_transform['id']),
+            'id' => $this->hash->itemTransfer()->encode($this->data_to_transform['id']),
             'from' => [
                 'id' => $this->hash->resource()->encode($this->data_to_transform['from_resource_id']),
                 'name' => $this->data_to_transform['from_resource_name'],

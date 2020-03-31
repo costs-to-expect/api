@@ -50,12 +50,12 @@ class ItemTransferController extends Controller
         );
 
         $pagination = UtilityPagination::init(
-            request()->path(),
-            $total,
-            10,
-            $this->allow_entire_collection
-        )->
-        paging();
+                request()->path(),
+                $total,
+                10,
+                $this->allow_entire_collection
+            )->
+            paging();
 
         $transfers = (new ItemTransfer())->paginatedCollection(
             (int) $resource_type_id,
@@ -71,7 +71,7 @@ class ItemTransferController extends Controller
         return response()->json(
             array_map(
                 static function($transfer) {
-                    return (new ItemTransfer($transfer))->toArray();
+                    return (new ItemTransferTransformer($transfer))->toArray();
                 },
                 $transfers
             ),
