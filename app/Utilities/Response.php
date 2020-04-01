@@ -115,7 +115,7 @@ class Response
     }
 
     /**
-     * 500 error, unable to select the data ready to update
+     * 500 error, unable to select the data ready to enable us to update or delete
      *
      * Until we add logging this is an unknown server error, later we will
      * add MySQL error logging
@@ -124,7 +124,7 @@ class Response
      *
      * @return JsonResponse
      */
-    public static function failedToSelectModelForUpdate(?Exception $e = null): JsonResponse
+    public static function failedToSelectModelForUpdateOrDelete(?Exception $e = null): JsonResponse
     {
         $response = [
             'message' => trans('responses.model-select-failure'),

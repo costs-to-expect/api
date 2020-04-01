@@ -327,7 +327,7 @@ class ResourceController extends Controller
         $resource = (new Resource())->instance($resource_type_id, $resource_id);
 
         if ($resource === null) {
-            UtilityResponse::failedToSelectModelForUpdate();
+            UtilityResponse::failedToSelectModelForUpdateOrDelete();
         }
 
         UtilityRequest::checkForEmptyPatch();

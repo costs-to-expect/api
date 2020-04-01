@@ -59,7 +59,8 @@ return [
 
     'item_partial_transfer_GET_index' => 'Return the partial transfers for the selected resource type',
     'item_partial_transfer_GET_show' => 'Return the selected partial transfer',
-    'item_partial_transfer_POST' => 'Portion a percentage of the total for an item to another resource',
+    'item_partial_transfer_POST' => 'Reassign a percentage of the total for an item to another resource',
+    'item_partial_transfer_DELETE' => 'Delete the selected partial transfer',
 
     'permitted_user_GET_index' => 'Return the permitted users',
     'permitted_user_POST' => 'Assign a permitted user',

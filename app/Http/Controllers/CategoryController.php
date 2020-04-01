@@ -337,7 +337,7 @@ class CategoryController extends Controller
         $category = (new Category())->instance($category_id);
 
         if ($category === null) {
-            UtilityResponse::failedToSelectModelForUpdate();
+            UtilityResponse::failedToSelectModelForUpdateOrDelete();
         }
 
         UtilityRequest::checkForEmptyPatch();

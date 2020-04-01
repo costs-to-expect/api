@@ -352,7 +352,7 @@ class SubcategoryController extends Controller
         $subcategory = (new Subcategory())->instance($category_id, $subcategory_id);
 
         if ($subcategory === null) {
-            UtilityResponse::failedToSelectModelForUpdate();
+            UtilityResponse::failedToSelectModelForUpdateOrDelete();
         }
 
         UtilityRequest::checkForEmptyPatch();

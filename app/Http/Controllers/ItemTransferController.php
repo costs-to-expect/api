@@ -249,7 +249,7 @@ class ItemTransferController extends Controller
                 $item->resource_id = $new_resource_id;
                 $item->save();
             } else {
-                UtilityResponse::failedToSelectModelForUpdate();
+                UtilityResponse::failedToSelectModelForUpdateOrDelete();
             }
 
             $item_transfer = new ItemTransfer([
