@@ -269,16 +269,16 @@ class CategoryController extends Controller
         ]);
         UtilityRequest::validateAndReturnErrors($validator);
 
-        //try {
+        try {
             $category = new Category([
                 'name' => request()->input('name'),
                 'description' => request()->input('description'),
                 'resource_type_id' => $resource_type_id
             ]);
             $category->save();
-        //} catch (Exception $e) {
-          //  UtilityResponse::failedToSaveModelForCreate();
-        //}
+        } catch (Exception $e) {
+           UtilityResponse::failedToSaveModelForCreate();
+        }
 
         return response()->json(
             (new CategoryTransformer((new Category)->instanceToArray($category)))->toArray(),

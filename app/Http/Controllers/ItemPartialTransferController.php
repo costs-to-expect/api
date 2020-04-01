@@ -19,6 +19,7 @@ use Exception;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Auth;
+use Monolog\Utils;
 
 /**
  * Partial transfer of items
@@ -191,12 +192,24 @@ class ItemPartialTransferController extends Controller
             ]);
             $partial_transfer->save();
         } catch (QueryException $e) {
-            UtilityResponse::foreignKeyConstraintError();
+            return UtilityResponse::foreignKeyConstraintError();
         } catch (Exception $e) {
-            UtilityResponse::failedToSaveModelForCreate();
+            return UtilityResponse::failedToSaveModelForCreate();
         }
 
-        return UtilityResponse::successNoContent();
+        $item_partial_transfer = (new ItemPartialTransfer())->single(
+            (int) $resource_type_id,
+            (int) $partial_transfer->id
+        );
+
+        if ($item_partial_transfer === null) {
+            return UtilityResponse::notFound(trans('entities.item_partial_transfer'));
+        }
+
+        return response()->json(
+            (new ItemPartialTransferTransformer($item_partial_transfer))->toArray(),
+            201
+        );
     }
 
     /**

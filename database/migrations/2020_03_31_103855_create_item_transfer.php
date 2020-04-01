@@ -24,11 +24,11 @@ class CreateItemTransfer extends Migration
             $table->unsignedBigInteger('item_id');
             $table->unsignedBigInteger('transferred_by');
             $table->timestamps();
-            $table->foreign('resource_type_id')->references('id')->on('resource_type');
-            $table->foreign('from')->references('id')->on('resource');
-            $table->foreign('to')->references('id')->on('resource');
-            $table->foreign('item_id')->references('id')->on('item');
-            $table->foreign('transferred_by')->references('id')->on('users');
+            $table->foreign('resource_type_id')->references('id')->on('resource_type')->onDelete('cascade');
+            $table->foreign('from')->references('id')->on('resource')->onDelete('cascade');
+            $table->foreign('to')->references('id')->on('resource')->onDelete('cascade');
+            $table->foreign('item_id')->references('id')->on('item')->onDelete('cascade');
+            $table->foreign('transferred_by')->references('id')->on('users')->onDelete('cascade');
             $table->unique(['resource_type_id', 'from', 'item_id'], 'unique_item_partial_transfer');
         });
     }

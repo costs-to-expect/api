@@ -78,6 +78,11 @@ Route::group(
         );
 
         Route::delete(
+            'resource-types/{resource_type_id}/partial-transfers/{item_partial_transfer_id}',
+            'ItemPartialTransferController@delete'
+        );
+
+        Route::delete(
             'resource-types/{resource_type_id}/resources/{resource_id}',
             'ResourceController@delete'
         );

@@ -241,7 +241,7 @@ class ItemTransferController extends Controller
             $new_resource_id = $this->hash->decode('resource', request()->input('resource_id'));
 
             if ($new_resource_id === false) {
-                UtilityResponse::unableToDecode();
+                return UtilityResponse::unableToDecode();
             }
 
             $item = (new Item())->instance($resource_type_id, $resource_id, $item_id);
@@ -249,7 +249,7 @@ class ItemTransferController extends Controller
                 $item->resource_id = $new_resource_id;
                 $item->save();
             } else {
-                UtilityResponse::failedToSelectModelForUpdateOrDelete();
+                return UtilityResponse::failedToSelectModelForUpdateOrDelete();
             }
 
             $item_transfer = new ItemTransfer([
@@ -261,9 +261,9 @@ class ItemTransferController extends Controller
             ]);
             $item_transfer->save();
         } catch (QueryException $e) {
-            UtilityResponse::foreignKeyConstraintError();
+            return UtilityResponse::foreignKeyConstraintError();
         } catch (Exception $e) {
-            UtilityResponse::failedToSaveModelForUpdate();
+            return UtilityResponse::failedToSaveModelForUpdate();
         }
 
         return UtilityResponse::successNoContent();
