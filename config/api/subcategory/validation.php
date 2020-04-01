@@ -13,7 +13,12 @@ return [
     ],
     'PATCH' => [
         'fields' => [
-            'description' => 'sometimes|string|max:255'
+            'description' =>
+                [
+                    'sometimes',
+                    'string',
+                    'max:255'
+                ]
         ],
         'messages' => [
             'name.unique' => 'subcategory/validation.name-unique'

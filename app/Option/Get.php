@@ -70,9 +70,9 @@ class Get extends Option
      */
     static private $sortable_parameters;
 
-    static private function reset()
+    private static function reset(): void
     {
-        self::resetBase();;
+        self::resetBase();
 
         self::$localised_parameters = [];
 
@@ -89,15 +89,15 @@ class Get extends Option
         self::$sortable_parameters = [];
     }
 
-    static public function init(): Get
+    public static function init(): Get
     {
-        self::$instance = new Get();
-        self::$instance->reset();
+        self::$instance = new self();
+        self::$instance::reset();
 
         return self::$instance;
     }
 
-    static public function setFilterable(
+    public static function setFilterable(
         string $config_path
     ): Get
     {
@@ -110,7 +110,7 @@ class Get extends Option
         return self::$instance;
     }
 
-    static public function setPagination(
+    public static function setPagination(
         bool $status = false
     ): Get
     {
@@ -121,7 +121,7 @@ class Get extends Option
         return self::$instance;
     }
 
-    static public function setPaginationOverride(
+    public static function setPaginationOverride(
         bool $status = false
     ): Get
     {
@@ -132,7 +132,7 @@ class Get extends Option
         return self::$instance;
     }
 
-    static public function setParameters(
+    public static function setParameters(
         string $config_path
     ): Get
     {
@@ -141,7 +141,7 @@ class Get extends Option
         return self::$instance;
     }
 
-    static public function setParametersData(
+    public static function setParametersData(
         array $parameters = []
     ): Get
     {
@@ -150,7 +150,7 @@ class Get extends Option
         return self::$instance;
     }
 
-    static public function setSearchable(
+    public static function setSearchable(
         string $config_path
     ): Get
     {
@@ -163,7 +163,7 @@ class Get extends Option
         return self::$instance;
     }
 
-    static public function setSortable(
+    public static function setSortable(
         string $config_path
     ): Get
     {
@@ -176,7 +176,7 @@ class Get extends Option
         return self::$instance;
     }
 
-    static protected function build()
+    protected static function build()
     {
         self::$localised_parameters = [];
 
@@ -198,7 +198,7 @@ class Get extends Option
         }
     }
 
-    static public function option(): array
+    public static function option(): array
     {
         self::build();
 

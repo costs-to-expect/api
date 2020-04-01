@@ -5,7 +5,10 @@ declare(strict_types=1);
 return [
     'POST' => [
         'fields' => [
-            'description' => 'required|string'
+            'description' => [
+                'required',
+                'string'
+            ]
         ],
         'messages' => [
             'name.unique' => 'category/validation.name-unique'
@@ -13,7 +16,11 @@ return [
     ],
     'PATCH' => [
         'fields' => [
-            'description' => 'sometimes|string|max:255'
+            'description' => [
+                'sometimes',
+                'string',
+                'max:255'
+            ]
         ],
         'messages' => [
             'name.unique' => 'category/validation.name-unique'

@@ -53,6 +53,11 @@ Route::group(
         );
 
         Route::post(
+            'resource-types/{resource_type_id}/resources/{resource_id}/items/{item_id}/partial-transfer',
+            'ItemPartialTransferController@transfer'
+        );
+
+        Route::post(
             'resource-types/{resource_type_id}/resources/{resource_id}/items/{item_id}/transfer',
             'ItemTransferController@transfer'
         );
@@ -70,6 +75,11 @@ Route::group(
         Route::delete(
             'resource-types/{resource_type_id}/categories/{category_id}/subcategories/{subcategory_id}',
             'SubcategoryController@delete'
+        );
+
+        Route::delete(
+            'resource-types/{resource_type_id}/partial-transfers/{item_partial_transfer_id}',
+            'ItemPartialTransferController@delete'
         );
 
         Route::delete(

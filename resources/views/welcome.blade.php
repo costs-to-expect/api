@@ -204,7 +204,7 @@
 
                     <hr />
 
-                    <h2>Latest feature release [v2.09.0]</h2>
+                    <h2>Latest feature release [v2.10.0]</h2>
 
                     <p>The latest release of the Costs to Expect API is
                         {{ $version }}; we released it on the {{ date('jS M Y', strtotime($date)) }}.</p>
@@ -215,48 +215,30 @@
                     <h3>Added</h3>
 
                     <ul>
-                        <li>We have added range filtering to the `items` collection; initially, we have added support for filtering for the `effective_date` of `allocated expense` items.</li>
-                        <li>We have added range filtering to the resource type `items` collection; as above, we have added `effective_date` filtering.</li>
-                        <li>We have added support for range filtering to the `items` and `resource type item` summary routes.</li>
-                        <li>We have added an X-Filter header to show the valid filters applied to a collection.</li>
-                        <li>We have added a link to Costs to Expect blog; the blog is a central repository for all product updates and somewhere to talk about our products.</li>
-                        <li>We have added a `FilterParameters` class to fetch any filter parameters from the URI and validate the format and values.</li>
+                        <li>We have added a new route, `/resource_types/[id]/resources/[id]/items/[id]/partial-transfer`; A partial transfer allows you to transfer a percentage of the `total` for an item from one resource to another.</li>
+                        <li>We have added an `item_transfer` table; the table will log which items were transferred and by whom.</li>
+                        <li>We have added a partial transfers collection; the route is `/resource_types/[id]/partial-transfers`.</li>
+                        <li>We have added a partial transfers item view; the route is `/resource_types/[id]/partial-transfers/[id]`.</li>
+                        <li>We have added a transfers collection; the route is `/resource_types/[id]/transfers`.</li>
+                        <li>We have added a transfers item view; the route is `/resource_types/[id]/transfers/[id]`.</li>
+                        <li>We have added a delete endpoint for partial transfers.</li>
                     </ul>
 
                     <h3>Changed</h3>
 
                     <ul>
-                        <li>We have refreshed the landing page, we have added updated text for each of the products within the service.</li>
-                        <li>We have tweaked the stying for the landing page.</li>
-                        <li>We have renamed the data methods in the `Option` subclasses, the conditional prefix is confusing.</li>
-                        <li>We have added an `interface` for the item model classes.</li>
-                        <li>We have added an `interface` for the resource type item model classes.</li>
-                        <li>We have renamed the existing Interfaces, more straightforward names.</li>
-                        <li>We have added additional Interfaces interfaces for the summary models.</li>
-                        <li>We have refactored several model classes to again, simplify the naming.</li>
-                        <li>We have corrected multiple summary config files, unnecessary structure.</li>
-                        <li>We have unified the parameters for related item methods.</li>
-                        <li>We have switched to a new font; the font is more legible at small screen sizes, and, it looks cool.</li>
-                        <li>We have reviewed our HTTP headers; Content-Language missing along with other expected headers.</li>
-                        <li>We log the id of the user that added a user to the 'permitted_user' table; this is to help later with permitted user management.</li>
-                        <li>We have updated the API to the most recent version of Laravel 6.</li>
-                        <li>We have updated the `resource-types/[id]/resources/[id]/items/[id]` GET endpoint; the `include-categories` and `include-subcategories` can be included in the request for 'allocated-expense' and 'simple-expense' type items.</li>
-                        <li>When a response includes additional data via the include parameters, we include the URI fragment for that data.</li>
+                        <li>We have reformatted the validation rules in the configuration files; easier to read and simpler to add additional rules.</li>
+                        <li>We have switched the HTTP status code for a "Constraint error" from 500 to 409.</li>
+                        <li>We have tweaked the description for the resource field in the `/resource_types/[id]/resources/[id]/items/[id]/transfer` OPTIONS request.</li>
+                        <li>We have renamed the third parameter of the route validation methods; we changed the name from `$manage` to `$write`.</li>
+                        <li>We have renamed a response helper method; it was not clear from the name that the method is used for updates and delete.</li>
                     </ul>
 
                     <h3>Fixed</h3>
 
                     <ul>
-                        <li>We have updated the `Option/Get` class, the `sort`, `search` and `filter` parameters will only display if there are viable parameters.</li>
-                        <li>The `description` field for the `simple-item` type should be nullable.</li>
-                        <li>Card data missing from head.</li>
-                        <li>Google analytics missing.</li>
-                    </ul>
-
-                    <h3>Removed</h3>
-
-                    <ul>
-                        <li>We have removed the layout file, not used as there is only one view file for the API.</li>
+                        <li>It is possible to set the quantity for a `simple-item` item as zero.</li>
+                        <li>It is possible to clear optional values in a PATCH request.</li>
                     </ul>
                 </div>
             </div>

@@ -42,9 +42,12 @@ class Hash
         $this->hashers['resource'] = new Hashids($config['resource'], $min_length);
         $this->hashers['item'] = new Hashids($config['item'], $min_length);
         $this->hashers['item_category'] = new Hashids($config['item_category'], $min_length);
-        $this->hashers['item_sub_category'] = new Hashids($config['item_subcategory'], $min_length);
+        $this->hashers['item_partial_transfer'] = new Hashids($config['item_partial_transfer'], $min_length);
+        $this->hashers['item_subcategory'] = new Hashids($config['item_subcategory'], $min_length);
+        $this->hashers['item_transfer'] = new Hashids($config['item_transfer'], $min_length);
         $this->hashers['item_type'] = new Hashids($config['item_type'], $min_length);
         $this->hashers['permitted_user'] = new Hashids($config['permitted_user'], $min_length);
+        $this->hashers['user'] = new Hashids($config['user'], $min_length);
     }
 
     /**
@@ -57,9 +60,9 @@ class Hash
     {
         if (array_key_exists($type, $this->hashers) === true) {
             return $this->hashers[$type]->encode($parameter);
-        } else {
-            return false;
         }
+
+        return false;
     }
 
     /**
@@ -73,13 +76,13 @@ class Hash
         if (array_key_exists($type, $this->hashers) === true) {
             $id = $this->hashers[$type]->decode($parameter);
             if (is_array($id) && array_key_exists(0, $id)) {
-                return intval($id[0]);
-            } else {
-                return false;
+                return (int) $id[0];
             }
-        } else {
+
             return false;
         }
+
+        return false;
     }
 
     /**
@@ -143,17 +146,37 @@ class Hash
     }
 
     /**
+     * Helper method to return the item partial transfer hash object
+     *
+     * @return Hashids
+     */
+    public function itemPartialTransfer(): Hashids
+    {
+        return $this->hashers['item_partial_transfer'];
+    }
+
+    /**
      * Helper method to return the item sub category hash object
      *
      * @return Hashids
      */
     public function itemSubCategory(): Hashids
     {
-        return $this->hashers['item_sub_category'];
+        return $this->hashers['item_subcategory'];
     }
 
     /**
-     * Helper method to return the item type
+     * Helper method to return the item transfer hash object
+     *
+     * @return Hashids
+     */
+    public function itemTransfer(): Hashids
+    {
+        return $this->hashers['item_transfer'];
+    }
+
+    /**
+     * Helper method to return the item type object
      *
      * @return Hashids
      */
@@ -163,12 +186,22 @@ class Hash
     }
 
     /**
-     * Helper method to return the permitted user
+     * Helper method to return the permitted user object
      *
      * @return Hashids
      */
     public function permittedUser(): Hashids
     {
         return $this->hashers['permitted_user'];
+    }
+
+    /**
+     * Helper method to return the user object
+     *
+     * @return Hashids
+     */
+    public function user(): Hashids
+    {
+        return $this->hashers['user'];
     }
 }

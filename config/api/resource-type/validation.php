@@ -14,7 +14,11 @@ return [
     ],
     'PATCH' => [
         'fields' => [
-            'description' => 'sometimes|string|max:255',
+            'description' => [
+                'sometimes',
+                'string',
+                'max:255'
+            ],
             'public' => 'sometimes|boolean'
         ],
         'messages' => [

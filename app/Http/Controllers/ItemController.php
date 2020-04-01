@@ -402,7 +402,7 @@ class ItemController extends Controller
         $item_type = $item_interface->instance((int) $item_id);
 
         if ($item === null || $item_type === null) {
-            UtilityResponse::failedToSelectModelForUpdate();
+            UtilityResponse::failedToSelectModelForUpdateOrDelete();
         }
 
         try {
@@ -415,7 +415,7 @@ class ItemController extends Controller
             UtilityResponse::failedToSaveModelForUpdate();
         }
 
-        UtilityResponse::successNoContent();
+        return UtilityResponse::successNoContent();
     }
 
     /**

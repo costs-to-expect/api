@@ -30,7 +30,7 @@ class RoutePermission
      *
      * @return array Two indexes, view and manage, values for both boolean
      */
-    static public function category(
+    public static function category(
         $resource_type_id,
         $category_id,
         array $permitted_resource_types
@@ -62,7 +62,7 @@ class RoutePermission
      *
      * @return array Two indexes, view and manage, values for both boolean
      */
-    static public function subcategory(
+    public static function subcategory(
         $resource_type_id,
         $category_id,
         $subcategory_id,
@@ -94,7 +94,7 @@ class RoutePermission
      *
      * @return array Two indexes, view and manage, values for both boolean
      */
-    static public function resourceType(
+    public static function resourceType(
         $resource_type_id,
         array $permitted_resource_types
     ): array
@@ -121,7 +121,7 @@ class RoutePermission
      *
      * @return array Two indexes, view and manage, values for both boolean
      */
-    static public function resource(
+    public static function resource(
         $resource_type_id,
         $resource_id,
         array $permitted_resource_types
@@ -152,7 +152,7 @@ class RoutePermission
      *
      * @return array Two indexes, view and manage, values for both boolean
      */
-    static public function item(
+    public static function item(
         $resource_type_id,
         $resource_id,
         $item_id,
@@ -187,7 +187,7 @@ class RoutePermission
      *
      * @return array Two indexes, view and manage, values for both boolean
      */
-    static public function itemCategory(
+    public static function itemCategory(
         $resource_type_id,
         $resource_id,
         $item_id,
@@ -226,7 +226,7 @@ class RoutePermission
      *
      * @return array Two indexes, view and manage, values for both boolean
      */
-    static public function itemSubcategory(
+    public static function itemSubcategory(
         $resource_type_id,
         $resource_id,
         $item_id,

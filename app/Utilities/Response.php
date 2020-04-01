@@ -3,9 +3,9 @@ declare(strict_types=1);
 
 namespace App\Utilities;
 
-use App;
 use Exception;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\App;
 
 /**
  * Utility class to return default responses, we want some consistency
@@ -23,9 +23,9 @@ use Illuminate\Http\JsonResponse;
 class Response
 {
 
-    static protected function addException(array $response, ?Exception $e = null): array
+    protected static function addException(array $response, ?Exception $e = null): array
     {
-        if (App::environment() !== 'production' && $e !== null) {
+        if ($e !== null && App::environment() !== 'production') {
             $response['exception'] = [
                 'message' => $e->getMessage(),
                 'file' => $e->getFile(),
@@ -45,7 +45,7 @@ class Response
      *
      * @return JsonResponse
      */
-    static public function notFound(?string $type = null, ?Exception $e = null): JsonResponse
+    public static function notFound(?string $type = null, ?Exception $e = null): JsonResponse
     {
         $response = [
             'message' => ($type !== null) ? trans('responses.not-found-entity', ['type'=>$type]) :
@@ -71,7 +71,7 @@ class Response
      *
      * @return JsonResponse
      */
-    static public function notFoundOrNotAccessible(?string $type = null, ?Exception $e = null): JsonResponse
+    public static function notFoundOrNotAccessible(?string $type = null, ?Exception $e = null): JsonResponse
     {
         $response = [
             'message' => ($type !== null) ? trans('responses.not-found-or-not-accessible-entity', ['type'=>$type]) :
@@ -97,7 +97,7 @@ class Response
      *
      * @return JsonResponse
      */
-    static public function foreignKeyConstraintError($message = '', ?Exception $e = null): JsonResponse
+    public static function foreignKeyConstraintError($message = '', ?Exception $e = null): JsonResponse
     {
         $response = [
             'message' => (strlen($message) > 0) ? $message : trans('responses.constraint')
@@ -109,13 +109,13 @@ class Response
 
         response()->json(
             $response,
-            500
+            409
         )->send();
         exit;
     }
 
     /**
-     * 500 error, unable to select the data ready to update
+     * 500 error, unable to select the data ready to enable us to update or delete
      *
      * Until we add logging this is an unknown server error, later we will
      * add MySQL error logging
@@ -124,7 +124,7 @@ class Response
      *
      * @return JsonResponse
      */
-    static public function failedToSelectModelForUpdate(?Exception $e = null): JsonResponse
+    public static function failedToSelectModelForUpdateOrDelete(?Exception $e = null): JsonResponse
     {
         $response = [
             'message' => trans('responses.model-select-failure'),
@@ -151,7 +151,7 @@ class Response
      *
      * @return JsonResponse
      */
-    static public function failedToSaveModelForUpdate(?Exception $e = null): JsonResponse
+    public static function failedToSaveModelForUpdate(?Exception $e = null): JsonResponse
     {
         $response = [
             'message' => trans('responses.model-save-failure-update'),
@@ -175,7 +175,7 @@ class Response
      *
      * @return JsonResponse
      */
-    static public function authenticationRequired(?Exception $e = null): JsonResponse
+    public static function authenticationRequired(?Exception $e = null): JsonResponse
     {
         $response = [
             'message' => trans('responses.authentication-required')
@@ -202,7 +202,7 @@ class Response
      *
      * @return JsonResponse
      */
-    static public function failedToSaveModelForCreate(?Exception $e = null): JsonResponse
+    public static function failedToSaveModelForCreate(?Exception $e = null): JsonResponse
     {
         $response = [
             'message' => trans('responses.model-save-failure-create'),
@@ -227,7 +227,7 @@ class Response
      *
      * @return JsonResponse
      */
-    static public function unableToDecode(?Exception $e = null): JsonResponse
+    public static function unableToDecode(?Exception $e = null): JsonResponse
     {
         $response = [
             'message' => trans('responses.decode-error')
@@ -251,7 +251,7 @@ class Response
      *
      * @return JsonResponse
      */
-    static public function successNoContent(?Exception $e = null): JsonResponse
+    public static function successNoContent(?Exception $e = null): JsonResponse
     {
         $response = [];
 
@@ -271,7 +271,7 @@ class Response
      *
      * @return JsonResponse
      */
-    static public function successEmptyContent(bool $array = false, ?Exception $e = null): JsonResponse
+    public static function successEmptyContent(bool $array = false, ?Exception $e = null): JsonResponse
     {
         $response = ($array === true ? [] : null);
 
@@ -290,7 +290,7 @@ class Response
      *
      * @return JsonResponse
      */
-    static public function nothingToPatch(?Exception $e = null)
+    public static function nothingToPatch(?Exception $e = null): JsonResponse
     {
         $response = [
             'message' => trans('responses.patch-empty')
@@ -315,7 +315,7 @@ class Response
      *
      * @return JsonResponse
      */
-    static public function invalidFieldsInRequest(array $invalid_fields, ?Exception $e = null): JsonResponse
+    public static function invalidFieldsInRequest(array $invalid_fields, ?Exception $e = null): JsonResponse
     {
         $response = [
             'message' => trans('responses.patch-invalid'),
@@ -340,7 +340,7 @@ class Response
      *
      * @return JsonResponse
      */
-    static public function maintenance(?Exception $e = null): JsonResponse
+    public static function maintenance(?Exception $e = null): JsonResponse
     {
         $response = [
             'message' => trans('responses.maintenance')
@@ -365,7 +365,7 @@ class Response
      *
      * @return JsonResponse
      */
-    static public function validationErrors(array $validation_errors, ?Exception $e = null): JsonResponse
+    public static function validationErrors(array $validation_errors, ?Exception $e = null): JsonResponse
     {
         $response = [
             'message' => trans('responses.validation'),

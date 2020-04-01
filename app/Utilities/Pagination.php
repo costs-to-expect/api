@@ -18,7 +18,7 @@ use Illuminate\Support\Facades\Config;
  */
 class Pagination
 {
-    private static $instance = null;
+    private static $instance;
 
     /**
      * @var array
@@ -79,7 +79,7 @@ class Pagination
     ): Pagination
     {
         if (self::$instance === null) {
-            self::$instance = new Pagination;
+            self::$instance = new self;
         }
 
         self::$parameters = [];
@@ -153,13 +153,13 @@ class Pagination
                 'offset' => self::$offset,
                 'limit' => self::$limit
             ];
-        } else {
-            return [
-                'links' => $pagination_uris,
-                'offset' => 0,
-                'limit' => self::$total
-            ];
         }
+
+        return [
+            'links' => $pagination_uris,
+            'offset' => 0,
+            'limit' => self::$total
+        ];
     }
 
     /**
@@ -173,7 +173,7 @@ class Pagination
         if (count(self::$parameters) > 0) {
             foreach (self::$parameters as $parameter => $parameter_value) {
                 if ($parameter_value !== null) {
-                    if (strlen($parameters) > 0) {
+                    if ($parameters !== '') {
                         $parameters .= '&';
                     }
 
@@ -192,7 +192,7 @@ class Pagination
             }
         }
 
-        if (strlen($parameters) > 0) {
+        if ($parameters !== '') {
             $parameters .= '&';
         }
 
@@ -204,14 +204,14 @@ class Pagination
      *
      * @return string
      */
-    private static function processSortParameters()
+    private static function processSortParameters(): string
     {
         $sort_parameters = '';
         foreach (self::$sort_parameters as $field => $order) {
             $sort_parameters .= '|' . $field . ':' . $order;
         }
 
-        if (strlen($sort_parameters) > 0) {
+        if ($sort_parameters !== '') {
             $sort_parameters = 'sort=' . ltrim($sort_parameters, '|') . '&';
         }
 
@@ -223,14 +223,14 @@ class Pagination
      *
      * @return string
      */
-    private static function processSearchParameters()
+    private static function processSearchParameters(): string
     {
         $search_parameters = '';
         foreach (self::$search_parameters as $field => $partial_term) {
             $search_parameters .= '|' . $field . ':' . urlencode($partial_term);
         }
 
-        if (strlen($search_parameters) > 0) {
+        if ($search_parameters !== '') {
             $search_parameters = 'search=' . ltrim($search_parameters, '|') . '&';
         }
 
@@ -244,8 +244,8 @@ class Pagination
      */
     private static function render(): array
     {
-        self::$offset = intval(request()->query('offset', 0));
-        self::$limit = intval(request()->query('limit', self::$limit));
+        self::$offset = (int) request()->query('offset', 0);
+        self::$limit = (int) request()->query('limit', self::$limit);
         if (self::$allow_override === true) {
             self::$collection = General::booleanValue(request()->query('collection', false));
         }

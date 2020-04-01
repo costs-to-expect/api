@@ -13,7 +13,7 @@ namespace App\Option;
  */
 class Delete extends Option
 {
-    static private function reset()
+    private static function reset(): void
     {
         self::resetBase();
 
@@ -21,20 +21,20 @@ class Delete extends Option
         self::$description = null;
     }
 
-    static public function init(): Delete
+    public static function init(): Delete
     {
-        self::$instance = new Delete();
-        self::$instance->reset();
+        self::$instance = new self();
+        self::$instance::reset();
 
         return self::$instance;
     }
 
-    static protected function build()
+    protected static function build()
     {
         // Not necessary for this simple Option
     }
 
-    static public function option(): array
+    public static function option(): array
     {
         return [
             'DELETE' => [

@@ -35,7 +35,9 @@ class ConvertRouteParameters
             'resource_id' => new Hashids($config['resource'], $min_length),
             'item_id' => new Hashids($config['item'], $min_length),
             'item_category_id' => new Hashids($config['item_category'], $min_length),
+            'item_partial_transfer_id' => new Hashids($config['item_partial_transfer'], $min_length),
             'item_subcategory_id' => new Hashids($config['item_subcategory'], $min_length),
+            'item_transfer_id' => new Hashids($config['item_transfer'], $min_length),
             'item_type_id' => new Hashids($config['item_type'], $min_length),
         ];
 
