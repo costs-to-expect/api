@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\ItemPartialTransfer;
 use App\Models\Resource;
 use App\Models\Transformers\ItemPartialTransfer as ItemPartialTransferTransformer;
+use App\Option\Delete;
 use App\Option\Get;
 use App\Option\Post;
 use App\Utilities\Header;
@@ -77,6 +78,41 @@ class ItemPartialTransferController extends Controller
             200,
             $headers->headers()
         );
+    }
+
+    /**
+     * Delete the requested partial transfer
+     *
+     * @param $resource_type_id
+     * @param $item_partial_transfer_id
+     *
+     * @return JsonResponse
+     */
+    public function delete(
+        $resource_type_id,
+        $item_partial_transfer_id
+    ): JsonResponse
+    {
+        Route::resourceType(
+            (int) $resource_type_id,
+            $this->permitted_resource_types,
+            true
+        );
+
+        try {
+            $partial_transfer = (new ItemPartialTransfer())->find($item_partial_transfer_id);
+
+            if ($partial_transfer !== null) {
+                $partial_transfer->delete();
+                return UtilityResponse::successNoContent();
+            }
+
+            return UtilityResponse::failedToSelectModelForUpdateOrDelete();
+        } catch (QueryException $e) {
+            return UtilityResponse::foreignKeyConstraintError();
+        } catch (Exception $e) {
+            return UtilityResponse::notFound(trans('entities.item-partial-transfer'), $e);
+        }
     }
 
     /**
@@ -215,12 +251,18 @@ class ItemPartialTransferController extends Controller
         );
 
         $get = Get::init()->
-        setDescription('route-descriptions.item_partial_transfer_GET_show')->
-        setAuthenticationStatus($permissions['view'])->
-        option();
+            setDescription('route-descriptions.item_partial_transfer_GET_show')->
+            setAuthenticationStatus($permissions['view'])->
+            option();
+
+        $delete = Delete::init()->
+            setAuthenticationRequired(true)->
+            setAuthenticationStatus($permissions['manage'])->
+            setDescription('route-descriptions.item_partial_transfer_DELETE')->
+            option();
 
         return $this->optionsResponse(
-            $get,
+            $get + $delete,
             200
         );
     }
