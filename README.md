@@ -126,6 +126,12 @@ additionally, the same is true if you are assigned to a resource type.
 | DELETE   | v2/resource-types/{resource_type_id}/categories/{category_id}/subcategories/{subcategory_id} |
 | GET/HEAD | v2/resource-types/{resource_type_id}/items |
 | OPTIONS  | v2/resource-types/{resource_type_id}/items |
+| GET/HEAD | v2/resource-types/{resource_type_id}/partial-transfers |
+| OPTIONS  | v2/resource-types/{resource_type_id}/partial-transfers |
+| GET/HEAD | v2/resource-types/{resource_type_id}/partial-transfers/{item_partial_transfer_id} |
+| OPTIONS  | v2/resource-types/{resource_type_id}/partial-transfers/{item_partial_transfer_id} |
+| DELETE   | v2/resource-types/{resource_type_id}/partial-transfers/{item_partial_transfer_id} |
+| GET/HEAD | v2/resource-types/{resource_type_id}/permitted-users |
 | OPTIONS  | v2/resource-types/{resource_type_id}/permitted-users |
 | GET/HEAD | v2/resource-types/{resource_type_id}/resources |
 | OPTIONS  | v2/resource-types/{resource_type_id}/resources |
@@ -157,6 +163,10 @@ additionally, the same is true if you are assigned to a resource type.
 | POST     | v2/resource-types/{resource_type_id}/resources/{resource_id}/items/{item_id}/partial-transfer |
 | OPTIONS  | v2/resource-types/{resource_type_id}/resources/{resource_id}/items/{item_id}/transfer |
 | POST     | v2/resource-types/{resource_type_id}/resources/{resource_id}/items/{item_id}/transfer |
+| GET/HEAD | v2/resource-types/{resource_type_id}/transfers |
+| OPTIONS  | v2/resource-types/{resource_type_id}/transfers |
+| GET/HEAD | v2/resource-types/{resource_type_id}/transfers/{item_transfer_id} |
+| OPTIONS  | v2/resource-types/{resource_type_id}/transfers/{item_transfer_id} |
 | GET/HEAD | v2/request/error-log |
 | OPTIONS  | v2/request/error-log |
 | POST     | v2/request/error-log |
