@@ -2,6 +2,27 @@
 
 The complete changelog for the Costs to Expect REST API, our changelog follows the format defined at https://keepachangelog.com/en/1.0.0/
 
+## [v2.10.0] - 2020-04-01
+### Added 
+- We have added a new route, `/resource_types/[id]/resources/[id]/items/[id]/partial-transfer`; A partial transfer allows you to transfer a percentage of the `total` for an item from one resource to another.
+- We have added an `item_transfer` table; the table will log which items were transferred and by whom.
+- We have added a partial transfers collection; the route is `/resource_types/[id]/partial-transfers`.
+- We have added a partial transfers item view; the route is `/resource_types/[id]/partial-transfers/[id]`.
+- We have added a transfers collection; the route is `/resource_types/[id]/transfers`.
+- We have added a transfers item view; the route is `/resource_types/[id]/transfers/[id]`.
+- We have added a delete endpoint for partial transfers.
+
+### Changed
+- We have reformatted the validation rules in the configuration files; easier to read and simpler to add additional rules.
+- We have switched the HTTP status code for a "Constraint error" from 500 to 409.
+- We have tweaked the description for the resource field in the `/resource_types/[id]/resources/[id]/items/[id]/transfer` OPTIONS request.
+- We have renamed the third parameter of the route validation methods; we changed the name from `$manage` to `$write`.
+- We have renamed a response helper method; it was not clear from the name that the method is used for updates and delete.
+
+### Fixed
+- It is possible to set the quantity for a `simple-item` item as zero.
+- It is possible to clear optional values in a PATCH request.
+
 ## [v2.09.4] - 2020-03-25
 ### Changed
 - When a response includes additional data via the include parameters, we include the URI fragment for that data.
