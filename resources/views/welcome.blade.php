@@ -232,6 +232,7 @@
                         <li>We have tweaked the description for the resource field in the `/resource_types/[id]/resources/[id]/items/[id]/transfer` OPTIONS request.</li>
                         <li>We have renamed the third parameter of the route validation methods; we changed the name from `$manage` to `$write`.</li>
                         <li>We have renamed a response helper method; it was not clear from the name that the method is used for updates and delete.</li>
+                        <li>We have tweaked our Docker setup to allow a local API and App/Website; the ports have been changed and a network has been created.</li>
                     </ul>
 
                     <h3>Fixed</h3>

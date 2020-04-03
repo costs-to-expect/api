@@ -2,6 +2,10 @@
 
 The complete changelog for the Costs to Expect REST API, our changelog follows the format defined at https://keepachangelog.com/en/1.0.0/
 
+## [v2.10.1] - 2020-04-03
+### Changed
+- We have tweaked our Docker setup to allow a local API and App/Website; the ports have been changed and a network has been created.
+
 ## [v2.10.0] - 2020-04-01
 ### Added 
 - We have added a new route, `/resource_types/[id]/resources/[id]/items/[id]/partial-transfer`; A partial transfer allows you to transfer a percentage of the `total` for an item from one resource to another.
