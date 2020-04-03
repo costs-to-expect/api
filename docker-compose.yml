@@ -9,7 +9,7 @@ services:
       dockerfile: .docker/api/Dockerfile
     image: costs-to-expect
     ports:
-      - 80:80
+      - 8080:80
     volumes:
       - .:/var/www/html
       # - /.docker/api/php/vendor # Uncomment to use local vendor directory for development
@@ -26,7 +26,7 @@ services:
       context: .
       dockerfile: .docker/mysql/Dockerfile
     ports:
-      - 3306:3306
+      - 3308:3306
     env_file: .env
     environment:
       MYSQL_DATABASE: ${DB_DATABASE}
@@ -35,3 +35,7 @@ services:
       MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
     volumes:
       - ./.docker/mysql/data:/var/lib/mysql
+networks:
+  default:
+    external:
+      name: costs-to-expect-network

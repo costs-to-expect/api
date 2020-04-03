@@ -19,14 +19,20 @@ more detail can be found at [Costs to Expect](https://www.costs-to-expect.com).
 
 ## Set up
 
-I'm going to assume you are using Docker, if not you should be able to work out 
+I'm going to assume you are using Docker, if not, you should be able to work out 
 what you need to run for your development setup, go to the project root 
 directory and run the below.
 
+*The network is included for local development, I need the Costs to Expect 
+Website and App to communicate with a local API. You probably don't need this 
+so remove the network section from the docker-compose file and don't create the 
+network.*
+
 ### Environment
 
-* Run `docker-compose build`
-* Run `docker-compose up`
+* $ `docker network create costs-to-expect-network`
+* $ `docker-compose build`
+* $ `docker-compose up`
 
 ### API
 
@@ -43,7 +49,7 @@ Now we need to set up the app by setting our .env, installing our dependencies
 and then running any migrations and install Passport.
 
 * Copy the `.env.example` file and name the copy `.env`, set your environment settings
-* `docker-compose exec api composer install`
+* `docker-compose exec api composer install` 
 * `docker-compose exec api php artisan key:generate`
 * `docker-compose exec api php artisan migrate`
 * `docker-compose exec api php artisan passport:install`
