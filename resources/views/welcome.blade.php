@@ -71,7 +71,7 @@
         </div>
         <div class="col-xl-10 col-lg-9 col-md-9 container-right">
             <nav class="navbar navbar-light d-md-none">
-                <a class="navbar-brand" href="/dashboard">
+                <a class="navbar-brand" href="/">
                     <img src="https://app.costs-to-expect.com/images/theme/logo-100.png" width="32" height="32" alt="Costs to Expect Logo"
                          title="Back to the dashboard"/><span class="d-none">C</span>osts to Expect.com
                 </a>
@@ -178,7 +178,7 @@
                         </dt>
                         <dd class="col-sm-8 col-md-8 col-lg-9 col-xl-10"><p>Our <a href="https://app.costs-to-expect.com/">App</a> is the
                             commercial offering for Costs to Expect,
-                            we are <a href="https://app.costs-to-expect.com/roadmap">working</a> towards the public alpha, out aim is to make tracking and
+                            we are <a href="https://app.costs-to-expect.com/roadmap">working</a> towards the public alpha, our aim is to make tracking and
                                 forecasting expenses as simple as possible.</p></dd>
 
                         <dt class="col-sm-4 col-md-4 col-lg-3 col-xl-2">
