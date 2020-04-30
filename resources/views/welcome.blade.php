@@ -233,6 +233,13 @@
                         <li>We have renamed the third parameter of the route validation methods; we changed the name from `$manage` to `$write`.</li>
                         <li>We have renamed a response helper method; it was not clear from the name that the method is used for updates and delete.</li>
                         <li>We have tweaked our Docker setup to allow a local API and App/Website; the ports have been changed and a network has been created.</li>
+                        <li>We have updated all item endpoints to return `updated`; this is the date and time an item was updated, not its category assignments.</li>
+                        <li>We have updated item collection and show endpoints; we are going to allow the possibility of items not having categories and subcategories. When you add the `include-categories` and `include-subcategories` parameters to a request, we will not exclude items without category assignments.</li>
+                        <li>We have updated the API to the latest release of Laravel 7.</li>
+                        <li>We have updated the front end dependencies for the welcome page.</li>
+                        <li>We have updated the `item-types` route to show additional information on each tracking method.</li>
+                        <li>We have updated all decimal fields to 13,2 rather than 10,2.</li>
+                        <li>We have updated all description fields; we have switched all the description fields from varchar(255) to text.</li>
                     </ul>
 
                     <h3>Fixed</h3>
@@ -240,6 +247,10 @@
                     <ul>
                         <li>It is possible to set the quantity for a `simple-item` item as zero.</li>
                         <li>It is possible to clear optional values in a PATCH request.</li>
+                        <li>We have corrected a bad link on the landing page.</li>
+                        <li>We have corrected a typo on the landing page.</li>
+                        <li>We have switched the table we look at to return created at for an item; we should be using the sub table, not the base item table.</li>
+                        <li>We have corrected the `/resource-types/` OPTIONS request; `public` is not a required field.</li>
                     </ul>
                 </div>
             </div>
