@@ -135,7 +135,7 @@ class AllocatedExpense extends Model implements IModel
             'item_type_allocated_expense.percentage AS item_percentage',
             'item_type_allocated_expense.actualised_total AS item_actualised_total',
             'item_type_allocated_expense.created_at AS item_created_at',
-            'item_type_allocated_expense.updated_at_at AS item_updated_at'
+            'item_type_allocated_expense.updated_at AS item_updated_at'
         ];
 
         $collection = $this->join('item_type_allocated_expense', 'item.id', 'item_type_allocated_expense.item_id')->
