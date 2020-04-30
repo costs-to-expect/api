@@ -50,25 +50,33 @@ class SimpleExpense extends Transformer
             array_key_exists('category_id', $this->item) === true &&
             array_key_exists('category_name', $this->item) === true
         ) {
-            $item['category'] = [
-                'id' => $this->hash->category()->encode($this->item['category_id']),
-                'name' => $this->item['category_name'],
-                'description' => $this->item['category_description'],
-                'uri' => '/category/' . $this->hash->itemCategory()->encode($this->item['item_category_id'])
-            ];
+            if ($this->item['category_id'] !== null) {
+                $item['category'] = [
+                    'id' => $this->hash->category()->encode($this->item['category_id']),
+                    'name' => $this->item['category_name'],
+                    'description' => $this->item['category_description'],
+                    'uri' => '/category/' . $this->hash->itemCategory()->encode($this->item['item_category_id'])
+                ];
+            } else {
+                $item['category'] = null;
+            }
 
             if (
                 array_key_exists('subcategory_id', $this->item) === true &&
                 array_key_exists('subcategory_name', $this->item) === true
             ) {
-                $item['subcategory'] = [
-                    'id' => $this->hash->subCategory()->encode($this->item['subcategory_id']),
-                    'name' => $this->item['subcategory_name'],
-                    'description' => $this->item['subcategory_description'],
-                    'uri' => '/category/' .
-                        $this->hash->itemCategory()->encode($this->item['item_category_id']) .
-                        '/subcategory/' . $this->hash->itemSubCategory()->encode($this->item['item_subcategory_id'])
-                ];
+                if ($this->item['subcategory_id'] !== null) {
+                    $item['subcategory'] = [
+                        'id' => $this->hash->subCategory()->encode($this->item['subcategory_id']),
+                        'name' => $this->item['subcategory_name'],
+                        'description' => $this->item['subcategory_description'],
+                        'uri' => '/category/' .
+                            $this->hash->itemCategory()->encode($this->item['item_category_id']) .
+                            '/subcategory/' . $this->hash->itemSubCategory()->encode($this->item['item_subcategory_id'])
+                    ];
+                } else {
+                    $item['subcategory'] = null;
+                }
             }
         }
 
