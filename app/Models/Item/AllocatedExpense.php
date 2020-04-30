@@ -56,14 +56,15 @@ class AllocatedExpense extends Model implements IModel
     ): ?array
     {
         $fields = [
-            'item.id AS item_id',
-            'item_type_allocated_expense.name AS item_name',
-            'item_type_allocated_expense.description AS item_description',
-            'item_type_allocated_expense.effective_date AS item_effective_date',
-            'item_type_allocated_expense.total AS item_total',
-            'item_type_allocated_expense.percentage AS item_percentage',
-            'item_type_allocated_expense.actualised_total AS item_actualised_total',
-            'item.created_at AS item_created_at'
+            "item.id AS item_id",
+            "{$this->table}.name AS item_name",
+            "{$this->table}.description AS item_description",
+            "{$this->table}.effective_date AS item_effective_date",
+            "{$this->table}.total AS item_total",
+            "{$this->table}.percentage AS item_percentage",
+            "{$this->table}.actualised_total AS item_actualised_total",
+            "{$this->table}.created_at AS item_created_at",
+            "{$this->table}.updated_at AS item_updated_at"
         ];
 
         $result = $this->from('item')->
@@ -285,13 +286,14 @@ class AllocatedExpense extends Model implements IModel
     {
         $select_fields = [
             'item.id AS item_id',
-            'item_type_allocated_expense.name AS item_name',
-            'item_type_allocated_expense.description AS item_description',
-            'item_type_allocated_expense.effective_date AS item_effective_date',
-            'item_type_allocated_expense.total AS item_total',
-            'item_type_allocated_expense.percentage AS item_percentage',
-            'item_type_allocated_expense.actualised_total AS item_actualised_total',
-            'item.created_at AS item_created_at'
+            "{$this->table}.name AS item_name",
+            "{$this->table}.description AS item_description",
+            "{$this->table}.effective_date AS item_effective_date",
+            "{$this->table}.total AS item_total",
+            "{$this->table}.percentage AS item_percentage",
+            "{$this->table}.actualised_total AS item_actualised_total",
+            "{$this->table}.created_at AS item_created_at",
+            "{$this->table}.updated_at AS item_updated_at"
         ];
 
         $category_join = false;

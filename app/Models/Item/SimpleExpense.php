@@ -71,7 +71,8 @@ class SimpleExpense extends Model implements IModel
             "{$this->table}.name AS item_name",
             "{$this->table}.description AS item_description",
             "{$this->table}.total AS item_total",
-            'item.created_at AS item_created_at'
+            "{$this->table}.created_at AS item_created_at",
+            "{$this->table}.updated_at AS item_updated_at"
         ];
 
         $result = $this->from('item')->
@@ -202,10 +203,11 @@ class SimpleExpense extends Model implements IModel
     {
         $select_fields = [
             'item.id AS item_id',
-            'item_type_simple_expense.name AS item_name',
-            'item_type_simple_expense.description AS item_description',
-            'item_type_simple_expense.total AS item_total',
-            'item.created_at AS item_created_at'
+            "{$this->table}.name AS item_name",
+            "{$this->table}.description AS item_description",
+            "{$this->table}.total AS item_total",
+            "{$this->table}.created_at AS item_created_at",
+            "{$this->table}.updated_at AS item_updated_at"
         ];
 
         $category_join = false;

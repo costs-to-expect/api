@@ -109,7 +109,8 @@ class SimpleExpense extends Model implements IModel
             'item_type_simple_expense.name AS item_name',
             'item_type_simple_expense.description AS item_description',
             'item_type_simple_expense.total AS item_total',
-            'item.created_at AS item_created_at'
+            'item_type_simple_expense.created_at AS item_created_at',
+            'item_type_simple_expense.updated_at AS item_updated_at'
         ];
 
         $collection = $this->join('item_type_simple_expense', 'item.id', 'item_type_simple_expense.item_id')->
