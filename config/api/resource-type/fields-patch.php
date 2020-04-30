@@ -18,9 +18,6 @@ return [
         'title' => 'resource-type/fields.title-description',
         'description' => 'resource-type/fields.description-description',
         'type' => 'string',
-        'validation' => [
-            'max-length' => 255
-        ],
         'required' => true
     ],
     'public' => [

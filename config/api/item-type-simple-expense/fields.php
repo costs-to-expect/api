@@ -18,9 +18,6 @@ return [
         'title' => 'item-type-simple-expense/fields.title-description',
         'description' => 'item-type-simple-expense/fields.description-description',
         'type' => 'string',
-        'validation' => [
-            'max-length' => 255
-        ],
         'required' => false
     ],
     'total' => [

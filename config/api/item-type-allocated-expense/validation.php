@@ -12,8 +12,7 @@ return [
             ],
             'description' => [
                 'sometimes',
-                'string',
-                'max:255'
+                'string'
             ],
             'effective_date' => [
                 'required',
@@ -49,8 +48,7 @@ return [
             'description' => [
                 'sometimes',
                 'nullable',
-                'string',
-                'max:255'
+                'string'
             ],
             'effective_date' => [
                 'sometimes',

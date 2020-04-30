@@ -18,8 +18,7 @@ return [
         'fields' => [
             'description' => [
                 'sometimes',
-                'string',
-                'max:255'
+                'string'
             ]
         ],
         'messages' => [

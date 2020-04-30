@@ -18,9 +18,6 @@ return [
         'title' => 'item-type-allocated-expense/fields.title-description',
         'description' => 'item-type-allocated-expense/fields.description-description',
         'type' => 'string',
-        'validation' => [
-            'max-length' => 255
-        ],
         'required' => false
     ],
     'effective_date' => [
