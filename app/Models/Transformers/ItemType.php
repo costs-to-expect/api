@@ -34,7 +34,9 @@ class ItemType extends Transformer
         return [
             'id' => $this->hash->itemType()->encode($this->data_to_transform['item_type_id']),
             'name' => $this->data_to_transform['item_type_name'],
+            'friendly_name' => $this->data_to_transform['item_type_friendly_name'],
             'description' => $this->data_to_transform['item_type_description'],
+            'example' => $this->data_to_transform['item_type_example'],
             'created' => $this->data_to_transform['item_type_created_at']
         ];
     }

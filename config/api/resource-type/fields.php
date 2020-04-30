@@ -38,6 +38,6 @@ return [
         'title' => 'resource-type/fields.title-public',
         'description' => 'resource-type/fields.description-public',
         'type' => 'boolean',
-        'required' => true
+        'required' => false
     ]
 ];
