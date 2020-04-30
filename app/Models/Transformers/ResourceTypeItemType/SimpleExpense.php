@@ -39,6 +39,7 @@ class SimpleExpense extends Transformer
             'description' => $this->item['item_description'],
             'total' => number_format((float) $this->item['item_total'], 2, '.', ''),
             'created' => $this->item['item_created_at'],
+            'updated' => $this->item['item_updated_at'],
             'resource' => [
                 'id' => $this->hash->resource()->encode($this->item['resource_id']),
                 'name' => $this->item['resource_name'],

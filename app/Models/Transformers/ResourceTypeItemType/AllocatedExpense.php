@@ -42,6 +42,7 @@ class AllocatedExpense extends Transformer
             'actualised_total' => number_format((float) $this->item['item_actualised_total'], 2, '.', ''),
             'effective_date' => $this->item['item_effective_date'],
             'created' => $this->item['item_created_at'],
+            'updated' => $this->item['item_updated_at'],
             'resource' => [
                 'id' => $this->hash->resource()->encode($this->item['resource_id']),
                 'name' => $this->item['resource_name'],

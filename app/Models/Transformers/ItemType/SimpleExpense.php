@@ -30,7 +30,8 @@ class SimpleExpense extends Transformer
             'name' => $this->item['item_name'],
             'description' => $this->item['item_description'],
             'total' => number_format((float) $this->item['item_total'],2, '.', ''),
-            'created' => $this->item['item_created_at']
+            'created' => $this->item['item_created_at'],
+            'updated' => $this->item['item_updated_at']
         ];
 
         if (

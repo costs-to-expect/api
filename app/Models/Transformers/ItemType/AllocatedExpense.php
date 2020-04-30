@@ -33,7 +33,8 @@ class AllocatedExpense extends Transformer
             'percentage' => $this->item['item_percentage'],
             'actualised_total' => number_format((float) $this->item['item_actualised_total'], 2, '.', ''),
             'effective_date' => $this->item['item_effective_date'],
-            'created' => $this->item['item_created_at']
+            'created' => $this->item['item_created_at'],
+            'updated' => $this->item['item_updated_at']
         ];
 
         if (

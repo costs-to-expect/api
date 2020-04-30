@@ -47,7 +47,8 @@ class SimpleExpense extends Model implements IModel
             'item_name' => $item_type->name,
             'item_description' => $item_type->description,
             'item_total' => $item_type->total,
-            'item_created_at' => $item->created_at->toDateTimeString()
+            'item_created_at' => $item->created_at->toDateTimeString(),
+            'item_updated_at' => $item->updated_at->toDateTimeString()
         ];
     }
 
