@@ -18,9 +18,6 @@ return [
         'title' => 'resource-type/fields.title-description',
         'description' => 'resource-type/fields.description-description',
         'type' => 'string',
-        'validation' => [
-            'max-length' => 255
-        ],
         'required' => true
     ],
     'item_type_id' => [
@@ -38,6 +35,6 @@ return [
         'title' => 'resource-type/fields.title-public',
         'description' => 'resource-type/fields.description-public',
         'type' => 'boolean',
-        'required' => true
+        'required' => false
     ]
 ];

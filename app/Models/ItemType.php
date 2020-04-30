@@ -57,7 +57,9 @@ class ItemType extends Model
         $collection = $this->select(
             'item_type.id AS item_type_id',
             'item_type.name AS item_type_name',
+            'item_type.friendly_name AS item_type_friendly_name',
             'item_type.description AS item_type_description',
+            'item_type.example AS item_type_example',
             'item_type.created_at AS item_type_created_at'
         );
 
@@ -97,7 +99,9 @@ class ItemType extends Model
         $result = $this->select(
             'item_type.id AS item_type_id',
             'item_type.name AS item_type_name',
+            'item_type.friendly_name AS item_type_friendly_name',
             'item_type.description AS item_type_description',
+            'item_type.example AS item_type_example',
             'item_type.created_at AS item_type_created_at'
         );
 

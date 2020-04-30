@@ -20,7 +20,7 @@ class ResourceType extends Model
 {
     protected $table = 'resource_type';
 
-    protected $guarded = ['id', 'created_at', 'updated_at'];
+    protected $guarded = ['id'];
 
     /**
      * Return an array of the fields that can be PATCHed.

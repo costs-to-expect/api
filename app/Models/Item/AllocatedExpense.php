@@ -56,14 +56,15 @@ class AllocatedExpense extends Model implements IModel
     ): ?array
     {
         $fields = [
-            'item.id AS item_id',
-            'item_type_allocated_expense.name AS item_name',
-            'item_type_allocated_expense.description AS item_description',
-            'item_type_allocated_expense.effective_date AS item_effective_date',
-            'item_type_allocated_expense.total AS item_total',
-            'item_type_allocated_expense.percentage AS item_percentage',
-            'item_type_allocated_expense.actualised_total AS item_actualised_total',
-            'item.created_at AS item_created_at'
+            "item.id AS item_id",
+            "{$this->table}.name AS item_name",
+            "{$this->table}.description AS item_description",
+            "{$this->table}.effective_date AS item_effective_date",
+            "{$this->table}.total AS item_total",
+            "{$this->table}.percentage AS item_percentage",
+            "{$this->table}.actualised_total AS item_actualised_total",
+            "{$this->table}.created_at AS item_created_at",
+            "{$this->table}.updated_at AS item_updated_at"
         ];
 
         $result = $this->from('item')->
@@ -78,8 +79,8 @@ class AllocatedExpense extends Model implements IModel
             array_key_exists('include-categories', $parameters) === true &&
             General::booleanValue($parameters['include-categories']) === true
         ) {
-            $result->join('item_category', 'item.id', 'item_category.item_id')->
-                join('category', 'item_category.category_id', 'category.id');
+            $result->leftJoin('item_category', 'item.id', 'item_category.item_id')->
+                leftJoin('category', 'item_category.category_id', 'category.id');
 
             $fields[] = 'item_category.id AS item_category_id';
             $fields[] = 'category.id AS category_id';
@@ -90,8 +91,8 @@ class AllocatedExpense extends Model implements IModel
                 array_key_exists('include-subcategories', $parameters) === true &&
                 General::booleanValue($parameters['include-subcategories']) === true
             ) {
-                $result->join('item_sub_category', 'item_category.id', 'item_sub_category.item_category_id')->
-                join('sub_category', 'item_sub_category.sub_category_id', 'sub_category.id');
+                $result->leftJoin('item_sub_category', 'item_category.id', 'item_sub_category.item_category_id')->
+                leftJoin('sub_category', 'item_sub_category.sub_category_id', 'sub_category.id');
 
                 $fields[] = 'item_sub_category.id AS item_subcategory_id';
                 $fields[] = 'sub_category.id AS subcategory_id';
@@ -104,9 +105,9 @@ class AllocatedExpense extends Model implements IModel
 
         if ($item !== null) {
            return $item->toArray();
-       } else {
-           return null;
        }
+
+        return null;
     }
 
     /**
@@ -125,10 +126,10 @@ class AllocatedExpense extends Model implements IModel
             first();
 
         if ($result === null) {
-            return intval(date('Y'));
-        } else {
-            return intval($result->year_limit);
+            return (int) (date('Y'));
         }
+
+        return (int) ($result->year_limit);
 
     }
 
@@ -148,10 +149,10 @@ class AllocatedExpense extends Model implements IModel
             first();
 
         if ($result === null) {
-            return intval(date('Y'));
-        } else {
-            return intval($result->year_limit);
+            return (int) (date('Y'));
         }
+
+        return (int) ($result->year_limit);
     }
 
     /**
@@ -173,7 +174,8 @@ class AllocatedExpense extends Model implements IModel
             'item_total' => $item_type->total,
             'item_percentage' => $item_type->percentage,
             'item_actualised_total' => $item_type->actualised_total,
-            'item_created_at' => $item->created_at->toDateTimeString()
+            'item_created_at' => $item->created_at->toDateTimeString(),
+            'item_updated_at' => $item->updated_at->toDateTimeString()
         ];
     }
 
@@ -285,13 +287,14 @@ class AllocatedExpense extends Model implements IModel
     {
         $select_fields = [
             'item.id AS item_id',
-            'item_type_allocated_expense.name AS item_name',
-            'item_type_allocated_expense.description AS item_description',
-            'item_type_allocated_expense.effective_date AS item_effective_date',
-            'item_type_allocated_expense.total AS item_total',
-            'item_type_allocated_expense.percentage AS item_percentage',
-            'item_type_allocated_expense.actualised_total AS item_actualised_total',
-            'item.created_at AS item_created_at'
+            "{$this->table}.name AS item_name",
+            "{$this->table}.description AS item_description",
+            "{$this->table}.effective_date AS item_effective_date",
+            "{$this->table}.total AS item_total",
+            "{$this->table}.percentage AS item_percentage",
+            "{$this->table}.actualised_total AS item_actualised_total",
+            "{$this->table}.created_at AS item_created_at",
+            "{$this->table}.updated_at AS item_updated_at"
         ];
 
         $category_join = false;
@@ -307,8 +310,8 @@ class AllocatedExpense extends Model implements IModel
             array_key_exists('include-categories', $parameters) === true &&
             General::booleanValue($parameters['include-categories']) === true
         ) {
-            $collection->join('item_category', 'item.id', 'item_category.item_id')->
-                join('category', 'item_category.category_id', 'category.id');
+            $collection->leftJoin('item_category', 'item.id', 'item_category.item_id')->
+            leftJoin('category', 'item_category.category_id', 'category.id');
 
             $category_join = true;
 
@@ -326,8 +329,8 @@ class AllocatedExpense extends Model implements IModel
                 array_key_exists('include-subcategories', $parameters) === true &&
                 General::booleanValue($parameters['include-subcategories']) === true
             ) {
-                $collection->join('item_sub_category', 'item_category.id', 'item_sub_category.item_category_id')->
-                    join('sub_category', 'item_sub_category.sub_category_id', 'sub_category.id');
+                $collection->leftJoin('item_sub_category', 'item_category.id', 'item_sub_category.item_category_id')->
+                leftJoin('sub_category', 'item_sub_category.sub_category_id', 'sub_category.id');
 
                 $subcategory_join = true;
 

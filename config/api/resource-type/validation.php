@@ -5,7 +5,7 @@ declare(strict_types=1);
 return [
     'POST' => [
         'fields' => [
-            'description' => 'required|string|max:255',
+            'description' => 'required|string',
             'public' => 'sometimes|boolean'
         ],
         'messages' => [
@@ -16,8 +16,7 @@ return [
         'fields' => [
             'description' => [
                 'sometimes',
-                'string',
-                'max:255'
+                'string'
             ],
             'public' => 'sometimes|boolean'
         ],

@@ -19,9 +19,6 @@ return [
         'title' => 'category/fields.title-description',
         'description' => 'category/fields.description-description',
         'type' => 'string',
-        'validation' => [
-            'max-length' => 255
-        ],
         'required' => true
     ]
 ];

@@ -47,7 +47,8 @@ class SimpleItem extends Model implements IModel
             'item_name' => $item_type->name,
             'item_description' => $item_type->description,
             'item_quantity' => $item_type->total,
-            'item_created_at' => $item->created_at->toDateTimeString()
+            'item_created_at' => $item->created_at->toDateTimeString(),
+            'item_updated_at' => $item->updated_at->toDateTimeString()
         ];
     }
 
@@ -71,7 +72,8 @@ class SimpleItem extends Model implements IModel
             "{$this->table}.name AS item_name",
             "{$this->table}.description AS item_description",
             "{$this->table}.quantity AS item_quantity",
-            'item.created_at AS item_created_at'
+            "{$this->table}.created_at AS item_created_at",
+            "{$this->table}.updated_at AS item_updated_at"
         ];
 
         $result = $this->from('item')->
@@ -161,7 +163,8 @@ class SimpleItem extends Model implements IModel
             "{$this->table}.name AS item_name",
             "{$this->table}.description AS item_description",
             "{$this->table}.quantity AS item_quantity",
-            'item.created_at AS item_created_at'
+            "{$this->table}.created_at AS item_created_at",
+            "{$this->table}.updated_at AS item_updated_at"
         ];
 
         $collection = $this->from('item')->

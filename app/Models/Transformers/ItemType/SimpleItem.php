@@ -30,7 +30,8 @@ class SimpleItem extends Transformer
             'name' => $this->item['item_name'],
             'description' => $this->item['item_description'],
             'quantity' => (int) $this->item['item_quantity'],
-            'created' => $this->item['item_created_at']
+            'created' => $this->item['item_created_at'],
+            'updated' => $this->item['item_updated_at']
         ];
 
         return $item;

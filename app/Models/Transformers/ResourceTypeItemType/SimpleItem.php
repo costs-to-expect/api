@@ -39,6 +39,7 @@ class SimpleItem extends Transformer
             'description' => $this->item['item_description'],
             'quantity' => (int) $this->item['item_quantity'],
             'created' => $this->item['item_created_at'],
+            'updated' => $this->item['item_updated_at'],
             'resource' => [
                 'id' => $this->hash->resource()->encode($this->item['resource_id']),
                 'name' => $this->item['resource_name'],

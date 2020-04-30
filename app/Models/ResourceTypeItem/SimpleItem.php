@@ -93,7 +93,8 @@ class SimpleItem extends Model implements IModel
             "{$this->item_table}.name AS item_name",
             "{$this->item_table}.description AS item_description",
             "{$this->item_table}.quantity AS item_quantity",
-            'item.created_at AS item_created_at'
+            "{$this->item_table}.created_at AS item_created_at",
+            "{$this->item_table}.updated_at AS item_updated_at"
         ];
 
         $collection = $this->join($this->item_table, 'item.id', "{$this->item_table}.item_id")->

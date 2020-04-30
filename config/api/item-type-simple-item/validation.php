@@ -12,8 +12,7 @@ return [
             ],
             'description' => [
                 'sometimes',
-                'string',
-                'max:255'
+                'string'
             ],
             'quantity' => [
                 'required',
@@ -32,8 +31,7 @@ return [
             'description' => [
                 'sometimes',
                 'nullable',
-                'string',
-                'max:255',
+                'string'
             ],
             'quantity' => [
                 'sometimes',

@@ -19,9 +19,6 @@ return [
         'title' => 'resource/fields.title-description',
         'description' => 'resource/fields.description-description',
         'type' => 'string',
-        'validation' => [
-            'max-length' => 255
-        ],
         'required' => true
     ],
     'effective_date' => [
