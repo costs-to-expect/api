@@ -251,6 +251,7 @@
                         <li>We have corrected a typo on the landing page.</li>
                         <li>We have switched the table we look at to return created at for an item; we should be using the sub table, not the base item table.</li>
                         <li>We have corrected the `/resource-types/` OPTIONS request; `public` is not a required field.</li>
+                        <li>We have updated the delete resource type action; we have added additional checks before we attempt to delete, it was possible to remove relationship values which made the resource type inaccessible.</li>
                     </ul>
                 </div>
             </div>

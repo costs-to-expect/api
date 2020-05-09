@@ -2,6 +2,10 @@
 
 The complete changelog for the Costs to Expect REST API, our changelog follows the format defined at https://keepachangelog.com/en/1.0.0/
 
+## [v2.10.3] - 2020-05-09
+### Fixed
+- We have updated the delete resource type action; we have added additional checks before we attempt to delete, it was possible to remove relationship values which made the resource type inaccessible.
+
 ## [v2.10.2] - 2020-04-30
 ### Changed
 - We have updated all item endpoints to return `updated`; this is the date and time an item was updated, not its category assignments.

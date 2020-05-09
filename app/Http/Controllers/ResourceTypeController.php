@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Category;
 use App\Models\ItemType;
 use App\Models\PermittedUser;
 use App\Models\Resource;
@@ -295,15 +296,41 @@ class ResourceTypeController extends Controller
             true
         );
 
-        try {
-            (new ResourceTypeItemType())->instance($resource_type_id)->delete();
-            (new PermittedUser())->instance($resource_type_id, Auth::user()->id)->delete();
-            (new ResourceType())->find($resource_type_id)->delete();
-            UtilityResponse::successNoContent();
-        } catch (QueryException $e) {
+        $resource_type_item_type = (new ResourceTypeItemType())->instance($resource_type_id);
+        $permitted_user = (new PermittedUser())->instance($resource_type_id, Auth::user()->id);
+        $resource_type = (new ResourceType())->find($resource_type_id);
+
+        $categories = (new Category())->total(
+            $resource_type_id,
+            $this->permitted_resource_types,
+            $this->include_public
+        );
+
+        $resources = (new Resource())->totalCount(
+            $resource_type_id,
+            $this->permitted_resource_types,
+            $this->include_public
+        );
+
+        if (
+            $categories === 0 &&
+            $resources === 0 &&
+            $resource_type_item_type !== null &&
+            $permitted_user !== null &&
+            $resource_type !== null
+        ) {
+            try {
+                $resource_type_item_type->delete();
+                $permitted_user->delete();
+                $resource_type->delete();
+                UtilityResponse::successNoContent();
+            } catch (QueryException $e) {
+                UtilityResponse::foreignKeyConstraintError();
+            } catch (Exception $e) {
+                UtilityResponse::notFound(trans('entities.resource-type'), $e);
+            }
+        } else {
             UtilityResponse::foreignKeyConstraintError();
-        } catch (Exception $e) {
-            UtilityResponse::notFound(trans('entities.resource-type'), $e);
         }
     }
 
