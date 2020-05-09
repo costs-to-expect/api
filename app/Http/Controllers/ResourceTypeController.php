@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Category;
 use App\Models\ItemType;
 use App\Models\PermittedUser;
 use App\Models\Resource;
@@ -299,7 +300,25 @@ class ResourceTypeController extends Controller
         $permitted_user = (new PermittedUser())->instance($resource_type_id, Auth::user()->id);
         $resource_type = (new ResourceType())->find($resource_type_id);
 
-        if ($resource_type_item_type !== null && $permitted_user !== null && $resource_type !== null) {
+        $categories = (new Category())->total(
+            $resource_type_id,
+            $this->permitted_resource_types,
+            $this->include_public
+        );
+
+        $resources = (new Resource())->totalCount(
+            $resource_type_id,
+            $this->permitted_resource_types,
+            $this->include_public
+        );
+
+        if (
+            $categories === 0 &&
+            $resources === 0 &&
+            $resource_type_item_type !== null &&
+            $permitted_user !== null &&
+            $resource_type !== null
+        ) {
             try {
                 $resource_type_item_type->delete();
                 $permitted_user->delete();
@@ -311,7 +330,7 @@ class ResourceTypeController extends Controller
                 UtilityResponse::notFound(trans('entities.resource-type'), $e);
             }
         } else {
-            UtilityResponse::notFound(trans('entities.resource-type'));
+            UtilityResponse::foreignKeyConstraintError();
         }
     }
 
