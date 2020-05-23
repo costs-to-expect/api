@@ -2,6 +2,11 @@
 
 The complete changelog for the Costs to Expect REST API, our changelog follows the format defined at https://keepachangelog.com/en/1.0.0/
 
+## [v2.10.4] - 2020-05-23
+### Fixed
+- We have adjusted the lottery value to reduce session clears.
+- We have updated to v3.5.1 of Jquery, v3.5.0 was bugged.
+
 ## [v2.10.3] - 2020-05-09
 ### Fixed
 - We have updated the delete resource type action; we have added additional checks before we attempt to delete, it was possible to remove relationship values which made the resource type inaccessible.

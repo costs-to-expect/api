@@ -252,6 +252,8 @@
                         <li>We have switched the table we look at to return created at for an item; we should be using the sub table, not the base item table.</li>
                         <li>We have corrected the `/resource-types/` OPTIONS request; `public` is not a required field.</li>
                         <li>We have updated the delete resource type action; we have added additional checks before we attempt to delete, it was possible to remove relationship values which made the resource type inaccessible.</li>
+                        <li>We have adjusted the lottery value to reduce session clears.</li>
+                        <li>We have updated to v3.5.1 of Jquery, v3.5.0 was bugged.</li>
                     </ul>
                 </div>
             </div>
