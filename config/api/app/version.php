@@ -10,5 +10,6 @@ return [
         'api' => '/v2/changelog',
         'markdown' => 'https://github.com/costs-to-expect/api/blob/master/CHANGELOG.md'
     ],
-    'readme' => 'https://github.com/costs-to-expect/api/blob/master/README.md'
+    'readme' => 'https://github.com/costs-to-expect/api/blob/master/README.md',
+    'documentation' => 'https://postman.costs-to-expect.com/?version=latest'
 ];

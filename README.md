@@ -4,14 +4,20 @@
 
 Costs to Expect is a service which focuses on tracking and forecasting expenses. 
 The Costs to Expect API is the backbone of the service and is not going to be 
-limited to expenses; however, we figured that is was an excellent place to start. 
+limited to expenses; however, we figured that it was an excellent place to start. 
+
+## Docs
+
+We are working hard to get the documentation ready, the App will not enter beta 
+until the API documentation is ready, the documentation can be found at 
+[postman.costs-to-expect.com](https://postman.costs-to-expect.com?version=latest) 
 
 ### The App
 The [alpha](https://app.costs-to-expect.com) for the service is online, we are 
- hoping to release the public alpha at the start of April 2020. Please check 
- the [app.costs-to-expect.com/roadmap](https://app.costs-to-expect.com/roadmap) 
- and changelog to see how we are getting on 
- [app.costs-to-expect.com/changelog](https://app.costs-to-expect.com/changelog) 
+ hoping to release the public beta soon(tm). Please check 
+ our [app.costs-to-expect.com/roadmap](https://app.costs-to-expect.com/roadmap) 
+ and [app.costs-to-expect.com/changelog](https://app.costs-to-expect.com/changelog) 
+ to see how we are progressing. 
 
 ### The Website
 A small part of the service is tracking the costs to raise a child in the UK, 
