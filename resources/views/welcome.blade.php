@@ -28,7 +28,7 @@
     <meta property="og:description" content="The Open Source API for the Costs to Expect service, expense tracking and forecasting" />
     <title>Costs to Expect API</title>
 
-    <link href="{{ asset('css/app.css') }}" rel="stylesheet">
+    <link href="{{ asset('css/app.css?ver=' . $version) }}" rel="stylesheet">
     <!-- Global site tag (gtag.js) - Google Analytics -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=UA-64736-10"></script>
     <script>
