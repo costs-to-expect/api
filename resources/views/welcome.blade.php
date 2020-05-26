@@ -148,6 +148,7 @@
                     <p>
                         <a href="/v2" class="btn btn-primary btn-lg" role="button" aria-pressed="true">Access API</a>
                         <a href="https://github.com/costs-to-expect/api" class="btn btn-primary alter btn-lg" role="button" aria-pressed="true">View our API on Github</a>
+                        <a href="https://postman.costs-to-expect.com" class="btn btn-primary alter btn-lg" role="button" aria-pressed="true">Documentation</a>
                     </p>
 
                     <hr />
