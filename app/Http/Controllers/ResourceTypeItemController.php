@@ -155,6 +155,7 @@ class ResourceTypeItemController extends Controller
         $get = Get::init()->
             setSortable($item_interface->sortParametersConfig())->
             setSearchable($item_interface->searchParametersConfig())->
+            setFilterable($item_interface->filterParametersConfig())->
             setPagination(true)->
             setParameters($item_interface->collectionParametersConfig())->
             setParametersData($parameters_data)->
