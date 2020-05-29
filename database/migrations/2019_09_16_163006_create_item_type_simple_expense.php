@@ -26,6 +26,8 @@ class CreateItemTypeSimpleExpense extends Migration
             $table->timestamps();
             $table->foreign('item_id')->references('id')->on('item');
         });
+
+        DB::statement('INSERT INTO `item_type` (`name`, `description`, `created_at`) VALUES ("simple-expense", "Track expenses for a specific event or function.", NOW())');
     }
 
     /**

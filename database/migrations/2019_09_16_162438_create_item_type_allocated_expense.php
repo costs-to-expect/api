@@ -31,6 +31,8 @@ class CreateItemTypeAllocatedExpense extends Migration
             $table->index('effective_date');
             $table->index('publish_after');
         });
+
+        DB::statement('INSERT INTO `item_type` (`name`, `description`, `created_at`) VALUES ("allocated-expense", "Track expenses over time, additionally, an expense can be partially allocated to a resource.", NOW())');
     }
 
     /**
