@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Interfaces\Item\ISummaryModel;
+namespace App\Interfaces\Item;
 
 /**
  * @author Dean Blackborough <dean@g3d-development.com>
