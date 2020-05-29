@@ -59,10 +59,10 @@ and then running any migrations and install Passport.
 * `docker-compose exec api php artisan key:generate`
 * `docker-compose exec api php artisan migrate`
 * `docker-compose exec api php artisan passport:install`
-* Run an OPTIONS request on `http://[your.domail.local]/v2/resource_types`, you should see a nice OPTIONS request, 
-alternatively a GET request to `http://[your.domail.local]/v1` will show all the routes.
-* You can add a development user by POSTing to `http://[your.domail.local]/v2/auth/register` and then get a bearer by 
-POSTing to `http://[your.domail.local]/v2/auth/login` - you will need a bearer for all the routes that require authentication.
+* Run an OPTIONS request on `http://[your.domail.local:8080]/v2/resource_types`, you should see a nice OPTIONS request, 
+alternatively a GET request to `http://[your.domail.local:8080]/v1` will show all the routes.
+* You can add a development user by POSTing to `http://[your.domail.local:8080]/v2/auth/register` and then get a bearer by 
+POSTing to `http://[your.domail.local:8080]/v2/auth/login` - you will need a bearer for all the routes that require authentication.
 * The API is setup to use Mailgun by default, populate `MAILGUN_DOMAIN` and `MAILGUN_SECRET` with values from your account, 
 you will also need to set `MAIL_FROM_ADDRESS` and `MAIL_TO_ADDRESS`. You may need to set `Authorized Recipients` in Mailgun. 
 
