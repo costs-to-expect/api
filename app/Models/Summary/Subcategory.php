@@ -15,7 +15,7 @@ use Illuminate\Database\Eloquent\Model;
  * @copyright Dean Blackborough 2018-2020
  * @license https://github.com/costs-to-expect/api/blob/master/LICENSE
  */
-class SubCategory extends Model
+class Subcategory extends Model
 {
     protected $table = 'sub_category';
 

@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Summary;
 
 use App\Http\Controllers\Controller;
-use App\Models\Summary\SubCategory;
+use App\Models\Summary\Subcategory;
 use App\Option\Get;
 use App\Utilities\Header;
 use App\Utilities\RoutePermission;
@@ -35,7 +35,7 @@ class SubcategoryController extends Controller
             $this->permitted_resource_types
         );
 
-        $summary = (new SubCategory())->totalCount(
+        $summary = (new Subcategory())->totalCount(
             $resource_type_id,
             $category_id
         );
