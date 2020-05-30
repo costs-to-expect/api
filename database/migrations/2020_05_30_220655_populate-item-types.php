@@ -17,7 +17,7 @@ class PopulateItemTypes extends Migration
         DB::statement('UPDATE `item_type` SET `friendly_name` = "Items" WHERE `name` = "simple-item"');
         DB::statement('UPDATE `item_type` SET `example` = "Examples include, stock, your lego collection or your Barry White CD collection" WHERE `name` = "simple-item"');
 
-        DB::statement('UPDATE `item_type` SET `friendly_name` = "Items" WHERE `name` = "simple-expense"');
+        DB::statement('UPDATE `item_type` SET `friendly_name` = "Bucket expenses" WHERE `name` = "simple-expense"');
         DB::statement('UPDATE `item_type` SET `example` = "Track expenses for a specific event or function." WHERE `name` = "simple-expense"');
 
         DB::statement('UPDATE `item_type` SET `friendly_name` = "Chronological expenses" WHERE `name` = "allocated-expense"');
@@ -31,6 +31,6 @@ class PopulateItemTypes extends Migration
      */
     public function down()
     {
-        //
+        // No down
     }
 }
