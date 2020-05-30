@@ -12,7 +12,7 @@ class AddSimpleItemType extends Migration
      */
     public function up()
     {
-        DB::statement('INSERT INTO `item_type` (`name`, `description`, `created_at`) VALUES ("simple-item", "Track a collection", NOW())');
+        DB::statement('INSERT INTO `item_type` (`name`, `description`, `created_at`) VALUES ("simple-item", "Log a list of items including their quantities.", NOW())');
     }
 
     /**
