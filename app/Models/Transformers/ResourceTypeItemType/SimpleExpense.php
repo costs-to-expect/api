@@ -53,8 +53,8 @@ class SimpleExpense extends Transformer
         ) {
             if ($this->item['category_id'] !== null) {
                 $item['category'] = [
-                    'item_category_id' => $this->hash->itemCategory()->encode($this->item['item_category_id']),
-                    'id' => $this->hash->category()->encode($this->item['category_id']),
+                    'id' => $this->hash->itemCategory()->encode($this->item['item_category_id']),
+                    'subcategory_id' => $this->hash->category()->encode($this->item['category_id']),
                     'name' => $this->item['category_name'],
                     'description' => $this->item['category_description']
                 ];

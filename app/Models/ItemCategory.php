@@ -70,6 +70,7 @@ class ItemCategory extends Model
             select(
                 'item_category.id AS item_category_id',
                 'item_category.created_at AS item_category_created_at',
+                'category.id AS item_category_category_id',
                 'category.name AS item_category_category_name',
                 'category.description AS item_category_category_description'
             )->
@@ -98,6 +99,7 @@ class ItemCategory extends Model
             select(
                 'item_category.id AS item_category_id',
                 'item_category.created_at AS item_category_created_at',
+                'category.id AS item_category_category_id',
                 'category.name AS item_category_category_name',
                 'category.description AS item_category_category_description'
             )->
@@ -116,6 +118,7 @@ class ItemCategory extends Model
         return [
             'item_category_id' => $item_category->id,
             'item_category_created_at' => $item_category->created_at->toDateTimeString(),
+            'item_category_category_id' => $item_category->category->id,
             'item_category_category_name' => $item_category->category->name,
             'item_category_category_description' => $item_category->category->description
         ];
