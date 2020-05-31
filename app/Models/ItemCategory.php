@@ -47,6 +47,7 @@ class ItemCategory extends Model
             select(
                 'item_category.id AS item_category_id',
                 'item_category.created_at AS item_category_created_at',
+                'category.id AS item_category_category_id',
                 'category.name AS item_category_category_name',
                 'category.description AS item_category_category_description'
             )->
