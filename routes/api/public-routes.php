@@ -204,41 +204,49 @@ Route::group(
             'ItemTransferController@optionsTransfer'
         );
 
+        /*This route needs to be removed*/
         Route::get(
             'resource-types/{resource_type_id}/resources/{resource_id}/items/{item_id}/category',
             'ItemCategoryController@index'
         );
 
+        /*This route needs to be removed*/
         Route::options(
             'resource-types/{resource_type_id}/resources/{resource_id}/items/{item_id}/category',
             'ItemCategoryController@optionsIndex'
         );
 
+        /*This route needs to be removed*/
         Route::get(
             'resource-types/{resource_type_id}/resources/{resource_id}/items/{item_id}/category/{item_category_id}',
             'ItemCategoryController@show'
         );
 
+        /*This route needs to be removed*/
         Route::options(
             'resource-types/{resource_type_id}/resources/{resource_id}/items/{item_id}/category/{item_category_id}',
             'ItemCategoryController@optionsShow'
         );
 
+        /*This route needs to be removed*/
         Route::get(
             'resource-types/{resource_type_id}/resources/{resource_id}/items/{item_id}/category/{item_category_id}/subcategory',
             'ItemSubcategoryController@index'
         );
 
+        /*This route needs to be removed*/
         Route::options(
             'resource-types/{resource_type_id}/resources/{resource_id}/items/{item_id}/category/{item_category_id}/subcategory',
             'ItemSubcategoryController@optionsIndex'
         );
 
+        /*This route needs to be removed*/
         Route::get(
             'resource-types/{resource_type_id}/resources/{resource_id}/items/{item_id}/category/{item_category_id}/subcategory/{item_subcategory_id}',
             'ItemSubcategoryController@show'
         );
 
+        /*This route needs to be removed*/
         Route::options(
             'resource-types/{resource_type_id}/resources/{resource_id}/items/{item_id}/category/{item_category_id}/subcategory/{item_subcategory_id}',
             'ItemSubcategoryController@optionsShow'
