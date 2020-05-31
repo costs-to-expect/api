@@ -53,10 +53,10 @@ class SimpleExpense extends Transformer
         ) {
             if ($this->item['category_id'] !== null) {
                 $item['category'] = [
+                    'item_category_id' => $this->hash->itemCategory()->encode($this->item['item_category_id']),
                     'id' => $this->hash->category()->encode($this->item['category_id']),
                     'name' => $this->item['category_name'],
-                    'description' => $this->item['category_description'],
-                    'uri' => '/category/' . $this->hash->itemCategory()->encode($this->item['item_category_id'])
+                    'description' => $this->item['category_description']
                 ];
             } else {
                 $item['category'] = null;
@@ -68,12 +68,10 @@ class SimpleExpense extends Transformer
             ) {
                 if ($this->item['subcategory_id'] !== null) {
                     $item['subcategory'] = [
+                        'item_subcategory_id' => $this->hash->itemSubCategory()->encode($this->item['item_subcategory_id']),
                         'id' => $this->hash->subCategory()->encode($this->item['subcategory_id']),
                         'name' => $this->item['subcategory_name'],
-                        'description' => $this->item['subcategory_description'],
-                        'uri' => '/category/' .
-                            $this->hash->itemCategory()->encode($this->item['item_category_id']) .
-                            '/subcategory/' . $this->hash->itemSubCategory()->encode($this->item['item_subcategory_id'])
+                        'description' => $this->item['subcategory_description']
                     ];
                 } else {
                     $item['subcategory'] = null;
