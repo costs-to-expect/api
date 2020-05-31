@@ -138,4 +138,14 @@ class ItemTransfer extends Model
 
         return $collection->count();
     }
+
+    /**
+     * @param int $item_id
+     *
+     * @return mixed
+     */
+    public function deleteTransfers(int $item_id)
+    {
+        return $this->where($this->table . '.item_id', '=', $item_id)->delete();
+    }
 }

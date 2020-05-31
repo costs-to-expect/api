@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Item\Factory;
+use App\Models\ItemTransfer;
 use App\Option\Delete;
 use App\Option\Get;
 use App\Option\Patch;
@@ -452,6 +453,7 @@ class ItemController extends Controller
         }
 
         try {
+            (new ItemTransfer())->deleteTransfers($item_id);
             $item_type->delete();
             $item->delete();
 
