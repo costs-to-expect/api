@@ -6,8 +6,8 @@ return [
     'collection' => [
         'item' => [
             'field' => 'item',
-            'title' => 'item-transfer/parameters.title-item',
-            'description' => 'item-transfer/parameters.description-item',
+            'title' => 'item-partial-transfer/parameters.title-item',
+            'description' => 'item-partial-transfer/parameters.description-item',
             'type' => 'string',
             'required' => false
         ]
