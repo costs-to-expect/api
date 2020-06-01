@@ -33,6 +33,7 @@ class ConvertGetParameters
             'category' => new Hashids($config['category'], $min_length),
             'subcategory' => new Hashids($config['subcategory'], $min_length),
             'resource-type' => new Hashids($config['resource_type'], $min_length),
+            'item' => new Hashids($config['item'], $min_length)
         ];
 
         $params_to_convert = array_keys($parameters);
