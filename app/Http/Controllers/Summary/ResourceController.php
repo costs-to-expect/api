@@ -8,7 +8,9 @@ use App\Utilities\Header;
 use App\Utilities\RoutePermission;
 use App\Validators\Route;
 use App\Models\Summary\Resource;
+use App\Validators\SearchParameters;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\Config;
 
 /**
  * Summary controller for the resource routes
@@ -33,10 +35,15 @@ class ResourceController extends Controller
             $this->permitted_resource_types
         );
 
+        $search_parameters = SearchParameters::fetch(
+            Config::get('api.resource.summary-searchable')
+        );
+
         $summary = (new Resource())->totalCount(
             $resource_type_id,
             $this->permitted_resource_types,
-            $this->include_public
+            $this->include_public,
+            $search_parameters
         );
 
         $headers = new Header();
@@ -76,6 +83,7 @@ class ResourceController extends Controller
             setParameters('api.resource.summary-parameters')->
             setDescription('route-descriptions.summary-resource-GET-index')->
             setAuthenticationStatus($permissions['view'])->
+            setSearchable('api.resource.summary-searchable')->
             option();
 
         return $this->optionsResponse($get, 200);
