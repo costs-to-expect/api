@@ -82,6 +82,7 @@ class CategoryController extends Controller
         $get = Get::init()->
             setDescription('route-descriptions.summary_category_GET_index')->
             setAuthenticationStatus($permissions['view'])->
+            setSearchable('api.category.summary-searchable')->
             option();
 
         return $this->optionsResponse($get, 200);
