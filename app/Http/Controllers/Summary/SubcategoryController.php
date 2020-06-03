@@ -38,7 +38,7 @@ class SubcategoryController extends Controller
         );
 
         $search_parameters = SearchParameters::fetch(
-            Config::get('api.subcategory.summary-searchable')
+            array_keys(Config::get('api.subcategory.summary-searchable'))
         );
 
         $summary = (new Subcategory())->totalCount(

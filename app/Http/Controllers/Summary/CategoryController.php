@@ -36,7 +36,7 @@ class CategoryController extends Controller
         );
 
         $search_parameters = SearchParameters::fetch(
-            Config::get('api.category.summary-searchable')
+            array_keys(Config::get('api.category.summary-searchable'))
         );
 
         $summary = (new Category())->total(

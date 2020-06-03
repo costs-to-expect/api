@@ -33,7 +33,7 @@ class ItemTypeController extends Controller
     public function index(): JsonResponse
     {
         $search_parameters = SearchParameters::fetch(
-            Config::get('api.item-type.searchable')
+            array_keys(Config::get('api.item-type.searchable'))
         );
 
         $total = (new ItemType())->totalCount($search_parameters);
@@ -51,6 +51,7 @@ class ItemTypeController extends Controller
             setSearchParameters($search_parameters)->
             setSortParameters($sort_parameters)->
             paging();
+
 
         $item_types = (new ItemType())->paginatedCollection(
             $pagination['offset'],
