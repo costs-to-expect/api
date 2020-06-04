@@ -2,6 +2,36 @@
 
 The complete changelog for the Costs to Expect REST API, our changelog follows the format defined at https://keepachangelog.com/en/1.0.0/
 
+## [v2.11.0] - 2020-06-06
+### Added
+- We have added search to the categories summary endpoint.
+- We have added search to the subcategories summary endpoint.
+- We have added search to the resources summary endpoint.
+- We have added search to the resource-types summary endpoint.
+- We have updated the transfers collection; you can filter the results by an `item` ID.
+- We have updated the partial transfers collection; you can filter the results by an `item` ID.
+
+### Changed
+- We have added the documentation URI to the README and API; the documentation for the API is work in progress; it is almost complete.
+- We have added a version query parameter to the CSS include.
+- We have removed a unique index on the `item_transfer` table; the index was limiting the ability to transfer an item multiple times.
+- We have altered the format of the category and subcategory object for item relationships; the returned object is now a closer match to a category object.
+- We have updated the URIs for item category and subcategory assignments; the URI was singular for a collection.
+- We have updated the item delete endpoint; we did not return a conflict error before removing relationships.
+
+### Fixed
+- The `name` field now displays as a required field in the items collection OPTIONS request.
+- The `filterable` array shows in the OPTIONS response for resource type items.
+- We have updated the namespace in a model.
+- We have corrected the case of a model name.
+- We have added the migrations for the original item-types, missing from the import.
+- We have added a database migration to update the `friendly_name` and `examples` data for `item-types`.
+- We have updated the delete item request; we delete the transfer log entries for the item.
+- We have updated two `item-type` summary endpoints to show they are sortable by `name`.
+
+### Removed
+- We have removed the category and subcategory item assigned URIs and replaced them with correctly named URIs for collections.
+
 ## [v2.10.4] - 2020-05-23
 ### Fixed
 - We have adjusted the lottery value to reduce session clears.
