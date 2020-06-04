@@ -452,6 +452,11 @@ class ItemController extends Controller
             UtilityResponse::notFound(trans('entities.item'));
         }
 
+        if (in_array($item_interface->type(), ['allocated-expense', 'simple-expense']) &&
+            $item_model->hasCategoryAssignments($item_id) === true) {
+                UtilityResponse::foreignKeyConstraintError();
+        }
+
         try {
             (new ItemTransfer())->deleteTransfers($item_id);
             $item_type->delete();

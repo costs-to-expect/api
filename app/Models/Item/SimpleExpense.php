@@ -320,4 +320,22 @@ class SimpleExpense extends Model implements IModel
             get()->
             toArray();
     }
+
+    public function hasCategoryAssignments(int $item_id): bool
+    {
+        $assignments = $this->from('item')->
+        leftJoin('item_category', 'item.id', '=', 'item_category.item_id')->
+        leftJoin('item_sub_category', 'item_category.id', '=', 'item_sub_category.item_category_id')->
+        where('item.id', '=', $item_id)->
+        select('item_category.id AS item_category_id', 'item_sub_category.id AS item_sub_category_id')->
+        first();
+
+        if ($assignments !== null) {
+            $categories = $assignments->toArray();
+
+            return $categories['item_category_id'] !== null || $categories['item_sub_category_id'] !== null;
+        }
+
+        return false;
+    }
 }

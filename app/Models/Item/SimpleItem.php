@@ -213,4 +213,9 @@ class SimpleItem extends Model implements IModel
             get()->
             toArray();
     }
+
+    public function hasCategoryAssignments(int $item_id): bool
+    {
+        return false;
+    }
 }
