@@ -10,6 +10,7 @@ The complete changelog for the Costs to Expect REST API, our changelog follows t
 - We have added search to the resource-types summary endpoint.
 - We have updated the transfers collection; you can filter the results by an `item` ID.
 - We have updated the partial transfers collection; you can filter the results by an `item` ID.
+- We have added additional filtering options for collections. We have added `total` and `actualised_total` range filtering for the `allocated-expense` item type and `total` range filtering for the `simple-expense` item type.
 
 ### Changed
 - We have added the documentation URI to the README and API; the documentation for the API is work in progress; it is almost complete.

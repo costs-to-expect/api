@@ -222,6 +222,7 @@
                         <li>We have added search to the resource-types summary endpoint.</li>
                         <li>We have updated the transfers collection; you can filter the results by an `item` ID.</li>
                         <li>We have updated the partial transfers collection; you can filter the results by an `item` ID.</li>
+                        <li>We have added additional filtering options for collections. We have added `total` and `actualised_total` range filtering for the `allocated-expense` item type and `total` range filtering for the `simple-expense` item type.</li>
                     </ul>
 
                     <h3>Changed</h3>
@@ -233,6 +234,7 @@
                         <li>We have altered the format of the category and subcategory object for item relationships; the returned object is now a closer match to a category object.</li>
                         <li>We have updated the URIs for item category and subcategory assignments; the URI was singular for a collection.</li>
                         <li>We have updated the item delete endpoint; we did not return a conflict error before removing relationships.</li>
+                        <li>We have tweaked the `type` for expense fields; we highlight that the supplied value should be a decimal string.</li>
                     </ul>
 
                     <h3>Fixed</h3>
@@ -246,7 +248,6 @@
                         <li>We have added a database migration to update the `friendly_name` and `examples` data for `item-types`.</li>
                         <li>We have updated the delete item request; we delete the transfer log entries for the item.</li>
                         <li>We have updated two `item-type` summary endpoints to show they are sortable by `name`.</li>
-                        <li>We have tweaked the `type` for expense fields; we highlight that the supplied value should be a decimal string.</li>
                     </ul>
 
                     <h3>Removed</h3>
