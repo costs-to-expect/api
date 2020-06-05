@@ -246,6 +246,7 @@
                         <li>We have added a database migration to update the `friendly_name` and `examples` data for `item-types`.</li>
                         <li>We have updated the delete item request; we delete the transfer log entries for the item.</li>
                         <li>We have updated two `item-type` summary endpoints to show they are sortable by `name`.</li>
+                        <li>We have tweaked the `type` for expense fields; we highlight that the supplied value should be a decimal string.</li>
                     </ul>
 
                     <h3>Removed</h3>

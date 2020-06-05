@@ -17,7 +17,8 @@ return [
             'total' => [
                 'required',
                 'string',
-                'regex:/^\d+\.\d{2}$/'
+                'regex:/^\d+\.\d{2}$/',
+                'max:16'
             ],
         ],
         'messages' => [

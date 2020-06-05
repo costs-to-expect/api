@@ -18,6 +18,7 @@ The complete changelog for the Costs to Expect REST API, our changelog follows t
 - We have altered the format of the category and subcategory object for item relationships; the returned object is now a closer match to a category object.
 - We have updated the URIs for item category and subcategory assignments; the URI was singular for a collection.
 - We have updated the item delete endpoint; we did not return a conflict error before removing relationships.
+- We have tweaked the `type` for expense fields; we highlight that the supplied value should be a decimal string.
 
 ### Fixed
 - The `name` field now displays as a required field in the items collection OPTIONS request.

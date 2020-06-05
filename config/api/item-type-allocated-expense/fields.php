@@ -38,7 +38,7 @@ return [
         'field' => 'total',
         'title' => 'item-type-allocated-expense/fields.title-total',
         'description' => 'item-type-allocated-expense/fields.description-total',
-        'type' => 'decimal (10,2)',
+        'type' => 'decimal string (13,2)',
         'required' => true
     ],
     'percentage' => [
