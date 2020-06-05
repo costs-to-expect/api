@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace App\Validators;
 
+use Illuminate\Support\Facades\Validator as ValidatorFacade;
 use DateTime;
 
 /**
@@ -34,16 +35,34 @@ class FilterParameters
                     is_array($filter) === true &&
                     count($filter) === 3
                 ) {
-                    if (
-                        strlen($filter[1]) === 10 &&
-                        strlen($filter[2]) === 10 &&
-                        self::validateDate($filter[1]) === true &&
-                        self::validateDate($filter[2]) === true
-                    ) {
-                        self::$parameters[$filter[0]] = [
-                            'from' => $filter[1],
-                            'to' => $filter[2]
-                        ];
+                    switch ($filter[0]) {
+                        case 'effective_date':
+                            if (
+                                strlen($filter[1]) === 10 &&
+                                strlen($filter[2]) === 10 &&
+                                self::validateDate($filter[1]) === true &&
+                                self::validateDate($filter[2]) === true
+                            ) {
+                                self::$parameters[$filter[0]] = [
+                                    'from' => $filter[1],
+                                    'to' => $filter[2]
+                                ];
+                            }
+                            break;
+                        case 'total':
+                        case 'actualised_total':
+                            if (self::validateMoney($filter[1]) === false &&
+                                self::validateMoney($filter[2]) === false) {
+                                self::$parameters[$filter[0]] = [
+                                    'from' => $filter[1],
+                                    'to' => $filter[2]
+                                ];
+                            }
+                            break;
+
+                        default:
+
+                            break;
                     }
                 }
             }
@@ -96,9 +115,9 @@ class FilterParameters
 
         if (strlen($header) > 0) {
             return ltrim($header, '|');
-        } else {
-            return null;
         }
+
+        return null;
     }
 
     private static function validateDate($date): bool
@@ -111,5 +130,24 @@ class FilterParameters
         }
 
         return false;
+    }
+
+    private static function validateMoney($value)
+    {
+        $validator = ValidatorFacade::make(
+            [
+                'value' => $value
+            ],
+            [
+                'value' => [
+                    'required',
+                    'string',
+                    'regex:/^\d+\.\d{2}$/',
+                    'max:16'
+                ]
+            ]
+        );
+
+        return $validator->fails();
     }
 }
