@@ -11,7 +11,7 @@ return [
         'validation' => [
             'max-length' => 255
         ],
-        'required' => false
+        'required' => true
     ],
     'description' => [
         'field' => 'description',
@@ -24,7 +24,7 @@ return [
         'field' => 'total',
         'title' => 'item-type-simple-expense/fields.title-total',
         'description' => 'item-type-simple-expense/fields.description-total',
-        'type' => 'decimal (10,2)',
+        'type' => 'decimal string (13,2)',
         'required' => true
     ]
 ];

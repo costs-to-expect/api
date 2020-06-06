@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace App\Item\Summary;
 
-use App\Interfaces\Item\ISummaryModel\ISummaryModel;
+use App\Interfaces\Item\ISummaryModel;
 use Illuminate\Support\Facades\Config;
 
 /**
@@ -69,7 +69,7 @@ abstract class AbstractItem
      */
     public function searchParameters(): array
     {
-        return Config::get($this->searchParametersConfig());
+        return array_keys(Config::get($this->searchParametersConfig()));
     }
 
     /**

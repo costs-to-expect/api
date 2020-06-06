@@ -82,7 +82,7 @@ abstract class AbstractItem
      */
     public function searchParameters(): array
     {
-        return Config::get($this->searchParametersConfig());
+        return array_keys(Config::get($this->searchParametersConfig()));
     }
 
     /**

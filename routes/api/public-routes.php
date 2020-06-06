@@ -204,43 +204,51 @@ Route::group(
             'ItemTransferController@optionsTransfer'
         );
 
+        /*This route needs to be removed*/
         Route::get(
-            'resource-types/{resource_type_id}/resources/{resource_id}/items/{item_id}/category',
+            'resource-types/{resource_type_id}/resources/{resource_id}/items/{item_id}/categories',
             'ItemCategoryController@index'
         );
 
+        /*This route needs to be removed*/
         Route::options(
-            'resource-types/{resource_type_id}/resources/{resource_id}/items/{item_id}/category',
+            'resource-types/{resource_type_id}/resources/{resource_id}/items/{item_id}/categories',
             'ItemCategoryController@optionsIndex'
         );
 
+        /*This route needs to be removed*/
         Route::get(
-            'resource-types/{resource_type_id}/resources/{resource_id}/items/{item_id}/category/{item_category_id}',
+            'resource-types/{resource_type_id}/resources/{resource_id}/items/{item_id}/categories/{item_category_id}',
             'ItemCategoryController@show'
         );
 
+        /*This route needs to be removed*/
         Route::options(
-            'resource-types/{resource_type_id}/resources/{resource_id}/items/{item_id}/category/{item_category_id}',
+            'resource-types/{resource_type_id}/resources/{resource_id}/items/{item_id}/categories/{item_category_id}',
             'ItemCategoryController@optionsShow'
         );
 
+        /*This route needs to be removed*/
         Route::get(
-            'resource-types/{resource_type_id}/resources/{resource_id}/items/{item_id}/category/{item_category_id}/subcategory',
+            'resource-types/{resource_type_id}/resources/{resource_id}/items/{item_id}/categories/{item_category_id}/subcategories',
             'ItemSubcategoryController@index'
         );
 
+        /*This route needs to be removed*/
         Route::options(
-            'resource-types/{resource_type_id}/resources/{resource_id}/items/{item_id}/category/{item_category_id}/subcategory',
+            'resource-types/{resource_type_id}/resources/{resource_id}/items/{item_id}/categories/{item_category_id}/subcategories',
             'ItemSubcategoryController@optionsIndex'
         );
 
+        /*This route needs to be removed*/
         Route::get(
-            'resource-types/{resource_type_id}/resources/{resource_id}/items/{item_id}/category/{item_category_id}/subcategory/{item_subcategory_id}',
+            'resource-types/{resource_type_id}/resources/{resource_id}/items/{item_id}/categories/{item_category_id}/subcategories/{item_subcategory_id}',
             'ItemSubcategoryController@show'
         );
 
+        /*This route needs to be removed*/
         Route::options(
-            'resource-types/{resource_type_id}/resources/{resource_id}/items/{item_id}/category/{item_category_id}/subcategory/{item_subcategory_id}',
+            'resource-types/{resource_type_id}/resources/{resource_id}/items/{item_id}/categories/{item_category_id}/subcategories/{item_subcategory_id}',
             'ItemSubcategoryController@optionsShow'
         );
 

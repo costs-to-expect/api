@@ -48,7 +48,7 @@ class ResourceController extends Controller
         );
 
         $search_parameters = SearchParameters::fetch(
-            Config::get('api.resource.searchable')
+            array_keys(Config::get('api.resource.searchable'))
         );
 
         $total = (new Resource())->totalCount(

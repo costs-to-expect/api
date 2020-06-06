@@ -7,7 +7,7 @@ services:
         - WITH_XDEBUG=${WITH_XDEBUG}
         - WITH_COMPOSER=${WITH_COMPOSER}
       dockerfile: .docker/api/Dockerfile
-    image: costs-to-expect
+    image: costs-to-expect-api
     ports:
       - 8080:80
     volumes:
@@ -25,6 +25,7 @@ services:
     build:
       context: .
       dockerfile: .docker/mysql/Dockerfile
+    image: costs-to-expect-api-mysql
     ports:
       - 3308:3306
     env_file: .env

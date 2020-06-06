@@ -48,7 +48,7 @@ class ResourceTypeController extends Controller
     public function index(): JsonResponse
     {
         $search_parameters = SearchParameters::fetch(
-            Config::get('api.resource-type.searchable')
+            array_keys(Config::get('api.resource-type.searchable'))
         );
 
         $total = (new ResourceType())->totalCount(

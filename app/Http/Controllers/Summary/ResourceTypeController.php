@@ -6,7 +6,9 @@ use App\Http\Controllers\Controller;
 use App\Models\Summary\ResourceType;
 use App\Option\Get;
 use App\Utilities\Header;
+use App\Validators\SearchParameters;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\Config;
 
 /**
  * Summary controller for the resource-type routes
@@ -24,9 +26,14 @@ class ResourceTypeController extends Controller
      */
     public function index(): JsonResponse
     {
+        $search_parameters = SearchParameters::fetch(
+            array_keys(Config::get('api.resource-type.summary-searchable'))
+        );
+
         $summary = (new ResourceType())->totalCount(
             $this->permitted_resource_types,
-            $this->include_public
+            $this->include_public,
+            $search_parameters
         );
 
         $headers = new Header();
@@ -54,6 +61,7 @@ class ResourceTypeController extends Controller
             setParameters('api.resource-type.summary-parameters')->
             setDescription('route-descriptions.summary-resource-type-GET-index')->
             setAuthenticationStatus(($this->user_id !== null) ? true : false)->
+            setSearchable('api.resource-type.summary-searchable')->
             option();
 
         return $this->optionsResponse($get, 200);

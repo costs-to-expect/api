@@ -28,7 +28,7 @@
     <meta property="og:description" content="The Open Source API for the Costs to Expect service, expense tracking and forecasting" />
     <title>Costs to Expect API</title>
 
-    <link href="{{ asset('css/app.css') }}" rel="stylesheet">
+    <link href="{{ asset('css/app.css?ver=' . $version) }}" rel="stylesheet">
     <!-- Global site tag (gtag.js) - Google Analytics -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=UA-64736-10"></script>
     <script>
@@ -148,6 +148,7 @@
                     <p>
                         <a href="/v2" class="btn btn-primary btn-lg" role="button" aria-pressed="true">Access API</a>
                         <a href="https://github.com/costs-to-expect/api" class="btn btn-primary alter btn-lg" role="button" aria-pressed="true">View our API on Github</a>
+                        <a href="https://postman.costs-to-expect.com" class="btn btn-primary alter btn-lg" role="button" aria-pressed="true">Documentation</a>
                     </p>
 
                     <hr />
@@ -204,7 +205,7 @@
 
                     <hr />
 
-                    <h2>Latest feature release [v2.10.0]</h2>
+                    <h2>Latest feature release [v2.11.0]</h2>
 
                     <p>The latest release of the Costs to Expect API is
                         {{ $version }}; we released it on the {{ date('jS M Y', strtotime($date)) }}.</p>
@@ -215,45 +216,44 @@
                     <h3>Added</h3>
 
                     <ul>
-                        <li>We have added a new route, `/resource_types/[id]/resources/[id]/items/[id]/partial-transfer`; A partial transfer allows you to transfer a percentage of the `total` for an item from one resource to another.</li>
-                        <li>We have added an `item_transfer` table; the table will log which items were transferred and by whom.</li>
-                        <li>We have added a partial transfers collection; the route is `/resource_types/[id]/partial-transfers`.</li>
-                        <li>We have added a partial transfers item view; the route is `/resource_types/[id]/partial-transfers/[id]`.</li>
-                        <li>We have added a transfers collection; the route is `/resource_types/[id]/transfers`.</li>
-                        <li>We have added a transfers item view; the route is `/resource_types/[id]/transfers/[id]`.</li>
-                        <li>We have added a delete endpoint for partial transfers.</li>
+                        <li>We have added search to the categories summary endpoint.</li>
+                        <li>We have added search to the subcategories summary endpoint.</li>
+                        <li>We have added search to the resources summary endpoint.</li>
+                        <li>We have added search to the resource-types summary endpoint.</li>
+                        <li>We have updated the transfers collection; you can filter the results by an `item` ID.</li>
+                        <li>We have updated the partial transfers collection; you can filter the results by an `item` ID.</li>
+                        <li>We have added additional filtering options for collections. We have added `total` and `actualised_total` range filtering for the `allocated-expense` item type and `total` range filtering for the `simple-expense` item type.</li>
                     </ul>
 
                     <h3>Changed</h3>
 
                     <ul>
-                        <li>We have reformatted the validation rules in the configuration files; easier to read and simpler to add additional rules.</li>
-                        <li>We have switched the HTTP status code for a "Constraint error" from 500 to 409.</li>
-                        <li>We have tweaked the description for the resource field in the `/resource_types/[id]/resources/[id]/items/[id]/transfer` OPTIONS request.</li>
-                        <li>We have renamed the third parameter of the route validation methods; we changed the name from `$manage` to `$write`.</li>
-                        <li>We have renamed a response helper method; it was not clear from the name that the method is used for updates and delete.</li>
-                        <li>We have tweaked our Docker setup to allow a local API and App/Website; the ports have been changed and a network has been created.</li>
-                        <li>We have updated all item endpoints to return `updated`; this is the date and time an item was updated, not its category assignments.</li>
-                        <li>We have updated item collection and show endpoints; we are going to allow the possibility of items not having categories and subcategories. When you add the `include-categories` and `include-subcategories` parameters to a request, we will not exclude items without category assignments.</li>
-                        <li>We have updated the API to the latest release of Laravel 7.</li>
-                        <li>We have updated the front end dependencies for the welcome page.</li>
-                        <li>We have updated the `item-types` route to show additional information on each tracking method.</li>
-                        <li>We have updated all decimal fields to 13,2 rather than 10,2.</li>
-                        <li>We have updated all description fields; we have switched all the description fields from varchar(255) to text.</li>
+                        <li>We have added the documentation URI to the README and API; the documentation for the API is work in progress; it is almost complete.</li>
+                        <li>We have added a version query parameter to the CSS include.</li>
+                        <li>We have removed a unique index on the `item_transfer` table; the index was limiting the ability to transfer an item multiple times.</li>
+                        <li>We have altered the format of the category and subcategory object for item relationships; the returned object is now a closer match to a category object.</li>
+                        <li>We have updated the URIs for item category and subcategory assignments; the URI was singular for a collection.</li>
+                        <li>We have updated the item delete endpoint; we did not return a conflict error before removing relationships.</li>
+                        <li>We have tweaked the `type` for expense fields; we highlight that the supplied value should be a decimal string.</li>
                     </ul>
 
                     <h3>Fixed</h3>
 
                     <ul>
-                        <li>It is possible to set the quantity for a `simple-item` item as zero.</li>
-                        <li>It is possible to clear optional values in a PATCH request.</li>
-                        <li>We have corrected a bad link on the landing page.</li>
-                        <li>We have corrected a typo on the landing page.</li>
-                        <li>We have switched the table we look at to return created at for an item; we should be using the sub table, not the base item table.</li>
-                        <li>We have corrected the `/resource-types/` OPTIONS request; `public` is not a required field.</li>
-                        <li>We have updated the delete resource type action; we have added additional checks before we attempt to delete, it was possible to remove relationship values which made the resource type inaccessible.</li>
-                        <li>We have adjusted the lottery value to reduce session clears.</li>
-                        <li>We have updated to v3.5.1 of Jquery, v3.5.0 was bugged.</li>
+                        <li>The `name` field now displays as a required field in the items collection OPTIONS request.</li>
+                        <li>The `filterable` array shows in the OPTIONS response for resource type items.</li>
+                        <li>We have updated the namespace in a model.</li>
+                        <li>We have corrected the case of a model name.</li>
+                        <li>We have added the migrations for the original item-types, missing from the import.</li>
+                        <li>We have added a database migration to update the `friendly_name` and `examples` data for `item-types`.</li>
+                        <li>We have updated the delete item request; we delete the transfer log entries for the item.</li>
+                        <li>We have updated two `item-type` summary endpoints to show they are sortable by `name`.</li>
+                    </ul>
+
+                    <h3>Removed</h3>
+
+                    <ul>
+                        <li>We have removed the category and subcategory item assigned URIs and replaced them with correctly named URIs for collections.</li>
                     </ul>
                 </div>
             </div>

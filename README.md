@@ -4,14 +4,20 @@
 
 Costs to Expect is a service which focuses on tracking and forecasting expenses. 
 The Costs to Expect API is the backbone of the service and is not going to be 
-limited to expenses; however, we figured that is was an excellent place to start. 
+limited to expenses; however, we figured that it was an excellent place to start. 
+
+## Docs
+
+We are working hard to get the documentation ready, the App will not enter beta 
+until the API documentation is ready, the documentation can be found at 
+[postman.costs-to-expect.com](https://postman.costs-to-expect.com?version=latest) 
 
 ### The App
 The [alpha](https://app.costs-to-expect.com) for the service is online, we are 
- hoping to release the public alpha at the start of April 2020. Please check 
- the [app.costs-to-expect.com/roadmap](https://app.costs-to-expect.com/roadmap) 
- and changelog to see how we are getting on 
- [app.costs-to-expect.com/changelog](https://app.costs-to-expect.com/changelog) 
+ hoping to release the public beta soon(tm). Please check 
+ our [app.costs-to-expect.com/roadmap](https://app.costs-to-expect.com/roadmap) 
+ and [app.costs-to-expect.com/changelog](https://app.costs-to-expect.com/changelog) 
+ to see how we are progressing. 
 
 ### The Website
 A small part of the service is tracking the costs to raise a child in the UK, 
@@ -53,10 +59,10 @@ and then running any migrations and install Passport.
 * `docker-compose exec api php artisan key:generate`
 * `docker-compose exec api php artisan migrate`
 * `docker-compose exec api php artisan passport:install`
-* Run an OPTIONS request on `http://[your.domail.local]/v2/resource_types`, you should see a nice OPTIONS request, 
-alternatively a GET request to `http://[your.domail.local]/v1` will show all the routes.
-* You can add a development user by POSTing to `http://[your.domail.local]/v2/auth/register` and then get a bearer by 
-POSTing to `http://[your.domail.local]/v2/auth/login` - you will need a bearer for all the routes that require authentication.
+* Run an OPTIONS request on `http://[your.domail.local:8080]/v2/resource_types`, you should see a nice OPTIONS request, 
+alternatively a GET request to `http://[your.domail.local:8080]/v1` will show all the routes.
+* You can add a development user by POSTing to `http://[your.domail.local:8080]/v2/auth/register` and then get a bearer by 
+POSTing to `http://[your.domail.local:8080]/v2/auth/login` - you will need a bearer for all the routes that require authentication.
 * The API is setup to use Mailgun by default, populate `MAILGUN_DOMAIN` and `MAILGUN_SECRET` with values from your account, 
 you will also need to set `MAIL_FROM_ADDRESS` and `MAIL_TO_ADDRESS`. You may need to set `Authorized Recipients` in Mailgun. 
 
@@ -153,18 +159,18 @@ additionally, the same is true if you are assigned to a resource type.
 | OPTIONS  | v2/resource-types/{resource_type_id}/resources/{resource_id}/items/{item_id} |
 | PATCH    | v2/resource-types/{resource_type_id}/resources/{resource_id}/items/{item_id} |
 | DELETE   | v2/resource-types/{resource_type_id}/resources/{resource_id}/items/{item_id} |
-| GET/HEAD | v2/resource-types/{resource_type_id}/resources/{resource_id}/items/{item_id}/category |
-| OPTIONS  | v2/resource-types/{resource_type_id}/resources/{resource_id}/items/{item_id}/category |
-| POST     | v2/resource-types/{resource_type_id}/resources/{resource_id}/items/{item_id}/category |
-| GET/HEAD | v2/resource-types/{resource_type_id}/resources/{resource_id}/items/{item_id}/category/{item_category_id} |
-| OPTIONS  | v2/resource-types/{resource_type_id}/resources/{resource_id}/items/{item_id}/category/{item_category_id} |
-| DELETE   | v2/resource-types/{resource_type_id}/resources/{resource_id}/items/{item_id}/category/{item_category_id} |
-| GET/HEAD | v2/resource-types/{resource_type_id}/resources/{resource_id}/items/{item_id}/category/{item_category_id}/subcategory |
-| OPTIONS  | v2/resource-types/{resource_type_id}/resources/{resource_id}/items/{item_id}/category/{item_category_id}/subcategory |
-| POST     | v2/resource-types/{resource_type_id}/resources/{resource_id}/items/{item_id}/category/{item_category_id}/sub_category |
-| GET/HEAD | v2/resource-types/{resource_type_id}/resources/{resource_id}/items/{item_id}/category/{item_category_id}/subcategory/{item_subcategory_id} |
-| OPTIONS  | v2/resource-types/{resource_type_id}/resources/{resource_id}/items/{item_id}/category/{item_category_id}/subcategory/{item_subcategory_id} |
-| DELETE   | v2/resource-types/{resource_type_id}/resources/{resource_id}/items/{item_id}/category/{item_category_id}/sub_category/{item_subcategory_id} |
+| GET/HEAD | v2/resource-types/{resource_type_id}/resources/{resource_id}/items/{item_id}/categories |
+| OPTIONS  | v2/resource-types/{resource_type_id}/resources/{resource_id}/items/{item_id}/categories |
+| POST     | v2/resource-types/{resource_type_id}/resources/{resource_id}/items/{item_id}/categories |
+| GET/HEAD | v2/resource-types/{resource_type_id}/resources/{resource_id}/items/{item_id}/categories/{item_category_id} |
+| OPTIONS  | v2/resource-types/{resource_type_id}/resources/{resource_id}/items/{item_id}/categories/{item_category_id} |
+| DELETE   | v2/resource-types/{resource_type_id}/resources/{resource_id}/items/{item_id}/categories/{item_category_id} |
+| GET/HEAD | v2/resource-types/{resource_type_id}/resources/{resource_id}/items/{item_id}/categories/{item_category_id}/subcategories |
+| OPTIONS  | v2/resource-types/{resource_type_id}/resources/{resource_id}/items/{item_id}/categories/{item_category_id}/subcategories |
+| POST     | v2/resource-types/{resource_type_id}/resources/{resource_id}/items/{item_id}/categories/{item_category_id}/subcategories |
+| GET/HEAD | v2/resource-types/{resource_type_id}/resources/{resource_id}/items/{item_id}/categories/{item_category_id}/subcategories/{item_subcategory_id} |
+| OPTIONS  | v2/resource-types/{resource_type_id}/resources/{resource_id}/items/{item_id}/categories/{item_category_id}/subcategories/{item_subcategory_id} |
+| DELETE   | v2/resource-types/{resource_type_id}/resources/{resource_id}/items/{item_id}/categories/{item_category_id}/subcategories/{item_subcategory_id} |
 | OPTIONS  | v2/resource-types/{resource_type_id}/resources/{resource_id}/items/{item_id}/partial-transfer |
 | POST     | v2/resource-types/{resource_type_id}/resources/{resource_id}/items/{item_id}/partial-transfer |
 | OPTIONS  | v2/resource-types/{resource_type_id}/resources/{resource_id}/items/{item_id}/transfer |

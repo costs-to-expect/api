@@ -3,12 +3,14 @@
 namespace App\Http\Controllers\Summary;
 
 use App\Http\Controllers\Controller;
-use App\Models\Summary\SubCategory;
+use App\Models\Summary\Subcategory;
 use App\Option\Get;
 use App\Utilities\Header;
 use App\Utilities\RoutePermission;
 use App\Validators\Route;
+use App\Validators\SearchParameters;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\Config;
 
 /**
  * Summary controller for the subcategories routes
@@ -35,9 +37,14 @@ class SubcategoryController extends Controller
             $this->permitted_resource_types
         );
 
-        $summary = (new SubCategory())->totalCount(
+        $search_parameters = SearchParameters::fetch(
+            array_keys(Config::get('api.subcategory.summary-searchable'))
+        );
+
+        $summary = (new Subcategory())->totalCount(
             $resource_type_id,
-            $category_id
+            $category_id,
+            $search_parameters
         );
 
         $headers = new Header();
@@ -79,6 +86,7 @@ class SubcategoryController extends Controller
         $get = Get::init()->
             setDescription('route-descriptions.summary_subcategory_GET_index')->
             setAuthenticationStatus($permissions['view'])->
+            setSearchable('api.subcategory.summary-searchable')->
             option();
 
         return $this->optionsResponse($get, 200);

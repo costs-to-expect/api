@@ -43,12 +43,12 @@ Route::group(
         );
 
         Route::post(
-            'resource-types/{resource_type_id}/resources/{resource_id}/items/{item_id}/category',
+            'resource-types/{resource_type_id}/resources/{resource_id}/items/{item_id}/categories',
             'ItemCategoryController@create'
         );
 
         Route::post(
-            'resource-types/{resource_type_id}/resources/{resource_id}/items/{item_id}/category/{item_category_id}/subcategory',
+            'resource-types/{resource_type_id}/resources/{resource_id}/items/{item_id}/categories/{item_category_id}/subcategories',
             'ItemSubcategoryController@create'
         );
 
@@ -93,12 +93,12 @@ Route::group(
         );
 
         Route::delete(
-            'resource-types/{resource_type_id}/resources/{resource_id}/items/{item_id}/category/{item_category_id}',
+            'resource-types/{resource_type_id}/resources/{resource_id}/items/{item_id}/categories/{item_category_id}',
             'ItemCategoryController@delete'
         );
 
         Route::delete(
-            'resource-types/{resource_type_id}/resources/{resource_id}/items/{item_id}/category/{item_category_id}/subcategory/{item_subcategory_id}',
+            'resource-types/{resource_type_id}/resources/{resource_id}/items/{item_id}/categories/{item_category_id}/subcategories/{item_subcategory_id}',
             'ItemSubcategoryController@delete'
         );
 

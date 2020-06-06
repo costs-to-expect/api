@@ -41,7 +41,7 @@ class PermittedUserController extends Controller
         );
 
         $search_parameters = SearchParameters::fetch(
-            Config::get('api.permitted-user.searchable')
+            array_keys(Config::get('api.permitted-user.searchable'))
         );
 
         $total = (new PermittedUser())->totalCount(

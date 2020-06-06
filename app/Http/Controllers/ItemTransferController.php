@@ -14,11 +14,13 @@ use App\Utilities\Request as UtilityRequest;
 use App\Utilities\Response as UtilityResponse;
 use App\Utilities\RoutePermission;
 use App\Validators\Fields\ItemTransfer as ItemTransferValidator;
+use App\Validators\Parameters;
 use App\Validators\Route;
 use Exception;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Config;
 
 /**
  * Transfer items
@@ -43,10 +45,15 @@ class ItemTransferController extends Controller
             $this->permitted_resource_types
         );
 
+        $parameters = Parameters::fetch(
+            array_keys(Config::get('api.item-transfer.parameters.collection'))
+        );
+
         $total = (new ItemTransfer())->total(
             (int) $resource_type_id,
             $this->permitted_resource_types,
-            $this->include_public
+            $this->include_public,
+            $parameters
         );
 
         $pagination = UtilityPagination::init(
@@ -62,7 +69,8 @@ class ItemTransferController extends Controller
             $this->permitted_resource_types,
             $this->include_public,
             $pagination['offset'],
-            $pagination['limit']
+            $pagination['limit'],
+            $parameters
         );
 
         $headers = new Header();
@@ -100,6 +108,7 @@ class ItemTransferController extends Controller
         );
 
         $get = Get::init()->
+            setParameters('api.item-transfer.parameters.collection')->
             setPagination(true)->
             setAuthenticationStatus($permissions['view'])->
             setDescription('route-descriptions.item_transfer_GET_index')->

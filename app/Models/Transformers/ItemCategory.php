@@ -26,6 +26,7 @@ class ItemCategory extends Transformer
         return [
             'id' => $this->hash->itemCategory()->encode($this->data_to_transform['item_category_id']),
             'category' => [
+                'id' => $this->hash->category()->encode($this->data_to_transform['item_category_category_id']),
                 'name' => $this->data_to_transform['item_category_category_name'],
                 'description' => $this->data_to_transform['item_category_category_description']
             ],

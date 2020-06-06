@@ -12,6 +12,8 @@ use Illuminate\Database\Eloquent\Model;
  */
 interface IModel
 {
+    public function hasCategoryAssignments(int $item_id): bool;
+
     /**
      * Return an instance of the relevant item model
      *

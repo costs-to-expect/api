@@ -55,6 +55,7 @@ class ItemSubcategory extends Model
             select(
                 'item_sub_category.id AS item_sub_category_id',
                 'item_sub_category.created_at AS item_sub_category_created_at',
+                'sub_category.id AS item_sub_category_sub_category_id',
                 'sub_category.name AS item_sub_category_sub_category_name',
                 'sub_category.description AS item_sub_category_sub_category_description'
             )->
@@ -81,6 +82,7 @@ class ItemSubcategory extends Model
             select(
                 'item_sub_category.id AS item_sub_category_id',
                 'item_sub_category.created_at AS item_sub_category_created_at',
+                'sub_category.id AS item_sub_category_sub_category_id',
                 'sub_category.name AS item_sub_category_sub_category_name',
                 'sub_category.description AS item_sub_category_sub_category_description'
             )->
@@ -112,6 +114,7 @@ class ItemSubcategory extends Model
             select(
                 'item_sub_category.id AS item_sub_category_id',
                 'item_sub_category.created_at AS item_sub_category_created_at',
+                'sub_category.id AS item_sub_category_sub_category_id',
                 'sub_category.name AS item_sub_category_sub_category_name',
                 'sub_category.description AS item_sub_category_sub_category_description'
             )->
@@ -130,6 +133,7 @@ class ItemSubcategory extends Model
         return [
             'item_sub_category_id' => $item_sub_category->id,
             'item_sub_category_created_at' => $item_sub_category->created_at->toDateTimeString(),
+            'item_sub_category_sub_category_id' => $item_sub_category->sub_category->id,
             'item_sub_category_sub_category_name' => $item_sub_category->sub_category->name,
             'item_sub_category_sub_category_description' => $item_sub_category->sub_category->description
         ];

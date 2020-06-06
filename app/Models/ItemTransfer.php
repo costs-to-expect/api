@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace App\Models;
 
+use App\Utilities\General;
 use App\Utilities\Model as ModelUtility;
 use Illuminate\Database\Eloquent\Builder as QueryBuilder;
 use Illuminate\Database\Eloquent\Model;
@@ -29,6 +30,7 @@ class ItemTransfer extends Model
      * @param boolean $include_public
      * @param integer $offset
      * @param integer $limit
+     * @param array $parameters
      *
      * @return array
      */
@@ -37,7 +39,8 @@ class ItemTransfer extends Model
         array $permitted_resource_types,
         bool $include_public,
         int $offset = 0,
-        int $limit = 10
+        int $limit = 10,
+        array $parameters = []
     ): array {
         $collection = $this->select(
                 $this->table . '.id',
@@ -56,6 +59,11 @@ class ItemTransfer extends Model
             join("item",$this->table . ".item_id","item.id")->
             join("users",$this->table . ".transferred_by","users.id")->
             where($this->table .'.resource_type_id', '=', $resource_type_id);
+
+        if (array_key_exists('item', $parameters) === true &&
+            $parameters['item'] !== null) {
+            $collection->where($this->table .'.item_id', '=', $parameters['item']);
+        }
 
         $collection = ModelUtility::applyResourceTypeCollectionCondition(
             $collection,
@@ -113,13 +121,15 @@ class ItemTransfer extends Model
      * @param integer $resource_type_id
      * @param array $permitted_resource_types
      * @param boolean $include_public
+     * @param array $parameters
      *
      * @return integer
      */
     public function total(
         int $resource_type_id,
         array $permitted_resource_types,
-        bool $include_public
+        bool $include_public,
+        array $parameters = []
     ): int
     {
         $collection = $this->select($this->table . '.id')->
@@ -130,6 +140,11 @@ class ItemTransfer extends Model
             join("users",$this->table . ".transferred_by","users.id")->
             where($this->table .'.resource_type_id', '=', $resource_type_id);
 
+        if (array_key_exists('item', $parameters) === true &&
+            $parameters['item'] !== null) {
+            $collection->where($this->table .'.item_id', '=', $parameters['item']);
+        }
+
         $collection = ModelUtility::applyResourceTypeCollectionCondition(
             $collection,
             $permitted_resource_types,
@@ -137,5 +152,15 @@ class ItemTransfer extends Model
         );
 
         return $collection->count();
+    }
+
+    /**
+     * @param int $item_id
+     *
+     * @return mixed
+     */
+    public function deleteTransfers(int $item_id)
+    {
+        return $this->where($this->table . '.item_id', '=', $item_id)->delete();
     }
 }

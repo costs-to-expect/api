@@ -3,5 +3,10 @@
 declare(strict_types=1);
 
 return [
-    'description'
+    'name' => [
+        'type' => 'string'
+    ],
+    'description' => [
+        'type' => 'string'
+    ]
 ];

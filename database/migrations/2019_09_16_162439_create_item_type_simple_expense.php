@@ -1,5 +1,6 @@
 <?php
 
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
@@ -26,6 +27,8 @@ class CreateItemTypeSimpleExpense extends Migration
             $table->timestamps();
             $table->foreign('item_id')->references('id')->on('item');
         });
+
+        DB::statement('INSERT INTO `item_type` (`name`, `description`, `created_at`) VALUES ("simple-expense", "Track expenses for a specific event or function.", NOW())');
     }
 
     /**

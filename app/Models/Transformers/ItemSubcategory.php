@@ -26,6 +26,7 @@ class ItemSubcategory extends Transformer
         return [
             'id' => $this->hash->itemSubCategory()->encode($this->data_to_transform['item_sub_category_id']),
             'subcategory' => [
+                'id' => $this->hash->subcategory()->encode($this->data_to_transform['item_sub_category_sub_category_id']),
                 'name' => $this->data_to_transform['item_sub_category_sub_category_name'],
                 'description' => $this->data_to_transform['item_sub_category_sub_category_description']
             ],

@@ -1,4 +1,4 @@
-FROM php:7.3-apache
+FROM php:7.4-apache
 
 COPY . /var/www/html
 COPY .docker/api/vhost.conf /etc/apache2/sites-available/000-default.conf

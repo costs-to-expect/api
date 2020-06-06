@@ -57,7 +57,8 @@ class IndexController extends Controller
                     'prefix' => $config['prefix'],
                     'release_date' => $config['release_date'],
                     'changelog' => $config['changelog'],
-                    'readme' => $config['readme']
+                    'readme' => $config['readme'],
+                    'documentation' => $config['documentation']
                 ],
                 'routes' => $routes_to_display
             ],
