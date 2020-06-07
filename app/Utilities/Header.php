@@ -102,6 +102,21 @@ class Header
     }
 
     /**
+     * Add the etag header
+     *
+     * @param array $content
+     *
+     * @return Header
+     */
+    public function addETag(array $content)
+    {
+        $json = json_encode($content, 15);
+        if ($json !== false) {
+            return $this->add('ETag', md5($json));
+        }
+    }
+
+    /**
      * Add the X-Filter header
      *
      * @param mixed $value

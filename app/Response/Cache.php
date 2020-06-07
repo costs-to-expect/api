@@ -27,17 +27,23 @@ class Cache
      * string specific to the user, we don't want any unfortunate caching
      * issues
      *
-     * @param string $prefix
+     * @param int $prefix
      */
-    public function __construct(string $prefix)
+    public function __construct(int $prefix = null)
     {
-        $this->ttl = Config::get('api.app.cache_ttl');
+        $config = Config::get('api.app.cache');
 
-        if (Config::get('api.app.cache') === true) {
+        $this->ttl = $config['ttl'];
+
+        if ($config['enable'] === true) {
             $this->cacheable = true;
         }
 
-        $this->key_prefix = '-' . $prefix . '-';
+        if ($prefix !== null) {
+            $this->key_prefix = '-' . $prefix . '-';
+        } else {
+            $this->key_prefix = $config['public_key_prefix'];
+        }
     }
 
     /**

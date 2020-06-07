@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\ItemType;
 use App\Option\Get;
+use App\Response\Cache;
 use App\Utilities\Header;
 use App\Utilities\Pagination as UtilityPagination;
 use App\Validators\Route;
@@ -32,57 +33,70 @@ class ItemTypeController extends Controller
      */
     public function index(): JsonResponse
     {
+        $cache = new Cache($this->user_id);
+
         $search_parameters = SearchParameters::fetch(
             array_keys(Config::get('api.item-type.searchable'))
         );
-
-        $total = (new ItemType())->totalCount($search_parameters);
 
         $sort_parameters = SortParameters::fetch(
             Config::get('api.item-type.sortable')
         );
 
-        $pagination = UtilityPagination::init(
-                request()->path(),
-                $total,
-                10,
-                $this->allow_entire_collection
-            )->
-            setSearchParameters($search_parameters)->
-            setSortParameters($sort_parameters)->
-            paging();
+        $cached = $cache->get(request()->getRequestUri());
 
+        if ($cached === null) {
+            $total = (new ItemType())->totalCount($search_parameters);
 
-        $item_types = (new ItemType())->paginatedCollection(
-            $pagination['offset'],
-            $pagination['limit'],
-            $search_parameters,
-            $sort_parameters
-        );
+            $pagination = UtilityPagination::init(
+                    request()->path(),
+                    $total,
+                    10,
+                    $this->allow_entire_collection
+                )->
+                setSearchParameters($search_parameters)->
+                setSortParameters($sort_parameters)->
+                paging();
 
-        $headers = new Header();
-        $headers->collection($pagination, count($item_types), $total);
+            $item_types = (new ItemType())->paginatedCollection(
+                $pagination['offset'],
+                $pagination['limit'],
+                $search_parameters,
+                $sort_parameters
+            );
 
-        $sort_header = SortParameters::xHeader();
-        if ($sort_header !== null) {
-            $headers->addSort($sort_header);
-        }
-
-        $search_header = SearchParameters::xHeader();
-        if ($search_header !== null) {
-            $headers->addSearch($search_header);
-        }
-
-        return response()->json(
-            array_map(
-                function($item_type) {
+            $collection = array_map(
+                static function($item_type) {
                     return (new ItemTypeTransformer($item_type))->toArray();
                 },
                 $item_types
-            ),
-            200,
-            $headers->headers()
-        );
+            );
+
+            $headers = new Header();
+            $headers->collection($pagination, count($item_types), $total);
+            $headers->addETag($collection);
+
+            $sort_header = SortParameters::xHeader();
+            if ($sort_header !== null) {
+                $headers->addSort($sort_header);
+            }
+
+            $search_header = SearchParameters::xHeader();
+            if ($search_header !== null) {
+                $headers->addSearch($search_header);
+            }
+
+            $cached = [
+                'total' => $total,
+                'pagination' => $pagination,
+                'collection' => $collection,
+                'headers' => $headers->headers()
+            ];
+
+            $cache->put(request()->getRequestUri(), $cached);
+        }
+
+        return response()->json($cached['collection'],200, $cached['headers']);
     }
 
     /**
