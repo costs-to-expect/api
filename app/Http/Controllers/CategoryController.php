@@ -31,7 +31,7 @@ use Illuminate\Support\Facades\Config;
  */
 class CategoryController extends Controller
 {
-    protected $allow_entire_collection = true;
+    protected bool $allow_entire_collection = true;
 
     /**
      * Return the categories collection

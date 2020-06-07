@@ -31,7 +31,7 @@ use Illuminate\Support\Facades\Config;
  */
 class SubcategoryController extends Controller
 {
-    protected $allow_entire_collection = true;
+    protected bool $allow_entire_collection = true;
 
     /**
      * Return all the sub categories assigned to the given category
