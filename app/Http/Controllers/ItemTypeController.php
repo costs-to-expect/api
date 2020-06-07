@@ -15,7 +15,7 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Config;
 
 /**
- * Manage item types
+ * Manage the item types supported by the API
  *
  * @author Dean Blackborough <dean@g3d-development.com>
  * @copyright Dean Blackborough 2018-2020
@@ -23,7 +23,7 @@ use Illuminate\Support\Facades\Config;
  */
 class ItemTypeController extends Controller
 {
-    protected $allow_entire_collection = true;
+    protected bool $allow_entire_collection = true;
 
     /**
      * Return all the item types
