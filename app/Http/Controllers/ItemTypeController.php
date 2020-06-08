@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\ItemType;
 use App\Option\Get;
-use App\Response\Cache;
+use App\Response\CacheControl;
 use App\Utilities\Header;
 use App\Utilities\Pagination as UtilityPagination;
 use App\Validators\Route;
@@ -33,7 +33,7 @@ class ItemTypeController extends Controller
      */
     public function index(): JsonResponse
     {
-        $cache = new Cache($this->user_id);
+        $cache = new CacheControl($this->user_id);
 
         $search_parameters = SearchParameters::fetch(
             array_keys(Config::get('api.item-type.searchable'))
