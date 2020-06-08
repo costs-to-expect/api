@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\ItemType;
 use App\Option\Get;
+use App\Response\Cache;
 use App\Response\CacheControl;
 use App\Utilities\Header;
 use App\Utilities\Pagination as UtilityPagination;
@@ -33,7 +34,7 @@ class ItemTypeController extends Controller
      */
     public function index(): JsonResponse
     {
-        $cache = new CacheControl($this->user_id);
+        $cache_control = new CacheControl($this->user_id);
 
         $search_parameters = SearchParameters::fetch(
             array_keys(Config::get('api.item-type.searchable'))
@@ -43,9 +44,11 @@ class ItemTypeController extends Controller
             Config::get('api.item-type.sortable')
         );
 
-        $cached = $cache->get(request()->getRequestUri());
+        $cache = new Cache();
+        $cache->setContent($cache_control->get(request()->getRequestUri()));
 
-        if ($cached === null) {
+        if ($cache->valid() === false) {
+
             $total = (new ItemType())->totalCount($search_parameters);
 
             $pagination = UtilityPagination::init(
@@ -86,17 +89,19 @@ class ItemTypeController extends Controller
                 $headers->addSearch($search_header);
             }
 
-            $cached = [
-                'total' => $total,
-                'pagination' => $pagination,
-                'collection' => $collection,
-                'headers' => $headers->headers()
-            ];
+            $cache->setCollection($collection);
+            $cache->setTotal($total);
+            $cache->setPagination($pagination);
+            $cache->setHeaders($headers->headers());
 
-            $cache->put(request()->getRequestUri(), $cached);
+            $cache_control->put(request()->getRequestUri(), $cache->content());
         }
 
-        return response()->json($cached['collection'],200, $cached['headers']);
+        return response()->json(
+            $cache->collection(),
+            $cache->statusCode(),
+            $cache->headers()
+        );
     }
 
     /**

@@ -14,11 +14,41 @@ namespace App\Response;
  */
 class Cache
 {
+    private bool $cached;
     private array $collection;
-    private array $content;
     private array $headers;
     private array $pagination;
     private int $total;
+    private int $status_code;
+
+    /**
+     * Create a cache response object
+     */
+    public function __construct()
+    {
+        $this->cached = false;
+        $this->status_code = 200;
+    }
+
+    public function collection(): array
+    {
+        return $this->collection;
+    }
+
+    public function content(): array
+    {
+        return [
+            'total' => $this->total,
+            'collection' => $this->collection,
+            'headers' => $this->headers,
+            'pagination' => $this->pagination
+        ];
+    }
+
+    public function headers(): array
+    {
+        return $this->headers;
+    }
 
     /**
      * Pass in the collection data
@@ -36,9 +66,23 @@ class Cache
      *
      * @param array $content
      */
-    public function setContent(array $content)
+    public function setContent(array $content = null)
     {
-        $this->content = $content;
+        if (
+            $content !== null &&
+            is_array($content) &&
+            array_key_exists('total', $content) === true &&
+            array_key_exists('collection', $content) === true &&
+            array_key_exists('headers', $content) === true &&
+            array_key_exists('pagination', $content) === true
+        ) {
+            $this->cached = true;
+            $this->total = $content['total'];
+            $this->collection = $content['collection'];
+            $this->headers = $content['headers'];
+            $this->pagination = $content['pagination'];
+            $this->status_code = 304;
+        }
     }
 
     /**
@@ -69,5 +113,27 @@ class Cache
     public function setTotal(int $total)
     {
         $this->total = $total;
+    }
+
+    /**
+     * Return the status code for the request, depends on how we set the
+     * data in the cache object, defaults to 200, we set 304 if we pass
+     * in a valid data array from the cache store
+     *
+     * @return int
+     */
+    public function statusCode(): int
+    {
+        return $this->status_code;
+    }
+
+    /**
+     * Doe we have a valid cached response?
+     *
+     * @return bool
+     */
+    public function valid(): bool
+    {
+        return $this->cached;
     }
 }
