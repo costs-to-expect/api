@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use App\Events\RequestError;
 use App\Option\Get;
 use App\Option\Post;
-use App\Utilities\Header;
+use App\Response\Header\Header;
 use App\Utilities\Request as UtilityRequest;
 use App\Utilities\Response;
 use App\Validators\Parameters;

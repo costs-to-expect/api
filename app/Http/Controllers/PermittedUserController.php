@@ -6,7 +6,7 @@ use App\Models\PermittedUser;
 use App\Models\Transformers\PermittedUser as PermittedUserTransformer;
 use App\Option\Get;
 use App\Option\Post;
-use App\Utilities\Header;
+use App\Response\Header\Header;
 use App\Utilities\Pagination as UtilityPagination;
 use App\Utilities\RoutePermission;
 use App\Validators\Route;

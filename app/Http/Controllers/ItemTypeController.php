@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\ItemType;
 use App\Option\Get;
 use App\Response\Cache;
-use App\Response\Headers;
+use App\Response\Header\Headers;
 use App\Utilities\Pagination as UtilityPagination;
 use App\Validators\Route;
 use App\Models\Transformers\ItemType as ItemTypeTransformer;

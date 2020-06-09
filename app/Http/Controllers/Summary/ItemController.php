@@ -5,7 +5,7 @@ namespace App\Http\Controllers\Summary;
 use App\Http\Controllers\Controller;
 use App\Item\Factory;
 use App\Option\Get;
-use App\Utilities\Header;
+use App\Response\Header\Header;
 use App\Utilities\Response;
 use App\Utilities\RoutePermission;
 use App\Validators\FilterParameters;

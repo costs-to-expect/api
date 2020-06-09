@@ -5,7 +5,7 @@ namespace App\Http\Controllers\Summary;
 use App\Http\Controllers\Controller;
 use App\Models\Summary\Subcategory;
 use App\Option\Get;
-use App\Utilities\Header;
+use App\Response\Header\Header;
 use App\Utilities\RoutePermission;
 use App\Validators\Route;
 use App\Validators\SearchParameters;

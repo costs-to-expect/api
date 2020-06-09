@@ -2,9 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Response;
-
-use App\Utilities\Header;
+namespace App\Response\Header;
 
 /**
  * Headers helper, generate the necessary headers for the response
