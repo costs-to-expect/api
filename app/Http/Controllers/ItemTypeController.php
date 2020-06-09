@@ -6,6 +6,7 @@ use App\Models\ItemType;
 use App\Option\Get;
 use App\Response\Cache;
 use App\Response\CacheControl;
+use App\Response\Headers;
 use App\Utilities\Header;
 use App\Utilities\Pagination as UtilityPagination;
 use App\Validators\Route;
@@ -49,7 +50,6 @@ class ItemTypeController extends Controller
         $cache->setFromCache($cache_control->get(request()->getRequestUri()));
 
         if ($cache->valid() === false) {
-
             $total = (new ItemType())->totalCount($search_parameters);
 
             $pagination = UtilityPagination::init(
@@ -76,24 +76,13 @@ class ItemTypeController extends Controller
                 $item_types
             );
 
-            $headers = new Header();
-            $headers->collection($pagination, count($item_types), $total);
-            $headers->addCacheControl(
-                $cache_control->visibility(),
-                $cache_control->ttl()
-            );
+            $headers = new Headers();
+            $headers->collection($pagination, count($item_types), $total)->
+                addCacheControl($cache_control->visibility(), $cache_control->ttl())->
+                addSearch(SearchParameters::xHeader())->
+                addSort(SortParameters::xHeader());
 
-            $sort_header = SortParameters::xHeader();
-            if ($sort_header !== null) {
-                $headers->addSort($sort_header);
-            }
-
-            $search_header = SearchParameters::xHeader();
-            if ($search_header !== null) {
-                $headers->addSearch($search_header);
-            }
-
-            $cache->create($total,$collection,$pagination,$headers->headers());
+            $cache->create($total, $collection, $pagination, $headers->headers());
             $cache_control->put(request()->getRequestUri(), $cache->content());
         }
 
