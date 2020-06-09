@@ -11,6 +11,8 @@ use App\Option\Delete;
 use App\Option\Get;
 use App\Option\Patch;
 use App\Option\Post;
+use App\Response\Cache;
+use App\Response\CacheControl;
 use App\Utilities\Header;
 use App\Utilities\Pagination as UtilityPagination;
 use App\Utilities\Request as UtilityRequest;
@@ -47,62 +49,73 @@ class ResourceTypeController extends Controller
      */
     public function index(): JsonResponse
     {
+        $cache_control = new CacheControl($this->user_id);
+
         $search_parameters = SearchParameters::fetch(
             array_keys(Config::get('api.resource-type.searchable'))
-        );
-
-        $total = (new ResourceType())->totalCount(
-            $this->permitted_resource_types,
-            $this->include_public,
-            $search_parameters
         );
 
         $sort_parameters = SortParameters::fetch(
             Config::get('api.resource-type.sortable')
         );
 
-        $pagination = UtilityPagination::init(
+        $cache = new Cache();
+        $cache->setContent($cache_control->get(request()->getRequestUri()));
+
+        if ($cache->valid() === false) {
+
+            $total = (new ResourceType())->totalCount(
+                $this->permitted_resource_types,
+                $this->include_public,
+                $search_parameters
+            );
+
+            $pagination = UtilityPagination::init(
                 request()->path(),
                 $total,
                 10,
                 $this->allow_entire_collection
-            )->
-            setSearchParameters($search_parameters)->
-            setSortParameters($sort_parameters)->
-            paging();
+            )->setSearchParameters($search_parameters)->setSortParameters($sort_parameters)->paging();
 
-        $resource_types = (new ResourceType())->paginatedCollection(
-            $this->permitted_resource_types,
-            $this->include_public,
-            $pagination['offset'],
-            $pagination['limit'],
-            $search_parameters,
-            $sort_parameters
-        );
+            $resource_types = (new ResourceType())->paginatedCollection(
+                $this->permitted_resource_types,
+                $this->include_public,
+                $pagination['offset'],
+                $pagination['limit'],
+                $search_parameters,
+                $sort_parameters
+            );
 
-        $headers = new Header();
-        $headers->collection($pagination, count($resource_types), $total);
-
-        $sort_header = SortParameters::xHeader();
-        if ($sort_header !== null) {
-            $headers->addSort($sort_header);
-        }
-
-        $search_header = SearchParameters::xHeader();
-        if ($search_header !== null) {
-            $headers->addSearch($search_header);
-        }
-
-        return response()->json(
-            array_map(
-                function($resource_type) {
+            $collection = array_map(
+                static function ($resource_type) {
                     return (new ResourceTypeTransformer($resource_type))->toArray();
                 },
                 $resource_types
-            ),
-            200,
-            $headers->headers()
-        );
+            );
+
+            $headers = new Header();
+            $headers->collection($pagination, count($resource_types), $total);
+            $headers->addCacheControl($cache_control->visibility());
+
+            $sort_header = SortParameters::xHeader();
+            if ($sort_header !== null) {
+                $headers->addSort($sort_header);
+            }
+
+            $search_header = SearchParameters::xHeader();
+            if ($search_header !== null) {
+                $headers->addSearch($search_header);
+            }
+
+            $cache->setCollection($collection);
+            $cache->setTotal($total);
+            $cache->setPagination($pagination);
+            $cache->setHeaders($headers->headers());
+
+            $cache_control->put(request()->getRequestUri(), $cache->content());
+        }
+
+        return response()->json($cache->collection(), 200, $cache->headers());
     }
 
     /**
