@@ -36,6 +36,22 @@ class Headers
     }
 
     /**
+     * Add the X-Parameters header if the parameters exist
+     *
+     * @param string|null $parameters_header
+     *
+     * @return Headers
+     */
+    public function addParameters(?string $parameters_header): Headers
+    {
+        if ($parameters_header !== null) {
+            $this->headers->addParameters($parameters_header);
+        }
+
+        return $this;
+    }
+
+    /**
      * Add the X-Search header if the parameters for a valid search exist
      *
      * @param string|null $search_header

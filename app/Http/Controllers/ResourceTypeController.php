@@ -12,7 +12,7 @@ use App\Option\Get;
 use App\Option\Patch;
 use App\Option\Post;
 use App\Response\Cache;
-use App\Response\Header\Header;
+use App\Response\Header\Headers;
 use App\Utilities\Pagination as UtilityPagination;
 use App\Utilities\Request as UtilityRequest;
 use App\Utilities\RoutePermission;
@@ -92,22 +92,11 @@ class ResourceTypeController extends Controller
                 $resource_types
             );
 
-            $headers = new Header();
-            $headers->collection($pagination, count($resource_types), $total);
-            $headers->addCacheControl(
-                $cache_control->visibility(),
-                $cache_control->ttl()
-            );
-
-            $sort_header = SortParameters::xHeader();
-            if ($sort_header !== null) {
-                $headers->addSort($sort_header);
-            }
-
-            $search_header = SearchParameters::xHeader();
-            if ($search_header !== null) {
-                $headers->addSearch($search_header);
-            }
+            $headers = new Headers();
+            $headers->collection($pagination, count($resource_types), $total)->
+                addCacheControl($cache_control->visibility(), $cache_control->ttl())->
+                addSearch(SearchParameters::xHeader())->
+                addSort(SortParameters::xHeader());
 
             $cache_collection->create($total, $collection, $pagination, $headers->headers());
             $cache_control->put(request()->getRequestUri(), $cache_collection->content());
@@ -152,13 +141,8 @@ class ResourceTypeController extends Controller
             );
         }
 
-        $headers = new Header();
-        $headers->item();
-
-        $parameters_header = Parameters::xHeader();
-        if ($parameters_header !== null) {
-            $headers->addParameters($parameters_header);
-        }
+        $headers = new Headers();
+        $headers->item()->addParameters(Parameters::xHeader());
 
         return response()->json(
             (new ResourceTypeTransformer($resource_type, $resources))->toArray(),
