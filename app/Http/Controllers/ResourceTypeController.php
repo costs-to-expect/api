@@ -12,7 +12,6 @@ use App\Option\Get;
 use App\Option\Patch;
 use App\Option\Post;
 use App\Response\Cache;
-use App\Response\CacheControl;
 use App\Utilities\Header;
 use App\Utilities\Pagination as UtilityPagination;
 use App\Utilities\Request as UtilityRequest;
@@ -49,7 +48,7 @@ class ResourceTypeController extends Controller
      */
     public function index(): JsonResponse
     {
-        $cache_control = new CacheControl($this->user_id);
+        $cache_control = new Cache\Control($this->user_id);
         $cache_control->setTtlOneDay();
 
         $search_parameters = SearchParameters::fetch(
@@ -60,11 +59,10 @@ class ResourceTypeController extends Controller
             Config::get('api.resource-type.sortable')
         );
 
-        $cache = new Cache();
-        $cache->setFromCache($cache_control->get(request()->getRequestUri()));
+        $cache_collection = new Cache\Collection();
+        $cache_collection->setFromCache($cache_control->get(request()->getRequestUri()));
 
-        if ($cache->valid() === false) {
-
+        if ($cache_collection->valid() === false) {
             $total = (new ResourceType())->totalCount(
                 $this->permitted_resource_types,
                 $this->include_public,
@@ -111,11 +109,11 @@ class ResourceTypeController extends Controller
                 $headers->addSearch($search_header);
             }
 
-            $cache->create($total,$collection,$pagination,$headers->headers());
-            $cache_control->put(request()->getRequestUri(), $cache->content());
+            $cache_collection->create($total, $collection, $pagination, $headers->headers());
+            $cache_control->put(request()->getRequestUri(), $cache_collection->content());
         }
 
-        return response()->json($cache->collection(), 200, $cache->headers());
+        return response()->json($cache_collection->collection(), 200, $cache_collection->headers());
     }
 
     /**

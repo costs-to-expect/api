@@ -9,7 +9,6 @@ use App\Option\Delete;
 use App\Option\Get;
 use App\Option\Post;
 use App\Response\Cache;
-use App\Response\CacheControl;
 use App\Utilities\Header;
 use App\Utilities\Pagination as UtilityPagination;
 use App\Utilities\Request as UtilityRequest;
@@ -43,7 +42,7 @@ class ItemPartialTransferController extends Controller
      */
     public function index($resource_type_id): JsonResponse
     {
-        $cache_control = new CacheControl($this->user_id);
+        $cache_control = new Cache\Control($this->user_id);
         $cache_control->setTtlOneWeek();
 
         Route::resourceType(
@@ -55,11 +54,10 @@ class ItemPartialTransferController extends Controller
             array_keys(Config::get('api.item-transfer.parameters.collection'))
         );
 
-        $cache = new Cache();
-        $cache->setFromCache($cache_control->get(request()->getRequestUri()));
+        $cache_collection = new Cache\Collection();
+        $cache_collection->setFromCache($cache_control->get(request()->getRequestUri()));
 
-        if ($cache->valid() === false) {
-
+        if ($cache_collection->valid() === false) {
             $total = (new ItemPartialTransfer())->total(
                 (int)$resource_type_id,
                 $this->permitted_resource_types,
@@ -97,11 +95,11 @@ class ItemPartialTransferController extends Controller
                 $cache_control->ttl()
             );
 
-            $cache->create($total,$collection,$pagination,$headers->headers());
-            $cache_control->put(request()->getRequestUri(), $cache->content());
+            $cache_collection->create($total, $collection, $pagination, $headers->headers());
+            $cache_control->put(request()->getRequestUri(), $cache_collection->content());
         }
 
-        return response()->json($cache->collection(), 200, $cache->headers());
+        return response()->json($cache_collection->collection(), 200, $cache_collection->headers());
     }
 
     /**

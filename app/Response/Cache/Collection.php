@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Response;
+namespace App\Response\Cache;
 
 /**
  * Cache helper, container for the cached data, gives us a simple
@@ -12,7 +12,7 @@ namespace App\Response;
  * @copyright Dean Blackborough 2018-2020
  * @license https://github.com/costs-to-expect/api/blob/master/LICENSE
  */
-class Cache
+class Collection
 {
     private bool $cached;
     private array $collection;

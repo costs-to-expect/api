@@ -98,4 +98,16 @@ class Headers
     {
         return $this->headers->headers();
     }
+
+    /**
+     * Generate the initial headers necessary for an item
+     *
+     * @return Headers
+     */
+    public function item(): Headers
+    {
+        $this->headers->item();
+
+        return $this;
+    }
 }

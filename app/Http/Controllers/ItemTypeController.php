@@ -5,9 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\ItemType;
 use App\Option\Get;
 use App\Response\Cache;
-use App\Response\CacheControl;
 use App\Response\Headers;
-use App\Utilities\Header;
 use App\Utilities\Pagination as UtilityPagination;
 use App\Validators\Route;
 use App\Models\Transformers\ItemType as ItemTypeTransformer;
@@ -35,7 +33,7 @@ class ItemTypeController extends Controller
      */
     public function index(): JsonResponse
     {
-        $cache_control = new CacheControl($this->user_id);
+        $cache_control = new Cache\Control($this->user_id);
         $cache_control->setTtlOneYear();
 
         $search_parameters = SearchParameters::fetch(
@@ -46,10 +44,10 @@ class ItemTypeController extends Controller
             Config::get('api.item-type.sortable')
         );
 
-        $cache = new Cache();
-        $cache->setFromCache($cache_control->get(request()->getRequestUri()));
+        $cache_collection = new Cache\Collection();
+        $cache_collection->setFromCache($cache_control->get(request()->getRequestUri()));
 
-        if ($cache->valid() === false) {
+        if ($cache_collection->valid() === false) {
             $total = (new ItemType())->totalCount($search_parameters);
 
             $pagination = UtilityPagination::init(
@@ -82,11 +80,11 @@ class ItemTypeController extends Controller
                 addSearch(SearchParameters::xHeader())->
                 addSort(SortParameters::xHeader());
 
-            $cache->create($total, $collection, $pagination, $headers->headers());
-            $cache_control->put(request()->getRequestUri(), $cache->content());
+            $cache_collection->create($total, $collection, $pagination, $headers->headers());
+            $cache_control->put(request()->getRequestUri(), $cache_collection->content());
         }
 
-        return response()->json($cache->collection(), 200, $cache->headers());
+        return response()->json($cache_collection->collection(), 200, $cache_collection->headers());
     }
 
     /**
@@ -106,7 +104,7 @@ class ItemTypeController extends Controller
             UtilityResponse::notFound(trans('entities.item-type'));
         }
 
-        $headers = new Header();
+        $headers = new Headers();
         $headers->item();
 
         return response()->json(

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Response;
+namespace App\Response\Cache;
 
 use Illuminate\Support\Facades\Cache as LaravelCache;
 use Illuminate\Support\Facades\Config;
@@ -14,7 +14,7 @@ use Illuminate\Support\Facades\Config;
  * @copyright Dean Blackborough 2018-2020
  * @license https://github.com/costs-to-expect/api/blob/master/LICENSE
  */
-class CacheControl
+class Control
 {
     private bool $cacheable = false;
 
