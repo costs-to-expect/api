@@ -50,6 +50,7 @@ class ResourceTypeController extends Controller
     public function index(): JsonResponse
     {
         $cache_control = new CacheControl($this->user_id);
+        $cache_control->setTtlOneDay();
 
         $search_parameters = SearchParameters::fetch(
             array_keys(Config::get('api.resource-type.searchable'))
@@ -95,7 +96,10 @@ class ResourceTypeController extends Controller
 
             $headers = new Header();
             $headers->collection($pagination, count($resource_types), $total);
-            $headers->addCacheControl($cache_control->visibility());
+            $headers->addCacheControl(
+                $cache_control->visibility(),
+                $cache_control->ttl()
+            );
 
             $sort_header = SortParameters::xHeader();
             if ($sort_header !== null) {

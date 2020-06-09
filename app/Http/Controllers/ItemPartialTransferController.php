@@ -8,6 +8,8 @@ use App\Models\Transformers\ItemPartialTransfer as ItemPartialTransferTransforme
 use App\Option\Delete;
 use App\Option\Get;
 use App\Option\Post;
+use App\Response\Cache;
+use App\Response\CacheControl;
 use App\Utilities\Header;
 use App\Utilities\Pagination as UtilityPagination;
 use App\Utilities\Request as UtilityRequest;
@@ -41,6 +43,9 @@ class ItemPartialTransferController extends Controller
      */
     public function index($resource_type_id): JsonResponse
     {
+        $cache_control = new CacheControl($this->user_id);
+        $cache_control->setTtlOneWeek();
+
         Route::resourceType(
             (int) $resource_type_id,
             $this->permitted_resource_types
@@ -50,43 +55,57 @@ class ItemPartialTransferController extends Controller
             array_keys(Config::get('api.item-transfer.parameters.collection'))
         );
 
-        $total = (new ItemPartialTransfer())->total(
-            (int) $resource_type_id,
-            $this->permitted_resource_types,
-            $this->include_public,
-            $parameters
-        );
+        $cache = new Cache();
+        $cache->setContent($cache_control->get(request()->getRequestUri()));
 
-        $pagination = UtilityPagination::init(
+        if ($cache->valid() === false) {
+
+            $total = (new ItemPartialTransfer())->total(
+                (int)$resource_type_id,
+                $this->permitted_resource_types,
+                $this->include_public,
+                $parameters
+            );
+
+            $pagination = UtilityPagination::init(
                 request()->path(),
                 $total,
                 10,
                 $this->allow_entire_collection
-            )->
-            paging();
+            )->paging();
 
-        $transfers = (new ItemPartialTransfer())->paginatedCollection(
-            (int) $resource_type_id,
-            $this->permitted_resource_types,
-            $this->include_public,
-            $pagination['offset'],
-            $pagination['limit'],
-            $parameters
-        );
+            $transfers = (new ItemPartialTransfer())->paginatedCollection(
+                (int)$resource_type_id,
+                $this->permitted_resource_types,
+                $this->include_public,
+                $pagination['offset'],
+                $pagination['limit'],
+                $parameters
+            );
 
-        $headers = new Header();
-        $headers->collection($pagination, count($transfers), $total);
-
-        return response()->json(
-            array_map(
-                static function($transfer) {
+            $collection = array_map(
+                static function ($transfer) {
                     return (new ItemPartialTransferTransformer($transfer))->toArray();
                 },
                 $transfers
-            ),
-            200,
-            $headers->headers()
-        );
+            );
+
+            $headers = new Header();
+            $headers->collection($pagination, count($transfers), $total);
+            $headers->addCacheControl(
+                $cache_control->visibility(),
+                $cache_control->ttl()
+            );
+
+            $cache->setCollection($collection);
+            $cache->setTotal($total);
+            $cache->setPagination($pagination);
+            $cache->setHeaders($headers->headers());
+
+            $cache_control->put(request()->getRequestUri(), $cache->content());
+        }
+
+        return response()->json($cache->collection(), 200, $cache->headers());
     }
 
     /**

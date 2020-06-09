@@ -100,14 +100,54 @@ class CacheControl
     }
 
     /**
-     * Set the ttl for our cache, we default to 1 hour, 3600 seconds however
-     * we can override this at will
+     * Set the ttl for our cache, we default to 1 year, 31536000 seconds,
+     * however we can override this at will
      *
      * @param $seconds
      */
     public function setTtl($seconds): void
     {
         $this->ttl = $seconds;
+    }
+
+    /**
+     * Set the ttl to one year
+     */
+    public function setTtlOneYear(): void
+    {
+        $this->setTtl(31536000);
+    }
+
+    /**
+     * Set the ttl to one month
+     */
+    public function setTtlOneMonth(): void
+    {
+        $this->setTtl(2592000);
+    }
+
+    /**
+     * Set the ttl to one week
+     */
+    public function setTtlOneWeek(): void
+    {
+        $this->setTtl(604800);
+    }
+
+    /**
+     * Set the ttl to one day
+     */
+    public function setTtlOneDay(): void
+    {
+        $this->setTtl(86400);
+    }
+
+    /**
+     * Set the ttl to one hour
+     */
+    public function setTtlOneHour(): void
+    {
+        $this->setTtl(3600);
     }
 
     /**

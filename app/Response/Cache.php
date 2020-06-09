@@ -53,6 +53,16 @@ class Cache
         ];
     }
 
+    public function create(
+        array $collection,
+        int $total,
+        array $pagination,
+        array $headers
+    )
+    {
+
+    }
+
     /**
      * Return the headers data array
      *

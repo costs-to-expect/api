@@ -35,6 +35,7 @@ class ItemTypeController extends Controller
     public function index(): JsonResponse
     {
         $cache_control = new CacheControl($this->user_id);
+        $cache_control->setTtlOneYear();
 
         $search_parameters = SearchParameters::fetch(
             array_keys(Config::get('api.item-type.searchable'))
@@ -77,7 +78,10 @@ class ItemTypeController extends Controller
 
             $headers = new Header();
             $headers->collection($pagination, count($item_types), $total);
-            $headers->addCacheControl($cache_control->visibility());
+            $headers->addCacheControl(
+                $cache_control->visibility(),
+                $cache_control->ttl()
+            );
 
             $sort_header = SortParameters::xHeader();
             if ($sort_header !== null) {
