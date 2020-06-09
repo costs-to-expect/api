@@ -56,7 +56,7 @@ class ItemPartialTransferController extends Controller
         );
 
         $cache = new Cache();
-        $cache->setContent($cache_control->get(request()->getRequestUri()));
+        $cache->setFromCache($cache_control->get(request()->getRequestUri()));
 
         if ($cache->valid() === false) {
 
@@ -97,11 +97,7 @@ class ItemPartialTransferController extends Controller
                 $cache_control->ttl()
             );
 
-            $cache->setCollection($collection);
-            $cache->setTotal($total);
-            $cache->setPagination($pagination);
-            $cache->setHeaders($headers->headers());
-
+            $cache->create($total,$collection,$pagination,$headers->headers());
             $cache_control->put(request()->getRequestUri(), $cache->content());
         }
 

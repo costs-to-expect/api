@@ -53,14 +53,24 @@ class Cache
         ];
     }
 
+    /**
+     * Create the cache data object
+     *
+     * @param int $total
+     * @param array $collection
+     * @param array $pagination
+     * @param array $headers
+     */
     public function create(
-        array $collection,
         int $total,
+        array $collection,
         array $pagination,
         array $headers
-    )
-    {
-
+    ): void {
+        $this->setTotal($total);
+        $this->setCollection($collection);
+        $this->setPagination($pagination);
+        $this->setHeaders($headers);
     }
 
     /**
@@ -78,7 +88,7 @@ class Cache
      *
      * @param array $collection
      */
-    public function setCollection(array $collection)
+    private function setCollection(array $collection): void
     {
         $this->collection = $collection;
     }
@@ -89,7 +99,7 @@ class Cache
      *
      * @param array $content
      */
-    public function setContent(array $content = null)
+    public function setFromCache(array $content = null): void
     {
         if (
             $content !== null &&
@@ -112,7 +122,7 @@ class Cache
      *
      * @param array $headers
      */
-    public function setHeaders(array $headers)
+    private function setHeaders(array $headers): void
     {
         $this->headers = $headers;
     }
@@ -122,7 +132,7 @@ class Cache
      *
      * @param array $pagination
      */
-    public function setPagination(array $pagination)
+    private function setPagination(array $pagination): void
     {
         $this->pagination = $pagination;
     }
@@ -132,7 +142,7 @@ class Cache
      *
      * @param int $total
      */
-    public function setTotal(int $total)
+    private function setTotal(int $total): void
     {
         $this->total = $total;
     }

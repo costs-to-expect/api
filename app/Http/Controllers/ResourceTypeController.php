@@ -61,7 +61,7 @@ class ResourceTypeController extends Controller
         );
 
         $cache = new Cache();
-        $cache->setContent($cache_control->get(request()->getRequestUri()));
+        $cache->setFromCache($cache_control->get(request()->getRequestUri()));
 
         if ($cache->valid() === false) {
 
@@ -111,11 +111,7 @@ class ResourceTypeController extends Controller
                 $headers->addSearch($search_header);
             }
 
-            $cache->setCollection($collection);
-            $cache->setTotal($total);
-            $cache->setPagination($pagination);
-            $cache->setHeaders($headers->headers());
-
+            $cache->create($total,$collection,$pagination,$headers->headers());
             $cache_control->put(request()->getRequestUri(), $cache->content());
         }
 
