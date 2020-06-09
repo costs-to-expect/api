@@ -8,6 +8,8 @@ use App\Models\Resource;
 use App\Models\Transformers\ItemTransfer as ItemTransferTransformer;
 use App\Option\Get;
 use App\Option\Post;
+use App\Response\Cache;
+use App\Response\CacheControl;
 use App\Utilities\Header;
 use App\Utilities\Pagination as UtilityPagination;
 use App\Utilities\Request as UtilityRequest;
@@ -40,6 +42,9 @@ class ItemTransferController extends Controller
      */
     public function index($resource_type_id): JsonResponse
     {
+        $cache_control = new CacheControl($this->user_id);
+        $cache_control->setTtlOneWeek();
+
         Route::resourceType(
             (int) $resource_type_id,
             $this->permitted_resource_types
@@ -49,43 +54,53 @@ class ItemTransferController extends Controller
             array_keys(Config::get('api.item-transfer.parameters.collection'))
         );
 
-        $total = (new ItemTransfer())->total(
-            (int) $resource_type_id,
-            $this->permitted_resource_types,
-            $this->include_public,
-            $parameters
-        );
+        $cache = new Cache();
+        $cache->setFromCache($cache_control->get(request()->getRequestUri()));
 
-        $pagination = UtilityPagination::init(
+        if ($cache->valid() === false) {
+
+            $total = (new ItemTransfer())->total(
+                (int)$resource_type_id,
+                $this->permitted_resource_types,
+                $this->include_public,
+                $parameters
+            );
+
+            $pagination = UtilityPagination::init(
                 request()->path(),
                 $total,
                 10,
                 $this->allow_entire_collection
-            )->
-            paging();
+            )->paging();
 
-        $transfers = (new ItemTransfer())->paginatedCollection(
-            (int) $resource_type_id,
-            $this->permitted_resource_types,
-            $this->include_public,
-            $pagination['offset'],
-            $pagination['limit'],
-            $parameters
-        );
+            $transfers = (new ItemTransfer())->paginatedCollection(
+                (int)$resource_type_id,
+                $this->permitted_resource_types,
+                $this->include_public,
+                $pagination['offset'],
+                $pagination['limit'],
+                $parameters
+            );
 
-        $headers = new Header();
-        $headers->collection($pagination, count($transfers), $total);
-
-        return response()->json(
-            array_map(
-                static function($transfer) {
+            $collection = array_map(
+                static function ($transfer) {
                     return (new ItemTransferTransformer($transfer))->toArray();
                 },
                 $transfers
-            ),
-            200,
-            $headers->headers()
-        );
+            );
+
+            $headers = new Header();
+            $headers->collection($pagination, count($transfers), $total);
+            $headers->addCacheControl(
+                $cache_control->visibility(),
+                $cache_control->ttl()
+            );
+
+            $cache->create($total,$collection,$pagination,$headers->headers());
+            $cache_control->put(request()->getRequestUri(), $cache->content());
+        }
+
+        return response()->json($cache->collection(), 200, $cache->headers());
     }
 
     /**
