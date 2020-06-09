@@ -19,7 +19,6 @@ class Cache
     private array $headers;
     private array $pagination;
     private int $total;
-    private int $status_code;
 
     /**
      * Create a cache response object
@@ -27,14 +26,23 @@ class Cache
     public function __construct()
     {
         $this->cached = false;
-        $this->status_code = 200;
     }
 
+    /**
+     * Return the collection data array
+     *
+     * @return array
+     */
     public function collection(): array
     {
         return $this->collection;
     }
 
+    /**
+     * Return all the content, total, collection, headers and pagination
+     *
+     * @return array
+     */
     public function content(): array
     {
         return [
@@ -45,6 +53,11 @@ class Cache
         ];
     }
 
+    /**
+     * Return the headers data array
+     *
+     * @return array
+     */
     public function headers(): array
     {
         return $this->headers;
@@ -81,7 +94,6 @@ class Cache
             $this->collection = $content['collection'];
             $this->headers = $content['headers'];
             $this->pagination = $content['pagination'];
-            $this->status_code = 304;
         }
     }
 
@@ -113,18 +125,6 @@ class Cache
     public function setTotal(int $total)
     {
         $this->total = $total;
-    }
-
-    /**
-     * Return the status code for the request, depends on how we set the
-     * data in the cache object, defaults to 200, we set 304 if we pass
-     * in a valid data array from the cache store
-     *
-     * @return int
-     */
-    public function statusCode(): int
-    {
-        return $this->status_code;
     }
 
     /**

@@ -77,7 +77,7 @@ class ItemTypeController extends Controller
 
             $headers = new Header();
             $headers->collection($pagination, count($item_types), $total);
-            $headers->addETag($collection);
+            $headers->addCacheControl();
 
             $sort_header = SortParameters::xHeader();
             if ($sort_header !== null) {
@@ -97,11 +97,7 @@ class ItemTypeController extends Controller
             $cache_control->put(request()->getRequestUri(), $cache->content());
         }
 
-        return response()->json(
-            $cache->collection(),
-            $cache->statusCode(),
-            $cache->headers()
-        );
+        return response()->json($cache->collection(), 200, $cache->headers());
     }
 
     /**

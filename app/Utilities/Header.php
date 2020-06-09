@@ -102,18 +102,17 @@ class Header
     }
 
     /**
-     * Add the etag header
+     * Add the cache control header
      *
-     * @param array $content
+     * @param bool $public
+     * @param int $max_age
      *
      * @return Header
      */
-    public function addETag(array $content, $public = true)
+    public function addCacheControl($public = true, $max_age = 31536000)
     {
-        $json = json_encode($content, 15);
         $visibility = $public === true ? 'Public' : 'Private';
-        return $this->add('ETag', '"' . md5($json) . '"')->
-            add('Cache-Control', $visibility . ', max-age=31536000');
+        return $this->add('Cache-Control', $visibility . ', max-age=' . $max_age);
     }
 
     /**
