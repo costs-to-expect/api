@@ -104,15 +104,14 @@ class Header
     /**
      * Add the cache control header
      *
-     * @param bool $public
+     * @param string $visibility
      * @param int $max_age
      *
      * @return Header
      */
-    public function addCacheControl($public = true, $max_age = 31536000)
+    public function addCacheControl($visibility, $max_age = 31536000)
     {
-        $visibility = $public === true ? 'Public' : 'Private';
-        return $this->add('Cache-Control', $visibility . ', max-age=' . $max_age);
+        return $this->add('Cache-Control', "{$visibility}, max-age={$max_age}");
     }
 
     /**

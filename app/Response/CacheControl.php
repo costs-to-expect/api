@@ -22,6 +22,8 @@ class CacheControl
 
     private int $ttl;
 
+    private string $visibility = 'public';
+
     /**
      * Create an instance of the cache class. The prefix needs to be a
      * string specific to the user, we don't want any unfortunate caching
@@ -41,6 +43,7 @@ class CacheControl
 
         if ($prefix !== null) {
             $this->key_prefix = '-' . $prefix . '-';
+            $this->visibility = 'Private';
         } else {
             $this->key_prefix = $config['public_key_prefix'];
         }
@@ -115,5 +118,16 @@ class CacheControl
     public function ttl(): int
     {
         return $this->ttl;
+    }
+
+    /**
+     * Return the visibility for the Cache-Control header, depends on where or
+     * not a valid Bearer/user id exists
+     *
+     * @return string
+     */
+    public function visibility(): string
+    {
+        return $this->visibility;
     }
 }
