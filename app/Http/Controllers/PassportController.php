@@ -56,14 +56,12 @@ class PassportController extends Controller
     /**
      * Register with the API will return the token
      *
-     * @param Request $request
-     *
      * @return Http\JsonResponse
      */
-    public function register(Request $request)
+    public function register()
     {
         $validator = Validator::make(
-            $request->all(),
+            request()->all(),
             [
                 'name' => 'required',
                 'email' => 'required|email',
@@ -82,7 +80,7 @@ class PassportController extends Controller
             );
         }
 
-        $input = $request->all();
+        $input = request()->all();
 
         $input['password'] = Hash::make($input['password']);
 

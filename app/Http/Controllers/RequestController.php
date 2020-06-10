@@ -35,15 +35,13 @@ class RequestController extends Controller
     /**
      * Return the paginated request log
      *
-     * @param Request $request
-     *
      * @return JsonResponse
      */
-    public function errorLog(Request $request): JsonResponse
+    public function errorLog(): JsonResponse
     {
         $total = (new RequestErrorLog())->totalCount();
 
-        $pagination = UtilityPagination::init($request->path(), $total, 50)
+        $pagination = UtilityPagination::init(request()->path(), $total, 50)
             ->paging();
 
         $logs = (new RequestErrorLog())->paginatedCollection(
@@ -112,10 +110,9 @@ class RequestController extends Controller
     /**
      * Generate the OPTIONS request for log
      *
-     * @param Request $request
      * @return JsonResponse
      */
-    public function optionsAccessLog(Request $request)
+    public function optionsAccessLog()
     {
         $get = Get::init()->
             setParameters('api.request-access-log.parameters.collection')->
@@ -130,10 +127,9 @@ class RequestController extends Controller
     /**
      * Generate the OPTIONS request for error log
      *
-     * @param Request $request
      * @return JsonResponse
      */
-    public function optionsErrorLog(Request $request)
+    public function optionsErrorLog()
     {
         $get = Get::init()->
             setDescription('route-descriptions.request_GET_error_log')->
@@ -156,34 +152,32 @@ class RequestController extends Controller
      * Log a request error, these are logged when the web app receives an unexpected
      * http status code response
      *
-     * @param Request $request
-     *
      * @return JsonResponse
      */
-    public function createErrorLog(Request $request): JsonResponse
+    public function createErrorLog(): JsonResponse
     {
         $validator = (new RequestErrorLogValidator())->create();
         UtilityRequest::validateAndReturnErrors($validator);
 
         try {
             $request_error_log = new RequestErrorLog([
-                'method' => $request->input('method'),
-                'source' => $request->input('source'),
-                'expected_status_code' => $request->input('expected_status_code'),
-                'returned_status_code' => $request->input('returned_status_code'),
-                'request_uri' => $request->input('request_uri'),
-                'debug' => $request->input('debug')
+                'method' => request()->input('method'),
+                'source' => request()->input('source'),
+                'expected_status_code' => request()->input('expected_status_code'),
+                'returned_status_code' => request()->input('returned_status_code'),
+                'request_uri' => request()->input('request_uri'),
+                'debug' => request()->input('debug')
             ]);
             $request_error_log->save();
 
             event(new RequestError([
-                'method' => $request->input('method'),
-                'source' => $request->input('source'),
-                'expected_status_code' => $request->input('expected_status_code'),
-                'returned_status_code' => $request->input('returned_status_code'),
-                'request_uri' => $request->input('request_uri'),
-                'referer' => $request->server('HTTP_REFERER', 'NOT SET!'),
-                'debug' => $request->input('debug')
+                'method' => request()->input('method'),
+                'source' => request()->input('source'),
+                'expected_status_code' => request()->input('expected_status_code'),
+                'returned_status_code' => request()->input('returned_status_code'),
+                'request_uri' => request()->input('request_uri'),
+                'referer' => request()->server('HTTP_REFERER', 'NOT SET!'),
+                'debug' => request()->input('debug')
             ]));
 
         } catch (Exception $e) {

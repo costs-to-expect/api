@@ -27,12 +27,11 @@ class ResourceTypeItemController extends Controller
     /**
      * Return all the items based on the set filter options
      *
-     * @param Request $request
      * @param string $resource_type_id
      *
      * @return JsonResponse
      */
-    public function index(Request $request, string $resource_type_id): JsonResponse
+    public function index(string $resource_type_id): JsonResponse
     {
         \App\Request\Route\Validate::resourceType(
             $resource_type_id,
@@ -67,7 +66,7 @@ class ResourceTypeItemController extends Controller
             $filter_parameters
         );
 
-        $pagination = UtilityPagination::init($request->path(), $total)
+        $pagination = UtilityPagination::init(request()->path(), $total)
             ->setParameters()
             ->paging();
 

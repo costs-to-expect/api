@@ -29,14 +29,13 @@ class ItemCategoryController extends Controller
     /**
      * Return the category assigned to an item
      *
-     * @param Request $request
      * @param string $resource_type_id
      * @param string $resource_id
      * @param string $item_id
      *
      * @return JsonResponse
      */
-    public function index(Request $request, string $resource_type_id, string $resource_id, string $item_id): JsonResponse
+    public function index(string $resource_type_id, string $resource_id, string $item_id): JsonResponse
     {
         \App\Request\Route\Validate::item(
             $resource_type_id,
@@ -69,7 +68,6 @@ class ItemCategoryController extends Controller
     /**
      * Return a single item
      *
-     * @param Request $request
      * @param string $resource_id
      * @param string $resource_type_id
      * @param string $item_id
@@ -78,7 +76,6 @@ class ItemCategoryController extends Controller
      * @return JsonResponse
      */
     public function show(
-        Request $request,
         string $resource_type_id,
         string $resource_id,
         string $item_id,
@@ -120,14 +117,13 @@ class ItemCategoryController extends Controller
     /**
      * Generate the OPTIONS request for the item list
      *
-     * @param Request $request
      * @param string $resource_type_id
      * @param string $resource_id
      * @param string $item_id
      *
      * @return JsonResponse
      */
-    public function optionsIndex(Request $request, string $resource_type_id, string $resource_id, string $item_id): JsonResponse
+    public function optionsIndex(string $resource_type_id, string $resource_id, string $item_id): JsonResponse
     {
         \App\Request\Route\Validate::item(
             $resource_type_id,
@@ -166,7 +162,6 @@ class ItemCategoryController extends Controller
     /**
      * Generate the OPTIONS request for a specific item
      *
-     * @param Request $request
      * @param string $resource_id
      * @param string $resource_type_id
      * @param string $item_id
@@ -175,7 +170,6 @@ class ItemCategoryController extends Controller
      * @return JsonResponse
      */
     public function optionsShow(
-        Request $request,
         string $resource_type_id,
         string $resource_id,
         string $item_id,
@@ -232,7 +226,6 @@ class ItemCategoryController extends Controller
     /**
      * Assign the category
      *
-     * @param Request $request
      * @param string $resource_type_id
      * @param string $resource_id
      * @param string $item_id
@@ -240,7 +233,6 @@ class ItemCategoryController extends Controller
      * @return JsonResponse
      */
     public function create(
-        Request $request,
         string $resource_type_id,
         string $resource_id,
         string $item_id
@@ -261,7 +253,7 @@ class ItemCategoryController extends Controller
         );
 
         try {
-            $category_id = $this->hash->decode('category', $request->input('category_id'));
+            $category_id = $this->hash->decode('category', request()->input('category_id'));
 
             if ($category_id === false) {
                 UtilityResponse::unableToDecode();

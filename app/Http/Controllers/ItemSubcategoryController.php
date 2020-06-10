@@ -30,7 +30,6 @@ class ItemSubcategoryController extends Controller
     /**
      * Return the sub category assigned to an item
      *
-     * @param Request $request
      * @param string $resource_type_id
      * @param string $resource_id
      * @param string $item_id
@@ -39,7 +38,6 @@ class ItemSubcategoryController extends Controller
      * @return JsonResponse
      */
     public function index(
-        Request $request,
         string $resource_type_id,
         string $resource_id,
         string $item_id,
@@ -82,7 +80,6 @@ class ItemSubcategoryController extends Controller
     /**
      * Return a single item
      *
-     * @param Request $request
      * @param string $resource_id
      * @param string $resource_type_id
      * @param string $item_id
@@ -92,7 +89,6 @@ class ItemSubcategoryController extends Controller
      * @return JsonResponse
      */
     public function show(
-        Request $request,
         string $resource_type_id,
         string $resource_id,
         string $item_id,
@@ -263,7 +259,6 @@ class ItemSubcategoryController extends Controller
     /**
      * Assign the sub category
      *
-     * @param Request $request
      * @param string $resource_type_id
      * @param string $resource_id
      * @param string $item_id
@@ -272,7 +267,6 @@ class ItemSubcategoryController extends Controller
      * @return JsonResponse
      */
     public function create(
-        Request $request,
         string $resource_type_id,
         string $resource_id,
         string $item_id,
@@ -302,7 +296,7 @@ class ItemSubcategoryController extends Controller
         );
 
         try {
-            $subcategory_id = $this->hash->decode('subcategory', $request->input('subcategory_id'));
+            $subcategory_id = $this->hash->decode('subcategory', request()->input('subcategory_id'));
 
             if ($subcategory_id === false) {
                 UtilityResponse::unableToDecode();
@@ -360,7 +354,6 @@ class ItemSubcategoryController extends Controller
     /**
      * Delete the assigned sub category
      *
-     * @param Request $request,
      * @param string $resource_type_id,
      * @param string $resource_id,
      * @param string $item_id,
@@ -370,7 +363,6 @@ class ItemSubcategoryController extends Controller
      * @return JsonResponse
      */
     public function delete(
-        Request $request,
         string $resource_type_id,
         string $resource_id,
         string $item_id,

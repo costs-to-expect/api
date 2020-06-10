@@ -21,11 +21,9 @@ class IndexController extends Controller
     /**
      * Return all routes
      *
-     * @param Request $request
-     *
      * @return \Illuminate\Http\JsonResponse
      */
-    public function index(Request $request)
+    public function index()
     {
         $routes_to_display = array();
 
@@ -69,10 +67,8 @@ class IndexController extends Controller
 
     /**
      * Generate the OPTIONS request
-     *
-     * @param Request $request
      */
-    public function optionsIndex(Request $request)
+    public function optionsIndex()
     {
         $this->optionsResponse(
             [
@@ -91,11 +87,9 @@ class IndexController extends Controller
     /**
      * Generate the change log request
      *
-     * @param Request $request
-     *
      * @return \Illuminate\Http\JsonResponse
      */
-    public function changeLog(Request $request)
+    public function changeLog()
     {
         $changes = [];
 
@@ -144,10 +138,8 @@ class IndexController extends Controller
 
     /**
      * Generate the OPTIONS request for the change log
-     *
-     * @param Request $request
      */
-    public function optionsChangeLog(Request $request)
+    public function optionsChangeLog()
     {
         $this->optionsResponse(
             [
