@@ -12,7 +12,7 @@ use App\Response\Header\Header;
 use App\Utilities\RoutePermission;
 use App\Validators\FilterParameters;
 use App\Validators\Parameters;
-use App\Validators\Route;
+use App\Validators\Validate;
 use App\Models\Category;
 use App\Models\Item;
 use App\Models\Subcategory;
@@ -49,7 +49,7 @@ class ItemController extends Controller
         string $resource_id
     ): JsonResponse
     {
-        Route::resource(
+        \App\Request\Route\Validate::resource(
             $resource_type_id,
             $resource_id,
             $this->permitted_resource_types,
@@ -151,7 +151,7 @@ class ItemController extends Controller
         string $item_id
     ): JsonResponse
     {
-        Route::item(
+        \App\Request\Route\Validate::item(
             $resource_type_id,
             $resource_id,
             $item_id,
@@ -202,7 +202,7 @@ class ItemController extends Controller
         string $resource_id
     ): JsonResponse
     {
-        Route::resource(
+        \App\Request\Route\Validate::resource(
             $resource_type_id,
             $resource_id,
             $this->permitted_resource_types,
@@ -270,7 +270,7 @@ class ItemController extends Controller
         string $item_id
     ): JsonResponse
     {
-        Route::item(
+        \App\Request\Route\Validate::item(
             $resource_type_id,
             $resource_id,
             $item_id,
@@ -332,7 +332,7 @@ class ItemController extends Controller
         string $resource_id
     ): JsonResponse
     {
-        Route::resource(
+        \App\Request\Route\Validate::resource(
             $resource_type_id,
             $resource_id,
             $this->permitted_resource_types,
@@ -381,7 +381,7 @@ class ItemController extends Controller
         string $item_id
     ): JsonResponse
     {
-        Route::item(
+        \App\Request\Route\Validate::item(
             $resource_type_id,
             $resource_id,
             $item_id,
@@ -434,7 +434,7 @@ class ItemController extends Controller
         string $item_id
     ): JsonResponse
     {
-        Route::resource(
+        \App\Request\Route\Validate::resource(
             $resource_type_id,
             $resource_id,
             $this->permitted_resource_types,

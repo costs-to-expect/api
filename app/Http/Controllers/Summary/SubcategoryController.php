@@ -7,7 +7,7 @@ use App\Models\Summary\Subcategory;
 use App\Option\Get;
 use App\Response\Header\Header;
 use App\Utilities\RoutePermission;
-use App\Validators\Route;
+use App\Validators\Validate;
 use App\Validators\SearchParameters;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Config;
@@ -31,7 +31,7 @@ class SubcategoryController extends Controller
      */
     public function index($resource_type_id, $category_id): JsonResponse
     {
-        Route::category(
+        \App\Request\Route\Validate::category(
             $resource_type_id,
             $category_id,
             $this->permitted_resource_types
@@ -71,7 +71,7 @@ class SubcategoryController extends Controller
      */
     public function optionsIndex($resource_type_id, $category_id): JsonResponse
     {
-        Route::category(
+        \App\Request\Route\Validate::category(
             $resource_type_id,
             $category_id,
             $this->permitted_resource_types

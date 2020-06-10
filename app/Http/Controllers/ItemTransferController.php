@@ -16,7 +16,7 @@ use App\Utilities\Response as UtilityResponse;
 use App\Utilities\RoutePermission;
 use App\Validators\Fields\ItemTransfer as ItemTransferValidator;
 use App\Validators\Parameters;
-use App\Validators\Route;
+use App\Validators\Validate;
 use Exception;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\JsonResponse;
@@ -44,7 +44,7 @@ class ItemTransferController extends Controller
         $cache_control = new Cache\Control($this->user_id);
         $cache_control->setTtlOneWeek();
 
-        Route::resourceType(
+        \App\Request\Route\Validate::resourceType(
             (int) $resource_type_id,
             $this->permitted_resource_types
         );
@@ -107,7 +107,7 @@ class ItemTransferController extends Controller
      */
     public function optionsIndex($resource_type_id): JsonResponse
     {
-        Route::resourceType(
+        \App\Request\Route\Validate::resourceType(
             (int) $resource_type_id,
             $this->permitted_resource_types
         );
@@ -140,7 +140,7 @@ class ItemTransferController extends Controller
      */
     public function optionsShow($resource_type_id, $item_transfer_id): JsonResponse
     {
-        Route::resourceType(
+        \App\Request\Route\Validate::resourceType(
             (int) $resource_type_id,
             $this->permitted_resource_types
         );
@@ -167,7 +167,7 @@ class ItemTransferController extends Controller
         string $item_id
     ): JsonResponse
     {
-        Route::item(
+        \App\Request\Route\Validate::item(
             $resource_type_id,
             $resource_id,
             $item_id,
@@ -210,7 +210,7 @@ class ItemTransferController extends Controller
         $item_transfer_id
     ): JsonResponse
     {
-        Route::resourceType(
+        \App\Request\Route\Validate::resourceType(
             (int) $resource_type_id,
             $this->permitted_resource_types
         );
@@ -240,7 +240,7 @@ class ItemTransferController extends Controller
         string $item_id
     ): JsonResponse
     {
-        Route::item(
+        \App\Request\Route\Validate::item(
             $resource_type_id,
             $resource_id,
             $item_id,

@@ -10,7 +10,7 @@ use App\Response\Header\Header;
 use App\Utilities\Pagination as UtilityPagination;
 use App\Utilities\Request as UtilityRequest;
 use App\Utilities\RoutePermission;
-use App\Validators\Route;
+use App\Validators\Validate;
 use App\Models\Subcategory;
 use App\Models\Transformers\Subcategory as SubcategoryTransformer;
 use App\Utilities\Response as UtilityResponse;
@@ -43,7 +43,7 @@ class SubcategoryController extends Controller
      */
     public function index($resource_type_id, $category_id): JsonResponse
     {
-        Route::category(
+        \App\Request\Route\Validate::category(
             (int) $resource_type_id,
             (int) $category_id,
             $this->permitted_resource_types
@@ -122,7 +122,7 @@ class SubcategoryController extends Controller
         $subcategory_id
     ): JsonResponse
     {
-        Route::subcategory(
+        \App\Request\Route\Validate::subcategory(
             (int) $resource_type_id,
             (int) $category_id,
             (int) $subcategory_id,
@@ -158,7 +158,7 @@ class SubcategoryController extends Controller
      */
     public function optionsIndex($resource_type_id, $category_id): JsonResponse
     {
-        Route::category(
+        \App\Request\Route\Validate::category(
             (int) $resource_type_id,
             (int) $category_id,
             $this->permitted_resource_types
@@ -207,7 +207,7 @@ class SubcategoryController extends Controller
         $subcategory_id
     ): JsonResponse
     {
-        Route::subcategory(
+        \App\Request\Route\Validate::subcategory(
             (int) $resource_type_id,
             (int) $category_id,
             (int) $subcategory_id,
@@ -256,7 +256,7 @@ class SubcategoryController extends Controller
      */
     public function create($resource_type_id, $category_id): JsonResponse
     {
-        Route::category(
+        \App\Request\Route\Validate::category(
             (int) $resource_type_id,
             (int) $category_id,
             $this->permitted_resource_types,
@@ -298,7 +298,7 @@ class SubcategoryController extends Controller
         $subcategory_id
     ): JsonResponse
     {
-        Route::subcategory(
+        \App\Request\Route\Validate::subcategory(
             (int) $resource_type_id,
             (int) $category_id,
             (int) $subcategory_id,
@@ -341,7 +341,7 @@ class SubcategoryController extends Controller
         $subcategory_id
     ): JsonResponse
     {
-        Route::subcategory(
+        \App\Request\Route\Validate::subcategory(
             (int) $resource_type_id,
             (int) $category_id,
             (int) $subcategory_id,

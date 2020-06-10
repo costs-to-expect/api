@@ -10,7 +10,7 @@ use App\Response\Header\Header;
 use App\Utilities\Pagination as UtilityPagination;
 use App\Utilities\Request as UtilityRequest;
 use App\Utilities\RoutePermission;
-use App\Validators\Route;
+use App\Validators\Validate;
 use App\Models\Resource;
 use App\Models\Transformers\Resource as ResourceTransformer;
 use App\Utilities\Response as UtilityResponse;
@@ -42,7 +42,7 @@ class ResourceController extends Controller
      */
     public function index(string $resource_type_id): JsonResponse
     {
-        Route::resourceType(
+        \App\Request\Route\Validate::resourceType(
             $resource_type_id,
             $this->permitted_resource_types
         );
@@ -118,7 +118,7 @@ class ResourceController extends Controller
         string $resource_id
     ): JsonResponse
     {
-        Route::resource(
+        \App\Request\Route\Validate::resource(
             $resource_type_id,
             $resource_id,
             $this->permitted_resource_types
@@ -149,7 +149,7 @@ class ResourceController extends Controller
      */
     public function optionsIndex(string $resource_type_id): JsonResponse
     {
-        Route::resourceType(
+        \App\Request\Route\Validate::resourceType(
             $resource_type_id,
             $this->permitted_resource_types
         );
@@ -191,7 +191,7 @@ class ResourceController extends Controller
      */
     public function optionsShow(string $resource_type_id, string $resource_id): JsonResponse
     {
-        Route::resource(
+        \App\Request\Route\Validate::resource(
             $resource_type_id,
             $resource_id,
             $this->permitted_resource_types
@@ -246,7 +246,7 @@ class ResourceController extends Controller
      */
     public function create(string $resource_type_id): JsonResponse
     {
-        Route::resourceType(
+        \App\Request\Route\Validate::resourceType(
             $resource_type_id,
             $this->permitted_resource_types,
             true
@@ -286,7 +286,7 @@ class ResourceController extends Controller
         string $resource_id
     ): JsonResponse
     {
-        Route::resource(
+        \App\Request\Route\Validate::resource(
             $resource_type_id,
             $resource_id,
             $this->permitted_resource_types,
@@ -317,7 +317,7 @@ class ResourceController extends Controller
         string $resource_id
     ): JsonResponse
     {
-        Route::resource(
+        \App\Request\Route\Validate::resource(
             $resource_type_id,
             $resource_id,
             $this->permitted_resource_types,

@@ -10,7 +10,7 @@ use App\Utilities\Response;
 use App\Utilities\RoutePermission;
 use App\Validators\FilterParameters;
 use App\Validators\Parameters;
-use App\Validators\Route;
+use App\Validators\Validate;
 use App\Models\Transformers\Summary\ItemCategory as ItemCategoryTransformer;
 use App\Models\Transformers\Summary\ItemMonth as ItemMonthTransformer;
 use App\Models\Transformers\Summary\ItemSubcategory as ItemSubcategoryTransformer;
@@ -41,7 +41,7 @@ class ItemController extends Controller
      */
     public function index(string $resource_type_id, string $resource_id): JsonResponse
     {
-        Route::resource(
+        \App\Request\Route\Validate::resource(
             $resource_type_id,
             $resource_id,
             $this->permitted_resource_types
@@ -718,7 +718,7 @@ class ItemController extends Controller
      */
     public function optionsIndex(string $resource_type_id, string $resource_id)
     {
-        Route::resource(
+        \App\Request\Route\Validate::resource(
             $resource_type_id,
             $resource_id,
             $this->permitted_resource_types

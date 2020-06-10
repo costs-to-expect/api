@@ -7,7 +7,7 @@ use App\Option\Get;
 use App\Option\Post;
 use App\Response\Header\Header;
 use App\Utilities\RoutePermission;
-use App\Validators\Route;
+use App\Validators\Validate;
 use App\Models\ItemCategory;
 use App\Models\ItemSubcategory;
 use App\Models\Subcategory;
@@ -48,7 +48,7 @@ class ItemSubcategoryController extends Controller
         string $item_category_id
     ): JsonResponse
     {
-        Route::item(
+        \App\Request\Route\Validate::item(
             $resource_type_id,
             $resource_id,
             $item_id,
@@ -102,7 +102,7 @@ class ItemSubcategoryController extends Controller
         string $item_subcategory_id
     ): JsonResponse
     {
-        Route::item(
+        \App\Request\Route\Validate::item(
             $resource_type_id,
             $resource_id,
             $item_id,
@@ -152,7 +152,7 @@ class ItemSubcategoryController extends Controller
         string $item_category_id
     ): JsonResponse
     {
-        Route::item(
+        \App\Request\Route\Validate::item(
             $resource_type_id,
             $resource_id,
             $item_id,
@@ -214,7 +214,7 @@ class ItemSubcategoryController extends Controller
         string $item_subcategory_id
     ): JsonResponse
     {
-        Route::item(
+        \App\Request\Route\Validate::item(
             $resource_type_id,
             $resource_id,
             $item_id,
@@ -281,7 +281,7 @@ class ItemSubcategoryController extends Controller
         string $item_category_id
     ): JsonResponse
     {
-        Route::item(
+        \App\Request\Route\Validate::item(
             $resource_type_id,
             $resource_id,
             $item_id,
@@ -380,7 +380,7 @@ class ItemSubcategoryController extends Controller
         string $item_subcategory_id
     ): JsonResponse
     {
-        Route::item(
+        \App\Request\Route\Validate::item(
             $resource_type_id,
             $resource_id,
             $item_id,

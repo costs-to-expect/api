@@ -7,7 +7,7 @@ use App\Option\Get;
 use App\Option\Post;
 use App\Response\Header\Header;
 use App\Utilities\RoutePermission;
-use App\Validators\Route;
+use App\Validators\Validate;
 use App\Models\Category;
 use App\Models\ItemCategory;
 use App\Models\Transformers\ItemCategory as ItemCategoryTransformer;
@@ -40,7 +40,7 @@ class ItemCategoryController extends Controller
      */
     public function index(Request $request, string $resource_type_id, string $resource_id, string $item_id): JsonResponse
     {
-        Route::item(
+        \App\Request\Route\Validate::item(
             $resource_type_id,
             $resource_id,
             $item_id,
@@ -87,7 +87,7 @@ class ItemCategoryController extends Controller
         string $item_category_id
     ): JsonResponse
     {
-        Route::item(
+        \App\Request\Route\Validate::item(
             $resource_type_id,
             $resource_id,
             $item_id,
@@ -131,7 +131,7 @@ class ItemCategoryController extends Controller
      */
     public function optionsIndex(Request $request, string $resource_type_id, string $resource_id, string $item_id): JsonResponse
     {
-        Route::item(
+        \App\Request\Route\Validate::item(
             $resource_type_id,
             $resource_id,
             $item_id,
@@ -184,7 +184,7 @@ class ItemCategoryController extends Controller
         string $item_category_id
     ): JsonResponse
     {
-        Route::item(
+        \App\Request\Route\Validate::item(
             $resource_type_id,
             $resource_id,
             $item_id,
@@ -248,7 +248,7 @@ class ItemCategoryController extends Controller
         string $item_id
     ): JsonResponse
     {
-        Route::item(
+        \App\Request\Route\Validate::item(
             $resource_type_id,
             $resource_id,
             $item_id,
@@ -331,7 +331,7 @@ class ItemCategoryController extends Controller
         string $item_category_id
     ): JsonResponse
     {
-        Route::itemCategory(
+        \App\Request\Route\Validate::itemCategory(
             $resource_type_id,
             $resource_id,
             $item_id,

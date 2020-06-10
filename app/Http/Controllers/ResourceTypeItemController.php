@@ -8,7 +8,7 @@ use App\Response\Header\Header;
 use App\Utilities\RoutePermission;
 use App\Validators\FilterParameters;
 use App\Validators\Parameters;
-use App\Validators\Route;
+use App\Validators\Validate;
 use App\Models\Category;
 use App\Models\Subcategory;
 use App\Utilities\Pagination as UtilityPagination;
@@ -36,7 +36,7 @@ class ResourceTypeItemController extends Controller
      */
     public function index(Request $request, string $resource_type_id): JsonResponse
     {
-        Route::resourceType(
+        \App\Request\Route\Validate::resourceType(
             $resource_type_id,
             $this->permitted_resource_types
         );
@@ -127,7 +127,7 @@ class ResourceTypeItemController extends Controller
      */
     public function optionsIndex(string $resource_type_id): JsonResponse
     {
-        Route::resourceType(
+        \App\Request\Route\Validate::resourceType(
             $resource_type_id,
             $this->permitted_resource_types
         );

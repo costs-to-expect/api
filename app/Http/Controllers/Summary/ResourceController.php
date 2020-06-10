@@ -6,7 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Option\Get;
 use App\Response\Header\Header;
 use App\Utilities\RoutePermission;
-use App\Validators\Route;
+use App\Validators\Validate;
 use App\Models\Summary\Resource;
 use App\Validators\SearchParameters;
 use Illuminate\Http\JsonResponse;
@@ -30,7 +30,7 @@ class ResourceController extends Controller
      */
     public function index(string $resource_type_id): JsonResponse
     {
-        Route::resourceType(
+        \App\Request\Route\Validate::resourceType(
             $resource_type_id,
             $this->permitted_resource_types
         );
@@ -69,7 +69,7 @@ class ResourceController extends Controller
      */
     public function optionsIndex(string $resource_type_id): JsonResponse
     {
-        Route::resourceType(
+        \App\Request\Route\Validate::resourceType(
             $resource_type_id,
             $this->permitted_resource_types
         );

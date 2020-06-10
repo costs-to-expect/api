@@ -9,7 +9,7 @@ use App\Response\Header\Header;
 use App\Utilities\RoutePermission;
 use App\Validators\FilterParameters;
 use App\Validators\Parameters;
-use App\Validators\Route;
+use App\Validators\Validate;
 use App\Models\Transformers\Summary\ResourceTypeItemCategory as ResourceTypeItemCategoryTransformer;
 use App\Models\Transformers\Summary\ResourceTypeItemMonth as ResourceTypeItemMonthTransformer;
 use App\Models\Transformers\Summary\ResourceTypeItemResource as ResourceTypeItemResourceTransformer;
@@ -40,7 +40,7 @@ class ResourceTypeItemController extends Controller
      */
     public function index(string $resource_type_id): JsonResponse
     {
-        Route::resourceType(
+        \App\Request\Route\Validate::resourceType(
             $resource_type_id,
             $this->permitted_resource_types
         );
@@ -747,7 +747,7 @@ class ResourceTypeItemController extends Controller
      */
     public function optionsIndex(string $resource_type_id): JsonResponse
     {
-        Route::resourceType(
+        \App\Request\Route\Validate::resourceType(
             (int) $resource_type_id,
             $this->permitted_resource_types
         );
