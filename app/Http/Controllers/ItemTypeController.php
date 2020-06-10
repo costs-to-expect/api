@@ -7,7 +7,6 @@ use App\Option\Get;
 use App\Response\Cache;
 use App\Response\Header\Headers;
 use App\Utilities\Pagination as UtilityPagination;
-use App\Validators\Validate;
 use App\Models\Transformers\ItemType as ItemTypeTransformer;
 use App\Utilities\Response as UtilityResponse;
 use App\Validators\SearchParameters;

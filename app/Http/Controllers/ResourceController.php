@@ -9,8 +9,6 @@ use App\Option\Post;
 use App\Response\Header\Header;
 use App\Utilities\Pagination as UtilityPagination;
 use App\Utilities\Request as UtilityRequest;
-use App\Utilities\RoutePermission;
-use App\Validators\Validate;
 use App\Models\Resource;
 use App\Models\Transformers\Resource as ResourceTransformer;
 use App\Utilities\Response as UtilityResponse;
@@ -154,7 +152,7 @@ class ResourceController extends Controller
             $this->permitted_resource_types
         );
 
-        $permissions = RoutePermission::resourceType(
+        $permissions = \App\Request\Route\Permission::resourceType(
             $resource_type_id,
             $this->permitted_resource_types
         );
@@ -197,7 +195,7 @@ class ResourceController extends Controller
             $this->permitted_resource_types
         );
 
-        $permissions = RoutePermission::resource(
+        $permissions = \App\Request\Route\Permission::resource(
             $resource_type_id,
             $resource_id,
             $this->permitted_resource_types

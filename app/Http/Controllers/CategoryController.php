@@ -9,9 +9,7 @@ use App\Option\Patch;
 use App\Option\Post;
 use App\Response\Header\Header;
 use App\Utilities\Pagination as UtilityPagination;
-use App\Utilities\RoutePermission;
 use App\Validators\Parameters;
-use App\Validators\Validate;
 use App\Models\Category;
 use App\Models\Transformers\Category as CategoryTransformer;
 use App\Utilities\Request as UtilityRequest;
@@ -176,7 +174,7 @@ class CategoryController extends Controller
             $this->permitted_resource_types
         );
 
-        $permissions = RoutePermission::resourceType(
+        $permissions = \App\Request\Route\Permission::resourceType(
             (int) $resource_type_id,
             $this->permitted_resource_types
         );
@@ -219,7 +217,7 @@ class CategoryController extends Controller
             $this->permitted_resource_types
         );
 
-        $permissions = RoutePermission::category(
+        $permissions = \App\Request\Route\Permission::category(
             (int) $resource_type_id,
             (int) $category_id,
             $this->permitted_resource_types

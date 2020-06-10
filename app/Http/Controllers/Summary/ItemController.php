@@ -7,10 +7,8 @@ use App\Item\Factory;
 use App\Option\Get;
 use App\Response\Header\Header;
 use App\Utilities\Response;
-use App\Utilities\RoutePermission;
 use App\Validators\FilterParameters;
 use App\Validators\Parameters;
-use App\Validators\Validate;
 use App\Models\Transformers\Summary\ItemCategory as ItemCategoryTransformer;
 use App\Models\Transformers\Summary\ItemMonth as ItemMonthTransformer;
 use App\Models\Transformers\Summary\ItemSubcategory as ItemSubcategoryTransformer;
@@ -726,7 +724,7 @@ class ItemController extends Controller
 
         $item_interface = Factory::summaryItem($resource_type_id);
 
-        $permissions = RoutePermission::resource(
+        $permissions = \App\Request\Route\Permission::resource(
             $resource_type_id,
             $resource_id,
             $this->permitted_resource_types

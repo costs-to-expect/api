@@ -6,8 +6,6 @@ use App\Http\Controllers\Controller;
 use App\Models\Summary\Subcategory;
 use App\Option\Get;
 use App\Response\Header\Header;
-use App\Utilities\RoutePermission;
-use App\Validators\Validate;
 use App\Validators\SearchParameters;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Config;
@@ -77,7 +75,7 @@ class SubcategoryController extends Controller
             $this->permitted_resource_types
         );
 
-        $permissions = RoutePermission::category(
+        $permissions = \App\Request\Route\Permission::category(
             $resource_type_id,
             $category_id,
             $this->permitted_resource_types

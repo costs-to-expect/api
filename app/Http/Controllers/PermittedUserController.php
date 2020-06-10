@@ -8,8 +8,6 @@ use App\Option\Get;
 use App\Option\Post;
 use App\Response\Header\Header;
 use App\Utilities\Pagination as UtilityPagination;
-use App\Utilities\RoutePermission;
-use App\Validators\Validate;
 use App\Validators\SearchParameters;
 use App\Validators\SortParameters;
 use Illuminate\Http\JsonResponse;
@@ -110,7 +108,7 @@ class PermittedUserController extends Controller
             $this->permitted_resource_types
         );
 
-        $permissions = RoutePermission::resourceType(
+        $permissions = \App\Request\Route\Permission::resourceType(
             $resource_type_id,
             $this->permitted_resource_types
         );

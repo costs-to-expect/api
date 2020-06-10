@@ -5,8 +5,6 @@ namespace App\Http\Controllers\Summary;
 use App\Http\Controllers\Controller;
 use App\Option\Get;
 use App\Response\Header\Header;
-use App\Utilities\RoutePermission;
-use App\Validators\Validate;
 use App\Models\Summary\Resource;
 use App\Validators\SearchParameters;
 use Illuminate\Http\JsonResponse;
@@ -74,7 +72,7 @@ class ResourceController extends Controller
             $this->permitted_resource_types
         );
 
-        $permissions = RoutePermission::resourceType(
+        $permissions = \App\Request\Route\Permission::resourceType(
             $resource_type_id,
             $this->permitted_resource_types
         );

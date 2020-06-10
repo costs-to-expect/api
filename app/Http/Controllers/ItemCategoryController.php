@@ -6,8 +6,6 @@ use App\Option\Delete;
 use App\Option\Get;
 use App\Option\Post;
 use App\Response\Header\Header;
-use App\Utilities\RoutePermission;
-use App\Validators\Validate;
 use App\Models\Category;
 use App\Models\ItemCategory;
 use App\Models\Transformers\ItemCategory as ItemCategoryTransformer;
@@ -138,7 +136,7 @@ class ItemCategoryController extends Controller
             $this->permitted_resource_types
         );
 
-        $permissions = RoutePermission::item(
+        $permissions = \App\Request\Route\Permission::item(
             $resource_type_id,
             $resource_id,
             $item_id,
@@ -191,7 +189,7 @@ class ItemCategoryController extends Controller
             $this->permitted_resource_types
         );
 
-        $permissions = RoutePermission::item(
+        $permissions = \App\Request\Route\Permission::item(
             $resource_type_id,
             $resource_id,
             $item_id,

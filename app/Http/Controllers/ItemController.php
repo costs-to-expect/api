@@ -9,10 +9,8 @@ use App\Option\Get;
 use App\Option\Patch;
 use App\Option\Post;
 use App\Response\Header\Header;
-use App\Utilities\RoutePermission;
 use App\Validators\FilterParameters;
 use App\Validators\Parameters;
-use App\Validators\Validate;
 use App\Models\Category;
 use App\Models\Item;
 use App\Models\Subcategory;
@@ -210,7 +208,7 @@ class ItemController extends Controller
 
         $item_interface = Factory::item($resource_type_id);
 
-        $permissions = RoutePermission::resource(
+        $permissions = \App\Request\Route\Permission::resource(
             $resource_type_id,
             $resource_id,
             $this->permitted_resource_types,
@@ -277,7 +275,7 @@ class ItemController extends Controller
             $this->permitted_resource_types
         );
 
-        $permissions = RoutePermission::item(
+        $permissions = \App\Request\Route\Permission::item(
             $resource_type_id,
             $resource_id,
             $item_id,
