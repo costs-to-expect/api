@@ -8,6 +8,7 @@ use App\Option\Get;
 use App\Option\Patch;
 use App\Option\Post;
 use App\Response\Header\Header;
+use App\Request\Parameter;
 use App\Utilities\Pagination as UtilityPagination;
 use App\Models\Category;
 use App\Models\Transformers\Category as CategoryTransformer;
@@ -42,7 +43,7 @@ class CategoryController extends Controller
             $this->permitted_resource_types
         );
 
-        $search_parameters = \App\Request\Parameter\Search::fetch(
+        $search_parameters = Parameter\Search::fetch(
             array_keys(Config::get('api.category.searchable'))
         );
 
@@ -53,7 +54,7 @@ class CategoryController extends Controller
             $search_parameters
         );
 
-        $sort_parameters = \App\Request\Parameter\Sort::fetch(
+        $sort_parameters = Parameter\Sort::fetch(
             Config::get('api.category.sortable')
         );
 
@@ -80,12 +81,12 @@ class CategoryController extends Controller
         $headers = new Header();
         $headers->collection($pagination, count($categories), $total);
 
-        $sort_header = \App\Request\Parameter\Sort::xHeader();
+        $sort_header = Parameter\Sort::xHeader();
         if ($sort_header !== null) {
             $headers->addSort($sort_header);
         }
 
-        $search_header = \App\Request\Parameter\Search::xHeader();
+        $search_header = Parameter\Search::xHeader();
         if ($search_header !== null) {
             $headers->addSearch($search_header);
         }
@@ -118,7 +119,7 @@ class CategoryController extends Controller
             $this->permitted_resource_types
         );
 
-        $parameters = \App\Request\Parameter\Request::fetch(array_keys(Config::get('api.category.parameters.item')));
+        $parameters = Parameter\Request::fetch(array_keys(Config::get('api.category.parameters.item')));
 
         $category = (new Category)->single(
             (int) $resource_type_id,
@@ -145,7 +146,7 @@ class CategoryController extends Controller
         $headers = new Header();
         $headers->item();
 
-        $parameters_header = \App\Request\Parameter\Request::xHeader();
+        $parameters_header = Parameter\Request::xHeader();
         if ($parameters_header !== null) {
             $headers->addParameters($parameters_header);
         }

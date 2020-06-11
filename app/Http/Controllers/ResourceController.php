@@ -7,6 +7,7 @@ use App\Option\Get;
 use App\Option\Patch;
 use App\Option\Post;
 use App\Response\Header\Header;
+use App\Request\Parameter;
 use App\Utilities\Pagination as UtilityPagination;
 use App\Utilities\Request as UtilityRequest;
 use App\Models\Resource;
@@ -43,7 +44,7 @@ class ResourceController extends Controller
             $this->permitted_resource_types
         );
 
-        $search_parameters = \App\Request\Parameter\Search::fetch(
+        $search_parameters = Parameter\Search::fetch(
             array_keys(Config::get('api.resource.searchable'))
         );
 
@@ -54,7 +55,7 @@ class ResourceController extends Controller
             $search_parameters
         );
 
-        $sort_parameters = \App\Request\Parameter\Sort::fetch(
+        $sort_parameters = Parameter\Sort::fetch(
             Config::get('api.resource.sortable')
         );
 
@@ -79,12 +80,12 @@ class ResourceController extends Controller
         $headers = new Header();
         $headers->collection($pagination, count($resources), $total);
 
-        $sort_header = \App\Request\Parameter\Sort::xHeader();
+        $sort_header = Parameter\Sort::xHeader();
         if ($sort_header !== null) {
             $headers->addSort($sort_header);
         }
 
-        $search_header = \App\Request\Parameter\Search::xHeader();
+        $search_header = Parameter\Search::xHeader();
         if ($search_header !== null) {
             $headers->addSearch($search_header);
         }

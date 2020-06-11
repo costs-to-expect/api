@@ -6,6 +6,7 @@ use App\Events\RequestError;
 use App\Option\Get;
 use App\Option\Post;
 use App\Response\Header\Header;
+use App\Request\Parameter;
 use App\Utilities\Request as UtilityRequest;
 use App\Utilities\Response;
 use App\Models\RequestErrorLog;
@@ -77,7 +78,7 @@ class RequestController extends Controller
     {
         $total = (new RequestLog())->totalCount();
 
-        $this->collection_parameters = \App\Request\Parameter\Request::fetch(
+        $this->collection_parameters = Parameter\Request::fetch(
             array_keys(Config::get('api.request-access-log.parameters.collection'))
         );
 
@@ -92,7 +93,7 @@ class RequestController extends Controller
         $headers = new Header();
         $headers->collection($pagination, count($log), $total);
 
-        $parameters_header = \App\Request\Parameter\Request::xHeader();
+        $parameters_header = Parameter\Request::xHeader();
         if ($parameters_header !== null) {
             $headers->addParameters($parameters_header);
         }

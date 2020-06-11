@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Item\Factory;
 use App\Option\Get;
 use App\Response\Header\Header;
+use App\Request\Parameter;
 use App\Utilities\Response;
 use App\Models\Transformers\Summary\ItemCategory as ItemCategoryTransformer;
 use App\Models\Transformers\Summary\ItemMonth as ItemMonthTransformer;
@@ -45,7 +46,7 @@ class ItemController extends Controller
         $item_interface = Factory::summaryItem($resource_type_id);
         $this->model = $item_interface->model();
 
-        $parameters = \App\Request\Parameter\Request::fetch(
+        $parameters = Parameter\Request::fetch(
             $item_interface->collectionParametersKeys(),
             (int) $resource_type_id,
             (int) $resource_id
@@ -111,11 +112,11 @@ class ItemController extends Controller
             $parameters['subcategory']
         );
 
-        $search_parameters = \App\Request\Parameter\Search::fetch(
+        $search_parameters = Parameter\Search::fetch(
             $item_interface->searchParameters()
         );
 
-        $filter_parameters = \App\Request\Parameter\Filter::fetch(
+        $filter_parameters = Parameter\Filter::fetch(
             $item_interface->filterParameters()
         );
 
@@ -251,7 +252,7 @@ class ItemController extends Controller
         $headers->add('X-Count', 1);
         $headers->add('X-Last-Updated', $summary[0]['last_updated']);
 
-        $parameters_header = \App\Request\Parameter\Request::xHeader();
+        $parameters_header = Parameter\Request::xHeader();
         if ($parameters_header !== null) {
             $headers->addParameters($parameters_header);
         }
@@ -294,7 +295,7 @@ class ItemController extends Controller
         $headers->add('X-Total-Count', count($summary));
         $headers->add('X-Count', count($summary));
 
-        $parameters_header = \App\Request\Parameter\Request::xHeader();
+        $parameters_header = Parameter\Request::xHeader();
         if ($parameters_header !== null) {
             $headers->addParameters($parameters_header);
         }
@@ -344,7 +345,7 @@ class ItemController extends Controller
         $headers->add('X-Count', count($summary));
         $headers->add('X-Last-Updated', $summary[0]['last_updated']);
 
-        $parameters_header = \App\Request\Parameter\Request::xHeader();
+        $parameters_header = Parameter\Request::xHeader();
         if ($parameters_header !== null) {
             $headers->addParameters($parameters_header);
         }
@@ -388,7 +389,7 @@ class ItemController extends Controller
         $headers->add('X-Total-Count', count($summary));
         $headers->add('X-Count', count($summary));
 
-        $parameters_header = \App\Request\Parameter\Request::xHeader();
+        $parameters_header = Parameter\Request::xHeader();
         if ($parameters_header !== null) {
             $headers->addParameters($parameters_header);
         }
@@ -441,7 +442,7 @@ class ItemController extends Controller
         $headers->add('X-Count', count($summary));
         $headers->add('X-Last-Updated', $summary[0]['last_updated']);
 
-        $parameters_header = \App\Request\Parameter\Request::xHeader();
+        $parameters_header = Parameter\Request::xHeader();
         if ($parameters_header !== null) {
             $headers->addParameters($parameters_header);
         }
@@ -482,7 +483,7 @@ class ItemController extends Controller
         $headers->add('X-Total-Count', count($summary));
         $headers->add('X-Count', count($summary));
 
-        $parameters_header = \App\Request\Parameter\Request::xHeader();
+        $parameters_header = Parameter\Request::xHeader();
         if ($parameters_header !== null) {
             $headers->addParameters($parameters_header);
         }
@@ -547,7 +548,7 @@ class ItemController extends Controller
         $headers->add('X-Count', count($summary));
         $headers->add('X-Last-Updated', $summary[0]['last_updated']);
 
-        $parameters_header = \App\Request\Parameter\Request::xHeader();
+        $parameters_header = Parameter\Request::xHeader();
         if ($parameters_header !== null) {
             $headers->addParameters($parameters_header);
         }
@@ -594,7 +595,7 @@ class ItemController extends Controller
         $headers->add('X-Count', count($summary));
         $headers->add('X-Last-Updated', $summary[0]['last_updated']);
 
-        $parameters_header = \App\Request\Parameter\Request::xHeader();
+        $parameters_header = Parameter\Request::xHeader();
         if ($parameters_header !== null) {
             $headers->addParameters($parameters_header);
         }
@@ -638,7 +639,7 @@ class ItemController extends Controller
         $headers->add('X-Total-Count', count($summary));
         $headers->add('X-Count', count($summary));
 
-        $parameters_header = \App\Request\Parameter\Request::xHeader();
+        $parameters_header = Parameter\Request::xHeader();
         if ($parameters_header !== null) {
             $headers->addParameters($parameters_header);
         }
@@ -691,7 +692,7 @@ class ItemController extends Controller
         $headers->add('X-Count', count($summary));
         $headers->add('X-Last-Updated', $summary[0]['last_updated']);
 
-        $parameters_header = \App\Request\Parameter\Request::xHeader();
+        $parameters_header = Parameter\Request::xHeader();
         if ($parameters_header !== null) {
             $headers->addParameters($parameters_header);
         }

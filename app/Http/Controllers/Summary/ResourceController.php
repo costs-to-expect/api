@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Summary;
 use App\Http\Controllers\Controller;
 use App\Option\Get;
 use App\Response\Header\Header;
+use App\Request\Parameter;
 use App\Models\Summary\Resource;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Config;
@@ -32,7 +33,7 @@ class ResourceController extends Controller
             $this->permitted_resource_types
         );
 
-        $search_parameters = \App\Request\Parameter\Search::fetch(
+        $search_parameters = Parameter\Search::fetch(
             array_keys(Config::get('api.resource.summary-searchable'))
         );
 

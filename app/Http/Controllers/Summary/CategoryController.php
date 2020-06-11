@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Summary\Category;
 use App\Option\Get;
 use App\Response\Header\Header;
+use App\Request\Parameter;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Config;
 
@@ -32,7 +33,7 @@ class CategoryController extends Controller
             $this->permitted_resource_types
         );
 
-        $search_parameters = \App\Request\Parameter\Search::fetch(
+        $search_parameters = Parameter\Search::fetch(
             array_keys(Config::get('api.category.summary-searchable'))
         );
 
