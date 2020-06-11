@@ -132,7 +132,7 @@ class ItemCategoryController extends Controller
             $this->permitted_resource_types
         );
 
-        $permissions = \App\Request\Route\Permission::item(
+        $permissions = Route\Permission::item(
             $resource_type_id,
             $resource_id,
             $item_id,
@@ -183,7 +183,7 @@ class ItemCategoryController extends Controller
             $this->permitted_resource_types
         );
 
-        $permissions = \App\Request\Route\Permission::item(
+        $permissions = Route\Permission::item(
             $resource_type_id,
             $resource_id,
             $item_id,

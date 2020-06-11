@@ -73,7 +73,7 @@ class CategoryController extends Controller
             $this->permitted_resource_types
         );
 
-        $permissions = \App\Request\Route\Permission::resourceType(
+        $permissions = Route\Permission::resourceType(
             $resource_type_id,
             $this->permitted_resource_types
         );

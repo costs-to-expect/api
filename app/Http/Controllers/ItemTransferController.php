@@ -111,7 +111,7 @@ class ItemTransferController extends Controller
             $this->permitted_resource_types
         );
 
-        $permissions = \App\Request\Route\Permission::resourceType(
+        $permissions = Route\Permission::resourceType(
             (int) $resource_type_id,
             $this->permitted_resource_types
         );
@@ -144,7 +144,7 @@ class ItemTransferController extends Controller
             $this->permitted_resource_types
         );
 
-        $permissions = \App\Request\Route\Permission::resourceType(
+        $permissions = Route\Permission::resourceType(
             (int) $resource_type_id,
             $this->permitted_resource_types
         );
@@ -173,7 +173,7 @@ class ItemTransferController extends Controller
             $this->permitted_resource_types
         );
 
-        $permissions = \App\Request\Route\Permission::item(
+        $permissions = Route\Permission::item(
             $resource_type_id,
             $resource_id,
             $item_id,

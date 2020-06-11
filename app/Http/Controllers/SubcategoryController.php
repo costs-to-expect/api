@@ -162,7 +162,7 @@ class SubcategoryController extends Controller
             $this->permitted_resource_types
         );
 
-        $permissions = \App\Request\Route\Permission::category(
+        $permissions = Route\Permission::category(
             (int) $resource_type_id,
             (int) $category_id,
             $this->permitted_resource_types
@@ -212,7 +212,7 @@ class SubcategoryController extends Controller
             $this->permitted_resource_types
         );
 
-        $permissions = \App\Request\Route\Permission::subcategory(
+        $permissions = Route\Permission::subcategory(
             (int) $resource_type_id,
             (int) $category_id,
             (int) $subcategory_id,

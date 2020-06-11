@@ -723,7 +723,7 @@ class ItemController extends Controller
 
         $item_interface = Factory::summaryItem($resource_type_id);
 
-        $permissions = \App\Request\Route\Permission::resource(
+        $permissions = Route\Permission::resource(
             $resource_type_id,
             $resource_id,
             $this->permitted_resource_types
