@@ -84,6 +84,22 @@ class Headers
     }
 
     /**
+     * Add the X-Filter header if the parameters for filtering exist
+     *
+     * @param string|null $filter_header
+     *
+     * @return Headers
+     */
+    public function addFilters(?string $filter_header): Headers
+    {
+        if ($filter_header !== null) {
+            $this->headers->addFilter($filter_header);
+        }
+
+        return $this;
+    }
+
+    /**
      * Generate the initial headers necessary for a collection
      *
      * @param array $pagination The Pagination data array

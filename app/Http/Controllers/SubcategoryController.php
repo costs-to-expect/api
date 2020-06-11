@@ -6,9 +6,11 @@ use App\Option\Delete;
 use App\Option\Get;
 use App\Option\Patch;
 use App\Option\Post;
+use App\Response\Cache;
 use App\Response\Header\Header;
 use App\Request\Parameter;
 use App\Request\Route;
+use App\Response\Header\Headers;
 use App\Utilities\Pagination as UtilityPagination;
 use App\Models\Subcategory;
 use App\Models\Transformers\Subcategory as SubcategoryTransformer;
@@ -45,62 +47,65 @@ class SubcategoryController extends Controller
             $this->permitted_resource_types
         );
 
+        $cache_control = new Cache\Control($this->user_id);
+        $cache_control->setTtlOneMonth();
+
         $search_parameters = Parameter\Search::fetch(
             array_keys(Config::get('api.subcategory.searchable'))
-        );
-
-        $total = (new Subcategory())->totalCount(
-            (int) $resource_type_id,
-            (int) $category_id,
-            $search_parameters
         );
 
         $sort_parameters = Parameter\Sort::fetch(
             Config::get('api.subcategory.sortable')
         );
 
-        $pagination = UtilityPagination::init(
-            request()->path(),
-            $total,
-            10,
-            $this->allow_entire_collection
-        )->
-        setSearchParameters($search_parameters)->
-        setSortParameters($sort_parameters)->
-        paging();
+        $cache_collection = new Cache\Collection();
+        $cache_collection->setFromCache($cache_control->get(request()->getRequestUri()));
 
-        $subcategories = (new Subcategory())->paginatedCollection(
-            (int) $resource_type_id,
-            (int) $category_id,
-            $pagination['offset'],
-            $pagination['limit'],
-            $search_parameters,
-            $sort_parameters
-        );
+        if ($cache_collection->valid() === false) {
 
-        $headers = new Header();
-        $headers->collection($pagination, count($subcategories), $total);
+            $total = (new Subcategory())->totalCount(
+                (int)$resource_type_id,
+                (int)$category_id,
+                $search_parameters
+            );
 
-        $sort_header = Parameter\Sort::xHeader();
-        if ($sort_header !== null) {
-            $headers->addSort($sort_header);
-        }
+            $pagination = UtilityPagination::init(
+                    request()->path(),
+                    $total,
+                    10,
+                    $this->allow_entire_collection
+                )->
+                setSearchParameters($search_parameters)->
+                setSortParameters($sort_parameters)->
+                paging();
 
-        $search_header = Parameter\Search::xHeader();
-        if ($search_header !== null) {
-            $headers->addSearch($search_header);
-        }
+            $subcategories = (new Subcategory())->paginatedCollection(
+                (int)$resource_type_id,
+                (int)$category_id,
+                $pagination['offset'],
+                $pagination['limit'],
+                $search_parameters,
+                $sort_parameters
+            );
 
-        return response()->json(
-            array_map(
-                function($subcategory) {
+            $collection = array_map(
+                static function ($subcategory) {
                     return (new SubcategoryTransformer($subcategory))->toArray();
                 },
                 $subcategories
-            ),
-            200,
-            $headers->headers()
-        );
+            );
+
+            $headers = new Headers();
+            $headers->collection($pagination, count($subcategories), $total)->
+                addCacheControl($cache_control->visibility(), $cache_control->ttl())->
+                addSearch(Parameter\Search::xHeader())->
+                addSort(Parameter\Sort::xHeader());
+
+            $cache_collection->create($total, $collection, $pagination, $headers->headers());
+            $cache_control->put(request()->getRequestUri(), $cache_collection->content());
+        }
+
+        return response()->json($cache_collection->collection(), 200, $cache_collection->headers());
     }
 
     /**
