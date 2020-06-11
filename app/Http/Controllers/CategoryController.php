@@ -7,9 +7,11 @@ use App\Option\Delete;
 use App\Option\Get;
 use App\Option\Patch;
 use App\Option\Post;
+Use App\Response\Cache;
 use App\Response\Header\Header;
 use App\Request\Parameter;
 use App\Request\Route;
+use App\Response\Header\Headers;
 use App\Utilities\Pagination as UtilityPagination;
 use App\Models\Category;
 use App\Models\Transformers\Category as CategoryTransformer;
@@ -42,64 +44,66 @@ class CategoryController extends Controller
             $this->permitted_resource_types
         );
 
+        $cache_control = new Cache\Control($this->user_id);
+        $cache_control->setTtlOneWeek();
+
         $search_parameters = Parameter\Search::fetch(
             array_keys(Config::get('api.category.searchable'))
-        );
-
-        $total = (new Category())->total(
-            (int) $resource_type_id,
-            $this->permitted_resource_types,
-            $this->include_public,
-            $search_parameters
         );
 
         $sort_parameters = Parameter\Sort::fetch(
             Config::get('api.category.sortable')
         );
 
-        $pagination = UtilityPagination::init(
-                request()->path(),
-                $total,
-                10,
-                $this->allow_entire_collection
-            )->
-            setSearchParameters($search_parameters)->
-            setSortParameters($sort_parameters)->
-            paging();
+        $cache_collection = new Cache\Collection();
+        $cache_collection->setFromCache($cache_control->get(request()->getRequestUri()));
 
-        $categories = (new Category())->paginatedCollection(
-            (int) $resource_type_id,
-            $this->permitted_resource_types,
-            $this->include_public,
-            $pagination['offset'],
-            $pagination['limit'],
-            $search_parameters,
-            $sort_parameters
-        );
+        if ($cache_collection->valid() === false) {
+            $total = (new Category())->total(
+                (int)$resource_type_id,
+                $this->permitted_resource_types,
+                $this->include_public,
+                $search_parameters
+            );
 
-        $headers = new Header();
-        $headers->collection($pagination, count($categories), $total);
+            $pagination = UtilityPagination::init(
+                    request()->path(),
+                    $total,
+                    10,
+                    $this->allow_entire_collection
+                )->
+                setSearchParameters($search_parameters)->
+                setSortParameters($sort_parameters)->
+                paging();
 
-        $sort_header = Parameter\Sort::xHeader();
-        if ($sort_header !== null) {
-            $headers->addSort($sort_header);
-        }
+            $categories = (new Category())->paginatedCollection(
+                (int)$resource_type_id,
+                $this->permitted_resource_types,
+                $this->include_public,
+                $pagination['offset'],
+                $pagination['limit'],
+                $search_parameters,
+                $sort_parameters
+            );
 
-        $search_header = Parameter\Search::xHeader();
-        if ($search_header !== null) {
-            $headers->addSearch($search_header);
-        }
-
-        return response()->json(
-            array_map(
-                function($category) {
+            $collection = array_map(
+                static function ($category) {
                     return (new CategoryTransformer($category))->toArray();
                 },
                 $categories
-            ),
-            200,
-            $headers->headers()
-        );
+            );
+
+            $headers = new Headers();
+            $headers->collection($pagination, count($categories), $total)->
+                addCacheControl($cache_control->visibility(), $cache_control->ttl())->
+                addSearch(Parameter\Search::xHeader())->
+                addSort(Parameter\Sort::xHeader());
+
+            $cache_collection->create($total, $collection, $pagination, $headers->headers());
+            $cache_control->put(request()->getRequestUri(), $cache_collection->content());
+        }
+
+        return response()->json($cache_collection->collection(), 200, $cache_collection->headers());
     }
 
     /**
