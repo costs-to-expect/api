@@ -85,6 +85,8 @@ if necessary.
 The TTL for the cache types is a below. As expected, caches will be 
 invalidated if the API detects a change.
 
+#### Collections
+
 - Item types: One year
 - Resource types: One week
 - Partial transfers: One week

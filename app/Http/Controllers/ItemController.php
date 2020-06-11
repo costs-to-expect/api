@@ -8,12 +8,14 @@ use App\Option\Delete;
 use App\Option\Get;
 use App\Option\Patch;
 use App\Option\Post;
+use App\Response\Cache;
 use App\Response\Header\Header;
 use App\Request\Parameter;
 use App\Request\Route;
 use App\Models\Category;
 use App\Models\Item;
 use App\Models\Subcategory;
+use App\Response\Header\Headers;
 use App\Utilities\Pagination as UtilityPagination;
 use Exception;
 use Illuminate\Database\QueryException;
@@ -49,6 +51,9 @@ class ItemController extends Controller
             $this->permitted_resource_types,
         );
 
+        $cache_control = new Cache\Control($this->user_id);
+        $cache_control->setTtlOneDay();
+
         $item_interface = Factory::item($resource_type_id);
 
         $parameters = Parameter\Request::fetch(
@@ -65,69 +70,61 @@ class ItemController extends Controller
             $item_interface->filterParameters()
         );
 
-        $item_model = $item_interface->model();
-        $total = $item_model->totalCount(
-            $resource_type_id,
-            $resource_id,
-            $parameters,
-            $search_parameters,
-            $filter_parameters
-        );
-
         $sort_parameters = Parameter\Sort::fetch(
             $item_interface->sortParameters()
         );
 
-        $pagination = UtilityPagination::init(request()->path(), $total)
-            ->setParameters($parameters)
-            ->setSortParameters($sort_parameters)
-            ->setSearchParameters($search_parameters)
-            ->paging();
+        $cache_collection = new Cache\Collection();
+        $cache_collection->setFromCache($cache_control->get(request()->getRequestUri()));
 
-        $items = $item_model->paginatedCollection(
-            $resource_type_id,
-            $resource_id,
-            $pagination['offset'],
-            $pagination['limit'],
-            $parameters,
-            $search_parameters,
-            $filter_parameters,
-            $sort_parameters
-        );
+        if ($cache_collection->valid() === false) {
 
-        $headers = new Header();
-        $headers->collection($pagination, count($items), $total);
+            $item_model = $item_interface->model();
+            $total = $item_model->totalCount(
+                $resource_type_id,
+                $resource_id,
+                $parameters,
+                $search_parameters,
+                $filter_parameters
+            );
 
-        $filter_header = Parameter\Filter::xHeader();
-        if ($filter_header !== null) {
-            $headers->addFilter($filter_header);
-        }
+            $pagination = UtilityPagination::init(request()->path(), $total)
+                ->setParameters($parameters)
+                ->setSortParameters($sort_parameters)
+                ->setSearchParameters($search_parameters)
+                ->paging();
 
-        $sort_header = Parameter\Sort::xHeader();
-        if ($sort_header !== null) {
-            $headers->addSort($sort_header);
-        }
+            $items = $item_model->paginatedCollection(
+                $resource_type_id,
+                $resource_id,
+                $pagination['offset'],
+                $pagination['limit'],
+                $parameters,
+                $search_parameters,
+                $filter_parameters,
+                $sort_parameters
+            );
 
-        $search_header = Parameter\Search::xHeader();
-        if ($search_header !== null) {
-            $headers->addSearch($search_header);
-        }
-
-        $parameters_header = Parameter\Request::xHeader();
-        if ($parameters_header !== null) {
-            $headers->addParameters($parameters_header);
-        }
-
-        return response()->json(
-            array_map(
-                function($item) use ($item_interface) {
+            $collection = array_map(
+                static function ($item) use ($item_interface) {
                     return $item_interface->transformer($item)->toArray();
                 },
                 $items
-            ),
-            200,
-            $headers->headers()
-        );
+            );
+
+            $headers = new Headers();
+            $headers->collection($pagination, count($items), $total)->
+                addCacheControl($cache_control->visibility(), $cache_control->ttl())->
+                addSearch(Parameter\Search::xHeader())->
+                addSort(Parameter\Sort::xHeader())->
+                addParameters(Parameter\Request::xHeader())->
+                addFilters(Parameter\Filter::xHeader());
+
+            $cache_collection->create($total, $collection, $pagination, $headers->headers());
+            $cache_control->put(request()->getRequestUri(), $cache_collection->content());
+        }
+
+        return response()->json($cache_collection->collection(), 200, $cache_collection->headers());
     }
 
     /**
