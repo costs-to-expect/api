@@ -6,9 +6,11 @@ use App\Models\PermittedUser;
 use App\Models\Transformers\PermittedUser as PermittedUserTransformer;
 use App\Option\Get;
 use App\Option\Post;
+use App\Response\Cache;
 use App\Response\Header\Header;
 use App\Request\Parameter;
 use App\Request\Route;
+use App\Response\Header\Headers;
 use App\Utilities\Pagination as UtilityPagination;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Config;
@@ -38,60 +40,59 @@ class PermittedUserController extends Controller
             $this->permitted_resource_types
         );
 
+        $cache_control = new Cache\Control($this->user_id);
+        $cache_control->setTtlOneMonth();
+
         $search_parameters = Parameter\Search::fetch(
             array_keys(Config::get('api.permitted-user.searchable'))
-        );
-
-        $total = (new PermittedUser())->totalCount(
-            $resource_type_id,
-            $search_parameters
         );
 
         $sort_parameters = Parameter\Sort::fetch(
             Config::get('api.permitted-user.sortable')
         );
 
-        $pagination = UtilityPagination::init(
+        $cache_collection = new Cache\Collection();
+        $cache_collection->setFromCache($cache_control->get(request()->getRequestUri()));
+
+        if ($cache_collection->valid() === false) {
+            $total = (new PermittedUser())->totalCount(
+                $resource_type_id,
+                $search_parameters
+            );
+
+            $pagination = UtilityPagination::init(
                 request()->path(),
                 $total,
                 10,
                 $this->allow_entire_collection
-            )->
-            setSearchParameters($search_parameters)->
-            setSortParameters($sort_parameters)->
-            paging();
+            )->setSearchParameters($search_parameters)->setSortParameters($sort_parameters)->paging();
 
-        $permitted_users = (new PermittedUser())->paginatedCollection(
-            $resource_type_id,
-            $pagination['offset'],
-            $pagination['limit'],
-            $search_parameters,
-            $sort_parameters
-        );
+            $permitted_users = (new PermittedUser())->paginatedCollection(
+                $resource_type_id,
+                $pagination['offset'],
+                $pagination['limit'],
+                $search_parameters,
+                $sort_parameters
+            );
 
-        $headers = new Header();
-        $headers->collection($pagination, count($permitted_users), $total);
-
-        $sort_header = Parameter\Sort::xHeader();
-        if ($sort_header !== null) {
-            $headers->addSort($sort_header);
-        }
-
-        $search_header = Parameter\Search::xHeader();
-        if ($search_header !== null) {
-            $headers->addSearch($search_header);
-        }
-
-        return response()->json(
-            array_map(
-                function($permitted_user) {
+            $collection = array_map(
+                static function ($permitted_user) {
                     return (new PermittedUserTransformer($permitted_user))->toArray();
                 },
                 $permitted_users
-            ),
-            200,
-            $headers->headers()
-        );
+            );
+
+            $headers = new Headers();
+            $headers->collection($pagination, count($permitted_users), $total)->
+                addCacheControl($cache_control->visibility(), $cache_control->ttl())->
+                addSearch(Parameter\Search::xHeader())->
+                addSort(Parameter\Sort::xHeader());
+
+            $cache_collection->create($total, $collection, $pagination, $headers->headers());
+            $cache_control->put(request()->getRequestUri(), $cache_collection->content());
+        }
+
+        return response()->json($cache_collection->collection(), 200, $cache_collection->headers());
     }
 
     /**
