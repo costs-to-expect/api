@@ -8,6 +8,7 @@ use App\Option\Get;
 use App\Option\Post;
 use App\Response\Header\Header;
 use App\Request\Parameter;
+use App\Request\Route;
 use App\Utilities\Pagination as UtilityPagination;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Config;
@@ -32,7 +33,7 @@ class PermittedUserController extends Controller
      */
     public function index(string $resource_type_id): JsonResponse
     {
-        \App\Request\Route\Validate::resourceType(
+        Route\Validate::resourceType(
             $resource_type_id,
             $this->permitted_resource_types
         );
@@ -102,7 +103,7 @@ class PermittedUserController extends Controller
      */
     public function optionsIndex(string $resource_type_id): JsonResponse
     {
-        \App\Request\Route\Validate::resourceType(
+        Route\Validate::resourceType(
             $resource_type_id,
             $this->permitted_resource_types
         );

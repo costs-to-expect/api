@@ -7,6 +7,7 @@ use App\Item\Factory;
 use App\Option\Get;
 use App\Response\Header\Header;
 use App\Request\Parameter;
+use App\Request\Route;
 use App\Utilities\Response;
 use App\Models\Transformers\Summary\ItemCategory as ItemCategoryTransformer;
 use App\Models\Transformers\Summary\ItemMonth as ItemMonthTransformer;
@@ -37,7 +38,7 @@ class ItemController extends Controller
      */
     public function index(string $resource_type_id, string $resource_id): JsonResponse
     {
-        \App\Request\Route\Validate::resource(
+        Route\Validate::resource(
             $resource_type_id,
             $resource_id,
             $this->permitted_resource_types
@@ -714,7 +715,7 @@ class ItemController extends Controller
      */
     public function optionsIndex(string $resource_type_id, string $resource_id)
     {
-        \App\Request\Route\Validate::resource(
+        Route\Validate::resource(
             $resource_type_id,
             $resource_id,
             $this->permitted_resource_types

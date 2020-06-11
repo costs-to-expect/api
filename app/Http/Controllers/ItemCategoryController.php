@@ -6,6 +6,7 @@ use App\Option\Delete;
 use App\Option\Get;
 use App\Option\Post;
 use App\Response\Header\Header;
+use App\Request\Route;
 use App\Models\Category;
 use App\Models\ItemCategory;
 use App\Models\Transformers\ItemCategory as ItemCategoryTransformer;
@@ -36,7 +37,7 @@ class ItemCategoryController extends Controller
      */
     public function index(string $resource_type_id, string $resource_id, string $item_id): JsonResponse
     {
-        \App\Request\Route\Validate::item(
+        Route\Validate::item(
             $resource_type_id,
             $resource_id,
             $item_id,
@@ -81,7 +82,7 @@ class ItemCategoryController extends Controller
         string $item_category_id
     ): JsonResponse
     {
-        \App\Request\Route\Validate::item(
+        Route\Validate::item(
             $resource_type_id,
             $resource_id,
             $item_id,
@@ -124,7 +125,7 @@ class ItemCategoryController extends Controller
      */
     public function optionsIndex(string $resource_type_id, string $resource_id, string $item_id): JsonResponse
     {
-        \App\Request\Route\Validate::item(
+        Route\Validate::item(
             $resource_type_id,
             $resource_id,
             $item_id,
@@ -175,7 +176,7 @@ class ItemCategoryController extends Controller
         string $item_category_id
     ): JsonResponse
     {
-        \App\Request\Route\Validate::item(
+        Route\Validate::item(
             $resource_type_id,
             $resource_id,
             $item_id,
@@ -237,7 +238,7 @@ class ItemCategoryController extends Controller
         string $item_id
     ): JsonResponse
     {
-        \App\Request\Route\Validate::item(
+        Route\Validate::item(
             $resource_type_id,
             $resource_id,
             $item_id,
@@ -320,7 +321,7 @@ class ItemCategoryController extends Controller
         string $item_category_id
     ): JsonResponse
     {
-        \App\Request\Route\Validate::itemCategory(
+        Route\Validate::itemCategory(
             $resource_type_id,
             $resource_id,
             $item_id,

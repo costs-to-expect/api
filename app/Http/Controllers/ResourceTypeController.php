@@ -14,6 +14,7 @@ use App\Option\Post;
 use App\Response\Cache;
 use App\Response\Header\Headers;
 use App\Request\Parameter;
+use App\Request\Route;
 use App\Utilities\Pagination as UtilityPagination;
 use App\Utilities\Request as UtilityRequest;
 use App\Models\ResourceType;
@@ -110,7 +111,7 @@ class ResourceTypeController extends Controller
      */
     public function show(string $resource_type_id): JsonResponse
     {
-        \App\Request\Route\Validate::resourceType(
+        Route\Validate::resourceType(
             $resource_type_id,
             $this->permitted_resource_types
         );
@@ -185,7 +186,7 @@ class ResourceTypeController extends Controller
      */
     public function optionsShow(string $resource_type_id): JsonResponse
     {
-        \App\Request\Route\Validate::resourceType(
+        Route\Validate::resourceType(
             $resource_type_id,
             $this->permitted_resource_types
         );
@@ -281,7 +282,7 @@ class ResourceTypeController extends Controller
         string $resource_type_id
     ): JsonResponse
     {
-        \App\Request\Route\Validate::resourceType(
+        Route\Validate::resourceType(
             $resource_type_id,
             $this->permitted_resource_types,
             true
@@ -336,7 +337,7 @@ class ResourceTypeController extends Controller
         string $resource_type_id
     ): JsonResponse
     {
-        \App\Request\Route\Validate::resourceType(
+        Route\Validate::resourceType(
             $resource_type_id,
             $this->permitted_resource_types,
             true

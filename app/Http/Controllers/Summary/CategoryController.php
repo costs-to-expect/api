@@ -7,6 +7,7 @@ use App\Models\Summary\Category;
 use App\Option\Get;
 use App\Response\Header\Header;
 use App\Request\Parameter;
+use App\Request\Route;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Config;
 
@@ -28,7 +29,7 @@ class CategoryController extends Controller
      */
     public function index($resource_type_id): JsonResponse
     {
-        \App\Request\Route\Validate::resourceType(
+        Route\Validate::resourceType(
             $resource_type_id,
             $this->permitted_resource_types
         );
@@ -67,7 +68,7 @@ class CategoryController extends Controller
      */
     public function optionsIndex($resource_type_id): JsonResponse
     {
-        \App\Request\Route\Validate::resourceType(
+        Route\Validate::resourceType(
             $resource_type_id,
             $this->permitted_resource_types
         );

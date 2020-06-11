@@ -7,6 +7,7 @@ use App\Option\Get;
 use App\Response\Cache;
 use App\Response\Header\Headers;
 use App\Request\Parameter;
+use App\Request\Route;
 use App\Utilities\Pagination as UtilityPagination;
 use App\Models\Transformers\ItemType as ItemTypeTransformer;
 use App\Utilities\Response as UtilityResponse;
@@ -94,7 +95,7 @@ class ItemTypeController extends Controller
      */
     public function show(string $item_type_id): JsonResponse
     {
-        \App\Request\Route\Validate::itemType((int) $item_type_id);
+        Route\Validate::itemType((int) $item_type_id);
 
         $item_type = (new ItemType())->single($item_type_id);
 
@@ -142,7 +143,7 @@ class ItemTypeController extends Controller
      */
     public function optionsShow(string $item_type_id): JsonResponse
     {
-        \App\Request\Route\Validate::itemType($item_type_id);
+        Route\Validate::itemType($item_type_id);
 
         $get = Get::init()->
             setDescription('route-descriptions.item_type_GET_show')->

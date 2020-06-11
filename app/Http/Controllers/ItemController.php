@@ -10,6 +10,7 @@ use App\Option\Patch;
 use App\Option\Post;
 use App\Response\Header\Header;
 use App\Request\Parameter;
+use App\Request\Route;
 use App\Models\Category;
 use App\Models\Item;
 use App\Models\Subcategory;
@@ -44,7 +45,7 @@ class ItemController extends Controller
         string $resource_id
     ): JsonResponse
     {
-        \App\Request\Route\Validate::resource(
+        Route\Validate::resource(
             $resource_type_id,
             $resource_id,
             $this->permitted_resource_types,
@@ -146,7 +147,7 @@ class ItemController extends Controller
         string $item_id
     ): JsonResponse
     {
-        \App\Request\Route\Validate::item(
+        Route\Validate::item(
             $resource_type_id,
             $resource_id,
             $item_id,
@@ -197,7 +198,7 @@ class ItemController extends Controller
         string $resource_id
     ): JsonResponse
     {
-        \App\Request\Route\Validate::resource(
+        Route\Validate::resource(
             $resource_type_id,
             $resource_id,
             $this->permitted_resource_types,
@@ -265,7 +266,7 @@ class ItemController extends Controller
         string $item_id
     ): JsonResponse
     {
-        \App\Request\Route\Validate::item(
+        Route\Validate::item(
             $resource_type_id,
             $resource_id,
             $item_id,
@@ -327,7 +328,7 @@ class ItemController extends Controller
         string $resource_id
     ): JsonResponse
     {
-        \App\Request\Route\Validate::resource(
+        Route\Validate::resource(
             $resource_type_id,
             $resource_id,
             $this->permitted_resource_types,
@@ -376,7 +377,7 @@ class ItemController extends Controller
         string $item_id
     ): JsonResponse
     {
-        \App\Request\Route\Validate::item(
+        Route\Validate::item(
             $resource_type_id,
             $resource_id,
             $item_id,
@@ -429,7 +430,7 @@ class ItemController extends Controller
         string $item_id
     ): JsonResponse
     {
-        \App\Request\Route\Validate::resource(
+        Route\Validate::resource(
             $resource_type_id,
             $resource_id,
             $this->permitted_resource_types,

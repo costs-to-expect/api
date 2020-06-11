@@ -6,6 +6,7 @@ use App\ResourceTypeItem\Factory;
 use App\Option\Get;
 use App\Response\Header\Header;
 use App\Request\Parameter;
+use App\Request\Route;
 use App\Models\Category;
 use App\Models\Subcategory;
 use App\Utilities\Pagination as UtilityPagination;
@@ -29,7 +30,7 @@ class ResourceTypeItemController extends Controller
      */
     public function index(string $resource_type_id): JsonResponse
     {
-        \App\Request\Route\Validate::resourceType(
+        Route\Validate::resourceType(
             $resource_type_id,
             $this->permitted_resource_types
         );
@@ -120,7 +121,7 @@ class ResourceTypeItemController extends Controller
      */
     public function optionsIndex(string $resource_type_id): JsonResponse
     {
-        \App\Request\Route\Validate::resourceType(
+        Route\Validate::resourceType(
             $resource_type_id,
             $this->permitted_resource_types
         );

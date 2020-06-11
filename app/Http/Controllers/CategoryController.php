@@ -9,6 +9,7 @@ use App\Option\Patch;
 use App\Option\Post;
 use App\Response\Header\Header;
 use App\Request\Parameter;
+use App\Request\Route;
 use App\Utilities\Pagination as UtilityPagination;
 use App\Models\Category;
 use App\Models\Transformers\Category as CategoryTransformer;
@@ -38,7 +39,7 @@ class CategoryController extends Controller
      */
     public function index($resource_type_id): JsonResponse
     {
-        \App\Request\Route\Validate::resourceType(
+        Route\Validate::resourceType(
             (int) $resource_type_id,
             $this->permitted_resource_types
         );
@@ -113,7 +114,7 @@ class CategoryController extends Controller
      */
     public function show($resource_type_id, $category_id): JsonResponse
     {
-        \App\Request\Route\Validate::category(
+        Route\Validate::category(
             (int) $resource_type_id,
             (int) $category_id,
             $this->permitted_resource_types
@@ -167,7 +168,7 @@ class CategoryController extends Controller
      */
     public function optionsIndex($resource_type_id): JsonResponse
     {
-        \App\Request\Route\Validate::resourceType(
+        Route\Validate::resourceType(
             (int) $resource_type_id,
             $this->permitted_resource_types
         );
@@ -209,7 +210,7 @@ class CategoryController extends Controller
      */
     public function optionsShow($resource_type_id, $category_id): JsonResponse
     {
-        \App\Request\Route\Validate::category(
+        Route\Validate::category(
             (int) $resource_type_id,
             (int) $category_id,
             $this->permitted_resource_types
@@ -255,7 +256,7 @@ class CategoryController extends Controller
      */
     public function create($resource_type_id): JsonResponse
     {
-        \App\Request\Route\Validate::resourceType(
+        Route\Validate::resourceType(
             (int) $resource_type_id,
             $this->permitted_resource_types
         );
@@ -295,7 +296,7 @@ class CategoryController extends Controller
         $category_id
     ): JsonResponse
     {
-        \App\Request\Route\Validate::category(
+        Route\Validate::category(
             (int) $resource_type_id,
             (int) $category_id,
             $this->permitted_resource_types,
@@ -323,7 +324,7 @@ class CategoryController extends Controller
      */
     public function update($resource_type_id, $category_id): JsonResponse
     {
-        \App\Request\Route\Validate::category(
+        Route\Validate::category(
             (int) $resource_type_id,
             (int) $category_id,
             $this->permitted_resource_types,
