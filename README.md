@@ -6,13 +6,13 @@ Costs to Expect is a service which focuses on tracking and forecasting expenses.
 The Costs to Expect API is the backbone of the service and is not going to be 
 limited to expenses; however, we figured that it was an excellent place to start. 
 
-## Docs
+## Documentation
 
-We are working hard to get the documentation ready, the App will not enter beta 
-until the API documentation is ready, the documentation can be found at 
-[postman.costs-to-expect.com](https://postman.costs-to-expect.com?version=latest) 
+The documentation for Costs to Expect API can be found at 
+[postman.costs-to-expect.com](https://postman.costs-to-expect.com?version=latest). 
 
 ### The App
+
 The [alpha](https://app.costs-to-expect.com) for the service is online, we are 
  hoping to release the public beta soon(tm). Please check 
  our [app.costs-to-expect.com/roadmap](https://app.costs-to-expect.com/roadmap) 
@@ -75,6 +75,27 @@ you will also need to set `MAIL_FROM_ADDRESS` and `MAIL_TO_ADDRESS`. You may nee
 * Successful DELETE requests will return a 204.
 * Non 2xx results will return an object with a message field and optionally a fields array, in the 
 case of a validation error, 422, the fields array will contain the validation errors.
+
+### Caching
+
+We include local level caching in the API, as time goes on we will move towards
+conditional caching, specifically including an Etag header and return a 304 
+if necessary.
+
+The TTL for the cache types is a below. As expected, caches will be 
+invalidated if the API detects a change.
+
+- Item types: One year
+- Resource types: One week
+- Partial transfers: One week
+- Transfers: One week
+- Permitted users: One month
+- Categories: One month
+- Subcategories: One month
+- Resources: One week
+- Items: One day
+- Item categories: One week
+- Item subcategories: One week
 
 ## Headers
 
