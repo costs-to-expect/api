@@ -16,7 +16,6 @@ use App\Response\Header\Headers;
 use App\Request\Parameter;
 use App\Request\Route;
 use App\Utilities\Pagination as UtilityPagination;
-use App\Utilities\Request as UtilityRequest;
 use App\Models\ResourceType;
 use App\Models\Transformers\ResourceType as ResourceTypeTransformer;
 use App\Utilities\Response as UtilityResponse;
@@ -233,7 +232,7 @@ class ResourceTypeController extends Controller
         $validator = (new ResourceTypeValidator)->create([
             'user_id' => $user_id
         ]);
-        UtilityRequest::validateAndReturnErrors($validator);
+        \App\Request\BodyValidation::validateAndReturnErrors($validator);
 
         try {
             $resource_type = new ResourceType([
@@ -349,15 +348,15 @@ class ResourceTypeController extends Controller
             UtilityResponse::failedToSelectModelForUpdateOrDelete();
         }
 
-        UtilityRequest::checkForEmptyPatch();
+        \App\Request\BodyValidation::checkForEmptyPatch();
 
         $validator = (new ResourceTypeValidator())->update([
             'resource_type_id' => intval($resource_type_id),
             'user_id' => Auth::user()->id
         ]);
-        UtilityRequest::validateAndReturnErrors($validator);
+        \App\Request\BodyValidation::validateAndReturnErrors($validator);
 
-        UtilityRequest::checkForInvalidFields(
+        \App\Request\BodyValidation::checkForInvalidFields(
             array_merge(
                 (new ResourceType())->patchableFields(),
                 (new ResourceTypeValidator())->dynamicDefinedFields()

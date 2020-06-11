@@ -15,7 +15,6 @@ use App\Models\Category;
 use App\Models\Item;
 use App\Models\Subcategory;
 use App\Utilities\Pagination as UtilityPagination;
-use App\Utilities\Request as UtilityRequest;
 use App\Utilities\Response as UtilityResponse;
 use Exception;
 use Illuminate\Database\QueryException;
@@ -339,7 +338,7 @@ class ItemController extends Controller
 
         $validator_factory = $item_interface->validator();
         $validator = $validator_factory->create();
-        UtilityRequest::validateAndReturnErrors($validator);
+        \App\Request\BodyValidation::validateAndReturnErrors($validator);
 
         $model = $item_interface->model();
 
@@ -387,13 +386,13 @@ class ItemController extends Controller
 
         $item_interface = Factory::item($resource_type_id);
 
-        UtilityRequest::checkForEmptyPatch();
+        \App\Request\BodyValidation::checkForEmptyPatch();
 
-        UtilityRequest::checkForInvalidFields($item_interface->validationPatchableFieldNames());
+        \App\Request\BodyValidation::checkForInvalidFields($item_interface->validationPatchableFieldNames());
 
         $validator_factory = $item_interface->validator();
         $validator = $validator_factory->update();
-        UtilityRequest::validateAndReturnErrors($validator);
+        \App\Request\BodyValidation::validateAndReturnErrors($validator);
 
         $item = (new Item())->instance($resource_type_id, $resource_id, $item_id);
         $item_type = $item_interface->instance((int) $item_id);

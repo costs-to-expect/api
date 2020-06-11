@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Utilities;
+namespace App\Request;
 
 use App\Utilities\Response as UtilityResponse;
 use Illuminate\Contracts\Validation\Validator;
@@ -18,7 +18,7 @@ use Illuminate\Http\JsonResponse;
  * @copyright Dean Blackborough 2018-2020
  * @license https://github.com/costs-to-expect/api/blob/master/LICENSE
  */
-class Request
+class BodyValidation
 {
     /**
      * Check to see if any of the provided fields are invalid, we throw an error

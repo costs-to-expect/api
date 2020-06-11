@@ -10,7 +10,6 @@ use App\Response\Header\Header;
 use App\Request\Parameter;
 use App\Request\Route;
 use App\Utilities\Pagination as UtilityPagination;
-use App\Utilities\Request as UtilityRequest;
 use App\Models\Subcategory;
 use App\Models\Transformers\Subcategory as SubcategoryTransformer;
 use App\Utilities\Response as UtilityResponse;
@@ -262,7 +261,7 @@ class SubcategoryController extends Controller
         );
 
         $validator = (new SubcategoryValidator)->create(['category_id' => $category_id]);
-        UtilityRequest::validateAndReturnErrors($validator);
+        \App\Request\BodyValidation::validateAndReturnErrors($validator);
 
         try {
             $sub_category = new Subcategory([
@@ -353,15 +352,15 @@ class SubcategoryController extends Controller
             UtilityResponse::failedToSelectModelForUpdateOrDelete();
         }
 
-        UtilityRequest::checkForEmptyPatch();
+        \App\Request\BodyValidation::checkForEmptyPatch();
 
         $validator = (new SubcategoryValidator())->update([
             'category_id' => (int)$category_id,
             'subcategory_id' => (int)$subcategory_id
         ]);
-        UtilityRequest::validateAndReturnErrors($validator);
+        \App\Request\BodyValidation::validateAndReturnErrors($validator);
 
-        UtilityRequest::checkForInvalidFields(
+        \App\Request\BodyValidation::checkForInvalidFields(
             array_merge(
                 (new Subcategory())->patchableFields(),
                 (new SubcategoryValidator)->dynamicDefinedFields()

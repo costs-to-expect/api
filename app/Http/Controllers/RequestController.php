@@ -7,7 +7,6 @@ use App\Option\Get;
 use App\Option\Post;
 use App\Response\Header\Header;
 use App\Request\Parameter;
-use App\Utilities\Request as UtilityRequest;
 use App\Utilities\Response;
 use App\Models\RequestErrorLog;
 use App\Models\RequestLog;
@@ -156,7 +155,7 @@ class RequestController extends Controller
     public function createErrorLog(): JsonResponse
     {
         $validator = (new RequestErrorLogValidator())->create();
-        UtilityRequest::validateAndReturnErrors($validator);
+        \App\Request\BodyValidation::validateAndReturnErrors($validator);
 
         try {
             $request_error_log = new RequestErrorLog([

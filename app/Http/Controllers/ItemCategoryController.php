@@ -10,7 +10,6 @@ use App\Request\Route;
 use App\Models\Category;
 use App\Models\ItemCategory;
 use App\Models\Transformers\ItemCategory as ItemCategoryTransformer;
-use App\Utilities\Request as UtilityRequest;
 use App\Utilities\Response as UtilityResponse;
 use App\Validators\Fields\ItemCategory as ItemCategoryValidator;
 use Exception;
@@ -247,7 +246,7 @@ class ItemCategoryController extends Controller
         );
 
         $validator = (new ItemCategoryValidator)->create();
-        UtilityRequest::validateAndReturnErrors(
+        \App\Request\BodyValidation::validateAndReturnErrors(
             $validator,
             $this->fieldsData($resource_type_id)
         );

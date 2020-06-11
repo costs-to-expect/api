@@ -13,7 +13,6 @@ use App\Response\Header\Headers;
 use App\Request\Parameter;
 use App\Request\Route;
 use App\Utilities\Pagination as UtilityPagination;
-use App\Utilities\Request as UtilityRequest;
 use App\Utilities\Response as UtilityResponse;
 use App\Validators\Fields\ItemTransfer as ItemTransferValidator;
 use Exception;
@@ -253,7 +252,7 @@ class ItemTransferController extends Controller
                 'existing_resource_id' => $resource_id
             ]
         );
-        UtilityRequest::validateAndReturnErrors($validator);
+        \App\Request\BodyValidation::validateAndReturnErrors($validator);
 
         try {
             $new_resource_id = $this->hash->decode('resource', request()->input('resource_id'));

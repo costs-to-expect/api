@@ -11,7 +11,6 @@ use App\Models\ItemCategory;
 use App\Models\ItemSubcategory;
 use App\Models\Subcategory;
 use App\Models\Transformers\ItemSubcategory as ItemSubcategoryTransformer;
-use App\Utilities\Request as UtilityRequest;
 use App\Utilities\Response as UtilityResponse;
 use App\Validators\Fields\ItemSubcategory as ItemSubcategoryValidator;
 use Exception;
@@ -290,7 +289,7 @@ class ItemSubcategoryController extends Controller
             ->find($item_category_id);
 
         $validator = (new ItemSubcategoryValidator)->create(['category_id' => $item_category->category_id]);
-        UtilityRequest::validateAndReturnErrors(
+        \App\Request\BodyValidation::validateAndReturnErrors(
             $validator,
             $this->fieldsData($item_category_id)
         );

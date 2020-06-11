@@ -10,7 +10,6 @@ use App\Response\Header\Header;
 use App\Request\Parameter;
 use App\Request\Route;
 use App\Utilities\Pagination as UtilityPagination;
-use App\Utilities\Request as UtilityRequest;
 use App\Models\Resource;
 use App\Models\Transformers\Resource as ResourceTransformer;
 use App\Utilities\Response as UtilityResponse;
@@ -251,7 +250,7 @@ class ResourceController extends Controller
         );
 
         $validator = (new ResourceValidator)->create(['resource_type_id' => $resource_type_id]);
-        UtilityRequest::validateAndReturnErrors($validator);
+        \App\Request\BodyValidation::validateAndReturnErrors($validator);
 
         try {
             $resource = new Resource([
@@ -328,15 +327,15 @@ class ResourceController extends Controller
             UtilityResponse::failedToSelectModelForUpdateOrDelete();
         }
 
-        UtilityRequest::checkForEmptyPatch();
+        \App\Request\BodyValidation::checkForEmptyPatch();
 
         $validator = (new ResourceValidator())->update([
             'resource_type_id' => (int)$resource_type_id,
             'resource_id' => (int)$resource_id
         ]);
-        UtilityRequest::validateAndReturnErrors($validator);
+        \App\Request\BodyValidation::validateAndReturnErrors($validator);
 
-        UtilityRequest::checkForInvalidFields(
+        \App\Request\BodyValidation::checkForInvalidFields(
             array_merge(
                 (new Resource())->patchableFields(),
                 (new ResourceValidator())->dynamicDefinedFields()

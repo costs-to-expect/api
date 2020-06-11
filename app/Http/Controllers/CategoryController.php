@@ -264,7 +264,7 @@ class CategoryController extends Controller
         $validator = (new CategoryValidator)->create([
             'resource_type_id' => $resource_type_id
         ]);
-        UtilityRequest::validateAndReturnErrors($validator);
+        \App\Request\BodyValidation::validateAndReturnErrors($validator);
 
         try {
             $category = new Category([
@@ -337,15 +337,15 @@ class CategoryController extends Controller
             UtilityResponse::failedToSelectModelForUpdateOrDelete();
         }
 
-        UtilityRequest::checkForEmptyPatch();
+        \App\Request\BodyValidation::checkForEmptyPatch();
 
         $validator = (new CategoryValidator)->update([
             'resource_type_id' => (int)$category->resource_type_id,
             'category_id' => (int)$category_id
         ]);
-        UtilityRequest::validateAndReturnErrors($validator);
+        \App\Request\BodyValidation::validateAndReturnErrors($validator);
 
-        UtilityRequest::checkForInvalidFields(
+        \App\Request\BodyValidation::checkForInvalidFields(
             array_merge(
                 (new Category())->patchableFields(),
                 (new CategoryValidator)->dynamicDefinedFields()
