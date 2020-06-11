@@ -45,7 +45,7 @@ class CategoryController extends Controller
         );
 
         $cache_control = new Cache\Control($this->user_id);
-        $cache_control->setTtlOneWeek();
+        $cache_control->setTtlOneMonth();
 
         $search_parameters = Parameter\Search::fetch(
             array_keys(Config::get('api.category.searchable'))

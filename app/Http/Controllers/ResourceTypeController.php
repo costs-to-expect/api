@@ -44,7 +44,7 @@ class ResourceTypeController extends Controller
     public function index(): JsonResponse
     {
         $cache_control = new Cache\Control($this->user_id);
-        $cache_control->setTtlOneDay();
+        $cache_control->setTtlOneWeek();
 
         $search_parameters = Parameter\Search::fetch(
             array_keys(Config::get('api.resource-type.searchable'))
