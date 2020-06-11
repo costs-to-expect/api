@@ -9,8 +9,6 @@ use App\Response\Header\Headers;
 use App\Utilities\Pagination as UtilityPagination;
 use App\Models\Transformers\ItemType as ItemTypeTransformer;
 use App\Utilities\Response as UtilityResponse;
-use App\Validators\SearchParameters;
-use App\Validators\SortParameters;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Config;
 
@@ -35,11 +33,11 @@ class ItemTypeController extends Controller
         $cache_control = new Cache\Control($this->user_id);
         $cache_control->setTtlOneYear();
 
-        $search_parameters = SearchParameters::fetch(
+        $search_parameters = \App\Request\Parameter\Search::fetch(
             array_keys(Config::get('api.item-type.searchable'))
         );
 
-        $sort_parameters = SortParameters::fetch(
+        $sort_parameters = \App\Request\Parameter\Sort::fetch(
             Config::get('api.item-type.sortable')
         );
 
@@ -76,8 +74,8 @@ class ItemTypeController extends Controller
             $headers = new Headers();
             $headers->collection($pagination, count($item_types), $total)->
                 addCacheControl($cache_control->visibility(), $cache_control->ttl())->
-                addSearch(SearchParameters::xHeader())->
-                addSort(SortParameters::xHeader());
+                addSearch(\App\Request\Parameter\Search::xHeader())->
+                addSort(\App\Request\Parameter\Sort::xHeader());
 
             $cache_collection->create($total, $collection, $pagination, $headers->headers());
             $cache_control->put(request()->getRequestUri(), $cache_collection->content());

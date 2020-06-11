@@ -13,8 +13,6 @@ use App\Models\Subcategory;
 use App\Models\Transformers\Subcategory as SubcategoryTransformer;
 use App\Utilities\Response as UtilityResponse;
 use App\Validators\Fields\Subcategory as SubcategoryValidator;
-use App\Validators\SearchParameters;
-use App\Validators\SortParameters;
 use Exception;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\JsonResponse;
@@ -47,7 +45,7 @@ class SubcategoryController extends Controller
             $this->permitted_resource_types
         );
 
-        $search_parameters = SearchParameters::fetch(
+        $search_parameters = \App\Request\Parameter\Search::fetch(
             array_keys(Config::get('api.subcategory.searchable'))
         );
 
@@ -57,7 +55,7 @@ class SubcategoryController extends Controller
             $search_parameters
         );
 
-        $sort_parameters = SortParameters::fetch(
+        $sort_parameters = \App\Request\Parameter\Sort::fetch(
             Config::get('api.subcategory.sortable')
         );
 
@@ -83,12 +81,12 @@ class SubcategoryController extends Controller
         $headers = new Header();
         $headers->collection($pagination, count($subcategories), $total);
 
-        $sort_header = SortParameters::xHeader();
+        $sort_header = \App\Request\Parameter\Sort::xHeader();
         if ($sort_header !== null) {
             $headers->addSort($sort_header);
         }
 
-        $search_header = SearchParameters::xHeader();
+        $search_header = \App\Request\Parameter\Search::xHeader();
         if ($search_header !== null) {
             $headers->addSearch($search_header);
         }
@@ -356,8 +354,8 @@ class SubcategoryController extends Controller
         UtilityRequest::checkForEmptyPatch();
 
         $validator = (new SubcategoryValidator())->update([
-            'category_id' => intval($category_id),
-            'subcategory_id' => intval($subcategory_id)
+            'category_id' => (int)$category_id,
+            'subcategory_id' => (int)$subcategory_id
         ]);
         UtilityRequest::validateAndReturnErrors($validator);
 

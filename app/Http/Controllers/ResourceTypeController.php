@@ -15,13 +15,10 @@ use App\Response\Cache;
 use App\Response\Header\Headers;
 use App\Utilities\Pagination as UtilityPagination;
 use App\Utilities\Request as UtilityRequest;
-use App\Validators\Parameters;
 use App\Models\ResourceType;
 use App\Models\Transformers\ResourceType as ResourceTypeTransformer;
 use App\Utilities\Response as UtilityResponse;
 use App\Validators\Fields\ResourceType as ResourceTypeValidator;
-use App\Validators\SearchParameters;
-use App\Validators\SortParameters;
 use Exception;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\JsonResponse;
@@ -49,11 +46,11 @@ class ResourceTypeController extends Controller
         $cache_control = new Cache\Control($this->user_id);
         $cache_control->setTtlOneDay();
 
-        $search_parameters = SearchParameters::fetch(
+        $search_parameters = \App\Request\Parameter\Search::fetch(
             array_keys(Config::get('api.resource-type.searchable'))
         );
 
-        $sort_parameters = SortParameters::fetch(
+        $sort_parameters = \App\Request\Parameter\Sort::fetch(
             Config::get('api.resource-type.sortable')
         );
 
@@ -93,8 +90,8 @@ class ResourceTypeController extends Controller
             $headers = new Headers();
             $headers->collection($pagination, count($resource_types), $total)->
                 addCacheControl($cache_control->visibility(), $cache_control->ttl())->
-                addSearch(SearchParameters::xHeader())->
-                addSort(SortParameters::xHeader());
+                addSearch(\App\Request\Parameter\Search::xHeader())->
+                addSort(\App\Request\Parameter\Sort::xHeader());
 
             $cache_collection->create($total, $collection, $pagination, $headers->headers());
             $cache_control->put(request()->getRequestUri(), $cache_collection->content());
@@ -117,7 +114,7 @@ class ResourceTypeController extends Controller
             $this->permitted_resource_types
         );
 
-        $parameters = Parameters::fetch(array_keys(Config::get('api.resource-type.parameters.item')));
+        $parameters = \App\Request\Parameter\Request::fetch(array_keys(Config::get('api.resource-type.parameters.item')));
 
         $resource_type = (new ResourceType())->single(
             $resource_type_id,
@@ -140,7 +137,7 @@ class ResourceTypeController extends Controller
         }
 
         $headers = new Headers();
-        $headers->item()->addParameters(Parameters::xHeader());
+        $headers->item()->addParameters(\App\Request\Parameter\Request::xHeader());
 
         return response()->json(
             (new ResourceTypeTransformer($resource_type, $resources))->toArray(),

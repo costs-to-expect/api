@@ -8,7 +8,6 @@ use App\Option\Post;
 use App\Response\Header\Header;
 use App\Utilities\Request as UtilityRequest;
 use App\Utilities\Response;
-use App\Validators\Parameters;
 use App\Models\RequestErrorLog;
 use App\Models\RequestLog;
 use App\Models\Transformers\RequestErrorLog as RequestErrorLogTransformer;
@@ -18,7 +17,6 @@ use App\Validators\Fields\RequestErrorLog as RequestErrorLogValidator;
 use App\Utilities\Response as UtilityResponse;
 use Exception;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Config;
 
 /**
@@ -79,7 +77,7 @@ class RequestController extends Controller
     {
         $total = (new RequestLog())->totalCount();
 
-        $this->collection_parameters = Parameters::fetch(
+        $this->collection_parameters = \App\Request\Parameter\Request::fetch(
             array_keys(Config::get('api.request-access-log.parameters.collection'))
         );
 
@@ -94,7 +92,7 @@ class RequestController extends Controller
         $headers = new Header();
         $headers->collection($pagination, count($log), $total);
 
-        $parameters_header = Parameters::xHeader();
+        $parameters_header = \App\Request\Parameter\Request::xHeader();
         if ($parameters_header !== null) {
             $headers->addParameters($parameters_header);
         }

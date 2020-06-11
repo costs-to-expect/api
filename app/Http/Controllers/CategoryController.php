@@ -9,14 +9,11 @@ use App\Option\Patch;
 use App\Option\Post;
 use App\Response\Header\Header;
 use App\Utilities\Pagination as UtilityPagination;
-use App\Validators\Parameters;
 use App\Models\Category;
 use App\Models\Transformers\Category as CategoryTransformer;
 use App\Utilities\Request as UtilityRequest;
 use App\Utilities\Response as UtilityResponse;
 use App\Validators\Fields\Category as CategoryValidator;
-use App\Validators\SearchParameters;
-use App\Validators\SortParameters;
 use Exception;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\JsonResponse;
@@ -45,7 +42,7 @@ class CategoryController extends Controller
             $this->permitted_resource_types
         );
 
-        $search_parameters = SearchParameters::fetch(
+        $search_parameters = \App\Request\Parameter\Search::fetch(
             array_keys(Config::get('api.category.searchable'))
         );
 
@@ -56,7 +53,7 @@ class CategoryController extends Controller
             $search_parameters
         );
 
-        $sort_parameters = SortParameters::fetch(
+        $sort_parameters = \App\Request\Parameter\Sort::fetch(
             Config::get('api.category.sortable')
         );
 
@@ -83,12 +80,12 @@ class CategoryController extends Controller
         $headers = new Header();
         $headers->collection($pagination, count($categories), $total);
 
-        $sort_header = SortParameters::xHeader();
+        $sort_header = \App\Request\Parameter\Sort::xHeader();
         if ($sort_header !== null) {
             $headers->addSort($sort_header);
         }
 
-        $search_header = SearchParameters::xHeader();
+        $search_header = \App\Request\Parameter\Search::xHeader();
         if ($search_header !== null) {
             $headers->addSearch($search_header);
         }
@@ -121,7 +118,7 @@ class CategoryController extends Controller
             $this->permitted_resource_types
         );
 
-        $parameters = Parameters::fetch(array_keys(Config::get('api.category.parameters.item')));
+        $parameters = \App\Request\Parameter\Request::fetch(array_keys(Config::get('api.category.parameters.item')));
 
         $category = (new Category)->single(
             (int) $resource_type_id,
@@ -148,7 +145,7 @@ class CategoryController extends Controller
         $headers = new Header();
         $headers->item();
 
-        $parameters_header = Parameters::xHeader();
+        $parameters_header = \App\Request\Parameter\Request::xHeader();
         if ($parameters_header !== null) {
             $headers->addParameters($parameters_header);
         }
@@ -341,8 +338,8 @@ class CategoryController extends Controller
         UtilityRequest::checkForEmptyPatch();
 
         $validator = (new CategoryValidator)->update([
-            'resource_type_id' => intval($category->resource_type_id),
-            'category_id' => intval($category_id)
+            'resource_type_id' => (int)$category->resource_type_id,
+            'category_id' => (int)$category_id
         ]);
         UtilityRequest::validateAndReturnErrors($validator);
 

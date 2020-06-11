@@ -5,15 +5,10 @@ namespace App\Http\Controllers;
 use App\ResourceTypeItem\Factory;
 use App\Option\Get;
 use App\Response\Header\Header;
-use App\Validators\FilterParameters;
-use App\Validators\Parameters;
 use App\Models\Category;
 use App\Models\Subcategory;
 use App\Utilities\Pagination as UtilityPagination;
-use App\Validators\SearchParameters;
-use App\Validators\SortParameters;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Request;
 
 /**
  * View items for all resources for a resource type
@@ -42,20 +37,20 @@ class ResourceTypeItemController extends Controller
 
         $resource_type_item_model = $item_interface->model();
 
-        $collection_parameters = Parameters::fetch(
+        $collection_parameters = \App\Request\Parameter\Request::fetch(
             array_keys($item_interface->collectionParameters()),
             $resource_type_id
         );
 
-        $sort_fields = SortParameters::fetch(
+        $sort_fields = \App\Request\Parameter\Sort::fetch(
             $item_interface->sortParameters()
         );
 
-        $search_parameters = SearchParameters::fetch(
+        $search_parameters = \App\Request\Parameter\Search::fetch(
             $item_interface->searchParameters()
         );
 
-        $filter_parameters = FilterParameters::fetch(
+        $filter_parameters = \App\Request\Parameter\Filter::fetch(
             $item_interface->filterParameters()
         );
 
@@ -83,22 +78,22 @@ class ResourceTypeItemController extends Controller
         $headers = new Header();
         $headers->collection($pagination, count($items), $total);
 
-        $filter_header = FilterParameters::xHeader();
+        $filter_header = \App\Request\Parameter\Filter::xHeader();
         if ($filter_header !== null) {
             $headers->addFilter($filter_header);
         }
 
-        $sort_header = SortParameters::xHeader();
+        $sort_header = \App\Request\Parameter\Sort::xHeader();
         if ($sort_header !== null) {
             $headers->addSort($sort_header);
         }
 
-        $search_header = SearchParameters::xHeader();
+        $search_header = \App\Request\Parameter\Search::xHeader();
         if ($search_header !== null) {
             $headers->addSearch($search_header);
         }
 
-        $parameters_header = Parameters::xHeader();
+        $parameters_header = \App\Request\Parameter\Request::xHeader();
         if ($parameters_header !== null) {
             $headers->addParameters($parameters_header);
         }
@@ -136,7 +131,7 @@ class ResourceTypeItemController extends Controller
             $this->permitted_resource_types
         );
 
-        $defined_parameters = Parameters::fetch(
+        $defined_parameters = \App\Request\Parameter\Request::fetch(
             array_keys($item_interface->collectionParameters()),
             $resource_type_id
         );

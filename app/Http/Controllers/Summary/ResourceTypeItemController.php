@@ -6,8 +6,6 @@ use App\Http\Controllers\Controller;
 use App\ResourceTypeItem\Factory;
 use App\Option\Get;
 use App\Response\Header\Header;
-use App\Validators\FilterParameters;
-use App\Validators\Parameters;
 use App\Models\Transformers\Summary\ResourceTypeItemCategory as ResourceTypeItemCategoryTransformer;
 use App\Models\Transformers\Summary\ResourceTypeItemMonth as ResourceTypeItemMonthTransformer;
 use App\Models\Transformers\Summary\ResourceTypeItemResource as ResourceTypeItemResourceTransformer;
@@ -15,7 +13,6 @@ use App\Models\Transformers\Summary\ResourceTypeItemSubcategory as ResourceTypeI
 use App\Models\Transformers\Summary\ResourceTypeItemYear as ResourceTypeItemYearTransformer;
 use App\Utilities\General;
 use App\Utilities\Response as UtilityResponse;
-use App\Validators\SearchParameters;
 use Illuminate\Http\JsonResponse;
 
 /**
@@ -46,7 +43,7 @@ class ResourceTypeItemController extends Controller
         $item_interface = Factory::summaryItem($resource_type_id);
         $this->model = $item_interface->model();
 
-        $parameters = Parameters::fetch(
+        $parameters = \App\Request\Parameter\Request::fetch(
             $item_interface->collectionParametersKeys(),
             $resource_type_id
         );
@@ -120,11 +117,11 @@ class ResourceTypeItemController extends Controller
             $parameters['subcategory']
         );
 
-        $search_parameters = SearchParameters::fetch(
+        $search_parameters = \App\Request\Parameter\Search::fetch(
             $item_interface->searchParameters()
         );
 
-        $filter_parameters = FilterParameters::fetch(
+        $filter_parameters = \App\Request\Parameter\Filter::fetch(
             $item_interface->filterParameters()
         );
 
@@ -257,7 +254,7 @@ class ResourceTypeItemController extends Controller
         $headers->add('X-Total-Count', count($summary));
         $headers->add('X-Count', count($summary));
 
-        $parameters_header = Parameters::xHeader();
+        $parameters_header = \App\Request\Parameter\Request::xHeader();
         if ($parameters_header !== null) {
             $headers->addParameters($parameters_header);
         }
@@ -303,7 +300,7 @@ class ResourceTypeItemController extends Controller
         $headers->add('X-Total-Count', count($summary));
         $headers->add('X-Count', count($summary));
 
-        $parameters_header = Parameters::xHeader();
+        $parameters_header = \App\Request\Parameter\Request::xHeader();
         if ($parameters_header !== null) {
             $headers->addParameters($parameters_header);
         }
@@ -347,7 +344,7 @@ class ResourceTypeItemController extends Controller
         $headers->add('X-Total-Count', count($summary));
         $headers->add('X-Count', count($summary));
 
-        $parameters_header = Parameters::xHeader();
+        $parameters_header = \App\Request\Parameter\Request::xHeader();
         if ($parameters_header !== null) {
             $headers->addParameters($parameters_header);
         }
@@ -394,7 +391,7 @@ class ResourceTypeItemController extends Controller
         $headers->add('X-Total-Count', count($summary));
         $headers->add('X-Count', count($summary));
 
-        $parameters_header = Parameters::xHeader();
+        $parameters_header = \App\Request\Parameter\Request::xHeader();
         if ($parameters_header !== null) {
             $headers->addParameters($parameters_header);
         }
@@ -436,7 +433,7 @@ class ResourceTypeItemController extends Controller
         $headers->add('X-Total-Count', count($summary));
         $headers->add('X-Count', count($summary));
 
-        $parameters_header = Parameters::xHeader();
+        $parameters_header = \App\Request\Parameter\Request::xHeader();
         if ($parameters_header !== null) {
             $headers->addParameters($parameters_header);
         }
@@ -486,7 +483,7 @@ class ResourceTypeItemController extends Controller
         $headers->add('X-Total-Count', count($summary));
         $headers->add('X-Count', count($summary));
 
-        $parameters_header = Parameters::xHeader();
+        $parameters_header = \App\Request\Parameter\Request::xHeader();
         if ($parameters_header !== null) {
             $headers->addParameters($parameters_header);
         }
@@ -525,7 +522,7 @@ class ResourceTypeItemController extends Controller
         $headers->add('X-Total-Count', count($summary));
         $headers->add('X-Count', count($summary));
 
-        $parameters_header = Parameters::xHeader();
+        $parameters_header = \App\Request\Parameter\Request::xHeader();
         if ($parameters_header !== null) {
             $headers->addParameters($parameters_header);
         }
@@ -572,7 +569,7 @@ class ResourceTypeItemController extends Controller
         $headers->add('X-Total-Count', count($summary));
         $headers->add('X-Count', count($summary));
 
-        $parameters_header = Parameters::xHeader();
+        $parameters_header = \App\Request\Parameter\Request::xHeader();
         if ($parameters_header !== null) {
             $headers->addParameters($parameters_header);
         }
@@ -628,7 +625,7 @@ class ResourceTypeItemController extends Controller
         $headers->add('X-Total-Count', count($summary));
         $headers->add('X-Count', count($summary));
 
-        $parameters_header = Parameters::xHeader();
+        $parameters_header = \App\Request\Parameter\Request::xHeader();
         if ($parameters_header !== null) {
             $headers->addParameters($parameters_header);
         }
@@ -672,7 +669,7 @@ class ResourceTypeItemController extends Controller
         $headers->add('X-Total-Count', count($summary));
         $headers->add('X-Count', count($summary));
 
-        $parameters_header = Parameters::xHeader();
+        $parameters_header = \App\Request\Parameter\Request::xHeader();
         if ($parameters_header !== null) {
             $headers->addParameters($parameters_header);
         }
@@ -722,7 +719,7 @@ class ResourceTypeItemController extends Controller
         $headers->add('X-Total-Count', count($summary));
         $headers->add('X-Count', count($summary));
 
-        $parameters_header = Parameters::xHeader();
+        $parameters_header = \App\Request\Parameter\Request::xHeader();
         if ($parameters_header !== null) {
             $headers->addParameters($parameters_header);
         }

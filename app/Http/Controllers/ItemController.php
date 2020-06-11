@@ -9,16 +9,12 @@ use App\Option\Get;
 use App\Option\Patch;
 use App\Option\Post;
 use App\Response\Header\Header;
-use App\Validators\FilterParameters;
-use App\Validators\Parameters;
 use App\Models\Category;
 use App\Models\Item;
 use App\Models\Subcategory;
 use App\Utilities\Pagination as UtilityPagination;
 use App\Utilities\Request as UtilityRequest;
 use App\Utilities\Response as UtilityResponse;
-use App\Validators\SearchParameters;
-use App\Validators\SortParameters;
 use Exception;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\JsonResponse;
@@ -55,17 +51,17 @@ class ItemController extends Controller
 
         $item_interface = Factory::item($resource_type_id);
 
-        $parameters = Parameters::fetch(
+        $parameters = \App\Request\Parameter\Request::fetch(
             array_keys($item_interface->collectionParameters()),
             (int) $resource_type_id,
             (int) $resource_id
         );
 
-        $search_parameters = SearchParameters::fetch(
+        $search_parameters = \App\Request\Parameter\Search::fetch(
             $item_interface->searchParameters()
         );
 
-        $filter_parameters = FilterParameters::fetch(
+        $filter_parameters = \App\Request\Parameter\Filter::fetch(
             $item_interface->filterParameters()
         );
 
@@ -78,7 +74,7 @@ class ItemController extends Controller
             $filter_parameters
         );
 
-        $sort_parameters = SortParameters::fetch(
+        $sort_parameters = \App\Request\Parameter\Sort::fetch(
             $item_interface->sortParameters()
         );
 
@@ -102,22 +98,22 @@ class ItemController extends Controller
         $headers = new Header();
         $headers->collection($pagination, count($items), $total);
 
-        $filter_header = FilterParameters::xHeader();
+        $filter_header = \App\Request\Parameter\Filter::xHeader();
         if ($filter_header !== null) {
             $headers->addFilter($filter_header);
         }
 
-        $sort_header = SortParameters::xHeader();
+        $sort_header = \App\Request\Parameter\Sort::xHeader();
         if ($sort_header !== null) {
             $headers->addSort($sort_header);
         }
 
-        $search_header = SearchParameters::xHeader();
+        $search_header = \App\Request\Parameter\Search::xHeader();
         if ($search_header !== null) {
             $headers->addSearch($search_header);
         }
 
-        $parameters_header = Parameters::xHeader();
+        $parameters_header = \App\Request\Parameter\Request::xHeader();
         if ($parameters_header !== null) {
             $headers->addParameters($parameters_header);
         }
@@ -158,7 +154,7 @@ class ItemController extends Controller
 
         $item_interface = Factory::item($resource_type_id);
 
-        $parameters = Parameters::fetch(
+        $parameters = \App\Request\Parameter\Request::fetch(
             array_keys($item_interface->showParameters()),
             (int) $resource_type_id,
             (int) $resource_id
@@ -214,7 +210,7 @@ class ItemController extends Controller
             $this->permitted_resource_types,
         );
 
-        $defined_parameters = Parameters::fetch(
+        $defined_parameters = \App\Request\Parameter\Request::fetch(
             array_keys($item_interface->collectionParameters()),
             (int) $resource_type_id,
             (int) $resource_id

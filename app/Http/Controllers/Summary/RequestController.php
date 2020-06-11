@@ -5,7 +5,6 @@ namespace App\Http\Controllers\Summary;
 use App\Http\Controllers\Controller;
 use App\Option\Get;
 use App\Response\Header\Header;
-use App\Validators\Parameters;
 use App\Models\Summary\RequestLog;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Config;
@@ -28,7 +27,7 @@ class RequestController extends Controller
      */
     public function accessLog(): JsonResponse
     {
-        $this->collection_parameters = Parameters::fetch(array_keys(Config::get('api.request-access-log.summary-parameters')));
+        $this->collection_parameters = \App\Request\Parameter\Request::fetch(array_keys(Config::get('api.request-access-log.summary-parameters')));
 
         $request_data = (new RequestLog())->monthlyRequests($this->collection_parameters);
 
@@ -41,7 +40,7 @@ class RequestController extends Controller
         $headers->add('X-Total-Count', count($summary));
         $headers->add('X-Count', count($summary));
 
-        $parameters_header = Parameters::xHeader();
+        $parameters_header = \App\Request\Parameter\Request::xHeader();
         if ($parameters_header !== null) {
             $headers->addParameters($parameters_header);
         }

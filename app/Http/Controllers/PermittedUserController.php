@@ -8,8 +8,6 @@ use App\Option\Get;
 use App\Option\Post;
 use App\Response\Header\Header;
 use App\Utilities\Pagination as UtilityPagination;
-use App\Validators\SearchParameters;
-use App\Validators\SortParameters;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Config;
 
@@ -38,7 +36,7 @@ class PermittedUserController extends Controller
             $this->permitted_resource_types
         );
 
-        $search_parameters = SearchParameters::fetch(
+        $search_parameters = \App\Request\Parameter\Search::fetch(
             array_keys(Config::get('api.permitted-user.searchable'))
         );
 
@@ -47,7 +45,7 @@ class PermittedUserController extends Controller
             $search_parameters
         );
 
-        $sort_parameters = SortParameters::fetch(
+        $sort_parameters = \App\Request\Parameter\Sort::fetch(
             Config::get('api.permitted-user.sortable')
         );
 
@@ -72,12 +70,12 @@ class PermittedUserController extends Controller
         $headers = new Header();
         $headers->collection($pagination, count($permitted_users), $total);
 
-        $sort_header = SortParameters::xHeader();
+        $sort_header = \App\Request\Parameter\Sort::xHeader();
         if ($sort_header !== null) {
             $headers->addSort($sort_header);
         }
 
-        $search_header = SearchParameters::xHeader();
+        $search_header = \App\Request\Parameter\Search::xHeader();
         if ($search_header !== null) {
             $headers->addSearch($search_header);
         }

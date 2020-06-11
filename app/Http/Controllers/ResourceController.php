@@ -13,8 +13,6 @@ use App\Models\Resource;
 use App\Models\Transformers\Resource as ResourceTransformer;
 use App\Utilities\Response as UtilityResponse;
 use App\Validators\Fields\Resource as ResourceValidator;
-use App\Validators\SearchParameters;
-use App\Validators\SortParameters;
 use Exception;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\JsonResponse;
@@ -45,7 +43,7 @@ class ResourceController extends Controller
             $this->permitted_resource_types
         );
 
-        $search_parameters = SearchParameters::fetch(
+        $search_parameters = \App\Request\Parameter\Search::fetch(
             array_keys(Config::get('api.resource.searchable'))
         );
 
@@ -56,7 +54,7 @@ class ResourceController extends Controller
             $search_parameters
         );
 
-        $sort_parameters = SortParameters::fetch(
+        $sort_parameters = \App\Request\Parameter\Sort::fetch(
             Config::get('api.resource.sortable')
         );
 
@@ -81,12 +79,12 @@ class ResourceController extends Controller
         $headers = new Header();
         $headers->collection($pagination, count($resources), $total);
 
-        $sort_header = SortParameters::xHeader();
+        $sort_header = \App\Request\Parameter\Sort::xHeader();
         if ($sort_header !== null) {
             $headers->addSort($sort_header);
         }
 
-        $search_header = SearchParameters::xHeader();
+        $search_header = \App\Request\Parameter\Search::xHeader();
         if ($search_header !== null) {
             $headers->addSearch($search_header);
         }
@@ -331,8 +329,8 @@ class ResourceController extends Controller
         UtilityRequest::checkForEmptyPatch();
 
         $validator = (new ResourceValidator())->update([
-            'resource_type_id' => intval($resource_type_id),
-            'resource_id' => intval($resource_id)
+            'resource_type_id' => (int)$resource_type_id,
+            'resource_id' => (int)$resource_id
         ]);
         UtilityRequest::validateAndReturnErrors($validator);
 
