@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Utilities;
+namespace App\Response;
 
 use Exception;
 use Illuminate\Http\JsonResponse;
@@ -20,9 +20,8 @@ use Illuminate\Support\Facades\App;
  * @copyright Dean Blackborough 2018-2020
  * @license https://github.com/costs-to-expect/api/blob/master/LICENSE
  */
-class Response
+class Responses
 {
-
     protected static function addException(array $response, ?Exception $e = null): array
     {
         if ($e !== null && App::environment() !== 'production') {

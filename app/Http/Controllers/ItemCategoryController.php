@@ -10,7 +10,6 @@ use App\Request\Route;
 use App\Models\Category;
 use App\Models\ItemCategory;
 use App\Models\Transformers\ItemCategory as ItemCategoryTransformer;
-use App\Utilities\Response as UtilityResponse;
 use App\Validators\Fields\ItemCategory as ItemCategoryValidator;
 use Exception;
 use Illuminate\Database\QueryException;
@@ -50,7 +49,7 @@ class ItemCategoryController extends Controller
         );
 
         if ($item_category === null || (is_array($item_category) === true && count($item_category) === 0)) {
-            UtilityResponse::notFound(trans('entities.item-category'));
+            \App\Response\Responses::notFound(trans('entities.item-category'));
         }
 
         $headers = new Header();
@@ -89,7 +88,7 @@ class ItemCategoryController extends Controller
         );
 
         if ($item_category_id === 'nill') {
-            UtilityResponse::notFound(trans('entities.item-category'));
+            \App\Response\Responses::notFound(trans('entities.item-category'));
         }
 
         $item_category = (new ItemCategory())->single(
@@ -100,7 +99,7 @@ class ItemCategoryController extends Controller
         );
 
         if ($item_category === null) {
-            UtilityResponse::notFound(trans('entities.item-category'));
+            \App\Response\Responses::notFound(trans('entities.item-category'));
         }
 
         $headers = new Header();
@@ -190,7 +189,7 @@ class ItemCategoryController extends Controller
         );
 
         if ($item_category_id === 'nill') {
-            UtilityResponse::notFound(trans('entities.item-category'));
+            \App\Response\Responses::notFound(trans('entities.item-category'));
         }
 
         $item_category = (new ItemCategory())->single(
@@ -201,7 +200,7 @@ class ItemCategoryController extends Controller
         );
 
         if ($item_category === null) {
-            UtilityResponse::notFound(trans('entities.item-category'));
+            \App\Response\Responses::notFound(trans('entities.item-category'));
         }
 
         $get = Get::init()->
@@ -255,7 +254,7 @@ class ItemCategoryController extends Controller
             $category_id = $this->hash->decode('category', request()->input('category_id'));
 
             if ($category_id === false) {
-                UtilityResponse::unableToDecode();
+                \App\Response\Responses::unableToDecode();
             }
 
             $item_category = new ItemCategory([
@@ -264,7 +263,7 @@ class ItemCategoryController extends Controller
             ]);
             $item_category->save();
         } catch (Exception $e) {
-            UtilityResponse::failedToSaveModelForCreate();
+            \App\Response\Responses::failedToSaveModelForCreate();
         }
 
         return response()->json(
@@ -290,7 +289,7 @@ class ItemCategoryController extends Controller
             $id = $this->hash->encode('category', $category['category_id']);
 
             if ($id === false) {
-                UtilityResponse::unableToDecode();
+                \App\Response\Responses::unableToDecode();
             }
 
             $conditional_post_parameters['category_id']['allowed_values'][$id] = [
@@ -337,17 +336,17 @@ class ItemCategoryController extends Controller
         );
 
         if ($item_category === null) {
-            UtilityResponse::notFound(trans('entities.item-category'));
+            \App\Response\Responses::notFound(trans('entities.item-category'));
         }
 
         try {
             (new ItemCategory())->find($item_category_id)->delete();
 
-            UtilityResponse::successNoContent();
+            \App\Response\Responses::successNoContent();
         } catch (QueryException $e) {
-            UtilityResponse::foreignKeyConstraintError();
+            \App\Response\Responses::foreignKeyConstraintError();
         } catch (Exception $e) {
-            UtilityResponse::notFound(trans('entities.item-category'), $e);
+            \App\Response\Responses::notFound(trans('entities.item-category'), $e);
         }
     }
 }

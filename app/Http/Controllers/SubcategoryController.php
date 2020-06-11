@@ -12,7 +12,6 @@ use App\Request\Route;
 use App\Utilities\Pagination as UtilityPagination;
 use App\Models\Subcategory;
 use App\Models\Transformers\Subcategory as SubcategoryTransformer;
-use App\Utilities\Response as UtilityResponse;
 use App\Validators\Fields\Subcategory as SubcategoryValidator;
 use Exception;
 use Illuminate\Database\QueryException;
@@ -132,7 +131,7 @@ class SubcategoryController extends Controller
         );
 
         if ($subcategory === null) {
-            UtilityResponse::notFound();
+            \App\Response\Responses::notFound();
         }
 
         $headers = new Header();
@@ -271,7 +270,7 @@ class SubcategoryController extends Controller
             ]);
             $sub_category->save();
         } catch (Exception $e) {
-            UtilityResponse::failedToSaveModelForCreate();
+            \App\Response\Responses::failedToSaveModelForCreate();
         }
 
         return response()->json(
@@ -309,17 +308,17 @@ class SubcategoryController extends Controller
         );
 
         if ($sub_category === null) {
-            UtilityResponse::notFound(trans('entities.subcategory'));
+            \App\Response\Responses::notFound(trans('entities.subcategory'));
         }
 
         try {
             $sub_category->delete();
 
-            UtilityResponse::successNoContent();
+            \App\Response\Responses::successNoContent();
         } catch (QueryException $e) {
-            UtilityResponse::foreignKeyConstraintError();
+            \App\Response\Responses::foreignKeyConstraintError();
         } catch (Exception $e) {
-            UtilityResponse::notFound(trans('entities.subcategory'), $e);
+            \App\Response\Responses::notFound(trans('entities.subcategory'), $e);
         }
     }
 
@@ -349,7 +348,7 @@ class SubcategoryController extends Controller
         $subcategory = (new Subcategory())->instance($category_id, $subcategory_id);
 
         if ($subcategory === null) {
-            UtilityResponse::failedToSelectModelForUpdateOrDelete();
+            \App\Response\Responses::failedToSelectModelForUpdateOrDelete();
         }
 
         \App\Request\BodyValidation::checkForEmptyPatch();
@@ -374,9 +373,9 @@ class SubcategoryController extends Controller
         try {
             $subcategory->save();
         } catch (Exception $e) {
-            UtilityResponse::failedToSaveModelForUpdate();
+            \App\Response\Responses::failedToSaveModelForUpdate();
         }
 
-        UtilityResponse::successNoContent();
+        \App\Response\Responses::successNoContent();
     }
 }

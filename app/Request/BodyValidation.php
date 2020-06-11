@@ -3,7 +3,6 @@ declare(strict_types=1);
 
 namespace App\Request;
 
-use App\Utilities\Response as UtilityResponse;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Http\JsonResponse;
 
@@ -39,7 +38,7 @@ class BodyValidation
         }
 
         if (count($invalid_fields) !== 0) {
-            return UtilityResponse::invalidFieldsInRequest($invalid_fields);
+            return \App\Response\Responses::invalidFieldsInRequest($invalid_fields);
         }
 
         return null;
@@ -54,7 +53,7 @@ class BodyValidation
     public static function checkForEmptyPatch(): ?JsonResponse
     {
         if (count(request()->all()) === 0) {
-            return UtilityResponse::nothingToPatch();
+            return \App\Response\Responses::nothingToPatch();
         }
 
         return null;
@@ -86,7 +85,7 @@ class BodyValidation
                 $validation_errors = array_merge_recursive($validation_errors, $allowed_values);
             }
 
-            return UtilityResponse::validationErrors($validation_errors);
+            return \App\Response\Responses::validationErrors($validation_errors);
         }
 
         return null;

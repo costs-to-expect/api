@@ -13,7 +13,6 @@ use App\Response\Header\Headers;
 use App\Request\Parameter;
 use App\Request\Route;
 use App\Utilities\Pagination as UtilityPagination;
-use App\Utilities\Response as UtilityResponse;
 use App\Validators\Fields\ItemPartialTransfer as ItemPartialTransferValidator;
 use Exception;
 use Illuminate\Database\QueryException;
@@ -120,14 +119,14 @@ class ItemPartialTransferController extends Controller
 
             if ($partial_transfer !== null) {
                 $partial_transfer->delete();
-                return UtilityResponse::successNoContent();
+                return \App\Response\Responses::successNoContent();
             }
 
-            return UtilityResponse::failedToSelectModelForUpdateOrDelete();
+            return \App\Response\Responses::failedToSelectModelForUpdateOrDelete();
         } catch (QueryException $e) {
-            return UtilityResponse::foreignKeyConstraintError();
+            return \App\Response\Responses::foreignKeyConstraintError();
         } catch (Exception $e) {
-            return UtilityResponse::notFound(trans('entities.item-partial-transfer'), $e);
+            return \App\Response\Responses::notFound(trans('entities.item-partial-transfer'), $e);
         }
     }
 
@@ -155,7 +154,7 @@ class ItemPartialTransferController extends Controller
         );
 
         if ($item_partial_transfer === null) {
-            UtilityResponse::notFound(trans('entities.item_partial_transfer'));
+            \App\Response\Responses::notFound(trans('entities.item_partial_transfer'));
         }
 
         $headers = new Headers();
@@ -193,7 +192,7 @@ class ItemPartialTransferController extends Controller
         $new_resource_id = $this->hash->decode('resource', request()->input('resource_id'));
 
         if ($new_resource_id === false) {
-            UtilityResponse::unableToDecode();
+            \App\Response\Responses::unableToDecode();
         }
 
         try {
@@ -207,9 +206,9 @@ class ItemPartialTransferController extends Controller
             ]);
             $partial_transfer->save();
         } catch (QueryException $e) {
-            return UtilityResponse::foreignKeyConstraintError();
+            return \App\Response\Responses::foreignKeyConstraintError();
         } catch (Exception $e) {
-            return UtilityResponse::failedToSaveModelForCreate();
+            return \App\Response\Responses::failedToSaveModelForCreate();
         }
 
         $item_partial_transfer = (new ItemPartialTransfer())->single(
@@ -218,7 +217,7 @@ class ItemPartialTransferController extends Controller
         );
 
         if ($item_partial_transfer === null) {
-            return UtilityResponse::notFound(trans('entities.item_partial_transfer'));
+            return \App\Response\Responses::notFound(trans('entities.item_partial_transfer'));
         }
 
         return response()->json(
@@ -356,7 +355,7 @@ class ItemPartialTransferController extends Controller
             $id = $this->hash->encode('resource', $resource['resource_id']);
 
             if ($id === false) {
-                UtilityResponse::unableToDecode();
+                \App\Response\Responses::unableToDecode();
             }
 
             $conditional_post_parameters['resource_id']['allowed_values'][$id] = [

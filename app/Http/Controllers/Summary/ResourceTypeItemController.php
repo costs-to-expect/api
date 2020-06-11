@@ -14,7 +14,6 @@ use App\Models\Transformers\Summary\ResourceTypeItemResource as ResourceTypeItem
 use App\Models\Transformers\Summary\ResourceTypeItemSubcategory as ResourceTypeItemSubcategoryTransformer;
 use App\Models\Transformers\Summary\ResourceTypeItemYear as ResourceTypeItemYearTransformer;
 use App\Utilities\General;
-use App\Utilities\Response as UtilityResponse;
 use Illuminate\Http\JsonResponse;
 
 /**
@@ -249,7 +248,7 @@ class ResourceTypeItemController extends Controller
         );
 
         if (count($summary) === 0) {
-            UtilityResponse::successEmptyContent(true);
+            \App\Response\Responses::successEmptyContent(true);
         }
 
         $headers = new Header();
@@ -295,7 +294,7 @@ class ResourceTypeItemController extends Controller
         );
 
         if (count($summary) === 0) {
-            UtilityResponse::successEmptyContent(true);
+            \App\Response\Responses::successEmptyContent(true);
         }
 
         $headers = new Header();
@@ -339,7 +338,7 @@ class ResourceTypeItemController extends Controller
         );
 
         if (count($summary) === 0) {
-            UtilityResponse::successEmptyContent(true);
+            \App\Response\Responses::successEmptyContent(true);
         }
 
         $headers = new Header();
@@ -386,7 +385,7 @@ class ResourceTypeItemController extends Controller
         );
 
         if (count($summary) === 0) {
-            UtilityResponse::successEmptyContent();
+            \App\Response\Responses::successEmptyContent();
         }
 
         $headers = new Header();
@@ -428,7 +427,7 @@ class ResourceTypeItemController extends Controller
         );
 
         if (count($summary) === 0) {
-            UtilityResponse::successEmptyContent(true);
+            \App\Response\Responses::successEmptyContent(true);
         }
 
         $headers = new Header();
@@ -478,7 +477,7 @@ class ResourceTypeItemController extends Controller
         );
 
         if (count($summary) === 0) {
-            UtilityResponse::successEmptyContent();
+            \App\Response\Responses::successEmptyContent();
         }
 
         $headers = new Header();
@@ -517,7 +516,7 @@ class ResourceTypeItemController extends Controller
         );
 
         if (count($summary) === 0) {
-            UtilityResponse::successEmptyContent(true);
+            \App\Response\Responses::successEmptyContent(true);
         }
 
         $headers = new Header();
@@ -564,7 +563,7 @@ class ResourceTypeItemController extends Controller
         );
 
         if (count($summary) === 0) {
-            UtilityResponse::successEmptyContent();
+            \App\Response\Responses::successEmptyContent();
         }
 
         $headers = new Header();
@@ -620,7 +619,7 @@ class ResourceTypeItemController extends Controller
         );
 
         if (count($summary) === 0) {
-            UtilityResponse::successEmptyContent();
+            \App\Response\Responses::successEmptyContent();
         }
 
         $headers = new Header();
@@ -664,7 +663,7 @@ class ResourceTypeItemController extends Controller
         );
 
         if (count($summary) === 0) {
-            UtilityResponse::successEmptyContent(true);
+            \App\Response\Responses::successEmptyContent(true);
         }
 
         $headers = new Header();
@@ -714,7 +713,7 @@ class ResourceTypeItemController extends Controller
         );
 
         if (count($summary) === 0) {
-            UtilityResponse::successEmptyContent();
+            \App\Response\Responses::successEmptyContent();
         }
 
         $headers = new Header();

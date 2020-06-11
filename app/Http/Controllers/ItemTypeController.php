@@ -10,7 +10,6 @@ use App\Request\Parameter;
 use App\Request\Route;
 use App\Utilities\Pagination as UtilityPagination;
 use App\Models\Transformers\ItemType as ItemTypeTransformer;
-use App\Utilities\Response as UtilityResponse;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Config;
 
@@ -100,7 +99,7 @@ class ItemTypeController extends Controller
         $item_type = (new ItemType())->single($item_type_id);
 
         if ($item_type === null) {
-            UtilityResponse::notFound(trans('entities.item-type'));
+            \App\Response\Responses::notFound(trans('entities.item-type'));
         }
 
         $headers = new Headers();

@@ -12,7 +12,6 @@ use App\Request\Route;
 use App\Utilities\Pagination as UtilityPagination;
 use App\Models\Resource;
 use App\Models\Transformers\Resource as ResourceTransformer;
-use App\Utilities\Response as UtilityResponse;
 use App\Validators\Fields\Resource as ResourceValidator;
 use Exception;
 use Illuminate\Database\QueryException;
@@ -124,7 +123,7 @@ class ResourceController extends Controller
         $resource = (new Resource)->single($resource_type_id, $resource_id);
 
         if ($resource === null) {
-            UtilityResponse::notFound(trans('entities.resource'));
+            \App\Response\Responses::notFound(trans('entities.resource'));
         }
 
         $headers = new Header();
@@ -206,7 +205,7 @@ class ResourceController extends Controller
         );
 
         if ($resource === null) {
-            UtilityResponse::notFound(trans('entities.resource'));
+            \App\Response\Responses::notFound(trans('entities.resource'));
         }
 
         $get = Get::init()->
@@ -261,7 +260,7 @@ class ResourceController extends Controller
             ]);
             $resource->save();
         } catch (Exception $e) {
-            UtilityResponse::failedToSaveModelForCreate();
+            \App\Response\Responses::failedToSaveModelForCreate();
         }
 
         return response()->json(
@@ -293,11 +292,11 @@ class ResourceController extends Controller
         try {
             (new Resource())->find($resource_id)->delete();
 
-            UtilityResponse::successNoContent();
+            \App\Response\Responses::successNoContent();
         } catch (QueryException $e) {
-            UtilityResponse::foreignKeyConstraintError();
+            \App\Response\Responses::foreignKeyConstraintError();
         } catch (Exception $e) {
-            UtilityResponse::notFound(trans('entities.resource'), $e);
+            \App\Response\Responses::notFound(trans('entities.resource'), $e);
         }
     }
 
@@ -324,7 +323,7 @@ class ResourceController extends Controller
         $resource = (new Resource())->instance($resource_type_id, $resource_id);
 
         if ($resource === null) {
-            UtilityResponse::failedToSelectModelForUpdateOrDelete();
+            \App\Response\Responses::failedToSelectModelForUpdateOrDelete();
         }
 
         \App\Request\BodyValidation::checkForEmptyPatch();
@@ -349,9 +348,9 @@ class ResourceController extends Controller
         try {
             $resource->save();
         } catch (Exception $e) {
-            UtilityResponse::failedToSaveModelForUpdate();
+            \App\Response\Responses::failedToSaveModelForUpdate();
         }
 
-        UtilityResponse::successNoContent();
+        \App\Response\Responses::successNoContent();
     }
 }

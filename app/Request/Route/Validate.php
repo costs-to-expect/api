@@ -3,8 +3,6 @@ declare(strict_types=1);
 
 namespace App\Request\Route;
 
-use App\Utilities\Response as UtilityResponse;
-
 /**
  * Validate the set route parameters, redirect to 404 if invalid
  *
@@ -38,7 +36,7 @@ class Validate
                     $permitted_resource_types
                 ) === false
             ) {
-                UtilityResponse::notFound(trans('entities.category'));
+                \App\Response\Responses::notFound(trans('entities.category'));
             }
         } else {
             if (
@@ -48,7 +46,7 @@ class Validate
                     $permitted_resource_types
                 ) === false
             ) {
-                UtilityResponse::notFoundOrNotAccessible(trans('entities.category'));
+                \App\Response\Responses::notFoundOrNotAccessible(trans('entities.category'));
             }
         }
     }
@@ -81,7 +79,7 @@ class Validate
                     $permitted_resource_types
                 ) === false
             ) {
-                UtilityResponse::notFound(trans('entities.subcategory'));
+                \App\Response\Responses::notFound(trans('entities.subcategory'));
             }
         } else {
             if (
@@ -92,7 +90,7 @@ class Validate
                     $permitted_resource_types
                 ) === false
             ) {
-                UtilityResponse::notFoundOrNotAccessible(trans('entities.subcategory'));
+                \App\Response\Responses::notFoundOrNotAccessible(trans('entities.subcategory'));
             }
         }
     }
@@ -118,7 +116,7 @@ class Validate
                     $permitted_resource_types
                 ) === false
             ) {
-                UtilityResponse::notFound(trans('entities.resource-type'));
+                \App\Response\Responses::notFound(trans('entities.resource-type'));
             }
         } else {
             if (
@@ -127,7 +125,7 @@ class Validate
                     $permitted_resource_types
                 ) === false
             ) {
-                UtilityResponse::notFoundOrNotAccessible(trans('entities.resource-type'));
+                \App\Response\Responses::notFoundOrNotAccessible(trans('entities.resource-type'));
             }
         }
     }
@@ -156,7 +154,7 @@ class Validate
                     $permitted_resource_types
                 ) === false
             ) {
-                UtilityResponse::notFound(trans('entities.resource'));
+                \App\Response\Responses::notFound(trans('entities.resource'));
             }
         } else {
             if (
@@ -166,7 +164,7 @@ class Validate
                     $permitted_resource_types
                 ) === false
             ) {
-                UtilityResponse::notFoundOrNotAccessible(trans('entities.resource'));
+                \App\Response\Responses::notFoundOrNotAccessible(trans('entities.resource'));
             }
         }
     }
@@ -198,7 +196,7 @@ class Validate
                     $permitted_resource_types
                 ) === false
             ) {
-                UtilityResponse::notFound(trans('entities.item'));
+                \App\Response\Responses::notFound(trans('entities.item'));
             }
         } else {
             if (
@@ -209,7 +207,7 @@ class Validate
                     $permitted_resource_types
                 ) === false
             ) {
-                UtilityResponse::notFoundOrNotAccessible(trans('entities.item'));
+                \App\Response\Responses::notFoundOrNotAccessible(trans('entities.item'));
             }
         }
     }
@@ -243,7 +241,7 @@ class Validate
                     $permitted_resource_types
                 ) === false
             ) {
-                UtilityResponse::notFound(trans('entities.item-category'));
+                \App\Response\Responses::notFound(trans('entities.item-category'));
             }
         } else {
             if (
@@ -255,7 +253,7 @@ class Validate
                     $permitted_resource_types
                 ) === false
             ) {
-                UtilityResponse::notFoundOrNotAccessible(trans('entities.item-category'));
+                \App\Response\Responses::notFoundOrNotAccessible(trans('entities.item-category'));
             }
         }
     }
@@ -271,7 +269,7 @@ class Validate
     public static function itemType($item_type_id)
     {
         if (Validator\ItemType::existsToUserForViewing((int) $item_type_id) === false) {
-            UtilityResponse::notFound(trans('entities.item-type'));
+            \App\Response\Responses::notFound(trans('entities.item-type'));
         }
     }
 
@@ -307,7 +305,7 @@ class Validate
                     $permitted_resource_types
                 ) === false
             ) {
-                UtilityResponse::notFound(trans('entities.item-subcategory'));
+                \App\Response\Responses::notFound(trans('entities.item-subcategory'));
             }
         } else {
             if (
@@ -320,7 +318,7 @@ class Validate
                     $permitted_resource_types
                 ) === false
             ) {
-                UtilityResponse::notFoundOrNotAccessible(trans('entities.item-subcategory'));
+                \App\Response\Responses::notFoundOrNotAccessible(trans('entities.item-subcategory'));
             }
         }
     }

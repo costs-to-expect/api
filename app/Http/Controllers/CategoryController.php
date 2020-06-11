@@ -13,8 +13,6 @@ use App\Request\Route;
 use App\Utilities\Pagination as UtilityPagination;
 use App\Models\Category;
 use App\Models\Transformers\Category as CategoryTransformer;
-use App\Utilities\Request as UtilityRequest;
-use App\Utilities\Response as UtilityResponse;
 use App\Validators\Fields\Category as CategoryValidator;
 use Exception;
 use Illuminate\Database\QueryException;
@@ -128,7 +126,7 @@ class CategoryController extends Controller
         );
 
         if ($category === null) {
-            UtilityResponse::notFound(trans('entities.category'));
+            \App\Response\Responses::notFound(trans('entities.category'));
         }
 
         $subcategories = [];
@@ -274,7 +272,7 @@ class CategoryController extends Controller
             ]);
             $category->save();
         } catch (Exception $e) {
-           UtilityResponse::failedToSaveModelForCreate();
+           \App\Response\Responses::failedToSaveModelForCreate();
         }
 
         return response()->json(
@@ -306,11 +304,11 @@ class CategoryController extends Controller
         try {
             (new Category())->find($category_id)->delete();
 
-            UtilityResponse::successNoContent();
+            \App\Response\Responses::successNoContent();
         } catch (QueryException $e) {
-            UtilityResponse::foreignKeyConstraintError();
+            \App\Response\Responses::foreignKeyConstraintError();
         } catch (Exception $e) {
-            UtilityResponse::notFound(trans('entities.category'), $e);
+            \App\Response\Responses::notFound(trans('entities.category'), $e);
         }
     }
 
@@ -334,7 +332,7 @@ class CategoryController extends Controller
         $category = (new Category())->instance($category_id);
 
         if ($category === null) {
-            UtilityResponse::failedToSelectModelForUpdateOrDelete();
+            \App\Response\Responses::failedToSelectModelForUpdateOrDelete();
         }
 
         \App\Request\BodyValidation::checkForEmptyPatch();
@@ -359,9 +357,9 @@ class CategoryController extends Controller
         try {
             $category->save();
         } catch (Exception $e) {
-            UtilityResponse::failedToSaveModelForUpdate();
+            \App\Response\Responses::failedToSaveModelForUpdate();
         }
 
-        UtilityResponse::successNoContent();
+        \App\Response\Responses::successNoContent();
     }
 }

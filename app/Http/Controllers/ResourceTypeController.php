@@ -18,7 +18,6 @@ use App\Request\Route;
 use App\Utilities\Pagination as UtilityPagination;
 use App\Models\ResourceType;
 use App\Models\Transformers\ResourceType as ResourceTypeTransformer;
-use App\Utilities\Response as UtilityResponse;
 use App\Validators\Fields\ResourceType as ResourceTypeValidator;
 use Exception;
 use Illuminate\Database\QueryException;
@@ -124,7 +123,7 @@ class ResourceTypeController extends Controller
         );
 
         if ($resource_type === null) {
-            UtilityResponse::notFound(trans('entities.resource-type'));
+            \App\Response\Responses::notFound(trans('entities.resource-type'));
         }
 
         $resources = [];
@@ -252,7 +251,7 @@ class ResourceTypeController extends Controller
             $item_type_id = $this->hash->decode('item_type', request()->input('item_type_id'));
 
             if ($item_type_id === false) {
-                UtilityResponse::unableToDecode();
+                \App\Response\Responses::unableToDecode();
             }
 
             $resource_type_item_type = new ResourceTypeItemType([
@@ -261,7 +260,7 @@ class ResourceTypeController extends Controller
             ]);
             $resource_type_item_type->save();
         } catch (Exception $e) {
-            UtilityResponse::failedToSaveModelForCreate();
+            \App\Response\Responses::failedToSaveModelForCreate();
         }
 
         return response()->json(
@@ -314,14 +313,14 @@ class ResourceTypeController extends Controller
                 $resource_type_item_type->delete();
                 $permitted_user->delete();
                 $resource_type->delete();
-                UtilityResponse::successNoContent();
+                \App\Response\Responses::successNoContent();
             } catch (QueryException $e) {
-                UtilityResponse::foreignKeyConstraintError();
+                \App\Response\Responses::foreignKeyConstraintError();
             } catch (Exception $e) {
-                UtilityResponse::notFound(trans('entities.resource-type'), $e);
+                \App\Response\Responses::notFound(trans('entities.resource-type'), $e);
             }
         } else {
-            UtilityResponse::foreignKeyConstraintError();
+            \App\Response\Responses::foreignKeyConstraintError();
         }
     }
 
@@ -345,7 +344,7 @@ class ResourceTypeController extends Controller
         $resource_type = (new ResourceType())->instance($resource_type_id);
 
         if ($resource_type === null) {
-            UtilityResponse::failedToSelectModelForUpdateOrDelete();
+            \App\Response\Responses::failedToSelectModelForUpdateOrDelete();
         }
 
         \App\Request\BodyValidation::checkForEmptyPatch();
@@ -370,10 +369,10 @@ class ResourceTypeController extends Controller
         try {
             $resource_type->save();
         } catch (Exception $e) {
-            UtilityResponse::failedToSaveModelForUpdate();
+            \App\Response\Responses::failedToSaveModelForUpdate();
         }
 
-        UtilityResponse::successNoContent();
+        \App\Response\Responses::successNoContent();
     }
 
     /**
@@ -391,7 +390,7 @@ class ResourceTypeController extends Controller
             $id = $this->hash->encode('item_type', $item_type['item_type_id']);
 
             if ($id === false) {
-                UtilityResponse::unableToDecode();
+                \App\Response\Responses::unableToDecode();
             }
 
             $parameters['item_type_id']['allowed_values'][$id] = [

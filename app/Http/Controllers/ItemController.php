@@ -15,7 +15,6 @@ use App\Models\Category;
 use App\Models\Item;
 use App\Models\Subcategory;
 use App\Utilities\Pagination as UtilityPagination;
-use App\Utilities\Response as UtilityResponse;
 use Exception;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\JsonResponse;
@@ -171,7 +170,7 @@ class ItemController extends Controller
         );
 
         if ($item === null) {
-            UtilityResponse::notFound(trans('entities.item'));
+            \App\Response\Responses::notFound(trans('entities.item'));
         }
 
         $headers = new Header();
@@ -286,7 +285,7 @@ class ItemController extends Controller
         $item = $item_model->single($resource_type_id, $resource_id, $item_id);
 
         if ($item === null) {
-            UtilityResponse::notFound(trans('entities.item'));
+            \App\Response\Responses::notFound(trans('entities.item'));
         }
 
         $get = Get::init()->
@@ -352,7 +351,7 @@ class ItemController extends Controller
             $item_type = $item_interface->create((int) $item->id);
 
         } catch (Exception $e) {
-            UtilityResponse::failedToSaveModelForCreate();
+            \App\Response\Responses::failedToSaveModelForCreate();
         }
 
         return response()->json(
@@ -398,7 +397,7 @@ class ItemController extends Controller
         $item_type = $item_interface->instance((int) $item_id);
 
         if ($item === null || $item_type === null) {
-            UtilityResponse::failedToSelectModelForUpdateOrDelete();
+            \App\Response\Responses::failedToSelectModelForUpdateOrDelete();
         }
 
         try {
@@ -408,10 +407,10 @@ class ItemController extends Controller
                 $item_interface->update(request()->all(), $item_type);
             }
         } catch (Exception $e) {
-            UtilityResponse::failedToSaveModelForUpdate();
+            \App\Response\Responses::failedToSaveModelForUpdate();
         }
 
-        return UtilityResponse::successNoContent();
+        return \App\Response\Responses::successNoContent();
     }
 
     /**
@@ -444,12 +443,12 @@ class ItemController extends Controller
         $item = (new Item())->instance($resource_type_id, $resource_id, $item_id);
 
         if ($item === null || $item_type === null) {
-            UtilityResponse::notFound(trans('entities.item'));
+            \App\Response\Responses::notFound(trans('entities.item'));
         }
 
         if (in_array($item_interface->type(), ['allocated-expense', 'simple-expense']) &&
             $item_model->hasCategoryAssignments($item_id) === true) {
-                UtilityResponse::foreignKeyConstraintError();
+                \App\Response\Responses::foreignKeyConstraintError();
         }
 
         try {
@@ -457,11 +456,11 @@ class ItemController extends Controller
             $item_type->delete();
             $item->delete();
 
-            UtilityResponse::successNoContent();
+            \App\Response\Responses::successNoContent();
         } catch (QueryException $e) {
-            UtilityResponse::foreignKeyConstraintError();
+            \App\Response\Responses::foreignKeyConstraintError();
         } catch (Exception $e) {
-            UtilityResponse::notFound(trans('entities.item'), $e);
+            \App\Response\Responses::notFound(trans('entities.item'), $e);
         }
     }
 

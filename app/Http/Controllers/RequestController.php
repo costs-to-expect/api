@@ -7,14 +7,12 @@ use App\Option\Get;
 use App\Option\Post;
 use App\Response\Header\Header;
 use App\Request\Parameter;
-use App\Utilities\Response;
 use App\Models\RequestErrorLog;
 use App\Models\RequestLog;
 use App\Models\Transformers\RequestErrorLog as RequestErrorLogTransformer;
 use App\Models\Transformers\RequestLog as RequestLogTransformer;
 use App\Utilities\Pagination as UtilityPagination;
 use App\Validators\Fields\RequestErrorLog as RequestErrorLogValidator;
-use App\Utilities\Response as UtilityResponse;
 use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Config;
@@ -179,9 +177,9 @@ class RequestController extends Controller
             ]));
 
         } catch (Exception $e) {
-            UtilityResponse::failedToSaveModelForCreate();
+            \App\Response\Responses::failedToSaveModelForCreate();
         }
 
-        return Response::successNoContent();
+        return \App\Response\Responses::successNoContent();
     }
 }

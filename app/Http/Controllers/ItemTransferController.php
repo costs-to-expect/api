@@ -13,7 +13,6 @@ use App\Response\Header\Headers;
 use App\Request\Parameter;
 use App\Request\Route;
 use App\Utilities\Pagination as UtilityPagination;
-use App\Utilities\Response as UtilityResponse;
 use App\Validators\Fields\ItemTransfer as ItemTransferValidator;
 use Exception;
 use Illuminate\Database\QueryException;
@@ -219,7 +218,7 @@ class ItemTransferController extends Controller
         );
 
         if ($item_transfer === null) {
-            UtilityResponse::notFound(trans('entities.item_transfer'));
+            \App\Response\Responses::notFound(trans('entities.item_transfer'));
         }
 
         $headers = new Headers();
@@ -258,7 +257,7 @@ class ItemTransferController extends Controller
             $new_resource_id = $this->hash->decode('resource', request()->input('resource_id'));
 
             if ($new_resource_id === false) {
-                return UtilityResponse::unableToDecode();
+                return \App\Response\Responses::unableToDecode();
             }
 
             $item = (new Item())->instance($resource_type_id, $resource_id, $item_id);
@@ -266,7 +265,7 @@ class ItemTransferController extends Controller
                 $item->resource_id = $new_resource_id;
                 $item->save();
             } else {
-                return UtilityResponse::failedToSelectModelForUpdateOrDelete();
+                return \App\Response\Responses::failedToSelectModelForUpdateOrDelete();
             }
 
             $item_transfer = new ItemTransfer([
@@ -278,12 +277,12 @@ class ItemTransferController extends Controller
             ]);
             $item_transfer->save();
         } catch (QueryException $e) {
-            return UtilityResponse::foreignKeyConstraintError();
+            return \App\Response\Responses::foreignKeyConstraintError();
         } catch (Exception $e) {
-            return UtilityResponse::failedToSaveModelForUpdate();
+            return \App\Response\Responses::failedToSaveModelForUpdate();
         }
 
-        return UtilityResponse::successNoContent();
+        return \App\Response\Responses::successNoContent();
     }
 
     /**
@@ -310,7 +309,7 @@ class ItemTransferController extends Controller
             $id = $this->hash->encode('resource', $resource['resource_id']);
 
             if ($id === false) {
-                UtilityResponse::unableToDecode();
+                \App\Response\Responses::unableToDecode();
             }
 
             $conditional_post_parameters['resource_id']['allowed_values'][$id] = [
