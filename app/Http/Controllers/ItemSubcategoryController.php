@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Option\Delete;
 use App\Option\Get;
 use App\Option\Post;
+use App\Response\Cache;
 use App\Response\Header\Header;
 use App\Request\Route;
 use App\Models\ItemCategory;
@@ -49,30 +50,37 @@ class ItemSubcategoryController extends Controller
             $this->permitted_resource_types
         );
 
-        if ($item_category_id === 'nill') {
-            \App\Response\Responses::notFound(trans('entities.item-subcategory'));
+        $cache_control = new Cache\Control($this->user_id);
+        $cache_control->setTtlOneWeek();
+
+        $cache_collection = new Cache\Collection();
+        $cache_collection->setFromCache($cache_control->get(request()->getRequestUri()));
+
+        if ($cache_collection->valid() === false) {
+
+            $item_sub_category = (new ItemSubcategory())->paginatedCollection(
+                $resource_type_id,
+                $resource_id,
+                $item_id,
+                $item_category_id
+            );
+
+            if ($item_sub_category === null || (is_array($item_sub_category) && count($item_sub_category) === 0)) {
+                $collection = [];
+            } else {
+                $collection = [(new ItemSubcategoryTransformer($item_sub_category[0]))->toArray()];
+            }
+
+            $headers = new Header();
+            $headers->add('X-Total-Count', 1);
+            $headers->add('X-Count', 1);
+            $headers->addCacheControl($cache_control->visibility(), $cache_control->ttl());
+
+            $cache_collection->create(count($collection), $collection, [], $headers->headers());
+            $cache_control->put(request()->getRequestUri(), $cache_collection->content());
         }
 
-        $item_sub_category = (new ItemSubcategory())->paginatedCollection(
-            $resource_type_id,
-            $resource_id,
-            $item_id,
-            $item_category_id
-        );
-
-        if ($item_sub_category === null || (is_array($item_sub_category) && count($item_sub_category) === 0)) {
-            \App\Response\Responses::notFound(trans('entities.item-subcategory'));
-        }
-
-        $headers = new Header();
-        $headers->add('X-Total-Count', 1);
-        $headers->add('X-Count', 1);
-
-        return response()->json(
-            [(new ItemSubcategoryTransformer($item_sub_category[0]))->toArray()],
-            200,
-            $headers->headers()
-        );
+        return response()->json($cache_collection->collection(), 200, $cache_collection->headers());
     }
 
     /**
