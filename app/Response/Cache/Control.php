@@ -72,6 +72,24 @@ class Control
     }
 
     /**
+     * Clear any keys matching the supplied key_prefix
+     *
+     * @param string $key_prefix
+     * @param bool $include_summaries
+     */
+    public function clearMatchingKeys(
+        string $key_prefix,
+        bool $include_summaries = false
+    ): void
+    {
+        $keys = $this->matchingKeys($key_prefix, $include_summaries);
+
+        foreach ($keys as $key) {
+            LaravelCache::forget(str_replace_first(Config::get('cache.prefix'), '', $key['key']));
+        }
+    }
+
+    /**
      * Check the cache to see if there is a stored value for the given key
      *
      * @param string $key
@@ -169,5 +187,24 @@ class Control
     public function visibility(): string
     {
         return $this->visibility;
+    }
+
+    /**
+     * Fetch any matching cache keys, performs a wildcard search
+     *
+     * @param string $key_prefix
+     * @param bool $include_summaries
+     *
+     * @return array
+     */
+    private function matchingKeys(
+        string $key_prefix,
+        bool $include_summaries = false
+    ): array
+    {
+        return (new \App\Models\Cache())->matchingKeys(
+            Config::get('cache.prefix') . $this->key_prefix . $key_prefix,
+            $include_summaries
+        );
     }
 }
