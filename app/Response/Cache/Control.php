@@ -84,7 +84,7 @@ class Control
      */
     public function clearMatchingKeys(
         string $key_prefix,
-        bool $include_summaries = false
+        bool $include_summaries = true
     ): void
     {
         $keys = $this->matchingKeys($key_prefix, $include_summaries);
