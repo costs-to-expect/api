@@ -19,6 +19,7 @@ use App\Validators\Fields\Category as CategoryValidator;
 use Exception;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Config;
 
 /**
@@ -263,6 +264,9 @@ class CategoryController extends Controller
             $this->permitted_resource_types
         );
 
+        $cache_control = new Cache\Control(Auth::user()->id);
+        $cache_key = new Cache\Key();
+
         $validator = (new CategoryValidator)->create([
             'resource_type_id' => $resource_type_id
         ]);
@@ -275,6 +279,8 @@ class CategoryController extends Controller
                 'resource_type_id' => $resource_type_id
             ]);
             $category->save();
+
+            $cache_control->clearMatchingKeys($cache_key->categories($resource_type_id));
         } catch (Exception $e) {
            \App\Response\Responses::failedToSaveModelForCreate();
         }
@@ -305,8 +311,12 @@ class CategoryController extends Controller
             true
         );
 
+        $cache_control = new Cache\Control(Auth::user()->id);
+        $cache_key = new Cache\Key();
+
         try {
             (new Category())->find($category_id)->delete();
+            $cache_control->clearMatchingKeys($cache_key->categories($resource_type_id));
 
             \App\Response\Responses::successNoContent();
         } catch (QueryException $e) {
@@ -332,6 +342,9 @@ class CategoryController extends Controller
             $this->permitted_resource_types,
             true
         );
+
+        $cache_control = new Cache\Control(Auth::user()->id);
+        $cache_key = new Cache\Key();
 
         $category = (new Category())->instance($category_id);
 
@@ -360,6 +373,7 @@ class CategoryController extends Controller
 
         try {
             $category->save();
+            $cache_control->clearMatchingKeys($cache_key->categories($resource_type_id));
         } catch (Exception $e) {
             \App\Response\Responses::failedToSaveModelForUpdate();
         }
