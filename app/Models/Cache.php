@@ -22,24 +22,38 @@ class Cache extends Model
 
     /**
      * Fetch all the matching cache keys that are a wildcard match for the
-     * given key prefix
+     * given key prefix, we look for private and public vrsions of the cache
      *
-     * @param string $key_prefix
+     * @param string $public_prefix
+     * @param string $key_wildcard
+     * @param string|null $private_prefix
      * @param bool $include_summaries
      *
      * @return array
      */
     public function matchingKeys(
-        string $key_prefix,
+        string $public_prefix,
+        string $key_wildcard,
+        string $private_prefix = null,
         bool $include_summaries = false
     ): array
     {
-        $result = $this->where('key', 'LIKE', $key_prefix . '%')->
-            orWhere('key', '=', $key_prefix);
+        $result = $this->where('key', 'LIKE', $public_prefix . $key_wildcard . '%')->
+            orWhere('key', '=', $public_prefix . $key_wildcard);
+
+        if ($private_prefix !== null) {
+            $result->orWhere('key', 'LIKE', $private_prefix . $key_wildcard . '%')->
+                orWhere('key', '=', $private_prefix . $key_wildcard);
+        }
 
         if ($include_summaries === true) {
-            $result->orWhere('key', 'LIKE', str_replace('v2/', 'v2/summary/', $key_prefix) . '%')->
-                orWhere('key', '=', str_replace('v2/', 'v2/summary/', $key_prefix));
+            $result->orWhere('key', 'LIKE', str_replace('v2/', 'v2/summary/', $public_prefix . $key_wildcard) . '%')->
+                orWhere('key', '=', str_replace('v2/', 'v2/summary/', $public_prefix . $key_wildcard));
+
+            if ($private_prefix !== null) {
+                $result->orWhere('key', 'LIKE', str_replace('v2/', 'v2/summary/', $private_prefix . $key_wildcard) . '%')
+                    ->orWhere('key', '=', str_replace('v2/', 'v2/summary/', $private_prefix . $key_wildcard));
+            }
         }
 
         return $result->select('key')->

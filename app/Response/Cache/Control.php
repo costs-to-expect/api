@@ -18,7 +18,8 @@ class Control
 {
     private bool $cacheable = false;
 
-    private string $key_prefix;
+    private string $key_prefix_private;
+    private string $key_prefix_public;
 
     private int $ttl;
 
@@ -42,10 +43,10 @@ class Control
         }
 
         if ($prefix !== null) {
-            $this->key_prefix = '-' . $prefix . '-';
+            $this->key_prefix_private = '-' . $prefix . '-';
             $this->visibility = 'Private';
         } else {
-            $this->key_prefix = $config['public_key_prefix'];
+            $this->key_prefix_public = $config['public_key_prefix'];
         }
     }
 
@@ -63,12 +64,14 @@ class Control
      * Clear any cache entries for the supplied key
      *
      * @param string $key
-     *
-     * @return bool
      */
-    public function clear(string $key): bool
+    public function clear(string $key): void
     {
-        return LaravelCache::forget($this->key_prefix . $key);
+        if ($this->key_prefix_private !== null) {
+            LaravelCache::forget($this->key_prefix_private . $key);
+        }
+
+        LaravelCache::forget($this->key_prefix_public . $key);
     }
 
     /**
@@ -85,6 +88,7 @@ class Control
         $keys = $this->matchingKeys($key_prefix, $include_summaries);
 
         foreach ($keys as $key) {
+            // We strip the cache prefix as we went to the db and the prefix will be in the strings already
             LaravelCache::forget(str_replace_first(Config::get('cache.prefix'), '', $key['key']));
         }
     }
@@ -98,7 +102,7 @@ class Control
      */
     public function get(string $key): ?array
     {
-        return LaravelCache::get($this->key_prefix . $key);
+        return LaravelCache::get(($this->key_prefix_private ?? $this->key_prefix_public) . $key);
     }
 
     /**
@@ -111,7 +115,7 @@ class Control
     public function put(string $key, array $data): bool
     {
         return LaravelCache::put(
-            $this->key_prefix . $key,
+            ($this->key_prefix_private ?? $this->key_prefix_public) . $key,
             $data,
             $this->ttl
         );
@@ -203,7 +207,9 @@ class Control
     ): array
     {
         return (new \App\Models\Cache())->matchingKeys(
-            Config::get('cache.prefix') . $this->key_prefix . $key_prefix,
+            $this->key_prefix_private,
+            $this->key_prefix_public,
+            Config::get('cache.prefix') . $this->key_prefix_private . $key_prefix,
             $include_summaries
         );
     }
