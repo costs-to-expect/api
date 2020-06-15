@@ -233,6 +233,9 @@ class ResourceTypeController extends Controller
         ]);
         \App\Request\BodyValidation::validateAndReturnErrors($validator);
 
+        $cache_control = new Cache\Control($user_id);
+        $cache_key = new Cache\Key();
+
         try {
             $resource_type = new ResourceType([
                 'name' => request()->input('name'),
@@ -259,6 +262,8 @@ class ResourceTypeController extends Controller
                 'item_type_id' => $item_type_id
             ]);
             $resource_type_item_type->save();
+
+            $cache_control->clearMatchingKeys($cache_key->resourcesTypes());
         } catch (Exception $e) {
             \App\Response\Responses::failedToSaveModelForCreate();
         }
@@ -286,8 +291,13 @@ class ResourceTypeController extends Controller
             true
         );
 
+        $user_id = Auth::user()->id;
+
+        $cache_control = new Cache\Control($user_id);
+        $cache_key = new Cache\Key();
+
         $resource_type_item_type = (new ResourceTypeItemType())->instance($resource_type_id);
-        $permitted_user = (new PermittedUser())->instance($resource_type_id, Auth::user()->id);
+        $permitted_user = (new PermittedUser())->instance($resource_type_id, $user_id);
         $resource_type = (new ResourceType())->find($resource_type_id);
 
         $categories = (new Category())->total(
@@ -313,6 +323,7 @@ class ResourceTypeController extends Controller
                 $resource_type_item_type->delete();
                 $permitted_user->delete();
                 $resource_type->delete();
+                $cache_control->clearMatchingKeys($cache_key->resourcesTypes());
                 \App\Response\Responses::successNoContent();
             } catch (QueryException $e) {
                 \App\Response\Responses::foreignKeyConstraintError();
@@ -341,6 +352,11 @@ class ResourceTypeController extends Controller
             true
         );
 
+        $user_id = Auth::user()->id;
+
+        $cache_control = new Cache\Control($user_id);
+        $cache_key = new Cache\Key();
+
         $resource_type = (new ResourceType())->instance($resource_type_id);
 
         if ($resource_type === null) {
@@ -350,8 +366,8 @@ class ResourceTypeController extends Controller
         \App\Request\BodyValidation::checkForEmptyPatch();
 
         $validator = (new ResourceTypeValidator())->update([
-            'resource_type_id' => intval($resource_type_id),
-            'user_id' => Auth::user()->id
+            'resource_type_id' => (int) ($resource_type_id),
+            'user_id' => $user_id
         ]);
         \App\Request\BodyValidation::validateAndReturnErrors($validator);
 
@@ -368,6 +384,8 @@ class ResourceTypeController extends Controller
 
         try {
             $resource_type->save();
+
+            $cache_control->clearMatchingKeys($cache_key->resourcesTypes());
         } catch (Exception $e) {
             \App\Response\Responses::failedToSaveModelForUpdate();
         }

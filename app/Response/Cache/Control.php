@@ -18,7 +18,7 @@ class Control
 {
     private bool $cacheable = false;
 
-    private string $key_prefix_private;
+    private ?string $key_prefix_private;
     private string $key_prefix_public;
 
     private int $ttl;
@@ -46,8 +46,10 @@ class Control
             $this->key_prefix_private = '-' . $prefix . '-';
             $this->visibility = 'Private';
         } else {
-            $this->key_prefix_public = $config['public_key_prefix'];
+            $this->key_prefix_private = null;
         }
+
+        $this->key_prefix_public = $config['public_key_prefix'];
     }
 
     /**
@@ -196,20 +198,20 @@ class Control
     /**
      * Fetch any matching cache keys, performs a wildcard search
      *
-     * @param string $key_prefix
+     * @param string $key_wildcard
      * @param bool $include_summaries
      *
      * @return array
      */
     private function matchingKeys(
-        string $key_prefix,
+        string $key_wildcard,
         bool $include_summaries = false
     ): array
     {
         return (new \App\Models\Cache())->matchingKeys(
-            $this->key_prefix_private,
-            $this->key_prefix_public,
-            Config::get('cache.prefix') . $this->key_prefix_private . $key_prefix,
+            Config::get('cache.prefix') . $this->key_prefix_public,
+            $key_wildcard,
+            ($this->key_prefix_private !== null ? Config::get('cache.prefix') . $this->key_prefix_private : null),
             $include_summaries
         );
     }

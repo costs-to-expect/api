@@ -15,8 +15,6 @@ class Key
     }
 
     /**
-     * Return the URI for the resources collection
-     *
      * @param int $resource_type_id
      *
      * @return string
@@ -26,5 +24,13 @@ class Key
         return '/v2/resource-types/' .
             $this->hash->encode('resource_type', $resource_type_id) .
             '/resources';
+    }
+
+    /**
+     * @return string
+     */
+    public function resourcesTypes(): string
+    {
+        return '/v2/resource-types';
     }
 }
