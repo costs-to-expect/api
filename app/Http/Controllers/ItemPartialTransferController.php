@@ -114,11 +114,18 @@ class ItemPartialTransferController extends Controller
             true
         );
 
+        $user_id = Auth::user()->id;
+
+        $cache_control = new Cache\Control($user_id);
+        $cache_key = new Cache\Key();
+
         try {
             $partial_transfer = (new ItemPartialTransfer())->find($item_partial_transfer_id);
 
             if ($partial_transfer !== null) {
                 $partial_transfer->delete();
+                $cache_control->clearMatchingKeys($cache_key->partialTransfers($resource_type_id));
+
                 return \App\Response\Responses::successNoContent();
             }
 
@@ -181,6 +188,11 @@ class ItemPartialTransferController extends Controller
             true
         );
 
+        $user_id = Auth::user()->id;
+
+        $cache_control = new Cache\Control($user_id);
+        $cache_key = new Cache\Key();
+
         $validator = (new ItemPartialTransferValidator)->create(
             [
                 'resource_type_id' => $resource_type_id,
@@ -202,9 +214,11 @@ class ItemPartialTransferController extends Controller
                 'to' => $new_resource_id,
                 'item_id' => $item_id,
                 'percentage' => request()->input('percentage'),
-                'transferred_by' => Auth::user()->id
+                'transferred_by' => $user_id
             ]);
             $partial_transfer->save();
+
+            $cache_control->clearMatchingKeys($cache_key->partialTransfers($resource_type_id));
         } catch (QueryException $e) {
             return \App\Response\Responses::foreignKeyConstraintError();
         } catch (Exception $e) {

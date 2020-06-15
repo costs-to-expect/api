@@ -19,6 +19,18 @@ class Key
      *
      * @return string
      */
+    public function partialTransfers(int $resource_type_id): string
+    {
+        return '/v2/resource-types/' .
+            $this->hash->encode('resource_type', $resource_type_id) .
+            '/partial-transfers';
+    }
+
+    /**
+     * @param int $resource_type_id
+     *
+     * @return string
+     */
     public function resources(int $resource_type_id): string
     {
         return '/v2/resource-types/' .
