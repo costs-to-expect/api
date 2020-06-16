@@ -16,6 +16,7 @@ use App\Validators\Fields\ItemCategory as ItemCategoryValidator;
 use Exception;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\Auth;
 
 /**
  * Manage the category for an item row
@@ -257,6 +258,9 @@ class ItemCategoryController extends Controller
             true
         );
 
+        $cache_control = new Cache\Control(Auth::user()->id);
+        $cache_key = new Cache\Key();
+
         $validator = (new ItemCategoryValidator)->create();
         \App\Request\BodyValidation::validateAndReturnErrors(
             $validator,
@@ -275,6 +279,11 @@ class ItemCategoryController extends Controller
                 'category_id' => $category_id
             ]);
             $item_category->save();
+
+            $cache_control->clearMatchingKeys([
+                $cache_key->items($resource_type_id, $resource_id),
+                $cache_key->resourceTypeItems($resource_type_id)
+            ]);
         } catch (Exception $e) {
             \App\Response\Responses::failedToSaveModelForCreate();
         }
@@ -341,6 +350,9 @@ class ItemCategoryController extends Controller
             true
         );
 
+        $cache_control = new Cache\Control(Auth::user()->id);
+        $cache_key = new Cache\Key();
+
         $item_category = (new ItemCategory())->instance(
             $resource_type_id,
             $resource_id,
@@ -354,6 +366,11 @@ class ItemCategoryController extends Controller
 
         try {
             (new ItemCategory())->find($item_category_id)->delete();
+
+            $cache_control->clearMatchingKeys([
+                $cache_key->items($resource_type_id, $resource_id),
+                $cache_key->resourceTypeItems($resource_type_id)
+            ]);
 
             \App\Response\Responses::successNoContent();
         } catch (QueryException $e) {

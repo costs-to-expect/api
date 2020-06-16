@@ -16,6 +16,7 @@ use App\Validators\Fields\ItemSubcategory as ItemSubcategoryValidator;
 use Exception;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\Auth;
 
 /**
  * Manage the category for an item row
@@ -287,6 +288,9 @@ class ItemSubcategoryController extends Controller
             true
         );
 
+        $cache_control = new Cache\Control(Auth::user()->id);
+        $cache_key = new Cache\Key();
+
         if ($item_category_id === 'nill') {
             \App\Response\Responses::notFound(trans('entities.item-subcategory'));
         }
@@ -313,6 +317,11 @@ class ItemSubcategoryController extends Controller
                 'sub_category_id' => $subcategory_id
             ]);
             $item_sub_category->save();
+
+            $cache_control->clearMatchingKeys([
+                $cache_key->items($resource_type_id, $resource_id),
+                $cache_key->resourceTypeItems($resource_type_id)
+            ]);
         } catch (Exception $e) {
             \App\Response\Responses::failedToSaveModelForCreate();
         }
@@ -384,6 +393,9 @@ class ItemSubcategoryController extends Controller
             true
         );
 
+        $cache_control = new Cache\Control(Auth::user()->id);
+        $cache_key = new Cache\Key();
+
         if ($item_category_id === 'nill' || $item_subcategory_id === 'nill') {
             \App\Response\Responses::notFound(trans('entities.item-subcategory'));
         }
@@ -403,6 +415,11 @@ class ItemSubcategoryController extends Controller
 
         try {
             (new ItemSubcategory())->find($item_subcategory_id)->delete();
+
+            $cache_control->clearMatchingKeys([
+                $cache_key->items($resource_type_id, $resource_id),
+                $cache_key->resourceTypeItems($resource_type_id)
+            ]);
 
             \App\Response\Responses::successNoContent();
         } catch (QueryException $e) {
