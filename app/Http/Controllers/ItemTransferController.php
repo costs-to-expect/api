@@ -86,7 +86,8 @@ class ItemTransferController extends Controller
 
             $headers = new Headers();
             $headers->collection($pagination, count($transfers), $total)->
-                addCacheControl($cache_control->visibility(), $cache_control->ttl());
+                addCacheControl($cache_control->visibility(), $cache_control->ttl())->
+                addETag($collection);
 
             $cache_collection->create($total, $collection, $pagination, $headers->headers());
             $cache_control->put(request()->getRequestUri(), $cache_collection->content());

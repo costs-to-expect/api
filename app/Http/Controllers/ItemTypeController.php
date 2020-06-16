@@ -75,6 +75,7 @@ class ItemTypeController extends Controller
             $headers = new Headers();
             $headers->collection($pagination, count($item_types), $total)->
                 addCacheControl($cache_control->visibility(), $cache_control->ttl())->
+                addETag($collection)->
                 addSearch(Parameter\Search::xHeader())->
                 addSort(Parameter\Sort::xHeader());
 

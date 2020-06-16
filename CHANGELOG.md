@@ -2,6 +2,17 @@
 
 The complete changelog for the Costs to Expect REST API, our changelog follows the format defined at https://keepachangelog.com/en/1.0.0/
 
+## [2.11.1] - 2020-06-16
+### Added 
+- We have added an application cache for collections; we include the ETag header however we are not yet returning a 304.
+
+### Changed
+- We have moved our route validators; the route validators sit inside the `App\Request` namespace.
+- We have moved our `Header` utility class; the `Header` class sits inside the `App\Response` namespace.
+- We have moved our `RoutePermission` utility class; the `Permission` class sits inside the `App\Request` namespace.
+- We have moved and simplified our `Parameter` classes; the `Parameter` classes sit inside the `App\Request` namespace.
+- We have moved and renamed the `RequestUtility` class; the `BodyValidation` class sits in the `App\Request` namespace.
+
 ## [v2.11.0] - 2020-06-06
 ### Added
 - We have added search to the categories summary endpoint.

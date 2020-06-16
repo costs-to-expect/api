@@ -85,6 +85,7 @@ class PermittedUserController extends Controller
             $headers = new Headers();
             $headers->collection($pagination, count($permitted_users), $total)->
                 addCacheControl($cache_control->visibility(), $cache_control->ttl())->
+                addETag($collection)->
                 addSearch(Parameter\Search::xHeader())->
                 addSort(Parameter\Sort::xHeader());
 
