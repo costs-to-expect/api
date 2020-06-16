@@ -280,7 +280,7 @@ class ItemCategoryController extends Controller
             ]);
             $item_category->save();
 
-            $cache_control->clearMatchingKeys([
+            $cache_control->clearPrivateCacheKeys([
                 $cache_key->items($resource_type_id, $resource_id),
                 $cache_key->resourceTypeItems($resource_type_id)
             ]);
@@ -367,7 +367,7 @@ class ItemCategoryController extends Controller
         try {
             (new ItemCategory())->find($item_category_id)->delete();
 
-            $cache_control->clearMatchingKeys([
+            $cache_control->clearPrivateCacheKeys([
                 $cache_key->items($resource_type_id, $resource_id),
                 $cache_key->resourceTypeItems($resource_type_id)
             ]);

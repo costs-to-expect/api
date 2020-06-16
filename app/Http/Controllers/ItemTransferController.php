@@ -283,7 +283,7 @@ class ItemTransferController extends Controller
             ]);
             $item_transfer->save();
 
-            $cache_control->clearMatchingKeys([$cache_key->transfers($resource_type_id)]);
+            $cache_control->clearPrivateCacheKeys([$cache_key->transfers($resource_type_id)]);
         } catch (QueryException $e) {
             return \App\Response\Responses::foreignKeyConstraintError();
         } catch (Exception $e) {

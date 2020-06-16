@@ -281,7 +281,7 @@ class CategoryController extends Controller
             ]);
             $category->save();
 
-            $cache_control->clearMatchingKeys([$cache_key->categories($resource_type_id)]);
+            $cache_control->clearPrivateCacheKeys([$cache_key->categories($resource_type_id)]);
         } catch (Exception $e) {
            \App\Response\Responses::failedToSaveModelForCreate();
         }
@@ -317,7 +317,7 @@ class CategoryController extends Controller
 
         try {
             (new Category())->find($category_id)->delete();
-            $cache_control->clearMatchingKeys([$cache_key->categories($resource_type_id)]);
+            $cache_control->clearPrivateCacheKeys([$cache_key->categories($resource_type_id)]);
 
             \App\Response\Responses::successNoContent();
         } catch (QueryException $e) {
@@ -375,7 +375,7 @@ class CategoryController extends Controller
         try {
             $category->save();
 
-            $cache_control->clearMatchingKeys([
+            $cache_control->clearPrivateCacheKeys([
                 // We need to clear categories, resource type items
                 // and items dur to includes so simpler to clear the entire
                 // resource type

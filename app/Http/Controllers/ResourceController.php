@@ -270,7 +270,7 @@ class ResourceController extends Controller
             ]);
             $resource->save();
 
-            $cache_control->clearMatchingKeys([$cache_key->resourceType($resource_type_id)]);
+            $cache_control->clearPrivateCacheKeys([$cache_key->resourceType($resource_type_id)]);
         } catch (Exception $e) {
             \App\Response\Responses::failedToSaveModelForCreate();
         }
@@ -307,7 +307,7 @@ class ResourceController extends Controller
         try {
             (new Resource())->find($resource_id)->delete();
 
-            $cache_control->clearMatchingKeys([$cache_key->resourceType($resource_type_id)]);
+            $cache_control->clearPrivateCacheKeys([$cache_key->resourceType($resource_type_id)]);
 
             \App\Response\Responses::successNoContent();
         } catch (QueryException $e) {
@@ -368,7 +368,7 @@ class ResourceController extends Controller
         try {
             $resource->save();
 
-            $cache_control->clearMatchingKeys([$cache_key->resourceType($resource_type_id)]);
+            $cache_control->clearPrivateCacheKeys([$cache_key->resourceType($resource_type_id)]);
         } catch (Exception $e) {
             \App\Response\Responses::failedToSaveModelForUpdate();
         }
