@@ -36,6 +36,22 @@ class Headers
     }
 
     /**
+     * Add the ETag header
+     *
+     * @param array $content
+     */
+    public function addETag(array $content): Headers
+    {
+        try {
+            $this->headers->addETag($content);
+        } catch (\Exception $e) {
+            // Nothing for now
+        }
+
+        return $this;
+    }
+
+    /**
      * Add the X-Parameters header if the parameters exist
      *
      * @param string|null $parameters_header
