@@ -12,7 +12,7 @@ namespace App\Request\Parameter;
  */
 class Search
 {
-    private static array $fields = [];
+    private static $fields = [];
 
     /**
      * Check the URI for the search parameter, if the format is valid split the

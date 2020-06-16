@@ -12,7 +12,7 @@ namespace App\Request\Parameter;
  */
 class Sort
 {
-    private static array $fields = [];
+    private static $fields = [];
 
     /**
      * Check the URI for the sort parameter, if the format is valid split the

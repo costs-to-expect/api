@@ -19,7 +19,7 @@ class Header
     /**
      * @var array
      */
-    private array $headers;
+    private $headers;
 
     public function __construct()
     {

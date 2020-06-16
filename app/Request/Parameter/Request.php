@@ -20,7 +20,7 @@ use App\Utilities\General;
  */
 class Request
 {
-    private static array $parameters = [];
+    private static $parameters = [];
 
     /**
      * Fetch any GET parameters from the URI and alter the type if necessary

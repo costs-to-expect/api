@@ -30,9 +30,9 @@ class Controller extends BaseController
     protected $user_id = null;
 
     /**
-     * @var boolean Allow the entire collection to be returned ignoring pagination
+     * @var bool Allow the entire collection to be returned ignoring pagination
      */
-    protected bool $allow_entire_collection = false;
+    protected $allow_entire_collection = false;
 
     public function __construct()
     {

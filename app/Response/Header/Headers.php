@@ -13,7 +13,7 @@ namespace App\Response\Header;
  */
 class Headers
 {
-    private Header $headers;
+    private $headers;
 
     public function __construct()
     {

@@ -34,7 +34,7 @@ use Illuminate\Support\Facades\Config;
  */
 class ResourceTypeController extends Controller
 {
-    protected bool $allow_entire_collection = true;
+    protected $allow_entire_collection = true;
 
     /**
      * Return all the resource types

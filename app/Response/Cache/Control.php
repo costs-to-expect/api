@@ -16,14 +16,14 @@ use Illuminate\Support\Facades\Config;
  */
 class Control
 {
-    private bool $cacheable = false;
+    private $cacheable = false;
 
-    private ?string $key_prefix_private;
-    private string $key_prefix_public;
+    private $key_prefix_private;
+    private $key_prefix_public;
 
-    private int $ttl;
+    private $ttl;
 
-    private string $visibility = 'public';
+    private $visibility = 'public';
 
     /**
      * Create an instance of the cache class. The prefix needs to be a

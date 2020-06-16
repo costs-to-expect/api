@@ -14,11 +14,11 @@ namespace App\Response\Cache;
  */
 class Collection
 {
-    private bool $cached;
-    private array $collection;
-    private array $headers;
-    private array $pagination;
-    private int $total;
+    private $cached;
+    private $collection;
+    private $headers;
+    private $pagination;
+    private $total;
 
     /**
      * Create a cache response object
