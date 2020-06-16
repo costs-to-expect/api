@@ -5,20 +5,18 @@ namespace App\Http\Controllers;
 use App\Option\Delete;
 use App\Option\Get;
 use App\Option\Post;
-use App\Utilities\Header;
-use App\Utilities\RoutePermission;
-use App\Validators\Route;
+use App\Response\Cache;
+use App\Response\Header\Header;
+use App\Request\Route;
 use App\Models\ItemCategory;
 use App\Models\ItemSubcategory;
 use App\Models\Subcategory;
 use App\Models\Transformers\ItemSubcategory as ItemSubcategoryTransformer;
-use App\Utilities\Request as UtilityRequest;
-use App\Utilities\Response as UtilityResponse;
 use App\Validators\Fields\ItemSubcategory as ItemSubcategoryValidator;
 use Exception;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 /**
  * Manage the category for an item row
@@ -32,7 +30,6 @@ class ItemSubcategoryController extends Controller
     /**
      * Return the sub category assigned to an item
      *
-     * @param Request $request
      * @param string $resource_type_id
      * @param string $resource_id
      * @param string $item_id
@@ -41,50 +38,55 @@ class ItemSubcategoryController extends Controller
      * @return JsonResponse
      */
     public function index(
-        Request $request,
         string $resource_type_id,
         string $resource_id,
         string $item_id,
         string $item_category_id
     ): JsonResponse
     {
-        Route::item(
+        Route\Validate::item(
             $resource_type_id,
             $resource_id,
             $item_id,
             $this->permitted_resource_types
         );
 
-        if ($item_category_id === 'nill') {
-            UtilityResponse::notFound(trans('entities.item-subcategory'));
+        $cache_control = new Cache\Control($this->user_id);
+        $cache_control->setTtlOneWeek();
+
+        $cache_collection = new Cache\Collection();
+        $cache_collection->setFromCache($cache_control->get(request()->getRequestUri()));
+
+        if ($cache_collection->valid() === false) {
+
+            $item_sub_category = (new ItemSubcategory())->paginatedCollection(
+                $resource_type_id,
+                $resource_id,
+                $item_id,
+                $item_category_id
+            );
+
+            if ($item_sub_category === null || (is_array($item_sub_category) && count($item_sub_category) === 0)) {
+                $collection = [];
+            } else {
+                $collection = [(new ItemSubcategoryTransformer($item_sub_category[0]))->toArray()];
+            }
+
+            $headers = new Header();
+            $headers->add('X-Total-Count', 1);
+            $headers->add('X-Count', 1);
+            $headers->addCacheControl($cache_control->visibility(), $cache_control->ttl());
+
+            $cache_collection->create(count($collection), $collection, [], $headers->headers());
+            $cache_control->put(request()->getRequestUri(), $cache_collection->content());
         }
 
-        $item_sub_category = (new ItemSubcategory())->paginatedCollection(
-            $resource_type_id,
-            $resource_id,
-            $item_id,
-            $item_category_id
-        );
-
-        if ($item_sub_category === null || (is_array($item_sub_category) && count($item_sub_category) === 0)) {
-            UtilityResponse::notFound(trans('entities.item-subcategory'));
-        }
-
-        $headers = new Header();
-        $headers->add('X-Total-Count', 1);
-        $headers->add('X-Count', 1);
-
-        return response()->json(
-            [(new ItemSubcategoryTransformer($item_sub_category[0]))->toArray()],
-            200,
-            $headers->headers()
-        );
+        return response()->json($cache_collection->collection(), 200, $cache_collection->headers());
     }
 
     /**
      * Return a single item
      *
-     * @param Request $request
      * @param string $resource_id
      * @param string $resource_type_id
      * @param string $item_id
@@ -94,7 +96,6 @@ class ItemSubcategoryController extends Controller
      * @return JsonResponse
      */
     public function show(
-        Request $request,
         string $resource_type_id,
         string $resource_id,
         string $item_id,
@@ -102,7 +103,7 @@ class ItemSubcategoryController extends Controller
         string $item_subcategory_id
     ): JsonResponse
     {
-        Route::item(
+        Route\Validate::item(
             $resource_type_id,
             $resource_id,
             $item_id,
@@ -110,7 +111,7 @@ class ItemSubcategoryController extends Controller
         );
 
         if ($item_category_id === 'nill' || $item_subcategory_id === 'nill') {
-            UtilityResponse::notFound(trans('entities.item-subcategory'));
+            \App\Response\Responses::notFound(trans('entities.item-subcategory'));
         }
 
         $item_sub_category = (new ItemSubcategory())->single(
@@ -122,7 +123,7 @@ class ItemSubcategoryController extends Controller
         );
 
         if ($item_sub_category === null) {
-            UtilityResponse::notFound(trans('entities.item-subcategory'));
+            \App\Response\Responses::notFound(trans('entities.item-subcategory'));
         }
 
         $headers = new Header();
@@ -152,14 +153,14 @@ class ItemSubcategoryController extends Controller
         string $item_category_id
     ): JsonResponse
     {
-        Route::item(
+        Route\Validate::item(
             $resource_type_id,
             $resource_id,
             $item_id,
             $this->permitted_resource_types
         );
 
-        $permissions = RoutePermission::item(
+        $permissions = Route\Permission::item(
             $resource_type_id,
             $resource_id,
             $item_id,
@@ -167,12 +168,12 @@ class ItemSubcategoryController extends Controller
         );
 
         if ($item_category_id === 'nill') {
-            UtilityResponse::notFound(trans('entities.item-subcategory'));
+            \App\Response\Responses::notFound(trans('entities.item-subcategory'));
         }
 
         $item_category = (new ItemCategory())->find($item_category_id);
         if ($item_category === null) {
-            UtilityResponse::notFound(trans('entities.item-category'));
+            \App\Response\Responses::notFound(trans('entities.item-category'));
         }
 
         $get = Get::init()->
@@ -214,14 +215,14 @@ class ItemSubcategoryController extends Controller
         string $item_subcategory_id
     ): JsonResponse
     {
-        Route::item(
+        Route\Validate::item(
             $resource_type_id,
             $resource_id,
             $item_id,
             $this->permitted_resource_types
         );
 
-        $permissions = RoutePermission::item(
+        $permissions = Route\Permission::item(
             $resource_type_id,
             $resource_id,
             $item_id,
@@ -229,7 +230,7 @@ class ItemSubcategoryController extends Controller
         );
 
         if ($item_category_id === 'nill' || $item_subcategory_id === 'nill') {
-            UtilityResponse::notFound(trans('entities.item-subcategory'));
+            \App\Response\Responses::notFound(trans('entities.item-subcategory'));
         }
 
         $item_sub_category = (new ItemSubcategory())->single(
@@ -241,7 +242,7 @@ class ItemSubcategoryController extends Controller
         );
 
         if ($item_sub_category === null) {
-            UtilityResponse::notFound(trans('entities.item-subcategory'));
+            \App\Response\Responses::notFound(trans('entities.item-subcategory'));
         }
 
         $get = Get::init()->
@@ -265,7 +266,6 @@ class ItemSubcategoryController extends Controller
     /**
      * Assign the sub category
      *
-     * @param Request $request
      * @param string $resource_type_id
      * @param string $resource_id
      * @param string $item_id
@@ -274,14 +274,13 @@ class ItemSubcategoryController extends Controller
      * @return JsonResponse
      */
     public function create(
-        Request $request,
         string $resource_type_id,
         string $resource_id,
         string $item_id,
         string $item_category_id
     ): JsonResponse
     {
-        Route::item(
+        Route\Validate::item(
             $resource_type_id,
             $resource_id,
             $item_id,
@@ -289,8 +288,11 @@ class ItemSubcategoryController extends Controller
             true
         );
 
+        $cache_control = new Cache\Control(Auth::user()->id);
+        $cache_key = new Cache\Key();
+
         if ($item_category_id === 'nill') {
-            UtilityResponse::notFound(trans('entities.item-subcategory'));
+            \App\Response\Responses::notFound(trans('entities.item-subcategory'));
         }
 
         $item_category = (new ItemCategory())
@@ -298,16 +300,16 @@ class ItemSubcategoryController extends Controller
             ->find($item_category_id);
 
         $validator = (new ItemSubcategoryValidator)->create(['category_id' => $item_category->category_id]);
-        UtilityRequest::validateAndReturnErrors(
+        \App\Request\BodyValidation::validateAndReturnErrors(
             $validator,
             $this->fieldsData($item_category_id)
         );
 
         try {
-            $subcategory_id = $this->hash->decode('subcategory', $request->input('subcategory_id'));
+            $subcategory_id = $this->hash->decode('subcategory', request()->input('subcategory_id'));
 
             if ($subcategory_id === false) {
-                UtilityResponse::unableToDecode();
+                \App\Response\Responses::unableToDecode();
             }
 
             $item_sub_category = new ItemSubcategory([
@@ -315,8 +317,13 @@ class ItemSubcategoryController extends Controller
                 'sub_category_id' => $subcategory_id
             ]);
             $item_sub_category->save();
+
+            $cache_control->clearMatchingKeys([
+                $cache_key->items($resource_type_id, $resource_id),
+                $cache_key->resourceTypeItems($resource_type_id)
+            ]);
         } catch (Exception $e) {
-            UtilityResponse::failedToSaveModelForCreate();
+            \App\Response\Responses::failedToSaveModelForCreate();
         }
 
         return response()->json(
@@ -346,7 +353,7 @@ class ItemSubcategoryController extends Controller
             $id = $this->hash->encode('subcategory', $sub_category->id);
 
             if ($id === false) {
-                UtilityResponse::unableToDecode();
+                \App\Response\Responses::unableToDecode();
             }
 
             $conditional_post_parameters['subcategory_id']['allowed_values'][$id] = [
@@ -362,7 +369,6 @@ class ItemSubcategoryController extends Controller
     /**
      * Delete the assigned sub category
      *
-     * @param Request $request,
      * @param string $resource_type_id,
      * @param string $resource_id,
      * @param string $item_id,
@@ -372,7 +378,6 @@ class ItemSubcategoryController extends Controller
      * @return JsonResponse
      */
     public function delete(
-        Request $request,
         string $resource_type_id,
         string $resource_id,
         string $item_id,
@@ -380,7 +385,7 @@ class ItemSubcategoryController extends Controller
         string $item_subcategory_id
     ): JsonResponse
     {
-        Route::item(
+        Route\Validate::item(
             $resource_type_id,
             $resource_id,
             $item_id,
@@ -388,8 +393,11 @@ class ItemSubcategoryController extends Controller
             true
         );
 
+        $cache_control = new Cache\Control(Auth::user()->id);
+        $cache_key = new Cache\Key();
+
         if ($item_category_id === 'nill' || $item_subcategory_id === 'nill') {
-            UtilityResponse::notFound(trans('entities.item-subcategory'));
+            \App\Response\Responses::notFound(trans('entities.item-subcategory'));
         }
 
         $item_sub_category = (new ItemSubcategory())->instance(
@@ -401,18 +409,23 @@ class ItemSubcategoryController extends Controller
         );
 
         if ($item_sub_category === null) {
-            UtilityResponse::notFound(trans('entities.item-subcategory'));
+            \App\Response\Responses::notFound(trans('entities.item-subcategory'));
         }
 
 
         try {
             (new ItemSubcategory())->find($item_subcategory_id)->delete();
 
-            UtilityResponse::successNoContent();
+            $cache_control->clearMatchingKeys([
+                $cache_key->items($resource_type_id, $resource_id),
+                $cache_key->resourceTypeItems($resource_type_id)
+            ]);
+
+            \App\Response\Responses::successNoContent();
         } catch (QueryException $e) {
-            UtilityResponse::foreignKeyConstraintError();
+            \App\Response\Responses::foreignKeyConstraintError();
         } catch (Exception $e) {
-            UtilityResponse::notFound(trans('entities.item-subcategory'), $e);
+            \App\Response\Responses::notFound(trans('entities.item-subcategory'), $e);
         }
     }
 }

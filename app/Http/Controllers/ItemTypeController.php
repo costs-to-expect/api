@@ -4,18 +4,17 @@ namespace App\Http\Controllers;
 
 use App\Models\ItemType;
 use App\Option\Get;
-use App\Utilities\Header;
+use App\Response\Cache;
+use App\Response\Header\Headers;
+use App\Request\Parameter;
+use App\Request\Route;
 use App\Utilities\Pagination as UtilityPagination;
-use App\Validators\Route;
 use App\Models\Transformers\ItemType as ItemTypeTransformer;
-use App\Utilities\Response as UtilityResponse;
-use App\Validators\SearchParameters;
-use App\Validators\SortParameters;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Config;
 
 /**
- * Manage item types
+ * Manage the item types supported by the API
  *
  * @author Dean Blackborough <dean@g3d-development.com>
  * @copyright Dean Blackborough 2018-2020
@@ -23,7 +22,7 @@ use Illuminate\Support\Facades\Config;
  */
 class ItemTypeController extends Controller
 {
-    protected $allow_entire_collection = true;
+    protected bool $allow_entire_collection = true;
 
     /**
      * Return all the item types
@@ -32,57 +31,59 @@ class ItemTypeController extends Controller
      */
     public function index(): JsonResponse
     {
-        $search_parameters = SearchParameters::fetch(
+        $cache_control = new Cache\Control($this->user_id);
+        $cache_control->setTtlOneYear();
+
+        $search_parameters = Parameter\Search::fetch(
             array_keys(Config::get('api.item-type.searchable'))
         );
 
-        $total = (new ItemType())->totalCount($search_parameters);
-
-        $sort_parameters = SortParameters::fetch(
+        $sort_parameters = Parameter\Sort::fetch(
             Config::get('api.item-type.sortable')
         );
 
-        $pagination = UtilityPagination::init(
-                request()->path(),
-                $total,
-                10,
-                $this->allow_entire_collection
-            )->
-            setSearchParameters($search_parameters)->
-            setSortParameters($sort_parameters)->
-            paging();
+        $cache_collection = new Cache\Collection();
+        $cache_collection->setFromCache($cache_control->get(request()->getRequestUri()));
 
+        if ($cache_collection->valid() === false) {
+            $total = (new ItemType())->totalCount($search_parameters);
 
-        $item_types = (new ItemType())->paginatedCollection(
-            $pagination['offset'],
-            $pagination['limit'],
-            $search_parameters,
-            $sort_parameters
-        );
+            $pagination = UtilityPagination::init(
+                    request()->path(),
+                    $total,
+                    10,
+                    $this->allow_entire_collection
+                )->
+                setSearchParameters($search_parameters)->
+                setSortParameters($sort_parameters)->
+                paging();
 
-        $headers = new Header();
-        $headers->collection($pagination, count($item_types), $total);
+            $item_types = (new ItemType())->paginatedCollection(
+                $pagination['offset'],
+                $pagination['limit'],
+                $search_parameters,
+                $sort_parameters
+            );
 
-        $sort_header = SortParameters::xHeader();
-        if ($sort_header !== null) {
-            $headers->addSort($sort_header);
-        }
-
-        $search_header = SearchParameters::xHeader();
-        if ($search_header !== null) {
-            $headers->addSearch($search_header);
-        }
-
-        return response()->json(
-            array_map(
-                function($item_type) {
+            $collection = array_map(
+                static function($item_type) {
                     return (new ItemTypeTransformer($item_type))->toArray();
                 },
                 $item_types
-            ),
-            200,
-            $headers->headers()
-        );
+            );
+
+            $headers = new Headers();
+            $headers->collection($pagination, count($item_types), $total)->
+                addCacheControl($cache_control->visibility(), $cache_control->ttl())->
+                addETag($collection)->
+                addSearch(Parameter\Search::xHeader())->
+                addSort(Parameter\Sort::xHeader());
+
+            $cache_collection->create($total, $collection, $pagination, $headers->headers());
+            $cache_control->put(request()->getRequestUri(), $cache_collection->content());
+        }
+
+        return response()->json($cache_collection->collection(), 200, $cache_collection->headers());
     }
 
     /**
@@ -94,15 +95,15 @@ class ItemTypeController extends Controller
      */
     public function show(string $item_type_id): JsonResponse
     {
-        Route::itemType((int) $item_type_id);
+        Route\Validate::itemType((int) $item_type_id);
 
         $item_type = (new ItemType())->single($item_type_id);
 
         if ($item_type === null) {
-            UtilityResponse::notFound(trans('entities.item-type'));
+            \App\Response\Responses::notFound(trans('entities.item-type'));
         }
 
-        $headers = new Header();
+        $headers = new Headers();
         $headers->item();
 
         return response()->json(
@@ -142,7 +143,7 @@ class ItemTypeController extends Controller
      */
     public function optionsShow(string $item_type_id): JsonResponse
     {
-        Route::itemType($item_type_id);
+        Route\Validate::itemType($item_type_id);
 
         $get = Get::init()->
             setDescription('route-descriptions.item_type_GET_show')->

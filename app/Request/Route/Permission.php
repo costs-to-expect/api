@@ -1,15 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Utilities;
-
-use App\Validators\Routes\Category;
-use App\Validators\Routes\Item;
-use App\Validators\Routes\ItemCategory;
-use App\Validators\Routes\ItemSubcategory;
-use App\Validators\Routes\Resource;
-use App\Validators\Routes\ResourceType;
-use App\Validators\Routes\Subcategory;
+namespace App\Request\Route;
 
 /**
  * Work out the permissions for each route, permissions are read and manage
@@ -18,7 +10,7 @@ use App\Validators\Routes\Subcategory;
  * @copyright Dean Blackborough 2018-2020
  * @license https://github.com/costs-to-expect/api/blob/master/LICENSE
  */
-class RoutePermission
+class Permission
 {
     /**
      * Returns the `read` and `manage` permission for the current user, checks
@@ -37,12 +29,12 @@ class RoutePermission
     ): array
     {
         return [
-            'view' => Category::existsToUserForViewing(
+            'view' => Validator\Category::existsToUserForViewing(
                 (int) $resource_type_id,
                 (int) $category_id,
                 $permitted_resource_types
             ),
-            'manage' => Category::existsToUserForManagement(
+            'manage' => Validator\Category::existsToUserForManagement(
                 (int) $resource_type_id,
                 (int) $category_id,
                 $permitted_resource_types
@@ -70,13 +62,13 @@ class RoutePermission
     ): array
     {
         return [
-            'view' => Subcategory::existsToUserForViewing(
+            'view' => Validator\Subcategory::existsToUserForViewing(
                 (int) $resource_type_id,
                 (int) $category_id,
                 (int) $subcategory_id,
                 $permitted_resource_types
             ),
-            'manage' => Subcategory::existsToUserForManagement(
+            'manage' => Validator\Subcategory::existsToUserForManagement(
                 (int) $resource_type_id,
                 (int) $category_id,
                 (int) $subcategory_id,
@@ -100,11 +92,11 @@ class RoutePermission
     ): array
     {
         return [
-            'view' => ResourceType::existsToUserForViewing(
+            'view' => Validator\ResourceType::existsToUserForViewing(
                 (int) $resource_type_id,
                 $permitted_resource_types
             ),
-            'manage' => ResourceType::existsToUserForManagement(
+            'manage' => Validator\ResourceType::existsToUserForManagement(
                 (int) $resource_type_id,
                 $permitted_resource_types
             )
@@ -128,12 +120,12 @@ class RoutePermission
     ): array
     {
         return [
-            'view' => Resource::existsToUserForViewing(
+            'view' => Validator\Resource::existsToUserForViewing(
                 (int) $resource_type_id,
                 (int) $resource_id,
                 $permitted_resource_types
             ),
-            'manage' => Resource::existsToUserForManagement(
+            'manage' => Validator\Resource::existsToUserForManagement(
                 (int) $resource_type_id,
                 (int) $resource_id,
                 $permitted_resource_types
@@ -160,13 +152,13 @@ class RoutePermission
     ): array
     {
         return [
-            'view' => Item::existsToUserForViewing(
+            'view' => Validator\Item::existsToUserForViewing(
                 (int) $resource_type_id,
                 (int) $resource_id,
                 (int) $item_id,
                 $permitted_resource_types
             ),
-            'manage' => Item::existsToUserForManagement(
+            'manage' => Validator\Item::existsToUserForManagement(
                 (int) $resource_type_id,
                 (int) $resource_id,
                 (int) $item_id,
@@ -196,14 +188,14 @@ class RoutePermission
     ): array
     {
         return [
-            'view' => ItemCategory::existsToUserForViewing(
+            'view' => Validator\ItemCategory::existsToUserForViewing(
                 (int) $resource_type_id,
                 (int) $resource_id,
                 (int) $item_id,
                 (int) $item_category_id,
                 $permitted_resource_types
             ),
-            'manage' => ItemCategory::existsToUserForManagement(
+            'manage' => Validator\ItemCategory::existsToUserForManagement(
                 (int) $resource_type_id,
                 (int) $resource_id,
                 (int) $item_id,
@@ -236,7 +228,7 @@ class RoutePermission
     ): array
     {
         return [
-        'view' => ItemSubcategory::existsToUserForViewing(
+        'view' => Validator\ItemSubcategory::existsToUserForViewing(
                 (int) $resource_type_id,
                 (int) $resource_id,
                 (int) $item_id,
@@ -244,7 +236,7 @@ class RoutePermission
                 (int) $item_subcategory_id,
                 $permitted_resource_types
             ),
-        'manage' => ItemSubcategory::existsToUserForManagement(
+        'manage' => Validator\ItemSubcategory::existsToUserForManagement(
                 (int) $resource_type_id,
                 (int) $resource_id,
                 (int) $item_id,

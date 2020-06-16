@@ -11,18 +11,14 @@ use App\Option\Delete;
 use App\Option\Get;
 use App\Option\Patch;
 use App\Option\Post;
-use App\Utilities\Header;
+use App\Response\Cache;
+use App\Response\Header\Headers;
+use App\Request\Parameter;
+use App\Request\Route;
 use App\Utilities\Pagination as UtilityPagination;
-use App\Utilities\Request as UtilityRequest;
-use App\Utilities\RoutePermission;
-use App\Validators\Parameters;
-use App\Validators\Route;
 use App\Models\ResourceType;
 use App\Models\Transformers\ResourceType as ResourceTypeTransformer;
-use App\Utilities\Response as UtilityResponse;
 use App\Validators\Fields\ResourceType as ResourceTypeValidator;
-use App\Validators\SearchParameters;
-use App\Validators\SortParameters;
 use Exception;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\JsonResponse;
@@ -38,7 +34,7 @@ use Illuminate\Support\Facades\Config;
  */
 class ResourceTypeController extends Controller
 {
-    protected $allow_entire_collection = true;
+    protected bool $allow_entire_collection = true;
 
     /**
      * Return all the resource types
@@ -47,62 +43,62 @@ class ResourceTypeController extends Controller
      */
     public function index(): JsonResponse
     {
-        $search_parameters = SearchParameters::fetch(
+        $cache_control = new Cache\Control($this->user_id);
+        $cache_control->setTtlOneWeek();
+
+        $search_parameters = Parameter\Search::fetch(
             array_keys(Config::get('api.resource-type.searchable'))
         );
 
-        $total = (new ResourceType())->totalCount(
-            $this->permitted_resource_types,
-            $this->include_public,
-            $search_parameters
-        );
-
-        $sort_parameters = SortParameters::fetch(
+        $sort_parameters = Parameter\Sort::fetch(
             Config::get('api.resource-type.sortable')
         );
 
-        $pagination = UtilityPagination::init(
+        $cache_collection = new Cache\Collection();
+        $cache_collection->setFromCache($cache_control->get(request()->getRequestUri()));
+
+        if ($cache_collection->valid() === false) {
+            $total = (new ResourceType())->totalCount(
+                $this->permitted_resource_types,
+                $this->include_public,
+                $search_parameters
+            );
+
+            $pagination = UtilityPagination::init(
                 request()->path(),
                 $total,
                 10,
                 $this->allow_entire_collection
-            )->
-            setSearchParameters($search_parameters)->
-            setSortParameters($sort_parameters)->
-            paging();
+            )->setSearchParameters($search_parameters)->setSortParameters($sort_parameters)->paging();
 
-        $resource_types = (new ResourceType())->paginatedCollection(
-            $this->permitted_resource_types,
-            $this->include_public,
-            $pagination['offset'],
-            $pagination['limit'],
-            $search_parameters,
-            $sort_parameters
-        );
+            $resource_types = (new ResourceType())->paginatedCollection(
+                $this->permitted_resource_types,
+                $this->include_public,
+                $pagination['offset'],
+                $pagination['limit'],
+                $search_parameters,
+                $sort_parameters
+            );
 
-        $headers = new Header();
-        $headers->collection($pagination, count($resource_types), $total);
-
-        $sort_header = SortParameters::xHeader();
-        if ($sort_header !== null) {
-            $headers->addSort($sort_header);
-        }
-
-        $search_header = SearchParameters::xHeader();
-        if ($search_header !== null) {
-            $headers->addSearch($search_header);
-        }
-
-        return response()->json(
-            array_map(
-                function($resource_type) {
+            $collection = array_map(
+                static function ($resource_type) {
                     return (new ResourceTypeTransformer($resource_type))->toArray();
                 },
                 $resource_types
-            ),
-            200,
-            $headers->headers()
-        );
+            );
+
+            $headers = new Headers();
+            $headers->collection($pagination, count($resource_types), $total)->
+                addCacheControl($cache_control->visibility(), $cache_control->ttl())->
+                addETag($collection)->
+                addSearch(Parameter\Search::xHeader())->
+                addSort(Parameter\Sort::xHeader());
+
+            $cache_collection->create($total, $collection, $pagination, $headers->headers());
+            $cache_control->put(request()->getRequestUri(), $cache_collection->content());
+        }
+
+        return response()->json($cache_collection->collection(), 200, $cache_collection->headers());
     }
 
     /**
@@ -114,12 +110,12 @@ class ResourceTypeController extends Controller
      */
     public function show(string $resource_type_id): JsonResponse
     {
-        Route::resourceType(
+        Route\Validate::resourceType(
             $resource_type_id,
             $this->permitted_resource_types
         );
 
-        $parameters = Parameters::fetch(array_keys(Config::get('api.resource-type.parameters.item')));
+        $parameters = Parameter\Request::fetch(array_keys(Config::get('api.resource-type.parameters.item')));
 
         $resource_type = (new ResourceType())->single(
             $resource_type_id,
@@ -128,7 +124,7 @@ class ResourceTypeController extends Controller
         );
 
         if ($resource_type === null) {
-            UtilityResponse::notFound(trans('entities.resource-type'));
+            \App\Response\Responses::notFound(trans('entities.resource-type'));
         }
 
         $resources = [];
@@ -141,13 +137,8 @@ class ResourceTypeController extends Controller
             );
         }
 
-        $headers = new Header();
-        $headers->item();
-
-        $parameters_header = Parameters::xHeader();
-        if ($parameters_header !== null) {
-            $headers->addParameters($parameters_header);
-        }
+        $headers = new Headers();
+        $headers->item()->addParameters(Parameter\Request::xHeader());
 
         return response()->json(
             (new ResourceTypeTransformer($resource_type, $resources))->toArray(),
@@ -194,12 +185,12 @@ class ResourceTypeController extends Controller
      */
     public function optionsShow(string $resource_type_id): JsonResponse
     {
-        Route::resourceType(
+        Route\Validate::resourceType(
             $resource_type_id,
             $this->permitted_resource_types
         );
 
-        $permissions = RoutePermission::resourceType(
+        $permissions = Route\Permission::resourceType(
             $resource_type_id,
             $this->permitted_resource_types
         );
@@ -241,7 +232,10 @@ class ResourceTypeController extends Controller
         $validator = (new ResourceTypeValidator)->create([
             'user_id' => $user_id
         ]);
-        UtilityRequest::validateAndReturnErrors($validator);
+        \App\Request\BodyValidation::validateAndReturnErrors($validator);
+
+        $cache_control = new Cache\Control($user_id);
+        $cache_key = new Cache\Key();
 
         try {
             $resource_type = new ResourceType([
@@ -261,7 +255,7 @@ class ResourceTypeController extends Controller
             $item_type_id = $this->hash->decode('item_type', request()->input('item_type_id'));
 
             if ($item_type_id === false) {
-                UtilityResponse::unableToDecode();
+                \App\Response\Responses::unableToDecode();
             }
 
             $resource_type_item_type = new ResourceTypeItemType([
@@ -269,8 +263,10 @@ class ResourceTypeController extends Controller
                 'item_type_id' => $item_type_id
             ]);
             $resource_type_item_type->save();
+
+            $cache_control->clearMatchingKeys([$cache_key->resourcesTypes()]);
         } catch (Exception $e) {
-            UtilityResponse::failedToSaveModelForCreate();
+            \App\Response\Responses::failedToSaveModelForCreate();
         }
 
         return response()->json(
@@ -290,14 +286,19 @@ class ResourceTypeController extends Controller
         string $resource_type_id
     ): JsonResponse
     {
-        Route::resourceType(
+        Route\Validate::resourceType(
             $resource_type_id,
             $this->permitted_resource_types,
             true
         );
 
+        $user_id = Auth::user()->id;
+
+        $cache_control = new Cache\Control($user_id);
+        $cache_key = new Cache\Key();
+
         $resource_type_item_type = (new ResourceTypeItemType())->instance($resource_type_id);
-        $permitted_user = (new PermittedUser())->instance($resource_type_id, Auth::user()->id);
+        $permitted_user = (new PermittedUser())->instance($resource_type_id, $user_id);
         $resource_type = (new ResourceType())->find($resource_type_id);
 
         $categories = (new Category())->total(
@@ -323,14 +324,20 @@ class ResourceTypeController extends Controller
                 $resource_type_item_type->delete();
                 $permitted_user->delete();
                 $resource_type->delete();
-                UtilityResponse::successNoContent();
+
+                $cache_control->clearMatchingKeys([
+                    $cache_key->resourcesTypes(),
+                    $cache_key->permittedUsers($resource_type_id)
+                ]);
+
+                \App\Response\Responses::successNoContent();
             } catch (QueryException $e) {
-                UtilityResponse::foreignKeyConstraintError();
+                \App\Response\Responses::foreignKeyConstraintError();
             } catch (Exception $e) {
-                UtilityResponse::notFound(trans('entities.resource-type'), $e);
+                \App\Response\Responses::notFound(trans('entities.resource-type'), $e);
             }
         } else {
-            UtilityResponse::foreignKeyConstraintError();
+            \App\Response\Responses::foreignKeyConstraintError();
         }
     }
 
@@ -345,27 +352,32 @@ class ResourceTypeController extends Controller
         string $resource_type_id
     ): JsonResponse
     {
-        Route::resourceType(
+        Route\Validate::resourceType(
             $resource_type_id,
             $this->permitted_resource_types,
             true
         );
 
+        $user_id = Auth::user()->id;
+
+        $cache_control = new Cache\Control($user_id);
+        $cache_key = new Cache\Key();
+
         $resource_type = (new ResourceType())->instance($resource_type_id);
 
         if ($resource_type === null) {
-            UtilityResponse::failedToSelectModelForUpdateOrDelete();
+            \App\Response\Responses::failedToSelectModelForUpdateOrDelete();
         }
 
-        UtilityRequest::checkForEmptyPatch();
+        \App\Request\BodyValidation::checkForEmptyPatch();
 
         $validator = (new ResourceTypeValidator())->update([
-            'resource_type_id' => intval($resource_type_id),
-            'user_id' => Auth::user()->id
+            'resource_type_id' => (int) ($resource_type_id),
+            'user_id' => $user_id
         ]);
-        UtilityRequest::validateAndReturnErrors($validator);
+        \App\Request\BodyValidation::validateAndReturnErrors($validator);
 
-        UtilityRequest::checkForInvalidFields(
+        \App\Request\BodyValidation::checkForInvalidFields(
             array_merge(
                 (new ResourceType())->patchableFields(),
                 (new ResourceTypeValidator())->dynamicDefinedFields()
@@ -378,11 +390,12 @@ class ResourceTypeController extends Controller
 
         try {
             $resource_type->save();
+            $cache_control->clearMatchingKeys([$cache_key->resourcesTypes()]);
         } catch (Exception $e) {
-            UtilityResponse::failedToSaveModelForUpdate();
+            \App\Response\Responses::failedToSaveModelForUpdate();
         }
 
-        UtilityResponse::successNoContent();
+        \App\Response\Responses::successNoContent();
     }
 
     /**
@@ -400,7 +413,7 @@ class ResourceTypeController extends Controller
             $id = $this->hash->encode('item_type', $item_type['item_type_id']);
 
             if ($id === false) {
-                UtilityResponse::unableToDecode();
+                \App\Response\Responses::unableToDecode();
             }
 
             $parameters['item_type_id']['allowed_values'][$id] = [

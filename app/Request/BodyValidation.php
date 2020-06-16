@@ -1,9 +1,8 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Utilities;
+namespace App\Request;
 
-use App\Utilities\Response as UtilityResponse;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Http\JsonResponse;
 
@@ -18,7 +17,7 @@ use Illuminate\Http\JsonResponse;
  * @copyright Dean Blackborough 2018-2020
  * @license https://github.com/costs-to-expect/api/blob/master/LICENSE
  */
-class Request
+class BodyValidation
 {
     /**
      * Check to see if any of the provided fields are invalid, we throw an error
@@ -39,7 +38,7 @@ class Request
         }
 
         if (count($invalid_fields) !== 0) {
-            return UtilityResponse::invalidFieldsInRequest($invalid_fields);
+            return \App\Response\Responses::invalidFieldsInRequest($invalid_fields);
         }
 
         return null;
@@ -54,7 +53,7 @@ class Request
     public static function checkForEmptyPatch(): ?JsonResponse
     {
         if (count(request()->all()) === 0) {
-            return UtilityResponse::nothingToPatch();
+            return \App\Response\Responses::nothingToPatch();
         }
 
         return null;
@@ -86,7 +85,7 @@ class Request
                 $validation_errors = array_merge_recursive($validation_errors, $allowed_values);
             }
 
-            return UtilityResponse::validationErrors($validation_errors);
+            return \App\Response\Responses::validationErrors($validation_errors);
         }
 
         return null;

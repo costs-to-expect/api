@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Validators\Routes;
+namespace App\Request\Route\Validator;
 
 use App\Models\ResourceTypeAccess;
 
@@ -24,24 +24,20 @@ class Category
      *
      * @return boolean
      */
-    static public function existsToUserForViewing(
+    public static function existsToUserForViewing(
         $resource_type_id,
         $category_id,
         array $permitted_resource_types
     ): bool
     {
-        if (
+        return !(
             $category_id === 'nill' ||
             (new ResourceTypeAccess())->categoryExistsToUser(
                 $resource_type_id,
                 $category_id,
                 $permitted_resource_types
             ) === false
-        ) {
-            return false;
-        }
-
-        return true;
+        );
     }
 
     /**
@@ -54,13 +50,13 @@ class Category
      *
      * @return boolean
      */
-    static public function existsToUserForManagement(
+    public static function existsToUserForManagement(
         $resource_type_id,
         $category_id,
         array $permitted_resource_types
     ): bool
     {
-        if (
+        return !(
             $category_id === 'nill' ||
             (new ResourceTypeAccess())->categoryExistsToUser(
                 $resource_type_id,
@@ -68,10 +64,6 @@ class Category
                 $permitted_resource_types,
                 true
             ) === false
-        ) {
-            return false;
-        }
-
-        return true;
+        );
     }
 }

@@ -7,21 +7,19 @@ use App\Option\Delete;
 use App\Option\Get;
 use App\Option\Patch;
 use App\Option\Post;
-use App\Utilities\Header;
+Use App\Response\Cache;
+use App\Response\Header\Header;
+use App\Request\Parameter;
+use App\Request\Route;
+use App\Response\Header\Headers;
 use App\Utilities\Pagination as UtilityPagination;
-use App\Utilities\RoutePermission;
-use App\Validators\Parameters;
-use App\Validators\Route;
 use App\Models\Category;
 use App\Models\Transformers\Category as CategoryTransformer;
-use App\Utilities\Request as UtilityRequest;
-use App\Utilities\Response as UtilityResponse;
 use App\Validators\Fields\Category as CategoryValidator;
-use App\Validators\SearchParameters;
-use App\Validators\SortParameters;
 use Exception;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Config;
 
 /**
@@ -31,7 +29,7 @@ use Illuminate\Support\Facades\Config;
  */
 class CategoryController extends Controller
 {
-    protected $allow_entire_collection = true;
+    protected bool $allow_entire_collection = true;
 
     /**
      * Return the categories collection
@@ -42,69 +40,72 @@ class CategoryController extends Controller
      */
     public function index($resource_type_id): JsonResponse
     {
-        Route::resourceType(
+        Route\Validate::resourceType(
             (int) $resource_type_id,
             $this->permitted_resource_types
         );
 
-        $search_parameters = SearchParameters::fetch(
+        $cache_control = new Cache\Control($this->user_id);
+        $cache_control->setTtlOneMonth();
+
+        $search_parameters = Parameter\Search::fetch(
             array_keys(Config::get('api.category.searchable'))
         );
 
-        $total = (new Category())->total(
-            (int) $resource_type_id,
-            $this->permitted_resource_types,
-            $this->include_public,
-            $search_parameters
-        );
-
-        $sort_parameters = SortParameters::fetch(
+        $sort_parameters = Parameter\Sort::fetch(
             Config::get('api.category.sortable')
         );
 
-        $pagination = UtilityPagination::init(
-                request()->path(),
-                $total,
-                10,
-                $this->allow_entire_collection
-            )->
-            setSearchParameters($search_parameters)->
-            setSortParameters($sort_parameters)->
-            paging();
+        $cache_collection = new Cache\Collection();
+        $cache_collection->setFromCache($cache_control->get(request()->getRequestUri()));
 
-        $categories = (new Category())->paginatedCollection(
-            (int) $resource_type_id,
-            $this->permitted_resource_types,
-            $this->include_public,
-            $pagination['offset'],
-            $pagination['limit'],
-            $search_parameters,
-            $sort_parameters
-        );
+        if ($cache_collection->valid() === false) {
+            $total = (new Category())->total(
+                (int)$resource_type_id,
+                $this->permitted_resource_types,
+                $this->include_public,
+                $search_parameters
+            );
 
-        $headers = new Header();
-        $headers->collection($pagination, count($categories), $total);
+            $pagination = UtilityPagination::init(
+                    request()->path(),
+                    $total,
+                    10,
+                    $this->allow_entire_collection
+                )->
+                setSearchParameters($search_parameters)->
+                setSortParameters($sort_parameters)->
+                paging();
 
-        $sort_header = SortParameters::xHeader();
-        if ($sort_header !== null) {
-            $headers->addSort($sort_header);
-        }
+            $categories = (new Category())->paginatedCollection(
+                (int)$resource_type_id,
+                $this->permitted_resource_types,
+                $this->include_public,
+                $pagination['offset'],
+                $pagination['limit'],
+                $search_parameters,
+                $sort_parameters
+            );
 
-        $search_header = SearchParameters::xHeader();
-        if ($search_header !== null) {
-            $headers->addSearch($search_header);
-        }
-
-        return response()->json(
-            array_map(
-                function($category) {
+            $collection = array_map(
+                static function ($category) {
                     return (new CategoryTransformer($category))->toArray();
                 },
                 $categories
-            ),
-            200,
-            $headers->headers()
-        );
+            );
+
+            $headers = new Headers();
+            $headers->collection($pagination, count($categories), $total)->
+                addCacheControl($cache_control->visibility(), $cache_control->ttl())->
+                addETag($collection)->
+                addSearch(Parameter\Search::xHeader())->
+                addSort(Parameter\Sort::xHeader());
+
+            $cache_collection->create($total, $collection, $pagination, $headers->headers());
+            $cache_control->put(request()->getRequestUri(), $cache_collection->content());
+        }
+
+        return response()->json($cache_collection->collection(), 200, $cache_collection->headers());
     }
 
     /**
@@ -117,13 +118,13 @@ class CategoryController extends Controller
      */
     public function show($resource_type_id, $category_id): JsonResponse
     {
-        Route::category(
+        Route\Validate::category(
             (int) $resource_type_id,
             (int) $category_id,
             $this->permitted_resource_types
         );
 
-        $parameters = Parameters::fetch(array_keys(Config::get('api.category.parameters.item')));
+        $parameters = Parameter\Request::fetch(array_keys(Config::get('api.category.parameters.item')));
 
         $category = (new Category)->single(
             (int) $resource_type_id,
@@ -131,7 +132,7 @@ class CategoryController extends Controller
         );
 
         if ($category === null) {
-            UtilityResponse::notFound(trans('entities.category'));
+            \App\Response\Responses::notFound(trans('entities.category'));
         }
 
         $subcategories = [];
@@ -150,7 +151,7 @@ class CategoryController extends Controller
         $headers = new Header();
         $headers->item();
 
-        $parameters_header = Parameters::xHeader();
+        $parameters_header = Parameter\Request::xHeader();
         if ($parameters_header !== null) {
             $headers->addParameters($parameters_header);
         }
@@ -171,12 +172,12 @@ class CategoryController extends Controller
      */
     public function optionsIndex($resource_type_id): JsonResponse
     {
-        Route::resourceType(
+        Route\Validate::resourceType(
             (int) $resource_type_id,
             $this->permitted_resource_types
         );
 
-        $permissions = RoutePermission::resourceType(
+        $permissions = Route\Permission::resourceType(
             (int) $resource_type_id,
             $this->permitted_resource_types
         );
@@ -213,13 +214,13 @@ class CategoryController extends Controller
      */
     public function optionsShow($resource_type_id, $category_id): JsonResponse
     {
-        Route::category(
+        Route\Validate::category(
             (int) $resource_type_id,
             (int) $category_id,
             $this->permitted_resource_types
         );
 
-        $permissions = RoutePermission::category(
+        $permissions = Route\Permission::category(
             (int) $resource_type_id,
             (int) $category_id,
             $this->permitted_resource_types
@@ -259,15 +260,18 @@ class CategoryController extends Controller
      */
     public function create($resource_type_id): JsonResponse
     {
-        Route::resourceType(
+        Route\Validate::resourceType(
             (int) $resource_type_id,
             $this->permitted_resource_types
         );
 
+        $cache_control = new Cache\Control(Auth::user()->id);
+        $cache_key = new Cache\Key();
+
         $validator = (new CategoryValidator)->create([
             'resource_type_id' => $resource_type_id
         ]);
-        UtilityRequest::validateAndReturnErrors($validator);
+        \App\Request\BodyValidation::validateAndReturnErrors($validator);
 
         try {
             $category = new Category([
@@ -276,8 +280,10 @@ class CategoryController extends Controller
                 'resource_type_id' => $resource_type_id
             ]);
             $category->save();
+
+            $cache_control->clearMatchingKeys([$cache_key->categories($resource_type_id)]);
         } catch (Exception $e) {
-           UtilityResponse::failedToSaveModelForCreate();
+           \App\Response\Responses::failedToSaveModelForCreate();
         }
 
         return response()->json(
@@ -299,21 +305,25 @@ class CategoryController extends Controller
         $category_id
     ): JsonResponse
     {
-        Route::category(
+        Route\Validate::category(
             (int) $resource_type_id,
             (int) $category_id,
             $this->permitted_resource_types,
             true
         );
 
+        $cache_control = new Cache\Control(Auth::user()->id);
+        $cache_key = new Cache\Key();
+
         try {
             (new Category())->find($category_id)->delete();
+            $cache_control->clearMatchingKeys([$cache_key->categories($resource_type_id)]);
 
-            UtilityResponse::successNoContent();
+            \App\Response\Responses::successNoContent();
         } catch (QueryException $e) {
-            UtilityResponse::foreignKeyConstraintError();
+            \App\Response\Responses::foreignKeyConstraintError();
         } catch (Exception $e) {
-            UtilityResponse::notFound(trans('entities.category'), $e);
+            \App\Response\Responses::notFound(trans('entities.category'), $e);
         }
     }
 
@@ -327,28 +337,31 @@ class CategoryController extends Controller
      */
     public function update($resource_type_id, $category_id): JsonResponse
     {
-        Route::category(
+        Route\Validate::category(
             (int) $resource_type_id,
             (int) $category_id,
             $this->permitted_resource_types,
             true
         );
 
+        $cache_control = new Cache\Control(Auth::user()->id);
+        $cache_key = new Cache\Key();
+
         $category = (new Category())->instance($category_id);
 
         if ($category === null) {
-            UtilityResponse::failedToSelectModelForUpdateOrDelete();
+            \App\Response\Responses::failedToSelectModelForUpdateOrDelete();
         }
 
-        UtilityRequest::checkForEmptyPatch();
+        \App\Request\BodyValidation::checkForEmptyPatch();
 
         $validator = (new CategoryValidator)->update([
-            'resource_type_id' => intval($category->resource_type_id),
-            'category_id' => intval($category_id)
+            'resource_type_id' => (int)$category->resource_type_id,
+            'category_id' => (int)$category_id
         ]);
-        UtilityRequest::validateAndReturnErrors($validator);
+        \App\Request\BodyValidation::validateAndReturnErrors($validator);
 
-        UtilityRequest::checkForInvalidFields(
+        \App\Request\BodyValidation::checkForInvalidFields(
             array_merge(
                 (new Category())->patchableFields(),
                 (new CategoryValidator)->dynamicDefinedFields()
@@ -361,10 +374,17 @@ class CategoryController extends Controller
 
         try {
             $category->save();
+
+            $cache_control->clearMatchingKeys([
+                // We need to clear categories, resource type items
+                // and items dur to includes so simpler to clear the entire
+                // resource type
+                $cache_key->resourceType($resource_type_id)
+            ]);
         } catch (Exception $e) {
-            UtilityResponse::failedToSaveModelForUpdate();
+            \App\Response\Responses::failedToSaveModelForUpdate();
         }
 
-        UtilityResponse::successNoContent();
+        \App\Response\Responses::successNoContent();
     }
 }

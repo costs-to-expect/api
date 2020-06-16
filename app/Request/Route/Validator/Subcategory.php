@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Validators\Routes;
+namespace App\Request\Route\Validator;
 
 use App\Models\ResourceTypeAccess;
 
@@ -25,14 +25,14 @@ class Subcategory
      *
      * @return boolean
      */
-    static public function existsToUserForViewing(
+    public static function existsToUserForViewing(
         int $resource_type_id,
         int $category_id,
         int $subcategory_id,
         array $permitted_resource_types
     ): bool
     {
-        if (
+        return !(
             $resource_type_id === 'nill' ||
             $category_id === 'nill' ||
             $subcategory_id === 'nill' ||
@@ -42,11 +42,7 @@ class Subcategory
                 $subcategory_id,
                 $permitted_resource_types
             ) === false
-        ) {
-            return false;
-        }
-
-        return true;
+        );
     }
 
     /**
@@ -60,14 +56,14 @@ class Subcategory
      *
      * @return boolean
      */
-    static public function existsToUserForManagement(
+    public static function existsToUserForManagement(
         int $resource_type_id,
         int $category_id,
         int $subcategory_id,
         array $permitted_resource_types
     ): bool
     {
-        if (
+        return !(
             $resource_type_id === 'nill' ||
             $category_id === 'nill' ||
             $subcategory_id === 'nill' ||
@@ -78,10 +74,6 @@ class Subcategory
                 $permitted_resource_types,
                 true
             ) === false
-        ) {
-            return false;
-        }
-
-        return true;
+        );
     }
 }

@@ -5,20 +5,16 @@ namespace App\Http\Controllers;
 use App\Events\RequestError;
 use App\Option\Get;
 use App\Option\Post;
-use App\Utilities\Header;
-use App\Utilities\Request as UtilityRequest;
-use App\Utilities\Response;
-use App\Validators\Parameters;
+use App\Response\Header\Header;
+use App\Request\Parameter;
 use App\Models\RequestErrorLog;
 use App\Models\RequestLog;
 use App\Models\Transformers\RequestErrorLog as RequestErrorLogTransformer;
 use App\Models\Transformers\RequestLog as RequestLogTransformer;
 use App\Utilities\Pagination as UtilityPagination;
 use App\Validators\Fields\RequestErrorLog as RequestErrorLogValidator;
-use App\Utilities\Response as UtilityResponse;
 use Exception;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Config;
 
 /**
@@ -35,15 +31,13 @@ class RequestController extends Controller
     /**
      * Return the paginated request log
      *
-     * @param Request $request
-     *
      * @return JsonResponse
      */
-    public function errorLog(Request $request): JsonResponse
+    public function errorLog(): JsonResponse
     {
         $total = (new RequestErrorLog())->totalCount();
 
-        $pagination = UtilityPagination::init($request->path(), $total, 50)
+        $pagination = UtilityPagination::init(request()->path(), $total, 50)
             ->paging();
 
         $logs = (new RequestErrorLog())->paginatedCollection(
@@ -81,7 +75,7 @@ class RequestController extends Controller
     {
         $total = (new RequestLog())->totalCount();
 
-        $this->collection_parameters = Parameters::fetch(
+        $this->collection_parameters = Parameter\Request::fetch(
             array_keys(Config::get('api.request-access-log.parameters.collection'))
         );
 
@@ -96,7 +90,7 @@ class RequestController extends Controller
         $headers = new Header();
         $headers->collection($pagination, count($log), $total);
 
-        $parameters_header = Parameters::xHeader();
+        $parameters_header = Parameter\Request::xHeader();
         if ($parameters_header !== null) {
             $headers->addParameters($parameters_header);
         }
@@ -112,10 +106,9 @@ class RequestController extends Controller
     /**
      * Generate the OPTIONS request for log
      *
-     * @param Request $request
      * @return JsonResponse
      */
-    public function optionsAccessLog(Request $request)
+    public function optionsAccessLog()
     {
         $get = Get::init()->
             setParameters('api.request-access-log.parameters.collection')->
@@ -130,10 +123,9 @@ class RequestController extends Controller
     /**
      * Generate the OPTIONS request for error log
      *
-     * @param Request $request
      * @return JsonResponse
      */
-    public function optionsErrorLog(Request $request)
+    public function optionsErrorLog()
     {
         $get = Get::init()->
             setDescription('route-descriptions.request_GET_error_log')->
@@ -156,40 +148,38 @@ class RequestController extends Controller
      * Log a request error, these are logged when the web app receives an unexpected
      * http status code response
      *
-     * @param Request $request
-     *
      * @return JsonResponse
      */
-    public function createErrorLog(Request $request): JsonResponse
+    public function createErrorLog(): JsonResponse
     {
         $validator = (new RequestErrorLogValidator())->create();
-        UtilityRequest::validateAndReturnErrors($validator);
+        \App\Request\BodyValidation::validateAndReturnErrors($validator);
 
         try {
             $request_error_log = new RequestErrorLog([
-                'method' => $request->input('method'),
-                'source' => $request->input('source'),
-                'expected_status_code' => $request->input('expected_status_code'),
-                'returned_status_code' => $request->input('returned_status_code'),
-                'request_uri' => $request->input('request_uri'),
-                'debug' => $request->input('debug')
+                'method' => request()->input('method'),
+                'source' => request()->input('source'),
+                'expected_status_code' => request()->input('expected_status_code'),
+                'returned_status_code' => request()->input('returned_status_code'),
+                'request_uri' => request()->input('request_uri'),
+                'debug' => request()->input('debug')
             ]);
             $request_error_log->save();
 
             event(new RequestError([
-                'method' => $request->input('method'),
-                'source' => $request->input('source'),
-                'expected_status_code' => $request->input('expected_status_code'),
-                'returned_status_code' => $request->input('returned_status_code'),
-                'request_uri' => $request->input('request_uri'),
-                'referer' => $request->server('HTTP_REFERER', 'NOT SET!'),
-                'debug' => $request->input('debug')
+                'method' => request()->input('method'),
+                'source' => request()->input('source'),
+                'expected_status_code' => request()->input('expected_status_code'),
+                'returned_status_code' => request()->input('returned_status_code'),
+                'request_uri' => request()->input('request_uri'),
+                'referer' => request()->server('HTTP_REFERER', 'NOT SET!'),
+                'debug' => request()->input('debug')
             ]));
 
         } catch (Exception $e) {
-            UtilityResponse::failedToSaveModelForCreate();
+            \App\Response\Responses::failedToSaveModelForCreate();
         }
 
-        return Response::successNoContent();
+        return \App\Response\Responses::successNoContent();
     }
 }

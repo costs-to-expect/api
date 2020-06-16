@@ -5,10 +5,9 @@ namespace App\Http\Controllers\Summary;
 use App\Http\Controllers\Controller;
 use App\Models\Summary\Subcategory;
 use App\Option\Get;
-use App\Utilities\Header;
-use App\Utilities\RoutePermission;
-use App\Validators\Route;
-use App\Validators\SearchParameters;
+use App\Response\Header\Header;
+use App\Request\Parameter;
+use App\Request\Route;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Config;
 
@@ -31,13 +30,13 @@ class SubcategoryController extends Controller
      */
     public function index($resource_type_id, $category_id): JsonResponse
     {
-        Route::category(
+        Route\Validate::category(
             $resource_type_id,
             $category_id,
             $this->permitted_resource_types
         );
 
-        $search_parameters = SearchParameters::fetch(
+        $search_parameters = Parameter\Search::fetch(
             array_keys(Config::get('api.subcategory.summary-searchable'))
         );
 
@@ -71,13 +70,13 @@ class SubcategoryController extends Controller
      */
     public function optionsIndex($resource_type_id, $category_id): JsonResponse
     {
-        Route::category(
+        Route\Validate::category(
             $resource_type_id,
             $category_id,
             $this->permitted_resource_types
         );
 
-        $permissions = RoutePermission::category(
+        $permissions = Route\Permission::category(
             $resource_type_id,
             $category_id,
             $this->permitted_resource_types

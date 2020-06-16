@@ -32,7 +32,7 @@ class Controller extends BaseController
     /**
      * @var boolean Allow the entire collection to be returned ignoring pagination
      */
-    protected $allow_entire_collection = false;
+    protected bool $allow_entire_collection = false;
 
     public function __construct()
     {

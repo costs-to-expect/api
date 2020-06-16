@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Validators;
+namespace App\Request\Parameter;
 
 /**
  * Fetch and validate any search parameters
@@ -10,29 +10,29 @@ namespace App\Validators;
  * @copyright Dean Blackborough 2018-2020
  * @license https://github.com/costs-to-expect/api/blob/master/LICENSE
  */
-class SearchParameters
+class Search
 {
-    private static $searchable_fields = [];
+    private static array $fields = [];
 
     /**
      * Check the URI for the search parameter, if the format is valid split the
      * string and set a search array of search terms and search fields
      */
-    private static function find()
+    private static function find(): void
     {
         $search_string = request()->get('search');
 
         if (is_string($search_string) && strlen($search_string) > 3) {
-            $search_parameters = explode('|', $search_string);
+            $searches = explode('|', $search_string);
 
-            foreach ($search_parameters as $search) {
+            foreach ($searches as $search) {
                 $search = explode(':', $search);
 
                 if (
                     is_array($search) === true &&
                     count($search) === 2
                 ) {
-                    self::$searchable_fields[$search[0]] = $search[1];
+                    self::$fields[$search[0]] = $search[1];
                 }
             }
         }
@@ -42,13 +42,13 @@ class SearchParameters
      * Validate the supplied search parameters array, if they aren't in the
      * expected array they are silently rejected
      *
-     * @param array $searchable_fields
+     * @param array $fields
      */
-    private static function validate(array $searchable_fields)
+    private static function validate(array $fields)
     {
-        foreach (array_keys(self::$searchable_fields) as $key) {
-            if (in_array($key, $searchable_fields) === false) {
-                unset(self::$searchable_fields[$key]);
+        foreach (array_keys(self::$fields) as $key) {
+            if (in_array($key, $fields, true) === false) {
+                unset(self::$fields[$key]);
             }
         }
     }
@@ -57,16 +57,16 @@ class SearchParameters
      * Return all the valid search parameters, check the supplied array against
      * the set search parameters
      *
-     * @param array $searchable_fields
+     * @param array $fields
      *
      * @return array
      */
-    public static function fetch(array $searchable_fields = []): array
+    public static function fetch(array $fields = []): array
     {
         self::find();
-        self::validate($searchable_fields);
+        self::validate($fields);
 
-        return self::$searchable_fields;
+        return self::$fields;
     }
 
     /**
@@ -78,14 +78,14 @@ class SearchParameters
     {
         $header = '';
 
-        foreach (self::$searchable_fields as $key => $value) {
+        foreach (self::$fields as $key => $value) {
             $header .= '|' . $key . ':' . urlencode($value);
         }
 
-        if (strlen($header) > 0) {
+        if ($header !== '') {
             return ltrim($header, '|');
-        } else {
-            return null;
         }
+
+        return null;
     }
 }

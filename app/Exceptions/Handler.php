@@ -4,7 +4,6 @@ namespace App\Exceptions;
 
 use App\Events\InternalError;
 use App\Models\ErrorLog;
-use App\Utilities\Response;
 use Exception;
 use Illuminate\Auth\AuthenticationException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
@@ -52,7 +51,7 @@ class Handler extends ExceptionHandler
     public function render($request, \Throwable $exception)
     {
         if ($exception instanceof AuthenticationException) {
-            Response::authenticationRequired();
+            \App\Response\Responses::authenticationRequired();
         }
 
         $status_code = 500;

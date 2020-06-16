@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\User;
-use Illuminate\Http\Request;
 use Illuminate\Http;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
@@ -43,9 +42,9 @@ class PassportController extends Controller
                 ],
                 201
             );
-        } else {
-            return response()->json(['message' => 'Unauthorised, credentials invalid'], 401);
         }
+
+        return response()->json(['message' => 'Unauthorised, credentials invalid'], 401);
     }
 
     public function check()
@@ -56,14 +55,12 @@ class PassportController extends Controller
     /**
      * Register with the API will return the token
      *
-     * @param Request $request
-     *
      * @return Http\JsonResponse
      */
-    public function register(Request $request)
+    public function register()
     {
         $validator = Validator::make(
-            $request->all(),
+            request()->all(),
             [
                 'name' => 'required',
                 'email' => 'required|email',
@@ -82,7 +79,7 @@ class PassportController extends Controller
             );
         }
 
-        $input = $request->all();
+        $input = request()->all();
 
         $input['password'] = Hash::make($input['password']);
 

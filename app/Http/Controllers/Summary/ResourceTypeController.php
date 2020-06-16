@@ -5,8 +5,8 @@ namespace App\Http\Controllers\Summary;
 use App\Http\Controllers\Controller;
 use App\Models\Summary\ResourceType;
 use App\Option\Get;
-use App\Utilities\Header;
-use App\Validators\SearchParameters;
+use App\Response\Header\Header;
+use App\Request\Parameter;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Config;
 
@@ -26,7 +26,7 @@ class ResourceTypeController extends Controller
      */
     public function index(): JsonResponse
     {
-        $search_parameters = SearchParameters::fetch(
+        $search_parameters = Parameter\Search::fetch(
             array_keys(Config::get('api.resource-type.summary-searchable'))
         );
 

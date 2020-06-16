@@ -8,20 +8,17 @@ use App\Models\Transformers\ItemPartialTransfer as ItemPartialTransferTransforme
 use App\Option\Delete;
 use App\Option\Get;
 use App\Option\Post;
-use App\Utilities\Header;
+use App\Response\Cache;
+use App\Response\Header\Headers;
+use App\Request\Parameter;
+use App\Request\Route;
 use App\Utilities\Pagination as UtilityPagination;
-use App\Utilities\Request as UtilityRequest;
-use App\Utilities\Response as UtilityResponse;
-use App\Utilities\RoutePermission;
 use App\Validators\Fields\ItemPartialTransfer as ItemPartialTransferValidator;
-use App\Validators\Parameters;
-use App\Validators\Route;
 use Exception;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Config;
-use Monolog\Utils;
 
 /**
  * Partial transfer of items
@@ -41,52 +38,62 @@ class ItemPartialTransferController extends Controller
      */
     public function index($resource_type_id): JsonResponse
     {
-        Route::resourceType(
+        $cache_control = new Cache\Control($this->user_id);
+        $cache_control->setTtlOneWeek();
+
+        Route\Validate::resourceType(
             (int) $resource_type_id,
             $this->permitted_resource_types
         );
 
-        $parameters = Parameters::fetch(
+        $parameters = Parameter\Request::fetch(
             array_keys(Config::get('api.item-transfer.parameters.collection'))
         );
 
-        $total = (new ItemPartialTransfer())->total(
-            (int) $resource_type_id,
-            $this->permitted_resource_types,
-            $this->include_public,
-            $parameters
-        );
+        $cache_collection = new Cache\Collection();
+        $cache_collection->setFromCache($cache_control->get(request()->getRequestUri()));
 
-        $pagination = UtilityPagination::init(
+        if ($cache_collection->valid() === false) {
+            $total = (new ItemPartialTransfer())->total(
+                (int)$resource_type_id,
+                $this->permitted_resource_types,
+                $this->include_public,
+                $parameters
+            );
+
+            $pagination = UtilityPagination::init(
                 request()->path(),
                 $total,
                 10,
                 $this->allow_entire_collection
-            )->
-            paging();
+            )->paging();
 
-        $transfers = (new ItemPartialTransfer())->paginatedCollection(
-            (int) $resource_type_id,
-            $this->permitted_resource_types,
-            $this->include_public,
-            $pagination['offset'],
-            $pagination['limit'],
-            $parameters
-        );
+            $transfers = (new ItemPartialTransfer())->paginatedCollection(
+                (int)$resource_type_id,
+                $this->permitted_resource_types,
+                $this->include_public,
+                $pagination['offset'],
+                $pagination['limit'],
+                $parameters
+            );
 
-        $headers = new Header();
-        $headers->collection($pagination, count($transfers), $total);
-
-        return response()->json(
-            array_map(
-                static function($transfer) {
+            $collection = array_map(
+                static function ($transfer) {
                     return (new ItemPartialTransferTransformer($transfer))->toArray();
                 },
                 $transfers
-            ),
-            200,
-            $headers->headers()
-        );
+            );
+
+            $headers = new Headers();
+            $headers->collection($pagination, count($transfers), $total)->
+                addCacheControl($cache_control->visibility(), $cache_control->ttl())->
+                addETag($collection);
+
+            $cache_collection->create($total, $collection, $pagination, $headers->headers());
+            $cache_control->put(request()->getRequestUri(), $cache_collection->content());
+        }
+
+        return response()->json($cache_collection->collection(), 200, $cache_collection->headers());
     }
 
     /**
@@ -102,25 +109,32 @@ class ItemPartialTransferController extends Controller
         $item_partial_transfer_id
     ): JsonResponse
     {
-        Route::resourceType(
+        Route\Validate::resourceType(
             (int) $resource_type_id,
             $this->permitted_resource_types,
             true
         );
+
+        $user_id = Auth::user()->id;
+
+        $cache_control = new Cache\Control($user_id);
+        $cache_key = new Cache\Key();
 
         try {
             $partial_transfer = (new ItemPartialTransfer())->find($item_partial_transfer_id);
 
             if ($partial_transfer !== null) {
                 $partial_transfer->delete();
-                return UtilityResponse::successNoContent();
+                $cache_control->clearMatchingKeys([$cache_key->partialTransfers($resource_type_id)]);
+
+                return \App\Response\Responses::successNoContent();
             }
 
-            return UtilityResponse::failedToSelectModelForUpdateOrDelete();
+            return \App\Response\Responses::failedToSelectModelForUpdateOrDelete();
         } catch (QueryException $e) {
-            return UtilityResponse::foreignKeyConstraintError();
+            return \App\Response\Responses::foreignKeyConstraintError();
         } catch (Exception $e) {
-            return UtilityResponse::notFound(trans('entities.item-partial-transfer'), $e);
+            return \App\Response\Responses::notFound(trans('entities.item-partial-transfer'), $e);
         }
     }
 
@@ -137,7 +151,7 @@ class ItemPartialTransferController extends Controller
         $item_partial_transfer_id
     ): JsonResponse
     {
-        Route::resourceType(
+        Route\Validate::resourceType(
             (int) $resource_type_id,
             $this->permitted_resource_types
         );
@@ -148,10 +162,10 @@ class ItemPartialTransferController extends Controller
         );
 
         if ($item_partial_transfer === null) {
-            UtilityResponse::notFound(trans('entities.item_partial_transfer'));
+            \App\Response\Responses::notFound(trans('entities.item_partial_transfer'));
         }
 
-        $headers = new Header();
+        $headers = new Headers();
         $headers->item();
 
         return response()->json(
@@ -167,7 +181,7 @@ class ItemPartialTransferController extends Controller
         string $item_id
     ): JsonResponse
     {
-        Route::item(
+        Route\Validate::item(
             $resource_type_id,
             $resource_id,
             $item_id,
@@ -175,18 +189,23 @@ class ItemPartialTransferController extends Controller
             true
         );
 
+        $user_id = Auth::user()->id;
+
+        $cache_control = new Cache\Control($user_id);
+        $cache_key = new Cache\Key();
+
         $validator = (new ItemPartialTransferValidator)->create(
             [
                 'resource_type_id' => $resource_type_id,
                 'existing_resource_id' => $resource_id
             ]
         );
-        UtilityRequest::validateAndReturnErrors($validator);
+        \App\Request\BodyValidation::validateAndReturnErrors($validator);
 
         $new_resource_id = $this->hash->decode('resource', request()->input('resource_id'));
 
         if ($new_resource_id === false) {
-            UtilityResponse::unableToDecode();
+            \App\Response\Responses::unableToDecode();
         }
 
         try {
@@ -196,13 +215,15 @@ class ItemPartialTransferController extends Controller
                 'to' => $new_resource_id,
                 'item_id' => $item_id,
                 'percentage' => request()->input('percentage'),
-                'transferred_by' => Auth::user()->id
+                'transferred_by' => $user_id
             ]);
             $partial_transfer->save();
+
+            $cache_control->clearMatchingKeys([$cache_key->partialTransfers($resource_type_id)]);
         } catch (QueryException $e) {
-            return UtilityResponse::foreignKeyConstraintError();
+            return \App\Response\Responses::foreignKeyConstraintError();
         } catch (Exception $e) {
-            return UtilityResponse::failedToSaveModelForCreate();
+            return \App\Response\Responses::failedToSaveModelForCreate();
         }
 
         $item_partial_transfer = (new ItemPartialTransfer())->single(
@@ -211,7 +232,7 @@ class ItemPartialTransferController extends Controller
         );
 
         if ($item_partial_transfer === null) {
-            return UtilityResponse::notFound(trans('entities.item_partial_transfer'));
+            return \App\Response\Responses::notFound(trans('entities.item_partial_transfer'));
         }
 
         return response()->json(
@@ -229,12 +250,12 @@ class ItemPartialTransferController extends Controller
      */
     public function optionsIndex($resource_type_id): JsonResponse
     {
-        Route::resourceType(
+        Route\Validate::resourceType(
             (int) $resource_type_id,
             $this->permitted_resource_types
         );
 
-        $permissions = RoutePermission::resourceType(
+        $permissions = Route\Permission::resourceType(
             (int) $resource_type_id,
             $this->permitted_resource_types
         );
@@ -262,12 +283,12 @@ class ItemPartialTransferController extends Controller
      */
     public function optionsShow($resource_type_id, $item_partial_transfer_id): JsonResponse
     {
-        Route::resourceType(
+        Route\Validate::resourceType(
             (int) $resource_type_id,
             $this->permitted_resource_types
         );
 
-        $permissions = RoutePermission::resourceType(
+        $permissions = Route\Permission::resourceType(
             (int) $resource_type_id,
             $this->permitted_resource_types
         );
@@ -295,14 +316,14 @@ class ItemPartialTransferController extends Controller
         string $item_id
     ): JsonResponse
     {
-        Route::item(
+        Route\Validate::item(
             $resource_type_id,
             $resource_id,
             $item_id,
             $this->permitted_resource_types
         );
 
-        $permissions = RoutePermission::item(
+        $permissions = Route\Permission::item(
             $resource_type_id,
             $resource_id,
             $item_id,
@@ -349,7 +370,7 @@ class ItemPartialTransferController extends Controller
             $id = $this->hash->encode('resource', $resource['resource_id']);
 
             if ($id === false) {
-                UtilityResponse::unableToDecode();
+                \App\Response\Responses::unableToDecode();
             }
 
             $conditional_post_parameters['resource_id']['allowed_values'][$id] = [

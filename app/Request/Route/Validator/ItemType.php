@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Validators\Routes;
+namespace App\Request\Route\Validator;
 
 use App\Models\ResourceTypeAccess;
 
@@ -21,15 +21,11 @@ class ItemType
      *
      * @return boolean
      */
-    static public function existsToUserForViewing($item_type_id): bool
+    public static function existsToUserForViewing($item_type_id): bool
     {
-        if (
+        return !(
             $item_type_id === 'nill' ||
             (new ResourceTypeAccess())->itemTypeExistsToUser($item_type_id) === false
-        ) {
-            return false;
-        }
-
-        return true;
+        );
     }
 }

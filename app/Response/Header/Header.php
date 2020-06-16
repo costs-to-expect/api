@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Utilities;
+namespace App\Response\Header;
 
 /**
  * Generate the headers for the request.
@@ -19,7 +19,7 @@ class Header
     /**
      * @var array
      */
-    private $headers;
+    private array $headers;
 
     public function __construct()
     {
@@ -97,6 +97,37 @@ class Header
     ): Header
     {
         $this->headers[$name] = $value;
+
+        return $this;
+    }
+
+    /**
+     * Add the cache control header
+     *
+     * @param string $visibility
+     * @param int $max_age
+     *
+     * @return Header
+     */
+    public function addCacheControl($visibility, $max_age = 31536000): Header
+    {
+        return $this->add('Cache-Control', "{$visibility}, max-age={$max_age}");
+    }
+
+    /**
+     * Add the eTag
+     *
+     * @param array $content The response data array
+     *
+     * @return Header
+     */
+    public function addETag(array $content): Header
+    {
+        $json = json_encode($content, JSON_THROW_ON_ERROR | 15);
+
+        if ($json !== false) {
+            $this->add('ETag', '"' . md5($json) . '"');
+        }
 
         return $this;
     }

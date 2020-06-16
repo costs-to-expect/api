@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Validators;
+namespace App\Request\Parameter;
 
 /**
  * Fetch and validate any sort parameters
@@ -10,9 +10,9 @@ namespace App\Validators;
  * @copyright Dean Blackborough 2018-2020
  * @license https://github.com/costs-to-expect/api/blob/master/LICENSE
  */
-class SortParameters
+class Sort
 {
-    private static $sortable_fields = [];
+    private static array $fields = [];
 
     /**
      * Check the URI for the sort parameter, if the format is valid split the
@@ -23,9 +23,9 @@ class SortParameters
         $sort_string = request()->get('sort');
 
         if (is_string($sort_string) && strlen($sort_string) > 3) {
-            $sort_parameters = explode('|', $sort_string);
+            $sorts = explode('|', $sort_string);
 
-            foreach ($sort_parameters as $sort) {
+            foreach ($sorts as $sort) {
                 $sort = explode(':', $sort);
 
                 if (
@@ -33,7 +33,7 @@ class SortParameters
                     count($sort) === 2 &&
                     in_array($sort[1], ['asc', 'desc']) === true
                 ) {
-                    self::$sortable_fields[$sort[0]] = $sort[1];
+                    self::$fields[$sort[0]] = $sort[1];
                 }
             }
         }
@@ -43,13 +43,13 @@ class SortParameters
      * Validate the supplied sort parameters array, if they aren't in the
      * expected array they are silently rejected
      *
-     * @param array $sortable_fields
+     * @param array $fields
      */
-    private static function validate(array $sortable_fields)
+    private static function validate(array $fields)
     {
-        foreach (array_keys(self::$sortable_fields) as $key) {
-            if (in_array($key, $sortable_fields) === false) {
-                unset(self::$sortable_fields[$key]);
+        foreach (array_keys(self::$fields) as $key) {
+            if (in_array($key, $fields, true) === false) {
+                unset(self::$fields[$key]);
             }
         }
     }
@@ -58,16 +58,16 @@ class SortParameters
      * Return all the valid sort parameters, check the supplied array against
      * the set sort parameters
      *
-     * @param array $sortable_fields
+     * @param array $fields
      *
      * @return array
      */
-    public static function fetch(array $sortable_fields = []): array
+    public static function fetch(array $fields = []): array
     {
         self::find();
-        self::validate($sortable_fields);
+        self::validate($fields);
 
-        return self::$sortable_fields;
+        return self::$fields;
     }
 
     /**
@@ -79,14 +79,14 @@ class SortParameters
     {
         $header = '';
 
-        foreach (self::$sortable_fields as $key => $value) {
+        foreach (self::$fields as $key => $value) {
             $header .= '|' . $key . ':' . urlencode($value);
         }
 
-        if (strlen($header) > 0) {
+        if ($header !== '') {
             return ltrim($header, '|');
-        } else {
-            return null;
         }
+
+        return null;
     }
 }

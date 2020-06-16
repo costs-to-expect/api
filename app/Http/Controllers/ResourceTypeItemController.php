@@ -4,18 +4,14 @@ namespace App\Http\Controllers;
 
 use App\ResourceTypeItem\Factory;
 use App\Option\Get;
-use App\Utilities\Header;
-use App\Utilities\RoutePermission;
-use App\Validators\FilterParameters;
-use App\Validators\Parameters;
-use App\Validators\Route;
+use App\Response\Cache;
+use App\Request\Parameter;
+use App\Request\Route;
 use App\Models\Category;
 use App\Models\Subcategory;
+use App\Response\Header\Headers;
 use App\Utilities\Pagination as UtilityPagination;
-use App\Validators\SearchParameters;
-use App\Validators\SortParameters;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Request;
 
 /**
  * View items for all resources for a resource type
@@ -29,93 +25,88 @@ class ResourceTypeItemController extends Controller
     /**
      * Return all the items based on the set filter options
      *
-     * @param Request $request
      * @param string $resource_type_id
      *
      * @return JsonResponse
      */
-    public function index(Request $request, string $resource_type_id): JsonResponse
+    public function index(string $resource_type_id): JsonResponse
     {
-        Route::resourceType(
+        Route\Validate::resourceType(
             $resource_type_id,
             $this->permitted_resource_types
         );
+
+        $cache_control = new Cache\Control($this->user_id);
+        $cache_control->setTtlOneDay();
 
         $item_interface = Factory::item($resource_type_id);
 
         $resource_type_item_model = $item_interface->model();
 
-        $collection_parameters = Parameters::fetch(
+        $collection_parameters = Parameter\Request::fetch(
             array_keys($item_interface->collectionParameters()),
             $resource_type_id
         );
 
-        $sort_fields = SortParameters::fetch(
+        $sort_fields = Parameter\Sort::fetch(
             $item_interface->sortParameters()
         );
 
-        $search_parameters = SearchParameters::fetch(
+        $search_parameters = Parameter\Search::fetch(
             $item_interface->searchParameters()
         );
 
-        $filter_parameters = FilterParameters::fetch(
+        $filter_parameters = Parameter\Filter::fetch(
             $item_interface->filterParameters()
         );
 
-        $total = $resource_type_item_model->totalCount(
-            $resource_type_id,
-            $collection_parameters,
-            $search_parameters,
-            $filter_parameters
-        );
+        $cache_collection = new Cache\Collection();
+        $cache_collection->setFromCache($cache_control->get(request()->getRequestUri()));
 
-        $pagination = UtilityPagination::init($request->path(), $total)
-            ->setParameters()
-            ->paging();
+        if ($cache_collection->valid() === false) {
 
-        $items = $resource_type_item_model->paginatedCollection(
-            $resource_type_id,
-            $pagination['offset'],
-            $pagination['limit'],
-            $collection_parameters,
-            $search_parameters,
-            $filter_parameters,
-            $sort_fields
-        );
+            $total = $resource_type_item_model->totalCount(
+                $resource_type_id,
+                $collection_parameters,
+                $search_parameters,
+                $filter_parameters
+            );
 
-        $headers = new Header();
-        $headers->collection($pagination, count($items), $total);
+            $pagination = UtilityPagination::init(request()->path(), $total)
+                ->setParameters()
+                ->paging();
 
-        $filter_header = FilterParameters::xHeader();
-        if ($filter_header !== null) {
-            $headers->addFilter($filter_header);
-        }
+            $items = $resource_type_item_model->paginatedCollection(
+                $resource_type_id,
+                $pagination['offset'],
+                $pagination['limit'],
+                $collection_parameters,
+                $search_parameters,
+                $filter_parameters,
+                $sort_fields
+            );
 
-        $sort_header = SortParameters::xHeader();
-        if ($sort_header !== null) {
-            $headers->addSort($sort_header);
-        }
-
-        $search_header = SearchParameters::xHeader();
-        if ($search_header !== null) {
-            $headers->addSearch($search_header);
-        }
-
-        $parameters_header = Parameters::xHeader();
-        if ($parameters_header !== null) {
-            $headers->addParameters($parameters_header);
-        }
-
-        return response()->json(
-            array_map(
-                function($item) use ($item_interface) {
+            $collection = array_map(
+                static function ($item) use ($item_interface) {
                     return $item_interface->transformer($item)->toArray();
                 },
                 $items
-            ),
-            200,
-            $headers->headers()
-        );
+            );
+
+            $headers = new Headers();
+            $headers->collection($pagination, count($items), $total)->
+                addCacheControl($cache_control->visibility(), $cache_control->ttl())->
+                addETag($collection)->
+                addSearch(Parameter\Search::xHeader())->
+                addSort(Parameter\Sort::xHeader())->
+                addParameters(Parameter\Request::xHeader())->
+                addFilters(Parameter\Filter::xHeader());
+
+            $cache_collection->create($total, $collection, $pagination, $headers->headers());
+            $cache_control->put(request()->getRequestUri(), $cache_collection->content());
+        }
+
+        return response()->json($cache_collection->collection(), 200, $cache_collection->headers());
     }
 
     /**
@@ -127,19 +118,19 @@ class ResourceTypeItemController extends Controller
      */
     public function optionsIndex(string $resource_type_id): JsonResponse
     {
-        Route::resourceType(
+        Route\Validate::resourceType(
             $resource_type_id,
             $this->permitted_resource_types
         );
 
         $item_interface = Factory::item($resource_type_id);
 
-        $permissions = RoutePermission::resourceType(
+        $permissions = Route\Permission::resourceType(
             $resource_type_id,
             $this->permitted_resource_types
         );
 
-        $defined_parameters = Parameters::fetch(
+        $defined_parameters = Parameter\Request::fetch(
             array_keys($item_interface->collectionParameters()),
             $resource_type_id
         );

@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Validators;
+namespace App\Request\Parameter;
 
 use App\ResourceTypeItem\Factory as ResourceTypeItemFactory;
 use App\Item\Factory as ItemFactory;
@@ -18,16 +18,16 @@ use App\Utilities\General;
  * @copyright Dean Blackborough 2018-2020
  * @license https://github.com/costs-to-expect/api/blob/master/LICENSE
  */
-class Parameters
+class Request
 {
-    private static $parameters = [];
+    private static array $parameters = [];
 
     /**
      * Fetch any GET parameters from the URI and alter the type if necessary
      *
      * @param array $parameter_names
      */
-    private static function find(array $parameter_names = [])
+    private static function find(array $parameter_names = []): void
     {
         $request_parameters = request()->all();
 
@@ -60,16 +60,16 @@ class Parameters
      * @param integer|null $resource_type_id
      * @param integer|null $resource_id
      */
-    private static function validate(?int $resource_type_id, ?int $resource_id)
+    private static function validate(?int $resource_type_id, ?int $resource_id): void
     {
         foreach (array_keys(self::$parameters) as $key) {
             switch ($key) {
                 case 'category':
-                    if (array_key_exists($key, self::$parameters) === true) {
-                        if ((new Category())->
-                            where('id', '=', self::$parameters[$key])->exists() === false) {
+                    if (
+                        array_key_exists($key, self::$parameters) === true &&
+                        (new Category())->where('id', '=', self::$parameters[$key])->exists() === false
+                    ) {
                             unset(self::$parameters[$key]);
-                        }
                     }
                     break;
 
@@ -77,18 +77,19 @@ class Parameters
                 case 'include-subcategories':
                 case 'include-resources':
                 case 'include-unpublished':
-                    if (array_key_exists($key, self::$parameters) === true) {
-                        if (General::booleanValue(self::$parameters[$key]) === false) {
-                            unset(self::$parameters[$key]);
-                        }
+                    if (
+                        array_key_exists($key, self::$parameters) === true &&
+                        General::booleanValue(self::$parameters[$key]) === false
+                    ) {
+                        unset(self::$parameters[$key]);
                     }
                     break;
 
                 case 'month':
                     if (array_key_exists($key, self::$parameters) === true &&
-                        intval(self::$parameters[$key] > 0)) {
+                        (int)(self::$parameters[$key] > 0)) {
 
-                        self::$parameters[$key] = intval(self::$parameters[$key]);
+                        self::$parameters[$key] = (int)self::$parameters[$key];
 
                         if (self::$parameters[$key] < 1 ||
                             self::$parameters[$key] > 12) {
@@ -98,11 +99,11 @@ class Parameters
                     break;
 
                 case 'resource-type':
-                    if (array_key_exists($key, self::$parameters) === true) {
-                        if ((new ResourceType())->
-                            where('id', '=', self::$parameters[$key])->exists() === false) {
+                    if (
+                        array_key_exists($key, self::$parameters) === true &&
+                        (new ResourceType())->where('id', '=', self::$parameters[$key])->exists() === false
+                    ) {
                             unset(self::$parameters[$key]);
-                        }
                     }
                     break;
 
@@ -124,21 +125,22 @@ class Parameters
                 case 'months':
                 case 'subcategories':
                 case 'years':
-                    if (array_key_exists($key, self::$parameters) === true) {
-                        if (General::isBooleanValue(self::$parameters[$key]) === false) {
+                    if (
+                        array_key_exists($key, self::$parameters) === true &&
+                        General::isBooleanValue(self::$parameters[$key]) === false
+                    ) {
                             unset(self::$parameters[$key]);
-                        }
                     }
                     break;
 
                 case 'year':
                     if (array_key_exists($key, self::$parameters) === true &&
-                        intval(self::$parameters[$key] > 0)) {
+                        (int)(self::$parameters[$key] > 0)) {
 
-                        self::$parameters[$key] = intval(self::$parameters[$key]);
+                        self::$parameters[$key] = (int)self::$parameters[$key];
 
-                        $min_year_limit = intval(Date('Y'));
-                        $max_year_limit = intval(Date('Y'));
+                        $min_year_limit = (int)Date('Y');
+                        $max_year_limit = (int)(Date('Y'));
 
                         if ($resource_type_id !== null && $resource_id === null) {
                             $item_interface = ResourceTypeItemFactory::item($resource_type_id);
@@ -226,10 +228,10 @@ class Parameters
             }
         }
 
-        if (strlen($header) > 0) {
+        if ($header !== '') {
             return ltrim($header, '|');
-        } else {
-            return null;
         }
+
+        return null;
     }
 }
