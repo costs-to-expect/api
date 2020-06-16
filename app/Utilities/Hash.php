@@ -19,7 +19,7 @@ use Illuminate\Support\Facades\Config;
  */
 class Hash
 {
-    private $hashers;
+    private array $hashers;
 
     public function __construct()
     {

@@ -16,10 +16,7 @@ namespace App\Response\Header;
  */
 class Header
 {
-    /**
-     * @var array
-     */
-    private $headers;
+    private array $headers;
 
     public function __construct()
     {

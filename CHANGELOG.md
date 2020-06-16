@@ -2,7 +2,14 @@
 
 The complete changelog for the Costs to Expect REST API, our changelog follows the format defined at https://keepachangelog.com/en/1.0.0/
 
-## [2.11.1] - 2020-06-16
+## [v2.11.2] - 2020-06-17
+### Changed
+- We have split calls to clear public and private cache keys.
+- We only clear public cache keys when modifying a public resource type.
+- We have updated the web.config; the web.config file was referring to PHP7.3.
+- Added removed class type hints now that we are running PHP7.4.
+
+## [v2.11.1] - 2020-06-16
 ### Added 
 - We have added an application cache for collections; we include the ETag header however we are not yet returning a 304.
 

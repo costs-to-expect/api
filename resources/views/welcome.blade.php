@@ -241,6 +241,10 @@
                         <li>We have moved our `RoutePermission` utility class; the `Permission` class sits inside the `App\Request` namespace.</li>
                         <li>We have moved and simplified our `Parameter` classes; the `Parameter` classes sit inside the `App\Request` namespace.</li>
                         <li>We have moved and renamed the `RequestUtility` class; the `BodyValidation` class sits in the `App\Request` namespace.</li>
+                        <li>We have split calls to clear public and private cache keys.</li>
+                        <li>We only clear public cache keys when modifying a public resource type.</li>
+                        <li>We have updated the web.config; the web.config file was referring to PHP7.3.</li>
+                        <li>Added removed class type hints now that we are running PHP7.4.</li>
                     </ul>
 
                     <h3>Fixed</h3>
