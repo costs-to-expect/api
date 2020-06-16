@@ -72,6 +72,20 @@ class Key
 
     /**
      * @param int $resource_type_id
+     * @param int $category_id
+     *
+     * @return string
+     */
+    public function subcategories(int $resource_type_id, int $category_id): string
+    {
+        return '/v2/resource-types/' .
+            $this->hash->encode('resource_type', $resource_type_id) .
+            '/categories/' . $this->hash->encode('category', $category_id) .
+            '/subcategories';
+    }
+
+    /**
+     * @param int $resource_type_id
      *
      * @return string
      */

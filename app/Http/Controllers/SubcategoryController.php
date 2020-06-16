@@ -18,6 +18,7 @@ use App\Validators\Fields\Subcategory as SubcategoryValidator;
 use Exception;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Config;
 
 /**
@@ -264,6 +265,9 @@ class SubcategoryController extends Controller
             true
         );
 
+        $cache_control = new Cache\Control(Auth::user()->id);
+        $cache_key = new Cache\Key();
+
         $validator = (new SubcategoryValidator)->create(['category_id' => $category_id]);
         \App\Request\BodyValidation::validateAndReturnErrors($validator);
 
@@ -274,6 +278,8 @@ class SubcategoryController extends Controller
                 'description' => request()->input('description')
             ]);
             $sub_category->save();
+
+            $cache_control->clearMatchingKeys($cache_key->categories($resource_type_id));
         } catch (Exception $e) {
             \App\Response\Responses::failedToSaveModelForCreate();
         }
@@ -307,6 +313,9 @@ class SubcategoryController extends Controller
             true
         );
 
+        $cache_control = new Cache\Control(Auth::user()->id);
+        $cache_key = new Cache\Key();
+
         $sub_category = (new Subcategory())->instance(
             $category_id,
             $subcategory_id
@@ -318,6 +327,8 @@ class SubcategoryController extends Controller
 
         try {
             $sub_category->delete();
+
+            $cache_control->clearMatchingKeys($cache_key->categories($resource_type_id));
 
             \App\Response\Responses::successNoContent();
         } catch (QueryException $e) {
@@ -350,6 +361,9 @@ class SubcategoryController extends Controller
             true
         );
 
+        $cache_control = new Cache\Control(Auth::user()->id);
+        $cache_key = new Cache\Key();
+
         $subcategory = (new Subcategory())->instance($category_id, $subcategory_id);
 
         if ($subcategory === null) {
@@ -377,6 +391,13 @@ class SubcategoryController extends Controller
 
         try {
             $subcategory->save();
+
+            $cache_control->clearMatchingKeys(
+                $cache_key->subcategories(
+                    $resource_type_id,
+                    $category_id
+                )
+            );
         } catch (Exception $e) {
             \App\Response\Responses::failedToSaveModelForUpdate();
         }
