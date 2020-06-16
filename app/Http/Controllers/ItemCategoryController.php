@@ -284,6 +284,13 @@ class ItemCategoryController extends Controller
                 $cache_key->items($resource_type_id, $resource_id),
                 $cache_key->resourceTypeItems($resource_type_id)
             ]);
+
+            if (in_array($resource_type_id, $this->public_resource_types, true)) {
+                $cache_control->clearPublicCacheKeys([
+                    $cache_key->items($resource_type_id, $resource_id),
+                    $cache_key->resourceTypeItems($resource_type_id)
+                ]);
+            }
         } catch (Exception $e) {
             \App\Response\Responses::failedToSaveModelForCreate();
         }
@@ -371,6 +378,13 @@ class ItemCategoryController extends Controller
                 $cache_key->items($resource_type_id, $resource_id),
                 $cache_key->resourceTypeItems($resource_type_id)
             ]);
+
+            if (in_array($resource_type_id, $this->public_resource_types, true)) {
+                $cache_control->clearPublicCacheKeys([
+                    $cache_key->items($resource_type_id, $resource_id),
+                    $cache_key->resourceTypeItems($resource_type_id)
+                ]);
+            }
 
             \App\Response\Responses::successNoContent();
         } catch (QueryException $e) {

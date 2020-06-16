@@ -30,7 +30,7 @@ use Illuminate\Support\Facades\Config;
  */
 class SubcategoryController extends Controller
 {
-    protected $allow_entire_collection = true;
+    protected bool $allow_entire_collection = true;
 
     /**
      * Return all the sub categories assigned to the given category
@@ -280,7 +280,15 @@ class SubcategoryController extends Controller
             ]);
             $sub_category->save();
 
-            $cache_control->clearPrivateCacheKeys([$cache_key->categories($resource_type_id)]);
+            $cache_control->clearPrivateCacheKeys([
+                $cache_key->categories($resource_type_id)
+            ]);
+
+            if (in_array($resource_type_id, $this->public_resource_types, true)) {
+                $cache_control->clearPublicCacheKeys([
+                    $cache_key->categories($resource_type_id)
+                ]);
+            }
         } catch (Exception $e) {
             \App\Response\Responses::failedToSaveModelForCreate();
         }
@@ -329,7 +337,15 @@ class SubcategoryController extends Controller
         try {
             $sub_category->delete();
 
-            $cache_control->clearPrivateCacheKeys([$cache_key->categories($resource_type_id)]);
+            $cache_control->clearPrivateCacheKeys([
+                $cache_key->categories($resource_type_id)
+            ]);
+
+            if (in_array($resource_type_id, $this->public_resource_types, true)) {
+                $cache_control->clearPublicCacheKeys([
+                    $cache_key->categories($resource_type_id)
+                ]);
+            }
 
             \App\Response\Responses::successNoContent();
         } catch (QueryException $e) {
@@ -399,6 +415,12 @@ class SubcategoryController extends Controller
                 // resource type
                 $cache_key->resourceType($resource_type_id)
             ]);
+
+            if (in_array($resource_type_id, $this->public_resource_types, true)) {
+                $cache_control->clearPublicCacheKeys([
+                    $cache_key->resourceType($resource_type_id)
+                ]);
+            }
         } catch (Exception $e) {
             \App\Response\Responses::failedToSaveModelForUpdate();
         }

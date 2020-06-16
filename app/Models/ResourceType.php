@@ -33,6 +33,27 @@ class ResourceType extends Model
     }
 
     /**
+     * Fetch all the public resource types
+     *
+     * @return array
+     */
+    public function publicResourceTypes(): array
+    {
+        $public = [];
+
+        $results = $this->where('public', '=', 1)->
+            select('id')->
+            get()->
+            toArray();
+
+        foreach ($results as $row) {
+            $public[] = (int) $row['id'];
+        }
+
+        return $public;
+    }
+
+    /**
      * Return the total number of resource types
      *
      * @param array $permitted_resource_types
