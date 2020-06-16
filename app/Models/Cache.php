@@ -37,7 +37,7 @@ class Cache extends Model
         bool $include_summaries = false
     ): array
     {
-        $result = $this->where('key', '=', $prefix . $key . '%')->
+        $result = $this->where('key', 'LIKE', $prefix . $key . '%')->
             orWhere('key', '=', $prefix . $key);
 
         if ($include_summaries === true) {
