@@ -7,7 +7,7 @@ use App\Utilities\Hash;
 
 class Key
 {
-    private Hash $hash;
+    private $hash;
 
     public function __construct()
     {
