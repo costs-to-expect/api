@@ -4,6 +4,7 @@ namespace App\Exceptions;
 
 use App\Events\InternalError;
 use App\Models\ErrorLog;
+use App\Response;
 use Exception;
 use Illuminate\Auth\AuthenticationException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
@@ -63,10 +64,10 @@ class Handler extends ExceptionHandler
 
         switch ($status_code) {
             case 404:
-                Response::notFound($exception);
+                Response\Responses::notFound($exception);
                 break;
             case 503:
-                Response::maintenance();
+                Response\Responses::maintenance();
                 break;
             case 500:
                 if (App::environment() === 'local') {
