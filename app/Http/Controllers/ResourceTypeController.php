@@ -263,7 +263,7 @@ class ResourceTypeController extends Controller
             ]);
             $resource_type_item_type->save();
 
-            $cache_control->clearMatchingKeys($cache_key->resourcesTypes());
+            $cache_control->clearMatchingKeys([$cache_key->resourcesTypes()]);
         } catch (Exception $e) {
             \App\Response\Responses::failedToSaveModelForCreate();
         }
@@ -324,8 +324,10 @@ class ResourceTypeController extends Controller
                 $permitted_user->delete();
                 $resource_type->delete();
 
-                $cache_control->clearMatchingKeys($cache_key->resourcesTypes());
-                $cache_control->clearMatchingKeys($cache_key->permittedUsers($resource_type_id));
+                $cache_control->clearMatchingKeys([
+                    $cache_key->resourcesTypes(),
+                    $cache_key->permittedUsers($resource_type_id)
+                ]);
 
                 \App\Response\Responses::successNoContent();
             } catch (QueryException $e) {
@@ -387,7 +389,7 @@ class ResourceTypeController extends Controller
 
         try {
             $resource_type->save();
-            $cache_control->clearMatchingKeys($cache_key->resourcesTypes());
+            $cache_control->clearMatchingKeys([$cache_key->resourcesTypes()]);
         } catch (Exception $e) {
             \App\Response\Responses::failedToSaveModelForUpdate();
         }

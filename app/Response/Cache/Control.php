@@ -77,21 +77,23 @@ class Control
     }
 
     /**
-     * Clear any keys matching the supplied key_prefix
+     * Clear any keys matching the supplied $key_wildcards
      *
-     * @param string $key_prefix
+     * @param array $key_wildcards
      * @param bool $include_summaries
      */
     public function clearMatchingKeys(
-        string $key_prefix,
+        array $key_wildcards,
         bool $include_summaries = true
     ): void
     {
-        $keys = $this->matchingKeys($key_prefix, $include_summaries);
+        foreach ($key_wildcards as $key_wildcard) {
+            $keys = $this->matchingKeys($key_wildcard, $include_summaries);
 
-        foreach ($keys as $key) {
-            // We strip the cache prefix as we went to the db and the prefix will be in the strings already
-            LaravelCache::forget(str_replace_first(Config::get('cache.prefix'), '', $key['key']));
+            foreach ($keys as $key) {
+                // We strip the cache prefix as we went to the db and the prefix will be in the strings already
+                LaravelCache::forget(str_replace_first(Config::get('cache.prefix'), '', $key['key']));
+            }
         }
     }
 
