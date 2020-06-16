@@ -330,6 +330,11 @@ class ItemController extends Controller
             true
         );
 
+        $user_id = Auth::user()->id;
+
+        $cache_control = new Cache\Control($user_id);
+        $cache_key = new Cache\Key();
+
         $item_interface = Factory::item($resource_type_id);
 
         $validator_factory = $item_interface->validator();
@@ -341,11 +346,16 @@ class ItemController extends Controller
         try {
             $item = new Item([
                 'resource_id' => $resource_id,
-                'created_by' => Auth::user()->id
+                'created_by' => $user_id
             ]);
             $item->save();
 
             $item_type = $item_interface->create((int) $item->id);
+
+            $cache_control->clearMatchingKeys([
+                $cache_key->resourceTypeItems($resource_type_id),
+                $cache_key->items($resource_type_id, $resource_id)
+            ]);
 
         } catch (Exception $e) {
             \App\Response\Responses::failedToSaveModelForCreate();
@@ -380,6 +390,11 @@ class ItemController extends Controller
             true
         );
 
+        $user_id = Auth::user()->id;
+
+        $cache_control = new Cache\Control($user_id);
+        $cache_key = new Cache\Key();
+
         $item_interface = Factory::item($resource_type_id);
 
         \App\Request\BodyValidation::checkForEmptyPatch();
@@ -398,11 +413,16 @@ class ItemController extends Controller
         }
 
         try {
-            $item->updated_by = Auth::user()->id;
+            $item->updated_by = $user_id;
 
             if ($item->save() === true) {
                 $item_interface->update(request()->all(), $item_type);
             }
+
+            $cache_control->clearMatchingKeys([
+                $cache_key->resourceTypeItems($resource_type_id),
+                $cache_key->items($resource_type_id, $resource_id)
+            ]);
         } catch (Exception $e) {
             \App\Response\Responses::failedToSaveModelForUpdate();
         }
@@ -432,6 +452,9 @@ class ItemController extends Controller
             true
         );
 
+        $cache_control = new Cache\Control(Auth::user()->id);
+        $cache_key = new Cache\Key();
+
         $item_interface = Factory::item($resource_type_id);
 
         $item_model = $item_interface->model();
@@ -452,6 +475,11 @@ class ItemController extends Controller
             (new ItemTransfer())->deleteTransfers($item_id);
             $item_type->delete();
             $item->delete();
+
+            $cache_control->clearMatchingKeys([
+                $cache_key->resourceTypeItems($resource_type_id),
+                $cache_key->items($resource_type_id, $resource_id)
+            ]);
 
             \App\Response\Responses::successNoContent();
         } catch (QueryException $e) {

@@ -18,6 +18,7 @@ use App\Validators\Fields\Resource as ResourceValidator;
 use Exception;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Config;
 
 /**
@@ -253,6 +254,9 @@ class ResourceController extends Controller
             true
         );
 
+        $cache_control = new Cache\Control(Auth::user()->id);
+        $cache_key = new Cache\Key();
+
         $validator = (new ResourceValidator)->create(['resource_type_id' => $resource_type_id]);
         \App\Request\BodyValidation::validateAndReturnErrors($validator);
 
@@ -264,6 +268,8 @@ class ResourceController extends Controller
                 'effective_date' => request()->input('effective_date')
             ]);
             $resource->save();
+
+            $cache_control->clearMatchingKeys([$cache_key->resourceType($resource_type_id)]);
         } catch (Exception $e) {
             \App\Response\Responses::failedToSaveModelForCreate();
         }
@@ -294,8 +300,13 @@ class ResourceController extends Controller
             true
         );
 
+        $cache_control = new Cache\Control(Auth::user()->id);
+        $cache_key = new Cache\Key();
+
         try {
             (new Resource())->find($resource_id)->delete();
+
+            $cache_control->clearMatchingKeys([$cache_key->resourceType($resource_type_id)]);
 
             \App\Response\Responses::successNoContent();
         } catch (QueryException $e) {
@@ -325,6 +336,9 @@ class ResourceController extends Controller
             true
         );
 
+        $cache_control = new Cache\Control(Auth::user()->id);
+        $cache_key = new Cache\Key();
+
         $resource = (new Resource())->instance($resource_type_id, $resource_id);
 
         if ($resource === null) {
@@ -352,6 +366,8 @@ class ResourceController extends Controller
 
         try {
             $resource->save();
+
+            $cache_control->clearMatchingKeys([$cache_key->resourceType($resource_type_id)]);
         } catch (Exception $e) {
             \App\Response\Responses::failedToSaveModelForUpdate();
         }
