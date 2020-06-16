@@ -22,7 +22,7 @@ use Illuminate\Support\Facades\Config;
  */
 class ItemTypeController extends Controller
 {
-    protected $allow_entire_collection = true;
+    protected bool $allow_entire_collection = true;
 
     /**
      * Return all the item types

@@ -125,7 +125,16 @@ class ItemPartialTransferController extends Controller
 
             if ($partial_transfer !== null) {
                 $partial_transfer->delete();
-                $cache_control->clearMatchingKeys([$cache_key->partialTransfers($resource_type_id)]);
+
+                $cache_control->clearPrivateCacheKeys([
+                    $cache_key->partialTransfers($resource_type_id)
+                ]);
+
+                if (in_array($resource_type_id, $this->public_resource_types, true)) {
+                    $cache_control->clearPublicCacheKeys([
+                        $cache_key->partialTransfers($resource_type_id)
+                    ]);
+                }
 
                 return \App\Response\Responses::successNoContent();
             }
@@ -219,7 +228,15 @@ class ItemPartialTransferController extends Controller
             ]);
             $partial_transfer->save();
 
-            $cache_control->clearMatchingKeys([$cache_key->partialTransfers($resource_type_id)]);
+            $cache_control->clearPrivateCacheKeys([
+                $cache_key->partialTransfers($resource_type_id)
+            ]);
+
+            if (in_array($resource_type_id, $this->public_resource_types, true)) {
+                $cache_control->clearPublicCacheKeys([
+                    $cache_key->partialTransfers($resource_type_id)
+                ]);
+            }
         } catch (QueryException $e) {
             return \App\Response\Responses::foreignKeyConstraintError();
         } catch (Exception $e) {

@@ -21,39 +21,28 @@ class Cache extends Model
     protected $guarded = ['key', 'value', 'expiration'];
 
     /**
-     * Fetch all the matching cache keys that are a wildcard match for the
-     * given key prefix, we look for private and public vrsions of the cache
+     * Fetch all the matching private cache keys that are a match or wildcard
+     * match for the given key and prefix, optionally we can fetch summary
+     * cache keys
      *
-     * @param string $public_prefix
-     * @param string $key_wildcard
-     * @param string|null $private_prefix
+     * @param string $prefix
+     * @param string $key
      * @param bool $include_summaries
      *
      * @return array
      */
     public function matchingKeys(
-        string $public_prefix,
-        string $key_wildcard,
-        string $private_prefix = null,
+        string $prefix,
+        string $key,
         bool $include_summaries = false
     ): array
     {
-        $result = $this->where('key', 'LIKE', $public_prefix . $key_wildcard . '%')->
-            orWhere('key', '=', $public_prefix . $key_wildcard);
-
-        if ($private_prefix !== null) {
-            $result->orWhere('key', 'LIKE', $private_prefix . $key_wildcard . '%')->
-                orWhere('key', '=', $private_prefix . $key_wildcard);
-        }
+        $result = $this->where('key', 'LIKE', $prefix . $key . '%')->
+            orWhere('key', '=', $prefix . $key);
 
         if ($include_summaries === true) {
-            $result->orWhere('key', 'LIKE', str_replace('v2/', 'v2/summary/', $public_prefix . $key_wildcard) . '%')->
-                orWhere('key', '=', str_replace('v2/', 'v2/summary/', $public_prefix . $key_wildcard));
-
-            if ($private_prefix !== null) {
-                $result->orWhere('key', 'LIKE', str_replace('v2/', 'v2/summary/', $private_prefix . $key_wildcard) . '%')
-                    ->orWhere('key', '=', str_replace('v2/', 'v2/summary/', $private_prefix . $key_wildcard));
-            }
+            $result->orWhere('key', 'LIKE', str_replace('v2/', 'v2/summary/', $prefix . $key) . '%')->
+                orWhere('key', '=', str_replace('v2/', 'v2/summary/', $prefix . $key));
         }
 
         return $result->select('key')->

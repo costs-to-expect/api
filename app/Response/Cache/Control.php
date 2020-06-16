@@ -16,14 +16,14 @@ use Illuminate\Support\Facades\Config;
  */
 class Control
 {
-    private $cacheable = false;
+    private bool $cacheable = false;
 
-    private $key_prefix_private;
-    private $key_prefix_public;
+    private ?string $key_prefix_private;
+    private string $key_prefix_public;
 
-    private $ttl;
+    private int $ttl;
 
-    private $visibility = 'public';
+    private string $visibility = 'public';
 
     /**
      * Create an instance of the cache class. The prefix needs to be a
@@ -82,13 +82,34 @@ class Control
      * @param array $key_wildcards
      * @param bool $include_summaries
      */
-    public function clearMatchingKeys(
+    public function clearPublicCacheKeys(
         array $key_wildcards,
         bool $include_summaries = true
     ): void
     {
         foreach ($key_wildcards as $key_wildcard) {
-            $keys = $this->matchingKeys($key_wildcard, $include_summaries);
+            $keys = $this->matchingPublicCacheKeys($key_wildcard, $include_summaries);
+
+            foreach ($keys as $key) {
+                // We strip the cache prefix as we went to the db and the prefix will be in the strings already
+                LaravelCache::forget(str_replace_first(Config::get('cache.prefix'), '', $key['key']));
+            }
+        }
+    }
+
+    /**
+     * Clear any keys matching the supplied $key_wildcards
+     *
+     * @param array $key_wildcards
+     * @param bool $include_summaries
+     */
+    public function clearPrivateCacheKeys(
+        array $key_wildcards,
+        bool $include_summaries = true
+    ): void
+    {
+        foreach ($key_wildcards as $key_wildcard) {
+            $keys = $this->matchingPrivateCacheKeys($key_wildcard, $include_summaries);
 
             foreach ($keys as $key) {
                 // We strip the cache prefix as we went to the db and the prefix will be in the strings already
@@ -205,7 +226,31 @@ class Control
      *
      * @return array
      */
-    private function matchingKeys(
+    private function matchingPrivateCacheKeys(
+        string $key_wildcard,
+        bool $include_summaries = false
+    ): array
+    {
+        if ($this->key_prefix_private !== null) {
+            return (new \App\Models\Cache())->matchingKeys(
+                Config::get('cache.prefix') . $this->key_prefix_private,
+                $key_wildcard,
+                $include_summaries
+            );
+        }
+
+        return [];
+    }
+
+    /**
+     * Fetch any matching cache keys, performs a wildcard search
+     *
+     * @param string $key_wildcard
+     * @param bool $include_summaries
+     *
+     * @return array
+     */
+    private function matchingPublicCacheKeys(
         string $key_wildcard,
         bool $include_summaries = false
     ): array
@@ -213,7 +258,6 @@ class Control
         return (new \App\Models\Cache())->matchingKeys(
             Config::get('cache.prefix') . $this->key_prefix_public,
             $key_wildcard,
-            ($this->key_prefix_private !== null ? Config::get('cache.prefix') . $this->key_prefix_private : null),
             $include_summaries
         );
     }

@@ -15,7 +15,7 @@ use DateTime;
  */
 class Filter
 {
-    private static $parameters = [];
+    private static array $parameters = [];
 
     /**
      * Check the URI for the filter parameter, if the format is valid split the

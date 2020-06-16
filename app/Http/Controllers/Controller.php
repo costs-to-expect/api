@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\ResourceType;
 use App\Models\ResourceTypeAccess;
 use App\Utilities\Hash;
 use Illuminate\Http\JsonResponse;
@@ -9,30 +10,23 @@ use Illuminate\Routing\Controller as BaseController;
 
 class Controller extends BaseController
 {
-    /**
-     * @var Hash
-     */
-    protected $hash;
+    protected Hash $hash;
 
-    /**
-     * @var boolean Include public content
-     */
-    protected $include_public;
+    protected bool $include_public;
 
-    /**
-     * @var array Permitted resource types
-     */
-    protected $permitted_resource_types = [];
+    protected array $permitted_resource_types = [];
+
+    protected array $public_resource_types = [];
 
     /**
      * @var integer|null
      */
-    protected $user_id = null;
+    protected ?int $user_id = null;
 
     /**
      * @var bool Allow the entire collection to be returned ignoring pagination
      */
-    protected $allow_entire_collection = false;
+    protected bool $allow_entire_collection = false;
 
     public function __construct()
     {
@@ -50,6 +44,7 @@ class Controller extends BaseController
         if (auth()->guard('api')->check() === true && auth('api')->user() !== null) {
             $this->user_id = auth('api')->user()->id;
             $this->permitted_resource_types = (new ResourceTypeAccess())->permittedResourceTypes($this->user_id);
+            $this->public_resource_types = (new ResourceType())->publicResourceTypes();
         }
 
         $this->include_public = true;

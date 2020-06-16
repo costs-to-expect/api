@@ -353,10 +353,17 @@ class ItemController extends Controller
 
             $item_type = $item_interface->create((int) $item->id);
 
-            $cache_control->clearMatchingKeys([
+            $cache_control->clearPrivateCacheKeys([
                 $cache_key->resourceTypeItems($resource_type_id),
                 $cache_key->items($resource_type_id, $resource_id)
             ]);
+
+            if (in_array($resource_type_id, $this->public_resource_types, true)) {
+                $cache_control->clearPublicCacheKeys([
+                    $cache_key->resourceTypeItems($resource_type_id),
+                    $cache_key->items($resource_type_id, $resource_id)
+                ]);
+            }
 
         } catch (Exception $e) {
             \App\Response\Responses::failedToSaveModelForCreate();
@@ -420,10 +427,17 @@ class ItemController extends Controller
                 $item_interface->update(request()->all(), $item_type);
             }
 
-            $cache_control->clearMatchingKeys([
+            $cache_control->clearPrivateCacheKeys([
                 $cache_key->resourceTypeItems($resource_type_id),
                 $cache_key->items($resource_type_id, $resource_id)
             ]);
+
+            if (in_array($resource_type_id, $this->public_resource_types, true)) {
+                $cache_control->clearPublicCacheKeys([
+                    $cache_key->resourceTypeItems($resource_type_id),
+                    $cache_key->items($resource_type_id, $resource_id)
+                ]);
+            }
         } catch (Exception $e) {
             \App\Response\Responses::failedToSaveModelForUpdate();
         }
@@ -477,10 +491,17 @@ class ItemController extends Controller
             $item_type->delete();
             $item->delete();
 
-            $cache_control->clearMatchingKeys([
+            $cache_control->clearPrivateCacheKeys([
                 $cache_key->resourceTypeItems($resource_type_id),
                 $cache_key->items($resource_type_id, $resource_id)
             ]);
+
+            if (in_array($resource_type_id, $this->public_resource_types, true)) {
+                $cache_control->clearPublicCacheKeys([
+                    $cache_key->resourceTypeItems($resource_type_id),
+                    $cache_key->items($resource_type_id, $resource_id)
+                ]);
+            }
 
             \App\Response\Responses::successNoContent();
         } catch (QueryException $e) {

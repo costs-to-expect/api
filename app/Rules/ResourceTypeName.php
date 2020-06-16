@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace App\Rules;
 
@@ -8,8 +9,8 @@ use Illuminate\Support\Facades\DB;
 
 class ResourceTypeName implements Rule
 {
-    private $user_id;
-    private $resource_type_id;
+    private int $user_id;
+    private ?int $resource_type_id;
 
     /**
      * Create a new rule instance.
