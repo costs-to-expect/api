@@ -4,9 +4,11 @@ namespace App\Http\Controllers\Summary;
 
 use App\Http\Controllers\Controller;
 use App\Option\Get;
+use App\Response\Cache;
 use App\Response\Header\Header;
 use App\Request\Parameter;
 use App\Models\Summary\RequestLog;
+use App\Response\Header\Headers;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Config;
 
@@ -28,29 +30,36 @@ class RequestController extends Controller
      */
     public function accessLog(): JsonResponse
     {
-        $this->collection_parameters = Parameter\Request::fetch(array_keys(Config::get('api.request-access-log.summary-parameters')));
+        $cache_control = new Cache\Control($this->user_id);
+        $cache_control->setTtlOneHour();
 
-        $request_data = (new RequestLog())->monthlyRequests($this->collection_parameters);
-
-        $summary = [];
-        foreach ($request_data as $month) {
-            $summary[$month['year']][] = ['month' => $month['month'], 'requests' => $month['requests']];
-        }
-
-        $headers = new Header();
-        $headers->add('X-Total-Count', count($summary));
-        $headers->add('X-Count', count($summary));
-
-        $parameters_header = Parameter\Request::xHeader();
-        if ($parameters_header !== null) {
-            $headers->addParameters($parameters_header);
-        }
-
-        return response()->json(
-            $summary,
-            200,
-            $headers->headers()
+        $this->collection_parameters = Parameter\Request::fetch(
+            array_keys(Config::get('api.request-access-log.summary-parameters'))
         );
+
+        $cache_summary = new Cache\Summary();
+        $cache_summary->setFromCache($cache_control->get(request()->getRequestUri()));
+
+        if ($cache_summary->valid() === false) {
+
+            $request_data = (new RequestLog())->monthlyRequests($this->collection_parameters);
+
+            $collection = [];
+            foreach ($request_data as $month) {
+                $collection[$month['year']][] = ['month' => $month['month'], 'requests' => $month['requests']];
+            }
+
+            $headers = new Headers();
+            $headers->addCacheControl($cache_control->visibility(), $cache_control->ttl())->
+                addETag($collection)->
+                addParameters(Parameter\Request::xHeader())->
+                addSearch(Parameter\Search::xHeader());
+
+            $cache_summary->create($collection, $headers->headers());
+            $cache_control->put(request()->getRequestUri(), $cache_summary->content());
+        }
+
+        return response()->json($cache_summary->collection(), 200, $cache_summary->headers());
     }
 
     /**
@@ -58,7 +67,7 @@ class RequestController extends Controller
      *
      * @return JsonResponse
      */
-    public function optionsAccessLog()
+    public function optionsAccessLog(): JsonResponse
     {
         $get = Get::init()->
             setParameters('api.request-access-log.parameters.collection')->
