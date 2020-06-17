@@ -5,9 +5,10 @@ namespace App\Http\Controllers\Summary;
 use App\Http\Controllers\Controller;
 use App\Models\Summary\Subcategory;
 use App\Option\Get;
-use App\Response\Header\Header;
+use App\Response\Cache;
 use App\Request\Parameter;
 use App\Request\Route;
+use App\Response\Header\Headers;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Config;
 
@@ -36,27 +37,38 @@ class SubcategoryController extends Controller
             $this->permitted_resource_types
         );
 
+        $cache_control = new Cache\Control($this->user_id);
+        $cache_control->setTtlOneMonth();
+
         $search_parameters = Parameter\Search::fetch(
             array_keys(Config::get('api.subcategory.summary-searchable'))
         );
 
-        $summary = (new Subcategory())->totalCount(
-            $resource_type_id,
-            $category_id,
-            $search_parameters
-        );
+        $cache_summary = new Cache\Summary();
+        $cache_summary->setFromCache($cache_control->get(request()->getRequestUri()));
 
-        $headers = new Header();
-        $headers->add('X-Total-Count', $summary);
-        $headers->add('X-Count', $summary);
+        if ($cache_summary->valid() === false) {
 
-        return response()->json(
-            [
+            $summary = (new Subcategory())->totalCount(
+                $resource_type_id,
+                $category_id,
+                $search_parameters
+            );
+
+            $collection = [
                 'subcategories' => $summary
-            ],
-            200,
-            $headers->headers()
-        );
+            ];
+
+            $headers = new Headers();
+            $headers->addCacheControl($cache_control->visibility(), $cache_control->ttl())->
+                addETag($collection)->
+                addSearch(Parameter\Search::xHeader());
+
+            $cache_summary->create($collection, $headers->headers());
+            $cache_control->put(request()->getRequestUri(), $cache_summary->content());
+        }
+
+        return response()->json($cache_summary->collection(), 200, $cache_summary->headers());
     }
 
 
