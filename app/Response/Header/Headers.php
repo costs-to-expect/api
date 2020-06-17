@@ -116,6 +116,20 @@ class Headers
     }
 
     /**
+     * Add the X-Last-Updated header
+     *
+     * @param string $last_updated
+     *
+     * @return Headers
+     */
+    public function addLastUpdated(string $last_updated): Headers
+    {
+        $this->headers->add('X-Last-Updated', $last_updated);
+
+        return $this;
+    }
+
+    /**
      * Generate the initial headers necessary for a collection
      *
      * @param array $pagination The Pagination data array
