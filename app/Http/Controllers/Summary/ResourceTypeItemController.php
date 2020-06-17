@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Summary;
 use App\Http\Controllers\Controller;
 use App\ResourceTypeItem\Factory;
 use App\Option\Get;
+use App\Response\Cache;
 use App\Response\Header\Header;
 use App\Request\Parameter;
 use App\Request\Route;
@@ -13,6 +14,7 @@ use App\Models\Transformers\Summary\ResourceTypeItemMonth as ResourceTypeItemMon
 use App\Models\Transformers\Summary\ResourceTypeItemResource as ResourceTypeItemResourceTransformer;
 use App\Models\Transformers\Summary\ResourceTypeItemSubcategory as ResourceTypeItemSubcategoryTransformer;
 use App\Models\Transformers\Summary\ResourceTypeItemYear as ResourceTypeItemYearTransformer;
+use App\Response\Header\Headers;
 use App\Utilities\General;
 use Illuminate\Http\JsonResponse;
 
@@ -242,36 +244,38 @@ class ResourceTypeItemController extends Controller
         array $parameters
     ): JsonResponse
     {
-        $summary = $this->model->summary(
-            $resource_type_id,
-            $parameters
-        );
+        $cache_control = new Cache\Control($this->user_id);
+        $cache_control->setTtlOneDay();
 
-        if (count($summary) === 0) {
-            \App\Response\Responses::successEmptyContent(true);
-        }
+        $cache_summary = new Cache\Summary();
+        $cache_summary->setFromCache($cache_control->get(request()->getRequestUri()));
 
-        $headers = new Header();
-        $headers->add('X-Total-Count', count($summary));
-        $headers->add('X-Count', count($summary));
+        if ($cache_summary->valid() === false) {
 
-        $parameters_header = Parameter\Request::xHeader();
-        if ($parameters_header !== null) {
-            $headers->addParameters($parameters_header);
-        }
+            $summary = $this->model->summary(
+                $resource_type_id,
+                $parameters
+            );
 
-        return response()->json(
-            [
+            $collection = [
                 'total' => number_format(
                     $summary[0]['total'],
                     2,
                     '.',
                     ''
                 )
-            ],
-            200,
-            $headers->headers()
-        );
+            ];
+
+            $headers = new Headers();
+            $headers->addCacheControl($cache_control->visibility(), $cache_control->ttl())->
+                addETag($collection)->
+                addParameters(Parameter\Request::xHeader());
+
+            $cache_summary->create($collection, $headers->headers());
+            $cache_control->put(request()->getRequestUri(), $cache_summary->content());
+        }
+
+        return response()->json($cache_summary->collection(), 200, $cache_summary->headers());
     }
 
     /**
@@ -288,34 +292,36 @@ class ResourceTypeItemController extends Controller
         array $parameters
     ): JsonResponse
     {
-        $summary = $this->model->resourcesSummary(
-            $resource_type_id,
-            $parameters
-        );
+        $cache_control = new Cache\Control($this->user_id);
+        $cache_control->setTtlOneDay();
 
-        if (count($summary) === 0) {
-            \App\Response\Responses::successEmptyContent(true);
-        }
+        $cache_summary = new Cache\Summary();
+        $cache_summary->setFromCache($cache_control->get(request()->getRequestUri()));
 
-        $headers = new Header();
-        $headers->add('X-Total-Count', count($summary));
-        $headers->add('X-Count', count($summary));
+        if ($cache_summary->valid() === false) {
 
-        $parameters_header = Parameter\Request::xHeader();
-        if ($parameters_header !== null) {
-            $headers->addParameters($parameters_header);
-        }
+            $summary = $this->model->resourcesSummary(
+                $resource_type_id,
+                $parameters
+            );
 
-        return response()->json(
-            array_map(
-                function ($resource) {
+            $collection = array_map(
+                static function ($resource) {
                     return (new ResourceTypeItemResourceTransformer($resource))->toArray();
                 },
                 $summary
-            ),
-            200,
-            $headers->headers()
-        );
+            );
+
+            $headers = new Headers();
+            $headers->addCacheControl($cache_control->visibility(), $cache_control->ttl())->
+                addETag($collection)->
+                addParameters(Parameter\Request::xHeader());
+
+            $cache_summary->create($collection, $headers->headers());
+            $cache_control->put(request()->getRequestUri(), $cache_summary->content());
+        }
+
+        return response()->json($cache_summary->collection(), 200, $cache_summary->headers());
     }
 
     /**
@@ -332,34 +338,36 @@ class ResourceTypeItemController extends Controller
         array $parameters
     ): JsonResponse
     {
-        $summary = $this->model->yearsSummary(
-            $resource_type_id,
-            $parameters
-        );
+        $cache_control = new Cache\Control($this->user_id);
+        $cache_control->setTtlOneDay();
 
-        if (count($summary) === 0) {
-            \App\Response\Responses::successEmptyContent(true);
-        }
+        $cache_summary = new Cache\Summary();
+        $cache_summary->setFromCache($cache_control->get(request()->getRequestUri()));
 
-        $headers = new Header();
-        $headers->add('X-Total-Count', count($summary));
-        $headers->add('X-Count', count($summary));
+        if ($cache_summary->valid() === false) {
 
-        $parameters_header = Parameter\Request::xHeader();
-        if ($parameters_header !== null) {
-            $headers->addParameters($parameters_header);
-        }
+            $summary = $this->model->yearsSummary(
+                $resource_type_id,
+                $parameters
+            );
 
-        return response()->json(
-            array_map(
-                function ($year) {
+            $collection = array_map(
+                static function ($year) {
                     return (new ResourceTypeItemYearTransformer($year))->toArray();
                 },
                 $summary
-            ),
-            200,
-            $headers->headers()
-        );
+            );
+
+            $headers = new Headers();
+            $headers->addCacheControl($cache_control->visibility(), $cache_control->ttl())->
+                addETag($collection)->
+                addParameters(Parameter\Request::xHeader());
+
+            $cache_summary->create($collection, $headers->headers());
+            $cache_control->put(request()->getRequestUri(), $cache_summary->content());
+        }
+
+        return response()->json($cache_summary->collection(), 200, $cache_summary->headers());
     }
 
     /**
@@ -378,30 +386,32 @@ class ResourceTypeItemController extends Controller
         array $parameters
     ): JsonResponse
     {
-        $summary = $this->model->yearSummary(
-            $resource_type_id,
-            $year,
-            $parameters
-        );
+        $cache_control = new Cache\Control($this->user_id);
+        $cache_control->setTtlOneDay();
 
-        if (count($summary) === 0) {
-            \App\Response\Responses::successEmptyContent();
+        $cache_summary = new Cache\Summary();
+        $cache_summary->setFromCache($cache_control->get(request()->getRequestUri()));
+
+        if ($cache_summary->valid() === false) {
+
+            $summary = $this->model->yearSummary(
+                $resource_type_id,
+                $year,
+                $parameters
+            );
+
+            $collection = (new ResourceTypeItemYearTransformer($summary[0]))->toArray();
+
+            $headers = new Headers();
+            $headers->addCacheControl($cache_control->visibility(), $cache_control->ttl())->
+                addETag($collection)->
+                addParameters(Parameter\Request::xHeader());
+
+            $cache_summary->create($collection, $headers->headers());
+            $cache_control->put(request()->getRequestUri(), $cache_summary->content());
         }
 
-        $headers = new Header();
-        $headers->add('X-Total-Count', count($summary));
-        $headers->add('X-Count', count($summary));
-
-        $parameters_header = Parameter\Request::xHeader();
-        if ($parameters_header !== null) {
-            $headers->addParameters($parameters_header);
-        }
-
-        return response()->json(
-            (new ResourceTypeItemYearTransformer($summary[0]))->toArray(),
-            200,
-            $headers->headers()
-        );
+        return response()->json($cache_summary->collection(), 200, $cache_summary->headers());
     }
 
     /**
@@ -420,35 +430,37 @@ class ResourceTypeItemController extends Controller
         array $parameters
     ): JsonResponse
     {
-        $summary = $this->model->monthsSummary(
-            $resource_type_id,
-            $year,
-            $parameters
-        );
+        $cache_control = new Cache\Control($this->user_id);
+        $cache_control->setTtlOneDay();
 
-        if (count($summary) === 0) {
-            \App\Response\Responses::successEmptyContent(true);
-        }
+        $cache_summary = new Cache\Summary();
+        $cache_summary->setFromCache($cache_control->get(request()->getRequestUri()));
 
-        $headers = new Header();
-        $headers->add('X-Total-Count', count($summary));
-        $headers->add('X-Count', count($summary));
+        if ($cache_summary->valid() === false) {
 
-        $parameters_header = Parameter\Request::xHeader();
-        if ($parameters_header !== null) {
-            $headers->addParameters($parameters_header);
-        }
+            $summary = $this->model->monthsSummary(
+                $resource_type_id,
+                $year,
+                $parameters
+            );
 
-        return response()->json(
-            array_map(
-                function ($month) {
+            $collection = array_map(
+                static function ($month) {
                     return (new ResourceTypeItemMonthTransformer($month))->toArray();
                 },
                 $summary
-            ),
-            200,
-            $headers->headers()
-        );
+            );
+
+            $headers = new Headers();
+            $headers->addCacheControl($cache_control->visibility(), $cache_control->ttl())->
+                addETag($collection)->
+                addParameters(Parameter\Request::xHeader());
+
+            $cache_summary->create($collection, $headers->headers());
+            $cache_control->put(request()->getRequestUri(), $cache_summary->content());
+        }
+
+        return response()->json($cache_summary->collection(), 200, $cache_summary->headers());
     }
 
     /**
@@ -469,31 +481,33 @@ class ResourceTypeItemController extends Controller
         array $parameters
     ): JsonResponse
     {
-        $summary = $this->model->monthSummary(
-            $resource_type_id,
-            $year,
-            $month,
-            $parameters
-        );
+        $cache_control = new Cache\Control($this->user_id);
+        $cache_control->setTtlOneDay();
 
-        if (count($summary) === 0) {
-            \App\Response\Responses::successEmptyContent();
+        $cache_summary = new Cache\Summary();
+        $cache_summary->setFromCache($cache_control->get(request()->getRequestUri()));
+
+        if ($cache_summary->valid() === false) {
+
+            $summary = $this->model->monthSummary(
+                $resource_type_id,
+                $year,
+                $month,
+                $parameters
+            );
+
+            $collection = (new ResourceTypeItemMonthTransformer($summary[0]))->toArray();
+
+            $headers = new Headers();
+            $headers->addCacheControl($cache_control->visibility(), $cache_control->ttl())->
+                addETag($collection)->
+                addParameters(Parameter\Request::xHeader());
+
+            $cache_summary->create($collection, $headers->headers());
+            $cache_control->put(request()->getRequestUri(), $cache_summary->content());
         }
 
-        $headers = new Header();
-        $headers->add('X-Total-Count', count($summary));
-        $headers->add('X-Count', count($summary));
-
-        $parameters_header = Parameter\Request::xHeader();
-        if ($parameters_header !== null) {
-            $headers->addParameters($parameters_header);
-        }
-
-        return response()->json(
-            (new ResourceTypeItemMonthTransformer($summary[0]))->toArray(),
-            200,
-            $headers->headers()
-        );
+        return response()->json($cache_summary->collection(), 200, $cache_summary->headers());
     }
 
     /**
@@ -510,34 +524,36 @@ class ResourceTypeItemController extends Controller
         array $parameters
     ): JsonResponse
     {
-        $summary = $this->model->categoriesSummary(
-            $resource_type_id,
-            $parameters
-        );
+        $cache_control = new Cache\Control($this->user_id);
+        $cache_control->setTtlOneDay();
 
-        if (count($summary) === 0) {
-            \App\Response\Responses::successEmptyContent(true);
-        }
+        $cache_summary = new Cache\Summary();
+        $cache_summary->setFromCache($cache_control->get(request()->getRequestUri()));
 
-        $headers = new Header();
-        $headers->add('X-Total-Count', count($summary));
-        $headers->add('X-Count', count($summary));
+        if ($cache_summary->valid() === false) {
 
-        $parameters_header = Parameter\Request::xHeader();
-        if ($parameters_header !== null) {
-            $headers->addParameters($parameters_header);
-        }
+            $summary = $this->model->categoriesSummary(
+                $resource_type_id,
+                $parameters
+            );
 
-        return response()->json(
-            array_map(
-                function ($category) {
+            $collection = array_map(
+                static function ($category) {
                     return (new ResourceTypeItemCategoryTransformer($category))->toArray();
                 },
                 $summary
-            ),
-            200,
-            $headers->headers()
-        );
+            );
+
+            $headers = new Headers();
+            $headers->addCacheControl($cache_control->visibility(), $cache_control->ttl())->
+                addETag($collection)->
+                addParameters(Parameter\Request::xHeader());
+
+            $cache_summary->create($collection, $headers->headers());
+            $cache_control->put(request()->getRequestUri(), $cache_summary->content());
+        }
+
+        return response()->json($cache_summary->collection(), 200, $cache_summary->headers());
     }
 
     /**
@@ -556,30 +572,32 @@ class ResourceTypeItemController extends Controller
         array $parameters
     ): JsonResponse
     {
-        $summary = $this->model->categorySummary(
-            $resource_type_id,
-            $category_id,
-            $parameters
-        );
+        $cache_control = new Cache\Control($this->user_id);
+        $cache_control->setTtlOneDay();
 
-        if (count($summary) === 0) {
-            \App\Response\Responses::successEmptyContent();
+        $cache_summary = new Cache\Summary();
+        $cache_summary->setFromCache($cache_control->get(request()->getRequestUri()));
+
+        if ($cache_summary->valid() === false) {
+
+            $summary = $this->model->categorySummary(
+                $resource_type_id,
+                $category_id,
+                $parameters
+            );
+
+            $collection = (new ResourceTypeItemCategoryTransformer($summary[0]))->toArray();
+
+            $headers = new Headers();
+            $headers->addCacheControl($cache_control->visibility(), $cache_control->ttl())->
+                addETag($collection)->
+                addParameters(Parameter\Request::xHeader());
+
+            $cache_summary->create($collection, $headers->headers());
+            $cache_control->put(request()->getRequestUri(), $cache_summary->content());
         }
 
-        $headers = new Header();
-        $headers->add('X-Total-Count', count($summary));
-        $headers->add('X-Count', count($summary));
-
-        $parameters_header = Parameter\Request::xHeader();
-        if ($parameters_header !== null) {
-            $headers->addParameters($parameters_header);
-        }
-
-        return response()->json(
-            (new ResourceTypeItemCategoryTransformer($summary[0]))->toArray(),
-            200,
-            $headers->headers()
-        );
+        return response()->json($cache_summary->collection(), 200, $cache_summary->headers());
     }
 
     /**
@@ -607,37 +625,41 @@ class ResourceTypeItemController extends Controller
         array $filter_parameters = []
     ): JsonResponse
     {
-        $summary = $this->model->filteredSummary(
-            $resource_type_id,
-            $category_id,
-            $subcategory_id,
-            $year,
-            $month,
-            $parameters,
-            $search_parameters,
-            $filter_parameters
-        );
+        $cache_control = new Cache\Control($this->user_id);
+        $cache_control->setTtlOneDay();
 
-        if (count($summary) === 0) {
-            \App\Response\Responses::successEmptyContent();
-        }
+        $cache_summary = new Cache\Summary();
+        $cache_summary->setFromCache($cache_control->get(request()->getRequestUri()));
 
-        $headers = new Header();
-        $headers->add('X-Total-Count', count($summary));
-        $headers->add('X-Count', count($summary));
+        if ($cache_summary->valid() === false) {
 
-        $parameters_header = Parameter\Request::xHeader();
-        if ($parameters_header !== null) {
-            $headers->addParameters($parameters_header);
-        }
+            $summary = $this->model->filteredSummary(
+                $resource_type_id,
+                $category_id,
+                $subcategory_id,
+                $year,
+                $month,
+                $parameters,
+                $search_parameters,
+                $filter_parameters
+            );
 
-        return response()->json(
-            [
+            $collection = [
                 'total' => number_format($summary[0]['total'], 2, '.', '')
-            ],
-            200,
-            $headers->headers()
-        );
+            ];
+
+            $headers = new Headers();
+            $headers->addCacheControl($cache_control->visibility(), $cache_control->ttl())->
+                addETag($collection)->
+                addFilters(Parameter\Filter::xHeader())->
+                addSearch(Parameter\Search::xHeader())->
+                addParameters(Parameter\Request::xHeader());
+
+            $cache_summary->create($collection, $headers->headers());
+            $cache_control->put(request()->getRequestUri(), $cache_summary->content());
+        }
+
+        return response()->json($cache_summary->collection(), 200, $cache_summary->headers());
     }
 
     /**
@@ -656,35 +678,37 @@ class ResourceTypeItemController extends Controller
         array $parameters
     ): JsonResponse
     {
-        $summary = $this->model->subcategoriesSummary(
-            $resource_type_id,
-            $category_id,
-            $parameters
-        );
+        $cache_control = new Cache\Control($this->user_id);
+        $cache_control->setTtlOneDay();
 
-        if (count($summary) === 0) {
-            \App\Response\Responses::successEmptyContent(true);
-        }
+        $cache_summary = new Cache\Summary();
+        $cache_summary->setFromCache($cache_control->get(request()->getRequestUri()));
 
-        $headers = new Header();
-        $headers->add('X-Total-Count', count($summary));
-        $headers->add('X-Count', count($summary));
+        if ($cache_summary->valid() === false) {
 
-        $parameters_header = Parameter\Request::xHeader();
-        if ($parameters_header !== null) {
-            $headers->addParameters($parameters_header);
-        }
+            $summary = $this->model->subcategoriesSummary(
+                $resource_type_id,
+                $category_id,
+                $parameters
+            );
 
-        return response()->json(
-            array_map(
-                function ($category) {
+            $collection = array_map(
+                static function ($category) {
                     return (new ResourceTypeItemSubcategoryTransformer($category))->toArray();
                 },
                 $summary
-            ),
-            200,
-            $headers->headers()
-        );
+            );
+
+            $headers = new Headers();
+            $headers->addCacheControl($cache_control->visibility(), $cache_control->ttl())->
+                addETag($collection)->
+                addParameters(Parameter\Request::xHeader());
+
+            $cache_summary->create($collection, $headers->headers());
+            $cache_control->put(request()->getRequestUri(), $cache_summary->content());
+        }
+
+        return response()->json($cache_summary->collection(), 200, $cache_summary->headers());
     }
 
     /**
@@ -705,31 +729,33 @@ class ResourceTypeItemController extends Controller
         array $parameters
     ): JsonResponse
     {
-        $summary = $this->model->subcategorySummary(
-            $resource_type_id,
-            $category_id,
-            $subcategory_id,
-            $parameters
-        );
+        $cache_control = new Cache\Control($this->user_id);
+        $cache_control->setTtlOneDay();
 
-        if (count($summary) === 0) {
-            \App\Response\Responses::successEmptyContent();
+        $cache_summary = new Cache\Summary();
+        $cache_summary->setFromCache($cache_control->get(request()->getRequestUri()));
+
+        if ($cache_summary->valid() === false) {
+
+            $summary = $this->model->subcategorySummary(
+                $resource_type_id,
+                $category_id,
+                $subcategory_id,
+                $parameters
+            );
+
+            $collection = (new ResourceTypeItemSubcategoryTransformer($summary[0]))->toArray();
+
+            $headers = new Headers();
+            $headers->addCacheControl($cache_control->visibility(), $cache_control->ttl())->
+                addETag($collection)->
+                addSearch(Parameter\Search::xHeader());
+
+            $cache_summary->create($collection, $headers->headers());
+            $cache_control->put(request()->getRequestUri(), $cache_summary->content());
         }
 
-        $headers = new Header();
-        $headers->add('X-Total-Count', count($summary));
-        $headers->add('X-Count', count($summary));
-
-        $parameters_header = Parameter\Request::xHeader();
-        if ($parameters_header !== null) {
-            $headers->addParameters($parameters_header);
-        }
-
-        return response()->json(
-            (new ResourceTypeItemSubcategoryTransformer($summary[0]))->toArray(),
-            200,
-            $headers->headers()
-        );
+        return response()->json($cache_summary->collection(), 200, $cache_summary->headers());
     }
 
 
