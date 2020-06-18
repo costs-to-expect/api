@@ -246,6 +246,7 @@
                         <li>We only clear public cache keys when modifying a public resource type.</li>
                         <li>We have updated the web.config; the web.config file was referring to PHP7.3.</li>
                         <li>Added removed class type hints now that we are running PHP7.4.</li>
+                        <li>We have updated the caching system to respect the `cache` config setting.</li>
                     </ul>
 
                     <h3>Fixed</h3>
