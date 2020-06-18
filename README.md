@@ -95,7 +95,7 @@ invalidated if the API detects a change.
 - Categories: One month
 - Subcategories: One month
 - Resources: One week
-- Items: One day
+- Items: One week
 - Item categories: One week
 - Item subcategories: One week
 

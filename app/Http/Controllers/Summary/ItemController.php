@@ -239,7 +239,7 @@ class ItemController extends Controller
     ): JsonResponse
     {
         $cache_control = new Cache\Control($this->user_id);
-        $cache_control->setTtlOneDay();
+        $cache_control->setTtlOneWeek();
 
         $cache_summary = new Cache\Summary();
         $cache_summary->setFromCache($cache_control->get(request()->getRequestUri()));
@@ -293,7 +293,7 @@ class ItemController extends Controller
     ): JsonResponse
     {
         $cache_control = new Cache\Control($this->user_id);
-        $cache_control->setTtlOneDay();
+        $cache_control->setTtlOneWeek();
 
         $cache_summary = new Cache\Summary();
         $cache_summary->setFromCache($cache_control->get(request()->getRequestUri()));
@@ -352,7 +352,7 @@ class ItemController extends Controller
     ): JsonResponse
     {
         $cache_control = new Cache\Control($this->user_id);
-        $cache_control->setTtlOneDay();
+        $cache_control->setTtlOneWeek();
 
         $cache_summary = new Cache\Summary();
         $cache_summary->setFromCache($cache_control->get(request()->getRequestUri()));
@@ -407,7 +407,7 @@ class ItemController extends Controller
     ): JsonResponse
     {
         $cache_control = new Cache\Control($this->user_id);
-        $cache_control->setTtlOneDay();
+        $cache_control->setTtlOneWeek();
 
         $cache_summary = new Cache\Summary();
         $cache_summary->setFromCache($cache_control->get(request()->getRequestUri()));
@@ -469,7 +469,7 @@ class ItemController extends Controller
     ): JsonResponse
     {
         $cache_control = new Cache\Control($this->user_id);
-        $cache_control->setTtlOneDay();
+        $cache_control->setTtlOneWeek();
 
         $cache_summary = new Cache\Summary();
         $cache_summary->setFromCache($cache_control->get(request()->getRequestUri()));
@@ -523,7 +523,7 @@ class ItemController extends Controller
     ): JsonResponse
     {
         $cache_control = new Cache\Control($this->user_id);
-        $cache_control->setTtlOneDay();
+        $cache_control->setTtlOneWeek();
 
         $cache_summary = new Cache\Summary();
         $cache_summary->setFromCache($cache_control->get(request()->getRequestUri()));
@@ -591,7 +591,7 @@ class ItemController extends Controller
     ): JsonResponse
     {
         $cache_control = new Cache\Control($this->user_id);
-        $cache_control->setTtlOneDay();
+        $cache_control->setTtlOneWeek();
 
         $cache_summary = new Cache\Summary();
         $cache_summary->setFromCache($cache_control->get(request()->getRequestUri()));
@@ -653,7 +653,7 @@ class ItemController extends Controller
     ): JsonResponse
     {
         $cache_control = new Cache\Control($this->user_id);
-        $cache_control->setTtlOneDay();
+        $cache_control->setTtlOneWeek();
 
         $cache_summary = new Cache\Summary();
         $cache_summary->setFromCache($cache_control->get(request()->getRequestUri()));
@@ -708,7 +708,7 @@ class ItemController extends Controller
     ): JsonResponse
     {
         $cache_control = new Cache\Control($this->user_id);
-        $cache_control->setTtlOneDay();
+        $cache_control->setTtlOneWeek();
 
         $cache_summary = new Cache\Summary();
         $cache_summary->setFromCache($cache_control->get(request()->getRequestUri()));
@@ -770,7 +770,7 @@ class ItemController extends Controller
     ): JsonResponse
     {
         $cache_control = new Cache\Control($this->user_id);
-        $cache_control->setTtlOneDay();
+        $cache_control->setTtlOneWeek();
 
         $cache_summary = new Cache\Summary();
         $cache_summary->setFromCache($cache_control->get(request()->getRequestUri()));
