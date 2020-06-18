@@ -37,7 +37,7 @@ class ResourceTypeItemController extends Controller
         );
 
         $cache_control = new Cache\Control($this->user_id);
-        $cache_control->setTtlOneDay();
+        $cache_control->setTtlOneWeek();
 
         $item_interface = Factory::item($resource_type_id);
 
