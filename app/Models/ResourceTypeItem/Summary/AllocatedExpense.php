@@ -38,7 +38,11 @@ class AllocatedExpense extends Model implements ISummaryModel, ISummaryModelCate
         array $parameters
     ): array
     {
-        $collection = $this->selectRaw("sum({$this->sub_table}.actualised_total) AS total")->
+        $collection = $this->selectRaw("
+                SUM({$this->sub_table}.actualised_total) AS total, 
+                COUNT({$this->sub_table}.item_id) AS total_count, 
+                MAX({$this->sub_table}.created_at) AS last_updated
+            ")->
             join($this->sub_table, 'item.id', "{$this->sub_table}.item_id")->
             join('resource', 'item.resource_id', 'resource.id')->
             join('resource_type', 'resource.resource_type_id', 'resource_type.id')->
@@ -68,7 +72,9 @@ class AllocatedExpense extends Model implements ISummaryModel, ISummaryModelCate
         $collection = $this->selectRaw("
                 resource.id AS id, 
                 resource.name AS `name`, 
-                SUM({$this->sub_table}.actualised_total) AS total"
+                SUM({$this->sub_table}.actualised_total) AS total, 
+                COUNT({$this->sub_table}.item_id) AS total_count, 
+                MAX({$this->sub_table}.created_at) AS last_updated"
             )->
             join($this->sub_table, 'item.id', "{$this->sub_table}.item_id")->
             join('resource', 'item.resource_id', 'resource.id')->
@@ -99,7 +105,9 @@ class AllocatedExpense extends Model implements ISummaryModel, ISummaryModelCate
     {
         $collection = $this->selectRaw("
                 YEAR({$this->sub_table}.effective_date) as year,
-                SUM({$this->sub_table}.actualised_total) AS total"
+                SUM({$this->sub_table}.actualised_total) AS total, 
+                COUNT({$this->sub_table}.item_id) AS total_count, 
+                MAX({$this->sub_table}.created_at) AS last_updated"
             )->
             join($this->sub_table, 'item.id', "{$this->sub_table}.item_id")->
             join("resource", "resource.id", "item.resource_id")->
@@ -132,7 +140,9 @@ class AllocatedExpense extends Model implements ISummaryModel, ISummaryModelCate
     {
         $collection = $this->selectRaw("
                 MONTH({$this->sub_table}.effective_date) as month, 
-                SUM({$this->sub_table}.actualised_total) AS total"
+                SUM({$this->sub_table}.actualised_total) AS total, 
+                COUNT({$this->sub_table}.item_id) AS total_count, 
+                MAX({$this->sub_table}.created_at) AS last_updated"
             )->
             join($this->sub_table, 'item.id', "{$this->sub_table}.item_id")->
             join("resource", "resource.id", "item.resource_id")->
@@ -168,7 +178,9 @@ class AllocatedExpense extends Model implements ISummaryModel, ISummaryModelCate
     {
         $collection = $this->selectRaw("
                 MONTH({$this->sub_table}.effective_date) as month, 
-                SUM({$this->sub_table}.actualised_total) AS total"
+                SUM({$this->sub_table}.actualised_total) AS total, 
+                COUNT({$this->sub_table}.item_id) AS total_count, 
+                MAX({$this->sub_table}.created_at) AS last_updated"
             )->
             join($this->sub_table, 'item.id', "{$this->sub_table}.item_id")->
             join("resource", "resource.id", "item.resource_id")->
@@ -203,7 +215,9 @@ class AllocatedExpense extends Model implements ISummaryModel, ISummaryModelCate
     {
         $collection = $this->selectRaw("
                 YEAR({$this->sub_table}.effective_date) as year, 
-                SUM({$this->sub_table}.actualised_total) AS total"
+                SUM({$this->sub_table}.actualised_total) AS total, 
+                COUNT({$this->sub_table}.item_id) AS total_count, 
+                MAX({$this->sub_table}.created_at) AS last_updated"
             )->
             join($this->sub_table, 'item.id', "{$this->sub_table}.item_id")->
             join("resource", "resource.id", "item.resource_id")->
@@ -237,7 +251,9 @@ class AllocatedExpense extends Model implements ISummaryModel, ISummaryModelCate
                 category.id, 
                 category.name AS name, 
                 category.description AS description,
-                SUM({$this->sub_table}.actualised_total) AS total")->
+                SUM({$this->sub_table}.actualised_total) AS total, 
+                COUNT({$this->sub_table}.item_id) AS total_count, 
+                MAX({$this->sub_table}.created_at) AS last_updated")->
             join($this->sub_table, 'item.id', "{$this->sub_table}.item_id")->
             join("resource", "resource.id", "item.resource_id")->
             join("resource_type", "resource_type.id", "resource.resource_type_id")->
@@ -274,7 +290,9 @@ class AllocatedExpense extends Model implements ISummaryModel, ISummaryModelCate
                 category.id, 
                 category.name AS name, 
                 category.description, 
-                SUM({$this->sub_table}.actualised_total) AS total")->
+                SUM({$this->sub_table}.actualised_total) AS total, 
+                COUNT({$this->sub_table}.item_id) AS total_count, 
+                MAX({$this->sub_table}.created_at) AS last_updated")->
             join($this->sub_table, 'item.id', "{$this->sub_table}.item_id")->
             join("resource", "resource.id", "item.resource_id")->
             join("resource_type", "resource_type.id", "resource.resource_type_id")->
@@ -315,7 +333,10 @@ class AllocatedExpense extends Model implements ISummaryModel, ISummaryModelCate
     ): array
     {
         $collection = $this->
-            selectRaw("SUM({$this->sub_table}.actualised_total) AS total")->
+            selectRaw(
+                "SUM({$this->sub_table}.actualised_total) AS total, 
+                COUNT({$this->sub_table}.item_id) AS total_count, 
+                MAX({$this->sub_table}.created_at) AS last_updated")->
             join($this->sub_table, 'item.id', "{$this->sub_table}.item_id")->
             join("resource", "resource.id", "item.resource_id")->
             join("resource_type", "resource_type.id", "resource.resource_type_id")->
@@ -376,7 +397,9 @@ class AllocatedExpense extends Model implements ISummaryModel, ISummaryModelCate
                 sub_category.id, 
                 sub_category.name AS name, 
                 sub_category.description AS description, 
-                SUM({$this->sub_table}.actualised_total) AS total")->
+                SUM({$this->sub_table}.actualised_total) AS total, 
+                COUNT({$this->sub_table}.item_id) AS total_count, 
+                MAX({$this->sub_table}.created_at) AS last_updated")->
             join($this->sub_table, 'item.id', "{$this->sub_table}.item_id")->
             join("resource", "resource.id", "item.resource_id")->
             join("resource_type", "resource_type.id", "resource.resource_type_id")->
@@ -418,7 +441,9 @@ class AllocatedExpense extends Model implements ISummaryModel, ISummaryModelCate
                 sub_category.id, 
                 sub_category.name AS name, 
                 sub_category.description AS description, 
-                SUM($this->sub_table.actualised_total) AS total")->
+                SUM($this->sub_table.actualised_total) AS total, 
+                COUNT({$this->sub_table}.item_id) AS total_count, 
+                MAX({$this->sub_table}.created_at) AS last_updated")->
             join($this->sub_table, 'item.id', "{$this->sub_table}.item_id")->
             join("resource", "resource.id", "item.resource_id")->
             join("resource_type", "resource_type.id", "resource.resource_type_id")->

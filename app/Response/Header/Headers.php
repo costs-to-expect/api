@@ -100,6 +100,20 @@ class Headers
     }
 
     /**
+     * Add the X-Total-Count header
+     *
+     * @param int $total
+     *
+     * @return Headers
+     */
+    public function addTotalCount(int $total): Headers
+    {
+        $this->headers->add('X-Total-Count', $total);
+
+        return $this;
+    }
+
+    /**
      * Add the X-Filter header if the parameters for filtering exist
      *
      * @param string|null $filter_header

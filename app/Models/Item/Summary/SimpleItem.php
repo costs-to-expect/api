@@ -50,7 +50,8 @@ class SimpleItem extends Model implements ISummaryModel
         $collection = $this->
             selectRaw("
                 SUM({$this->sub_table}.quantity) AS total, 
-                COUNT({$this->sub_table}.item_id) AS total_count
+                COUNT({$this->sub_table}.item_id) AS total_count, 
+                MAX({$this->sub_table}.created_at) AS last_updated
             ")->
             join($this->sub_table, 'item.id', "{$this->sub_table}.item_id")->
             join("resource", "resource.id", "item.resource_id")->

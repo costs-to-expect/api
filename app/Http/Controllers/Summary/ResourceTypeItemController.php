@@ -270,6 +270,15 @@ class ResourceTypeItemController extends Controller
                 addETag($collection)->
                 addParameters(Parameter\Request::xHeader());
 
+            if (array_key_exists(0, $summary)) {
+                if (array_key_exists('last_updated', $summary[0]) === true) {
+                    $headers->addLastUpdated($summary[0]['last_updated']);
+                }
+                if (array_key_exists('total_count', $summary[0]) === true) {
+                    $headers->addTotalCount((int) $summary[0]['total_count']);
+                }
+            }
+
             $cache_summary->create($collection, $headers->headers());
             $cache_control->put(request()->getRequestUri(), $cache_summary->content());
         }
@@ -315,6 +324,15 @@ class ResourceTypeItemController extends Controller
             $headers->addCacheControl($cache_control->visibility(), $cache_control->ttl())->
                 addETag($collection)->
                 addParameters(Parameter\Request::xHeader());
+
+            if (array_key_exists(0, $summary)) {
+                if (array_key_exists('last_updated', $summary[0]) === true) {
+                    $headers->addLastUpdated($summary[0]['last_updated']);
+                }
+                if (array_key_exists('total_count', $summary[0]) === true) {
+                    $headers->addTotalCount((int) $summary[0]['total_count']);
+                }
+            }
 
             $cache_summary->create($collection, $headers->headers());
             $cache_control->put(request()->getRequestUri(), $cache_summary->content());
@@ -362,6 +380,15 @@ class ResourceTypeItemController extends Controller
                 addETag($collection)->
                 addParameters(Parameter\Request::xHeader());
 
+            if (array_key_exists(0, $summary)) {
+                if (array_key_exists('last_updated', $summary[0]) === true) {
+                    $headers->addLastUpdated($summary[0]['last_updated']);
+                }
+                if (array_key_exists('total_count', $summary[0]) === true) {
+                    $headers->addTotalCount((int) $summary[0]['total_count']);
+                }
+            }
+
             $cache_summary->create($collection, $headers->headers());
             $cache_control->put(request()->getRequestUri(), $cache_summary->content());
         }
@@ -405,6 +432,15 @@ class ResourceTypeItemController extends Controller
             $headers->addCacheControl($cache_control->visibility(), $cache_control->ttl())->
                 addETag($collection)->
                 addParameters(Parameter\Request::xHeader());
+
+            if (array_key_exists(0, $summary)) {
+                if (array_key_exists('last_updated', $summary[0]) === true) {
+                    $headers->addLastUpdated($summary[0]['last_updated']);
+                }
+                if (array_key_exists('total_count', $summary[0]) === true) {
+                    $headers->addTotalCount((int) $summary[0]['total_count']);
+                }
+            }
 
             $cache_summary->create($collection, $headers->headers());
             $cache_control->put(request()->getRequestUri(), $cache_summary->content());
@@ -455,6 +491,15 @@ class ResourceTypeItemController extends Controller
                 addETag($collection)->
                 addParameters(Parameter\Request::xHeader());
 
+            if (array_key_exists(0, $summary)) {
+                if (array_key_exists('last_updated', $summary[0]) === true) {
+                    $headers->addLastUpdated($summary[0]['last_updated']);
+                }
+                if (array_key_exists('total_count', $summary[0]) === true) {
+                    $headers->addTotalCount((int) $summary[0]['total_count']);
+                }
+            }
+
             $cache_summary->create($collection, $headers->headers());
             $cache_control->put(request()->getRequestUri(), $cache_summary->content());
         }
@@ -502,6 +547,15 @@ class ResourceTypeItemController extends Controller
                 addETag($collection)->
                 addParameters(Parameter\Request::xHeader());
 
+            if (array_key_exists(0, $summary)) {
+                if (array_key_exists('last_updated', $summary[0]) === true) {
+                    $headers->addLastUpdated($summary[0]['last_updated']);
+                }
+                if (array_key_exists('total_count', $summary[0]) === true) {
+                    $headers->addTotalCount((int) $summary[0]['total_count']);
+                }
+            }
+
             $cache_summary->create($collection, $headers->headers());
             $cache_control->put(request()->getRequestUri(), $cache_summary->content());
         }
@@ -548,6 +602,15 @@ class ResourceTypeItemController extends Controller
                 addETag($collection)->
                 addParameters(Parameter\Request::xHeader());
 
+            if (array_key_exists(0, $summary)) {
+                if (array_key_exists('last_updated', $summary[0]) === true) {
+                    $headers->addLastUpdated($summary[0]['last_updated']);
+                }
+                if (array_key_exists('total_count', $summary[0]) === true) {
+                    $headers->addTotalCount((int) $summary[0]['total_count']);
+                }
+            }
+
             $cache_summary->create($collection, $headers->headers());
             $cache_control->put(request()->getRequestUri(), $cache_summary->content());
         }
@@ -591,6 +654,15 @@ class ResourceTypeItemController extends Controller
             $headers->addCacheControl($cache_control->visibility(), $cache_control->ttl())->
                 addETag($collection)->
                 addParameters(Parameter\Request::xHeader());
+
+            if (array_key_exists(0, $summary)) {
+                if (array_key_exists('last_updated', $summary[0]) === true) {
+                    $headers->addLastUpdated($summary[0]['last_updated']);
+                }
+                if (array_key_exists('total_count', $summary[0]) === true) {
+                    $headers->addTotalCount((int) $summary[0]['total_count']);
+                }
+            }
 
             $cache_summary->create($collection, $headers->headers());
             $cache_control->put(request()->getRequestUri(), $cache_summary->content());
@@ -654,6 +726,15 @@ class ResourceTypeItemController extends Controller
                 addSearch(Parameter\Search::xHeader())->
                 addParameters(Parameter\Request::xHeader());
 
+            if (array_key_exists(0, $summary)) {
+                if (array_key_exists('last_updated', $summary[0]) === true) {
+                    $headers->addLastUpdated($summary[0]['last_updated']);
+                }
+                if (array_key_exists('total_count', $summary[0]) === true) {
+                    $headers->addTotalCount((int) $summary[0]['total_count']);
+                }
+            }
+
             $cache_summary->create($collection, $headers->headers());
             $cache_control->put(request()->getRequestUri(), $cache_summary->content());
         }
@@ -703,6 +784,15 @@ class ResourceTypeItemController extends Controller
                 addETag($collection)->
                 addParameters(Parameter\Request::xHeader());
 
+            if (array_key_exists(0, $summary)) {
+                if (array_key_exists('last_updated', $summary[0]) === true) {
+                    $headers->addLastUpdated($summary[0]['last_updated']);
+                }
+                if (array_key_exists('total_count', $summary[0]) === true) {
+                    $headers->addTotalCount((int) $summary[0]['total_count']);
+                }
+            }
+
             $cache_summary->create($collection, $headers->headers());
             $cache_control->put(request()->getRequestUri(), $cache_summary->content());
         }
@@ -749,6 +839,15 @@ class ResourceTypeItemController extends Controller
             $headers->addCacheControl($cache_control->visibility(), $cache_control->ttl())->
                 addETag($collection)->
                 addSearch(Parameter\Search::xHeader());
+
+            if (array_key_exists(0, $summary)) {
+                if (array_key_exists('last_updated', $summary[0]) === true) {
+                    $headers->addLastUpdated($summary[0]['last_updated']);
+                }
+                if (array_key_exists('total_count', $summary[0]) === true) {
+                    $headers->addTotalCount((int) $summary[0]['total_count']);
+                }
+            }
 
             $cache_summary->create($collection, $headers->headers());
             $cache_control->put(request()->getRequestUri(), $cache_summary->content());

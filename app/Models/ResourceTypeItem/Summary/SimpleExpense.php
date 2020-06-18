@@ -35,7 +35,11 @@ class SimpleExpense extends Model implements ISummaryModel, ISummaryModelCategor
         array $parameters
     ): array
     {
-        $collection = $this->selectRaw("sum({$this->sub_table}.total) AS total")->
+        $collection = $this->selectRaw("
+                sum({$this->sub_table}.total) AS total, 
+                COUNT({$this->sub_table}.item_id) AS total_count, 
+                MAX({$this->sub_table}.created_at) AS last_updated
+            ")->
             join($this->sub_table, 'item.id', "{$this->sub_table}.item_id")->
             join('resource', 'item.resource_id', 'resource.id')->
             join('resource_type', 'resource.resource_type_id', 'resource_type.id')->
@@ -63,7 +67,9 @@ class SimpleExpense extends Model implements ISummaryModel, ISummaryModelCategor
         $collection = $this->selectRaw("
                 resource.id AS id, 
                 resource.name AS `name`, 
-                SUM({$this->sub_table}.total) AS total"
+                SUM({$this->sub_table}.total) AS total, 
+                COUNT({$this->sub_table}.item_id) AS total_count, 
+                MAX({$this->sub_table}.created_at) AS last_updated"
             )->
             join($this->sub_table, 'item.id', "{$this->sub_table}.item_id")->
             join('resource', 'item.resource_id', 'resource.id')->
@@ -94,7 +100,9 @@ class SimpleExpense extends Model implements ISummaryModel, ISummaryModelCategor
                 category.id, 
                 category.name AS name, 
                 category.description AS description,
-                SUM({$this->sub_table}.total) AS total")->
+                SUM({$this->sub_table}.total) AS total, 
+                COUNT({$this->sub_table}.item_id) AS total_count, 
+                MAX({$this->sub_table}.created_at) AS last_updated")->
             join($this->sub_table, 'item.id', "{$this->sub_table}.item_id")->
             join("resource", "resource.id", "item.resource_id")->
             join("resource_type", "resource_type.id", "resource.resource_type_id")->
@@ -129,7 +137,9 @@ class SimpleExpense extends Model implements ISummaryModel, ISummaryModelCategor
                 category.id, 
                 category.name AS name, 
                 category.description, 
-                SUM({$this->sub_table}.total) AS total")->
+                SUM({$this->sub_table}.total) AS total, 
+                COUNT({$this->sub_table}.item_id) AS total_count, 
+                MAX({$this->sub_table}.created_at) AS last_updated")->
             join($this->sub_table, 'item.id', "{$this->sub_table}.item_id")->
             join("resource", "resource.id", "item.resource_id")->
             join("resource_type", "resource_type.id", "resource.resource_type_id")->
@@ -166,7 +176,11 @@ class SimpleExpense extends Model implements ISummaryModel, ISummaryModelCategor
     ): array
     {
         $collection = $this->
-            selectRaw("SUM({$this->sub_table}.total) AS total")->
+            selectRaw("
+                SUM({$this->sub_table}.total) AS total,
+                COUNT({$this->sub_table}.item_id) AS total_count,  
+                MAX({$this->sub_table}.created_at) AS last_updated
+            ")->
             join($this->sub_table, 'item.id', "{$this->sub_table}.item_id")->
             join("resource", "resource.id", "item.resource_id")->
             join("resource_type", "resource_type.id", "resource.resource_type_id")->
@@ -212,7 +226,10 @@ class SimpleExpense extends Model implements ISummaryModel, ISummaryModelCategor
                 sub_category.id, 
                 sub_category.name AS name, 
                 sub_category.description AS description, 
-                SUM({$this->sub_table}.total) AS total")->
+                SUM({$this->sub_table}.total) AS total, 
+                COUNT({$this->sub_table}.item_id) AS total_count, 
+                MAX({$this->sub_table}.created_at) AS last_updated
+            ")->
             join($this->sub_table, 'item.id', "{$this->sub_table}.item_id")->
             join("resource", "resource.id", "item.resource_id")->
             join("resource_type", "resource_type.id", "resource.resource_type_id")->
@@ -252,7 +269,10 @@ class SimpleExpense extends Model implements ISummaryModel, ISummaryModelCategor
                 sub_category.id, 
                 sub_category.name AS name, 
                 sub_category.description AS description, 
-                SUM($this->sub_table.total) AS total")->
+                SUM($this->sub_table.total) AS total, 
+                COUNT({$this->sub_table}.item_id) AS total_count, 
+                MAX({$this->sub_table}.created_at) AS last_updated
+            ")->
             join($this->sub_table, 'item.id', "{$this->sub_table}.item_id")->
             join("resource", "resource.id", "item.resource_id")->
             join("resource_type", "resource_type.id", "resource.resource_type_id")->
