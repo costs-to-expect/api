@@ -40,7 +40,7 @@ class RequestController extends Controller
         $cache_summary = new Cache\Summary();
         $cache_summary->setFromCache($cache_control->get(request()->getRequestUri()));
 
-        if ($cache_summary->valid() === false) {
+        if ($cache_control->cacheable() === false || $cache_summary->valid() === false) {
 
             $request_data = (new RequestLog())->monthlyRequests($this->collection_parameters);
 

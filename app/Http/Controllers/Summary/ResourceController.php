@@ -46,7 +46,7 @@ class ResourceController extends Controller
         $cache_summary = new Cache\Summary();
         $cache_summary->setFromCache($cache_control->get(request()->getRequestUri()));
 
-        if ($cache_summary->valid() === false) {
+        if ($cache_control->cacheable() === false || $cache_summary->valid() === false) {
 
             $summary = (new Resource())->totalCount(
                 $resource_type_id,

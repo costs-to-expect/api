@@ -62,7 +62,7 @@ class SubcategoryController extends Controller
         $cache_collection = new Cache\Collection();
         $cache_collection->setFromCache($cache_control->get(request()->getRequestUri()));
 
-        if ($cache_collection->valid() === false) {
+        if ($cache_control->cacheable() === false || $cache_collection->valid() === false) {
 
             $total = (new Subcategory())->totalCount(
                 (int)$resource_type_id,

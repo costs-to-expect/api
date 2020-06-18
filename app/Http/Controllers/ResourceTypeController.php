@@ -57,7 +57,7 @@ class ResourceTypeController extends Controller
         $cache_collection = new Cache\Collection();
         $cache_collection->setFromCache($cache_control->get(request()->getRequestUri()));
 
-        if ($cache_collection->valid() === false) {
+        if ($cache_control->cacheable() === false || $cache_collection->valid() === false) {
             $total = (new ResourceType())->totalCount(
                 $this->permitted_resource_types,
                 $this->include_public,

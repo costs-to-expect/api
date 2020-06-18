@@ -249,7 +249,7 @@ class ResourceTypeItemController extends Controller
         $cache_summary = new Cache\Summary();
         $cache_summary->setFromCache($cache_control->get(request()->getRequestUri()));
 
-        if ($cache_summary->valid() === false) {
+        if ($cache_control->cacheable() === false || $cache_summary->valid() === false) {
 
             $summary = $this->model->summary(
                 $resource_type_id,
@@ -306,7 +306,7 @@ class ResourceTypeItemController extends Controller
         $cache_summary = new Cache\Summary();
         $cache_summary->setFromCache($cache_control->get(request()->getRequestUri()));
 
-        if ($cache_summary->valid() === false) {
+        if ($cache_control->cacheable() === false || $cache_summary->valid() === false) {
 
             $summary = $this->model->resourcesSummary(
                 $resource_type_id,
@@ -361,7 +361,7 @@ class ResourceTypeItemController extends Controller
         $cache_summary = new Cache\Summary();
         $cache_summary->setFromCache($cache_control->get(request()->getRequestUri()));
 
-        if ($cache_summary->valid() === false) {
+        if ($cache_control->cacheable() === false || $cache_summary->valid() === false) {
 
             $summary = $this->model->yearsSummary(
                 $resource_type_id,
@@ -418,7 +418,7 @@ class ResourceTypeItemController extends Controller
         $cache_summary = new Cache\Summary();
         $cache_summary->setFromCache($cache_control->get(request()->getRequestUri()));
 
-        if ($cache_summary->valid() === false) {
+        if ($cache_control->cacheable() === false || $cache_summary->valid() === false) {
 
             $summary = $this->model->yearSummary(
                 $resource_type_id,
@@ -471,7 +471,7 @@ class ResourceTypeItemController extends Controller
         $cache_summary = new Cache\Summary();
         $cache_summary->setFromCache($cache_control->get(request()->getRequestUri()));
 
-        if ($cache_summary->valid() === false) {
+        if ($cache_control->cacheable() === false || $cache_summary->valid() === false) {
 
             $summary = $this->model->monthsSummary(
                 $resource_type_id,
@@ -531,7 +531,7 @@ class ResourceTypeItemController extends Controller
         $cache_summary = new Cache\Summary();
         $cache_summary->setFromCache($cache_control->get(request()->getRequestUri()));
 
-        if ($cache_summary->valid() === false) {
+        if ($cache_control->cacheable() === false || $cache_summary->valid() === false) {
 
             $summary = $this->model->monthSummary(
                 $resource_type_id,
@@ -583,7 +583,7 @@ class ResourceTypeItemController extends Controller
         $cache_summary = new Cache\Summary();
         $cache_summary->setFromCache($cache_control->get(request()->getRequestUri()));
 
-        if ($cache_summary->valid() === false) {
+        if ($cache_control->cacheable() === false || $cache_summary->valid() === false) {
 
             $summary = $this->model->categoriesSummary(
                 $resource_type_id,
@@ -640,7 +640,7 @@ class ResourceTypeItemController extends Controller
         $cache_summary = new Cache\Summary();
         $cache_summary->setFromCache($cache_control->get(request()->getRequestUri()));
 
-        if ($cache_summary->valid() === false) {
+        if ($cache_control->cacheable() === false || $cache_summary->valid() === false) {
 
             $summary = $this->model->categorySummary(
                 $resource_type_id,
@@ -702,7 +702,7 @@ class ResourceTypeItemController extends Controller
         $cache_summary = new Cache\Summary();
         $cache_summary->setFromCache($cache_control->get(request()->getRequestUri()));
 
-        if ($cache_summary->valid() === false) {
+        if ($cache_control->cacheable() === false || $cache_summary->valid() === false) {
 
             $summary = $this->model->filteredSummary(
                 $resource_type_id,
@@ -764,7 +764,7 @@ class ResourceTypeItemController extends Controller
         $cache_summary = new Cache\Summary();
         $cache_summary->setFromCache($cache_control->get(request()->getRequestUri()));
 
-        if ($cache_summary->valid() === false) {
+        if ($cache_control->cacheable() === false || $cache_summary->valid() === false) {
 
             $summary = $this->model->subcategoriesSummary(
                 $resource_type_id,
@@ -824,7 +824,7 @@ class ResourceTypeItemController extends Controller
         $cache_summary = new Cache\Summary();
         $cache_summary->setFromCache($cache_control->get(request()->getRequestUri()));
 
-        if ($cache_summary->valid() === false) {
+        if ($cache_control->cacheable() === false || $cache_summary->valid() === false) {
 
             $summary = $this->model->subcategorySummary(
                 $resource_type_id,
