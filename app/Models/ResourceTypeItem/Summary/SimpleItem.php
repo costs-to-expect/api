@@ -34,7 +34,11 @@ class SimpleItem extends Model implements ISummaryModel
         array $parameters
     ): array
     {
-        $collection = $this->selectRaw("sum({$this->sub_table}.quantity) AS total")->
+        $collection = $this->selectRaw("
+                SUM({$this->sub_table}.quantity) AS total, 
+                COUNT({$this->sub_table}.item_id) AS total_count, 
+                MAX({$this->sub_table}.created_at) AS last_updated
+            ")->
             join($this->sub_table, 'item.id', "{$this->sub_table}.item_id")->
             join('resource', 'item.resource_id', 'resource.id')->
             join('resource_type', 'resource.resource_type_id', 'resource_type.id')->
@@ -62,7 +66,9 @@ class SimpleItem extends Model implements ISummaryModel
         $collection = $this->selectRaw("
                 resource.id AS id, 
                 resource.name AS `name`, 
-                SUM({$this->sub_table}.quantity) AS total"
+                SUM({$this->sub_table}.quantity) AS total, 
+                COUNT({$this->sub_table}.item_id) AS total_count, 
+                MAX({$this->sub_table}.created_at) AS last_updated"
             )->
             join($this->sub_table, 'item.id', "{$this->sub_table}.item_id")->
             join('resource', 'item.resource_id', 'resource.id')->
@@ -96,7 +102,11 @@ class SimpleItem extends Model implements ISummaryModel
     ): array
     {
         $collection = $this->
-            selectRaw("SUM({$this->sub_table}.quantity) AS total")->
+            selectRaw("
+                SUM({$this->sub_table}.quantity) AS total, 
+                COUNT({$this->sub_table}.item_id) AS total_count, 
+                MAX({$this->sub_table}.created_at) AS last_updated
+            ")->
             join($this->sub_table, 'item.id', "{$this->sub_table}.item_id")->
             join("resource", "resource.id", "item.resource_id")->
             join("resource_type", "resource_type.id", "resource.resource_type_id")->

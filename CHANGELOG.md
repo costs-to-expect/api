@@ -2,6 +2,12 @@
 
 The complete changelog for the Costs to Expect REST API, our changelog follows the format defined at https://keepachangelog.com/en/1.0.0/
 
+## [v2.11.3] - 2020-06-19
+### Added 
+- We have added an application cache for summaries; we include the ETag header however we are not yet returning a 304.
+### Changed
+- We have updated the caching system to respect the `cache` config setting.
+
 ## [v2.11.2] - 2020-06-17
 ### Changed
 - We have split calls to clear public and private cache keys.

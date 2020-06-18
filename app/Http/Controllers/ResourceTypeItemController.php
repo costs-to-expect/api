@@ -63,7 +63,7 @@ class ResourceTypeItemController extends Controller
         $cache_collection = new Cache\Collection();
         $cache_collection->setFromCache($cache_control->get(request()->getRequestUri()));
 
-        if ($cache_collection->valid() === false) {
+        if ($cache_control->cacheable() === false || $cache_collection->valid() === false) {
 
             $total = $resource_type_item_model->totalCount(
                 $resource_type_id,

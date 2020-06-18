@@ -139,11 +139,15 @@ class Control
      */
     public function put(string $key, array $data): bool
     {
-        return LaravelCache::put(
-            ($this->key_prefix_private ?? $this->key_prefix_public) . $key,
-            $data,
-            $this->ttl
-        );
+        if ($this->cacheable() === true) {
+            return LaravelCache::put(
+                ($this->key_prefix_private ?? $this->key_prefix_public) . $key,
+                $data,
+                $this->ttl
+            );
+        }
+
+        return true;
     }
 
     /**

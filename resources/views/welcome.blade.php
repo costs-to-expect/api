@@ -224,6 +224,7 @@
                         <li>We have updated the partial transfers collection; you can filter the results by an `item` ID.</li>
                         <li>We have added additional filtering options for collections. We have added `total` and `actualised_total` range filtering for the `allocated-expense` item type and `total` range filtering for the `simple-expense` item type.</li>
                         <li>We have added an application cache for collections; we include the ETag header however we are not yet returning a 304.</li>
+                        <li>We have added an application cache for summaries; we include the ETag header however we are not yet returning a 304.</li>
                     </ul>
 
                     <h3>Changed</h3>
@@ -245,6 +246,7 @@
                         <li>We only clear public cache keys when modifying a public resource type.</li>
                         <li>We have updated the web.config; the web.config file was referring to PHP7.3.</li>
                         <li>Added removed class type hints now that we are running PHP7.4.</li>
+                        <li>We have updated the caching system to respect the `cache` config setting.</li>
                     </ul>
 
                     <h3>Fixed</h3>

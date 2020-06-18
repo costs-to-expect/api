@@ -57,7 +57,7 @@ class ItemSubcategoryController extends Controller
         $cache_collection = new Cache\Collection();
         $cache_collection->setFromCache($cache_control->get(request()->getRequestUri()));
 
-        if ($cache_collection->valid() === false) {
+        if ($cache_control->cacheable() === false || $cache_collection->valid() === false) {
 
             $item_sub_category = (new ItemSubcategory())->paginatedCollection(
                 $resource_type_id,
