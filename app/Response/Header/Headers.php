@@ -132,11 +132,11 @@ class Headers
     /**
      * Add the X-Last-Updated header
      *
-     * @param string $last_updated
+     * @param string|null $last_updated
      *
      * @return Headers
      */
-    public function addLastUpdated(string $last_updated): Headers
+    public function addLastUpdated(?string $last_updated = null): Headers
     {
         $this->headers->add('X-Last-Updated', $last_updated);
 
