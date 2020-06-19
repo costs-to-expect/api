@@ -7,6 +7,10 @@ RUN docker-php-ext-install pdo_mysql bcmath
 RUN apt-get update
 RUN apt-get install -y git zip unzip
 
+RUN pecl install -o -f redis \
+&&  rm -rf /tmp/pear \
+&&  docker-php-ext-enable redis
+
 ARG WITH_COMPOSER=false
 
 RUN if [ $WITH_COMPOSER = "true" ] ; then \
