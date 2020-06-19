@@ -33,14 +33,14 @@ class RequestController extends Controller
         $cache_control = new Cache\Control($this->user_id);
         $cache_control->setTtlOneHour();
 
-        $this->collection_parameters = Parameter\Request::fetch(
-            array_keys(Config::get('api.request-access-log.summary-parameters'))
-        );
-
         $cache_summary = new Cache\Summary();
         $cache_summary->setFromCache($cache_control->get(request()->getRequestUri()));
 
         if ($cache_control->cacheable() === false || $cache_summary->valid() === false) {
+
+            $this->collection_parameters = Parameter\Request::fetch(
+                array_keys(Config::get('api.request-access-log.summary-parameters'))
+            );
 
             $request_data = (new RequestLog())->monthlyRequests($this->collection_parameters);
 

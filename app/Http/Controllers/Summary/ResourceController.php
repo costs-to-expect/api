@@ -39,14 +39,14 @@ class ResourceController extends Controller
         $cache_control = new Cache\Control($this->user_id);
         $cache_control->setTtlOneWeek();
 
-        $search_parameters = Parameter\Search::fetch(
-            array_keys(Config::get('api.resource.summary-searchable'))
-        );
-
         $cache_summary = new Cache\Summary();
         $cache_summary->setFromCache($cache_control->get(request()->getRequestUri()));
 
         if ($cache_control->cacheable() === false || $cache_summary->valid() === false) {
+
+            $search_parameters = Parameter\Search::fetch(
+                array_keys(Config::get('api.resource.summary-searchable'))
+            );
 
             $summary = (new Resource())->totalCount(
                 $resource_type_id,

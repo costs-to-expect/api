@@ -48,18 +48,19 @@ class CategoryController extends Controller
         $cache_control = new Cache\Control($this->user_id);
         $cache_control->setTtlOneMonth();
 
-        $search_parameters = Parameter\Search::fetch(
-            array_keys(Config::get('api.category.searchable'))
-        );
-
-        $sort_parameters = Parameter\Sort::fetch(
-            Config::get('api.category.sortable')
-        );
-
         $cache_collection = new Cache\Collection();
         $cache_collection->setFromCache($cache_control->get(request()->getRequestUri()));
 
         if ($cache_control->cacheable() === false || $cache_collection->valid() === false) {
+
+            $search_parameters = Parameter\Search::fetch(
+                array_keys(Config::get('api.category.searchable'))
+            );
+
+            $sort_parameters = Parameter\Sort::fetch(
+                Config::get('api.category.sortable')
+            );
+
             $total = (new Category())->total(
                 (int)$resource_type_id,
                 $this->permitted_resource_types,

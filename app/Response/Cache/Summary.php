@@ -91,12 +91,7 @@ class Summary
      */
     public function setFromCache(array $content = null): void
     {
-        if (
-            $content !== null &&
-            is_array($content) &&
-            array_key_exists('collection', $content) === true &&
-            array_key_exists('headers', $content) === true
-        ) {
+        if ($content !== null) {
             $this->cached = true;
             $this->collection = $content['collection'];
             $this->headers = $content['headers'];

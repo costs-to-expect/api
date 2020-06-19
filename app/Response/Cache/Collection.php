@@ -101,14 +101,7 @@ class Collection
      */
     public function setFromCache(array $content = null): void
     {
-        if (
-            $content !== null &&
-            is_array($content) &&
-            array_key_exists('total', $content) === true &&
-            array_key_exists('collection', $content) === true &&
-            array_key_exists('headers', $content) === true &&
-            array_key_exists('pagination', $content) === true
-        ) {
+        if ($content !== null) {
             $this->cached = true;
             $this->total = $content['total'];
             $this->collection = $content['collection'];

@@ -39,31 +39,31 @@ class ResourceTypeItemController extends Controller
         $cache_control = new Cache\Control($this->user_id);
         $cache_control->setTtlOneWeek();
 
-        $item_interface = Factory::item($resource_type_id);
-
-        $resource_type_item_model = $item_interface->model();
-
-        $collection_parameters = Parameter\Request::fetch(
-            array_keys($item_interface->collectionParameters()),
-            $resource_type_id
-        );
-
-        $sort_fields = Parameter\Sort::fetch(
-            $item_interface->sortParameters()
-        );
-
-        $search_parameters = Parameter\Search::fetch(
-            $item_interface->searchParameters()
-        );
-
-        $filter_parameters = Parameter\Filter::fetch(
-            $item_interface->filterParameters()
-        );
-
         $cache_collection = new Cache\Collection();
         $cache_collection->setFromCache($cache_control->get(request()->getRequestUri()));
 
         if ($cache_control->cacheable() === false || $cache_collection->valid() === false) {
+
+            $item_interface = Factory::item($resource_type_id);
+
+            $resource_type_item_model = $item_interface->model();
+
+            $collection_parameters = Parameter\Request::fetch(
+                array_keys($item_interface->collectionParameters()),
+                $resource_type_id
+            );
+
+            $sort_fields = Parameter\Sort::fetch(
+                $item_interface->sortParameters()
+            );
+
+            $search_parameters = Parameter\Search::fetch(
+                $item_interface->searchParameters()
+            );
+
+            $filter_parameters = Parameter\Filter::fetch(
+                $item_interface->filterParameters()
+            );
 
             $total = $resource_type_item_model->totalCount(
                 $resource_type_id,

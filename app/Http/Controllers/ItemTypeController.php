@@ -34,18 +34,19 @@ class ItemTypeController extends Controller
         $cache_control = new Cache\Control($this->user_id);
         $cache_control->setTtlOneYear();
 
-        $search_parameters = Parameter\Search::fetch(
-            array_keys(Config::get('api.item-type.searchable'))
-        );
-
-        $sort_parameters = Parameter\Sort::fetch(
-            Config::get('api.item-type.sortable')
-        );
-
         $cache_collection = new Cache\Collection();
         $cache_collection->setFromCache($cache_control->get(request()->getRequestUri()));
 
         if ($cache_control->cacheable() === false || $cache_collection->valid() === false) {
+
+            $search_parameters = Parameter\Search::fetch(
+                array_keys(Config::get('api.item-type.searchable'))
+            );
+
+            $sort_parameters = Parameter\Sort::fetch(
+                Config::get('api.item-type.sortable')
+            );
+
             $total = (new ItemType())->totalCount($search_parameters);
 
             $pagination = UtilityPagination::init(

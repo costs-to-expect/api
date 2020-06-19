@@ -51,18 +51,18 @@ class SubcategoryController extends Controller
         $cache_control = new Cache\Control($this->user_id);
         $cache_control->setTtlOneMonth();
 
-        $search_parameters = Parameter\Search::fetch(
-            array_keys(Config::get('api.subcategory.searchable'))
-        );
-
-        $sort_parameters = Parameter\Sort::fetch(
-            Config::get('api.subcategory.sortable')
-        );
-
         $cache_collection = new Cache\Collection();
         $cache_collection->setFromCache($cache_control->get(request()->getRequestUri()));
 
         if ($cache_control->cacheable() === false || $cache_collection->valid() === false) {
+
+            $search_parameters = Parameter\Search::fetch(
+                array_keys(Config::get('api.subcategory.searchable'))
+            );
+
+            $sort_parameters = Parameter\Sort::fetch(
+                Config::get('api.subcategory.sortable')
+            );
 
             $total = (new Subcategory())->totalCount(
                 (int)$resource_type_id,
