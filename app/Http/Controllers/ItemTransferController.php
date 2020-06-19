@@ -38,22 +38,23 @@ class ItemTransferController extends Controller
      */
     public function index($resource_type_id): JsonResponse
     {
-        $cache_control = new Cache\Control($this->user_id);
-        $cache_control->setTtlOneWeek();
-
         Route\Validate::resourceType(
             (int) $resource_type_id,
             $this->permitted_resource_types
         );
 
-        $parameters = Parameter\Request::fetch(
-            array_keys(Config::get('api.item-transfer.parameters.collection'))
-        );
+        $cache_control = new Cache\Control($this->user_id);
+        $cache_control->setTtlOneWeek();
 
         $cache_collection = new Cache\Collection();
         $cache_collection->setFromCache($cache_control->get(request()->getRequestUri()));
 
         if ($cache_control->cacheable() === false || $cache_collection->valid() === false) {
+
+            $parameters = Parameter\Request::fetch(
+                array_keys(Config::get('api.item-transfer.parameters.collection'))
+            );
+
             $total = (new ItemTransfer())->total(
                 (int)$resource_type_id,
                 $this->permitted_resource_types,

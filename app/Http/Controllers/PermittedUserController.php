@@ -43,18 +43,19 @@ class PermittedUserController extends Controller
         $cache_control = new Cache\Control($this->user_id);
         $cache_control->setTtlOneMonth();
 
-        $search_parameters = Parameter\Search::fetch(
-            array_keys(Config::get('api.permitted-user.searchable'))
-        );
-
-        $sort_parameters = Parameter\Sort::fetch(
-            Config::get('api.permitted-user.sortable')
-        );
-
         $cache_collection = new Cache\Collection();
         $cache_collection->setFromCache($cache_control->get(request()->getRequestUri()));
 
         if ($cache_control->cacheable() === false || $cache_collection->valid() === false) {
+
+            $search_parameters = Parameter\Search::fetch(
+                array_keys(Config::get('api.permitted-user.searchable'))
+            );
+
+            $sort_parameters = Parameter\Sort::fetch(
+                Config::get('api.permitted-user.sortable')
+            );
+
             $total = (new PermittedUser())->totalCount(
                 $resource_type_id,
                 $search_parameters

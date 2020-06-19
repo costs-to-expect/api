@@ -56,28 +56,28 @@ class ItemController extends Controller
 
         $item_interface = Factory::item($resource_type_id);
 
-        $parameters = Parameter\Request::fetch(
-            array_keys($item_interface->collectionParameters()),
-            (int) $resource_type_id,
-            (int) $resource_id
-        );
-
-        $search_parameters = Parameter\Search::fetch(
-            $item_interface->searchParameters()
-        );
-
-        $filter_parameters = Parameter\Filter::fetch(
-            $item_interface->filterParameters()
-        );
-
-        $sort_parameters = Parameter\Sort::fetch(
-            $item_interface->sortParameters()
-        );
-
         $cache_collection = new Cache\Collection();
         $cache_collection->setFromCache($cache_control->get(request()->getRequestUri()));
 
         if ($cache_control->cacheable() === false || $cache_collection->valid() === false) {
+
+            $parameters = Parameter\Request::fetch(
+                array_keys($item_interface->collectionParameters()),
+                (int) $resource_type_id,
+                (int) $resource_id
+            );
+
+            $search_parameters = Parameter\Search::fetch(
+                $item_interface->searchParameters()
+            );
+
+            $filter_parameters = Parameter\Filter::fetch(
+                $item_interface->filterParameters()
+            );
+
+            $sort_parameters = Parameter\Sort::fetch(
+                $item_interface->sortParameters()
+            );
 
             $item_model = $item_interface->model();
             $total = $item_model->totalCount(

@@ -46,18 +46,19 @@ class ResourceTypeController extends Controller
         $cache_control = new Cache\Control($this->user_id);
         $cache_control->setTtlOneWeek();
 
-        $search_parameters = Parameter\Search::fetch(
-            array_keys(Config::get('api.resource-type.searchable'))
-        );
-
-        $sort_parameters = Parameter\Sort::fetch(
-            Config::get('api.resource-type.sortable')
-        );
-
         $cache_collection = new Cache\Collection();
         $cache_collection->setFromCache($cache_control->get(request()->getRequestUri()));
 
         if ($cache_control->cacheable() === false || $cache_collection->valid() === false) {
+
+            $search_parameters = Parameter\Search::fetch(
+                array_keys(Config::get('api.resource-type.searchable'))
+            );
+
+            $sort_parameters = Parameter\Sort::fetch(
+                Config::get('api.resource-type.sortable')
+            );
+
             $total = (new ResourceType())->totalCount(
                 $this->permitted_resource_types,
                 $this->include_public,

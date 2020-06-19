@@ -46,14 +46,15 @@ class ItemPartialTransferController extends Controller
             $this->permitted_resource_types
         );
 
-        $parameters = Parameter\Request::fetch(
-            array_keys(Config::get('api.item-transfer.parameters.collection'))
-        );
-
         $cache_collection = new Cache\Collection();
         $cache_collection->setFromCache($cache_control->get(request()->getRequestUri()));
 
         if ($cache_control->cacheable() === false || $cache_collection->valid() === false) {
+
+            $parameters = Parameter\Request::fetch(
+                array_keys(Config::get('api.item-transfer.parameters.collection'))
+            );
+
             $total = (new ItemPartialTransfer())->total(
                 (int)$resource_type_id,
                 $this->permitted_resource_types,
