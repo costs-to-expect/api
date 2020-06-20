@@ -366,6 +366,10 @@ class ItemController extends Controller
                 $parameters
             );
 
+            if (count($summary) === 0) {
+                abort(404, 'Unable to generate the requested summary');
+            }
+
             $collection = (new ItemYearTransformer($summary[0]))->toArray();
 
             $headers = new Headers();
@@ -483,6 +487,10 @@ class ItemController extends Controller
                 $month,
                 $parameters
             );
+
+            if (count($summary) === 0) {
+                abort(404, 'Unable to generate the requested summary');
+            }
 
             $collection = (new ItemMonthTransformer($summary[0]))->toArray();
 
@@ -667,6 +675,10 @@ class ItemController extends Controller
                 $parameters
             );
 
+            if (count($summary) === 0) {
+                abort(404, 'Unable to generate the requested summary');
+            }
+
             $collection = (new ItemCategoryTransformer($summary[0]))->toArray();
 
             $headers = new Headers();
@@ -784,6 +796,10 @@ class ItemController extends Controller
                 $subcategory_id,
                 $parameters
             );
+
+            if (count($summary) === 0) {
+                abort(404, 'Unable to generate the requested summary');
+            }
 
             $collection = (new ItemSubcategoryTransformer($summary[0]))->toArray();
 
