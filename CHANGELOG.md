@@ -2,7 +2,11 @@
 
 The complete changelog for the Costs to Expect REST API, our changelog follows the format defined at https://keepachangelog.com/en/1.0.0/
 
-## [v2.13.4] - 2020-06-19
+## [v2.12.0] - 2020-xx-xx
+### Changed
+- We have updated the example ENV file.
+
+## [v2.11.4] - 2020-06-19
 ### Changed
 - We have switched to Redis for our cache.
 
