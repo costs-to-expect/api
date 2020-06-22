@@ -15,4 +15,14 @@ Route::view(
     ]
 );
 
+Route::view(
+    'documentation',
+    'documentation',
+    [
+        'maintenance' => app()->isDownForMaintenance(),
+        'version' => $version['version'],
+        'date' => $version['release_date']
+    ]
+);
+
 

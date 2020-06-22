@@ -59,6 +59,7 @@
                                 <li><a class="nav-link  active " href="/v2">The API</a></li>
                                 <li><a class="nav-link " href="https://github.com/costs-to-expect/api/blob/master/CHANGELOG.md">Changelog (Github)</a></li>
                                 <li><a class="nav-link " href="/v2/changelog">Changelog (API)</a></li>
+                                <li><a class="nav-link " href="/documentation">Documentation</a></li>
                                 <li><a class="nav-link" href="https://www.costs-to-expect.com" title="The Costs to Expect Website">The Website</a></li>
                                 <li><a class="nav-link" href="https://app.costs-to-expect.com" title="The Costs to Expect App">The App</a></li>
                                 <li><a class="nav-link" href="https://blog.costs-to-expect.com" title="The Costs to Expect Blog">The Blog</a></li>
@@ -88,6 +89,7 @@
                                         <li><a class="nav-link  active " href="/v2">The API</a></li>
                                         <li><a class="nav-link " href="https://github.com/costs-to-expect/api/blob/master/CHANGELOG.md">Changelog (Github)</a></li>
                                         <li><a class="nav-link " href="/v2/changelog">Changelog (API)</a></li>
+                                        <li><a class="nav-link " href="/documentation">Documentation</a></li>
                                         <li><a class="nav-link" href="https://www.costs-to-expect.com" title="The Costs to Expect Website">The Website</a></li>
                                         <li><a class="nav-link" href="https://app.costs-to-expect.com" title="The Costs to Expect App">The App</a></li>
                                         <li><a class="nav-link" href="https://blog.costs-to-expect.com" title="The Costs to Expect Blog">The Blog</a></li>
