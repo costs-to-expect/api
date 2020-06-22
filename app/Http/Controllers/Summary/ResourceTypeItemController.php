@@ -62,32 +62,32 @@ class ResourceTypeItemController extends Controller
 
         if (
             array_key_exists('resources', $parameters) === true &&
-            General::booleanValue($parameters['resources']) === true
+            General::convertedBooleanValue($parameters['resources']) === true
         ) {
             $resources = true;
         }
 
         if (
             array_key_exists('years', $parameters) === true &&
-            General::booleanValue($parameters['years']) === true
+            General::convertedBooleanValue($parameters['years']) === true
         ) {
             $years = true;
         }
 
         if (
             array_key_exists('months', $parameters) === true &&
-            General::booleanValue($parameters['months']) === true
+            General::convertedBooleanValue($parameters['months']) === true
         ) {
             $months = true;
         }
 
         if (array_key_exists('categories', $parameters) === true &&
-            General::booleanValue($parameters['categories']) === true) {
+            General::convertedBooleanValue($parameters['categories']) === true) {
             $categories = true;
         }
 
         if (array_key_exists('subcategories', $parameters) === true &&
-                General::booleanValue($parameters['subcategories']) === true) {
+                General::convertedBooleanValue($parameters['subcategories']) === true) {
             $subcategories = true;
         }
 

@@ -133,7 +133,7 @@ class ResourceTypeItem extends Model
 
         if (
             array_key_exists('include-categories', $parameters_collection) === true &&
-            General::booleanValue($parameters_collection['include-categories']) === true
+            General::convertedBooleanValue($parameters_collection['include-categories']) === true
         ) {
             $collection->join('item_category', 'item.id', 'item_category.item_id')->
                 join('category', 'item_category.category_id', 'category.id');
@@ -151,7 +151,7 @@ class ResourceTypeItem extends Model
 
             if (
                 array_key_exists('include-subcategories', $parameters_collection) === true &&
-                General::booleanValue($parameters_collection['include-subcategories']) === true
+                General::convertedBooleanValue($parameters_collection['include-subcategories']) === true
             ) {
                 $collection->join('item_sub_category', 'item_category.id', 'item_sub_category.item_category_id')->
                     join('sub_category', 'item_sub_category.sub_category_id', 'sub_category.id');

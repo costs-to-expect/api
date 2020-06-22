@@ -42,7 +42,7 @@ class Request
                     case 'include-resources';
                     case 'include-categories':
                     case 'include-subcategories';
-                        self::$parameters[$parameter] = General::booleanValue($request_parameters[$parameter]);
+                        self::$parameters[$parameter] = General::convertedBooleanValue($request_parameters[$parameter]);
                         break;
 
                     default:
@@ -79,7 +79,10 @@ class Request
                 case 'include-unpublished':
                     if (
                         array_key_exists($key, self::$parameters) === true &&
-                        General::booleanValue(self::$parameters[$key]) === false
+                        (
+                            General::isConvertibleToBoolean(self::$parameters[$key]) === false ||
+                            General::convertedBooleanValue(self::$parameters[$key]) === false
+                        )
                     ) {
                         unset(self::$parameters[$key]);
                     }
@@ -127,7 +130,7 @@ class Request
                 case 'years':
                     if (
                         array_key_exists($key, self::$parameters) === true &&
-                        General::isBooleanValue(self::$parameters[$key]) === false
+                        General::isConvertibleToBoolean(self::$parameters[$key]) === false
                     ) {
                             unset(self::$parameters[$key]);
                     }

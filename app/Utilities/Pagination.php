@@ -247,7 +247,12 @@ class Pagination
         self::$offset = (int) request()->query('offset', 0);
         self::$limit = (int) request()->query('limit', self::$limit);
         if (self::$allow_override === true) {
-            self::$collection = General::booleanValue(request()->query('collection', false));
+
+            self::$collection = false;
+
+            if (General::convertedBooleanValue(request()->query('collection')) === true) {
+                self::$collection = true;
+            }
         }
 
         $uris = [

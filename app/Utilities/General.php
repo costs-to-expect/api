@@ -15,28 +15,29 @@ namespace App\Utilities;
 class General
 {
     /**
-     * Checks a value and see if a boolean is returned after a call to
-     * filter_var($value, FILTER_VALIDATE_BOOLEAN)
+     * Converts the provided value to a boolean, valid options are 1, true,
+     * "true" and "off". We look for the positive values are return anything
+     * else as FALSE
      *
      * @param $value
      *
      * @return bool
      */
-    public static function booleanValue($value): bool
+    public static function convertedBooleanValue($value): bool
     {
         return filter_var($value, FILTER_VALIDATE_BOOLEAN) === true;
     }
 
     /**
-     * Check to see if a value is a valid boolean, uses filter_var so true, 1,
-     * "true" and "on" are all valid positive boolean values, off values
-     * are false, 0, "false" and "off"
+     * Check to see if the provided value can be turned into a boolean,
+     * we use filter_var s0 true, 1, "true" and "on" are all valid positive
+     * boolean values, valid false values are false, 0, "false" and "off"
      *
      * @param mixed $value Value to check to see if it is a possible boolean
      *
      * @return bool
      */
-    public static function isBooleanValue($value): bool
+    public static function isConvertibleToBoolean($value): bool
     {
         $filtered = filter_var($value, FILTER_VALIDATE_BOOLEAN,FILTER_NULL_ON_FAILURE);
 
