@@ -4,7 +4,7 @@ declare(strict_types=1);
 namespace App\Models\ResourceTypeItem;
 
 use App\Interfaces\ResourceTypeItem\IModel;
-use App\Utilities\General;
+use App\Request\Validate\Boolean;
 use App\Utilities\Model as ModelUtility;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Query\Builder as QueryBuilder;
@@ -123,7 +123,7 @@ class SimpleExpense extends Model implements IModel
 
         if (
             array_key_exists('include-categories', $parameters_collection) === true &&
-            General::convertedBooleanValue($parameters_collection['include-categories']) === true
+            Boolean::convertedValue($parameters_collection['include-categories']) === true
         ) {
             $collection->leftJoin('item_category', 'item.id', 'item_category.item_id')->
                 leftJoin('category', 'item_category.category_id', 'category.id');
@@ -142,7 +142,7 @@ class SimpleExpense extends Model implements IModel
 
             if (
                 array_key_exists('include-subcategories', $parameters_collection) === true &&
-                General::convertedBooleanValue($parameters_collection['include-subcategories']) === true
+                Boolean::convertedValue($parameters_collection['include-subcategories']) === true
             ) {
                 $collection->leftJoin('item_sub_category', 'item_category.id', 'item_sub_category.item_category_id')->
                     leftJoin('sub_category', 'item_sub_category.sub_category_id', 'sub_category.id');

@@ -3,6 +3,8 @@ declare(strict_types=1);
 
 namespace App\Utilities;
 
+use App\Request\Validate\Boolean;
+
 use Illuminate\Support\Facades\Config;
 
 /**
@@ -250,7 +252,7 @@ class Pagination
 
             self::$collection = false;
 
-            if (General::convertedBooleanValue(request()->query('collection')) === true) {
+            if (Boolean::convertedValue(request()->query('collection')) === true) {
                 self::$collection = true;
             }
         }

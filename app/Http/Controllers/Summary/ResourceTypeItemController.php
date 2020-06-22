@@ -8,13 +8,13 @@ use App\Option\Get;
 use App\Response\Cache;
 use App\Request\Parameter;
 use App\Request\Route;
+use App\Request\Validate\Boolean;
 use App\Models\Transformers\Summary\ResourceTypeItemCategory as ResourceTypeItemCategoryTransformer;
 use App\Models\Transformers\Summary\ResourceTypeItemMonth as ResourceTypeItemMonthTransformer;
 use App\Models\Transformers\Summary\ResourceTypeItemResource as ResourceTypeItemResourceTransformer;
 use App\Models\Transformers\Summary\ResourceTypeItemSubcategory as ResourceTypeItemSubcategoryTransformer;
 use App\Models\Transformers\Summary\ResourceTypeItemYear as ResourceTypeItemYearTransformer;
 use App\Response\Header\Headers;
-use App\Utilities\General;
 use Illuminate\Http\JsonResponse;
 
 /**
@@ -62,32 +62,32 @@ class ResourceTypeItemController extends Controller
 
         if (
             array_key_exists('resources', $parameters) === true &&
-            General::convertedBooleanValue($parameters['resources']) === true
+            Boolean::convertedValue($parameters['resources']) === true
         ) {
             $resources = true;
         }
 
         if (
             array_key_exists('years', $parameters) === true &&
-            General::convertedBooleanValue($parameters['years']) === true
+            Boolean::convertedValue($parameters['years']) === true
         ) {
             $years = true;
         }
 
         if (
             array_key_exists('months', $parameters) === true &&
-            General::convertedBooleanValue($parameters['months']) === true
+            Boolean::convertedValue($parameters['months']) === true
         ) {
             $months = true;
         }
 
         if (array_key_exists('categories', $parameters) === true &&
-            General::convertedBooleanValue($parameters['categories']) === true) {
+            Boolean::convertedValue($parameters['categories']) === true) {
             $categories = true;
         }
 
         if (array_key_exists('subcategories', $parameters) === true &&
-                General::convertedBooleanValue($parameters['subcategories']) === true) {
+                Boolean::convertedValue($parameters['subcategories']) === true) {
             $subcategories = true;
         }
 
