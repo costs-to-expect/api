@@ -135,11 +135,13 @@
                     <h2>Docs and examples</h2>
 
                     <p>The documentation for the Costs to Expects API is
-                        available as a Postman collection. The documentation is
+                        available as a Postman collection.</p>
+
+                    <p>Our documentation is
                         available at <a href="https://postman.costs-to-expect.com">https://postman.costs-to-expect.com</a>.</p>
 
-                    <p>Our documentation will always be up to date; the
-                        documentation will always refer to the live version
+                    <p>We will ensure that all our docs are always be up to date;
+                        the docs will always refer to the released live version
                         of the API. </p>
 
                     <p>In addition to the published documentation, we include
