@@ -7,7 +7,6 @@
     <meta name="description" content="The Costs to Expect API. Open source REST API focused on budgeting and forecasting">
     <meta name="author" content="Dean Blackborough">
     <meta name="copyright" content="Dean Blackborough 2018-{{ date('Y') }}">
-    <link href="{{ asset('node_modules/open-iconic/font/css/open-iconic-bootstrap.css') }}" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css?family=Quicksand&display=swap" rel="stylesheet">
     <link rel="shortcut icon" href="{{ asset('images/theme/favicon.ico') }}">
     <link rel="icon" sizes="16x16 32x32 64x64" href="{{ asset('images/theme/favicon.ico') }}">
@@ -57,12 +56,12 @@
                     <ul class="menu list-unstyled">
                         <li><strong>Costs to Expect</strong>
                             <ul class="submenu">
-                                <li><a class="nav-link  active " href="/v2"><span class="oi oi-key" title="The Costs to Expect API" aria-hidden="true"></span>The API</a></li>
-                                <li><a class="nav-link " href="https://github.com/costs-to-expect/api/blob/master/CHANGELOG.md"><span class="oi oi-script" title="Our changelog" aria-hidden="true"></span>Changelog (Github)</a></li>
-                                <li><a class="nav-link " href="/v2/changelog"><span class="oi oi-script" title="Our changelog" aria-hidden="true"></span>Changelog (API)</a></li>
-                                <li><a class="nav-link" href="https://www.costs-to-expect.com" title="The Costs to Expect Website"><span class="oi oi-monitor" title="The Costs to Expect Website" aria-hidden="true"></span>The Website</a></li>
-                                <li><a class="nav-link" href="https://app.costs-to-expect.com" title="The Costs to Expect App"><span class="oi oi-spreadsheet" title="The Costs to Expect App" aria-hidden="true"></span>The App</a></li>
-                                <li><a class="nav-link" href="https://blog.costs-to-expect.com" title="The Costs to Expect Blog"><span class="oi oi-copywriting" title="The Costs to Expect Blog" aria-hidden="true"></span>The Blog</a></li>
+                                <li><a class="nav-link  active " href="/v2">The API</a></li>
+                                <li><a class="nav-link " href="https://github.com/costs-to-expect/api/blob/master/CHANGELOG.md">Changelog (Github)</a></li>
+                                <li><a class="nav-link " href="/v2/changelog">Changelog (API)</a></li>
+                                <li><a class="nav-link" href="https://www.costs-to-expect.com" title="The Costs to Expect Website">The Website</a></li>
+                                <li><a class="nav-link" href="https://app.costs-to-expect.com" title="The Costs to Expect App">The App</a></li>
+                                <li><a class="nav-link" href="https://blog.costs-to-expect.com" title="The Costs to Expect Blog">The Blog</a></li>
                             </ul>
                         </li>
                     </ul>
@@ -86,12 +85,12 @@
                             <ul class="menu list-unstyled">
                                 <li><strong>Costs to Expect</strong>
                                     <ul class="submenu">
-                                        <li><a class="nav-link  active " href="/v2"><span class="oi oi-key" title="The Costs to Expect API" aria-hidden="true"></span>The API</a></li>
-                                        <li><a class="nav-link " href="https://github.com/costs-to-expect/api/blob/master/CHANGELOG.md"><span class="oi oi-script" title="Our changelog" aria-hidden="true"></span>Changelog (Github)</a></li>
-                                        <li><a class="nav-link " href="/v2/changelog"><span class="oi oi-script" title="Our changelog" aria-hidden="true"></span>Changelog (API)</a></li>
-                                        <li><a class="nav-link" href="https://www.costs-to-expect.com" title="The Costs to Expect Website"><span class="oi oi-monitor" title="The Costs to Expect Website" aria-hidden="true"></span>The Website</a></li>
-                                        <li><a class="nav-link" href="https://app.costs-to-expect.com" title="The Costs to Expect App"><span class="oi oi-spreadsheet" title="The Costs to Expect App" aria-hidden="true"></span>The App</a></li>
-                                        <li><a class="nav-link" href="https://blog.costs-to-expect.com" title="The Costs to Expect Blog"><span class="oi oi-copywriting" title="The Costs to Expect Blog" aria-hidden="true"></span>The Blog</a></li>
+                                        <li><a class="nav-link  active " href="/v2">The API</a></li>
+                                        <li><a class="nav-link " href="https://github.com/costs-to-expect/api/blob/master/CHANGELOG.md">Changelog (Github)</a></li>
+                                        <li><a class="nav-link " href="/v2/changelog">Changelog (API)</a></li>
+                                        <li><a class="nav-link" href="https://www.costs-to-expect.com" title="The Costs to Expect Website">The Website</a></li>
+                                        <li><a class="nav-link" href="https://app.costs-to-expect.com" title="The Costs to Expect App">The App</a></li>
+                                        <li><a class="nav-link" href="https://blog.costs-to-expect.com" title="The Costs to Expect Blog">The Blog</a></li>
                                     </ul>
                                 </li>
                             </ul>
@@ -148,6 +147,11 @@
                     <p>
                         <a href="/v2" class="btn btn-primary btn-lg" role="button" aria-pressed="true">Access API</a>
                         <a href="https://github.com/costs-to-expect/api" class="btn btn-primary alter btn-lg" role="button" aria-pressed="true">View our API on Github</a>
+                    </p>
+
+                    <p>The documentation for the API is available as a Postman collection.</p>
+
+                    <p>
                         <a href="https://postman.costs-to-expect.com" class="btn btn-primary alter btn-lg" role="button" aria-pressed="true">Documentation</a>
                     </p>
 
