@@ -6,8 +6,8 @@ namespace App\Item;
 use App\Interfaces\Item\IModel;
 use App\Models\Item\SimpleItem as ItemModel;
 use App\Models\Transformers\Transformer;
-use App\Validators\Fields\ItemType\SimpleItem as ItemTypeSimpleItemValidator;
-use App\Validators\Fields\Validator;
+use App\Request\Validate\ItemType\SimpleItem as ItemTypeSimpleItemValidator;
+use App\Request\Validate\Validator;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Config;
 

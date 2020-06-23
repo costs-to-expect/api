@@ -6,8 +6,8 @@ namespace App\Item;
 use App\Interfaces\Item\IModel;
 use App\Models\Item\SimpleExpense as ItemModel;
 use App\Models\Transformers\Transformer;
-use App\Validators\Fields\ItemType\SimpleExpense as ItemTypeSimpleExpenseValidator;
-use App\Validators\Fields\Validator;
+use App\Request\Validate\ItemType\SimpleExpense as ItemTypeSimpleExpenseValidator;
+use App\Request\Validate\Validator;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Config;
 

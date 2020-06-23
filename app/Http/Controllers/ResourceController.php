@@ -14,7 +14,7 @@ use App\Response\Header\Headers;
 use App\Utilities\Pagination as UtilityPagination;
 use App\Models\Resource;
 use App\Models\Transformers\Resource as ResourceTransformer;
-use App\Validators\Fields\Resource as ResourceValidator;
+use App\Request\Validate\Resource as ResourceValidator;
 use Exception;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\JsonResponse;

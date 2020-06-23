@@ -15,7 +15,7 @@ use App\Response\Header\Headers;
 use App\Utilities\Pagination as UtilityPagination;
 use App\Models\Category;
 use App\Models\Transformers\Category as CategoryTransformer;
-use App\Validators\Fields\Category as CategoryValidator;
+use App\Request\Validate\Category as CategoryValidator;
 use Exception;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\JsonResponse;

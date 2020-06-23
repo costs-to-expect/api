@@ -12,7 +12,7 @@ use App\Models\RequestLog;
 use App\Models\Transformers\RequestErrorLog as RequestErrorLogTransformer;
 use App\Models\Transformers\RequestLog as RequestLogTransformer;
 use App\Utilities\Pagination as UtilityPagination;
-use App\Validators\Fields\RequestErrorLog as RequestErrorLogValidator;
+use App\Request\Validate\RequestErrorLog as RequestErrorLogValidator;
 use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Config;

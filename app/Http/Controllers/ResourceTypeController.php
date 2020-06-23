@@ -18,7 +18,7 @@ use App\Request\Route;
 use App\Utilities\Pagination as UtilityPagination;
 use App\Models\ResourceType;
 use App\Models\Transformers\ResourceType as ResourceTypeTransformer;
-use App\Validators\Fields\ResourceType as ResourceTypeValidator;
+use App\Request\Validate\ResourceType as ResourceTypeValidator;
 use Exception;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\JsonResponse;
