@@ -4,15 +4,15 @@ namespace App\Http\Controllers\Summary;
 
 use App\Http\Controllers\Controller;
 use App\Item\Factory;
-use App\Option\Get;
-use App\Response\Cache;
-use App\Request\Parameter;
-use App\Request\Route;
-use App\Request\Validate\Boolean;
 use App\Models\Transformers\Summary\ItemCategory as ItemCategoryTransformer;
 use App\Models\Transformers\Summary\ItemMonth as ItemMonthTransformer;
 use App\Models\Transformers\Summary\ItemSubcategory as ItemSubcategoryTransformer;
 use App\Models\Transformers\Summary\ItemYear as ItemYearTransformer;
+use App\Option\Get;
+use App\Request\Parameter;
+use App\Request\Route;
+use App\Request\Validate\Boolean;
+use App\Response\Cache;
 use App\Response\Header\Headers;
 use Illuminate\Http\JsonResponse;
 
@@ -62,17 +62,13 @@ class ItemController extends Controller
         $category = null;
         $subcategory = null;
 
-        if (
-            array_key_exists('years', $parameters) === true &&
-            Boolean::convertedValue($parameters['years']) === true
-        ) {
+        if (array_key_exists('years', $parameters) === true &&
+            Boolean::convertedValue($parameters['years']) === true) {
             $years = true;
         }
 
-        if (
-            array_key_exists('months', $parameters) === true &&
-            Boolean::convertedValue($parameters['months']) === true
-        ) {
+        if (array_key_exists('months', $parameters) === true &&
+            Boolean::convertedValue($parameters['months']) === true) {
             $months = true;
         }
 
@@ -82,7 +78,7 @@ class ItemController extends Controller
         }
 
         if (array_key_exists('subcategories', $parameters) === true &&
-                Boolean::convertedValue($parameters['subcategories']) === true) {
+            Boolean::convertedValue($parameters['subcategories']) === true) {
             $subcategories = true;
         }
 
@@ -252,26 +248,21 @@ class ItemController extends Controller
                 $parameters
             );
 
-            $collection = [
-                'total' => number_format($summary[0]['total'], 2, '.', '')
-            ];
-
-            $headers = new Headers();
-            $headers->addCacheControl($cache_control->visibility(), $cache_control->ttl())->
-                addETag($collection)->
-                addParameters(Parameter\Request::xHeader());
-
-            if (array_key_exists(0, $summary)) {
-                if (array_key_exists('last_updated', $summary[0]) === true) {
-                    $headers->addLastUpdated($summary[0]['last_updated']);
-                }
-                if (array_key_exists('total_count', $summary[0]) === true) {
-                    $headers->addTotalCount((int) $summary[0]['total_count']);
-                }
+            $total = '0.00';
+            if (array_key_exists(0, $summary) && array_key_exists('total', $summary[0])) {
+                $total = number_format($summary[0]['total'], 2, '.', '');
             }
 
-            $cache_summary->create($collection, $headers->headers());
-            $cache_control->put(request()->getRequestUri(), $cache_summary->content());
+            $collection = [
+                'total' => $total
+            ];
+
+            $this->assignContentToCache(
+                $summary,
+                $collection,
+                $cache_control,
+                $cache_summary
+            );
         }
 
         return response()->json($cache_summary->collection(), 200, $cache_summary->headers());
@@ -313,22 +304,12 @@ class ItemController extends Controller
                 $summary
             );
 
-            $headers = new Headers();
-            $headers->addCacheControl($cache_control->visibility(), $cache_control->ttl())->
-                addETag($collection)->
-                addParameters(Parameter\Request::xHeader());
-
-            if (array_key_exists(0, $summary)) {
-                if (array_key_exists('last_updated', $summary[0]) === true) {
-                    $headers->addLastUpdated($summary[0]['last_updated']);
-                }
-                if (array_key_exists('total_count', $summary[0]) === true) {
-                    $headers->addTotalCount((int) $summary[0]['total_count']);
-                }
-            }
-
-            $cache_summary->create($collection, $headers->headers());
-            $cache_control->put(request()->getRequestUri(), $cache_summary->content());
+            $this->assignContentToCache(
+                $summary,
+                $collection,
+                $cache_control,
+                $cache_summary
+            );
         }
 
         return response()->json($cache_summary->collection(), 200, $cache_summary->headers());
@@ -366,28 +347,17 @@ class ItemController extends Controller
                 $parameters
             );
 
-            if (count($summary) === 0) {
-                abort(404, 'Unable to generate the requested summary');
-            }
-
-            $collection = (new ItemYearTransformer($summary[0]))->toArray();
-
-            $headers = new Headers();
-            $headers->addCacheControl($cache_control->visibility(), $cache_control->ttl())->
-                addETag($collection)->
-                addParameters(Parameter\Request::xHeader());
-
+            $collection = [];
             if (array_key_exists(0, $summary)) {
-                if (array_key_exists('last_updated', $summary[0]) === true) {
-                    $headers->addLastUpdated($summary[0]['last_updated']);
-                }
-                if (array_key_exists('total_count', $summary[0]) === true) {
-                    $headers->addTotalCount((int) $summary[0]['total_count']);
-                }
+                $collection = (new ItemYearTransformer($summary[0]))->toArray();
             }
 
-            $cache_summary->create($collection, $headers->headers());
-            $cache_control->put(request()->getRequestUri(), $cache_summary->content());
+            $this->assignContentToCache(
+                $summary,
+                $collection,
+                $cache_control,
+                $cache_summary
+            );
         }
 
         return response()->json($cache_summary->collection(), 200, $cache_summary->headers());
@@ -432,22 +402,12 @@ class ItemController extends Controller
                 $summary
             );
 
-            $headers = new Headers();
-            $headers->addCacheControl($cache_control->visibility(), $cache_control->ttl())->
-                addETag($collection)->
-                addParameters(Parameter\Request::xHeader());
-
-            if (array_key_exists(0, $summary)) {
-                if (array_key_exists('last_updated', $summary[0]) === true) {
-                    $headers->addLastUpdated($summary[0]['last_updated']);
-                }
-                if (array_key_exists('total_count', $summary[0]) === true) {
-                    $headers->addTotalCount((int) $summary[0]['total_count']);
-                }
-            }
-
-            $cache_summary->create($collection, $headers->headers());
-            $cache_control->put(request()->getRequestUri(), $cache_summary->content());
+            $this->assignContentToCache(
+                $summary,
+                $collection,
+                $cache_control,
+                $cache_summary
+            );
         }
 
         return response()->json($cache_summary->collection(), 200, $cache_summary->headers());
@@ -488,28 +448,17 @@ class ItemController extends Controller
                 $parameters
             );
 
-            if (count($summary) === 0) {
-                abort(404, 'Unable to generate the requested summary');
-            }
-
-            $collection = (new ItemMonthTransformer($summary[0]))->toArray();
-
-            $headers = new Headers();
-            $headers->addCacheControl($cache_control->visibility(), $cache_control->ttl())->
-                addETag($collection)->
-                addParameters(Parameter\Request::xHeader());
-
+            $collection = [];
             if (array_key_exists(0, $summary)) {
-                if (array_key_exists('last_updated', $summary[0]) === true) {
-                    $headers->addLastUpdated($summary[0]['last_updated']);
-                }
-                if (array_key_exists('total_count', $summary[0]) === true) {
-                    $headers->addTotalCount((int) $summary[0]['total_count']);
-                }
+                $collection = (new ItemMonthTransformer($summary[0]))->toArray();
             }
 
-            $cache_summary->create($collection, $headers->headers());
-            $cache_control->put(request()->getRequestUri(), $cache_summary->content());
+            $this->assignContentToCache(
+                $summary,
+                $collection,
+                $cache_control,
+                $cache_summary
+            );
         }
 
         return response()->json($cache_summary->collection(), 200, $cache_summary->headers());
@@ -550,22 +499,12 @@ class ItemController extends Controller
                 $summary
             );
 
-            $headers = new Headers();
-            $headers->addCacheControl($cache_control->visibility(), $cache_control->ttl())->
-                addETag($collection)->
-                addParameters(Parameter\Request::xHeader());
-
-            if (array_key_exists(0, $summary)) {
-                if (array_key_exists('last_updated', $summary[0]) === true) {
-                    $headers->addLastUpdated($summary[0]['last_updated']);
-                }
-                if (array_key_exists('total_count', $summary[0]) === true) {
-                    $headers->addTotalCount((int) $summary[0]['total_count']);
-                }
-            }
-
-            $cache_summary->create($collection, $headers->headers());
-            $cache_control->put(request()->getRequestUri(), $cache_summary->content());
+            $this->assignContentToCache(
+                $summary,
+                $collection,
+                $cache_control,
+                $cache_summary
+            );
         }
 
         return response()->json($cache_summary->collection(), 200, $cache_summary->headers());
@@ -618,26 +557,21 @@ class ItemController extends Controller
                 $filter_parameters
             );
 
-            $collection = [
-                'total' => number_format($summary[0]['total'], 2, '.', '')
-            ];
-
-            $headers = new Headers();
-            $headers->addCacheControl($cache_control->visibility(), $cache_control->ttl())->
-                addETag($collection)->
-                addParameters(Parameter\Request::xHeader());
-
-            if (array_key_exists(0, $summary)) {
-                if (array_key_exists('last_updated', $summary[0]) === true) {
-                    $headers->addLastUpdated($summary[0]['last_updated']);
-                }
-                if (array_key_exists('total_count', $summary[0]) === true) {
-                    $headers->addTotalCount((int) $summary[0]['total_count']);
-                }
+            $total = '0.00';
+            if (array_key_exists(0, $summary) && array_key_exists('total', $summary[0])) {
+                $total = number_format($summary[0]['total'], 2, '.', '');
             }
 
-            $cache_summary->create($collection, $headers->headers());
-            $cache_control->put(request()->getRequestUri(), $cache_summary->content());
+            $collection = [
+                'total' => $total
+            ];
+
+            $this->assignContentToCache(
+                $summary,
+                $collection,
+                $cache_control,
+                $cache_summary
+            );
         }
 
         return response()->json($cache_summary->collection(), 200, $cache_summary->headers());
@@ -675,28 +609,17 @@ class ItemController extends Controller
                 $parameters
             );
 
-            if (count($summary) === 0) {
-                abort(404, 'Unable to generate the requested summary');
-            }
-
-            $collection = (new ItemCategoryTransformer($summary[0]))->toArray();
-
-            $headers = new Headers();
-            $headers->addCacheControl($cache_control->visibility(), $cache_control->ttl())->
-                addETag($collection)->
-                addParameters(Parameter\Request::xHeader());
-
+            $collection = [];
             if (array_key_exists(0, $summary)) {
-                if (array_key_exists('last_updated', $summary[0]) === true) {
-                    $headers->addLastUpdated($summary[0]['last_updated']);
-                }
-                if (array_key_exists('total_count', $summary[0]) === true) {
-                    $headers->addTotalCount((int) $summary[0]['total_count']);
-                }
+                $collection = (new ItemCategoryTransformer($summary[0]))->toArray();
             }
 
-            $cache_summary->create($collection, $headers->headers());
-            $cache_control->put(request()->getRequestUri(), $cache_summary->content());
+            $this->assignContentToCache(
+                $summary,
+                $collection,
+                $cache_control,
+                $cache_summary
+            );
         }
 
         return response()->json($cache_summary->collection(), 200, $cache_summary->headers());
@@ -741,22 +664,12 @@ class ItemController extends Controller
                 $summary
             );
 
-            $headers = new Headers();
-            $headers->addCacheControl($cache_control->visibility(), $cache_control->ttl())->
-                addETag($collection)->
-                addParameters(Parameter\Request::xHeader());
-
-            if (array_key_exists(0, $summary)) {
-                if (array_key_exists('last_updated', $summary[0]) === true) {
-                    $headers->addLastUpdated($summary[0]['last_updated']);
-                }
-                if (array_key_exists('total_count', $summary[0]) === true) {
-                    $headers->addTotalCount((int) $summary[0]['total_count']);
-                }
-            }
-
-            $cache_summary->create($collection, $headers->headers());
-            $cache_control->put(request()->getRequestUri(), $cache_summary->content());
+            $this->assignContentToCache(
+                $summary,
+                $collection,
+                $cache_control,
+                $cache_summary
+            );
         }
 
         return response()->json($cache_summary->collection(), 200, $cache_summary->headers());
@@ -797,28 +710,17 @@ class ItemController extends Controller
                 $parameters
             );
 
-            if (count($summary) === 0) {
-                abort(404, 'Unable to generate the requested summary');
-            }
-
-            $collection = (new ItemSubcategoryTransformer($summary[0]))->toArray();
-
-            $headers = new Headers();
-            $headers->addCacheControl($cache_control->visibility(), $cache_control->ttl())->
-                addETag($collection)->
-                addParameters(Parameter\Request::xHeader());
-
+            $collection = [];
             if (array_key_exists(0, $summary)) {
-                if (array_key_exists('last_updated', $summary[0]) === true) {
-                    $headers->addLastUpdated($summary[0]['last_updated']);
-                }
-                if (array_key_exists('total_count', $summary[0]) === true) {
-                    $headers->addTotalCount((int) $summary[0]['total_count']);
-                }
+                $collection = (new ItemSubcategoryTransformer($summary[0]))->toArray();
             }
 
-            $cache_summary->create($collection, $headers->headers());
-            $cache_control->put(request()->getRequestUri(), $cache_summary->content());
+            $this->assignContentToCache(
+                $summary,
+                $collection,
+                $cache_control,
+                $cache_summary
+            );
         }
 
         return response()->json($cache_summary->collection(), 200, $cache_summary->headers());
@@ -857,5 +759,32 @@ class ItemController extends Controller
             option();
 
         return $this->optionsResponse($get, 200);
+    }
+
+    private function assignContentToCache(
+        array $summary,
+        array $collection,
+        Cache\Control $cache_control,
+        Cache\Summary $cache_summary
+    )
+    {
+        $headers = new Headers();
+        $headers->addCacheControl($cache_control->visibility(), $cache_control->ttl())->
+            addETag($collection)->
+            addParameters(Parameter\Request::xHeader());
+
+        if (array_key_exists(0, $summary)) {
+            if (array_key_exists('last_updated', $summary[0]) === true) {
+                $headers->addLastUpdated($summary[0]['last_updated']);
+            }
+            if (array_key_exists('total_count', $summary[0]) === true) {
+                $headers->addTotalCount((int) $summary[0]['total_count']);
+            }
+        }
+
+        $cache_summary->create($collection, $headers->headers());
+        $cache_control->put(request()->getRequestUri(), $cache_summary->content());
+
+        return $cache_summary;
     }
 }
