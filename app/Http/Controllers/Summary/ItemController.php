@@ -49,8 +49,8 @@ class ItemController extends Controller
 
         $parameters = Parameter\Request::fetch(
             $item_interface->collectionParametersKeys(),
-            (int) $resource_type_id,
-            (int) $resource_id
+            (int)$resource_type_id,
+            (int)$resource_id
         );
 
         $years = false;
@@ -83,19 +83,19 @@ class ItemController extends Controller
         }
 
         if (array_key_exists('year', $parameters) === true) {
-            $year = (int) $parameters['year'];
+            $year = (int)$parameters['year'];
         }
 
         if (array_key_exists('month', $parameters) === true) {
-            $month = (int) $parameters['month'];
+            $month = (int)$parameters['month'];
         }
 
         if (array_key_exists('category', $parameters) === true) {
-            $category = (int) $parameters['category'];
+            $category = (int)$parameters['category'];
         }
 
         if (array_key_exists('subcategory', $parameters) === true) {
-            $subcategory = (int) $parameters['subcategory'];
+            $subcategory = (int)$parameters['subcategory'];
         }
 
         unset(
@@ -119,11 +119,13 @@ class ItemController extends Controller
 
         if ($years === true) {
             return $this->yearsSummary(
-                (int) $resource_type_id,
-                (int) $resource_id,
+                (int)$resource_type_id,
+                (int)$resource_id,
                 $parameters
             );
-        } else if (
+        }
+
+        if (
             $year !== null &&
             $category === null &&
             $subcategory === null &&
@@ -131,36 +133,40 @@ class ItemController extends Controller
         ) {
             if ($months === true) {
                 return $this->monthsSummary(
-                    (int) $resource_type_id,
-                    (int) $resource_id,
-                    $year,
-                    $parameters
-                );
-            } else if ($month !== null) {
-                return $this->monthSummary(
-                    (int) $resource_type_id,
-                    (int) $resource_id,
-                    $year,
-                    $month,
-                    $parameters
-                );
-            } else {
-                return $this->yearSummary(
-                    (int) $resource_type_id,
-                    (int) $resource_id,
+                    (int)$resource_type_id,
+                    (int)$resource_id,
                     $year,
                     $parameters
                 );
             }
+
+            if ($month !== null) {
+                return $this->monthSummary(
+                    (int)$resource_type_id,
+                    (int)$resource_id,
+                    $year,
+                    $month,
+                    $parameters
+                );
+            }
+
+            return $this->yearSummary(
+                (int)$resource_type_id,
+                (int)$resource_id,
+                $year,
+                $parameters
+            );
         }
 
         if ($categories === true) {
             return $this->categoriesSummary(
-                (int) $resource_type_id,
-                (int) $resource_id,
+                (int)$resource_type_id,
+                (int)$resource_id,
                 $parameters
             );
-        } else if (
+        }
+
+        if (
             $category !== null &&
             $year === null &&
             $month === null &&
@@ -168,27 +174,29 @@ class ItemController extends Controller
         ) {
             if ($subcategories === true) {
                 return $this->subcategoriesSummary(
-                    (int) $resource_type_id,
-                    (int) $resource_id,
-                    $category,
-                    $parameters
-                );
-            } else if ($subcategory !== null) {
-                return $this->subcategorySummary(
-                    (int) $resource_type_id,
-                    (int) $resource_id,
-                    $category,
-                    $subcategory,
-                    $parameters
-                );
-            } else {
-                return $this->categorySummary(
-                    (int) $resource_type_id,
-                    (int) $resource_id,
+                    (int)$resource_type_id,
+                    (int)$resource_id,
                     $category,
                     $parameters
                 );
             }
+
+            if ($subcategory !== null) {
+                return $this->subcategorySummary(
+                    (int)$resource_type_id,
+                    (int)$resource_id,
+                    $category,
+                    $subcategory,
+                    $parameters
+                );
+            }
+
+            return $this->categorySummary(
+                (int)$resource_type_id,
+                (int)$resource_id,
+                $category,
+                $parameters
+            );
         }
 
         if (
@@ -200,8 +208,8 @@ class ItemController extends Controller
             count($filter_parameters) > 0
         ) {
             return $this->filteredSummary(
-                (int) $resource_type_id,
-                (int) $resource_id,
+                (int)$resource_type_id,
+                (int)$resource_id,
                 $category,
                 $subcategory,
                 $year,
@@ -213,59 +221,10 @@ class ItemController extends Controller
         }
 
         return $this->tcoSummary(
-            (int) $resource_type_id,
-            (int) $resource_id,
+            (int)$resource_type_id,
+            (int)$resource_id,
             $parameters
         );
-    }
-
-    /**
-     * Return the total summary for a resource, total cost of ownership
-     *
-     * @param int $resource_type_id
-     * @param int $resource_id
-     * @param array $parameters
-     *
-     * @return JsonResponse
-     */
-    private function tcoSummary(
-        int $resource_type_id,
-        int $resource_id,
-        array $parameters
-    ): JsonResponse
-    {
-        $cache_control = new Cache\Control($this->user_id);
-        $cache_control->setTtlOneWeek();
-
-        $cache_summary = new Cache\Summary();
-        $cache_summary->setFromCache($cache_control->get(request()->getRequestUri()));
-
-        if ($cache_control->cacheable() === false || $cache_summary->valid() === false) {
-
-            $summary = $this->model->summary(
-                $resource_type_id,
-                $resource_id,
-                $parameters
-            );
-
-            $total = '0.00';
-            if (array_key_exists(0, $summary) && array_key_exists('total', $summary[0])) {
-                $total = number_format($summary[0]['total'], 2, '.', '');
-            }
-
-            $collection = [
-                'total' => $total
-            ];
-
-            $this->assignContentToCache(
-                $summary,
-                $collection,
-                $cache_control,
-                $cache_summary
-            );
-        }
-
-        return response()->json($cache_summary->collection(), 200, $cache_summary->headers());
     }
 
     /**
@@ -281,8 +240,7 @@ class ItemController extends Controller
         int $resource_type_id,
         int $resource_id,
         array $parameters
-    ): JsonResponse
-    {
+    ): JsonResponse {
         $cache_control = new Cache\Control($this->user_id);
         $cache_control->setTtlOneWeek();
 
@@ -315,52 +273,32 @@ class ItemController extends Controller
         return response()->json($cache_summary->collection(), 200, $cache_summary->headers());
     }
 
-    /**
-     * Return the total cost for a specific year
-     *
-     * @param int $resource_type_id,
-     * @param int $resource_id
-     * @param int $year
-     * @param array $parameters
-     *
-     * @return JsonResponse
-     */
-    private function yearSummary(
-        int $resource_type_id,
-        int $resource_id,
-        int $year,
-        array $parameters
-    ): JsonResponse
-    {
-        $cache_control = new Cache\Control($this->user_id);
-        $cache_control->setTtlOneWeek();
+    private function assignContentToCache(
+        array $summary,
+        array $collection,
+        Cache\Control $cache_control,
+        Cache\Summary $cache_summary
+    ): \App\Response\Cache\Summary {
+        $headers = new Headers();
+        $headers->addCacheControl($cache_control->visibility(), $cache_control->ttl())->
+            addETag($collection)->
+            addParameters(Parameter\Request::xHeader())->
+            addFilters(Parameter\Filter::xHeader())->
+            addSearch(Parameter\Search::xHeader());
 
-        $cache_summary = new Cache\Summary();
-        $cache_summary->setFromCache($cache_control->get(request()->getRequestUri()));
-
-        if ($cache_control->cacheable() === false || $cache_summary->valid() === false) {
-
-            $summary = $this->model->yearSummary(
-                $resource_type_id,
-                $resource_id,
-                $year,
-                $parameters
-            );
-
-            $collection = [];
-            if (array_key_exists(0, $summary)) {
-                $collection = (new ItemYearTransformer($summary[0]))->toArray();
+        if (array_key_exists(0, $summary)) {
+            if (array_key_exists('last_updated', $summary[0]) === true) {
+                $headers->addLastUpdated($summary[0]['last_updated']);
             }
-
-            $this->assignContentToCache(
-                $summary,
-                $collection,
-                $cache_control,
-                $cache_summary
-            );
+            if (array_key_exists('total_count', $summary[0]) === true) {
+                $headers->addTotalCount((int)$summary[0]['total_count']);
+            }
         }
 
-        return response()->json($cache_summary->collection(), 200, $cache_summary->headers());
+        $cache_summary->create($collection, $headers->headers());
+        $cache_control->put(request()->getRequestUri(), $cache_summary->content());
+
+        return $cache_summary;
     }
 
     /**
@@ -378,8 +316,7 @@ class ItemController extends Controller
         int $resource_id,
         int $year,
         array $parameters
-    ): JsonResponse
-    {
+    ): JsonResponse {
         $cache_control = new Cache\Control($this->user_id);
         $cache_control->setTtlOneWeek();
 
@@ -430,8 +367,7 @@ class ItemController extends Controller
         int $year,
         int $month,
         array $parameters
-    ): JsonResponse
-    {
+    ): JsonResponse {
         $cache_control = new Cache\Control($this->user_id);
         $cache_control->setTtlOneWeek();
 
@@ -465,6 +401,53 @@ class ItemController extends Controller
     }
 
     /**
+     * Return the total cost for a specific year
+     *
+     * @param int $resource_type_id ,
+     * @param int $resource_id
+     * @param int $year
+     * @param array $parameters
+     *
+     * @return JsonResponse
+     */
+    private function yearSummary(
+        int $resource_type_id,
+        int $resource_id,
+        int $year,
+        array $parameters
+    ): JsonResponse {
+        $cache_control = new Cache\Control($this->user_id);
+        $cache_control->setTtlOneWeek();
+
+        $cache_summary = new Cache\Summary();
+        $cache_summary->setFromCache($cache_control->get(request()->getRequestUri()));
+
+        if ($cache_control->cacheable() === false || $cache_summary->valid() === false) {
+
+            $summary = $this->model->yearSummary(
+                $resource_type_id,
+                $resource_id,
+                $year,
+                $parameters
+            );
+
+            $collection = [];
+            if (array_key_exists(0, $summary)) {
+                $collection = (new ItemYearTransformer($summary[0]))->toArray();
+            }
+
+            $this->assignContentToCache(
+                $summary,
+                $collection,
+                $cache_control,
+                $cache_summary
+            );
+        }
+
+        return response()->json($cache_summary->collection(), 200, $cache_summary->headers());
+    }
+
+    /**
      * Return the categories summary for a resource
      *
      * @param int $resource_type_id
@@ -477,8 +460,7 @@ class ItemController extends Controller
         int $resource_type_id,
         int $resource_id,
         array $parameters
-    ): JsonResponse
-    {
+    ): JsonResponse {
         $cache_control = new Cache\Control($this->user_id);
         $cache_control->setTtlOneWeek();
 
@@ -511,121 +493,6 @@ class ItemController extends Controller
     }
 
     /**
-     * Return a filtered summary
-     *
-     * @param int $resource_type_id
-     * @param int $resource_id
-     * @param int|null $category_id
-     * @param int|null $subcategory_id
-     * @param int|null $year
-     * @param int|null $month
-     * @param array $parameters
-     * @param array $search_parameters
-     * @param array $filter_parameters
-     *
-     * @return JsonResponse
-     */
-    private function filteredSummary(
-        int $resource_type_id,
-        int $resource_id,
-        int $category_id = null,
-        int $subcategory_id = null,
-        int $year = null,
-        int $month = null,
-        array $parameters = [],
-        array $search_parameters = [],
-        array $filter_parameters = []
-    ): JsonResponse
-    {
-        $cache_control = new Cache\Control($this->user_id);
-        $cache_control->setTtlOneWeek();
-
-        $cache_summary = new Cache\Summary();
-        $cache_summary->setFromCache($cache_control->get(request()->getRequestUri()));
-
-        if ($cache_control->cacheable() === false || $cache_summary->valid() === false) {
-
-            $summary = $this->model->filteredSummary(
-                $resource_type_id,
-                $resource_id,
-                $category_id,
-                $subcategory_id,
-                $year,
-                $month,
-                $parameters,
-                $search_parameters,
-                $filter_parameters
-            );
-
-            $total = '0.00';
-            if (array_key_exists(0, $summary) && array_key_exists('total', $summary[0])) {
-                $total = number_format($summary[0]['total'], 2, '.', '');
-            }
-
-            $collection = [
-                'total' => $total
-            ];
-
-            $this->assignContentToCache(
-                $summary,
-                $collection,
-                $cache_control,
-                $cache_summary
-            );
-        }
-
-        return response()->json($cache_summary->collection(), 200, $cache_summary->headers());
-    }
-
-    /**
-     * Return the category summary for a resource
-     *
-     * @param int $resource_type_id
-     * @param int $resource_id
-     * @param int $category_id
-     * @param array $parameters
-     *
-     * @return JsonResponse
-     */
-    private function categorySummary(
-        int $resource_type_id,
-        int $resource_id,
-        int $category_id,
-        array $parameters
-    ): JsonResponse
-    {
-        $cache_control = new Cache\Control($this->user_id);
-        $cache_control->setTtlOneWeek();
-
-        $cache_summary = new Cache\Summary();
-        $cache_summary->setFromCache($cache_control->get(request()->getRequestUri()));
-
-        if ($cache_control->cacheable() === false || $cache_summary->valid() === false) {
-
-            $summary = $this->model->categorySummary(
-                $resource_type_id,
-                $resource_id,
-                $category_id,
-                $parameters
-            );
-
-            $collection = [];
-            if (array_key_exists(0, $summary)) {
-                $collection = (new ItemCategoryTransformer($summary[0]))->toArray();
-            }
-
-            $this->assignContentToCache(
-                $summary,
-                $collection,
-                $cache_control,
-                $cache_summary
-            );
-        }
-
-        return response()->json($cache_summary->collection(), 200, $cache_summary->headers());
-    }
-
-    /**
      * Return the subcategories summary for a category
      *
      * @param int $resource_type_id
@@ -640,8 +507,7 @@ class ItemController extends Controller
         int $resource_id,
         int $category_id,
         array $parameters
-    ): JsonResponse
-    {
+    ): JsonResponse {
         $cache_control = new Cache\Control($this->user_id);
         $cache_control->setTtlOneWeek();
 
@@ -692,8 +558,7 @@ class ItemController extends Controller
         int $category_id,
         int $subcategory_id,
         array $parameters
-    ): JsonResponse
-    {
+    ): JsonResponse {
         $cache_control = new Cache\Control($this->user_id);
         $cache_control->setTtlOneWeek();
 
@@ -727,6 +592,167 @@ class ItemController extends Controller
     }
 
     /**
+     * Return the category summary for a resource
+     *
+     * @param int $resource_type_id
+     * @param int $resource_id
+     * @param int $category_id
+     * @param array $parameters
+     *
+     * @return JsonResponse
+     */
+    private function categorySummary(
+        int $resource_type_id,
+        int $resource_id,
+        int $category_id,
+        array $parameters
+    ): JsonResponse {
+        $cache_control = new Cache\Control($this->user_id);
+        $cache_control->setTtlOneWeek();
+
+        $cache_summary = new Cache\Summary();
+        $cache_summary->setFromCache($cache_control->get(request()->getRequestUri()));
+
+        if ($cache_control->cacheable() === false || $cache_summary->valid() === false) {
+
+            $summary = $this->model->categorySummary(
+                $resource_type_id,
+                $resource_id,
+                $category_id,
+                $parameters
+            );
+
+            $collection = [];
+            if (array_key_exists(0, $summary)) {
+                $collection = (new ItemCategoryTransformer($summary[0]))->toArray();
+            }
+
+            $this->assignContentToCache(
+                $summary,
+                $collection,
+                $cache_control,
+                $cache_summary
+            );
+        }
+
+        return response()->json($cache_summary->collection(), 200, $cache_summary->headers());
+    }
+
+    /**
+     * Return a filtered summary
+     *
+     * @param int $resource_type_id
+     * @param int $resource_id
+     * @param int|null $category_id
+     * @param int|null $subcategory_id
+     * @param int|null $year
+     * @param int|null $month
+     * @param array $parameters
+     * @param array $search_parameters
+     * @param array $filter_parameters
+     *
+     * @return JsonResponse
+     */
+    private function filteredSummary(
+        int $resource_type_id,
+        int $resource_id,
+        int $category_id = null,
+        int $subcategory_id = null,
+        int $year = null,
+        int $month = null,
+        array $parameters = [],
+        array $search_parameters = [],
+        array $filter_parameters = []
+    ): JsonResponse {
+        $cache_control = new Cache\Control($this->user_id);
+        $cache_control->setTtlOneWeek();
+
+        $cache_summary = new Cache\Summary();
+        $cache_summary->setFromCache($cache_control->get(request()->getRequestUri()));
+
+        if ($cache_control->cacheable() === false || $cache_summary->valid() === false) {
+
+            $summary = $this->model->filteredSummary(
+                $resource_type_id,
+                $resource_id,
+                $category_id,
+                $subcategory_id,
+                $year,
+                $month,
+                $parameters,
+                $search_parameters,
+                $filter_parameters
+            );
+
+            $total = '0.00';
+            if (array_key_exists(0, $summary) && array_key_exists('total', $summary[0])) {
+                $total = number_format($summary[0]['total'], 2, '.', '');
+            }
+
+            $collection = [
+                'total' => $total
+            ];
+
+            $this->assignContentToCache(
+                $summary,
+                $collection,
+                $cache_control,
+                $cache_summary
+            );
+        }
+
+        return response()->json($cache_summary->collection(), 200, $cache_summary->headers());
+    }
+
+    /**
+     * Return the total summary for a resource, total cost of ownership
+     *
+     * @param int $resource_type_id
+     * @param int $resource_id
+     * @param array $parameters
+     *
+     * @return JsonResponse
+     */
+    private function tcoSummary(
+        int $resource_type_id,
+        int $resource_id,
+        array $parameters
+    ): JsonResponse {
+        $cache_control = new Cache\Control($this->user_id);
+        $cache_control->setTtlOneWeek();
+
+        $cache_summary = new Cache\Summary();
+        $cache_summary->setFromCache($cache_control->get(request()->getRequestUri()));
+
+        if ($cache_control->cacheable() === false || $cache_summary->valid() === false) {
+
+            $summary = $this->model->summary(
+                $resource_type_id,
+                $resource_id,
+                $parameters
+            );
+
+            $total = '0.00';
+            if (array_key_exists(0, $summary) && array_key_exists('total', $summary[0])) {
+                $total = number_format($summary[0]['total'], 2, '.', '');
+            }
+
+            $collection = [
+                'total' => $total
+            ];
+
+            $this->assignContentToCache(
+                $summary,
+                $collection,
+                $cache_control,
+                $cache_summary
+            );
+        }
+
+        return response()->json($cache_summary->collection(), 200, $cache_summary->headers());
+    }
+
+    /**
      * Generate the OPTIONS request for items route
      *
      * @param string $resource_type_id
@@ -734,7 +760,7 @@ class ItemController extends Controller
      *
      * @return JsonResponse
      */
-    public function optionsIndex(string $resource_type_id, string $resource_id)
+    public function optionsIndex(string $resource_type_id, string $resource_id): JsonResponse
     {
         Route\Validate::resource(
             $resource_type_id,
@@ -750,41 +776,10 @@ class ItemController extends Controller
             $this->permitted_resource_types
         );
 
-        $get = Get::init()->
-            setParameters($item_interface->collectionParametersConfig())->
-            setSearchable($item_interface->searchParametersConfig())->
-            setFilterable($item_interface->filterParametersConfig())->
-            setDescription('route-descriptions.summary_GET_resource-type_resource_items')->
-            setAuthenticationStatus($permissions['view'])->
-            option();
+        $get = Get::init()->setParameters($item_interface->collectionParametersConfig())->setSearchable($item_interface->searchParametersConfig())
+            ->setFilterable($item_interface->filterParametersConfig())->setDescription('route-descriptions.summary_GET_resource-type_resource_items')
+            ->setAuthenticationStatus($permissions['view'])->option();
 
         return $this->optionsResponse($get, 200);
-    }
-
-    private function assignContentToCache(
-        array $summary,
-        array $collection,
-        Cache\Control $cache_control,
-        Cache\Summary $cache_summary
-    )
-    {
-        $headers = new Headers();
-        $headers->addCacheControl($cache_control->visibility(), $cache_control->ttl())->
-            addETag($collection)->
-            addParameters(Parameter\Request::xHeader());
-
-        if (array_key_exists(0, $summary)) {
-            if (array_key_exists('last_updated', $summary[0]) === true) {
-                $headers->addLastUpdated($summary[0]['last_updated']);
-            }
-            if (array_key_exists('total_count', $summary[0]) === true) {
-                $headers->addTotalCount((int) $summary[0]['total_count']);
-            }
-        }
-
-        $cache_summary->create($collection, $headers->headers());
-        $cache_control->put(request()->getRequestUri(), $cache_summary->content());
-
-        return $cache_summary;
     }
 }
