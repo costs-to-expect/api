@@ -4,7 +4,7 @@ declare(strict_types=1);
 namespace App\Models\Item;
 
 use App\Interfaces\Item\IModel;
-use App\Utilities\General;
+use App\Request\Validate\Boolean;
 use App\Utilities\Model as ModelUtility;
 use Illuminate\Database\Query\Builder as QueryBuilder;
 use Illuminate\Database\Eloquent\Model;
@@ -77,7 +77,7 @@ class AllocatedExpense extends Model implements IModel
 
         if (
             array_key_exists('include-categories', $parameters) === true &&
-            General::booleanValue($parameters['include-categories']) === true
+            Boolean::convertedValue($parameters['include-categories']) === true
         ) {
             $result->leftJoin('item_category', 'item.id', 'item_category.item_id')->
                 leftJoin('category', 'item_category.category_id', 'category.id');
@@ -89,7 +89,7 @@ class AllocatedExpense extends Model implements IModel
 
             if (
                 array_key_exists('include-subcategories', $parameters) === true &&
-                General::booleanValue($parameters['include-subcategories']) === true
+                Boolean::convertedValue($parameters['include-subcategories']) === true
             ) {
                 $result->leftJoin('item_sub_category', 'item_category.id', 'item_sub_category.item_category_id')->
                 leftJoin('sub_category', 'item_sub_category.sub_category_id', 'sub_category.id');
@@ -250,7 +250,7 @@ class AllocatedExpense extends Model implements IModel
 
         if (
             array_key_exists('include-unpublished', $parameters) === false ||
-            General::booleanValue($parameters['include-unpublished']) === false
+            Boolean::convertedValue($parameters['include-unpublished']) === false
         ) {
             $collection->where(function ($collection) {
                 $collection->whereNull('item_type_allocated_expense.publish_after')->orWhereRaw('item_type_allocated_expense.publish_after < NOW()');
@@ -308,7 +308,7 @@ class AllocatedExpense extends Model implements IModel
 
         if (
             array_key_exists('include-categories', $parameters) === true &&
-            General::booleanValue($parameters['include-categories']) === true
+            Boolean::convertedValue($parameters['include-categories']) === true
         ) {
             $collection->leftJoin('item_category', 'item.id', 'item_category.item_id')->
             leftJoin('category', 'item_category.category_id', 'category.id');
@@ -327,7 +327,7 @@ class AllocatedExpense extends Model implements IModel
 
             if (
                 array_key_exists('include-subcategories', $parameters) === true &&
-                General::booleanValue($parameters['include-subcategories']) === true
+                Boolean::convertedValue($parameters['include-subcategories']) === true
             ) {
                 $collection->leftJoin('item_sub_category', 'item_category.id', 'item_sub_category.item_category_id')->
                 leftJoin('sub_category', 'item_sub_category.sub_category_id', 'sub_category.id');
@@ -381,7 +381,7 @@ class AllocatedExpense extends Model implements IModel
 
         if (
             array_key_exists('include-unpublished', $parameters) === false ||
-            General::booleanValue($parameters['include-unpublished']) === false
+            Boolean::convertedValue($parameters['include-unpublished']) === false
         ) {
             $collection->where(function ($collection) {
                 $collection->whereNull('item_type_allocated_expense.publish_after')->orWhereRaw('item_type_allocated_expense.publish_after < NOW()');

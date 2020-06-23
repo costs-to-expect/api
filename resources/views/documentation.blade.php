@@ -25,7 +25,7 @@
     <meta property="og:title" content="Costs to Expect API" />
     <meta property="og:url" content="https://api.costs-to-expect.com" />
     <meta property="og:description" content="The Open Source API for the Costs to Expect service, expense tracking and forecasting" />
-    <title>Costs to Expect API</title>
+    <title>Costs to Expect API: Documentation</title>
 
     <link href="{{ asset('css/app.css?ver=' . $version) }}" rel="stylesheet">
     <!-- Global site tag (gtag.js) - Google Analytics -->
@@ -56,10 +56,10 @@
                     <ul class="menu list-unstyled">
                         <li><strong>Costs to Expect</strong>
                             <ul class="submenu">
-                                <li><a class="nav-link  active " href="/v2">The API</a></li>
+                                <li><a class="nav-link" href="/v2">The API</a></li>
                                 <li><a class="nav-link " href="https://github.com/costs-to-expect/api/blob/master/CHANGELOG.md">Changelog (Github)</a></li>
                                 <li><a class="nav-link " href="/v2/changelog">Changelog (API)</a></li>
-                                <li><a class="nav-link " href="/documentation">Documentation</a></li>
+                                <li><a class="nav-link active" href="/documentation">Documentation</a></li>
                                 <li><a class="nav-link" href="https://www.costs-to-expect.com" title="The Costs to Expect Website">The Website</a></li>
                                 <li><a class="nav-link" href="https://app.costs-to-expect.com" title="The Costs to Expect App">The App</a></li>
                                 <li><a class="nav-link" href="https://blog.costs-to-expect.com" title="The Costs to Expect Blog">The Blog</a></li>
@@ -86,10 +86,10 @@
                             <ul class="menu list-unstyled">
                                 <li><strong>Costs to Expect</strong>
                                     <ul class="submenu">
-                                        <li><a class="nav-link  active " href="/v2">The API</a></li>
+                                        <li><a class="nav-link " href="/v2">The API</a></li>
                                         <li><a class="nav-link " href="https://github.com/costs-to-expect/api/blob/master/CHANGELOG.md">Changelog (Github)</a></li>
                                         <li><a class="nav-link " href="/v2/changelog">Changelog (API)</a></li>
-                                        <li><a class="nav-link " href="/documentation">Documentation</a></li>
+                                        <li><a class="nav-link active" href="/documentation">Documentation</a></li>
                                         <li><a class="nav-link" href="https://www.costs-to-expect.com" title="The Costs to Expect Website">The Website</a></li>
                                         <li><a class="nav-link" href="https://app.costs-to-expect.com" title="The Costs to Expect App">The App</a></li>
                                         <li><a class="nav-link" href="https://blog.costs-to-expect.com" title="The Costs to Expect Blog">The Blog</a></li>
@@ -111,7 +111,7 @@
                             Welcome to Costs to Expect
                         </div>
                         <div class="title">
-                            <h1>Our REST API</h1>
+                            <h1>Documentation</h1>
                         </div>
 
                         <hr />
@@ -132,116 +132,155 @@
 
                     @endif
 
-                    <h2>Overview</h2>
+                    <h2>Docs and examples</h2>
 
-                    <p>Costs to Expect is a service focused on tracking and
-                        forecasting expenses. We are trying to simplify
-                        your budgets. There are three core products in the
-                        service; the Open Source REST API, our App and an Open
-                        Source website showing the costs to raise our children
-                        to adulthood.</p>
+                    <p>The documentation for the Costs to Expects API is
+                        available as a Postman collection.</p>
 
-                    <p>Our API is the backbone of the service, everything depends
-                        on it. Our API is available to anyone who wants to use it.
-                        Our focus is expenses, however, that will change as the
-                        product matures.</p>
+                    <p>Our documentation is
+                        available at <a href="https://postman.costs-to-expect.com">https://postman.costs-to-expect.com</a>.</p>
 
-                    <p>
-                        <a href="/v2" class="btn btn-primary btn-lg" role="button" aria-pressed="true">Access API</a>
-                        <a href="https://github.com/costs-to-expect/api" class="btn btn-primary alter btn-lg" role="button" aria-pressed="true">View our API on Github</a>
-                    </p>
+                    <p>We will ensure that all our docs are always be up to date;
+                        the docs will always refer to the released live version
+                        of the API. </p>
 
-                    <p>The documentation for the API is available as a Postman collection.</p>
+                    <p>In addition to the published documentation, we include
+                        some documentation within our API, in the form of
+                        OPTIONS requests. </p>
 
-                    <p>
-                        <a href="https://postman.costs-to-expect.com" class="btn btn-primary alter btn-lg" role="button" aria-pressed="true">Documentation</a>
-                    </p>
+                    <p>The root collection of the API details all the available
+                        routes and the endpoints for each route. An OPTIONS
+                        endpoint exists for each route; in addition to the
+                        supported routes, the OPTIONS response shows the
+                        supported fields and parameters.</p>
 
-                    <hr />
+                    <h3>Structure</h3>
 
-                    <h2>Our Products</h2>
-
-                    <p>There are multiple products within the Costs to Expect
-                        service, the major products being our API and App, below
-                        is a quick overview of each product.</p>
-
-                    <dl class="row">
-                        <dt class="col-sm-4 col-md-4 col-lg-3 col-xl-2">
-                            <a href="/v2">
-                            <span class="oi oi-key" title="Costs to Expect API" aria-hidden="true"></span>
-                            Our API
-                            </a>
-                        </dt>
-                        <dd class="col-sm-8 col-md-8 col-lg-9 col-xl-10">
-                            <p>Our <a href="https://github.com/costs-to-expect/api/blob/master/LICENSE">Open Source</a>
-                            REST <a href="https://api.costs-to-expect.com/v2">API</a>, available under
-                                the MIT license, the API drives the entire service.</p></dd>
-
-                        <dt class="col-sm-4 col-md-4 col-lg-3 col-xl-2">
-                            <a href="https://app.costs-to-expect.com">
-                            <span class="oi oi-spreadsheet" title="Costs to Expect App" aria-hidden="true"></span>
-                            Our App
-                            </a>
-                        </dt>
-                        <dd class="col-sm-8 col-md-8 col-lg-9 col-xl-10"><p>Our <a href="https://app.costs-to-expect.com/">App</a> is the
-                            commercial offering for Costs to Expect,
-                            we are <a href="https://app.costs-to-expect.com/roadmap">working</a> towards the public alpha, our aim is to make tracking and
-                                forecasting expenses as simple as possible.</p></dd>
-
-                        <dt class="col-sm-4 col-md-4 col-lg-3 col-xl-2">
-                            <a href="https://www.costs-to-expect.com">
-                            <span class="oi oi-monitor" title="Costs to Expect Website" aria-hidden="true"></span>
-                            Our Website
-                            </a>
-                        </dt>
-                        <dd class="col-sm-8 col-md-8 col-lg-9 col-xl-10"><p>Our <a href="https://www.costs-to-expect.com">website</a>
-                                is a long-term social project. My wife
-                                and I are tracking all the expenses to raise our child to adulthood.</p></dd>
-
-                        <dt class="col-sm-4 col-md-4 col-lg-3 col-xl-2">
-                            <a href="https://blog.costs-to-expect.com">
-                            <span class="oi oi-copywriting" title="Costs to Expect Blog" aria-hidden="true"></span>
-                            Our Blog
-                            </a>
-                        </dt>
-                        <dd class="col-sm-8 col-md-8 col-lg-9 col-xl-10"><p>Our blog acts as a central repository to list all updates,
-                            explains why we are doing what we are and acts as a place for us to talk about
-                            our products and the service.</p></dd>
-                    </dl>
-
-                    <hr />
-
-                    <h2>Latest release {{ $version }}</h2>
-
-                    <p>The latest release of the Costs to Expect API is
-                        {{ $version }}; we released it on the {{ date('jS M Y', strtotime($date)) }}.</p>
-
-                    <p>The changelog below shows all the fixes and improvements we have made, to view
-                        the entire changelog please check <a href="https://github.com/costs-to-expect/api/releases">here</a>.</p>
-
-                    <h3>Added</h3>
+                    <p>In the Costs to Expect API, we have three base levels
+                        of hierarchy, resource type, resource, and item.</p>
 
                     <ul>
-                        <li>We have added a documentation page; the documentation page links to the API documentation and includes a couple of examples.
-                            Changed</li>
+                        <li>Items are the individual expense or items we a tracking.</li>
+                        <li>Resources are the names for the buckets, lists or trackers.</li>
+                        <li>Resource types are for grouping and where we define the kind of thing we are tracking or forecasting.</li>
                     </ul>
 
-                    <h3>Changed</h3>
+                    <p>The resources in a resource type all use the same
+                        tracking or forecasting method. The categories and
+                        subcategories defined for a resource type belong to
+                        all the resources.</p>
 
-                    <ul>
-                        <li>We have updated the example ENV file.</li>
-                        <li>We have renamed a couple of our helper conversion/validation classes and moved them to a new namespace.</li>
-                        <li>We have made a minor content tweak on the landing page; the documentation button is in another section.</li>
-                        <li>We have updated and relocated our validation classes; the validation classes are now part of the `App\Request\Validate` namespace.</li>
-                        <li>We have reworked our summary controllers; we have removed some code duplication and added additional error checking.</li>
-                    </ul>
+                    <h3>Examples</h3>
 
-                    <h3>Fixed</h3>
+                    <p>We have included a couple of examples below to give
+                        you an idea of the typical responses the API will return.</p>
 
-                    <ul>
-                        <li>Incorrectly assuming the result will be an array with at least one value.</li>
-                        <li>We have fixed an error in the changelog; we jump a couple of minor versions.</li>
-                    </ul>
+                    <h4><a href="https://api.costs-to-expect.com/v2/resource-types?limit=25&offset=0">Resource types</a></h4>
+
+                    <h5>Request</h5>
+
+                    <pre class="bg-white"><code>curl --location --request GET 'https://api.costs-to-expect.com/v2/resource-types?limit=25&offset=0'</code></pre>
+
+                    <h5>Response</h5>
+
+                    <pre class="bg-white"><code>[
+  {
+    "id": "d185Q15grY",
+    "name": "Blackborough boys",
+    "description": "The Blackborough children, Jack and Niall",
+    "created": "2018-09-06 22:04:23",
+    "public": true,
+    "item_type": {
+      "id": "OqZwKX16bW",
+      "name": "allocated-expense",
+      "description": "Expenses with an allocation rate"
+    },
+    "resources": {
+      "count": 2
+    }
+  }
+]</code></pre>
+
+                    <h5>Headers</h5>
+
+                    <pre class="bg-white"><code>Cache-Control: max-age=604800, public
+Content-Length: 335
+Content-Type: application/json
+Content-Encoding: gzip
+Content-Language: en
+ETag: "2a03c7fc4044c27aa801410c050fadb4"
+Vary: Accept-Encoding
+X-Powered-By: PHP/7.4.5
+Content-Security-Policy: default-src 'none'
+Strict-Transport-Security: max-age=31536000;
+Referrer-Policy: strict-origin-when-cross-origin
+X-Content-Type-Options: nosniff
+X-Count: 1
+X-Total-Count: 1
+X-Offset: 0
+X-Limit: 10
+X-Link-Previous:
+X-Link-Next:
+X-RateLimit-Limit: 300
+X-RateLimit-Remaining: 299
+Date: Mon, 22 Jun 2020 14:40:57 GMT</code></pre>
+
+                        <h4><a href="https://api.costs-to-expect.com/v2/resource-types/d185Q15grY/resources/kw8gLq31VB/items?limit=25&offset=0">Items for a resource</a></h4>
+
+                        <h5>Request</h5>
+
+                        <pre class="bg-white"><code>curl --location --request GET 'https://api.costs-to-expect.com/v2/resource-types/d185Q15grY/resources/kw8gLq31VB/items?limit=25&offset=0'</code></pre>
+
+                        <h5>Response</h5>
+
+                        <pre class="bg-white"><code>[
+  {
+    "id": "K13qM2K3OV",
+    "name": "Pocket money",
+    "description": null,
+    "total": "3.90",
+    "percentage": 100,
+    "actualised_total": "3.90",
+    "effective_date": "2020-05-25",
+    "created": "2020-05-25 18:01:00",
+    "updated": "2020-05-25 18:01:00"
+  },
+  {
+    "id": "akzpAXBD8g",
+    "name": "Share of shopping",
+    "description": null,
+    "total": "156.91",
+    "percentage": 20,
+    "actualised_total": "31.38",
+    "effective_date": "2020-05-24",
+    "created": "2020-05-24 12:52:00",
+    "updated": "2020-05-24 12:52:00"
+  }
+]</code></pre>
+
+                        <h5>Headers</h5>
+
+                        <pre class="bg-white"><code>Cache-Control: max-age=604800, private
+Content-Length: 790
+Content-Type: application/json
+Content-Encoding: gzip
+Content-Language: en
+ETag: "c3b0623f7dc47c6a48bd18c8fcbf3618"
+Vary: Accept-Encoding
+X-Powered-By: PHP/7.4.5
+Content-Security-Policy: default-src 'none'
+Strict-Transport-Security: max-age=31536000;
+Referrer-Policy: strict-origin-when-cross-origin
+X-Content-Type-Options: nosniff
+X-Count: 10
+X-Total-Count: 1694
+X-Offset: 0
+X-Limit: 10
+X-Link-Previous:
+X-Link-Next: /v2/resource-types/d185Q15grY/resources/kw8gLq31VB/items?offset=10&limit=10
+X-RateLimit-Limit: 300
+X-RateLimit-Remaining: 299
+Date: Sun, Mon, 22 Jun 2020 14:46:03 GMT</code></pre>
                 </div>
             </div>
 

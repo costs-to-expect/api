@@ -8,7 +8,7 @@ use App\Item\Factory as ItemFactory;
 use App\Models\Category;
 use App\Models\ResourceType;
 use App\Models\Subcategory;
-use App\Utilities\General;
+use App\Request\Validate\Boolean;
 
 /**
  * Fetch any GET parameters attached to the URI and validate them, silently
@@ -42,7 +42,7 @@ class Request
                     case 'include-resources';
                     case 'include-categories':
                     case 'include-subcategories';
-                        self::$parameters[$parameter] = General::booleanValue($request_parameters[$parameter]);
+                        self::$parameters[$parameter] = Boolean::convertedValue($request_parameters[$parameter]);
                         break;
 
                     default:
@@ -79,7 +79,10 @@ class Request
                 case 'include-unpublished':
                     if (
                         array_key_exists($key, self::$parameters) === true &&
-                        General::booleanValue(self::$parameters[$key]) === false
+                        (
+                            Boolean::isConvertible(self::$parameters[$key]) === false ||
+                            Boolean::convertedValue(self::$parameters[$key]) === false
+                        )
                     ) {
                         unset(self::$parameters[$key]);
                     }
@@ -127,7 +130,7 @@ class Request
                 case 'years':
                     if (
                         array_key_exists($key, self::$parameters) === true &&
-                        General::isBooleanValue(self::$parameters[$key]) === false
+                        Boolean::isConvertible(self::$parameters[$key]) === false
                     ) {
                             unset(self::$parameters[$key]);
                     }

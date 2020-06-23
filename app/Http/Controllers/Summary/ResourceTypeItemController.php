@@ -8,13 +8,13 @@ use App\Option\Get;
 use App\Response\Cache;
 use App\Request\Parameter;
 use App\Request\Route;
+use App\Request\Validate\Boolean;
 use App\Models\Transformers\Summary\ResourceTypeItemCategory as ResourceTypeItemCategoryTransformer;
 use App\Models\Transformers\Summary\ResourceTypeItemMonth as ResourceTypeItemMonthTransformer;
 use App\Models\Transformers\Summary\ResourceTypeItemResource as ResourceTypeItemResourceTransformer;
 use App\Models\Transformers\Summary\ResourceTypeItemSubcategory as ResourceTypeItemSubcategoryTransformer;
 use App\Models\Transformers\Summary\ResourceTypeItemYear as ResourceTypeItemYearTransformer;
 use App\Response\Header\Headers;
-use App\Utilities\General;
 use Illuminate\Http\JsonResponse;
 
 /**
@@ -60,34 +60,28 @@ class ResourceTypeItemController extends Controller
         $category = null;
         $subcategory = null;
 
-        if (
-            array_key_exists('resources', $parameters) === true &&
-            General::booleanValue($parameters['resources']) === true
-        ) {
+        if (array_key_exists('resources', $parameters) === true &&
+            Boolean::convertedValue($parameters['resources']) === true) {
             $resources = true;
         }
 
-        if (
-            array_key_exists('years', $parameters) === true &&
-            General::booleanValue($parameters['years']) === true
-        ) {
+        if (array_key_exists('years', $parameters) === true &&
+            Boolean::convertedValue($parameters['years']) === true) {
             $years = true;
         }
 
-        if (
-            array_key_exists('months', $parameters) === true &&
-            General::booleanValue($parameters['months']) === true
-        ) {
+        if (array_key_exists('months', $parameters) === true &&
+            Boolean::convertedValue($parameters['months']) === true) {
             $months = true;
         }
 
         if (array_key_exists('categories', $parameters) === true &&
-            General::booleanValue($parameters['categories']) === true) {
+            Boolean::convertedValue($parameters['categories']) === true) {
             $categories = true;
         }
 
         if (array_key_exists('subcategories', $parameters) === true &&
-                General::booleanValue($parameters['subcategories']) === true) {
+            Boolean::convertedValue($parameters['subcategories']) === true) {
             $subcategories = true;
         }
 
@@ -132,7 +126,9 @@ class ResourceTypeItemController extends Controller
                 $resource_type_id,
                 $parameters
             );
-        } else if (
+        }
+
+        if (
             $year !== null &&
             $category === null &&
             $subcategory === null &&
@@ -144,22 +140,22 @@ class ResourceTypeItemController extends Controller
                     $year,
                     $parameters
                 );
-            } else {
-                if ($month !== null) {
-                    return $this->monthSummary(
-                        $resource_type_id,
-                        $year,
-                        $month,
-                        $parameters
-                    );
-                } else {
-                    return $this->yearSummary(
-                        $resource_type_id,
-                        $year,
-                        $parameters
-                    );
-                }
             }
+
+            if ($month !== null) {
+                return $this->monthSummary(
+                    $resource_type_id,
+                    $year,
+                    $month,
+                    $parameters
+                );
+            }
+
+            return $this->yearSummary(
+                $resource_type_id,
+                $year,
+                $parameters
+            );
         }
 
         if ($categories === true) {
@@ -167,7 +163,9 @@ class ResourceTypeItemController extends Controller
                 $resource_type_id,
                 $parameters
             );
-        } else if (
+        }
+
+        if (
             $category !== null &&
             $year === null &&
             $month === null &&
@@ -179,22 +177,22 @@ class ResourceTypeItemController extends Controller
                     $category,
                     $parameters
                 );
-            } else {
-                if ($subcategory !== null) {
-                    return $this->subcategorySummary(
-                        $resource_type_id,
-                        $category,
-                        $subcategory,
-                        $parameters
-                    );
-                } else {
-                    return $this->categorySummary(
-                        $resource_type_id,
-                        $category,
-                        $parameters
-                    );
-                }
             }
+
+            if ($subcategory !== null) {
+                return $this->subcategorySummary(
+                    $resource_type_id,
+                    $category,
+                    $subcategory,
+                    $parameters
+                );
+            }
+
+            return $this->categorySummary(
+                $resource_type_id,
+                $category,
+                $parameters
+            );
         }
 
         if ($resources === true) {
@@ -230,6 +228,35 @@ class ResourceTypeItemController extends Controller
         );
     }
 
+    private function assignContentToCache(
+        array $summary,
+        array $collection,
+        Cache\Control $cache_control,
+        Cache\Summary $cache_summary
+    ): \App\Response\Cache\Summary {
+        $headers = new Headers();
+        $headers->addCacheControl($cache_control->visibility(), $cache_control->ttl())->
+            addETag($collection)->
+            addParameters(Parameter\Request::xHeader())->
+            addFilters(Parameter\Filter::xHeader())->
+            addSearch(Parameter\Search::xHeader());
+
+
+        if (array_key_exists(0, $summary)) {
+            if (array_key_exists('last_updated', $summary[0]) === true) {
+                $headers->addLastUpdated($summary[0]['last_updated']);
+            }
+            if (array_key_exists('total_count', $summary[0]) === true) {
+                $headers->addTotalCount((int)$summary[0]['total_count']);
+            }
+        }
+
+        $cache_summary->create($collection, $headers->headers());
+        $cache_control->put(request()->getRequestUri(), $cache_summary->content());
+
+        return $cache_summary;
+    }
+
     /**
      * Return the total summary for all the resources in the resource type
      *
@@ -256,31 +283,21 @@ class ResourceTypeItemController extends Controller
                 $parameters
             );
 
-            $collection = [
-                'total' => number_format(
-                    $summary[0]['total'],
-                    2,
-                    '.',
-                    ''
-                )
-            ];
-
-            $headers = new Headers();
-            $headers->addCacheControl($cache_control->visibility(), $cache_control->ttl())->
-                addETag($collection)->
-                addParameters(Parameter\Request::xHeader());
-
-            if (array_key_exists(0, $summary)) {
-                if (array_key_exists('last_updated', $summary[0]) === true) {
-                    $headers->addLastUpdated($summary[0]['last_updated']);
-                }
-                if (array_key_exists('total_count', $summary[0]) === true) {
-                    $headers->addTotalCount((int) $summary[0]['total_count']);
-                }
+            $total = '0.00';
+            if (array_key_exists(0, $summary) && array_key_exists('total', $summary[0])) {
+                $total = number_format($summary[0]['total'], 2, '.', '');
             }
 
-            $cache_summary->create($collection, $headers->headers());
-            $cache_control->put(request()->getRequestUri(), $cache_summary->content());
+            $collection = [
+                'total' => $total
+            ];
+
+            $this->assignContentToCache(
+                $summary,
+                $collection,
+                $cache_control,
+                $cache_summary
+            );
         }
 
         return response()->json($cache_summary->collection(), 200, $cache_summary->headers());
@@ -320,22 +337,12 @@ class ResourceTypeItemController extends Controller
                 $summary
             );
 
-            $headers = new Headers();
-            $headers->addCacheControl($cache_control->visibility(), $cache_control->ttl())->
-                addETag($collection)->
-                addParameters(Parameter\Request::xHeader());
-
-            if (array_key_exists(0, $summary)) {
-                if (array_key_exists('last_updated', $summary[0]) === true) {
-                    $headers->addLastUpdated($summary[0]['last_updated']);
-                }
-                if (array_key_exists('total_count', $summary[0]) === true) {
-                    $headers->addTotalCount((int) $summary[0]['total_count']);
-                }
-            }
-
-            $cache_summary->create($collection, $headers->headers());
-            $cache_control->put(request()->getRequestUri(), $cache_summary->content());
+            $this->assignContentToCache(
+                $summary,
+                $collection,
+                $cache_control,
+                $cache_summary
+            );
         }
 
         return response()->json($cache_summary->collection(), 200, $cache_summary->headers());
@@ -375,22 +382,12 @@ class ResourceTypeItemController extends Controller
                 $summary
             );
 
-            $headers = new Headers();
-            $headers->addCacheControl($cache_control->visibility(), $cache_control->ttl())->
-                addETag($collection)->
-                addParameters(Parameter\Request::xHeader());
-
-            if (array_key_exists(0, $summary)) {
-                if (array_key_exists('last_updated', $summary[0]) === true) {
-                    $headers->addLastUpdated($summary[0]['last_updated']);
-                }
-                if (array_key_exists('total_count', $summary[0]) === true) {
-                    $headers->addTotalCount((int) $summary[0]['total_count']);
-                }
-            }
-
-            $cache_summary->create($collection, $headers->headers());
-            $cache_control->put(request()->getRequestUri(), $cache_summary->content());
+            $this->assignContentToCache(
+                $summary,
+                $collection,
+                $cache_control,
+                $cache_summary
+            );
         }
 
         return response()->json($cache_summary->collection(), 200, $cache_summary->headers());
@@ -426,24 +423,17 @@ class ResourceTypeItemController extends Controller
                 $parameters
             );
 
-            $collection = (new ResourceTypeItemYearTransformer($summary[0]))->toArray();
-
-            $headers = new Headers();
-            $headers->addCacheControl($cache_control->visibility(), $cache_control->ttl())->
-                addETag($collection)->
-                addParameters(Parameter\Request::xHeader());
-
+            $collection = [];
             if (array_key_exists(0, $summary)) {
-                if (array_key_exists('last_updated', $summary[0]) === true) {
-                    $headers->addLastUpdated($summary[0]['last_updated']);
-                }
-                if (array_key_exists('total_count', $summary[0]) === true) {
-                    $headers->addTotalCount((int) $summary[0]['total_count']);
-                }
+                $collection = (new ResourceTypeItemYearTransformer($summary[0]))->toArray();
             }
 
-            $cache_summary->create($collection, $headers->headers());
-            $cache_control->put(request()->getRequestUri(), $cache_summary->content());
+            $this->assignContentToCache(
+                $summary,
+                $collection,
+                $cache_control,
+                $cache_summary
+            );
         }
 
         return response()->json($cache_summary->collection(), 200, $cache_summary->headers());
@@ -486,22 +476,12 @@ class ResourceTypeItemController extends Controller
                 $summary
             );
 
-            $headers = new Headers();
-            $headers->addCacheControl($cache_control->visibility(), $cache_control->ttl())->
-                addETag($collection)->
-                addParameters(Parameter\Request::xHeader());
-
-            if (array_key_exists(0, $summary)) {
-                if (array_key_exists('last_updated', $summary[0]) === true) {
-                    $headers->addLastUpdated($summary[0]['last_updated']);
-                }
-                if (array_key_exists('total_count', $summary[0]) === true) {
-                    $headers->addTotalCount((int) $summary[0]['total_count']);
-                }
-            }
-
-            $cache_summary->create($collection, $headers->headers());
-            $cache_control->put(request()->getRequestUri(), $cache_summary->content());
+            $this->assignContentToCache(
+                $summary,
+                $collection,
+                $cache_control,
+                $cache_summary
+            );
         }
 
         return response()->json($cache_summary->collection(), 200, $cache_summary->headers());
@@ -540,24 +520,17 @@ class ResourceTypeItemController extends Controller
                 $parameters
             );
 
-            $collection = (new ResourceTypeItemMonthTransformer($summary[0]))->toArray();
-
-            $headers = new Headers();
-            $headers->addCacheControl($cache_control->visibility(), $cache_control->ttl())->
-                addETag($collection)->
-                addParameters(Parameter\Request::xHeader());
-
+            $collection = [];
             if (array_key_exists(0, $summary)) {
-                if (array_key_exists('last_updated', $summary[0]) === true) {
-                    $headers->addLastUpdated($summary[0]['last_updated']);
-                }
-                if (array_key_exists('total_count', $summary[0]) === true) {
-                    $headers->addTotalCount((int) $summary[0]['total_count']);
-                }
+                $collection = (new ResourceTypeItemMonthTransformer($summary[0]))->toArray();
             }
 
-            $cache_summary->create($collection, $headers->headers());
-            $cache_control->put(request()->getRequestUri(), $cache_summary->content());
+            $this->assignContentToCache(
+                $summary,
+                $collection,
+                $cache_control,
+                $cache_summary
+            );
         }
 
         return response()->json($cache_summary->collection(), 200, $cache_summary->headers());
@@ -597,22 +570,12 @@ class ResourceTypeItemController extends Controller
                 $summary
             );
 
-            $headers = new Headers();
-            $headers->addCacheControl($cache_control->visibility(), $cache_control->ttl())->
-                addETag($collection)->
-                addParameters(Parameter\Request::xHeader());
-
-            if (array_key_exists(0, $summary)) {
-                if (array_key_exists('last_updated', $summary[0]) === true) {
-                    $headers->addLastUpdated($summary[0]['last_updated']);
-                }
-                if (array_key_exists('total_count', $summary[0]) === true) {
-                    $headers->addTotalCount((int) $summary[0]['total_count']);
-                }
-            }
-
-            $cache_summary->create($collection, $headers->headers());
-            $cache_control->put(request()->getRequestUri(), $cache_summary->content());
+            $this->assignContentToCache(
+                $summary,
+                $collection,
+                $cache_control,
+                $cache_summary
+            );
         }
 
         return response()->json($cache_summary->collection(), 200, $cache_summary->headers());
@@ -648,24 +611,17 @@ class ResourceTypeItemController extends Controller
                 $parameters
             );
 
-            $collection = (new ResourceTypeItemCategoryTransformer($summary[0]))->toArray();
-
-            $headers = new Headers();
-            $headers->addCacheControl($cache_control->visibility(), $cache_control->ttl())->
-                addETag($collection)->
-                addParameters(Parameter\Request::xHeader());
-
+            $collection = [];
             if (array_key_exists(0, $summary)) {
-                if (array_key_exists('last_updated', $summary[0]) === true) {
-                    $headers->addLastUpdated($summary[0]['last_updated']);
-                }
-                if (array_key_exists('total_count', $summary[0]) === true) {
-                    $headers->addTotalCount((int) $summary[0]['total_count']);
-                }
+                $collection = (new ResourceTypeItemCategoryTransformer($summary[0]))->toArray();
             }
 
-            $cache_summary->create($collection, $headers->headers());
-            $cache_control->put(request()->getRequestUri(), $cache_summary->content());
+            $this->assignContentToCache(
+                $summary,
+                $collection,
+                $cache_control,
+                $cache_summary
+            );
         }
 
         return response()->json($cache_summary->collection(), 200, $cache_summary->headers());
@@ -715,28 +671,21 @@ class ResourceTypeItemController extends Controller
                 $filter_parameters
             );
 
-            $collection = [
-                'total' => number_format($summary[0]['total'], 2, '.', '')
-            ];
-
-            $headers = new Headers();
-            $headers->addCacheControl($cache_control->visibility(), $cache_control->ttl())->
-                addETag($collection)->
-                addFilters(Parameter\Filter::xHeader())->
-                addSearch(Parameter\Search::xHeader())->
-                addParameters(Parameter\Request::xHeader());
-
-            if (array_key_exists(0, $summary)) {
-                if (array_key_exists('last_updated', $summary[0]) === true) {
-                    $headers->addLastUpdated($summary[0]['last_updated']);
-                }
-                if (array_key_exists('total_count', $summary[0]) === true) {
-                    $headers->addTotalCount((int) $summary[0]['total_count']);
-                }
+            $total = '0.00';
+            if (array_key_exists(0, $summary) && array_key_exists('total', $summary[0])) {
+                $total = number_format($summary[0]['total'], 2, '.', '');
             }
 
-            $cache_summary->create($collection, $headers->headers());
-            $cache_control->put(request()->getRequestUri(), $cache_summary->content());
+            $collection = [
+                'total' => $total
+            ];
+
+            $this->assignContentToCache(
+                $summary,
+                $collection,
+                $cache_control,
+                $cache_summary
+            );
         }
 
         return response()->json($cache_summary->collection(), 200, $cache_summary->headers());
@@ -779,22 +728,12 @@ class ResourceTypeItemController extends Controller
                 $summary
             );
 
-            $headers = new Headers();
-            $headers->addCacheControl($cache_control->visibility(), $cache_control->ttl())->
-                addETag($collection)->
-                addParameters(Parameter\Request::xHeader());
-
-            if (array_key_exists(0, $summary)) {
-                if (array_key_exists('last_updated', $summary[0]) === true) {
-                    $headers->addLastUpdated($summary[0]['last_updated']);
-                }
-                if (array_key_exists('total_count', $summary[0]) === true) {
-                    $headers->addTotalCount((int) $summary[0]['total_count']);
-                }
-            }
-
-            $cache_summary->create($collection, $headers->headers());
-            $cache_control->put(request()->getRequestUri(), $cache_summary->content());
+            $this->assignContentToCache(
+                $summary,
+                $collection,
+                $cache_control,
+                $cache_summary
+            );
         }
 
         return response()->json($cache_summary->collection(), 200, $cache_summary->headers());
@@ -833,24 +772,17 @@ class ResourceTypeItemController extends Controller
                 $parameters
             );
 
-            $collection = (new ResourceTypeItemSubcategoryTransformer($summary[0]))->toArray();
-
-            $headers = new Headers();
-            $headers->addCacheControl($cache_control->visibility(), $cache_control->ttl())->
-                addETag($collection)->
-                addSearch(Parameter\Search::xHeader());
-
+            $collection = [];
             if (array_key_exists(0, $summary)) {
-                if (array_key_exists('last_updated', $summary[0]) === true) {
-                    $headers->addLastUpdated($summary[0]['last_updated']);
-                }
-                if (array_key_exists('total_count', $summary[0]) === true) {
-                    $headers->addTotalCount((int) $summary[0]['total_count']);
-                }
+                $collection = (new ResourceTypeItemSubcategoryTransformer($summary[0]))->toArray();
             }
 
-            $cache_summary->create($collection, $headers->headers());
-            $cache_control->put(request()->getRequestUri(), $cache_summary->content());
+            $this->assignContentToCache(
+                $summary,
+                $collection,
+                $cache_control,
+                $cache_summary
+            );
         }
 
         return response()->json($cache_summary->collection(), 200, $cache_summary->headers());

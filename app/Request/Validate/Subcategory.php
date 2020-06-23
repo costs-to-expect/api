@@ -1,15 +1,15 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Validators\Fields;
+namespace App\Request\Validate;
 
-use App\Validators\Fields\Validator as BaseValidator;
-use Illuminate\Contracts\Validation\Validator;
+use App\Request\Validate\Validator as BaseValidator;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Validator as ValidatorFacade;
 
 /**
- * Validation helper class for sub categories, returns the generated validator objects
+ * Validation helper class for subcategories, returns the generated
+ * validator objects
  *
  * @author Dean Blackborough <dean@g3d-development.com>
  * @copyright Dean Blackborough 2018-2020
@@ -40,7 +40,7 @@ class Subcategory extends BaseValidator
     }
 
     /**
-     * Create the validation rules for the update request
+     * Create the validation rules for the update (PATCH) request
      *
      * @param integer $category_id
      * @param integer $subcategory_id
@@ -62,38 +62,47 @@ class Subcategory extends BaseValidator
         );
     }
 
+    /**
+     * Any fields which can't be defined via the configuration files because
+     * the validation rules are dynamic
+     *
+     * @return array|string[]
+     */
     public function dynamicDefinedFields(): array
     {
         return ['name'];
     }
 
     /**
-     * Return the validator object for the create request
+     * Return a valid validator object for a create (POST) request
      *
      * @param array $options
      *
-     * @return Validator
+     * @return \Illuminate\Contracts\Validation\Validator
      */
-    public function create(array $options = []): Validator
+    public function create(array $options = []): \Illuminate\Contracts\Validation\Validator
     {
         $this->requiredIndexes(['category_id'], $options);
 
         return ValidatorFacade::make(
             request()->all(),
-            self::createRules(intval($options['category_id'])),
+            $this->createRules((int) $options['category_id']),
             $this->translateMessages('api.subcategory.validation.POST.messages')
         );
     }
 
     /**
+     * Return a valid validator object for a update (PATCH) request
+     *
      * @param array $options
-     * @return Validator
+     *
+     * @return \Illuminate\Contracts\Validation\Validator|null
      */
-    public function update(array $options = []): Validator
+    public function update(array $options = []): ?\Illuminate\Contracts\Validation\Validator
     {
         return ValidatorFacade::make(
             request()->all(),
-            $this->updateRules($options['category_id'], $options['subcategory_id']),
+            $this->updateRules((int) $options['category_id'], (int) $options['subcategory_id']),
             $this->translateMessages('api.subcategory.validation.PATCH.messages')
         );
     }

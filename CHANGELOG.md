@@ -2,7 +2,22 @@
 
 The complete changelog for the Costs to Expect REST API, our changelog follows the format defined at https://keepachangelog.com/en/1.0.0/
 
-## [v2.13.4] - 2020-06-19
+## [v2.11.5] - 2020-06-24
+### Added 
+- We have added a documentation page; the documentation page links to the API documentation and includes a couple of examples.
+
+### Changed
+- We have updated the example ENV file.
+- We have renamed a couple of our helper conversion/validation classes and moved them to a new namespace.
+- We have made a minor content tweak on the landing page; the documentation button is in another section.
+- We have updated and relocated our validation classes; the validation classes are now part of the `App\Request\Validate` namespace.
+- We have reworked our summary controllers; we have removed some code duplication and added additional error checking.
+
+### Fixed
+- Incorrectly assuming the result will be an array with at least one value.
+- We have fixed an error in the changelog; we jump a couple of minor versions.
+
+## [v2.11.4] - 2020-06-19
 ### Changed
 - We have switched to Redis for our cache.
 

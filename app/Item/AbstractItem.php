@@ -5,7 +5,7 @@ namespace App\Item;
 
 use App\Interfaces\Item\IModel;
 use App\Models\Transformers\Transformer;
-use App\Validators\Fields\Validator;
+use App\Request\Validate\Validator;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Config;
 

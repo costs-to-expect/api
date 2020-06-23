@@ -1,10 +1,9 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Validators\Fields;
+namespace App\Request\Validate;
 
-use App\Validators\Fields\Validator as BaseValidator;
-use Illuminate\Contracts\Validation\Validator;
+use App\Request\Validate\Validator as BaseValidator;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Validator as ValidatorFacade;
 
@@ -17,19 +16,13 @@ use Illuminate\Support\Facades\Validator as ValidatorFacade;
  */
 class ItemSubcategory extends BaseValidator
 {
-    private $category_id;
-
     /**
      * Create the validation rules for the create (POST) request
      *
-     * @param integer $category_id
-     *
      * @return array
      */
-    private function createRules(int $category_id): array
+    private function createRules(): array
     {
-        $this->category_id = $category_id;
-
         return array_merge(
             [
                 'subcategory_id' => [
@@ -41,13 +34,13 @@ class ItemSubcategory extends BaseValidator
     }
 
     /**
-     * Return the validator object for the create request
+     * Return a valid validator object for a create (POST) request
      *
      * @param array $options
      *
-     * @return Validator
+     * @return \Illuminate\Contracts\Validation\Validator
      */
-    public function create(array $options = []): Validator
+    public function create(array $options = []): \Illuminate\Contracts\Validation\Validator
     {
         $this->requiredIndexes(['category_id'], $options);
 
@@ -59,17 +52,13 @@ class ItemSubcategory extends BaseValidator
 
         return ValidatorFacade::make(
             ['subcategory_id' => $subcategory_id],
-            self::createRules(intval($options['category_id'])),
+            $this->createRules(),
             $this->translateMessages('api.item-subcategory.validation.POST.messages')
         );
     }
 
-    /**
-     * @param array $options
-     * @return Validator
-     */
-    public function update(array $options = []): Validator
+    public function update(array $options = []): ?\Illuminate\Contracts\Validation\Validator
     {
-        // TODO: Implement update() method.
+        return null;
     }
 }

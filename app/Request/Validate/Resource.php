@@ -1,10 +1,9 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Validators\Fields;
+namespace App\Request\Validate;
 
-use App\Validators\Fields\Validator as BaseValidator;
-use Illuminate\Contracts\Validation\Validator;
+use App\Request\Validate\Validator as BaseValidator;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Validator as ValidatorFacade;
 
@@ -18,7 +17,7 @@ use Illuminate\Support\Facades\Validator as ValidatorFacade;
 class Resource extends BaseValidator
 {
     /**
-     * Create the validation rules for the create request
+     * Create the validation rules for the create (POST) request
      *
      * @param integer $resource_type_id
      *
@@ -40,7 +39,7 @@ class Resource extends BaseValidator
     }
 
     /**
-     * Create the validation rules for the update request
+     * Create the validation rules for the update (PATCH) request
      *
      * @param integer $resource_type_id
      * @param integer $resource_id
@@ -62,34 +61,43 @@ class Resource extends BaseValidator
         );
     }
 
+    /**
+     * Any fields which can't be defined via the configuration files because
+     * the validation rules are dynamic
+     *
+     * @return array|string[]
+     */
     public function dynamicDefinedFields(): array
     {
         return ['name'];
     }
 
     /**
-     * Return the validator object for the create request
+     * Return a valid validator object for a create (POST) request
      *
      * @param array $options
      *
-     * @return Validator
+     * @return \Illuminate\Contracts\Validation\Validator
      */
-    public function create(array $options = []): Validator
+    public function create(array $options = []): \Illuminate\Contracts\Validation\Validator
     {
         $this->requiredIndexes(['resource_type_id'], $options);
 
         return ValidatorFacade::make(
             request()->all(),
-            self::createRules(intval($options['resource_type_id'])),
+            $this->createRules((int) $options['resource_type_id']),
             $this->translateMessages('api.resource.validation.POST.messages')
         );
     }
 
     /**
+     * Return a valid validator object for a update (PATCH) request
+     *
      * @param array $options
-     * @return Validator
+     *
+     * @return \Illuminate\Contracts\Validation\Validator|null
      */
-    public function update(array $options = []): Validator
+    public function update(array $options = []): ?\Illuminate\Contracts\Validation\Validator
     {
         return ValidatorFacade::make(
             request()->all(),

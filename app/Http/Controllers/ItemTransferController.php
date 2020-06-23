@@ -13,7 +13,7 @@ use App\Response\Header\Headers;
 use App\Request\Parameter;
 use App\Request\Route;
 use App\Utilities\Pagination as UtilityPagination;
-use App\Validators\Fields\ItemTransfer as ItemTransferValidator;
+use App\Request\Validate\ItemTransfer as ItemTransferValidator;
 use Exception;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\JsonResponse;

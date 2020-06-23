@@ -14,7 +14,7 @@ use App\Response\Header\Headers;
 use App\Utilities\Pagination as UtilityPagination;
 use App\Models\Subcategory;
 use App\Models\Transformers\Subcategory as SubcategoryTransformer;
-use App\Validators\Fields\Subcategory as SubcategoryValidator;
+use App\Request\Validate\Subcategory as SubcategoryValidator;
 use Exception;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\JsonResponse;

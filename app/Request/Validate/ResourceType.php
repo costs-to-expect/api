@@ -1,11 +1,10 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Validators\Fields;
+namespace App\Request\Validate;
 
 use App\Rules\ResourceTypeName;
-use App\Validators\Fields\Validator as BaseValidator;
-use Illuminate\Contracts\Validation\Validator;
+use App\Request\Validate\Validator as BaseValidator;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Validator as ValidatorFacade;
 
@@ -19,7 +18,7 @@ use Illuminate\Support\Facades\Validator as ValidatorFacade;
 class ResourceType extends BaseValidator
 {
     /**
-     * Create the validation rules for the create request
+     * Create the validation rules for the create (POST) request
      *
      * @param integer $user_id
      *
@@ -45,7 +44,7 @@ class ResourceType extends BaseValidator
     }
 
     /**
-     * Create the validation rules for the update request
+     * Create the validation rules for the update (PATCH) request
      *
      * @param integer $resource_type_id
      * @param integer $user_id
@@ -67,21 +66,28 @@ class ResourceType extends BaseValidator
         );
     }
 
+    /**
+     * Any fields which can't be defined via the configuration files because
+     * the validation rules are dynamic
+     *
+     * @return array|string[]
+     */
     public function dynamicDefinedFields(): array
     {
         return ['name'];
     }
 
     /**
-     * Return the validator object for the create request
+     * Return a valid validator object for a create (POST) request
      *
      * @param array $options
      *
-     * @return Validator
+     * @return \Illuminate\Contracts\Validation\Validator
      */
-    public function create(array $options = []): Validator
+    public function create(array $options = []): \Illuminate\Contracts\Validation\Validator
     {
         $decode = $this->hash->itemType()->decode(request()->input('item_type_id'));
+
         $item_type_id = null;
         if (count($decode) === 1) {
             $item_type_id = $decode[0];
@@ -98,11 +104,13 @@ class ResourceType extends BaseValidator
     }
 
     /**
+     * Return a valid validator object for a update (PATCH) request
+     *
      * @param array $options
      *
-     * @return Validator
+     * @return \Illuminate\Contracts\Validation\Validator|null
      */
-    public function update(array $options = []): Validator
+    public function update(array $options = []): ?\Illuminate\Contracts\Validation\Validator
     {
         return ValidatorFacade::make(
             request()->all(),

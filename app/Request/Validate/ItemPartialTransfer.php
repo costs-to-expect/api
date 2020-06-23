@@ -1,10 +1,9 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Validators\Fields;
+namespace App\Request\Validate;
 
-use App\Validators\Fields\Validator as BaseValidator;
-use Illuminate\Contracts\Validation\Validator;
+use App\Request\Validate\Validator as BaseValidator;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Validator as ValidatorFacade;
 use Illuminate\Validation\Rule;
@@ -20,13 +19,13 @@ use Illuminate\Validation\Rule;
 class ItemPartialTransfer extends BaseValidator
 {
     /**
-     * Return the validator object for the create request
+     * Create the validation rules for the create (POST) request
      *
      * @param array $options
      *
-     * @return Validator
+     * @return \Illuminate\Contracts\Validation\Validator
      */
-    public function create(array $options = []): Validator
+    public function create(array $options = []): \Illuminate\Contracts\Validation\Validator
     {
         $this->requiredIndexes([
                 'resource_type_id',
@@ -53,7 +52,7 @@ class ItemPartialTransfer extends BaseValidator
                 [
                     'resource_id' => [
                         'required',
-                        Rule::exists('resource', 'id')->where(function ($query) use ($options)
+                        Rule::exists('resource', 'id')->where(static function ($query) use ($options)
                         {
                             $query->where('resource_type_id', '=', $options['resource_type_id'])->
                                 where('id', '!=', $options['existing_resource_id']);
@@ -66,13 +65,8 @@ class ItemPartialTransfer extends BaseValidator
         );
     }
 
-    /**
-     * @param array $options
-     *
-     * @return Validator
-     */
-    public function update(array $options = []): \Illuminate\Contracts\Validation\Validator
+    public function update(array $options = []): ?\Illuminate\Contracts\Validation\Validator
     {
-        // TODO: Implement update() method.
+        return null;
     }
 }

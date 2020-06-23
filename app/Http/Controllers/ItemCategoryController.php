@@ -12,7 +12,7 @@ use App\Models\Category;
 use App\Models\ItemCategory;
 use App\Models\Transformers\ItemCategory as ItemCategoryTransformer;
 use App\Response\Header\Headers;
-use App\Validators\Fields\ItemCategory as ItemCategoryValidator;
+use App\Request\Validate\ItemCategory as ItemCategoryValidator;
 use Exception;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\JsonResponse;

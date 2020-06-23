@@ -1,10 +1,9 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Validators\Fields;
+namespace App\Request\Validate;
 
-use App\Validators\Fields\Validator as BaseValidator;
-use Illuminate\Contracts\Validation\Validator;
+use App\Request\Validate\Validator as BaseValidator;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Validator as ValidatorFacade;
 
@@ -19,13 +18,13 @@ use Illuminate\Support\Facades\Validator as ValidatorFacade;
 class RequestErrorLog extends BaseValidator
 {
     /**
-     * Return the validator object for the create request
+     * Return a valid validator object for a create (POST) request
      *
      * @param array $options
      *
-     * @return Validator
+     * @return \Illuminate\Contracts\Validation\Validator
      */
-    public function create(array $options = []): Validator
+    public function create(array $options = []): \Illuminate\Contracts\Validation\Validator
     {
         return ValidatorFacade::make(
             request()->all(),
@@ -34,8 +33,8 @@ class RequestErrorLog extends BaseValidator
         );
     }
 
-    public function update(array $options = []): Validator
+    public function update(array $options = []): ?\Illuminate\Contracts\Validation\Validator
     {
-        // TODO: Implement update() method.
+        return null;
     }
 }
