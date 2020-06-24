@@ -154,7 +154,8 @@
                     <p>The documentation for the API is available as a Postman collection.</p>
 
                     <p>
-                        <a href="https://postman.costs-to-expect.com" class="btn btn-primary alter btn-lg" role="button" aria-pressed="true">Documentation</a>
+                        <a href="/documentation" class="btn btn-primary btn-lg" role="button" aria-pressed="true">Docs and Examples</a>
+                        <a href="https://postman.costs-to-expect.com" class="btn btn-primary alter btn-lg" role="button" aria-pressed="true">Postman Collection</a>
                     </p>
 
                     <hr />
