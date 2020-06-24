@@ -91,7 +91,7 @@ class SubcategoryController extends Controller
 
             $collection = array_map(
                 static function ($subcategory) {
-                    return (new SubcategoryTransformer($subcategory))->toArray();
+                    return (new SubcategoryTransformer($subcategory))->asArray();
                 },
                 $subcategories
             );
@@ -145,7 +145,7 @@ class SubcategoryController extends Controller
         $headers->item();
 
         return response()->json(
-            (new SubcategoryTransformer($subcategory))->toArray(),
+            (new SubcategoryTransformer($subcategory))->asArray(),
             200,
             $headers->headers()
         );
@@ -294,7 +294,7 @@ class SubcategoryController extends Controller
         }
 
         return response()->json(
-            (new SubcategoryTransformer((new Subcategory())->instanceToArray($sub_category)))->toArray(),
+            (new SubcategoryTransformer((new Subcategory())->instanceToArray($sub_category)))->asArray(),
             201
         );
     }
