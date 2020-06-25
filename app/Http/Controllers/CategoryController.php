@@ -158,7 +158,7 @@ class CategoryController extends Controller
         }
 
         return response()->json(
-            (new CategoryTransformer($category, $subcategories))->asArray(),
+            (new CategoryTransformer($category, ['subcategories'=>$subcategories]))->asArray(),
             200,
             $headers->headers()
         );
