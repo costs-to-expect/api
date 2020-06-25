@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Utilities;
+namespace App\Response;
 
 use App\Request\Validate\Boolean;
 

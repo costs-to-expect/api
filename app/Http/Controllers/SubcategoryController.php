@@ -11,7 +11,7 @@ use App\Response\Header\Header;
 use App\Request\Parameter;
 use App\Request\Route;
 use App\Response\Header\Headers;
-use App\Utilities\Pagination as UtilityPagination;
+use App\Response\Pagination as UtilityPagination;
 use App\Models\Subcategory;
 use App\Models\Transformers\Subcategory as SubcategoryTransformer;
 use App\Request\Validate\Subcategory as SubcategoryValidator;

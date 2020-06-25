@@ -8,7 +8,7 @@ use App\Response\Cache;
 use App\Response\Header\Headers;
 use App\Request\Parameter;
 use App\Request\Route;
-use App\Utilities\Pagination as UtilityPagination;
+use App\Response\Pagination as UtilityPagination;
 use App\Models\Transformers\ItemType as ItemTypeTransformer;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Config;

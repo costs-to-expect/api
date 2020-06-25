@@ -10,7 +10,7 @@ use App\Request\Route;
 use App\Models\Category;
 use App\Models\Subcategory;
 use App\Response\Header\Headers;
-use App\Utilities\Pagination as UtilityPagination;
+use App\Response\Pagination as UtilityPagination;
 use Illuminate\Http\JsonResponse;
 
 /**
