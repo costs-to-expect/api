@@ -4,7 +4,7 @@ declare(strict_types=1);
 namespace App\Models\Transformers;
 
 /**
- * Transform the data returned from Eloquent into the format we want for the API
+ * Transform the data from our queries into the format we want to display
  *
  * @author Dean Blackborough <dean@g3d-development.com>
  * @copyright Dean Blackborough 2018-2020
@@ -12,22 +12,13 @@ namespace App\Models\Transformers;
  */
 class PermittedUser extends Transformer
 {
-    private $data_to_transform;
-
-    public function __construct(array $data_to_transform)
+    public function format(array $to_transform): void
     {
-        parent::__construct();
-
-        $this->data_to_transform = $data_to_transform;
-    }
-
-    public function toArray(): array
-    {
-        return [
-            'id' => $this->hash->permittedUser()->encode($this->data_to_transform['permitted_user_id']),
-            'name' => $this->data_to_transform['permitted_user_name'],
-            'email' => $this->data_to_transform['permitted_user_email'],
-            'created' => $this->data_to_transform['permitted_user_created_at']
+        $this->transformed = [
+            'id' => $this->hash->permittedUser()->encode($to_transform['permitted_user_id']),
+            'name' => $to_transform['permitted_user_name'],
+            'email' => $to_transform['permitted_user_email'],
+            'created' => $to_transform['permitted_user_created_at']
         ];
     }
 }

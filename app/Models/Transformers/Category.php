@@ -4,10 +4,7 @@ declare(strict_types=1);
 namespace App\Models\Transformers;
 
 /**
- * Transform the data returns from Eloquent into the format we want for the API
- *
- * This is an updated version of the transformers, the other transformers need to
- * be updated to operate on an array rather than collections
+ * Transform the data from our queries into the format we want to display
  *
  * @author Dean Blackborough <dean@g3d-development.com>
  * @copyright Dean Blackborough 2018-2020
@@ -15,48 +12,30 @@ namespace App\Models\Transformers;
  */
 class Category extends Transformer
 {
-    private $data_to_transform;
-
-    private $subcategories = [];
-
-    /**
-     * ResourceType constructor.
-     *
-     * @param array $data_to_transform
-     * @param array $subcategories
-     */
-    public function __construct(array $data_to_transform, array $subcategories = [])
+    public function format(array $to_transform): void
     {
-        parent::__construct();
-
-        $this->data_to_transform = $data_to_transform;
-        $this->subcategories = $subcategories;
-    }
-
-    public function toArray(): array
-    {
-        $result = [
-            'id' => $this->hash->category()->encode($this->data_to_transform['category_id']),
-            'name' => $this->data_to_transform['category_name'],
-            'description' => $this->data_to_transform['category_description'],
-            'created' => $this->data_to_transform['category_created_at'],
+        $this->transformed = [
+            'id' => $this->hash->category()->encode($to_transform['category_id']),
+            'name' => $to_transform['category_name'],
+            'description' => $to_transform['category_description'],
+            'created' => $to_transform['category_created_at'],
             'resource_type' => [
-                'id' => $this->hash->resourceType()->encode($this->data_to_transform['resource_type_id'])
+                'id' => $this->hash->resourceType()->encode($to_transform['resource_type_id'])
             ]
         ];
 
-        if (array_key_exists('resource_type_name', $this->data_to_transform) === true) {
-           $result['resource_type']['name'] = $this->data_to_transform['resource_type_name'];
+        if (array_key_exists('resource_type_name', $to_transform) === true) {
+           $this->transformed['resource_type']['name'] = $to_transform['resource_type_name'];
         }
 
-        if (array_key_exists('category_subcategories', $this->data_to_transform)) {
-            $result['subcategories']['count'] = $this->data_to_transform['category_subcategories'];
+        if (array_key_exists('category_subcategories', $to_transform)) {
+            $this->transformed['subcategories']['count'] = $to_transform['category_subcategories'];
         }
 
-        foreach ($this->subcategories as $subcategory) {
-            $result['subcategories']['collection'][] = (new Subcategory($subcategory))->toArray();
+        if (array_key_exists('subcategories', $this->related) === true) {
+            foreach ($this->related['subcategories'] as $subcategory) {
+                $this->transformed['subcategories']['collection'][] = (new Subcategory($subcategory))->asArray();
+            }
         }
-
-        return $result;
     }
 }

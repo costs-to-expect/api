@@ -14,60 +14,36 @@ use App\Models\Transformers\Resource as ResourceTransformer;
  */
 class ResourceType extends Transformer
 {
-    private $data_to_transform;
-
-    private $resources = [];
-
-    /**
-     * ResourceType constructor.
-     *
-     * @param array $data_to_transform
-     * @param array $resources
-     */
-    public function __construct(array $data_to_transform, array $resources = [])
+    public function format(array $to_transform): void
     {
-        parent::__construct();
-
-        $this->data_to_transform = $data_to_transform;
-        $this->resources = $resources;
-    }
-
-    /**
-     * Format the data
-     *
-     * @return array
-     */
-    public function toArray(): array
-    {
-        $result = [
-            'id' => $this->hash->resourceType()->encode($this->data_to_transform['resource_type_id']),
-            'name' => $this->data_to_transform['resource_type_name'],
-            'description' => $this->data_to_transform['resource_type_description'],
-            'created' => $this->data_to_transform['resource_type_created_at'],
-            'public' => boolval($this->data_to_transform['resource_type_public']),
+        $this->transformed = [
+            'id' => $this->hash->resourceType()->encode($to_transform['resource_type_id']),
+            'name' => $to_transform['resource_type_name'],
+            'description' => $to_transform['resource_type_description'],
+            'created' => $to_transform['resource_type_created_at'],
+            'public' => (bool) $to_transform['resource_type_public'],
         ];
 
         if (
-            array_key_exists('resource_type_item_type_id', $this->data_to_transform) === true &&
-            array_key_exists('resource_type_item_type_name', $this->data_to_transform) === true &&
-            array_key_exists('resource_type_item_type_description', $this->data_to_transform) === true
+            array_key_exists('resource_type_item_type_id', $to_transform) === true &&
+            array_key_exists('resource_type_item_type_name', $to_transform) === true &&
+            array_key_exists('resource_type_item_type_description', $to_transform) === true
         ) {
-            $result['item_type'] = [
-                'id' => $this->hash->itemType()->encode($this->data_to_transform['resource_type_item_type_id']),
-                'name' => $this->data_to_transform['resource_type_item_type_name'],
-                'description' => $this->data_to_transform['resource_type_item_type_description']
+            $this->transformed['item_type'] = [
+                'id' => $this->hash->itemType()->encode($to_transform['resource_type_item_type_id']),
+                'name' => $to_transform['resource_type_item_type_name'],
+                'description' => $to_transform['resource_type_item_type_description']
             ];
         }
 
-        if (array_key_exists('resource_type_resources', $this->data_to_transform)) {
-            $result['resources']['count'] = $this->data_to_transform['resource_type_resources'];
+        if (array_key_exists('resource_type_resources', $to_transform)) {
+            $this->transformed['resources']['count'] = $to_transform['resource_type_resources'];
         }
 
-        foreach ($this->resources as $resource) {
-            $result['resources']['collection'][] = (new ResourceTransformer($resource))->toArray();
+        if (array_key_exists('resources', $this->related) === true) {
+            foreach ($this->related['resources'] as $resource) {
+                $this->transformed['resources']['collection'][] = (new ResourceTransformer($resource))->asArray();
+            }
         }
-
-
-        return $result;
     }
 }

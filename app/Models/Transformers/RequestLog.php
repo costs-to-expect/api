@@ -4,10 +4,7 @@ declare(strict_types=1);
 namespace App\Models\Transformers;
 
 /**
- * Transform the data returns from Eloquent into the format we want for the API
- *
- * This is an updated version of the transformers, the other transformers need to
- * be updated to operate on an array rather than collections
+ * Transform the data from our queries into the format we want to display
  *
  * @author Dean Blackborough <dean@g3d-development.com>
  * @copyright Dean Blackborough 2018-2020
@@ -15,22 +12,13 @@ namespace App\Models\Transformers;
  */
 class RequestLog extends Transformer
 {
-    protected $data_to_transform;
-
-    public function __construct(array $data_to_transform)
+    public function format(array $to_transform): void
     {
-        parent::__construct();
-
-        $this->data_to_transform = $data_to_transform;
-    }
-
-    public function toArray(): array
-    {
-        return [
-            'method' => $this->data_to_transform['method'],
-            'source' => $this->data_to_transform['source'],
-            'request_uri' => $this->data_to_transform['request'],
-            'created' => $this->data_to_transform['created_at']
+        $this->transformed = [
+            'method' => $to_transform['method'],
+            'source' => $to_transform['source'],
+            'request_uri' => $to_transform['request'],
+            'created' => $to_transform['created_at']
         ];
     }
 }

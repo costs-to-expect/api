@@ -17,16 +17,20 @@ abstract class Transformer
 {
     protected Hash $hash;
 
+    protected array $related;
+
     protected array $transformed;
 
     /**
-     * Pass in the data we want to format for output
-     *
      * @param array $to_transform
+     * @param array $related Pass in optional related data arrays
      */
-    public function __construct(array $to_transform)
+    public function __construct(array $to_transform, array $related = [])
     {
         $this->hash = new Hash();
+
+        $this->transformed = [];
+        $this->related = $related;
 
         $this->format($to_transform);
     }

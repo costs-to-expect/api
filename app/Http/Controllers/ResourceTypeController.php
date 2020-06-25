@@ -83,7 +83,7 @@ class ResourceTypeController extends Controller
 
             $collection = array_map(
                 static function ($resource_type) {
-                    return (new ResourceTypeTransformer($resource_type))->toArray();
+                    return (new ResourceTypeTransformer($resource_type))->asArray();
                 },
                 $resource_types
             );
@@ -142,7 +142,7 @@ class ResourceTypeController extends Controller
         $headers->item()->addParameters(Parameter\Request::xHeader());
 
         return response()->json(
-            (new ResourceTypeTransformer($resource_type, $resources))->toArray(),
+            (new ResourceTypeTransformer($resource_type, ['resources' => $resources]))->asArray(),
             200,
             $headers->headers()
         );
@@ -279,7 +279,7 @@ class ResourceTypeController extends Controller
         }
 
         return response()->json(
-            (new ResourceTypeTransformer((New ResourceType())->instanceToArray($resource_type)))->toArray(),
+            (new ResourceTypeTransformer((New ResourceType())->instanceToArray($resource_type)))->asArray(),
             201
         );
     }
