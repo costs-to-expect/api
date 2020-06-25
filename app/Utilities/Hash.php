@@ -26,11 +26,9 @@ class Hash
         $this->hashers = [];
 
         $this->setUp();
-
-        return $this;
     }
 
-    private function setUp()
+    private function setUp(): void
     {
         $config = Config::get('api.app.hashids');
 
