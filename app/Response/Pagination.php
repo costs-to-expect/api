@@ -9,11 +9,7 @@ use App\Utilities\Hash;
 use Illuminate\Support\Facades\Config;
 
 /**
- * Pagination helper
- *
- * As with all utility classes, eventually they may be moved into libraries if
- * they gain more than a few functions and the creation of a library makes
- * sense.
+ * Generate the pagination URIs based on th request
  *
  * @author Dean Blackborough <dean@g3d-development.com>
  * @copyright Dean Blackborough 2018-2020
@@ -21,160 +17,137 @@ use Illuminate\Support\Facades\Config;
  */
 class Pagination
 {
-    private static $instance;
+    private array $parameters;
+    private array $sort_parameters;
+    private array $search_parameters;
+    private array $filtering_parameters;
+
+    private int $offset;
+
+    private bool $collection;
+    private bool $allow_override;
+
+    private Hash $hash;
+
+    private string $uri;
+    private int $total;
+    private int $limit;
 
     /**
-     * @var array
-     */
-    private static $parameters;
-    /**
-     * @var array
-     */
-    private static $sort_parameters;
-    /**
-     * @var array
-     */
-    private static $search_parameters;
-    /**
-     * @var int
-     */
-    private static $limit;
-    /**
-     * @var int
-     */
-    private static $offset;
-    /**
-     * @var boolean
-     */
-    private static $collection;
-    /**
-     * @var boolean
-     */
-    private static $allow_override;
-    /**
-     * @var int
-     */
-    private static $total;
-    /**
-     * @var string
-     */
-    private static $uri;
-    /**
-     * @var Hash
-     */
-    private static $hash;
-
-    /**
-     * Constructor
-     *
-     * @param string $uri Set the pagination uri
+     * @param string $uri The base URI for the pagination URIs
      * @param int $total Set the total number of items in collection
      * @param int $limit Set the 'per page' limit
-     * @param boolean $allow_override Allow the pagination to be overridden via the collection parameter
-     *
-     * @return Pagination
      */
-    public static function init(
+    public function __construct(
         string $uri,
         int $total,
-        int $limit = 10,
-        bool $allow_override = false
-    ): Pagination
-    {
-        if (self::$instance === null) {
-            self::$instance = new self;
-        }
+        int $limit = 10
+    ) {
+        $this->parameters = [];
+        $this->sort_parameters = [];
+        $this->search_parameters = [];
 
-        self::$parameters = [];
-        self::$sort_parameters = [];
-        self::$search_parameters = [];
-        self::$limit = $limit;
-        self::$total = $total;
-        self::$uri = $uri;
-        self::$hash = new Hash();
-        self::$offset = 0;
-        self::$allow_override = $allow_override;
-        self::$collection = false;
-
-        return self::$instance;
+        $this->limit = $limit;
+        $this->total = $total;
+        $this->uri = $uri;
+        $this->hash = new Hash();
+        $this->offset = 0;
+        $this->allow_override = false;
+        $this->collection = false;
     }
 
     /**
-     * Set any optional route parameters
+     * Is the user able to request the entire collection?
+     *
+     * @param bool $allow_override
+     *
+     * @return Pagination
+     */
+    public function allowPaginationOverride(bool $allow_override): Pagination
+    {
+        $this->allow_override = $allow_override;
+
+        return $this;
+    }
+
+    /**
+     * Set any request parameters
      *
      * @param array $parameters
      *
      * @return Pagination
      */
-    public static function setParameters(array $parameters = []): Pagination
+    public function setParameters(array $parameters = []): Pagination
     {
-        self::$parameters = $parameters;
+        $this->parameters = $parameters;
 
-        return self::$instance;
+        return $this;
     }
 
     /**
-     * Set any optional sort parameters
+     * Set any request filtering parameters
      *
      * @param array $parameters
      *
      * @return Pagination
      */
-    public static function setSortParameters(array $parameters = []): Pagination
+    public function setFilteringParameters(array $parameters = []): Pagination
     {
-        self::$sort_parameters = $parameters;
+        $this->filtering_parameters = $parameters;
 
-        return self::$instance;
+        return $this;
     }
 
     /**
-     * Set any optional search parameters
+     * Set any request sort parameters
      *
      * @param array $parameters
      *
      * @return Pagination
      */
-    public static function setSearchParameters(array $parameters = []): Pagination
+    public function setSortParameters(array $parameters = []): Pagination
     {
-        self::$search_parameters = $parameters;
+        $this->sort_parameters = $parameters;
 
-        return self::$instance;
+        return $this;
     }
 
     /**
-     * Return the pagination array
+     * Set any request search parameters
+     *
+     * @param array $parameters
+     *
+     * @return Pagination
+     */
+    public function setSearchParameters(array $parameters = []): Pagination
+    {
+        $this->search_parameters = $parameters;
+
+        return $this;
+    }
+
+    /**
+     * Return the generated pagination parameters, the uris for next and
+     * previous, the defined offset and limit
      *
      * @return array
      */
-    public static function paging(): array
+    public function parameters(): array
     {
-        $pagination_uris = self::render();
-
-        if (self::$collection === false) {
-            return [
-                'links' => $pagination_uris,
-                'offset' => self::$offset,
-                'limit' => self::$limit
-            ];
-        }
+        $uris = $this->generateUris();
 
         return [
-            'links' => $pagination_uris,
-            'offset' => 0,
-            'limit' => self::$total
+            'links' => $uris,
+            'offset' => ($this->collection === false ? $this->offset : 0),
+            'limit' => ($this->collection === false ? $this->limit : $this->total)
         ];
     }
 
-    /**
-     * Process any passed in parameters, encoding as required
-     *
-     * @return string
-     */
-    private static function processParameters(): string
+    private function processParameters(): string
     {
         $parameters = '';
-        if (count(self::$parameters) > 0) {
-            foreach (self::$parameters as $parameter => $parameter_value) {
+        if (count($this->parameters) > 0) {
+            foreach ($this->parameters as $parameter => $parameter_value) {
                 if ($parameter_value !== null) {
                     if ($parameters !== '') {
                         $parameters .= '&';
@@ -184,7 +157,7 @@ class Pagination
                         case 'category':
                         case 'subcategory':
                             $parameters .= $parameter . '=' .
-                                self::$hash->encode($parameter, $parameter_value);
+                                $this->hash->encode($parameter, $parameter_value);
                             break;
 
                         default:
@@ -202,15 +175,24 @@ class Pagination
         return $parameters;
     }
 
-    /**
-     * Process any sort parameters
-     *
-     * @return string
-     */
-    private static function processSortParameters(): string
+    private function processFilterParameters(): string
+    {
+        $filter_parameters = '';
+        foreach ($this->filtering_parameters as $field => $ranges) {
+            $filter_parameters .= '|' . $field . ':' . $ranges['from'] . ':' . $ranges['to'];
+        }
+
+        if ($filter_parameters !== '') {
+            $filter_parameters = 'filter=' . ltrim($filter_parameters, '|') . '&';
+        }
+
+        return $filter_parameters;
+    }
+
+    private function processSortParameters(): string
     {
         $sort_parameters = '';
-        foreach (self::$sort_parameters as $field => $order) {
+        foreach ($this->sort_parameters as $field => $order) {
             $sort_parameters .= '|' . $field . ':' . $order;
         }
 
@@ -221,15 +203,10 @@ class Pagination
         return $sort_parameters;
     }
 
-    /**
-     * Process any search parameters
-     *
-     * @return string
-     */
-    private static function processSearchParameters(): string
+    private function processSearchParameters(): string
     {
         $search_parameters = '';
-        foreach (self::$search_parameters as $field => $partial_term) {
+        foreach ($this->search_parameters as $field => $partial_term) {
             $search_parameters .= '|' . $field . ':' . urlencode($partial_term);
         }
 
@@ -240,22 +217,13 @@ class Pagination
         return $search_parameters;
     }
 
-    /**
-     * Create the paging uris
-     *
-     * @return array
-     */
-    private static function render(): array
+    private function generateUris(): array
     {
-        self::$offset = (int) request()->query('offset', 0);
-        self::$limit = (int) request()->query('limit', self::$limit);
-        if (self::$allow_override === true) {
+        $this->offset = (int) request()->query('offset', 0);
+        $this->limit = (int) request()->query('limit', $this->limit);
 
-            self::$collection = false;
-
-            if (Boolean::convertedValue(request()->query('collection')) === true) {
-                self::$collection = true;
-            }
+        if ($this->allow_override === true && Boolean::convertedValue(request()->query('collection')) === true) {
+            $this->collection = true;
         }
 
         $uris = [
@@ -263,34 +231,37 @@ class Pagination
             'previous' => null
         ];
 
-        if (self::$collection === false) {
+        if ($this->collection === false) {
 
             $previous_offset = null;
             $next_offset = null;
 
-            if (self::$offset !== 0) {
-                $previous_offset = abs(self::$offset - self::$limit);
+            if ($this->offset !== 0) {
+                $previous_offset = abs($this->offset - $this->limit);
             }
-            if (self::$offset + self::$limit < self::$total) {
-                $next_offset = self::$offset + self::$limit;
+            if ($this->offset + $this->limit < $this->total) {
+                $next_offset = $this->offset + $this->limit;
             }
 
-            $parameters = self::processParameters();
-            $sort_parameters = self::processSortParameters();
-            $search_parameters = self::processSearchParameters();
+            $parameters = $this->processParameters();
+            $sort_parameters = $this->processSortParameters();
+            $search_parameters = $this->processSearchParameters();
+            $filter_parameters = $this->processFilterParameters();
 
-            self::$uri .= '?';
+            $this->uri .= '?';
 
             if ($previous_offset !== null) {
-                $uris['previous'] .= Config::get('api.app.url') . '/' . self::$uri .
-                    $parameters . $sort_parameters . $search_parameters . 'offset=' . $previous_offset . '&limit=' .
-                    self::$limit;
+                $uris['previous'] .= Config::get('api.app.url') . '/' . $this->uri .
+                    $parameters . $sort_parameters . $search_parameters .
+                    $filter_parameters . 'offset=' . $previous_offset . '&limit=' .
+                    $this->limit;
             }
 
             if ($next_offset !== null) {
-                $uris['next'] .= Config::get('api.app.url') . '/' . self::$uri .
-                    $parameters . $sort_parameters . $search_parameters . 'offset=' . $next_offset . '&limit=' .
-                    self::$limit;
+                $uris['next'] .= Config::get('api.app.url') . '/' . $this->uri .
+                    $parameters . $sort_parameters . $search_parameters .
+                    $filter_parameters . 'offset=' . $next_offset . '&limit=' .
+                    $this->limit;
             }
         }
 
