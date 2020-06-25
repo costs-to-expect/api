@@ -257,7 +257,7 @@ class ItemController extends Controller
 
             $collection = array_map(
                 static function ($year) {
-                    return (new ItemYearTransformer($year))->toArray();
+                    return (new ItemYearTransformer($year))->asArray();
                 },
                 $summary
             );
@@ -334,7 +334,7 @@ class ItemController extends Controller
 
             $collection = array_map(
                 static function ($month) {
-                    return (new ItemMonthTransformer($month))->toArray();
+                    return (new ItemMonthTransformer($month))->asArray();
                 },
                 $summary
             );
@@ -386,7 +386,7 @@ class ItemController extends Controller
 
             $collection = [];
             if (array_key_exists(0, $summary)) {
-                $collection = (new ItemMonthTransformer($summary[0]))->toArray();
+                $collection = (new ItemMonthTransformer($summary[0]))->asArray();
             }
 
             $this->assignContentToCache(
@@ -433,7 +433,7 @@ class ItemController extends Controller
 
             $collection = [];
             if (array_key_exists(0, $summary)) {
-                $collection = (new ItemYearTransformer($summary[0]))->toArray();
+                $collection = (new ItemYearTransformer($summary[0]))->asArray();
             }
 
             $this->assignContentToCache(
@@ -476,7 +476,7 @@ class ItemController extends Controller
 
             $collection = array_map(
                 static function ($category) {
-                    return (new ItemCategoryTransformer($category))->toArray();
+                    return (new ItemCategoryTransformer($category))->asArray();
                 },
                 $summary
             );
@@ -525,7 +525,7 @@ class ItemController extends Controller
 
             $collection = array_map(
                 static function ($subcategory) {
-                    return (new ItemSubcategoryTransformer($subcategory))->toArray();
+                    return (new ItemSubcategoryTransformer($subcategory))->asArray();
                 },
                 $summary
             );
@@ -577,7 +577,7 @@ class ItemController extends Controller
 
             $collection = [];
             if (array_key_exists(0, $summary)) {
-                $collection = (new ItemSubcategoryTransformer($summary[0]))->toArray();
+                $collection = (new ItemSubcategoryTransformer($summary[0]))->asArray();
             }
 
             $this->assignContentToCache(
@@ -624,7 +624,7 @@ class ItemController extends Controller
 
             $collection = [];
             if (array_key_exists(0, $summary)) {
-                $collection = (new ItemCategoryTransformer($summary[0]))->toArray();
+                $collection = (new ItemCategoryTransformer($summary[0]))->asArray();
             }
 
             $this->assignContentToCache(

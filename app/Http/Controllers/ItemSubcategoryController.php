@@ -69,7 +69,7 @@ class ItemSubcategoryController extends Controller
             if ($item_sub_category === null || (is_array($item_sub_category) && count($item_sub_category) === 0)) {
                 $collection = [];
             } else {
-                $collection = [(new ItemSubcategoryTransformer($item_sub_category[0]))->toArray()];
+                $collection = [(new ItemSubcategoryTransformer($item_sub_category[0]))->asArray()];
             }
 
             $headers = new Header();
@@ -130,7 +130,7 @@ class ItemSubcategoryController extends Controller
         $headers->item();
 
         return response()->json(
-            (new ItemSubcategoryTransformer($item_sub_category))->toArray(),
+            (new ItemSubcategoryTransformer($item_sub_category))->asArray(),
             200,
             $headers->headers()
         );
@@ -334,7 +334,7 @@ class ItemSubcategoryController extends Controller
         }
 
         return response()->json(
-            (new ItemSubcategoryTransformer((new ItemSubcategory())->instanceToArray($item_sub_category)))->toArray(),
+            (new ItemSubcategoryTransformer((new ItemSubcategory())->instanceToArray($item_sub_category)))->asArray(),
             201
         );
     }

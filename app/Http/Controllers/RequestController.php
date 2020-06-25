@@ -57,7 +57,7 @@ class RequestController extends Controller
         return response()->json(
             array_map(
                 function($log) {
-                    return (new RequestErrorLogTransformer($log))->toArray();
+                    return (new RequestErrorLogTransformer($log))->asArray();
                 },
                 $logs
             ),
@@ -97,7 +97,7 @@ class RequestController extends Controller
 
         $json = [];
         foreach ($log as $log_item) {
-            $json[] = (new RequestLogTransformer($log_item))->toArray();
+            $json[] = (new RequestLogTransformer($log_item))->asArray();
         }
 
         return response()->json($json, 200, $headers->headers());

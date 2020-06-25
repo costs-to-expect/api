@@ -88,7 +88,7 @@ class ResourceTypeItemController extends Controller
 
             $collection = array_map(
                 static function ($item) use ($item_interface) {
-                    return $item_interface->transformer($item)->toArray();
+                    return $item_interface->transformer($item)->asArray();
                 },
                 $items
             );

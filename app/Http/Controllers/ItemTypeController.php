@@ -68,7 +68,7 @@ class ItemTypeController extends Controller
 
             $collection = array_map(
                 static function($item_type) {
-                    return (new ItemTypeTransformer($item_type))->toArray();
+                    return (new ItemTypeTransformer($item_type))->asArray();
                 },
                 $item_types
             );
@@ -108,7 +108,7 @@ class ItemTypeController extends Controller
         $headers->item();
 
         return response()->json(
-            (new ItemTypeTransformer($item_type))->toArray(),
+            (new ItemTypeTransformer($item_type))->asArray(),
             200,
             $headers->headers()
         );

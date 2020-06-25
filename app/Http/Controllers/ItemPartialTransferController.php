@@ -80,7 +80,7 @@ class ItemPartialTransferController extends Controller
 
             $collection = array_map(
                 static function ($transfer) {
-                    return (new ItemPartialTransferTransformer($transfer))->toArray();
+                    return (new ItemPartialTransferTransformer($transfer))->asArray();
                 },
                 $transfers
             );
@@ -179,7 +179,7 @@ class ItemPartialTransferController extends Controller
         $headers->item();
 
         return response()->json(
-            (new ItemPartialTransferTransformer($item_partial_transfer))->toArray(),
+            (new ItemPartialTransferTransformer($item_partial_transfer))->asArray(),
             200,
             $headers->headers()
         );
@@ -254,7 +254,7 @@ class ItemPartialTransferController extends Controller
         }
 
         return response()->json(
-            (new ItemPartialTransferTransformer($item_partial_transfer))->toArray(),
+            (new ItemPartialTransferTransformer($item_partial_transfer))->asArray(),
             201
         );
     }

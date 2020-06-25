@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Response\Header\Header;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Str;

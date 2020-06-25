@@ -7,7 +7,6 @@ use App\Models\Transformers\PermittedUser as PermittedUserTransformer;
 use App\Option\Get;
 use App\Option\Post;
 use App\Response\Cache;
-use App\Response\Header\Header;
 use App\Request\Parameter;
 use App\Request\Route;
 use App\Response\Header\Headers;
@@ -78,7 +77,7 @@ class PermittedUserController extends Controller
 
             $collection = array_map(
                 static function ($permitted_user) {
-                    return (new PermittedUserTransformer($permitted_user))->toArray();
+                    return (new PermittedUserTransformer($permitted_user))->asArray();
                 },
                 $permitted_users
             );

@@ -107,7 +107,7 @@ class ItemController extends Controller
 
             $collection = array_map(
                 static function ($item) use ($item_interface) {
-                    return $item_interface->transformer($item)->toArray();
+                    return $item_interface->transformer($item)->asArray();
                 },
                 $items
             );
@@ -175,7 +175,7 @@ class ItemController extends Controller
         $headers->item();
 
         return response()->json(
-            $item_interface->transformer($item)->toArray(),
+            $item_interface->transformer($item)->asArray(),
             200,
             $headers->headers()
         );
@@ -370,7 +370,7 @@ class ItemController extends Controller
         }
 
         return response()->json(
-            $item_interface->transformer($model->instanceToArray($item, $item_type))->toArray(),
+            $item_interface->transformer($model->instanceToArray($item, $item_type))->asArray(),
             201
         );
     }

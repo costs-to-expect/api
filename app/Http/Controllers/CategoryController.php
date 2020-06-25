@@ -90,7 +90,7 @@ class CategoryController extends Controller
 
             $collection = array_map(
                 static function ($category) {
-                    return (new CategoryTransformer($category))->toArray();
+                    return (new CategoryTransformer($category))->asArray();
                 },
                 $categories
             );
@@ -158,7 +158,7 @@ class CategoryController extends Controller
         }
 
         return response()->json(
-            (new CategoryTransformer($category, $subcategories))->toArray(),
+            (new CategoryTransformer($category, $subcategories))->asArray(),
             200,
             $headers->headers()
         );
@@ -296,7 +296,7 @@ class CategoryController extends Controller
         }
 
         return response()->json(
-            (new CategoryTransformer((new Category)->instanceToArray($category)))->toArray(),
+            (new CategoryTransformer((new Category)->instanceToArray($category)))->asArray(),
             201
         );
     }

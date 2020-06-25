@@ -11,7 +11,6 @@ use App\Request\Route;
 use App\Models\Category;
 use App\Models\ItemCategory;
 use App\Models\Transformers\ItemCategory as ItemCategoryTransformer;
-use App\Response\Header\Headers;
 use App\Request\Validate\ItemCategory as ItemCategoryValidator;
 use Exception;
 use Illuminate\Database\QueryException;
@@ -62,7 +61,7 @@ class ItemCategoryController extends Controller
             if ($item_category === null || (is_array($item_category) === true && count($item_category) === 0)) {
                 $collection = [];
             } else {
-                $collection = [(new ItemCategoryTransformer($item_category[0]))->toArray()];
+                $collection = [(new ItemCategoryTransformer($item_category[0]))->asArray()];
             }
 
             $headers = new Header();
@@ -120,7 +119,7 @@ class ItemCategoryController extends Controller
         $headers->item();
 
         return response()->json(
-            (new ItemCategoryTransformer($item_category))->toArray(),
+            (new ItemCategoryTransformer($item_category))->asArray(),
             200,
             $headers->headers()
         );
@@ -296,7 +295,7 @@ class ItemCategoryController extends Controller
         }
 
         return response()->json(
-            (new ItemCategoryTransformer((new ItemCategory())->instanceToArray($item_category)))->toArray(),
+            (new ItemCategoryTransformer((new ItemCategory())->instanceToArray($item_category)))->asArray(),
             201
         );
     }

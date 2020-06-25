@@ -80,7 +80,7 @@ class ItemTransferController extends Controller
 
             $collection = array_map(
                 static function ($transfer) {
-                    return (new ItemTransferTransformer($transfer))->toArray();
+                    return (new ItemTransferTransformer($transfer))->asArray();
                 },
                 $transfers
             );
@@ -227,7 +227,7 @@ class ItemTransferController extends Controller
         $headers->item();
 
         return response()->json(
-            (new ItemTransferTransformer($item_transfer))->toArray(),
+            (new ItemTransferTransformer($item_transfer))->asArray(),
             200,
             $headers->headers()
         );

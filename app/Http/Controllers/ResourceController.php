@@ -89,7 +89,7 @@ class ResourceController extends Controller
 
             $collection = array_map(
                 static function ($resource) {
-                    return (new ResourceTransformer($resource))->toArray();
+                    return (new ResourceTransformer($resource))->asArray();
                 },
                 $resources
             );
@@ -137,7 +137,7 @@ class ResourceController extends Controller
         $headers->item();
 
         return response()->json(
-            (new ResourceTransformer($resource))->toArray(),
+            (new ResourceTransformer($resource))->asArray(),
             200,
             $headers->headers()
         );
@@ -284,7 +284,7 @@ class ResourceController extends Controller
         }
 
         return response()->json(
-            (new ResourceTransformer((New Resource())->instanceToArray($resource)))->toArray(),
+            (new ResourceTransformer((New Resource())->instanceToArray($resource)))->asArray(),
             201
         );
     }

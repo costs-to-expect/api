@@ -332,7 +332,7 @@ class ResourceTypeItemController extends Controller
 
             $collection = array_map(
                 static function ($resource) {
-                    return (new ResourceTypeItemResourceTransformer($resource))->toArray();
+                    return (new ResourceTypeItemResourceTransformer($resource))->asArray();
                 },
                 $summary
             );
@@ -377,7 +377,7 @@ class ResourceTypeItemController extends Controller
 
             $collection = array_map(
                 static function ($year) {
-                    return (new ResourceTypeItemYearTransformer($year))->toArray();
+                    return (new ResourceTypeItemYearTransformer($year))->asArray();
                 },
                 $summary
             );
@@ -425,7 +425,7 @@ class ResourceTypeItemController extends Controller
 
             $collection = [];
             if (array_key_exists(0, $summary)) {
-                $collection = (new ResourceTypeItemYearTransformer($summary[0]))->toArray();
+                $collection = (new ResourceTypeItemYearTransformer($summary[0]))->asArray();
             }
 
             $this->assignContentToCache(
@@ -471,7 +471,7 @@ class ResourceTypeItemController extends Controller
 
             $collection = array_map(
                 static function ($month) {
-                    return (new ResourceTypeItemMonthTransformer($month))->toArray();
+                    return (new ResourceTypeItemMonthTransformer($month))->asArray();
                 },
                 $summary
             );
@@ -522,7 +522,7 @@ class ResourceTypeItemController extends Controller
 
             $collection = [];
             if (array_key_exists(0, $summary)) {
-                $collection = (new ResourceTypeItemMonthTransformer($summary[0]))->toArray();
+                $collection = (new ResourceTypeItemMonthTransformer($summary[0]))->asArray();
             }
 
             $this->assignContentToCache(
@@ -565,7 +565,7 @@ class ResourceTypeItemController extends Controller
 
             $collection = array_map(
                 static function ($category) {
-                    return (new ResourceTypeItemCategoryTransformer($category))->toArray();
+                    return (new ResourceTypeItemCategoryTransformer($category))->asArray();
                 },
                 $summary
             );
@@ -613,7 +613,7 @@ class ResourceTypeItemController extends Controller
 
             $collection = [];
             if (array_key_exists(0, $summary)) {
-                $collection = (new ResourceTypeItemCategoryTransformer($summary[0]))->toArray();
+                $collection = (new ResourceTypeItemCategoryTransformer($summary[0]))->asArray();
             }
 
             $this->assignContentToCache(
@@ -723,7 +723,7 @@ class ResourceTypeItemController extends Controller
 
             $collection = array_map(
                 static function ($category) {
-                    return (new ResourceTypeItemSubcategoryTransformer($category))->toArray();
+                    return (new ResourceTypeItemSubcategoryTransformer($category))->asArray();
                 },
                 $summary
             );
@@ -774,7 +774,7 @@ class ResourceTypeItemController extends Controller
 
             $collection = [];
             if (array_key_exists(0, $summary)) {
-                $collection = (new ResourceTypeItemSubcategoryTransformer($summary[0]))->toArray();
+                $collection = (new ResourceTypeItemSubcategoryTransformer($summary[0]))->asArray();
             }
 
             $this->assignContentToCache(
