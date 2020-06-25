@@ -37,26 +37,26 @@ class RequestController extends Controller
     {
         $total = (new RequestErrorLog())->totalCount();
 
-        $pagination = UtilityPagination::init(request()->path(), $total, 50)
-            ->paging();
+        $pagination = new UtilityPagination(request()->path(), $total, 50);
+        $pagination_parameters = $pagination->parameters();
 
         $logs = (new RequestErrorLog())->paginatedCollection(
-            $pagination['offset'],
-            $pagination['limit']
+            $pagination_parameters['offset'],
+            $pagination_parameters['limit']
         );
 
         $headers = [
             'X-Count' => count($logs),
             'X-Total-Count' => $total,
-            'X-Offset' => $pagination['offset'],
-            'X-Limit' => $pagination['limit'],
-            'X-Link-Previous' => $pagination['links']['previous'],
-            'X-Link-Next' => $pagination['links']['next'],
+            'X-Offset' => $pagination_parameters['offset'],
+            'X-Limit' => $pagination_parameters['limit'],
+            'X-Link-Previous' => $pagination_parameters['links']['previous'],
+            'X-Link-Next' => $pagination_parameters['links']['next'],
         ];
 
         return response()->json(
             array_map(
-                function($log) {
+                static function($log) {
                     return (new RequestErrorLogTransformer($log))->asArray();
                 },
                 $logs
@@ -79,16 +79,18 @@ class RequestController extends Controller
             array_keys(Config::get('api.request-access-log.parameters.collection'))
         );
 
-        $pagination = UtilityPagination::init(request()->path(), $total, 25)->paging();
+        $pagination = new UtilityPagination(request()->path(), $total, 25);
+        $pagination_parameters = $pagination->setParameters($this->collection_parameters)->
+            parameters();
 
         $log = (new RequestLog())->paginatedCollection(
-            $pagination['offset'],
-            $pagination['limit'],
+            $pagination_parameters['offset'],
+            $pagination_parameters['limit'],
             $this->collection_parameters
         );
 
         $headers = new Header();
-        $headers->collection($pagination, count($log), $total);
+        $headers->collection($pagination_parameters, count($log), $total);
 
         $parameters_header = Parameter\Request::xHeader();
         if ($parameters_header !== null) {

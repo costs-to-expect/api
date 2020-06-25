@@ -88,17 +88,19 @@ class ItemController extends Controller
                 $filter_parameters
             );
 
-            $pagination = UtilityPagination::init(request()->path(), $total)
-                ->setParameters($parameters)
-                ->setSortParameters($sort_parameters)
-                ->setSearchParameters($search_parameters)
-                ->paging();
+            $pagination = new UtilityPagination(request()->path(), $total);
+            $pagination_parameters = $pagination->allowPaginationOverride($this->allow_entire_collection)->
+                setParameters($parameters)->
+                setSearchParameters($search_parameters)->
+                setSortParameters($sort_parameters)->
+                setFilteringParameters($filter_parameters)->
+                parameters();
 
             $items = $item_model->paginatedCollection(
                 $resource_type_id,
                 $resource_id,
-                $pagination['offset'],
-                $pagination['limit'],
+                $pagination_parameters['offset'],
+                $pagination_parameters['limit'],
                 $parameters,
                 $search_parameters,
                 $filter_parameters,
@@ -113,7 +115,7 @@ class ItemController extends Controller
             );
 
             $headers = new Headers();
-            $headers->collection($pagination, count($items), $total)->
+            $headers->collection($pagination_parameters, count($items), $total)->
                 addCacheControl($cache_control->visibility(), $cache_control->ttl())->
                 addETag($collection)->
                 addSearch(Parameter\Search::xHeader())->
@@ -121,7 +123,7 @@ class ItemController extends Controller
                 addParameters(Parameter\Request::xHeader())->
                 addFilters(Parameter\Filter::xHeader());
 
-            $cache_collection->create($total, $collection, $pagination, $headers->headers());
+            $cache_collection->create($total, $collection, $pagination_parameters, $headers->headers());
             $cache_control->put(request()->getRequestUri(), $cache_collection->content());
         }
 

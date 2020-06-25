@@ -60,17 +60,16 @@ class PermittedUserController extends Controller
                 $search_parameters
             );
 
-            $pagination = UtilityPagination::init(
-                request()->path(),
-                $total,
-                10,
-                $this->allow_entire_collection
-            )->setSearchParameters($search_parameters)->setSortParameters($sort_parameters)->paging();
+            $pagination = new UtilityPagination(request()->path(), $total);
+            $pagination_parameters = $pagination->allowPaginationOverride($this->allow_entire_collection)->
+                setSearchParameters($search_parameters)->
+                setSortParameters($sort_parameters)->
+                parameters();
 
             $permitted_users = (new PermittedUser())->paginatedCollection(
                 $resource_type_id,
-                $pagination['offset'],
-                $pagination['limit'],
+                $pagination_parameters['offset'],
+                $pagination_parameters['limit'],
                 $search_parameters,
                 $sort_parameters
             );
@@ -83,13 +82,13 @@ class PermittedUserController extends Controller
             );
 
             $headers = new Headers();
-            $headers->collection($pagination, count($permitted_users), $total)->
+            $headers->collection($pagination_parameters, count($permitted_users), $total)->
                 addCacheControl($cache_control->visibility(), $cache_control->ttl())->
                 addETag($collection)->
                 addSearch(Parameter\Search::xHeader())->
                 addSort(Parameter\Sort::xHeader());
 
-            $cache_collection->create($total, $collection, $pagination, $headers->headers());
+            $cache_collection->create($total, $collection, $pagination_parameters, $headers->headers());
             $cache_control->put(request()->getRequestUri(), $cache_collection->content());
         }
 

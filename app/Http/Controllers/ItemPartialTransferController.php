@@ -62,19 +62,17 @@ class ItemPartialTransferController extends Controller
                 $parameters
             );
 
-            $pagination = UtilityPagination::init(
-                request()->path(),
-                $total,
-                10,
-                $this->allow_entire_collection
-            )->paging();
+            $pagination = new UtilityPagination(request()->path(), $total);
+            $pagination_parameters = $pagination->allowPaginationOverride($this->allow_entire_collection)->
+                setParameters($parameters)->
+                parameters();
 
             $transfers = (new ItemPartialTransfer())->paginatedCollection(
                 (int)$resource_type_id,
                 $this->permitted_resource_types,
                 $this->include_public,
-                $pagination['offset'],
-                $pagination['limit'],
+                $pagination_parameters['offset'],
+                $pagination_parameters['limit'],
                 $parameters
             );
 
@@ -86,11 +84,11 @@ class ItemPartialTransferController extends Controller
             );
 
             $headers = new Headers();
-            $headers->collection($pagination, count($transfers), $total)->
+            $headers->collection($pagination_parameters, count($transfers), $total)->
                 addCacheControl($cache_control->visibility(), $cache_control->ttl())->
                 addETag($collection);
 
-            $cache_collection->create($total, $collection, $pagination, $headers->headers());
+            $cache_collection->create($total, $collection, $pagination_parameters, $headers->headers());
             $cache_control->put(request()->getRequestUri(), $cache_collection->content());
         }
 

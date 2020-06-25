@@ -46,6 +46,7 @@ class Pagination
         $this->parameters = [];
         $this->sort_parameters = [];
         $this->search_parameters = [];
+        $this->filtering_parameters = [];
 
         $this->limit = $limit;
         $this->total = $total;

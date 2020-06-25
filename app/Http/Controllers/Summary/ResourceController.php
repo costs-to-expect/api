@@ -5,7 +5,6 @@ namespace App\Http\Controllers\Summary;
 use App\Http\Controllers\Controller;
 use App\Option\Get;
 use App\Response\Cache;
-use App\Response\Header\Header;
 use App\Request\Parameter;
 use App\Request\Route;
 use App\Models\Summary\Resource;
