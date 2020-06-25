@@ -9,7 +9,7 @@ use App\Utilities\Hash;
 use Illuminate\Support\Facades\Config;
 
 /**
- * Generate the pagination URIs based on th request
+ * Generate the pagination URIs based on all the request parameters
  *
  * @author Dean Blackborough <dean@g3d-development.com>
  * @copyright Dean Blackborough 2018-2020
