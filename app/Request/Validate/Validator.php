@@ -4,7 +4,7 @@ declare(strict_types=1);
 namespace App\Request\Validate;
 
 use App\Item\AbstractItem;
-use App\Utilities\Hash;
+use App\Request\Hash;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Validator as ValidatorFacade;
 

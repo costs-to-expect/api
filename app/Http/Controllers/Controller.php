@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\ResourceType;
 use App\Models\ResourceTypeAccess;
-use App\Utilities\Hash;
+use App\Request\Hash;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Routing\Controller as BaseController;
 

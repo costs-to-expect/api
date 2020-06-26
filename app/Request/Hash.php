@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Utilities;
+namespace App\Request;
 
 use Hashids\Hashids;
 use Illuminate\Support\Facades\Config;
@@ -19,6 +19,9 @@ use Illuminate\Support\Facades\Config;
  */
 class Hash
 {
+    /**
+     * @var Hashids[]
+     */
     private array $hashers;
 
     public function __construct()

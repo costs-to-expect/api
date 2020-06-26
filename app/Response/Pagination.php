@@ -5,7 +5,7 @@ namespace App\Response;
 
 use App\Request\Validate\Boolean;
 
-use App\Utilities\Hash;
+use App\Request\Hash;
 use Illuminate\Support\Facades\Config;
 
 /**

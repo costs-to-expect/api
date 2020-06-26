@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace App\Models\Transformers;
 
-use App\Utilities\Hash;
+use App\Request\Hash;
 
 /**
  * Our base transformer class, used to convert the results of our queries into
