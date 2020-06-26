@@ -4,7 +4,7 @@ declare(strict_types=1);
 namespace App\Models\Item\Summary;
 
 use App\Interfaces\Item\ISummaryModel;
-use App\Utilities\Model as ModelUtility;
+use App\Models\Clause;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Query\Builder as QueryBuilder;
 
@@ -59,12 +59,12 @@ class SimpleItem extends Model implements ISummaryModel
             where("resource_type.id", "=", $resource_type_id)->
             where("resource.id", "=", $resource_id);
 
-        $collection = ModelUtility::applySearch(
+        $collection = Clause::applySearch(
             $collection,
             $this->sub_table,
             $search_parameters
         );
-        $collection = ModelUtility::applyFiltering(
+        $collection = Clause::applyFiltering(
             $collection,
             $this->sub_table,
             $filter_parameters

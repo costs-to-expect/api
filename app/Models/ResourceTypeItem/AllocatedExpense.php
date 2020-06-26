@@ -5,7 +5,7 @@ namespace App\Models\ResourceTypeItem;
 
 use App\Interfaces\ResourceTypeItem\IModel;
 use App\Request\Validate\Boolean;
-use App\Utilities\Model as ModelUtility;
+use App\Models\Clause;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Query\Builder as QueryBuilder;
@@ -74,13 +74,13 @@ class AllocatedExpense extends Model implements IModel
             }
         }
 
-        $collection = ModelUtility::applySearch(
+        $collection = Clause::applySearch(
             $collection,
             $this->item_table,
             $search_parameters
         );
 
-        $collection = ModelUtility::applyFiltering(
+        $collection = Clause::applyFiltering(
             $collection,
             $this->item_table,
             $filter_parameters
@@ -214,13 +214,13 @@ class AllocatedExpense extends Model implements IModel
             }
         }
 
-        $collection = ModelUtility::applySearch(
+        $collection = Clause::applySearch(
             $collection,
             $this->item_table,
             $search_parameters
         );
 
-        $collection = ModelUtility::applyFiltering(
+        $collection = Clause::applyFiltering(
             $collection,
             $this->item_table,
             $filter_parameters

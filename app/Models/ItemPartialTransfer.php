@@ -3,7 +3,6 @@ declare(strict_types=1);
 
 namespace App\Models;
 
-use App\Utilities\Model as ModelUtility;
 use Illuminate\Database\Eloquent\Builder as QueryBuilder;
 use Illuminate\Database\Eloquent\Model;
 
@@ -65,7 +64,7 @@ class ItemPartialTransfer extends Model
             $collection->where($this->table .'.item_id', '=', $parameters['item']);
         }
 
-        $collection = ModelUtility::applyResourceTypeCollectionCondition(
+        $collection = Clause::applyResourceTypeCollectionCondition(
             $collection,
             $permitted_resource_types,
             $include_public
@@ -146,7 +145,7 @@ class ItemPartialTransfer extends Model
             $collection->where($this->table .'.item_id', '=', $parameters['item']);
         }
 
-        $collection = ModelUtility::applyResourceTypeCollectionCondition(
+        $collection = Clause::applyResourceTypeCollectionCondition(
             $collection,
             $permitted_resource_types,
             $include_public

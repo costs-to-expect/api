@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace App\Models\Summary;
 
-use App\Utilities\Model as ModelUtility;
+use App\Models\Clause;
 use Illuminate\Database\Query\Builder as QueryBuilder;
 use Illuminate\Database\Eloquent\Model;
 
@@ -38,13 +38,13 @@ class Category extends Model
             join("resource_type", "category.resource_type_id", "resource_type.id")->
             where('category.resource_type_id', '=', $resource_type_id);
 
-        $collection = ModelUtility::applyResourceTypeCollectionCondition(
+        $collection = Clause::applyResourceTypeCollectionCondition(
             $collection,
             $permitted_resource_types,
             $include_public
         );
 
-        $collection = ModelUtility::applySearch($collection, $this->table, $search_parameters);
+        $collection = Clause::applySearch($collection, $this->table, $search_parameters);
 
         return $collection->count();
     }

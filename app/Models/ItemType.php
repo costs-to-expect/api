@@ -3,7 +3,6 @@ declare(strict_types=1);
 
 namespace App\Models;
 
-use App\Utilities\Model as ModelUtility;
 use Illuminate\Database\Eloquent\Builder as QueryBuilder;
 use Illuminate\Database\Eloquent\Model;
 
@@ -63,7 +62,7 @@ class ItemType extends Model
             'item_type.created_at AS item_type_created_at'
         );
 
-        $collection = ModelUtility::applySearch($collection, $this->table, $search_parameters);
+        $collection = Clause::applySearch($collection, $this->table, $search_parameters);
 
         if (count($sort_parameters) > 0) {
             foreach ($sort_parameters as $field => $direction) {
@@ -120,7 +119,7 @@ class ItemType extends Model
     {
         $collection = $this->select("item_type.id");
 
-        $collection = ModelUtility::applySearch($collection, $this->table, $search_parameters);
+        $collection = Clause::applySearch($collection, $this->table, $search_parameters);
 
         return $collection->count();
     }

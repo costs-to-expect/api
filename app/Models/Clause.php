@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Utilities;
+namespace App\Models;
 
 use Illuminate\Database\Query\Builder as QueryBuilder;
 
@@ -17,7 +17,7 @@ use Illuminate\Database\Query\Builder as QueryBuilder;
  * @copyright Dean Blackborough 2018-2020
  * @license https://github.com/costs-to-expect/api/blob/master/LICENSE
  */
-class Model
+class Clause
 {
     public static function applySearch(
         $collection,

@@ -5,7 +5,7 @@ namespace App\Models\Item;
 
 use App\Interfaces\Item\IModel;
 use App\Request\Validate\Boolean;
-use App\Utilities\Model as ModelUtility;
+use App\Models\Clause;
 use Illuminate\Database\Query\Builder as QueryBuilder;
 use Illuminate\Database\Eloquent\Model;
 
@@ -163,12 +163,12 @@ class SimpleExpense extends Model implements IModel
             $collection->where('item_sub_category.sub_category_id', '=', $parameters['subcategory']);
         }
 
-        $collection = ModelUtility::applySearch(
+        $collection = Clause::applySearch(
             $collection,
             $this->table,
             $search_parameters
         );
-        $collection = ModelUtility::applyFiltering(
+        $collection = Clause::applyFiltering(
             $collection,
             $this->table,
             $filter_parameters
@@ -280,12 +280,12 @@ class SimpleExpense extends Model implements IModel
             $collection->where('item_sub_category.sub_category_id', '=', $parameters['subcategory']);
         }
 
-        $collection = ModelUtility::applySearch(
+        $collection = Clause::applySearch(
             $collection,
             $this->table,
             $search_parameters
         );
-        $collection = ModelUtility::applyFiltering(
+        $collection = Clause::applyFiltering(
             $collection,
             $this->table,
             $filter_parameters

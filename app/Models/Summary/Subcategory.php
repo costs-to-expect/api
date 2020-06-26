@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace App\Models\Summary;
 
-use App\Utilities\Model as ModelUtility;
+use App\Models\Clause;
 use Illuminate\Database\Query\Builder as QueryBuilder;
 use Illuminate\Database\Eloquent\Model;
 
@@ -36,7 +36,7 @@ class Subcategory extends Model
             where('sub_category.category_id', '=', $category_id)->
             where('category.resource_type_id', '=', $resource_type_id);
 
-        $collection = ModelUtility::applySearch($collection, $this->table, $search_parameters);
+        $collection = Clause::applySearch($collection, $this->table, $search_parameters);
 
         return $collection->count();
     }

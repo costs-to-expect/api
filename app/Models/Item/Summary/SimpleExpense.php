@@ -5,7 +5,7 @@ namespace App\Models\Item\Summary;
 
 use App\Interfaces\Item\ISummaryModelCategories;
 use App\Interfaces\Item\ISummaryModel;
-use App\Utilities\Model as ModelUtility;
+use App\Models\Clause;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Query\Builder as QueryBuilder;
 
@@ -151,12 +151,12 @@ class SimpleExpense extends Model implements ISummaryModel, ISummaryModelCategor
             $collection->where("sub_category.id", "=", $subcategory_id);
         }
 
-        $collection = ModelUtility::applySearch(
+        $collection = Clause::applySearch(
             $collection,
             $this->sub_table,
             $search_parameters
         );
-        $collection = ModelUtility::applyFiltering(
+        $collection = Clause::applyFiltering(
             $collection,
             $this->sub_table,
             $filter_parameters

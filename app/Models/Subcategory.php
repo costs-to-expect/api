@@ -3,7 +3,6 @@ declare(strict_types=1);
 
 namespace App\Models;
 
-use App\Utilities\Model as ModelUtility;
 use Illuminate\Database\Query\Builder as QueryBuilder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Config;
@@ -54,7 +53,7 @@ class Subcategory extends Model
             where('sub_category.category_id', '=', $category_id)->
             where('category.resource_type_id', '=', $resource_type_id);
 
-        $collection = ModelUtility::applySearch($collection, $this->table, $search_parameters);
+        $collection = Clause::applySearch($collection, $this->table, $search_parameters);
 
         return $collection->count();
     }
@@ -88,7 +87,7 @@ class Subcategory extends Model
             where('sub_category.category_id', '=', $category_id)->
             where('category.resource_type_id', '=', $resource_type_id);
 
-        $collection = ModelUtility::applySearch($collection, $this->table, $search_parameters);
+        $collection = Clause::applySearch($collection, $this->table, $search_parameters);
 
         if (count($sort_parameters) > 0) {
             foreach ($sort_parameters as $field => $direction) {
