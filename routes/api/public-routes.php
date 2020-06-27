@@ -76,22 +76,22 @@ Route::group(
 
         Route::get(
             'resource-types/{resource_type_id}/categories',
-            'CategoryController@index'
+            'CategoryView@index'
         );
 
         Route::options(
             'resource-types/{resource_type_id}/categories',
-            'CategoryController@optionsIndex'
+            'CategoryView@optionsIndex'
         );
 
         Route::get(
             'resource-types/{resource_type_id}/categories/{category_id}',
-            'CategoryController@show'
+            'CategoryView@show'
         );
 
         Route::options(
             'resource-types/{resource_type_id}/categories/{category_id}',
-            'CategoryController@optionsShow'
+            'CategoryView@optionsShow'
         );
 
         Route::get(

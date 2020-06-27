@@ -24,7 +24,7 @@ Route::group(
 
         Route::post(
             'resource-types/{resource_type_id}/categories',
-            'CategoryController@create'
+            'CategoryManage@create'
         );
 
         Route::post(
@@ -69,7 +69,7 @@ Route::group(
 
         Route::delete(
             'resource-types/{resource_type_id}/categories/{category_id}',
-            'CategoryController@delete'
+            'CategoryManage@delete'
         );
 
         Route::delete(
@@ -109,7 +109,7 @@ Route::group(
 
         Route::patch(
             'resource-types/{resource_type_id}/categories/{category_id}',
-            'CategoryController@update'
+            'CategoryManage@update'
         );
 
         Route::patch(
