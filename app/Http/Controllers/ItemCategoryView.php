@@ -24,7 +24,7 @@ use Illuminate\Support\Facades\Auth;
  * @copyright Dean Blackborough 2018-2020
  * @license https://github.com/costs-to-expect/api/blob/master/LICENSE
  */
-class ItemCategoryController extends Controller
+class ItemCategoryManage extends Controller
 {
     /**
      * Return the category assigned to an item
@@ -235,72 +235,6 @@ class ItemCategoryController extends Controller
     }
 
     /**
-     * Assign the category
-     *
-     * @param string $resource_type_id
-     * @param string $resource_id
-     * @param string $item_id
-     *
-     * @return JsonResponse
-     */
-    public function create(
-        string $resource_type_id,
-        string $resource_id,
-        string $item_id
-    ): JsonResponse
-    {
-        Route\Validate::item(
-            $resource_type_id,
-            $resource_id,
-            $item_id,
-            $this->permitted_resource_types,
-            true
-        );
-
-        $cache_control = new Cache\Control(Auth::user()->id);
-        $cache_key = new Cache\Key();
-
-        $validator = (new ItemCategoryValidator)->create();
-        \App\Request\BodyValidation::validateAndReturnErrors(
-            $validator,
-            $this->fieldsData($resource_type_id)
-        );
-
-        try {
-            $category_id = $this->hash->decode('category', request()->input('category_id'));
-
-            if ($category_id === false) {
-                \App\Response\Responses::unableToDecode();
-            }
-
-            $item_category = new ItemCategory([
-                'item_id' => $item_id,
-                'category_id' => $category_id
-            ]);
-            $item_category->save();
-
-            $cache_control->clearPrivateCacheKeys([
-                $cache_key->items($resource_type_id, $resource_id),
-                $cache_key->resourceTypeItems($resource_type_id)
-            ]);
-
-            if (in_array($resource_type_id, $this->public_resource_types, true)) {
-                $cache_control->clearPublicCacheKeys([
-                    $cache_key->items($resource_type_id, $resource_id),
-                    $cache_key->resourceTypeItems($resource_type_id)
-                ]);
-            }
-        } catch (Exception $e) {
-            \App\Response\Responses::failedToSaveModelForCreate();
-        }
-
-        return response()->json(
-            (new ItemCategoryTransformer((new ItemCategory())->instanceToArray($item_category)))->asArray(),
-            201
-        );
-    }
-
-    /**
      * Generate any conditional POST parameters, will be merged with the relevant
      * config/api/[type]/fields.php data array
      *
@@ -328,68 +262,5 @@ class ItemCategoryController extends Controller
         }
 
         return $conditional_post_parameters;
-    }
-
-    /**
-     * Delete the assigned category
-     *
-     * @param string $resource_type_id,
-     * @param string $resource_id,
-     * @param string $item_id,
-     * @param string $item_category_id
-     *
-     * @return JsonResponse
-     */
-    public function delete(
-        string $resource_type_id,
-        string $resource_id,
-        string $item_id,
-        string $item_category_id
-    ): JsonResponse
-    {
-        Route\Validate::itemCategory(
-            $resource_type_id,
-            $resource_id,
-            $item_id,
-            $item_category_id,
-            $this->permitted_resource_types,
-            true
-        );
-
-        $cache_control = new Cache\Control(Auth::user()->id);
-        $cache_key = new Cache\Key();
-
-        $item_category = (new ItemCategory())->instance(
-            $resource_type_id,
-            $resource_id,
-            $item_id,
-            $item_category_id
-        );
-
-        if ($item_category === null) {
-            \App\Response\Responses::notFound(trans('entities.item-category'));
-        }
-
-        try {
-            (new ItemCategory())->find($item_category_id)->delete();
-
-            $cache_control->clearPrivateCacheKeys([
-                $cache_key->items($resource_type_id, $resource_id),
-                $cache_key->resourceTypeItems($resource_type_id)
-            ]);
-
-            if (in_array($resource_type_id, $this->public_resource_types, true)) {
-                $cache_control->clearPublicCacheKeys([
-                    $cache_key->items($resource_type_id, $resource_id),
-                    $cache_key->resourceTypeItems($resource_type_id)
-                ]);
-            }
-
-            \App\Response\Responses::successNoContent();
-        } catch (QueryException $e) {
-            \App\Response\Responses::foreignKeyConstraintError();
-        } catch (Exception $e) {
-            \App\Response\Responses::notFound(trans('entities.item-category'), $e);
-        }
     }
 }

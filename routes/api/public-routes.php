@@ -16,22 +16,22 @@ Route::group(
         // Root of the API and CHANGELOG
         Route::get(
             '',
-            'IndexController@index'
+            'IndexView@index'
         );
 
         Route::options(
             '',
-            'IndexController@optionsIndex'
+            'IndexView@optionsIndex'
         );
 
         Route::get(
             'changelog',
-            'IndexController@changeLog'
+            'IndexView@changeLog'
         );
 
         Route::options(
             'changelog',
-            'IndexController@optionsChangeLog'
+            'IndexView@optionsChangeLog'
         );
 
         Route::get(
