@@ -14,7 +14,7 @@ Route::group(
     function () {
         Route::get(
             'auth/user',
-            'PassportController@user'
+            'PassportView@user'
         );
 
         Route::post(
@@ -49,7 +49,7 @@ Route::group(
 
         Route::post(
             'resource-types/{resource_type_id}/resources/{resource_id}/items/{item_id}/categories/{item_category_id}/subcategories',
-            'ItemSubcategoryController@create'
+            'ItemSubcategoryManage@create'
         );
 
         Route::post(
@@ -59,7 +59,7 @@ Route::group(
 
         Route::post(
             'resource-types/{resource_type_id}/resources/{resource_id}/items/{item_id}/transfer',
-            'ItemTransferController@transfer'
+            'ItemTransferManage@transfer'
         );
 
         Route::delete(
@@ -99,7 +99,7 @@ Route::group(
 
         Route::delete(
             'resource-types/{resource_type_id}/resources/{resource_id}/items/{item_id}/categories/{item_category_id}/subcategories/{item_subcategory_id}',
-            'ItemSubcategoryController@delete'
+            'ItemSubcategoryManage@delete'
         );
 
         Route::patch(

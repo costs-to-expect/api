@@ -36,22 +36,22 @@ Route::group(
 
         Route::get(
             'item-types',
-            'ItemTypeController@index'
+            'ItemTypeView@index'
         );
 
         Route::options(
             'item-types',
-            'ItemTypeController@optionsIndex'
+            'ItemTypeView@optionsIndex'
         );
 
         Route::get(
             'item-types/{item_type_id}',
-            'ItemTypeController@show'
+            'ItemTypeView@show'
         );
 
         Route::options(
             'item-types/{item_type_id}',
-            'ItemTypeController@optionsShow'
+            'ItemTypeView@optionsShow'
         );
 
         Route::get(
@@ -201,7 +201,7 @@ Route::group(
 
         Route::options(
             'resource-types/{resource_type_id}/resources/{resource_id}/items/{item_id}/transfer',
-            'ItemTransferController@optionsTransfer'
+            'ItemTransferView@optionsTransfer'
         );
 
         /*This route needs to be removed*/
@@ -231,45 +231,45 @@ Route::group(
         /*This route needs to be removed*/
         Route::get(
             'resource-types/{resource_type_id}/resources/{resource_id}/items/{item_id}/categories/{item_category_id}/subcategories',
-            'ItemSubcategoryController@index'
+            'ItemSubcategoryView@index'
         );
 
         /*This route needs to be removed*/
         Route::options(
             'resource-types/{resource_type_id}/resources/{resource_id}/items/{item_id}/categories/{item_category_id}/subcategories',
-            'ItemSubcategoryController@optionsIndex'
+            'ItemSubcategoryView@optionsIndex'
         );
 
         /*This route needs to be removed*/
         Route::get(
             'resource-types/{resource_type_id}/resources/{resource_id}/items/{item_id}/categories/{item_category_id}/subcategories/{item_subcategory_id}',
-            'ItemSubcategoryController@show'
+            'ItemSubcategoryView@show'
         );
 
         /*This route needs to be removed*/
         Route::options(
             'resource-types/{resource_type_id}/resources/{resource_id}/items/{item_id}/categories/{item_category_id}/subcategories/{item_subcategory_id}',
-            'ItemSubcategoryController@optionsShow'
+            'ItemSubcategoryView@optionsShow'
         );
 
         Route::options(
             'resource-types/{resource_type_id}/transfers',
-            'ItemTransferController@optionsIndex'
+            'ItemTransferView@optionsIndex'
         );
 
         Route::get(
             'resource-types/{resource_type_id}/transfers',
-            'ItemTransferController@index'
+            'ItemTransferView@index'
         );
 
         Route::options(
             'resource-types/{resource_type_id}/transfers/{item_transfer_id}',
-            'ItemTransferController@optionsShow'
+            'ItemTransferView@optionsShow'
         );
 
         Route::get(
             'resource-types/{resource_type_id}/transfers/{item_transfer_id}',
-            'ItemTransferController@show'
+            'ItemTransferView@show'
         );
 
         // Request access and error logs
