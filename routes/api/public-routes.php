@@ -126,22 +126,22 @@ Route::group(
 
         Route::get(
             'resource-types/{resource_type_id}/partial-transfers',
-            'ItemPartialTransferController@index'
+            'ItemPartialTransferView@index'
         );
 
         Route::options(
             'resource-types/{resource_type_id}/partial-transfers',
-            'ItemPartialTransferController@optionsIndex'
+            'ItemPartialTransferView@optionsIndex'
         );
 
         Route::get(
             'resource-types/{resource_type_id}/partial-transfers/{item_partial_transfer_id}',
-            'ItemPartialTransferController@show'
+            'ItemPartialTransferView@show'
         );
 
         Route::options(
             'resource-types/{resource_type_id}/partial-transfers/{item_partial_transfer_id}',
-            'ItemPartialTransferController@optionsShow'
+            'ItemPartialTransferView@optionsShow'
         );
 
         Route::get(
@@ -176,27 +176,27 @@ Route::group(
 
         Route::get(
             'resource-types/{resource_type_id}/resources/{resource_id}/items',
-            'ItemController@index'
+            'ItemView@index'
         );
 
         Route::options(
             'resource-types/{resource_type_id}/resources/{resource_id}/items',
-            'ItemController@optionsIndex'
+            'ItemView@optionsIndex'
         );
 
         Route::get(
             'resource-types/{resource_type_id}/resources/{resource_id}/items/{item_id}',
-            'ItemController@show'
+            'ItemView@show'
         );
 
         Route::options(
             'resource-types/{resource_type_id}/resources/{resource_id}/items/{item_id}',
-            'ItemController@optionsShow'
+            'ItemView@optionsShow'
         );
 
         Route::options(
             'resource-types/{resource_type_id}/resources/{resource_id}/items/{item_id}/partial-transfer',
-            'ItemPartialTransferController@optionsTransfer'
+            'ItemPartialTransferView@optionsTransfer'
         );
 
         Route::options(

@@ -39,7 +39,7 @@ Route::group(
 
         Route::post(
             'resource-types/{resource_type_id}/resources/{resource_id}/items',
-            'ItemController@create'
+            'ItemManage@create'
         );
 
         Route::post(
@@ -54,7 +54,7 @@ Route::group(
 
         Route::post(
             'resource-types/{resource_type_id}/resources/{resource_id}/items/{item_id}/partial-transfer',
-            'ItemPartialTransferController@transfer'
+            'ItemPartialTransferManage@transfer'
         );
 
         Route::post(
@@ -79,7 +79,7 @@ Route::group(
 
         Route::delete(
             'resource-types/{resource_type_id}/partial-transfers/{item_partial_transfer_id}',
-            'ItemPartialTransferController@delete'
+            'ItemPartialTransferManage@delete'
         );
 
         Route::delete(
@@ -89,7 +89,7 @@ Route::group(
 
         Route::delete(
             'resource-types/{resource_type_id}/resources/{resource_id}/items/{item_id}',
-            'ItemController@delete'
+            'ItemManage@delete'
         );
 
         Route::delete(
@@ -124,7 +124,7 @@ Route::group(
 
         Route::patch(
             'resource-types/{resource_type_id}/resources/{resource_id}/items/{item_id}',
-            'ItemController@update'
+            'ItemManage@update'
         );
     }
 );
