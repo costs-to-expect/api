@@ -21,7 +21,7 @@ use Illuminate\Support\Facades\Config;
  * @copyright Dean Blackborough 2018-2020
  * @license https://github.com/costs-to-expect/api/blob/master/LICENSE
  */
-class PermittedUserController extends Controller
+class PermittedUserView extends Controller
 {
     protected bool $allow_entire_collection = true;
 

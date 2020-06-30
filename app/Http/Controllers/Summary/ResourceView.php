@@ -19,7 +19,7 @@ use Illuminate\Support\Facades\Config;
  * @copyright Dean Blackborough 2018-2020
  * @license https://github.com/costs-to-expect/api/blob/master/LICENSE
  */
-class ResourceController extends Controller
+class ResourceView extends Controller
 {
     /**
      * Return a summary of the resources

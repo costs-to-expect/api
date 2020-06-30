@@ -56,22 +56,22 @@ Route::group(
 
         Route::get(
             'resource-types',
-            'ResourceTypeController@index'
+            'ResourceTypeView@index'
         );
 
         Route::options(
             'resource-types',
-            'ResourceTypeController@optionsIndex'
+            'ResourceTypeView@optionsIndex'
         );
 
         Route::get(
             'resource-types/{resource_type_id}',
-            'ResourceTypeController@show'
+            'ResourceTypeView@show'
         );
 
         Route::options(
             'resource-types/{resource_type_id}',
-            'ResourceTypeController@optionsShow'
+            'ResourceTypeView@optionsShow'
         );
 
         Route::get(
@@ -96,32 +96,32 @@ Route::group(
 
         Route::get(
             'resource-types/{resource_type_id}/categories/{category_id}/subcategories',
-            'SubcategoryController@index'
+            'SubcategoryView@index'
         );
 
         Route::options(
             'resource-types/{resource_type_id}/categories/{category_id}/subcategories',
-            'SubcategoryController@optionsIndex'
+            'SubcategoryView@optionsIndex'
         );
 
         Route::get(
             'resource-types/{resource_type_id}/categories/{category_id}/subcategories/{subcategory_id}',
-            'SubcategoryController@show'
+            'SubcategoryView@show'
         );
 
         Route::options(
             'resource-types/{resource_type_id}/categories/{category_id}/subcategories/{subcategory_id}',
-            'SubcategoryController@optionsShow'
+            'SubcategoryView@optionsShow'
         );
 
         Route::get(
             'resource-types/{resource_type_id}/items',
-            'ResourceTypeItemController@index'
+            'ResourceTypeItemView@index'
         );
 
         Route::options(
             'resource-types/{resource_type_id}/items',
-            'ResourceTypeItemController@optionsIndex'
+            'ResourceTypeItemView@optionsIndex'
         );
 
         Route::get(
@@ -146,32 +146,32 @@ Route::group(
 
         Route::get(
             'resource-types/{resource_type_id}/permitted-users',
-            'PermittedUserController@index'
+            'PermittedUserView@index'
         );
 
         Route::options(
             'resource-types/{resource_type_id}/permitted-users',
-            'PermittedUserController@optionsIndex'
+            'PermittedUserView@optionsIndex'
         );
 
         Route::get(
             'resource-types/{resource_type_id}/resources',
-            'ResourceController@index'
+            'ResourceView@index'
         );
 
         Route::options(
             'resource-types/{resource_type_id}/resources',
-            'ResourceController@optionsIndex'
+            'ResourceView@optionsIndex'
         );
 
         Route::get(
             'resource-types/{resource_type_id}/resources/{resource_id}',
-            'ResourceController@show'
+            'ResourceView@show'
         );
 
         Route::options(
             'resource-types/{resource_type_id}/resources/{resource_id}',
-            'ResourceController@optionsShow'
+            'ResourceView@optionsShow'
         );
 
         Route::get(
@@ -275,27 +275,27 @@ Route::group(
         // Request access and error logs
         Route::options(
             'request/error-log',
-            'RequestController@optionsErrorLog'
+            'RequestView@optionsErrorLog'
         );
 
         Route::get(
             'request/error-log',
-            'RequestController@errorLog'
+            'RequestView@errorLog'
         );
 
         Route::post(
             'request/error-log',
-            'RequestController@createErrorLog'
+            'RequestManage@createErrorLog'
         );
 
         Route::get(
             'request/access-log',
-            'RequestController@accessLog'
+            'RequestView@accessLog'
         );
 
         Route::options(
             'request/access-log',
-            'RequestController@optionsAccessLog'
+            'RequestView@optionsAccessLog'
         );
     }
 );

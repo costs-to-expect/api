@@ -18,7 +18,7 @@ use Illuminate\Support\Facades\Config;
  * @copyright Dean Blackborough 2018-2020
  * @license https://github.com/costs-to-expect/api/blob/master/LICENSE
  */
-class RequestController extends Controller
+class RequestView extends Controller
 {
     private $collection_parameters;
 

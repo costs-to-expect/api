@@ -16,72 +16,72 @@ Route::group(
 
         Route::get(
             'summary/resource-types',
-            'Summary\ResourceTypeController@index'
+            'Summary\ResourceTypeView@index'
         );
 
         Route::options(
             'summary/resource-types',
-            'Summary\ResourceTypeController@optionsIndex'
+            'Summary\ResourceTypeView@optionsIndex'
         );
 
         Route::get(
             'summary/resource-types/{resource_type_id}/categories',
-            'Summary\CategoryController@index'
+            'Summary\CategoryView@index'
         );
 
         Route::options(
             'summary/resource-types/{resource_type_id}/categories',
-            'Summary\CategoryController@optionsIndex'
+            'Summary\CategoryView@optionsIndex'
         );
 
         Route::get(
             'summary/resource-types/{resource_type_id}/categories/{category_id}/subcategories',
-            'Summary\SubcategoryController@index'
+            'Summary\SubcategoryView@index'
         );
 
         Route::options(
             'summary/resource-types/{resource_type_id}/categories/{category_id}/subcategories',
-            'Summary\SubcategoryController@optionsIndex'
+            'Summary\SubcategoryView@optionsIndex'
         );
 
         Route::get(
             'summary/resource-types/{resource_type_id}/resources',
-            'Summary\ResourceController@index'
+            'Summary\ResourceView@index'
         );
 
         Route::options(
             'summary/resource-types/{resource_type_id}/resources',
-            'Summary\ResourceController@optionsIndex'
+            'Summary\ResourceView@optionsIndex'
         );
 
         Route::get(
             'summary/resource-types/{resource_type_id}/items',
-            'Summary\ResourceTypeItemController@index'
+            'Summary\ResourceTypeItemView@index'
         );
 
         Route::options(
             'summary/resource-types/{resource_type_id}/items',
-            'Summary\ResourceTypeItemController@optionsIndex'
+            'Summary\ResourceTypeItemView@optionsIndex'
         );
 
         Route::get(
             'summary/resource-types/{resource_type_id}/resources/{resource_id}/items',
-            'Summary\ItemController@index'
+            'Summary\ItemView@index'
         );
 
         Route::options(
             'summary/resource-types/{resource_type_id}/resources/{resource_id}/items',
-            'Summary\ItemController@optionsIndex'
+            'Summary\ItemView@optionsIndex'
         );
 
         Route::get(
             'summary/request/access-log',
-            'Summary\RequestController@AccessLog'
+            'Summary\RequestView@AccessLog'
         );
 
         Route::options(
             'summary/request/access-log',
-            'Summary\RequestController@optionsAccessLog'
+            'Summary\RequestView@optionsAccessLog'
         );
     }
 );

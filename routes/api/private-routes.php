@@ -19,7 +19,7 @@ Route::group(
 
         Route::post(
             'resource-types',
-            'ResourceTypeController@create'
+            'ResourceTypeManage@create'
         );
 
         Route::post(
@@ -29,12 +29,12 @@ Route::group(
 
         Route::post(
             'resource-types/{resource_type_id}/categories/{category_id}/subcategories',
-            'SubcategoryController@create'
+            'SubcategoryManage@create'
         );
 
         Route::post(
             'resource-types/{resource_type_id}/resources',
-            'ResourceController@create'
+            'ResourceManage@create'
         );
 
         Route::post(
@@ -64,7 +64,7 @@ Route::group(
 
         Route::delete(
             'resource-types/{resource_type_id}',
-            'ResourceTypeController@delete'
+            'ResourceTypeManage@delete'
         );
 
         Route::delete(
@@ -74,7 +74,7 @@ Route::group(
 
         Route::delete(
             'resource-types/{resource_type_id}/categories/{category_id}/subcategories/{subcategory_id}',
-            'SubcategoryController@delete'
+            'SubcategoryManager@delete'
         );
 
         Route::delete(
@@ -84,7 +84,7 @@ Route::group(
 
         Route::delete(
             'resource-types/{resource_type_id}/resources/{resource_id}',
-            'ResourceController@delete'
+            'ResourceManage@delete'
         );
 
         Route::delete(
@@ -104,7 +104,7 @@ Route::group(
 
         Route::patch(
             'resource-types/{resource_type_id}',
-            'ResourceTypeController@update'
+            'ResourceTypeManage@update'
         );
 
         Route::patch(
@@ -114,12 +114,12 @@ Route::group(
 
         Route::patch(
             'resource-types/{resource_type_id}/categories/{category_id}/subcategories/{subcategory_id}',
-            'SubcategoryController@update'
+            'SubcategoryManage@update'
         );
 
         Route::patch(
             'resource-types/{resource_type_id}/resources/{resource_id}',
-            'ResourceController@update'
+            'ResourceManage@update'
         );
 
         Route::patch(

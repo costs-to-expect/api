@@ -20,7 +20,7 @@ use Illuminate\Http\JsonResponse;
  * @copyright Dean Blackborough 2018-2020
  * @license https://github.com/costs-to-expect/api/blob/master/LICENSE
  */
-class ResourceTypeItemController extends Controller
+class ResourceTypeItemView extends Controller
 {
     /**
      * Return all the items based on the set filter options
