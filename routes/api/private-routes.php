@@ -74,7 +74,7 @@ Route::group(
 
         Route::delete(
             'resource-types/{resource_type_id}/categories/{category_id}/subcategories/{subcategory_id}',
-            'SubcategoryManager@delete'
+            'SubcategoryManage@delete'
         );
 
         Route::delete(
