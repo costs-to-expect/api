@@ -2,11 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Option\Delete;
-use App\Option\Get;
-use App\Option\Post;
 use App\Response\Cache;
-use App\Response\Header\Header;
 use App\Request\Route;
 use App\Models\Category;
 use App\Models\ItemCategory;

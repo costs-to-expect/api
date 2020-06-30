@@ -11,11 +11,7 @@ use App\Request\Route;
 use App\Models\Category;
 use App\Models\ItemCategory;
 use App\Models\Transformers\ItemCategory as ItemCategoryTransformer;
-use App\Request\Validate\ItemCategory as ItemCategoryValidator;
-use Exception;
-use Illuminate\Database\QueryException;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Support\Facades\Auth;
 
 /**
  * Manage the category for an item row
@@ -24,7 +20,7 @@ use Illuminate\Support\Facades\Auth;
  * @copyright Dean Blackborough 2018-2020
  * @license https://github.com/costs-to-expect/api/blob/master/LICENSE
  */
-class ItemCategoryManage extends Controller
+class ItemCategoryView extends Controller
 {
     /**
      * Return the category assigned to an item

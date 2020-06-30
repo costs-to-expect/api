@@ -207,25 +207,25 @@ Route::group(
         /*This route needs to be removed*/
         Route::get(
             'resource-types/{resource_type_id}/resources/{resource_id}/items/{item_id}/categories',
-            'ItemCategoryController@index'
+            'ItemCategoryView@index'
         );
 
         /*This route needs to be removed*/
         Route::options(
             'resource-types/{resource_type_id}/resources/{resource_id}/items/{item_id}/categories',
-            'ItemCategoryController@optionsIndex'
+            'ItemCategoryView@optionsIndex'
         );
 
         /*This route needs to be removed*/
         Route::get(
             'resource-types/{resource_type_id}/resources/{resource_id}/items/{item_id}/categories/{item_category_id}',
-            'ItemCategoryController@show'
+            'ItemCategoryView@show'
         );
 
         /*This route needs to be removed*/
         Route::options(
             'resource-types/{resource_type_id}/resources/{resource_id}/items/{item_id}/categories/{item_category_id}',
-            'ItemCategoryController@optionsShow'
+            'ItemCategoryView@optionsShow'
         );
 
         /*This route needs to be removed*/
