@@ -3,7 +3,6 @@ declare(strict_types=1);
 
 namespace App\Models;
 
-use App\Utilities\Model as ModelUtility;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Query\Builder as QueryBuilder;
 
@@ -60,7 +59,7 @@ class ResourceTypeAccess extends Model
             join('resource_type', 'category.resource_type_id', 'resource_type.id')->
             where('category.resource_type_id', '=', $resource_type_id);
 
-        $collection = ModelUtility::applyResourceTypeCollectionCondition(
+        $collection = Clause::applyResourceTypeCollectionCondition(
             $collection,
             $permitted_resource_types,
             ($manage === true) ? false : true
@@ -101,7 +100,7 @@ class ResourceTypeAccess extends Model
             where('item.id', '=', $item_id)->
             where('item_category.id', '=', $item_category_id);
 
-        $collection = ModelUtility::applyResourceTypeCollectionCondition(
+        $collection = Clause::applyResourceTypeCollectionCondition(
             $collection,
             $permitted_resource_types,
             ($manage === true) ? false : true
@@ -138,7 +137,7 @@ class ResourceTypeAccess extends Model
             where('resource.id', '=', $resource_id)->
             where('item.id', '=', $item_id);
 
-        $collection = ModelUtility::applyResourceTypeCollectionCondition(
+        $collection = Clause::applyResourceTypeCollectionCondition(
             $collection,
             $permitted_resource_types,
             ($manage === true) ? false : true
@@ -183,7 +182,7 @@ class ResourceTypeAccess extends Model
             where('item_category.id', '=', $item_category_id)->
             where('item_sub_category.id', '=', $item_subcategory_id);
 
-        $collection = ModelUtility::applyResourceTypeCollectionCondition(
+        $collection = Clause::applyResourceTypeCollectionCondition(
             $collection,
             $permitted_resource_types,
             ($manage === true) ? false : true
@@ -254,7 +253,7 @@ class ResourceTypeAccess extends Model
             where('resource.resource_type_id', '=', $resource_type_id)->
             where('resource.id', '=', $resource_id);
 
-        $collection = ModelUtility::applyResourceTypeCollectionCondition(
+        $collection = Clause::applyResourceTypeCollectionCondition(
             $collection,
             $permitted_resource_types,
             ($manage === true) ? false : true
@@ -283,7 +282,7 @@ class ResourceTypeAccess extends Model
         $collection = $this->from('resource_type')->
             where('resource_type.id', '=', $id);
 
-        $collection = ModelUtility::applyResourceTypeCollectionCondition(
+        $collection = Clause::applyResourceTypeCollectionCondition(
             $collection,
             $permitted_resource_types,
             ($manage === true) ? false : true
@@ -320,7 +319,7 @@ class ResourceTypeAccess extends Model
             where('sub_category.category_id', '=', $category_id)->
             where('category.resource_type_id', '=', $resource_type_id);
 
-        $collection = ModelUtility::applyResourceTypeCollectionCondition(
+        $collection = Clause::applyResourceTypeCollectionCondition(
             $collection,
             $permitted_resource_types,
             ($manage === true) ? false : true

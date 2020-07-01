@@ -6,7 +6,7 @@ namespace App\Models\Transformers\ItemType;
 use App\Models\Transformers\Transformer;
 
 /**
- * Transform the data returns from Eloquent into the format we want for the API
+ * Transform the data from our queries into the format we want to display
  *
  * @author Dean Blackborough <dean@g3d-development.com>
  * @copyright Dean Blackborough 2018-2020
@@ -14,26 +14,15 @@ use App\Models\Transformers\Transformer;
  */
 class SimpleItem extends Transformer
 {
-    protected $item;
-
-    public function __construct(array $item)
+    public function format(array $to_transform): void
     {
-        parent::__construct();
-
-        $this->item = $item;
-    }
-
-    public function toArray(): array
-    {
-        $item = [
-            'id' => $this->hash->item()->encode($this->item['item_id']),
-            'name' => $this->item['item_name'],
-            'description' => $this->item['item_description'],
-            'quantity' => (int) $this->item['item_quantity'],
-            'created' => $this->item['item_created_at'],
-            'updated' => $this->item['item_updated_at']
+        $this->transformed = [
+            'id' => $this->hash->item()->encode($to_transform['item_id']),
+            'name' => $to_transform['item_name'],
+            'description' => $to_transform['item_description'],
+            'quantity' => (int) $to_transform['item_quantity'],
+            'created' => $to_transform['item_created_at'],
+            'updated' => $to_transform['item_updated_at']
         ];
-
-        return $item;
     }
 }

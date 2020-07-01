@@ -3,7 +3,6 @@ declare(strict_types=1);
 
 namespace App\Models;
 
-use App\Utilities\Model as ModelUtility;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Query\Builder as QueryBuilder;
 use Illuminate\Support\Facades\Config;
@@ -70,13 +69,13 @@ class ResourceType extends Model
     {
         $collection = $this->select("resource_type.id");
 
-        $collection = ModelUtility::applyResourceTypeCollectionCondition(
+        $collection = Clause::applyResourceTypeCollectionCondition(
             $collection,
             $permitted_resource_types,
             $include_public
         );
 
-        $collection = ModelUtility::applySearch($collection, $this->table, $search_parameters);
+        $collection = Clause::applySearch($collection, $this->table, $search_parameters);
 
         return $collection->count();
     }
@@ -130,13 +129,13 @@ class ResourceType extends Model
             join('item_type', 'resource_type_item_type.item_type_id', 'item_type.id')->
             leftJoin("resource", "resource_type.id", "resource.id");
 
-        $collection = ModelUtility::applyResourceTypeCollectionCondition(
+        $collection = Clause::applyResourceTypeCollectionCondition(
             $collection,
             $permitted_resource_types,
             $include_public
         );
 
-        $collection = ModelUtility::applySearch($collection, $this->table, $search_parameters);
+        $collection = Clause::applySearch($collection, $this->table, $search_parameters);
 
         if (count($sort_parameters) > 0) {
             foreach ($sort_parameters as $field => $direction) {
@@ -227,7 +226,7 @@ class ResourceType extends Model
                 'resource_type.description AS resource_type_description'
             );
 
-        $collection = ModelUtility::applyResourceTypeCollectionCondition(
+        $collection = Clause::applyResourceTypeCollectionCondition(
             $collection,
             $permitted_resource_types,
             $include_public

@@ -6,7 +6,7 @@ namespace App\Models\Transformers\ItemType;
 use App\Models\Transformers\Transformer;
 
 /**
- * Transform the data returns from Eloquent into the format we want for the API
+ * Transform the data from our queries into the format we want to display
  *
  * @author Dean Blackborough <dean@g3d-development.com>
  * @copyright Dean Blackborough 2018-2020
@@ -14,58 +14,47 @@ use App\Models\Transformers\Transformer;
  */
 class SimpleExpense extends Transformer
 {
-    protected $item;
-
-    public function __construct(array $item)
+    public function format(array $to_transform): void
     {
-        parent::__construct();
-
-        $this->item = $item;
-    }
-
-    public function toArray(): array
-    {
-        $item = [
-            'id' => $this->hash->item()->encode($this->item['item_id']),
-            'name' => $this->item['item_name'],
-            'description' => $this->item['item_description'],
-            'total' => number_format((float) $this->item['item_total'],2, '.', ''),
-            'created' => $this->item['item_created_at'],
-            'updated' => $this->item['item_updated_at']
+        $this->transformed = [
+            'id' => $this->hash->item()->encode($to_transform['item_id']),
+            'name' => $to_transform['item_name'],
+            'description' => $to_transform['item_description'],
+            'total' => number_format((float) $to_transform['item_total'],2, '.', ''),
+            'created' => $to_transform['item_created_at'],
+            'updated' => $to_transform['item_updated_at']
         ];
 
         if (
-            array_key_exists('category_id', $this->item) === true &&
-            array_key_exists('category_name', $this->item) === true
+            array_key_exists('category_id', $to_transform) === true &&
+            array_key_exists('category_name', $to_transform) === true
         ) {
-            if ($this->item['category_id'] !== null) {
-                $item['category'] = [
-                    'id' => $this->hash->itemCategory()->encode($this->item['item_category_id']),
-                    'category_id' => $this->hash->category()->encode($this->item['category_id']),
-                    'name' => $this->item['category_name'],
-                    'description' => $this->item['category_description']
+            if ($to_transform['category_id'] !== null) {
+                $this->transformed['category'] = [
+                    'id' => $this->hash->itemCategory()->encode($to_transform['item_category_id']),
+                    'category_id' => $this->hash->category()->encode($to_transform['category_id']),
+                    'name' => $to_transform['category_name'],
+                    'description' => $to_transform['category_description']
                 ];
             } else {
-                $item['category'] = null;
+                $this->transformed['category'] = null;
             }
 
             if (
-                array_key_exists('subcategory_id', $this->item) === true &&
-                array_key_exists('subcategory_name', $this->item) === true
+                array_key_exists('subcategory_id', $to_transform) === true &&
+                array_key_exists('subcategory_name', $to_transform) === true
             ) {
-                if ($this->item['subcategory_id'] !== null) {
-                    $item['subcategory'] = [
-                        'id' => $this->hash->itemSubCategory()->encode($this->item['item_subcategory_id']),
-                        'subcategory_id' => $this->hash->subCategory()->encode($this->item['subcategory_id']),
-                        'name' => $this->item['subcategory_name'],
-                        'description' => $this->item['subcategory_description']
+                if ($to_transform['subcategory_id'] !== null) {
+                    $this->transformed['subcategory'] = [
+                        'id' => $this->hash->itemSubCategory()->encode($to_transform['item_subcategory_id']),
+                        'subcategory_id' => $this->hash->subCategory()->encode($to_transform['subcategory_id']),
+                        'name' => $to_transform['subcategory_name'],
+                        'description' => $to_transform['subcategory_description']
                     ];
                 } else {
-                    $item['subcategory'] = null;
+                    $this->transformed['subcategory'] = null;
                 }
             }
         }
-
-        return $item;
     }
 }

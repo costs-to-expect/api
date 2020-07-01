@@ -7,11 +7,10 @@ use App\Models\Transformers\PermittedUser as PermittedUserTransformer;
 use App\Option\Get;
 use App\Option\Post;
 use App\Response\Cache;
-use App\Response\Header\Header;
 use App\Request\Parameter;
 use App\Request\Route;
 use App\Response\Header\Headers;
-use App\Utilities\Pagination as UtilityPagination;
+use App\Response\Pagination as UtilityPagination;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Config;
 
@@ -22,7 +21,7 @@ use Illuminate\Support\Facades\Config;
  * @copyright Dean Blackborough 2018-2020
  * @license https://github.com/costs-to-expect/api/blob/master/LICENSE
  */
-class PermittedUserController extends Controller
+class PermittedUserView extends Controller
 {
     protected bool $allow_entire_collection = true;
 
@@ -61,36 +60,35 @@ class PermittedUserController extends Controller
                 $search_parameters
             );
 
-            $pagination = UtilityPagination::init(
-                request()->path(),
-                $total,
-                10,
-                $this->allow_entire_collection
-            )->setSearchParameters($search_parameters)->setSortParameters($sort_parameters)->paging();
+            $pagination = new UtilityPagination(request()->path(), $total);
+            $pagination_parameters = $pagination->allowPaginationOverride($this->allow_entire_collection)->
+                setSearchParameters($search_parameters)->
+                setSortParameters($sort_parameters)->
+                parameters();
 
             $permitted_users = (new PermittedUser())->paginatedCollection(
                 $resource_type_id,
-                $pagination['offset'],
-                $pagination['limit'],
+                $pagination_parameters['offset'],
+                $pagination_parameters['limit'],
                 $search_parameters,
                 $sort_parameters
             );
 
             $collection = array_map(
                 static function ($permitted_user) {
-                    return (new PermittedUserTransformer($permitted_user))->toArray();
+                    return (new PermittedUserTransformer($permitted_user))->asArray();
                 },
                 $permitted_users
             );
 
             $headers = new Headers();
-            $headers->collection($pagination, count($permitted_users), $total)->
+            $headers->collection($pagination_parameters, count($permitted_users), $total)->
                 addCacheControl($cache_control->visibility(), $cache_control->ttl())->
                 addETag($collection)->
                 addSearch(Parameter\Search::xHeader())->
                 addSort(Parameter\Sort::xHeader());
 
-            $cache_collection->create($total, $collection, $pagination, $headers->headers());
+            $cache_collection->create($total, $collection, $pagination_parameters, $headers->headers());
             $cache_control->put(request()->getRequestUri(), $cache_collection->content());
         }
 

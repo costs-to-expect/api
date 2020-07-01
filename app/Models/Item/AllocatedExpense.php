@@ -5,7 +5,7 @@ namespace App\Models\Item;
 
 use App\Interfaces\Item\IModel;
 use App\Request\Validate\Boolean;
-use App\Utilities\Model as ModelUtility;
+use App\Models\Clause;
 use Illuminate\Database\Query\Builder as QueryBuilder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
@@ -237,12 +237,12 @@ class AllocatedExpense extends Model implements IModel
             $collection->where('item_sub_category.sub_category_id', '=', $parameters['subcategory']);
         }
 
-        $collection = ModelUtility::applySearch(
+        $collection = Clause::applySearch(
             $collection,
             $this->table,
             $search_parameters
         );
-        $collection = ModelUtility::applyFiltering(
+        $collection = Clause::applyFiltering(
             $collection,
             $this->table,
             $filter_parameters
@@ -376,8 +376,8 @@ class AllocatedExpense extends Model implements IModel
             $collection->where('item_sub_category.sub_category_id', '=', $parameters['subcategory']);
         }
 
-        $collection = ModelUtility::applySearch($collection, 'item_type_allocated_expense', $search_parameters);
-        $collection = ModelUtility::applyFiltering($collection, 'item_type_allocated_expense', $filter_parameters);
+        $collection = Clause::applySearch($collection, 'item_type_allocated_expense', $search_parameters);
+        $collection = Clause::applyFiltering($collection, 'item_type_allocated_expense', $filter_parameters);
 
         if (
             array_key_exists('include-unpublished', $parameters) === false ||

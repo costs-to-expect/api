@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Utilities;
+namespace App\Models;
 
 use Illuminate\Database\Query\Builder as QueryBuilder;
 
@@ -17,7 +17,7 @@ use Illuminate\Database\Query\Builder as QueryBuilder;
  * @copyright Dean Blackborough 2018-2020
  * @license https://github.com/costs-to-expect/api/blob/master/LICENSE
  */
-class Model
+class Clause
 {
     public static function applySearch(
         $collection,
@@ -57,7 +57,7 @@ class Model
     )
     {
         if ($include_public === true) {
-            $collection->where(function ($collection) use ($permitted_resource_types, $include_public) {
+            $collection->where(static function ($collection) use ($permitted_resource_types, $include_public) {
                 $collection->where('resource_type.public', '=', (int) $include_public)->
                     orWhereIn('resource_type.id', $permitted_resource_types);
             });

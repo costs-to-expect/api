@@ -4,7 +4,7 @@ declare(strict_types=1);
 namespace App\Models\Transformers;
 
 /**
- * Transform the data returns from Eloquent into the format we want for the API
+ * Transform the data from our queries into the format we want to display
  *
  * @author Dean Blackborough <dean@g3d-development.com>
  * @copyright Dean Blackborough 2018-2020
@@ -12,25 +12,16 @@ namespace App\Models\Transformers;
  */
 class ItemCategory extends Transformer
 {
-    protected $data_to_transform;
-
-    public function __construct(array $data_to_transform)
+    public function format(array $to_transform): void
     {
-        parent::__construct();
-
-        $this->data_to_transform = $data_to_transform;
-    }
-
-    public function toArray(): array
-    {
-        return [
-            'id' => $this->hash->itemCategory()->encode($this->data_to_transform['item_category_id']),
+        $this->transformed = [
+            'id' => $this->hash->itemCategory()->encode($to_transform['item_category_id']),
             'category' => [
-                'id' => $this->hash->category()->encode($this->data_to_transform['item_category_category_id']),
-                'name' => $this->data_to_transform['item_category_category_name'],
-                'description' => $this->data_to_transform['item_category_category_description']
+                'id' => $this->hash->category()->encode($to_transform['item_category_category_id']),
+                'name' => $to_transform['item_category_category_name'],
+                'description' => $to_transform['item_category_category_description']
             ],
-            'created' => $this->data_to_transform['item_category_created_at']
+            'created' => $to_transform['item_category_created_at']
         ];
     }
 }

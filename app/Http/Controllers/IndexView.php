@@ -3,20 +3,17 @@
 namespace App\Http\Controllers;
 
 use App\Response\Header\Header;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Str;
 use SplFileObject;
 
 /**
- * Manage items
- *
  * @author Dean Blackborough <dean@g3d-development.com>
  * @copyright Dean Blackborough 2018-2020
  * @license https://github.com/costs-to-expect/api/blob/master/LICENSE
  */
-class IndexController extends Controller
+class IndexView extends Controller
 {
     /**
      * Return all routes

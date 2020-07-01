@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Summary;
 
 use App\Http\Controllers\Controller;
-use App\Models\Summary\Subcategory;
+use App\Models\Summary\Category;
 use App\Option\Get;
 use App\Response\Cache;
 use App\Request\Parameter;
@@ -13,27 +13,25 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Config;
 
 /**
- * Summary controller for the subcategories routes
+ * Summary controller for the categories routes
  *
  * @author Dean Blackborough <dean@g3d-development.com>
  * @copyright Dean Blackborough 2018-2020
  * @license https://github.com/costs-to-expect/api/blob/master/LICENSE
  */
-class SubcategoryController extends Controller
+class CategoryView extends Controller
 {
     /**
-     * Return a summary of the subcategories
+     * Return a summary of the categories
      *
      * @param $resource_type_id
-     * @param $category_id
      *
      * @return JsonResponse
      */
-    public function index($resource_type_id, $category_id): JsonResponse
+    public function index($resource_type_id): JsonResponse
     {
-        Route\Validate::category(
+        Route\Validate::resourceType(
             $resource_type_id,
-            $category_id,
             $this->permitted_resource_types
         );
 
@@ -46,17 +44,18 @@ class SubcategoryController extends Controller
         if ($cache_control->cacheable() === false || $cache_summary->valid() === false) {
 
             $search_parameters = Parameter\Search::fetch(
-                array_keys(Config::get('api.subcategory.summary-searchable'))
+                array_keys(Config::get('api.category.summary-searchable'))
             );
 
-            $summary = (new Subcategory())->totalCount(
+            $summary = (new Category())->total(
                 $resource_type_id,
-                $category_id,
+                $this->permitted_resource_types,
+                $this->include_public,
                 $search_parameters
             );
 
             $collection = [
-                'subcategories' => $summary
+                'categories' => $summary
             ];
 
             $headers = new Headers();
@@ -73,31 +72,28 @@ class SubcategoryController extends Controller
 
 
     /**
-     * Generate the OPTIONS request for the subcategories summary
+     * Generate the OPTIONS request for the categories summary
      *
      * @param $resource_type_id
-     * @param $category_id
      *
      * @return JsonResponse
      */
-    public function optionsIndex($resource_type_id, $category_id): JsonResponse
+    public function optionsIndex($resource_type_id): JsonResponse
     {
-        Route\Validate::category(
+        Route\Validate::resourceType(
             $resource_type_id,
-            $category_id,
             $this->permitted_resource_types
         );
 
-        $permissions = Route\Permission::category(
+        $permissions = Route\Permission::resourceType(
             $resource_type_id,
-            $category_id,
             $this->permitted_resource_types
         );
 
         $get = Get::init()->
-            setDescription('route-descriptions.summary_subcategory_GET_index')->
+            setDescription('route-descriptions.summary_category_GET_index')->
             setAuthenticationStatus($permissions['view'])->
-            setSearchable('api.subcategory.summary-searchable')->
+            setSearchable('api.category.summary-searchable')->
             option();
 
         return $this->optionsResponse($get, 200);

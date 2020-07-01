@@ -3,44 +3,42 @@
 namespace App\Http\Controllers\Summary;
 
 use App\Http\Controllers\Controller;
-use App\Item\Factory;
-use App\Models\Transformers\Summary\ItemCategory as ItemCategoryTransformer;
-use App\Models\Transformers\Summary\ItemMonth as ItemMonthTransformer;
-use App\Models\Transformers\Summary\ItemSubcategory as ItemSubcategoryTransformer;
-use App\Models\Transformers\Summary\ItemYear as ItemYearTransformer;
+use App\ResourceTypeItem\Factory;
 use App\Option\Get;
+use App\Response\Cache;
 use App\Request\Parameter;
 use App\Request\Route;
 use App\Request\Validate\Boolean;
-use App\Response\Cache;
+use App\Models\Transformers\Summary\ResourceTypeItemCategory as ResourceTypeItemCategoryTransformer;
+use App\Models\Transformers\Summary\ResourceTypeItemMonth as ResourceTypeItemMonthTransformer;
+use App\Models\Transformers\Summary\ResourceTypeItemResource as ResourceTypeItemResourceTransformer;
+use App\Models\Transformers\Summary\ResourceTypeItemSubcategory as ResourceTypeItemSubcategoryTransformer;
+use App\Models\Transformers\Summary\ResourceTypeItemYear as ResourceTypeItemYearTransformer;
 use App\Response\Header\Headers;
 use Illuminate\Http\JsonResponse;
 
 /**
- * Summary for the items route
+ * Summary for resource type items route
  *
  * @author Dean Blackborough <dean@g3d-development.com>
  * @copyright Dean Blackborough 2018-2020
  * @license https://github.com/costs-to-expect/api/blob/master/LICENSE
  */
-class ItemController extends Controller
+class ResourceTypeItemView extends Controller
 {
     private $model;
 
     /**
-     * Return the TCO for the resource or pass the request off to the relevant
-     * method
+     * Return the TCO for all the resources within the resource type
      *
      * @param string $resource_type_id
-     * @param string $resource_id
      *
      * @return JsonResponse
      */
-    public function index(string $resource_type_id, string $resource_id): JsonResponse
+    public function index(string $resource_type_id): JsonResponse
     {
-        Route\Validate::resource(
+        Route\Validate::resourceType(
             $resource_type_id,
-            $resource_id,
             $this->permitted_resource_types
         );
 
@@ -49,10 +47,10 @@ class ItemController extends Controller
 
         $parameters = Parameter\Request::fetch(
             $item_interface->collectionParametersKeys(),
-            (int)$resource_type_id,
-            (int)$resource_id
+            $resource_type_id
         );
 
+        $resources = false;
         $years = false;
         $months = false;
         $categories = false;
@@ -61,6 +59,11 @@ class ItemController extends Controller
         $month = null;
         $category = null;
         $subcategory = null;
+
+        if (array_key_exists('resources', $parameters) === true &&
+            Boolean::convertedValue($parameters['resources']) === true) {
+            $resources = true;
+        }
 
         if (array_key_exists('years', $parameters) === true &&
             Boolean::convertedValue($parameters['years']) === true) {
@@ -83,22 +86,23 @@ class ItemController extends Controller
         }
 
         if (array_key_exists('year', $parameters) === true) {
-            $year = (int)$parameters['year'];
+            $year = (int) $parameters['year'];
         }
 
         if (array_key_exists('month', $parameters) === true) {
-            $month = (int)$parameters['month'];
+            $month = (int) $parameters['month'];
         }
 
         if (array_key_exists('category', $parameters) === true) {
-            $category = (int)$parameters['category'];
+            $category = (int) $parameters['category'];
         }
 
         if (array_key_exists('subcategory', $parameters) === true) {
-            $subcategory = (int)$parameters['subcategory'];
+            $subcategory = (int) $parameters['subcategory'];
         }
 
         unset(
+            $parameters['resources'],
             $parameters['years'],
             $parameters['year'],
             $parameters['months'],
@@ -119,8 +123,7 @@ class ItemController extends Controller
 
         if ($years === true) {
             return $this->yearsSummary(
-                (int)$resource_type_id,
-                (int)$resource_id,
+                $resource_type_id,
                 $parameters
             );
         }
@@ -133,8 +136,7 @@ class ItemController extends Controller
         ) {
             if ($months === true) {
                 return $this->monthsSummary(
-                    (int)$resource_type_id,
-                    (int)$resource_id,
+                    $resource_type_id,
                     $year,
                     $parameters
                 );
@@ -142,8 +144,7 @@ class ItemController extends Controller
 
             if ($month !== null) {
                 return $this->monthSummary(
-                    (int)$resource_type_id,
-                    (int)$resource_id,
+                    $resource_type_id,
                     $year,
                     $month,
                     $parameters
@@ -151,8 +152,7 @@ class ItemController extends Controller
             }
 
             return $this->yearSummary(
-                (int)$resource_type_id,
-                (int)$resource_id,
+                $resource_type_id,
                 $year,
                 $parameters
             );
@@ -160,8 +160,7 @@ class ItemController extends Controller
 
         if ($categories === true) {
             return $this->categoriesSummary(
-                (int)$resource_type_id,
-                (int)$resource_id,
+                $resource_type_id,
                 $parameters
             );
         }
@@ -174,8 +173,7 @@ class ItemController extends Controller
         ) {
             if ($subcategories === true) {
                 return $this->subcategoriesSummary(
-                    (int)$resource_type_id,
-                    (int)$resource_id,
+                    $resource_type_id,
                     $category,
                     $parameters
                 );
@@ -183,8 +181,7 @@ class ItemController extends Controller
 
             if ($subcategory !== null) {
                 return $this->subcategorySummary(
-                    (int)$resource_type_id,
-                    (int)$resource_id,
+                    $resource_type_id,
                     $category,
                     $subcategory,
                     $parameters
@@ -192,85 +189,43 @@ class ItemController extends Controller
             }
 
             return $this->categorySummary(
-                (int)$resource_type_id,
-                (int)$resource_id,
+                $resource_type_id,
                 $category,
                 $parameters
             );
         }
 
+        if ($resources === true) {
+            return $this->resourcesSummary(
+                $resource_type_id,
+                $parameters
+            );
+        }
+
         if (
-            $category !== null ||
-            $subcategory !== null ||
-            $year !== null ||
-            $month !== null ||
+            $category === true ||
+            $subcategory === true ||
+            $year === true ||
+            $month === true ||
             count($search_parameters) > 0 ||
             count($filter_parameters) > 0
         ) {
             return $this->filteredSummary(
-                (int)$resource_type_id,
-                (int)$resource_id,
+                $resource_type_id,
                 $category,
                 $subcategory,
                 $year,
                 $month,
                 $parameters,
                 (count($search_parameters) > 0 ? $search_parameters : []),
-                (count($filter_parameters) > 0 ? $filter_parameters : [])
+                (count($filter_parameters) > 0 ? $filter_parameters : []),
             );
         }
 
-        return $this->tcoSummary(
-            (int)$resource_type_id,
-            (int)$resource_id,
+        return $this->summary(
+            $resource_type_id,
             $parameters
         );
-    }
-
-    /**
-     * Return the annualised summary for a resource
-     *
-     * @param int $resource_type_id
-     * @param int $resource_id
-     * @param array $parameters
-     *
-     * @return JsonResponse
-     */
-    private function yearsSummary(
-        int $resource_type_id,
-        int $resource_id,
-        array $parameters
-    ): JsonResponse {
-        $cache_control = new Cache\Control($this->user_id);
-        $cache_control->setTtlOneWeek();
-
-        $cache_summary = new Cache\Summary();
-        $cache_summary->setFromCache($cache_control->get(request()->getRequestUri()));
-
-        if ($cache_control->cacheable() === false || $cache_summary->valid() === false) {
-
-            $summary = $this->model->yearsSummary(
-                $resource_type_id,
-                $resource_id,
-                $parameters
-            );
-
-            $collection = array_map(
-                static function ($year) {
-                    return (new ItemYearTransformer($year))->toArray();
-                },
-                $summary
-            );
-
-            $this->assignContentToCache(
-                $summary,
-                $collection,
-                $cache_control,
-                $cache_summary
-            );
-        }
-
-        return response()->json($cache_summary->collection(), 200, $cache_summary->headers());
     }
 
     private function assignContentToCache(
@@ -285,6 +240,7 @@ class ItemController extends Controller
             addParameters(Parameter\Request::xHeader())->
             addFilters(Parameter\Filter::xHeader())->
             addSearch(Parameter\Search::xHeader());
+
 
         if (array_key_exists(0, $summary)) {
             if (array_key_exists('last_updated', $summary[0]) === true) {
@@ -302,21 +258,18 @@ class ItemController extends Controller
     }
 
     /**
-     * Return the monthly summary for a specific year
+     * Return the total summary for all the resources in the resource type
      *
      * @param int $resource_type_id
-     * @param int $resource_id
-     * @param int $year
      * @param array $parameters
      *
      * @return JsonResponse
      */
-    private function monthsSummary(
+    private function summary(
         int $resource_type_id,
-        int $resource_id,
-        int $year,
         array $parameters
-    ): JsonResponse {
+    ): JsonResponse
+    {
         $cache_control = new Cache\Control($this->user_id);
         $cache_control->setTtlOneWeek();
 
@@ -325,16 +278,61 @@ class ItemController extends Controller
 
         if ($cache_control->cacheable() === false || $cache_summary->valid() === false) {
 
-            $summary = $this->model->monthsSummary(
+            $summary = $this->model->summary(
                 $resource_type_id,
-                $resource_id,
-                $year,
+                $parameters
+            );
+
+            $total = '0.00';
+            if (array_key_exists(0, $summary) && array_key_exists('total', $summary[0])) {
+                $total = number_format($summary[0]['total'], 2, '.', '');
+            }
+
+            $collection = [
+                'total' => $total
+            ];
+
+            $this->assignContentToCache(
+                $summary,
+                $collection,
+                $cache_control,
+                $cache_summary
+            );
+        }
+
+        return response()->json($cache_summary->collection(), 200, $cache_summary->headers());
+    }
+
+    /**
+     * Return the total summary for all the resources in the resource type
+     * grouped by resource
+     *
+     * @param int $resource_type_id
+     * @param array $parameters
+     *
+     * @return JsonResponse
+     */
+    private function resourcesSummary(
+        int $resource_type_id,
+        array $parameters
+    ): JsonResponse
+    {
+        $cache_control = new Cache\Control($this->user_id);
+        $cache_control->setTtlOneWeek();
+
+        $cache_summary = new Cache\Summary();
+        $cache_summary->setFromCache($cache_control->get(request()->getRequestUri()));
+
+        if ($cache_control->cacheable() === false || $cache_summary->valid() === false) {
+
+            $summary = $this->model->resourcesSummary(
+                $resource_type_id,
                 $parameters
             );
 
             $collection = array_map(
-                static function ($month) {
-                    return (new ItemMonthTransformer($month))->toArray();
+                static function ($resource) {
+                    return (new ResourceTypeItemResourceTransformer($resource))->asArray();
                 },
                 $summary
             );
@@ -351,23 +349,19 @@ class ItemController extends Controller
     }
 
     /**
-     * Return the month summary for a specific year and month
+     * Return the total summary for all the resources in the resource type
+     * grouped by year
      *
      * @param int $resource_type_id
-     * @param int $resource_id
-     * @param int $year
-     * @param int $month
      * @param array $parameters
      *
      * @return JsonResponse
      */
-    private function monthSummary(
+    private function yearsSummary(
         int $resource_type_id,
-        int $resource_id,
-        int $year,
-        int $month,
         array $parameters
-    ): JsonResponse {
+    ): JsonResponse
+    {
         $cache_control = new Cache\Control($this->user_id);
         $cache_control->setTtlOneWeek();
 
@@ -376,18 +370,17 @@ class ItemController extends Controller
 
         if ($cache_control->cacheable() === false || $cache_summary->valid() === false) {
 
-            $summary = $this->model->monthSummary(
+            $summary = $this->model->yearsSummary(
                 $resource_type_id,
-                $resource_id,
-                $year,
-                $month,
                 $parameters
             );
 
-            $collection = [];
-            if (array_key_exists(0, $summary)) {
-                $collection = (new ItemMonthTransformer($summary[0]))->toArray();
-            }
+            $collection = array_map(
+                static function ($year) {
+                    return (new ResourceTypeItemYearTransformer($year))->asArray();
+                },
+                $summary
+            );
 
             $this->assignContentToCache(
                 $summary,
@@ -401,10 +394,10 @@ class ItemController extends Controller
     }
 
     /**
-     * Return the total cost for a specific year
+     * Return the total summary for all the resources in the resource type
+     * for the requested year
      *
-     * @param int $resource_type_id ,
-     * @param int $resource_id
+     * @param int $resource_type_id
      * @param int $year
      * @param array $parameters
      *
@@ -412,10 +405,10 @@ class ItemController extends Controller
      */
     private function yearSummary(
         int $resource_type_id,
-        int $resource_id,
         int $year,
         array $parameters
-    ): JsonResponse {
+    ): JsonResponse
+    {
         $cache_control = new Cache\Control($this->user_id);
         $cache_control->setTtlOneWeek();
 
@@ -426,14 +419,13 @@ class ItemController extends Controller
 
             $summary = $this->model->yearSummary(
                 $resource_type_id,
-                $resource_id,
                 $year,
                 $parameters
             );
 
             $collection = [];
             if (array_key_exists(0, $summary)) {
-                $collection = (new ItemYearTransformer($summary[0]))->toArray();
+                $collection = (new ResourceTypeItemYearTransformer($summary[0]))->asArray();
             }
 
             $this->assignContentToCache(
@@ -448,19 +440,116 @@ class ItemController extends Controller
     }
 
     /**
-     * Return the categories summary for a resource
+     * Return the total summary for all the resources in the resource type
+     * grouped by year
      *
      * @param int $resource_type_id
-     * @param int $resource_id
+     * @param int $year
+     * @param array $parameters
+     *
+     * @return JsonResponse
+     */
+    private function monthsSummary(
+        int $resource_type_id,
+        int $year,
+        array $parameters
+    ): JsonResponse
+    {
+        $cache_control = new Cache\Control($this->user_id);
+        $cache_control->setTtlOneWeek();
+
+        $cache_summary = new Cache\Summary();
+        $cache_summary->setFromCache($cache_control->get(request()->getRequestUri()));
+
+        if ($cache_control->cacheable() === false || $cache_summary->valid() === false) {
+
+            $summary = $this->model->monthsSummary(
+                $resource_type_id,
+                $year,
+                $parameters
+            );
+
+            $collection = array_map(
+                static function ($month) {
+                    return (new ResourceTypeItemMonthTransformer($month))->asArray();
+                },
+                $summary
+            );
+
+            $this->assignContentToCache(
+                $summary,
+                $collection,
+                $cache_control,
+                $cache_summary
+            );
+        }
+
+        return response()->json($cache_summary->collection(), 200, $cache_summary->headers());
+    }
+
+    /**
+     * Return the total summary for all the resources in the resource type
+     * for a specific month
+     *
+     * @param int $resource_type_id
+     * @param int $year
+     * @param int $month
+     * @param array $parameters
+     *
+     * @return JsonResponse
+     */
+    private function monthSummary(
+        int $resource_type_id,
+        int $year,
+        int $month,
+        array $parameters
+    ): JsonResponse
+    {
+        $cache_control = new Cache\Control($this->user_id);
+        $cache_control->setTtlOneWeek();
+
+        $cache_summary = new Cache\Summary();
+        $cache_summary->setFromCache($cache_control->get(request()->getRequestUri()));
+
+        if ($cache_control->cacheable() === false || $cache_summary->valid() === false) {
+
+            $summary = $this->model->monthSummary(
+                $resource_type_id,
+                $year,
+                $month,
+                $parameters
+            );
+
+            $collection = [];
+            if (array_key_exists(0, $summary)) {
+                $collection = (new ResourceTypeItemMonthTransformer($summary[0]))->asArray();
+            }
+
+            $this->assignContentToCache(
+                $summary,
+                $collection,
+                $cache_control,
+                $cache_summary
+            );
+        }
+
+        return response()->json($cache_summary->collection(), 200, $cache_summary->headers());
+    }
+
+    /**
+     * Return the total summary for all the resources in the resource type
+     * grouped by category
+     *
+     * @param int $resource_type_id
      * @param array $parameters
      *
      * @return JsonResponse
      */
     private function categoriesSummary(
         int $resource_type_id,
-        int $resource_id,
         array $parameters
-    ): JsonResponse {
+    ): JsonResponse
+    {
         $cache_control = new Cache\Control($this->user_id);
         $cache_control->setTtlOneWeek();
 
@@ -468,15 +557,15 @@ class ItemController extends Controller
         $cache_summary->setFromCache($cache_control->get(request()->getRequestUri()));
 
         if ($cache_control->cacheable() === false || $cache_summary->valid() === false) {
+
             $summary = $this->model->categoriesSummary(
                 $resource_type_id,
-                $resource_id,
                 $parameters
             );
 
             $collection = array_map(
                 static function ($category) {
-                    return (new ItemCategoryTransformer($category))->toArray();
+                    return (new ResourceTypeItemCategoryTransformer($category))->asArray();
                 },
                 $summary
             );
@@ -493,109 +582,10 @@ class ItemController extends Controller
     }
 
     /**
-     * Return the subcategories summary for a category
+     * Return the total summary for all the resources in the resource type
+     * for a specific category
      *
      * @param int $resource_type_id
-     * @param int $resource_id
-     * @param int $category_id
-     * @param array $parameters
-     *
-     * @return JsonResponse
-     */
-    private function subcategoriesSummary(
-        int $resource_type_id,
-        int $resource_id,
-        int $category_id,
-        array $parameters
-    ): JsonResponse {
-        $cache_control = new Cache\Control($this->user_id);
-        $cache_control->setTtlOneWeek();
-
-        $cache_summary = new Cache\Summary();
-        $cache_summary->setFromCache($cache_control->get(request()->getRequestUri()));
-
-        if ($cache_control->cacheable() === false || $cache_summary->valid() === false) {
-
-            $summary = $this->model->subCategoriesSummary(
-                $resource_type_id,
-                $resource_id,
-                $category_id,
-                $parameters
-            );
-
-            $collection = array_map(
-                static function ($subcategory) {
-                    return (new ItemSubcategoryTransformer($subcategory))->toArray();
-                },
-                $summary
-            );
-
-            $this->assignContentToCache(
-                $summary,
-                $collection,
-                $cache_control,
-                $cache_summary
-            );
-        }
-
-        return response()->json($cache_summary->collection(), 200, $cache_summary->headers());
-    }
-
-    /**
-     * Return the subcategories summary for a category
-     *
-     * @param int $resource_type_id
-     * @param int $resource_id
-     * @param int $category_id
-     * @param int $subcategory_id
-     * @param array $parameters
-     *
-     * @return JsonResponse
-     */
-    private function subcategorySummary(
-        int $resource_type_id,
-        int $resource_id,
-        int $category_id,
-        int $subcategory_id,
-        array $parameters
-    ): JsonResponse {
-        $cache_control = new Cache\Control($this->user_id);
-        $cache_control->setTtlOneWeek();
-
-        $cache_summary = new Cache\Summary();
-        $cache_summary->setFromCache($cache_control->get(request()->getRequestUri()));
-
-        if ($cache_control->cacheable() === false || $cache_summary->valid() === false) {
-
-            $summary = $this->model->subCategorySummary(
-                $resource_type_id,
-                $resource_id,
-                $category_id,
-                $subcategory_id,
-                $parameters
-            );
-
-            $collection = [];
-            if (array_key_exists(0, $summary)) {
-                $collection = (new ItemSubcategoryTransformer($summary[0]))->toArray();
-            }
-
-            $this->assignContentToCache(
-                $summary,
-                $collection,
-                $cache_control,
-                $cache_summary
-            );
-        }
-
-        return response()->json($cache_summary->collection(), 200, $cache_summary->headers());
-    }
-
-    /**
-     * Return the category summary for a resource
-     *
-     * @param int $resource_type_id
-     * @param int $resource_id
      * @param int $category_id
      * @param array $parameters
      *
@@ -603,10 +593,10 @@ class ItemController extends Controller
      */
     private function categorySummary(
         int $resource_type_id,
-        int $resource_id,
         int $category_id,
         array $parameters
-    ): JsonResponse {
+    ): JsonResponse
+    {
         $cache_control = new Cache\Control($this->user_id);
         $cache_control->setTtlOneWeek();
 
@@ -617,14 +607,13 @@ class ItemController extends Controller
 
             $summary = $this->model->categorySummary(
                 $resource_type_id,
-                $resource_id,
                 $category_id,
                 $parameters
             );
 
             $collection = [];
             if (array_key_exists(0, $summary)) {
-                $collection = (new ItemCategoryTransformer($summary[0]))->toArray();
+                $collection = (new ResourceTypeItemCategoryTransformer($summary[0]))->asArray();
             }
 
             $this->assignContentToCache(
@@ -642,7 +631,6 @@ class ItemController extends Controller
      * Return a filtered summary
      *
      * @param int $resource_type_id
-     * @param int $resource_id
      * @param int|null $category_id
      * @param int|null $subcategory_id
      * @param int|null $year
@@ -655,7 +643,6 @@ class ItemController extends Controller
      */
     private function filteredSummary(
         int $resource_type_id,
-        int $resource_id,
         int $category_id = null,
         int $subcategory_id = null,
         int $year = null,
@@ -663,7 +650,8 @@ class ItemController extends Controller
         array $parameters = [],
         array $search_parameters = [],
         array $filter_parameters = []
-    ): JsonResponse {
+    ): JsonResponse
+    {
         $cache_control = new Cache\Control($this->user_id);
         $cache_control->setTtlOneWeek();
 
@@ -674,7 +662,6 @@ class ItemController extends Controller
 
             $summary = $this->model->filteredSummary(
                 $resource_type_id,
-                $resource_id,
                 $category_id,
                 $subcategory_id,
                 $year,
@@ -705,19 +692,21 @@ class ItemController extends Controller
     }
 
     /**
-     * Return the total summary for a resource, total cost of ownership
+     * Return the total summary for all the resources in the resource type
+     * and category grouped by subcategory
      *
      * @param int $resource_type_id
-     * @param int $resource_id
+     * @param int $category_id
      * @param array $parameters
      *
      * @return JsonResponse
      */
-    private function tcoSummary(
+    private function subcategoriesSummary(
         int $resource_type_id,
-        int $resource_id,
+        int $category_id,
         array $parameters
-    ): JsonResponse {
+    ): JsonResponse
+    {
         $cache_control = new Cache\Control($this->user_id);
         $cache_control->setTtlOneWeek();
 
@@ -726,20 +715,18 @@ class ItemController extends Controller
 
         if ($cache_control->cacheable() === false || $cache_summary->valid() === false) {
 
-            $summary = $this->model->summary(
+            $summary = $this->model->subcategoriesSummary(
                 $resource_type_id,
-                $resource_id,
+                $category_id,
                 $parameters
             );
 
-            $total = '0.00';
-            if (array_key_exists(0, $summary) && array_key_exists('total', $summary[0])) {
-                $total = number_format($summary[0]['total'], 2, '.', '');
-            }
-
-            $collection = [
-                'total' => $total
-            ];
+            $collection = array_map(
+                static function ($category) {
+                    return (new ResourceTypeItemSubcategoryTransformer($category))->asArray();
+                },
+                $summary
+            );
 
             $this->assignContentToCache(
                 $summary,
@@ -753,32 +740,84 @@ class ItemController extends Controller
     }
 
     /**
-     * Generate the OPTIONS request for items route
+     * Return the total summary for all the resources in the resource type
+     * for a specific category and subcategory
      *
-     * @param string $resource_type_id
-     * @param string $resource_id
+     * @param int $resource_type_id
+     * @param int $category_id
+     * @param int $subcategory_id
+     * @param array $parameters
      *
      * @return JsonResponse
      */
-    public function optionsIndex(string $resource_type_id, string $resource_id): JsonResponse
+    private function subcategorySummary(
+        int $resource_type_id,
+        int $category_id,
+        int $subcategory_id,
+        array $parameters
+    ): JsonResponse
     {
-        Route\Validate::resource(
-            $resource_type_id,
-            $resource_id,
+        $cache_control = new Cache\Control($this->user_id);
+        $cache_control->setTtlOneWeek();
+
+        $cache_summary = new Cache\Summary();
+        $cache_summary->setFromCache($cache_control->get(request()->getRequestUri()));
+
+        if ($cache_control->cacheable() === false || $cache_summary->valid() === false) {
+
+            $summary = $this->model->subcategorySummary(
+                $resource_type_id,
+                $category_id,
+                $subcategory_id,
+                $parameters
+            );
+
+            $collection = [];
+            if (array_key_exists(0, $summary)) {
+                $collection = (new ResourceTypeItemSubcategoryTransformer($summary[0]))->asArray();
+            }
+
+            $this->assignContentToCache(
+                $summary,
+                $collection,
+                $cache_control,
+                $cache_summary
+            );
+        }
+
+        return response()->json($cache_summary->collection(), 200, $cache_summary->headers());
+    }
+
+
+    /**
+     * Generate the OPTIONS request for items summary route
+     *
+     * @param string $resource_type_id
+     *
+     * @return JsonResponse
+     *
+     */
+    public function optionsIndex(string $resource_type_id): JsonResponse
+    {
+        Route\Validate::resourceType(
+            (int) $resource_type_id,
             $this->permitted_resource_types
         );
 
         $item_interface = Factory::summaryItem($resource_type_id);
 
-        $permissions = Route\Permission::resource(
+        $permissions = Route\Permission::resourceType(
             $resource_type_id,
-            $resource_id,
             $this->permitted_resource_types
         );
 
-        $get = Get::init()->setParameters($item_interface->collectionParametersConfig())->setSearchable($item_interface->searchParametersConfig())
-            ->setFilterable($item_interface->filterParametersConfig())->setDescription('route-descriptions.summary_GET_resource-type_resource_items')
-            ->setAuthenticationStatus($permissions['view'])->option();
+        $get = Get::init()->
+            setSearchable($item_interface->searchParametersConfig())->
+            setParameters($item_interface->collectionParametersConfig())->
+            setFilterable($item_interface->filterParametersConfig())->
+            setDescription('route-descriptions.summary-resource-type-item-GET-index')->
+            setAuthenticationStatus($permissions['view'])->
+            option();
 
         return $this->optionsResponse($get, 200);
     }

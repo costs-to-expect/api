@@ -3,7 +3,6 @@ declare(strict_types=1);
 
 namespace App\Models;
 
-use App\Utilities\Model as ModelUtility;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Query\Builder as QueryBuilder;
 
@@ -53,7 +52,7 @@ class PermittedUser extends Model
             join('users', 'permitted_user.user_id', 'users.id')->
             where('permitted_user.resource_type_id', '=', $resource_type_id);
 
-        $collection = ModelUtility::applySearch($collection, 'users', $search_parameters);
+        $collection = Clause::applySearch($collection, 'users', $search_parameters);
 
         return $collection->count('permitted_user.id');
     }
@@ -86,7 +85,7 @@ class PermittedUser extends Model
             join('users', 'permitted_user.user_id', 'users.id')->
             where('permitted_user.resource_type_id', '=', $resource_type_id);
 
-        $collection = ModelUtility::applySearch($collection, 'users', $search_parameters);
+        $collection = Clause::applySearch($collection, 'users', $search_parameters);
 
         if (count($sort_parameters) > 0) {
             foreach ($sort_parameters as $field => $direction) {

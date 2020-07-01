@@ -5,7 +5,6 @@ namespace App\Http\Controllers\Summary;
 use App\Http\Controllers\Controller;
 use App\Option\Get;
 use App\Response\Cache;
-use App\Response\Header\Header;
 use App\Request\Parameter;
 use App\Models\Summary\RequestLog;
 use App\Response\Header\Headers;
@@ -19,7 +18,7 @@ use Illuminate\Support\Facades\Config;
  * @copyright Dean Blackborough 2018-2020
  * @license https://github.com/costs-to-expect/api/blob/master/LICENSE
  */
-class RequestController extends Controller
+class RequestView extends Controller
 {
     private $collection_parameters;
 

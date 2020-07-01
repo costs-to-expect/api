@@ -10,7 +10,7 @@ use App\Request\Route;
 use App\Models\Category;
 use App\Models\Subcategory;
 use App\Response\Header\Headers;
-use App\Utilities\Pagination as UtilityPagination;
+use App\Response\Pagination as UtilityPagination;
 use Illuminate\Http\JsonResponse;
 
 /**
@@ -20,7 +20,7 @@ use Illuminate\Http\JsonResponse;
  * @copyright Dean Blackborough 2018-2020
  * @license https://github.com/costs-to-expect/api/blob/master/LICENSE
  */
-class ResourceTypeItemController extends Controller
+class ResourceTypeItemView extends Controller
 {
     /**
      * Return all the items based on the set filter options
@@ -72,14 +72,19 @@ class ResourceTypeItemController extends Controller
                 $filter_parameters
             );
 
-            $pagination = UtilityPagination::init(request()->path(), $total)
-                ->setParameters()
-                ->paging();
+            $pagination = new UtilityPagination(request()->path(), $total);
+            $pagination_parameters = $pagination->allowPaginationOverride($this->allow_entire_collection)->
+                setSearchParameters($search_parameters)->
+                setSortParameters($sort_fields)->
+                setParameters($collection_parameters)->
+                setFilteringParameters($filter_parameters)->
+                parameters();
+
 
             $items = $resource_type_item_model->paginatedCollection(
                 $resource_type_id,
-                $pagination['offset'],
-                $pagination['limit'],
+                $pagination_parameters['offset'],
+                $pagination_parameters['limit'],
                 $collection_parameters,
                 $search_parameters,
                 $filter_parameters,
@@ -88,13 +93,13 @@ class ResourceTypeItemController extends Controller
 
             $collection = array_map(
                 static function ($item) use ($item_interface) {
-                    return $item_interface->transformer($item)->toArray();
+                    return $item_interface->transformer($item)->asArray();
                 },
                 $items
             );
 
             $headers = new Headers();
-            $headers->collection($pagination, count($items), $total)->
+            $headers->collection($pagination_parameters, count($items), $total)->
                 addCacheControl($cache_control->visibility(), $cache_control->ttl())->
                 addETag($collection)->
                 addSearch(Parameter\Search::xHeader())->
@@ -102,7 +107,7 @@ class ResourceTypeItemController extends Controller
                 addParameters(Parameter\Request::xHeader())->
                 addFilters(Parameter\Filter::xHeader());
 
-            $cache_collection->create($total, $collection, $pagination, $headers->headers());
+            $cache_collection->create($total, $collection, $pagination_parameters, $headers->headers());
             $cache_control->put(request()->getRequestUri(), $cache_collection->content());
         }
 

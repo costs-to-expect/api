@@ -4,7 +4,7 @@ declare(strict_types=1);
 namespace App\Models\Transformers;
 
 /**
- * Transform the data returned from Eloquent into the format we want for the API
+ * Transform the data from our queries into the format we want to display
  *
  * @author Dean Blackborough <dean@g3d-development.com>
  * @copyright Dean Blackborough 2018-2020
@@ -12,32 +12,15 @@ namespace App\Models\Transformers;
  */
 class ItemType extends Transformer
 {
-    private $data_to_transform;
-
-    /**
-     * @param array $data_to_transform
-     */
-    public function __construct(array $data_to_transform)
+    public function format(array $to_transform): void
     {
-        parent::__construct();
-
-        $this->data_to_transform = $data_to_transform;
-    }
-
-    /**
-     * Format the data
-     *
-     * @return array
-     */
-    public function toArray(): array
-    {
-        return [
-            'id' => $this->hash->itemType()->encode($this->data_to_transform['item_type_id']),
-            'name' => $this->data_to_transform['item_type_name'],
-            'friendly_name' => $this->data_to_transform['item_type_friendly_name'],
-            'description' => $this->data_to_transform['item_type_description'],
-            'example' => $this->data_to_transform['item_type_example'],
-            'created' => $this->data_to_transform['item_type_created_at']
+        $this->transformed = [
+            'id' => $this->hash->itemType()->encode($to_transform['item_type_id']),
+            'name' => $to_transform['item_type_name'],
+            'friendly_name' => $to_transform['item_type_friendly_name'],
+            'description' => $to_transform['item_type_description'],
+            'example' => $to_transform['item_type_example'],
+            'created' => $to_transform['item_type_created_at']
         ];
     }
 }

@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Utilities;
+namespace App\Request;
 
 use Hashids\Hashids;
 use Illuminate\Support\Facades\Config;
@@ -19,6 +19,9 @@ use Illuminate\Support\Facades\Config;
  */
 class Hash
 {
+    /**
+     * @var Hashids[]
+     */
     private array $hashers;
 
     public function __construct()
@@ -26,27 +29,25 @@ class Hash
         $this->hashers = [];
 
         $this->setUp();
-
-        return $this;
     }
 
-    private function setUp()
+    private function setUp(): void
     {
         $config = Config::get('api.app.hashids');
 
-        $min_length = $config['min_length'];
+        $min_length = $config['min-length'];
 
         $this->hashers['category'] = new Hashids($config['category'], $min_length);
         $this->hashers['subcategory'] = new Hashids($config['subcategory'], $min_length);
-        $this->hashers['resource_type'] = new Hashids($config['resource_type'], $min_length);
+        $this->hashers['resource-type'] = new Hashids($config['resource-type'], $min_length);
         $this->hashers['resource'] = new Hashids($config['resource'], $min_length);
         $this->hashers['item'] = new Hashids($config['item'], $min_length);
-        $this->hashers['item_category'] = new Hashids($config['item_category'], $min_length);
-        $this->hashers['item_partial_transfer'] = new Hashids($config['item_partial_transfer'], $min_length);
-        $this->hashers['item_subcategory'] = new Hashids($config['item_subcategory'], $min_length);
-        $this->hashers['item_transfer'] = new Hashids($config['item_transfer'], $min_length);
-        $this->hashers['item_type'] = new Hashids($config['item_type'], $min_length);
-        $this->hashers['permitted_user'] = new Hashids($config['permitted_user'], $min_length);
+        $this->hashers['item-category'] = new Hashids($config['item-category'], $min_length);
+        $this->hashers['item-partial-transfer'] = new Hashids($config['item-partial-transfer'], $min_length);
+        $this->hashers['item-subcategory'] = new Hashids($config['item-subcategory'], $min_length);
+        $this->hashers['item-transfer'] = new Hashids($config['item-transfer'], $min_length);
+        $this->hashers['item-type'] = new Hashids($config['item-type'], $min_length);
+        $this->hashers['permitted-user'] = new Hashids($config['permitted-user'], $min_length);
         $this->hashers['user'] = new Hashids($config['user'], $min_length);
     }
 
@@ -112,7 +113,7 @@ class Hash
      */
     public function resourceType(): Hashids
     {
-        return $this->hashers['resource_type'];
+        return $this->hashers['resource-type'];
     }
 
     /**
@@ -142,7 +143,7 @@ class Hash
      */
     public function itemCategory(): Hashids
     {
-        return $this->hashers['item_category'];
+        return $this->hashers['item-category'];
     }
 
     /**
@@ -152,7 +153,7 @@ class Hash
      */
     public function itemPartialTransfer(): Hashids
     {
-        return $this->hashers['item_partial_transfer'];
+        return $this->hashers['item-partial-transfer'];
     }
 
     /**
@@ -162,7 +163,7 @@ class Hash
      */
     public function itemSubCategory(): Hashids
     {
-        return $this->hashers['item_subcategory'];
+        return $this->hashers['item-subcategory'];
     }
 
     /**
@@ -172,7 +173,7 @@ class Hash
      */
     public function itemTransfer(): Hashids
     {
-        return $this->hashers['item_transfer'];
+        return $this->hashers['item-transfer'];
     }
 
     /**
@@ -182,7 +183,7 @@ class Hash
      */
     public function itemType(): Hashids
     {
-        return $this->hashers['item_type'];
+        return $this->hashers['item-type'];
     }
 
     /**
@@ -192,7 +193,7 @@ class Hash
      */
     public function permittedUser(): Hashids
     {
-        return $this->hashers['permitted_user'];
+        return $this->hashers['permitted-user'];
     }
 
     /**

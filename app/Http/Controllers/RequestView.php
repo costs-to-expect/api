@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Events\RequestError;
 use App\Option\Get;
 use App\Option\Post;
 use App\Response\Header\Header;
@@ -11,9 +10,7 @@ use App\Models\RequestErrorLog;
 use App\Models\RequestLog;
 use App\Models\Transformers\RequestErrorLog as RequestErrorLogTransformer;
 use App\Models\Transformers\RequestLog as RequestLogTransformer;
-use App\Utilities\Pagination as UtilityPagination;
-use App\Request\Validate\RequestErrorLog as RequestErrorLogValidator;
-use Exception;
+use App\Response\Pagination as UtilityPagination;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Config;
 
@@ -24,7 +21,7 @@ use Illuminate\Support\Facades\Config;
  * @copyright Dean Blackborough 2018-2020
  * @license https://github.com/costs-to-expect/api/blob/master/LICENSE
  */
-class RequestController extends Controller
+class RequestView extends Controller
 {
     protected $collection_parameters = [];
 
@@ -37,27 +34,27 @@ class RequestController extends Controller
     {
         $total = (new RequestErrorLog())->totalCount();
 
-        $pagination = UtilityPagination::init(request()->path(), $total, 50)
-            ->paging();
+        $pagination = new UtilityPagination(request()->path(), $total, 50);
+        $pagination_parameters = $pagination->parameters();
 
         $logs = (new RequestErrorLog())->paginatedCollection(
-            $pagination['offset'],
-            $pagination['limit']
+            $pagination_parameters['offset'],
+            $pagination_parameters['limit']
         );
 
         $headers = [
             'X-Count' => count($logs),
             'X-Total-Count' => $total,
-            'X-Offset' => $pagination['offset'],
-            'X-Limit' => $pagination['limit'],
-            'X-Link-Previous' => $pagination['links']['previous'],
-            'X-Link-Next' => $pagination['links']['next'],
+            'X-Offset' => $pagination_parameters['offset'],
+            'X-Limit' => $pagination_parameters['limit'],
+            'X-Link-Previous' => $pagination_parameters['links']['previous'],
+            'X-Link-Next' => $pagination_parameters['links']['next'],
         ];
 
         return response()->json(
             array_map(
-                function($log) {
-                    return (new RequestErrorLogTransformer($log))->toArray();
+                static function($log) {
+                    return (new RequestErrorLogTransformer($log))->asArray();
                 },
                 $logs
             ),
@@ -79,16 +76,18 @@ class RequestController extends Controller
             array_keys(Config::get('api.request-access-log.parameters.collection'))
         );
 
-        $pagination = UtilityPagination::init(request()->path(), $total, 25)->paging();
+        $pagination = new UtilityPagination(request()->path(), $total, 25);
+        $pagination_parameters = $pagination->setParameters($this->collection_parameters)->
+            parameters();
 
         $log = (new RequestLog())->paginatedCollection(
-            $pagination['offset'],
-            $pagination['limit'],
+            $pagination_parameters['offset'],
+            $pagination_parameters['limit'],
             $this->collection_parameters
         );
 
         $headers = new Header();
-        $headers->collection($pagination, count($log), $total);
+        $headers->collection($pagination_parameters, count($log), $total);
 
         $parameters_header = Parameter\Request::xHeader();
         if ($parameters_header !== null) {
@@ -97,7 +96,7 @@ class RequestController extends Controller
 
         $json = [];
         foreach ($log as $log_item) {
-            $json[] = (new RequestLogTransformer($log_item))->toArray();
+            $json[] = (new RequestLogTransformer($log_item))->asArray();
         }
 
         return response()->json($json, 200, $headers->headers());
@@ -142,44 +141,5 @@ class RequestController extends Controller
             $get + $post,
             200
         );
-    }
-
-    /**
-     * Log a request error, these are logged when the web app receives an unexpected
-     * http status code response
-     *
-     * @return JsonResponse
-     */
-    public function createErrorLog(): JsonResponse
-    {
-        $validator = (new RequestErrorLogValidator())->create();
-        \App\Request\BodyValidation::validateAndReturnErrors($validator);
-
-        try {
-            $request_error_log = new RequestErrorLog([
-                'method' => request()->input('method'),
-                'source' => request()->input('source'),
-                'expected_status_code' => request()->input('expected_status_code'),
-                'returned_status_code' => request()->input('returned_status_code'),
-                'request_uri' => request()->input('request_uri'),
-                'debug' => request()->input('debug')
-            ]);
-            $request_error_log->save();
-
-            event(new RequestError([
-                'method' => request()->input('method'),
-                'source' => request()->input('source'),
-                'expected_status_code' => request()->input('expected_status_code'),
-                'returned_status_code' => request()->input('returned_status_code'),
-                'request_uri' => request()->input('request_uri'),
-                'referer' => request()->server('HTTP_REFERER', 'NOT SET!'),
-                'debug' => request()->input('debug')
-            ]));
-
-        } catch (Exception $e) {
-            \App\Response\Responses::failedToSaveModelForCreate();
-        }
-
-        return \App\Response\Responses::successNoContent();
     }
 }

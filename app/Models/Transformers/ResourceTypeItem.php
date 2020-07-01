@@ -4,10 +4,7 @@ declare(strict_types=1);
 namespace App\Models\Transformers;
 
 /**
- * Transform the data array into the format we require for the API
- *
- * This is an updated version of the transformers, the other transformers need to
- * be updated to operate on array rather than collections
+ * Transform the data from our queries into the format we want to display
  *
  * @author Dean Blackborough <dean@g3d-development.com>
  * @copyright Dean Blackborough 2018-2020
@@ -15,63 +12,44 @@ namespace App\Models\Transformers;
  */
 class ResourceTypeItem extends Transformer
 {
-    protected $item;
-
-    /**
-     * @param array $item
-     */
-    public function __construct(array $item)
+    protected function format(array $to_transform): void
     {
-        parent::__construct();
-
-        $this->item = $item;
-    }
-
-    /**
-     * Return the formatted array
-     *
-     * @return array
-     */
-    public function toArray(): array
-    {
-        $item = [
-            'id' => $this->hash->item()->encode($this->item['item_id']),
-            'name' => $this->item['item_name'],
-            'description' => $this->item['item_description'],
-            'total' => number_format((float) $this->item['item_total'], 2, '.', ''),
-            'percentage' => (int) $this->item['item_percentage'],
-            'actualised_total' => number_format((float) $this->item['item_actualised_total'], 2, '.', ''),
-            'effective_date' => $this->item['item_effective_date'],
-            'created' => $this->item['item_created_at'],
+        $this->transformed = [
+            'id' => $this->hash->item()->encode($to_transform['item_id']),
+            'name' => $to_transform['item_name'],
+            'description' => $to_transform['item_description'],
+            'total' => number_format((float) $to_transform['item_total'], 2, '.', ''),
+            'percentage' => (int) $to_transform['item_percentage'],
+            'actualised_total' => number_format((float) $to_transform['item_actualised_total'], 2, '.', ''),
+            'effective_date' => $to_transform['item_effective_date'],
+            'created' => $to_transform['item_created_at'],
             'resource' => [
-                'id' => $this->hash->resource()->encode($this->item['resource_id']),
-                'name' => $this->item['resource_name'],
-                'description' => $this->item['resource_description']
+                'id' => $this->hash->resource()->encode($to_transform['resource_id']),
+                'name' => $to_transform['resource_name'],
+                'description' => $to_transform['resource_description']
             ]
         ];
 
         if (
-            array_key_exists('category_id', $this->item) === true &&
-            array_key_exists('category_name', $this->item) === true
+            array_key_exists('category_id', $to_transform) === true &&
+            array_key_exists('category_name', $to_transform) === true
         ) {
             $item['category'] = [
-                'id' => $this->hash->category()->encode($this->item['category_id']),
-                'name' => $this->item['category_name'],
-                'description' => $this->item['category_description']
+                'id' => $this->hash->category()->encode($to_transform['category_id']),
+                'name' => $to_transform['category_name'],
+                'description' => $to_transform['category_description']
             ];
 
             if (
-                array_key_exists('subcategory_id', $this->item) === true &&
-                array_key_exists('subcategory_name', $this->item) === true
+                array_key_exists('subcategory_id', $to_transform) === true &&
+                array_key_exists('subcategory_name', $to_transform) === true
             ) {
                 $item['subcategory'] = [
-                    'id' => $this->hash->subCategory()->encode($this->item['subcategory_id']),
-                    'name' => $this->item['subcategory_name'],
-                    'description' => $this->item['subcategory_description']
+                    'id' => $this->hash->subCategory()->encode($to_transform['subcategory_id']),
+                    'name' => $to_transform['subcategory_name'],
+                    'description' => $to_transform['subcategory_description']
                 ];
             }
         }
-
-        return $item;
     }
 }

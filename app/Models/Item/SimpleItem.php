@@ -4,8 +4,7 @@ declare(strict_types=1);
 namespace App\Models\Item;
 
 use App\Interfaces\Item\IModel;
-use App\Utilities\General;
-use App\Utilities\Model as ModelUtility;
+use App\Models\Clause;
 use Illuminate\Database\Query\Builder as QueryBuilder;
 use Illuminate\Database\Eloquent\Model;
 
@@ -88,9 +87,9 @@ class SimpleItem extends Model implements IModel
 
         if ($item !== null) {
             return $item->toArray();
-        } else {
-            return null;
         }
+
+        return null;
     }
 
     /**
@@ -119,12 +118,12 @@ class SimpleItem extends Model implements IModel
             where('resource_id', '=', $resource_id)->
             where('resource.resource_type_id', '=', $resource_type_id);
 
-        $collection = ModelUtility::applySearch(
+        $collection = Clause::applySearch(
             $collection,
             $this->table,
             $search_parameters
         );
-        $collection = ModelUtility::applyFiltering(
+        $collection = Clause::applyFiltering(
             $collection,
             $this->table,
             $filter_parameters
@@ -173,12 +172,12 @@ class SimpleItem extends Model implements IModel
             where('resource_id', '=', $resource_id)->
             where('resource.resource_type_id', '=', $resource_type_id);
 
-        $collection = ModelUtility::applySearch(
+        $collection = Clause::applySearch(
             $collection,
             $this->table,
             $search_parameters
         );
-        $collection = ModelUtility::applyFiltering(
+        $collection = Clause::applyFiltering(
             $collection,
             $this->table,
             $filter_parameters

@@ -11,14 +11,10 @@ use App\Response\Header\Header;
 use App\Request\Parameter;
 use App\Request\Route;
 use App\Response\Header\Headers;
-use App\Utilities\Pagination as UtilityPagination;
+use App\Response\Pagination as UtilityPagination;
 use App\Models\Subcategory;
 use App\Models\Transformers\Subcategory as SubcategoryTransformer;
-use App\Request\Validate\Subcategory as SubcategoryValidator;
-use Exception;
-use Illuminate\Database\QueryException;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Config;
 
 /**
@@ -28,7 +24,7 @@ use Illuminate\Support\Facades\Config;
  * @copyright Dean Blackborough 2018-2020
  * @license https://github.com/costs-to-expect/api/blob/master/LICENSE
  */
-class SubcategoryController extends Controller
+class SubcategoryView extends Controller
 {
     protected bool $allow_entire_collection = true;
 
@@ -70,40 +66,36 @@ class SubcategoryController extends Controller
                 $search_parameters
             );
 
-            $pagination = UtilityPagination::init(
-                    request()->path(),
-                    $total,
-                    10,
-                    $this->allow_entire_collection
-                )->
+            $pagination = new UtilityPagination(request()->path(), $total);
+            $pagination_parameters = $pagination->allowPaginationOverride($this->allow_entire_collection)->
                 setSearchParameters($search_parameters)->
                 setSortParameters($sort_parameters)->
-                paging();
+                parameters();
 
             $subcategories = (new Subcategory())->paginatedCollection(
                 (int)$resource_type_id,
                 (int)$category_id,
-                $pagination['offset'],
-                $pagination['limit'],
+                $pagination_parameters['offset'],
+                $pagination_parameters['limit'],
                 $search_parameters,
                 $sort_parameters
             );
 
             $collection = array_map(
                 static function ($subcategory) {
-                    return (new SubcategoryTransformer($subcategory))->toArray();
+                    return (new SubcategoryTransformer($subcategory))->asArray();
                 },
                 $subcategories
             );
 
             $headers = new Headers();
-            $headers->collection($pagination, count($subcategories), $total)->
+            $headers->collection($pagination_parameters, count($subcategories), $total)->
                 addCacheControl($cache_control->visibility(), $cache_control->ttl())->
                 addETag($collection)->
                 addSearch(Parameter\Search::xHeader())->
                 addSort(Parameter\Sort::xHeader());
 
-            $cache_collection->create($total, $collection, $pagination, $headers->headers());
+            $cache_collection->create($total, $collection, $pagination_parameters, $headers->headers());
             $cache_control->put(request()->getRequestUri(), $cache_collection->content());
         }
 
@@ -145,7 +137,7 @@ class SubcategoryController extends Controller
         $headers->item();
 
         return response()->json(
-            (new SubcategoryTransformer($subcategory))->toArray(),
+            (new SubcategoryTransformer($subcategory))->asArray(),
             200,
             $headers->headers()
         );
@@ -247,184 +239,5 @@ class SubcategoryController extends Controller
             $get + $delete + $patch,
             200
         );
-    }
-
-    /**
-     * Create a new sub category
-     *
-     * @param $resource_type_id
-     * @param $category_id
-     *
-     * @return JsonResponse
-     */
-    public function create($resource_type_id, $category_id): JsonResponse
-    {
-        Route\Validate::category(
-            (int) $resource_type_id,
-            (int) $category_id,
-            $this->permitted_resource_types,
-            true
-        );
-
-        $cache_control = new Cache\Control(Auth::user()->id);
-        $cache_key = new Cache\Key();
-
-        $validator = (new SubcategoryValidator)->create(['category_id' => $category_id]);
-        \App\Request\BodyValidation::validateAndReturnErrors($validator);
-
-        try {
-            $sub_category = new Subcategory([
-                'category_id' => $category_id,
-                'name' => request()->input('name'),
-                'description' => request()->input('description')
-            ]);
-            $sub_category->save();
-
-            $cache_control->clearPrivateCacheKeys([
-                $cache_key->categories($resource_type_id)
-            ]);
-
-            if (in_array($resource_type_id, $this->public_resource_types, true)) {
-                $cache_control->clearPublicCacheKeys([
-                    $cache_key->categories($resource_type_id)
-                ]);
-            }
-        } catch (Exception $e) {
-            \App\Response\Responses::failedToSaveModelForCreate();
-        }
-
-        return response()->json(
-            (new SubcategoryTransformer((new Subcategory())->instanceToArray($sub_category)))->toArray(),
-            201
-        );
-    }
-
-    /**
-     * Delete the requested sub category
-     *
-     * @param $resource_type_id
-     * @param $category_id
-     * @param $subcategory_id
-     *
-     * @return JsonResponse
-     */
-    public function delete(
-        $resource_type_id,
-        $category_id,
-        $subcategory_id
-    ): JsonResponse
-    {
-        Route\Validate::subcategory(
-            (int) $resource_type_id,
-            (int) $category_id,
-            (int) $subcategory_id,
-            $this->permitted_resource_types,
-            true
-        );
-
-        $cache_control = new Cache\Control(Auth::user()->id);
-        $cache_key = new Cache\Key();
-
-        $sub_category = (new Subcategory())->instance(
-            $category_id,
-            $subcategory_id
-        );
-
-        if ($sub_category === null) {
-            \App\Response\Responses::notFound(trans('entities.subcategory'));
-        }
-
-        try {
-            $sub_category->delete();
-
-            $cache_control->clearPrivateCacheKeys([
-                $cache_key->categories($resource_type_id)
-            ]);
-
-            if (in_array($resource_type_id, $this->public_resource_types, true)) {
-                $cache_control->clearPublicCacheKeys([
-                    $cache_key->categories($resource_type_id)
-                ]);
-            }
-
-            \App\Response\Responses::successNoContent();
-        } catch (QueryException $e) {
-            \App\Response\Responses::foreignKeyConstraintError();
-        } catch (Exception $e) {
-            \App\Response\Responses::notFound(trans('entities.subcategory'), $e);
-        }
-    }
-
-    /**
-     * Update the selected subcategory
-     *
-     * @param $resource_type_id
-     * @param $category_id
-     * @param $subcategory_id
-     *
-     * @return JsonResponse
-     */
-    public function update(
-        $resource_type_id,
-        $category_id,
-        $subcategory_id
-    ): JsonResponse
-    {
-        Route\Validate::subcategory(
-            (int) $resource_type_id,
-            (int) $category_id,
-            (int) $subcategory_id,
-            $this->permitted_resource_types,
-            true
-        );
-
-        $cache_control = new Cache\Control(Auth::user()->id);
-        $cache_key = new Cache\Key();
-
-        $subcategory = (new Subcategory())->instance($category_id, $subcategory_id);
-
-        if ($subcategory === null) {
-            \App\Response\Responses::failedToSelectModelForUpdateOrDelete();
-        }
-
-        \App\Request\BodyValidation::checkForEmptyPatch();
-
-        $validator = (new SubcategoryValidator())->update([
-            'category_id' => (int)$category_id,
-            'subcategory_id' => (int)$subcategory_id
-        ]);
-        \App\Request\BodyValidation::validateAndReturnErrors($validator);
-
-        \App\Request\BodyValidation::checkForInvalidFields(
-            array_merge(
-                (new Subcategory())->patchableFields(),
-                (new SubcategoryValidator)->dynamicDefinedFields()
-            )
-        );
-
-        foreach (request()->all() as $key => $value) {
-            $subcategory->$key = $value;
-        }
-
-        try {
-            $subcategory->save();
-
-            $cache_control->clearPrivateCacheKeys([
-                // We need to clear subcategories, resource type items
-                // and items dur to includes so simpler to clear the entire
-                // resource type
-                $cache_key->resourceType($resource_type_id)
-            ]);
-
-            if (in_array($resource_type_id, $this->public_resource_types, true)) {
-                $cache_control->clearPublicCacheKeys([
-                    $cache_key->resourceType($resource_type_id)
-                ]);
-            }
-        } catch (Exception $e) {
-            \App\Response\Responses::failedToSaveModelForUpdate();
-        }
-
-        \App\Response\Responses::successNoContent();
     }
 }

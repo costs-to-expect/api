@@ -59,6 +59,12 @@ class Control
      */
     public function cacheable(): bool
     {
+        $skip_cache = request()->header('x-skip-cache');
+
+        if ($skip_cache !== null) {
+            return false;
+        }
+
         return $this->cacheable;
     }
 

@@ -2,6 +2,24 @@
 
 The complete changelog for the Costs to Expect REST API, our changelog follows the format defined at https://keepachangelog.com/en/1.0.0/
 
+## [v2.11.6] - 2020-07-01
+### Added
+- We have added support for an `X-Skip-Cache` request header; If you include the header with your request we will skip response caching and fetch live values, please use this with care.
+
+### Changed
+- We have added separate links for the documentation and example page and the postman collection.
+- We have simplified our `\Model\Transformer` classes and made it possible to alter the returned data format.
+- We have added `public` as a sorting option for resource types.
+- We have reworked our pagination class; we have moved it to a new workspace and also improved how it works.
+- We have moved our `Hash` class; the `Hash` class now lives in the `Request` namespace.
+- We have moved our `ModelUtility` class: the `ModelUtility` class now lives in the `Models` namespace.
+- We have updated the indexes in our `Hash` request class; the indexes are consistent with the rest of the app.
+
+### Fixed
+- We have updated our pagination helper to include any defined filtering parameters.
+- We have corrected pagination calls in all our controllers; we now include all possible request parameters.
+- We have corrected calls to clear public caches; we were comparing different types.
+
 ## [v2.11.5] - 2020-06-24
 ### Added 
 - We have added a documentation page; the documentation page links to the API documentation and includes a couple of examples.

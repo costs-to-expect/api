@@ -14,117 +14,117 @@ Route::group(
     function () {
         Route::get(
             'auth/user',
-            'PassportController@user'
+            'PassportView@user'
         );
 
         Route::post(
             'resource-types',
-            'ResourceTypeController@create'
+            'ResourceTypeManage@create'
         );
 
         Route::post(
             'resource-types/{resource_type_id}/categories',
-            'CategoryController@create'
+            'CategoryManage@create'
         );
 
         Route::post(
             'resource-types/{resource_type_id}/categories/{category_id}/subcategories',
-            'SubcategoryController@create'
+            'SubcategoryManage@create'
         );
 
         Route::post(
             'resource-types/{resource_type_id}/resources',
-            'ResourceController@create'
+            'ResourceManage@create'
         );
 
         Route::post(
             'resource-types/{resource_type_id}/resources/{resource_id}/items',
-            'ItemController@create'
+            'ItemManage@create'
         );
 
         Route::post(
             'resource-types/{resource_type_id}/resources/{resource_id}/items/{item_id}/categories',
-            'ItemCategoryController@create'
+            'ItemCategoryManage@create'
         );
 
         Route::post(
             'resource-types/{resource_type_id}/resources/{resource_id}/items/{item_id}/categories/{item_category_id}/subcategories',
-            'ItemSubcategoryController@create'
+            'ItemSubcategoryManage@create'
         );
 
         Route::post(
             'resource-types/{resource_type_id}/resources/{resource_id}/items/{item_id}/partial-transfer',
-            'ItemPartialTransferController@transfer'
+            'ItemPartialTransferManage@transfer'
         );
 
         Route::post(
             'resource-types/{resource_type_id}/resources/{resource_id}/items/{item_id}/transfer',
-            'ItemTransferController@transfer'
+            'ItemTransferManage@transfer'
         );
 
         Route::delete(
             'resource-types/{resource_type_id}',
-            'ResourceTypeController@delete'
+            'ResourceTypeManage@delete'
         );
 
         Route::delete(
             'resource-types/{resource_type_id}/categories/{category_id}',
-            'CategoryController@delete'
+            'CategoryManage@delete'
         );
 
         Route::delete(
             'resource-types/{resource_type_id}/categories/{category_id}/subcategories/{subcategory_id}',
-            'SubcategoryController@delete'
+            'SubcategoryManage@delete'
         );
 
         Route::delete(
             'resource-types/{resource_type_id}/partial-transfers/{item_partial_transfer_id}',
-            'ItemPartialTransferController@delete'
+            'ItemPartialTransferManage@delete'
         );
 
         Route::delete(
             'resource-types/{resource_type_id}/resources/{resource_id}',
-            'ResourceController@delete'
+            'ResourceManage@delete'
         );
 
         Route::delete(
             'resource-types/{resource_type_id}/resources/{resource_id}/items/{item_id}',
-            'ItemController@delete'
+            'ItemManage@delete'
         );
 
         Route::delete(
             'resource-types/{resource_type_id}/resources/{resource_id}/items/{item_id}/categories/{item_category_id}',
-            'ItemCategoryController@delete'
+            'ItemCategoryManage@delete'
         );
 
         Route::delete(
             'resource-types/{resource_type_id}/resources/{resource_id}/items/{item_id}/categories/{item_category_id}/subcategories/{item_subcategory_id}',
-            'ItemSubcategoryController@delete'
+            'ItemSubcategoryManage@delete'
         );
 
         Route::patch(
             'resource-types/{resource_type_id}',
-            'ResourceTypeController@update'
+            'ResourceTypeManage@update'
         );
 
         Route::patch(
             'resource-types/{resource_type_id}/categories/{category_id}',
-            'CategoryController@update'
+            'CategoryManage@update'
         );
 
         Route::patch(
             'resource-types/{resource_type_id}/categories/{category_id}/subcategories/{subcategory_id}',
-            'SubcategoryController@update'
+            'SubcategoryManage@update'
         );
 
         Route::patch(
             'resource-types/{resource_type_id}/resources/{resource_id}',
-            'ResourceController@update'
+            'ResourceManage@update'
         );
 
         Route::patch(
             'resource-types/{resource_type_id}/resources/{resource_id}/items/{item_id}',
-            'ItemController@update'
+            'ItemManage@update'
         );
     }
 );

@@ -13,7 +13,7 @@ use Illuminate\Support\Facades\Validator;
  *
  * @package App\Http\Controllers
  */
-class PassportController extends Controller
+class PassportView extends Controller
 {
     /**
      * login to the API and create a token

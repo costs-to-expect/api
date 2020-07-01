@@ -8,7 +8,7 @@ use App\Response\Cache;
 use App\Response\Header\Headers;
 use App\Request\Parameter;
 use App\Request\Route;
-use App\Utilities\Pagination as UtilityPagination;
+use App\Response\Pagination as UtilityPagination;
 use App\Models\Transformers\ItemType as ItemTypeTransformer;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Config;
@@ -20,7 +20,7 @@ use Illuminate\Support\Facades\Config;
  * @copyright Dean Blackborough 2018-2020
  * @license https://github.com/costs-to-expect/api/blob/master/LICENSE
  */
-class ItemTypeController extends Controller
+class ItemTypeView extends Controller
 {
     protected bool $allow_entire_collection = true;
 
@@ -49,38 +49,34 @@ class ItemTypeController extends Controller
 
             $total = (new ItemType())->totalCount($search_parameters);
 
-            $pagination = UtilityPagination::init(
-                    request()->path(),
-                    $total,
-                    10,
-                    $this->allow_entire_collection
-                )->
+            $pagination = new UtilityPagination(request()->path(), $total);
+            $pagination_parameters = $pagination->allowPaginationOverride($this->allow_entire_collection)->
                 setSearchParameters($search_parameters)->
                 setSortParameters($sort_parameters)->
-                paging();
+                parameters();
 
             $item_types = (new ItemType())->paginatedCollection(
-                $pagination['offset'],
-                $pagination['limit'],
+                $pagination_parameters['offset'],
+                $pagination_parameters['limit'],
                 $search_parameters,
                 $sort_parameters
             );
 
             $collection = array_map(
                 static function($item_type) {
-                    return (new ItemTypeTransformer($item_type))->toArray();
+                    return (new ItemTypeTransformer($item_type))->asArray();
                 },
                 $item_types
             );
 
             $headers = new Headers();
-            $headers->collection($pagination, count($item_types), $total)->
+            $headers->collection($pagination_parameters, count($item_types), $total)->
                 addCacheControl($cache_control->visibility(), $cache_control->ttl())->
                 addETag($collection)->
                 addSearch(Parameter\Search::xHeader())->
                 addSort(Parameter\Sort::xHeader());
 
-            $cache_collection->create($total, $collection, $pagination, $headers->headers());
+            $cache_collection->create($total, $collection, $pagination_parameters, $headers->headers());
             $cache_control->put(request()->getRequestUri(), $cache_collection->content());
         }
 
@@ -108,7 +104,7 @@ class ItemTypeController extends Controller
         $headers->item();
 
         return response()->json(
-            (new ItemTypeTransformer($item_type))->toArray(),
+            (new ItemTypeTransformer($item_type))->asArray(),
             200,
             $headers->headers()
         );

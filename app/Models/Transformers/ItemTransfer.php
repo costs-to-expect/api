@@ -4,7 +4,7 @@ declare(strict_types=1);
 namespace App\Models\Transformers;
 
 /**
- * Transform the data returned from Eloquent into the format we want for the API
+ * Transform the data from our queries into the format we want to display
  *
  * @author Dean Blackborough <dean@g3d-development.com>
  * @copyright Dean Blackborough 2018-2020
@@ -12,35 +12,26 @@ namespace App\Models\Transformers;
  */
 class ItemTransfer extends Transformer
 {
-    private $data_to_transform;
-
-    public function __construct(array $data_to_transform)
+    public function format(array $to_transform): void
     {
-        parent::__construct();
-
-        $this->data_to_transform = $data_to_transform;
-    }
-
-    public function toArray(): array
-    {
-        return [
-            'id' => $this->hash->itemTransfer()->encode($this->data_to_transform['id']),
+        $this->transformed = [
+            'id' => $this->hash->itemTransfer()->encode($to_transform['id']),
             'from' => [
-                'id' => $this->hash->resource()->encode($this->data_to_transform['from_resource_id']),
-                'name' => $this->data_to_transform['from_resource_name'],
+                'id' => $this->hash->resource()->encode($to_transform['from_resource_id']),
+                'name' => $to_transform['from_resource_name'],
             ],
             'to' => [
-                'id' => $this->hash->resource()->encode($this->data_to_transform['to_resource_id']),
-                'name' => $this->data_to_transform['to_resource_name'],
+                'id' => $this->hash->resource()->encode($to_transform['to_resource_id']),
+                'name' => $to_transform['to_resource_name'],
             ],
             'item' => [
-                'id' => $this->hash->item()->encode($this->data_to_transform['item_id'])
+                'id' => $this->hash->item()->encode($to_transform['item_id'])
             ],
             'transferred' => [
-                'at' => $this->data_to_transform['created_at'],
+                'at' => $to_transform['created_at'],
                 'user' => [
-                    'id' => $this->hash->user()->encode($this->data_to_transform['user_id']),
-                    'name' => $this->data_to_transform['user_name']
+                    'id' => $this->hash->user()->encode($to_transform['user_id']),
+                    'name' => $to_transform['user_name']
                 ]
             ]
         ];

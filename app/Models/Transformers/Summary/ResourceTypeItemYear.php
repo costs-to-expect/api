@@ -7,7 +7,7 @@ namespace App\Models\Transformers\Summary;
 use App\Models\Transformers\Transformer;
 
 /**
- * Transform the data array into the format we require for the API
+ * Transform the data from our queries into the format we want to display
  *
  * @author Dean Blackborough <dean@g3d-development.com>
  * @copyright Dean Blackborough 2018-2020
@@ -15,26 +15,12 @@ use App\Models\Transformers\Transformer;
  */
 class ResourceTypeItemYear extends Transformer
 {
-    private $year_summary;
-
-    /**
-     * ResourceType constructor.
-     *
-     * @param array $year_summary
-     */
-    public function __construct(array $year_summary)
+    public function format(array $to_transform): void
     {
-        parent::__construct();
-
-        $this->year_summary = $year_summary;
-    }
-
-    public function toArray(): array
-    {
-        return [
-            'id' => $this->year_summary['year'],
-            'year' => $this->year_summary['year'],
-            'total' => (float)$this->year_summary['total']
+        $this->transformed = [
+            'id' => $to_transform['year'],
+            'year' => $to_transform['year'],
+            'total' => (float) $to_transform['total']
         ];
     }
 }
