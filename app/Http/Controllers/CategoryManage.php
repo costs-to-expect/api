@@ -53,7 +53,7 @@ class CategoryManage extends Controller
                 $cache_key->categories($resource_type_id)
             ]);
 
-            if (in_array($resource_type_id, $this->public_resource_types, true)) {
+            if (in_array((int) $resource_type_id, $this->public_resource_types, true)) {
                 $cache_control->clearPublicCacheKeys([
                     $cache_key->categories($resource_type_id)
                 ]);
@@ -97,7 +97,7 @@ class CategoryManage extends Controller
                 $cache_key->categories($resource_type_id)
             ]);
 
-            if (in_array($resource_type_id, $this->public_resource_types, true)) {
+            if (in_array((int) $resource_type_id, $this->public_resource_types, true)) {
                 $cache_control->clearPublicCacheKeys([
                     $cache_key->categories($resource_type_id)
                 ]);
@@ -166,7 +166,7 @@ class CategoryManage extends Controller
                 $cache_key->resourceType($resource_type_id)
             ]);
 
-            if (in_array($resource_type_id, $this->public_resource_types, true)) {
+            if (in_array((int) $resource_type_id, $this->public_resource_types, true)) {
                 $cache_control->clearPublicCacheKeys([
                     $cache_key->resourceType($resource_type_id)
                 ]);

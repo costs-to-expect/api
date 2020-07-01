@@ -145,7 +145,7 @@ class ResourceTypeManage extends Controller
                     $cache_key->permittedUsers($resource_type_id)
                 ]);
 
-                if (in_array($resource_type_id, $this->public_resource_types, true)) {
+                if (in_array((int) $resource_type_id, $this->public_resource_types, true)) {
                     $cache_control->clearPublicCacheKeys([
                         $cache_key->resourcesTypes(),
                         $cache_key->permittedUsers($resource_type_id)
@@ -216,7 +216,7 @@ class ResourceTypeManage extends Controller
                 $cache_key->resourcesTypes()
             ]);
 
-            if (in_array($resource_type_id, $this->public_resource_types, true)) {
+            if (in_array((int) $resource_type_id, $this->public_resource_types, true)) {
                 $cache_control->clearPublicCacheKeys([
                     $cache_key->resourcesTypes()
                 ]);
