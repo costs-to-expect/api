@@ -59,7 +59,7 @@ class ResourceTypeManage extends Controller
             ]);
             $permitted_users->save();
 
-            $item_type_id = $this->hash->decode('item_type', request()->input('item_type_id'));
+            $item_type_id = $this->hash->decode('item-type', request()->input('item_type_id'));
 
             if ($item_type_id === false) {
                 \App\Response\Responses::unableToDecode();

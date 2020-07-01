@@ -3,17 +3,17 @@
 declare(strict_types=1);
 
 return [
-    'min_length' => env('APP_HASH_MIN_LENGTH'),
+    'min-length' => env('APP_HASH_MIN_LENGTH'),
     'category' => env('APP_HASH_SALT_CATEGORY'),
     'subcategory' => env('APP_HASH_SALT_SUBCATEGORY'),
-    'resource_type' => env('APP_HASH_SALT_RESOURCE_TYPE'),
+    'resource-type' => env('APP_HASH_SALT_RESOURCE_TYPE'),
     'resource' => env('APP_HASH_SALT_RESOURCE'),
     'item' => env('APP_HASH_SALT_ITEM'),
-    'item_category' => env('APP_HASH_SALT_ITEM_CATEGORY'),
-    'item_partial_transfer' => env('APP_HASH_SALT_ITEM_PARTIAL_TRANSFER'),
-    'item_subcategory' => env('APP_HASH_SALT_ITEM_SUBCATEGORY'),
-    'item_transfer' => env('APP_HASH_SALT_ITEM_TRANSFER'),
-    'item_type' => env('APP_HASH_SALT_ITEM_TYPE'),
-    'permitted_user' => env('APP_HASH_SALT_PERMITTED_USER'),
+    'item-category' => env('APP_HASH_SALT_ITEM_CATEGORY'),
+    'item-partial-transfer' => env('APP_HASH_SALT_ITEM_PARTIAL_TRANSFER'),
+    'item-subcategory' => env('APP_HASH_SALT_ITEM_SUBCATEGORY'),
+    'item-transfer' => env('APP_HASH_SALT_ITEM_TRANSFER'),
+    'item-type' => env('APP_HASH_SALT_ITEM_TYPE'),
+    'permitted-user' => env('APP_HASH_SALT_PERMITTED_USER'),
     'user' => env('APP_HASH_SALT_USER')
 ];

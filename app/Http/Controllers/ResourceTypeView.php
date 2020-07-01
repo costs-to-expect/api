@@ -225,7 +225,7 @@ class ResourceTypeView extends Controller
 
         $parameters = ['item_type_id' => []];
         foreach ($item_types as $item_type) {
-            $id = $this->hash->encode('item_type', $item_type['item_type_id']);
+            $id = $this->hash->encode('item-type', $item_type['item_type_id']);
 
             if ($id === false) {
                 \App\Response\Responses::unableToDecode();
