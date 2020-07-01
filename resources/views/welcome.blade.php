@@ -223,25 +223,27 @@
                     <h3>Added</h3>
 
                     <ul>
-                        <li>We have added a documentation page; the documentation page links to the API documentation and includes a couple of examples.
-                            Changed</li>
+                        <li>We have added support for an `X-Skip-Cache` request header; If you include the header with your request we will skip response caching and fetch live values, please use this with care.</li>
                     </ul>
 
                     <h3>Changed</h3>
 
                     <ul>
-                        <li>We have updated the example ENV file.</li>
-                        <li>We have renamed a couple of our helper conversion/validation classes and moved them to a new namespace.</li>
-                        <li>We have made a minor content tweak on the landing page; the documentation button is in another section.</li>
-                        <li>We have updated and relocated our validation classes; the validation classes are now part of the `App\Request\Validate` namespace.</li>
-                        <li>We have reworked our summary controllers; we have removed some code duplication and added additional error checking.</li>
+                        <li>We have added separate links for the documentation and example page and the postman collection.</li>
+                        <li>We have simplified our `\Model\Transformer` classes and made it possible to alter the returned data format.</li>
+                        <li>We have added `public` as a sorting option for resource types.</li>
+                        <li>We have reworked our pagination class; we have moved it to a new workspace and also improved how it works.</li>
+                        <li>We have moved our `Hash` class; the `Hash` class now lives in the `Request` namespace.</li>
+                        <li>We have moved our `ModelUtility` class: the `ModelUtility` class now lives in the `Models` namespace.</li>
+                        <li>We have updated the indexes in our `Hash` request class; the indexes are consistent with the rest of the app.</li>
                     </ul>
 
                     <h3>Fixed</h3>
 
                     <ul>
-                        <li>Incorrectly assuming the result will be an array with at least one value.</li>
-                        <li>We have fixed an error in the changelog; we jump a couple of minor versions.</li>
+                        <li>We have updated our pagination helper to include any defined filtering parameters.</li>
+                        <li>We have corrected pagination calls in all our controllers; we now include all possible request parameters.</li>
+                        <li>We have corrected calls to clear public caches; we were comparing different types.</li>
                     </ul>
                 </div>
             </div>
