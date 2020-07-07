@@ -2,6 +2,8 @@
 
 The complete changelog for the Costs to Expect REST API, our changelog follows the format defined at https://keepachangelog.com/en/1.0.0/
 
+## [v2.12.0] - 2020-xx-xx
+
 ## [v2.11.6] - 2020-07-01
 ### Added
 - We have added support for an `X-Skip-Cache` request header; If you include the header with your request we will skip response caching and fetch live values, please use this with care.
