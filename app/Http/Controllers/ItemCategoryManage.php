@@ -177,7 +177,7 @@ class ItemCategoryManage extends Controller
         } catch (QueryException $e) {
             \App\Response\Responses::foreignKeyConstraintError();
         } catch (Exception $e) {
-            \App\Response\Responses::notFound(trans('entities.item-category'), $e);
+            \App\Response\Responses::notFound(trans('entities.item-category'));
         }
     }
 }

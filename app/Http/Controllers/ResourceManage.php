@@ -112,7 +112,7 @@ class ResourceManage extends Controller
         } catch (QueryException $e) {
             \App\Response\Responses::foreignKeyConstraintError();
         } catch (Exception $e) {
-            \App\Response\Responses::notFound(trans('entities.resource'), $e);
+            \App\Response\Responses::notFound(trans('entities.resource'));
         }
     }
 

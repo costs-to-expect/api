@@ -68,7 +68,7 @@ class ItemPartialTransferManage extends Controller
         } catch (QueryException $e) {
             return \App\Response\Responses::foreignKeyConstraintError();
         } catch (Exception $e) {
-            return \App\Response\Responses::notFound(trans('entities.item-partial-transfer'), $e);
+            return \App\Response\Responses::notFound(trans('entities.item-partial-transfer'));
         }
     }
 
