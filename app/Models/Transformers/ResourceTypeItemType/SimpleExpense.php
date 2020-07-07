@@ -37,7 +37,7 @@ class SimpleExpense extends Transformer
             if ($to_transform['category_id'] !== null) {
                 $this->transformed['category'] = [
                     'id' => $this->hash->itemCategory()->encode($to_transform['item_category_id']),
-                    'subcategory_id' => $this->hash->category()->encode($to_transform['category_id']),
+                    'category_id' => $this->hash->category()->encode($to_transform['category_id']),
                     'name' => $to_transform['category_name'],
                     'description' => $to_transform['category_description']
                 ];
@@ -51,8 +51,8 @@ class SimpleExpense extends Transformer
             ) {
                 if ($to_transform['subcategory_id'] !== null) {
                     $this->transformed['subcategory'] = [
-                        'item_subcategory_id' => $this->hash->itemSubCategory()->encode($to_transform['item_subcategory_id']),
-                        'id' => $this->hash->subCategory()->encode($to_transform['subcategory_id']),
+                        'id' => $this->hash->itemSubCategory()->encode($to_transform['item_subcategory_id']),
+                        'subcategory_id' => $this->hash->subCategory()->encode($to_transform['subcategory_id']),
                         'name' => $to_transform['subcategory_name'],
                         'description' => $to_transform['subcategory_description']
                     ];
