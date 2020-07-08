@@ -3,17 +3,8 @@ declare(strict_types=1);
 
 namespace App\Option\Value;
 
-use App\Request\Hash;
-
-class Resource
+class Resource extends Value
 {
-    private Hash $hash;
-
-    public function __construct()
-    {
-        $this->hash = new Hash();
-    }
-
     /**
      * Generate the allowed values resources array, will be passed to the
      * Option classes and merged with the fields/parameters

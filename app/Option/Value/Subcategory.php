@@ -3,17 +3,8 @@ declare(strict_types=1);
 
 namespace App\Option\Value;
 
-use App\Request\Hash;
-
-class Subcategory
+class Subcategory extends Value
 {
-    private Hash $hash;
-
-    public function __construct()
-    {
-        $this->hash = new Hash();
-    }
-
     /**
      * Generate the allowed values subcategories array, will be passed to the
      * Option classes and merged with the fields/parameters
