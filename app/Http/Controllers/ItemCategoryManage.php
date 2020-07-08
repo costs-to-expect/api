@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Response\Cache;
 use App\Request\Route;
-use App\Models\Category;
 use App\Models\ItemCategory;
 use App\Models\Transformers\ItemCategory as ItemCategoryTransformer;
 use App\Request\Validate\ItemCategory as ItemCategoryValidator;
@@ -51,7 +50,7 @@ class ItemCategoryManage extends Controller
         $validator = (new ItemCategoryValidator)->create();
         \App\Request\BodyValidation::validateAndReturnErrors(
             $validator,
-            $this->fieldsData($resource_type_id)
+            (new \App\Option\Value\Category())->allowedValues($resource_type_id)
         );
 
         try {
@@ -86,36 +85,6 @@ class ItemCategoryManage extends Controller
             (new ItemCategoryTransformer((new ItemCategory())->instanceToArray($item_category)))->asArray(),
             201
         );
-    }
-
-    /**
-     * Generate any conditional POST parameters, will be merged with the relevant
-     * config/api/[type]/fields.php data array
-     *
-     * @param integer $resource_type_id
-     *
-     * @return array
-     */
-    private function fieldsData($resource_type_id): array
-    {
-        $categories = (new Category())->categoriesByResourceType($resource_type_id);
-
-        $conditional_post_parameters = ['category_id' => []];
-        foreach ($categories as $category) {
-            $id = $this->hash->encode('category', $category['category_id']);
-
-            if ($id === false) {
-                \App\Response\Responses::unableToDecode();
-            }
-
-            $conditional_post_parameters['category_id']['allowed_values'][$id] = [
-                'value' => $id,
-                'name' => $category['category_name'],
-                'description' => $category['category_description']
-            ];
-        }
-
-        return $conditional_post_parameters;
     }
 
     /**

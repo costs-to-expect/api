@@ -62,7 +62,7 @@ class ItemSubcategoryManage extends Controller
         $validator = (new ItemSubcategoryValidator)->create(['category_id' => $item_category->category_id]);
         \App\Request\BodyValidation::validateAndReturnErrors(
             $validator,
-            $this->fieldsData($item_category_id)
+            (new \App\Option\Value\Subcategory())->allowedValues($item_category->category_id)
         );
 
         try {
@@ -97,40 +97,6 @@ class ItemSubcategoryManage extends Controller
             (new ItemSubcategoryTransformer((new ItemSubcategory())->instanceToArray($item_sub_category)))->asArray(),
             201
         );
-    }
-
-    /**
-     * Generate any conditional POST parameters, will be merged with the data
-     * arrays defined in config/api/[type]/fields.php
-     *
-     * @param integer $category_id
-     *
-     * @return array
-     */
-    private function fieldsData($category_id): array
-    {
-        $sub_categories = (new Subcategory())
-            ->select('id', 'name', 'description')
-            ->where('category_id', '=', $category_id)
-            ->get();
-
-        $conditional_post_parameters = ['subcategory_id' => []];
-
-        foreach ($sub_categories as $sub_category) {
-            $id = $this->hash->encode('subcategory', $sub_category->id);
-
-            if ($id === false) {
-                \App\Response\Responses::unableToDecode();
-            }
-
-            $conditional_post_parameters['subcategory_id']['allowed_values'][$id] = [
-                'value' => $id,
-                'name' => $sub_category->name,
-                'description' => $sub_category->description
-            ];
-        }
-
-        return $conditional_post_parameters;
     }
 
     /**

@@ -8,7 +8,6 @@ use App\Option\Post;
 use App\Response\Cache;
 use App\Response\Header\Header;
 use App\Request\Route;
-use App\Models\Category;
 use App\Models\ItemCategory;
 use App\Models\Transformers\ItemCategory as ItemCategoryTransformer;
 use Illuminate\Http\JsonResponse;
@@ -154,7 +153,7 @@ class ItemCategoryView extends Controller
 
         $post = Post::init()->
             setFields('api.item-category.fields')->
-            setFieldsData($this->fieldsData($resource_type_id))->
+            setDynamicFields((new \App\Option\Value\Category())->allowedValues($resource_type_id))->
             setDescription('route-descriptions.item_category_POST')->
             setAuthenticationStatus($permissions['manage'])->
             setAuthenticationRequired(true)->
@@ -228,35 +227,5 @@ class ItemCategoryView extends Controller
             $get + $delete,
             200
         );
-    }
-
-    /**
-     * Generate any conditional POST parameters, will be merged with the relevant
-     * config/api/[type]/fields.php data array
-     *
-     * @param integer $resource_type_id
-     *
-     * @return array
-     */
-    private function fieldsData($resource_type_id): array
-    {
-        $categories = (new Category())->categoriesByResourceType($resource_type_id);
-
-        $conditional_post_parameters = ['category_id' => []];
-        foreach ($categories as $category) {
-            $id = $this->hash->encode('category', $category['category_id']);
-
-            if ($id === false) {
-                \App\Response\Responses::unableToDecode();
-            }
-
-            $conditional_post_parameters['category_id']['allowed_values'][$id] = [
-                'value' => $id,
-                'name' => $category['category_name'],
-                'description' => $category['category_description']
-            ];
-        }
-
-        return $conditional_post_parameters;
     }
 }

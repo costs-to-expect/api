@@ -157,7 +157,7 @@ class ResourceTypeView extends Controller
 
         $post = Post::init()->
             setFields('api.resource-type.fields')->
-            setFieldsData($this->fieldsData())->
+            setDynamicFields($this->fieldsData())->
             setDescription('route-descriptions.resource_type_POST')->
             setAuthenticationStatus(($this->user_id !== null) ? true : false)->
             setAuthenticationRequired(true)->

@@ -180,7 +180,7 @@ class ItemSubcategoryView extends Controller
 
         $post = Post::init()->
             setFields('api.item-subcategory.fields')->
-            setFieldsData($this->fieldsData($item_category->category_id))->
+            setDynamicFields((new \App\Option\Value\Subcategory())->allowedValues($item_category->category_id))->
             setDescription('route-descriptions.item_sub_category_POST')->
             setAuthenticationStatus($permissions['manage'])->
             setAuthenticationRequired(true)->
@@ -257,39 +257,5 @@ class ItemSubcategoryView extends Controller
             $get + $delete,
             200
         );
-    }
-
-    /**
-     * Generate any conditional POST parameters, will be merged with the data
-     * arrays defined in config/api/[type]/fields.php
-     *
-     * @param integer $category_id
-     *
-     * @return array
-     */
-    private function fieldsData($category_id): array
-    {
-        $sub_categories = (new Subcategory())
-            ->select('id', 'name', 'description')
-            ->where('category_id', '=', $category_id)
-            ->get();
-
-        $conditional_post_parameters = ['subcategory_id' => []];
-
-        foreach ($sub_categories as $sub_category) {
-            $id = $this->hash->encode('subcategory', $sub_category->id);
-
-            if ($id === false) {
-                \App\Response\Responses::unableToDecode();
-            }
-
-            $conditional_post_parameters['subcategory_id']['allowed_values'][$id] = [
-                'value' => $id,
-                'name' => $sub_category->name,
-                'description' => $sub_category->description
-            ];
-        }
-
-        return $conditional_post_parameters;
     }
 }

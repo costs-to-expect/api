@@ -175,12 +175,11 @@ class ItemTransferView extends Controller
 
         $post = Post::init()->
             setFields('api.item-transfer.fields')->
-            setFieldsData(
-                $this->fieldsData(
-                    $resource_type_id,
-                    $resource_id
-                )
-            )->
+            setDynamicFields(
+            (new \App\Option\Value\Resource())->allowedValues(
+                $resource_type_id,
+                $resource_id
+            ))->
             setDescription('route-descriptions.item_transfer_POST')->
             setAuthenticationStatus($permissions['manage'])->
             setAuthenticationRequired(true)->
@@ -224,42 +223,5 @@ class ItemTransferView extends Controller
             200,
             $headers->headers()
         );
-    }
-
-    /**
-     * Generate any conditional POST parameters, will be merged with the
-     * relevant config/api/[type]/fields.php data array
-     *
-     * @param integer $resource_type_id
-     * @param integer $resource_id
-     *
-     * @return array
-     */
-    private function fieldsData(
-        int $resource_type_id,
-        int $resource_id
-    ): array
-    {
-        $resources = (new Resource())->resourcesForResourceType(
-            $resource_type_id,
-            $resource_id
-        );
-
-        $conditional_post_parameters = ['resource_id' => []];
-        foreach ($resources as $resource) {
-            $id = $this->hash->encode('resource', $resource['resource_id']);
-
-            if ($id === false) {
-                \App\Response\Responses::unableToDecode();
-            }
-
-            $conditional_post_parameters['resource_id']['allowed_values'][$id] = [
-                'value' => $id,
-                'name' => $resource['resource_name'],
-                'description' => $resource['resource_description']
-            ];
-        }
-
-        return $conditional_post_parameters;
     }
 }

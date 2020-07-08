@@ -47,7 +47,14 @@ class Post extends Option
         return self::$instance;
     }
 
-    public static function setFieldsData(
+    /**
+     * Set any dynamic fields or field data, this is data that can't come from
+     * a static configuration file and relies on state data
+     *
+     * @param array $parameters
+     * @return Post
+     */
+    public static function setDynamicFields(
         array $parameters = []
     ): Post
     {
