@@ -141,7 +141,7 @@ class Get extends Option
         return self::$instance;
     }
 
-    public static function setParametersData(
+    public static function setDynamicParameters(
         array $parameters = []
     ): Get
     {

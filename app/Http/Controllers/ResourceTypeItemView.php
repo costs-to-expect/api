@@ -154,7 +154,7 @@ class ResourceTypeItemView extends Controller
             setFilterable($item_interface->filterParametersConfig())->
             setPagination(true)->
             setParameters($item_interface->collectionParametersConfig())->
-            setParametersData($parameters_data)->
+            setDynamicParameters($parameters_data)->
             setDescription('route-descriptions.resource_type_item_GET_index')->
             setAuthenticationStatus($permissions['view'])->
             option();
