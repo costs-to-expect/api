@@ -20,7 +20,7 @@ class Subcategory extends Value
             ->where('category_id', '=', $category_id)
             ->get();
 
-        $parameters = ['subcategory_id' => []];
+        $parameters = ['subcategory_id' => ['allowed_values' => []]];
 
         foreach ($subcategories as $subcategory) {
             $id = $this->hash->encode('subcategory', $subcategory->id);

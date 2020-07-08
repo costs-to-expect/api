@@ -17,7 +17,7 @@ class Category extends Value
     {
         $categories = (new \App\Models\Category())->categoriesByResourceType($resource_type_id);
 
-        $parameters = ['category_id' => []];
+        $parameters = ['category_id' => ['allowed_values' => []]];
 
         foreach ($categories as $category) {
             $id = $this->hash->encode('category', $category['category_id']);

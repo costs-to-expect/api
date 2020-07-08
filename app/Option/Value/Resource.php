@@ -21,7 +21,7 @@ class Resource extends Value
             $exclude_resource_id
         );
 
-        $parameters = ['resource_id' => []];
+        $parameters = ['resource_id' => ['allowed_values' => []]];
         foreach ($resources as $resource) {
             $id = $this->hash->encode('resource', $resource['resource_id']);
 
