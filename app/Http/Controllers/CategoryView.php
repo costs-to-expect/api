@@ -4,9 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Subcategory;
 use App\Option\CategoryCollection;
-use App\Option\Delete;
-use App\Option\Get;
-use App\Option\Patch;
+use App\Option\CategoryItem;
 Use App\Response\Cache;
 use App\Response\Header\Header;
 use App\Request\Parameter;
@@ -202,28 +200,8 @@ class CategoryView extends Controller
             $this->permitted_resource_types
         );
 
-        $get = Get::init()->
-            setParameters('api.category.parameters.item')->
-            setDescription('route-descriptions.category_GET_show')->
-            setAuthenticationStatus($permissions['view'])->
-            option();
+        $response = new CategoryItem($permissions);
 
-        $delete = Delete::init()->
-            setAuthenticationRequired(true)->
-            setAuthenticationStatus($permissions['manage'])->
-            setDescription('route-descriptions.category_DELETE')->
-            option();
-
-        $patch = Patch::init()->
-            setFields('api.category.fields-patch')->
-            setDescription('route-descriptions.category_PATCH')->
-            setAuthenticationStatus($permissions['manage'])->
-            setAuthenticationRequired(true)->
-            option();
-
-        return $this->optionsResponse(
-            $get + $delete + $patch,
-            200
-        );
+        return $response->create()->response();
     }
 }

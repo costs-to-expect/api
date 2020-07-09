@@ -85,7 +85,11 @@ class Get extends Method
         string $configuration_path
     ): Get
     {
-        $this->parameters = Config::get($configuration_path);
+        $parameters = Config::get($configuration_path);
+
+        if (is_array($parameters) && count($parameters) > 0) {
+            $this->parameters = $parameters;
+        }
 
         return $this;
     }

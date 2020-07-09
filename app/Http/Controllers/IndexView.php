@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Option\Changelog;
+use App\Option\Root;
 use App\Response\Header\Header;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Route;
@@ -67,18 +69,9 @@ class IndexView extends Controller
      */
     public function optionsIndex()
     {
-        $this->optionsResponse(
-            [
-                'GET' => [
-                    'description' => trans('route-descriptions.api_GET_index'),
-                    'authentication' => [
-                        'required' => false,
-                        'authenticated' => ($this->user_id !== null) ? true : false
-                    ],
-                    'parameters' => []
-                ]
-            ]
-        );
+        $response = new Changelog(['view' => ($this->user_id !== null)]);
+
+        return $response->create()->response();
     }
 
     /**
@@ -98,7 +91,7 @@ class IndexView extends Controller
 
             $line = trim($changelog->fgets());
 
-            if (strlen($line) > 0) {
+            if ($line !== '') {
 
                 if (strpos($line, '## [v') !== false) {
 
@@ -111,7 +104,7 @@ class IndexView extends Controller
                     $section = strtolower(trim(str_replace('###', '', $line)));
                 }
 
-                if (strpos($line, '-') !== false && $section !== null) {
+                if ($section !== null && strpos($line, '-') !== false) {
                     $changes[$i][$section][] = trim(str_replace('- ', '', $line));
                 }
             }
@@ -138,17 +131,8 @@ class IndexView extends Controller
      */
     public function optionsChangeLog()
     {
-        $this->optionsResponse(
-            [
-                'GET' => [
-                    'description' => trans('route-descriptions.api_GET_changelog'),
-                    'authentication' => [
-                        'required' => false,
-                        'authenticated' => ($this->user_id !== null) ? true : false
-                    ],
-                    'parameters' => []
-                ]
-            ]
-        );
+        $response = new Root(['view' => ($this->user_id !== null)]);
+
+        return $response->create()->response();
     }
 }
