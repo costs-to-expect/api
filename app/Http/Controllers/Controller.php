@@ -33,21 +33,26 @@ class Controller extends BaseController
         $this->hash = new Hash();
 
         $this->middleware(function ($request, $next) {
-            $this->setHelperProperties();
+            $this->setGlobalPropertyValues();
 
             return $next($request);
         });
     }
 
-    protected function setHelperProperties()
+    /**
+     * Set the values for the controller properties, used by every controller
+     *
+     * @return void
+     */
+    protected function setGlobalPropertyValues(): void
     {
-        if (auth()->guard('api')->check() === true && auth('api')->user() !== null) {
+        $this->public_resource_types = (new ResourceType())->publicResourceTypes();
+        $this->include_public = true;
+
+        if (auth('api')->user() !== null && auth()->guard('api')->check() === true) {
             $this->user_id = auth('api')->user()->id;
             $this->permitted_resource_types = (new ResourceTypeAccess())->permittedResourceTypes($this->user_id);
-            $this->public_resource_types = (new ResourceType())->publicResourceTypes();
         }
-
-        $this->include_public = true;
     }
 
     /**
