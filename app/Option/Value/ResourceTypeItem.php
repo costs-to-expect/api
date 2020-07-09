@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace App\Option\Value;
 
-use App\Item\AbstractItem;
+use App\ResourceTypeItem\AbstractItem;
 use App\Models\Category;
 use App\Models\Subcategory;
 
@@ -22,6 +22,19 @@ class ResourceTypeItem extends Value
     {
         $parameters = ['year' => ['allowed_values' => []]];
 
+        for (
+            $i = $item_interface->conditionalParameterMinYear($resource_type_id);
+            $i <= $item_interface->conditionalParameterMaxYear($resource_type_id);
+            $i++
+        ) {
+            $parameters['year']['allowed_values'][$i] = [
+                'value' => $i,
+                'name' => $i,
+                'description' => trans('resource-type-item-type-' . $item_interface->type() .
+                        '/allowed-values.description-prefix-year') . $i
+            ];
+        }
+
         return $parameters;
     }
 
@@ -35,6 +48,16 @@ class ResourceTypeItem extends Value
     ): array
     {
         $parameters = ['month' => ['allowed_values' => []]];
+
+        for ($i=1; $i < 13; $i++) {
+            $parameters['month']['allowed_values'][$i] = [
+                'value' => $i,
+                'name' => date("F", mktime(0, 0, 0, $i, 10)),
+                'description' => trans('resource-type-item-type-' . $item_interface->type() .
+                        '/allowed-values.description-prefix-month') .
+                    date("F", mktime(0, 0, 0, $i, 1))
+            ];
+        }
 
         return $parameters;
     }
@@ -56,6 +79,28 @@ class ResourceTypeItem extends Value
     {
         $parameters = ['category' => ['allowed_values' => []]];
 
+        $categories = (new Category())->paginatedCollection(
+            (int) $resource_type_id,
+            $permitted_resource_types,
+            $include_public,
+            0,
+            100
+        );
+
+        foreach ($categories as $category) {
+            $category_id = $this->hash->encode('category', $category['category_id']);
+
+            $conditional_parameters['category']['allowed_values'][$category_id] = [
+                'value' => $category_id,
+                'name' => $category['category_name'],
+                'description' => trans('resource-type-item-type-' . $item_interface->type() .
+                        '/allowed-values.description-prefix-category') .
+                    $category['category_name'] .
+                    trans('resource-type-item-type-' . $item_interface->type() .
+                        '/allowed-values.description-suffix-category')
+            ];
+        }
+
         return $parameters;
     }
 
@@ -73,6 +118,25 @@ class ResourceTypeItem extends Value
     ): array
     {
         $parameters = ['subcategory' => ['allowed_values' => []]];
+
+        $subcategories = (new Subcategory())->paginatedCollection(
+            $resource_type_id,
+            $category_id
+        );
+
+        array_map(
+            function($subcategory) use (&$conditional_parameters, $item_interface) {
+                $subcategory_id = $this->hash->encode('subcategory', $subcategory['subcategory_id']);
+
+                $conditional_parameters['subcategory']['allowed_values'][$subcategory_id] = [
+                    'value' => $subcategory_id,
+                    'name' => $subcategory['subcategory_name'],
+                    'description' => trans('resource-type-item-type-' . $item_interface->type() . '/allowed-values.description-prefix-subcategory') .
+                        $subcategory['subcategory_name'] . trans('resource-type-item-type-' . $item_interface->type() . '/allowed-values.description-suffix-subcategory')
+                ];
+            },
+            $subcategories
+        );
 
         return $parameters;
     }

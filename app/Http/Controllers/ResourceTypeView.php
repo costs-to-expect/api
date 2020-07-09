@@ -8,6 +8,7 @@ use App\Option\Delete;
 use App\Option\Get;
 use App\Option\Patch;
 use App\Option\Post;
+use App\Option\Value\Item;
 use App\Response\Cache;
 use App\Response\Header\Headers;
 use App\Request\Parameter;
@@ -157,7 +158,7 @@ class ResourceTypeView extends Controller
 
         $post = Post::init()->
             setFields('api.resource-type.fields')->
-            setDynamicFields($this->fieldsData())->
+            setDynamicFields((new \App\Option\Value\ItemType())->allowedValues())->
             setDescription('route-descriptions.resource_type_POST')->
             setAuthenticationStatus(($this->user_id !== null) ? true : false)->
             setAuthenticationRequired(true)->
@@ -211,33 +212,5 @@ class ResourceTypeView extends Controller
             $get + $delete + $patch,
             200
         );
-    }
-
-    /**
-     * Generate any conditional POST parameters, will be merged with the relevant
-     * config/api/[type]/fields.php data array
-     *
-     * @return array
-     */
-    private function fieldsData(): array
-    {
-        $item_types = (new ItemType())->minimisedCollection();
-
-        $parameters = ['item_type_id' => []];
-        foreach ($item_types as $item_type) {
-            $id = $this->hash->encode('item-type', $item_type['item_type_id']);
-
-            if ($id === false) {
-                \App\Response\Responses::unableToDecode();
-            }
-
-            $parameters['item_type_id']['allowed_values'][$id] = [
-                'value' => $id,
-                'name' => $item_type['item_type_name'],
-                'description' => $item_type['item_type_description']
-            ];
-        }
-
-        return $parameters;
     }
 }
