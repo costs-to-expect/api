@@ -3,7 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\ItemType;
-use App\Option\Get;
+use App\Option\ItemTypeCollection;
+use App\Option\ItemTypeItem;
 use App\Response\Cache;
 use App\Response\Header\Headers;
 use App\Request\Parameter;
@@ -117,18 +118,9 @@ class ItemTypeView extends Controller
      */
     public function optionsIndex(): JsonResponse
     {
-        $get = Get::init()->
-            setSortable('api.item-type.sortable')->
-            setSearchable('api.item-type.searchable')->
-            setPaginationOverride(true)->
-            setDescription('route-descriptions.item_type_GET_index')->
-            setAuthenticationStatus(($this->user_id !== null) ? true : false)->
-            option();
+        $response = new ItemTypeCollection(['view'=> $this->user_id !== null]);
 
-        return $this->optionsResponse(
-            $get,
-            200
-        );
+        return $response->create()->response();
     }
 
     /**
@@ -142,14 +134,8 @@ class ItemTypeView extends Controller
     {
         Route\Validate::itemType($item_type_id);
 
-        $get = Get::init()->
-            setDescription('route-descriptions.item_type_GET_show')->
-            setAuthenticationStatus(($this->user_id !== null) ? true : false)->
-            option();
+        $response = new ItemTypeItem(['view'=> $this->user_id !== null]);
 
-        return $this->optionsResponse(
-            $get,
-            200
-        );
+        return $response->create()->response();
     }
 }
