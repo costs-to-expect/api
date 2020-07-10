@@ -18,6 +18,8 @@ abstract class Response
         $this->verbs = [];
 
         $this->permissions = $permissions;
+
+        $this->allowed_values = [];
     }
 
     abstract public function create();

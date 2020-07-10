@@ -3,11 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Models\ItemPartialTransfer;
-use App\Models\Resource;
 use App\Models\Transformers\ItemPartialTransfer as ItemPartialTransferTransformer;
-use App\Option\Delete;
-use App\Option\Get;
-use App\Option\Post;
+use App\Option\ItemPartialTransferCollection;
+use App\Option\ItemPartialTransferItem;
+use App\Option\ItemPartialTransferTransfer;
 use App\Response\Cache;
 use App\Response\Header\Headers;
 use App\Request\Parameter;
@@ -26,7 +25,7 @@ use Illuminate\Support\Facades\Config;
 class ItemPartialTransferView extends Controller
 {
     /**
-     * Return the categories collection
+     * Return the partial transfer collection
      *
      * @param string $resource_type_id
      *
@@ -147,17 +146,9 @@ class ItemPartialTransferView extends Controller
             $this->permitted_resource_types
         );
 
-        $get = Get::init()->
-            setParameters('api.item-partial-transfer.parameters.collection')->
-            setPagination(true)->
-            setAuthenticationStatus($permissions['view'])->
-            setDescription('route-descriptions.item_partial_transfer_GET_index')->
-            option();
+        $response = new ItemPartialTransferCollection($permissions);
 
-        return $this->optionsResponse(
-            $get,
-            200
-        );
+        return $response->create()->response();
     }
 
     /**
@@ -180,21 +171,9 @@ class ItemPartialTransferView extends Controller
             $this->permitted_resource_types
         );
 
-        $get = Get::init()->
-            setDescription('route-descriptions.item_partial_transfer_GET_show')->
-            setAuthenticationStatus($permissions['view'])->
-            option();
+        $response = new ItemPartialTransferItem($permissions);
 
-        $delete = Delete::init()->
-            setAuthenticationRequired(true)->
-            setAuthenticationStatus($permissions['manage'])->
-            setDescription('route-descriptions.item_partial_transfer_DELETE')->
-            option();
-
-        return $this->optionsResponse(
-            $get + $delete,
-            200
-        );
+        return $response->create()->response();
     }
 
     public function optionsTransfer(
@@ -217,18 +196,15 @@ class ItemPartialTransferView extends Controller
             $this->permitted_resource_types
         );
 
-        $post = Post::init()->
-            setFields('api.item-partial-transfer.fields')->
-            setDynamicFields(
-            (new \App\Option\Value\Resource())->allowedValues(
-                $resource_type_id,
-                $resource_id
-            ))->
-            setDescription('route-descriptions.item_partial_transfer_POST')->
-            setAuthenticationStatus($permissions['manage'])->
-            setAuthenticationRequired(true)->
-            option();
+        $response = new ItemPartialTransferTransfer($permissions);
 
-        return $this->optionsResponse($post, 200);
+        return $response->setAllowedValues(
+                (new \App\Option\Value\Resource())->allowedValues(
+                    $resource_type_id,
+                    $resource_id
+                )
+            )->
+            create()->
+            response();
     }
 }
