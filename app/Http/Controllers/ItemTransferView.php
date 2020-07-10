@@ -6,6 +6,9 @@ use App\Models\ItemTransfer;
 use App\Models\Resource;
 use App\Models\Transformers\ItemTransfer as ItemTransferTransformer;
 use App\Option\Get;
+use App\Option\ItemTransferCollection;
+use App\Option\ItemTransferItem;
+use App\Option\ItemTransferTransfer;
 use App\Option\Post;
 use App\Response\Cache;
 use App\Response\Header\Headers;
@@ -109,17 +112,9 @@ class ItemTransferView extends Controller
             $this->permitted_resource_types
         );
 
-        $get = Get::init()->
-            setParameters('api.item-transfer.parameters.collection')->
-            setPagination(true)->
-            setAuthenticationStatus($permissions['view'])->
-            setDescription('route-descriptions.item_transfer_GET_index')->
-            option();
+        $response = new ItemTransferCollection($permissions);
 
-        return $this->optionsResponse(
-            $get,
-            200
-        );
+        return $response->create()->response();
     }
 
     /**
@@ -142,15 +137,9 @@ class ItemTransferView extends Controller
             $this->permitted_resource_types
         );
 
-        $get = Get::init()->
-            setDescription('route-descriptions.item_transfer_GET_show')->
-            setAuthenticationStatus($permissions['view'])->
-            option();
+        $response = new ItemTransferItem($permissions);
 
-        return $this->optionsResponse(
-            $get,
-            200
-        );
+        return $response->create()->response();
     }
 
     public function optionsTransfer(
@@ -173,19 +162,16 @@ class ItemTransferView extends Controller
             $this->permitted_resource_types
         );
 
-        $post = Post::init()->
-            setFields('api.item-transfer.fields')->
-            setDynamicFields(
-            (new \App\Option\Value\Resource())->allowedValues(
-                $resource_type_id,
-                $resource_id
-            ))->
-            setDescription('route-descriptions.item_transfer_POST')->
-            setAuthenticationStatus($permissions['manage'])->
-            setAuthenticationRequired(true)->
-            option();
+        $response = new ItemTransferTransfer($permissions);
 
-        return $this->optionsResponse($post, 200);
+        return $response->setAllowedValues(
+                (new \App\Option\Value\Resource())->allowedValues(
+                    $resource_type_id,
+                    $resource_id
+                )
+            )->
+            create()->
+            response();
     }
 
     /**
