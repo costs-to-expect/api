@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Option\ItemSubcategoryCollection;
 use App\Option\ItemSubcategoryItem;
 use App\Response\Cache;
 use App\Response\Header\Header;
@@ -169,7 +170,7 @@ class ItemSubcategoryView extends Controller
             \App\Response\Responses::notFound(trans('entities.item-category'));
         }
 
-        $response = new ItemSubcategoryItem($permissions);
+        $response = new ItemSubcategoryCollection($permissions);
 
         return $response->setAllowedValues(
                 (new \App\Option\Value\Subcategory())->allowedValues($item_category->category_id)

@@ -2,10 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\Option\Delete;
-use App\Option\Get;
-use App\Option\Patch;
-use App\Option\Post;
+use App\Option\SubcategoryCollection;
+use App\Option\SubcategoryItem;
 use App\Response\Cache;
 use App\Response\Header\Header;
 use App\Request\Parameter;
@@ -165,26 +163,9 @@ class SubcategoryView extends Controller
             $this->permitted_resource_types
         );
 
-        $get = Get::init()->
-            setSortable('api.subcategory.sortable')->
-            setSearchable('api.subcategory.searchable')->
-            setPaginationOverride(true)->
-            setParameters('api.subcategory.parameters.collection')->
-            setDescription('route-descriptions.sub_category_GET_index')->
-            setAuthenticationStatus($permissions['view'])->
-            option();
+        $response = new SubcategoryCollection($permissions);
 
-        $post = Post::init()->
-            setFields('api.subcategory.fields')->
-            setDescription('route-descriptions.sub_category_POST')->
-            setAuthenticationRequired(true)->
-            setAuthenticationStatus($permissions['manage'])->
-            option();
-
-        return $this->optionsResponse(
-            $get + $post,
-            200
-        );
+        return $response->create()->response();
     }
 
     /**
@@ -216,28 +197,8 @@ class SubcategoryView extends Controller
             $this->permitted_resource_types
         );
 
-        $get = Get::init()->
-            setParameters('api.subcategory.parameters.item')->
-            setDescription('route-descriptions.sub_category_GET_show')->
-            setAuthenticationStatus($permissions['view'])->
-            option();
+        $response = new SubcategoryItem($permissions);
 
-        $delete = Delete::init()->
-            setDescription('route-descriptions.sub_category_DELETE')->
-            setAuthenticationRequired(true)->
-            setAuthenticationStatus($permissions['manage'])->
-            option();
-
-        $patch = Patch::init()->
-            setFields('api.subcategory.fields')->
-            setDescription('route-descriptions.sub_category_PATCH')->
-            setAuthenticationRequired(true)->
-            setAuthenticationStatus($permissions['manage'])->
-            option();
-
-        return $this->optionsResponse(
-            $get + $delete + $patch,
-            200
-        );
+        return $response->create()->response();
     }
 }

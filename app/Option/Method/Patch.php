@@ -19,6 +19,15 @@ class Patch extends Method
     protected array $fields_after_localisation;
     protected array $fields;
 
+    public function __construct()
+    {
+        parent::__construct();
+
+        $this->dynamic_fields = [];
+        $this->fields_after_localisation = [];
+        $this->fields = [];
+    }
+
     public function setDynamicFields(
         array $fields = []
     ): Patch

@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Option\ResourceTypeItemCollection;
 use App\Option\Value\ResourceTypeItem;
 use App\ResourceTypeItem\Factory;
-use App\Option\Get;
 use App\Response\Cache;
 use App\Request\Parameter;
 use App\Request\Route;
@@ -139,7 +139,7 @@ class ResourceTypeItemView extends Controller
             $resource_type_id
         );
 
-        $parameters_data = (new ResourceTypeItem())->allowedValues(
+        $allowed_values = (new ResourceTypeItem())->allowedValues(
             $item_interface,
             $resource_type_id,
             $this->permitted_resource_types,
@@ -150,28 +150,11 @@ class ResourceTypeItemView extends Controller
             )
         );
 
-        $get = Get::init()->
-            setSortable($item_interface->sortParametersConfig())->
-            setSearchable($item_interface->searchParametersConfig())->
-            setFilterable($item_interface->filterParametersConfig())->
-            setPagination(true)->
-            setParameters($item_interface->collectionParametersConfig())->
-            setDynamicParameters(
-                (new ResourceTypeItem())->allowedValues(
-                    $item_interface,
-                    $resource_type_id,
-                    $this->permitted_resource_types,
-                    $this->include_public,
-                    array_merge(
-                        $item_interface->collectionParametersKeys(),
-                        $defined_parameters
-                    )
-                )
-            )->
-            setDescription('route-descriptions.resource_type_item_GET_index')->
-            setAuthenticationStatus($permissions['view'])->
-            option();
+        $response = new ResourceTypeItemCollection($permissions);
 
-        return $this->optionsResponse($get, 200);
+        return $response->setItemInterface($item_interface)->
+            setAllowedValues($allowed_values)->
+            create()->
+            response();
     }
 }

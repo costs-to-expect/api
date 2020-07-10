@@ -2,10 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\Option\Delete;
-use App\Option\Get;
-use App\Option\Patch;
-use App\Option\Post;
+use App\Option\ResourceCollection;
+use App\Option\ResourceItem;
 use App\Response\Cache;
 use App\Response\Header\Header;
 use App\Request\Parameter;
@@ -154,26 +152,9 @@ class ResourceView extends Controller
             $this->permitted_resource_types
         );
 
-        $get = Get::init()->
-            setSortable('api.resource.sortable')->
-            setSearchable('api.resource.searchable')->
-            setPaginationOverride(true)->
-            setParameters('api.resource.parameters.collection')->
-            setAuthenticationStatus($permissions['view'])->
-            setDescription('route-descriptions.resource_GET_index')->
-            option();
+        $response = new ResourceCollection($permissions);
 
-        $post = Post::init()->
-            setFields('api.resource.fields')->
-            setDescription('route-descriptions.resource_POST')->
-            setAuthenticationStatus($permissions['manage'])->
-            setAuthenticationRequired(true)->
-            option();
-
-        return $this->optionsResponse(
-            $get + $post,
-            200
-        );
+        return $response->create()->response();
     }
 
     /**
@@ -207,28 +188,8 @@ class ResourceView extends Controller
             \App\Response\Responses::notFound(trans('entities.resource'));
         }
 
-        $get = Get::init()->
-            setParameters('api.resource.parameters.item')->
-            setAuthenticationStatus($permissions['view'])->
-            setDescription('route-descriptions.resource_GET_show')->
-            option();
+        $response = new ResourceItem($permissions);
 
-        $delete = Delete::init()->
-            setDescription('route-descriptions.resource_DELETE')->
-            setAuthenticationRequired(true)->
-            setAuthenticationStatus($permissions['manage'])->
-            option();
-
-        $patch = Patch::init()->
-            setFields('api.resource.fields')->
-            setDescription('route-descriptions.resource_PATCH')->
-            setAuthenticationRequired(true)->
-            setAuthenticationStatus($permissions['manage'])->
-            option();
-
-        return $this->optionsResponse(
-            $get + $delete + $patch,
-            200
-        );
+        return $response->create()->response();
     }
 }
