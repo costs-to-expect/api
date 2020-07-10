@@ -13,6 +13,8 @@ abstract class Response
 
     protected array $allowed_values;
 
+    protected $interface;
+
     public function __construct(array $permissions)
     {
         $this->verbs = [];
@@ -50,6 +52,13 @@ abstract class Response
     public function setAllowedValues(array $allowed_values)
     {
         $this->allowed_values = $allowed_values;
+
+        return $this;
+    }
+
+    public function setItemInterface($interface)
+    {
+        $this->interface = $interface;
 
         return $this;
     }

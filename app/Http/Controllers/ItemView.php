@@ -3,10 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Item\Factory;
-use App\Option\Delete;
-use App\Option\Get;
-use App\Option\Patch;
-use App\Option\Post;
+use App\Option\ItemCollection;
+use App\Option\ItemItem;
 use App\Option\Value\Item;
 use App\Response\Cache;
 use App\Response\Header\Header;
@@ -219,28 +217,12 @@ class ItemView extends Controller
             $defined_parameters
         );
 
-        $get = Get::init()->
-            setSortable($item_interface->sortParametersConfig())->
-            setSearchable($item_interface->searchParametersConfig())->
-            setFilterable($item_interface->filterParametersConfig())->
-            setParameters($item_interface->collectionParametersConfig())->
-            setDynamicParameters($allowed_values)->
-            setPagination(true)->
-            setAuthenticationStatus($permissions['view'])->
-            setDescription('route-descriptions.item_GET_index')->
-            option();
+        $response = new ItemCollection($permissions);
 
-        $post = Post::init()->
-            setFields($item_interface->fieldsConfig())->
-            setDescription( 'route-descriptions.item_POST')->
-            setAuthenticationRequired(true)->
-            setAuthenticationStatus($permissions['manage'])->
-            option();
-
-        return $this->optionsResponse(
-            $get + $post,
-            200
-        );
+        return $response->setItemInterface($item_interface)->
+            setAllowedValues($allowed_values)->
+            create()->
+            response();
     }
 
     /**
@@ -282,28 +264,8 @@ class ItemView extends Controller
             \App\Response\Responses::notFound(trans('entities.item'));
         }
 
-        $get = Get::init()->
-            setParameters($item_interface->showParametersConfig())->
-            setAuthenticationStatus($permissions['view'])->
-            setDescription('route-descriptions.item_GET_show')->
-            option();
+        $response = new ItemItem($permissions);
 
-        $delete = Delete::init()->
-            setDescription('route-descriptions.item_DELETE')->
-            setAuthenticationStatus($permissions['manage'])->
-            setAuthenticationRequired(true)->
-            option();
-
-        $patch = Patch::init()->
-            setFields($item_interface->fieldsConfig())->
-            setDescription('route-descriptions.item_PATCH')->
-            setAuthenticationStatus($permissions['manage'])->
-            setAuthenticationRequired(true)->
-            option();
-
-        return $this->optionsResponse(
-            $get + $delete + $patch,
-            200
-        );
+        return $response->setItemInterface($item_interface)->create()->response();
     }
 }

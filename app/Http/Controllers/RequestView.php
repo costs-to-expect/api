@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\Option\Get;
-use App\Option\Post;
+use App\Option\AccessLog;
+use App\Option\ErrorLog;
 use App\Response\Header\Header;
 use App\Request\Parameter;
 use App\Models\RequestErrorLog;
@@ -107,16 +107,11 @@ class RequestView extends Controller
      *
      * @return JsonResponse
      */
-    public function optionsAccessLog()
+    public function optionsAccessLog(): JsonResponse
     {
-        $get = Get::init()->
-            setParameters('api.request-access-log.parameters.collection')->
-            setPagination(true)->
-            setAuthenticationStatus(($this->user_id !== null) ? true : false)->
-            setDescription('route-descriptions.request_GET_access-log')->
-            option();
+        $response = new AccessLog(['view'=> $this->user_id !== null]);
 
-        return $this->optionsResponse($get, 200);
+        return $response->create()->response();
     }
 
     /**
@@ -124,22 +119,10 @@ class RequestView extends Controller
      *
      * @return JsonResponse
      */
-    public function optionsErrorLog()
+    public function optionsErrorLog(): JsonResponse
     {
-        $get = Get::init()->
-            setDescription('route-descriptions.request_GET_error_log')->
-            setAuthenticationStatus(($this->user_id !== null) ? true : false)->
-            option();
+        $response = new ErrorLog(['view'=> $this->user_id !== null]);
 
-        $post = Post::init()->
-            setFields('api.request-error-log.fields')->
-            setDescription('route-descriptions.request_POST')->
-            setAuthenticationStatus(($this->user_id !== null) ? true : false)->
-            option();
-
-        return $this->optionsResponse(
-            $get + $post,
-            200
-        );
+        return $response->create()->response();
     }
 }

@@ -4,8 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\PermittedUser;
 use App\Models\Transformers\PermittedUser as PermittedUserTransformer;
-use App\Option\Get;
-use App\Option\Post;
+use App\Option\PermittedUserCollection;
 use App\Response\Cache;
 use App\Request\Parameter;
 use App\Request\Route;
@@ -114,24 +113,8 @@ class PermittedUserView extends Controller
             $this->permitted_resource_types
         );
 
-        $get = Get::init()->
-            setSortable('api.permitted-user.sortable')->
-            setSearchable('api.permitted-user.searchable')->
-            setPaginationOverride(true)->
-            setAuthenticationStatus($permissions['view'])->
-            setDescription('route-descriptions.permitted_user_GET_index')->
-            option();
+        $response = new PermittedUserCollection($permissions);
 
-        $post = Post::init()->
-            setFields('api.permitted-user.fields')->
-            setDescription('route-descriptions.permitted_user_POST')->
-            setAuthenticationStatus($permissions['manage'])->
-            setAuthenticationRequired(true)->
-            option();
-
-        return $this->optionsResponse(
-            $get + $post,
-            200
-        );
+        return $response->create()->response();
     }
 }
