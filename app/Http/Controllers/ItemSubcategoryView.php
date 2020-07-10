@@ -2,15 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use App\Option\Delete;
-use App\Option\Get;
-use App\Option\Post;
+use App\Option\ItemSubcategoryItem;
 use App\Response\Cache;
 use App\Response\Header\Header;
 use App\Request\Route;
 use App\Models\ItemCategory;
 use App\Models\ItemSubcategory;
-use App\Models\Subcategory;
 use App\Models\Transformers\ItemSubcategory as ItemSubcategoryTransformer;
 use Illuminate\Http\JsonResponse;
 
@@ -172,24 +169,13 @@ class ItemSubcategoryView extends Controller
             \App\Response\Responses::notFound(trans('entities.item-category'));
         }
 
-        $get = Get::init()->
-            setParameters('api.item-subcategory.parameters.collection')->
-            setAuthenticationStatus($permissions['view'])->
-            setDescription('route-descriptions.item_sub_category_GET_index')->
-            option();
+        $response = new ItemSubcategoryItem($permissions);
 
-        $post = Post::init()->
-            setFields('api.item-subcategory.fields')->
-            setDynamicFields((new \App\Option\Value\Subcategory())->allowedValues($item_category->category_id))->
-            setDescription('route-descriptions.item_sub_category_POST')->
-            setAuthenticationStatus($permissions['manage'])->
-            setAuthenticationRequired(true)->
-            option();
-
-        return $this->optionsResponse(
-            $get + $post,
-            200
-        );
+        return $response->setAllowedValues(
+                (new \App\Option\Value\Subcategory())->allowedValues($item_category->category_id)
+            )->
+            create()->
+            response();
     }
 
     /**
@@ -241,21 +227,8 @@ class ItemSubcategoryView extends Controller
             \App\Response\Responses::notFound(trans('entities.item-subcategory'));
         }
 
-        $get = Get::init()->
-            setParameters('api.item-subcategory.parameters.item')->
-            setAuthenticationStatus($permissions['view'])->
-            setDescription('route-descriptions.item_sub_category_GET_show')->
-            option();
+        $response = new ItemSubcategoryItem($permissions);
 
-        $delete = Delete::init()->
-            setDescription('route-descriptions.item_sub_category_DELETE')->
-            setAuthenticationStatus($permissions['manage'])->
-            setAuthenticationRequired(true)->
-            option();
-
-        return $this->optionsResponse(
-            $get + $delete,
-            200
-        );
+        return $response->create()->response();
     }
 }
