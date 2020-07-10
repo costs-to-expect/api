@@ -2,9 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\Option\Delete;
-use App\Option\Get;
-use App\Option\Post;
+use App\Option\ItemCategoryCollection;
+use App\Option\ItemCategoryItem;
 use App\Response\Cache;
 use App\Response\Header\Header;
 use App\Request\Route;
@@ -145,24 +144,14 @@ class ItemCategoryView extends Controller
             $this->permitted_resource_types
         );
 
-        $get = Get::init()->
-            setParameters('api.item-category.parameters.collection')->
-            setAuthenticationStatus($permissions['view'])->
-            setDescription('route-descriptions.item_category_GET_index')->
-            option();
+        $response = new ItemCategoryCollection($permissions);
 
-        $post = Post::init()->
-            setFields('api.item-category.fields')->
-            setDynamicFields((new \App\Option\Value\Category())->allowedValues($resource_type_id))->
-            setDescription('route-descriptions.item_category_POST')->
-            setAuthenticationStatus($permissions['manage'])->
-            setAuthenticationRequired(true)->
-            option();
-
-        return $this->optionsResponse(
-            $get + $post,
-            200
-        );
+        return $response->setAllowedValues(
+                (new \App\Option\Value\Category()
+            )->
+            allowedValues($resource_type_id))->
+            create()->
+            response();
     }
 
     /**
@@ -211,21 +200,8 @@ class ItemCategoryView extends Controller
             \App\Response\Responses::notFound(trans('entities.item-category'));
         }
 
-        $get = Get::init()->
-            setParameters('api.item-category.parameters.item')->
-            setAuthenticationStatus($permissions['view'])->
-            setDescription('route-descriptions.item_category_GET_show')->
-            option();
+        $response = new ItemCategoryItem($permissions);
 
-        $delete = Delete::init()->
-            setDescription('route-descriptions.item_category_DELETE')->
-            setAuthenticationStatus($permissions['manage'])->
-            setAuthenticationRequired(true)->
-            option();
-
-        return $this->optionsResponse(
-            $get + $delete,
-            200
-        );
+        return $response->create()->response();
     }
 }
