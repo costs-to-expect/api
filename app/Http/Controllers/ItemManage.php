@@ -11,6 +11,7 @@ use Exception;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 /**
  * Manage items
@@ -55,13 +56,17 @@ class ItemManage extends Controller
         $model = $item_interface->model();
 
         try {
-            $item = new Item([
-                'resource_id' => $resource_id,
-                'created_by' => $user_id
-            ]);
-            $item->save();
+            [$item, $item_type] = DB::transaction(static function() use ($resource_id, $user_id, $item_interface) {
+                $item = new Item([
+                    'resource_id' => $resource_id,
+                    'created_by' => $user_id
+                ]);
+                $item->save();
 
-            $item_type = $item_interface->create((int) $item->id);
+                $item_type = $item_interface->create((int) $item->id);
+
+                return [$item, $item_type];
+            });
 
             $cache_control->clearPrivateCacheKeys([
                 $cache_key->resourceTypeItems($resource_type_id),
@@ -133,9 +138,11 @@ class ItemManage extends Controller
         try {
             $item->updated_by = $user_id;
 
-            if ($item->save() === true) {
-                $item_interface->update(request()->all(), $item_type);
-            }
+            DB::transaction(static function() use ($item, $item_interface, $item_type) {
+                if ($item->save() === true) {
+                    $item_interface->update(request()->all(), $item_type);
+                }
+            });
 
             $cache_control->clearPrivateCacheKeys([
                 $cache_key->resourceTypeItems($resource_type_id),
@@ -197,9 +204,11 @@ class ItemManage extends Controller
         }
 
         try {
-            (new ItemTransfer())->deleteTransfers($item_id);
-            $item_type->delete();
-            $item->delete();
+            DB::transaction(static function() use ($item_id, $item_type, $item) {
+                (new ItemTransfer())->deleteTransfers($item_id);
+                $item_type->delete();
+                $item->delete();
+            });
 
             $cache_control->clearPrivateCacheKeys([
                 $cache_key->resourceTypeItems($resource_type_id),

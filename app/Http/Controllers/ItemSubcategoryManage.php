@@ -145,7 +145,6 @@ class ItemSubcategoryManage extends Controller
             \App\Response\Responses::notFound(trans('entities.item-subcategory'));
         }
 
-
         try {
             (new ItemSubcategory())->find($item_subcategory_id)->delete();
 

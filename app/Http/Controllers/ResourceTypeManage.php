@@ -15,6 +15,7 @@ use Exception;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 /**
  * Manage resource types
@@ -136,9 +137,11 @@ class ResourceTypeManage extends Controller
             $resource_type !== null
         ) {
             try {
-                $resource_type_item_type->delete();
-                $permitted_user->delete();
-                $resource_type->delete();
+                DB::transaction(static function() use ($resource_type_item_type, $permitted_user, $resource_type) {
+                    $resource_type_item_type->delete();
+                    $permitted_user->delete();
+                    $resource_type->delete();
+                });
 
                 $cache_control->clearPrivateCacheKeys([
                     $cache_key->resourcesTypes(),
