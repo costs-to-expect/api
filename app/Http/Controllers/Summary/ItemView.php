@@ -8,7 +8,7 @@ use App\Models\Transformers\Summary\ItemCategory as ItemCategoryTransformer;
 use App\Models\Transformers\Summary\ItemMonth as ItemMonthTransformer;
 use App\Models\Transformers\Summary\ItemSubcategory as ItemSubcategoryTransformer;
 use App\Models\Transformers\Summary\ItemYear as ItemYearTransformer;
-use App\Option\Get;
+use App\Option\SummaryItemCollection;
 use App\Request\Parameter;
 use App\Request\Route;
 use App\Request\Validate\Boolean;
@@ -776,10 +776,10 @@ class ItemView extends Controller
             $this->permitted_resource_types
         );
 
-        $get = Get::init()->setParameters($item_interface->collectionParametersConfig())->setSearchable($item_interface->searchParametersConfig())
-            ->setFilterable($item_interface->filterParametersConfig())->setDescription('route-descriptions.summary_GET_resource-type_resource_items')
-            ->setAuthenticationStatus($permissions['view'])->option();
+        $response = new SummaryItemCollection($permissions);
 
-        return $this->optionsResponse($get, 200);
+        return $response->setItemInterface($item_interface)->
+            create()->
+            response();
     }
 }

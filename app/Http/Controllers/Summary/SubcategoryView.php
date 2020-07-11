@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Summary;
 
 use App\Http\Controllers\Controller;
 use App\Models\Summary\Subcategory;
-use App\Option\Get;
+use App\Option\SummarySubcategoryCollection;
 use App\Response\Cache;
 use App\Request\Parameter;
 use App\Request\Route;
@@ -94,12 +94,8 @@ class SubcategoryView extends Controller
             $this->permitted_resource_types
         );
 
-        $get = Get::init()->
-            setDescription('route-descriptions.summary_subcategory_GET_index')->
-            setAuthenticationStatus($permissions['view'])->
-            setSearchable('api.subcategory.summary-searchable')->
-            option();
+        $response = new SummarySubcategoryCollection($permissions);
 
-        return $this->optionsResponse($get, 200);
+        return $response->create()->response();
     }
 }

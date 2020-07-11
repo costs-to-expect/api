@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Summary;
 
 use App\Http\Controllers\Controller;
-use App\Option\Get;
+use App\Option\SummaryResourceCollection;
 use App\Response\Cache;
 use App\Request\Parameter;
 use App\Request\Route;
@@ -90,13 +90,8 @@ class ResourceView extends Controller
             $this->permitted_resource_types
         );
 
-        $get = Get::init()->
-            setParameters('api.resource.summary-parameters')->
-            setDescription('route-descriptions.summary-resource-GET-index')->
-            setAuthenticationStatus($permissions['view'])->
-            setSearchable('api.resource.summary-searchable')->
-            option();
+        $response = new SummaryResourceCollection($permissions);
 
-        return $this->optionsResponse($get, 200);
+        return $response->create()->response();
     }
 }

@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Summary;
 
 use App\Http\Controllers\Controller;
-use App\Option\Get;
+use App\Option\SummaryAccessLog;
 use App\Response\Cache;
 use App\Request\Parameter;
 use App\Models\Summary\RequestLog;
@@ -68,12 +68,8 @@ class RequestView extends Controller
      */
     public function optionsAccessLog(): JsonResponse
     {
-        $get = Get::init()->
-            setParameters('api.request-access-log.parameters.collection')->
-            setDescription('route-descriptions.summary_GET_request_access-log')->
-            setAuthenticationStatus(($this->user_id !== null) ? true : false)->
-            option();
+        $response = new SummaryAccessLog(['view'=> $this->user_id !== null]);
 
-        return $this->optionsResponse($get, 200);
+        return $response->create()->response();
     }
 }
