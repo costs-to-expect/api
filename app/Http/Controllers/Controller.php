@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\ResourceType;
 use App\Models\ResourceTypeAccess;
 use App\Request\Hash;
+use App\Request\Validate\Boolean;
 use Illuminate\Routing\Controller as BaseController;
 
 class Controller extends BaseController
@@ -46,7 +47,11 @@ class Controller extends BaseController
     protected function setGlobalPropertyValues(): void
     {
         $this->public_resource_types = (new ResourceType())->publicResourceTypes();
+
         $this->include_public = true;
+        if (Boolean::convertedValue(request()->query('exclude-public')) === true) {
+            $this->include_public = false;
+        }
 
         if (auth('api')->user() !== null && auth()->guard('api')->check() === true) {
             $this->user_id = auth('api')->user()->id;

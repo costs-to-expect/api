@@ -53,18 +53,17 @@ class Clause
     public static function applyResourceTypeCollectionCondition(
         $collection,
         array $permitted_resource_types,
-        bool $include_public
-    )
-    {
+        bool $include_public = false
+    ) {
         if ($include_public === true) {
             $collection->where(static function ($collection) use ($permitted_resource_types, $include_public) {
-                $collection->where('resource_type.public', '=', (int) $include_public)->
+                $collection->where('resource_type.public', '=', 1)->
                     orWhereIn('resource_type.id', $permitted_resource_types);
             });
-        } else {
-            $collection->WhereIn('resource_type.id', $permitted_resource_types);
+
+            return $collection;
         }
 
-        return $collection;
+        return $collection->whereIn('resource_type.id', $permitted_resource_types);
     }
 }
