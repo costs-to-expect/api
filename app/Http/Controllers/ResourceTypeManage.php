@@ -14,7 +14,6 @@ use App\Request\Validate\ResourceType as ResourceTypeValidator;
 use Exception;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
 /**
@@ -35,14 +34,12 @@ class ResourceTypeManage extends Controller
      */
     public function create(): JsonResponse
     {
-        $user_id = Auth::user()->id;
-
         $validator = (new ResourceTypeValidator)->create([
-            'user_id' => $user_id
+            'user_id' => $this->user_id
         ]);
         \App\Request\BodyValidation::validateAndReturnErrors($validator);
 
-        $cache_control = new Cache\Control($user_id);
+        $cache_control = new Cache\Control($this->user_id);
         $cache_key = new Cache\Key();
 
         try {
@@ -55,8 +52,8 @@ class ResourceTypeManage extends Controller
 
             $permitted_users = new PermittedUser([
                 'resource_type_id' => $resource_type->id,
-                'user_id' => $user_id,
-                'added_by' => $user_id
+                'user_id' => $this->user_id,
+                'added_by' => $this->user_id
             ]);
             $permitted_users->save();
 
@@ -108,13 +105,11 @@ class ResourceTypeManage extends Controller
             true
         );
 
-        $user_id = Auth::user()->id;
-
-        $cache_control = new Cache\Control($user_id);
+        $cache_control = new Cache\Control($this->user_id);
         $cache_key = new Cache\Key();
 
         $resource_type_item_type = (new ResourceTypeItemType())->instance($resource_type_id);
-        $permitted_user = (new PermittedUser())->instance($resource_type_id, $user_id);
+        $permitted_user = (new PermittedUser())->instance($resource_type_id, $this->user_id);
         $resource_type = (new ResourceType())->find($resource_type_id);
 
         $categories = (new Category())->total(
@@ -183,9 +178,7 @@ class ResourceTypeManage extends Controller
             true
         );
 
-        $user_id = Auth::user()->id;
-
-        $cache_control = new Cache\Control($user_id);
+        $cache_control = new Cache\Control($this->user_id);
         $cache_key = new Cache\Key();
 
         $resource_type = (new ResourceType())->instance($resource_type_id);
@@ -198,7 +191,7 @@ class ResourceTypeManage extends Controller
 
         $validator = (new ResourceTypeValidator())->update([
             'resource_type_id' => (int) ($resource_type_id),
-            'user_id' => $user_id
+            'user_id' => $this->user_id
         ]);
         \App\Request\BodyValidation::validateAndReturnErrors($validator);
 

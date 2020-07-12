@@ -10,7 +10,6 @@ use App\Request\Validate\ItemCategory as ItemCategoryValidator;
 use Exception;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Support\Facades\Auth;
 
 /**
  * Manage the category for an item row
@@ -44,7 +43,7 @@ class ItemCategoryManage extends Controller
             true
         );
 
-        $cache_control = new Cache\Control(Auth::user()->id);
+        $cache_control = new Cache\Control($this->user_id);
         $cache_key = new Cache\Key();
 
         $validator = (new ItemCategoryValidator)->create();
@@ -113,7 +112,7 @@ class ItemCategoryManage extends Controller
             true
         );
 
-        $cache_control = new Cache\Control(Auth::user()->id);
+        $cache_control = new Cache\Control($this->user_id);
         $cache_key = new Cache\Key();
 
         $item_category = (new ItemCategory())->instance(
@@ -128,7 +127,7 @@ class ItemCategoryManage extends Controller
         }
 
         try {
-            (new ItemCategory())->find($item_category_id)->delete();
+            $item_category->delete();
 
             $cache_control->clearPrivateCacheKeys([
                 $cache_key->items($resource_type_id, $resource_id),

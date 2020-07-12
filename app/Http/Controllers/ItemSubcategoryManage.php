@@ -6,13 +6,11 @@ use App\Response\Cache;
 use App\Request\Route;
 use App\Models\ItemCategory;
 use App\Models\ItemSubcategory;
-use App\Models\Subcategory;
 use App\Models\Transformers\ItemSubcategory as ItemSubcategoryTransformer;
 use App\Request\Validate\ItemSubcategory as ItemSubcategoryValidator;
 use Exception;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Support\Facades\Auth;
 
 /**
  * Manage the category for an item row
@@ -48,7 +46,7 @@ class ItemSubcategoryManage extends Controller
             true
         );
 
-        $cache_control = new Cache\Control(Auth::user()->id);
+        $cache_control = new Cache\Control($this->user_id);
         $cache_key = new Cache\Key();
 
         if ($item_category_id === 'nill') {
@@ -126,7 +124,7 @@ class ItemSubcategoryManage extends Controller
             true
         );
 
-        $cache_control = new Cache\Control(Auth::user()->id);
+        $cache_control = new Cache\Control($this->user_id);
         $cache_key = new Cache\Key();
 
         if ($item_category_id === 'nill' || $item_subcategory_id === 'nill') {
@@ -146,7 +144,7 @@ class ItemSubcategoryManage extends Controller
         }
 
         try {
-            (new ItemSubcategory())->find($item_subcategory_id)->delete();
+            $item_sub_category->delete();
 
             $cache_control->clearPrivateCacheKeys([
                 $cache_key->items($resource_type_id, $resource_id),

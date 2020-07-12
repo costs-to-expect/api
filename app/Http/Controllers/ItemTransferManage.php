@@ -10,7 +10,6 @@ use App\Request\Validate\ItemTransfer as ItemTransferValidator;
 use Exception;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
 /**
@@ -36,7 +35,7 @@ class ItemTransferManage extends Controller
             true
         );
 
-        $user_id = Auth::user()->id;
+        $user_id = $this->user_id;
 
         $cache_control = new Cache\Control($user_id);
         $cache_key = new Cache\Key();

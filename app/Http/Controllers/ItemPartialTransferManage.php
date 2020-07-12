@@ -7,10 +7,10 @@ use App\Models\Transformers\ItemPartialTransfer as ItemPartialTransferTransforme
 use App\Response\Cache;
 use App\Request\Route;
 use App\Request\Validate\ItemPartialTransfer as ItemPartialTransferValidator;
+use App\Response\Responses;
 use Exception;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Support\Facades\Auth;
 
 /**
  * Partial transfer of items
@@ -40,9 +40,7 @@ class ItemPartialTransferManage extends Controller
             true
         );
 
-        $user_id = Auth::user()->id;
-
-        $cache_control = new Cache\Control($user_id);
+        $cache_control = new Cache\Control($this->user_id);
         $cache_key = new Cache\Key();
 
         try {
@@ -61,14 +59,14 @@ class ItemPartialTransferManage extends Controller
                     ]);
                 }
 
-                return \App\Response\Responses::successNoContent();
+                return Responses::successNoContent();
             }
 
-            return \App\Response\Responses::failedToSelectModelForUpdateOrDelete();
+            return Responses::failedToSelectModelForUpdateOrDelete();
         } catch (QueryException $e) {
-            return \App\Response\Responses::foreignKeyConstraintError();
+            return Responses::foreignKeyConstraintError();
         } catch (Exception $e) {
-            return \App\Response\Responses::notFound(trans('entities.item-partial-transfer'));
+            return Responses::notFound(trans('entities.item-partial-transfer'));
         }
     }
 
@@ -86,9 +84,7 @@ class ItemPartialTransferManage extends Controller
             true
         );
 
-        $user_id = Auth::user()->id;
-
-        $cache_control = new Cache\Control($user_id);
+        $cache_control = new Cache\Control($this->user_id);
         $cache_key = new Cache\Key();
 
         $validator = (new ItemPartialTransferValidator)->create(
@@ -102,7 +98,7 @@ class ItemPartialTransferManage extends Controller
         $new_resource_id = $this->hash->decode('resource', request()->input('resource_id'));
 
         if ($new_resource_id === false) {
-            \App\Response\Responses::unableToDecode();
+            Responses::unableToDecode();
         }
 
         try {
@@ -112,7 +108,7 @@ class ItemPartialTransferManage extends Controller
                 'to' => $new_resource_id,
                 'item_id' => $item_id,
                 'percentage' => request()->input('percentage'),
-                'transferred_by' => $user_id
+                'transferred_by' => $this->user_id
             ]);
             $partial_transfer->save();
 
@@ -126,9 +122,9 @@ class ItemPartialTransferManage extends Controller
                 ]);
             }
         } catch (QueryException $e) {
-            return \App\Response\Responses::foreignKeyConstraintError();
+            return Responses::foreignKeyConstraintError();
         } catch (Exception $e) {
-            return \App\Response\Responses::failedToSaveModelForCreate();
+            return Responses::failedToSaveModelForCreate();
         }
 
         $item_partial_transfer = (new ItemPartialTransfer())->single(
@@ -137,7 +133,7 @@ class ItemPartialTransferManage extends Controller
         );
 
         if ($item_partial_transfer === null) {
-            return \App\Response\Responses::notFound(trans('entities.item_partial_transfer'));
+            return Responses::notFound(trans('entities.item_partial_transfer'));
         }
 
         return response()->json(

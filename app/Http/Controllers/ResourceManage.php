@@ -7,10 +7,10 @@ use App\Request\Route;
 use App\Models\Resource;
 use App\Models\Transformers\Resource as ResourceTransformer;
 use App\Request\Validate\Resource as ResourceValidator;
+use App\Response\Responses;
 use Exception;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Support\Facades\Auth;
 
 /**
  * Manage resources
@@ -38,7 +38,7 @@ class ResourceManage extends Controller
             true
         );
 
-        $cache_control = new Cache\Control(Auth::user()->id);
+        $cache_control = new Cache\Control($this->user_id);
         $cache_key = new Cache\Key();
 
         $validator = (new ResourceValidator)->create(['resource_type_id' => $resource_type_id]);
@@ -63,7 +63,7 @@ class ResourceManage extends Controller
                 ]);
             }
         } catch (Exception $e) {
-            \App\Response\Responses::failedToSaveModelForCreate();
+            Responses::failedToSaveModelForCreate();
         }
 
         return response()->json(
@@ -92,8 +92,14 @@ class ResourceManage extends Controller
             true
         );
 
-        $cache_control = new Cache\Control(Auth::user()->id);
+        $cache_control = new Cache\Control($this->user_id);
         $cache_key = new Cache\Key();
+
+        $resource = (new Resource())->find($resource_id);
+
+        if ($resource === null) {
+            Responses::failedToSelectModelForUpdateOrDelete();
+        }
 
         try {
             (new Resource())->find($resource_id)->delete();
@@ -108,11 +114,11 @@ class ResourceManage extends Controller
                 ]);
             }
 
-            \App\Response\Responses::successNoContent();
+            Responses::successNoContent();
         } catch (QueryException $e) {
-            \App\Response\Responses::foreignKeyConstraintError();
+            Responses::foreignKeyConstraintError();
         } catch (Exception $e) {
-            \App\Response\Responses::notFound(trans('entities.resource'));
+            Responses::notFound(trans('entities.resource'));
         }
     }
 
@@ -136,13 +142,13 @@ class ResourceManage extends Controller
             true
         );
 
-        $cache_control = new Cache\Control(Auth::user()->id);
+        $cache_control = new Cache\Control($this->user_id);
         $cache_key = new Cache\Key();
 
         $resource = (new Resource())->instance($resource_type_id, $resource_id);
 
         if ($resource === null) {
-            \App\Response\Responses::failedToSelectModelForUpdateOrDelete();
+            Responses::failedToSelectModelForUpdateOrDelete();
         }
 
         \App\Request\BodyValidation::checkForEmptyPatch();
@@ -177,9 +183,9 @@ class ResourceManage extends Controller
                 ]);
             }
         } catch (Exception $e) {
-            \App\Response\Responses::failedToSaveModelForUpdate();
+            Responses::failedToSaveModelForUpdate();
         }
 
-        \App\Response\Responses::successNoContent();
+        Responses::successNoContent();
     }
 }

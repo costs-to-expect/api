@@ -112,6 +112,7 @@ class ItemSubcategory extends Model
             where('resource.id', '=', $resource_id)->
             where('resource.resource_type_id', '=', $resource_type_id)->
             select(
+            'item_sub_category.id AS id',
                 'item_sub_category.id AS item_sub_category_id',
                 'item_sub_category.created_at AS item_sub_category_created_at',
                 'sub_category.id AS item_sub_category_sub_category_id',

@@ -8,9 +8,7 @@ use App\Response\Cache;
 use App\Request\Route;
 use App\Models\Item;
 use Exception;
-use Illuminate\Database\QueryException;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
 /**
@@ -42,9 +40,9 @@ class ItemManage extends Controller
             true
         );
 
-        $user_id = Auth::user()->id;
+        $user_id = $this->user_id;
 
-        $cache_control = new Cache\Control($user_id);
+        $cache_control = new Cache\Control($this->user_id);
         $cache_key = new Cache\Key();
 
         $item_interface = Factory::item($resource_type_id);
@@ -113,9 +111,7 @@ class ItemManage extends Controller
             true
         );
 
-        $user_id = Auth::user()->id;
-
-        $cache_control = new Cache\Control($user_id);
+        $cache_control = new Cache\Control($this->user_id);
         $cache_key = new Cache\Key();
 
         $item_interface = Factory::item($resource_type_id);
@@ -136,7 +132,7 @@ class ItemManage extends Controller
         }
 
         try {
-            $item->updated_by = $user_id;
+            $item->updated_by = $this->user_id;
 
             DB::transaction(static function() use ($item, $item_interface, $item_type) {
                 if ($item->save() === true) {
@@ -184,7 +180,7 @@ class ItemManage extends Controller
             true
         );
 
-        $cache_control = new Cache\Control(Auth::user()->id);
+        $cache_control = new Cache\Control($this->user_id);
         $cache_key = new Cache\Key();
 
         $item_interface = Factory::item($resource_type_id);
@@ -203,7 +199,7 @@ class ItemManage extends Controller
                 \App\Response\Responses::foreignKeyConstraintError();
         }
 
-        try {
+        //try {
             DB::transaction(static function() use ($item_id, $item_type, $item) {
                 (new ItemTransfer())->deleteTransfers($item_id);
                 $item_type->delete();
@@ -223,10 +219,10 @@ class ItemManage extends Controller
             }
 
             \App\Response\Responses::successNoContent();
-        } catch (QueryException $e) {
+        /*} catch (QueryException $e) {
             \App\Response\Responses::foreignKeyConstraintError();
         } catch (Exception $e) {
             \App\Response\Responses::notFound(trans('entities.item'));
-        }
+        }*/
     }
 }

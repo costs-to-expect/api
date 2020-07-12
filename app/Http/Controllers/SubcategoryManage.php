@@ -7,10 +7,10 @@ use App\Request\Route;
 use App\Models\Subcategory;
 use App\Models\Transformers\Subcategory as SubcategoryTransformer;
 use App\Request\Validate\Subcategory as SubcategoryValidator;
+use App\Response\Responses;
 use Exception;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Support\Facades\Auth;
 
 /**
  * Manage category sub categories
@@ -40,7 +40,7 @@ class SubcategoryManage extends Controller
             true
         );
 
-        $cache_control = new Cache\Control(Auth::user()->id);
+        $cache_control = new Cache\Control($this->user_id);
         $cache_key = new Cache\Key();
 
         $validator = (new SubcategoryValidator)->create(['category_id' => $category_id]);
@@ -64,7 +64,7 @@ class SubcategoryManage extends Controller
                 ]);
             }
         } catch (Exception $e) {
-            \App\Response\Responses::failedToSaveModelForCreate();
+            Responses::failedToSaveModelForCreate();
         }
 
         return response()->json(
@@ -96,7 +96,7 @@ class SubcategoryManage extends Controller
             true
         );
 
-        $cache_control = new Cache\Control(Auth::user()->id);
+        $cache_control = new Cache\Control($this->user_id);
         $cache_key = new Cache\Key();
 
         $sub_category = (new Subcategory())->instance(
@@ -105,7 +105,7 @@ class SubcategoryManage extends Controller
         );
 
         if ($sub_category === null) {
-            \App\Response\Responses::notFound(trans('entities.subcategory'));
+            Responses::notFound(trans('entities.subcategory'));
         }
 
         try {
@@ -121,11 +121,11 @@ class SubcategoryManage extends Controller
                 ]);
             }
 
-            \App\Response\Responses::successNoContent();
+            Responses::successNoContent();
         } catch (QueryException $e) {
-            \App\Response\Responses::foreignKeyConstraintError();
+            Responses::foreignKeyConstraintError();
         } catch (Exception $e) {
-            \App\Response\Responses::notFound(trans('entities.subcategory'));
+            Responses::notFound(trans('entities.subcategory'));
         }
     }
 
@@ -152,13 +152,13 @@ class SubcategoryManage extends Controller
             true
         );
 
-        $cache_control = new Cache\Control(Auth::user()->id);
+        $cache_control = new Cache\Control($this->user_id);
         $cache_key = new Cache\Key();
 
         $subcategory = (new Subcategory())->instance($category_id, $subcategory_id);
 
         if ($subcategory === null) {
-            \App\Response\Responses::failedToSelectModelForUpdateOrDelete();
+            Responses::failedToSelectModelForUpdateOrDelete();
         }
 
         \App\Request\BodyValidation::checkForEmptyPatch();
@@ -196,9 +196,9 @@ class SubcategoryManage extends Controller
                 ]);
             }
         } catch (Exception $e) {
-            \App\Response\Responses::failedToSaveModelForUpdate();
+            Responses::failedToSaveModelForUpdate();
         }
 
-        \App\Response\Responses::successNoContent();
+        Responses::successNoContent();
     }
 }
