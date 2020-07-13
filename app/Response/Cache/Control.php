@@ -251,7 +251,7 @@ class Control
     {
         if ($this->key_prefix_private !== null) {
             return (new \App\Models\Cache())->matchingKeys(
-                Config::get('cache.prefix') . $this->key_prefix_private,
+                $this->laravel_cache_prefix . $this->key_prefix_private,
                 $key_wildcard,
                 $include_summaries
             );
@@ -274,7 +274,7 @@ class Control
     ): array
     {
         return (new \App\Models\Cache())->matchingKeys(
-            Config::get('cache.prefix') . $this->key_prefix_public,
+            $this->laravel_cache_prefix . $this->key_prefix_public,
             $key_wildcard,
             $include_summaries
         );
