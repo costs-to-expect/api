@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Response\Cache;
 use Illuminate\Http\JsonResponse;
 
 /**
@@ -18,6 +19,19 @@ class ToolManage extends Controller
      */
     public function clearCache(): JsonResponse
     {
-        return \App\Response\Responses::successNoContent();
+        $cache_control = new Cache\Control($this->user_id);
+
+        $keys = $cache_control->matchingPrivateCacheKeys('', true);
+
+        foreach ($keys as $key) {
+            $cache_control->clearCacheKeyByFullName($key['key']);
+        }
+
+        return response()->json(
+            [
+                'cleared_keys' => count($keys),
+            ],
+            200,
+        );
     }
 }

@@ -207,6 +207,8 @@ additionally, the same is true if you are assigned to a resource type.
 | POST     | v2/request/error-log |
 | GET/HEAD | v2/request/access-log |
 | OPTIONS  | v2/request/access-log |
+| GET/HEAD | v2/tools/clear-cache |
+| OPTIONS  | v2/tools/clear-cache
 
 ## Summary routes
 
