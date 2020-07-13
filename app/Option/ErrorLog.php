@@ -8,7 +8,7 @@ class ErrorLog extends Response
     public function create()
     {
         $get = new \App\Option\Method\Get();
-        $this->verbs['GET'] = $get->setDescription('route-descriptions.request_GET_error_log')->
+        $this->verbs['GET'] = $get->setDescription('route-descriptions.request_GET_error-log')->
             setAuthenticationStatus($this->permissions['view'])->
             option();
 

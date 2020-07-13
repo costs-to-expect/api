@@ -297,5 +297,10 @@ Route::group(
             'request/access-log',
             'RequestView@optionsAccessLog'
         );
+
+        Route::options(
+            'tools/clear-cache',
+            'ToolView@optionsClearCache'
+        );
     }
 );
