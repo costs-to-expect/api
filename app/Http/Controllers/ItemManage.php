@@ -8,6 +8,7 @@ use App\Response\Cache;
 use App\Request\Route;
 use App\Models\Item;
 use Exception;
+use Illuminate\Database\QueryException;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\DB;
 
@@ -199,7 +200,7 @@ class ItemManage extends Controller
                 \App\Response\Responses::foreignKeyConstraintError();
         }
 
-        //try {
+        try {
             DB::transaction(static function() use ($item_id, $item_type, $item) {
                 (new ItemTransfer())->deleteTransfers($item_id);
                 $item_type->delete();
@@ -219,10 +220,10 @@ class ItemManage extends Controller
             }
 
             \App\Response\Responses::successNoContent();
-        /*} catch (QueryException $e) {
+        } catch (QueryException $e) {
             \App\Response\Responses::foreignKeyConstraintError();
         } catch (Exception $e) {
             \App\Response\Responses::notFound(trans('entities.item'));
-        }*/
+        }
     }
 }

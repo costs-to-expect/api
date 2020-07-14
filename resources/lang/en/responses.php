@@ -6,7 +6,7 @@ return [
     'not-found' => 'The requested resource does not exist.',
     'not-found-entity' => 'The requested `:type` does not exist.',
     'not-found-or-not-accessible-entity' => 'The requested `:type` does not exist or is not accessible with your permissions.',
-    'constraint' => 'Unable to handle your request, dependent data exists or the result is being limited by a key.',
+    'constraint' => 'Unable to handle your request, dependent data exists or foreign key error.',
     'model-select-failure' => 'Unable to handle your request, an error occurred when selecting the data to complete your request.',
     'model-save-failure-update' => 'Unable to handle your request, an error occurred when processing your update request.',
     'model-save-failure-create' => 'Unable to handle your request, an error occurred when processing your create request.',
