@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Option\ClearCache;
+use App\Option\Cache;
 use Illuminate\Http\JsonResponse;
 
 /**
@@ -13,13 +13,13 @@ use Illuminate\Http\JsonResponse;
 class ToolView extends Controller
 {
      /**
-     * Clear the cache for the authenticated user
+     * Options request for the tools/cache route
      *
      * @return JsonResponse
      */
-    public function optionsClearCache(): JsonResponse
+    public function optionsCache(): JsonResponse
     {
-        $response = new ClearCache(['manage'=> $this->user_id !== null]);
+        $response = new Cache(['view'=> $this->user_id !== null, 'manage'=> $this->user_id !== null]);
 
         return $response->create()->response();
     }

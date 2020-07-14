@@ -67,7 +67,8 @@ return [
 
     'request_GET_access-log' => 'Return the access log, read requests',
     'request_GET_error-log' => 'Return the error log',
-    'request_GET_clear-cache' => 'Attempt to clear the cache for the signed in user',
+    'request_GET_cache' => 'Return the number of cached keys for the authenticated user',
+    'request_DELETE_cache' => 'Attempt to delete the cached keys for the authenticated user',
     'request_POST' => 'Create an error log report',
 
     'summary_category_GET_index' => 'Return a summary of the categories',

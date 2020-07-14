@@ -128,8 +128,13 @@ Route::group(
         );
 
         Route::get(
-            'tools/clear-cache',
-            'ToolManage@clearCache'
+            'tools/cache',
+            'ToolManage@cache'
+        );
+
+        Route::delete(
+            'tools/cache',
+            'ToolManage@deleteCache'
         );
     }
 );

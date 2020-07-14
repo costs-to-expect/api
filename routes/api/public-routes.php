@@ -299,8 +299,8 @@ Route::group(
         );
 
         Route::options(
-            'tools/clear-cache',
-            'ToolView@optionsClearCache'
+            'tools/cache',
+            'ToolView@optionsCache'
         );
     }
 );

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Response\Cache;
+use App\Response\Responses;
 use Illuminate\Http\JsonResponse;
 
 /**
@@ -13,11 +14,30 @@ use Illuminate\Http\JsonResponse;
 class ToolManage extends Controller
 {
      /**
-     * Clear the cache for the authenticated user
+     * View the number of cached keys
      *
      * @return JsonResponse
      */
-    public function clearCache(): JsonResponse
+    public function cache(): JsonResponse
+    {
+        $cache_control = new Cache\Control($this->user_id);
+
+        $keys = $cache_control->matchingPrivateCacheKeys('', true);
+
+        return response()->json(
+            [
+                'cached_keys' => count($keys),
+            ],
+            200,
+        );
+    }
+
+    /**
+     * Delete the cache
+     *
+     * @return JsonResponse
+     */
+    public function deleteCache(): JsonResponse
     {
         $cache_control = new Cache\Control($this->user_id);
 
@@ -27,11 +47,6 @@ class ToolManage extends Controller
             $cache_control->clearCacheKeyByFullName($key['key']);
         }
 
-        return response()->json(
-            [
-                'cleared_keys' => count($keys),
-            ],
-            200,
-        );
+        return Responses::successNoContent();
     }
 }
