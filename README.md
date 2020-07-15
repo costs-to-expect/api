@@ -205,8 +205,6 @@ additionally, the same is true if you are assigned to a resource type.
 | GET/HEAD | v2/request/error-log |
 | OPTIONS  | v2/request/error-log |
 | POST     | v2/request/error-log |
-| GET/HEAD | v2/request/access-log |
-| OPTIONS  | v2/request/access-log |
 | GET/HEAD | v2/tools/cache |
 | OPTIONS  | v2/tools/cache |
 | DELETE   | v2/tools/cache |
@@ -222,8 +220,6 @@ largely match the non summary route.
 
 | HTTP Verb(s) | Route |
 | :--- | :--- |
-| GET/HEAD | v2/summary/request/access-log |
-| OPTIONS  | v2/summary/request/access-log |
 | GET/HEAD | v2/summary/resource-types |
 | OPTIONS  | v2/summary/resource-types |
 | GET/HEAD | v2/summary/resource-types/{resource_type_id}/categories |

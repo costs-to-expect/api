@@ -56,7 +56,6 @@ class Kernel extends HttpKernel
         'can' => \Illuminate\Auth\Middleware\Authorize::class,
         'signed' => \Illuminate\Routing\Middleware\ValidateSignature::class,
         'throttle' => \Illuminate\Routing\Middleware\ThrottleRequests::class,
-        'log.requests' => \App\Http\Middleware\LogRequests::class,
         'convert.route.parameters' => \App\Http\Middleware\ConvertRouteParameters::class,
         'convert.get.parameters' => \App\Http\Middleware\ConvertGetParameters::class
     ];

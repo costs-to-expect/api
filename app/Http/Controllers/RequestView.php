@@ -64,57 +64,6 @@ class RequestView extends Controller
     }
 
     /**
-     * Return the paginated access log
-     *
-     * @return JsonResponse
-     */
-    public function accessLog(): JsonResponse
-    {
-        $total = (new RequestLog())->totalCount();
-
-        $this->collection_parameters = Parameter\Request::fetch(
-            array_keys(Config::get('api.request-access-log.parameters.collection'))
-        );
-
-        $pagination = new UtilityPagination(request()->path(), $total, 25);
-        $pagination_parameters = $pagination->setParameters($this->collection_parameters)->
-            parameters();
-
-        $log = (new RequestLog())->paginatedCollection(
-            $pagination_parameters['offset'],
-            $pagination_parameters['limit'],
-            $this->collection_parameters
-        );
-
-        $headers = new Header();
-        $headers->collection($pagination_parameters, count($log), $total);
-
-        $parameters_header = Parameter\Request::xHeader();
-        if ($parameters_header !== null) {
-            $headers->addParameters($parameters_header);
-        }
-
-        $json = [];
-        foreach ($log as $log_item) {
-            $json[] = (new RequestLogTransformer($log_item))->asArray();
-        }
-
-        return response()->json($json, 200, $headers->headers());
-    }
-
-    /**
-     * Generate the OPTIONS request for log
-     *
-     * @return JsonResponse
-     */
-    public function optionsAccessLog(): JsonResponse
-    {
-        $response = new AccessLog(['view'=> $this->user_id !== null]);
-
-        return $response->create()->response();
-    }
-
-    /**
      * Generate the OPTIONS request for error log
      *
      * @return JsonResponse

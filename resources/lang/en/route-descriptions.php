@@ -65,7 +65,6 @@ return [
     'permitted_user_GET_index' => 'Return the permitted users',
     'permitted_user_POST' => 'Assign a permitted user',
 
-    'request_GET_access-log' => 'Return the access log, read requests',
     'request_GET_error-log' => 'Return the error log',
     'request_GET_cache' => 'Return the number of cached keys for the authenticated user',
     'request_DELETE_cache' => 'Attempt to delete the cached keys for the authenticated user',
@@ -73,8 +72,6 @@ return [
 
     'summary_category_GET_index' => 'Return a summary of the categories',
     'summary_subcategory_GET_index' => 'Return a summary of the subcategories',
-
-    'summary_GET_request_access-log' => 'Return a summary of the access log, all read requests, grouped by year and month',
 
     'summary-resource-type-GET-index' => 'Return a summary of the resource types',
     'summary-resource-GET-index' => 'Return a summary of the resources',
