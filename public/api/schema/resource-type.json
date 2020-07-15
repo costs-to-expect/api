@@ -1,0 +1,52 @@
+{
+    "type": "object",
+    "properties": {
+        "id": {
+            "type": "string"
+        },
+        "name": {
+            "type": "string"
+        },
+        "description": {
+            "type": "string"
+        },
+        "created": {
+            "type": "string"
+        },
+        "public": {
+            "type": "boolean"
+        },
+        "item_type": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "description": {
+                    "type": "string"
+                }
+            }
+        },
+        "resources": {
+            "type": "object",
+            "properties": {
+                "count": {
+                    "type": "integer"
+                }
+            }
+
+        },
+        "required": [
+            "id",
+            "name",
+            "description",
+            "created",
+            "public",
+            "item_type",
+            "resources"
+        ]
+    }
+}
