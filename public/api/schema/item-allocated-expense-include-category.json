@@ -1,0 +1,54 @@
+{
+    "type": "object",
+    "properties": {
+        "id": {
+            "type": "string"
+        },
+        "name": {
+            "type": "string"
+        },
+        "description": {
+            "type": ["null", "string"]
+        },
+        "total": {
+            "type": "string"
+        },
+        "pecentage": {
+            "type": "integer"
+        },
+        "actualised_total": {
+            "type": "string"
+        },
+        "effective_date": {
+            "type": "string"
+        },
+        "created": {
+            "type": "string"
+        },
+        "category": {
+            "type": ["object","null"],
+            "properties": {
+                "id": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "description": {
+                    "type": "string"
+                }
+            }
+        }
+    },
+    "required": [
+        "id",
+        "name",
+        "description",
+        "total",
+        "percentage",
+        "actualised_total",
+        "effective_date",
+        "created",
+        "category"
+    ]
+}

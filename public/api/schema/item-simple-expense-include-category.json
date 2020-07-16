@@ -1,0 +1,42 @@
+{
+    "type": "object",
+    "properties": {
+        "id": {
+            "type": "string"
+        },
+        "name": {
+            "type": "string"
+        },
+        "description": {
+            "type": "null"
+        },
+        "total": {
+            "type": "string"
+        },
+        "created": {
+            "type": "string"
+        },
+        "category": {
+            "type": ["object","null"],
+            "properties": {
+                "id": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "description": {
+                    "type": "string"
+                }
+            }
+        }
+    },
+    "required": [
+        "id",
+        "name",
+        "description",
+        "total",
+        "created",
+        "category"
+    ]
+}
