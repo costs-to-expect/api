@@ -67,17 +67,17 @@ class ItemManage extends Controller
                 return [$item, $item_type];
             });
 
-            $cache_control->clearPrivateCacheKeys([
-                $cache_key->resourceTypeItems($resource_type_id),
-                $cache_key->items($resource_type_id, $resource_id)
-            ]);
-
-            if (in_array((int) $resource_type_id, $this->public_resource_types, true)) {
-                $cache_control->clearPublicCacheKeys([
+            $cache_trash = new Cache\Trash(
+                $cache_control,
+                [
                     $cache_key->resourceTypeItems($resource_type_id),
                     $cache_key->items($resource_type_id, $resource_id)
-                ]);
-            }
+                ],
+                $resource_type_id,
+                $this->public_resource_types,
+                $this->permittedUsers($resource_type_id)
+            );
+            $cache_trash->all();
 
         } catch (Exception $e) {
             \App\Response\Responses::failedToSaveModelForCreate();

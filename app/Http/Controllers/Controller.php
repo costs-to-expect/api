@@ -18,6 +18,8 @@ class Controller extends BaseController
 
     protected array $public_resource_types = [];
 
+    protected ResourceTypeAccess $resource_type_access;
+
     /**
      * @var integer|null
      */
@@ -31,6 +33,8 @@ class Controller extends BaseController
     public function __construct()
     {
         $this->hash = new Hash();
+
+        $this->resource_type_access = new ResourceTypeAccess();
 
         $this->middleware(function ($request, $next) {
             $this->setGlobalPropertyValues();
@@ -55,7 +59,12 @@ class Controller extends BaseController
 
         if (auth('api')->user() !== null && auth()->guard('api')->check() === true) {
             $this->user_id = auth('api')->user()->id;
-            $this->permitted_resource_types = (new ResourceTypeAccess())->permittedResourceTypes($this->user_id);
+            $this->permitted_resource_types = $this->resource_type_access->permittedResourceTypes($this->user_id);
         }
+    }
+
+    protected function permittedUsers(int $resource_type_id): ?array
+    {
+        return $this->resource_type_access->permittedResourceTypeUsers($resource_type_id, $this->user_id);
     }
 }
