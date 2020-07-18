@@ -179,11 +179,11 @@
 
                     <h5>Request</h5>
 
-                    <pre class="bg-white"><code>curl --location --request GET 'https://api.costs-to-expect.com/v2/resource-types?limit=25&offset=0'</code></pre>
+                    <pre class="bg-white p-3"><code>curl --location --request GET 'https://api.costs-to-expect.com/v2/resource-types?limit=25&offset=0'</code></pre>
 
                     <h5>Response</h5>
 
-                    <pre class="bg-white"><code>[
+                    <pre class="bg-white p-3"><code>[
   {
     "id": "d185Q15grY",
     "name": "Blackborough boys",
@@ -203,7 +203,7 @@
 
                     <h5>Headers</h5>
 
-                    <pre class="bg-white"><code>Cache-Control: max-age=604800, public
+                    <pre class="bg-white p-3"><code>Cache-Control: max-age=604800, public
 Content-Length: 335
 Content-Type: application/json
 Content-Encoding: gzip
@@ -229,11 +229,11 @@ Date: Mon, 22 Jun 2020 14:40:57 GMT</code></pre>
 
                         <h5>Request</h5>
 
-                        <pre class="bg-white"><code>curl --location --request GET 'https://api.costs-to-expect.com/v2/resource-types/d185Q15grY/resources/kw8gLq31VB/items?limit=25&offset=0'</code></pre>
+                        <pre class="bg-white p-3"><code>curl --location --request GET 'https://api.costs-to-expect.com/v2/resource-types/d185Q15grY/resources/kw8gLq31VB/items?limit=25&offset=0'</code></pre>
 
                         <h5>Response</h5>
 
-                        <pre class="bg-white"><code>[
+                        <pre class="bg-white p-3"><code>[
   {
     "id": "K13qM2K3OV",
     "name": "Pocket money",
@@ -260,7 +260,7 @@ Date: Mon, 22 Jun 2020 14:40:57 GMT</code></pre>
 
                         <h5>Headers</h5>
 
-                        <pre class="bg-white"><code>Cache-Control: max-age=604800, private
+                        <pre class="bg-white p-3"><code>Cache-Control: max-age=604800, private
 Content-Length: 790
 Content-Type: application/json
 Content-Encoding: gzip
