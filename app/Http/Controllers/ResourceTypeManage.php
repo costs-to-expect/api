@@ -70,12 +70,12 @@ class ResourceTypeManage extends Controller
             $resource_type_item_type->save();
 
             $cache_control->clearPrivateCacheKeys([
-                $cache_key->resourcesTypes()
+                $cache_key->resourceTypes()
             ]);
 
             if (request()->input('public', 0) !== 0) {
                 $cache_control->clearPublicCacheKeys([
-                    $cache_key->resourcesTypes()
+                    $cache_key->resourceTypes()
                 ]);
             }
         } catch (Exception $e) {
@@ -138,17 +138,17 @@ class ResourceTypeManage extends Controller
                     $resource_type->delete();
                 });
 
-                $cache_control->clearPrivateCacheKeys([
-                    $cache_key->resourcesTypes(),
-                    $cache_key->permittedUsers($resource_type_id)
-                ]);
-
-                if (in_array((int) $resource_type_id, $this->public_resource_types, true)) {
-                    $cache_control->clearPublicCacheKeys([
-                        $cache_key->resourcesTypes(),
+                $cache_trash = new Cache\Trash(
+                    $cache_control,
+                    [
+                        $cache_key->resourceTypes(),
                         $cache_key->permittedUsers($resource_type_id)
-                    ]);
-                }
+                    ],
+                    $resource_type_id,
+                    $this->public_resource_types,
+                    $this->permittedUsers($resource_type_id)
+                );
+                $cache_trash->all();
 
                 \App\Response\Responses::successNoContent();
             } catch (QueryException $e) {
@@ -208,15 +208,19 @@ class ResourceTypeManage extends Controller
 
         try {
             $resource_type->save();
-            $cache_control->clearPrivateCacheKeys([
-                $cache_key->resourcesTypes()
-            ]);
 
-            if (in_array((int) $resource_type_id, $this->public_resource_types, true)) {
-                $cache_control->clearPublicCacheKeys([
-                    $cache_key->resourcesTypes()
-                ]);
-            }
+            $cache_trash = new Cache\Trash(
+                $cache_control,
+                [
+                    $cache_key->resourceTypes(),
+                    $cache_key->permittedUsers($resource_type_id)
+                ],
+                $resource_type_id,
+                $this->public_resource_types,
+                $this->permittedUsers($resource_type_id)
+            );
+            $cache_trash->all();
+
         } catch (Exception $e) {
             \App\Response\Responses::failedToSaveModelForUpdate();
         }

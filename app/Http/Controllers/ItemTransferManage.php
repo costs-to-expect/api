@@ -74,15 +74,17 @@ class ItemTransferManage extends Controller
                 $item_transfer->save();
             });
 
-            $cache_control->clearPrivateCacheKeys([
-                $cache_key->transfers($resource_type_id)
-            ]);
+            $cache_trash = new Cache\Trash(
+                $cache_control,
+                [
+                    $cache_key->resourceType($resource_type_id) // We need to clear everything
+                ],
+                $resource_type_id,
+                $this->public_resource_types,
+                $this->permittedUsers($resource_type_id)
+            );
+            $cache_trash->all();
 
-            if (in_array((int) $resource_type_id, $this->public_resource_types, true)) {
-                $cache_control->clearPublicCacheKeys([
-                    $cache_key->transfers($resource_type_id)
-                ]);
-            }
         } catch (QueryException $e) {
             return \App\Response\Responses::foreignKeyConstraintError();
         } catch (Exception $e) {

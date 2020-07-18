@@ -54,15 +54,17 @@ class SubcategoryManage extends Controller
             ]);
             $sub_category->save();
 
-            $cache_control->clearPrivateCacheKeys([
-                $cache_key->categories($resource_type_id)
-            ]);
-
-            if (in_array((int) $resource_type_id, $this->public_resource_types, true)) {
-                $cache_control->clearPublicCacheKeys([
+            $cache_trash = new Cache\Trash(
+                $cache_control,
+                [
                     $cache_key->categories($resource_type_id)
-                ]);
-            }
+                ],
+                $resource_type_id,
+                $this->public_resource_types,
+                $this->permittedUsers($resource_type_id)
+            );
+            $cache_trash->all();
+
         } catch (Exception $e) {
             Responses::failedToSaveModelForCreate();
         }
@@ -111,15 +113,16 @@ class SubcategoryManage extends Controller
         try {
             $sub_category->delete();
 
-            $cache_control->clearPrivateCacheKeys([
-                $cache_key->categories($resource_type_id)
-            ]);
-
-            if (in_array((int) $resource_type_id, $this->public_resource_types, true)) {
-                $cache_control->clearPublicCacheKeys([
+            $cache_trash = new Cache\Trash(
+                $cache_control,
+                [
                     $cache_key->categories($resource_type_id)
-                ]);
-            }
+                ],
+                $resource_type_id,
+                $this->public_resource_types,
+                $this->permittedUsers($resource_type_id)
+            );
+            $cache_trash->all();
 
             Responses::successNoContent();
         } catch (QueryException $e) {
@@ -183,18 +186,17 @@ class SubcategoryManage extends Controller
         try {
             $subcategory->save();
 
-            $cache_control->clearPrivateCacheKeys([
-                // We need to clear subcategories, resource type items
-                // and items dur to includes so simpler to clear the entire
-                // resource type
-                $cache_key->resourceType($resource_type_id)
-            ]);
+            $cache_trash = new Cache\Trash(
+                $cache_control,
+                [
+                    $cache_key->categories($resource_type_id)
+                ],
+                $resource_type_id,
+                $this->public_resource_types,
+                $this->permittedUsers($resource_type_id)
+            );
+            $cache_trash->all();
 
-            if (in_array((int) $resource_type_id, $this->public_resource_types, true)) {
-                $cache_control->clearPublicCacheKeys([
-                    $cache_key->resourceType($resource_type_id)
-                ]);
-            }
         } catch (Exception $e) {
             Responses::failedToSaveModelForUpdate();
         }
