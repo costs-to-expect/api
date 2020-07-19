@@ -24,6 +24,8 @@ class AllocatedExpense extends Model implements IModel
 
     protected $guarded = ['id', 'actualised_total'];
 
+    public $timestamps = false;
+
     public function setActualisedTotal($total, $percentage)
     {
         $this->attributes['actualised_total'] = ($percentage === 100) ? $total : $total * ($percentage/100);
@@ -174,8 +176,8 @@ class AllocatedExpense extends Model implements IModel
             'item_total' => $item_type->total,
             'item_percentage' => $item_type->percentage,
             'item_actualised_total' => $item_type->actualised_total,
-            'item_created_at' => $item->created_at->toDateTimeString(),
-            'item_updated_at' => $item->updated_at->toDateTimeString()
+            'item_created_at' => ($item_type->created_at !== null) ? $item_type->created_at->toDateTimeString() : null,
+            'item_updated_at' => ($item_type->updated_at !== null) ? $item_type->updated_at->toDateTimeString() : null,
         ];
     }
 

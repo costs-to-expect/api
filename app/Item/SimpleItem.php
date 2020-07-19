@@ -10,6 +10,7 @@ use App\Request\Validate\ItemType\SimpleItem as ItemTypeSimpleItemValidator;
 use App\Request\Validate\Validator;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Config;
+use Illuminate\Support\Facades\Date;
 
 /**
  * The Interface for dealing with simple items, everything should be
@@ -45,6 +46,8 @@ class SimpleItem extends AbstractItem
             'name' => request()->input('name'),
             'description' => request()->input('description', null),
             'quantity' => request()->input('quantity', 1),
+            'created_at' => Date::now(),
+            'updated_at' => null
         ]);
 
         $item_type->save();

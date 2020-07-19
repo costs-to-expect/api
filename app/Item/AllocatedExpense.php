@@ -10,6 +10,7 @@ use App\Request\Validate\ItemType\AllocatedExpense as ItemTypeAllocatedExpenseVa
 use App\Request\Validate\Validator;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Config;
+use Illuminate\Support\Facades\Date;
 
 /**
  * The Interface for dealing with allocated expenses, everything should be
@@ -76,6 +77,8 @@ class AllocatedExpense extends AbstractItem
             'publish_after' => request()->input('publish_after', null),
             'total' => request()->input('total'),
             'percentage' => request()->input('percentage', 100),
+            'created_at' => Date::now(),
+            'updated_at' => null
         ]);
 
         $item_type->setActualisedTotal(

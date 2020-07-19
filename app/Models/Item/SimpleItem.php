@@ -22,6 +22,8 @@ class SimpleItem extends Model implements IModel
 
     protected $guarded = ['id', 'updated_at', 'created_at'];
 
+    public $timestamps = false;
+
     public function instance(int $item_id): ?Model
     {
         return $this->where('item_id', '=', $item_id)->
@@ -46,8 +48,8 @@ class SimpleItem extends Model implements IModel
             'item_name' => $item_type->name,
             'item_description' => $item_type->description,
             'item_quantity' => $item_type->total,
-            'item_created_at' => $item->created_at->toDateTimeString(),
-            'item_updated_at' => $item->updated_at->toDateTimeString()
+            'item_created_at' => ($item_type->created_at !== null) ? $item_type->created_at->toDateTimeString() : null,
+            'item_updated_at' => ($item_type->updated_at !== null) ? $item_type->updated_at->toDateTimeString() : null,
         ];
     }
 
