@@ -206,6 +206,8 @@ class AllocatedExpense extends AbstractItem
             $instance->setActualisedTotal($instance->total, $instance->percentage);
         }
 
+        $instance->updated_at = Date::now();
+
         return $instance->save();
     }
 

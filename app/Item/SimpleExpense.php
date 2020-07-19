@@ -161,6 +161,8 @@ class SimpleExpense extends AbstractItem
             $instance->$key = $value;
         }
 
+        $instance->updated_at = Date::now();
+
         return $instance->save();
     }
 
