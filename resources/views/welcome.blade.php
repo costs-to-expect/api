@@ -248,6 +248,7 @@
                         <li>We have fixed the allowed values subcategories array; when we show the allowed values array with a validation error, the collection will have values.</li>
                         <li>We have reworked all our deletes; in some cases, we were possibly creating null references.</li>
                         <li>We have moved a call to fetch a config value; the function call is inside a loop which is a performance issue.</li>
+                        <li>We have updated the item type models': the `updated_at` and `created_at` come from the relevant item type model.</li>
                     </ul>
 
                     <h3>Removed</h3>

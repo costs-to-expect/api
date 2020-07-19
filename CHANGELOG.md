@@ -23,6 +23,7 @@ The complete changelog for the Costs to Expect REST API, our changelog follows t
 - We have fixed the allowed values subcategories array; when we show the allowed values array with a validation error, the collection will have values.
 - We have reworked all our deletes; in some cases, we were possibly creating null references.
 - We have moved a call to fetch a config value; the function call is inside a loop which is a performance issue.
+- We have updated the item type models': the `updated_at` and `created_at` come from the relevant item type model.
 
 ### Removed
 - We have removed all API request logging; the request logging isn't adding any value data that we can't get via other means.
