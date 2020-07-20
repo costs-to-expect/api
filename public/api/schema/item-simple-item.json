@@ -15,6 +15,9 @@
         },
         "created": {
             "type": "string"
+        },
+        "updated": {
+            "type": ["null", "string"]
         }
     },
     "required": [
@@ -22,6 +25,7 @@
         "name",
         "description",
         "quantity",
-        "created"
+        "created",
+        "updated"
     ]
 }

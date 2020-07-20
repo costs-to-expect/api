@@ -7,25 +7,25 @@
         "name": {
             "type": "string"
         },
-        "description": {
-            "type": "null"
+        "friendly_name": {
+            "type": "string"
         },
-        "total": {
+        "description": {
+            "type": "string"
+        },
+        "example": {
             "type": "string"
         },
         "created": {
             "type": "string"
         },
-        "updated": {
-            "type": ["null", "string"]
-        }
-    },
-    "required": [
-        "id",
-        "name",
-        "description",
-        "total",
-        "created",
-        "updated"
-    ]
+        "required": [
+            "id",
+            "name",
+            "friendly_name",
+            "description",
+            "example",
+            "created"
+        ]
+    }
 }

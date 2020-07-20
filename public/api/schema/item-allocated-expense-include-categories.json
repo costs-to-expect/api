@@ -13,7 +13,7 @@
         "total": {
             "type": "string"
         },
-        "pecentage": {
+        "percentage": {
             "type": "integer"
         },
         "actualised_total": {
@@ -24,6 +24,9 @@
         },
         "created": {
             "type": "string"
+        },
+        "updated": {
+            "type": ["null", "string"]
         },
         "category": {
             "type": ["object", "null"],
@@ -63,6 +66,7 @@
         "actualised_total",
         "effective_date",
         "created",
+        "updated",
         "category",
         "subcategory"
     ]

@@ -16,6 +16,9 @@
         "created": {
             "type": "string"
         },
+        "updated": {
+            "type": ["null", "string"]
+        },
         "category": {
             "type": ["object","null"],
             "properties": {
@@ -51,6 +54,7 @@
         "description",
         "total",
         "created",
+        "updated",
         "category",
         "subcategory"
     ]
