@@ -10,6 +10,7 @@ use App\Request\Validate\ItemType\SimpleExpense as ItemTypeSimpleExpenseValidato
 use App\Request\Validate\Validator;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Config;
+use Illuminate\Support\Facades\Date;
 
 /**
  * The Interface for dealing with simple expenses, everything should be
@@ -45,6 +46,8 @@ class SimpleExpense extends AbstractItem
             'name' => request()->input('name'),
             'description' => request()->input('description', null),
             'total' => request()->input('total'),
+            'created_at' => Date::now(),
+            'updated_at' => null
         ]);
 
         $item_type->save();
@@ -157,6 +160,8 @@ class SimpleExpense extends AbstractItem
         foreach ($request as $key => $value) {
             $instance->$key = $value;
         }
+
+        $instance->updated_at = Date::now();
 
         return $instance->save();
     }

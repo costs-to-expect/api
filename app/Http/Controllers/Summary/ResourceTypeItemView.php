@@ -3,8 +3,8 @@
 namespace App\Http\Controllers\Summary;
 
 use App\Http\Controllers\Controller;
+use App\Option\SummaryResourceTypeItemCollection;
 use App\ResourceTypeItem\Factory;
-use App\Option\Get;
 use App\Response\Cache;
 use App\Request\Parameter;
 use App\Request\Route;
@@ -811,14 +811,10 @@ class ResourceTypeItemView extends Controller
             $this->permitted_resource_types
         );
 
-        $get = Get::init()->
-            setSearchable($item_interface->searchParametersConfig())->
-            setParameters($item_interface->collectionParametersConfig())->
-            setFilterable($item_interface->filterParametersConfig())->
-            setDescription('route-descriptions.summary-resource-type-item-GET-index')->
-            setAuthenticationStatus($permissions['view'])->
-            option();
+        $response = new SummaryResourceTypeItemCollection($permissions);
 
-        return $this->optionsResponse($get, 200);
+        return $response->setItemInterface($item_interface)->
+            create()->
+            response();
     }
 }

@@ -2,13 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use App\Option\Delete;
-use App\Option\Get;
-use App\Option\Post;
+use App\Option\ItemCategoryCollection;
+use App\Option\ItemCategoryItem;
 use App\Response\Cache;
 use App\Response\Header\Header;
 use App\Request\Route;
-use App\Models\Category;
 use App\Models\ItemCategory;
 use App\Models\Transformers\ItemCategory as ItemCategoryTransformer;
 use Illuminate\Http\JsonResponse;
@@ -146,24 +144,14 @@ class ItemCategoryView extends Controller
             $this->permitted_resource_types
         );
 
-        $get = Get::init()->
-            setParameters('api.item-category.parameters.collection')->
-            setAuthenticationStatus($permissions['view'])->
-            setDescription('route-descriptions.item_category_GET_index')->
-            option();
+        $response = new ItemCategoryCollection($permissions);
 
-        $post = Post::init()->
-            setFields('api.item-category.fields')->
-            setFieldsData($this->fieldsData($resource_type_id))->
-            setDescription('route-descriptions.item_category_POST')->
-            setAuthenticationStatus($permissions['manage'])->
-            setAuthenticationRequired(true)->
-            option();
-
-        return $this->optionsResponse(
-            $get + $post,
-            200
-        );
+        return $response->setAllowedValues(
+                (new \App\Option\Value\Category()
+            )->
+            allowedValues($resource_type_id))->
+            create()->
+            response();
     }
 
     /**
@@ -212,51 +200,8 @@ class ItemCategoryView extends Controller
             \App\Response\Responses::notFound(trans('entities.item-category'));
         }
 
-        $get = Get::init()->
-            setParameters('api.item-category.parameters.item')->
-            setAuthenticationStatus($permissions['view'])->
-            setDescription('route-descriptions.item_category_GET_show')->
-            option();
+        $response = new ItemCategoryItem($permissions);
 
-        $delete = Delete::init()->
-            setDescription('route-descriptions.item_category_DELETE')->
-            setAuthenticationStatus($permissions['manage'])->
-            setAuthenticationRequired(true)->
-            option();
-
-        return $this->optionsResponse(
-            $get + $delete,
-            200
-        );
-    }
-
-    /**
-     * Generate any conditional POST parameters, will be merged with the relevant
-     * config/api/[type]/fields.php data array
-     *
-     * @param integer $resource_type_id
-     *
-     * @return array
-     */
-    private function fieldsData($resource_type_id): array
-    {
-        $categories = (new Category())->categoriesByResourceType($resource_type_id);
-
-        $conditional_post_parameters = ['category_id' => []];
-        foreach ($categories as $category) {
-            $id = $this->hash->encode('category', $category['category_id']);
-
-            if ($id === false) {
-                \App\Response\Responses::unableToDecode();
-            }
-
-            $conditional_post_parameters['category_id']['allowed_values'][$id] = [
-                'value' => $id,
-                'name' => $category['category_name'],
-                'description' => $category['category_description']
-            ];
-        }
-
-        return $conditional_post_parameters;
+        return $response->create()->response();
     }
 }

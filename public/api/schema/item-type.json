@@ -1,0 +1,31 @@
+{
+    "type": "object",
+    "properties": {
+        "id": {
+            "type": "string"
+        },
+        "name": {
+            "type": "string"
+        },
+        "friendly_name": {
+            "type": "string"
+        },
+        "description": {
+            "type": "string"
+        },
+        "example": {
+            "type": "string"
+        },
+        "created": {
+            "type": "string"
+        },
+        "required": [
+            "id",
+            "name",
+            "friendly_name",
+            "description",
+            "example",
+            "created"
+        ]
+    }
+}

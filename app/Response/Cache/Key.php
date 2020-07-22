@@ -102,7 +102,7 @@ class Key
     /**
      * @return string
      */
-    public function resourcesTypes(): string
+    public function resourceTypes(): string
     {
         return '/v2/resource-types';
     }

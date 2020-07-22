@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\ResourceType;
 use App\Models\ResourceTypeAccess;
 use App\Request\Hash;
-use Illuminate\Http\JsonResponse;
+use App\Request\Validate\Boolean;
 use Illuminate\Routing\Controller as BaseController;
 
 class Controller extends BaseController
@@ -17,6 +17,8 @@ class Controller extends BaseController
     protected array $permitted_resource_types = [];
 
     protected array $public_resource_types = [];
+
+    protected ResourceTypeAccess $resource_type_access;
 
     /**
      * @var integer|null
@@ -32,56 +34,37 @@ class Controller extends BaseController
     {
         $this->hash = new Hash();
 
+        $this->resource_type_access = new ResourceTypeAccess();
+
         $this->middleware(function ($request, $next) {
-            $this->setHelperProperties();
+            $this->setGlobalPropertyValues();
 
             return $next($request);
         });
     }
 
-    protected function setHelperProperties()
+    /**
+     * Set the values for the controller properties, used by every controller
+     *
+     * @return void
+     */
+    protected function setGlobalPropertyValues(): void
     {
-        if (auth()->guard('api')->check() === true && auth('api')->user() !== null) {
-            $this->user_id = auth('api')->user()->id;
-            $this->permitted_resource_types = (new ResourceTypeAccess())->permittedResourceTypes($this->user_id);
-            $this->public_resource_types = (new ResourceType())->publicResourceTypes();
-        }
+        $this->public_resource_types = (new ResourceType())->publicResourceTypes();
 
         $this->include_public = true;
-    }
-
-    /**
-     * Generate and return the options response
-     *
-     * @param array $verbs Verb arrays
-     * @param integer $http_status_code, defaults to 200
-     *
-     * @return JsonResponse
-     */
-    protected function optionsResponse(array $verbs, $http_status_code = 200): JsonResponse
-    {
-        $options = [
-            'verbs' => [],
-            'http_status_code' => $http_status_code,
-            'headers' => [
-                'Content-Security-Policy' => 'default-src \'none\'',
-                'Strict-Transport-Security' => 'max-age=31536000;',
-                'Content-Type' => 'application/json',
-                'Content-Language' => app()->getLocale(),
-                'Referrer-Policy' => 'strict-origin-when-cross-origin',
-                'X-Content-Type-Options' => 'nosniff'
-            ]
-        ];
-
-        foreach ($verbs as $verb => $detail) {
-            $options['verbs'][$verb] = $detail;
+        if (Boolean::convertedValue(request()->query('exclude-public')) === true) {
+            $this->include_public = false;
         }
 
-        response()->json(
-            $options['verbs'],
-            $options['http_status_code'],
-            $options['headers']
-        )->send();
-        exit;
+        if (auth('api')->user() !== null && auth()->guard('api')->check() === true) {
+            $this->user_id = auth('api')->user()->id;
+            $this->permitted_resource_types = $this->resource_type_access->permittedResourceTypes($this->user_id);
+        }
+    }
+
+    protected function permittedUsers(int $resource_type_id): ?array
+    {
+        return $this->resource_type_access->permittedResourceTypeUsers($resource_type_id, $this->user_id);
     }
 }

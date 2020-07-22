@@ -1,0 +1,30 @@
+{
+    "type": "object",
+    "properties": {
+        "id": {
+            "type": "string"
+        },
+        "subcategory": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "description": {
+                    "type": "string"
+                }
+            }
+        },
+        "created": {
+            "type": "string"
+        }
+    },
+    "required": [
+        "id",
+        "subcategory",
+        "created"
+    ]
+}

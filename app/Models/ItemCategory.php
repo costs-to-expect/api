@@ -98,6 +98,7 @@ class ItemCategory extends Model
             where('resource.id', '=', $resource_id)->
             where('resource.resource_type_id', '=', $resource_type_id)->
             select(
+                'item_category.id AS id',
                 'item_category.id AS item_category_id',
                 'item_category.created_at AS item_category_created_at',
                 'category.id AS item_category_category_id',

@@ -9,14 +9,12 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 
 /**
- * Register users and login
- *
  * @package App\Http\Controllers
  */
 class PassportView extends Controller
 {
     /**
-     * login to the API and create a token
+     * login to the API and create an access token
      *
      * @return Http\JsonResponse
      */
@@ -33,7 +31,7 @@ class PassportView extends Controller
 
             return response()->json(
                 [
-                    'id' => Auth::id(),
+                    'id' => $this->hash->user()->encode(Auth::id()),
                     'type' => 'Bearer',
                     'token' => $token->accessToken,
                     'created' => $token->token->created_at,
@@ -100,6 +98,13 @@ class PassportView extends Controller
     public function user()
     {
         $user = Auth::user();
+
+        if ($user === null) {
+            abort(403);
+        }
+
+        $user = $user->toArray();
+        $user['id'] = $this->hash->user()->encode($user['id']);
 
         return response()->json($user, 200);
     }

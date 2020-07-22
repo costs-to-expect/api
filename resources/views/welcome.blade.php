@@ -223,27 +223,38 @@
                     <h3>Added</h3>
 
                     <ul>
-                        <li>We have added support for an `X-Skip-Cache` request header; If you include the header with your request we will skip response caching and fetch live values, please use this with care.</li>
+                        <li>We have added the ability to exclude public resource types; to exclude public resource types include `exclude-public=1` in your request URIs.</li>
+                        <li>We have added support for database transactions; if we are modifying more than one table, we use database transactions.</li>
+                        <li>We have added a route to show the number of cached keys for the authenticated user and then optionally delete.</li>
+                        <li>We have included the schema files for the API. The schema files are accessible at `/api/schema/[type]`.</li>
                     </ul>
 
                     <h3>Changed</h3>
 
                     <ul>
-                        <li>We have added separate links for the documentation and example page and the postman collection.</li>
-                        <li>We have simplified our `\Model\Transformer` classes and made it possible to alter the returned data format.</li>
-                        <li>We have added `public` as a sorting option for resource types.</li>
-                        <li>We have reworked our pagination class; we have moved it to a new workspace and also improved how it works.</li>
-                        <li>We have moved our `Hash` class; the `Hash` class now lives in the `Request` namespace.</li>
-                        <li>We have moved our `ModelUtility` class: the `ModelUtility` class now lives in the `Models` namespace.</li>
-                        <li>We have updated the indexes in our `Hash` request class; the indexes are consistent with the rest of the app.</li>
+                        <li>We have reworked our Option responses; we have moved the code from the controllers ready for the creation of a new package/library.</li>
+                        <li>We have removed some duplication in our controllers, fetching dynamic data for Options requests and validation responses is simpler.</li>
+                        <li>We have updated all manage controllers; we make use of the existing`user_id` property if we need a `user_id`.</li>
+                        <li>We have reworked how we are clearing cache; we clear the cache for all permitted users when any user makes a cache clearing change.</li>
                     </ul>
 
                     <h3>Fixed</h3>
 
                     <ul>
-                        <li>We have updated our pagination helper to include any defined filtering parameters.</li>
-                        <li>We have corrected pagination calls in all our controllers; we now include all possible request parameters.</li>
-                        <li>We have corrected calls to clear public caches; we were comparing different types.</li>
+                        <li>We have fixed a couple of instances where we are not passing ids through our hashers.</li>
+                        <li>We have fixed the include category and subcategory objects in the resource type items collection.</li>
+                        <li>We have fixed a couple of transformers; we were not correctly formatting totals.</li>
+                        <li>We have corrected not found calls; in some cases, we were showing error messages on our live environment that we don't want to show</li>
+                        <li>We have fixed the allowed values subcategories array; when we show the allowed values array with a validation error, the collection will have values.</li>
+                        <li>We have reworked all our deletes; in some cases, we were possibly creating null references.</li>
+                        <li>We have moved a call to fetch a config value; the function call is inside a loop which is a performance issue.</li>
+                        <li>We have updated the item type models': the `updated_at` and `created_at` come from the relevant item type model.</li>
+                    </ul>
+
+                    <h3>Removed</h3>
+
+                    <ul>
+                        <li>We have removed all API request logging; the request logging isn't adding any value data that we can't get via other means.</li>
                     </ul>
                 </div>
             </div>

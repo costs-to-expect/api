@@ -10,7 +10,7 @@ use App\Models\Item;
 use Exception;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 /**
  * Manage items
@@ -41,9 +41,9 @@ class ItemManage extends Controller
             true
         );
 
-        $user_id = Auth::user()->id;
+        $user_id = $this->user_id;
 
-        $cache_control = new Cache\Control($user_id);
+        $cache_control = new Cache\Control($this->user_id);
         $cache_key = new Cache\Key();
 
         $item_interface = Factory::item($resource_type_id);
@@ -55,25 +55,29 @@ class ItemManage extends Controller
         $model = $item_interface->model();
 
         try {
-            $item = new Item([
-                'resource_id' => $resource_id,
-                'created_by' => $user_id
-            ]);
-            $item->save();
+            [$item, $item_type] = DB::transaction(static function() use ($resource_id, $user_id, $item_interface) {
+                $item = new Item([
+                    'resource_id' => $resource_id,
+                    'created_by' => $user_id
+                ]);
+                $item->save();
 
-            $item_type = $item_interface->create((int) $item->id);
+                $item_type = $item_interface->create((int) $item->id);
 
-            $cache_control->clearPrivateCacheKeys([
-                $cache_key->resourceTypeItems($resource_type_id),
-                $cache_key->items($resource_type_id, $resource_id)
-            ]);
+                return [$item, $item_type];
+            });
 
-            if (in_array((int) $resource_type_id, $this->public_resource_types, true)) {
-                $cache_control->clearPublicCacheKeys([
+            $cache_trash = new Cache\Trash(
+                $cache_control,
+                [
                     $cache_key->resourceTypeItems($resource_type_id),
                     $cache_key->items($resource_type_id, $resource_id)
-                ]);
-            }
+                ],
+                $resource_type_id,
+                $this->public_resource_types,
+                $this->permittedUsers($resource_type_id)
+            );
+            $cache_trash->all();
 
         } catch (Exception $e) {
             \App\Response\Responses::failedToSaveModelForCreate();
@@ -108,9 +112,7 @@ class ItemManage extends Controller
             true
         );
 
-        $user_id = Auth::user()->id;
-
-        $cache_control = new Cache\Control($user_id);
+        $cache_control = new Cache\Control($this->user_id);
         $cache_key = new Cache\Key();
 
         $item_interface = Factory::item($resource_type_id);
@@ -131,23 +133,26 @@ class ItemManage extends Controller
         }
 
         try {
-            $item->updated_by = $user_id;
+            $item->updated_by = $this->user_id;
 
-            if ($item->save() === true) {
-                $item_interface->update(request()->all(), $item_type);
-            }
+            DB::transaction(static function() use ($item, $item_interface, $item_type) {
+                if ($item->save() === true) {
+                    $item_interface->update(request()->all(), $item_type);
+                }
+            });
 
-            $cache_control->clearPrivateCacheKeys([
-                $cache_key->resourceTypeItems($resource_type_id),
-                $cache_key->items($resource_type_id, $resource_id)
-            ]);
-
-            if (in_array((int) $resource_type_id, $this->public_resource_types, true)) {
-                $cache_control->clearPublicCacheKeys([
+            $cache_trash = new Cache\Trash(
+                $cache_control,
+                [
                     $cache_key->resourceTypeItems($resource_type_id),
                     $cache_key->items($resource_type_id, $resource_id)
-                ]);
-            }
+                ],
+                $resource_type_id,
+                $this->public_resource_types,
+                $this->permittedUsers($resource_type_id)
+            );
+            $cache_trash->all();
+
         } catch (Exception $e) {
             \App\Response\Responses::failedToSaveModelForUpdate();
         }
@@ -177,7 +182,7 @@ class ItemManage extends Controller
             true
         );
 
-        $cache_control = new Cache\Control(Auth::user()->id);
+        $cache_control = new Cache\Control($this->user_id);
         $cache_key = new Cache\Key();
 
         $item_interface = Factory::item($resource_type_id);
@@ -197,27 +202,29 @@ class ItemManage extends Controller
         }
 
         try {
-            (new ItemTransfer())->deleteTransfers($item_id);
-            $item_type->delete();
-            $item->delete();
+            DB::transaction(static function() use ($item_id, $item_type, $item) {
+                (new ItemTransfer())->deleteTransfers($item_id);
+                $item_type->delete();
+                $item->delete();
+            });
 
-            $cache_control->clearPrivateCacheKeys([
-                $cache_key->resourceTypeItems($resource_type_id),
-                $cache_key->items($resource_type_id, $resource_id)
-            ]);
-
-            if (in_array((int) $resource_type_id, $this->public_resource_types, true)) {
-                $cache_control->clearPublicCacheKeys([
+            $cache_trash = new Cache\Trash(
+                $cache_control,
+                [
                     $cache_key->resourceTypeItems($resource_type_id),
                     $cache_key->items($resource_type_id, $resource_id)
-                ]);
-            }
+                ],
+                $resource_type_id,
+                $this->public_resource_types,
+                $this->permittedUsers($resource_type_id)
+            );
+            $cache_trash->all();
 
             \App\Response\Responses::successNoContent();
         } catch (QueryException $e) {
             \App\Response\Responses::foreignKeyConstraintError();
         } catch (Exception $e) {
-            \App\Response\Responses::notFound(trans('entities.item'), $e);
+            \App\Response\Responses::notFound(trans('entities.item'));
         }
     }
 }

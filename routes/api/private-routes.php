@@ -126,5 +126,15 @@ Route::group(
             'resource-types/{resource_type_id}/resources/{resource_id}/items/{item_id}',
             'ItemManage@update'
         );
+
+        Route::get(
+            'tools/cache',
+            'ToolManage@cache'
+        );
+
+        Route::delete(
+            'tools/cache',
+            'ToolManage@deleteCache'
+        );
     }
 );

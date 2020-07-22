@@ -1,0 +1,35 @@
+{
+    "type": "object",
+    "properties": {
+        "method": {
+            "type": "string"
+        },
+        "expected_status_code": {
+            "type": "integer"
+        },
+        "returned_status_code": {
+            "type": "integer"
+        },
+        "request_uri": {
+            "type": "string"
+        },
+        "source": {
+            "type": "string"
+        },
+        "created": {
+            "type": "string"
+        },
+        "debug": {
+            "type": ["null", "string"]
+        },
+        "required": [
+            "method",
+            "expected_status_code",
+            "returned_status_code",
+            "request_uri",
+            "source",
+            "created",
+            "debug"
+        ]
+    }
+}

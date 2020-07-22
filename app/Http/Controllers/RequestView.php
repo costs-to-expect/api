@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\Option\Get;
-use App\Option\Post;
+use App\Option\AccessLog;
+use App\Option\ErrorLog;
 use App\Response\Header\Header;
 use App\Request\Parameter;
 use App\Models\RequestErrorLog;
@@ -64,82 +64,14 @@ class RequestView extends Controller
     }
 
     /**
-     * Return the paginated access log
-     *
-     * @return JsonResponse
-     */
-    public function accessLog(): JsonResponse
-    {
-        $total = (new RequestLog())->totalCount();
-
-        $this->collection_parameters = Parameter\Request::fetch(
-            array_keys(Config::get('api.request-access-log.parameters.collection'))
-        );
-
-        $pagination = new UtilityPagination(request()->path(), $total, 25);
-        $pagination_parameters = $pagination->setParameters($this->collection_parameters)->
-            parameters();
-
-        $log = (new RequestLog())->paginatedCollection(
-            $pagination_parameters['offset'],
-            $pagination_parameters['limit'],
-            $this->collection_parameters
-        );
-
-        $headers = new Header();
-        $headers->collection($pagination_parameters, count($log), $total);
-
-        $parameters_header = Parameter\Request::xHeader();
-        if ($parameters_header !== null) {
-            $headers->addParameters($parameters_header);
-        }
-
-        $json = [];
-        foreach ($log as $log_item) {
-            $json[] = (new RequestLogTransformer($log_item))->asArray();
-        }
-
-        return response()->json($json, 200, $headers->headers());
-    }
-
-    /**
-     * Generate the OPTIONS request for log
-     *
-     * @return JsonResponse
-     */
-    public function optionsAccessLog()
-    {
-        $get = Get::init()->
-            setParameters('api.request-access-log.parameters.collection')->
-            setPagination(true)->
-            setAuthenticationStatus(($this->user_id !== null) ? true : false)->
-            setDescription('route-descriptions.request_GET_access-log')->
-            option();
-
-        return $this->optionsResponse($get, 200);
-    }
-
-    /**
      * Generate the OPTIONS request for error log
      *
      * @return JsonResponse
      */
-    public function optionsErrorLog()
+    public function optionsErrorLog(): JsonResponse
     {
-        $get = Get::init()->
-            setDescription('route-descriptions.request_GET_error_log')->
-            setAuthenticationStatus(($this->user_id !== null) ? true : false)->
-            option();
+        $response = new ErrorLog(['view'=> $this->user_id !== null]);
 
-        $post = Post::init()->
-            setFields('api.request-error-log.fields')->
-            setDescription('route-descriptions.request_POST')->
-            setAuthenticationStatus(($this->user_id !== null) ? true : false)->
-            option();
-
-        return $this->optionsResponse(
-            $get + $post,
-            200
-        );
+        return $response->create()->response();
     }
 }

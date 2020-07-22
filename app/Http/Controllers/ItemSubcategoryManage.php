@@ -6,13 +6,11 @@ use App\Response\Cache;
 use App\Request\Route;
 use App\Models\ItemCategory;
 use App\Models\ItemSubcategory;
-use App\Models\Subcategory;
 use App\Models\Transformers\ItemSubcategory as ItemSubcategoryTransformer;
 use App\Request\Validate\ItemSubcategory as ItemSubcategoryValidator;
 use Exception;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Support\Facades\Auth;
 
 /**
  * Manage the category for an item row
@@ -48,7 +46,7 @@ class ItemSubcategoryManage extends Controller
             true
         );
 
-        $cache_control = new Cache\Control(Auth::user()->id);
+        $cache_control = new Cache\Control($this->user_id);
         $cache_key = new Cache\Key();
 
         if ($item_category_id === 'nill') {
@@ -62,7 +60,7 @@ class ItemSubcategoryManage extends Controller
         $validator = (new ItemSubcategoryValidator)->create(['category_id' => $item_category->category_id]);
         \App\Request\BodyValidation::validateAndReturnErrors(
             $validator,
-            $this->fieldsData($item_category_id)
+            (new \App\Option\Value\Subcategory())->allowedValues($item_category->category_id)
         );
 
         try {
@@ -78,17 +76,18 @@ class ItemSubcategoryManage extends Controller
             ]);
             $item_sub_category->save();
 
-            $cache_control->clearPrivateCacheKeys([
-                $cache_key->items($resource_type_id, $resource_id),
-                $cache_key->resourceTypeItems($resource_type_id)
-            ]);
-
-            if (in_array((int) $resource_type_id, $this->public_resource_types, true)) {
-                $cache_control->clearPublicCacheKeys([
+            $cache_trash = new Cache\Trash(
+                $cache_control,
+                [
                     $cache_key->items($resource_type_id, $resource_id),
                     $cache_key->resourceTypeItems($resource_type_id)
-                ]);
-            }
+                ],
+                $resource_type_id,
+                $this->public_resource_types,
+                $this->permittedUsers($resource_type_id)
+            );
+            $cache_trash->all();
+
         } catch (Exception $e) {
             \App\Response\Responses::failedToSaveModelForCreate();
         }
@@ -97,40 +96,6 @@ class ItemSubcategoryManage extends Controller
             (new ItemSubcategoryTransformer((new ItemSubcategory())->instanceToArray($item_sub_category)))->asArray(),
             201
         );
-    }
-
-    /**
-     * Generate any conditional POST parameters, will be merged with the data
-     * arrays defined in config/api/[type]/fields.php
-     *
-     * @param integer $category_id
-     *
-     * @return array
-     */
-    private function fieldsData($category_id): array
-    {
-        $sub_categories = (new Subcategory())
-            ->select('id', 'name', 'description')
-            ->where('category_id', '=', $category_id)
-            ->get();
-
-        $conditional_post_parameters = ['subcategory_id' => []];
-
-        foreach ($sub_categories as $sub_category) {
-            $id = $this->hash->encode('subcategory', $sub_category->id);
-
-            if ($id === false) {
-                \App\Response\Responses::unableToDecode();
-            }
-
-            $conditional_post_parameters['subcategory_id']['allowed_values'][$id] = [
-                'value' => $id,
-                'name' => $sub_category->name,
-                'description' => $sub_category->description
-            ];
-        }
-
-        return $conditional_post_parameters;
     }
 
     /**
@@ -160,7 +125,7 @@ class ItemSubcategoryManage extends Controller
             true
         );
 
-        $cache_control = new Cache\Control(Auth::user()->id);
+        $cache_control = new Cache\Control($this->user_id);
         $cache_key = new Cache\Key();
 
         if ($item_category_id === 'nill' || $item_subcategory_id === 'nill') {
@@ -179,27 +144,26 @@ class ItemSubcategoryManage extends Controller
             \App\Response\Responses::notFound(trans('entities.item-subcategory'));
         }
 
-
         try {
-            (new ItemSubcategory())->find($item_subcategory_id)->delete();
+            $item_sub_category->delete();
 
-            $cache_control->clearPrivateCacheKeys([
-                $cache_key->items($resource_type_id, $resource_id),
-                $cache_key->resourceTypeItems($resource_type_id)
-            ]);
-
-            if (in_array((int) $resource_type_id, $this->public_resource_types, true)) {
-                $cache_control->clearPublicCacheKeys([
+            $cache_trash = new Cache\Trash(
+                $cache_control,
+                [
                     $cache_key->items($resource_type_id, $resource_id),
                     $cache_key->resourceTypeItems($resource_type_id)
-                ]);
-            }
+                ],
+                $resource_type_id,
+                $this->public_resource_types,
+                $this->permittedUsers($resource_type_id)
+            );
+            $cache_trash->all();
 
             \App\Response\Responses::successNoContent();
         } catch (QueryException $e) {
             \App\Response\Responses::foreignKeyConstraintError();
         } catch (Exception $e) {
-            \App\Response\Responses::notFound(trans('entities.item-subcategory'), $e);
+            \App\Response\Responses::notFound(trans('entities.item-subcategory'));
         }
     }
 }

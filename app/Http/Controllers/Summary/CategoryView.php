@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Summary;
 
 use App\Http\Controllers\Controller;
 use App\Models\Summary\Category;
-use App\Option\Get;
+use App\Option\SummaryCategoryCollection;
 use App\Response\Cache;
 use App\Request\Parameter;
 use App\Request\Route;
@@ -90,12 +90,8 @@ class CategoryView extends Controller
             $this->permitted_resource_types
         );
 
-        $get = Get::init()->
-            setDescription('route-descriptions.summary_category_GET_index')->
-            setAuthenticationStatus($permissions['view'])->
-            setSearchable('api.category.summary-searchable')->
-            option();
+        $response = new SummaryCategoryCollection($permissions);
 
-        return $this->optionsResponse($get, 200);
+        return $response->create()->response();
     }
 }

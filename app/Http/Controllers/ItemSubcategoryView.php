@@ -2,15 +2,13 @@
 
 namespace App\Http\Controllers;
 
-use App\Option\Delete;
-use App\Option\Get;
-use App\Option\Post;
+use App\Option\ItemSubcategoryCollection;
+use App\Option\ItemSubcategoryItem;
 use App\Response\Cache;
 use App\Response\Header\Header;
 use App\Request\Route;
 use App\Models\ItemCategory;
 use App\Models\ItemSubcategory;
-use App\Models\Subcategory;
 use App\Models\Transformers\ItemSubcategory as ItemSubcategoryTransformer;
 use Illuminate\Http\JsonResponse;
 
@@ -172,24 +170,13 @@ class ItemSubcategoryView extends Controller
             \App\Response\Responses::notFound(trans('entities.item-category'));
         }
 
-        $get = Get::init()->
-            setParameters('api.item-subcategory.parameters.collection')->
-            setAuthenticationStatus($permissions['view'])->
-            setDescription('route-descriptions.item_sub_category_GET_index')->
-            option();
+        $response = new ItemSubcategoryCollection($permissions);
 
-        $post = Post::init()->
-            setFields('api.item-subcategory.fields')->
-            setFieldsData($this->fieldsData($item_category->category_id))->
-            setDescription('route-descriptions.item_sub_category_POST')->
-            setAuthenticationStatus($permissions['manage'])->
-            setAuthenticationRequired(true)->
-            option();
-
-        return $this->optionsResponse(
-            $get + $post,
-            200
-        );
+        return $response->setAllowedValues(
+                (new \App\Option\Value\Subcategory())->allowedValues($item_category->category_id)
+            )->
+            create()->
+            response();
     }
 
     /**
@@ -241,55 +228,8 @@ class ItemSubcategoryView extends Controller
             \App\Response\Responses::notFound(trans('entities.item-subcategory'));
         }
 
-        $get = Get::init()->
-            setParameters('api.item-subcategory.parameters.item')->
-            setAuthenticationStatus($permissions['view'])->
-            setDescription('route-descriptions.item_sub_category_GET_show')->
-            option();
+        $response = new ItemSubcategoryItem($permissions);
 
-        $delete = Delete::init()->
-            setDescription('route-descriptions.item_sub_category_DELETE')->
-            setAuthenticationStatus($permissions['manage'])->
-            setAuthenticationRequired(true)->
-            option();
-
-        return $this->optionsResponse(
-            $get + $delete,
-            200
-        );
-    }
-
-    /**
-     * Generate any conditional POST parameters, will be merged with the data
-     * arrays defined in config/api/[type]/fields.php
-     *
-     * @param integer $category_id
-     *
-     * @return array
-     */
-    private function fieldsData($category_id): array
-    {
-        $sub_categories = (new Subcategory())
-            ->select('id', 'name', 'description')
-            ->where('category_id', '=', $category_id)
-            ->get();
-
-        $conditional_post_parameters = ['subcategory_id' => []];
-
-        foreach ($sub_categories as $sub_category) {
-            $id = $this->hash->encode('subcategory', $sub_category->id);
-
-            if ($id === false) {
-                \App\Response\Responses::unableToDecode();
-            }
-
-            $conditional_post_parameters['subcategory_id']['allowed_values'][$id] = [
-                'value' => $id,
-                'name' => $sub_category->name,
-                'description' => $sub_category->description
-            ];
-        }
-
-        return $conditional_post_parameters;
+        return $response->create()->response();
     }
 }

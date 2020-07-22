@@ -251,15 +251,17 @@ class Pagination
 
             $this->uri .= '?';
 
+            $app_url = Config::get('api.app.url');
+
             if ($previous_offset !== null) {
-                $uris['previous'] .= Config::get('api.app.url') . '/' . $this->uri .
+                $uris['previous'] .= $app_url . '/' . $this->uri .
                     $parameters . $sort_parameters . $search_parameters .
                     $filter_parameters . 'offset=' . $previous_offset . '&limit=' .
                     $this->limit;
             }
 
             if ($next_offset !== null) {
-                $uris['next'] .= Config::get('api.app.url') . '/' . $this->uri .
+                $uris['next'] .= $app_url . '/' . $this->uri .
                     $parameters . $sort_parameters . $search_parameters .
                     $filter_parameters . 'offset=' . $next_offset . '&limit=' .
                     $this->limit;

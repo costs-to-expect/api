@@ -8,8 +8,7 @@ Route::group(
         'prefix' => Config::get('api.app.version.prefix'),
         'middleware' => [
             'convert.route.parameters',
-            'convert.get.parameters',
-            'log.requests'
+            'convert.get.parameters'
         ]
     ],
     function () {
@@ -72,16 +71,6 @@ Route::group(
         Route::options(
             'summary/resource-types/{resource_type_id}/resources/{resource_id}/items',
             'Summary\ItemView@optionsIndex'
-        );
-
-        Route::get(
-            'summary/request/access-log',
-            'Summary\RequestView@AccessLog'
-        );
-
-        Route::options(
-            'summary/request/access-log',
-            'Summary\RequestView@optionsAccessLog'
         );
     }
 );

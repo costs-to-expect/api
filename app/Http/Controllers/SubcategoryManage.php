@@ -7,10 +7,10 @@ use App\Request\Route;
 use App\Models\Subcategory;
 use App\Models\Transformers\Subcategory as SubcategoryTransformer;
 use App\Request\Validate\Subcategory as SubcategoryValidator;
+use App\Response\Responses;
 use Exception;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Support\Facades\Auth;
 
 /**
  * Manage category sub categories
@@ -40,7 +40,7 @@ class SubcategoryManage extends Controller
             true
         );
 
-        $cache_control = new Cache\Control(Auth::user()->id);
+        $cache_control = new Cache\Control($this->user_id);
         $cache_key = new Cache\Key();
 
         $validator = (new SubcategoryValidator)->create(['category_id' => $category_id]);
@@ -54,17 +54,19 @@ class SubcategoryManage extends Controller
             ]);
             $sub_category->save();
 
-            $cache_control->clearPrivateCacheKeys([
-                $cache_key->categories($resource_type_id)
-            ]);
-
-            if (in_array((int) $resource_type_id, $this->public_resource_types, true)) {
-                $cache_control->clearPublicCacheKeys([
+            $cache_trash = new Cache\Trash(
+                $cache_control,
+                [
                     $cache_key->categories($resource_type_id)
-                ]);
-            }
+                ],
+                $resource_type_id,
+                $this->public_resource_types,
+                $this->permittedUsers($resource_type_id)
+            );
+            $cache_trash->all();
+
         } catch (Exception $e) {
-            \App\Response\Responses::failedToSaveModelForCreate();
+            Responses::failedToSaveModelForCreate();
         }
 
         return response()->json(
@@ -96,7 +98,7 @@ class SubcategoryManage extends Controller
             true
         );
 
-        $cache_control = new Cache\Control(Auth::user()->id);
+        $cache_control = new Cache\Control($this->user_id);
         $cache_key = new Cache\Key();
 
         $sub_category = (new Subcategory())->instance(
@@ -105,27 +107,28 @@ class SubcategoryManage extends Controller
         );
 
         if ($sub_category === null) {
-            \App\Response\Responses::notFound(trans('entities.subcategory'));
+            Responses::notFound(trans('entities.subcategory'));
         }
 
         try {
             $sub_category->delete();
 
-            $cache_control->clearPrivateCacheKeys([
-                $cache_key->categories($resource_type_id)
-            ]);
-
-            if (in_array((int) $resource_type_id, $this->public_resource_types, true)) {
-                $cache_control->clearPublicCacheKeys([
+            $cache_trash = new Cache\Trash(
+                $cache_control,
+                [
                     $cache_key->categories($resource_type_id)
-                ]);
-            }
+                ],
+                $resource_type_id,
+                $this->public_resource_types,
+                $this->permittedUsers($resource_type_id)
+            );
+            $cache_trash->all();
 
-            \App\Response\Responses::successNoContent();
+            Responses::successNoContent();
         } catch (QueryException $e) {
-            \App\Response\Responses::foreignKeyConstraintError();
+            Responses::foreignKeyConstraintError();
         } catch (Exception $e) {
-            \App\Response\Responses::notFound(trans('entities.subcategory'), $e);
+            Responses::notFound(trans('entities.subcategory'));
         }
     }
 
@@ -152,13 +155,13 @@ class SubcategoryManage extends Controller
             true
         );
 
-        $cache_control = new Cache\Control(Auth::user()->id);
+        $cache_control = new Cache\Control($this->user_id);
         $cache_key = new Cache\Key();
 
         $subcategory = (new Subcategory())->instance($category_id, $subcategory_id);
 
         if ($subcategory === null) {
-            \App\Response\Responses::failedToSelectModelForUpdateOrDelete();
+            Responses::failedToSelectModelForUpdateOrDelete();
         }
 
         \App\Request\BodyValidation::checkForEmptyPatch();
@@ -183,22 +186,21 @@ class SubcategoryManage extends Controller
         try {
             $subcategory->save();
 
-            $cache_control->clearPrivateCacheKeys([
-                // We need to clear subcategories, resource type items
-                // and items dur to includes so simpler to clear the entire
-                // resource type
-                $cache_key->resourceType($resource_type_id)
-            ]);
+            $cache_trash = new Cache\Trash(
+                $cache_control,
+                [
+                    $cache_key->categories($resource_type_id)
+                ],
+                $resource_type_id,
+                $this->public_resource_types,
+                $this->permittedUsers($resource_type_id)
+            );
+            $cache_trash->all();
 
-            if (in_array((int) $resource_type_id, $this->public_resource_types, true)) {
-                $cache_control->clearPublicCacheKeys([
-                    $cache_key->resourceType($resource_type_id)
-                ]);
-            }
         } catch (Exception $e) {
-            \App\Response\Responses::failedToSaveModelForUpdate();
+            Responses::failedToSaveModelForUpdate();
         }
 
-        \App\Response\Responses::successNoContent();
+        Responses::successNoContent();
     }
 }

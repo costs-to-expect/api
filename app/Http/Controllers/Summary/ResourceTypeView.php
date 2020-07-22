@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Summary;
 
 use App\Http\Controllers\Controller;
 use App\Models\Summary\ResourceType;
-use App\Option\Get;
+use App\Option\SummaryResourceTypeCollection;
 use App\Response\Cache;
 use App\Request\Parameter;
 use App\Response\Header\Headers;
@@ -69,13 +69,8 @@ class ResourceTypeView extends Controller
      */
     public function optionsIndex(): JsonResponse
     {
-        $get = Get::init()->
-            setParameters('api.resource-type.summary-parameters')->
-            setDescription('route-descriptions.summary-resource-type-GET-index')->
-            setAuthenticationStatus(($this->user_id !== null) ? true : false)->
-            setSearchable('api.resource-type.summary-searchable')->
-            option();
+        $response = new SummaryResourceTypeCollection(['view'=> $this->user_id !== null]);
 
-        return $this->optionsResponse($get, 200);
+        return $response->create()->response();
     }
 }

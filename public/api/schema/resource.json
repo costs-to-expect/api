@@ -1,0 +1,27 @@
+{
+    "type": "object",
+    "properties": {
+        "id": {
+            "type": "string"
+        },
+        "name": {
+            "type": "string"
+        },
+        "description": {
+            "type": "string"
+        },
+        "effective_date": {
+            "type": "string"
+        },
+        "created": {
+            "type": "string"
+        },
+        "required": [
+            "id",
+            "name",
+            "description",
+            "effective_date",
+            "created"
+        ]
+    }
+}

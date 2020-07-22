@@ -2,15 +2,16 @@
 
 namespace App\Http\Controllers;
 
+use App\Request\BodyValidation;
 Use App\Response\Cache;
 use App\Request\Route;
 use App\Models\Category;
 use App\Models\Transformers\Category as CategoryTransformer;
 use App\Request\Validate\Category as CategoryValidator;
+use App\Response\Responses;
 use Exception;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Support\Facades\Auth;
 
 /**
  * @author Dean Blackborough <dean@g3d-development.com>
@@ -33,13 +34,13 @@ class CategoryManage extends Controller
             $this->permitted_resource_types
         );
 
-        $cache_control = new Cache\Control(Auth::user()->id);
+        $cache_control = new Cache\Control($this->user_id);
         $cache_key = new Cache\Key();
 
         $validator = (new CategoryValidator)->create([
             'resource_type_id' => $resource_type_id
         ]);
-        \App\Request\BodyValidation::validateAndReturnErrors($validator);
+        BodyValidation::validateAndReturnErrors($validator);
 
         try {
             $category = new Category([
@@ -49,17 +50,19 @@ class CategoryManage extends Controller
             ]);
             $category->save();
 
-            $cache_control->clearPrivateCacheKeys([
-                $cache_key->categories($resource_type_id)
-            ]);
+            $cache_trash = new Cache\Trash(
+                $cache_control,
+                [
+                    $cache_key->resourceType($resource_type_id)
+                ],
+                $resource_type_id,
+                $this->public_resource_types,
+                $this->permittedUsers($resource_type_id)
+            );
+            $cache_trash->all();
 
-            if (in_array((int) $resource_type_id, $this->public_resource_types, true)) {
-                $cache_control->clearPublicCacheKeys([
-                    $cache_key->categories($resource_type_id)
-                ]);
-            }
         } catch (Exception $e) {
-           \App\Response\Responses::failedToSaveModelForCreate();
+           Responses::failedToSaveModelForCreate();
         }
 
         return response()->json(
@@ -88,26 +91,33 @@ class CategoryManage extends Controller
             true
         );
 
-        $cache_control = new Cache\Control(Auth::user()->id);
+        $cache_control = new Cache\Control($this->user_id);
         $cache_key = new Cache\Key();
 
+        $category = (new Category())->find($category_id);
+        if ($category === null) {
+            Responses::notFound(trans('entities.category'));
+        }
+
         try {
-            (new Category())->find($category_id)->delete();
-            $cache_control->clearPrivateCacheKeys([
-                $cache_key->categories($resource_type_id)
-            ]);
+            $category->delete();
 
-            if (in_array((int) $resource_type_id, $this->public_resource_types, true)) {
-                $cache_control->clearPublicCacheKeys([
-                    $cache_key->categories($resource_type_id)
-                ]);
-            }
+            $cache_trash = new Cache\Trash(
+                $cache_control,
+                [
+                    $cache_key->resourceType($resource_type_id)
+                ],
+                $resource_type_id,
+                $this->public_resource_types,
+                $this->permittedUsers($resource_type_id)
+            );
+            $cache_trash->all();
 
-            \App\Response\Responses::successNoContent();
+            Responses::successNoContent();
         } catch (QueryException $e) {
-            \App\Response\Responses::foreignKeyConstraintError();
+            Responses::foreignKeyConstraintError();
         } catch (Exception $e) {
-            \App\Response\Responses::notFound(trans('entities.category'), $e);
+            Responses::notFound(trans('entities.category'));
         }
     }
 
@@ -128,24 +138,29 @@ class CategoryManage extends Controller
             true
         );
 
-        $cache_control = new Cache\Control(Auth::user()->id);
+        $cache_control = new Cache\Control($this->user_id);
         $cache_key = new Cache\Key();
 
         $category = (new Category())->instance($category_id);
 
         if ($category === null) {
-            \App\Response\Responses::failedToSelectModelForUpdateOrDelete();
+            Responses::failedToSelectModelForUpdateOrDelete();
         }
 
-        \App\Request\BodyValidation::checkForEmptyPatch();
+        BodyValidation::checkForEmptyPatch();
 
         $validator = (new CategoryValidator)->update([
-            'resource_type_id' => (int)$category->resource_type_id,
-            'category_id' => (int)$category_id
+            'resource_type_id' => (int) $category->resource_type_id,
+            'category_id' => (int) $category_id
         ]);
-        \App\Request\BodyValidation::validateAndReturnErrors($validator);
 
-        \App\Request\BodyValidation::checkForInvalidFields(
+        if ($validator === null) {
+            Responses::failedToSelectModelForUpdateOrDelete();
+        }
+
+        BodyValidation::validateAndReturnErrors($validator);
+
+        BodyValidation::checkForInvalidFields(
             array_merge(
                 (new Category())->patchableFields(),
                 (new CategoryValidator)->dynamicDefinedFields()
@@ -159,22 +174,21 @@ class CategoryManage extends Controller
         try {
             $category->save();
 
-            $cache_control->clearPrivateCacheKeys([
-                // We need to clear categories, resource type items
-                // and items due to includes so simpler to clear the entire
-                // resource type
-                $cache_key->resourceType($resource_type_id)
-            ]);
-
-            if (in_array((int) $resource_type_id, $this->public_resource_types, true)) {
-                $cache_control->clearPublicCacheKeys([
+            $cache_trash = new Cache\Trash(
+                $cache_control,
+                [
                     $cache_key->resourceType($resource_type_id)
-                ]);
-            }
+                ],
+                $resource_type_id,
+                $this->public_resource_types,
+                $this->permittedUsers($resource_type_id)
+            );
+            $cache_trash->all();
+
         } catch (Exception $e) {
-            \App\Response\Responses::failedToSaveModelForUpdate();
+            Responses::failedToSaveModelForUpdate();
         }
 
-        \App\Response\Responses::successNoContent();
+        Responses::successNoContent();
     }
 }

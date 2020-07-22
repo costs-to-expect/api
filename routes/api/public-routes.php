@@ -8,8 +8,7 @@ Route::group(
         'prefix' => Config::get('api.app.version.prefix'),
         'middleware' => [
             'convert.route.parameters',
-            'convert.get.parameters',
-            'log.requests'
+            'convert.get.parameters'
         ]
     ],
     function () {
@@ -288,14 +287,9 @@ Route::group(
             'RequestManage@createErrorLog'
         );
 
-        Route::get(
-            'request/access-log',
-            'RequestView@accessLog'
-        );
-
         Route::options(
-            'request/access-log',
-            'RequestView@optionsAccessLog'
+            'tools/cache',
+            'ToolView@optionsCache'
         );
     }
 );

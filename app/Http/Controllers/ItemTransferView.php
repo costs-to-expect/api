@@ -3,10 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Models\ItemTransfer;
-use App\Models\Resource;
 use App\Models\Transformers\ItemTransfer as ItemTransferTransformer;
-use App\Option\Get;
-use App\Option\Post;
+use App\Option\ItemTransferCollection;
+use App\Option\ItemTransferItem;
+use App\Option\ItemTransferTransfer;
 use App\Response\Cache;
 use App\Response\Header\Headers;
 use App\Request\Parameter;
@@ -109,17 +109,9 @@ class ItemTransferView extends Controller
             $this->permitted_resource_types
         );
 
-        $get = Get::init()->
-            setParameters('api.item-transfer.parameters.collection')->
-            setPagination(true)->
-            setAuthenticationStatus($permissions['view'])->
-            setDescription('route-descriptions.item_transfer_GET_index')->
-            option();
+        $response = new ItemTransferCollection($permissions);
 
-        return $this->optionsResponse(
-            $get,
-            200
-        );
+        return $response->create()->response();
     }
 
     /**
@@ -142,15 +134,9 @@ class ItemTransferView extends Controller
             $this->permitted_resource_types
         );
 
-        $get = Get::init()->
-            setDescription('route-descriptions.item_transfer_GET_show')->
-            setAuthenticationStatus($permissions['view'])->
-            option();
+        $response = new ItemTransferItem($permissions);
 
-        return $this->optionsResponse(
-            $get,
-            200
-        );
+        return $response->create()->response();
     }
 
     public function optionsTransfer(
@@ -173,20 +159,16 @@ class ItemTransferView extends Controller
             $this->permitted_resource_types
         );
 
-        $post = Post::init()->
-            setFields('api.item-transfer.fields')->
-            setFieldsData(
-                $this->fieldsData(
+        $response = new ItemTransferTransfer($permissions);
+
+        return $response->setAllowedValues(
+                (new \App\Option\Value\Resource())->allowedValues(
                     $resource_type_id,
                     $resource_id
                 )
             )->
-            setDescription('route-descriptions.item_transfer_POST')->
-            setAuthenticationStatus($permissions['manage'])->
-            setAuthenticationRequired(true)->
-            option();
-
-        return $this->optionsResponse($post, 200);
+            create()->
+            response();
     }
 
     /**
@@ -224,42 +206,5 @@ class ItemTransferView extends Controller
             200,
             $headers->headers()
         );
-    }
-
-    /**
-     * Generate any conditional POST parameters, will be merged with the
-     * relevant config/api/[type]/fields.php data array
-     *
-     * @param integer $resource_type_id
-     * @param integer $resource_id
-     *
-     * @return array
-     */
-    private function fieldsData(
-        int $resource_type_id,
-        int $resource_id
-    ): array
-    {
-        $resources = (new Resource())->resourcesForResourceType(
-            $resource_type_id,
-            $resource_id
-        );
-
-        $conditional_post_parameters = ['resource_id' => []];
-        foreach ($resources as $resource) {
-            $id = $this->hash->encode('resource', $resource['resource_id']);
-
-            if ($id === false) {
-                \App\Response\Responses::unableToDecode();
-            }
-
-            $conditional_post_parameters['resource_id']['allowed_values'][$id] = [
-                'value' => $id,
-                'name' => $resource['resource_name'],
-                'description' => $resource['resource_description']
-            ];
-        }
-
-        return $conditional_post_parameters;
     }
 }

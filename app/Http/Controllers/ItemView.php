@@ -3,16 +3,13 @@
 namespace App\Http\Controllers;
 
 use App\Item\Factory;
-use App\Option\Delete;
-use App\Option\Get;
-use App\Option\Patch;
-use App\Option\Post;
+use App\Option\ItemCollection;
+use App\Option\ItemItem;
+use App\Option\Value\Item;
 use App\Response\Cache;
 use App\Response\Header\Header;
 use App\Request\Parameter;
 use App\Request\Route;
-use App\Models\Category;
-use App\Models\Subcategory;
 use App\Response\Header\Headers;
 use App\Response\Pagination as UtilityPagination;
 use Illuminate\Http\JsonResponse;
@@ -211,37 +208,21 @@ class ItemView extends Controller
             (int) $resource_id
         );
 
-        $parameters_data = $this->parametersData(
+        $allowed_values = (new Item())->allowedValues(
+            $item_interface,
             $resource_type_id,
             $resource_id,
-            array_merge(
-                $item_interface->collectionParametersNames(),
-                $defined_parameters
-            )
+            $this->permitted_resource_types,
+            $this->include_public,
+            $defined_parameters
         );
 
-        $get = Get::init()->
-            setSortable($item_interface->sortParametersConfig())->
-            setSearchable($item_interface->searchParametersConfig())->
-            setFilterable($item_interface->filterParametersConfig())->
-            setParameters($item_interface->collectionParametersConfig())->
-            setParametersData($parameters_data)->
-            setPagination(true)->
-            setAuthenticationStatus($permissions['view'])->
-            setDescription('route-descriptions.item_GET_index')->
-            option();
+        $response = new ItemCollection($permissions);
 
-        $post = Post::init()->
-            setFields($item_interface->fieldsConfig())->
-            setDescription( 'route-descriptions.item_POST')->
-            setAuthenticationRequired(true)->
-            setAuthenticationStatus($permissions['manage'])->
-            option();
-
-        return $this->optionsResponse(
-            $get + $post,
-            200
-        );
+        return $response->setItemInterface($item_interface)->
+            setAllowedValues($allowed_values)->
+            create()->
+            response();
     }
 
     /**
@@ -283,136 +264,8 @@ class ItemView extends Controller
             \App\Response\Responses::notFound(trans('entities.item'));
         }
 
-        $get = Get::init()->
-            setParameters($item_interface->showParametersConfig())->
-            setAuthenticationStatus($permissions['view'])->
-            setDescription('route-descriptions.item_GET_show')->
-            option();
+        $response = new ItemItem($permissions);
 
-        $delete = Delete::init()->
-            setDescription('route-descriptions.item_DELETE')->
-            setAuthenticationStatus($permissions['manage'])->
-            setAuthenticationRequired(true)->
-            option();
-
-        $patch = Patch::init()->
-            setFields($item_interface->fieldsConfig())->
-            setDescription('route-descriptions.item_PATCH')->
-            setAuthenticationStatus($permissions['manage'])->
-            setAuthenticationRequired(true)->
-            option();
-
-        return $this->optionsResponse(
-            $get + $delete + $patch,
-            200
-        );
-    }
-
-    /**
-     * Set the allowed values for any conditional parameters, these will be
-     * merged with the data arrays defined in config/api/[item-type]/parameters.php
-     *
-     * Checks to see if a parameter requiring conditional values exists, if it
-     * does, populate the values
-     *
-     * @param integer $resource_type_id
-     * @param integer $resource_id
-     * @param array $parameters Merged array of definable parameters and any
-     * set values
-     *
-     * @return array
-     */
-    private function parametersData(
-        int $resource_type_id,
-        int $resource_id,
-        array $parameters
-    ): array
-    {
-
-        $item_interface = Factory::item($resource_type_id);
-
-        $conditional_parameters = [];
-
-        if (array_key_exists('year', $parameters) === true) {
-            $conditional_parameters['year']['allowed_values'] = [];
-
-            for (
-                $i = $item_interface->conditionalParameterMinYear($resource_id);
-                $i <= $item_interface->conditionalParameterMaxYear($resource_id);
-                $i++
-            ) {
-                $conditional_parameters['year']['allowed_values'][$i] = [
-                    'value' => $i,
-                    'name' => $i,
-                    'description' => trans('item-type-' . $item_interface->type() .
-                            '/allowed-values.description-prefix-year') . $i
-                ];
-            }
-        }
-
-        if (array_key_exists('month', $parameters) === true) {
-            $conditional_parameters['month']['allowed_values'] = [];
-
-            for ($i=1; $i < 13; $i++) {
-                $conditional_parameters['month']['allowed_values'][$i] = [
-                    'value' => $i,
-                    'name' => date("F", mktime(0, 0, 0, $i, 10)),
-                    'description' => trans('item-type-' . $item_interface->type() .
-                        '/allowed-values.description-prefix-month') .
-                        date("F", mktime(0, 0, 0, $i, 1))
-                ];
-            }
-        }
-
-        if (array_key_exists('category', $parameters) === true) {
-            $conditional_parameters['category']['allowed_values'] = [];
-
-            $categories = (new Category())->paginatedCollection(
-                $resource_type_id,
-                $this->permitted_resource_types,
-                $this->include_public,
-                0,
-                100
-            );
-
-            foreach ($categories as $category) {
-                $conditional_parameters['category']['allowed_values'][$this->hash->encode('category', $category['category_id'])] = [
-                    'value' => $this->hash->encode('category', $category['category_id']),
-                    'name' => $category['category_name'],
-                    'description' => trans('item-type-' . $item_interface->type() .
-                            '/allowed-values.description-prefix-category') .
-                        $category['category_name'] .
-                        trans('item-type-' . $item_interface->type() .
-                            '/allowed-values.description-suffix-category')
-                ];
-            }
-        }
-
-        if (
-            array_key_exists('category', $parameters) === true &&
-            $parameters['category'] !== null &&
-            array_key_exists('subcategory', $parameters) === true
-        ) {
-            $conditional_parameters['subcategory']['allowed_values'] = [];
-
-            $subcategories = (new Subcategory())->paginatedCollection(
-                $resource_type_id,
-                $parameters['category']
-            );
-
-            array_map(
-                function($subcategory) use (&$conditional_parameters, $item_interface) {
-                    $conditional_parameters['subcategory']['allowed_values'][$this->hash->encode('subcategory', $subcategory['subcategory_id'])] = [
-                        'value' => $this->hash->encode('subcategory', $subcategory['subcategory_id']),
-                        'name' => $subcategory['subcategory_name'],
-                        'description' => trans('item-type-' . $item_interface->type() . '/allowed-values.description-prefix-subcategory') .
-                            $subcategory['subcategory_name'] . trans('item-type-' . $item_interface->type() . '/allowed-values.description-suffix-subcategory')
-                    ];
-                },
-                $subcategories
-            );
-        }
-
-        return $conditional_parameters;
+        return $response->setItemInterface($item_interface)->create()->response();
     }
 }

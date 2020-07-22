@@ -223,10 +223,27 @@ class ResourceTypeAccess extends Model
             toArray();
 
         foreach ($results as $row) {
-            $permitted[] = $row['resource_type_id'];
+            $permitted[] = (int) $row['resource_type_id'];
         }
 
         return $permitted;
+    }
+
+    public function permittedResourceTypeUsers(int $resource_type_id, int $ignore_user_id): array
+    {
+        $users = [];
+
+        $results = $this->where('resource_type_id', '=', $resource_type_id)->
+            where('user_id', '!=', $ignore_user_id)->
+            select('user_id')->
+            get()->
+            toArray();
+
+        foreach ($results as $row) {
+            $users[] = (int) $row['user_id'];
+        }
+
+        return $users;
     }
 
     /**

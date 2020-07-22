@@ -25,6 +25,8 @@ class Control
 
     private string $visibility = 'public';
 
+    private string $laravel_cache_prefix;
+
     /**
      * Create an instance of the cache class. The prefix needs to be a
      * string specific to the user, we don't want any unfortunate caching
@@ -50,6 +52,8 @@ class Control
         }
 
         $this->key_prefix_public = $config['public_key_prefix'];
+
+        $this->laravel_cache_prefix = Config::get('cache.prefix');
     }
 
     /**
@@ -97,10 +101,15 @@ class Control
             $keys = $this->matchingPublicCacheKeys($key_wildcard, $include_summaries);
 
             foreach ($keys as $key) {
-                // We strip the cache prefix as we went to the db and the prefix will be in the strings already
-                LaravelCache::forget(str_replace_first(Config::get('cache.prefix'), '', $key['key']));
+                $this->clearCacheKeyByFullName($key['key']);
             }
         }
+    }
+
+    public function clearCacheKeyByFullName(string $key): void
+    {
+        // We strip the cache prefix as we went to the db and the prefix will be in the string
+        LaravelCache::forget(str_replace_first($this->laravel_cache_prefix, '', $key));
     }
 
     /**
@@ -118,8 +127,7 @@ class Control
             $keys = $this->matchingPrivateCacheKeys($key_wildcard, $include_summaries);
 
             foreach ($keys as $key) {
-                // We strip the cache prefix as we went to the db and the prefix will be in the strings already
-                LaravelCache::forget(str_replace_first(Config::get('cache.prefix'), '', $key['key']));
+                $this->clearCacheKeyByFullName($key['key']);
             }
         }
     }
@@ -236,14 +244,14 @@ class Control
      *
      * @return array
      */
-    private function matchingPrivateCacheKeys(
+    public function matchingPrivateCacheKeys(
         string $key_wildcard,
         bool $include_summaries = false
     ): array
     {
         if ($this->key_prefix_private !== null) {
             return (new \App\Models\Cache())->matchingKeys(
-                Config::get('cache.prefix') . $this->key_prefix_private,
+                $this->laravel_cache_prefix . $this->key_prefix_private,
                 $key_wildcard,
                 $include_summaries
             );
@@ -260,13 +268,13 @@ class Control
      *
      * @return array
      */
-    private function matchingPublicCacheKeys(
+    public function matchingPublicCacheKeys(
         string $key_wildcard,
         bool $include_summaries = false
     ): array
     {
         return (new \App\Models\Cache())->matchingKeys(
-            Config::get('cache.prefix') . $this->key_prefix_public,
+            $this->laravel_cache_prefix . $this->key_prefix_public,
             $key_wildcard,
             $include_summaries
         );

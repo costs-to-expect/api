@@ -20,7 +20,7 @@ class ResourceTypeItemMonth extends Transformer
         $this->transformed = [
             'id' => $to_transform['month'],
             'month' => date("F", mktime(0, 0, 0, $to_transform['month'], 1)),
-            'total' => (float)$to_transform['total']
+            'total' => number_format((float) $to_transform['total'],2, '.', '')
         ];
     }
 }

@@ -10,7 +10,7 @@ use App\Request\Validate\ItemTransfer as ItemTransferValidator;
 use Exception;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 /**
  * Transfer items
@@ -35,7 +35,7 @@ class ItemTransferManage extends Controller
             true
         );
 
-        $user_id = Auth::user()->id;
+        $user_id = $this->user_id;
 
         $cache_control = new Cache\Control($user_id);
         $cache_key = new Cache\Key();
@@ -55,32 +55,36 @@ class ItemTransferManage extends Controller
                 return \App\Response\Responses::unableToDecode();
             }
 
-            $item = (new Item())->instance($resource_type_id, $resource_id, $item_id);
-            if ($item !== null) {
-                $item->resource_id = $new_resource_id;
-                $item->save();
-            } else {
-                return \App\Response\Responses::failedToSelectModelForUpdateOrDelete();
-            }
+            DB::transaction(static function() use ($resource_type_id, $resource_id, $item_id, $new_resource_id, $user_id) {
+                $item = (new Item())->instance($resource_type_id, $resource_id, $item_id);
+                if ($item !== null) {
+                    $item->resource_id = $new_resource_id;
+                    $item->save();
+                } else {
+                    return \App\Response\Responses::failedToSelectModelForUpdateOrDelete();
+                }
 
-            $item_transfer = new ItemTransfer([
-                'resource_type_id' => $resource_type_id,
-                'from' => (int) $resource_id,
-                'to' => $new_resource_id,
-                'item_id' => $item_id,
-                'transferred_by' => $user_id
-            ]);
-            $item_transfer->save();
-
-            $cache_control->clearPrivateCacheKeys([
-                $cache_key->transfers($resource_type_id)
-            ]);
-
-            if (in_array((int) $resource_type_id, $this->public_resource_types, true)) {
-                $cache_control->clearPublicCacheKeys([
-                    $cache_key->transfers($resource_type_id)
+                $item_transfer = new ItemTransfer([
+                    'resource_type_id' => $resource_type_id,
+                    'from' => (int)$resource_id,
+                    'to' => $new_resource_id,
+                    'item_id' => $item_id,
+                    'transferred_by' => $user_id
                 ]);
-            }
+                $item_transfer->save();
+            });
+
+            $cache_trash = new Cache\Trash(
+                $cache_control,
+                [
+                    $cache_key->resourceType($resource_type_id) // We need to clear everything
+                ],
+                $resource_type_id,
+                $this->public_resource_types,
+                $this->permittedUsers($resource_type_id)
+            );
+            $cache_trash->all();
+
         } catch (QueryException $e) {
             return \App\Response\Responses::foreignKeyConstraintError();
         } catch (Exception $e) {

@@ -20,7 +20,7 @@ class ResourceTypeItemYear extends Transformer
         $this->transformed = [
             'id' => $to_transform['year'],
             'year' => $to_transform['year'],
-            'total' => (float) $to_transform['total']
+            'total' => number_format((float) $to_transform['total'],2, '.', '')
         ];
     }
 }

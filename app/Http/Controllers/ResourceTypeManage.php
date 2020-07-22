@@ -14,7 +14,7 @@ use App\Request\Validate\ResourceType as ResourceTypeValidator;
 use Exception;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 /**
  * Manage resource types
@@ -34,14 +34,12 @@ class ResourceTypeManage extends Controller
      */
     public function create(): JsonResponse
     {
-        $user_id = Auth::user()->id;
-
         $validator = (new ResourceTypeValidator)->create([
-            'user_id' => $user_id
+            'user_id' => $this->user_id
         ]);
         \App\Request\BodyValidation::validateAndReturnErrors($validator);
 
-        $cache_control = new Cache\Control($user_id);
+        $cache_control = new Cache\Control($this->user_id);
         $cache_key = new Cache\Key();
 
         try {
@@ -54,8 +52,8 @@ class ResourceTypeManage extends Controller
 
             $permitted_users = new PermittedUser([
                 'resource_type_id' => $resource_type->id,
-                'user_id' => $user_id,
-                'added_by' => $user_id
+                'user_id' => $this->user_id,
+                'added_by' => $this->user_id
             ]);
             $permitted_users->save();
 
@@ -72,12 +70,12 @@ class ResourceTypeManage extends Controller
             $resource_type_item_type->save();
 
             $cache_control->clearPrivateCacheKeys([
-                $cache_key->resourcesTypes()
+                $cache_key->resourceTypes()
             ]);
 
             if (request()->input('public', 0) !== 0) {
                 $cache_control->clearPublicCacheKeys([
-                    $cache_key->resourcesTypes()
+                    $cache_key->resourceTypes()
                 ]);
             }
         } catch (Exception $e) {
@@ -107,13 +105,11 @@ class ResourceTypeManage extends Controller
             true
         );
 
-        $user_id = Auth::user()->id;
-
-        $cache_control = new Cache\Control($user_id);
+        $cache_control = new Cache\Control($this->user_id);
         $cache_key = new Cache\Key();
 
         $resource_type_item_type = (new ResourceTypeItemType())->instance($resource_type_id);
-        $permitted_user = (new PermittedUser())->instance($resource_type_id, $user_id);
+        $permitted_user = (new PermittedUser())->instance($resource_type_id, $this->user_id);
         $resource_type = (new ResourceType())->find($resource_type_id);
 
         $categories = (new Category())->total(
@@ -136,27 +132,29 @@ class ResourceTypeManage extends Controller
             $resource_type !== null
         ) {
             try {
-                $resource_type_item_type->delete();
-                $permitted_user->delete();
-                $resource_type->delete();
+                DB::transaction(static function() use ($resource_type_item_type, $permitted_user, $resource_type) {
+                    $resource_type_item_type->delete();
+                    $permitted_user->delete();
+                    $resource_type->delete();
+                });
 
-                $cache_control->clearPrivateCacheKeys([
-                    $cache_key->resourcesTypes(),
-                    $cache_key->permittedUsers($resource_type_id)
-                ]);
-
-                if (in_array((int) $resource_type_id, $this->public_resource_types, true)) {
-                    $cache_control->clearPublicCacheKeys([
-                        $cache_key->resourcesTypes(),
+                $cache_trash = new Cache\Trash(
+                    $cache_control,
+                    [
+                        $cache_key->resourceTypes(),
                         $cache_key->permittedUsers($resource_type_id)
-                    ]);
-                }
+                    ],
+                    $resource_type_id,
+                    $this->public_resource_types,
+                    $this->permittedUsers($resource_type_id)
+                );
+                $cache_trash->all();
 
                 \App\Response\Responses::successNoContent();
             } catch (QueryException $e) {
                 \App\Response\Responses::foreignKeyConstraintError();
             } catch (Exception $e) {
-                \App\Response\Responses::notFound(trans('entities.resource-type'), $e);
+                \App\Response\Responses::notFound(trans('entities.resource-type'));
             }
         } else {
             \App\Response\Responses::foreignKeyConstraintError();
@@ -180,9 +178,7 @@ class ResourceTypeManage extends Controller
             true
         );
 
-        $user_id = Auth::user()->id;
-
-        $cache_control = new Cache\Control($user_id);
+        $cache_control = new Cache\Control($this->user_id);
         $cache_key = new Cache\Key();
 
         $resource_type = (new ResourceType())->instance($resource_type_id);
@@ -195,7 +191,7 @@ class ResourceTypeManage extends Controller
 
         $validator = (new ResourceTypeValidator())->update([
             'resource_type_id' => (int) ($resource_type_id),
-            'user_id' => $user_id
+            'user_id' => $this->user_id
         ]);
         \App\Request\BodyValidation::validateAndReturnErrors($validator);
 
@@ -212,15 +208,19 @@ class ResourceTypeManage extends Controller
 
         try {
             $resource_type->save();
-            $cache_control->clearPrivateCacheKeys([
-                $cache_key->resourcesTypes()
-            ]);
 
-            if (in_array((int) $resource_type_id, $this->public_resource_types, true)) {
-                $cache_control->clearPublicCacheKeys([
-                    $cache_key->resourcesTypes()
-                ]);
-            }
+            $cache_trash = new Cache\Trash(
+                $cache_control,
+                [
+                    $cache_key->resourceTypes(),
+                    $cache_key->permittedUsers($resource_type_id)
+                ],
+                $resource_type_id,
+                $this->public_resource_types,
+                $this->permittedUsers($resource_type_id)
+            );
+            $cache_trash->all();
+
         } catch (Exception $e) {
             \App\Response\Responses::failedToSaveModelForUpdate();
         }

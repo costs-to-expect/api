@@ -2,6 +2,32 @@
 
 The complete changelog for the Costs to Expect REST API, our changelog follows the format defined at https://keepachangelog.com/en/1.0.0/
 
+## [v2.12.0] - 2020-07-19
+### Added
+- We have added the ability to exclude public resource types; to exclude public resource types include `exclude-public=1` in your request URIs.
+- We have added support for database transactions; if we are modifying more than one table, we use database transactions.
+- We have added a route to show the number of cached keys for the authenticated user and then optionally delete.
+- We have included the schema files for the API. The schema files are accessible at `/api/schema/[type]`.
+
+### Changed
+- We have reworked our Option responses; we have moved the code from the controllers ready for the creation of a new package/library.
+- We have removed some duplication in our controllers, fetching dynamic data for Options requests and validation responses is simpler.
+- We have updated all manage controllers; we make use of the existing`user_id` property if we need a `user_id`.
+- We have reworked how we are clearing cache; we clear the cache for all permitted users when any user makes a cache clearing change.
+
+### Fixed
+- We have fixed a couple of instances where we are not passing ids through our hashers.
+- We have fixed the included category and subcategory objects in the resource type items collection.
+- We have fixed a couple of transformers; we were not correctly formatting totals.
+- We have corrected not found calls; in some cases, we were showing error messages on our live environment that we don't want to show.
+- We have fixed the allowed values subcategories array; when we show the allowed values array with a validation error, the collection will have values.
+- We have reworked all our deletes; in some cases, we were possibly creating null references.
+- We have moved a call to fetch a config value; the function call is inside a loop which is a performance issue.
+- We have updated the item type models': the `updated_at` and `created_at` come from the relevant item type model.
+
+### Removed
+- We have removed all API request logging; the request logging isn't adding any value data that we can't get via other means.
+
 ## [v2.11.6] - 2020-07-01
 ### Added
 - We have added support for an `X-Skip-Cache` request header; If you include the header with your request we will skip response caching and fetch live values, please use this with care.
