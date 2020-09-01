@@ -31,10 +31,8 @@ class Control
      * Create an instance of the cache class. The prefix needs to be a
      * string specific to the user, we don't want any unfortunate caching
      * issues
-     *
-     * @param int $prefix
      */
-    public function __construct(int $prefix = null)
+    public function __construct(int $prefix = null, bool $permitted_user = false)
     {
         $config = Config::get('api.app.cache');
 
@@ -44,7 +42,7 @@ class Control
             $this->cacheable = true;
         }
 
-        if ($prefix !== null) {
+        if ($prefix !== null && $permitted_user === true) {
             $this->key_prefix_private = '-' . $prefix . '-';
             $this->visibility = 'Private';
         } else {
