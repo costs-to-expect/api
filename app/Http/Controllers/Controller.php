@@ -58,7 +58,7 @@ class Controller extends BaseController
         }
 
         if (auth('api')->user() !== null && auth()->guard('api')->check() === true) {
-            $this->user_id = auth('api')->user()->id;
+            $this->user_id = auth('api')->user()->id; // Safe as check above ensures not null
             $this->permitted_resource_types = $this->resource_type_access->permittedResourceTypes($this->user_id);
         }
     }
