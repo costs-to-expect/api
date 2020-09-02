@@ -40,7 +40,10 @@ class SubcategoryManage extends Controller
             true
         );
 
-        $cache_control = new Cache\Control($this->user_id);
+        $cache_control = new Cache\Control(
+            $this->user_id,
+            in_array($resource_type_id, $this->permitted_resource_types, true)
+        );
         $cache_key = new Cache\Key();
 
         $validator = (new SubcategoryValidator)->create(['category_id' => $category_id]);
@@ -98,7 +101,10 @@ class SubcategoryManage extends Controller
             true
         );
 
-        $cache_control = new Cache\Control($this->user_id);
+        $cache_control = new Cache\Control(
+            $this->user_id,
+            in_array($resource_type_id, $this->permitted_resource_types, true)
+        );
         $cache_key = new Cache\Key();
 
         $sub_category = (new Subcategory())->instance(
@@ -155,7 +161,10 @@ class SubcategoryManage extends Controller
             true
         );
 
-        $cache_control = new Cache\Control($this->user_id);
+        $cache_control = new Cache\Control(
+            $this->user_id,
+            in_array($resource_type_id, $this->permitted_resource_types, true)
+        );
         $cache_key = new Cache\Key();
 
         $subcategory = (new Subcategory())->instance($category_id, $subcategory_id);

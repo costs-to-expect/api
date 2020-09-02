@@ -20,7 +20,7 @@ class ToolManage extends Controller
      */
     public function cache(): JsonResponse
     {
-        $cache_control = new Cache\Control($this->user_id);
+        $cache_control = new Cache\Control($this->user_id, true);
 
         $keys = $cache_control->matchingPrivateCacheKeys('', true);
 
@@ -39,7 +39,7 @@ class ToolManage extends Controller
      */
     public function deleteCache(): JsonResponse
     {
-        $cache_control = new Cache\Control($this->user_id);
+        $cache_control = new Cache\Control($this->user_id, true);
 
         $keys = $cache_control->matchingPrivateCacheKeys('', true);
 

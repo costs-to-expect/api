@@ -43,7 +43,10 @@ class ItemManage extends Controller
 
         $user_id = $this->user_id;
 
-        $cache_control = new Cache\Control($this->user_id);
+        $cache_control = new Cache\Control(
+            $this->user_id,
+            in_array($resource_type_id, $this->permitted_resource_types, true)
+        );
         $cache_key = new Cache\Key();
 
         $item_interface = Factory::item($resource_type_id);
@@ -112,7 +115,10 @@ class ItemManage extends Controller
             true
         );
 
-        $cache_control = new Cache\Control($this->user_id);
+        $cache_control = new Cache\Control(
+            $this->user_id,
+            in_array($resource_type_id, $this->permitted_resource_types, true)
+        );
         $cache_key = new Cache\Key();
 
         $item_interface = Factory::item($resource_type_id);
@@ -182,7 +188,10 @@ class ItemManage extends Controller
             true
         );
 
-        $cache_control = new Cache\Control($this->user_id);
+        $cache_control = new Cache\Control(
+            $this->user_id,
+            in_array($resource_type_id, $this->permitted_resource_types, true)
+        );
         $cache_key = new Cache\Key();
 
         $item_interface = Factory::item($resource_type_id);

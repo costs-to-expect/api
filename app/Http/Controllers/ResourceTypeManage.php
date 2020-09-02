@@ -39,7 +39,7 @@ class ResourceTypeManage extends Controller
         ]);
         \App\Request\BodyValidation::validateAndReturnErrors($validator);
 
-        $cache_control = new Cache\Control($this->user_id);
+        $cache_control = new Cache\Control($this->user_id, true);
         $cache_key = new Cache\Key();
 
         try {
@@ -105,7 +105,7 @@ class ResourceTypeManage extends Controller
             true
         );
 
-        $cache_control = new Cache\Control($this->user_id);
+        $cache_control = new Cache\Control($this->user_id, true);
         $cache_key = new Cache\Key();
 
         $resource_type_item_type = (new ResourceTypeItemType())->instance($resource_type_id);
@@ -178,7 +178,7 @@ class ResourceTypeManage extends Controller
             true
         );
 
-        $cache_control = new Cache\Control($this->user_id);
+        $cache_control = new Cache\Control($this->user_id, true);
         $cache_key = new Cache\Key();
 
         $resource_type = (new ResourceType())->instance($resource_type_id);

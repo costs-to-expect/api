@@ -2,17 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use App\Option\AccessLog;
 use App\Option\ErrorLog;
-use App\Response\Header\Header;
-use App\Request\Parameter;
 use App\Models\RequestErrorLog;
-use App\Models\RequestLog;
 use App\Models\Transformers\RequestErrorLog as RequestErrorLogTransformer;
-use App\Models\Transformers\RequestLog as RequestLogTransformer;
 use App\Response\Pagination as UtilityPagination;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Support\Facades\Config;
 
 /**
  * Manage categories

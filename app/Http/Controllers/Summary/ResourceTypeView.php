@@ -27,7 +27,7 @@ class ResourceTypeView extends Controller
      */
     public function index(): JsonResponse
     {
-        $cache_control = new Cache\Control($this->user_id);
+        $cache_control = new Cache\Control($this->user_id, true);
         $cache_control->setTtlOneWeek();
 
         $cache_summary = new Cache\Summary();

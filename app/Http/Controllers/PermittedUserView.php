@@ -38,7 +38,10 @@ class PermittedUserView extends Controller
             $this->permitted_resource_types
         );
 
-        $cache_control = new Cache\Control($this->user_id);
+        $cache_control = new Cache\Control(
+            $this->user_id,
+            in_array($resource_type_id, $this->permitted_resource_types, true)
+        );
         $cache_control->setTtlOneMonth();
 
         $cache_collection = new Cache\Collection();

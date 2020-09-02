@@ -241,7 +241,10 @@ class ItemView extends Controller
         int $resource_id,
         array $parameters
     ): JsonResponse {
-        $cache_control = new Cache\Control($this->user_id);
+        $cache_control = new Cache\Control(
+            $this->user_id,
+            in_array($resource_type_id, $this->permitted_resource_types, true)
+        );
         $cache_control->setTtlOneWeek();
 
         $cache_summary = new Cache\Summary();
@@ -317,7 +320,10 @@ class ItemView extends Controller
         int $year,
         array $parameters
     ): JsonResponse {
-        $cache_control = new Cache\Control($this->user_id);
+        $cache_control = new Cache\Control(
+            $this->user_id,
+            in_array($resource_type_id, $this->permitted_resource_types, true)
+        );
         $cache_control->setTtlOneWeek();
 
         $cache_summary = new Cache\Summary();
@@ -368,7 +374,10 @@ class ItemView extends Controller
         int $month,
         array $parameters
     ): JsonResponse {
-        $cache_control = new Cache\Control($this->user_id);
+        $cache_control = new Cache\Control(
+            $this->user_id,
+            in_array($resource_type_id, $this->permitted_resource_types, true)
+        );
         $cache_control->setTtlOneWeek();
 
         $cache_summary = new Cache\Summary();
@@ -416,7 +425,10 @@ class ItemView extends Controller
         int $year,
         array $parameters
     ): JsonResponse {
-        $cache_control = new Cache\Control($this->user_id);
+        $cache_control = new Cache\Control(
+            $this->user_id,
+            in_array($resource_type_id, $this->permitted_resource_types, true)
+        );
         $cache_control->setTtlOneWeek();
 
         $cache_summary = new Cache\Summary();
@@ -461,7 +473,10 @@ class ItemView extends Controller
         int $resource_id,
         array $parameters
     ): JsonResponse {
-        $cache_control = new Cache\Control($this->user_id);
+        $cache_control = new Cache\Control(
+            $this->user_id,
+            in_array($resource_type_id, $this->permitted_resource_types, true)
+        );
         $cache_control->setTtlOneWeek();
 
         $cache_summary = new Cache\Summary();
@@ -508,7 +523,10 @@ class ItemView extends Controller
         int $category_id,
         array $parameters
     ): JsonResponse {
-        $cache_control = new Cache\Control($this->user_id);
+        $cache_control = new Cache\Control(
+            $this->user_id,
+            in_array($resource_type_id, $this->permitted_resource_types, true)
+        );
         $cache_control->setTtlOneWeek();
 
         $cache_summary = new Cache\Summary();
@@ -559,7 +577,10 @@ class ItemView extends Controller
         int $subcategory_id,
         array $parameters
     ): JsonResponse {
-        $cache_control = new Cache\Control($this->user_id);
+        $cache_control = new Cache\Control(
+            $this->user_id,
+            in_array($resource_type_id, $this->permitted_resource_types, true)
+        );
         $cache_control->setTtlOneWeek();
 
         $cache_summary = new Cache\Summary();
@@ -607,7 +628,10 @@ class ItemView extends Controller
         int $category_id,
         array $parameters
     ): JsonResponse {
-        $cache_control = new Cache\Control($this->user_id);
+        $cache_control = new Cache\Control(
+            $this->user_id,
+            in_array($resource_type_id, $this->permitted_resource_types, true)
+        );
         $cache_control->setTtlOneWeek();
 
         $cache_summary = new Cache\Summary();
@@ -664,7 +688,10 @@ class ItemView extends Controller
         array $search_parameters = [],
         array $filter_parameters = []
     ): JsonResponse {
-        $cache_control = new Cache\Control($this->user_id);
+        $cache_control = new Cache\Control(
+            $this->user_id,
+            in_array($resource_type_id, $this->permitted_resource_types, true)
+        );
         $cache_control->setTtlOneWeek();
 
         $cache_summary = new Cache\Summary();
@@ -718,7 +745,10 @@ class ItemView extends Controller
         int $resource_id,
         array $parameters
     ): JsonResponse {
-        $cache_control = new Cache\Control($this->user_id);
+        $cache_control = new Cache\Control(
+            $this->user_id,
+            in_array($resource_type_id, $this->permitted_resource_types, true)
+        );
         $cache_control->setTtlOneWeek();
 
         $cache_summary = new Cache\Summary();

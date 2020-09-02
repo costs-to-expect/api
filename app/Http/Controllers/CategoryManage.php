@@ -34,7 +34,10 @@ class CategoryManage extends Controller
             $this->permitted_resource_types
         );
 
-        $cache_control = new Cache\Control($this->user_id);
+        $cache_control = new Cache\Control(
+            $this->user_id,
+            in_array($resource_type_id, $this->permitted_resource_types, true)
+        );
         $cache_key = new Cache\Key();
 
         $validator = (new CategoryValidator)->create([
@@ -91,7 +94,10 @@ class CategoryManage extends Controller
             true
         );
 
-        $cache_control = new Cache\Control($this->user_id);
+        $cache_control = new Cache\Control(
+            $this->user_id,
+            in_array($resource_type_id, $this->permitted_resource_types, true)
+        );
         $cache_key = new Cache\Key();
 
         $category = (new Category())->find($category_id);
@@ -138,7 +144,10 @@ class CategoryManage extends Controller
             true
         );
 
-        $cache_control = new Cache\Control($this->user_id);
+        $cache_control = new Cache\Control(
+            $this->user_id,
+            in_array($resource_type_id, $this->permitted_resource_types, true)
+        );
         $cache_key = new Cache\Key();
 
         $category = (new Category())->instance($category_id);
