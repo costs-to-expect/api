@@ -21,6 +21,11 @@ class Config
 
     public function filterParameters(): array
     {
+        return LaravelConfig::get($this->base_path . '.filterable', []);
+    }
+
+    public function itemParameters(): array
+    {
         return [];
     }
 
@@ -31,46 +36,56 @@ class Config
 
     public function patchValidation(): array // We need to split validation config files
     {
-        return [];
+        return LaravelConfig::get($this->base_path . '.validation.PATCH.fields', []);
+    }
+
+    public function patchValidationMessages(): array // We need to split validation config files
+    {
+        return LaravelConfig::get($this->base_path . '.validation.PATCH.messages', []);
     }
 
     public function postFields(): array // We need post fields and patch fields
     {
-        return LaravelConfig::get('api.item-type-allocated-expense.fields');
+        return LaravelConfig::get($this->base_path . '.fields', []);
     }
 
     public function postValidation(): array // We need to split validation config files
     {
-        return [];
+        return LaravelConfig::get($this->base_path . '.validation.POST.fields', []);
+    }
+
+    public function postValidationMessages(): array // We need to split validation config files
+    {
+        return LaravelConfig::get($this->base_path . '.validation.POST.messages', []);
     }
 
     public function requestParameters(): array
     {
-        return [];
+        return LaravelConfig::get($this->base_path . '.parameters', []);
     }
 
     public function searchParameters(): array
     {
-        return [];
+        return LaravelConfig::get($this->base_path . '.searchable', []);
     }
 
     public function sortParameters(): array
     {
-        return [];
+        return LaravelConfig::get($this->base_path . '.sortable', []);
     }
 
     public function summaryFilterParameters(): array
     {
-        return [];
+        return LaravelConfig::get($this->base_path . '.summary-filterable', []);
     }
 
     public function summaryRequestParameters(): array
     {
-        return [];
+        return LaravelConfig::get($this->base_path . '.summary-parameters', []);
     }
 
     public function summarySearchParameters(): array
     {
-        return [];
+        return LaravelConfig::get($this->base_path . '.summary-searchable', []);
     }
 }

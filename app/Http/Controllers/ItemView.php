@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Entity\Item\AllocatedExpense;
 use App\Item\Factory;
 use App\Option\ItemCollection;
 use App\Option\ItemItem;
@@ -222,10 +223,11 @@ class ItemView extends Controller
 
         $response = new ItemCollection($permissions);
 
-        return $response->setItemInterface($item_interface)->
-            setAllowedValues($allowed_values)->
-            create()->
-            response();
+        return $response->setItemInterface($item_interface)
+            ->setEntityConfig(new AllocatedExpense())
+            ->setAllowedValues($allowed_values)
+            ->create()
+            ->response();
     }
 
     /**

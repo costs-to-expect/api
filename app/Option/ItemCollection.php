@@ -7,11 +7,11 @@ class ItemCollection extends Response
 {
     public function create()
     {
-        $get = new \App\Option\Method\Get();
-        $this->verbs['GET'] = $get->setSortableParameters($this->interface->sortParametersConfig())->
-            setSearchableParameters($this->interface->searchParametersConfig())->
-            setFilterableParameters($this->interface->filterParametersConfig())->
-            setParameters($this->interface->collectionParametersConfig())->
+        $get = new \App\Option\Method\GetRequest();
+        $this->verbs['GET'] = $get->setSortableParameters($this->entity_config->sortParameters())->
+            setSearchableParameters($this->entity_config->searchParameters())->
+            setFilterableParameters($this->entity_config->filterParameters())->
+            setParameters($this->entity_config->requestParameters())->
             setDynamicParameters($this->allowed_values)->
             setPaginationStatus(true)->
             setAuthenticationStatus($this->permissions['view'])->
