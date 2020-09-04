@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\Config as LaravelConfig;
  * Add the ticket to Pivotal when/if happy with this.
  */
 
-class Config
+abstract class Config
 {
     protected string $base_path;
 
@@ -88,4 +88,6 @@ class Config
     {
         return LaravelConfig::get($this->base_path . '.summary-searchable', []);
     }
+
+    abstract public function type(): string;
 }

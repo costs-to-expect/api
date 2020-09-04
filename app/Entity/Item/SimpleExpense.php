@@ -13,4 +13,9 @@ class SimpleExpense extends Config
 
         parent::__construct();
     }
+
+    public function type(): string
+    {
+        return 'simple-expense';
+    }
 }

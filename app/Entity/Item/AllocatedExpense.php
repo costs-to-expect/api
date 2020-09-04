@@ -13,4 +13,9 @@ class AllocatedExpense extends Config
 
         parent::__construct();
     }
+
+    public function type(): string
+    {
+        return 'allocated-expense';
+    }
 }

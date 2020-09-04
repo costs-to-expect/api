@@ -198,7 +198,7 @@ class ItemView extends Controller
             $this->permitted_resource_types,
         );
 
-
+        $entity_config = new AllocatedExpense();
 
         $item_interface = Factory::item($resource_type_id);
 
@@ -209,7 +209,7 @@ class ItemView extends Controller
         );
 
         $defined_parameters = Parameter\Request::fetch(
-            array_keys($item_interface->collectionParameters()),
+            array_keys($entity_config->requestParameters()),
             (int) $resource_type_id,
             (int) $resource_id
         );
@@ -226,7 +226,7 @@ class ItemView extends Controller
         $response = new ItemCollection($permissions);
 
         return $response->setItemInterface($item_interface)
-            ->setEntityConfig(new AllocatedExpense())
+            ->setEntityConfig($entity_config)
             ->setAllowedValues($allowed_values)
             ->create()
             ->response();
