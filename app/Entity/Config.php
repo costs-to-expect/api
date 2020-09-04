@@ -24,9 +24,9 @@ class Config
         return LaravelConfig::get($this->base_path . '.filterable', []);
     }
 
-    public function itemParameters(): array
+    public function itemRequestParameters(): array
     {
-        return [];
+        return LaravelConfig::get($this->base_path . '.parameters.item', []); // We need to split this
     }
 
     public function patchFields(): array // We need post fields and patch fields
@@ -61,7 +61,7 @@ class Config
 
     public function requestParameters(): array
     {
-        return LaravelConfig::get($this->base_path . '.parameters', []);
+        return LaravelConfig::get($this->base_path . '.parameters.collection', []); // We need to split this
     }
 
     public function searchParameters(): array
