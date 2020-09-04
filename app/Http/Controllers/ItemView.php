@@ -198,6 +198,8 @@ class ItemView extends Controller
             $this->permitted_resource_types,
         );
 
+
+
         $item_interface = Factory::item($resource_type_id);
 
         $permissions = Route\Permission::resource(

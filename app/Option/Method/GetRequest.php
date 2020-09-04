@@ -3,8 +3,6 @@ declare(strict_types=1);
 
 namespace App\Option\Method;
 
-use Illuminate\Support\Facades\Config;
-
 /**
  * @todo This is a newer WIP version of the option classes, uses the new
  * config objects
@@ -73,9 +71,9 @@ class GetRequest extends Method
             $this->pagination = true;
 
             if ($override === false) {
-                $this->pagination_parameters = Config::get('api.app.pagination-parameters');
+                $this->pagination_parameters = $this->api_config->paginationParameters();
             } else {
-                $this->pagination_parameters = Config::get('api.app.pagination-parameters-including-collection');
+                $this->pagination_parameters = $this->api_config->paginationParametersAllowingEntireCollection();
             }
         }
 
@@ -131,9 +129,9 @@ class GetRequest extends Method
         foreach (
             array_merge_recursive(
                 $this->pagination_parameters,
-                ($this->sortable === true ? Config::get('api.app.sortable-parameters') : []),
-                ($this->searchable === true ? Config::get('api.app.searchable-parameters') : []),
-                ($this->filterable === true ? Config::get('api.app.filterable-parameters') : []),
+                ($this->sortable === true ? $this->api_config->sortParameter() : []),
+                ($this->searchable === true ? $this->api_config->searchParameter() : []),
+                ($this->filterable === true ? $this->api_config->filterParameter() : []),
                 $this->parameters,
                 $this->dynamic_parameters
             )

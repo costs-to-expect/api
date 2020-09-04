@@ -16,7 +16,7 @@ class Config
 
     public function __construct()
     {
-
+        //
     }
 
     public function filterParameters(): array
