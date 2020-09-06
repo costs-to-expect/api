@@ -269,6 +269,8 @@ class ItemView extends Controller
 
         $response = new ItemItem($permissions);
 
-        return $response->setItemInterface($item_interface)->create()->response();
+        return $response->setEntityConfig(new AllocatedExpense())
+            ->create()
+            ->response();
     }
 }
