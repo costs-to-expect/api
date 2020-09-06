@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Entity\Item\AllocatedExpense;
+use App\Entity\Item\Entity;
 use App\Item\Factory;
 use App\Option\ItemCollection;
 use App\Option\ItemItem;
@@ -197,7 +197,7 @@ class ItemView extends Controller
             $this->permitted_resource_types,
         );
 
-        $entity_config = new AllocatedExpense();
+        $entity_config = Entity::item($resource_type_id);
 
         $permissions = Route\Permission::resource(
             $resource_type_id,
@@ -269,7 +269,7 @@ class ItemView extends Controller
 
         $response = new ItemItem($permissions);
 
-        return $response->setEntityConfig(new AllocatedExpense())
+        return $response->setEntityConfig(Entity::item($resource_type_id))
             ->create()
             ->response();
     }
