@@ -25,7 +25,7 @@ class SimpleExpense extends Config
         return 'simple-expense';
     }
 
-    public function model(): Model
+    public function model()
     {
         return new \App\Models\Item\SimpleExpense();
     }

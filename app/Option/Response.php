@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace App\Option;
 
-use App\Entity\Config;
+use App\Entity\Item\Config;
 use Illuminate\Http\JsonResponse;
 
 abstract class Response

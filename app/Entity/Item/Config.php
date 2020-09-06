@@ -36,7 +36,7 @@ abstract class Config
         return LaravelConfig::get($this->base_path . '.parameters.item', []); // We need to split this
     }
 
-    abstract public function model(): ItemModel;
+    abstract public function model();
 
     public function patchFields(): array // We need post fields and patch fields
     {

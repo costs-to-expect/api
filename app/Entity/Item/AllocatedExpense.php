@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace App\Entity\Item;
 
+use App\Interfaces\Item\ItemModel;
 use App\Models\Transformers\Transformer;
 use Illuminate\Database\Eloquent\Model;
 
@@ -30,7 +31,7 @@ class AllocatedExpense extends Config
         return 'allocated-expense';
     }
 
-    public function model(): Model
+    public function model()
     {
         return new \App\Models\Item\AllocatedExpense();
     }

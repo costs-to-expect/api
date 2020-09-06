@@ -25,7 +25,7 @@ class SimpleItem extends Config
         return 'simple-item';
     }
 
-    public function model(): Model
+    public function model()
     {
         return new \App\Models\Item\SimpleItem();
     }

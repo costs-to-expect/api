@@ -267,7 +267,7 @@ class ItemView extends Controller
 
         $response = new ItemItem($permissions);
 
-        return $response->setEntityConfig(Entity::item($resource_type_id))
+        return $response->setEntityConfig($entity_config)
             ->create()
             ->response();
     }
