@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Entity\Item\Entity;
-use App\Item\Factory;
 use App\Option\ItemCollection;
 use App\Option\ItemItem;
 use App\Response\Cache;
@@ -15,8 +14,6 @@ use App\Response\Pagination as UtilityPagination;
 use Illuminate\Http\JsonResponse;
 
 /**
- * Manage items
- *
  * @author Dean Blackborough <dean@g3d-development.com>
  * @copyright Dean Blackborough 2018-2020
  * @license https://github.com/costs-to-expect/api/blob/master/LICENSE
@@ -49,7 +46,7 @@ class ItemView extends Controller
         );
         $cache_control->setTtlOneWeek();
 
-        $item_interface = Factory::item($resource_type_id);
+        $entity_config = Entity::item($resource_type_id);
 
         $cache_collection = new Cache\Collection();
         $cache_collection->setFromCache($cache_control->get(request()->getRequestUri()));
@@ -57,24 +54,25 @@ class ItemView extends Controller
         if ($cache_control->cacheable() === false || $cache_collection->valid() === false) {
 
             $parameters = Parameter\Request::fetch(
-                array_keys($item_interface->collectionParameters()),
+                array_keys($entity_config->requestParameters()),
                 (int) $resource_type_id,
                 (int) $resource_id
             );
 
             $search_parameters = Parameter\Search::fetch(
-                $item_interface->searchParameters()
+                $entity_config->searchParameters()
             );
 
             $filter_parameters = Parameter\Filter::fetch(
-                $item_interface->filterParameters()
+                $entity_config->filterParameters()
             );
 
             $sort_parameters = Parameter\Sort::fetch(
-                $item_interface->sortParameters()
+                $entity_config->sortParameters()
             );
 
-            $item_model = $item_interface->model();
+            $item_model = $entity_config->model();
+
             $total = $item_model->totalCount(
                 $resource_type_id,
                 $resource_id,
@@ -103,8 +101,8 @@ class ItemView extends Controller
             );
 
             $collection = array_map(
-                static function ($item) use ($item_interface) {
-                    return $item_interface->transformer($item)->asArray();
+                static function ($item) use ($entity_config) {
+                    return $entity_config->transformer($item)->asArray();
                 },
                 $items
             );
@@ -147,15 +145,15 @@ class ItemView extends Controller
             $this->permitted_resource_types
         );
 
-        $item_interface = Factory::item($resource_type_id);
+        $entity_config = Entity::item($resource_type_id);
 
         $parameters = Parameter\Request::fetch(
-            array_keys($item_interface->showParameters()),
+            array_keys($entity_config->itemRequestParameters()),
             (int) $resource_type_id,
             (int) $resource_id
         );
 
-        $item_model = $item_interface->model();
+        $item_model = $entity_config->model();
 
         $item = $item_model->single(
             $resource_type_id,
@@ -172,7 +170,7 @@ class ItemView extends Controller
         $headers->item();
 
         return response()->json(
-            $item_interface->transformer($item)->asArray(),
+            $entity_config->transformer($item)->asArray(),
             200,
             $headers->headers()
         );
@@ -257,9 +255,9 @@ class ItemView extends Controller
             $this->permitted_resource_types,
         );
 
-        $item_interface = Factory::item($resource_type_id);
+        $entity_config = Entity::item($resource_type_id);
 
-        $item_model = $item_interface->model();
+        $item_model = $entity_config->model();
 
         $item = $item_model->single($resource_type_id, $resource_id, $item_id);
 

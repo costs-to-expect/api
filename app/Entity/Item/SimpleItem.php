@@ -4,6 +4,8 @@ declare(strict_types=1);
 namespace App\Entity\Item;
 
 use App\Entity\Config;
+use App\Models\Transformers\Transformer;
+use Illuminate\Database\Eloquent\Model;
 
 class SimpleItem extends Config
 {
@@ -22,5 +24,15 @@ class SimpleItem extends Config
     public function type(): string
     {
         return 'simple-item';
+    }
+
+    public function model(): Model
+    {
+        return new \App\Models\Item\SimpleItem();
+    }
+
+    public function transformer(array $data_to_transform): Transformer
+    {
+        return new \App\Models\Transformers\ItemType\SimpleItem($data_to_transform);
     }
 }

@@ -3,6 +3,8 @@ declare(strict_types=1);
 
 namespace App\Entity;
 
+use App\Models\Transformers\Transformer;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Config as LaravelConfig;
 
 /**
@@ -33,6 +35,8 @@ abstract class Config
     {
         return LaravelConfig::get($this->base_path . '.parameters.item', []); // We need to split this
     }
+
+    abstract public function model(): Model; // @todo We need to update this to a better model
 
     public function patchFields(): array // We need post fields and patch fields
     {
@@ -95,6 +99,8 @@ abstract class Config
     }
 
     abstract public function table(): string;
+
+    abstract public function transformer(array $data_to_transform): Transformer;
 
     abstract public function type(): string;
 }
