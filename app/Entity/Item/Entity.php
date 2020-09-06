@@ -2,7 +2,6 @@
 
 namespace App\Entity\Item;
 
-use App\Entity\Config;
 use App\Models\ResourceTypeItemType;
 
 class Entity

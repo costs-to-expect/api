@@ -3,7 +3,6 @@ declare(strict_types=1);
 
 namespace App\Entity\Item;
 
-use App\Entity\Config;
 use App\Models\Transformers\Transformer;
 use Illuminate\Database\Eloquent\Model;
 
