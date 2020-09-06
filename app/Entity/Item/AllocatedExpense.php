@@ -14,6 +14,16 @@ class AllocatedExpense extends Config
         parent::__construct();
     }
 
+    public function dateRangeField(): ?string
+    {
+        return 'effective_date';
+    }
+
+    public function table(): string
+    {
+        return 'item_type_allocated_expense';
+    }
+
     public function type(): string
     {
         return 'allocated-expense';

@@ -6,7 +6,6 @@ use App\Entity\Item\AllocatedExpense;
 use App\Item\Factory;
 use App\Option\ItemCollection;
 use App\Option\ItemItem;
-use App\Option\Value\Item;
 use App\Response\Cache;
 use App\Response\Header\Header;
 use App\Request\Parameter;
@@ -200,8 +199,6 @@ class ItemView extends Controller
 
         $entity_config = new AllocatedExpense();
 
-        $item_interface = Factory::item($resource_type_id);
-
         $permissions = Route\Permission::resource(
             $resource_type_id,
             $resource_id,
@@ -214,19 +211,18 @@ class ItemView extends Controller
             (int) $resource_id
         );
 
-        $allowed_values = (new Item())->allowedValues(
-            $item_interface,
+        $allowed_values = (new \App\Option\AllowedValues\Item($entity_config))->allowedValues(
             $resource_type_id,
             $resource_id,
             $this->permitted_resource_types,
             $this->include_public,
+            array_keys($entity_config->requestParameters()),
             $defined_parameters
         );
 
         $response = new ItemCollection($permissions);
 
-        return $response->setItemInterface($item_interface)
-            ->setEntityConfig($entity_config)
+        return $response->setEntityConfig($entity_config)
             ->setAllowedValues($allowed_values)
             ->create()
             ->response();

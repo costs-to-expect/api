@@ -19,6 +19,11 @@ abstract class Config
         //
     }
 
+    public function dateRangeField(): ?string
+    {
+        return null;
+    }
+
     public function filterParameters(): array
     {
         return LaravelConfig::get($this->base_path . '.filterable', []);
@@ -88,6 +93,8 @@ abstract class Config
     {
         return LaravelConfig::get($this->base_path . '.summary-searchable', []);
     }
+
+    abstract public function table(): string;
 
     abstract public function type(): string;
 }

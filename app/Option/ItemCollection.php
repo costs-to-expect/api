@@ -18,8 +18,8 @@ class ItemCollection extends Response
             setDescription('route-descriptions.item_GET_index')->
             option();
 
-        $post = new \App\Option\Method\Post();
-        $this->verbs['POST'] = $post->setFields($this->interface->fieldsConfig())->
+        $post = new \App\Option\Method\PostRequest();
+        $this->verbs['POST'] = $post->setFields($this->entity_config->postFields())->
             setDescription( 'route-descriptions.item_POST')->
             setAuthenticationRequirement(true)->
             setAuthenticationStatus($this->permissions['manage'])->

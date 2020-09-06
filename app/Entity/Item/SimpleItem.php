@@ -14,6 +14,11 @@ class SimpleItem extends Config
         parent::__construct();
     }
 
+    public function table(): string
+    {
+        return 'item_type_simple_item';
+    }
+
     public function type(): string
     {
         return 'simple-item';
