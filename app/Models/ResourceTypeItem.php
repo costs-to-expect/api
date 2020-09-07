@@ -78,7 +78,7 @@ class ResourceTypeItem extends Model
             array_key_exists('include-unpublished', $parameters_collection) === false ||
             $parameters_collection['include-unpublished'] === false
         ) {
-            $collection->where(function ($collection) {
+            $collection->where(static function ($collection) {
                 $collection->whereNull('item_type_allocated_expense.publish_after')->
                     orWhereRaw('item_type_allocated_expense.publish_after < NOW()');
             });
@@ -207,7 +207,7 @@ class ResourceTypeItem extends Model
             array_key_exists('include-unpublished', $parameters_collection) === false ||
             $parameters_collection['include-unpublished'] === false
         ) {
-            $collection->where(function ($collection) {
+            $collection->where(static function ($collection) {
                 $collection->whereNull('item_type_allocated_expense.publish_after')->
                     orWhereRaw('item_type_allocated_expense.publish_after < NOW()');
             });
@@ -634,7 +634,7 @@ class ResourceTypeItem extends Model
     private function includeUnpublished($collection, bool $include_unpublished): Builder
     {
         if ($include_unpublished === false) {
-            $collection->where(function ($sql) {
+            $collection->where(static function ($sql) {
                 $sql->whereNull('item_type_allocated_expense.publish_after')->
                     orWhereRaw('item_type_allocated_expense.publish_after < NOW()');
             });

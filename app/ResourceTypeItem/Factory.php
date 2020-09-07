@@ -44,19 +44,15 @@ class Factory
             switch ($item_type) {
                 case 'allocated-expense':
                     return new AllocatedExpense();
-                    break;
 
                 case 'simple-expense':
                     return new SimpleExpense();
-                    break;
 
                 case 'simple-item':
                     return new SimpleItem();
-                    break;
 
                 default:
                     throw new Exception('Unable to load the relevant resource type item type', 500);
-                    break;
             }
         } else {
             throw New Exception('No relevant resource type item type defined for the resource type', 500);
@@ -82,19 +78,15 @@ class Factory
             switch ($item_type) {
                 case 'allocated-expense':
                     return new Summary\AllocatedExpense();
-                    break;
 
                 case 'simple-expense':
                     return new Summary\SimpleExpense();
-                    break;
 
                 case 'simple-item':
                     return new Summary\SimpleItem();
-                    break;
 
                 default:
                     throw new Exception('Unable to load the relevant resource type item summary type', 500);
-                    break;
             }
         } else {
             throw New Exception('No relevant resource type item summary type defined for the resource type', 500);

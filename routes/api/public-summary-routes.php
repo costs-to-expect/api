@@ -11,7 +11,7 @@ Route::group(
             'convert.get.parameters'
         ]
     ],
-    function () {
+    static function () {
 
         Route::get(
             'summary/resource-types',

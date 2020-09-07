@@ -15,11 +15,9 @@ use App\Request\Validate\Validator as BaseValidator;
  */
 class SimpleItem extends BaseValidator
 {
-    protected Entity $entity;
-
     public function __construct()
     {
-        $this->item = new \App\Item\SimpleItem();
+        $this->entity = Entity::byType('simple-item');
 
         parent::__construct();
     }

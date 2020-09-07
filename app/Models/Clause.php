@@ -56,7 +56,7 @@ class Clause
         bool $include_public = false
     ) {
         if ($include_public === true) {
-            $collection->where(static function ($collection) use ($permitted_resource_types, $include_public) {
+            $collection->where(static function ($collection) use ($permitted_resource_types) {
                 $collection->where('resource_type.public', '=', 1)->
                     orWhereIn('resource_type.id', $permitted_resource_types);
             });

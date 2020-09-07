@@ -11,22 +11,26 @@ class Entity
         $type =(new ResourceTypeItemType())->itemType($resource_type_id);
 
         if ($type !== null) {
-            switch ($type) {
-                case 'allocated-expense':
-                    return new AllocatedExpense();
+            return self::byType($type);
+        }
 
-                case 'simple-expense':
-                    return new SimpleExpense();
+        throw new \RuntimeException('No entity definition for ' . $type, 500);
+    }
 
-                case 'simple-item':
-                    return new SimpleItem();
+    public static function byType(string $item_type): Item
+    {
+        switch ($item_type) {
+            case 'allocated-expense':
+                return new AllocatedExpense();
 
-                default:
-                    throw new \OutOfRangeException('No entity definition for ' . $type, 500);
-                    break;
-            }
-        } else {
-            throw new \RuntimeException('No entity definition for ' . $type, 500);
+            case 'simple-expense':
+                return new SimpleExpense();
+
+            case 'simple-item':
+                return new SimpleItem();
+
+            default:
+                throw new \OutOfRangeException('No entity definition for ' . $item_type, 500);
         }
     }
 }

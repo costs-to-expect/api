@@ -80,7 +80,7 @@ class ResourceTypeItem extends Value
         $parameters = ['category' => ['allowed_values' => []]];
 
         $categories = (new Category())->paginatedCollection(
-            (int) $resource_type_id,
+            $resource_type_id,
             $permitted_resource_types,
             $include_public,
             0,

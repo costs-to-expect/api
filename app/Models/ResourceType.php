@@ -197,7 +197,7 @@ class ResourceType extends Model
             join('item_type', 'resource_type_item_type.item_type_id', 'item_type.id')->
             leftJoin("resource", "resource_type.id", "resource.id");
 
-        $result->where(function ($result) use ($permitted_resource_types, $include_public) {
+        $result->where(static function ($result) use ($permitted_resource_types, $include_public) {
             $result->where('resource_type.public', '=', (int) $include_public)->
                 orWhereIn('resource_type.id', $permitted_resource_types);
         });

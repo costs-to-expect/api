@@ -15,11 +15,9 @@ use App\Request\Validate\Validator as BaseValidator;
  */
 class AllocatedExpense extends BaseValidator
 {
-    protected Entity $entity;
-
     public function __construct()
     {
-        $this->item = new \App\Item\AllocatedExpense();
+        $this->entity = Entity::byType('allocated-expense');
 
         parent::__construct();
     }
