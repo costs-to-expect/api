@@ -14,6 +14,8 @@ class SimpleItem extends Item
     {
         $this->base_path = 'api.item-type-simple-item';
 
+        $this->resource_type_base_path = 'api.resource-type-item-type-simple-item';
+
         parent::__construct();
     }
 
@@ -77,5 +79,15 @@ class SimpleItem extends Item
     public function validator(): Validator
     {
         return new \App\Request\Validate\ItemType\SimpleItem();
+    }
+
+    public function resourceTypeModel(): Model
+    {
+        return new \App\Models\ResourceTypeItem\SimpleItem();
+    }
+
+    public function resourceTypeTransformer(array $data_to_transform): Transformer
+    {
+        return new \App\Models\Transformers\ResourceTypeItemType\SimpleItem($data_to_transform);
     }
 }

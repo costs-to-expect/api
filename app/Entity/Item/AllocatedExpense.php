@@ -14,6 +14,8 @@ class AllocatedExpense extends Item
     {
         $this->base_path = 'api.item-type-allocated-expense';
 
+        $this->resource_type_base_path = 'api.resource-type-item-type-allocated-expense';
+
         parent::__construct();
     }
 
@@ -106,5 +108,15 @@ class AllocatedExpense extends Item
     public function validator(): Validator
     {
         return new \App\Request\Validate\ItemType\AllocatedExpense();
+    }
+
+    public function resourceTypeModel(): Model
+    {
+        return new \App\Models\ResourceTypeItem\AllocatedExpense();
+    }
+
+    public function resourceTypeTransformer(array $data_to_transform): Transformer
+    {
+        return new \App\Models\Transformers\ResourceTypeItemType\AllocatedExpense($data_to_transform);
     }
 }

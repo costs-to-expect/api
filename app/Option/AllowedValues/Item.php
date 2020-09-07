@@ -13,15 +13,15 @@ class Item
 {
     private Hash $hash;
 
-    private Entity $entity_config;
+    private Entity $entity;
 
     private EntityConfig $model;
 
-    public function __construct(Entity $entity_config)
+    public function __construct(Entity $entity)
     {
         $this->hash = new Hash();
 
-        $this->entity_config = $entity_config;
+        $this->entity = $entity;
 
         $this->model = new EntityConfig();
     }
@@ -111,10 +111,10 @@ class Item
             $parameters['category']['allowed_values'][$category_id] = [
                 'value' => $category_id,
                 'name' => $category['category_name'],
-                'description' => trans('item-type-' . $this->entity_config->type() .
+                'description' => trans('item-type-' . $this->entity->type() .
                         '/allowed-values.description-prefix-category') .
                     $category['category_name'] .
-                    trans('item-type-' . $this->entity_config->type() .
+                    trans('item-type-' . $this->entity->type() .
                         '/allowed-values.description-suffix-category')
             ];
         }
@@ -133,7 +133,7 @@ class Item
             $parameters['month']['allowed_values'][$i] = [
                 'value' => $i,
                 'name' => date("F", mktime(0, 0, 0, $i, 10)),
-                'description' => trans('item-type-' . $this->entity_config->type() .
+                'description' => trans('item-type-' . $this->entity->type() .
                         '/allowed-values.description-prefix-month') .
                     date("F", mktime(0, 0, 0, $i, 1))
             ];
@@ -163,8 +163,8 @@ class Item
                 $parameters['subcategory']['allowed_values'][$subcategory_id] = [
                     'value' => $subcategory_id,
                     'name' => $subcategory['subcategory_name'],
-                    'description' => trans('item-type-' . $this->entity_config->type() . '/allowed-values.description-prefix-subcategory') .
-                        $subcategory['subcategory_name'] . trans('item-type-' . $this->entity_config->type() . '/allowed-values.description-suffix-subcategory')
+                    'description' => trans('item-type-' . $this->entity->type() . '/allowed-values.description-prefix-subcategory') .
+                        $subcategory['subcategory_name'] . trans('item-type-' . $this->entity->type() . '/allowed-values.description-suffix-subcategory')
                 ];
             },
             $subcategories
@@ -187,21 +187,21 @@ class Item
             $i = $this->model->minimumYearByResourceTypeAndResource(
                 $resource_type_id,
                 $resource_id,
-                $this->entity_config->table(),
-                $this->entity_config->dateRangeField()
+                $this->entity->table(),
+                $this->entity->dateRangeField()
             );
             $i <= $this->model->maximumYearByResourceTypeAndResource(
                 $resource_type_id,
                 $resource_id,
-                $this->entity_config->table(),
-                $this->entity_config->dateRangeField()
+                $this->entity->table(),
+                $this->entity->dateRangeField()
             );
             $i++
         ) {
             $parameters['year']['allowed_values'][$i] = [
                 'value' => $i,
                 'name' => $i,
-                'description' => trans('item-type-' . $this->entity_config->type() .
+                'description' => trans('item-type-' . $this->entity->type() .
                         '/allowed-values.description-prefix-year') . $i
             ];
         }

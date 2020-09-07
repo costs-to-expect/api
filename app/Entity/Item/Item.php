@@ -17,6 +17,8 @@ abstract class Item
 {
     protected string $base_path;
 
+    protected string $resource_type_base_path;
+
     public function __construct()
     {
         //
@@ -77,6 +79,30 @@ abstract class Item
     {
         return LaravelConfig::get($this->base_path . '.parameters.collection', []); // We need to split this
     }
+
+    public function resourceTypeFilterParameters(): array
+    {
+        return LaravelConfig::get($this->resource_type_base_path . '.filterable', []);
+    }
+
+    abstract public function resourceTypeModel(): Model;
+
+    public function resourceTypeRequestParameters(): array
+    {
+        return LaravelConfig::get($this->resource_type_base_path . '.parameters.collection', []);
+    }
+
+    public function resourceTypeSearchParameters(): array
+    {
+        return LaravelConfig::get($this->resource_type_base_path . '.searchable', []);
+    }
+
+    public function resourceTypeSortParameters(): array
+    {
+        return LaravelConfig::get($this->resource_type_base_path . '.sortable', []);
+    }
+
+    abstract public function resourceTypeTransformer(array $data_to_transform): Transformer;
 
     public function searchParameters(): array
     {
