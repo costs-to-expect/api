@@ -126,6 +126,23 @@ abstract class Item
         return LaravelConfig::get($this->base_path . '.summary-parameters', []);
     }
 
+    public function summaryResourceTypeFilterParameters(): array
+    {
+        return LaravelConfig::get($this->resource_type_base_path . '.summary-filterable', []);
+    }
+
+    abstract public function summaryResourceTypeModel(): Model;
+
+    public function summaryResourceTypeRequestParameters(): array
+    {
+        return LaravelConfig::get($this->resource_type_base_path . '.summary-parameters', []);
+    }
+
+    public function summaryResourceTypeSearchParameters(): array
+    {
+        return LaravelConfig::get($this->resource_type_base_path . '.summary-searchable', []);
+    }
+
     public function summarySearchParameters(): array
     {
         return LaravelConfig::get($this->base_path . '.summary-searchable', []);

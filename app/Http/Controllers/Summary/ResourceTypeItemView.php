@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers\Summary;
 
+use App\Entity\Item\Entity;
 use App\Http\Controllers\Controller;
 use App\Option\SummaryResourceTypeItemCollection;
-use App\ResourceTypeItem\Factory;
 use App\Response\Cache;
 use App\Request\Parameter;
 use App\Request\Route;
@@ -15,6 +15,7 @@ use App\Models\Transformers\Summary\ResourceTypeItemResource as ResourceTypeItem
 use App\Models\Transformers\Summary\ResourceTypeItemSubcategory as ResourceTypeItemSubcategoryTransformer;
 use App\Models\Transformers\Summary\ResourceTypeItemYear as ResourceTypeItemYearTransformer;
 use App\Response\Header\Headers;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\JsonResponse;
 
 /**
@@ -26,7 +27,7 @@ use Illuminate\Http\JsonResponse;
  */
 class ResourceTypeItemView extends Controller
 {
-    private $model;
+    private Model $model;
 
     /**
      * Return the TCO for all the resources within the resource type
@@ -42,11 +43,12 @@ class ResourceTypeItemView extends Controller
             $this->permitted_resource_types
         );
 
-        $item_interface = Factory::summaryItem($resource_type_id);
-        $this->model = $item_interface->model();
+        $entity = Entity::item($resource_type_id);
+
+        $this->model = $entity->summaryResourceTypeModel();
 
         $parameters = Parameter\Request::fetch(
-            $item_interface->collectionParametersKeys(),
+            array_keys($entity->summaryResourceTypeRequestParameters()),
             $resource_type_id
         );
 
@@ -114,11 +116,11 @@ class ResourceTypeItemView extends Controller
         );
 
         $search_parameters = Parameter\Search::fetch(
-            $item_interface->searchParameters()
+            $entity->summaryResourceTypeSearchParameters()
         );
 
         $filter_parameters = Parameter\Filter::fetch(
-            $item_interface->filterParameters()
+            $entity->summaryResourceTypeFilterParameters()
         );
 
         if ($years === true) {
@@ -837,7 +839,7 @@ class ResourceTypeItemView extends Controller
             $this->permitted_resource_types
         );
 
-        $item_interface = Factory::summaryItem($resource_type_id);
+        $entity = Entity::item($resource_type_id);
 
         $permissions = Route\Permission::resourceType(
             $resource_type_id,
@@ -846,7 +848,7 @@ class ResourceTypeItemView extends Controller
 
         $response = new SummaryResourceTypeItemCollection($permissions);
 
-        return $response->setItemInterface($item_interface)->
+        return $response->setEntity($entity)->
             create()->
             response();
     }

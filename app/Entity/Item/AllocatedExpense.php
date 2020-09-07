@@ -119,4 +119,9 @@ class AllocatedExpense extends Item
     {
         return new \App\Models\Transformers\ResourceTypeItemType\AllocatedExpense($data_to_transform);
     }
+
+    public function summaryResourceTypeModel(): Model
+    {
+        return new \App\Models\ResourceTypeItem\Summary\AllocatedExpense();
+    }
 }

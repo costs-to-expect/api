@@ -90,4 +90,9 @@ class SimpleExpense extends Item
     {
         return new \App\Models\Transformers\ResourceTypeItemType\SimpleExpense($data_to_transform);
     }
+
+    public function summaryResourceTypeModel(): Model
+    {
+        return new \App\Models\ResourceTypeItem\Summary\SimpleExpense();
+    }
 }
