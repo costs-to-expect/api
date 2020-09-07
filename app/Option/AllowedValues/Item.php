@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace App\Option\AllowedValues;
 
-use App\Entity\Config;
+use App\Entity\Item\Config;
 use App\Models\Category;
 use App\Models\EntityConfig;
 use App\Models\Subcategory;

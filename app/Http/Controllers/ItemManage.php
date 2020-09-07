@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Entity\Item\Entity;
 use App\Item\Factory;
 use App\Models\ItemTransfer;
 use App\Response\Cache;
@@ -49,23 +50,23 @@ class ItemManage extends Controller
         );
         $cache_key = new Cache\Key();
 
-        $item_interface = Factory::item($resource_type_id);
+        $entity_config = Entity::item($resource_type_id);
 
-        $validator_factory = $item_interface->validator();
-        $validator = $validator_factory->create();
+        $validation = $entity_config->validator();
+        $validator = $validation->create();
         \App\Request\BodyValidation::validateAndReturnErrors($validator);
 
-        $model = $item_interface->model();
+        $model = $entity_config->model();
 
         try {
-            [$item, $item_type] = DB::transaction(static function() use ($resource_id, $user_id, $item_interface) {
+            [$item, $item_type] = DB::transaction(static function() use ($resource_id, $user_id, $entity_config) {
                 $item = new Item([
                     'resource_id' => $resource_id,
                     'created_by' => $user_id
                 ]);
                 $item->save();
 
-                $item_type = $item_interface->create((int) $item->id);
+                $item_type = $entity_config->create((int) $item->id);
 
                 return [$item, $item_type];
             });
@@ -87,7 +88,7 @@ class ItemManage extends Controller
         }
 
         return response()->json(
-            $item_interface->transformer($model->instanceToArray($item, $item_type))->asArray(),
+            $entity_config->transformer($model->instanceToArray($item, $item_type))->asArray(),
             201
         );
     }
@@ -121,14 +122,16 @@ class ItemManage extends Controller
         );
         $cache_key = new Cache\Key();
 
+        $entity_config = Entity::item($resource_type_id);
+
         $item_interface = Factory::item($resource_type_id);
 
         \App\Request\BodyValidation::checkForEmptyPatch();
 
-        \App\Request\BodyValidation::checkForInvalidFields($item_interface->validationPatchableFieldNames());
+        \App\Request\BodyValidation::checkForInvalidFields(array_keys($entity_config->patchValidation()));
 
-        $validator_factory = $item_interface->validator();
-        $validator = $validator_factory->update();
+        $validation = $entity_config->validator();
+        $validator = $validation->update();
         \App\Request\BodyValidation::validateAndReturnErrors($validator);
 
         $item = (new Item())->instance($resource_type_id, $resource_id, $item_id);
@@ -194,9 +197,9 @@ class ItemManage extends Controller
         );
         $cache_key = new Cache\Key();
 
-        $item_interface = Factory::item($resource_type_id);
+        $entity_config = Entity::item($resource_type_id);
 
-        $item_model = $item_interface->model();
+        $item_model = $entity_config->model();
 
         $item_type = $item_model->instance($item_id);
         $item = (new Item())->instance($resource_type_id, $resource_id, $item_id);
@@ -205,7 +208,7 @@ class ItemManage extends Controller
             \App\Response\Responses::notFound(trans('entities.item'));
         }
 
-        if (in_array($item_interface->type(), ['allocated-expense', 'simple-expense']) &&
+        if (in_array($entity_config->type(), ['allocated-expense', 'simple-expense']) &&
             $item_model->hasCategoryAssignments($item_id) === true) {
                 \App\Response\Responses::foreignKeyConstraintError();
         }

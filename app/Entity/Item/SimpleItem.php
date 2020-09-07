@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace App\Entity\Item;
 
 use App\Models\Transformers\Transformer;
+use App\Request\Validate\Validator;
 use Illuminate\Database\Eloquent\Model;
 
 class SimpleItem extends Config
@@ -33,5 +34,10 @@ class SimpleItem extends Config
     public function transformer(array $data_to_transform): Transformer
     {
         return new \App\Models\Transformers\ItemType\SimpleItem($data_to_transform);
+    }
+
+    public function validator(): Validator
+    {
+        return new \App\Request\Validate\ItemType\SimpleItem();
     }
 }

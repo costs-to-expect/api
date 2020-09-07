@@ -3,8 +3,9 @@ declare(strict_types=1);
 
 namespace App\Entity\Item;
 
-use App\Interfaces\Item\ItemModel;
 use App\Models\Transformers\Transformer;
+use App\Request\Validate\Validator;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Config as LaravelConfig;
 
 /**
@@ -20,6 +21,8 @@ abstract class Config
     {
         //
     }
+
+    abstract public function create(int $id): Model;
 
     public function dateRangeField(): ?string
     {
@@ -103,4 +106,6 @@ abstract class Config
     abstract public function transformer(array $data_to_transform): Transformer;
 
     abstract public function type(): string;
+
+    abstract public function validator(): Validator;
 }
