@@ -16,7 +16,7 @@ abstract class Response
 
     protected $interface;
 
-    protected Item $entity_config;
+    protected Item $entity;
 
     public function __construct(array $permissions)
     {
@@ -70,9 +70,9 @@ abstract class Response
      * @todo This is a new method to work with the WIP new config based item
      * approach, we are going to develop this slowly to see how it works
      */
-    public function setEntityConfig(Item $entity_config): Response
+    public function setEntity(Item $entity): Response
     {
-        $this->entity_config = $entity_config;
+        $this->entity = $entity;
 
         return $this;
     }

@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers\Summary;
 
+use App\Entity\Item\Entity;
 use App\Http\Controllers\Controller;
-use App\Item\Factory;
 use App\Models\Transformers\Summary\ItemCategory as ItemCategoryTransformer;
 use App\Models\Transformers\Summary\ItemMonth as ItemMonthTransformer;
 use App\Models\Transformers\Summary\ItemSubcategory as ItemSubcategoryTransformer;
@@ -44,11 +44,12 @@ class ItemView extends Controller
             $this->permitted_resource_types
         );
 
-        $item_interface = Factory::summaryItem($resource_type_id);
-        $this->model = $item_interface->model();
+        $entity = Entity::item($resource_type_id);
+
+        $this->model = $entity->model();
 
         $parameters = Parameter\Request::fetch(
-            $item_interface->collectionParametersKeys(),
+            $entity->summaryRequestParameters(),
             (int)$resource_type_id,
             (int)$resource_id
         );
@@ -110,11 +111,11 @@ class ItemView extends Controller
         );
 
         $search_parameters = Parameter\Search::fetch(
-            $item_interface->searchParameters()
+            $entity->summarySearchParameters()
         );
 
         $filter_parameters = Parameter\Filter::fetch(
-            $item_interface->filterParameters()
+            $entity->filterParameters()
         );
 
         if ($years === true) {
@@ -798,7 +799,7 @@ class ItemView extends Controller
             $this->permitted_resource_types
         );
 
-        $item_interface = Factory::summaryItem($resource_type_id);
+        $entity = Entity::item($resource_type_id);
 
         $permissions = Route\Permission::resource(
             $resource_type_id,
@@ -808,7 +809,7 @@ class ItemView extends Controller
 
         $response = new SummaryItemCollection($permissions);
 
-        return $response->setItemInterface($item_interface)->
+        return $response->setEntityConfig($entity)->
             create()->
             response();
     }

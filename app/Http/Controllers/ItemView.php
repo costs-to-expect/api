@@ -220,7 +220,7 @@ class ItemView extends Controller
 
         $response = new ItemCollection($permissions);
 
-        return $response->setEntityConfig($entity)
+        return $response->setEntity($entity)
             ->setAllowedValues($allowed_values)
             ->create()
             ->response();
@@ -267,7 +267,7 @@ class ItemView extends Controller
 
         $response = new ItemItem($permissions);
 
-        return $response->setEntityConfig($entity)
+        return $response->setEntity($entity)
             ->create()
             ->response();
     }

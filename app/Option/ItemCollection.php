@@ -8,10 +8,10 @@ class ItemCollection extends Response
     public function create()
     {
         $get = new \App\Option\Method\GetRequest();
-        $this->verbs['GET'] = $get->setSortableParameters($this->entity_config->sortParameters())->
-            setSearchableParameters($this->entity_config->searchParameters())->
-            setFilterableParameters($this->entity_config->filterParameters())->
-            setParameters($this->entity_config->requestParameters())->
+        $this->verbs['GET'] = $get->setSortableParameters($this->entity->sortParameters())->
+            setSearchableParameters($this->entity->searchParameters())->
+            setFilterableParameters($this->entity->filterParameters())->
+            setParameters($this->entity->requestParameters())->
             setDynamicParameters($this->allowed_values)->
             setPaginationStatus(true)->
             setAuthenticationStatus($this->permissions['view'])->
@@ -19,7 +19,7 @@ class ItemCollection extends Response
             option();
 
         $post = new \App\Option\Method\PostRequest();
-        $this->verbs['POST'] = $post->setFields($this->entity_config->postFields())->
+        $this->verbs['POST'] = $post->setFields($this->entity->postFields())->
             setDescription( 'route-descriptions.item_POST')->
             setAuthenticationRequirement(true)->
             setAuthenticationStatus($this->permissions['manage'])->
