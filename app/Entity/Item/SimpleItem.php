@@ -6,6 +6,7 @@ namespace App\Entity\Item;
 use App\Models\Transformers\Transformer;
 use App\Request\Validate\Validator;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Date;
 
 class SimpleItem extends Config
 {
@@ -14,6 +15,22 @@ class SimpleItem extends Config
         $this->base_path = 'api.item-type-simple-item';
 
         parent::__construct();
+    }
+
+    public function create(int $id): Model
+    {
+        $item = new \App\Models\Item\SimpleItem([
+            'item_id' => $id,
+            'name' => request()->input('name'),
+            'description' => request()->input('description', null),
+            'quantity' => request()->input('quantity', 1),
+            'created_at' => Date::now(),
+            'updated_at' => null
+        ]);
+
+        $item->save();
+
+        return $item;
     }
 
     public function table(): string
