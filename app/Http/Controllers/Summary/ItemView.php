@@ -46,10 +46,10 @@ class ItemView extends Controller
 
         $entity = Entity::item($resource_type_id);
 
-        $this->model = $entity->model();
+        $this->model = $entity->summaryModel();
 
         $parameters = Parameter\Request::fetch(
-            $entity->summaryRequestParameters(),
+            array_keys($entity->summaryRequestParameters()),
             (int)$resource_type_id,
             (int)$resource_id
         );
@@ -809,7 +809,7 @@ class ItemView extends Controller
 
         $response = new SummaryItemCollection($permissions);
 
-        return $response->setEntityConfig($entity)->
+        return $response->setEntity($entity)->
             create()->
             response();
     }

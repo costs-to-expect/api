@@ -73,6 +73,11 @@ class AllocatedExpense extends Item
         return new \App\Models\Item\AllocatedExpense();
     }
 
+    public function summaryModel(): Model
+    {
+        return new \App\Models\Item\Summary\AllocatedExpense();
+    }
+
     public function transformer(array $data_to_transform): Transformer
     {
         return new \App\Models\Transformers\ItemType\AllocatedExpense($data_to_transform);

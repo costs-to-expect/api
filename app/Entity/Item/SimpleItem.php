@@ -43,6 +43,11 @@ class SimpleItem extends Item
         return new \App\Models\Item\SimpleItem();
     }
 
+    public function summaryModel(): Model
+    {
+        return new \App\Models\Item\Summary\SimpleItem();
+    }
+
     public function table(): string
     {
         return 'item_type_simple_item';

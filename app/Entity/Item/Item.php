@@ -93,6 +93,8 @@ abstract class Item
         return LaravelConfig::get($this->base_path . '.summary-filterable', []);
     }
 
+    abstract public function summaryModel(): Model;
+
     public function summaryRequestParameters(): array
     {
         return LaravelConfig::get($this->base_path . '.summary-parameters', []);

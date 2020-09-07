@@ -53,6 +53,11 @@ class SimpleExpense extends Item
         return 'simple-expense';
     }
 
+    public function summaryModel(): Model
+    {
+        return new \App\Models\Item\Summary\SimpleExpense();
+    }
+
     public function transformer(array $data_to_transform): Transformer
     {
         return new \App\Models\Transformers\ItemType\SimpleExpense($data_to_transform);

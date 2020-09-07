@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace App\Request\Validate\ItemType;
 
+use App\Entity\Item\Entity;
 use App\Request\Validate\Validator as BaseValidator;
 
 /**
@@ -14,6 +15,8 @@ use App\Request\Validate\Validator as BaseValidator;
  */
 class AllocatedExpense extends BaseValidator
 {
+    protected Entity $entity;
+
     public function __construct()
     {
         $this->item = new \App\Item\AllocatedExpense();
