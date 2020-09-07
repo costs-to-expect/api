@@ -39,7 +39,7 @@ class Item
     ): array
     {
         $years = [];
-        if (in_array('year', $available_parameters, true)) {
+        if (array_key_exists('year', $available_parameters)) {
             $years = $this->allowedValuesForYear(
                 $resource_type_id,
                 $resource_id
@@ -47,12 +47,12 @@ class Item
         }
 
         $months = [];
-        if (in_array('month', $available_parameters, true)) {
+        if (array_key_exists('month', $available_parameters)) {
             $months = $this->allowedValuesForMonth();
         }
 
         $categories = [];
-        if (in_array('category', $available_parameters, true)) {
+        if (array_key_exists('category', $available_parameters)) {
             $categories = $this->allowedValuesForCategory(
                 $resource_type_id,
                 $permitted_resource_types,

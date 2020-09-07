@@ -214,7 +214,7 @@ class ItemView extends Controller
             $resource_id,
             $this->permitted_resource_types,
             $this->include_public,
-            array_keys($entity->requestParameters()),
+            $entity->requestParameters(),
             $defined_parameters
         );
 
