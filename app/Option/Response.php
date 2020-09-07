@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace App\Option;
 
-use App\Entity\Item\Config;
+use App\Entity\Item\Item;
 use Illuminate\Http\JsonResponse;
 
 abstract class Response
@@ -16,7 +16,7 @@ abstract class Response
 
     protected $interface;
 
-    protected Config $entity_config;
+    protected Item $entity_config;
 
     public function __construct(array $permissions)
     {
@@ -70,7 +70,7 @@ abstract class Response
      * @todo This is a new method to work with the WIP new config based item
      * approach, we are going to develop this slowly to see how it works
      */
-    public function setEntityConfig(Config $entity_config): Response
+    public function setEntityConfig(Item $entity_config): Response
     {
         $this->entity_config = $entity_config;
 

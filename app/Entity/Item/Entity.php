@@ -6,7 +6,7 @@ use App\Models\ResourceTypeItemType;
 
 class Entity
 {
-    public static function item(int $resource_type_id): Config
+    public static function item(int $resource_type_id): Item
     {
         $type =(new ResourceTypeItemType())->itemType($resource_type_id);
 

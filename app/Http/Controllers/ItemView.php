@@ -46,7 +46,7 @@ class ItemView extends Controller
         );
         $cache_control->setTtlOneWeek();
 
-        $entity_config = Entity::item($resource_type_id);
+        $entity = Entity::item($resource_type_id);
 
         $cache_collection = new Cache\Collection();
         $cache_collection->setFromCache($cache_control->get(request()->getRequestUri()));
@@ -54,24 +54,24 @@ class ItemView extends Controller
         if ($cache_control->cacheable() === false || $cache_collection->valid() === false) {
 
             $parameters = Parameter\Request::fetch(
-                array_keys($entity_config->requestParameters()),
+                array_keys($entity->requestParameters()),
                 (int) $resource_type_id,
                 (int) $resource_id
             );
 
             $search_parameters = Parameter\Search::fetch(
-                $entity_config->searchParameters()
+                $entity->searchParameters()
             );
 
             $filter_parameters = Parameter\Filter::fetch(
-                $entity_config->filterParameters()
+                $entity->filterParameters()
             );
 
             $sort_parameters = Parameter\Sort::fetch(
-                $entity_config->sortParameters()
+                $entity->sortParameters()
             );
 
-            $item_model = $entity_config->model();
+            $item_model = $entity->model();
 
             $total = $item_model->totalCount(
                 $resource_type_id,
@@ -101,8 +101,8 @@ class ItemView extends Controller
             );
 
             $collection = array_map(
-                static function ($item) use ($entity_config) {
-                    return $entity_config->transformer($item)->asArray();
+                static function ($item) use ($entity) {
+                    return $entity->transformer($item)->asArray();
                 },
                 $items
             );
@@ -145,15 +145,15 @@ class ItemView extends Controller
             $this->permitted_resource_types
         );
 
-        $entity_config = Entity::item($resource_type_id);
+        $entity = Entity::item($resource_type_id);
 
         $parameters = Parameter\Request::fetch(
-            array_keys($entity_config->itemRequestParameters()),
+            array_keys($entity->itemRequestParameters()),
             (int) $resource_type_id,
             (int) $resource_id
         );
 
-        $item_model = $entity_config->model();
+        $item_model = $entity->model();
 
         $item = $item_model->single(
             $resource_type_id,
@@ -170,7 +170,7 @@ class ItemView extends Controller
         $headers->item();
 
         return response()->json(
-            $entity_config->transformer($item)->asArray(),
+            $entity->transformer($item)->asArray(),
             200,
             $headers->headers()
         );
@@ -195,7 +195,7 @@ class ItemView extends Controller
             $this->permitted_resource_types,
         );
 
-        $entity_config = Entity::item($resource_type_id);
+        $entity = Entity::item($resource_type_id);
 
         $permissions = Route\Permission::resource(
             $resource_type_id,
@@ -204,23 +204,23 @@ class ItemView extends Controller
         );
 
         $defined_parameters = Parameter\Request::fetch(
-            array_keys($entity_config->requestParameters()),
+            array_keys($entity->requestParameters()),
             (int) $resource_type_id,
             (int) $resource_id
         );
 
-        $allowed_values = (new \App\Option\AllowedValues\Item($entity_config))->allowedValues(
+        $allowed_values = (new \App\Option\AllowedValues\Item($entity))->allowedValues(
             $resource_type_id,
             $resource_id,
             $this->permitted_resource_types,
             $this->include_public,
-            array_keys($entity_config->requestParameters()),
+            array_keys($entity->requestParameters()),
             $defined_parameters
         );
 
         $response = new ItemCollection($permissions);
 
-        return $response->setEntityConfig($entity_config)
+        return $response->setEntityConfig($entity)
             ->setAllowedValues($allowed_values)
             ->create()
             ->response();
@@ -255,9 +255,9 @@ class ItemView extends Controller
             $this->permitted_resource_types,
         );
 
-        $entity_config = Entity::item($resource_type_id);
+        $entity = Entity::item($resource_type_id);
 
-        $item_model = $entity_config->model();
+        $item_model = $entity->model();
 
         $item = $item_model->single($resource_type_id, $resource_id, $item_id);
 
@@ -267,7 +267,7 @@ class ItemView extends Controller
 
         $response = new ItemItem($permissions);
 
-        return $response->setEntityConfig($entity_config)
+        return $response->setEntityConfig($entity)
             ->create()
             ->response();
     }

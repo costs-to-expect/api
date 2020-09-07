@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace App\Option\AllowedValues;
 
-use App\Entity\Item\Config;
+use App\Entity\Item\Item as Entity;
 use App\Models\Category;
 use App\Models\EntityConfig;
 use App\Models\Subcategory;
@@ -13,11 +13,11 @@ class Item
 {
     private Hash $hash;
 
-    private Config $entity_config;
+    private Entity $entity_config;
 
     private EntityConfig $model;
 
-    public function __construct(Config $entity_config)
+    public function __construct(Entity $entity_config)
     {
         $this->hash = new Hash();
 

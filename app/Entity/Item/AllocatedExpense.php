@@ -8,7 +8,7 @@ use App\Models\Transformers\Transformer;
 use App\Request\Validate\Validator;
 use Illuminate\Support\Facades\Date;
 
-class AllocatedExpense extends Config
+class AllocatedExpense extends Item
 {
     public function __construct()
     {
@@ -53,6 +53,11 @@ class AllocatedExpense extends Config
         return 'effective_date';
     }
 
+    public function instance(int $id): Model
+    {
+        return (new \App\Models\Item\AllocatedExpense())->instance($id);
+    }
+
     public function table(): string
     {
         return 'item_type_allocated_expense';
@@ -71,6 +76,26 @@ class AllocatedExpense extends Config
     public function transformer(array $data_to_transform): Transformer
     {
         return new \App\Models\Transformers\ItemType\AllocatedExpense($data_to_transform);
+    }
+
+    public function update(array $patch, Model $instance): bool
+    {
+        $set_actualised = false;
+        foreach ($patch as $key => $value) {
+            $instance->$key = $value;
+
+            if (in_array($key, ['total', 'percentage']) === true) {
+                $set_actualised = true;
+            }
+        }
+
+        if ($set_actualised === true) {
+            $instance->setActualisedTotal($instance->total, $instance->percentage);
+        }
+
+        $instance->updated_at = Date::now();
+
+        return $instance->save();
     }
 
     public function validator(): Validator

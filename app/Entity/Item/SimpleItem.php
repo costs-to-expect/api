@@ -8,7 +8,7 @@ use App\Request\Validate\Validator;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Date;
 
-class SimpleItem extends Config
+class SimpleItem extends Item
 {
     public function __construct()
     {
@@ -33,6 +33,16 @@ class SimpleItem extends Config
         return $item;
     }
 
+    public function instance(int $id): Model
+    {
+        return (new \App\Models\Item\SimpleItem())->instance($id);
+    }
+
+    public function model()
+    {
+        return new \App\Models\Item\SimpleItem();
+    }
+
     public function table(): string
     {
         return 'item_type_simple_item';
@@ -43,14 +53,20 @@ class SimpleItem extends Config
         return 'simple-item';
     }
 
-    public function model()
-    {
-        return new \App\Models\Item\SimpleItem();
-    }
-
     public function transformer(array $data_to_transform): Transformer
     {
         return new \App\Models\Transformers\ItemType\SimpleItem($data_to_transform);
+    }
+
+    public function update(array $patch, Model $instance): bool
+    {
+        foreach ($patch as $key => $value) {
+            $instance->$key = $value;
+        }
+
+        $instance->updated_at = Date::now();
+
+        return $instance->save();
     }
 
     public function validator(): Validator

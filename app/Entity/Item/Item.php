@@ -13,7 +13,7 @@ use Illuminate\Support\Facades\Config as LaravelConfig;
  * Add the ticket to Pivotal when/if happy with this.
  */
 
-abstract class Config
+abstract class Item
 {
     protected string $base_path;
 
@@ -33,6 +33,8 @@ abstract class Config
     {
         return LaravelConfig::get($this->base_path . '.filterable', []);
     }
+
+    abstract public function instance(int $id): Model;
 
     public function itemRequestParameters(): array
     {
@@ -106,6 +108,8 @@ abstract class Config
     abstract public function transformer(array $data_to_transform): Transformer;
 
     abstract public function type(): string;
+
+    abstract public function update(array $patch, Model $instance): bool;
 
     abstract public function validator(): Validator;
 }

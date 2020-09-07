@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Entity\Item\Entity;
-use App\Item\Factory;
 use App\Models\ItemTransfer;
 use App\Response\Cache;
 use App\Request\Route;
@@ -50,23 +49,23 @@ class ItemManage extends Controller
         );
         $cache_key = new Cache\Key();
 
-        $entity_config = Entity::item($resource_type_id);
+        $entity = Entity::item($resource_type_id);
 
-        $validation = $entity_config->validator();
+        $validation = $entity->validator();
         $validator = $validation->create();
         \App\Request\BodyValidation::validateAndReturnErrors($validator);
 
-        $model = $entity_config->model();
+        $model = $entity->model();
 
         try {
-            [$item, $item_type] = DB::transaction(static function() use ($resource_id, $user_id, $entity_config) {
+            [$item, $item_type] = DB::transaction(static function() use ($resource_id, $user_id, $entity) {
                 $item = new Item([
                     'resource_id' => $resource_id,
                     'created_by' => $user_id
                 ]);
                 $item->save();
 
-                $item_type = $entity_config->create((int) $item->id);
+                $item_type = $entity->create((int) $item->id);
 
                 return [$item, $item_type];
             });
@@ -88,7 +87,7 @@ class ItemManage extends Controller
         }
 
         return response()->json(
-            $entity_config->transformer($model->instanceToArray($item, $item_type))->asArray(),
+            $entity->transformer($model->instanceToArray($item, $item_type))->asArray(),
             201
         );
     }
@@ -122,20 +121,18 @@ class ItemManage extends Controller
         );
         $cache_key = new Cache\Key();
 
-        $entity_config = Entity::item($resource_type_id);
-
-        $item_interface = Factory::item($resource_type_id);
+        $entity = Entity::item($resource_type_id);
 
         \App\Request\BodyValidation::checkForEmptyPatch();
 
-        \App\Request\BodyValidation::checkForInvalidFields(array_keys($entity_config->patchValidation()));
+        \App\Request\BodyValidation::checkForInvalidFields(array_keys($entity->patchValidation()));
 
-        $validation = $entity_config->validator();
+        $validation = $entity->validator();
         $validator = $validation->update();
         \App\Request\BodyValidation::validateAndReturnErrors($validator);
 
         $item = (new Item())->instance($resource_type_id, $resource_id, $item_id);
-        $item_type = $item_interface->instance((int) $item_id);
+        $item_type = $entity->instance((int) $item_id);
 
         if ($item === null || $item_type === null) {
             \App\Response\Responses::failedToSelectModelForUpdateOrDelete();
@@ -144,9 +141,9 @@ class ItemManage extends Controller
         try {
             $item->updated_by = $this->user_id;
 
-            DB::transaction(static function() use ($item, $item_interface, $item_type) {
+            DB::transaction(static function() use ($item, $entity, $item_type) {
                 if ($item->save() === true) {
-                    $item_interface->update(request()->all(), $item_type);
+                    $entity->update(request()->all(), $item_type);
                 }
             });
 
@@ -197,9 +194,9 @@ class ItemManage extends Controller
         );
         $cache_key = new Cache\Key();
 
-        $entity_config = Entity::item($resource_type_id);
+        $entity = Entity::item($resource_type_id);
 
-        $item_model = $entity_config->model();
+        $item_model = $entity->model();
 
         $item_type = $item_model->instance($item_id);
         $item = (new Item())->instance($resource_type_id, $resource_id, $item_id);
@@ -208,7 +205,7 @@ class ItemManage extends Controller
             \App\Response\Responses::notFound(trans('entities.item'));
         }
 
-        if (in_array($entity_config->type(), ['allocated-expense', 'simple-expense']) &&
+        if (in_array($entity->type(), ['allocated-expense', 'simple-expense']) &&
             $item_model->hasCategoryAssignments($item_id) === true) {
                 \App\Response\Responses::foreignKeyConstraintError();
         }

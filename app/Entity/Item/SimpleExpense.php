@@ -8,7 +8,7 @@ use App\Request\Validate\Validator;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Date;
 
-class SimpleExpense extends Config
+class SimpleExpense extends Item
 {
     public function __construct()
     {
@@ -33,6 +33,11 @@ class SimpleExpense extends Config
         return $item;
     }
 
+    public function instance(int $id): Model
+    {
+        return (new \App\Models\Item\SimpleExpense())->instance($id);
+    }
+
     public function model()
     {
         return new \App\Models\Item\SimpleExpense();
@@ -51,6 +56,17 @@ class SimpleExpense extends Config
     public function transformer(array $data_to_transform): Transformer
     {
         return new \App\Models\Transformers\ItemType\SimpleExpense($data_to_transform);
+    }
+
+    public function update(array $patch, Model $instance): bool
+    {
+        foreach ($patch as $key => $value) {
+            $instance->$key = $value;
+        }
+
+        $instance->updated_at = Date::now();
+
+        return $instance->save();
     }
 
     public function validator(): Validator
