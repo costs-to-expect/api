@@ -3,18 +3,20 @@ declare(strict_types=1);
 
 namespace App\Option;
 
+use Illuminate\Support\Facades\Config;
+
 class ItemSubcategoryCollection extends Response
 {
     public function create()
     {
-        $get = new \App\Option\Method\Get();
-        $this->verbs['GET'] = $get->setParameters('api.item-subcategory.parameters.collection')->
+        $get = new \App\Option\Method\GetRequest();
+        $this->verbs['GET'] = $get->setParameters(Config::get('api.item-subcategory.parameters.collection'))->
             setAuthenticationStatus($this->permissions['view'])->
             setDescription('route-descriptions.item_sub_category_GET_index')->
             option();
 
-        $post = new \App\Option\Method\Post();
-        $this->verbs['POST'] = $post->setFields('api.item-subcategory.fields')->
+        $post = new \App\Option\Method\PostRequest();
+        $this->verbs['POST'] = $post->setFields(Config::get('api.item-subcategory.fields'))->
             setDynamicFields($this->allowed_values)->
             setDescription('route-descriptions.item_sub_category_POST')->
             setAuthenticationStatus($this->permissions['manage'])->
