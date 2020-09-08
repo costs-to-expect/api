@@ -14,8 +14,6 @@ abstract class Response
 
     protected array $allowed_values;
 
-    protected $interface;
-
     protected Item $entity;
 
     public function __construct(array $permissions)
@@ -55,13 +53,6 @@ abstract class Response
     public function setAllowedValues(array $allowed_values): Response
     {
         $this->allowed_values = $allowed_values;
-
-        return $this;
-    }
-
-    public function setItemInterface($interface): Response
-    {
-        $this->interface = $interface;
 
         return $this;
     }
