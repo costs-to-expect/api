@@ -50,7 +50,7 @@ class PermittedUserView extends Controller
         if ($cache_control->cacheable() === false || $cache_collection->valid() === false) {
 
             $search_parameters = Parameter\Search::fetch(
-                array_keys(Config::get('api.permitted-user.searchable'))
+                Config::get('api.permitted-user.searchable')
             );
 
             $sort_parameters = Parameter\Sort::fetch(

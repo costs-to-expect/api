@@ -41,7 +41,7 @@ class ItemTypeView extends Controller
         if ($cache_control->cacheable() === false || $cache_collection->valid() === false) {
 
             $search_parameters = Parameter\Search::fetch(
-                array_keys(Config::get('api.item-type.searchable'))
+                Config::get('api.item-type.searchable')
             );
 
             $sort_parameters = Parameter\Sort::fetch(

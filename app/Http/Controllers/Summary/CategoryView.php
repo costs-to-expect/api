@@ -47,7 +47,7 @@ class CategoryView extends Controller
         if ($cache_control->cacheable() === false || $cache_summary->valid() === false) {
 
             $search_parameters = Parameter\Search::fetch(
-                array_keys(Config::get('api.category.summary-searchable'))
+                Config::get('api.category.summary-searchable')
             );
 
             $summary = (new Category())->total(

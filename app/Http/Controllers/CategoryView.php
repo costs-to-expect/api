@@ -51,7 +51,7 @@ class CategoryView extends Controller
         if ($cache_control->cacheable() === false || $cache_collection->valid() === false) {
 
             $search_parameters = Parameter\Search::fetch(
-                array_keys(Config::get('api.category.searchable'))
+                Config::get('api.category.searchable')
             );
 
             $sort_parameters = Parameter\Sort::fetch(

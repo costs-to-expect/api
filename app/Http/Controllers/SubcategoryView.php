@@ -54,7 +54,7 @@ class SubcategoryView extends Controller
         if ($cache_control->cacheable() === false || $cache_collection->valid() === false) {
 
             $search_parameters = Parameter\Search::fetch(
-                array_keys(Config::get('api.subcategory.searchable'))
+                Config::get('api.subcategory.searchable')
             );
 
             $sort_parameters = Parameter\Sort::fetch(

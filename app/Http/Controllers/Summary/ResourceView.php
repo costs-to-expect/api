@@ -47,7 +47,7 @@ class ResourceView extends Controller
         if ($cache_control->cacheable() === false || $cache_summary->valid() === false) {
 
             $search_parameters = Parameter\Search::fetch(
-                array_keys(Config::get('api.resource.summary-searchable'))
+                Config::get('api.resource.summary-searchable')
             );
 
             $summary = (new Resource())->totalCount(

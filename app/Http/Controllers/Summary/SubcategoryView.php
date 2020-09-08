@@ -49,7 +49,7 @@ class SubcategoryView extends Controller
         if ($cache_control->cacheable() === false || $cache_summary->valid() === false) {
 
             $search_parameters = Parameter\Search::fetch(
-                array_keys(Config::get('api.subcategory.summary-searchable'))
+                Config::get('api.subcategory.summary-searchable')
             );
 
             $summary = (new Subcategory())->totalCount(
