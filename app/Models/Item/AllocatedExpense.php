@@ -254,7 +254,7 @@ class AllocatedExpense extends Model implements IModel
             array_key_exists('include-unpublished', $parameters) === false ||
             Boolean::convertedValue($parameters['include-unpublished']) === false
         ) {
-            $collection->where(function ($collection) {
+            $collection->where(static function ($collection) {
                 $collection->whereNull('item_type_allocated_expense.publish_after')->orWhereRaw('item_type_allocated_expense.publish_after < NOW()');
             });
         }
@@ -385,7 +385,7 @@ class AllocatedExpense extends Model implements IModel
             array_key_exists('include-unpublished', $parameters) === false ||
             Boolean::convertedValue($parameters['include-unpublished']) === false
         ) {
-            $collection->where(function ($collection) {
+            $collection->where(static function ($collection) {
                 $collection->whereNull('item_type_allocated_expense.publish_after')->orWhereRaw('item_type_allocated_expense.publish_after < NOW()');
             });
         }

@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace App\Option;
 
+use App\Entity\Item\Item;
 use Illuminate\Http\JsonResponse;
 
 abstract class Response
@@ -13,7 +14,7 @@ abstract class Response
 
     protected array $allowed_values;
 
-    protected $interface;
+    protected Item $entity;
 
     public function __construct(array $permissions)
     {
@@ -49,16 +50,20 @@ abstract class Response
         exit;
     }
 
-    public function setAllowedValues(array $allowed_values)
+    public function setAllowedValues(array $allowed_values): Response
     {
         $this->allowed_values = $allowed_values;
 
         return $this;
     }
 
-    public function setItemInterface($interface)
+    /**
+     * @todo This is a new method to work with the WIP new config based item
+     * approach, we are going to develop this slowly to see how it works
+     */
+    public function setEntity(Item $entity): Response
     {
-        $this->interface = $interface;
+        $this->entity = $entity;
 
         return $this;
     }

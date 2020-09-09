@@ -3,8 +3,11 @@ declare(strict_types=1);
 
 namespace App\Models;
 
+use Carbon\Carbon;
 use Illuminate\Database\Query\Builder as QueryBuilder;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Date;
+use Illuminate\Support\Facades\DB;
 
 /**
  * Manage the our cache
@@ -37,16 +40,17 @@ class Cache extends Model
         bool $include_summaries = false
     ): array
     {
-        $result = $this->where('key', 'LIKE', $prefix . $key . '%')->
-            orWhere('key', '=', $prefix . $key);
+        $result = $this->where('expiration', '>', DB::raw('NOW()'))
+            ->where('key', 'LIKE', $prefix . $key . '%')
+            ->orWhere('key', '=', $prefix . $key);
 
         if ($include_summaries === true) {
-            $result->orWhere('key', 'LIKE', str_replace('v2/', 'v2/summary/', $prefix . $key) . '%')->
-                orWhere('key', '=', str_replace('v2/', 'v2/summary/', $prefix . $key));
+            $result->orWhere('key', 'LIKE', str_replace('v2/', 'v2/summary/', $prefix . $key) . '%')
+                ->orWhere('key', '=', str_replace('v2/', 'v2/summary/', $prefix . $key));
         }
 
-        return $result->select('key')->
-            get()->
-            toArray();
+        return $result->select('key')
+            ->get()
+            ->toArray();
     }
 }

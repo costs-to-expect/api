@@ -8,7 +8,7 @@ namespace App\Option\Method;
  * @copyright Dean Blackborough 2018-2020
  * @license https://github.com/costs-to-expect/api/blob/master/LICENSE
  */
-class Delete extends Method
+class DeleteRequest extends Method
 {
     protected function mergeAndLocalise(): void
     {

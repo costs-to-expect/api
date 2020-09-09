@@ -46,8 +46,10 @@ class Search
      */
     private static function validate(array $fields)
     {
+        $searchable_fields = array_keys($fields);
+
         foreach (array_keys(self::$fields) as $key) {
-            if (in_array($key, $fields, true) === false) {
+            if (in_array($key, $searchable_fields, true) === false) {
                 unset(self::$fields[$key]);
             }
         }

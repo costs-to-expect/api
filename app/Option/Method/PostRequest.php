@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\Config;
  * @copyright Dean Blackborough 2018-2020
  * @license https://github.com/costs-to-expect/api/blob/master/LICENSE
  */
-class Post extends Method
+class PostRequest extends Method
 {
     protected array $dynamic_fields;
     protected array $fields;
@@ -27,7 +27,7 @@ class Post extends Method
 
     public function setDynamicFields(
         array $fields = []
-    ): Post
+    ): PostRequest
     {
         $this->dynamic_fields = $fields;
 
@@ -35,12 +35,10 @@ class Post extends Method
     }
 
     public function setFields(
-        string $configuration_path
-    ): Post
+        array $fields
+    ): PostRequest
     {
-        $fields = Config::get($configuration_path);
-
-        if (is_array($fields) && count($fields) > 0) {
+        if (count($fields) > 0) {
             $this->fields = $fields;
         }
 

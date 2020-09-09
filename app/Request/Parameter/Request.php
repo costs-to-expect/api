@@ -3,8 +3,8 @@ declare(strict_types=1);
 
 namespace App\Request\Parameter;
 
-use App\ResourceTypeItem\Factory as ResourceTypeItemFactory;
-use App\Item\Factory as ItemFactory;
+use App\Entity\Item\Entity;
+use App\Models\EntityConfig;
 use App\Models\Category;
 use App\Models\ResourceType;
 use App\Models\Subcategory;
@@ -140,21 +140,40 @@ class Request
                     if (array_key_exists($key, self::$parameters) === true &&
                         (int)(self::$parameters[$key] > 0)) {
 
-                        self::$parameters[$key] = (int)self::$parameters[$key];
+                        self::$parameters[$key] = (int) self::$parameters[$key];
 
-                        $min_year_limit = (int)Date('Y');
-                        $max_year_limit = (int)(Date('Y'));
+                        $min_year_limit = (int) Date('Y');
+                        $max_year_limit = (int) Date('Y');
+
+                        $entity_model = new EntityConfig();
+                        $entity = Entity::item($resource_type_id);
 
                         if ($resource_type_id !== null && $resource_id === null) {
-                            $item_interface = ResourceTypeItemFactory::item($resource_type_id);
-                            $min_year_limit = $item_interface->conditionalParameterMinYear($resource_type_id);
-                            $max_year_limit = $item_interface->conditionalParameterMaxYear($resource_type_id);
+                            $min_year_limit = $entity_model->minimumYearByResourceType(
+                                $resource_type_id,
+                                $entity->table(),
+                                $entity->dateRangeField()
+                            );
+                            $max_year_limit = $entity_model->maximumYearByResourceType(
+                                $resource_type_id,
+                                $entity->table(),
+                                $entity->dateRangeField()
+                            );
                         }
 
                         if ($resource_type_id !== null && $resource_id !== null) {
-                            $item_interface = ItemFactory::item($resource_type_id);
-                            $min_year_limit = $item_interface->conditionalParameterMinYear($resource_id);
-                            $max_year_limit = $item_interface->conditionalParameterMaxYear($resource_id);
+                            $min_year_limit = $entity_model->minimumYearByResourceTypeAndResource(
+                                $resource_type_id,
+                                $resource_id,
+                                $entity->table(),
+                                $entity->dateRangeField()
+                            );
+                            $max_year_limit = $entity_model->maximumYearByResourceTypeAndResource(
+                                $resource_type_id,
+                                $resource_id,
+                                $entity->table(),
+                                $entity->dateRangeField()
+                            );
                         }
 
                         if (self::$parameters[$key] < $min_year_limit ||

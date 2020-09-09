@@ -2,6 +2,22 @@
 
 The complete changelog for the Costs to Expect REST API, our changelog follows the format defined at https://keepachangelog.com/en/1.0.0/
 
+## [v2.12.1] - 2020-09-09
+### Added
+- We have reworked our item configuration; we are moving away from multiple item type classes and moving towards a configuration based setup.
+
+### Changed
+- We have updated web.config; our server will not serve static JSON files.
+- We have updated our back-end dependencies.
+- We will no longer send request error mails for 404s; the number of emails is getting out of hand.
+- We have updated our cache manager; some endpoints will only ever have a public cache, never a private cache.
+
+### Fixed
+- We have fixed a small bug when creating items of type 'simple-item' and 'simple-expense'; we are not setting a date for 'created_at`.
+- We have tweaked our cache management system; our system will not create a private cache for authenticated users when they are looking at public endpoints for which they have no permissions.
+- We have updated the allowed values for some OPTIONS requests; the allowed values are sometimes not displaying.
+- We have made a minor tweak to the query for selecting cache keys.
+
 ## [v2.12.0] - 2020-07-19
 ### Added
 - We have added the ability to exclude public resource types; to exclude public resource types include `exclude-public=1` in your request URIs.

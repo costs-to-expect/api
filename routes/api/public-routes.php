@@ -11,7 +11,7 @@ Route::group(
             'convert.get.parameters'
         ]
     ],
-    function () {
+    static function () {
         // Root of the API and CHANGELOG
         Route::get(
             '',

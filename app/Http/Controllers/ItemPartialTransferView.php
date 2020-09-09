@@ -33,7 +33,10 @@ class ItemPartialTransferView extends Controller
      */
     public function index($resource_type_id): JsonResponse
     {
-        $cache_control = new Cache\Control($this->user_id);
+        $cache_control = new Cache\Control(
+            $this->user_id,
+            in_array($resource_type_id, $this->permitted_resource_types, true)
+        );
         $cache_control->setTtlOneWeek();
 
         Route\Validate::resourceType(

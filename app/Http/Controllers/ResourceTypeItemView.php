@@ -2,9 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Entity\Item\Entity;
 use App\Option\ResourceTypeItemCollection;
-use App\Option\Value\ResourceTypeItem;
-use App\ResourceTypeItem\Factory;
 use App\Response\Cache;
 use App\Request\Parameter;
 use App\Request\Route;
@@ -35,7 +34,10 @@ class ResourceTypeItemView extends Controller
             $this->permitted_resource_types
         );
 
-        $cache_control = new Cache\Control($this->user_id);
+        $cache_control = new Cache\Control(
+            $this->user_id,
+            in_array($resource_type_id, $this->permitted_resource_types, true)
+        );
         $cache_control->setTtlOneWeek();
 
         $cache_collection = new Cache\Collection();
@@ -43,25 +45,25 @@ class ResourceTypeItemView extends Controller
 
         if ($cache_control->cacheable() === false || $cache_collection->valid() === false) {
 
-            $item_interface = Factory::item($resource_type_id);
+            $entity = Entity::item($resource_type_id);
 
-            $resource_type_item_model = $item_interface->model();
+            $resource_type_item_model = $entity->resourceTypeModel();
 
             $collection_parameters = Parameter\Request::fetch(
-                array_keys($item_interface->collectionParameters()),
+                array_keys($entity->resourceTypeRequestParameters()),
                 $resource_type_id
             );
 
             $sort_fields = Parameter\Sort::fetch(
-                $item_interface->sortParameters()
+                $entity->resourceTypeSortParameters()
             );
 
             $search_parameters = Parameter\Search::fetch(
-                $item_interface->searchParameters()
+                $entity->resourceTypeSearchParameters()
             );
 
             $filter_parameters = Parameter\Filter::fetch(
-                $item_interface->filterParameters()
+                $entity->resourceTypeFilterParameters()
             );
 
             $total = $resource_type_item_model->totalCount(
@@ -91,8 +93,8 @@ class ResourceTypeItemView extends Controller
             );
 
             $collection = array_map(
-                static function ($item) use ($item_interface) {
-                    return $item_interface->transformer($item)->asArray();
+                static function ($item) use ($entity) {
+                    return $entity->resourceTypeTransformer($item)->asArray();
                 },
                 $items
             );
@@ -127,7 +129,7 @@ class ResourceTypeItemView extends Controller
             $this->permitted_resource_types
         );
 
-        $item_interface = Factory::item($resource_type_id);
+        $entity = Entity::item($resource_type_id);
 
         $permissions = Route\Permission::resourceType(
             $resource_type_id,
@@ -135,24 +137,21 @@ class ResourceTypeItemView extends Controller
         );
 
         $defined_parameters = Parameter\Request::fetch(
-            array_keys($item_interface->collectionParameters()),
+            array_keys($entity->resourceTypeRequestParameters()),
             $resource_type_id
         );
 
-        $allowed_values = (new ResourceTypeItem())->allowedValues(
-            $item_interface,
+        $allowed_values = (new \App\Option\AllowedValues\ResourceTypeItem($entity))->allowedValues(
             $resource_type_id,
             $this->permitted_resource_types,
             $this->include_public,
-            array_merge(
-                $item_interface->collectionParametersKeys(),
-                $defined_parameters
-            )
+            $entity->resourceTypeRequestParameters(),
+            $defined_parameters
         );
 
         $response = new ResourceTypeItemCollection($permissions);
 
-        return $response->setItemInterface($item_interface)->
+        return $response->setEntity($entity)->
             setAllowedValues($allowed_values)->
             create()->
             response();

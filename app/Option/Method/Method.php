@@ -3,6 +3,8 @@ declare(strict_types=1);
 
 namespace App\Option\Method;
 
+use App\Entity\Api;
+
 /**
  * @author Dean Blackborough <dean@g3d-development.com>
  * @copyright Dean Blackborough 2018-2020
@@ -16,11 +18,15 @@ abstract class Method
 
     protected $description;
 
+    protected Api $api_config;
+
     public function __construct()
     {
         $this->authentication = false;
         $this->authenticated = false;
         $this->description = '';
+
+        $this->api_config = new Api();
     }
 
     public function setAuthenticationRequirement(

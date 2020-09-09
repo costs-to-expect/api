@@ -21,7 +21,7 @@ class SimpleExpense extends Model implements IModel
 {
     protected $table = 'item_type_simple_expense';
 
-    protected $guarded = ['id', 'updated_at', 'created_at'];
+    protected $guarded = ['id'];
 
     public $timestamps = false;
 

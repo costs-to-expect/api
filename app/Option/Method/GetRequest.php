@@ -3,14 +3,15 @@ declare(strict_types=1);
 
 namespace App\Option\Method;
 
-use Illuminate\Support\Facades\Config;
-
 /**
+ * @todo This is a newer WIP version of the option classes, uses the new
+ * config objects
+ *
  * @author Dean Blackborough <dean@g3d-development.com>
  * @copyright Dean Blackborough 2018-2020
  * @license https://github.com/costs-to-expect/api/blob/master/LICENSE
  */
-class Get extends Method
+class GetRequest extends Method
 {
     protected bool $pagination;
     protected array $pagination_parameters;
@@ -50,12 +51,10 @@ class Get extends Method
     }
 
     public function setFilterableParameters(
-        string $configuration_path
-    ): Get
+        array $parameters
+    ): GetRequest
     {
-        $parameters = Config::get($configuration_path);
-
-        if (is_array($parameters) && count($parameters) > 0) {
+        if (count($parameters) > 0) {
             $this->filterable = true;
             $this->filterable_parameters = $parameters;
         }
@@ -66,15 +65,15 @@ class Get extends Method
     public function setPaginationStatus(
         bool $status = false,
         bool $override = false
-    ): Get
+    ): GetRequest
     {
         if ($status === true) {
             $this->pagination = true;
 
             if ($override === false) {
-                $this->pagination_parameters = Config::get('api.app.pagination-parameters');
+                $this->pagination_parameters = $this->api_config->paginationParameters();
             } else {
-                $this->pagination_parameters = Config::get('api.app.pagination-parameters-including-collection');
+                $this->pagination_parameters = $this->api_config->paginationParametersAllowingEntireCollection();
             }
         }
 
@@ -82,12 +81,10 @@ class Get extends Method
     }
 
     public function setParameters(
-        string $configuration_path
-    ): Get
+        array $parameters
+    ): GetRequest
     {
-        $parameters = Config::get($configuration_path);
-
-        if (is_array($parameters) && count($parameters) > 0) {
+        if (count($parameters) > 0) {
             $this->parameters = $parameters;
         }
 
@@ -96,7 +93,7 @@ class Get extends Method
 
     public function setDynamicParameters(
         array $parameters = []
-    ): Get
+    ): GetRequest
     {
         $this->dynamic_parameters = $parameters;
 
@@ -104,12 +101,10 @@ class Get extends Method
     }
 
     public function setSearchableParameters(
-        string $configuration_path
-    ): Get
+        array $parameters
+    ): GetRequest
     {
-        $parameters = Config::get($configuration_path);
-
-        if (is_array($parameters) && count($parameters) > 0) {
+        if (count($parameters) > 0) {
             $this->searchable = true;
             $this->searchable_parameters = $parameters;
         }
@@ -118,12 +113,10 @@ class Get extends Method
     }
 
     public function setSortableParameters(
-        string $configuration_path
-    ): Get
+        array $parameters
+    ): GetRequest
     {
-        $parameters = Config::get($configuration_path);
-
-        if (is_array($parameters) && count($parameters) > 0) {
+        if (count($parameters) > 0) {
             $this->sortable = true;
             $this->sortable_parameters = $parameters;
         }
@@ -136,9 +129,9 @@ class Get extends Method
         foreach (
             array_merge_recursive(
                 $this->pagination_parameters,
-                ($this->sortable === true ? Config::get('api.app.sortable-parameters') : []),
-                ($this->searchable === true ? Config::get('api.app.searchable-parameters') : []),
-                ($this->filterable === true ? Config::get('api.app.filterable-parameters') : []),
+                ($this->sortable === true ? $this->api_config->sortParameter() : []),
+                ($this->searchable === true ? $this->api_config->searchParameter() : []),
+                ($this->filterable === true ? $this->api_config->filterParameter() : []),
                 $this->parameters,
                 $this->dynamic_parameters
             )

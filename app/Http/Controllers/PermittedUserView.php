@@ -38,7 +38,10 @@ class PermittedUserView extends Controller
             $this->permitted_resource_types
         );
 
-        $cache_control = new Cache\Control($this->user_id);
+        $cache_control = new Cache\Control(
+            $this->user_id,
+            in_array($resource_type_id, $this->permitted_resource_types, true)
+        );
         $cache_control->setTtlOneMonth();
 
         $cache_collection = new Cache\Collection();
@@ -47,7 +50,7 @@ class PermittedUserView extends Controller
         if ($cache_control->cacheable() === false || $cache_collection->valid() === false) {
 
             $search_parameters = Parameter\Search::fetch(
-                array_keys(Config::get('api.permitted-user.searchable'))
+                Config::get('api.permitted-user.searchable')
             );
 
             $sort_parameters = Parameter\Sort::fetch(

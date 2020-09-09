@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace App\Request\Validate;
 
-use App\Item\AbstractItem;
+use App\Entity\Item\Item;
 use App\Request\Hash;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Validator as ValidatorFacade;
@@ -19,7 +19,7 @@ abstract class Validator
 {
     protected Hash $hash;
 
-    protected AbstractItem $item;
+    protected Item $entity;
 
     public function __construct()
     {
@@ -88,13 +88,13 @@ abstract class Validator
     protected function createItemValidator(): \Illuminate\Contracts\Validation\Validator
     {
         $messages = [];
-        foreach ($this->item->validationPostableFieldMessages() as $key => $custom_message) {
+        foreach ($this->entity->postValidationMessages() as $key => $custom_message) {
             $messages[$key] = trans($custom_message);
         }
 
         return ValidatorFacade::make(
             request()->all(),
-            $this->item->validationPostableFields(),
+            $this->entity->postValidation(),
             $messages
         );
     }
@@ -105,13 +105,13 @@ abstract class Validator
     public function updateItemValidator(): ?\Illuminate\Contracts\Validation\Validator
     {
         $messages = [];
-        foreach ($this->item->validationPatchableFieldMessages() as $key => $custom_message) {
+        foreach ($this->entity->patchValidationMessages() as $key => $custom_message) {
             $messages[$key] = trans($custom_message);
         }
 
         return ValidatorFacade::make(
             request()->all(),
-            $this->item->validationPatchableFields(),
+            $this->entity->patchValidation(),
             $messages
         );
     }

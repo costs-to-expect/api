@@ -39,7 +39,10 @@ class CategoryView extends Controller
             $this->permitted_resource_types
         );
 
-        $cache_control = new Cache\Control($this->user_id);
+        $cache_control = new Cache\Control(
+            $this->user_id,
+            in_array($resource_type_id, $this->permitted_resource_types, true)
+        );
         $cache_control->setTtlOneMonth();
 
         $cache_collection = new Cache\Collection();
@@ -48,7 +51,7 @@ class CategoryView extends Controller
         if ($cache_control->cacheable() === false || $cache_collection->valid() === false) {
 
             $search_parameters = Parameter\Search::fetch(
-                array_keys(Config::get('api.category.searchable'))
+                Config::get('api.category.searchable')
             );
 
             $sort_parameters = Parameter\Sort::fetch(

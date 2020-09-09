@@ -90,7 +90,7 @@ class AllocatedExpense extends Model implements IModel
             array_key_exists('include-unpublished', $parameters_collection) === false ||
             $parameters_collection['include-unpublished'] === false
         ) {
-            $collection->where(function ($collection) {
+            $collection->where(static function ($collection) {
                 $collection->whereNull('item_type_allocated_expense.publish_after')->
                     orWhereRaw('item_type_allocated_expense.publish_after < NOW()');
             });
@@ -230,7 +230,7 @@ class AllocatedExpense extends Model implements IModel
             array_key_exists('include-unpublished', $parameters_collection) === false ||
             $parameters_collection['include-unpublished'] === false
         ) {
-            $collection->where(function ($collection) {
+            $collection->where(static function ($collection) {
                 $collection->whereNull('item_type_allocated_expense.publish_after')->
                     orWhereRaw('item_type_allocated_expense.publish_after < NOW()');
             });
@@ -286,9 +286,9 @@ class AllocatedExpense extends Model implements IModel
             first();
 
         if ($result === null) {
-            return intval(date('Y'));
+            return (int) date('Y');
         } else {
-            return intval($result->year_limit);
+            return (int) $result->year_limit;
         }
     }
 
@@ -310,29 +310,9 @@ class AllocatedExpense extends Model implements IModel
             first();
 
         if ($result === null) {
-            return intval(date('Y'));
+            return (int) date('Y');
         } else {
-            return intval($result->year_limit);
+            return (int) $result->year_limit;
         }
-    }
-
-    /**
-     * Work out if we should be hiding unpublished items, by default we don't show them
-     *
-     * @param $collection
-     * @param boolean $include_unpublished
-     *
-     * @return Builder
-     */
-    private function includeUnpublished($collection, bool $include_unpublished): Builder
-    {
-        if ($include_unpublished === false) {
-            $collection->where(function ($sql) {
-                $sql->whereNull('item_type_allocated_expense.publish_after')->
-                    orWhereRaw('item_type_allocated_expense.publish_after < NOW()');
-            });
-        }
-
-        return $collection;
     }
 }

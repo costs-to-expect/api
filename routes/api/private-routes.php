@@ -11,7 +11,7 @@ Route::group(
             'convert.route.parameters'
         ]
     ],
-    function () {
+    static function () {
         Route::get(
             'auth/user',
             'PassportView@user'

@@ -475,7 +475,7 @@ class AllocatedExpense extends Model implements ISummaryModel, ISummaryModelCate
             array_key_exists('include-unpublished', $parameters) === false ||
             $parameters['include-unpublished'] === false
         ) {
-            $collection->where(function ($sql) {
+            $collection->where(static function ($sql) {
                 $sql->whereNull('item_type_allocated_expense.publish_after')->
                     orWhereRaw('item_type_allocated_expense.publish_after < NOW()');
             });

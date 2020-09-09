@@ -223,38 +223,25 @@
                     <h3>Added</h3>
 
                     <ul>
-                        <li>We have added the ability to exclude public resource types; to exclude public resource types include `exclude-public=1` in your request URIs.</li>
-                        <li>We have added support for database transactions; if we are modifying more than one table, we use database transactions.</li>
-                        <li>We have added a route to show the number of cached keys for the authenticated user and then optionally delete.</li>
-                        <li>We have included the schema files for the API. The schema files are accessible at `/api/schema/[type]`.</li>
+                        <li>We have reworked our item configuration; we are moving away from multiple item type classes and moving towards a configuration based setup.</li>
                     </ul>
 
                     <h3>Changed</h3>
 
                     <ul>
-                        <li>We have reworked our Option responses; we have moved the code from the controllers ready for the creation of a new package/library.</li>
-                        <li>We have removed some duplication in our controllers, fetching dynamic data for Options requests and validation responses is simpler.</li>
-                        <li>We have updated all manage controllers; we make use of the existing`user_id` property if we need a `user_id`.</li>
-                        <li>We have reworked how we are clearing cache; we clear the cache for all permitted users when any user makes a cache clearing change.</li>
+                        <li>We have updated web.config; our server will not serve static JSON files.</li>
+                        <li>We have updated our back-end dependencies.</li>
+                        <li>We will no longer send request error mails for 404s; the number of emails is getting out of hand.</li>
+                        <li>We have updated our cache manager; some endpoints will only ever have a public cache, never a private cache.</li>
                     </ul>
 
                     <h3>Fixed</h3>
 
                     <ul>
-                        <li>We have fixed a couple of instances where we are not passing ids through our hashers.</li>
-                        <li>We have fixed the include category and subcategory objects in the resource type items collection.</li>
-                        <li>We have fixed a couple of transformers; we were not correctly formatting totals.</li>
-                        <li>We have corrected not found calls; in some cases, we were showing error messages on our live environment that we don't want to show</li>
-                        <li>We have fixed the allowed values subcategories array; when we show the allowed values array with a validation error, the collection will have values.</li>
-                        <li>We have reworked all our deletes; in some cases, we were possibly creating null references.</li>
-                        <li>We have moved a call to fetch a config value; the function call is inside a loop which is a performance issue.</li>
-                        <li>We have updated the item type models': the `updated_at` and `created_at` come from the relevant item type model.</li>
-                    </ul>
-
-                    <h3>Removed</h3>
-
-                    <ul>
-                        <li>We have removed all API request logging; the request logging isn't adding any value data that we can't get via other means.</li>
+                        <li>We have fixed a small bug when creating items of type 'simple-item' and 'simple-expense'; we are not setting a date for 'created_at`.</li>
+                        <li>We have tweaked our cache management system; our system will not create a private cache for authenticated users when they are looking at public endpoints for which they have no permissions.</li>
+                        <li>We have updated the allowed values for some OPTIONS requests; the allowed values are sometimes not displaying.</li>
+                        <li>We have made a minor tweak to the query for selecting cache keys.</li>
                     </ul>
                 </div>
             </div>

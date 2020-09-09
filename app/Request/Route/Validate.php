@@ -84,9 +84,9 @@ class Validate
         } else {
             if (
                 Validator\Subcategory::existsToUserForManagement(
-                    (int) $resource_type_id,
-                    (int) $category_id,
-                    (int) $subcategory_id,
+                    $resource_type_id,
+                    $category_id,
+                    $subcategory_id,
                     $permitted_resource_types
                 ) === false
             ) {

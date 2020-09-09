@@ -38,7 +38,10 @@ class ResourceManage extends Controller
             true
         );
 
-        $cache_control = new Cache\Control($this->user_id);
+        $cache_control = new Cache\Control(
+            $this->user_id,
+            in_array($resource_type_id, $this->permitted_resource_types, true)
+        );
         $cache_key = new Cache\Key();
 
         $validator = (new ResourceValidator)->create(['resource_type_id' => $resource_type_id]);
@@ -94,7 +97,10 @@ class ResourceManage extends Controller
             true
         );
 
-        $cache_control = new Cache\Control($this->user_id);
+        $cache_control = new Cache\Control(
+            $this->user_id,
+            in_array($resource_type_id, $this->permitted_resource_types, true)
+        );
         $cache_key = new Cache\Key();
 
         $resource = (new Resource())->find($resource_id);
@@ -145,7 +151,10 @@ class ResourceManage extends Controller
             true
         );
 
-        $cache_control = new Cache\Control($this->user_id);
+        $cache_control = new Cache\Control(
+            $this->user_id,
+            in_array($resource_type_id, $this->permitted_resource_types, true)
+        );
         $cache_key = new Cache\Key();
 
         $resource = (new Resource())->instance($resource_type_id, $resource_id);

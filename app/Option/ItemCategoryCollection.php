@@ -3,18 +3,20 @@ declare(strict_types=1);
 
 namespace App\Option;
 
+use Illuminate\Support\Facades\Config;
+
 class ItemCategoryCollection extends Response
 {
     public function create()
     {
-        $get = new \App\Option\Method\Get();
+        $get = new \App\Option\Method\GetRequest();
         $this->verbs['GET'] = $get->setAuthenticationStatus($this->permissions['view'])->
-            setParameters('api.item-category.parameters.collection')->
+            setParameters(Config::get('api.item-category.parameters.collection'))->
             setDescription('route-descriptions.item_category_GET_index')->
             option();
 
-        $post = new \App\Option\Method\Post();
-        $this->verbs['POST'] = $post->setFields('api.item-category.fields')->
+        $post = new \App\Option\Method\PostRequest();
+        $this->verbs['POST'] = $post->setFields(Config::get('api.item-category.fields'))->
             setDynamicFields($this->allowed_values)->
             setAuthenticationRequirement(true)->
             setAuthenticationStatus($this->permissions['manage'])->

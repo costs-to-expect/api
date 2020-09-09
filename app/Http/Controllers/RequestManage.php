@@ -39,15 +39,17 @@ class RequestManage extends Controller
             ]);
             $request_error_log->save();
 
-            event(new RequestError([
-                'method' => request()->input('method'),
-                'source' => request()->input('source'),
-                'expected_status_code' => request()->input('expected_status_code'),
-                'returned_status_code' => request()->input('returned_status_code'),
-                'request_uri' => request()->input('request_uri'),
-                'referer' => request()->server('HTTP_REFERER', 'NOT SET!'),
-                'debug' => request()->input('debug')
-            ]));
+            if (request()->input('returned_status_code') !== '404') {
+                event(new RequestError([
+                    'method' => request()->input('method'),
+                    'source' => request()->input('source'),
+                    'expected_status_code' => request()->input('expected_status_code'),
+                    'returned_status_code' => request()->input('returned_status_code'),
+                    'request_uri' => request()->input('request_uri'),
+                    'referer' => request()->server('HTTP_REFERER', 'NOT SET!'),
+                    'debug' => request()->input('debug')
+                ]));
+            }
 
         } catch (Exception $e) {
             \App\Response\Responses::failedToSaveModelForCreate();

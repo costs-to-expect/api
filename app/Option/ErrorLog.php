@@ -3,17 +3,19 @@ declare(strict_types=1);
 
 namespace App\Option;
 
+use Illuminate\Support\Facades\Config;
+
 class ErrorLog extends Response
 {
     public function create()
     {
-        $get = new \App\Option\Method\Get();
+        $get = new \App\Option\Method\GetRequest();
         $this->verbs['GET'] = $get->setDescription('route-descriptions.request_GET_error-log')->
             setAuthenticationStatus($this->permissions['view'])->
             option();
 
-        $post = new \App\Option\Method\Post();
-        $this->verbs['POST'] = $post->setFields('api.request-error-log.fields')->
+        $post = new \App\Option\Method\PostRequest();
+        $this->verbs['POST'] = $post->setFields(Config::get('api.request-error-log.fields'))->
             setDescription('route-descriptions.request_POST')->
             setAuthenticationStatus($this->permissions['view'])->
             option();

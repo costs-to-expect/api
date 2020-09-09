@@ -106,7 +106,6 @@ class Handler extends ExceptionHandler
                     500
                 )->send();
                 exit;
-                break;
             default:
                 $message = $exception->getMessage();
                 break;

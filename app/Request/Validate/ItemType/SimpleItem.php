@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace App\Request\Validate\ItemType;
 
+use App\Entity\Item\Entity;
 use App\Request\Validate\Validator as BaseValidator;
 
 /**
@@ -16,7 +17,7 @@ class SimpleItem extends BaseValidator
 {
     public function __construct()
     {
-        $this->item = new \App\Item\SimpleItem();
+        $this->entity = Entity::byType('simple-item');
 
         parent::__construct();
     }

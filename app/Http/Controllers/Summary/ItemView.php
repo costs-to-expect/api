@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers\Summary;
 
+use App\Entity\Item\Entity;
 use App\Http\Controllers\Controller;
-use App\Item\Factory;
 use App\Models\Transformers\Summary\ItemCategory as ItemCategoryTransformer;
 use App\Models\Transformers\Summary\ItemMonth as ItemMonthTransformer;
 use App\Models\Transformers\Summary\ItemSubcategory as ItemSubcategoryTransformer;
@@ -44,11 +44,12 @@ class ItemView extends Controller
             $this->permitted_resource_types
         );
 
-        $item_interface = Factory::summaryItem($resource_type_id);
-        $this->model = $item_interface->model();
+        $entity = Entity::item($resource_type_id);
+
+        $this->model = $entity->summaryModel();
 
         $parameters = Parameter\Request::fetch(
-            $item_interface->collectionParametersKeys(),
+            array_keys($entity->summaryRequestParameters()),
             (int)$resource_type_id,
             (int)$resource_id
         );
@@ -110,11 +111,11 @@ class ItemView extends Controller
         );
 
         $search_parameters = Parameter\Search::fetch(
-            $item_interface->searchParameters()
+            $entity->summarySearchParameters()
         );
 
         $filter_parameters = Parameter\Filter::fetch(
-            $item_interface->filterParameters()
+            $entity->filterParameters()
         );
 
         if ($years === true) {
@@ -241,7 +242,10 @@ class ItemView extends Controller
         int $resource_id,
         array $parameters
     ): JsonResponse {
-        $cache_control = new Cache\Control($this->user_id);
+        $cache_control = new Cache\Control(
+            $this->user_id,
+            in_array($resource_type_id, $this->permitted_resource_types, true)
+        );
         $cache_control->setTtlOneWeek();
 
         $cache_summary = new Cache\Summary();
@@ -317,7 +321,10 @@ class ItemView extends Controller
         int $year,
         array $parameters
     ): JsonResponse {
-        $cache_control = new Cache\Control($this->user_id);
+        $cache_control = new Cache\Control(
+            $this->user_id,
+            in_array($resource_type_id, $this->permitted_resource_types, true)
+        );
         $cache_control->setTtlOneWeek();
 
         $cache_summary = new Cache\Summary();
@@ -368,7 +375,10 @@ class ItemView extends Controller
         int $month,
         array $parameters
     ): JsonResponse {
-        $cache_control = new Cache\Control($this->user_id);
+        $cache_control = new Cache\Control(
+            $this->user_id,
+            in_array($resource_type_id, $this->permitted_resource_types, true)
+        );
         $cache_control->setTtlOneWeek();
 
         $cache_summary = new Cache\Summary();
@@ -416,7 +426,10 @@ class ItemView extends Controller
         int $year,
         array $parameters
     ): JsonResponse {
-        $cache_control = new Cache\Control($this->user_id);
+        $cache_control = new Cache\Control(
+            $this->user_id,
+            in_array($resource_type_id, $this->permitted_resource_types, true)
+        );
         $cache_control->setTtlOneWeek();
 
         $cache_summary = new Cache\Summary();
@@ -461,7 +474,10 @@ class ItemView extends Controller
         int $resource_id,
         array $parameters
     ): JsonResponse {
-        $cache_control = new Cache\Control($this->user_id);
+        $cache_control = new Cache\Control(
+            $this->user_id,
+            in_array($resource_type_id, $this->permitted_resource_types, true)
+        );
         $cache_control->setTtlOneWeek();
 
         $cache_summary = new Cache\Summary();
@@ -508,7 +524,10 @@ class ItemView extends Controller
         int $category_id,
         array $parameters
     ): JsonResponse {
-        $cache_control = new Cache\Control($this->user_id);
+        $cache_control = new Cache\Control(
+            $this->user_id,
+            in_array($resource_type_id, $this->permitted_resource_types, true)
+        );
         $cache_control->setTtlOneWeek();
 
         $cache_summary = new Cache\Summary();
@@ -559,7 +578,10 @@ class ItemView extends Controller
         int $subcategory_id,
         array $parameters
     ): JsonResponse {
-        $cache_control = new Cache\Control($this->user_id);
+        $cache_control = new Cache\Control(
+            $this->user_id,
+            in_array($resource_type_id, $this->permitted_resource_types, true)
+        );
         $cache_control->setTtlOneWeek();
 
         $cache_summary = new Cache\Summary();
@@ -607,7 +629,10 @@ class ItemView extends Controller
         int $category_id,
         array $parameters
     ): JsonResponse {
-        $cache_control = new Cache\Control($this->user_id);
+        $cache_control = new Cache\Control(
+            $this->user_id,
+            in_array($resource_type_id, $this->permitted_resource_types, true)
+        );
         $cache_control->setTtlOneWeek();
 
         $cache_summary = new Cache\Summary();
@@ -664,7 +689,10 @@ class ItemView extends Controller
         array $search_parameters = [],
         array $filter_parameters = []
     ): JsonResponse {
-        $cache_control = new Cache\Control($this->user_id);
+        $cache_control = new Cache\Control(
+            $this->user_id,
+            in_array($resource_type_id, $this->permitted_resource_types, true)
+        );
         $cache_control->setTtlOneWeek();
 
         $cache_summary = new Cache\Summary();
@@ -718,7 +746,10 @@ class ItemView extends Controller
         int $resource_id,
         array $parameters
     ): JsonResponse {
-        $cache_control = new Cache\Control($this->user_id);
+        $cache_control = new Cache\Control(
+            $this->user_id,
+            in_array($resource_type_id, $this->permitted_resource_types, true)
+        );
         $cache_control->setTtlOneWeek();
 
         $cache_summary = new Cache\Summary();
@@ -768,7 +799,7 @@ class ItemView extends Controller
             $this->permitted_resource_types
         );
 
-        $item_interface = Factory::summaryItem($resource_type_id);
+        $entity = Entity::item($resource_type_id);
 
         $permissions = Route\Permission::resource(
             $resource_type_id,
@@ -778,7 +809,7 @@ class ItemView extends Controller
 
         $response = new SummaryItemCollection($permissions);
 
-        return $response->setItemInterface($item_interface)->
+        return $response->setEntity($entity)->
             create()->
             response();
     }

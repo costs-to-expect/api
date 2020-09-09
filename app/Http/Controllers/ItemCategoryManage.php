@@ -43,7 +43,10 @@ class ItemCategoryManage extends Controller
             true
         );
 
-        $cache_control = new Cache\Control($this->user_id);
+        $cache_control = new Cache\Control(
+            $this->user_id,
+            in_array($resource_type_id, $this->permitted_resource_types, true)
+        );
         $cache_key = new Cache\Key();
 
         $validator = (new ItemCategoryValidator)->create();
@@ -113,7 +116,10 @@ class ItemCategoryManage extends Controller
             true
         );
 
-        $cache_control = new Cache\Control($this->user_id);
+        $cache_control = new Cache\Control(
+            $this->user_id,
+            in_array($resource_type_id, $this->permitted_resource_types, true)
+        );
         $cache_key = new Cache\Key();
 
         $item_category = (new ItemCategory())->instance(

@@ -3,21 +3,23 @@ declare(strict_types=1);
 
 namespace App\Option;
 
+use Illuminate\Support\Facades\Config;
+
 class ResourceCollection extends Response
 {
     public function create()
     {
-        $get = new \App\Option\Method\Get();
-        $this->verbs['GET'] = $get->setSortableParameters('api.resource.sortable')->
-            setSearchableParameters('api.resource.searchable')->
+        $get = new \App\Option\Method\GetRequest();
+        $this->verbs['GET'] = $get->setSortableParameters(Config::get('api.resource.sortable'))->
+            setSearchableParameters(Config::get('api.resource.searchable'))->
             setPaginationStatus(true, true)->
-            setParameters('api.resource.parameters.collection')->
+            setParameters(Config::get('api.resource.parameters.collection'))->
             setAuthenticationStatus($this->permissions['view'])->
             setDescription('route-descriptions.resource_GET_index')->
             option();
 
-        $post = new \App\Option\Method\Post();
-        $this->verbs['POST'] = $post->setFields('api.resource.fields')->
+        $post = new \App\Option\Method\PostRequest();
+        $this->verbs['POST'] = $post->setFields(Config::get('api.resource.fields'))->
             setDescription('route-descriptions.resource_POST')->
             setAuthenticationStatus($this->permissions['manage'])->
             setAuthenticationRequirement(true)->
