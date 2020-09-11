@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Resource;
+use App\Option\AllowedValues\ItemType;
 use App\Option\ResourceTypeCollection;
 use App\Option\ResourceTypeItem;
 use App\Response\Cache;
@@ -146,7 +147,9 @@ class ResourceTypeView extends Controller
     {
         $response = new ResourceTypeCollection(['view'=> $this->user_id !== null, 'manage'=> $this->user_id !== null]);
 
-        return $response->create()->response();
+        return $response->setAllowedValues((new ItemType())->allowedValues())
+            ->create()
+            ->response();
     }
 
     /**

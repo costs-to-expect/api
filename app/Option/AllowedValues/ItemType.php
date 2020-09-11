@@ -1,10 +1,19 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Option\Value;
+namespace App\Option\AllowedValues;
 
-class ItemType extends Value
+use App\Request\Hash;
+
+class ItemType
 {
+    protected Hash $hash;
+
+    public function __construct()
+    {
+        $this->hash = new Hash();
+    }
+
     /**
      * Generate the allowed values item type array, will be passed to the
      * Option classes and merged with the fields/parameters
