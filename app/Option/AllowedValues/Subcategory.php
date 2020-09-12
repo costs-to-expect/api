@@ -1,10 +1,19 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Option\Value;
+namespace App\Option\AllowedValues;
 
-class Subcategory extends Value
+use App\Request\Hash;
+
+class Subcategory
 {
+    protected Hash $hash;
+
+    public function __construct()
+    {
+        $this->hash = new Hash();
+    }
+
     /**
      * Generate the allowed values subcategories array, will be passed to the
      * Option classes and merged with the fields/parameters

@@ -9,7 +9,7 @@ use App\Models\EntityConfig;
 use App\Models\Subcategory;
 use App\Request\Hash;
 
-class Item
+class ResourceItem
 {
     private Hash $hash;
 

@@ -176,7 +176,7 @@ class ItemSubcategoryView extends Controller
         $response = new ItemSubcategoryCollection($permissions);
 
         return $response->setAllowedValues(
-                (new \App\Option\Value\Subcategory())->allowedValues($item_category->category_id)
+                (new \App\Option\AllowedValues\Subcategory())->allowedValues($item_category->category_id)
             )->
             create()->
             response();

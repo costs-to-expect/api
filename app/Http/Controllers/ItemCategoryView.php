@@ -150,11 +150,9 @@ class ItemCategoryView extends Controller
         $response = new ItemCategoryCollection($permissions);
 
         return $response->setAllowedValues(
-                (new \App\Option\Value\Category()
-            )->
-            allowedValues($resource_type_id))->
-            create()->
-            response();
+                (new \App\Option\AllowedValues\Category())->allowedValues($resource_type_id))
+            ->create()
+            ->response();
     }
 
     /**

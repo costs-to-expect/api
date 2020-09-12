@@ -40,7 +40,7 @@ class Cache extends Model
         bool $include_summaries = false
     ): array
     {
-        $result = $this->where('expiration', '>', DB::raw('NOW()'))
+        $result = $this->where('expiration', '>', DB::raw('UNIX_TIMESTAMP()'))
             ->where('key', 'LIKE', $prefix . $key . '%')
             ->orWhere('key', '=', $prefix . $key);
 
