@@ -223,25 +223,23 @@
                     <h3>Added</h3>
 
                     <ul>
-                        <li>We have reworked our item configuration; we are moving away from multiple item type classes and moving towards a configuration based setup.</li>
+                        <li>We have added additional tests to our POSTMAN test collection to ensure allowed values exist where expected.</li>
+                        <li>We have updated our OPTIONS responses for summary controllers; where relevant, and we show the allowed values for a parameter or field.</li>
                     </ul>
 
                     <h3>Changed</h3>
 
                     <ul>
-                        <li>We have updated web.config; our server will not serve static JSON files.</li>
                         <li>We have updated our back-end dependencies.</li>
-                        <li>We will no longer send request error mails for 404s; the number of emails is getting out of hand.</li>
-                        <li>We have updated our cache manager; some endpoints will only ever have a public cache, never a private cache.</li>
+                        <li>We have updated our OPTIONS requests; in some cases, we were not showing allowed values for POST fields and GET parameters.</li>
                     </ul>
 
                     <h3>Fixed</h3>
 
                     <ul>
-                        <li>We have fixed a small bug when creating items of type 'simple-item' and 'simple-expense'; we are not setting a date for 'created_at`.</li>
-                        <li>We have tweaked our cache management system; our system will not create a private cache for authenticated users when they are looking at public endpoints for which they have no permissions.</li>
-                        <li>We have updated the allowed values for some OPTIONS requests; the allowed values are sometimes not displaying.</li>
-                        <li>We have made a minor tweak to the query for selecting cache keys.</li>
+                        <li>We have tweaked our cache query; we use UNIX_TIMESTAMP() for comparison.</li>
+                        <li>We have removed a unique index from the `resource_type` table.</li>
+                        <li>We have updated the OPTIONS response for the `resource-types` collection; we show the allowed values for the `item_type_id.`</li>
                     </ul>
                 </div>
             </div>

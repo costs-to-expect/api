@@ -2,6 +2,20 @@
 
 The complete changelog for the Costs to Expect REST API, our changelog follows the format defined at https://keepachangelog.com/en/1.0.0/
 
+## [v2.12.2] - 2020-09-12
+### Added
+- We have added additional tests to our POSTMAN test collection to ensure allowed values exist where expected.
+- We have updated our OPTIONS responses for summary controllers; where relevant, and we show the allowed values for a parameter or field.
+
+### Changed
+- We have updated our back-end dependencies.
+- We have updated our OPTIONS requests; in some cases, we were not showing allowed values for POST fields and GET parameters.
+
+### Fixed
+- We have tweaked our cache query; we use UNIX_TIMESTAMP() for comparison.
+- We have removed a unique index from the `resource_type` table.
+- We have updated the OPTIONS response for the `resource-types` collection; we show the allowed values for the `item_type_id.`
+
 ## [v2.12.1] - 2020-09-09
 ### Added
 - We have reworked our item configuration; we are moving away from multiple item type classes and moving towards a configuration based setup.
