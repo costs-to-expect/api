@@ -165,7 +165,7 @@ class ItemTransferView extends Controller
         $response = new ItemTransferTransfer($permissions);
 
         return $response->setAllowedValues(
-                (new \App\Option\Value\Resource())->allowedValues(
+                (new \App\Option\AllowedValues\Resource())->allowedValues(
                     $resource_type_id,
                     $resource_id
                 )

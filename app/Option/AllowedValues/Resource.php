@@ -1,10 +1,19 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Option\Value;
+namespace App\Option\AllowedValues;
 
-class Resource extends Value
+use App\Request\Hash;
+
+class Resource
 {
+    protected Hash $hash;
+
+    public function __construct()
+    {
+        $this->hash = new Hash();
+    }
+
     /**
      * Generate the allowed values resources array, will be passed to the
      * Option classes and merged with the fields/parameters
