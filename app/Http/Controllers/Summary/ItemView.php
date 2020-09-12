@@ -807,10 +807,26 @@ class ItemView extends Controller
             $this->permitted_resource_types
         );
 
+        $defined_parameters = Parameter\Request::fetch(
+            array_keys($entity->requestParameters()),
+            (int) $resource_type_id,
+            (int) $resource_id
+        );
+
+        $allowed_values = (new \App\Option\AllowedValues\Item($entity))->allowedValues(
+            $resource_type_id,
+            $resource_id,
+            $this->permitted_resource_types,
+            $this->include_public,
+            $entity->requestParameters(),
+            $defined_parameters
+        );
+
         $response = new SummaryItemCollection($permissions);
 
-        return $response->setEntity($entity)->
-            create()->
-            response();
+        return $response->setEntity($entity)
+            ->setAllowedValues($allowed_values)
+            ->create()
+            ->response();
     }
 }
