@@ -8,7 +8,6 @@ use App\Models\ItemTransfer;
 use App\Response\Cache;
 use App\Request\Route;
 use App\Models\Item;
-use App\Response\Cache\KeyGroup;
 use Exception;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\JsonResponse;
@@ -45,12 +44,6 @@ class ItemManage extends Controller
 
         $user_id = $this->user_id;
 
-        $cache_control = new Cache\Control(
-            $this->user_id,
-            in_array($resource_type_id, $this->permitted_resource_types, true)
-        );
-        $cache_key = new Cache\Key();
-
         $entity = Entity::item($resource_type_id);
 
         $validation = $entity->validator();
@@ -59,17 +52,13 @@ class ItemManage extends Controller
 
         $model = $entity->model();
 
-        $cache_job_payload = new Cache\JobPayload(
-            $this->user_id,
-            in_array($resource_type_id, $this->permitted_resource_types, true)
-        );
-        $cache_job_payload->groupKey(Cache\KeyGroup::ITEM_CREATE)
-            ->setPermittedUsers($this->permittedUsers($resource_type_id))
-            ->setPublicResourceTypes($this->public_resource_types)
+        $cache_job_payload = (new Cache\JobPayload())
+            ->setGroupKey(Cache\KeyGroup::ITEM_CREATE)
             ->setRouteParameters([
                 'resource_type_id' => $resource_type_id,
                 'resource_id' => $resource_id
-            ]);
+            ])
+            ->setUserId($user_id);
 
         try {
             [$item, $item_type] = DB::transaction(static function() use ($resource_id, $user_id, $entity) {
@@ -85,18 +74,6 @@ class ItemManage extends Controller
             });
 
             ClearCache::dispatch($cache_job_payload->payload());
-
-            /*$cache_trash = new Cache\Trash(
-                $cache_control,
-                [
-                    $cache_key->resourceTypeItems($resource_type_id),
-                    $cache_key->items($resource_type_id, $resource_id)
-                ],
-                $resource_type_id,
-                $this->public_resource_types,
-                $this->permittedUsers($resource_type_id)
-            );
-            $cache_trash->all();*/
 
         } catch (Exception $e) {
             \App\Response\Responses::failedToSaveModelForCreate();

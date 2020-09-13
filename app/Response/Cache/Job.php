@@ -19,9 +19,9 @@ class Job
         $this->payload = $payload;
     }
 
-    public function cachePrefix(): ?int
+    public function userId(): ?int
     {
-        return $this->payload['cache_prefix'];
+        return $this->payload['user_id'];
     }
 
     public function permittedUser(): bool
@@ -31,21 +31,11 @@ class Job
 
     public function groupKey(): string
     {
-        return $this->payload['key'];
+        return $this->payload['group_key'];
     }
 
-    public function permittedUsers(): array
-    {
-        return $this->payload['permitted_users'];
-    }
-
-    public function parameters(): array
+    public function routeParameters(): array
     {
         return $this->payload['route_parameters'];
-    }
-
-    public function publicResourceTypes(): array
-    {
-        return $this->payload['public_resource_types'];
     }
 }

@@ -16,24 +16,26 @@ class JobPayload
 {
     private array $payload;
 
-    public function __construct(
-        int $cache_prefix = null,
-        bool $permitted_user = false
-    )
+    public function __construct()
     {
         $this->payload = [
-            'cache_prefix' => $cache_prefix,
-            'permitted_user' => $permitted_user,
-            'public_resource_types' => [],
+            'permitted_user' => null,
             'route_parameters' => [],
-            'permitted_users' => [],
-            'key' => ''
+            'key' => null,
+            'user_id' => null
         ];
     }
 
-    public function setPublicResourceTypes(array $resource_types): JobPayload
+    public function setUserId(int $id): JobPayload
     {
-        $this->payload['public_resource_types'] = $resource_types;
+        $this->payload['user_id'] = $id;
+
+        return $this;
+    }
+
+    public function setPermittedUser(bool $permitted = false): JobPayload
+    {
+        $this->payload['permitted_user'] = $permitted;
 
         return $this;
     }
@@ -45,16 +47,9 @@ class JobPayload
         return $this;
     }
 
-    public function setPermittedUsers(array $users): JobPayload
+    public function setGroupKey(string $key): JobPayload
     {
-        $this->payload['permitted_users'] = $users;
-
-        return $this;
-    }
-
-    public function groupKey(string $key): JobPayload
-    {
-        $this->payload['key'] = $key;
+        $this->payload['group_key'] = $key;
 
         return $this;
     }
