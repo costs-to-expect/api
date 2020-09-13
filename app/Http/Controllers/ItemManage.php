@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Entity\Item\Entity;
+use App\Jobs\ClearCache;
 use App\Models\ItemTransfer;
 use App\Response\Cache;
 use App\Request\Route;
@@ -57,6 +58,18 @@ class ItemManage extends Controller
 
         $model = $entity->model();
 
+        $cache_job_payload = new Cache\JobPayload(
+            $this->user_id,
+            in_array($resource_type_id, $this->permitted_resource_types, true)
+        );
+        $cache_job_payload->groupKey('item-create')
+            ->setPermittedUsers($this->permittedUsers($resource_type_id))
+            ->setPublicResourceTypes($this->public_resource_types)
+            ->setRouteParameters([
+                'resource_type_id' => $resource_type_id,
+                'resource_id'
+            ]);
+
         try {
             [$item, $item_type] = DB::transaction(static function() use ($resource_id, $user_id, $entity) {
                 $item = new Item([
@@ -70,7 +83,9 @@ class ItemManage extends Controller
                 return [$item, $item_type];
             });
 
-            $cache_trash = new Cache\Trash(
+            ClearCache::dispatch($cache_job_payload->payload());
+
+            /*$cache_trash = new Cache\Trash(
                 $cache_control,
                 [
                     $cache_key->resourceTypeItems($resource_type_id),
@@ -80,7 +95,7 @@ class ItemManage extends Controller
                 $this->public_resource_types,
                 $this->permittedUsers($resource_type_id)
             );
-            $cache_trash->all();
+            $cache_trash->all();*/
 
         } catch (Exception $e) {
             \App\Response\Responses::failedToSaveModelForCreate();
