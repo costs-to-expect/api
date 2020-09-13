@@ -8,6 +8,7 @@ use App\Models\ItemTransfer;
 use App\Response\Cache;
 use App\Request\Route;
 use App\Models\Item;
+use App\Response\Cache\KeyGroup;
 use Exception;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\JsonResponse;
@@ -62,12 +63,12 @@ class ItemManage extends Controller
             $this->user_id,
             in_array($resource_type_id, $this->permitted_resource_types, true)
         );
-        $cache_job_payload->groupKey('item-create')
+        $cache_job_payload->groupKey(Cache\KeyGroup::ITEM_CREATE)
             ->setPermittedUsers($this->permittedUsers($resource_type_id))
             ->setPublicResourceTypes($this->public_resource_types)
             ->setRouteParameters([
                 'resource_type_id' => $resource_type_id,
-                'resource_id'
+                'resource_id' => $resource_id
             ]);
 
         try {

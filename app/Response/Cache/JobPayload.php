@@ -33,21 +33,29 @@ class JobPayload
 
     public function setPublicResourceTypes(array $resource_types): JobPayload
     {
+        $this->payload['public_resource_types'] = $resource_types;
+
         return $this;
     }
 
     public function setRouteParameters(array $parameters): JobPayload
     {
+        $this->payload['route_parameters'] = $parameters;
+
         return $this;
     }
 
     public function setPermittedUsers(array $users): JobPayload
     {
+        $this->payload['permitted_users'] = $users;
+
         return $this;
     }
 
     public function groupKey(string $key): JobPayload
     {
+        $this->payload['key'] = $key;
+
         return $this;
     }
 

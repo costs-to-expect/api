@@ -2,6 +2,10 @@
 
 namespace App\Jobs;
 
+use App\Response\Cache\Control;
+use App\Response\Cache\Job;
+use App\Response\Cache\KeyGroup;
+use App\Response\Cache\Trash;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
@@ -38,6 +42,23 @@ class ClearCache implements ShouldQueue
      */
     public function handle()
     {
-        //
+        $payload = new Job($this->payload);
+
+        $cache_control = new Control(
+            $payload->cachePrefix(),
+            $payload->permittedUser()
+        );
+
+        $cache_key_group = new KeyGroup($payload->parameters());
+
+        $trash = new Trash(
+            $cache_control,
+            $cache_key_group->keys($payload->groupKey()),
+            $payload->parameters()['resource_type_id'],
+            $payload->publicResourceTypes(),
+            $payload->permittedUsers()
+        );
+
+        $trash->all();
     }
 }
