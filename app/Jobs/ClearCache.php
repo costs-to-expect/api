@@ -53,10 +53,14 @@ class ClearCache implements ShouldQueue
 
         $cache_key_group = new KeyGroup($payload->routeParameters());
 
-        $permitted_users = (new ResourceTypeAccess())->permittedResourceTypeUsers(
-            $payload->routeParameters()['resource_type_id'],
-            $payload->userId()
-        );
+        if (array_key_exists('resource_type_id', $payload->routeParameters())) {
+            $permitted_users = (new ResourceTypeAccess())->permittedResourceTypeUsers(
+                $payload->routeParameters()['resource_type_id'],
+                $payload->userId()
+            );
+        } else {
+            $permitted_users = [];
+        }
 
         $public_resource_types = (new ResourceType())->publicResourceTypes();
 
