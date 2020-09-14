@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Jobs\ClearCache;
 use App\Models\Category;
 use App\Models\PermittedUser;
 use App\Models\Resource;
@@ -39,8 +40,11 @@ class ResourceTypeManage extends Controller
         ]);
         \App\Request\BodyValidation::validateAndReturnErrors($validator);
 
-        $cache_control = new Cache\Control($this->user_id, true);
-        $cache_key = new Cache\Key();
+        $cache_job_payload = (new Cache\JobPayload())
+            ->setGroupKey(Cache\KeyGroup::RESOURCE_TYPE_CREATE)
+            ->setRouteParameters([])
+            ->setPermittedUser(true)
+            ->setUserId($this->user_id);
 
         try {
             $resource_type = new ResourceType([
@@ -69,15 +73,8 @@ class ResourceTypeManage extends Controller
             ]);
             $resource_type_item_type->save();
 
-            $cache_control->clearPrivateCacheKeys([
-                $cache_key->resourceTypes()
-            ]);
+            ClearCache::dispatch($cache_job_payload->payload());
 
-            if (request()->input('public', 0) !== 0) {
-                $cache_control->clearPublicCacheKeys([
-                    $cache_key->resourceTypes()
-                ]);
-            }
         } catch (Exception $e) {
             \App\Response\Responses::failedToSaveModelForCreate();
         }
@@ -105,9 +102,6 @@ class ResourceTypeManage extends Controller
             true
         );
 
-        $cache_control = new Cache\Control($this->user_id, true);
-        $cache_key = new Cache\Key();
-
         $resource_type_item_type = (new ResourceTypeItemType())->instance($resource_type_id);
         $permitted_user = (new PermittedUser())->instance($resource_type_id, $this->user_id);
         $resource_type = (new ResourceType())->find($resource_type_id);
@@ -124,6 +118,14 @@ class ResourceTypeManage extends Controller
             $this->include_public
         );
 
+        $cache_job_payload = (new Cache\JobPayload())
+            ->setGroupKey(Cache\KeyGroup::RESOURCE_TYPE_DELETE)
+            ->setRouteParameters([
+                'resource_type_id' => $resource_type_id
+            ])
+            ->setPermittedUser(in_array($resource_type_id, $this->permitted_resource_types, true))
+            ->setUserId($this->user_id);
+
         if (
             $categories === 0 &&
             $resources === 0 &&
@@ -138,17 +140,7 @@ class ResourceTypeManage extends Controller
                     $resource_type->delete();
                 });
 
-                $cache_trash = new Cache\Trash(
-                    $cache_control,
-                    [
-                        $cache_key->resourceTypes(),
-                        $cache_key->permittedUsers($resource_type_id)
-                    ],
-                    $resource_type_id,
-                    $this->public_resource_types,
-                    $this->permittedUsers($resource_type_id)
-                );
-                $cache_trash->all();
+                ClearCache::dispatch($cache_job_payload->payload());
 
                 \App\Response\Responses::successNoContent();
             } catch (QueryException $e) {
@@ -178,9 +170,6 @@ class ResourceTypeManage extends Controller
             true
         );
 
-        $cache_control = new Cache\Control($this->user_id, true);
-        $cache_key = new Cache\Key();
-
         $resource_type = (new ResourceType())->instance($resource_type_id);
 
         if ($resource_type === null) {
@@ -206,20 +195,18 @@ class ResourceTypeManage extends Controller
             $resource_type->$key = $value;
         }
 
+        $cache_job_payload = (new Cache\JobPayload())
+            ->setGroupKey(Cache\KeyGroup::RESOURCE_TYPE_UPDATE)
+            ->setRouteParameters([
+                'resource_type_id' => $resource_type_id
+            ])
+            ->setPermittedUser(in_array($resource_type_id, $this->permitted_resource_types, true))
+            ->setUserId($this->user_id);
+
         try {
             $resource_type->save();
 
-            $cache_trash = new Cache\Trash(
-                $cache_control,
-                [
-                    $cache_key->resourceTypes(),
-                    $cache_key->permittedUsers($resource_type_id)
-                ],
-                $resource_type_id,
-                $this->public_resource_types,
-                $this->permittedUsers($resource_type_id)
-            );
-            $cache_trash->all();
+            ClearCache::dispatch($cache_job_payload->payload());
 
         } catch (Exception $e) {
             \App\Response\Responses::failedToSaveModelForUpdate();

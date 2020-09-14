@@ -13,6 +13,10 @@ class KeyGroup
     public const RESOURCE_DELETE = 'resource_delete';
     public const RESOURCE_UPDATE = 'resource_update';
 
+    public const RESOURCE_TYPE_CREATE = 'resource_type_create';
+    public const RESOURCE_TYPE_DELETE = 'resource_type_delete';
+    public const RESOURCE_TYPE_UPDATE = 'resource_type_update';
+
     public const CATEGORY_CREATE = 'category_create';
     public const CATEGORY_DELETE = 'category_delete';
     public const CATEGORY_UPDATE = 'category_update';
@@ -81,7 +85,7 @@ class KeyGroup
             case self::CATEGORY_UPDATE: // Item collections all need to be cleared
             case self::SUBCATEGORY_UPDATE: // Item collections all need to be cleared
             case self::ITEM_TRANSFER_CREATE: // Item collections all need to be cleared
-            case self::RESOURCE_UPDATE: 
+            case self::RESOURCE_UPDATE:
                 return [
                     $this->key->resourceType(
                         (int) $this->parameters['resource_type_id']
@@ -103,6 +107,13 @@ class KeyGroup
                         (int) $this->parameters['resource_type_id'],
                         (int) $this->parameters['category_id']
                     )
+                ];
+
+            case self::RESOURCE_TYPE_CREATE:
+            case self::RESOURCE_TYPE_UPDATE:
+            case self::RESOURCE_TYPE_DELETE:
+                return [
+                    $this->key->resourceTypes()
                 ];
 
             default:
