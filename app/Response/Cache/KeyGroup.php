@@ -16,6 +16,13 @@ class KeyGroup
     public const ITEM_UPDATE = 'item_update';
 
     public const ITEM_CATEGORY_CREATE = 'item_category_create';
+    public const ITEM_CATEGORY_DELETE = 'item_category_delete';
+
+    public const ITEM_SUBCATEGORY_CREATE = 'item_subcategory_create';
+    public const ITEM_SUBCATEGORY_DELETE = 'item_subcategory_delete';
+
+    public const ITEM_PARTIAL_TRANSFER_CREATE = 'item_partial_transfer_create';
+    public const ITEM_PARTIAL_TRANSFER_DELETE = 'item_partial_transfer_delete';
 
     public function __construct(array $parameters)
     {

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Jobs\ClearCache;
 use App\Models\ItemPartialTransfer;
 use App\Models\Transformers\ItemPartialTransfer as ItemPartialTransferTransformer;
 use App\Response\Cache;
@@ -40,28 +41,22 @@ class ItemPartialTransferManage extends Controller
             true
         );
 
-        $cache_control = new Cache\Control(
-            $this->user_id,
-            in_array($resource_type_id, $this->permitted_resource_types, true)
-        );
-        $cache_key = new Cache\Key();
+        $cache_job_payload = (new Cache\JobPayload())
+            ->setGroupKey(Cache\KeyGroup::ITEM_PARTIAL_TRANSFER_DELETE)
+            ->setRouteParameters([
+                'resource_type_id' => $resource_type_id
+            ])
+            ->setPermittedUser(in_array($resource_type_id, $this->permitted_resource_types, true))
+            ->setUserId($this->user_id);
 
         try {
             $partial_transfer = (new ItemPartialTransfer())->find($item_partial_transfer_id);
 
+
             if ($partial_transfer !== null) {
                 $partial_transfer->delete();
 
-                $cache_trash = new Cache\Trash(
-                    $cache_control,
-                    [
-                        $cache_key->partialTransfers($resource_type_id)
-                    ],
-                    $resource_type_id,
-                    $this->public_resource_types,
-                    $this->permittedUsers($resource_type_id)
-                );
-                $cache_trash->all();
+                ClearCache::dispatch($cache_job_payload->payload());
 
                 return Responses::successNoContent();
             }
@@ -88,12 +83,6 @@ class ItemPartialTransferManage extends Controller
             true
         );
 
-        $cache_control = new Cache\Control(
-            $this->user_id,
-            in_array($resource_type_id, $this->permitted_resource_types, true)
-        );
-        $cache_key = new Cache\Key();
-
         $validator = (new ItemPartialTransferValidator)->create(
             [
                 'resource_type_id' => $resource_type_id,
@@ -108,6 +97,14 @@ class ItemPartialTransferManage extends Controller
             Responses::unableToDecode();
         }
 
+        $cache_job_payload = (new Cache\JobPayload())
+            ->setGroupKey(Cache\KeyGroup::ITEM_PARTIAL_TRANSFER_CREATE)
+            ->setRouteParameters([
+                'resource_type_id' => $resource_type_id
+            ])
+            ->setPermittedUser(in_array($resource_type_id, $this->permitted_resource_types, true))
+            ->setUserId($this->user_id);
+
         try {
             $partial_transfer = new ItemPartialTransfer([
                 'resource_type_id' => $resource_type_id,
@@ -119,16 +116,7 @@ class ItemPartialTransferManage extends Controller
             ]);
             $partial_transfer->save();
 
-            $cache_trash = new Cache\Trash(
-                $cache_control,
-                [
-                    $cache_key->partialTransfers($resource_type_id)
-                ],
-                $resource_type_id,
-                $this->public_resource_types,
-                $this->permittedUsers($resource_type_id)
-            );
-            $cache_trash->all();
+            ClearCache::dispatch($cache_job_payload->payload());
 
         } catch (QueryException $e) {
             return Responses::foreignKeyConstraintError();

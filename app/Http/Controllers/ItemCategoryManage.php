@@ -122,7 +122,7 @@ class ItemCategoryManage extends Controller
         }
 
         $cache_job_payload = (new Cache\JobPayload())
-            ->setGroupKey(Cache\KeyGroup::ITEM_CATEGORY_CREATE)
+            ->setGroupKey(Cache\KeyGroup::ITEM_CATEGORY_DELETE)
             ->setRouteParameters([
                 'resource_type_id' => $resource_type_id,
                 'resource_id' => $resource_id

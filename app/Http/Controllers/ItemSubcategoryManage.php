@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Jobs\ClearCache;
 use App\Response\Cache;
 use App\Request\Route;
 use App\Models\ItemCategory;
@@ -46,12 +47,6 @@ class ItemSubcategoryManage extends Controller
             true
         );
 
-        $cache_control = new Cache\Control(
-            $this->user_id,
-            in_array($resource_type_id, $this->permitted_resource_types, true)
-        );
-        $cache_key = new Cache\Key();
-
         if ($item_category_id === 'nill') {
             \App\Response\Responses::notFound(trans('entities.item-subcategory'));
         }
@@ -66,6 +61,15 @@ class ItemSubcategoryManage extends Controller
             (new \App\Option\AllowedValues\Subcategory())->allowedValues($item_category->category_id)
         );
 
+        $cache_job_payload = (new Cache\JobPayload())
+            ->setGroupKey(Cache\KeyGroup::ITEM_SUBCATEGORY_CREATE)
+            ->setRouteParameters([
+                'resource_type_id' => $resource_type_id,
+                'resource_id' => $resource_id
+            ])
+            ->setPermittedUser(in_array($resource_type_id, $this->permitted_resource_types, true))
+            ->setUserId($this->user_id);
+
         try {
             $subcategory_id = $this->hash->decode('subcategory', request()->input('subcategory_id'));
 
@@ -79,17 +83,7 @@ class ItemSubcategoryManage extends Controller
             ]);
             $item_sub_category->save();
 
-            $cache_trash = new Cache\Trash(
-                $cache_control,
-                [
-                    $cache_key->items($resource_type_id, $resource_id),
-                    $cache_key->resourceTypeItems($resource_type_id)
-                ],
-                $resource_type_id,
-                $this->public_resource_types,
-                $this->permittedUsers($resource_type_id)
-            );
-            $cache_trash->all();
+            ClearCache::dispatch($cache_job_payload->payload());
 
         } catch (Exception $e) {
             \App\Response\Responses::failedToSaveModelForCreate();
@@ -128,12 +122,6 @@ class ItemSubcategoryManage extends Controller
             true
         );
 
-        $cache_control = new Cache\Control(
-            $this->user_id,
-            in_array($resource_type_id, $this->permitted_resource_types, true)
-        );
-        $cache_key = new Cache\Key();
-
         if ($item_category_id === 'nill' || $item_subcategory_id === 'nill') {
             \App\Response\Responses::notFound(trans('entities.item-subcategory'));
         }
@@ -150,20 +138,19 @@ class ItemSubcategoryManage extends Controller
             \App\Response\Responses::notFound(trans('entities.item-subcategory'));
         }
 
+        $cache_job_payload = (new Cache\JobPayload())
+            ->setGroupKey(Cache\KeyGroup::ITEM_SUBCATEGORY_DELETE)
+            ->setRouteParameters([
+                'resource_type_id' => $resource_type_id,
+                'resource_id' => $resource_id
+            ])
+            ->setPermittedUser(in_array($resource_type_id, $this->permitted_resource_types, true))
+            ->setUserId($this->user_id);
+
         try {
             $item_sub_category->delete();
 
-            $cache_trash = new Cache\Trash(
-                $cache_control,
-                [
-                    $cache_key->items($resource_type_id, $resource_id),
-                    $cache_key->resourceTypeItems($resource_type_id)
-                ],
-                $resource_type_id,
-                $this->public_resource_types,
-                $this->permittedUsers($resource_type_id)
-            );
-            $cache_trash->all();
+            ClearCache::dispatch($cache_job_payload->payload());
 
             \App\Response\Responses::successNoContent();
         } catch (QueryException $e) {
