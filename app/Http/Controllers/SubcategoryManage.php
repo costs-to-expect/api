@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Jobs\ClearCache;
 use App\Response\Cache;
 use App\Request\Route;
 use App\Models\Subcategory;
@@ -40,14 +41,17 @@ class SubcategoryManage extends Controller
             true
         );
 
-        $cache_control = new Cache\Control(
-            $this->user_id,
-            in_array($resource_type_id, $this->permitted_resource_types, true)
-        );
-        $cache_key = new Cache\Key();
-
         $validator = (new SubcategoryValidator)->create(['category_id' => $category_id]);
         \App\Request\BodyValidation::validateAndReturnErrors($validator);
+
+        $cache_job_payload = (new Cache\JobPayload())
+            ->setGroupKey(Cache\KeyGroup::SUBCATEGORY_CREATE)
+            ->setRouteParameters([
+                'resource_type_id' => $resource_type_id,
+                'category_id' => $category_id
+            ])
+            ->setPermittedUser(in_array($resource_type_id, $this->permitted_resource_types, true))
+            ->setUserId($this->user_id);
 
         try {
             $sub_category = new Subcategory([
@@ -57,16 +61,7 @@ class SubcategoryManage extends Controller
             ]);
             $sub_category->save();
 
-            $cache_trash = new Cache\Trash(
-                $cache_control,
-                [
-                    $cache_key->categories($resource_type_id)
-                ],
-                $resource_type_id,
-                $this->public_resource_types,
-                $this->permittedUsers($resource_type_id)
-            );
-            $cache_trash->all();
+            ClearCache::dispatch($cache_job_payload->payload());
 
         } catch (Exception $e) {
             Responses::failedToSaveModelForCreate();
@@ -101,12 +96,6 @@ class SubcategoryManage extends Controller
             true
         );
 
-        $cache_control = new Cache\Control(
-            $this->user_id,
-            in_array($resource_type_id, $this->permitted_resource_types, true)
-        );
-        $cache_key = new Cache\Key();
-
         $sub_category = (new Subcategory())->instance(
             $category_id,
             $subcategory_id
@@ -116,19 +105,19 @@ class SubcategoryManage extends Controller
             Responses::notFound(trans('entities.subcategory'));
         }
 
+        $cache_job_payload = (new Cache\JobPayload())
+            ->setGroupKey(Cache\KeyGroup::SUBCATEGORY_DELETE)
+            ->setRouteParameters([
+                'resource_type_id' => $resource_type_id,
+                'category_id' => $category_id
+            ])
+            ->setPermittedUser(in_array($resource_type_id, $this->permitted_resource_types, true))
+            ->setUserId($this->user_id);
+
         try {
             $sub_category->delete();
 
-            $cache_trash = new Cache\Trash(
-                $cache_control,
-                [
-                    $cache_key->categories($resource_type_id)
-                ],
-                $resource_type_id,
-                $this->public_resource_types,
-                $this->permittedUsers($resource_type_id)
-            );
-            $cache_trash->all();
+            ClearCache::dispatch($cache_job_payload->payload());
 
             Responses::successNoContent();
         } catch (QueryException $e) {
@@ -161,12 +150,6 @@ class SubcategoryManage extends Controller
             true
         );
 
-        $cache_control = new Cache\Control(
-            $this->user_id,
-            in_array($resource_type_id, $this->permitted_resource_types, true)
-        );
-        $cache_key = new Cache\Key();
-
         $subcategory = (new Subcategory())->instance($category_id, $subcategory_id);
 
         if ($subcategory === null) {
@@ -192,19 +175,19 @@ class SubcategoryManage extends Controller
             $subcategory->$key = $value;
         }
 
+        $cache_job_payload = (new Cache\JobPayload())
+            ->setGroupKey(Cache\KeyGroup::SUBCATEGORY_UPDATE)
+            ->setRouteParameters([
+                'resource_type_id' => $resource_type_id,
+                'category_id' => $category_id
+            ])
+            ->setPermittedUser(in_array($resource_type_id, $this->permitted_resource_types, true))
+            ->setUserId($this->user_id);
+
         try {
             $subcategory->save();
 
-            $cache_trash = new Cache\Trash(
-                $cache_control,
-                [
-                    $cache_key->categories($resource_type_id)
-                ],
-                $resource_type_id,
-                $this->public_resource_types,
-                $this->permittedUsers($resource_type_id)
-            );
-            $cache_trash->all();
+            ClearCache::dispatch($cache_job_payload->payload());
 
         } catch (Exception $e) {
             Responses::failedToSaveModelForUpdate();

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Jobs\ClearCache;
 use App\Models\Item;
 use App\Models\ItemTransfer;
 use App\Response\Cache;
@@ -37,12 +38,6 @@ class ItemTransferManage extends Controller
 
         $user_id = $this->user_id;
 
-        $cache_control = new Cache\Control(
-            $this->user_id,
-            in_array($resource_type_id, $this->permitted_resource_types, true)
-        );
-        $cache_key = new Cache\Key();
-
         $validator = (new ItemTransferValidator)->create(
             [
                 'resource_type_id' => $resource_type_id,
@@ -50,6 +45,14 @@ class ItemTransferManage extends Controller
             ]
         );
         \App\Request\BodyValidation::validateAndReturnErrors($validator);
+
+        $cache_job_payload = (new Cache\JobPayload())
+            ->setGroupKey(Cache\KeyGroup::ITEM_TRANSFER_CREATE)
+            ->setRouteParameters([
+                'resource_type_id' => $resource_type_id
+            ])
+            ->setPermittedUser(in_array($resource_type_id, $this->permitted_resource_types, true))
+            ->setUserId($this->user_id);
 
         try {
             $new_resource_id = $this->hash->decode('resource', request()->input('resource_id'));
@@ -77,16 +80,7 @@ class ItemTransferManage extends Controller
                 $item_transfer->save();
             });
 
-            $cache_trash = new Cache\Trash(
-                $cache_control,
-                [
-                    $cache_key->resourceType($resource_type_id) // We need to clear everything
-                ],
-                $resource_type_id,
-                $this->public_resource_types,
-                $this->permittedUsers($resource_type_id)
-            );
-            $cache_trash->all();
+            ClearCache::dispatch($cache_job_payload->payload());
 
         } catch (QueryException $e) {
             return \App\Response\Responses::foreignKeyConstraintError();
