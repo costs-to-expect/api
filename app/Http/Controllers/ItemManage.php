@@ -58,6 +58,7 @@ class ItemManage extends Controller
                 'resource_type_id' => $resource_type_id,
                 'resource_id' => $resource_id
             ])
+            ->setPermittedUser(in_array($resource_type_id, $this->permitted_resource_types, true))
             ->setUserId($user_id);
 
         try {
@@ -108,12 +109,6 @@ class ItemManage extends Controller
             true
         );
 
-        $cache_control = new Cache\Control(
-            $this->user_id,
-            in_array($resource_type_id, $this->permitted_resource_types, true)
-        );
-        $cache_key = new Cache\Key();
-
         $entity = Entity::item($resource_type_id);
 
         \App\Request\BodyValidation::checkForEmptyPatch();
@@ -123,6 +118,15 @@ class ItemManage extends Controller
         $validation = $entity->validator();
         $validator = $validation->update();
         \App\Request\BodyValidation::validateAndReturnErrors($validator);
+
+        $cache_job_payload = (new Cache\JobPayload())
+            ->setGroupKey(Cache\KeyGroup::ITEM_DELETE)
+            ->setRouteParameters([
+                'resource_type_id' => $resource_type_id,
+                'resource_id' => $resource_id
+            ])
+            ->setPermittedUser(in_array($resource_type_id, $this->permitted_resource_types, true))
+            ->setUserId($this->user_id);
 
         $item = (new Item())->instance($resource_type_id, $resource_id, $item_id);
         $item_type = $entity->instance((int) $item_id);
@@ -140,17 +144,7 @@ class ItemManage extends Controller
                 }
             });
 
-            $cache_trash = new Cache\Trash(
-                $cache_control,
-                [
-                    $cache_key->resourceTypeItems($resource_type_id),
-                    $cache_key->items($resource_type_id, $resource_id)
-                ],
-                $resource_type_id,
-                $this->public_resource_types,
-                $this->permittedUsers($resource_type_id)
-            );
-            $cache_trash->all();
+            ClearCache::dispatch($cache_job_payload->payload());
 
         } catch (Exception $e) {
             \App\Response\Responses::failedToSaveModelForUpdate();
@@ -181,13 +175,16 @@ class ItemManage extends Controller
             true
         );
 
-        $cache_control = new Cache\Control(
-            $this->user_id,
-            in_array($resource_type_id, $this->permitted_resource_types, true)
-        );
-        $cache_key = new Cache\Key();
-
         $entity = Entity::item($resource_type_id);
+
+        $cache_job_payload = (new Cache\JobPayload())
+            ->setGroupKey(Cache\KeyGroup::ITEM_DELETE)
+            ->setRouteParameters([
+                'resource_type_id' => $resource_type_id,
+                'resource_id' => $resource_id
+            ])
+            ->setPermittedUser(in_array($resource_type_id, $this->permitted_resource_types, true))
+            ->setUserId($this->user_id);
 
         $item_model = $entity->model();
 
@@ -210,17 +207,7 @@ class ItemManage extends Controller
                 $item->delete();
             });
 
-            $cache_trash = new Cache\Trash(
-                $cache_control,
-                [
-                    $cache_key->resourceTypeItems($resource_type_id),
-                    $cache_key->items($resource_type_id, $resource_id)
-                ],
-                $resource_type_id,
-                $this->public_resource_types,
-                $this->permittedUsers($resource_type_id)
-            );
-            $cache_trash->all();
+            ClearCache::dispatch($cache_job_payload->payload());
 
             \App\Response\Responses::successNoContent();
         } catch (QueryException $e) {

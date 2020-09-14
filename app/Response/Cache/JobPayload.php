@@ -19,7 +19,7 @@ class JobPayload
     public function __construct()
     {
         $this->payload = [
-            'permitted_user' => null,
+            'permitted_user' => false,
             'route_parameters' => [],
             'key' => null,
             'user_id' => null

@@ -12,6 +12,10 @@ class KeyGroup
     private Key $key;
 
     public const ITEM_CREATE = 'item_create';
+    public const ITEM_DELETE = 'item_delete';
+    public const ITEM_UPDATE = 'item_update';
+
+    public const ITEM_CATEGORY_CREATE = 'item_category_create';
 
     public function __construct(array $parameters)
     {
@@ -23,6 +27,10 @@ class KeyGroup
     {
         switch ($group_key) {
             case self::ITEM_CREATE:
+            case self::ITEM_DELETE:
+            case self::ITEM_UPDATE:
+
+            case self::ITEM_CATEGORY_CREATE:
                 return [
                     $this->key->items(
                         (int) $this->parameters['resource_type_id'],
