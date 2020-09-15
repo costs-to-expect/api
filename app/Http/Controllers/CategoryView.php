@@ -126,7 +126,7 @@ class CategoryView extends Controller
         );
 
         if ($category === null) {
-            \App\Response\Responses::notFound(trans('entities.category'));
+            return \App\Response\Responses::notFound(trans('entities.category'));
         }
 
         $subcategories = [];

@@ -108,7 +108,7 @@ class ItemSubcategoryView extends Controller
         );
 
         if ($item_category_id === 'nill' || $item_subcategory_id === 'nill') {
-            \App\Response\Responses::notFound(trans('entities.item-subcategory'));
+            return \App\Response\Responses::notFound(trans('entities.item-subcategory'));
         }
 
         $item_sub_category = (new ItemSubcategory())->single(
@@ -120,7 +120,7 @@ class ItemSubcategoryView extends Controller
         );
 
         if ($item_sub_category === null) {
-            \App\Response\Responses::notFound(trans('entities.item-subcategory'));
+            return \App\Response\Responses::notFound(trans('entities.item-subcategory'));
         }
 
         $headers = new Header();
@@ -165,12 +165,12 @@ class ItemSubcategoryView extends Controller
         );
 
         if ($item_category_id === 'nill') {
-            \App\Response\Responses::notFound(trans('entities.item-subcategory'));
+            return \App\Response\Responses::notFound(trans('entities.item-subcategory'));
         }
 
         $item_category = (new ItemCategory())->find($item_category_id);
         if ($item_category === null) {
-            \App\Response\Responses::notFound(trans('entities.item-category'));
+            return \App\Response\Responses::notFound(trans('entities.item-category'));
         }
 
         $response = new ItemSubcategoryCollection($permissions);
@@ -216,7 +216,7 @@ class ItemSubcategoryView extends Controller
         );
 
         if ($item_category_id === 'nill' || $item_subcategory_id === 'nill') {
-            \App\Response\Responses::notFound(trans('entities.item-subcategory'));
+            return \App\Response\Responses::notFound(trans('entities.item-subcategory'));
         }
 
         $item_sub_category = (new ItemSubcategory())->single(
@@ -228,7 +228,7 @@ class ItemSubcategoryView extends Controller
         );
 
         if ($item_sub_category === null) {
-            \App\Response\Responses::notFound(trans('entities.item-subcategory'));
+            return \App\Response\Responses::notFound(trans('entities.item-subcategory'));
         }
 
         $response = new ItemSubcategoryItem($permissions);

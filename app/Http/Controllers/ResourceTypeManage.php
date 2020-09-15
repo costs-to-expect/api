@@ -64,7 +64,7 @@ class ResourceTypeManage extends Controller
             $item_type_id = $this->hash->decode('item-type', request()->input('item_type_id'));
 
             if ($item_type_id === false) {
-                \App\Response\Responses::unableToDecode();
+                return \App\Response\Responses::unableToDecode();
             }
 
             $resource_type_item_type = new ResourceTypeItemType([
@@ -76,7 +76,7 @@ class ResourceTypeManage extends Controller
             ClearCache::dispatch($cache_job_payload->payload());
 
         } catch (Exception $e) {
-            \App\Response\Responses::failedToSaveModelForCreate();
+            return \App\Response\Responses::failedToSaveModelForCreate();
         }
 
         return response()->json(
@@ -142,14 +142,14 @@ class ResourceTypeManage extends Controller
 
                 ClearCache::dispatch($cache_job_payload->payload());
 
-                \App\Response\Responses::successNoContent();
+                return \App\Response\Responses::successNoContent();
             } catch (QueryException $e) {
-                \App\Response\Responses::foreignKeyConstraintError();
+                return \App\Response\Responses::foreignKeyConstraintError();
             } catch (Exception $e) {
-                \App\Response\Responses::notFound(trans('entities.resource-type'));
+                return \App\Response\Responses::notFound(trans('entities.resource-type'));
             }
         } else {
-            \App\Response\Responses::foreignKeyConstraintError();
+            return \App\Response\Responses::foreignKeyConstraintError();
         }
     }
 
@@ -173,7 +173,7 @@ class ResourceTypeManage extends Controller
         $resource_type = (new ResourceType())->instance($resource_type_id);
 
         if ($resource_type === null) {
-            \App\Response\Responses::failedToSelectModelForUpdateOrDelete();
+            return \App\Response\Responses::failedToSelectModelForUpdateOrDelete();
         }
 
         \App\Request\BodyValidation::checkForEmptyPatch();
@@ -209,9 +209,9 @@ class ResourceTypeManage extends Controller
             ClearCache::dispatch($cache_job_payload->payload());
 
         } catch (Exception $e) {
-            \App\Response\Responses::failedToSaveModelForUpdate();
+            return \App\Response\Responses::failedToSaveModelForUpdate();
         }
 
-        \App\Response\Responses::successNoContent();
+        return \App\Response\Responses::successNoContent();
     }
 }

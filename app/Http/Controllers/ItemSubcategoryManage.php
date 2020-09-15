@@ -48,7 +48,7 @@ class ItemSubcategoryManage extends Controller
         );
 
         if ($item_category_id === 'nill') {
-            \App\Response\Responses::notFound(trans('entities.item-subcategory'));
+            return \App\Response\Responses::notFound(trans('entities.item-subcategory'));
         }
 
         $item_category = (new ItemCategory())
@@ -74,7 +74,7 @@ class ItemSubcategoryManage extends Controller
             $subcategory_id = $this->hash->decode('subcategory', request()->input('subcategory_id'));
 
             if ($subcategory_id === false) {
-                \App\Response\Responses::unableToDecode();
+                return \App\Response\Responses::unableToDecode();
             }
 
             $item_sub_category = new ItemSubcategory([
@@ -86,7 +86,7 @@ class ItemSubcategoryManage extends Controller
             ClearCache::dispatch($cache_job_payload->payload());
 
         } catch (Exception $e) {
-            \App\Response\Responses::failedToSaveModelForCreate();
+            return \App\Response\Responses::failedToSaveModelForCreate();
         }
 
         return response()->json(
@@ -123,7 +123,7 @@ class ItemSubcategoryManage extends Controller
         );
 
         if ($item_category_id === 'nill' || $item_subcategory_id === 'nill') {
-            \App\Response\Responses::notFound(trans('entities.item-subcategory'));
+            return \App\Response\Responses::notFound(trans('entities.item-subcategory'));
         }
 
         $item_sub_category = (new ItemSubcategory())->instance(
@@ -135,7 +135,7 @@ class ItemSubcategoryManage extends Controller
         );
 
         if ($item_sub_category === null) {
-            \App\Response\Responses::notFound(trans('entities.item-subcategory'));
+            return \App\Response\Responses::notFound(trans('entities.item-subcategory'));
         }
 
         $cache_job_payload = (new Cache\JobPayload())
@@ -152,11 +152,11 @@ class ItemSubcategoryManage extends Controller
 
             ClearCache::dispatch($cache_job_payload->payload());
 
-            \App\Response\Responses::successNoContent();
+            return \App\Response\Responses::successNoContent();
         } catch (QueryException $e) {
-            \App\Response\Responses::foreignKeyConstraintError();
+            return \App\Response\Responses::foreignKeyConstraintError();
         } catch (Exception $e) {
-            \App\Response\Responses::notFound(trans('entities.item-subcategory'));
+            return \App\Response\Responses::notFound(trans('entities.item-subcategory'));
         }
     }
 }

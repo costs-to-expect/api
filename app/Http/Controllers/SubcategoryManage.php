@@ -64,7 +64,7 @@ class SubcategoryManage extends Controller
             ClearCache::dispatch($cache_job_payload->payload());
 
         } catch (Exception $e) {
-            Responses::failedToSaveModelForCreate();
+            return Responses::failedToSaveModelForCreate();
         }
 
         return response()->json(
@@ -102,7 +102,7 @@ class SubcategoryManage extends Controller
         );
 
         if ($sub_category === null) {
-            Responses::notFound(trans('entities.subcategory'));
+            return Responses::notFound(trans('entities.subcategory'));
         }
 
         $cache_job_payload = (new Cache\JobPayload())
@@ -119,11 +119,11 @@ class SubcategoryManage extends Controller
 
             ClearCache::dispatch($cache_job_payload->payload());
 
-            Responses::successNoContent();
+            return Responses::successNoContent();
         } catch (QueryException $e) {
-            Responses::foreignKeyConstraintError();
+            return Responses::foreignKeyConstraintError();
         } catch (Exception $e) {
-            Responses::notFound(trans('entities.subcategory'));
+            return Responses::notFound(trans('entities.subcategory'));
         }
     }
 
@@ -153,7 +153,7 @@ class SubcategoryManage extends Controller
         $subcategory = (new Subcategory())->instance($category_id, $subcategory_id);
 
         if ($subcategory === null) {
-            Responses::failedToSelectModelForUpdateOrDelete();
+            return Responses::failedToSelectModelForUpdateOrDelete();
         }
 
         \App\Request\BodyValidation::checkForEmptyPatch();
@@ -190,9 +190,9 @@ class SubcategoryManage extends Controller
             ClearCache::dispatch($cache_job_payload->payload());
 
         } catch (Exception $e) {
-            Responses::failedToSaveModelForUpdate();
+            return Responses::failedToSaveModelForUpdate();
         }
 
-        Responses::successNoContent();
+        return Responses::successNoContent();
     }
 }

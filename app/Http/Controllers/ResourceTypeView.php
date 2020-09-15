@@ -115,7 +115,7 @@ class ResourceTypeView extends Controller
         );
 
         if ($resource_type === null) {
-            \App\Response\Responses::notFound(trans('entities.resource-type'));
+            return \App\Response\Responses::notFound(trans('entities.resource-type'));
         }
 
         $resources = [];

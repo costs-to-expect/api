@@ -63,7 +63,7 @@ class ItemCategoryManage extends Controller
             $category_id = $this->hash->decode('category', request()->input('category_id'));
 
             if ($category_id === false) {
-                \App\Response\Responses::unableToDecode();
+                return \App\Response\Responses::unableToDecode();
             }
 
             $item_category = new ItemCategory([
@@ -75,7 +75,7 @@ class ItemCategoryManage extends Controller
             ClearCache::dispatch($cache_job_payload->payload());
 
         } catch (Exception $e) {
-            \App\Response\Responses::failedToSaveModelForCreate();
+            return \App\Response\Responses::failedToSaveModelForCreate();
         }
 
         return response()->json(
@@ -118,7 +118,7 @@ class ItemCategoryManage extends Controller
         );
 
         if ($item_category === null) {
-            \App\Response\Responses::notFound(trans('entities.item-category'));
+            return \App\Response\Responses::notFound(trans('entities.item-category'));
         }
 
         $cache_job_payload = (new Cache\JobPayload())
@@ -135,11 +135,11 @@ class ItemCategoryManage extends Controller
 
             ClearCache::dispatch($cache_job_payload->payload());
 
-            \App\Response\Responses::successNoContent();
+            return \App\Response\Responses::successNoContent();
         } catch (QueryException $e) {
-            \App\Response\Responses::foreignKeyConstraintError();
+            return \App\Response\Responses::foreignKeyConstraintError();
         } catch (Exception $e) {
-            \App\Response\Responses::notFound(trans('entities.item-category'));
+            return \App\Response\Responses::notFound(trans('entities.item-category'));
         }
     }
 }

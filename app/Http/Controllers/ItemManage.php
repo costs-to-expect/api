@@ -77,7 +77,7 @@ class ItemManage extends Controller
             ClearCache::dispatch($cache_job_payload->payload());
 
         } catch (Exception $e) {
-            \App\Response\Responses::failedToSaveModelForCreate();
+            return \App\Response\Responses::failedToSaveModelForCreate();
         }
 
         return response()->json(
@@ -132,7 +132,7 @@ class ItemManage extends Controller
         $item_type = $entity->instance((int) $item_id);
 
         if ($item === null || $item_type === null) {
-            \App\Response\Responses::failedToSelectModelForUpdateOrDelete();
+            return \App\Response\Responses::failedToSelectModelForUpdateOrDelete();
         }
 
         try {
@@ -147,7 +147,7 @@ class ItemManage extends Controller
             ClearCache::dispatch($cache_job_payload->payload());
 
         } catch (Exception $e) {
-            \App\Response\Responses::failedToSaveModelForUpdate();
+            return \App\Response\Responses::failedToSaveModelForUpdate();
         }
 
         return \App\Response\Responses::successNoContent();
@@ -192,12 +192,12 @@ class ItemManage extends Controller
         $item = (new Item())->instance($resource_type_id, $resource_id, $item_id);
 
         if ($item === null || $item_type === null) {
-            \App\Response\Responses::notFound(trans('entities.item'));
+            return \App\Response\Responses::notFound(trans('entities.item'));
         }
 
         if (in_array($entity->type(), ['allocated-expense', 'simple-expense']) &&
             $item_model->hasCategoryAssignments($item_id) === true) {
-                \App\Response\Responses::foreignKeyConstraintError();
+                return \App\Response\Responses::foreignKeyConstraintError();
         }
 
         try {
@@ -209,11 +209,11 @@ class ItemManage extends Controller
 
             ClearCache::dispatch($cache_job_payload->payload());
 
-            \App\Response\Responses::successNoContent();
+            return \App\Response\Responses::successNoContent();
         } catch (QueryException $e) {
-            \App\Response\Responses::foreignKeyConstraintError();
+            return \App\Response\Responses::foreignKeyConstraintError();
         } catch (Exception $e) {
-            \App\Response\Responses::notFound(trans('entities.item'));
+            return \App\Response\Responses::notFound(trans('entities.item'));
         }
     }
 }

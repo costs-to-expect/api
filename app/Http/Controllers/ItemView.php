@@ -163,7 +163,7 @@ class ItemView extends Controller
         );
 
         if ($item === null) {
-            \App\Response\Responses::notFound(trans('entities.item'));
+            return \App\Response\Responses::notFound(trans('entities.item'));
         }
 
         $headers = new Header();
@@ -262,7 +262,7 @@ class ItemView extends Controller
         $item = $item_model->single($resource_type_id, $resource_id, $item_id);
 
         if ($item === null) {
-            \App\Response\Responses::notFound(trans('entities.item'));
+            return \App\Response\Responses::notFound(trans('entities.item'));
         }
 
         $response = new ItemItem($permissions);

@@ -98,7 +98,7 @@ class ItemCategoryView extends Controller
         );
 
         if ($item_category_id === 'nill') {
-            \App\Response\Responses::notFound(trans('entities.item-category'));
+            return \App\Response\Responses::notFound(trans('entities.item-category'));
         }
 
         $item_category = (new ItemCategory())->single(
@@ -109,7 +109,7 @@ class ItemCategoryView extends Controller
         );
 
         if ($item_category === null) {
-            \App\Response\Responses::notFound(trans('entities.item-category'));
+            return \App\Response\Responses::notFound(trans('entities.item-category'));
         }
 
         $headers = new Header();
@@ -187,7 +187,7 @@ class ItemCategoryView extends Controller
         );
 
         if ($item_category_id === 'nill') {
-            \App\Response\Responses::notFound(trans('entities.item-category'));
+            return \App\Response\Responses::notFound(trans('entities.item-category'));
         }
 
         $item_category = (new ItemCategory())->single(
@@ -198,7 +198,7 @@ class ItemCategoryView extends Controller
         );
 
         if ($item_category === null) {
-            \App\Response\Responses::notFound(trans('entities.item-category'));
+            return \App\Response\Responses::notFound(trans('entities.item-category'));
         }
 
         $response = new ItemCategoryItem($permissions);

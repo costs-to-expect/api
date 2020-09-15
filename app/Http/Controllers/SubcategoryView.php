@@ -131,7 +131,7 @@ class SubcategoryView extends Controller
         );
 
         if ($subcategory === null) {
-            \App\Response\Responses::notFound(trans('entities.subcategory'));
+            return \App\Response\Responses::notFound(trans('entities.subcategory'));
         }
 
         $headers = new Header();

@@ -62,7 +62,7 @@ class ResourceManage extends Controller
             ClearCache::dispatch($cache_job_payload->payload());
 
         } catch (Exception $e) {
-            Responses::failedToSaveModelForCreate();
+            return Responses::failedToSaveModelForCreate();
         }
 
         return response()->json(
@@ -94,7 +94,7 @@ class ResourceManage extends Controller
         $resource = (new Resource())->find($resource_id);
 
         if ($resource === null) {
-            Responses::failedToSelectModelForUpdateOrDelete();
+            return Responses::failedToSelectModelForUpdateOrDelete();
         }
 
         $cache_job_payload = (new Cache\JobPayload())
@@ -111,11 +111,11 @@ class ResourceManage extends Controller
 
             ClearCache::dispatch($cache_job_payload->payload());
 
-            Responses::successNoContent();
+            return Responses::successNoContent();
         } catch (QueryException $e) {
-            Responses::foreignKeyConstraintError();
+            return Responses::foreignKeyConstraintError();
         } catch (Exception $e) {
-            Responses::notFound(trans('entities.resource'));
+            return Responses::notFound(trans('entities.resource'));
         }
     }
 
@@ -142,7 +142,7 @@ class ResourceManage extends Controller
         $resource = (new Resource())->instance($resource_type_id, $resource_id);
 
         if ($resource === null) {
-            Responses::failedToSelectModelForUpdateOrDelete();
+            return Responses::failedToSelectModelForUpdateOrDelete();
         }
 
         \App\Request\BodyValidation::checkForEmptyPatch();
@@ -178,9 +178,9 @@ class ResourceManage extends Controller
             ClearCache::dispatch($cache_job_payload->payload());
             
         } catch (Exception $e) {
-            Responses::failedToSaveModelForUpdate();
+            return Responses::failedToSaveModelForUpdate();
         }
 
-        Responses::successNoContent();
+        return Responses::successNoContent();
     }
 }

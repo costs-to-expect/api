@@ -123,7 +123,7 @@ class ResourceView extends Controller
         $resource = (new Resource)->single($resource_type_id, $resource_id);
 
         if ($resource === null) {
-            \App\Response\Responses::notFound(trans('entities.resource'));
+            return \App\Response\Responses::notFound(trans('entities.resource'));
         }
 
         $headers = new Header();
@@ -188,7 +188,7 @@ class ResourceView extends Controller
         );
 
         if ($resource === null) {
-            \App\Response\Responses::notFound(trans('entities.resource'));
+            return \App\Response\Responses::notFound(trans('entities.resource'));
         }
 
         $response = new ResourceItem($permissions);

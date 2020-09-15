@@ -59,7 +59,7 @@ class CategoryManage extends Controller
             ClearCache::dispatch($cache_job_payload->payload());
 
         } catch (Exception $e) {
-           Responses::failedToSaveModelForCreate();
+           return Responses::failedToSaveModelForCreate();
         }
 
         return response()->json(
@@ -98,7 +98,7 @@ class CategoryManage extends Controller
 
         $category = (new Category())->find($category_id);
         if ($category === null) {
-            Responses::notFound(trans('entities.category'));
+            return Responses::notFound(trans('entities.category'));
         }
 
         try {
@@ -106,11 +106,11 @@ class CategoryManage extends Controller
 
             ClearCache::dispatch($cache_job_payload->payload());
 
-            Responses::successNoContent();
+            return Responses::successNoContent();
         } catch (QueryException $e) {
-            Responses::foreignKeyConstraintError();
+            return Responses::foreignKeyConstraintError();
         } catch (Exception $e) {
-            Responses::notFound(trans('entities.category'));
+            return Responses::notFound(trans('entities.category'));
         }
     }
 
@@ -134,7 +134,7 @@ class CategoryManage extends Controller
         $category = (new Category())->instance($category_id);
 
         if ($category === null) {
-            Responses::failedToSelectModelForUpdateOrDelete();
+            return Responses::failedToSelectModelForUpdateOrDelete();
         }
 
         BodyValidation::checkForEmptyPatch();
@@ -145,7 +145,7 @@ class CategoryManage extends Controller
         ]);
 
         if ($validator === null) {
-            Responses::failedToSelectModelForUpdateOrDelete();
+            return Responses::failedToSelectModelForUpdateOrDelete();
         }
 
         BodyValidation::validateAndReturnErrors($validator);
@@ -175,9 +175,9 @@ class CategoryManage extends Controller
             ClearCache::dispatch($cache_job_payload->payload());
 
         } catch (Exception $e) {
-            Responses::failedToSaveModelForUpdate();
+            return Responses::failedToSaveModelForUpdate();
         }
 
-        Responses::successNoContent();
+        return Responses::successNoContent();
     }
 }

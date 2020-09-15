@@ -94,7 +94,7 @@ class ItemPartialTransferManage extends Controller
         $new_resource_id = $this->hash->decode('resource', request()->input('resource_id'));
 
         if ($new_resource_id === false) {
-            Responses::unableToDecode();
+            return Responses::unableToDecode();
         }
 
         $cache_job_payload = (new Cache\JobPayload())
