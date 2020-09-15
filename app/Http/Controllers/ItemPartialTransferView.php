@@ -117,7 +117,7 @@ class ItemPartialTransferView extends Controller
         );
 
         if ($item_partial_transfer === null) {
-            \App\Response\Responses::notFound(trans('entities.item_partial_transfer'));
+            return \App\Response\Responses::notFound(trans('entities.item_partial_transfer'));
         }
 
         $headers = new Headers();

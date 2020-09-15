@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Entity\Item\Entity;
+use App\Jobs\ClearCache;
 use App\Models\ItemTransfer;
 use App\Response\Cache;
 use App\Request\Route;
@@ -43,12 +44,6 @@ class ItemManage extends Controller
 
         $user_id = $this->user_id;
 
-        $cache_control = new Cache\Control(
-            $this->user_id,
-            in_array($resource_type_id, $this->permitted_resource_types, true)
-        );
-        $cache_key = new Cache\Key();
-
         $entity = Entity::item($resource_type_id);
 
         $validation = $entity->validator();
@@ -56,6 +51,15 @@ class ItemManage extends Controller
         \App\Request\BodyValidation::validateAndReturnErrors($validator);
 
         $model = $entity->model();
+
+        $cache_job_payload = (new Cache\JobPayload())
+            ->setGroupKey(Cache\KeyGroup::ITEM_CREATE)
+            ->setRouteParameters([
+                'resource_type_id' => $resource_type_id,
+                'resource_id' => $resource_id
+            ])
+            ->setPermittedUser(in_array($resource_type_id, $this->permitted_resource_types, true))
+            ->setUserId($user_id);
 
         try {
             [$item, $item_type] = DB::transaction(static function() use ($resource_id, $user_id, $entity) {
@@ -70,20 +74,10 @@ class ItemManage extends Controller
                 return [$item, $item_type];
             });
 
-            $cache_trash = new Cache\Trash(
-                $cache_control,
-                [
-                    $cache_key->resourceTypeItems($resource_type_id),
-                    $cache_key->items($resource_type_id, $resource_id)
-                ],
-                $resource_type_id,
-                $this->public_resource_types,
-                $this->permittedUsers($resource_type_id)
-            );
-            $cache_trash->all();
+            ClearCache::dispatch($cache_job_payload->payload());
 
         } catch (Exception $e) {
-            \App\Response\Responses::failedToSaveModelForCreate();
+            return \App\Response\Responses::failedToSaveModelForCreate();
         }
 
         return response()->json(
@@ -115,12 +109,6 @@ class ItemManage extends Controller
             true
         );
 
-        $cache_control = new Cache\Control(
-            $this->user_id,
-            in_array($resource_type_id, $this->permitted_resource_types, true)
-        );
-        $cache_key = new Cache\Key();
-
         $entity = Entity::item($resource_type_id);
 
         \App\Request\BodyValidation::checkForEmptyPatch();
@@ -131,11 +119,20 @@ class ItemManage extends Controller
         $validator = $validation->update();
         \App\Request\BodyValidation::validateAndReturnErrors($validator);
 
+        $cache_job_payload = (new Cache\JobPayload())
+            ->setGroupKey(Cache\KeyGroup::ITEM_DELETE)
+            ->setRouteParameters([
+                'resource_type_id' => $resource_type_id,
+                'resource_id' => $resource_id
+            ])
+            ->setPermittedUser(in_array($resource_type_id, $this->permitted_resource_types, true))
+            ->setUserId($this->user_id);
+
         $item = (new Item())->instance($resource_type_id, $resource_id, $item_id);
         $item_type = $entity->instance((int) $item_id);
 
         if ($item === null || $item_type === null) {
-            \App\Response\Responses::failedToSelectModelForUpdateOrDelete();
+            return \App\Response\Responses::failedToSelectModelForUpdateOrDelete();
         }
 
         try {
@@ -147,20 +144,10 @@ class ItemManage extends Controller
                 }
             });
 
-            $cache_trash = new Cache\Trash(
-                $cache_control,
-                [
-                    $cache_key->resourceTypeItems($resource_type_id),
-                    $cache_key->items($resource_type_id, $resource_id)
-                ],
-                $resource_type_id,
-                $this->public_resource_types,
-                $this->permittedUsers($resource_type_id)
-            );
-            $cache_trash->all();
+            ClearCache::dispatch($cache_job_payload->payload());
 
         } catch (Exception $e) {
-            \App\Response\Responses::failedToSaveModelForUpdate();
+            return \App\Response\Responses::failedToSaveModelForUpdate();
         }
 
         return \App\Response\Responses::successNoContent();
@@ -188,13 +175,16 @@ class ItemManage extends Controller
             true
         );
 
-        $cache_control = new Cache\Control(
-            $this->user_id,
-            in_array($resource_type_id, $this->permitted_resource_types, true)
-        );
-        $cache_key = new Cache\Key();
-
         $entity = Entity::item($resource_type_id);
+
+        $cache_job_payload = (new Cache\JobPayload())
+            ->setGroupKey(Cache\KeyGroup::ITEM_DELETE)
+            ->setRouteParameters([
+                'resource_type_id' => $resource_type_id,
+                'resource_id' => $resource_id
+            ])
+            ->setPermittedUser(in_array($resource_type_id, $this->permitted_resource_types, true))
+            ->setUserId($this->user_id);
 
         $item_model = $entity->model();
 
@@ -202,12 +192,12 @@ class ItemManage extends Controller
         $item = (new Item())->instance($resource_type_id, $resource_id, $item_id);
 
         if ($item === null || $item_type === null) {
-            \App\Response\Responses::notFound(trans('entities.item'));
+            return \App\Response\Responses::notFound(trans('entities.item'));
         }
 
         if (in_array($entity->type(), ['allocated-expense', 'simple-expense']) &&
             $item_model->hasCategoryAssignments($item_id) === true) {
-                \App\Response\Responses::foreignKeyConstraintError();
+                return \App\Response\Responses::foreignKeyConstraintError();
         }
 
         try {
@@ -217,23 +207,13 @@ class ItemManage extends Controller
                 $item->delete();
             });
 
-            $cache_trash = new Cache\Trash(
-                $cache_control,
-                [
-                    $cache_key->resourceTypeItems($resource_type_id),
-                    $cache_key->items($resource_type_id, $resource_id)
-                ],
-                $resource_type_id,
-                $this->public_resource_types,
-                $this->permittedUsers($resource_type_id)
-            );
-            $cache_trash->all();
+            ClearCache::dispatch($cache_job_payload->payload());
 
-            \App\Response\Responses::successNoContent();
+            return \App\Response\Responses::successNoContent();
         } catch (QueryException $e) {
-            \App\Response\Responses::foreignKeyConstraintError();
+            return \App\Response\Responses::foreignKeyConstraintError();
         } catch (Exception $e) {
-            \App\Response\Responses::notFound(trans('entities.item'));
+            return \App\Response\Responses::notFound(trans('entities.item'));
         }
     }
 }

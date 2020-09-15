@@ -52,7 +52,7 @@ class RequestManage extends Controller
             }
 
         } catch (Exception $e) {
-            \App\Response\Responses::failedToSaveModelForCreate();
+            return \App\Response\Responses::failedToSaveModelForCreate();
         }
 
         return \App\Response\Responses::successNoContent();

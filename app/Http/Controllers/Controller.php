@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\ResourceType;
 use App\Models\ResourceTypeAccess;
 use App\Request\Hash;
 use App\Request\Validate\Boolean;
@@ -15,8 +14,6 @@ class Controller extends BaseController
     protected bool $include_public;
 
     protected array $permitted_resource_types = [];
-
-    protected array $public_resource_types = [];
 
     protected ResourceTypeAccess $resource_type_access;
 
@@ -50,8 +47,6 @@ class Controller extends BaseController
      */
     protected function setGlobalPropertyValues(): void
     {
-        $this->public_resource_types = (new ResourceType())->publicResourceTypes();
-
         $this->include_public = true;
         if (Boolean::convertedValue(request()->query('exclude-public')) === true) {
             $this->include_public = false;
@@ -61,10 +56,5 @@ class Controller extends BaseController
             $this->user_id = auth('api')->user()->id; // Safe as check above ensures not null
             $this->permitted_resource_types = $this->resource_type_access->permittedResourceTypes($this->user_id);
         }
-    }
-
-    protected function permittedUsers(int $resource_type_id): ?array
-    {
-        return $this->resource_type_access->permittedResourceTypeUsers($resource_type_id, $this->user_id);
     }
 }

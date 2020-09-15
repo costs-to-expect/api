@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Jobs\ClearCache;
 use App\Response\Cache;
 use App\Request\Route;
 use App\Models\ItemCategory;
@@ -43,23 +44,26 @@ class ItemCategoryManage extends Controller
             true
         );
 
-        $cache_control = new Cache\Control(
-            $this->user_id,
-            in_array($resource_type_id, $this->permitted_resource_types, true)
-        );
-        $cache_key = new Cache\Key();
-
         $validator = (new ItemCategoryValidator)->create();
         \App\Request\BodyValidation::validateAndReturnErrors(
             $validator,
             (new \App\Option\AllowedValues\Category())->allowedValues($resource_type_id)
         );
 
+        $cache_job_payload = (new Cache\JobPayload())
+            ->setGroupKey(Cache\KeyGroup::ITEM_CATEGORY_CREATE)
+            ->setRouteParameters([
+                'resource_type_id' => $resource_type_id,
+                'resource_id' => $resource_id
+            ])
+            ->setPermittedUser(in_array($resource_type_id, $this->permitted_resource_types, true))
+            ->setUserId($this->user_id);
+
         try {
             $category_id = $this->hash->decode('category', request()->input('category_id'));
 
             if ($category_id === false) {
-                \App\Response\Responses::unableToDecode();
+                return \App\Response\Responses::unableToDecode();
             }
 
             $item_category = new ItemCategory([
@@ -68,20 +72,10 @@ class ItemCategoryManage extends Controller
             ]);
             $item_category->save();
 
-            $cache_trash = new Cache\Trash(
-                $cache_control,
-                [
-                    $cache_key->items($resource_type_id, $resource_id),
-                    $cache_key->resourceTypeItems($resource_type_id)
-                ],
-                $resource_type_id,
-                $this->public_resource_types,
-                $this->permittedUsers($resource_type_id)
-            );
-            $cache_trash->all();
+            ClearCache::dispatch($cache_job_payload->payload());
 
         } catch (Exception $e) {
-            \App\Response\Responses::failedToSaveModelForCreate();
+            return \App\Response\Responses::failedToSaveModelForCreate();
         }
 
         return response()->json(
@@ -116,12 +110,6 @@ class ItemCategoryManage extends Controller
             true
         );
 
-        $cache_control = new Cache\Control(
-            $this->user_id,
-            in_array($resource_type_id, $this->permitted_resource_types, true)
-        );
-        $cache_key = new Cache\Key();
-
         $item_category = (new ItemCategory())->instance(
             $resource_type_id,
             $resource_id,
@@ -130,29 +118,28 @@ class ItemCategoryManage extends Controller
         );
 
         if ($item_category === null) {
-            \App\Response\Responses::notFound(trans('entities.item-category'));
+            return \App\Response\Responses::notFound(trans('entities.item-category'));
         }
+
+        $cache_job_payload = (new Cache\JobPayload())
+            ->setGroupKey(Cache\KeyGroup::ITEM_CATEGORY_DELETE)
+            ->setRouteParameters([
+                'resource_type_id' => $resource_type_id,
+                'resource_id' => $resource_id
+            ])
+            ->setPermittedUser(in_array($resource_type_id, $this->permitted_resource_types, true))
+            ->setUserId($this->user_id);
 
         try {
             $item_category->delete();
 
-            $cache_trash = new Cache\Trash(
-                $cache_control,
-                [
-                    $cache_key->items($resource_type_id, $resource_id),
-                    $cache_key->resourceTypeItems($resource_type_id)
-                ],
-                $resource_type_id,
-                $this->public_resource_types,
-                $this->permittedUsers($resource_type_id)
-            );
-            $cache_trash->all();
+            ClearCache::dispatch($cache_job_payload->payload());
 
-            \App\Response\Responses::successNoContent();
+            return \App\Response\Responses::successNoContent();
         } catch (QueryException $e) {
-            \App\Response\Responses::foreignKeyConstraintError();
+            return \App\Response\Responses::foreignKeyConstraintError();
         } catch (Exception $e) {
-            \App\Response\Responses::notFound(trans('entities.item-category'));
+            return \App\Response\Responses::notFound(trans('entities.item-category'));
         }
     }
 }

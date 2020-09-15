@@ -98,7 +98,7 @@ class ItemTypeView extends Controller
         $item_type = (new ItemType())->single($item_type_id);
 
         if ($item_type === null) {
-            \App\Response\Responses::notFound(trans('entities.item-type'));
+            return \App\Response\Responses::notFound(trans('entities.item-type'));
         }
 
         $headers = new Headers();

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Jobs\ClearCache;
 use App\Request\BodyValidation;
 Use App\Response\Cache;
 use App\Request\Route;
@@ -34,16 +35,18 @@ class CategoryManage extends Controller
             $this->permitted_resource_types
         );
 
-        $cache_control = new Cache\Control(
-            $this->user_id,
-            in_array($resource_type_id, $this->permitted_resource_types, true)
-        );
-        $cache_key = new Cache\Key();
-
         $validator = (new CategoryValidator)->create([
             'resource_type_id' => $resource_type_id
         ]);
         BodyValidation::validateAndReturnErrors($validator);
+
+        $cache_job_payload = (new Cache\JobPayload())
+            ->setGroupKey(Cache\KeyGroup::CATEGORY_CREATE)
+            ->setRouteParameters([
+                'resource_type_id' => $resource_type_id
+            ])
+            ->setPermittedUser(in_array($resource_type_id, $this->permitted_resource_types, true))
+            ->setUserId($this->user_id);
 
         try {
             $category = new Category([
@@ -53,19 +56,10 @@ class CategoryManage extends Controller
             ]);
             $category->save();
 
-            $cache_trash = new Cache\Trash(
-                $cache_control,
-                [
-                    $cache_key->resourceType($resource_type_id)
-                ],
-                $resource_type_id,
-                $this->public_resource_types,
-                $this->permittedUsers($resource_type_id)
-            );
-            $cache_trash->all();
+            ClearCache::dispatch($cache_job_payload->payload());
 
         } catch (Exception $e) {
-           Responses::failedToSaveModelForCreate();
+           return Responses::failedToSaveModelForCreate();
         }
 
         return response()->json(
@@ -94,36 +88,29 @@ class CategoryManage extends Controller
             true
         );
 
-        $cache_control = new Cache\Control(
-            $this->user_id,
-            in_array($resource_type_id, $this->permitted_resource_types, true)
-        );
-        $cache_key = new Cache\Key();
+        $cache_job_payload = (new Cache\JobPayload())
+            ->setGroupKey(Cache\KeyGroup::CATEGORY_DELETE)
+            ->setRouteParameters([
+                'resource_type_id' => $resource_type_id
+            ])
+            ->setPermittedUser(in_array($resource_type_id, $this->permitted_resource_types, true))
+            ->setUserId($this->user_id);
 
         $category = (new Category())->find($category_id);
         if ($category === null) {
-            Responses::notFound(trans('entities.category'));
+            return Responses::notFound(trans('entities.category'));
         }
 
         try {
             $category->delete();
 
-            $cache_trash = new Cache\Trash(
-                $cache_control,
-                [
-                    $cache_key->resourceType($resource_type_id)
-                ],
-                $resource_type_id,
-                $this->public_resource_types,
-                $this->permittedUsers($resource_type_id)
-            );
-            $cache_trash->all();
+            ClearCache::dispatch($cache_job_payload->payload());
 
-            Responses::successNoContent();
+            return Responses::successNoContent();
         } catch (QueryException $e) {
-            Responses::foreignKeyConstraintError();
+            return Responses::foreignKeyConstraintError();
         } catch (Exception $e) {
-            Responses::notFound(trans('entities.category'));
+            return Responses::notFound(trans('entities.category'));
         }
     }
 
@@ -144,16 +131,10 @@ class CategoryManage extends Controller
             true
         );
 
-        $cache_control = new Cache\Control(
-            $this->user_id,
-            in_array($resource_type_id, $this->permitted_resource_types, true)
-        );
-        $cache_key = new Cache\Key();
-
         $category = (new Category())->instance($category_id);
 
         if ($category === null) {
-            Responses::failedToSelectModelForUpdateOrDelete();
+            return Responses::failedToSelectModelForUpdateOrDelete();
         }
 
         BodyValidation::checkForEmptyPatch();
@@ -164,7 +145,7 @@ class CategoryManage extends Controller
         ]);
 
         if ($validator === null) {
-            Responses::failedToSelectModelForUpdateOrDelete();
+            return Responses::failedToSelectModelForUpdateOrDelete();
         }
 
         BodyValidation::validateAndReturnErrors($validator);
@@ -180,24 +161,23 @@ class CategoryManage extends Controller
             $category->$key = $value;
         }
 
+        $cache_job_payload = (new Cache\JobPayload())
+            ->setGroupKey(Cache\KeyGroup::CATEGORY_UPDATE)
+            ->setRouteParameters([
+                'resource_type_id' => $resource_type_id
+            ])
+            ->setPermittedUser(in_array($resource_type_id, $this->permitted_resource_types, true))
+            ->setUserId($this->user_id);
+
         try {
             $category->save();
 
-            $cache_trash = new Cache\Trash(
-                $cache_control,
-                [
-                    $cache_key->resourceType($resource_type_id)
-                ],
-                $resource_type_id,
-                $this->public_resource_types,
-                $this->permittedUsers($resource_type_id)
-            );
-            $cache_trash->all();
+            ClearCache::dispatch($cache_job_payload->payload());
 
         } catch (Exception $e) {
-            Responses::failedToSaveModelForUpdate();
+            return Responses::failedToSaveModelForUpdate();
         }
 
-        Responses::successNoContent();
+        return Responses::successNoContent();
     }
 }

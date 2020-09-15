@@ -198,7 +198,7 @@ class ItemTransferView extends Controller
         );
 
         if ($item_transfer === null) {
-            \App\Response\Responses::notFound(trans('entities.item_transfer'));
+            return \App\Response\Responses::notFound(trans('entities.item_transfer'));
         }
 
         $headers = new Headers();

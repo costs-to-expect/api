@@ -117,7 +117,7 @@ class ResourceTypeItem
         );
 
         array_map(
-            function($subcategory) use (&$conditional_parameters) {
+            function($subcategory) {
                 $subcategory_id = $this->hash->encode('subcategory', $subcategory['subcategory_id']);
 
                 $parameters['subcategory']['allowed_values'][$subcategory_id] = [
