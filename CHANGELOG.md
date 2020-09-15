@@ -2,6 +2,20 @@
 
 The complete changelog for the Costs to Expect REST API, our changelog follows the format defined at https://keepachangelog.com/en/1.0.0/
 
+## [v2.13.0] - 2020-09-15
+### Added
+- We have added support for queues; we clear all cache via queues.
+
+### Changed
+- We have updated all our management controllers, we add a job to the queue rather than clearing the necessary cache synchronously.
+- We have added the Postman collection link to the menu and renamed the documentation button.
+- We have updated our README and included details on how to start the queue.
+
+## Fixed
+- We have corrected a couple of minor coding issues, unused parameters etc.
+- We have updated our changelog, small spelling error.
+- We have updated our controllers and added missing return statements.
+
 ## [v2.12.2] - 2020-09-12
 ### Added
 - We have added additional tests to our POSTMAN test collection to ensure allowed values exist where expected.

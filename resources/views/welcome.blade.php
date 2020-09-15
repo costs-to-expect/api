@@ -56,10 +56,11 @@
                     <ul class="menu list-unstyled">
                         <li><strong>Costs to Expect</strong>
                             <ul class="submenu">
-                                <li><a class="nav-link  active " href="/v2">The API</a></li>
-                                <li><a class="nav-link " href="https://github.com/costs-to-expect/api/blob/master/CHANGELOG.md">Changelog (Github)</a></li>
-                                <li><a class="nav-link " href="/v2/changelog">Changelog (API)</a></li>
-                                <li><a class="nav-link " href="/documentation">Documentation</a></li>
+                                <li><a class="nav-link  active" href="/v2">The API</a></li>
+                                <li><a class="nav-link" href="https://github.com/costs-to-expect/api/blob/master/CHANGELOG.md">Changelog (Github)</a></li>
+                                <li><a class="nav-link" href="/v2/changelog">Changelog (API)</a></li>
+                                <li><a class="nav-link" href="https://postman.costs-to-expect.com">Postman Collection</a></li>
+                                <li><a class="nav-link" href="/documentation">Documentation examples</a></li>
                                 <li><a class="nav-link" href="https://www.costs-to-expect.com" title="The Costs to Expect Website">The Website</a></li>
                                 <li><a class="nav-link" href="https://app.costs-to-expect.com" title="The Costs to Expect App">The App</a></li>
                                 <li><a class="nav-link" href="https://blog.costs-to-expect.com" title="The Costs to Expect Blog">The Blog</a></li>
@@ -86,10 +87,11 @@
                             <ul class="menu list-unstyled">
                                 <li><strong>Costs to Expect</strong>
                                     <ul class="submenu">
-                                        <li><a class="nav-link  active " href="/v2">The API</a></li>
-                                        <li><a class="nav-link " href="https://github.com/costs-to-expect/api/blob/master/CHANGELOG.md">Changelog (Github)</a></li>
-                                        <li><a class="nav-link " href="/v2/changelog">Changelog (API)</a></li>
-                                        <li><a class="nav-link " href="/documentation">Documentation</a></li>
+                                        <li><a class="nav-link active " href="/v2">The API</a></li>
+                                        <li><a class="nav-link" href="https://github.com/costs-to-expect/api/blob/master/CHANGELOG.md">Changelog (Github)</a></li>
+                                        <li><a class="nav-link" href="/v2/changelog">Changelog (API)</a></li>
+                                        <li><a class="nav-link" href="https://postman.costs-to-expect.com">Postman Collection</a></li>
+                                        <li><a class="nav-link" href="/documentation">Documentation examples</a></li>
                                         <li><a class="nav-link" href="https://www.costs-to-expect.com" title="The Costs to Expect Website">The Website</a></li>
                                         <li><a class="nav-link" href="https://app.costs-to-expect.com" title="The Costs to Expect App">The App</a></li>
                                         <li><a class="nav-link" href="https://blog.costs-to-expect.com" title="The Costs to Expect Blog">The Blog</a></li>
@@ -154,8 +156,8 @@
                     <p>The documentation for the API is available as a Postman collection.</p>
 
                     <p>
-                        <a href="/documentation" class="btn btn-primary btn-lg" role="button" aria-pressed="true">Docs and Examples</a>
-                        <a href="https://postman.costs-to-expect.com" class="btn btn-primary alter btn-lg" role="button" aria-pressed="true">Postman Collection</a>
+                        <a href="/documentation" class="btn btn-primary alter btn-lg" role="button" aria-pressed="true">Examples</a>
+                        <a href="https://postman.costs-to-expect.com" class="btn btn-primary alter btn-lg" role="button" aria-pressed="true">Postman</a>
                     </p>
 
                     <hr />
@@ -223,23 +225,23 @@
                     <h3>Added</h3>
 
                     <ul>
-                        <li>We have added additional tests to our POSTMAN test collection to ensure allowed values exist where expected.</li>
-                        <li>We have updated our OPTIONS responses for summary controllers; where relevant, and we show the allowed values for a parameter or field.</li>
+                        <li>We have added support for queues; we clear all cache via queues.</li>
                     </ul>
 
                     <h3>Changed</h3>
 
                     <ul>
-                        <li>We have updated our back-end dependencies.</li>
-                        <li>We have updated our OPTIONS requests; in some cases, we were not showing allowed values for POST fields and GET parameters.</li>
+                        <li>We have updated all our management controllers, we add a job to the queue rather than clearing the necessary cache synchronously.</li>
+                        <li>We have added the Postman collection link to the menu and renamed the documentation button.</li>
+                        <li>We have updated our README and included details on how to start the queue.</li>
                     </ul>
 
                     <h3>Fixed</h3>
 
                     <ul>
-                        <li>We have tweaked our cache query; we use UNIX_TIMESTAMP() for comparison.</li>
-                        <li>We have removed a unique index from the `resource_type` table.</li>
-                        <li>We have updated the OPTIONS response for the `resource-types` collection; we show the allowed values for the `item_type_id.`</li>
+                        <li>We have corrected a couple of minor coding issues, unused parameters etc.</li>
+                        <li>We have updated our changelog, small spelling error.</li>
+                        <li>We have updated our controllers and added missing return statements.</li>
                     </ul>
                 </div>
             </div>

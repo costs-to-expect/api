@@ -26,44 +26,47 @@ more detail can be found at [Costs to Expect](https://www.costs-to-expect.com).
 ## Set up
 
 I'm going to assume you are using Docker, if not, you should be able to work out 
-what you need to run for your development setup, go to the project root 
+what you need to run for your development setup. 
+
+Go to the project root 
 directory and run the below.
 
-*The network is included for local development, I need the Costs to Expect 
+### Environment
+
+* $ `docker network create costs-to-expect-network` *
+* $ `docker-compose build`
+* $ `docker-compose up`
+
+*We include a network for local development purposed, I need the Costs to Expect 
 Website and App to communicate with a local API. You probably don't need this 
 so remove the network section from the docker-compose file and don't create the 
 network.*
 
-### Environment
-
-* $ `docker network create costs-to-expect-network`
-* $ `docker-compose build`
-* $ `docker-compose up`
-
 ### API
 
-We now have a working environment, lets set up the app. There are two Docker 
-services, `api` and `mysql`, we need to exec into the `api` service to set up 
-our app.
+We now have a working environment, we need to set up the API. There are two 
+Docker services, `api` and `mysql`, we will need to exec into the `api` service to 
+set up our app.
 
-First, let us check we are trying to access the right place, 
-run `docker-compose exec api ls`. You should see a list of the files and 
-directories at the root of our project, if you can see artisan, you are in 
-the right place, otherwise see where you are and adjust accordingly.
+Firstly, we need to check we are trying to access the right location, 
+execute `docker-compose exec api ls`. You should see a list of the files and 
+directories at the project root. 
 
-Now we need to set up the app by setting our .env, installing our dependencies 
-and then running any migrations and install Passport.
+Next, we need to configure the API by setting out local .ENV file our .env, 
+installing all dependencies and running our migrations.
 
-* Copy the `.env.example` file and name the copy `.env`, set your environment settings
+* Copy the `.env.example` file and name the copy `.env`. Set all the empty values, all 
+drivers have been set to our defaults, sessions, cache, and the queue default to the database driver.
 * `docker-compose exec api composer install` 
 * `docker-compose exec api php artisan key:generate`
 * `docker-compose exec api php artisan migrate`
 * `docker-compose exec api php artisan passport:install`
-* Run an OPTIONS request on `http://[your.domail.local:8080]/v2/resource_types`, you should see a nice OPTIONS request, 
-alternatively a GET request to `http://[your.domail.local:8080]/v1` will show all the routes.
-* You can add a development user by POSTing to `http://[your.domail.local:8080]/v2/auth/register` and then get a bearer by 
-POSTing to `http://[your.domail.local:8080]/v2/auth/login` - you will need a bearer for all the routes that require authentication.
-* The API is setup to use Mailgun by default, populate `MAILGUN_DOMAIN` and `MAILGUN_SECRET` with values from your account, 
+* `docker-compose exec api php artisan queue:work`
+* Run an OPTIONS request on `http://[your.domail.local:8080]/v2/resource_types`, you will see an OPTIONS response, 
+alternatively a GET request to `http://[your.domail.local:8080]/v1` will show all the defined routes.
+* You can add a development user by POSTing to `http://[your.domail.local:8080]/v2/auth/register`. A bearer will be in the 
+ response from POSTing to `http://[your.domail.local:8080]/v2/auth/login` - you will need a bearer for all the routes that require authentication.
+* Our API defaults to Mailgun, populate `MAILGUN_DOMAIN` and `MAILGUN_SECRET` with the relevant values from your account, 
 you will also need to set `MAIL_FROM_ADDRESS` and `MAIL_TO_ADDRESS`. You may need to set `Authorized Recipients` in Mailgun. 
 
 ## Responses
@@ -73,14 +76,13 @@ you will also need to set `MAIL_FROM_ADDRESS` and `MAIL_TO_ADDRESS`. You may nee
 * Successful POST requests will return a single object and a 201.
 * Successful PATCH requests will return 204.
 * Successful DELETE requests will return a 204.
-* Non 2xx results will return an object with a message field and optionally a fields array, in the 
-case of a validation error, 422, the fields array will contain the validation errors.
+* Non 2xx results will return an object with a message field and optionally a fields array. When we 
+return a validation error, the response will be 422 and the fields array will contain the validation errors.
 
 ### Caching
 
 We include local level caching in the API, as time goes on we will move towards
-conditional caching, specifically including an Etag header and return a 304 
-if necessary.
+conditional caching, specifically including an Etag header and returning a 304 response.
 
 The TTL for the cache types is a below. As expected, caches will be 
 invalidated if the API detects a change.
@@ -101,8 +103,8 @@ invalidated if the API detects a change.
 
 ## Headers
 
-Responses will include multiple headers, the table details the purpose behind 
-some of the custom headers.
+Responses will include multiple headers, the table below details the intention 
+behind each of our custom headers.
 
 | Header | Purpose |
 | :--- | :--- |
