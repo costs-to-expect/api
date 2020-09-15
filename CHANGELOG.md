@@ -21,7 +21,7 @@ The complete changelog for the Costs to Expect REST API, our changelog follows t
 - We have reworked our item configuration; we are moving away from multiple item type classes and moving towards a configuration based setup.
 
 ### Changed
-- We have updated web.config; our server will not serve static JSON files.
+- We have updated the web.config; our server will not serve static JSON files.
 - We have updated our back-end dependencies.
 - We will no longer send request error mails for 404s; the number of emails is getting out of hand.
 - We have updated our cache manager; some endpoints will only ever have a public cache, never a private cache.
