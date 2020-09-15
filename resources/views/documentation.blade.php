@@ -57,9 +57,10 @@
                         <li><strong>Costs to Expect</strong>
                             <ul class="submenu">
                                 <li><a class="nav-link" href="/v2">The API</a></li>
-                                <li><a class="nav-link " href="https://github.com/costs-to-expect/api/blob/master/CHANGELOG.md">Changelog (Github)</a></li>
-                                <li><a class="nav-link " href="/v2/changelog">Changelog (API)</a></li>
-                                <li><a class="nav-link active" href="/documentation">Documentation</a></li>
+                                <li><a class="nav-link" href="https://github.com/costs-to-expect/api/blob/master/CHANGELOG.md">Changelog (Github)</a></li>
+                                <li><a class="nav-link" href="/v2/changelog">Changelog (API)</a></li>
+                                <li><a class="nav-link" href="https://postman.costs-to-expect.com">Postman Collection</a></li>
+                                <li><a class="nav-link active" href="/documentation">Documentation examples</a></li>
                                 <li><a class="nav-link" href="https://www.costs-to-expect.com" title="The Costs to Expect Website">The Website</a></li>
                                 <li><a class="nav-link" href="https://app.costs-to-expect.com" title="The Costs to Expect App">The App</a></li>
                                 <li><a class="nav-link" href="https://blog.costs-to-expect.com" title="The Costs to Expect Blog">The Blog</a></li>
@@ -86,10 +87,11 @@
                             <ul class="menu list-unstyled">
                                 <li><strong>Costs to Expect</strong>
                                     <ul class="submenu">
-                                        <li><a class="nav-link " href="/v2">The API</a></li>
-                                        <li><a class="nav-link " href="https://github.com/costs-to-expect/api/blob/master/CHANGELOG.md">Changelog (Github)</a></li>
-                                        <li><a class="nav-link " href="/v2/changelog">Changelog (API)</a></li>
-                                        <li><a class="nav-link active" href="/documentation">Documentation</a></li>
+                                        <li><a class="nav-link" href="/v2">The API</a></li>
+                                        <li><a class="nav-link" href="https://github.com/costs-to-expect/api/blob/master/CHANGELOG.md">Changelog (Github)</a></li>
+                                        <li><a class="nav-link" href="/v2/changelog">Changelog (API)</a></li>
+                                        <li><a class="nav-link" href="https://postman.costs-to-expect.com">Postman Collection</a></li>
+                                        <li><a class="nav-link active" href="/documentation">Documentation examples</a></li>
                                         <li><a class="nav-link" href="https://www.costs-to-expect.com" title="The Costs to Expect Website">The Website</a></li>
                                         <li><a class="nav-link" href="https://app.costs-to-expect.com" title="The Costs to Expect App">The App</a></li>
                                         <li><a class="nav-link" href="https://blog.costs-to-expect.com" title="The Costs to Expect Blog">The Blog</a></li>
@@ -111,7 +113,7 @@
                             Welcome to Costs to Expect
                         </div>
                         <div class="title">
-                            <h1>Documentation</h1>
+                            <h1>Examples</h1>
                         </div>
 
                         <hr />
@@ -132,7 +134,7 @@
 
                     @endif
 
-                    <h2>Docs and examples</h2>
+                    <h2>Request examples</h2>
 
                     <p>The documentation for the Costs to Expects API is
                         available as a Postman collection.</p>

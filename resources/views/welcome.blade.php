@@ -56,10 +56,11 @@
                     <ul class="menu list-unstyled">
                         <li><strong>Costs to Expect</strong>
                             <ul class="submenu">
-                                <li><a class="nav-link  active " href="/v2">The API</a></li>
-                                <li><a class="nav-link " href="https://github.com/costs-to-expect/api/blob/master/CHANGELOG.md">Changelog (Github)</a></li>
-                                <li><a class="nav-link " href="/v2/changelog">Changelog (API)</a></li>
-                                <li><a class="nav-link " href="/documentation">Documentation</a></li>
+                                <li><a class="nav-link  active" href="/v2">The API</a></li>
+                                <li><a class="nav-link" href="https://github.com/costs-to-expect/api/blob/master/CHANGELOG.md">Changelog (Github)</a></li>
+                                <li><a class="nav-link" href="/v2/changelog">Changelog (API)</a></li>
+                                <li><a class="nav-link" href="https://postman.costs-to-expect.com">Postman Collection</a></li>
+                                <li><a class="nav-link" href="/documentation">Documentation examples</a></li>
                                 <li><a class="nav-link" href="https://www.costs-to-expect.com" title="The Costs to Expect Website">The Website</a></li>
                                 <li><a class="nav-link" href="https://app.costs-to-expect.com" title="The Costs to Expect App">The App</a></li>
                                 <li><a class="nav-link" href="https://blog.costs-to-expect.com" title="The Costs to Expect Blog">The Blog</a></li>
@@ -86,10 +87,11 @@
                             <ul class="menu list-unstyled">
                                 <li><strong>Costs to Expect</strong>
                                     <ul class="submenu">
-                                        <li><a class="nav-link  active " href="/v2">The API</a></li>
-                                        <li><a class="nav-link " href="https://github.com/costs-to-expect/api/blob/master/CHANGELOG.md">Changelog (Github)</a></li>
-                                        <li><a class="nav-link " href="/v2/changelog">Changelog (API)</a></li>
-                                        <li><a class="nav-link " href="/documentation">Documentation</a></li>
+                                        <li><a class="nav-link active " href="/v2">The API</a></li>
+                                        <li><a class="nav-link" href="https://github.com/costs-to-expect/api/blob/master/CHANGELOG.md">Changelog (Github)</a></li>
+                                        <li><a class="nav-link" href="/v2/changelog">Changelog (API)</a></li>
+                                        <li><a class="nav-link" href="https://postman.costs-to-expect.com">Postman Collection</a></li>
+                                        <li><a class="nav-link" href="/documentation">Documentation examples</a></li>
                                         <li><a class="nav-link" href="https://www.costs-to-expect.com" title="The Costs to Expect Website">The Website</a></li>
                                         <li><a class="nav-link" href="https://app.costs-to-expect.com" title="The Costs to Expect App">The App</a></li>
                                         <li><a class="nav-link" href="https://blog.costs-to-expect.com" title="The Costs to Expect Blog">The Blog</a></li>
@@ -154,8 +156,8 @@
                     <p>The documentation for the API is available as a Postman collection.</p>
 
                     <p>
-                        <a href="/documentation" class="btn btn-primary btn-lg" role="button" aria-pressed="true">Docs and Examples</a>
-                        <a href="https://postman.costs-to-expect.com" class="btn btn-primary alter btn-lg" role="button" aria-pressed="true">Postman Collection</a>
+                        <a href="/documentation" class="btn btn-primary alter btn-lg" role="button" aria-pressed="true">Examples</a>
+                        <a href="https://postman.costs-to-expect.com" class="btn btn-primary alter btn-lg" role="button" aria-pressed="true">Postman</a>
                     </p>
 
                     <hr />
