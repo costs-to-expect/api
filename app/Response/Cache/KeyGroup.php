@@ -95,9 +95,7 @@ class KeyGroup
             case self::RESOURCE_CREATE:
             case self::RESOURCE_DELETE:
                 return [
-                    $this->key->resources(
-                        (int) $this->parameters['resource_type_id']
-                    )
+                    $this->key->resourceTypes()
                 ];
 
             case self::SUBCATEGORY_CREATE:

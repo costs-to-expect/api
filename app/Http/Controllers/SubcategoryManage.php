@@ -50,7 +50,7 @@ class SubcategoryManage extends Controller
                 'resource_type_id' => $resource_type_id,
                 'category_id' => $category_id
             ])
-            ->setPermittedUser(in_array($resource_type_id, $this->permitted_resource_types, true))
+            ->setPermittedUser(in_array((int) $resource_type_id, $this->permitted_resource_types, true))
             ->setUserId($this->user_id);
 
         try {
@@ -111,7 +111,7 @@ class SubcategoryManage extends Controller
                 'resource_type_id' => $resource_type_id,
                 'category_id' => $category_id
             ])
-            ->setPermittedUser(in_array($resource_type_id, $this->permitted_resource_types, true))
+            ->setPermittedUser(in_array((int) $resource_type_id, $this->permitted_resource_types, true))
             ->setUserId($this->user_id);
 
         try {
@@ -181,7 +181,7 @@ class SubcategoryManage extends Controller
                 'resource_type_id' => $resource_type_id,
                 'category_id' => $category_id
             ])
-            ->setPermittedUser(in_array($resource_type_id, $this->permitted_resource_types, true))
+            ->setPermittedUser(in_array((int) $resource_type_id, $this->permitted_resource_types, true))
             ->setUserId($this->user_id);
 
         try {
