@@ -73,7 +73,7 @@ class ResourceTypeManage extends Controller
             ]);
             $resource_type_item_type->save();
 
-            ClearCache::dispatch($cache_job_payload->payload());
+            ClearCache::dispatch($cache_job_payload->payload())->delay(now()->addMinute());
 
         } catch (Exception $e) {
             return \App\Response\Responses::failedToSaveModelForCreate();
@@ -123,7 +123,7 @@ class ResourceTypeManage extends Controller
             ->setRouteParameters([
                 'resource_type_id' => $resource_type_id
             ])
-            ->setPermittedUser(in_array($resource_type_id, $this->permitted_resource_types, true))
+            ->setPermittedUser(in_array((int) $resource_type_id, $this->permitted_resource_types, true))
             ->setUserId($this->user_id);
 
         if (
@@ -140,7 +140,7 @@ class ResourceTypeManage extends Controller
                     $resource_type->delete();
                 });
 
-                ClearCache::dispatch($cache_job_payload->payload());
+                ClearCache::dispatch($cache_job_payload->payload())->delay(now()->addMinute());
 
                 return \App\Response\Responses::successNoContent();
             } catch (QueryException $e) {
@@ -200,13 +200,13 @@ class ResourceTypeManage extends Controller
             ->setRouteParameters([
                 'resource_type_id' => $resource_type_id
             ])
-            ->setPermittedUser(in_array($resource_type_id, $this->permitted_resource_types, true))
+            ->setPermittedUser(in_array((int) $resource_type_id, $this->permitted_resource_types, true))
             ->setUserId($this->user_id);
 
         try {
             $resource_type->save();
 
-            ClearCache::dispatch($cache_job_payload->payload());
+            ClearCache::dispatch($cache_job_payload->payload())->delay(now()->addMinute());
 
         } catch (Exception $e) {
             return \App\Response\Responses::failedToSaveModelForUpdate();

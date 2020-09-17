@@ -58,7 +58,7 @@ class ItemManage extends Controller
                 'resource_type_id' => $resource_type_id,
                 'resource_id' => $resource_id
             ])
-            ->setPermittedUser(in_array($resource_type_id, $this->permitted_resource_types, true))
+            ->setPermittedUser(in_array((int) $resource_type_id, $this->permitted_resource_types, true))
             ->setUserId($user_id);
 
         try {
@@ -125,7 +125,7 @@ class ItemManage extends Controller
                 'resource_type_id' => $resource_type_id,
                 'resource_id' => $resource_id
             ])
-            ->setPermittedUser(in_array($resource_type_id, $this->permitted_resource_types, true))
+            ->setPermittedUser(in_array((int) $resource_type_id, $this->permitted_resource_types, true))
             ->setUserId($this->user_id);
 
         $item = (new Item())->instance($resource_type_id, $resource_id, $item_id);
@@ -183,7 +183,7 @@ class ItemManage extends Controller
                 'resource_type_id' => $resource_type_id,
                 'resource_id' => $resource_id
             ])
-            ->setPermittedUser(in_array($resource_type_id, $this->permitted_resource_types, true))
+            ->setPermittedUser(in_array((int) $resource_type_id, $this->permitted_resource_types, true))
             ->setUserId($this->user_id);
 
         $item_model = $entity->model();

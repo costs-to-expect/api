@@ -47,7 +47,7 @@ class ResourceManage extends Controller
             ->setRouteParameters([
                 'resource_type_id' => $resource_type_id
             ])
-            ->setPermittedUser(in_array($resource_type_id, $this->permitted_resource_types, true))
+            ->setPermittedUser(in_array((int) $resource_type_id, $this->permitted_resource_types, true))
             ->setUserId($this->user_id);
 
         try {
@@ -59,7 +59,7 @@ class ResourceManage extends Controller
             ]);
             $resource->save();
 
-            ClearCache::dispatch($cache_job_payload->payload());
+            ClearCache::dispatch($cache_job_payload->payload())->delay(now()->addMinute());
 
         } catch (Exception $e) {
             return Responses::failedToSaveModelForCreate();
@@ -103,13 +103,13 @@ class ResourceManage extends Controller
                 'resource_type_id' => $resource_type_id,
                 'resource_id' => $resource_id
             ])
-            ->setPermittedUser(in_array($resource_type_id, $this->permitted_resource_types, true))
+            ->setPermittedUser(in_array((int) $resource_type_id, $this->permitted_resource_types, true))
             ->setUserId($this->user_id);
 
         try {
             (new Resource())->find($resource_id)->delete();
 
-            ClearCache::dispatch($cache_job_payload->payload());
+            ClearCache::dispatch($cache_job_payload->payload())->delay(now()->addMinute());
 
             return Responses::successNoContent();
         } catch (QueryException $e) {
@@ -169,13 +169,13 @@ class ResourceManage extends Controller
             ->setRouteParameters([
                 'resource_type_id' => $resource_type_id
             ])
-            ->setPermittedUser(in_array($resource_type_id, $this->permitted_resource_types, true))
+            ->setPermittedUser(in_array((int) $resource_type_id, $this->permitted_resource_types, true))
             ->setUserId($this->user_id);
 
         try {
             $resource->save();
 
-            ClearCache::dispatch($cache_job_payload->payload());
+            ClearCache::dispatch($cache_job_payload->payload())->delay(now()->addMinute());
             
         } catch (Exception $e) {
             return Responses::failedToSaveModelForUpdate();
