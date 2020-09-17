@@ -7,7 +7,7 @@ The complete changelog for the Costs to Expect REST API, our changelog follows t
 - We have changed the cache which gets cleared when we create or delete a resource.
 - We have added a delay for the job which clears the cache on creation or deletion of a resource type and resource.
 
-## Fixed
+### Fixed
 - We have corrected a type error; the permitted user check fails because of a type error.
 
 ## [v2.13.0] - 2020-09-15
@@ -19,7 +19,7 @@ The complete changelog for the Costs to Expect REST API, our changelog follows t
 - We have added the Postman collection link to the menu and renamed the documentation button.
 - We have updated our README and included details on how to start the queue.
 
-## Fixed
+### Fixed
 - We have corrected a couple of minor coding issues, unused parameters etc.
 - We have updated our changelog, small spelling error.
 - We have updated our controllers and added missing return statements.
