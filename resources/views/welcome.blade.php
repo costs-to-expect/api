@@ -222,26 +222,17 @@
                     <p>The changelog below shows all the fixes and improvements we have made, to view
                         the entire changelog please check <a href="https://github.com/costs-to-expect/api/releases">here</a>.</p>
 
-                    <h3>Added</h3>
-
-                    <ul>
-                        <li>We have added support for queues; we clear all cache via queues.</li>
-                    </ul>
-
                     <h3>Changed</h3>
 
                     <ul>
-                        <li>We have updated all our management controllers, we add a job to the queue rather than clearing the necessary cache synchronously.</li>
-                        <li>We have added the Postman collection link to the menu and renamed the documentation button.</li>
-                        <li>We have updated our README and included details on how to start the queue.</li>
+                        <li>We have changed the cache which gets cleared when we create or delete a resource.</li>
+                        <li>We have added a delay for the job which clears the cache on creation or deletion of a resource type and resource.</li>
                     </ul>
 
                     <h3>Fixed</h3>
 
                     <ul>
-                        <li>We have corrected a couple of minor coding issues, unused parameters etc.</li>
-                        <li>We have updated our changelog, small spelling error.</li>
-                        <li>We have updated our controllers and added missing return statements.</li>
+                        <li>We have corrected a type error; the permitted user check fails because of a type error.</li>
                     </ul>
                 </div>
             </div>

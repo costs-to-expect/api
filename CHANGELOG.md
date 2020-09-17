@@ -2,6 +2,14 @@
 
 The complete changelog for the Costs to Expect REST API, our changelog follows the format defined at https://keepachangelog.com/en/1.0.0/
 
+## [v2.13.1] - 2020-09-17
+### Changed
+- We have changed the cache which gets cleared when we create or delete a resource.
+- We have added a delay for the job which clears the cache on creation or deletion of a resource type and resource.
+
+## Fixed
+- We have corrected a type error; the permitted user check fails because of a type error.
+
 ## [v2.13.0] - 2020-09-15
 ### Added
 - We have added support for queues; we clear all cache via queues.
