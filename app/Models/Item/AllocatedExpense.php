@@ -292,6 +292,7 @@ class AllocatedExpense extends Model implements IModel
             "{$this->table}.name AS item_name",
             "{$this->table}.description AS item_description",
             "{$this->table}.effective_date AS item_effective_date",
+            "currency.code AS item_currency_code",
             "{$this->table}.total AS item_total",
             "{$this->table}.percentage AS item_percentage",
             "{$this->table}.actualised_total AS item_actualised_total",
@@ -304,6 +305,7 @@ class AllocatedExpense extends Model implements IModel
 
         $collection = $this->from('item')->
             join('item_type_allocated_expense', 'item.id', 'item_type_allocated_expense.item_id')->
+            join('currency', 'item_type_allocated_expense.currency_id', 'currency.id')->
             join('resource', 'item.resource_id', 'resource.id')->
             where('resource_id', '=', $resource_id)->
             where('resource.resource_type_id', '=', $resource_type_id);

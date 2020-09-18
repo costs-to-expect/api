@@ -82,7 +82,7 @@ class AllocatedExpense extends Item
 
     public function transformer(array $data_to_transform): Transformer
     {
-        return new \App\Models\Transformers\ItemType\AllocatedExpense($data_to_transform);
+        return new \App\Models\Transformers\Item\AllocatedExpense($data_to_transform);
     }
 
     public function update(array $patch, Model $instance): bool

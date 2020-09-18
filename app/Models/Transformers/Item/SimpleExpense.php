@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Models\Transformers\ItemType;
+namespace App\Models\Transformers\Item;
 
 use App\Models\Transformers\Transformer;
 
@@ -12,7 +12,7 @@ use App\Models\Transformers\Transformer;
  * @copyright Dean Blackborough 2018-2020
  * @license https://github.com/costs-to-expect/api/blob/master/LICENSE
  */
-class AllocatedExpense extends Transformer
+class SimpleExpense extends Transformer
 {
     public function format(array $to_transform): void
     {
@@ -21,9 +21,6 @@ class AllocatedExpense extends Transformer
             'name' => $to_transform['item_name'],
             'description' => $to_transform['item_description'],
             'total' => number_format((float) $to_transform['item_total'],2, '.', ''),
-            'percentage' => $to_transform['item_percentage'],
-            'actualised_total' => number_format((float) $to_transform['item_actualised_total'], 2, '.', ''),
-            'effective_date' => $to_transform['item_effective_date'],
             'created' => $to_transform['item_created_at'],
             'updated' => $to_transform['item_updated_at']
         ];
@@ -40,7 +37,7 @@ class AllocatedExpense extends Transformer
                     'description' => $to_transform['category_description']
                 ];
             } else {
-                $this->transformed['category'] = null;    
+                $this->transformed['category'] = null;
             }
 
             if (

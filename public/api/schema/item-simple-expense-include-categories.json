@@ -10,6 +10,11 @@
         "description": {
             "type": "null"
         },
+        "currency_code": {
+            "type": "string",
+            "maxLength": 3,
+            "minLength": 3
+        },
         "total": {
             "type": "string"
         },
@@ -52,6 +57,7 @@
         "id",
         "name",
         "description",
+        "currency_code",
         "total",
         "created",
         "updated",

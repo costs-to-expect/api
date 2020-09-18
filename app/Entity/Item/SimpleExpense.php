@@ -62,7 +62,7 @@ class SimpleExpense extends Item
 
     public function transformer(array $data_to_transform): Transformer
     {
-        return new \App\Models\Transformers\ItemType\SimpleExpense($data_to_transform);
+        return new \App\Models\Transformers\Item\SimpleExpense($data_to_transform);
     }
 
     public function update(array $patch, Model $instance): bool

@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Models\Transformers\ItemType;
+namespace App\Models\Transformers\Item;
 
 use App\Models\Transformers\Transformer;
 
