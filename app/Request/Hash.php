@@ -49,6 +49,7 @@ class Hash
         $this->hashers['item-type'] = new Hashids($config['item-type'], $min_length);
         $this->hashers['permitted-user'] = new Hashids($config['permitted-user'], $min_length);
         $this->hashers['user'] = new Hashids($config['user'], $min_length);
+        $this->hashers['currency'] = new Hashids($config['currency'], $min_length);
     }
 
     /**
@@ -86,123 +87,68 @@ class Hash
         return false;
     }
 
-    /**
-     * Helper method to return the category hash object
-     *
-     * @return Hashids
-     */
     public function category(): Hashids
     {
         return $this->hashers['category'];
     }
 
-    /**
-     * Helper method to return the sub category hash object
-     *
-     * @return Hashids
-     */
-    public function subCategory(): Hashids
+    public function subcategory(): Hashids
     {
         return $this->hashers['subcategory'];
     }
 
-    /**
-     * Helper method to return the resource type hash object
-     *
-     * @return Hashids
-     */
     public function resourceType(): Hashids
     {
         return $this->hashers['resource-type'];
     }
 
-    /**
-     * Helper method to return the resource hash object
-     *
-     * @return Hashids
-     */
     public function resource(): Hashids
     {
         return $this->hashers['resource'];
     }
 
-    /**
-     * Helper method to return the item hash object
-     *
-     * @return Hashids
-     */
     public function item(): Hashids
     {
         return $this->hashers['item'];
     }
 
-    /**
-     * Helper method to return the item category hash object
-     *
-     * @return Hashids
-     */
     public function itemCategory(): Hashids
     {
         return $this->hashers['item-category'];
     }
 
-    /**
-     * Helper method to return the item partial transfer hash object
-     *
-     * @return Hashids
-     */
     public function itemPartialTransfer(): Hashids
     {
         return $this->hashers['item-partial-transfer'];
     }
 
-    /**
-     * Helper method to return the item sub category hash object
-     *
-     * @return Hashids
-     */
-    public function itemSubCategory(): Hashids
+    public function itemSubcategory(): Hashids
     {
         return $this->hashers['item-subcategory'];
     }
 
-    /**
-     * Helper method to return the item transfer hash object
-     *
-     * @return Hashids
-     */
     public function itemTransfer(): Hashids
     {
         return $this->hashers['item-transfer'];
     }
 
-    /**
-     * Helper method to return the item type object
-     *
-     * @return Hashids
-     */
     public function itemType(): Hashids
     {
         return $this->hashers['item-type'];
     }
 
-    /**
-     * Helper method to return the permitted user object
-     *
-     * @return Hashids
-     */
     public function permittedUser(): Hashids
     {
         return $this->hashers['permitted-user'];
     }
 
-    /**
-     * Helper method to return the user object
-     *
-     * @return Hashids
-     */
     public function user(): Hashids
     {
         return $this->hashers['user'];
+    }
+
+    public function currency(): Hashids
+    {
+        return $this->hashers['currency'];
     }
 }

@@ -17,7 +17,7 @@ class ItemSubcategory extends Transformer
     public function format(array $to_transform): void
     {
         $this->transformed = [
-            'id' => $this->hash->subCategory()->encode($to_transform['id']),
+            'id' => $this->hash->subcategory()->encode($to_transform['id']),
             'name' => $to_transform['name'],
             'description' => $to_transform['description'],
             'total' => number_format((float) $to_transform['total'],2, '.', '')
