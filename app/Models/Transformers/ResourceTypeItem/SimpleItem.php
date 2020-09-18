@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Models\Transformers\ResourceTypeItemType;
+namespace App\Models\Transformers\ResourceTypeItem;
 
 use App\Models\Transformers\Transformer;
 

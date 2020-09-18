@@ -88,7 +88,7 @@ class SimpleItem extends Item
 
     public function resourceTypeTransformer(array $data_to_transform): Transformer
     {
-        return new \App\Models\Transformers\ResourceTypeItemType\SimpleItem($data_to_transform);
+        return new \App\Models\Transformers\ResourceTypeItem\SimpleItem($data_to_transform);
     }
 
     public function summaryResourceTypeModel(): Model
