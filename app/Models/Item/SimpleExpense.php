@@ -73,6 +73,7 @@ class SimpleExpense extends Model implements IModel
             'item.id AS item_id',
             "{$this->table}.name AS item_name",
             "{$this->table}.description AS item_description",
+            "currency.code AS item_currency_code",
             "{$this->table}.total AS item_total",
             "{$this->table}.created_at AS item_created_at",
             "{$this->table}.updated_at AS item_updated_at"
@@ -81,6 +82,7 @@ class SimpleExpense extends Model implements IModel
         $result = $this->from('item')->
             join('item_type_simple_expense', 'item.id', 'item_type_simple_expense.item_id')->
             join('resource', 'item.resource_id', 'resource.id')->
+            join('currency', 'item_type_allocated_expense.currency_id', 'currency.id')->
             where('item.resource_id', '=', $resource_id)->
             where('resource.resource_type_id', '=', $resource_type_id)->
             where('item_type_simple_expense.item_id', '=', $item_id)->
@@ -208,6 +210,7 @@ class SimpleExpense extends Model implements IModel
             'item.id AS item_id',
             "{$this->table}.name AS item_name",
             "{$this->table}.description AS item_description",
+            "currency.code AS item_currency_code",
             "{$this->table}.total AS item_total",
             "{$this->table}.created_at AS item_created_at",
             "{$this->table}.updated_at AS item_updated_at"
@@ -218,6 +221,7 @@ class SimpleExpense extends Model implements IModel
 
         $collection = $this->from('item')->
             join('item_type_simple_expense', 'item.id', 'item_type_simple_expense.item_id')->
+            join('currency', 'item_type_allocated_expense.currency_id', 'currency.id')->
             join('resource', 'item.resource_id', 'resource.id')->
             where('resource_id', '=', $resource_id)->
             where('resource.resource_type_id', '=', $resource_type_id);
