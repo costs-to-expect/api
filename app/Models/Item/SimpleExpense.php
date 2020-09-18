@@ -73,7 +73,9 @@ class SimpleExpense extends Model implements IModel
             'item.id AS item_id',
             "{$this->table}.name AS item_name",
             "{$this->table}.description AS item_description",
+            "currency.id AS item_currency_id",
             "currency.code AS item_currency_code",
+            "currency.name AS item_currency_name",
             "{$this->table}.total AS item_total",
             "{$this->table}.created_at AS item_created_at",
             "{$this->table}.updated_at AS item_updated_at"
@@ -210,7 +212,9 @@ class SimpleExpense extends Model implements IModel
             'item.id AS item_id',
             "{$this->table}.name AS item_name",
             "{$this->table}.description AS item_description",
+            "currency.id AS item_currency_id",
             "currency.code AS item_currency_code",
+            "currency.name AS item_currency_name",
             "{$this->table}.total AS item_total",
             "{$this->table}.created_at AS item_created_at",
             "{$this->table}.updated_at AS item_updated_at"
