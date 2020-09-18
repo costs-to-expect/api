@@ -10,10 +10,21 @@
         "description": {
             "type": ["null", "string"]
         },
-        "currency_code": {
-            "type": "string",
-            "maxLength": 3,
-            "minLength": 3
+        "currency": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "string"
+                },
+                "code": {
+                    "type": "string",
+                    "maxLength": 3,
+                    "minLength": 3
+                },
+                "name": {
+                    "type": "string"
+                }
+            }
         },
         "total": {
             "type": "string"
@@ -49,7 +60,7 @@
         "id",
         "name",
         "description",
-        "currency_code",
+        "currency",
         "total",
         "percentage",
         "actualised_total",
