@@ -137,10 +137,15 @@ class GetRequest extends Method
             )
             as $parameter => $parameter_data
         ) {
-            $parameter_data['title'] = trans($parameter_data['title']);
-            $parameter_data['description'] = trans($parameter_data['description']);
+            if (
+                array_key_exists('title', $parameter_data) === true &&
+                array_key_exists('description', $parameter_data) === true
+            ) {
+                $parameter_data['title'] = trans($parameter_data['title']);
+                $parameter_data['description'] = trans($parameter_data['description']);
 
-            $this->parameters_after_localisation[$parameter] = $parameter_data;
+                $this->parameters_after_localisation[$parameter] = $parameter_data;
+            }
         }
     }
 

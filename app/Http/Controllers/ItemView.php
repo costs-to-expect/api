@@ -215,7 +215,8 @@ class ItemView extends Controller
             $this->permitted_resource_types,
             $this->include_public,
             $entity->requestParameters(),
-            $defined_parameters
+            $defined_parameters,
+            ($entity->type() !== 'simple-item')
         );
 
         $response = new ItemCollection($permissions);

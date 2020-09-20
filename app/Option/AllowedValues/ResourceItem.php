@@ -35,7 +35,8 @@ class ResourceItem
         array $permitted_resource_types,
         bool $include_public,
         array $available_parameters,
-        array $defined_parameters
+        array $defined_parameters,
+        bool $include_currencies = false
     ): array
     {
         $years = [];
@@ -74,11 +75,18 @@ class ResourceItem
             );
         }
 
+        $currencies = [];
+
+        if ($include_currencies === true) {
+            $currencies = $this->allowedValuesForCurrency();
+        }
+
         return array_merge(
             $years,
             $months,
             $categories,
-            $subcategories
+            $subcategories,
+            $currencies
         );
     }
 
@@ -136,6 +144,29 @@ class ResourceItem
                 'description' => trans('item-type-' . $this->entity->type() .
                         '/allowed-values.description-prefix-month') .
                     date("F", mktime(0, 0, 0, $i, 1))
+            ];
+        }
+
+        return $parameters;
+    }
+
+    protected function allowedValuesForCurrency(): array
+    {
+        $parameters = ['currency_id' => ['allowed_values' => []]];
+
+        $currencies = (new \App\Models\Currency())->minimisedCollection();
+
+        foreach ($currencies as $currency) {
+            $id = $this->hash->encode('currency', $currency['currency_id']);
+
+            if ($id === false) {
+                \App\Response\Responses::unableToDecode();
+            }
+
+            $parameters['currency_id']['allowed_values'][$id] = [
+                'value' => $id,
+                'name' => $currency['currency_name'],
+                'description' => $currency['currency_name']
             ];
         }
 

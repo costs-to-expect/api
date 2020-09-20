@@ -57,11 +57,16 @@ class PatchRequest extends Method
             )
             as $field => $field_data
         ) {
-            $field_data['title'] = trans($field_data['title']);
-            $field_data['description'] = trans($field_data['description']);
-            $field_data['required'] = false;
+            if (
+                array_key_exists('title', $field_data) === true &&
+                array_key_exists('description', $field_data) === true
+            ) {
+                $field_data['title'] = trans($field_data['title']);
+                $field_data['description'] = trans($field_data['description']);
+                $field_data['required'] = false;
 
-            $this->fields_after_localisation[$field] = $field_data;
+                $this->fields_after_localisation[$field] = $field_data;
+            }
         }
     }
 
