@@ -34,6 +34,16 @@ return [
         'type' => 'date (yyyy-mm-dd)',
         'required' => false
     ],
+    'currency_id' => [
+        'field' => 'currency_id',
+        'title' => 'item-type-allocated-expense/fields.title-currency_id',
+        'description' => 'item-type-allocated-expense/fields.description-currency_id',
+        'type' => 'string',
+        'validation' => [
+            'length' => 10
+        ],
+        'required' => true
+    ],
     'total' => [
         'field' => 'total',
         'title' => 'item-type-allocated-expense/fields.title-total',
