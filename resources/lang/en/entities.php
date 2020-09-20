@@ -12,5 +12,6 @@ return [
     'item-partial-transfer' => 'Item Partial Transfer',
     'item-subcategory' => 'Assigned Subcategory',
     'item-transfer' => 'Item Transfer',
-    'item-type' => 'Item type'
+    'item-type' => 'Item type',
+    'currency' => 'Currency'
 ];

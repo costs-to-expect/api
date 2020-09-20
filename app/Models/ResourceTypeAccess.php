@@ -62,10 +62,10 @@ class ResourceTypeAccess extends Model
         $collection = Clause::applyResourceTypeCollectionCondition(
             $collection,
             $permitted_resource_types,
-            ($manage === true) ? false : true
+            $manage !== true
         );
 
-        return (count($collection->get()) === 1) ? true : false;
+        return count($collection->get()) === 1;
     }
 
     /**
@@ -103,10 +103,10 @@ class ResourceTypeAccess extends Model
         $collection = Clause::applyResourceTypeCollectionCondition(
             $collection,
             $permitted_resource_types,
-            ($manage === true) ? false : true
+            $manage !== true
         );
 
-        return (count($collection->get()) === 1) ? true : false;
+        return count($collection->get()) === 1;
     }
 
     /**
@@ -140,10 +140,10 @@ class ResourceTypeAccess extends Model
         $collection = Clause::applyResourceTypeCollectionCondition(
             $collection,
             $permitted_resource_types,
-            ($manage === true) ? false : true
+            $manage !== true
         );
 
-        return (count($collection->get()) === 1) ? true : false;
+        return count($collection->get()) === 1;
     }
 
     /**
@@ -185,10 +185,10 @@ class ResourceTypeAccess extends Model
         $collection = Clause::applyResourceTypeCollectionCondition(
             $collection,
             $permitted_resource_types,
-            ($manage === true) ? false : true
+            $manage !== true
         );
 
-        return (count($collection->get()) === 1) ? true : false;
+        return count($collection->get()) === 1;
     }
 
     /**
@@ -203,7 +203,22 @@ class ResourceTypeAccess extends Model
         $collection = $this->from('item_type')->
             where('item_type.id', '=', $id);
 
-        return (count($collection->get()) === 1) ? true : false;
+        return count($collection->get()) === 1;
+    }
+
+    /**
+     * Validate that the currency exists
+     *
+     * @param integer $id
+     *
+     * @return boolean
+     */
+    public function currencyExistsToUser(int $id): bool
+    {
+        $collection = $this->from('currency')->
+        where('currency.id', '=', $id);
+
+        return count($collection->get()) === 1;
     }
 
     /**
@@ -273,10 +288,10 @@ class ResourceTypeAccess extends Model
         $collection = Clause::applyResourceTypeCollectionCondition(
             $collection,
             $permitted_resource_types,
-            ($manage === true) ? false : true
+            $manage !== true
         );
 
-        return (count($collection->get()) === 1) ? true : false;
+        return count($collection->get()) === 1;
     }
 
     /**
@@ -302,10 +317,10 @@ class ResourceTypeAccess extends Model
         $collection = Clause::applyResourceTypeCollectionCondition(
             $collection,
             $permitted_resource_types,
-            ($manage === true) ? false : true
+            $manage !== true
         );
 
-        return (count($collection->get()) === 1) ? true : false;
+        return count($collection->get()) === 1;
     }
 
     /**
@@ -339,9 +354,9 @@ class ResourceTypeAccess extends Model
         $collection = Clause::applyResourceTypeCollectionCondition(
             $collection,
             $permitted_resource_types,
-            ($manage === true) ? false : true
+            $manage !== true
         );
 
-        return (count($collection->get()) === 1) ? true : false;
+        return count($collection->get()) === 1;
     }
 }

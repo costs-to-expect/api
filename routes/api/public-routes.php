@@ -34,6 +34,26 @@ Route::group(
         );
 
         Route::get(
+            'currencies',
+            'CurrencyView@index'
+        );
+
+        Route::options(
+            'currencies',
+            'CurrencyView@optionsIndex'
+        );
+
+        Route::get(
+            'currencies/{currency_id}',
+            'CurrencyView@show'
+        );
+
+        Route::options(
+            'currencies/{currency_id}',
+            'CurrencyView@optionsShow'
+        );
+
+        Route::get(
             'item-types',
             'ItemTypeView@index'
         );
