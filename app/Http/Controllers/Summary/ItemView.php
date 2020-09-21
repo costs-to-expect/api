@@ -221,7 +221,7 @@ class ItemView extends Controller
             );
         }
 
-        return $this->tcoSummary(
+        return $this->summary(
             (int)$resource_type_id,
             (int)$resource_id,
             $parameters
@@ -741,7 +741,7 @@ class ItemView extends Controller
      *
      * @return JsonResponse
      */
-    private function tcoSummary(
+    private function summary(
         int $resource_type_id,
         int $resource_id,
         array $parameters
