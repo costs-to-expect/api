@@ -148,6 +148,8 @@ abstract class Item
         return LaravelConfig::get($this->base_path . '.summary-searchable', []);
     }
 
+    abstract public function summaryTransformer(array $data_to_transform): Transformer;
+
     abstract public function table(): string;
 
     abstract public function transformer(array $data_to_transform): Transformer;

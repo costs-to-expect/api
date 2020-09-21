@@ -763,15 +763,11 @@ class ItemView extends Controller
                 $parameters
             );
 
+            $entity = Entity::item($resource_type_id);
+
             $collection = [];
-            foreach ($summary as $currency) {
-                $collection[] = [
-                    'currency' => [
-                        'code' => $currency['currency_code']
-                    ],
-                    'count' => $currency['total_count'],
-                    'subtotal' => number_format($currency['total'], 2, '.', '')
-                ];
+            foreach ($summary as $subtotal) {
+                $collection[] = $entity->summaryTransformer($subtotal)->asArray();
             }
 
             $this->assignContentToCache(

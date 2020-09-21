@@ -95,4 +95,9 @@ class SimpleItem extends Item
     {
         return new \App\Models\ResourceTypeItem\Summary\SimpleItem();
     }
+
+    public function summaryTransformer(array $data_to_transform): Transformer
+    {
+        return new \App\Models\Transformers\Item\Summary\SimpleItem($data_to_transform);
+    }
 }
