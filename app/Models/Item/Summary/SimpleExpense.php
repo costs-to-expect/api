@@ -270,16 +270,20 @@ class SimpleExpense extends Model implements ISummaryModel, ISummaryModelCategor
     ): array
     {
         $collection = $this->selectRaw("
+                currency.code AS currency_code,
                 SUM({$this->sub_table}.total) AS total, 
                 COUNT({$this->sub_table}.item_id) AS total_count,
                 MAX({$this->sub_table}.created_at) AS last_updated
-            ")->
-            join($this->sub_table, 'item.id', "{$this->sub_table}.item_id")->
-            join('resource', 'item.resource_id', 'resource.id')->
-            where('resource_id', '=', $resource_id)->
-            where('resource.resource_type_id', '=', $resource_type_id);
+            ")
+            ->join($this->sub_table, 'item.id', "{$this->sub_table}.item_id")
+            ->join('resource', 'item.resource_id', 'resource.id')
+            ->join('currency', "{$this->sub_table}.currency_id", 'currency.id')
+            ->where('resource_id', '=', $resource_id)
+            ->where('resource.resource_type_id', '=', $resource_type_id)
+            ->groupBy('currency.code');
 
-        return $collection->get()
+        return $collection
+            ->get()
             ->toArray();
     }
 }

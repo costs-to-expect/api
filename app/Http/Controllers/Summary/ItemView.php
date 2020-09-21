@@ -763,14 +763,16 @@ class ItemView extends Controller
                 $parameters
             );
 
-            $total = '0.00';
-            if (array_key_exists(0, $summary) && array_key_exists('total', $summary[0])) {
-                $total = number_format($summary[0]['total'], 2, '.', '');
+            $collection = [];
+            foreach ($summary as $currency) {
+                $collection[] = [
+                    'currency' => [
+                        'code' => $currency['currency_code']
+                    ],
+                    'count' => $currency['total_count'],
+                    'subtotal' => number_format($currency['total'], 2, '.', '')
+                ];
             }
-
-            $collection = [
-                'total' => $total
-            ];
 
             $this->assignContentToCache(
                 $summary,

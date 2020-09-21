@@ -93,13 +93,14 @@ class SimpleItem extends Model implements ISummaryModel
                 SUM({$this->sub_table}.quantity) AS total, 
                 COUNT({$this->sub_table}.item_id) AS total_count,
                 MAX({$this->sub_table}.created_at) AS last_updated
-            ")->
-            join($this->sub_table, 'item.id', "{$this->sub_table}.item_id")->
-            join('resource', 'item.resource_id', 'resource.id')->
-            where('resource_id', '=', $resource_id)->
-            where('resource.resource_type_id', '=', $resource_type_id);
+            ")
+            ->join($this->sub_table, 'item.id', "{$this->sub_table}.item_id")
+            ->join('resource', 'item.resource_id', 'resource.id')
+            ->where('resource_id', '=', $resource_id)
+            ->where('resource.resource_type_id', '=', $resource_type_id);
 
-        return $collection->get()
+        return $collection
+            ->get()
             ->toArray();
     }
 }
