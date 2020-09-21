@@ -55,7 +55,6 @@ return [
         ],
         'messages' => [
             'total.regex' => 'item-type-simple-expense/validation.total-regex',
-            'currency_id.required' => 'item-type-simple-expense/validation.currency_id-required',
             'currency_id.exists' => 'item-type-simple-expense/validation.currency_id-exists'
         ]
     ]

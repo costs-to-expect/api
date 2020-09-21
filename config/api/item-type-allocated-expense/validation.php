@@ -83,7 +83,6 @@ return [
         ],
         'messages' => [
             'total.regex' => 'item-type-allocated-expense/validation.total-regex',
-            'currency_id.required' => 'item-type-allocated-expense/validation.currency_id-required',
             'currency_id.exists' => 'item-type-allocated-expense/validation.currency_id-exists'
         ]
     ]

@@ -43,6 +43,6 @@ class SimpleExpense extends BaseValidator
      */
     public function update(array $options = []): ?\Illuminate\Contracts\Validation\Validator
     {
-        return $this->updateItemValidator();
+        return $this->updateExpenseItemValidator();
     }
 }

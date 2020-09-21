@@ -121,10 +121,15 @@ abstract class Validator
 
     public function updateExpenseItemValidator(): ?\Illuminate\Contracts\Validation\Validator
     {
-        $decode = $this->hash->currency()->decode(request()->input('currency_id'));
-        $currency_id = null;
-        if (count($decode) === 1) {
-            $currency_id = $decode[0];
+        $merge_array = [];
+        if (array_key_exists('currency_id', request()->all())) {
+            $decode = $this->hash->currency()->decode(request()->input('currency_id'));
+            $currency_id = null;
+            if (count($decode) === 1) {
+                $currency_id = $decode[0];
+            }
+
+            $merge_array = ['currency_id' => $currency_id];
         }
 
         $messages = [];
@@ -135,7 +140,7 @@ abstract class Validator
         return ValidatorFacade::make(
             array_merge(
                 request()->all(),
-                ['currency_id' => $currency_id]
+                $merge_array
             ),
             $this->entity->patchValidation(),
             $messages
