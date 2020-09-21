@@ -74,6 +74,11 @@ class SimpleExpense extends Item
     {
         foreach ($patch as $key => $value) {
             $instance->$key = $value;
+
+            if ($key === 'currency_id') {
+                $hash = new Hash();
+                $instance->$key = $hash->decode('currency', request()->input('currency_id'));
+            }
         }
 
         $instance->updated_at = Date::now();

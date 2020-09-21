@@ -99,6 +99,11 @@ class AllocatedExpense extends Item
             if (in_array($key, ['total', 'percentage']) === true) {
                 $set_actualised = true;
             }
+
+            if ($key === 'currency_id') {
+                $hash = new Hash();
+                $instance->$key = $hash->decode('currency', request()->input('currency_id'));
+            }
         }
 
         if ($set_actualised === true) {

@@ -266,9 +266,15 @@ class ItemView extends Controller
             return \App\Response\Responses::notFound(trans('entities.item'));
         }
 
+        $allowed_values = [];
+        if ($entity->type() !== 'simple-item') {
+            $allowed_values = (new \App\Option\AllowedValues\Currency())->allowedValues();
+        }
+
         $response = new ItemItem($permissions);
 
         return $response->setEntity($entity)
+            ->setAllowedValues($allowed_values)
             ->create()
             ->response();
     }
