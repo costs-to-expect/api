@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace App\Entity\Item;
 
+use App\Request\Hash;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\Transformers\Transformer;
 use App\Request\Validate\Validator;
@@ -28,12 +29,16 @@ class AllocatedExpense extends Item
      */
     public function create($id): Model
     {
+        $hash = new Hash();
+        $currency_id = $hash->decode('currency', request()->input('currency_id'));
+
         $item = new \App\Models\Item\AllocatedExpense([
             'item_id' => $id,
             'name' => request()->input('name'),
             'description' => request()->input('description', null),
             'effective_date' => request()->input('effective_date'),
             'publish_after' => request()->input('publish_after', null),
+            'currency_id' => $currency_id,
             'total' => request()->input('total'),
             'percentage' => request()->input('percentage', 100),
             'created_at' => Date::now(),

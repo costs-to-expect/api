@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace App\Models\Item;
 
 use App\Interfaces\Item\IModel;
+use App\Models\Currency;
 use App\Request\Validate\Boolean;
 use App\Models\Clause;
 use Illuminate\Database\Query\Builder as QueryBuilder;
@@ -25,6 +26,11 @@ class AllocatedExpense extends Model implements IModel
     protected $guarded = ['id', 'actualised_total'];
 
     public $timestamps = false;
+
+    public function currency()
+    {
+        return $this->hasOne(Currency::class, 'id', 'currency_id');
+    }
 
     public function setActualisedTotal($total, $percentage)
     {
@@ -177,6 +183,9 @@ class AllocatedExpense extends Model implements IModel
             'item_description' => $item_type->description,
             'item_effective_date' => $item_type->effective_date,
             'item_publish_after' => $item_type->publish_after,
+            'item_currency_id' => $item_type->currency->id,
+            'item_currency_code' => $item_type->currency->code,
+            'item_currency_name' => $item_type->currency->name,
             'item_total' => $item_type->total,
             'item_percentage' => $item_type->percentage,
             'item_actualised_total' => $item_type->actualised_total,

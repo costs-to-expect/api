@@ -85,6 +85,32 @@ abstract class Validator
     /**
      * @return \Illuminate\Contracts\Validation\Validator
      */
+    protected function createExpenseItemValidator(): \Illuminate\Contracts\Validation\Validator
+    {
+        $decode = $this->hash->currency()->decode(request()->input('currency_id'));
+        $currency_id = null;
+        if (count($decode) === 1) {
+            $currency_id = $decode[0];
+        }
+
+        $messages = [];
+        foreach ($this->entity->postValidationMessages() as $key => $custom_message) {
+            $messages[$key] = trans($custom_message);
+        }
+
+        return ValidatorFacade::make(
+            array_merge(
+                request()->all(),
+                ['currency_id' => $currency_id]
+            ),
+            $this->entity->postValidation(),
+            $messages
+        );
+    }
+
+    /**
+     * @return \Illuminate\Contracts\Validation\Validator
+     */
     protected function createItemValidator(): \Illuminate\Contracts\Validation\Validator
     {
         $messages = [];
