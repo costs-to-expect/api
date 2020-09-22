@@ -84,31 +84,34 @@ class AllocatedExpense extends Model implements ISummaryModel, ISummaryModelCate
         array $parameters = []
     ): array
     {
-        $collection = $this->
-            selectRaw("
+        $collection = $this
+            ->selectRaw("
                 category.id, 
                 category.name AS name, 
                 category.description AS description, 
+                currency.code AS currency_code,
                 SUM({$this->sub_table}.actualised_total) AS total, 
                 COUNT({$this->sub_table}.item_id) AS total_count, 
                 MAX({$this->sub_table}.created_at) AS last_updated
-            ")->
-            join($this->sub_table, 'item.id', "{$this->sub_table}.item_id")->
-            join("resource", "resource.id", "item.resource_id")->
-            join("resource_type", "resource_type.id", "resource.resource_type_id")->
-            join("item_category", "item_category.item_id", "item.id")->
-            join("category", "category.id", "item_category.category_id")->
-            where("category.resource_type_id", "=", $resource_type_id)->
-            where("resource_type.id", "=", $resource_type_id)->
-            where("resource.id", "=", $resource_id)->
-            where("category.id", "=", $category_id);
+            ")
+            ->join($this->sub_table, 'item.id', "{$this->sub_table}.item_id")
+            ->join("resource", "resource.id", "item.resource_id")
+            ->join("resource_type", "resource_type.id", "resource.resource_type_id")
+            ->join("item_category", "item_category.item_id", "item.id")
+            ->join("category", "category.id", "item_category.category_id")
+            ->join('currency', "{$this->sub_table}.currency_id", 'currency.id')
+            ->where("category.resource_type_id", "=", $resource_type_id)
+            ->where("resource_type.id", "=", $resource_type_id)
+            ->where("resource.id", "=", $resource_id)
+            ->where("category.id", "=", $category_id);
 
         $collection = $this->includeUnpublished($collection, $parameters);
 
-        return $collection->groupBy("item_category.category_id")->
-            orderBy("name")->
-            get()->
-            toArray();
+        return $collection
+            ->groupBy('item_category.category_id', 'currency.code')
+            ->orderBy("name")
+            ->get()
+            ->toArray();
     }
 
     /**
