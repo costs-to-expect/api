@@ -60,7 +60,8 @@ class AllocatedExpense extends Model implements ISummaryModel, ISummaryModelCate
 
         $collection = $this->includeUnpublished($collection, $parameters);
 
-        return $collection->groupBy('item_category.category_id', 'currency.code')
+        return $collection
+            ->groupBy('item_category.category_id', 'currency.code')
             ->orderBy("name")
             ->get()
             ->toArray();
