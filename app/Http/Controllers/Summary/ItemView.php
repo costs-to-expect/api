@@ -490,12 +490,9 @@ class ItemView extends Controller
                 $parameters
             );
 
-            $collection = array_map(
-                static function ($category) {
-                    return (new ItemCategoryTransformer($category))->asArray();
-                },
-                $summary
-            );
+            $entity = Entity::item($resource_type_id);
+
+            $collection = $entity->summaryTransformerByCategory($summary)->asArray();
 
             $this->assignContentToCache(
                 $summary,

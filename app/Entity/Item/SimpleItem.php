@@ -100,4 +100,10 @@ class SimpleItem extends Item
     {
         return new \App\Models\Transformers\Item\Summary\SimpleItem($data_to_transform);
     }
+
+    public function summaryTransformerByCategory(array $data_to_transform): Transformer
+    {
+        // Return default transformer, not relevant for type
+        return new \App\Models\Transformers\Item\Summary\SimpleItem($data_to_transform);
+    }
 }

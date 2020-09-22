@@ -70,6 +70,11 @@ class SimpleExpense extends Item
         return new \App\Models\Transformers\Item\Summary\ExpenseItem($data_to_transform);
     }
 
+    public function summaryTransformerByCategory(array $data_to_transform): Transformer
+    {
+        return new \App\Models\Transformers\Item\Summary\ExpenseItemByCategory($data_to_transform);
+    }
+
     public function transformer(array $data_to_transform): Transformer
     {
         return new \App\Models\Transformers\Item\SimpleExpense($data_to_transform);
