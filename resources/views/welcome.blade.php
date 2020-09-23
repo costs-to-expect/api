@@ -222,17 +222,22 @@
                     <p>The changelog below shows all the fixes and improvements we have made, to view
                         the entire changelog please check <a href="https://github.com/costs-to-expect/api/releases">here</a>.</p>
 
+                    <h3>Added</h3>
+
+                    <ul>
+                        <li>We have updated the API to support multiple currencies, we are starting with GBP, USD and EUR.</li>
+                        <li>We have added a `/currencies` route to detail the supported currencies.</li>
+                        <li>We have increased the scope of our development test suite, specifically with regards to summaries.</li>
+                    </ul>
+
                     <h3>Changed</h3>
 
                     <ul>
-                        <li>We have changed the cache which gets cleared when we create or delete a resource.</li>
-                        <li>We have added a delay for the job which clears the cache on creation or deletion of a resource type and resource.</li>
-                    </ul>
-
-                    <h3>Fixed</h3>
-
-                    <ul>
-                        <li>We have corrected a type error; the permitted user check fails because of a type error.</li>
+                        <li>We have updated our item collections. If the `item type` includes a monetary value, a currency object will be part of the response.</li>
+                        <li>We have updated the relevant item POSTs, `currency_id` is now required.</li>
+                        <li>We have updated the relevant item PATCHes, `currency_id is an allowable field.</li>
+                        <li>We have updated our item summaries, the format of the response summary objects supports multiple currencies if necessary.</li>
+                        <li>We have updated our resource type item summaries, the format of the response summary objects supports multiple currencies if necessary.</li>
                     </ul>
                 </div>
             </div>
