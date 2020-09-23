@@ -259,12 +259,9 @@ class ItemView extends Controller
                 $parameters
             );
 
-            $collection = array_map(
-                static function ($year) {
-                    return (new ItemYearTransformer($year))->asArray();
-                },
-                $summary
-            );
+            $entity = Entity::item($resource_type_id);
+
+            $collection = $entity->summaryTransformerByYear($summary)->asArray();
 
             $this->assignContentToCache(
                 $summary,
@@ -339,12 +336,9 @@ class ItemView extends Controller
                 $parameters
             );
 
-            $collection = array_map(
-                static function ($month) {
-                    return (new ItemMonthTransformer($month))->asArray();
-                },
-                $summary
-            );
+            $entity = Entity::item($resource_type_id);
+
+            $collection = $entity->summaryTransformerByMonth($summary)->asArray();
 
             $this->assignContentToCache(
                 $summary,
@@ -394,9 +388,14 @@ class ItemView extends Controller
                 $parameters
             );
 
-            $collection = [];
-            if (array_key_exists(0, $summary)) {
-                $collection = (new ItemMonthTransformer($summary[0]))->asArray();
+            $entity = Entity::item($resource_type_id);
+
+            $collection = $entity->summaryTransformerByMonth($summary)->asArray();
+
+            if (count($collection) === 1) {
+                $collection = $collection[0];
+            } else {
+                $collection = [];
             }
 
             $this->assignContentToCache(
@@ -444,9 +443,14 @@ class ItemView extends Controller
                 $parameters
             );
 
-            $collection = [];
-            if (array_key_exists(0, $summary)) {
-                $collection = (new ItemYearTransformer($summary[0]))->asArray();
+            $entity = Entity::item($resource_type_id);
+
+            $collection = $entity->summaryTransformerByYear($summary)->asArray();
+
+            if (count($collection) === 1) {
+                $collection = $collection[0];
+            } else {
+                $collection = [];
             }
 
             $this->assignContentToCache(
