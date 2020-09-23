@@ -122,6 +122,6 @@ class SimpleItem extends Item
     public function summaryTransformerByResource(array $data_to_transform): Transformer
     {
         // Return default transformer, not relevant for type
-        return new \App\Models\Transformers\Item\Summary\SimpleItem($data_to_transform);
+        return new \App\Models\Transformers\Item\Summary\SimpleItemByResource($data_to_transform);
     }
 }

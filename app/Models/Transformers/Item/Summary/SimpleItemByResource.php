@@ -12,13 +12,17 @@ use App\Models\Transformers\Transformer;
  * @copyright Dean Blackborough 2018-2020
  * @license https://github.com/costs-to-expect/api/blob/master/LICENSE
  */
-class SimpleItem extends Transformer
+class SimpleItemByResource extends Transformer
 {
     public function format(array $to_transform): void
     {
-        $this->transformed = [
-            'count' => (int) $to_transform['total_count'],
-            'total' => (int) $to_transform['total']
-        ];
+        foreach ($to_transform as $summary) {
+            $this->transformed[] = [
+                'id' => $this->hash->resource()->encode($summary['id']),
+                'name' => $summary['name'],
+                'count' => (int) $summary['total_count'],
+                'total' => (int) $summary['total']
+            ];
+        }
     }
 }
