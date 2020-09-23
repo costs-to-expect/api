@@ -41,17 +41,20 @@ class AllocatedExpense extends Model implements ISummaryModel, ISummaryModelCate
         $collection = $this
             ->selectRaw("
                 SUM({$this->sub_table}.actualised_total) AS total, 
+                currency.code AS currency_code,
                 COUNT({$this->sub_table}.item_id) AS total_count, 
                 MAX({$this->sub_table}.created_at) AS last_updated
             ")
             ->join($this->sub_table, 'item.id', "{$this->sub_table}.item_id")
             ->join('resource', 'item.resource_id', 'resource.id')
             ->join('resource_type', 'resource.resource_type_id', 'resource_type.id')
+            ->join('currency', "{$this->sub_table}.currency_id", 'currency.id')
             ->where('resource_type.id', '=', $resource_type_id);
 
         $collection = $this->includeUnpublished($collection, $parameters);
 
         return $collection
+            ->groupBy('currency.code')
             ->get()
             ->toArray();
     }
@@ -74,6 +77,7 @@ class AllocatedExpense extends Model implements ISummaryModel, ISummaryModelCate
             ->selectRaw("
                 resource.id AS id, 
                 resource.name AS `name`, 
+                currency.code AS currency_code,
                 SUM({$this->sub_table}.actualised_total) AS total, 
                 COUNT({$this->sub_table}.item_id) AS total_count, 
                 MAX({$this->sub_table}.created_at) AS last_updated"
@@ -81,12 +85,13 @@ class AllocatedExpense extends Model implements ISummaryModel, ISummaryModelCate
             ->join($this->sub_table, 'item.id', "{$this->sub_table}.item_id")
             ->join('resource', 'item.resource_id', 'resource.id')
             ->join('resource_type', 'resource.resource_type_id', 'resource_type.id')
+            ->join('currency', "{$this->sub_table}.currency_id", 'currency.id')
             ->where('resource_type.id', '=', $resource_type_id);
 
         $collection = $this->includeUnpublished($collection, $parameters);
 
         return $collection
-            ->groupBy('resource.id')
+            ->groupBy('resource.id', 'currency.code')
             ->orderBy('name')
             ->get()
             ->toArray();
@@ -109,6 +114,7 @@ class AllocatedExpense extends Model implements ISummaryModel, ISummaryModelCate
         $collection = $this
             ->selectRaw("
                 YEAR({$this->sub_table}.effective_date) as year,
+                currency.code AS currency_code,
                 SUM({$this->sub_table}.actualised_total) AS total, 
                 COUNT({$this->sub_table}.item_id) AS total_count, 
                 MAX({$this->sub_table}.created_at) AS last_updated"
@@ -116,13 +122,14 @@ class AllocatedExpense extends Model implements ISummaryModel, ISummaryModelCate
             ->join($this->sub_table, 'item.id', "{$this->sub_table}.item_id")
             ->join("resource", "resource.id", "item.resource_id")
             ->join("resource_type", "resource_type.id", "resource.resource_type_id")
+            ->join('currency', "{$this->sub_table}.currency_id", 'currency.id')
             ->where("resource_type.id", "=", $resource_type_id);
 
         $collection = $this->includeUnpublished($collection, $parameters);
 
         return $collection
-            ->groupBy("year")
-            ->orderBy("year")
+            ->groupBy('year', 'currency.code')
+            ->orderBy('year')
             ->get()
             ->toArray();
     }
@@ -146,6 +153,7 @@ class AllocatedExpense extends Model implements ISummaryModel, ISummaryModelCate
         $collection = $this
             ->selectRaw("
                 MONTH({$this->sub_table}.effective_date) as month, 
+                currency.code AS currency_code,
                 SUM({$this->sub_table}.actualised_total) AS total, 
                 COUNT({$this->sub_table}.item_id) AS total_count, 
                 MAX({$this->sub_table}.created_at) AS last_updated"
@@ -153,14 +161,15 @@ class AllocatedExpense extends Model implements ISummaryModel, ISummaryModelCate
             ->join($this->sub_table, 'item.id', "{$this->sub_table}.item_id")
             ->join("resource", "resource.id", "item.resource_id")
             ->join("resource_type", "resource_type.id", "resource.resource_type_id")
+            ->join('currency', "{$this->sub_table}.currency_id", 'currency.id')
             ->where("resource_type.id", "=", $resource_type_id)
             ->where(DB::raw("YEAR({$this->sub_table}.effective_date)"), '=', $year);
 
         $collection = $this->includeUnpublished($collection, $parameters);
 
         return $collection
-            ->groupBy("month")
-            ->orderBy("month")
+            ->groupBy('month', 'currency.code')
+            ->orderBy('month')
             ->get()
             ->toArray();
     }
@@ -186,6 +195,7 @@ class AllocatedExpense extends Model implements ISummaryModel, ISummaryModelCate
         $collection = $this
             ->selectRaw("
                 MONTH({$this->sub_table}.effective_date) as month, 
+                currency.code AS currency_code,
                 SUM({$this->sub_table}.actualised_total) AS total, 
                 COUNT({$this->sub_table}.item_id) AS total_count, 
                 MAX({$this->sub_table}.created_at) AS last_updated"
@@ -193,6 +203,7 @@ class AllocatedExpense extends Model implements ISummaryModel, ISummaryModelCate
             ->join($this->sub_table, 'item.id', "{$this->sub_table}.item_id")
             ->join("resource", "resource.id", "item.resource_id")
             ->join("resource_type", "resource_type.id", "resource.resource_type_id")
+            ->join('currency', "{$this->sub_table}.currency_id", 'currency.id')
             ->where("resource_type.id", "=", $resource_type_id)
             ->where(DB::raw("YEAR({$this->sub_table}.effective_date)"), '=', $year)
             ->where(DB::raw("MONTH({$this->sub_table}.effective_date)"), '=', $month);
@@ -200,8 +211,8 @@ class AllocatedExpense extends Model implements ISummaryModel, ISummaryModelCate
         $collection = $this->includeUnpublished($collection, $parameters);
 
         return $collection
-            ->groupBy("month")
-            ->orderBy("month")
+            ->groupBy('month', 'currency.code')
+            ->orderBy('month')
             ->get()
             ->toArray();
     }
@@ -225,6 +236,7 @@ class AllocatedExpense extends Model implements ISummaryModel, ISummaryModelCate
         $collection = $this
             ->selectRaw("
                 YEAR({$this->sub_table}.effective_date) as year, 
+                currency.code AS currency_code,
                 SUM({$this->sub_table}.actualised_total) AS total, 
                 COUNT({$this->sub_table}.item_id) AS total_count, 
                 MAX({$this->sub_table}.created_at) AS last_updated"
@@ -232,14 +244,15 @@ class AllocatedExpense extends Model implements ISummaryModel, ISummaryModelCate
             ->join($this->sub_table, 'item.id', "{$this->sub_table}.item_id")
             ->join("resource", "resource.id", "item.resource_id")
             ->join("resource_type", "resource_type.id", "resource.resource_type_id")
+            ->join('currency', "{$this->sub_table}.currency_id", 'currency.id')
             ->where("resource_type.id", "=", $resource_type_id)
             ->where(DB::raw("YEAR({$this->sub_table}.effective_date)"), '=', $year);
 
         $collection = $this->includeUnpublished($collection, $parameters);
 
         return $collection
-            ->groupBy("year")
-            ->orderBy("year")
+            ->groupBy('year', 'currency.code')
+            ->orderBy('year')
             ->get()
             ->toArray();
     }
@@ -263,6 +276,7 @@ class AllocatedExpense extends Model implements ISummaryModel, ISummaryModelCate
                 category.id, 
                 category.name AS name, 
                 category.description AS description,
+                currency.code AS currency_code,
                 SUM({$this->sub_table}.actualised_total) AS total, 
                 COUNT({$this->sub_table}.item_id) AS total_count, 
                 MAX({$this->sub_table}.created_at) AS last_updated")
@@ -271,14 +285,15 @@ class AllocatedExpense extends Model implements ISummaryModel, ISummaryModelCate
             ->join("resource_type", "resource_type.id", "resource.resource_type_id")
             ->join("item_category", "item_category.item_id", "item.id")
             ->join("category", "category.id", "item_category.category_id")
+            ->join('currency', "{$this->sub_table}.currency_id", 'currency.id')
             ->where("category.resource_type_id", "=", $resource_type_id)
             ->where("resource_type.id", "=", $resource_type_id);
 
         $collection = $this->includeUnpublished($collection, $parameters);
 
         return $collection
-            ->groupBy("category.id")
-            ->orderBy("name")
+            ->groupBy('category.id', 'currency.code')
+            ->orderBy('name')
             ->get()
             ->toArray();
     }
@@ -304,6 +319,7 @@ class AllocatedExpense extends Model implements ISummaryModel, ISummaryModelCate
                 category.id, 
                 category.name AS name, 
                 category.description, 
+                currency.code AS currency_code,
                 SUM({$this->sub_table}.actualised_total) AS total, 
                 COUNT({$this->sub_table}.item_id) AS total_count, 
                 MAX({$this->sub_table}.created_at) AS last_updated")
@@ -312,6 +328,7 @@ class AllocatedExpense extends Model implements ISummaryModel, ISummaryModelCate
             ->join("resource_type", "resource_type.id", "resource.resource_type_id")
             ->join("item_category", "item_category.item_id", "item.id")
             ->join("category", "category.id", "item_category.category_id")
+            ->join('currency', "{$this->sub_table}.currency_id", 'currency.id')
             ->where("category.resource_type_id", "=", $resource_type_id)
             ->where("resource_type.id", "=", $resource_type_id)
             ->where("category.id", '=', $category_id);
@@ -319,8 +336,8 @@ class AllocatedExpense extends Model implements ISummaryModel, ISummaryModelCate
         $collection = $this->includeUnpublished($collection, $parameters);
 
         return $collection
-            ->groupBy("category.id")
-            ->orderBy("name")
+            ->groupBy('category.id', 'currency.code')
+            ->orderBy('name')
             ->get()
             ->toArray();
     }
@@ -348,8 +365,9 @@ class AllocatedExpense extends Model implements ISummaryModel, ISummaryModelCate
     ): array
     {
         $collection = $this
-            ->selectRaw(
-                "SUM({$this->sub_table}.actualised_total) AS total, 
+            ->selectRaw("
+                SUM({$this->sub_table}.actualised_total) AS total,
+                currency.code AS currency_code, 
                 COUNT({$this->sub_table}.item_id) AS total_count, 
                 MAX({$this->sub_table}.created_at) AS last_updated")
             ->join($this->sub_table, 'item.id', "{$this->sub_table}.item_id")
@@ -359,6 +377,7 @@ class AllocatedExpense extends Model implements ISummaryModel, ISummaryModelCate
             ->join("item_sub_category", "item_sub_category.item_category_id", "item_category.id")
             ->join("category", "category.id", "item_category.category_id")
             ->join("sub_category", "sub_category.id", "item_sub_category.sub_category_id")
+            ->join('currency', "{$this->sub_table}.currency_id", 'currency.id')
             ->where("resource_type.id", "=", $resource_type_id);
 
         if ($category_id !== null) {
@@ -389,6 +408,7 @@ class AllocatedExpense extends Model implements ISummaryModel, ISummaryModelCate
         $collection = $this->includeUnpublished($collection, $parameters);
 
         return $collection
+            ->groupBy('currency.code')
             ->get()
             ->toArray();
     }
@@ -414,6 +434,7 @@ class AllocatedExpense extends Model implements ISummaryModel, ISummaryModelCate
                 sub_category.id, 
                 sub_category.name AS name, 
                 sub_category.description AS description, 
+                currency.code AS currency_code,
                 SUM({$this->sub_table}.actualised_total) AS total, 
                 COUNT({$this->sub_table}.item_id) AS total_count, 
                 MAX({$this->sub_table}.created_at) AS last_updated")
@@ -424,6 +445,7 @@ class AllocatedExpense extends Model implements ISummaryModel, ISummaryModelCate
             ->join("item_sub_category", "item_sub_category.item_category_id", "item_category.id")
             ->join("category", "category.id", "item_category.category_id")
             ->join("sub_category", "sub_category.id", "item_sub_category.sub_category_id")
+            ->join('currency', "{$this->sub_table}.currency_id", 'currency.id')
             ->where("category.resource_type_id", "=", $resource_type_id)
             ->where("resource_type.id", "=", $resource_type_id)
             ->where("category.id", "=", $category_id);
@@ -431,8 +453,8 @@ class AllocatedExpense extends Model implements ISummaryModel, ISummaryModelCate
         $collection = $this->includeUnpublished($collection, $parameters);
 
         return $collection
-            ->groupBy("sub_category.id")
-            ->orderBy("name")
+            ->groupBy('sub_category.id', 'currency.code')
+            ->orderBy('name')
             ->get()
             ->toArray();
     }
@@ -460,6 +482,7 @@ class AllocatedExpense extends Model implements ISummaryModel, ISummaryModelCate
                 sub_category.id, 
                 sub_category.name AS name, 
                 sub_category.description AS description, 
+                currency.code AS currency_code,
                 SUM($this->sub_table.actualised_total) AS total, 
                 COUNT({$this->sub_table}.item_id) AS total_count, 
                 MAX({$this->sub_table}.created_at) AS last_updated")
@@ -470,6 +493,7 @@ class AllocatedExpense extends Model implements ISummaryModel, ISummaryModelCate
             ->join("item_sub_category", "item_sub_category.item_category_id", "item_category.id")
             ->join("category", "category.id", "item_category.category_id")
             ->join("sub_category", "sub_category.id", "item_sub_category.sub_category_id")
+            ->join('currency', "{$this->sub_table}.currency_id", 'currency.id')
             ->where("category.resource_type_id", "=", $resource_type_id)
             ->where("resource_type.id", "=", $resource_type_id)
             ->where("category.id", "=", $category_id)
@@ -478,8 +502,8 @@ class AllocatedExpense extends Model implements ISummaryModel, ISummaryModelCate
         $collection = $this->includeUnpublished($collection, $parameters);
 
         return $collection
-            ->groupBy("sub_category.id")
-            ->orderBy("name")
+            ->groupBy('sub_category.id', 'currency.code')
+            ->orderBy('name')
             ->get()
             ->toArray();
     }
