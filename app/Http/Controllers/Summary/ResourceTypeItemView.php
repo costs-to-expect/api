@@ -336,12 +336,9 @@ class ResourceTypeItemView extends Controller
                 $parameters
             );
 
-            $collection = array_map(
-                static function ($resource) {
-                    return (new ResourceTypeItemResourceTransformer($resource))->asArray();
-                },
-                $summary
-            );
+            $entity = Entity::item($resource_type_id);
+
+            $collection = $entity->summaryTransformerByResource($summary)->asArray();
 
             $this->assignContentToCache(
                 $summary,

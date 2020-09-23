@@ -156,6 +156,8 @@ abstract class Item
 
     abstract public function summaryTransformerByMonth(array $data_to_transform): Transformer;
 
+    abstract public function summaryTransformerByResource(array $data_to_transform): Transformer;
+
     abstract public function table(): string;
 
     abstract public function transformer(array $data_to_transform): Transformer;
