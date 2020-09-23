@@ -34,19 +34,20 @@ class SimpleItem extends Model implements ISummaryModel
         array $parameters
     ): array
     {
-        $collection = $this->selectRaw("
+        $collection = $this
+            ->selectRaw("
                 SUM({$this->sub_table}.quantity) AS total, 
                 COUNT({$this->sub_table}.item_id) AS total_count, 
                 MAX({$this->sub_table}.created_at) AS last_updated
-            ")->
-            join($this->sub_table, 'item.id', "{$this->sub_table}.item_id")->
-            join('resource', 'item.resource_id', 'resource.id')->
-            join('resource_type', 'resource.resource_type_id', 'resource_type.id')->
-            where('resource_type.id', '=', $resource_type_id);
+            ")
+            ->join($this->sub_table, 'item.id', "{$this->sub_table}.item_id")
+            ->join('resource', 'item.resource_id', 'resource.id')
+            ->join('resource_type', 'resource.resource_type_id', 'resource_type.id')
+            ->where('resource_type.id', '=', $resource_type_id);
 
-        return $collection->
-            get()->
-            toArray();
+        return $collection
+            ->get()
+            ->toArray();
     }
 
     /**
@@ -63,22 +64,24 @@ class SimpleItem extends Model implements ISummaryModel
         array $parameters
     ): array
     {
-        $collection = $this->selectRaw("
+        $collection = $this
+            ->selectRaw("
                 resource.id AS id, 
                 resource.name AS `name`, 
                 SUM({$this->sub_table}.quantity) AS total, 
                 COUNT({$this->sub_table}.item_id) AS total_count, 
                 MAX({$this->sub_table}.created_at) AS last_updated"
-            )->
-            join($this->sub_table, 'item.id', "{$this->sub_table}.item_id")->
-            join('resource', 'item.resource_id', 'resource.id')->
-            join('resource_type', 'resource.resource_type_id', 'resource_type.id')->
-            where('resource_type.id', '=', $resource_type_id);
+            )
+            ->join($this->sub_table, 'item.id', "{$this->sub_table}.item_id")
+            ->join('resource', 'item.resource_id', 'resource.id')
+            ->join('resource_type', 'resource.resource_type_id', 'resource_type.id')
+            ->where('resource_type.id', '=', $resource_type_id);
 
-        return $collection->groupBy('resource.id')->
-            orderBy('name')->
-            get()->
-            toArray();
+        return $collection
+            ->groupBy('resource.id')
+            ->orderBy('name')
+            ->get()
+            ->toArray();
     }
 
     /**
@@ -101,16 +104,16 @@ class SimpleItem extends Model implements ISummaryModel
         array $search_parameters = []
     ): array
     {
-        $collection = $this->
-            selectRaw("
+        $collection = $this
+            ->selectRaw("
                 SUM({$this->sub_table}.quantity) AS total, 
                 COUNT({$this->sub_table}.item_id) AS total_count, 
                 MAX({$this->sub_table}.created_at) AS last_updated
-            ")->
-            join($this->sub_table, 'item.id', "{$this->sub_table}.item_id")->
-            join("resource", "resource.id", "item.resource_id")->
-            join("resource_type", "resource_type.id", "resource.resource_type_id")->
-            where("resource_type.id", "=", $resource_type_id);
+            ")
+            ->join($this->sub_table, 'item.id', "{$this->sub_table}.item_id")
+            ->join("resource", "resource.id", "item.resource_id")
+            ->join("resource_type", "resource_type.id", "resource.resource_type_id")
+            ->where("resource_type.id", "=", $resource_type_id);
 
         if (count($search_parameters) > 0) {
             foreach ($search_parameters as $field => $search_term) {
@@ -118,7 +121,8 @@ class SimpleItem extends Model implements ISummaryModel
             }
         }
 
-        return $collection->get()->
-            toArray();
+        return $collection
+            ->get()
+            ->toArray();
     }
 }
