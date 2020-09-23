@@ -716,14 +716,12 @@ class ItemView extends Controller
                 $filter_parameters
             );
 
-            $total = '0.00';
-            if (array_key_exists(0, $summary) && array_key_exists('total', $summary[0])) {
-                $total = number_format($summary[0]['total'], 2, '.', '');
-            }
+            $entity = Entity::item($resource_type_id);
 
-            $collection = [
-                'total' => $total
-            ];
+            $collection = [];
+            foreach ($summary as $subtotal) {
+                $collection[] = $entity->summaryTransformer($subtotal)->asArray();
+            }
 
             $this->assignContentToCache(
                 $summary,
