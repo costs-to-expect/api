@@ -107,6 +107,12 @@ class SimpleItem extends Item
         return new \App\Models\Transformers\Item\Summary\SimpleItem($data_to_transform);
     }
 
+    public function summaryTransformerBySubcategory(array $data_to_transform): Transformer
+    {
+        // Return default transformer, not relevant for type
+        return new \App\Models\Transformers\Item\Summary\SimpleItem($data_to_transform);
+    }
+
     public function summaryTransformerByMonth(array $data_to_transform): Transformer
     {
         // Return default transformer, not relevant for type

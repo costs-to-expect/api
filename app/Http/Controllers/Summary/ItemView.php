@@ -541,7 +541,7 @@ class ItemView extends Controller
 
             $entity = Entity::item($resource_type_id);
 
-            $collection = $entity->summaryTransformerByCategory($summary)->asArray();
+            $collection = $entity->summaryTransformerBySubcategory($summary)->asArray();
 
             $this->assignContentToCache(
                 $summary,
@@ -593,7 +593,7 @@ class ItemView extends Controller
 
             $entity = Entity::item($resource_type_id);
 
-            $collection = $entity->summaryTransformerByCategory($summary)->asArray();
+            $collection = $entity->summaryTransformerBySubcategory($summary)->asArray();
 
             if (count($collection) === 1) {
                 $collection = $collection[0];

@@ -152,6 +152,8 @@ abstract class Item
 
     abstract public function summaryTransformerByCategory(array $data_to_transform): Transformer;
 
+    abstract public function summaryTransformerBySubcategory(array $data_to_transform): Transformer;
+
     abstract public function summaryTransformerByYear(array $data_to_transform): Transformer;
 
     abstract public function summaryTransformerByMonth(array $data_to_transform): Transformer;
