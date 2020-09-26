@@ -228,6 +228,7 @@
                         <li>We have updated the API to support multiple currencies, we are starting with GBP, USD and EUR.</li>
                         <li>We have added a `/currencies` route to detail the supported currencies.</li>
                         <li>We have increased the scope of our development test suite, specifically with regards to summaries.</li>
+                        <li>We have added a `/queue` route to show the number of jobs in the queue.</li>
                     </ul>
 
                     <h3>Changed</h3>

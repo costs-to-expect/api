@@ -7,6 +7,7 @@ The complete changelog for the Costs to Expect REST API, our changelog follows t
 - We have updated the API to support multiple currencies, we are starting with GBP, USD and EUR.
 - We have added a `/currencies` route to detail the supported currencies.
 - We have increased the scope of our development test suite, specifically with regards to summaries.
+- We have added a `/queue` route to show the number of jobs in the queue.
 
 ### Changed
 - We have updated our item collections. If the `item type` includes a monetary value, a currency object will be part of the response.
