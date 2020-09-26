@@ -74,6 +74,26 @@ Route::group(
         );
 
         Route::get(
+            'queue',
+            'QueueView@index'
+        );
+
+        Route::options(
+            'queue',
+            'QueueView@optionsIndex'
+        );
+
+        Route::get(
+            'queue/{queue_id}',
+            'QueueView@show'
+        );
+
+        Route::options(
+            'queue/{queue_id}',
+            'QueueView@optionsShow'
+        );
+
+        Route::get(
             'resource-types',
             'ResourceTypeView@index'
         );

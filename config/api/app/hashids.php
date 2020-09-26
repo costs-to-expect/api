@@ -16,5 +16,6 @@ return [
     'item-type' => env('APP_HASH_SALT_ITEM_TYPE'),
     'permitted-user' => env('APP_HASH_SALT_PERMITTED_USER'),
     'user' => env('APP_HASH_SALT_USER'),
-    'currency' => env('APP_HASH_SALT_CURRENCY')
+    'currency' => env('APP_HASH_SALT_CURRENCY'),
+    'queue' => env('APP_HASH_SALT_QUEUE'),
 ];

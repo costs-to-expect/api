@@ -222,6 +222,21 @@ class ResourceTypeAccess extends Model
     }
 
     /**
+     * Validate that the queue id
+     *
+     * @param integer $id
+     *
+     * @return boolean
+     */
+    public function queueExistsToUser(int $id): bool
+    {
+        $collection = $this->from('jobs')->
+        where('jobs.id', '=', $id);
+
+        return count($collection->get()) === 1;
+    }
+
+    /**
      * Fetch all the resource types the user has access to
      *
      * @param integer $user_id

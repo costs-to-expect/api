@@ -13,5 +13,6 @@ return [
     'item-subcategory' => 'Assigned Subcategory',
     'item-transfer' => 'Item Transfer',
     'item-type' => 'Item type',
-    'currency' => 'Currency'
+    'currency' => 'Currency',
+    'queue' => 'Queue job',
 ];

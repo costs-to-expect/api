@@ -173,44 +173,39 @@ class Control
         $this->ttl = $seconds;
     }
 
-    /**
-     * Set the ttl to one year
-     */
     public function setTtlOneYear(): void
     {
         $this->setTtl(31536000);
     }
 
-    /**
-     * Set the ttl to one month
-     */
     public function setTtlOneMonth(): void
     {
         $this->setTtl(2592000);
     }
 
-    /**
-     * Set the ttl to one week
-     */
     public function setTtlOneWeek(): void
     {
         $this->setTtl(604800);
     }
 
-    /**
-     * Set the ttl to one day
-     */
     public function setTtlOneDay(): void
     {
         $this->setTtl(86400);
     }
 
-    /**
-     * Set the ttl to one hour
-     */
     public function setTtlOneHour(): void
     {
         $this->setTtl(3600);
+    }
+
+    public function setTtlFivesMinutes(): void
+    {
+        $this->setTtl(300);
+    }
+
+    public function setTtlOneMinute(): void
+    {
+        $this->setTtl(60);
     }
 
     /**

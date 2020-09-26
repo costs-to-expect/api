@@ -292,6 +292,21 @@ class Validate
      * Validate the route, checks the route parameters based on the users
      * permitted resource types
      *
+     * (In this case that doesn't happen as anyone can see the queue)
+     *
+     * @param $queue_id
+     */
+    public static function queue($queue_id)
+    {
+        if (Validator\Queue::existsToUserForViewing((int) $queue_id) === false) {
+            \App\Response\Responses::notFound(trans('entities.queue'));
+        }
+    }
+
+    /**
+     * Validate the route, checks the route parameters based on the users
+     * permitted resource types
+     *
      * @param $resource_type_id
      * @param $resource_id
      * @param $item_id

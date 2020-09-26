@@ -50,6 +50,7 @@ class Hash
         $this->hashers['permitted-user'] = new Hashids($config['permitted-user'], $min_length);
         $this->hashers['user'] = new Hashids($config['user'], $min_length);
         $this->hashers['currency'] = new Hashids($config['currency'], $min_length);
+        $this->hashers['queue'] = new Hashids($config['queue'], $min_length);
     }
 
     /**
@@ -150,5 +151,10 @@ class Hash
     public function currency(): Hashids
     {
         return $this->hashers['currency'];
+    }
+
+    public function queue(): Hashids
+    {
+        return $this->hashers['queue'];
     }
 }
