@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace App\Models\Item;
 
 use App\Interfaces\Item\IModel;
+use App\Models\Currency;
 use App\Request\Validate\Boolean;
 use App\Models\Clause;
 use Illuminate\Database\Query\Builder as QueryBuilder;
@@ -25,6 +26,11 @@ class AllocatedExpense extends Model implements IModel
     protected $guarded = ['id', 'actualised_total'];
 
     public $timestamps = false;
+
+    public function currency()
+    {
+        return $this->hasOne(Currency::class, 'id', 'currency_id');
+    }
 
     public function setActualisedTotal($total, $percentage)
     {
@@ -61,6 +67,9 @@ class AllocatedExpense extends Model implements IModel
             "item.id AS item_id",
             "{$this->table}.name AS item_name",
             "{$this->table}.description AS item_description",
+            "currency.id AS item_currency_id",
+            "currency.code AS item_currency_code",
+            "currency.name AS item_currency_name",
             "{$this->table}.effective_date AS item_effective_date",
             "{$this->table}.total AS item_total",
             "{$this->table}.percentage AS item_percentage",
@@ -72,6 +81,7 @@ class AllocatedExpense extends Model implements IModel
         $result = $this->from('item')->
             join('item_type_allocated_expense', 'item.id', 'item_type_allocated_expense.item_id')->
             join('resource', 'item.resource_id', 'resource.id')->
+            join('currency', 'item_type_allocated_expense.currency_id', 'currency.id')->
             where('resource_id', '=', $resource_id)->
             where('resource.resource_type_id', '=', $resource_type_id)->
             where('item_type_allocated_expense.item_id', '=', $item_id)->
@@ -173,6 +183,9 @@ class AllocatedExpense extends Model implements IModel
             'item_description' => $item_type->description,
             'item_effective_date' => $item_type->effective_date,
             'item_publish_after' => $item_type->publish_after,
+            'item_currency_id' => $item_type->currency->id,
+            'item_currency_code' => $item_type->currency->code,
+            'item_currency_name' => $item_type->currency->name,
             'item_total' => $item_type->total,
             'item_percentage' => $item_type->percentage,
             'item_actualised_total' => $item_type->actualised_total,
@@ -292,6 +305,9 @@ class AllocatedExpense extends Model implements IModel
             "{$this->table}.name AS item_name",
             "{$this->table}.description AS item_description",
             "{$this->table}.effective_date AS item_effective_date",
+            "currency.id AS item_currency_id",
+            "currency.code AS item_currency_code",
+            "currency.name AS item_currency_name",
             "{$this->table}.total AS item_total",
             "{$this->table}.percentage AS item_percentage",
             "{$this->table}.actualised_total AS item_actualised_total",
@@ -304,6 +320,7 @@ class AllocatedExpense extends Model implements IModel
 
         $collection = $this->from('item')->
             join('item_type_allocated_expense', 'item.id', 'item_type_allocated_expense.item_id')->
+            join('currency', 'item_type_allocated_expense.currency_id', 'currency.id')->
             join('resource', 'item.resource_id', 'resource.id')->
             where('resource_id', '=', $resource_id)->
             where('resource.resource_type_id', '=', $resource_type_id);

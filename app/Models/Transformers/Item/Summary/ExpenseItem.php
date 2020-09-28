@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Models\Transformers\Summary;
+namespace App\Models\Transformers\Item\Summary;
 
 use App\Models\Transformers\Transformer;
 
@@ -12,15 +12,16 @@ use App\Models\Transformers\Transformer;
  * @copyright Dean Blackborough 2018-2020
  * @license https://github.com/costs-to-expect/api/blob/master/LICENSE
  */
-class ResourceTypeItemSubcategory extends Transformer
+class ExpenseItem extends Transformer
 {
     public function format(array $to_transform): void
     {
         $this->transformed = [
-            'id' => $this->hash->subCategory()->encode($to_transform['id']),
-            'name' => $to_transform['name'],
-            'description' => $to_transform['description'],
-            'total' => number_format((float) $to_transform['total'], 2, '.', '')
+            'currency' => [
+                'code' => $to_transform['currency_code']
+            ],
+            'count' => $to_transform['total_count'],
+            'subtotal' => number_format((float) $to_transform['total'], 2, '.', '')
         ];
     }
 }

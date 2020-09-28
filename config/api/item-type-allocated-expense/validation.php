@@ -22,6 +22,10 @@ return [
                 'sometimes',
                 'date_format:Y-m-d'
             ],
+            'currency_id' => [
+                'required',
+                'exists:currency,id'
+            ],
             'total' => [
                 'required',
                 'string',
@@ -36,7 +40,9 @@ return [
             ]
         ],
         'messages' => [
-            'total.regex' => 'item-type-allocated-expense/validation.total-regex'
+            'total.regex' => 'item-type-allocated-expense/validation.total-regex',
+            'currency_id.required' => 'item-type-allocated-expense/validation.currency_id-required',
+            'currency_id.exists' => 'item-type-allocated-expense/validation.currency_id-exists'
         ]
     ],
     'PATCH' => [
@@ -60,6 +66,10 @@ return [
                 'nullable',
                 'date_format:Y-m-d'
             ],
+            'currency_id' => [
+                'sometimes',
+                'exists:currency,id'
+            ],
             'total' => [
                 'sometimes',
                 'string',
@@ -72,7 +82,8 @@ return [
             ]
         ],
         'messages' => [
-            'total.regex' => 'item-type-allocated-expense/validation.total-regex'
+            'total.regex' => 'item-type-allocated-expense/validation.total-regex',
+            'currency_id.exists' => 'item-type-allocated-expense/validation.currency_id-exists'
         ]
     ]
 ];

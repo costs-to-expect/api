@@ -82,9 +82,29 @@ abstract class Validator
      */
     abstract public function update(array $options = []): ?\Illuminate\Contracts\Validation\Validator;
 
-    /**
-     * @return \Illuminate\Contracts\Validation\Validator
-     */
+    protected function createExpenseItemValidator(): \Illuminate\Contracts\Validation\Validator
+    {
+        $decode = $this->hash->currency()->decode(request()->input('currency_id'));
+        $currency_id = null;
+        if (count($decode) === 1) {
+            $currency_id = $decode[0];
+        }
+
+        $messages = [];
+        foreach ($this->entity->postValidationMessages() as $key => $custom_message) {
+            $messages[$key] = trans($custom_message);
+        }
+
+        return ValidatorFacade::make(
+            array_merge(
+                request()->all(),
+                ['currency_id' => $currency_id]
+            ),
+            $this->entity->postValidation(),
+            $messages
+        );
+    }
+
     protected function createItemValidator(): \Illuminate\Contracts\Validation\Validator
     {
         $messages = [];
@@ -99,9 +119,34 @@ abstract class Validator
         );
     }
 
-    /**
-     * @return \Illuminate\Contracts\Validation\Validator
-     */
+    public function updateExpenseItemValidator(): ?\Illuminate\Contracts\Validation\Validator
+    {
+        $merge_array = [];
+        if (array_key_exists('currency_id', request()->all())) {
+            $decode = $this->hash->currency()->decode(request()->input('currency_id'));
+            $currency_id = null;
+            if (count($decode) === 1) {
+                $currency_id = $decode[0];
+            }
+
+            $merge_array = ['currency_id' => $currency_id];
+        }
+
+        $messages = [];
+        foreach ($this->entity->patchValidationMessages() as $key => $custom_message) {
+            $messages[$key] = trans($custom_message);
+        }
+
+        return ValidatorFacade::make(
+            array_merge(
+                request()->all(),
+                $merge_array
+            ),
+            $this->entity->patchValidation(),
+            $messages
+        );
+    }
+
     public function updateItemValidator(): ?\Illuminate\Contracts\Validation\Validator
     {
         $messages = [];

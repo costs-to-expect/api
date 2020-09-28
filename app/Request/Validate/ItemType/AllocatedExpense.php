@@ -31,7 +31,7 @@ class AllocatedExpense extends BaseValidator
      */
     public function create(array $options = []): \Illuminate\Contracts\Validation\Validator
     {
-        return $this->createItemValidator();
+        return $this->createExpenseItemValidator();
     }
 
     /**
@@ -43,6 +43,6 @@ class AllocatedExpense extends BaseValidator
      */
     public function update(array $options = []): ?\Illuminate\Contracts\Validation\Validator
     {
-        return $this->updateItemValidator();
+        return $this->updateExpenseItemValidator();
     }
 }

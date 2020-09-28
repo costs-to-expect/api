@@ -215,7 +215,8 @@ class ItemView extends Controller
             $this->permitted_resource_types,
             $this->include_public,
             $entity->requestParameters(),
-            $defined_parameters
+            $defined_parameters,
+            ($entity->type() !== 'simple-item')
         );
 
         $response = new ItemCollection($permissions);
@@ -265,9 +266,15 @@ class ItemView extends Controller
             return \App\Response\Responses::notFound(trans('entities.item'));
         }
 
+        $allowed_values = [];
+        if ($entity->type() !== 'simple-item') {
+            $allowed_values = (new \App\Option\AllowedValues\Currency())->allowedValues();
+        }
+
         $response = new ItemItem($permissions);
 
         return $response->setEntity($entity)
+            ->setAllowedValues($allowed_values)
             ->create()
             ->response();
     }

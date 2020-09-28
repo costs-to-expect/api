@@ -45,7 +45,7 @@ class ResourceTypeItem extends Transformer
                 array_key_exists('subcategory_name', $to_transform) === true
             ) {
                 $item['subcategory'] = [
-                    'id' => $this->hash->subCategory()->encode($to_transform['subcategory_id']),
+                    'id' => $this->hash->subcategory()->encode($to_transform['subcategory_id']),
                     'name' => $to_transform['subcategory_name'],
                     'description' => $to_transform['subcategory_description']
                 ];

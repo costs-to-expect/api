@@ -9,11 +9,6 @@ use App\Response\Cache;
 use App\Request\Parameter;
 use App\Request\Route;
 use App\Request\Validate\Boolean;
-use App\Models\Transformers\Summary\ResourceTypeItemCategory as ResourceTypeItemCategoryTransformer;
-use App\Models\Transformers\Summary\ResourceTypeItemMonth as ResourceTypeItemMonthTransformer;
-use App\Models\Transformers\Summary\ResourceTypeItemResource as ResourceTypeItemResourceTransformer;
-use App\Models\Transformers\Summary\ResourceTypeItemSubcategory as ResourceTypeItemSubcategoryTransformer;
-use App\Models\Transformers\Summary\ResourceTypeItemYear as ResourceTypeItemYearTransformer;
 use App\Response\Header\Headers;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\JsonResponse;
@@ -288,14 +283,12 @@ class ResourceTypeItemView extends Controller
                 $parameters
             );
 
-            $total = '0.00';
-            if (array_key_exists(0, $summary) && array_key_exists('total', $summary[0])) {
-                $total = number_format($summary[0]['total'], 2, '.', '');
-            }
+            $entity = Entity::item($resource_type_id);
 
-            $collection = [
-                'total' => $total
-            ];
+            $collection = [];
+            foreach ($summary as $subtotal) {
+                $collection[] = $entity->summaryTransformer($subtotal)->asArray();
+            }
 
             $this->assignContentToCache(
                 $summary,
@@ -338,12 +331,9 @@ class ResourceTypeItemView extends Controller
                 $parameters
             );
 
-            $collection = array_map(
-                static function ($resource) {
-                    return (new ResourceTypeItemResourceTransformer($resource))->asArray();
-                },
-                $summary
-            );
+            $entity = Entity::item($resource_type_id);
+
+            $collection = $entity->summaryTransformerByResource($summary)->asArray();
 
             $this->assignContentToCache(
                 $summary,
@@ -386,12 +376,9 @@ class ResourceTypeItemView extends Controller
                 $parameters
             );
 
-            $collection = array_map(
-                static function ($year) {
-                    return (new ResourceTypeItemYearTransformer($year))->asArray();
-                },
-                $summary
-            );
+            $entity = Entity::item($resource_type_id);
+
+            $collection = $entity->summaryTransformerByYear($summary)->asArray();
 
             $this->assignContentToCache(
                 $summary,
@@ -437,9 +424,14 @@ class ResourceTypeItemView extends Controller
                 $parameters
             );
 
-            $collection = [];
-            if (array_key_exists(0, $summary)) {
-                $collection = (new ResourceTypeItemYearTransformer($summary[0]))->asArray();
+            $entity = Entity::item($resource_type_id);
+
+            $collection = $entity->summaryTransformerByYear($summary)->asArray();
+
+            if (count($collection) === 1) {
+                $collection = $collection[0];
+            } else {
+                $collection = [];
             }
 
             $this->assignContentToCache(
@@ -486,12 +478,9 @@ class ResourceTypeItemView extends Controller
                 $parameters
             );
 
-            $collection = array_map(
-                static function ($month) {
-                    return (new ResourceTypeItemMonthTransformer($month))->asArray();
-                },
-                $summary
-            );
+            $entity = Entity::item($resource_type_id);
+
+            $collection = $entity->summaryTransformerByMonth($summary)->asArray();
 
             $this->assignContentToCache(
                 $summary,
@@ -540,9 +529,14 @@ class ResourceTypeItemView extends Controller
                 $parameters
             );
 
-            $collection = [];
-            if (array_key_exists(0, $summary)) {
-                $collection = (new ResourceTypeItemMonthTransformer($summary[0]))->asArray();
+            $entity = Entity::item($resource_type_id);
+
+            $collection = $entity->summaryTransformerByMonth($summary)->asArray();
+
+            if (count($collection) === 1) {
+                $collection = $collection[0];
+            } else {
+                $collection = [];
             }
 
             $this->assignContentToCache(
@@ -586,12 +580,9 @@ class ResourceTypeItemView extends Controller
                 $parameters
             );
 
-            $collection = array_map(
-                static function ($category) {
-                    return (new ResourceTypeItemCategoryTransformer($category))->asArray();
-                },
-                $summary
-            );
+            $entity = Entity::item($resource_type_id);
+
+            $collection = $entity->summaryTransformerByCategory($summary)->asArray();
 
             $this->assignContentToCache(
                 $summary,
@@ -637,9 +628,14 @@ class ResourceTypeItemView extends Controller
                 $parameters
             );
 
-            $collection = [];
-            if (array_key_exists(0, $summary)) {
-                $collection = (new ResourceTypeItemCategoryTransformer($summary[0]))->asArray();
+            $entity = Entity::item($resource_type_id);
+
+            $collection = $entity->summaryTransformerByCategory($summary)->asArray();
+
+            if (count($collection) === 1) {
+                $collection = $collection[0];
+            } else {
+                $collection = [];
             }
 
             $this->assignContentToCache(
@@ -700,14 +696,12 @@ class ResourceTypeItemView extends Controller
                 $filter_parameters
             );
 
-            $total = '0.00';
-            if (array_key_exists(0, $summary) && array_key_exists('total', $summary[0])) {
-                $total = number_format($summary[0]['total'], 2, '.', '');
-            }
+            $entity = Entity::item($resource_type_id);
 
-            $collection = [
-                'total' => $total
-            ];
+            $collection = [];
+            foreach ($summary as $subtotal) {
+                $collection[] = $entity->summaryTransformer($subtotal)->asArray();
+            }
 
             $this->assignContentToCache(
                 $summary,
@@ -753,12 +747,9 @@ class ResourceTypeItemView extends Controller
                 $parameters
             );
 
-            $collection = array_map(
-                static function ($category) {
-                    return (new ResourceTypeItemSubcategoryTransformer($category))->asArray();
-                },
-                $summary
-            );
+            $entity = Entity::item($resource_type_id);
+
+            $collection = $entity->summaryTransformerBySubcategory($summary)->asArray();
 
             $this->assignContentToCache(
                 $summary,
@@ -807,9 +798,14 @@ class ResourceTypeItemView extends Controller
                 $parameters
             );
 
-            $collection = [];
-            if (array_key_exists(0, $summary)) {
-                $collection = (new ResourceTypeItemSubcategoryTransformer($summary[0]))->asArray();
+            $entity = Entity::item($resource_type_id);
+
+            $collection = $entity->summaryTransformerBySubcategory($summary)->asArray();
+
+            if (count($collection) === 1) {
+                $collection = $collection[0];
+            } else {
+                $collection = [];
             }
 
             $this->assignContentToCache(

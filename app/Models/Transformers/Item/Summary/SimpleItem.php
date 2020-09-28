@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Models\Transformers\ItemType;
+namespace App\Models\Transformers\Item\Summary;
 
 use App\Models\Transformers\Transformer;
 
@@ -17,12 +17,8 @@ class SimpleItem extends Transformer
     public function format(array $to_transform): void
     {
         $this->transformed = [
-            'id' => $this->hash->item()->encode($to_transform['item_id']),
-            'name' => $to_transform['item_name'],
-            'description' => $to_transform['item_description'],
-            'quantity' => (int) $to_transform['item_quantity'],
-            'created' => $to_transform['item_created_at'],
-            'updated' => $to_transform['item_updated_at']
+            'count' => (int) $to_transform['total_count'],
+            'total' => (int) $to_transform['total']
         ];
     }
 }

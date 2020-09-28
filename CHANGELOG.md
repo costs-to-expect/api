@@ -2,6 +2,20 @@
 
 The complete changelog for the Costs to Expect REST API, our changelog follows the format defined at https://keepachangelog.com/en/1.0.0/
 
+## [v2.14.0] - 2020-09-27
+### Added
+- We have updated the API to support multiple currencies, we are starting with GBP, USD and EUR.
+- We have added a `/currencies` route to detail the supported currencies.
+- We have increased the scope of our development test suite, specifically with regards to summaries.
+- We have added a `/queue` route to show the number of jobs in the queue.
+
+### Changed
+- We have updated our item collections. If the `item type` includes a monetary value, a currency object will be part of the response.
+- We have updated the relevant item POSTs, `currency_id` is now required.
+- We have updated the relevant item PATCHes, `currency_id is an allowable field.
+- We have updated our item summaries, the format of the response summary objects supports multiple currencies if necessary.
+- We have updated our resource type item summaries, the format of the response summary objects supports multiple currencies if necessary.
+
 ## [v2.13.1] - 2020-09-17
 ### Changed
 - We have changed the cache which gets cleared when we create or delete a resource.

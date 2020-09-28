@@ -36,27 +36,30 @@ class SimpleExpense extends Model implements ISummaryModel, ISummaryModelCategor
         array $parameters = []
     ): array
     {
-        $collection = $this->
-            selectRaw("
+        $collection = $this
+            ->selectRaw("
                 category.id, 
                 category.name AS name, 
                 category.description AS description,
+                currency.code AS currency_code,
                 SUM({$this->sub_table}.total) AS total, 
                 COUNT({$this->sub_table}.item_id) AS total_count, 
-                MAX({$this->sub_table}.created_at) AS last_updated")->
-            join($this->sub_table, 'item.id', "{$this->sub_table}.item_id")->
-            join("resource", "resource.id", "item.resource_id")->
-            join("resource_type", "resource_type.id", "resource.resource_type_id")->
-            join("item_category", "item_category.item_id", "item.id")->
-            join("category", "category.id", "item_category.category_id")->
-            where("category.resource_type_id", "=", $resource_type_id)->
-            where("resource_type.id", "=", $resource_type_id)->
-            where("resource.id", "=", $resource_id);
+                MAX({$this->sub_table}.created_at) AS last_updated")
+            ->join($this->sub_table, 'item.id', "{$this->sub_table}.item_id")
+            ->join("resource", "resource.id", "item.resource_id")
+            ->join("resource_type", "resource_type.id", "resource.resource_type_id")
+            ->join("item_category", "item_category.item_id", "item.id")
+            ->join("category", "category.id", "item_category.category_id")
+            ->join('currency', "{$this->sub_table}.currency_id", 'currency.id')
+            ->where("category.resource_type_id", "=", $resource_type_id)
+            ->where("resource_type.id", "=", $resource_type_id)
+            ->where("resource.id", "=", $resource_id);
 
-        return $collection->groupBy("item_category.category_id")->
-            orderBy("name")->
-            get()->
-            toArray();
+        return $collection
+            ->groupBy('item_category.category_id', 'currency.code')
+            ->orderBy("name")
+            ->get()
+            ->toArray();
     }
 
     /**
@@ -76,29 +79,32 @@ class SimpleExpense extends Model implements ISummaryModel, ISummaryModelCategor
         array $parameters = []
     ): array
     {
-        $collection = $this->
-            selectRaw("
+        $collection = $this
+            ->selectRaw("
                 category.id, 
                 category.name AS name, 
                 category.description AS description, 
+                currency.code AS currency_code,
                 SUM({$this->sub_table}.total) AS total, 
                 COUNT({$this->sub_table}.item_id) AS total_count,
                 MAX({$this->sub_table}.created_at) AS last_updated
-            ")->
-            join($this->sub_table, 'item.id', "{$this->sub_table}.item_id")->
-            join("resource", "resource.id", "item.resource_id")->
-            join("resource_type", "resource_type.id", "resource.resource_type_id")->
-            join("item_category", "item_category.item_id", "item.id")->
-            join("category", "category.id", "item_category.category_id")->
-            where("category.resource_type_id", "=", $resource_type_id)->
-            where("resource_type.id", "=", $resource_type_id)->
-            where("resource.id", "=", $resource_id)->
-            where("category.id", "=", $category_id);
+            ")
+            ->join($this->sub_table, 'item.id', "{$this->sub_table}.item_id")
+            ->join("resource", "resource.id", "item.resource_id")
+            ->join("resource_type", "resource_type.id", "resource.resource_type_id")
+            ->join("item_category", "item_category.item_id", "item.id")
+            ->join("category", "category.id", "item_category.category_id")
+            ->join('currency', "{$this->sub_table}.currency_id", 'currency.id')
+            ->where("category.resource_type_id", "=", $resource_type_id)
+            ->where("resource_type.id", "=", $resource_type_id)
+            ->where("resource.id", "=", $resource_id)
+            ->where("category.id", "=", $category_id);
 
-        return $collection->groupBy("item_category.category_id")->
-            orderBy("name")->
-            get()->
-            toArray();
+        return $collection
+            ->groupBy('item_category.category_id', 'currency.code')
+            ->orderBy("name")
+            ->get()
+            ->toArray();
     }
 
     /**
@@ -128,21 +134,24 @@ class SimpleExpense extends Model implements ISummaryModel, ISummaryModelCategor
         array $filter_parameters = []
     ): array
     {
-        $collection = $this->
-            selectRaw("
+        $collection = $this
+            ->selectRaw("
+                currency.code AS currency_code,
                 SUM({$this->sub_table}.total) AS total, 
                 COUNT({$this->sub_table}.item_id) AS total_count,
                 MAX({$this->sub_table}.created_at) AS last_updated
-            ")->
-            join($this->sub_table, 'item.id', "{$this->sub_table}.item_id")->
-            join("resource", "resource.id", "item.resource_id")->
-            join("resource_type", "resource_type.id", "resource.resource_type_id")->
-            join("item_category", "item_category.item_id", "item.id")->
-            join("item_sub_category", "item_sub_category.item_category_id", "item_category.id")->
-            join("category", "category.id", "item_category.category_id")->
-            join("sub_category", "sub_category.id", "item_sub_category.sub_category_id")->
-            where("resource_type.id", "=", $resource_type_id)->
-            where("resource.id", "=", $resource_id);
+            ")
+            ->join($this->sub_table, 'item.id', "{$this->sub_table}.item_id")
+            ->join("resource", "resource.id", "item.resource_id")
+            ->join("resource_type", "resource_type.id", "resource.resource_type_id")
+            ->join("item_category", "item_category.item_id", "item.id")
+            ->join("item_sub_category", "item_sub_category.item_category_id", "item_category.id")
+            ->join("category", "category.id", "item_category.category_id")
+            ->join("sub_category", "sub_category.id", "item_sub_category.sub_category_id")
+            ->join('currency', "{$this->sub_table}.currency_id", 'currency.id')
+            ->where("resource_type.id", "=", $resource_type_id)
+            ->where("resource.id", "=", $resource_id)
+            ->groupBy('currency.code');
 
         if ($category_id !== null) {
             $collection->where("category.id", "=", $category_id);
@@ -162,8 +171,9 @@ class SimpleExpense extends Model implements ISummaryModel, ISummaryModelCategor
             $filter_parameters
         );
 
-        return $collection->get()->
-            toArray();
+        return $collection
+            ->get()
+            ->toArray();
     }
 
     /**
@@ -183,29 +193,32 @@ class SimpleExpense extends Model implements ISummaryModel, ISummaryModelCategor
         array $parameters = []
     ): array
     {
-        $collection = $this->
-            selectRaw("
+        $collection = $this
+            ->selectRaw("
                 sub_category.id, 
                 sub_category.name AS name, 
                 sub_category.description AS description,
+                currency.code AS currency_code,
                 SUM({$this->sub_table}.total) AS total, 
                 COUNT({$this->sub_table}.item_id) AS total_count, 
-                MAX({$this->sub_table}.created_at) AS last_updated")->
-            join($this->sub_table, 'item.id', "{$this->sub_table}.item_id")->
-            join("resource", "resource.id", "item.resource_id")->
-            join("resource_type", "resource_type.id", "resource.resource_type_id")->
-            join("item_category", "item_category.item_id", "item.id")->
-            join("item_sub_category", "item_sub_category.item_category_id", "item_category.id")->
-            join("category", "category.id", "item_category.category_id")->
-            join("sub_category", "sub_category.id", "item_sub_category.sub_category_id")->
-            where("resource_type.id", "=", $resource_type_id)->
-            where("resource.id", "=", $resource_id)->
-            where("category.id", "=", $category_id);
+                MAX({$this->sub_table}.created_at) AS last_updated")
+            ->join($this->sub_table, 'item.id', "{$this->sub_table}.item_id")
+            ->join("resource", "resource.id", "item.resource_id")
+            ->join("resource_type", "resource_type.id", "resource.resource_type_id")
+            ->join("item_category", "item_category.item_id", "item.id")
+            ->join("item_sub_category", "item_sub_category.item_category_id", "item_category.id")
+            ->join("category", "category.id", "item_category.category_id")
+            ->join("sub_category", "sub_category.id", "item_sub_category.sub_category_id")
+            ->join('currency', "{$this->sub_table}.currency_id", 'currency.id')
+            ->where("resource_type.id", "=", $resource_type_id)
+            ->where("resource.id", "=", $resource_id)
+            ->where("category.id", "=", $category_id);
 
-        return $collection->groupBy("item_sub_category.sub_category_id")->
-            orderBy("name")->
-            get()->
-            toArray();
+        return $collection
+            ->groupBy('item_sub_category.sub_category_id', 'currency.code')
+            ->orderBy('name')
+            ->get()
+            ->toArray();
     }
 
     /**
@@ -227,31 +240,34 @@ class SimpleExpense extends Model implements ISummaryModel, ISummaryModelCategor
         array $parameters = []
     ): array
     {
-        $collection = $this->
-            selectRaw("
+        $collection = $this
+            ->selectRaw("
                 sub_category.id, 
                 sub_category.name AS name, 
                 sub_category.description AS description,
+                currency.code AS currency_code,
                 SUM({$this->sub_table}.total) AS total, 
                 COUNT({$this->sub_table}.item_id) AS total_count,
                 MAX({$this->sub_table}.created_at) AS last_updated
-            ")->
-            join($this->sub_table, 'item.id', "{$this->sub_table}.item_id")->
-            join("resource", "resource.id", "item.resource_id")->
-            join("resource_type", "resource_type.id", "resource.resource_type_id")->
-            join("item_category", "item_category.item_id", "item.id")->
-            join("item_sub_category", "item_sub_category.item_category_id", "item_category.id")->
-            join("category", "category.id", "item_category.category_id")->
-            join("sub_category", "sub_category.id", "item_sub_category.sub_category_id")->
-            where("resource_type.id", "=", $resource_type_id)->
-            where("resource.id", "=", $resource_id)->
-            where("category.id", "=", $category_id)->
-            where("sub_category.id", "=", $subcategory_id);
+            ")
+            ->join($this->sub_table, 'item.id', "{$this->sub_table}.item_id")
+            ->join("resource", "resource.id", "item.resource_id")
+            ->join("resource_type", "resource_type.id", "resource.resource_type_id")
+            ->join("item_category", "item_category.item_id", "item.id")
+            ->join("item_sub_category", "item_sub_category.item_category_id", "item_category.id")
+            ->join("category", "category.id", "item_category.category_id")
+            ->join("sub_category", "sub_category.id", "item_sub_category.sub_category_id")
+            ->join('currency', "{$this->sub_table}.currency_id", 'currency.id')
+            ->where("resource_type.id", "=", $resource_type_id)
+            ->where("resource.id", "=", $resource_id)
+            ->where("category.id", "=", $category_id)
+            ->where("sub_category.id", "=", $subcategory_id);
 
-        return $collection->groupBy("item_sub_category.sub_category_id")->
-            orderBy("name")->
-            get()->
-            toArray();
+        return $collection
+            ->groupBy('item_sub_category.sub_category_id', 'currency.code')
+            ->orderBy("name")
+            ->get()
+            ->toArray();
     }
 
     /**
@@ -270,16 +286,20 @@ class SimpleExpense extends Model implements ISummaryModel, ISummaryModelCategor
     ): array
     {
         $collection = $this->selectRaw("
+                currency.code AS currency_code,
                 SUM({$this->sub_table}.total) AS total, 
                 COUNT({$this->sub_table}.item_id) AS total_count,
                 MAX({$this->sub_table}.created_at) AS last_updated
-            ")->
-            join($this->sub_table, 'item.id', "{$this->sub_table}.item_id")->
-            join('resource', 'item.resource_id', 'resource.id')->
-            where('resource_id', '=', $resource_id)->
-            where('resource.resource_type_id', '=', $resource_type_id);
+            ")
+            ->join($this->sub_table, 'item.id', "{$this->sub_table}.item_id")
+            ->join('resource', 'item.resource_id', 'resource.id')
+            ->join('currency', "{$this->sub_table}.currency_id", 'currency.id')
+            ->where('resource_id', '=', $resource_id)
+            ->where('resource.resource_type_id', '=', $resource_type_id)
+            ->groupBy('currency.code');
 
-        return $collection->get()
+        return $collection
+            ->get()
             ->toArray();
     }
 }

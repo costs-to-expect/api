@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace App\Entity\Item;
 
+use App\Request\Hash;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\Transformers\Transformer;
 use App\Request\Validate\Validator;
@@ -28,12 +29,16 @@ class AllocatedExpense extends Item
      */
     public function create($id): Model
     {
+        $hash = new Hash();
+        $currency_id = $hash->decode('currency', request()->input('currency_id'));
+
         $item = new \App\Models\Item\AllocatedExpense([
             'item_id' => $id,
             'name' => request()->input('name'),
             'description' => request()->input('description', null),
             'effective_date' => request()->input('effective_date'),
             'publish_after' => request()->input('publish_after', null),
+            'currency_id' => $currency_id,
             'total' => request()->input('total'),
             'percentage' => request()->input('percentage', 100),
             'created_at' => Date::now(),
@@ -80,9 +85,39 @@ class AllocatedExpense extends Item
         return new \App\Models\Item\Summary\AllocatedExpense();
     }
 
+    public function summaryTransformer(array $data_to_transform): Transformer
+    {
+        return new \App\Models\Transformers\Item\Summary\ExpenseItem($data_to_transform);
+    }
+
+    public function summaryTransformerByCategory(array $data_to_transform): Transformer
+    {
+        return new \App\Models\Transformers\Item\Summary\ExpenseItemByCategory($data_to_transform);
+    }
+
+    public function summaryTransformerBySubcategory(array $data_to_transform): Transformer
+    {
+        return new \App\Models\Transformers\Item\Summary\ExpenseItemBySubcategory($data_to_transform);
+    }
+
+    public function summaryTransformerByMonth(array $data_to_transform): Transformer
+    {
+        return new \App\Models\Transformers\Item\Summary\ExpenseItemByMonth($data_to_transform);
+    }
+
+    public function summaryTransformerByYear(array $data_to_transform): Transformer
+    {
+        return new \App\Models\Transformers\Item\Summary\ExpenseItemByYear($data_to_transform);
+    }
+
+    public function summaryTransformerByResource(array $data_to_transform): Transformer
+    {
+        return new \App\Models\Transformers\Item\Summary\ExpenseItemByResource($data_to_transform);
+    }
+
     public function transformer(array $data_to_transform): Transformer
     {
-        return new \App\Models\Transformers\ItemType\AllocatedExpense($data_to_transform);
+        return new \App\Models\Transformers\Item\AllocatedExpense($data_to_transform);
     }
 
     public function update(array $patch, Model $instance): bool
@@ -93,6 +128,11 @@ class AllocatedExpense extends Item
 
             if (in_array($key, ['total', 'percentage']) === true) {
                 $set_actualised = true;
+            }
+
+            if ($key === 'currency_id') {
+                $hash = new Hash();
+                $instance->$key = $hash->decode('currency', request()->input('currency_id'));
             }
         }
 
@@ -117,7 +157,7 @@ class AllocatedExpense extends Item
 
     public function resourceTypeTransformer(array $data_to_transform): Transformer
     {
-        return new \App\Models\Transformers\ResourceTypeItemType\AllocatedExpense($data_to_transform);
+        return new \App\Models\Transformers\ResourceTypeItem\AllocatedExpense($data_to_transform);
     }
 
     public function summaryResourceTypeModel(): Model

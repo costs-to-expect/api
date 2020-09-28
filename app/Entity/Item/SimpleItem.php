@@ -62,7 +62,7 @@ class SimpleItem extends Item
 
     public function transformer(array $data_to_transform): Transformer
     {
-        return new \App\Models\Transformers\ItemType\SimpleItem($data_to_transform);
+        return new \App\Models\Transformers\Item\SimpleItem($data_to_transform);
     }
 
     public function update(array $patch, Model $instance): bool
@@ -88,11 +88,46 @@ class SimpleItem extends Item
 
     public function resourceTypeTransformer(array $data_to_transform): Transformer
     {
-        return new \App\Models\Transformers\ResourceTypeItemType\SimpleItem($data_to_transform);
+        return new \App\Models\Transformers\ResourceTypeItem\SimpleItem($data_to_transform);
     }
 
     public function summaryResourceTypeModel(): Model
     {
         return new \App\Models\ResourceTypeItem\Summary\SimpleItem();
+    }
+
+    public function summaryTransformer(array $data_to_transform): Transformer
+    {
+        return new \App\Models\Transformers\Item\Summary\SimpleItem($data_to_transform);
+    }
+
+    public function summaryTransformerByCategory(array $data_to_transform): Transformer
+    {
+        // Return default transformer, not relevant for type
+        return new \App\Models\Transformers\Item\Summary\SimpleItem($data_to_transform);
+    }
+
+    public function summaryTransformerBySubcategory(array $data_to_transform): Transformer
+    {
+        // Return default transformer, not relevant for type
+        return new \App\Models\Transformers\Item\Summary\SimpleItem($data_to_transform);
+    }
+
+    public function summaryTransformerByMonth(array $data_to_transform): Transformer
+    {
+        // Return default transformer, not relevant for type
+        return new \App\Models\Transformers\Item\Summary\SimpleItem($data_to_transform);
+    }
+
+    public function summaryTransformerByYear(array $data_to_transform): Transformer
+    {
+        // Return default transformer, not relevant for type
+        return new \App\Models\Transformers\Item\Summary\SimpleItem($data_to_transform);
+    }
+
+    public function summaryTransformerByResource(array $data_to_transform): Transformer
+    {
+        // Return default transformer, not relevant for type
+        return new \App\Models\Transformers\Item\Summary\SimpleItemByResource($data_to_transform);
     }
 }

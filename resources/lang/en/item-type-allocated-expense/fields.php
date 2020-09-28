@@ -15,6 +15,9 @@ return [
     'title-publish_after' => 'Publish after this date',
     'description-publish_after' => 'Enter a date to withhold publishing until',
 
+    'title-currency_id' => 'Currency Id',
+    'description-currency_id' => 'The currency for this expense',
+
     'title-total' => 'Item total',
     'description-total' => 'Enter the total cost for the item',
 

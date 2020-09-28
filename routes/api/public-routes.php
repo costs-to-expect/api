@@ -34,6 +34,26 @@ Route::group(
         );
 
         Route::get(
+            'currencies',
+            'CurrencyView@index'
+        );
+
+        Route::options(
+            'currencies',
+            'CurrencyView@optionsIndex'
+        );
+
+        Route::get(
+            'currencies/{currency_id}',
+            'CurrencyView@show'
+        );
+
+        Route::options(
+            'currencies/{currency_id}',
+            'CurrencyView@optionsShow'
+        );
+
+        Route::get(
             'item-types',
             'ItemTypeView@index'
         );
@@ -51,6 +71,26 @@ Route::group(
         Route::options(
             'item-types/{item_type_id}',
             'ItemTypeView@optionsShow'
+        );
+
+        Route::get(
+            'queue',
+            'QueueView@index'
+        );
+
+        Route::options(
+            'queue',
+            'QueueView@optionsIndex'
+        );
+
+        Route::get(
+            'queue/{queue_id}',
+            'QueueView@show'
+        );
+
+        Route::options(
+            'queue/{queue_id}',
+            'QueueView@optionsShow'
         );
 
         Route::get(

@@ -15,7 +15,7 @@ class Subcategory extends Transformer
     protected function format(array $to_transform): void
     {
         $this->transformed = [
-            'id' => $this->hash->subCategory()->encode($to_transform['subcategory_id']),
+            'id' => $this->hash->subcategory()->encode($to_transform['subcategory_id']),
             'name' => $to_transform['subcategory_name'],
             'description' => $to_transform['subcategory_description'],
             'created' => $to_transform['subcategory_created_at']

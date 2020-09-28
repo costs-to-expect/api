@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Models\Transformers\ResourceTypeItemType;
+namespace App\Models\Transformers\Item;
 
 use App\Models\Transformers\Transformer;
 
@@ -22,12 +22,7 @@ class SimpleItem extends Transformer
             'description' => $to_transform['item_description'],
             'quantity' => (int) $to_transform['item_quantity'],
             'created' => $to_transform['item_created_at'],
-            'updated' => $to_transform['item_updated_at'],
-            'resource' => [
-                'id' => $this->hash->resource()->encode($to_transform['resource_id']),
-                'name' => $to_transform['resource_name'],
-                'description' => $to_transform['resource_description']
-            ]
+            'updated' => $to_transform['item_updated_at']
         ];
     }
 }

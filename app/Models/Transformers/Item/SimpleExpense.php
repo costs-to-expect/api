@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Models\Transformers\ResourceTypeItemType;
+namespace App\Models\Transformers\Item;
 
 use App\Models\Transformers\Transformer;
 
@@ -20,14 +20,14 @@ class SimpleExpense extends Transformer
             'id' => $this->hash->item()->encode($to_transform['item_id']),
             'name' => $to_transform['item_name'],
             'description' => $to_transform['item_description'],
-            'total' => number_format((float) $to_transform['item_total'], 2, '.', ''),
+            'currency' => [
+                'id' => $this->hash->currency()->encode($to_transform['item_currency_id']),
+                'code' => $to_transform['item_currency_code'],
+                'name' => $to_transform['item_currency_name'],
+            ],
+            'total' => number_format((float) $to_transform['item_total'],2, '.', ''),
             'created' => $to_transform['item_created_at'],
-            'updated' => $to_transform['item_updated_at'],
-            'resource' => [
-                'id' => $this->hash->resource()->encode($to_transform['resource_id']),
-                'name' => $to_transform['resource_name'],
-                'description' => $to_transform['resource_description']
-            ]
+            'updated' => $to_transform['item_updated_at']
         ];
 
         if (
@@ -51,8 +51,8 @@ class SimpleExpense extends Transformer
             ) {
                 if ($to_transform['subcategory_id'] !== null) {
                     $this->transformed['subcategory'] = [
-                        'id' => $this->hash->itemSubCategory()->encode($to_transform['item_subcategory_id']),
-                        'subcategory_id' => $this->hash->subCategory()->encode($to_transform['subcategory_id']),
+                        'id' => $this->hash->itemSubcategory()->encode($to_transform['item_subcategory_id']),
+                        'subcategory_id' => $this->hash->subcategory()->encode($to_transform['subcategory_id']),
                         'name' => $to_transform['subcategory_name'],
                         'description' => $to_transform['subcategory_description']
                     ];

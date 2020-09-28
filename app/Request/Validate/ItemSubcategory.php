@@ -44,7 +44,7 @@ class ItemSubcategory extends BaseValidator
     {
         $this->requiredIndexes(['category_id'], $options);
 
-        $decode = $this->hash->subCategory()->decode(request()->input('subcategory_id'));
+        $decode = $this->hash->subcategory()->decode(request()->input('subcategory_id'));
         $subcategory_id = null;
         if (count($decode) === 1) {
             $subcategory_id = $decode[0];

@@ -15,7 +15,7 @@ class ItemSubcategory extends Transformer
     public function format(array $to_transform): void
     {
         $this->transformed = [
-            'id' => $this->hash->itemSubCategory()->encode($to_transform['item_sub_category_id']),
+            'id' => $this->hash->itemSubcategory()->encode($to_transform['item_sub_category_id']),
             'subcategory' => [
                 'id' => $this->hash->subcategory()->encode($to_transform['item_sub_category_sub_category_id']),
                 'name' => $to_transform['item_sub_category_sub_category_name'],

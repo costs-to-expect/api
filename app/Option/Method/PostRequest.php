@@ -3,8 +3,6 @@ declare(strict_types=1);
 
 namespace App\Option\Method;
 
-use Illuminate\Support\Facades\Config;
-
 /**
  * @author Dean Blackborough <dean@g3d-development.com>
  * @copyright Dean Blackborough 2018-2020
@@ -54,10 +52,15 @@ class PostRequest extends Method
             )
             as $field => $field_data
         ) {
-            $field_data['title'] = trans($field_data['title']);
-            $field_data['description'] = trans($field_data['description']);
+            if (
+                array_key_exists('title', $field_data) === true &&
+                array_key_exists('description', $field_data) === true
+            ) {
+                $field_data['title'] = trans($field_data['title']);
+                $field_data['description'] = trans($field_data['description']);
 
-            $this->fields_after_localisation[$field] = $field_data;
+                $this->fields_after_localisation[$field] = $field_data;
+            }
         }
     }
 

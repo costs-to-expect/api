@@ -108,6 +108,9 @@ class SimpleExpense extends Model implements IModel
             'item.id AS item_id',
             'item_type_simple_expense.name AS item_name',
             'item_type_simple_expense.description AS item_description',
+            "currency.id AS item_currency_id",
+            "currency.code AS item_currency_code",
+            "currency.name AS item_currency_name",
             'item_type_simple_expense.total AS item_total',
             'item_type_simple_expense.created_at AS item_created_at',
             'item_type_simple_expense.updated_at AS item_updated_at'
@@ -116,6 +119,7 @@ class SimpleExpense extends Model implements IModel
         $collection = $this->join('item_type_simple_expense', 'item.id', 'item_type_simple_expense.item_id')->
             join('resource', 'item.resource_id', 'resource.id')->
             join('resource_type', 'resource.resource_type_id', 'resource_type.id')->
+            join('currency', 'item_type_simple_expense.currency_id', 'currency.id')->
             where('resource_type.id', '=', $resource_type_id);
 
         $category_join = false; // Check to see if join has taken place
