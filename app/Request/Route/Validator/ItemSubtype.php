@@ -25,7 +25,7 @@ class ItemSubtype
         return !(
             $item_type_id === 'nill' ||
             $item_subtype_id === 'nill' ||
-            (new ResourceTypeAccess())->itemSubTypeExistsToUser($item_type_id, $item_subtype_id) === false
+            (new ResourceTypeAccess())->itemSubTypeExistsToUser((int) $item_type_id, (int) $item_subtype_id) === false
         );
     }
 }

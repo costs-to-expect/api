@@ -34,8 +34,8 @@ class Resource
             $resource_type_id === 'nill' ||
             $resource_id === 'nill' ||
             (new ResourceTypeAccess())->resourceExistsToUser(
-                $resource_id,
-                $resource_type_id,
+                (int) $resource_id,
+                (int) $resource_type_id,
                 $permitted_resource_types
             ) === false
         );
@@ -61,8 +61,8 @@ class Resource
             $resource_type_id === 'nill' ||
             $resource_id === 'nill' ||
             (new ResourceTypeAccess())->resourceExistsToUser(
-                $resource_id,
-                $resource_type_id,
+                (int) $resource_id,
+                (int) $resource_type_id,
                 $permitted_resource_types,
                 true
             ) === false

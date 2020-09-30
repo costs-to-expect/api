@@ -37,9 +37,9 @@ class Item
             $resource_id === 'nill' ||
             $item_id === 'nill' ||
             (new ResourceTypeAccess())->itemExistsToUser(
-                $resource_type_id,
-                $resource_id,
-                $item_id,
+                (int) $resource_type_id,
+                (int) $resource_id,
+                (int) $item_id,
                 $permitted_resource_types
             ) === false
         );
@@ -68,9 +68,9 @@ class Item
             $resource_id === 'nill' ||
             $item_id === 'nill' ||
             (new ResourceTypeAccess())->itemExistsToUser(
-                $resource_type_id,
-                $resource_id,
-                $item_id,
+                (int) $resource_type_id,
+                (int) $resource_id,
+                (int) $item_id,
                 $permitted_resource_types,
                 true
             ) === false

@@ -40,10 +40,10 @@ class ItemCategory
             $item_id === 'nill' ||
             $item_category_id === 'nill' ||
             (new ResourceTypeAccess())->itemCategoryExistsToUser(
-                $resource_type_id,
-                $resource_id,
-                $item_id,
-                $item_category_id,
+                (int) $resource_type_id,
+                (int) $resource_id,
+                (int) $item_id,
+                (int) $item_category_id,
                 $permitted_resource_types
             ) === false
         );
@@ -75,10 +75,10 @@ class ItemCategory
             $item_id === 'nill' ||
             $item_category_id === 'nill' ||
             (new ResourceTypeAccess())->itemCategoryExistsToUser(
-                $resource_type_id,
-                $resource_id,
-                $item_id,
-                $item_category_id,
+                (int) $resource_type_id,
+                (int) $resource_id,
+                (int) $item_id,
+                (int) $item_category_id,
                 $permitted_resource_types,
                 true
             ) === false
