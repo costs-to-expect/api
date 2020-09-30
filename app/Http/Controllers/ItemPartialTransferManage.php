@@ -36,7 +36,7 @@ class ItemPartialTransferManage extends Controller
     ): JsonResponse
     {
         Route\Validate::resourceType(
-            (int) $resource_type_id,
+            $resource_type_id,
             $this->permitted_resource_types,
             true
         );

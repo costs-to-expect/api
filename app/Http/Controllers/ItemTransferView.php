@@ -34,7 +34,7 @@ class ItemTransferView extends Controller
     public function index($resource_type_id): JsonResponse
     {
         Route\Validate::resourceType(
-            (int) $resource_type_id,
+            $resource_type_id,
             $this->permitted_resource_types
         );
 
@@ -103,7 +103,7 @@ class ItemTransferView extends Controller
     public function optionsIndex($resource_type_id): JsonResponse
     {
         Route\Validate::resourceType(
-            (int) $resource_type_id,
+            $resource_type_id,
             $this->permitted_resource_types
         );
 
@@ -128,7 +128,7 @@ class ItemTransferView extends Controller
     public function optionsShow($resource_type_id, $item_transfer_id): JsonResponse
     {
         Route\Validate::resourceType(
-            (int) $resource_type_id,
+            $resource_type_id,
             $this->permitted_resource_types
         );
 

@@ -35,8 +35,8 @@ class SubcategoryManage extends Controller
     public function create($resource_type_id, $category_id): JsonResponse
     {
         Route\Validate::category(
-            (int) $resource_type_id,
-            (int) $category_id,
+            $resource_type_id,
+            $category_id,
             $this->permitted_resource_types,
             true
         );
@@ -89,9 +89,9 @@ class SubcategoryManage extends Controller
     ): JsonResponse
     {
         Route\Validate::subcategory(
-            (int) $resource_type_id,
-            (int) $category_id,
-            (int) $subcategory_id,
+            $resource_type_id,
+            $category_id,
+            $subcategory_id,
             $this->permitted_resource_types,
             true
         );
@@ -143,9 +143,9 @@ class SubcategoryManage extends Controller
     ): JsonResponse
     {
         Route\Validate::subcategory(
-            (int) $resource_type_id,
-            (int) $category_id,
-            (int) $subcategory_id,
+            $resource_type_id,
+            $category_id,
+            $subcategory_id,
             $this->permitted_resource_types,
             true
         );

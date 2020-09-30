@@ -31,7 +31,7 @@ class CategoryManage extends Controller
     public function create($resource_type_id): JsonResponse
     {
         Route\Validate::resourceType(
-            (int) $resource_type_id,
+            $resource_type_id,
             $this->permitted_resource_types
         );
 
@@ -82,8 +82,8 @@ class CategoryManage extends Controller
     ): JsonResponse
     {
         Route\Validate::category(
-            (int) $resource_type_id,
-            (int) $category_id,
+            $resource_type_id,
+            $category_id,
             $this->permitted_resource_types,
             true
         );
@@ -125,8 +125,8 @@ class CategoryManage extends Controller
     public function update($resource_type_id, $category_id): JsonResponse
     {
         Route\Validate::category(
-            (int) $resource_type_id,
-            (int) $category_id,
+            $resource_type_id,
+            $category_id,
             $this->permitted_resource_types,
             true
         );
