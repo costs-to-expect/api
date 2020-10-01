@@ -9,6 +9,9 @@ return [
     'title-description' => 'Resource description',
     'description-description' => 'Enter a description for the resource type',
 
+    'title-item_subtype_id' => 'Item subtype',
+    'description-item_subtype_id' => 'The item subtype to use for this resource type',
+
     'title-effective_date' => 'Resource effective date',
     'description-effective_date' => 'Enter an effective date for the resource (yyyy-mm-dd)'
 ];
