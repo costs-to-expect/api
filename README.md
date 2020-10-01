@@ -144,6 +144,10 @@ additionally, the same is true if you are assigned to a resource type.
 | OPTIONS  | v2/item-types |
 | GET/HEAD | v2/item-types/{item_type_id} |
 | OPTIONS  | v2/item-types/{item_type_id} |
+| GET/HEAD | v2/item-types/{item_type_id}/item-subtypes |
+| OPTIONS  | v2/item-types/{item_type_id}/item-subtypes |
+| GET/HEAD | v2/item-types/{item_type_id}/item-subtypes/{item_subtype_id} |
+| OPTIONS  | v2/item-types/{item_type_id}/item-subtypes/{item_subtype_id} |
 | GET/HEAD | v2/resource-types |
 | OPTIONS  | v2/resource-types |
 | POST     | v2/resource-types |

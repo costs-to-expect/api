@@ -74,6 +74,26 @@ Route::group(
         );
 
         Route::get(
+            'item-types/{item_type_id}/item-subtypes',
+            'ItemSubtypeView@index'
+        );
+
+        Route::options(
+            'item-types/{item_type_id}/item-subtypes',
+            'ItemSubtypeView@optionsIndex'
+        );
+
+        Route::get(
+            'item-types/{item_type_id}/item-subtypes/{item_subtype_id}',
+            'ItemSubtypeView@show'
+        );
+
+        Route::options(
+            'item-types/{item_type_id}/item-subtypes/{item_subtype_id}',
+            'ItemSubtypeView@optionsShow'
+        );
+
+        Route::get(
             'queue',
             'QueueView@index'
         );

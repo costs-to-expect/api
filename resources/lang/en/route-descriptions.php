@@ -21,6 +21,9 @@ return [
     'item_type_GET_index' => 'Return all the item types supported in the API',
     'item_type_GET_show' => 'Return the selected item type',
 
+    'item_subtype_GET_index' => 'Return all the item subtypes supported by the selected item type',
+    'item_subtype_GET_show' => 'Return the selected item subtype',
+
     'currency_GET_index' => 'Return all the currencies supported in the API',
     'currency_GET_show' => 'Return the selected currency',
 

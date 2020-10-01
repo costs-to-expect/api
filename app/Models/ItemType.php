@@ -18,7 +18,7 @@ class ItemType extends Model
 {
     protected $table = 'item_type';
 
-    protected $guarded = ['id', 'name', 'description', 'created_at', 'updated_at'];
+    protected $guarded = ['id', 'name', 'description', 'example', 'created_at', 'updated_at'];
 
     /**
      * Fetch the item types, id, name and description only
