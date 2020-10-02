@@ -13,6 +13,20 @@
         "effective_date": {
             "type": "string"
         },
+        "item_subtype": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "description": {
+                    "type": "string"
+                }
+            }
+        },
         "created": {
             "type": "string"
         },
@@ -21,6 +35,7 @@
             "name",
             "description",
             "effective_date",
+            "item_subtype",
             "created"
         ]
     }

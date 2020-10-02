@@ -21,5 +21,17 @@ class Resource extends Transformer
             'effective_date' => $to_transform['resource_effective_date'],
             'created' => $to_transform['resource_created_at']
         ];
+
+        if (
+            array_key_exists('resource_item_subtype_id', $to_transform) === true &&
+            array_key_exists('resource_item_subtype_name', $to_transform) === true &&
+            array_key_exists('resource_item_subtype_description', $to_transform) === true
+        ) {
+            $this->transformed['item_subtype'] = [
+                'id' => $this->hash->itemSubtype()->encode($to_transform['resource_item_subtype_id']),
+                'name' => $to_transform['resource_item_subtype_name'],
+                'description' => $to_transform['resource_item_subtype_description']
+            ];
+        }
     }
 }

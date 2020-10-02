@@ -106,7 +106,8 @@ class ResourceType extends Model
         array $sort_parameters = []
     ): array
     {
-        $collection = $this->select(
+        $collection = $this
+            ->select(
                 'resource_type.id AS resource_type_id',
                 'resource_type.name AS resource_type_name',
                 'resource_type.description AS resource_type_description',
@@ -115,7 +116,8 @@ class ResourceType extends Model
                 'item_type.id AS resource_type_item_type_id',
                 'item_type.name AS resource_type_item_type_name',
                 'item_type.description AS resource_type_item_type_description'
-            )->selectRaw('
+            )
+            ->selectRaw('
                 (
                     SELECT 
                         COUNT(resource.id) 
@@ -124,10 +126,10 @@ class ResourceType extends Model
                     WHERE 
                         resource.resource_type_id = resource_type.id
                 ) AS resource_type_resources'
-            )->
-            join('resource_type_item_type', 'resource_type.id', 'resource_type_item_type.resource_type_id')->
-            join('item_type', 'resource_type_item_type.item_type_id', 'item_type.id')->
-            leftJoin("resource", "resource_type.id", "resource.id");
+            )
+            ->join('resource_type_item_type', 'resource_type.id', 'resource_type_item_type.resource_type_id')
+            ->join('item_type', 'resource_type_item_type.item_type_id', 'item_type.id')
+            ->leftJoin("resource", "resource_type.id", "resource.id");
 
         $collection = Clause::applyResourceTypeCollectionCondition(
             $collection,

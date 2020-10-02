@@ -81,14 +81,20 @@ class Resource extends Model
         array $sort_parameters = []
     ): array
     {
-        $collection = $this->select(
+        $collection = $this
+            ->select(
                 'resource.id AS resource_id',
                 'resource.name AS resource_name',
                 'resource.description AS resource_description',
                 'resource.effective_date AS resource_effective_date',
-                'resource.created_at AS resource_created_at'
-            )->
-            where('resource_type_id', '=', $resource_type_id);
+                'resource.created_at AS resource_created_at',
+                'item_subtype.id AS resource_item_subtype_id',
+                'item_subtype.name AS resource_item_subtype_name',
+                'item_subtype.description AS resource_item_subtype_description'
+            )
+            ->join('resource_item_subtype', 'resource_item_subtype.resource_id', 'resource.id')
+            ->join('item_subtype', 'resource_item_subtype.item_subtype_id', 'item_subtype.id')
+            ->where('resource_type_id', '=', $resource_type_id);
 
         $collection = Clause::applySearch($collection, $this->table, $search_parameters);
 
@@ -96,16 +102,16 @@ class Resource extends Model
             foreach ($sort_parameters as $field => $direction) {
                 switch ($field) {
                     case 'created':
-                        $collection->orderBy('created_at', $direction);
+                        $collection->orderBy('resource.created_at', $direction);
                         break;
 
                     default:
-                        $collection->orderBy($field, $direction);
+                        $collection->orderBy('resource.' . $field, $direction);
                         break;
                 }
             }
         } else {
-            $collection->latest();
+            $collection->orderBy('resource.created_at', 'desc');
         }
 
         return $collection->offset($offset)->
@@ -116,21 +122,27 @@ class Resource extends Model
 
     public function single(int $resource_type_id, int $resource_id): ?array
     {
-        $result = $this->select(
+        $result = $this
+            ->select(
                 'resource.id AS resource_id',
                 'resource.name AS resource_name',
                 'resource.description AS resource_description',
                 'resource.effective_date AS resource_effective_date',
-                'resource.created_at AS resource_created_at'
-            )->
-            where('resource_type_id', '=', $resource_type_id)->
-            find($resource_id);
+                'resource.created_at AS resource_created_at',
+                'item_subtype.id AS resource_item_subtype_id',
+                'item_subtype.name AS resource_item_subtype_name',
+                'item_subtype.description AS resource_item_subtype_description'
+            )
+            ->join('resource_item_subtype', 'resource_item_subtype.resource_id', 'resource.id')
+            ->join('item_subtype', 'resource_item_subtype.item_subtype_id', 'item_subtype.id')
+            ->where('resource_type_id', '=', $resource_type_id)
+            ->find($resource_id);
 
         if ($result !== null) {
             return $result->toArray();
-        } else {
-            return null;
         }
+
+        return null;
     }
 
     /**
