@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Jobs\ClearCache;
 use App\Models\ResourceItemSubtype;
+use App\Models\ResourceType;
 use App\Response\Cache;
 use App\Request\Route;
 use App\Models\Resource;
@@ -41,9 +42,15 @@ class ResourceManage extends Controller
             true
         );
 
+        $resource_type = (new ResourceType())->single(
+            $resource_type_id,
+            $this->permitted_resource_types,
+            $this->include_public
+        );
+
         $validator = (new ResourceValidator)->create([
             'resource_type_id' => $resource_type_id,
-            'item_type_id' => 3
+            'item_type_id' => $resource_type['resource_type_item_type_id']
         ]);
         \App\Request\BodyValidation::validateAndReturnErrors($validator);
 
