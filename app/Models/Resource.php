@@ -21,6 +21,18 @@ class Resource extends Model
 
     protected $guarded = ['id', 'created_at', 'updated_at'];
 
+    public function item_subtype()
+    {
+        return $this->hasOneThrough(
+            ItemSubtype::class,
+            ResourceItemSubtype::class,
+            'resource_id',
+            'id',
+            null,
+            'item_subtype_id'
+        );
+    }
+
     /**
      * Return an array of the fields that can be PATCHed.
      *
@@ -174,21 +186,17 @@ class Resource extends Model
             toArray();
     }
 
-    /**
-     * Convert the model instance to an array for use with the transformer
-     *
-     * @param Resource
-     *
-     * @return array
-     */
-    public function instanceToArray(Resource $resource): array
+    public function instanceToArray(Model $resource): array
     {
         return [
             'resource_id' => $resource->id,
             'resource_name' => $resource->name,
             'resource_description' => $resource->description,
             'resource_effective_date' => $resource->effective_date,
-            'resource_created_at' => $resource->created_at->toDateTimeString()
+            'resource_created_at' => $resource->created_at->toDateTimeString(),
+            'resource_item_subtype_id' => $resource->item_subtype->id,
+            'resource_item_subtype_name' => $resource->item_subtype->name,
+            'resource_item_subtype_description' => $resource->item_subtype->description
         ];
     }
 

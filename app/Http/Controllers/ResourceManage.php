@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Jobs\ClearCache;
+use App\Models\ResourceItemSubtype;
 use App\Response\Cache;
 use App\Request\Route;
 use App\Models\Resource;
@@ -12,6 +13,7 @@ use App\Response\Responses;
 use Exception;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\DB;
 
 /**
  * Manage resources
@@ -39,7 +41,10 @@ class ResourceManage extends Controller
             true
         );
 
-        $validator = (new ResourceValidator)->create(['resource_type_id' => $resource_type_id]);
+        $validator = (new ResourceValidator)->create([
+            'resource_type_id' => $resource_type_id,
+            'item_type_id' => 3
+        ]);
         \App\Request\BodyValidation::validateAndReturnErrors($validator);
 
         $cache_job_payload = (new Cache\JobPayload())
@@ -51,13 +56,29 @@ class ResourceManage extends Controller
             ->setUserId($this->user_id);
 
         try {
-            $resource = new Resource([
-                'resource_type_id' => $resource_type_id,
-                'name' => request()->input('name'),
-                'description' => request()->input('description'),
-                'effective_date' => request()->input('effective_date')
-            ]);
-            $resource->save();
+            $resource = DB::transaction(function() use ($resource_type_id) {
+                $resource = new Resource([
+                    'resource_type_id' => $resource_type_id,
+                    'name' => request()->input('name'),
+                    'description' => request()->input('description'),
+                    'effective_date' => request()->input('effective_date')
+                ]);
+                $resource->save();
+
+                $item_subtype_id = $this->hash->decode('item-subtype', request()->input('item_subtype_id'));
+
+                if ($item_subtype_id === false) {
+                    return \App\Response\Responses::unableToDecode();
+                }
+
+                $resource_item_subtype = new ResourceItemSubtype([
+                    'resource_id' => $resource->id,
+                    'item_subtype_id' => $item_subtype_id
+                ]);
+                $resource_item_subtype->save();
+
+                return $resource;
+            });
 
             ClearCache::dispatch($cache_job_payload->payload())->delay(now()->addMinute());
 
