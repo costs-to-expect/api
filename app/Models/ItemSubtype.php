@@ -18,7 +18,7 @@ class ItemSubtype extends Model
 
     protected $guarded = ['id', 'name', 'description', 'created_at', 'updated_at'];
 
-    public function minimisedCollection(): array
+    public function minimisedCollection(int $item_type_id): array
     {
         return $this
             ->select(
@@ -26,6 +26,7 @@ class ItemSubtype extends Model
                 "{$this->table}.name AS {$this->table}_name",
                 "{$this->table}.description AS {$this->table}_description"
             )
+            ->where("{$this->table}.item_type_id", '=', $item_type_id)
             ->get()
             ->toArray();
     }
