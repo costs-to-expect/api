@@ -27,9 +27,9 @@ class CreateItemSubtype extends Migration
             $table->foreign('item_type_id')->references('id')->on('item_type');
         });
 
-        DB::statement('INSERT INTO `item_subtype` (`item_type_id`, `name`, `description`, `created_at`) VALUES (1, "default", "Default behaviour for type", NOW())');
-        DB::statement('INSERT INTO `item_subtype` (`item_type_id`, `name`, `description`, `created_at`) VALUES (2, "default", "Default behaviour for type", NOW())');
-        DB::statement('INSERT INTO `item_subtype` (`item_type_id`, `name`, `description`, `created_at`) VALUES (3, "default", "Default behaviour for type", NOW())');
+        DB::statement('INSERT INTO `item_subtype` (`item_type_id`, `name`, `description`, `created_at`) VALUES (1, "default", "Default behaviour for the allocated-exense type", NOW())');
+        DB::statement('INSERT INTO `item_subtype` (`item_type_id`, `name`, `description`, `created_at`) VALUES (2, "default", "Default behaviour for the simple-expense type", NOW())');
+        DB::statement('INSERT INTO `item_subtype` (`item_type_id`, `name`, `description`, `created_at`) VALUES (3, "default", "Default behaviour for the simple-item type", NOW())');
     }
 
     /**
