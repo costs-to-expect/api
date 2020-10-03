@@ -32,34 +32,40 @@ class SimpleExpense extends Transformer
 
         if (
             array_key_exists('category_id', $to_transform) === true &&
-            array_key_exists('category_name', $to_transform) === true
+            array_key_exists('category_name', $to_transform) === true &&
+            array_key_exists('category_description', $to_transform) === true &&
+            array_key_exists('item_category_id', $to_transform) === true
         ) {
             if ($to_transform['category_id'] !== null) {
-                $this->transformed['category'] = [
+                $category = [
                     'id' => $this->hash->itemCategory()->encode($to_transform['item_category_id']),
                     'category_id' => $this->hash->category()->encode($to_transform['category_id']),
                     'name' => $to_transform['category_name'],
                     'description' => $to_transform['category_description']
                 ];
             } else {
-                $this->transformed['category'] = null;
+                $category = [];
             }
 
             if (
                 array_key_exists('subcategory_id', $to_transform) === true &&
-                array_key_exists('subcategory_name', $to_transform) === true
+                array_key_exists('subcategory_name', $to_transform) === true &&
+                array_key_exists('subcategory_description', $to_transform) === true &&
+                array_key_exists('item_subcategory_id', $to_transform) === true
             ) {
                 if ($to_transform['subcategory_id'] !== null) {
-                    $this->transformed['subcategory'] = [
+                    $category['subcategories'][] = [
                         'id' => $this->hash->itemSubcategory()->encode($to_transform['item_subcategory_id']),
                         'subcategory_id' => $this->hash->subcategory()->encode($to_transform['subcategory_id']),
                         'name' => $to_transform['subcategory_name'],
                         'description' => $to_transform['subcategory_description']
                     ];
                 } else {
-                    $this->transformed['subcategory'] = null;
+                    $category['subcategories'] = [];
                 }
             }
+
+            $this->transformed['categories'][] = $category;
         }
     }
 }
