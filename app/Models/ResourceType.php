@@ -21,6 +21,18 @@ class ResourceType extends Model
 
     protected $guarded = ['id'];
 
+    public function item_type()
+    {
+        return $this->hasOneThrough(
+            ItemType::class,
+            ResourceTypeItemType::class,
+            'resource_type_id',
+            'id',
+            null,
+            'item_type_id'
+        );
+    }
+
     /**
      * Return an array of the fields that can be PATCHed.
      *
@@ -255,7 +267,10 @@ class ResourceType extends Model
             'resource_type_name' => $resource_type->name,
             'resource_type_description' => $resource_type->description,
             'resource_type_created_at' => $resource_type->created_at->toDateTimeString(),
-            'resource_type_public' => $resource_type->public
+            'resource_type_public' => $resource_type->public,
+            'resource_type_item_type_id' => $resource_type->item_type->id,
+            'resource_type_item_type_name' => $resource_type->item_type->name,
+            'resource_type_item_type_description' => $resource_type->item_type->description
         ];
     }
 
