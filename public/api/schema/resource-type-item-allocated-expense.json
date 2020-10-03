@@ -44,6 +44,9 @@
         "updated": {
             "type": ["null", "string"]
         },
+        "categories": {
+            "type": "array"
+        },
         "resource": {
             "type": "object",
             "properties" : {
@@ -70,6 +73,7 @@
         "effective_date",
         "created",
         "updated",
+        "categories",
         "resource"
     ]
 }

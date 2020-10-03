@@ -26,6 +26,7 @@ class SimpleExpense extends Transformer
                 'name' => $to_transform['item_currency_name'],
             ],
             'total' => number_format((float) $to_transform['item_total'],2, '.', ''),
+            'categories' => [],
             'created' => $to_transform['item_created_at'],
             'updated' => $to_transform['item_updated_at']
         ];

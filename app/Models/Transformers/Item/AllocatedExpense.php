@@ -29,6 +29,7 @@ class AllocatedExpense extends Transformer
             'percentage' => $to_transform['item_percentage'],
             'actualised_total' => number_format((float) $to_transform['item_actualised_total'], 2, '.', ''),
             'effective_date' => $to_transform['item_effective_date'],
+            'categories' => [],
             'created' => $to_transform['item_created_at'],
             'updated' => $to_transform['item_updated_at']
         ];

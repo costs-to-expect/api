@@ -31,6 +31,7 @@ class AllocatedExpense extends Transformer
             'effective_date' => $to_transform['item_effective_date'],
             'created' => $to_transform['item_created_at'],
             'updated' => $to_transform['item_updated_at'],
+            'categories' => [],
             'resource' => [
                 'id' => $this->hash->resource()->encode($to_transform['resource_id']),
                 'name' => $to_transform['resource_name'],

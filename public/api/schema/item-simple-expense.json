@@ -29,6 +29,9 @@
         "total": {
             "type": "string"
         },
+        "categories": {
+            "type": "array"
+        },
         "created": {
             "type": "string"
         },
@@ -42,6 +45,7 @@
         "description",
         "currency",
         "total",
+        "categories",
         "created",
         "updated"
     ]
