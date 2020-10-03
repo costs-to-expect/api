@@ -19,6 +19,11 @@ class SimpleItem extends Item
         parent::__construct();
     }
 
+    public function categoryAssignmentLimit(): int
+    {
+        return 0;
+    }
+
     public function create(int $id): Model
     {
         $item = new \App\Models\Item\SimpleItem([
@@ -43,6 +48,11 @@ class SimpleItem extends Item
     public function model()
     {
         return new \App\Models\Item\SimpleItem();
+    }
+
+    public function subcategoryAssignmentLimit(): int
+    {
+        return 0;
     }
 
     public function summaryModel(): Model

@@ -24,6 +24,11 @@ abstract class Item
         //
     }
 
+    public function categoryAssignmentLimit(): int
+    {
+        return 1;
+    }
+
     abstract public function create(int $id): Model;
 
     public function dateRangeField(): ?string
@@ -112,6 +117,11 @@ abstract class Item
     public function sortParameters(): array
     {
         return LaravelConfig::get($this->base_path . '.sortable', []);
+    }
+
+    public function subcategoryAssignmentLimit(): int
+    {
+        return 1;
     }
 
     public function summaryFilterParameters(): array
