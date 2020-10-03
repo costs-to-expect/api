@@ -17,4 +17,11 @@ class ResourceItemSubtype extends Model
     protected $table = 'resource_item_subtype';
 
     protected $guarded = ['id', 'created_at', 'updated_at'];
+
+    public function instance(int $resource_id): Model
+    {
+        return $this
+            ->where('resource_id', '=', $resource_id)
+            ->first();
+    }
 }

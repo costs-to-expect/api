@@ -119,9 +119,10 @@ class ResourceManage extends Controller
             true
         );
 
-        $resource = (new Resource())->find($resource_id);
+        $resource = (new Resource())->instance($resource_type_id, $resource_id);
+        $resource_item_subtype = (new ResourceItemSubtype())->instance($resource_id);
 
-        if ($resource === null) {
+        if ($resource === null || $resource_item_subtype === null) {
             return Responses::failedToSelectModelForUpdateOrDelete();
         }
 
@@ -135,7 +136,10 @@ class ResourceManage extends Controller
             ->setUserId($this->user_id);
 
         try {
-            (new Resource())->find($resource_id)->delete();
+            DB::transaction(function() use ($resource, $resource_item_subtype) {
+                $resource_item_subtype->delete();
+                $resource->delete();
+            });
 
             ClearCache::dispatch($cache_job_payload->payload())->delay(now()->addMinute());
 

@@ -203,15 +203,17 @@ class Resource extends Model
     public function instance(
         int $resource_type_id,
         int $resource_id
-    ): ?Resource
+    ): ?Model
     {
-        return $this->select(
+        return $this
+            ->select(
                 'resource.id',
                 'resource.name',
                 'resource.description',
                 'resource.effective_date'
-            )->
-            where('resource_type_id', '=', $resource_type_id)->
-            find($resource_id);
+            )
+            ->where('resource_type_id', '=', $resource_type_id)
+            ->where('id', '=', $resource_id)
+            ->first();
     }
 }
