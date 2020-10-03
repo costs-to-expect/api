@@ -45,10 +45,9 @@ class AllocatedExpense extends Transformer
                     'id' => $this->hash->itemCategory()->encode($to_transform['item_category_id']),
                     'category_id' => $this->hash->category()->encode($to_transform['category_id']),
                     'name' => $to_transform['category_name'],
-                    'description' => $to_transform['category_description']
+                    'description' => $to_transform['category_description'],
+                    "subcategories" => []
                 ];
-            } else {
-                $category = [];
             }
 
             if (
@@ -64,8 +63,6 @@ class AllocatedExpense extends Transformer
                         'name' => $to_transform['subcategory_name'],
                         'description' => $to_transform['subcategory_description']
                     ];
-                } else {
-                    $category['subcategories'] = [];
                 }
             }
 

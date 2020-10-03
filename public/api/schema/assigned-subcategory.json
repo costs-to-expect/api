@@ -9,15 +9,11 @@
         },
         "description": {
             "type": "string"
-        },
-        "subcategories": {
-            "type": "array"
         }
     },
     "required": [
         "id",
         "name",
-        "description",
-        "subcategories"
+        "description"
     ]
 }
