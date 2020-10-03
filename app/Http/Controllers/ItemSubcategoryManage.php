@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Entity\Item\Entity;
 use App\Jobs\ClearCache;
 use App\Response\Cache;
 use App\Request\Route;
@@ -49,6 +50,18 @@ class ItemSubcategoryManage extends Controller
 
         if ($item_category_id === 'nill') {
             return \App\Response\Responses::notFound(trans('entities.item-subcategory'));
+        }
+
+        $entity = Entity::item($resource_type_id);
+        $assigned = (new ItemSubcategory())->numberAssigned(
+            $resource_type_id,
+            $resource_id,
+            $item_id,
+            $item_category_id
+        );
+
+        if ($assigned >= $entity->subcategoryAssignmentLimit()) {
+            return \App\Response\Responses::subcategoryAssignmentLimit($entity->subcategoryAssignmentLimit());
         }
 
         $item_category = (new ItemCategory())
