@@ -191,6 +191,23 @@ class Responses
         exit();
     }
 
+    public static function categoryAssignmentLimit(int $limit, ?Exception $e = null): JsonResponse
+    {
+        $response = [
+            'message' => trans('responses.patch-invalid'),
+            'limit' => $limit
+        ];
+
+        if ($e instanceOf Exception) {
+            $response = self::addException($response, $e);
+        }
+
+        response()
+            ->json($response,400)
+            ->send();
+        exit();
+    }
+
     /**
      * 500 error, failed to save the model.
      *
@@ -260,6 +277,23 @@ class Responses
 
         response()->json($response,204)->send();
         exit;
+    }
+
+    public static function subcategoryAssignmentLimit(int $limit, ?Exception $e = null): JsonResponse
+    {
+        $response = [
+            'message' => trans('responses.patch-invalid'),
+            'limit' => $limit
+        ];
+
+        if ($e instanceOf Exception) {
+            $response = self::addException($response, $e);
+        }
+
+        response()
+            ->json($response,400)
+            ->send();
+        exit();
     }
 
     /**
