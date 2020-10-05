@@ -19,7 +19,7 @@ class CreateItemSubtype extends Migration
             $table->collation = 'utf8mb4_unicode_ci';
 
             $table->tinyIncrements('id');
-            $table->unsignedTinyInteger('item_type_id');
+            $table->unsignedInteger('item_type_id');
             $table->string('name', 255);
             $table->string('description');
             $table->timestamps();

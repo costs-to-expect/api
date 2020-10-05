@@ -16,7 +16,10 @@ class RemoveUniqueKeyItemCategories extends Migration
         Schema::table('item_category', function (Blueprint $table) {
             $table->dropForeign('item_category_category_id_foreign');
             $table->dropForeign('item_category_item_id_foreign');
-            $table->dropUnique(['item_id', 'category_id']);
+
+            $table->dropUnique('item_category_item_id_unique');
+
+            $table->unique(['item_id', 'category_id']);
 
             $table->foreign('item_id')->references('id')->on('item');
             $table->foreign('category_id')->references('id')->on('category');
@@ -34,9 +37,12 @@ class RemoveUniqueKeyItemCategories extends Migration
             $table->dropForeign('item_category_category_id_foreign');
             $table->dropForeign('item_category_item_id_foreign');
 
+            $table->dropUnique(['item_id', 'category_id']);
+
+            $table->unique(['item_id']);
+
             $table->foreign('item_id')->references('id')->on('item');
             $table->foreign('category_id')->references('id')->on('category');
-            $table->unique(['item_id', 'category_id']);
         });
     }
 }
