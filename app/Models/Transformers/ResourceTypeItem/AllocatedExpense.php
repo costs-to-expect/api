@@ -39,39 +39,6 @@ class AllocatedExpense extends Transformer
             ]
         ];
 
-        if (
-            array_key_exists('category_id', $to_transform) === true &&
-            array_key_exists('category_name', $to_transform) === true &&
-            array_key_exists('category_description', $to_transform) === true &&
-            array_key_exists('item_category_id', $to_transform) === true
-        ) {
-            if ($to_transform['category_id'] !== null) {
-                $category = [
-                    'id' => $this->hash->itemCategory()->encode($to_transform['item_category_id']),
-                    'category_id' => $this->hash->category()->encode($to_transform['category_id']),
-                    'name' => $to_transform['category_name'],
-                    'description' => $to_transform['category_description'],
-                    "subcategories" => []
-                ];
-            }
-
-            if (
-                array_key_exists('subcategory_id', $to_transform) === true &&
-                array_key_exists('subcategory_name', $to_transform) === true &&
-                array_key_exists('subcategory_description', $to_transform) === true &&
-                array_key_exists('item_subcategory_id', $to_transform) === true
-            ) {
-                if ($to_transform['subcategory_id'] !== null) {
-                    $category['subcategories'][] = [
-                        'id' => $this->hash->itemSubcategory()->encode($to_transform['item_subcategory_id']),
-                        'subcategory_id' => $this->hash->subcategory()->encode($to_transform['subcategory_id']),
-                        'name' => $to_transform['subcategory_name'],
-                        'description' => $to_transform['subcategory_description']
-                    ];
-                }
-            }
-
-            $this->transformed['categories'][] = $category;
-        }
+        $this->assignCategories($to_transform);
     }
 }

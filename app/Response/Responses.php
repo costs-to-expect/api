@@ -194,7 +194,7 @@ class Responses
     public static function categoryAssignmentLimit(int $limit, ?Exception $e = null): JsonResponse
     {
         $response = [
-            'message' => trans('responses.patch-invalid'),
+            'message' => trans('responses.category-limit'),
             'limit' => $limit
         ];
 
@@ -282,7 +282,7 @@ class Responses
     public static function subcategoryAssignmentLimit(int $limit, ?Exception $e = null): JsonResponse
     {
         $response = [
-            'message' => trans('responses.patch-invalid'),
+            'message' => trans('responses.subcategory-limit'),
             'limit' => $limit
         ];
 
