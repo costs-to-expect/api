@@ -14,7 +14,7 @@ class AddGameItemTypeAndSubtypes extends Migration
      */
     public function up()
     {
-        DB::statement('INSERT INTO `item_type` (`name`, `friendly_name`, `description`, `example`, `created_at`) VALUES ("game", "Board and card games", "Track you your friends and families board and card games scores", "Check the item_subtype collection, more added on request", NOW())');
+        DB::statement('INSERT INTO `item_type` (`name`, `friendly_name`, `description`, `example`, `created_at`) VALUES ("game", "Board and card games", "Track your board and card game sessions with your friends and family.", "Check the item_subtype collection, more added on request", NOW())');
 
         DB::statement('INSERT INTO `item_subtype` (`item_type_id`, `name`, `description`, `created_at`) VALUES (4, "carcassonne", "Track your Carcassonne games, wins and losses", NOW())');
         DB::statement('INSERT INTO `item_subtype` (`item_type_id`, `name`, `description`, `created_at`) VALUES (4, "scrabble", "Track your Scrabble games, wins and losses", NOW())');
