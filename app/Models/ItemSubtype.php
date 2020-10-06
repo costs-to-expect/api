@@ -24,6 +24,7 @@ class ItemSubtype extends Model
             ->select(
                 "{$this->table}.id AS {$this->table}_id",
                 "{$this->table}.name AS {$this->table}_name",
+                "{$this->table}.friendly_name AS {$this->table}_friendly_name",
                 "{$this->table}.description AS {$this->table}_description"
             )
             ->where("{$this->table}.item_type_id", '=', $item_type_id)
@@ -42,6 +43,7 @@ class ItemSubtype extends Model
         $collection = $this->select(
             "{$this->table}.id AS {$this->table}_id",
             "{$this->table}.name AS {$this->table}_name",
+            "{$this->table}.friendly_name AS {$this->table}_friendly_name",
             "{$this->table}.description AS {$this->table}_description",
             "{$this->table}.created_at AS {$this->table}_created_at"
         );
@@ -80,6 +82,7 @@ class ItemSubtype extends Model
             ->select(
                 "{$this->table}.id AS {$this->table}_id",
                 "{$this->table}.name AS {$this->table}_name",
+                "{$this->table}.friendly_name AS {$this->table}_friendly_name",
                 "{$this->table}.description AS {$this->table}_description",
                 "{$this->table}.created_at AS {$this->table}_created_at"
             )

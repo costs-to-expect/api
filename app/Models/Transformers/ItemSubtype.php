@@ -17,6 +17,7 @@ class ItemSubtype extends Transformer
         $this->transformed = [
             'id' => $this->hash->itemSubtype()->encode($to_transform['item_subtype_id']),
             'name' => $to_transform['item_subtype_name'],
+            'friendly_name' => $to_transform['item_subtype_friendly_name'],
             'description' => $to_transform['item_subtype_description'],
             'created' => $to_transform['item_subtype_created_at']
         ];

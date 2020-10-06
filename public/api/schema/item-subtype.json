@@ -7,6 +7,9 @@
         "name": {
             "type": "string"
         },
+        "friendly_name": {
+            "type": "string"
+        },
         "description": {
             "type": "string"
         },
@@ -16,6 +19,7 @@
         "required": [
             "id",
             "name",
+            "friendly_name",
             "description",
             "created"
         ]
