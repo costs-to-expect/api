@@ -144,7 +144,7 @@ class ResourceTypeManage extends Controller
                     $resource_type->delete();
                 });
 
-                ClearCache::dispatchNow($cache_job_payload->payload())->delay(now()->addMinute());
+                ClearCache::dispatchNow($cache_job_payload->payload());
 
                 return \App\Response\Responses::successNoContent();
             } catch (QueryException $e) {
