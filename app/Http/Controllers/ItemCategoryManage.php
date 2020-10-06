@@ -145,7 +145,7 @@ class ItemCategoryManage extends Controller
         try {
             $item_category->delete();
 
-            ClearCache::dispatch($cache_job_payload->payload());
+            ClearCache::dispatchNow($cache_job_payload->payload());
 
             return \App\Response\Responses::successNoContent();
         } catch (QueryException $e) {

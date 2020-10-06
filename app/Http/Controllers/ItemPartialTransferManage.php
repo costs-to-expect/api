@@ -56,7 +56,7 @@ class ItemPartialTransferManage extends Controller
             if ($partial_transfer !== null) {
                 $partial_transfer->delete();
 
-                ClearCache::dispatch($cache_job_payload->payload());
+                ClearCache::dispatchNow($cache_job_payload->payload());
 
                 return Responses::successNoContent();
             }
