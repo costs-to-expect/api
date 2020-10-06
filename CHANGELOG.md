@@ -2,6 +2,25 @@
 
 The complete changelog for the Costs to Expect REST API, our changelog follows the format defined at https://keepachangelog.com/en/1.0.0/
 
+## [v2.15.0]
+### Added
+- We have added an `item-subtype` table; the subtypes will allow us to customise individual `item-types` within the Costs to Expect App.
+- We have added a migration for the new `item-type` and the subtypes supported by the `item-type`.
+- We have updated all resource collection and item response, we will include the selected `item-subtype` in the response.
+- We have added an `item-subtype` schema.
+- We have added an `assigned-category` schema for category assignments.
+- We have added an `assigned-subcategory` schema for subcategory assignments.
+
+### Changed
+- We have modified the unique indexes on the `item_category` and `item_sub_category` table; we need to remove the unique index to allow multiple category assignments per `item`.
+- We have updated create resource; we need you to define the `item-subtype` when creating a resource.
+- We have added comments to the `allocated-expense` and `simple-expense` models. We left join to the category and subcategory tables knowing there will only ever be at most one category. For later `item-types` multiple categories will get assigned to an item, we will need to come up with an alternative solution.
+- We have updated the clear cache calls for delete requests; we no longer add a job to the queue, we clear the cache synchronously.
+
+### Fixed
+- We have updated create resource type; we didn't start a transaction.
+- We have updated the returned response after creating a resource type; the chosen item type will now show in the response.
+
 ## [v2.14.0] - 2020-09-27
 ### Added
 - We have updated the API to support multiple currencies, we are starting with GBP, USD and EUR.

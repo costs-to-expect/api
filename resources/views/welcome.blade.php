@@ -225,20 +225,28 @@
                     <h3>Added</h3>
 
                     <ul>
-                        <li>We have updated the API to support multiple currencies, we are starting with GBP, USD and EUR.</li>
-                        <li>We have added a `/currencies` route to detail the supported currencies.</li>
-                        <li>We have increased the scope of our development test suite, specifically with regards to summaries.</li>
-                        <li>We have added a `/queue` route to show the number of jobs in the queue.</li>
+                        <li>We have added an `item-subtype` table; the subtypes will allow us to customise individual `item-types` within the Costs to Expect App.</li>
+                        <li>We have added a migration for the new `item-type` and the subtypes supported by the `item-type`.</li>
+                        <li>We have updated all resource collection and item response, we will include the selected `item-subtype` in the response.</li>
+                        <li>We have added an `item-subtype` schema.</li>
+                        <li>We have added an `assigned-category` schema for category assignments.</li>
+                        <li>We have added an `assigned-subcategory` schema for subcategory assignments.</li>
                     </ul>
 
                     <h3>Changed</h3>
 
                     <ul>
-                        <li>We have updated our item collections. If the `item type` includes a monetary value, a currency object will be part of the response.</li>
-                        <li>We have updated the relevant item POSTs, `currency_id` is now required.</li>
-                        <li>We have updated the relevant item PATCHes, `currency_id is an allowable field.</li>
-                        <li>We have updated our item summaries, the format of the response summary objects supports multiple currencies if necessary.</li>
-                        <li>We have updated our resource type item summaries, the format of the response summary objects supports multiple currencies if necessary.</li>
+                        <li>We have modified the unique indexes on the `item_category` and `item_sub_category` table; we need to remove the unique index to allow multiple category assignments per `item`.</li>
+                        <li>We have updated create resource; we need you to define the `item-subtype` when creating a resource.</li>
+                        <li>We have added comments to the `allocated-expense` and `simple-expense` models. We left join to the category and subcategory tables knowing there will only ever be at most one category. For later `item-types` multiple categories will get assigned to an item, we will need to come up with an alternative solution.</li>
+                        <li>We have updated the clear cache calls for delete requests; we no longer add a job to the queue, we clear the cache synchronously.</li>
+                    </ul>
+
+                    <h3>Fixed</h3>
+
+                    <ul>
+                        <li>We have updated create resource type; we didn't start a transaction.</li>
+                        <li>We have updated the returned response after creating a resource type; the chosen item type will now show in the response.</li>
                     </ul>
                 </div>
             </div>
