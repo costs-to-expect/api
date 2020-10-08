@@ -16,14 +16,14 @@ class Validate
      * Validate the route, checks the route parameters based on the users
      * permitted resource types
      *
-     * @param integer $resource_type_id
-     * @param integer $category_id
+     * @param integer|string $resource_type_id
+     * @param integer|string $category_id
      * @param array $permitted_resource_types
      * @param bool $write
      */
     public static function category(
-        int $resource_type_id,
-        int $category_id,
+        $resource_type_id,
+        $category_id,
         array $permitted_resource_types,
         bool $write = false
     )
@@ -56,16 +56,16 @@ class Validate
      * Validate the route, checks the route parameters based on the users
      * permitted resource types
      *
-     * @param integer $resource_type_id
-     * @param integer $category_id
-     * @param integer $subcategory_id
+     * @param integer|string $resource_type_id
+     * @param integer|string $category_id
+     * @param integer|string $subcategory_id
      * @param array $permitted_resource_types
      * @param bool $write
      */
     public static function subcategory(
-        int $resource_type_id,
-        int $category_id,
-        int $subcategory_id,
+        $resource_type_id,
+        $category_id,
+        $subcategory_id,
         array $permitted_resource_types,
         $write = false
     )
@@ -112,7 +112,7 @@ class Validate
          if ($write === false) {
             if (
                 Validator\ResourceType::existsToUserForViewing(
-                    (int) $resource_type_id,
+                    $resource_type_id,
                     $permitted_resource_types
                 ) === false
             ) {
@@ -121,7 +121,7 @@ class Validate
         } else {
             if (
                 Validator\ResourceType::existsToUserForManagement(
-                    (int) $resource_type_id,
+                    $resource_type_id,
                     $permitted_resource_types
                 ) === false
             ) {
@@ -149,8 +149,8 @@ class Validate
         if ($write === false) {
             if (
                 Validator\Resource::existsToUserForViewing(
-                    (int) $resource_type_id,
-                    (int) $resource_id,
+                    $resource_type_id,
+                    $resource_id,
                     $permitted_resource_types
                 ) === false
             ) {
@@ -159,8 +159,8 @@ class Validate
         } else {
             if (
                 Validator\Resource::existsToUserForManagement(
-                    (int) $resource_type_id,
-                    (int) $resource_id,
+                    $resource_type_id,
+                    $resource_id,
                     $permitted_resource_types
                 ) === false
             ) {
@@ -190,9 +190,9 @@ class Validate
         if ($write === false) {
             if (
                 Validator\Item::existsToUserForViewing(
-                    (int) $resource_type_id,
-                    (int) $resource_id,
-                    (int) $item_id,
+                    $resource_type_id,
+                    $resource_id,
+                    $item_id,
                     $permitted_resource_types
                 ) === false
             ) {
@@ -201,9 +201,9 @@ class Validate
         } else {
             if (
                 Validator\Item::existsToUserForManagement(
-                    (int) $resource_type_id,
-                    (int) $resource_id,
-                    (int) $item_id,
+                    $resource_type_id,
+                    $resource_id,
+                    $item_id,
                     $permitted_resource_types
                 ) === false
             ) {
@@ -234,10 +234,10 @@ class Validate
         if ($write === false) {
             if (
                 Validator\ItemCategory::existsToUserForViewing(
-                    (int) $resource_type_id,
-                    (int) $resource_id,
-                    (int) $item_id,
-                    (int) $item_category_id,
+                    $resource_type_id,
+                    $resource_id,
+                    $item_id,
+                    $item_category_id,
                     $permitted_resource_types
                 ) === false
             ) {
@@ -246,10 +246,10 @@ class Validate
         } else {
             if (
                 Validator\ItemCategory::existsToUserForManagement(
-                    (int) $resource_type_id,
-                    (int) $resource_id,
-                    (int) $item_id,
-                    (int) $item_category_id,
+                    $resource_type_id,
+                    $resource_id,
+                    $item_id,
+                    $item_category_id,
                     $permitted_resource_types
                 ) === false
             ) {
@@ -268,7 +268,23 @@ class Validate
      */
     public static function itemType($item_type_id)
     {
-        if (Validator\ItemType::existsToUserForViewing((int) $item_type_id) === false) {
+        if (Validator\ItemType::existsToUserForViewing($item_type_id) === false) {
+            \App\Response\Responses::notFound(trans('entities.item-type'));
+        }
+    }
+
+    /**
+     * Validate the route, checks the route parameters based on the users
+     * permitted resource types
+     *
+     * (In this case that doesn't happen as anyone can see the item type)
+     *
+     * @param $item_type_id
+     * @param $item_subtype_id
+     */
+    public static function itemSubType($item_type_id, $item_subtype_id)
+    {
+        if (Validator\ItemSubtype::existsToUserForViewing($item_type_id, $item_subtype_id) === false) {
             \App\Response\Responses::notFound(trans('entities.item-type'));
         }
     }
@@ -283,7 +299,7 @@ class Validate
      */
     public static function currency($currency_id)
     {
-        if (Validator\Currency::existsToUserForViewing((int) $currency_id) === false) {
+        if (Validator\Currency::existsToUserForViewing($currency_id) === false) {
             \App\Response\Responses::notFound(trans('entities.currency'));
         }
     }
@@ -298,7 +314,7 @@ class Validate
      */
     public static function queue($queue_id)
     {
-        if (Validator\Queue::existsToUserForViewing((int) $queue_id) === false) {
+        if (Validator\Queue::existsToUserForViewing($queue_id) === false) {
             \App\Response\Responses::notFound(trans('entities.queue'));
         }
     }
@@ -327,11 +343,11 @@ class Validate
         if ($write === false) {
             if (
                 Validator\ItemSubcategory::existsToUserForViewing(
-                    (int) $resource_type_id,
-                    (int) $resource_id,
-                    (int) $item_id,
-                    (int) $item_category_id,
-                    (int) $item_subcategory_id,
+                    $resource_type_id,
+                    $resource_id,
+                    $item_id,
+                    $item_category_id,
+                    $item_subcategory_id,
                     $permitted_resource_types
                 ) === false
             ) {
@@ -340,11 +356,11 @@ class Validate
         } else {
             if (
                 Validator\ItemSubcategory::existsToUserForManagement(
-                    (int) $resource_type_id,
-                    (int) $resource_id,
-                    (int) $item_id,
-                    (int) $item_category_id,
-                    (int) $item_subcategory_id,
+                    $resource_type_id,
+                    $resource_id,
+                    $item_id,
+                    $item_category_id,
+                    $item_subcategory_id,
                     $permitted_resource_types
                 ) === false
             ) {

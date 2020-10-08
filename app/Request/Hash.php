@@ -47,6 +47,7 @@ class Hash
         $this->hashers['item-subcategory'] = new Hashids($config['item-subcategory'], $min_length);
         $this->hashers['item-transfer'] = new Hashids($config['item-transfer'], $min_length);
         $this->hashers['item-type'] = new Hashids($config['item-type'], $min_length);
+        $this->hashers['item-subtype'] = new Hashids($config['item-subtype'], $min_length);
         $this->hashers['permitted-user'] = new Hashids($config['permitted-user'], $min_length);
         $this->hashers['user'] = new Hashids($config['user'], $min_length);
         $this->hashers['currency'] = new Hashids($config['currency'], $min_length);
@@ -136,6 +137,11 @@ class Hash
     public function itemType(): Hashids
     {
         return $this->hashers['item-type'];
+    }
+
+    public function itemSubtype(): Hashids
+    {
+        return $this->hashers['item-subtype'];
     }
 
     public function permittedUser(): Hashids

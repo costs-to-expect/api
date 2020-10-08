@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Entity\Item\Entity;
 use App\Option\ItemCategoryCollection;
 use App\Option\ItemCategoryItem;
 use App\Response\Cache;
@@ -149,7 +150,9 @@ class ItemCategoryView extends Controller
 
         $response = new ItemCategoryCollection($permissions);
 
-        return $response->setAllowedValues(
+        return $response
+            ->setEntity(Entity::item($resource_type_id))
+            ->setAllowedValues(
                 (new \App\Option\AllowedValues\Category())->allowedValues($resource_type_id))
             ->create()
             ->response();

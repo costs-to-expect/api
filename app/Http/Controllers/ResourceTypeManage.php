@@ -47,31 +47,35 @@ class ResourceTypeManage extends Controller
             ->setUserId($this->user_id);
 
         try {
-            $resource_type = new ResourceType([
-                'name' => request()->input('name'),
-                'description' => request()->input('description'),
-                'public' => request()->input('public', 0)
-            ]);
-            $resource_type->save();
+            $resource_type = DB::transaction(function() {
+                $resource_type = new ResourceType([
+                    'name' => request()->input('name'),
+                    'description' => request()->input('description'),
+                    'public' => request()->input('public', 0)
+                ]);
+                $resource_type->save();
 
-            $permitted_users = new PermittedUser([
-                'resource_type_id' => $resource_type->id,
-                'user_id' => $this->user_id,
-                'added_by' => $this->user_id
-            ]);
-            $permitted_users->save();
+                $permitted_users = new PermittedUser([
+                    'resource_type_id' => $resource_type->id,
+                    'user_id' => $this->user_id,
+                    'added_by' => $this->user_id
+                ]);
+                $permitted_users->save();
 
-            $item_type_id = $this->hash->decode('item-type', request()->input('item_type_id'));
+                $item_type_id = $this->hash->decode('item-type', request()->input('item_type_id'));
 
-            if ($item_type_id === false) {
-                return \App\Response\Responses::unableToDecode();
-            }
+                if ($item_type_id === false) {
+                    return \App\Response\Responses::unableToDecode();
+                }
 
-            $resource_type_item_type = new ResourceTypeItemType([
-                'resource_type_id' => $resource_type->id,
-                'item_type_id' => $item_type_id
-            ]);
-            $resource_type_item_type->save();
+                $resource_type_item_type = new ResourceTypeItemType([
+                    'resource_type_id' => $resource_type->id,
+                    'item_type_id' => $item_type_id
+                ]);
+                $resource_type_item_type->save();
+
+                return $resource_type;
+            });
 
             ClearCache::dispatch($cache_job_payload->payload())->delay(now()->addMinute());
 
@@ -140,7 +144,7 @@ class ResourceTypeManage extends Controller
                     $resource_type->delete();
                 });
 
-                ClearCache::dispatch($cache_job_payload->payload())->delay(now()->addMinute());
+                ClearCache::dispatchNow($cache_job_payload->payload());
 
                 return \App\Response\Responses::successNoContent();
             } catch (QueryException $e) {

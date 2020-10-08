@@ -23,7 +23,7 @@ class Queue
     {
         return !(
             $queue_id === 'nill' ||
-            (new ResourceTypeAccess())->queueExistsToUser($queue_id) === false
+            (new ResourceTypeAccess())->queueExistsToUser((int) $queue_id) === false
         );
     }
 }

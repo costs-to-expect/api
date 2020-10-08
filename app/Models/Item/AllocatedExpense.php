@@ -87,6 +87,7 @@ class AllocatedExpense extends Model implements IModel
             where('item_type_allocated_expense.item_id', '=', $item_id)->
             where('item.id', '=', $item_id);
 
+        // We can only do this here because there will only ever be one category assignment
         if (
             array_key_exists('include-categories', $parameters) === true &&
             Boolean::convertedValue($parameters['include-categories']) === true
@@ -325,6 +326,7 @@ class AllocatedExpense extends Model implements IModel
             where('resource_id', '=', $resource_id)->
             where('resource.resource_type_id', '=', $resource_type_id);
 
+        // We can only do this here because there will only ever be one category assignment
         if (
             array_key_exists('include-categories', $parameters) === true &&
             Boolean::convertedValue($parameters['include-categories']) === true

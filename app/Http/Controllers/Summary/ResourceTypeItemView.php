@@ -831,7 +831,7 @@ class ResourceTypeItemView extends Controller
     public function optionsIndex(string $resource_type_id): JsonResponse
     {
         Route\Validate::resourceType(
-            (int) $resource_type_id,
+            $resource_type_id,
             $this->permitted_resource_types
         );
 

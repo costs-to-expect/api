@@ -35,7 +35,7 @@ class CategoryView extends Controller
     public function index($resource_type_id): JsonResponse
     {
         Route\Validate::resourceType(
-            (int) $resource_type_id,
+            $resource_type_id,
             $this->permitted_resource_types
         );
 
@@ -113,8 +113,8 @@ class CategoryView extends Controller
     public function show($resource_type_id, $category_id): JsonResponse
     {
         Route\Validate::category(
-            (int) $resource_type_id,
-            (int) $category_id,
+            $resource_type_id,
+            $category_id,
             $this->permitted_resource_types
         );
 
@@ -167,7 +167,7 @@ class CategoryView extends Controller
     public function optionsIndex($resource_type_id): JsonResponse
     {
         Route\Validate::resourceType(
-            (int) $resource_type_id,
+            $resource_type_id,
             $this->permitted_resource_types
         );
 
@@ -192,14 +192,14 @@ class CategoryView extends Controller
     public function optionsShow($resource_type_id, $category_id): JsonResponse
     {
         Route\Validate::category(
-            (int) $resource_type_id,
-            (int) $category_id,
+            $resource_type_id,
+            $category_id,
             $this->permitted_resource_types
         );
 
         $permissions = Route\Permission::category(
-            (int) $resource_type_id,
-            (int) $category_id,
+            $resource_type_id,
+            $category_id,
             $this->permitted_resource_types
         );
 

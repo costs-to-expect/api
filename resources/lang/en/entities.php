@@ -12,7 +12,8 @@ return [
     'item-partial-transfer' => 'Item Partial Transfer',
     'item-subcategory' => 'Assigned Subcategory',
     'item-transfer' => 'Item Transfer',
-    'item-type' => 'Item type',
+    'item-type' => 'Item Type',
+    'item-subtype' => 'Item Subtype',
     'currency' => 'Currency',
     'queue' => 'Queue job',
 ];

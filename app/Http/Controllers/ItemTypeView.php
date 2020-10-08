@@ -93,7 +93,7 @@ class ItemTypeView extends Controller
      */
     public function show(string $item_type_id): JsonResponse
     {
-        Route\Validate::itemType((int) $item_type_id);
+        Route\Validate::itemType($item_type_id);
 
         $item_type = (new ItemType())->single($item_type_id);
 

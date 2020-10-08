@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Jobs\ClearCache;
+use App\Models\ResourceItemSubtype;
+use App\Models\ResourceType;
 use App\Response\Cache;
 use App\Request\Route;
 use App\Models\Resource;
@@ -12,6 +14,7 @@ use App\Response\Responses;
 use Exception;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\DB;
 
 /**
  * Manage resources
@@ -39,7 +42,16 @@ class ResourceManage extends Controller
             true
         );
 
-        $validator = (new ResourceValidator)->create(['resource_type_id' => $resource_type_id]);
+        $resource_type = (new ResourceType())->single(
+            $resource_type_id,
+            $this->permitted_resource_types,
+            $this->include_public
+        );
+
+        $validator = (new ResourceValidator)->create([
+            'resource_type_id' => $resource_type_id,
+            'item_type_id' => $resource_type['resource_type_item_type_id']
+        ]);
         \App\Request\BodyValidation::validateAndReturnErrors($validator);
 
         $cache_job_payload = (new Cache\JobPayload())
@@ -51,13 +63,29 @@ class ResourceManage extends Controller
             ->setUserId($this->user_id);
 
         try {
-            $resource = new Resource([
-                'resource_type_id' => $resource_type_id,
-                'name' => request()->input('name'),
-                'description' => request()->input('description'),
-                'effective_date' => request()->input('effective_date')
-            ]);
-            $resource->save();
+            $resource = DB::transaction(function() use ($resource_type_id) {
+                $resource = new Resource([
+                    'resource_type_id' => $resource_type_id,
+                    'name' => request()->input('name'),
+                    'description' => request()->input('description'),
+                    'effective_date' => request()->input('effective_date')
+                ]);
+                $resource->save();
+
+                $item_subtype_id = $this->hash->decode('item-subtype', request()->input('item_subtype_id'));
+
+                if ($item_subtype_id === false) {
+                    return \App\Response\Responses::unableToDecode();
+                }
+
+                $resource_item_subtype = new ResourceItemSubtype([
+                    'resource_id' => $resource->id,
+                    'item_subtype_id' => $item_subtype_id
+                ]);
+                $resource_item_subtype->save();
+
+                return $resource;
+            });
 
             ClearCache::dispatch($cache_job_payload->payload())->delay(now()->addMinute());
 
@@ -91,9 +119,10 @@ class ResourceManage extends Controller
             true
         );
 
-        $resource = (new Resource())->find($resource_id);
+        $resource = (new Resource())->instance($resource_type_id, $resource_id);
+        $resource_item_subtype = (new ResourceItemSubtype())->instance($resource_id);
 
-        if ($resource === null) {
+        if ($resource === null || $resource_item_subtype === null) {
             return Responses::failedToSelectModelForUpdateOrDelete();
         }
 
@@ -107,9 +136,12 @@ class ResourceManage extends Controller
             ->setUserId($this->user_id);
 
         try {
-            (new Resource())->find($resource_id)->delete();
+            DB::transaction(function() use ($resource, $resource_item_subtype) {
+                $resource_item_subtype->delete();
+                $resource->delete();
+            });
 
-            ClearCache::dispatch($cache_job_payload->payload())->delay(now()->addMinute());
+            ClearCache::dispatchNow($cache_job_payload->payload());
 
             return Responses::successNoContent();
         } catch (QueryException $e) {

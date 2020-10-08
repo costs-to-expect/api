@@ -21,6 +21,16 @@ return [
         'type' => 'string',
         'required' => true
     ],
+    'item_subtype_id' => [
+        'field' => 'item_subtype_id',
+        'title' => 'resource/fields.title-item_subtype_id',
+        'description' => 'resource/fields.description-item_subtype_id',
+        'type' => 'string',
+        'validation' => [
+            'length' => 10
+        ],
+        'required' => true
+    ],
     'effective_date' => [
         'field' => 'effective_date',
         'title' => 'resource/fields.title-effective_date',

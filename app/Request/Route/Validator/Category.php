@@ -33,8 +33,8 @@ class Category
         return !(
             $category_id === 'nill' ||
             (new ResourceTypeAccess())->categoryExistsToUser(
-                $resource_type_id,
-                $category_id,
+                (int) $resource_type_id,
+                (int) $category_id,
                 $permitted_resource_types
             ) === false
         );
@@ -59,8 +59,8 @@ class Category
         return !(
             $category_id === 'nill' ||
             (new ResourceTypeAccess())->categoryExistsToUser(
-                $resource_type_id,
-                $category_id,
+                (int) $resource_type_id,
+                (int) $category_id,
                 $permitted_resource_types,
                 true
             ) === false

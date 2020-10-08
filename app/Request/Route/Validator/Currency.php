@@ -25,7 +25,7 @@ class Currency
     {
         return !(
             $currency_id === 'nill' ||
-            (new ResourceTypeAccess())->currencyExistsToUser($currency_id) === false
+            (new ResourceTypeAccess())->currencyExistsToUser((int) $currency_id) === false
         );
     }
 }

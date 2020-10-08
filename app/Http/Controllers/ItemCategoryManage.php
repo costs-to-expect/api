@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Entity\Item\Entity;
 use App\Jobs\ClearCache;
 use App\Response\Cache;
 use App\Request\Route;
@@ -43,6 +44,17 @@ class ItemCategoryManage extends Controller
             $this->permitted_resource_types,
             true
         );
+
+        $entity = Entity::item($resource_type_id);
+        $assigned = (new ItemCategory())->numberAssigned(
+            $resource_type_id,
+            $resource_id,
+            $item_id
+        );
+
+        if ($assigned >= $entity->categoryAssignmentLimit()) {
+            return \App\Response\Responses::categoryAssignmentLimit($entity->categoryAssignmentLimit());
+        }
 
         $validator = (new ItemCategoryValidator)->create();
         \App\Request\BodyValidation::validateAndReturnErrors(
@@ -133,7 +145,7 @@ class ItemCategoryManage extends Controller
         try {
             $item_category->delete();
 
-            ClearCache::dispatch($cache_job_payload->payload());
+            ClearCache::dispatchNow($cache_job_payload->payload());
 
             return \App\Response\Responses::successNoContent();
         } catch (QueryException $e) {

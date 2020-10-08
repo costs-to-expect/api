@@ -16,5 +16,7 @@ return [
     'validation' => 'Validation error.',
     'authentication-required' => 'Authentication required, please try again with a Bearer.',
     'maintenance' => 'Down for maintenance, we should be back very soon, please check https://status.costs-to-expect.com for more information',
-    'error' => 'Sorry, there has been an error, please try again later.'
+    'error' => 'Sorry, there has been an error, please try again later.',
+    'category-limit' => 'Unable to handle your request, the number of allowable category assignments reached',
+    'subcategory-limit' => 'Unable to handle your request, the number of allowable subcategory assignments reached',
 ];

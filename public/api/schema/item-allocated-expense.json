@@ -38,6 +38,9 @@
         "effective_date": {
             "type": "string"
         },
+        "categories": {
+            "type": "array"
+        },
         "created": {
             "type": "string"
         },
@@ -54,6 +57,7 @@
         "percentage",
         "actualised_total",
         "effective_date",
+        "categories",
         "created",
         "updated"
     ]

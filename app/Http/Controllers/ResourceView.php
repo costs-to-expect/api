@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\ResourceType;
+use App\Option\AllowedValues\ItemSubtype;
 use App\Option\ResourceCollection;
 use App\Option\ResourceItem;
 use App\Response\Cache;
@@ -155,9 +157,18 @@ class ResourceView extends Controller
             $this->permitted_resource_types
         );
 
+        $resource_type = (new ResourceType())->single(
+            $resource_type_id,
+            $this->permitted_resource_types,
+            $this->include_public
+        );
+
         $response = new ResourceCollection($permissions);
 
-        return $response->create()->response();
+        return $response
+            ->setAllowedValues((new ItemSubtype())->allowedValues($resource_type['resource_type_item_type_id']))
+            ->create()
+            ->response();
     }
 
     /**

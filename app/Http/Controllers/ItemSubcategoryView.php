@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Entity\Item\Entity;
 use App\Option\ItemSubcategoryCollection;
 use App\Option\ItemSubcategoryItem;
 use App\Response\Cache;
@@ -175,11 +176,13 @@ class ItemSubcategoryView extends Controller
 
         $response = new ItemSubcategoryCollection($permissions);
 
-        return $response->setAllowedValues(
+        return $response
+            ->setEntity(Entity::item($resource_type_id))
+            ->setAllowedValues(
                 (new \App\Option\AllowedValues\Subcategory())->allowedValues($item_category->category_id)
-            )->
-            create()->
-            response();
+            )
+            ->create()
+            ->response();
     }
 
     /**

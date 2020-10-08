@@ -21,6 +21,9 @@ return [
     'item_type_GET_index' => 'Return all the item types supported in the API',
     'item_type_GET_show' => 'Return the selected item type',
 
+    'item_subtype_GET_index' => 'Return all the item subtypes supported by the selected item type',
+    'item_subtype_GET_show' => 'Return the selected item subtype',
+
     'currency_GET_index' => 'Return all the currencies supported in the API',
     'currency_GET_show' => 'Return the selected currency',
 
@@ -49,13 +52,21 @@ return [
 
     'item_category_GET_index' => 'Return the category assigned to the selected item',
     'item_category_GET_show' => 'Return the category assigned to the selected item',
-    'item_category_POST' => 'Assign a category to the selected item',
+
+    'item_category_POST_allocated-expense' => 'Assign a maximum of one category to the selected allocated-expense',
+    'item_category_POST_simple-expense' => 'Assign a maximum of one category to the selected simple-expense',
+    'item_category_POST_simple-item' => 'Category assignment not support for simple-item',
+
     'item_category_PATCH' => 'Update the category assigned to the selected item',
     'item_category_DELETE' => 'Delete the category assigned to the selected item',
 
     'item_sub_category_GET_index' => 'Return the subcategory assigned to the selected item',
     'item_sub_category_GET_show' => 'Return the subcategory assigned to the selected item',
-    'item_sub_category_POST' => 'Assign a subcategory to the selected item',
+
+    'item_sub_category_POST_allocated-expense' => 'Assign a maximum of one subcategory to the selected allocated-expense',
+    'item_sub_category_POST_simple-expense' => 'Assign a maximum of one subcategory to the selected simple-expense',
+    'item_sub_category_POST_simple-item' => 'Subcategory assignment not support for simple-item',
+
     'item_sub_category_PATCH' => 'Update the subcategory assigned to the selected item',
     'item_sub_category_DELETE' => 'Delete the subcategory assigned to the selected item',
 

@@ -191,66 +191,53 @@ class ResourceTypeAccess extends Model
         return count($collection->get()) === 1;
     }
 
-    /**
-     * Validate that the item type exists
-     *
-     * @param integer $id
-     *
-     * @return boolean
-     */
     public function itemTypeExistsToUser(int $id): bool
     {
-        $collection = $this->from('item_type')->
-            where('item_type.id', '=', $id);
+        $collection = $this
+            ->from('item_type')
+            ->where('item_type.id', '=', $id);
 
         return count($collection->get()) === 1;
     }
 
-    /**
-     * Validate that the currency exists
-     *
-     * @param integer $id
-     *
-     * @return boolean
-     */
+    public function itemSubTypeExistsToUser(int $item_type_id, int $id): bool
+    {
+        $collection = $this
+            ->from('item_subtype')
+            ->join('item_type', 'item_subtype.item_type_id', 'item_type.id')
+            ->where('item_type.id', '=', $item_type_id)
+            ->where('item_subtype.id', '=', $id);
+
+        return count($collection->get()) === 1;
+    }
+
     public function currencyExistsToUser(int $id): bool
     {
-        $collection = $this->from('currency')->
-        where('currency.id', '=', $id);
+        $collection = $this
+            ->from('currency')
+            ->where('currency.id', '=', $id);
 
         return count($collection->get()) === 1;
     }
 
-    /**
-     * Validate that the queue id
-     *
-     * @param integer $id
-     *
-     * @return boolean
-     */
     public function queueExistsToUser(int $id): bool
     {
-        $collection = $this->from('jobs')->
-        where('jobs.id', '=', $id);
+        $collection = $this
+            ->from('jobs')
+            ->where('jobs.id', '=', $id);
 
         return count($collection->get()) === 1;
     }
 
-    /**
-     * Fetch all the resource types the user has access to
-     *
-     * @param integer $user_id
-     *
-     * @return array
-     */
     public function permittedResourceTypes(int $user_id): array
     {
         $permitted = [];
 
-        $results = $this->where('user_id', '=', $user_id)->
-            select('resource_type_id')->
-            get()->
-            toArray();
+        $results = $this
+            ->where('user_id', '=', $user_id)
+            ->select('resource_type_id')
+            ->get()
+            ->toArray();
 
         foreach ($results as $row) {
             $permitted[] = (int) $row['resource_type_id'];

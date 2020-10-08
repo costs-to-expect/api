@@ -35,6 +35,24 @@ class ItemSubcategory extends Model
         return $this->belongsTo(ItemCategory::class, 'item_category_id', 'id');
     }
 
+    public function numberAssigned(
+        int $resource_type_id,
+        int $resource_id,
+        int $item_id,
+        int $item_category_id
+    ): int
+    {
+        return $this
+            ->join('item_category', 'item_sub_category.item_category_id', 'item_category.id')
+            ->join('item', 'item_category.item_id', 'item.id')
+            ->join('resource', 'item.resource_id', 'resource.id')
+            ->where('item_category.id', '=', $item_category_id)
+            ->where('item_category.item_id', '=', $item_id)
+            ->where('resource.id', '=', $resource_id)
+            ->where('resource.resource_type_id', '=', $resource_type_id)
+            ->count();
+    }
+
     public function paginatedCollection(
         int $resource_type_id,
         int $resource_id,

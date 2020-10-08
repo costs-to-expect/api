@@ -91,7 +91,7 @@ class CurrencyView extends Controller
      */
     public function show(string $currency_id): JsonResponse
     {
-        Route\Validate::currency((int) $currency_id);
+        Route\Validate::currency($currency_id);
 
         $currency = (new Currency())->single($currency_id);
 

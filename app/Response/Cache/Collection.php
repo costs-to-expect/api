@@ -97,7 +97,7 @@ class Collection
      * Pass in the content from the cache table, the content will include
      * four indexes, total, collection, headers and pagination
      *
-     * @param array $content
+     * @param array|null $content
      */
     public function setFromCache(array $content = null): void
     {

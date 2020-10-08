@@ -6,6 +6,7 @@ namespace App\Request\Validate;
 use App\Request\Validate\Validator as BaseValidator;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Validator as ValidatorFacade;
+use Illuminate\Validation\Rule;
 
 /**
  * Validation helper class for resources, returns the generated validator objects
@@ -23,7 +24,7 @@ class Resource extends BaseValidator
      *
      * @return array
      */
-    private function createRules(int $resource_type_id): array
+    private function createRules(int $resource_type_id, int $item_type_id): array
     {
         return array_merge(
             [
@@ -33,6 +34,14 @@ class Resource extends BaseValidator
                     'max:255',
                     'unique:resource,name,null,id,resource_type_id,' . $resource_type_id
                 ],
+                'item_subtype_id' => [
+                    'required',
+                    Rule::exists('item_subtype', 'id')->where(
+                        function ($query) use ($item_type_id) {
+                            $query->where('item_type_id', '=', $item_type_id);
+                        }
+                    )
+                ]
             ],
             Config::get('api.resource.validation.POST.fields')
         );
@@ -81,11 +90,21 @@ class Resource extends BaseValidator
      */
     public function create(array $options = []): \Illuminate\Contracts\Validation\Validator
     {
-        $this->requiredIndexes(['resource_type_id'], $options);
+        $this->requiredIndexes(['resource_type_id', 'item_type_id'], $options);
+
+        $decode = $this->hash->itemSubtype()->decode(request()->input('item_subtype_id'));
+
+        $item_subtype_id = null;
+        if (count($decode) === 1) {
+            $item_subtype_id = $decode[0];
+        }
 
         return ValidatorFacade::make(
-            request()->all(),
-            $this->createRules((int) $options['resource_type_id']),
+            array_merge(
+                request()->all(),
+                ['item_subtype_id' => $item_subtype_id]
+            ),
+            $this->createRules((int) $options['resource_type_id'], (int) $options['item_type_id']),
             $this->translateMessages('api.resource.validation.POST.messages')
         );
     }

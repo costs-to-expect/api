@@ -29,40 +29,11 @@ class AllocatedExpense extends Transformer
             'percentage' => $to_transform['item_percentage'],
             'actualised_total' => number_format((float) $to_transform['item_actualised_total'], 2, '.', ''),
             'effective_date' => $to_transform['item_effective_date'],
+            'categories' => [],
             'created' => $to_transform['item_created_at'],
             'updated' => $to_transform['item_updated_at']
         ];
 
-        if (
-            array_key_exists('category_id', $to_transform) === true &&
-            array_key_exists('category_name', $to_transform) === true
-        ) {
-            if ($to_transform['category_id'] !== null) {
-                $this->transformed['category'] = [
-                    'id' => $this->hash->itemCategory()->encode($to_transform['item_category_id']),
-                    'category_id' => $this->hash->category()->encode($to_transform['category_id']),
-                    'name' => $to_transform['category_name'],
-                    'description' => $to_transform['category_description']
-                ];
-            } else {
-                $this->transformed['category'] = null;    
-            }
-
-            if (
-                array_key_exists('subcategory_id', $to_transform) === true &&
-                array_key_exists('subcategory_name', $to_transform) === true
-            ) {
-                if ($to_transform['subcategory_id'] !== null) {
-                    $this->transformed['subcategory'] = [
-                        'id' => $this->hash->itemSubcategory()->encode($to_transform['item_subcategory_id']),
-                        'subcategory_id' => $this->hash->subcategory()->encode($to_transform['subcategory_id']),
-                        'name' => $to_transform['subcategory_name'],
-                        'description' => $to_transform['subcategory_description']
-                    ];
-                } else {
-                    $this->transformed['subcategory'] = null;
-                }
-            }
-        }
+        $this->assignCategories($to_transform);
     }
 }

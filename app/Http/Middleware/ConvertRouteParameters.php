@@ -39,6 +39,7 @@ class ConvertRouteParameters
             'item_subcategory_id' => new Hashids($config['item-subcategory'], $min_length),
             'item_transfer_id' => new Hashids($config['item-transfer'], $min_length),
             'item_type_id' => new Hashids($config['item-type'], $min_length),
+            'item_subtype_id' => new Hashids($config['item-subtype'], $min_length),
             'currency_id' => new Hashids($config['currency'], $min_length),
             'queue_id' => new Hashids($config['queue'], $min_length),
         ];

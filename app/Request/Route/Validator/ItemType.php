@@ -25,7 +25,7 @@ class ItemType
     {
         return !(
             $item_type_id === 'nill' ||
-            (new ResourceTypeAccess())->itemTypeExistsToUser($item_type_id) === false
+            (new ResourceTypeAccess())->itemTypeExistsToUser((int) $item_type_id) === false
         );
     }
 }

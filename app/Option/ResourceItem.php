@@ -22,7 +22,7 @@ class ResourceItem extends Response
             option();
 
         $patch = new \App\Option\Method\PatchRequest();
-        $this->verbs['PATCH'] = $patch->setFields(Config::get('api.resource.fields'))->
+        $this->verbs['PATCH'] = $patch->setFields(Config::get('api.resource.fields-patch'))->
             setDescription('route-descriptions.resource_PATCH')->
             setAuthenticationRequirement(true)->
             setAuthenticationStatus($this->permissions['manage'])->

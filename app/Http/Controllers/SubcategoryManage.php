@@ -35,8 +35,8 @@ class SubcategoryManage extends Controller
     public function create($resource_type_id, $category_id): JsonResponse
     {
         Route\Validate::category(
-            (int) $resource_type_id,
-            (int) $category_id,
+            $resource_type_id,
+            $category_id,
             $this->permitted_resource_types,
             true
         );
@@ -89,9 +89,9 @@ class SubcategoryManage extends Controller
     ): JsonResponse
     {
         Route\Validate::subcategory(
-            (int) $resource_type_id,
-            (int) $category_id,
-            (int) $subcategory_id,
+            $resource_type_id,
+            $category_id,
+            $subcategory_id,
             $this->permitted_resource_types,
             true
         );
@@ -117,7 +117,7 @@ class SubcategoryManage extends Controller
         try {
             $sub_category->delete();
 
-            ClearCache::dispatch($cache_job_payload->payload());
+            ClearCache::dispatchNow($cache_job_payload->payload());
 
             return Responses::successNoContent();
         } catch (QueryException $e) {
@@ -143,9 +143,9 @@ class SubcategoryManage extends Controller
     ): JsonResponse
     {
         Route\Validate::subcategory(
-            (int) $resource_type_id,
-            (int) $category_id,
-            (int) $subcategory_id,
+            $resource_type_id,
+            $category_id,
+            $subcategory_id,
             $this->permitted_resource_types,
             true
         );
