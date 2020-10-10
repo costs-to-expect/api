@@ -67,7 +67,12 @@ class ItemSubcategoryView extends Controller
             if ($item_sub_category === null || (is_array($item_sub_category) && count($item_sub_category) === 0)) {
                 $collection = [];
             } else {
-                $collection = [(new ItemSubcategoryTransformer($item_sub_category[0]))->asArray()];
+                $collection = array_map(
+                    static function ($category) {
+                        return (new ItemSubcategoryTransformer($category))->asArray();
+                    },
+                    $item_sub_category
+                );
             }
 
             $headers = new Header();
