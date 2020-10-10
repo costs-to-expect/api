@@ -29,6 +29,9 @@ class Entity
             case 'simple-item':
                 return new SimpleItem();
 
+            case 'game':
+                return new Game();
+
             default:
                 throw new \OutOfRangeException('No entity definition for ' . $item_type, 500);
         }

@@ -18,7 +18,7 @@ class Game extends Model implements IModel
 {
     protected $table = 'item_type_game';
 
-    protected $guarded = ['id', 'created_at', 'updated_at'];
+    protected $guarded = ['id'];
 
     public $timestamps = false;
 
