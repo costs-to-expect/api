@@ -24,14 +24,14 @@ return [
         'field' => 'game',
         'title' => 'item-type-game/fields.title-game',
         'description' => 'item-type-game/fields.description-game',
-        'type' => 'string',
+        'type' => 'json',
         'required' => true
     ],
     'statistics' => [
         'field' => 'statistics',
         'title' => 'item-type-game/fields.title-statistics',
         'description' => 'item-type-game/fields.description-statistics',
-        'type' => 'string',
+        'type' => 'json',
         'required' => true
     ]
 ];

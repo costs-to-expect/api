@@ -16,11 +16,11 @@ return [
             ],
             'game' => [
                 'required',
-                'string'
+                'json'
             ],
             'statistics' => [
                 'required',
-                'string'
+                'json'
             ]
         ],
         'messages' => []
@@ -39,11 +39,11 @@ return [
             ],
             'game' => [
                 'required',
-                'string'
+                'json'
             ],
             'statistics' => [
                 'required',
-                'string'
+                'json'
             ]
         ],
         'messages' => []

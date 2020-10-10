@@ -30,8 +30,8 @@ class Game extends Item
             'item_id' => $id,
             'name' => request()->input('name'),
             'description' => request()->input('description', null),
-            'game' => json_encode(request()->input('game'), JSON_THROW_ON_ERROR),
-            'statistics' => json_encode(request()->input('statistics'), JSON_THROW_ON_ERROR),
+            'game' => request()->input('game'),
+            'statistics' => request()->input('statistics'),
             'created_at' => Date::now(),
             'updated_at' => null
         ]);
