@@ -34,7 +34,6 @@ return [
             ],
             'percentage' => [
                 'sometimes',
-                'required',
                 'integer',
                 'between:1,100'
             ]

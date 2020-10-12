@@ -59,7 +59,12 @@ class ItemCategoryView extends Controller
             if ($item_category === null || (is_array($item_category) === true && count($item_category) === 0)) {
                 $collection = [];
             } else {
-                $collection = [(new ItemCategoryTransformer($item_category[0]))->asArray()];
+                $collection = array_map(
+                    static function ($category) {
+                        return (new ItemCategoryTransformer($category))->asArray();
+                    },
+                    $item_category
+                );
             }
 
             $headers = new Header();
