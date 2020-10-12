@@ -1,0 +1,47 @@
+{
+    "type": "object",
+    "properties": {
+        "id": {
+            "type": "string"
+        },
+        "name": {
+            "type": "string"
+        },
+        "description": {
+            "type": ["null", "string"]
+        },
+        "game": {
+            "type": "object"
+        },
+        "statistics": {
+            "type": "object"
+        },
+        "winner": {
+            "type": ["string", "null"]
+        },
+        "score": {
+            "type": "integer"
+        },
+        "complete": {
+            "type": "integer"
+        },
+        "created": {
+            "type": "string"
+        },
+        "updated": {
+            "type": ["null", "string"]
+        }
+    },
+    "required": [
+        "id",
+        "name",
+        "description",
+        "game",
+        "statistics",
+        "winner",
+        "score",
+        "complete",
+        "created",
+        "updated"
+    ]
+}
