@@ -21,8 +21,12 @@ class CreateItemTypeGame extends Migration
             $table->unsignedBigInteger('item_id');
             $table->string('name'); // Game and Datetime??
             $table->string('description')->nullable();
+            $table->longText('players');
             $table->longText('game');
             $table->longText('statistics');
+            $table->char('winner', 10)->nullable();
+            $table->integer('score', false, true)->default(0);
+            $table->tinyInteger('complete', false, true)->default(0);
             $table->timestamps();
             $table->foreign('item_id')->references('id')->on('item');
         });
