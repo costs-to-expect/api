@@ -13,37 +13,33 @@ return [
             'description' => [
                 'sometimes',
                 'string'
-            ],
-            'game' => [
-                'required',
-                'json'
-            ],
-            'statistics' => [
-                'required',
-                'json'
             ]
         ],
         'messages' => []
     ],
     'PATCH' => [
         'fields' => [
-            'name' => [
-                'sometimes',
-                'string',
-                'max:255'
-            ],
-            'description' => [
-                'sometimes',
-                'nullable',
-                'string'
-            ],
             'game' => [
                 'required',
                 'json'
             ],
             'statistics' => [
-                'required',
+                'sometimes',
                 'json'
+            ],
+            'winner' => [
+                'sometimes',
+                'string',
+                'size:10'
+            ],
+            'score' => [
+                'sometimes',
+                'integer',
+                'min:0'
+            ],
+            'complete' => [
+                'sometimes',
+                'boolean'
             ]
         ],
         'messages' => []

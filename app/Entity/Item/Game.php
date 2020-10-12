@@ -6,6 +6,7 @@ namespace App\Entity\Item;
 use App\Models\Transformers\Transformer;
 use App\Request\Validate\Validator;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Config as LaravelConfig;
 use Illuminate\Support\Facades\Date;
 
 class Game extends Item
@@ -30,8 +31,8 @@ class Game extends Item
             'item_id' => $id,
             'name' => request()->input('name'),
             'description' => request()->input('description', null),
-            'game' => request()->input('game'),
-            'statistics' => request()->input('statistics'),
+            'game' => "{\"turns\": []}",
+            'statistics' => "{\"turns\": 0, \"scores\": []}",
             'created_at' => Date::now(),
             'updated_at' => null
         ]);
@@ -100,6 +101,11 @@ class Game extends Item
     public function resourceTypeTransformer(array $data_to_transform): Transformer
     {
         return new \App\Models\Transformers\ResourceTypeItem\SimpleItem($data_to_transform);
+    }
+
+    public function patchFields(): array
+    {
+        return LaravelConfig::get($this->base_path . '.fields-patch', []);
     }
 
     public function summaryResourceTypeModel(): Model

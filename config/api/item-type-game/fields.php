@@ -19,19 +19,5 @@ return [
         'description' => 'item-type-game/fields.description-description',
         'type' => 'string',
         'required' => false
-    ],
-    'game' => [
-        'field' => 'game',
-        'title' => 'item-type-game/fields.title-game',
-        'description' => 'item-type-game/fields.description-game',
-        'type' => 'json',
-        'required' => true
-    ],
-    'statistics' => [
-        'field' => 'statistics',
-        'title' => 'item-type-game/fields.title-statistics',
-        'description' => 'item-type-game/fields.description-statistics',
-        'type' => 'json',
-        'required' => true
     ]
 ];

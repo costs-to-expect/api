@@ -39,6 +39,9 @@ class Game extends Model implements IModel
             'item_description' => $item_type->description,
             'item_game' => $item_type->game,
             'item_statistics' => $item_type->statistics,
+            'item_winner' => $item_type->winner,
+            'item_score' => $item_type->score,
+            'item_complete' => $item_type->complete,
             'item_created_at' => ($item_type->created_at !== null) ? $item_type->created_at->toDateTimeString() : null,
             'item_updated_at' => ($item_type->updated_at !== null) ? $item_type->updated_at->toDateTimeString() : null,
         ];
@@ -57,6 +60,9 @@ class Game extends Model implements IModel
             "{$this->table}.description AS item_description",
             "{$this->table}.game AS item_game",
             "{$this->table}.statistics AS item_statistics",
+            "{$this->table}.winner AS item_winner",
+            "{$this->table}.score AS item_score",
+            "{$this->table}.complete AS item_complete",
             "{$this->table}.created_at AS item_created_at",
             "{$this->table}.updated_at AS item_updated_at"
         ];
@@ -123,6 +129,9 @@ class Game extends Model implements IModel
             "{$this->table}.description AS item_description",
             "{$this->table}.game AS item_game",
             "{$this->table}.statistics AS item_statistics",
+            "{$this->table}.winner AS item_winner",
+            "{$this->table}.score AS item_score",
+            "{$this->table}.complete AS item_complete",
             "{$this->table}.created_at AS item_created_at",
             "{$this->table}.updated_at AS item_updated_at"
         ];
