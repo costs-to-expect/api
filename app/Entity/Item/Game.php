@@ -95,12 +95,12 @@ class Game extends Item
 
     public function resourceTypeModel(): Model
     {
-        return new \App\Models\ResourceTypeItem\SimpleItem();
+        return new \App\Models\ResourceTypeItem\Game();
     }
 
     public function resourceTypeTransformer(array $data_to_transform): Transformer
     {
-        return new \App\Models\Transformers\ResourceTypeItem\SimpleItem($data_to_transform);
+        return new \App\Models\Transformers\ResourceTypeItem\Game($data_to_transform);
     }
 
     public function patchFields(): array
