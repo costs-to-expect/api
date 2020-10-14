@@ -32,6 +32,9 @@ class Game extends Model implements ISummaryModel
     {
         $collection = $this
             ->selectRaw("
+                `resource_type`.`id` AS resource_type_id, 
+                `resource_type`.`name` AS resource_type_name, 
+                `resource_type`.`description` AS resource_type_description, 
                 COUNT({$this->sub_table}.item_id) AS count, 
                 MAX({$this->sub_table}.created_at) AS last_updated
             ")
@@ -41,6 +44,7 @@ class Game extends Model implements ISummaryModel
             ->where('resource_type.id', '=', $resource_type_id);
 
         return $collection
+            ->groupBy('resource_type.id')
             ->get()
             ->toArray();
     }

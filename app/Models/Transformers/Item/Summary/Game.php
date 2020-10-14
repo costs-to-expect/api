@@ -17,6 +17,11 @@ class Game extends Transformer
     public function format(array $to_transform): void
     {
         $this->transformed = [
+            'resource_type' => [
+                'id' => $this->hash->resourceType()->encode($to_transform['resource_type_id']),
+                'name' => $to_transform['resource_type_name'],
+                'description' => $to_transform['resource_type_description']
+            ],
             'count' => (int) $to_transform['count']
         ];
     }
