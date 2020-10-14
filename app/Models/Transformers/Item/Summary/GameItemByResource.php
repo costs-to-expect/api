@@ -17,11 +17,28 @@ class GameItemByResource extends Transformer
     public function format(array $to_transform): void
     {
         foreach ($to_transform as $summary) {
-            $this->transformed[] = [
-                'id' => $this->hash->resource()->encode($summary['id']),
-                'name' => $summary['name'],
-                'count' => (int) $summary['count']
+
+            $transformed['resource'] = [
+                'id' => $this->hash->resource()->encode($summary['resource_id']),
+                'name' => $summary['resource_name'],
+                'description' => $summary['resource_description']
             ];
+
+            if (
+                array_key_exists('resource_item_subtype_id', $summary) === true &&
+                array_key_exists('resource_item_subtype_name', $summary) === true &&
+                array_key_exists('resource_item_subtype_description', $summary) === true
+            ) {
+                $transformed['item_subtype'] = [
+                    'id' => $this->hash->itemSubtype()->encode($summary['resource_item_subtype_id']),
+                    'name' => $summary['resource_item_subtype_name'],
+                    'description' => $summary['resource_item_subtype_description']
+                ];
+            }
+
+            $transformed['count'] = (int) $summary['count'];
+
+            $this->transformed[] = $transformed;
         }
     }
 }

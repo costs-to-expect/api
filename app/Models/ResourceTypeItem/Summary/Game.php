@@ -58,19 +58,25 @@ class Game extends Model implements ISummaryModel
     {
         $collection = $this
             ->selectRaw("
-                resource.id AS id, 
-                resource.name AS `name`, 
-                COUNT({$this->sub_table}.item_id) AS count, 
-                MAX({$this->sub_table}.created_at) AS last_updated"
+                `resource`.`id` AS resource_id, 
+                `resource`.`name` AS resource_name, 
+                `resource`.`description` AS resource_description, 
+                `item_subtype`.`id` AS resource_item_subtype_id,
+                `item_subtype`.`name` AS resource_item_subtype_name,
+                `item_subtype`.`description` AS resource_item_subtype_description,
+                COUNT(`{$this->sub_table}`.`item_id`) AS count, 
+                MAX(`{$this->sub_table}`.`created_at`) AS last_updated"
             )
             ->join($this->sub_table, 'item.id', "{$this->sub_table}.item_id")
             ->join('resource', 'item.resource_id', 'resource.id')
+            ->join('resource_item_subtype', 'resource_item_subtype.resource_id', 'resource.id')
+            ->join('item_subtype', 'resource_item_subtype.item_subtype_id', 'item_subtype.id')
             ->join('resource_type', 'resource.resource_type_id', 'resource_type.id')
             ->where('resource_type.id', '=', $resource_type_id);
 
         return $collection
-            ->groupBy('resource.id')
-            ->orderBy('name')
+            ->groupBy('resource.id', 'item_subtype.id')
+            ->orderBy('resource.name')
             ->get()
             ->toArray();
     }
