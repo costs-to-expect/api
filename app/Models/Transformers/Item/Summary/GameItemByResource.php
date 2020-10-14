@@ -29,7 +29,7 @@ class GameItemByResource extends Transformer
                 array_key_exists('resource_item_subtype_name', $summary) === true &&
                 array_key_exists('resource_item_subtype_description', $summary) === true
             ) {
-                $transformed['item_subtype'] = [
+                $transformed['resource']['item_subtype'] = [
                     'id' => $this->hash->itemSubtype()->encode($summary['resource_item_subtype_id']),
                     'name' => $summary['resource_item_subtype_name'],
                     'description' => $summary['resource_item_subtype_description']

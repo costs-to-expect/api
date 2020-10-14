@@ -49,12 +49,20 @@ class Game extends Model implements ISummaryModel
     {
         $collection = $this
             ->selectRaw("
+                `resource`.`id` AS resource_id, 
+                `resource`.`name` AS resource_name, 
+                `resource`.`description` AS resource_description, 
+                `item_subtype`.`id` AS resource_item_subtype_id,
+                `item_subtype`.`name` AS resource_item_subtype_name,
+                `item_subtype`.`description` AS resource_item_subtype_description,
                 COUNT({$this->sub_table}.item_id) AS count, 
                 MAX({$this->sub_table}.created_at) AS last_updated
             ")
             ->join($this->sub_table, 'item.id', "{$this->sub_table}.item_id")
             ->join("resource", "resource.id", "item.resource_id")
             ->join("resource_type", "resource_type.id", "resource.resource_type_id")
+            ->join('resource_item_subtype', 'resource_item_subtype.resource_id', 'resource.id')
+            ->join('item_subtype', 'resource_item_subtype.item_subtype_id', 'item_subtype.id')
             ->where("resource_type.id", "=", $resource_type_id)
             ->where("resource.id", "=", $resource_id);
 
@@ -70,6 +78,7 @@ class Game extends Model implements ISummaryModel
         );
 
         return $collection
+            ->groupBy('resource.id', 'item_subtype.id')
             ->get()
             ->toArray();
     }
@@ -91,16 +100,25 @@ class Game extends Model implements ISummaryModel
     {
         $collection = $this
             ->selectRaw("
+                `resource`.`id` AS resource_id, 
+                `resource`.`name` AS resource_name, 
+                `resource`.`description` AS resource_description,
+                `item_subtype`.`id` AS resource_item_subtype_id,
+                `item_subtype`.`name` AS resource_item_subtype_name,
+                `item_subtype`.`description` AS resource_item_subtype_description,
                 COUNT({$this->sub_table}.item_id) AS count, 
                 MAX({$this->sub_table}.created_at) AS last_updated
             ")
             ->join($this->sub_table, 'item.id', "{$this->sub_table}.item_id")
             ->join("resource", "resource.id", "item.resource_id")
             ->join("resource_type", "resource_type.id", "resource.resource_type_id")
+            ->join('resource_item_subtype', 'resource_item_subtype.resource_id', 'resource.id')
+            ->join('item_subtype', 'resource_item_subtype.item_subtype_id', 'item_subtype.id')
             ->where("resource_type.id", "=", $resource_type_id)
             ->where("resource.id", "=", $resource_id);
 
         return $collection
+            ->groupBy('resource.id', 'item_subtype.id')
             ->get()
             ->toArray();
     }
