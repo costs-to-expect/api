@@ -269,7 +269,7 @@ class ResourceTypeItemView extends Controller
     {
         $cache_control = new Cache\Control(
             $this->user_id,
-            in_array($resource_type_id, $this->permitted_resource_types, true)
+            in_array((int) $resource_type_id, $this->permitted_resource_types, true)
         );
         $cache_control->setTtlOneWeek();
 
@@ -317,7 +317,7 @@ class ResourceTypeItemView extends Controller
     {
         $cache_control = new Cache\Control(
             $this->user_id,
-            in_array($resource_type_id, $this->permitted_resource_types, true)
+            in_array((int) $resource_type_id, $this->permitted_resource_types, true)
         );
         $cache_control->setTtlOneWeek();
 
@@ -362,7 +362,7 @@ class ResourceTypeItemView extends Controller
     {
         $cache_control = new Cache\Control(
             $this->user_id,
-            in_array($resource_type_id, $this->permitted_resource_types, true)
+            in_array((int) $resource_type_id, $this->permitted_resource_types, true)
         );
         $cache_control->setTtlOneWeek();
 
@@ -409,7 +409,7 @@ class ResourceTypeItemView extends Controller
     {
         $cache_control = new Cache\Control(
             $this->user_id,
-            in_array($resource_type_id, $this->permitted_resource_types, true)
+            in_array((int) $resource_type_id, $this->permitted_resource_types, true)
         );
         $cache_control->setTtlOneWeek();
 
@@ -463,7 +463,7 @@ class ResourceTypeItemView extends Controller
     {
         $cache_control = new Cache\Control(
             $this->user_id,
-            in_array($resource_type_id, $this->permitted_resource_types, true)
+            in_array((int) $resource_type_id, $this->permitted_resource_types, true)
         );
         $cache_control->setTtlOneWeek();
 
@@ -513,7 +513,7 @@ class ResourceTypeItemView extends Controller
     {
         $cache_control = new Cache\Control(
             $this->user_id,
-            in_array($resource_type_id, $this->permitted_resource_types, true)
+            in_array((int) $resource_type_id, $this->permitted_resource_types, true)
         );
         $cache_control->setTtlOneWeek();
 
@@ -566,7 +566,7 @@ class ResourceTypeItemView extends Controller
     {
         $cache_control = new Cache\Control(
             $this->user_id,
-            in_array($resource_type_id, $this->permitted_resource_types, true)
+            in_array((int) $resource_type_id, $this->permitted_resource_types, true)
         );
         $cache_control->setTtlOneWeek();
 
@@ -613,7 +613,7 @@ class ResourceTypeItemView extends Controller
     {
         $cache_control = new Cache\Control(
             $this->user_id,
-            in_array($resource_type_id, $this->permitted_resource_types, true)
+            in_array((int) $resource_type_id, $this->permitted_resource_types, true)
         );
         $cache_control->setTtlOneWeek();
 
@@ -676,7 +676,7 @@ class ResourceTypeItemView extends Controller
     {
         $cache_control = new Cache\Control(
             $this->user_id,
-            in_array($resource_type_id, $this->permitted_resource_types, true)
+            in_array((int) $resource_type_id, $this->permitted_resource_types, true)
         );
         $cache_control->setTtlOneWeek();
 
@@ -732,7 +732,7 @@ class ResourceTypeItemView extends Controller
     {
         $cache_control = new Cache\Control(
             $this->user_id,
-            in_array($resource_type_id, $this->permitted_resource_types, true)
+            in_array((int) $resource_type_id, $this->permitted_resource_types, true)
         );
         $cache_control->setTtlOneWeek();
 
@@ -782,7 +782,7 @@ class ResourceTypeItemView extends Controller
     {
         $cache_control = new Cache\Control(
             $this->user_id,
-            in_array($resource_type_id, $this->permitted_resource_types, true)
+            in_array((int) $resource_type_id, $this->permitted_resource_types, true)
         );
         $cache_control->setTtlOneWeek();
 
