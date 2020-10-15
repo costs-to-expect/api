@@ -225,28 +225,25 @@
                     <h3>Added</h3>
 
                     <ul>
-                        <li>We have added an `item-subtype` table; the subtypes will allow us to customise individual `item-types` within the Costs to Expect App.</li>
-                        <li>We have added a migration for the new `item-type` and the subtypes supported by the `item-type`.</li>
-                        <li>We have updated all resource collection and item response, we will include the selected `item-subtype` in the response.</li>
-                        <li>We have added an `item-subtype` schema.</li>
-                        <li>We have added an `assigned-category` schema for category assignments.</li>
-                        <li>We have added an `assigned-subcategory` schema for subcategory assignments.</li>
+                        <li>We have added a migration to create the `game` item-type table.</li>
+                        <li>We have added the configuration for the `game` item-types.</li>
+                        <li>We have added a schema for the `game` item-type.</li>
+                        <li>We have added a schema for the `game` resource type item-type.</li>
+                        <li>We have updated the item and resource type item collections; the collections are aware of the new `game` item-type.</li>
+                        <li>We have updated the summary routes; the item and resource type item summaries are aware of the new `game` item-type.</li>
                     </ul>
 
                     <h3>Changed</h3>
 
                     <ul>
-                        <li>We have modified the unique indexes on the `item_category` and `item_sub_category` table; we need to remove the unique index to allow multiple category assignments per `item`.</li>
-                        <li>We have updated create resource; we need you to define the `item-subtype` when creating a resource.</li>
-                        <li>We have added comments to the `allocated-expense` and `simple-expense` models. We left join to the category and subcategory tables knowing there will only ever be at most one category. For later `item-types` multiple categories will get assigned to an item, we will need to come up with an alternative solution.</li>
-                        <li>We have updated the clear cache calls for delete requests; we no longer add a job to the queue, we clear the cache synchronously.</li>
+                        <li>We are upgrading summaries; the new `game` summaries include much more information than other summaries. We will upgrade all the summaries a little bit at a time.</li>
                     </ul>
 
                     <h3>Fixed</h3>
 
                     <ul>
-                        <li>We have updated create resource type; we didn't start a transaction.</li>
-                        <li>We have updated the returned response after creating a resource type; the chosen item type will now show in the response.</li>
+                        <li>We have removed a rogue validation rule present in the POST request for the `allocated-expense` item type.</li>
+                        <li>We have updated the item category and subcategory assignment routes. Category and subcategory assignment routes can show more than one item in the collection if the item-type configuration allows.</li>
                     </ul>
                 </div>
             </div>
