@@ -1,0 +1,128 @@
+<?php
+declare(strict_types=1);
+
+namespace App\Models\ResourceTypeItem\Summary;
+
+use App\Interfaces\ResourceTypeItem\ISummaryModel;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Query\Builder as QueryBuilder;
+
+/**
+ * @mixin QueryBuilder
+ * @author Dean Blackborough <dean@g3d-development.com>
+ * @copyright Dean Blackborough 2018-2020
+ * @license https://github.com/costs-to-expect/api/blob/master/LICENSE
+ */
+class Game extends Model implements ISummaryModel
+{
+    protected $guarded = ['id'];
+    protected $table = 'item';
+    protected $sub_table = 'item_type_game';
+
+    /**
+     * @param int $resource_type_id
+     * @param array $parameters
+     *
+     * @return array
+     */
+    public function summary(
+        int $resource_type_id,
+        array $parameters
+    ): array
+    {
+        $collection = $this
+            ->selectRaw("
+                `resource_type`.`id` AS resource_type_id, 
+                `resource_type`.`name` AS resource_type_name, 
+                `resource_type`.`description` AS resource_type_description, 
+                COUNT({$this->sub_table}.item_id) AS count, 
+                MAX({$this->sub_table}.created_at) AS last_updated
+            ")
+            ->join($this->sub_table, 'item.id', "{$this->sub_table}.item_id")
+            ->join('resource', 'item.resource_id', 'resource.id')
+            ->join('resource_type', 'resource.resource_type_id', 'resource_type.id')
+            ->where('resource_type.id', '=', $resource_type_id);
+
+        return $collection
+            ->groupBy('resource_type.id')
+            ->get()
+            ->toArray();
+    }
+
+    /**
+     * @param int $resource_type_id
+     * @param array $parameters
+     *
+     * @return array
+     */
+    public function resourcesSummary(
+        int $resource_type_id,
+        array $parameters
+    ): array
+    {
+        $collection = $this
+            ->selectRaw("
+                `resource`.`id` AS resource_id, 
+                `resource`.`name` AS resource_name, 
+                `resource`.`description` AS resource_description, 
+                `item_subtype`.`id` AS resource_item_subtype_id,
+                `item_subtype`.`name` AS resource_item_subtype_name,
+                `item_subtype`.`description` AS resource_item_subtype_description,
+                COUNT(`{$this->sub_table}`.`item_id`) AS count, 
+                MAX(`{$this->sub_table}`.`created_at`) AS last_updated"
+            )
+            ->join($this->sub_table, 'item.id', "{$this->sub_table}.item_id")
+            ->join('resource', 'item.resource_id', 'resource.id')
+            ->join('resource_item_subtype', 'resource_item_subtype.resource_id', 'resource.id')
+            ->join('item_subtype', 'resource_item_subtype.item_subtype_id', 'item_subtype.id')
+            ->join('resource_type', 'resource.resource_type_id', 'resource_type.id')
+            ->where('resource_type.id', '=', $resource_type_id);
+
+        return $collection
+            ->groupBy('resource.id', 'item_subtype.id')
+            ->orderBy('resource.name')
+            ->get()
+            ->toArray();
+    }
+
+    /**
+     * @param int $resource_type_id
+     * @param int|null $category_id
+     * @param int|null $subcategory_id
+     * @param int|null $year
+     * @param int|null $month
+     * @param array $parameters
+     * @param array $search_parameters
+     * @return array
+     */
+    public function filteredSummary(
+        int $resource_type_id,
+        int $category_id = null,
+        int $subcategory_id = null,
+        int $year = null,
+        int $month = null,
+        array $parameters = [],
+        array $search_parameters = []
+    ): array
+    {
+        $collection = $this
+            ->selectRaw("
+                COUNT({$this->sub_table}.item_id) AS count, 
+                MAX({$this->sub_table}.created_at) AS last_updated
+            ")
+            ->join($this->sub_table, 'item.id', "{$this->sub_table}.item_id")
+            ->join("resource", "resource.id", "item.resource_id")
+            ->join("resource_type", "resource_type.id", "resource.resource_type_id")
+            ->where("resource_type.id", "=", $resource_type_id);
+
+        if (count($search_parameters) > 0) {
+            foreach ($search_parameters as $field => $search_term) {
+                $collection->where("{$this->sub_table}." . $field, 'LIKE', '%' . $search_term . '%');
+            }
+        }
+
+        return $collection
+            ->get()
+            ->toArray();
+    }
+}

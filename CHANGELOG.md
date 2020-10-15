@@ -2,7 +2,23 @@
 
 The complete changelog for the Costs to Expect REST API, our changelog follows the format defined at https://keepachangelog.com/en/1.0.0/
 
-## [v2.15.0]
+## [v2.16.0] - 2020-10-15
+### Added
+- We have added a migration to create the `game` item-type table.
+- We have added the configuration for the `game` item-types.
+- We have added a schema for the `game` item-type.
+- We have added a schema for the `game` resource type item-type.
+- We have updated the item and resource type item collections; the collections are aware of the new `game` item-type.
+- We have updated the summary routes; the item and resource type item summaries are aware of the new `game` item-type.
+
+### Changed
+- We are upgrading summaries; the new `game` summaries include much more information than other summaries. We will upgrade all the summaries a little bit at a time.
+
+### Fixed
+- We have removed a rogue validation rule present in the POST request for the `allocated-expense` item type.
+- We have updated the item category and subcategory assignment routes. Category and subcategory assignment routes can show more than one item in the collection if the item-type configuration allows.
+
+## [v2.15.0] - 2020-10-08
 ### Added
 - We have added an `item-subtype` table; the subtypes will allow us to customise individual `item-types` within the Costs to Expect App.
 - We have added a migration for the new `item-type` and the subtypes supported by the `item-type`.
