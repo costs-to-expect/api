@@ -38,7 +38,7 @@ class Category extends Model
             join("resource_type", "category.resource_type_id", "resource_type.id")->
             where('category.resource_type_id', '=', $resource_type_id);
 
-        $collection = Clause::applyResourceTypeCollectionCondition(
+        $collection = Clause::applyPermittedResourceTypes(
             $collection,
             $permitted_resource_types,
             $include_public

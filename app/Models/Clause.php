@@ -50,7 +50,7 @@ class Clause
         return $collection;
     }
 
-    public static function applyResourceTypeCollectionCondition(
+    public static function applyPermittedResourceTypes(
         $collection,
         array $permitted_resource_types,
         bool $include_public = false

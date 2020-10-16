@@ -40,7 +40,7 @@ class Resource extends Model
             join('resource_type', 'resource.resource_type_id', 'resource_type.id')->
             where('resource_type.id', '=', $resource_type_id);
 
-        $collection = Clause::applyResourceTypeCollectionCondition(
+        $collection = Clause::applyPermittedResourceTypes(
             $collection,
             $permitted_resource_types,
             $include_public

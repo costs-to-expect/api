@@ -81,7 +81,7 @@ class ResourceType extends Model
     {
         $collection = $this->select("resource_type.id");
 
-        $collection = Clause::applyResourceTypeCollectionCondition(
+        $collection = Clause::applyPermittedResourceTypes(
             $collection,
             $permitted_resource_types,
             $include_public
@@ -144,7 +144,7 @@ class ResourceType extends Model
             ->join('item_type', 'resource_type_item_type.item_type_id', 'item_type.id')
             ->leftJoin("resource", "resource_type.id", "resource.id");
 
-        $collection = Clause::applyResourceTypeCollectionCondition(
+        $collection = Clause::applyPermittedResourceTypes(
             $collection,
             $permitted_resource_types,
             $include_public
@@ -245,7 +245,7 @@ class ResourceType extends Model
                 'resource_type.description AS resource_type_description'
             );
 
-        $collection = Clause::applyResourceTypeCollectionCondition(
+        $collection = Clause::applyPermittedResourceTypes(
             $collection,
             $permitted_resource_types,
             $include_public
