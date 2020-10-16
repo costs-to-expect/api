@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace App\Models;
 
+use App\Request\Validate\Boolean;
 use Illuminate\Database\Query\Builder as QueryBuilder;
 
 /**
@@ -54,7 +55,8 @@ class Clause
         $collection,
         array $permitted_resource_types,
         bool $include_public = false
-    ) {
+    )
+    {
         if ($include_public === true) {
             $collection->where(static function ($collection) use ($permitted_resource_types) {
                 $collection->where('resource_type.public', '=', 1)->
@@ -65,5 +67,24 @@ class Clause
         }
 
         return $collection->whereIn('resource_type.id', $permitted_resource_types);
+    }
+
+    public static function applyIncludeUnpublishedForAllocatedExpense(
+        $collection,
+        array $parameters
+    )
+    {
+        if (
+            array_key_exists('include-unpublished', $parameters) === false ||
+            Boolean::convertedValue($parameters['include-unpublished']) === false
+        ) {
+            $collection->where(static function ($collection) {
+                $collection
+                    ->whereNull('item_type_allocated_expense.publish_after')
+                    ->orWhereRaw('item_type_allocated_expense.publish_after < NOW()');
+            });
+        }
+
+        return $collection;
     }
 }

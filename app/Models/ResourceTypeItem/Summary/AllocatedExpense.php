@@ -51,7 +51,7 @@ class AllocatedExpense extends Model implements ISummaryModel, ISummaryModelCate
             ->join('currency', "{$this->sub_table}.currency_id", 'currency.id')
             ->where('resource_type.id', '=', $resource_type_id);
 
-        $collection = $this->includeUnpublished($collection, $parameters);
+        $collection = Clause::applyIncludeUnpublishedForAllocatedExpense($collection, $parameters);
 
         return $collection
             ->groupBy('currency.code')
@@ -88,7 +88,7 @@ class AllocatedExpense extends Model implements ISummaryModel, ISummaryModelCate
             ->join('currency', "{$this->sub_table}.currency_id", 'currency.id')
             ->where('resource_type.id', '=', $resource_type_id);
 
-        $collection = $this->includeUnpublished($collection, $parameters);
+        $collection = Clause::applyIncludeUnpublishedForAllocatedExpense($collection, $parameters);
 
         return $collection
             ->groupBy('resource.id', 'currency.code')
@@ -125,7 +125,7 @@ class AllocatedExpense extends Model implements ISummaryModel, ISummaryModelCate
             ->join('currency', "{$this->sub_table}.currency_id", 'currency.id')
             ->where("resource_type.id", "=", $resource_type_id);
 
-        $collection = $this->includeUnpublished($collection, $parameters);
+        $collection = Clause::applyIncludeUnpublishedForAllocatedExpense($collection, $parameters);
 
         return $collection
             ->groupBy('year', 'currency.code')
@@ -165,7 +165,7 @@ class AllocatedExpense extends Model implements ISummaryModel, ISummaryModelCate
             ->where("resource_type.id", "=", $resource_type_id)
             ->where(DB::raw("YEAR({$this->sub_table}.effective_date)"), '=', $year);
 
-        $collection = $this->includeUnpublished($collection, $parameters);
+        $collection = Clause::applyIncludeUnpublishedForAllocatedExpense($collection, $parameters);
 
         return $collection
             ->groupBy('month', 'currency.code')
@@ -208,7 +208,7 @@ class AllocatedExpense extends Model implements ISummaryModel, ISummaryModelCate
             ->where(DB::raw("YEAR({$this->sub_table}.effective_date)"), '=', $year)
             ->where(DB::raw("MONTH({$this->sub_table}.effective_date)"), '=', $month);
 
-        $collection = $this->includeUnpublished($collection, $parameters);
+        $collection = Clause::applyIncludeUnpublishedForAllocatedExpense($collection, $parameters);
 
         return $collection
             ->groupBy('month', 'currency.code')
@@ -248,7 +248,7 @@ class AllocatedExpense extends Model implements ISummaryModel, ISummaryModelCate
             ->where("resource_type.id", "=", $resource_type_id)
             ->where(DB::raw("YEAR({$this->sub_table}.effective_date)"), '=', $year);
 
-        $collection = $this->includeUnpublished($collection, $parameters);
+        $collection = Clause::applyIncludeUnpublishedForAllocatedExpense($collection, $parameters);
 
         return $collection
             ->groupBy('year', 'currency.code')
@@ -289,7 +289,7 @@ class AllocatedExpense extends Model implements ISummaryModel, ISummaryModelCate
             ->where("category.resource_type_id", "=", $resource_type_id)
             ->where("resource_type.id", "=", $resource_type_id);
 
-        $collection = $this->includeUnpublished($collection, $parameters);
+        $collection = Clause::applyIncludeUnpublishedForAllocatedExpense($collection, $parameters);
 
         return $collection
             ->groupBy('category.id', 'currency.code')
@@ -333,7 +333,7 @@ class AllocatedExpense extends Model implements ISummaryModel, ISummaryModelCate
             ->where("resource_type.id", "=", $resource_type_id)
             ->where("category.id", '=', $category_id);
 
-        $collection = $this->includeUnpublished($collection, $parameters);
+        $collection = Clause::applyIncludeUnpublishedForAllocatedExpense($collection, $parameters);
 
         return $collection
             ->groupBy('category.id', 'currency.code')
@@ -405,7 +405,7 @@ class AllocatedExpense extends Model implements ISummaryModel, ISummaryModelCate
             $filter_parameters
         );
 
-        $collection = $this->includeUnpublished($collection, $parameters);
+        $collection = Clause::applyIncludeUnpublishedForAllocatedExpense($collection, $parameters);
 
         return $collection
             ->groupBy('currency.code')
@@ -450,7 +450,7 @@ class AllocatedExpense extends Model implements ISummaryModel, ISummaryModelCate
             ->where("resource_type.id", "=", $resource_type_id)
             ->where("category.id", "=", $category_id);
 
-        $collection = $this->includeUnpublished($collection, $parameters);
+        $collection = Clause::applyIncludeUnpublishedForAllocatedExpense($collection, $parameters);
 
         return $collection
             ->groupBy('sub_category.id', 'currency.code')
@@ -499,35 +499,12 @@ class AllocatedExpense extends Model implements ISummaryModel, ISummaryModelCate
             ->where("category.id", "=", $category_id)
             ->where('sub_category.id', '=', $subcategory_id);
 
-        $collection = $this->includeUnpublished($collection, $parameters);
+        $collection = Clause::applyIncludeUnpublishedForAllocatedExpense($collection, $parameters);
 
         return $collection
             ->groupBy('sub_category.id', 'currency.code')
             ->orderBy('name')
             ->get()
             ->toArray();
-    }
-
-    /**
-     * Work out if we should be hiding unpublished items, by default we don't show them
-     *
-     * @param $collection
-     * @param array $parameters
-     *
-     * @return Builder
-     */
-    private function includeUnpublished($collection, array $parameters): Builder
-    {
-        if (
-            array_key_exists('include-unpublished', $parameters) === false ||
-            $parameters['include-unpublished'] === false
-        ) {
-            $collection->where(static function ($sql) {
-                $sql->whereNull('item_type_allocated_expense.publish_after')->
-                    orWhereRaw('item_type_allocated_expense.publish_after < NOW()');
-            });
-        }
-
-        return $collection;
     }
 }
