@@ -32,6 +32,7 @@ class ResourceType extends Transformer
             $this->transformed['item_type'] = [
                 'id' => $this->hash->itemType()->encode($to_transform['resource_type_item_type_id']),
                 'name' => $to_transform['resource_type_item_type_name'],
+                'friendly_name' => $to_transform['resource_type_item_type_friendly_name'],
                 'description' => $to_transform['resource_type_item_type_description']
             ];
         }
