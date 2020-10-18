@@ -74,7 +74,7 @@ class ResourceTypeItem extends Model
             }
         }
 
-        $collection = Clause::applyIncludeUnpublishedForAllocatedExpense($collection, $parameters_collection);
+        $collection = Clause::applyExcludeFutureUnpublished($collection, $parameters_collection);
 
         return $collection->count();
     }
@@ -195,7 +195,7 @@ class ResourceTypeItem extends Model
             }
         }
 
-        $collection = Clause::applyIncludeUnpublishedForAllocatedExpense($collection, $parameters_collection);
+        $collection = Clause::applyExcludeFutureUnpublished($collection, $parameters_collection);
 
         if (count($sort_parameters) > 0) {
             foreach ($sort_parameters as $field => $direction) {
@@ -246,11 +246,11 @@ class ResourceTypeItem extends Model
             where('resource_type.id', '=', $resource_type_id);
 
         if ($include_unpublished === false) {
-            $collection = Clause::applyIncludeUnpublishedForAllocatedExpense($collection, []);
+            $collection = Clause::applyExcludeFutureUnpublished($collection, []);
         }
 
         if ($include_unpublished === false) {
-            $collection = Clause::applyIncludeUnpublishedForAllocatedExpense($collection, []);
+            $collection = Clause::applyExcludeFutureUnpublished($collection, []);
         }
 
         return $collection->
@@ -280,7 +280,7 @@ class ResourceTypeItem extends Model
             where('resource_type.id', '=', $resource_type_id);
 
         if ($include_unpublished === false) {
-            $collection = Clause::applyIncludeUnpublishedForAllocatedExpense($collection, []);
+            $collection = Clause::applyExcludeFutureUnpublished($collection, []);
         }
 
         return $collection->groupBy('resource.id')->
@@ -310,7 +310,7 @@ class ResourceTypeItem extends Model
             where("resource_type.id", "=", $resource_type_id);
 
         if ($include_unpublished === false) {
-            $collection = Clause::applyIncludeUnpublishedForAllocatedExpense($collection, []);
+            $collection = Clause::applyExcludeFutureUnpublished($collection, []);
         }
 
         return $collection->groupBy("year")->
@@ -342,7 +342,7 @@ class ResourceTypeItem extends Model
             where(DB::raw('YEAR(item_type_allocated_expense.effective_date)'), '=', $year);
 
         if ($include_unpublished === false) {
-            $collection = Clause::applyIncludeUnpublishedForAllocatedExpense($collection, []);
+            $collection = Clause::applyExcludeFutureUnpublished($collection, []);
         }
 
         return $collection->groupBy("month")->
@@ -381,7 +381,7 @@ class ResourceTypeItem extends Model
             where(DB::raw('MONTH(item_type_allocated_expense.effective_date)'), '=', $month);
 
         if ($include_unpublished === false) {
-            $collection = Clause::applyIncludeUnpublishedForAllocatedExpense($collection, []);
+            $collection = Clause::applyExcludeFutureUnpublished($collection, []);
         }
 
         return $collection->groupBy("month")->
@@ -413,7 +413,7 @@ class ResourceTypeItem extends Model
             where(DB::raw('YEAR(item_type_allocated_expense.effective_date)'), '=', $year);
 
         if ($include_unpublished === false) {
-            $collection = Clause::applyIncludeUnpublishedForAllocatedExpense($collection, []);
+            $collection = Clause::applyExcludeFutureUnpublished($collection, []);
         }
 
         return $collection->groupBy("year")->
@@ -450,7 +450,7 @@ class ResourceTypeItem extends Model
             where("resource_type.id", "=", $resource_type_id);
 
         if ($include_unpublished === false) {
-            $collection = Clause::applyIncludeUnpublishedForAllocatedExpense($collection, []);
+            $collection = Clause::applyExcludeFutureUnpublished($collection, []);
         }
 
         return $collection->groupBy("category.id")->
@@ -490,7 +490,7 @@ class ResourceTypeItem extends Model
             where("category.id", '=', $category_id);
 
         if ($include_unpublished === false) {
-            $collection = Clause::applyIncludeUnpublishedForAllocatedExpense($collection, []);
+            $collection = Clause::applyExcludeFutureUnpublished($collection, []);
         }
 
         return $collection->groupBy("category.id")->
@@ -539,7 +539,7 @@ class ResourceTypeItem extends Model
         }
 
         if ($include_unpublished === false) {
-            $collection = Clause::applyIncludeUnpublishedForAllocatedExpense($collection, []);
+            $collection = Clause::applyExcludeFutureUnpublished($collection, []);
         }
 
         return $collection->get()->
@@ -579,7 +579,7 @@ class ResourceTypeItem extends Model
             where("category.id", "=", $category_id);
 
         if ($include_unpublished === false) {
-            $collection = Clause::applyIncludeUnpublishedForAllocatedExpense($collection, []);
+            $collection = Clause::applyExcludeFutureUnpublished($collection, []);
         }
 
         return $collection->groupBy("sub_category.id")->
@@ -624,7 +624,7 @@ class ResourceTypeItem extends Model
             where('sub_category.id', '=', $subcategory_id);
 
         if ($include_unpublished === false) {
-            $collection = Clause::applyIncludeUnpublishedForAllocatedExpense($collection, []);
+            $collection = Clause::applyExcludeFutureUnpublished($collection, []);
         }
 
         return $collection->groupBy("sub_category.id")->

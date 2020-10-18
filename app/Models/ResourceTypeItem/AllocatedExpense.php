@@ -86,7 +86,7 @@ class AllocatedExpense extends Model implements IModel
             $filter_parameters
         );
 
-        $collection = Clause::applyIncludeUnpublishedForAllocatedExpense($collection, $parameters_collection);
+        $collection = Clause::applyExcludeFutureUnpublished($collection, $parameters_collection);
 
         return $collection->count();
     }
@@ -222,7 +222,7 @@ class AllocatedExpense extends Model implements IModel
             $filter_parameters
         );
 
-        $collection = Clause::applyIncludeUnpublishedForAllocatedExpense($collection, $parameters_collection);
+        $collection = Clause::applyExcludeFutureUnpublished($collection, $parameters_collection);
 
         if (count($sort_parameters) > 0) {
             foreach ($sort_parameters as $field => $direction) {

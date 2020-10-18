@@ -264,7 +264,7 @@ class AllocatedExpense extends Model implements IModel
             $filter_parameters
         );
 
-        $collection = Clause::applyIncludeUnpublishedForAllocatedExpense($collection, $parameters);
+        $collection = Clause::applyExcludeFutureUnpublished($collection, $parameters);
 
         return $collection->count();
     }
@@ -393,7 +393,7 @@ class AllocatedExpense extends Model implements IModel
         $collection = Clause::applySearch($collection, 'item_type_allocated_expense', $search_parameters);
         $collection = Clause::applyFiltering($collection, 'item_type_allocated_expense', $filter_parameters);
 
-        $collection = Clause::applyIncludeUnpublishedForAllocatedExpense($collection, $parameters);
+        $collection = Clause::applyExcludeFutureUnpublished($collection, $parameters);
 
         if (count($sort_parameters) > 0) {
             foreach ($sort_parameters as $field => $direction) {

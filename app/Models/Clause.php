@@ -69,7 +69,7 @@ class Clause
         return $collection->whereIn('resource_type.id', $permitted_resource_types);
     }
 
-    public static function applyIncludeUnpublishedForAllocatedExpense(
+    public static function applyExcludeFutureUnpublished(
         $collection,
         array $parameters
     )
