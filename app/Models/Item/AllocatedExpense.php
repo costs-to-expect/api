@@ -264,14 +264,7 @@ class AllocatedExpense extends Model implements IModel
             $filter_parameters
         );
 
-        if (
-            array_key_exists('include-unpublished', $parameters) === false ||
-            Boolean::convertedValue($parameters['include-unpublished']) === false
-        ) {
-            $collection->where(static function ($collection) {
-                $collection->whereNull('item_type_allocated_expense.publish_after')->orWhereRaw('item_type_allocated_expense.publish_after < NOW()');
-            });
-        }
+        $collection = Clause::applyIncludeUnpublishedForAllocatedExpense($collection, $parameters);
 
         return $collection->count();
     }
@@ -400,14 +393,7 @@ class AllocatedExpense extends Model implements IModel
         $collection = Clause::applySearch($collection, 'item_type_allocated_expense', $search_parameters);
         $collection = Clause::applyFiltering($collection, 'item_type_allocated_expense', $filter_parameters);
 
-        if (
-            array_key_exists('include-unpublished', $parameters) === false ||
-            Boolean::convertedValue($parameters['include-unpublished']) === false
-        ) {
-            $collection->where(static function ($collection) {
-                $collection->whereNull('item_type_allocated_expense.publish_after')->orWhereRaw('item_type_allocated_expense.publish_after < NOW()');
-            });
-        }
+        $collection = Clause::applyIncludeUnpublishedForAllocatedExpense($collection, $parameters);
 
         if (count($sort_parameters) > 0) {
             foreach ($sort_parameters as $field => $direction) {

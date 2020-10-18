@@ -74,15 +74,7 @@ class ResourceTypeItem extends Model
             }
         }
 
-        if (
-            array_key_exists('include-unpublished', $parameters_collection) === false ||
-            $parameters_collection['include-unpublished'] === false
-        ) {
-            $collection->where(static function ($collection) {
-                $collection->whereNull('item_type_allocated_expense.publish_after')->
-                    orWhereRaw('item_type_allocated_expense.publish_after < NOW()');
-            });
-        }
+        $collection = Clause::applyIncludeUnpublishedForAllocatedExpense($collection, $parameters_collection);
 
         return $collection->count();
     }
@@ -203,15 +195,7 @@ class ResourceTypeItem extends Model
             }
         }
 
-        if (
-            array_key_exists('include-unpublished', $parameters_collection) === false ||
-            $parameters_collection['include-unpublished'] === false
-        ) {
-            $collection->where(static function ($collection) {
-                $collection->whereNull('item_type_allocated_expense.publish_after')->
-                    orWhereRaw('item_type_allocated_expense.publish_after < NOW()');
-            });
-        }
+        $collection = Clause::applyIncludeUnpublishedForAllocatedExpense($collection, $parameters_collection);
 
         if (count($sort_parameters) > 0) {
             foreach ($sort_parameters as $field => $direction) {
