@@ -7,6 +7,7 @@ use Illuminate\Http;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
+use Laravel\Passport\HasApiTokens;
 
 /**
  * @package App\Http\Controllers
@@ -26,20 +27,28 @@ class PassportView extends Controller
                     'email' => request('email'),
                     'password' => request('password')
                 ]
-        ) === true) {
-            $token = Auth::user()->createToken('costs-to-expect-api');
+            ) === true
+        ) {
+            $user = Auth::user();
 
-            return response()->json(
-                [
-                    'id' => $this->hash->user()->encode(Auth::id()),
-                    'type' => 'Bearer',
-                    'token' => $token->accessToken,
-                    'created' => $token->token->created_at,
-                    'updated' => $token->token->updated_at,
-                    'expires' => $token->token->expires_at
-                ],
-                201
-            );
+            if ($user !== null) {
+
+                $token = $user->createToken('costs-to-expect-api');
+
+                return response()->json(
+                    [
+                        'id' => $this->hash->user()->encode(Auth::id()),
+                        'type' => 'Bearer',
+                        'token' => $token->accessToken,
+                        'created' => $token->token->created_at,
+                        'updated' => $token->token->updated_at,
+                        'expires' => $token->token->expires_at
+                    ],
+                    201
+                );
+            }
+
+            return response()->json(['message' => 'Unauthorised, credentials invalid'], 401);
         }
 
         return response()->json(['message' => 'Unauthorised, credentials invalid'], 401);
