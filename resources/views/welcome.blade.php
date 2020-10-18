@@ -222,28 +222,21 @@
                     <p>The changelog below shows all the fixes and improvements we have made, to view
                         the entire changelog please check <a href="https://github.com/costs-to-expect/api/releases">here</a>.</p>
 
-                    <h3>Added</h3>
-
-                    <ul>
-                        <li>We have added a migration to create the `game` item-type table.</li>
-                        <li>We have added the configuration for the `game` item-types.</li>
-                        <li>We have added a schema for the `game` item-type.</li>
-                        <li>We have added a schema for the `game` resource type item-type.</li>
-                        <li>We have updated the item and resource type item collections; the collections are aware of the new `game` item-type.</li>
-                        <li>We have updated the summary routes; the item and resource type item summaries are aware of the new `game` item-type.</li>
-                    </ul>
-
                     <h3>Changed</h3>
 
                     <ul>
-                        <li>We are upgrading summaries; the new `game` summaries include much more information than other summaries. We will upgrade all the summaries a little bit at a time.</li>
+                        <li>We have updated the `friendly_name` for item types; the updated names provide more information and make customising the App simpler.</li>
+                        <li>We have updated the `item-type` object included within the `resource type` object; the `item-type` object will include the `friendly_name` field.</li>
+                        <li>We have updated the description for our `game` item type; we are going to support dice games.</li>
+                        <li>We have removed the duplicated `includeUnpublished` functions and added a reusable method to our `Clause` class.</li>
+                        <li>We have disabled sessions for our web routes.</li>
                     </ul>
 
                     <h3>Fixed</h3>
 
                     <ul>
-                        <li>We have removed a rogue validation rule present in the POST request for the `allocated-expense` item type.</li>
-                        <li>We have updated the item category and subcategory assignment routes. Category and subcategory assignment routes can show more than one item in the collection if the item-type configuration allows.</li>
+                        <li>We have corrected an issue with our cache; we were incorrectly creating public cache entries rather than private cache entries. No data is leaking because the cache for resource types controls access and the resource type cache is correct.</li>
+                        <li>We have renamed the method which adds the clause to include unpublished costs. By default, the method excludes unpublished expenses, so we renamed the method to make the intention clear.</li>
                     </ul>
                 </div>
             </div>

@@ -64,7 +64,7 @@ class ItemPartialTransfer extends Model
             $collection->where($this->table .'.item_id', '=', $parameters['item']);
         }
 
-        $collection = Clause::applyResourceTypeCollectionCondition(
+        $collection = Clause::applyPermittedResourceTypes(
             $collection,
             $permitted_resource_types,
             $include_public
@@ -145,7 +145,7 @@ class ItemPartialTransfer extends Model
             $collection->where($this->table .'.item_id', '=', $parameters['item']);
         }
 
-        $collection = Clause::applyResourceTypeCollectionCondition(
+        $collection = Clause::applyPermittedResourceTypes(
             $collection,
             $permitted_resource_types,
             $include_public

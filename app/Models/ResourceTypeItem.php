@@ -74,15 +74,7 @@ class ResourceTypeItem extends Model
             }
         }
 
-        if (
-            array_key_exists('include-unpublished', $parameters_collection) === false ||
-            $parameters_collection['include-unpublished'] === false
-        ) {
-            $collection->where(static function ($collection) {
-                $collection->whereNull('item_type_allocated_expense.publish_after')->
-                    orWhereRaw('item_type_allocated_expense.publish_after < NOW()');
-            });
-        }
+        $collection = Clause::applyExcludeFutureUnpublished($collection, $parameters_collection);
 
         return $collection->count();
     }
@@ -203,15 +195,7 @@ class ResourceTypeItem extends Model
             }
         }
 
-        if (
-            array_key_exists('include-unpublished', $parameters_collection) === false ||
-            $parameters_collection['include-unpublished'] === false
-        ) {
-            $collection->where(static function ($collection) {
-                $collection->whereNull('item_type_allocated_expense.publish_after')->
-                    orWhereRaw('item_type_allocated_expense.publish_after < NOW()');
-            });
-        }
+        $collection = Clause::applyExcludeFutureUnpublished($collection, $parameters_collection);
 
         if (count($sort_parameters) > 0) {
             foreach ($sort_parameters as $field => $direction) {
@@ -261,7 +245,9 @@ class ResourceTypeItem extends Model
             join('resource_type', 'resource.resource_type_id', 'resource_type.id')->
             where('resource_type.id', '=', $resource_type_id);
 
-        $collection = $this->includeUnpublished($collection, $include_unpublished);
+        if ($include_unpublished === false) {
+            $collection = Clause::applyExcludeFutureUnpublished($collection, []);
+        }
 
         return $collection->
             get()->
@@ -289,7 +275,9 @@ class ResourceTypeItem extends Model
             join('resource_type', 'resource.resource_type_id', 'resource_type.id')->
             where('resource_type.id', '=', $resource_type_id);
 
-        $collection = $this->includeUnpublished($collection, $include_unpublished);
+        if ($include_unpublished === false) {
+            $collection = Clause::applyExcludeFutureUnpublished($collection, []);
+        }
 
         return $collection->groupBy('resource.id')->
             orderBy('name')->
@@ -317,7 +305,9 @@ class ResourceTypeItem extends Model
             join("resource_type", "resource_type.id", "resource.resource_type_id")->
             where("resource_type.id", "=", $resource_type_id);
 
-        $collection = $this->includeUnpublished($collection, $include_unpublished);
+        if ($include_unpublished === false) {
+            $collection = Clause::applyExcludeFutureUnpublished($collection, []);
+        }
 
         return $collection->groupBy("year")->
             orderBy("year")->
@@ -347,7 +337,9 @@ class ResourceTypeItem extends Model
             where("resource_type.id", "=", $resource_type_id)->
             where(DB::raw('YEAR(item_type_allocated_expense.effective_date)'), '=', $year);
 
-        $collection = $this->includeUnpublished($collection, $include_unpublished);
+        if ($include_unpublished === false) {
+            $collection = Clause::applyExcludeFutureUnpublished($collection, []);
+        }
 
         return $collection->groupBy("month")->
             orderBy("month")->
@@ -384,7 +376,9 @@ class ResourceTypeItem extends Model
             where(DB::raw('YEAR(item_type_allocated_expense.effective_date)'), '=', $year)->
             where(DB::raw('MONTH(item_type_allocated_expense.effective_date)'), '=', $month);
 
-        $collection = $this->includeUnpublished($collection, $include_unpublished);
+        if ($include_unpublished === false) {
+            $collection = Clause::applyExcludeFutureUnpublished($collection, []);
+        }
 
         return $collection->groupBy("month")->
             orderBy("month")->
@@ -414,7 +408,9 @@ class ResourceTypeItem extends Model
             where("resource_type.id", "=", $resource_type_id)->
             where(DB::raw('YEAR(item_type_allocated_expense.effective_date)'), '=', $year);
 
-        $collection = $this->includeUnpublished($collection, $include_unpublished);
+        if ($include_unpublished === false) {
+            $collection = Clause::applyExcludeFutureUnpublished($collection, []);
+        }
 
         return $collection->groupBy("year")->
             orderBy("year")->
@@ -449,7 +445,9 @@ class ResourceTypeItem extends Model
             where("category.resource_type_id", "=", $resource_type_id)->
             where("resource_type.id", "=", $resource_type_id);
 
-        $collection = $this->includeUnpublished($collection, $include_unpublished);
+        if ($include_unpublished === false) {
+            $collection = Clause::applyExcludeFutureUnpublished($collection, []);
+        }
 
         return $collection->groupBy("category.id")->
             orderBy("name")->
@@ -487,7 +485,9 @@ class ResourceTypeItem extends Model
             where("resource_type.id", "=", $resource_type_id)->
             where("category.id", '=', $category_id);
 
-        $collection = $this->includeUnpublished($collection, $include_unpublished);
+        if ($include_unpublished === false) {
+            $collection = Clause::applyExcludeFutureUnpublished($collection, []);
+        }
 
         return $collection->groupBy("category.id")->
             orderBy("name")->
@@ -534,7 +534,9 @@ class ResourceTypeItem extends Model
             }
         }
 
-        $collection = $this->includeUnpublished($collection, $include_unpublished);
+        if ($include_unpublished === false) {
+            $collection = Clause::applyExcludeFutureUnpublished($collection, []);
+        }
 
         return $collection->get()->
             toArray();
@@ -572,7 +574,9 @@ class ResourceTypeItem extends Model
             where("resource_type.id", "=", $resource_type_id)->
             where("category.id", "=", $category_id);
 
-        $collection = $this->includeUnpublished($collection, $include_unpublished);
+        if ($include_unpublished === false) {
+            $collection = Clause::applyExcludeFutureUnpublished($collection, []);
+        }
 
         return $collection->groupBy("sub_category.id")->
             orderBy("name")->
@@ -615,31 +619,13 @@ class ResourceTypeItem extends Model
             where("category.id", "=", $category_id)->
             where('sub_category.id', '=', $subcategory_id);
 
-        $collection = $this->includeUnpublished($collection, $include_unpublished);
+        if ($include_unpublished === false) {
+            $collection = Clause::applyExcludeFutureUnpublished($collection, []);
+        }
 
         return $collection->groupBy("sub_category.id")->
             orderBy("name")->
             get()->
             toArray();
-    }
-
-    /**
-     * Work out if we should be hiding unpublished items, by default we don't show them
-     *
-     * @param $collection
-     * @param boolean $include_unpublished
-     *
-     * @return Builder
-     */
-    private function includeUnpublished($collection, bool $include_unpublished): Builder
-    {
-        if ($include_unpublished === false) {
-            $collection->where(static function ($sql) {
-                $sql->whereNull('item_type_allocated_expense.publish_after')->
-                    orWhereRaw('item_type_allocated_expense.publish_after < NOW()');
-            });
-        }
-
-        return $collection;
     }
 }

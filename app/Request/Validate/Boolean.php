@@ -14,7 +14,7 @@ class Boolean
 {
     /**
      * Converts the provided value to a boolean, valid options are 1, true,
-     * "true" and "off". We look for the positive values are return anything
+     * "true" and "off". We look for the positive values and return anything
      * else as FALSE
      *
      * @param $value

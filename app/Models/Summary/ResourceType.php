@@ -36,7 +36,7 @@ class ResourceType extends Model
     {
         $collection = $this->select("resource_type.id");
 
-        $collection = Clause::applyResourceTypeCollectionCondition(
+        $collection = Clause::applyPermittedResourceTypes(
             $collection,
             $permitted_resource_types,
             $include_public

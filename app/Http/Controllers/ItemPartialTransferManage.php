@@ -52,7 +52,6 @@ class ItemPartialTransferManage extends Controller
         try {
             $partial_transfer = (new ItemPartialTransfer())->find($item_partial_transfer_id);
 
-
             if ($partial_transfer !== null) {
                 $partial_transfer->delete();
 

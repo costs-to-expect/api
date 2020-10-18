@@ -2,6 +2,18 @@
 
 The complete changelog for the Costs to Expect REST API, our changelog follows the format defined at https://keepachangelog.com/en/1.0.0/
 
+## [v2.16.1] - 2020-10-18
+### Changed
+- We have updated the `friendly_name` for item types; the updated names provide more information and make customising the App simpler.
+- We have updated the `item-type` object included within the `resource type` object; the `item-type` object will include the `friendly_name` field.
+- We have updated the description for our `game` item type; we are going to support dice games.
+- We have removed the duplicated `includeUnpublished` functions and added a reusable method to our `Clause` class.
+- We have disabled sessions for our web routes.
+
+### Fixed
+- We have corrected an issue with our cache; we were incorrectly creating public cache entries rather than private cache entries. No data is leaking because the cache for resource types controls access and the resource type cache is correct.
+- We have renamed the method which adds the clause to include unpublished costs. By default, the method excludes unpublished expenses, so we renamed the method to make the intention clear.
+
 ## [v2.16.0] - 2020-10-15
 ### Added
 - We have added a migration to create the `game` item-type table.

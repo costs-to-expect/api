@@ -58,7 +58,7 @@ class AllocatedExpense extends Model implements ISummaryModel, ISummaryModelCate
             ->where("resource_type.id", "=", $resource_type_id)
             ->where("resource.id", "=", $resource_id);
 
-        $collection = $this->includeUnpublished($collection, $parameters);
+        $collection = Clause::applyExcludeFutureUnpublished($collection, $parameters);
 
         return $collection
             ->groupBy('item_category.category_id', 'currency.code')
@@ -105,7 +105,7 @@ class AllocatedExpense extends Model implements ISummaryModel, ISummaryModelCate
             ->where("resource.id", "=", $resource_id)
             ->where("category.id", "=", $category_id);
 
-        $collection = $this->includeUnpublished($collection, $parameters);
+        $collection = Clause::applyExcludeFutureUnpublished($collection, $parameters);
 
         return $collection
             ->groupBy('item_category.category_id', 'currency.code')
@@ -185,7 +185,7 @@ class AllocatedExpense extends Model implements ISummaryModel, ISummaryModelCate
             $filter_parameters
         );
 
-        $collection = $this->includeUnpublished($collection, $parameters);
+        $collection = Clause::applyExcludeFutureUnpublished($collection, $parameters);
 
         return $collection
             ->get()
@@ -225,7 +225,7 @@ class AllocatedExpense extends Model implements ISummaryModel, ISummaryModelCate
             ->where("resource.id", "=", $resource_id)
             ->whereRaw(DB::raw("YEAR({$this->sub_table}.effective_date) = '{$year}'"));
 
-        $collection = $this->includeUnpublished($collection, $parameters);
+        $collection = Clause::applyExcludeFutureUnpublished($collection, $parameters);
 
         return $collection
             ->groupBy('month', 'currency.code')
@@ -270,7 +270,7 @@ class AllocatedExpense extends Model implements ISummaryModel, ISummaryModelCate
             ->whereRaw(DB::raw("YEAR({$this->sub_table}.effective_date) = '{$year}'"))
             ->whereRaw(DB::raw("MONTH({$this->sub_table}.effective_date) = '{$month}'"));
 
-        $collection = $this->includeUnpublished($collection, $parameters);
+        $collection = Clause::applyExcludeFutureUnpublished($collection, $parameters);
 
         return $collection
             ->groupBy('month', 'currency.code')
@@ -318,7 +318,7 @@ class AllocatedExpense extends Model implements ISummaryModel, ISummaryModelCate
             ->where("resource.id", "=", $resource_id)
             ->where("category.id", "=", $category_id);
 
-        $collection = $this->includeUnpublished($collection, $parameters);
+        $collection = Clause::applyExcludeFutureUnpublished($collection, $parameters);
 
         return $collection
             ->groupBy('item_sub_category.sub_category_id', 'currency.code')
@@ -369,7 +369,7 @@ class AllocatedExpense extends Model implements ISummaryModel, ISummaryModelCate
             ->where("category.id", "=", $category_id)
             ->where("sub_category.id", "=", $subcategory_id);
 
-        $collection = $this->includeUnpublished($collection, $parameters);
+        $collection = Clause::applyExcludeFutureUnpublished($collection, $parameters);
 
         return $collection
             ->groupBy('item_sub_category.sub_category_id', 'currency.code')
@@ -406,7 +406,7 @@ class AllocatedExpense extends Model implements ISummaryModel, ISummaryModelCate
             ->where('resource.resource_type_id', '=', $resource_type_id)
             ->groupBy('currency.code');
 
-        $collection = $this->includeUnpublished($collection, $parameters);
+        $collection = Clause::applyExcludeFutureUnpublished($collection, $parameters);
 
         return $collection
             ->get()
@@ -443,7 +443,7 @@ class AllocatedExpense extends Model implements ISummaryModel, ISummaryModelCate
             ->where("resource_type.id", "=", $resource_type_id)
             ->where("resource.id", "=", $resource_id);
 
-        $collection = $this->includeUnpublished($collection, $parameters);
+        $collection = Clause::applyExcludeFutureUnpublished($collection, $parameters);
 
         return $collection
             ->groupBy('year', 'currency.code')
@@ -485,34 +485,11 @@ class AllocatedExpense extends Model implements ISummaryModel, ISummaryModelCate
             ->where("resource.id", "=", $resource_id)
             ->whereRaw(DB::raw("YEAR({$this->sub_table}.effective_date) = '{$year}'"));
 
-        $collection = $this->includeUnpublished($collection, $parameters);
+        $collection = Clause::applyExcludeFutureUnpublished($collection, $parameters);
 
         return $collection
             ->groupBy('year', 'currency.code')
             ->get()
             ->toArray();
-    }
-
-    /**
-     * Work out if we should be hiding unpublished items, by default we don't show them
-     *
-     * @param $collection
-     * @param array $parameters
-     *
-     * @return Builder
-     */
-    private function includeUnpublished($collection, array $parameters): Builder
-    {
-        if (
-            array_key_exists('include-unpublished', $parameters) === false ||
-            $parameters['include-unpublished'] === false
-        ) {
-            $collection->where(static function ($sql) {
-                $sql->whereNull('item_type_allocated_expense.publish_after')->
-                    orWhereRaw('item_type_allocated_expense.publish_after < NOW()');
-            });
-        }
-
-        return $collection;
     }
 }
