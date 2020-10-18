@@ -249,10 +249,6 @@ class ResourceTypeItem extends Model
             $collection = Clause::applyExcludeFutureUnpublished($collection, []);
         }
 
-        if ($include_unpublished === false) {
-            $collection = Clause::applyExcludeFutureUnpublished($collection, []);
-        }
-
         return $collection->
             get()->
             toArray();
