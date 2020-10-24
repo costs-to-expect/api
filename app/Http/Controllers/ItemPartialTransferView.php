@@ -50,7 +50,7 @@ class ItemPartialTransferView extends Controller
         if ($cache_control->cacheable() === false || $cache_collection->valid() === false) {
 
             $parameters = Parameter\Request::fetch(
-                array_keys(Config::get('api.item-transfer.parameters.collection'))
+                array_keys(Config::get('api.item-partial-transfer.parameters.collection'))
             );
 
             $total = (new ItemPartialTransfer())->total(

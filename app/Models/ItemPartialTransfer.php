@@ -40,24 +40,28 @@ class ItemPartialTransfer extends Model
         int $limit = 10,
         array $parameters = []
     ): array {
-        $collection = $this->select(
+        $collection = $this
+            ->select(
                 $this->table . '.id',
                 $this->table . '.percentage',
-                $this->table . '.item_id',
+                $this->table . '.item_id AS item_item_id',
                 $this->table . '.created_at',
+                'item_type_allocated_expense.name AS item_name',
+                'item_type_allocated_expense.description AS item_description',
                 'from_resource.id AS from_resource_id',
                 'from_resource.name AS from_resource_name',
                 'to_resource.id AS to_resource_id',
                 'to_resource.name AS to_resource_name',
                 'users.id AS user_id',
                 'users.name AS user_name'
-            )->
-            join("resource_type",$this->table . ".resource_type_id","resource_type.id")->
-            join("resource AS from_resource",$this->table . ".from","from_resource.id")->
-            join("resource AS to_resource",$this->table . ".to","to_resource.id")->
-            join("item",$this->table . ".item_id","item.id")->
-            join("users",$this->table . ".transferred_by","users.id")->
-            where($this->table .'.resource_type_id', '=', $resource_type_id);
+            )
+            ->join("resource_type",$this->table . ".resource_type_id","resource_type.id")
+            ->join("resource AS from_resource",$this->table . ".from","from_resource.id")
+            ->join("resource AS to_resource",$this->table . ".to","to_resource.id")
+            ->join("item",$this->table . ".item_id","item.id")
+            ->join("item_type_allocated_expense", "item.id","item_type_allocated_expense.item_id")
+            ->join("users",$this->table . ".transferred_by","users.id")
+            ->where($this->table .'.resource_type_id', '=', $resource_type_id);
 
         if (array_key_exists('item', $parameters) === true &&
             $parameters['item'] !== null) {
@@ -89,32 +93,36 @@ class ItemPartialTransfer extends Model
         int $item_partial_transfer_id
     ): ?array
     {
-        $result = $this->join("resource_type",$this->table . ".resource_type_id","resource_type.id")->
-        join("resource AS from_resource",$this->table . ".from","from_resource.id")->
-        join("resource AS to_resource",$this->table . ".to","to_resource.id")->
-        join("item",$this->table . ".item_id","item.id")->
-        join("users",$this->table . ".transferred_by","users.id")->
-        where($this->table .'.resource_type_id', '=', $resource_type_id)->
-        where($this->table .'.id', '=', $item_partial_transfer_id)->
-        select(
-            $this->table . '.id',
-            $this->table . '.percentage',
-            $this->table . '.item_id',
-            $this->table . '.created_at',
-            'from_resource.id AS from_resource_id',
-            'from_resource.name AS from_resource_name',
-            'to_resource.id AS to_resource_id',
-            'to_resource.name AS to_resource_name',
-            'users.id AS user_id',
-            'users.name AS user_name'
-        )->
-        first();
+        $result = $this
+            ->join("resource_type",$this->table . ".resource_type_id","resource_type.id")
+            ->join("resource AS from_resource",$this->table . ".from","from_resource.id")
+            ->join("resource AS to_resource",$this->table . ".to","to_resource.id")
+            ->join("item",$this->table . ".item_id","item.id")
+            ->join("item_type_allocated_expense", "item.id","item_type_allocated_expense.item_id")
+            ->join("users",$this->table . ".transferred_by","users.id")
+            ->where($this->table .'.resource_type_id', '=', $resource_type_id)
+            ->where($this->table .'.id', '=', $item_partial_transfer_id)
+            ->select(
+                $this->table . '.id',
+                $this->table . '.percentage',
+                $this->table . '.item_id AS item_item_id',
+                'item_type_allocated_expense.name AS item_name',
+                'item_type_allocated_expense.description AS item_description',
+                $this->table . '.created_at',
+                'from_resource.id AS from_resource_id',
+                'from_resource.name AS from_resource_name',
+                'to_resource.id AS to_resource_id',
+                'to_resource.name AS to_resource_name',
+                'users.id AS user_id',
+                'users.name AS user_name'
+            )
+            ->first();
 
         if ($result === null) {
             return null;
-        } else {
-            return $result->toArray();
         }
+
+        return $result->toArray();
     }
 
     /**
