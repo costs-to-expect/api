@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace App\Entity\Item;
 
 use App\Models\Transformers\Transformer;
+use App\Request\Hash;
 use App\Request\Validate\Validator;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Config as LaravelConfig;
@@ -80,6 +81,15 @@ class Game extends Item
     public function update(array $patch, Model $instance): bool
     {
         foreach ($patch as $key => $value) {
+            if ($key === 'winner') {
+                $winner = (new Hash())->decode('category', request()->input('winner'));
+
+                $value = null;
+                if ($winner !== false) {
+                    $value = $winner;
+                }
+            }
+
             $instance->$key = $value;
         }
 

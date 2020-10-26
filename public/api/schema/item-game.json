@@ -17,7 +17,19 @@
             "type": "object"
         },
         "winner": {
-            "type": ["string", "null"]
+            "type": ["object","null"],
+            "properties": {
+                "id": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                }
+            },
+            "required": [
+                "id",
+                "name"
+            ]
         },
         "score": {
             "type": "integer"

@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace App\Models\Item;
 
 use App\Interfaces\Item\IModel;
+use App\Models\Category;
 use App\Models\Clause;
 use Illuminate\Database\Query\Builder as QueryBuilder;
 use Illuminate\Database\Eloquent\Model;
@@ -22,6 +23,11 @@ class Game extends Model implements IModel
 
     public $timestamps = false;
 
+    public function winner()
+    {
+        return $this->hasOne(Category::class, 'id', 'winner_id');
+    }
+
     public function instance(int $item_id): ?Model
     {
         return $this->where('item_id', '=', $item_id)->
@@ -39,7 +45,8 @@ class Game extends Model implements IModel
             'item_description' => $item_type->description,
             'item_game' => $item_type->game,
             'item_statistics' => $item_type->statistics,
-            'item_winner' => $item_type->winner,
+            'item_winner_id' => $item_type->winner->id,
+            'item_winner_name' => $item_type->winner->name,
             'item_score' => $item_type->score,
             'item_complete' => $item_type->complete,
             'item_created_at' => ($item_type->created_at !== null) ? $item_type->created_at->toDateTimeString() : null,
@@ -60,20 +67,23 @@ class Game extends Model implements IModel
             "{$this->table}.description AS item_description",
             "{$this->table}.game AS item_game",
             "{$this->table}.statistics AS item_statistics",
-            "{$this->table}.winner AS item_winner",
+            "category.id AS item_winner_id",
+            "category.name AS item_winner_name",
             "{$this->table}.score AS item_score",
             "{$this->table}.complete AS item_complete",
             "{$this->table}.created_at AS item_created_at",
             "{$this->table}.updated_at AS item_updated_at"
         ];
 
-        $result = $this->from('item')->
-            join($this->table, 'item.id', "{$this->table}.item_id")->
-            join('resource', 'item.resource_id', 'resource.id')->
-            where('item.resource_id', '=', $resource_id)->
-            where('resource.resource_type_id', '=', $resource_type_id)->
-            where("{$this->table}.item_id", '=', $item_id)->
-            where('item.id', '=', $item_id);
+        $result = $this
+            ->from('item')
+            ->join($this->table, 'item.id', "{$this->table}.item_id")
+            ->join('resource', 'item.resource_id', 'resource.id')
+            ->leftJoin('category', $this->table . '.winner', 'category.id')
+            ->where('item.resource_id', '=', $resource_id)
+            ->where('resource.resource_type_id', '=', $resource_type_id)
+            ->where("{$this->table}.item_id", '=', $item_id)
+            ->where('item.id', '=', $item_id);
 
         $item = $result->select($fields)->first();
 
@@ -92,11 +102,11 @@ class Game extends Model implements IModel
         array $filter_parameters = []
     ): int
     {
-        $collection = $this->from('item')->
-            join($this->table, 'item.id', $this->table . '.item_id')->
-            join('resource', 'item.resource_id', 'resource.id')->
-            where('resource_id', '=', $resource_id)->
-            where('resource.resource_type_id', '=', $resource_type_id);
+        $collection = $this->from('item')
+            ->join($this->table, 'item.id', $this->table . '.item_id')
+            ->join('resource', 'item.resource_id', 'resource.id')
+            ->where('resource_id', '=', $resource_id)
+            ->where('resource.resource_type_id', '=', $resource_type_id);
 
         $collection = Clause::applySearch(
             $collection,
@@ -129,18 +139,21 @@ class Game extends Model implements IModel
             "{$this->table}.description AS item_description",
             "{$this->table}.game AS item_game",
             "{$this->table}.statistics AS item_statistics",
-            "{$this->table}.winner AS item_winner",
+            "category.id AS item_winner_id",
+            "category.name AS item_winner_name",
             "{$this->table}.score AS item_score",
             "{$this->table}.complete AS item_complete",
             "{$this->table}.created_at AS item_created_at",
             "{$this->table}.updated_at AS item_updated_at"
         ];
 
-        $collection = $this->from('item')->
-            join($this->table, 'item.id', "{$this->table}.item_id")->
-            join('resource', 'item.resource_id', 'resource.id')->
-            where('resource_id', '=', $resource_id)->
-            where('resource.resource_type_id', '=', $resource_type_id);
+        $collection = $this
+            ->from('item')
+            ->join($this->table, 'item.id', "{$this->table}.item_id")
+            ->join('resource', 'item.resource_id', 'resource.id')
+            ->leftJoin('category', $this->table . '.winner', 'category.id')
+            ->where('resource_id', '=', $resource_id)
+            ->where('resource.resource_type_id', '=', $resource_type_id);
 
         $collection = Clause::applySearch(
             $collection,
@@ -169,10 +182,9 @@ class Game extends Model implements IModel
             $collection->orderBy('item.created_at', 'desc');
         }
 
-        $collection->offset($offset);
-        $collection->limit($limit);
-
         return $collection
+            ->offset($offset)
+            ->limit($limit)
             ->select($select_fields)
             ->get()
             ->toArray();
