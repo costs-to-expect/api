@@ -13,11 +13,9 @@ class Controller extends BaseController
 {
     protected Hash $hash;
 
-    protected bool $include_public;
+    protected bool $include_public = true;
 
     protected array $permitted_resource_types = [];
-
-    protected ResourceTypeAccess $resource_type_access;
 
     /**
      * @var integer|null
@@ -33,27 +31,13 @@ class Controller extends BaseController
     {
         $this->hash = new Hash();
 
-        $this->resource_type_access = new ResourceTypeAccess();
+        $this->excludePublicResourceTypes();
 
-        $this->middleware(function ($request, $next) {
-            $this->setGlobalPropertyValues();
-
-            return $next($request);
-        });
+        $this->setPermittedResourceTypes();
     }
 
-    /**
-     * Set the values for the controller properties, used by every controller
-     *
-     * @return void
-     */
-    protected function setGlobalPropertyValues(): void
+    protected function setPermittedResourceTypes(): void
     {
-        $this->include_public = true;
-        if (Boolean::convertedValue(request()->query('exclude-public')) === true) {
-            $this->include_public = false;
-        }
-
         if (auth('api')->user() !== null && auth()->guard('api')->check() === true) {
             $this->user_id = auth('api')->user()->id; // Safe as check above ensures not null
 
@@ -65,7 +49,7 @@ class Controller extends BaseController
 
             if ($cache_control->cacheable() === false || $cache_collection->valid() === false) {
 
-                $permitted_resource_types = $this->resource_type_access->permittedResourceTypes($this->user_id);
+                $permitted_resource_types = (new ResourceTypeAccess())->permittedResourceTypes($this->user_id);
 
                 $cache_collection->create(
                     count($permitted_resource_types),
@@ -77,6 +61,13 @@ class Controller extends BaseController
             }
 
             $this->permitted_resource_types = $cache_collection->collection();
+        }
+    }
+
+    protected function excludePublicResourceTypes(): void
+    {
+        if (Boolean::convertedValue(request()->query('exclude-public')) === true) {
+            $this->include_public = false;
         }
     }
 }
