@@ -20,7 +20,7 @@ return [
     'PATCH' => [
         'fields' => [
             'game' => [
-                'required',
+                'sometimes',
                 'json'
             ],
             'statistics' => [
@@ -29,6 +29,7 @@ return [
             ],
             'winner' => [
                 'sometimes',
+                'nullable',
                 'string',
                 'size:10'
             ],

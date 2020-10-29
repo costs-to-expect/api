@@ -33,7 +33,11 @@ class Game extends Transformer
        }
 
         $winner = null;
-        if (array_key_exists('item_winner_id', $to_transform) && array_key_exists('item_winner_name', $to_transform)) {
+        if (
+            array_key_exists('item_winner_id', $to_transform) &&
+            array_key_exists('item_winner_name', $to_transform) &&
+            $to_transform['item_winner_id'] !== null
+        ) {
             $winner = [
                 'id' => $this->hash->category()->encode($to_transform['item_winner_id']),
                 'name' => $to_transform['item_winner_name']

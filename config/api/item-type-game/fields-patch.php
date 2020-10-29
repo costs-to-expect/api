@@ -8,7 +8,7 @@ return [
         'title' => 'item-type-game/fields.title-game',
         'description' => 'item-type-game/fields.description-game',
         'type' => 'json',
-        'required' => true
+        'required' => false
     ],
     'statistics' => [
         'field' => 'statistics',

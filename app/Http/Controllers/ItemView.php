@@ -267,8 +267,15 @@ class ItemView extends Controller
         }
 
         $allowed_values = [];
-        if ($entity->type() !== 'simple-item') {
+
+        $entity_type = $entity->type();
+
+        if ($entity_type === 'simple-expense' || $entity_type === 'allocated-expense') {
             $allowed_values = (new \App\Option\AllowedValues\Currency())->allowedValues();
+        }
+
+        if ($entity_type === 'game') {
+            $allowed_values = (new \App\Option\AllowedValues\Winner())->allowedValues($resource_type_id);
         }
 
         $response = new ItemItem($permissions);
