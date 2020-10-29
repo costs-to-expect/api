@@ -77,7 +77,7 @@ class ResourceTypeManage extends Controller
                 return $resource_type;
             });
 
-            ClearCache::dispatch($cache_job_payload->payload())->delay(now()->addMinute());
+            ClearCache::dispatchNow($cache_job_payload->payload());
 
         } catch (Exception $e) {
             return \App\Response\Responses::failedToSaveModelForCreate();

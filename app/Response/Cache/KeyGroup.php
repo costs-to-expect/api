@@ -94,6 +94,7 @@ class KeyGroup
 
             case self::RESOURCE_CREATE:
             case self::RESOURCE_DELETE:
+            case self::RESOURCE_TYPE_UPDATE:
                 return [
                     $this->key->resourceTypes()
                 ];
@@ -108,10 +109,10 @@ class KeyGroup
                 ];
 
             case self::RESOURCE_TYPE_CREATE:
-            case self::RESOURCE_TYPE_UPDATE:
             case self::RESOURCE_TYPE_DELETE:
                 return [
-                    $this->key->resourceTypes()
+                    $this->key->resourceTypes(),
+                    $this->key->permittedResourceTypes()
                 ];
 
             default:
