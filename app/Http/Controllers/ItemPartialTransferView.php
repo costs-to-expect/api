@@ -34,8 +34,8 @@ class ItemPartialTransferView extends Controller
     public function index($resource_type_id): JsonResponse
     {
         $cache_control = new Cache\Control(
-            $this->user_id,
-            in_array((int) $resource_type_id, $this->permitted_resource_types, true)
+            in_array((int) $resource_type_id, $this->permitted_resource_types, true),
+            $this->user_id
         );
         $cache_control->setTtlOneWeek();
 
@@ -45,9 +45,9 @@ class ItemPartialTransferView extends Controller
         );
 
         $cache_collection = new Cache\Collection();
-        $cache_collection->setFromCache($cache_control->get(request()->getRequestUri()));
+        $cache_collection->setFromCache($cache_control->getByKey(request()->getRequestUri()));
 
-        if ($cache_control->cacheable() === false || $cache_collection->valid() === false) {
+        if ($cache_control->isRequestCacheable() === false || $cache_collection->valid() === false) {
 
             $parameters = Parameter\Request::fetch(
                 array_keys(Config::get('api.item-partial-transfer.parameters.collection'))
@@ -87,7 +87,7 @@ class ItemPartialTransferView extends Controller
                 addETag($collection);
 
             $cache_collection->create($total, $collection, $pagination_parameters, $headers->headers());
-            $cache_control->put(request()->getRequestUri(), $cache_collection->content());
+            $cache_control->putByKey(request()->getRequestUri(), $cache_collection->content());
         }
 
         return response()->json($cache_collection->collection(), 200, $cache_collection->headers());

@@ -40,16 +40,21 @@ class Cache extends Model
         bool $include_summaries = false
     ): array
     {
-        $result = $this->where('expiration', '>', DB::raw('UNIX_TIMESTAMP()'))
-            ->where('key', 'LIKE', $prefix . $key . '%')
-            ->orWhere('key', '=', $prefix . $key);
+        $result = $this
+            ->where('expiration', '>', DB::raw('UNIX_TIMESTAMP()'))
+            ->where('key', 'LIKE', $prefix . rtrim($key, '/') . '%');
+            /*->orWhere('key', '=', $prefix . $key);*/
 
         if ($include_summaries === true) {
-            $result->orWhere('key', 'LIKE', str_replace('v2/', 'v2/summary/', $prefix . $key) . '%')
-                ->orWhere('key', '=', str_replace('v2/', 'v2/summary/', $prefix . $key));
+            $summary_key = rtrim(str_replace('v2/', 'v2/summary/', $prefix . $key), '/');
+
+            $result
+                ->orWhere('key', 'LIKE', $summary_key . '%');
+                /*->orWhere('key', '=', $summary_key);*/
         }
 
-        return $result->select('key')
+        return $result
+            ->select('key')
             ->get()
             ->toArray();
     }

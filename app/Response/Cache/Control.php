@@ -16,50 +16,33 @@ use Illuminate\Support\Facades\Config;
  */
 class Control
 {
-    private bool $cacheable = false;
+    private bool $cacheable;
 
-    private ?string $key_prefix_private;
-    private string $key_prefix_public;
-
-    private int $ttl;
+    private int $ttl = 31536000;
 
     private string $visibility = 'public';
 
     private string $laravel_cache_prefix;
 
-    /**
-     * Create an instance of the cache class. The prefix needs to be a
-     * string specific to the user, we don't want any unfortunate caching
-     * issues
-     */
-    public function __construct(int $prefix = null, bool $permitted_user = false)
+    private string $cache_prefix;
+
+    private string $public_cache_prefix = '-p-';
+
+    public function __construct(bool $permitted_user = false, int $user_id = null)
     {
-        $config = Config::get('api.app.cache');
+        $this->cache_prefix = $this->public_cache_prefix;
 
-        $this->ttl = $config['ttl'];
-
-        if ($config['enable'] === true) {
-            $this->cacheable = true;
+        if ($permitted_user === true && $user_id !== null) {
+            $this->cache_prefix = '-'  . $user_id . '-';
+            $this->visibility = 'private';
         }
 
-        if ($prefix !== null && $permitted_user === true) {
-            $this->key_prefix_private = '-' . $prefix . '-';
-            $this->visibility = 'Private';
-        } else {
-            $this->key_prefix_private = null;
-        }
-
-        $this->key_prefix_public = $config['public_key_prefix'];
+        $this->cacheable = Config::get('api.app.cache.enable');
 
         $this->laravel_cache_prefix = Config::get('cache.prefix');
     }
 
-    /**
-     * Are we able to cache the request?
-     *
-     * @return bool
-     */
-    public function cacheable(): bool
+    public function isRequestCacheable(): bool
     {
         $skip_cache = request()->header('x-skip-cache');
 
@@ -70,104 +53,64 @@ class Control
         return $this->cacheable;
     }
 
-    /**
-     * Clear any cache entries for the supplied key
-     *
-     * @param string $key
-     */
-    public function clear(string $key): void
+    public function clearCacheForRequestedKey(string $key): void
     {
-        if ($this->key_prefix_private !== null) {
-            LaravelCache::forget($this->key_prefix_private . $key);
-        }
+        LaravelCache::forget($this->cache_prefix . $key);
 
-        LaravelCache::forget($this->key_prefix_public . $key);
+        // Clear public if possibly necessary
+        if ($this->cache_prefix !== $this->public_cache_prefix) {
+            LaravelCache::forget($this->public_cache_prefix . $key);
+        }
     }
 
-    /**
-     * Clear any keys matching the supplied $key_wildcards
-     *
-     * @param array $key_wildcards
-     * @param bool $include_summaries
-     */
-    public function clearPublicCacheKeys(
+    public function clearMatchingPublicCacheKeys(
         array $key_wildcards,
         bool $include_summaries = true
     ): void
     {
         foreach ($key_wildcards as $key_wildcard) {
-            $keys = $this->matchingPublicCacheKeys($key_wildcard, $include_summaries);
+            $keys = $this->fetchMatchingPublicCacheKeys($key_wildcard, $include_summaries);
 
             foreach ($keys as $key) {
-                $this->clearCacheKeyByFullName($key['key']);
+                $this->clearCacheKeyByItsFullName($key['key']);
             }
         }
     }
 
-    public function clearCacheKeyByFullName(string $key): void
+    public function clearCacheKeyByItsFullName(string $key): void
     {
         // We strip the cache prefix as we went to the db and the prefix will be in the string
         LaravelCache::forget(str_replace_first($this->laravel_cache_prefix, '', $key));
     }
 
-    /**
-     * Clear any keys matching the supplied $key_wildcards
-     *
-     * @param array $key_wildcards
-     * @param bool $include_summaries
-     */
-    public function clearPrivateCacheKeys(
+    public function clearMatchingCacheKeys(
         array $key_wildcards,
         bool $include_summaries = true
     ): void
     {
         foreach ($key_wildcards as $key_wildcard) {
-            $keys = $this->matchingPrivateCacheKeys($key_wildcard, $include_summaries);
+            $keys = $this->fetchMatchingCacheKeys($key_wildcard, $include_summaries);
 
             foreach ($keys as $key) {
-                $this->clearCacheKeyByFullName($key['key']);
+                $this->clearCacheKeyByItsFullName($key['key']);
             }
         }
     }
 
-    /**
-     * Check the cache to see if there is a stored value for the given key
-     *
-     * @param string $key
-     *
-     * @return array|null
-     */
-    public function get(string $key): ?array
+    public function getByKey(string $key): ?array
     {
-        return LaravelCache::get(($this->key_prefix_private ?? $this->key_prefix_public) . $key);
+        return LaravelCache::get($this->cache_prefix . $key);
     }
 
-    /**
-     * Store a new item in cache using the supplied key
-     *
-     * @param string $key
-     * @param array $data
-     * @return bool
-     */
-    public function put(string $key, array $data): bool
+    public function putByKey(string $key, array $data): bool
     {
-        if ($this->cacheable() === true) {
-            return LaravelCache::put(
-                ($this->key_prefix_private ?? $this->key_prefix_public) . $key,
-                $data,
-                $this->ttl
-            );
-        }
-
-        return true;
+        return LaravelCache::put(
+            $this->cache_prefix . $key,
+            $data,
+            $this->ttl
+        );
     }
 
-    /**
-     * Set the ttl for our cache, we default to 1 year, 31536000 seconds,
-     * however we can override this at will
-     *
-     * @param $seconds
-     */
     public function setTtl($seconds): void
     {
         $this->ttl = $seconds;
@@ -208,66 +151,35 @@ class Control
         $this->setTtl(60);
     }
 
-    /**
-     * Return the current ttl
-     *
-     * @return int
-     */
     public function ttl(): int
     {
         return $this->ttl;
     }
 
-    /**
-     * Return the visibility for the Cache-Control header, depends on where or
-     * not a valid Bearer/user id exists
-     *
-     * @return string
-     */
     public function visibility(): string
     {
         return $this->visibility;
     }
 
-    /**
-     * Fetch any matching cache keys, performs a wildcard search
-     *
-     * @param string $key_wildcard
-     * @param bool $include_summaries
-     *
-     * @return array
-     */
-    public function matchingPrivateCacheKeys(
-        string $key_wildcard,
-        bool $include_summaries = false
-    ): array
-    {
-        if ($this->key_prefix_private !== null) {
-            return (new \App\Models\Cache())->matchingKeys(
-                $this->laravel_cache_prefix . $this->key_prefix_private,
-                $key_wildcard,
-                $include_summaries
-            );
-        }
-
-        return [];
-    }
-
-    /**
-     * Fetch any matching cache keys, performs a wildcard search
-     *
-     * @param string $key_wildcard
-     * @param bool $include_summaries
-     *
-     * @return array
-     */
-    public function matchingPublicCacheKeys(
+    public function fetchMatchingCacheKeys(
         string $key_wildcard,
         bool $include_summaries = false
     ): array
     {
         return (new \App\Models\Cache())->matchingKeys(
-            $this->laravel_cache_prefix . $this->key_prefix_public,
+            $this->laravel_cache_prefix . $this->cache_prefix,
+            $key_wildcard,
+            $include_summaries
+        );
+    }
+
+    public function fetchMatchingPublicCacheKeys(
+        string $key_wildcard,
+        bool $include_summaries = false
+    ): array
+    {
+        return (new \App\Models\Cache())->matchingKeys(
+            $this->laravel_cache_prefix . $this->public_cache_prefix,
             $key_wildcard,
             $include_summaries
         );

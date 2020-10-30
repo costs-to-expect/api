@@ -47,8 +47,8 @@ class ClearCache implements ShouldQueue
         $payload = new Job($this->payload);
 
         $cache_control = new Control(
-            $payload->userId(),
-            $payload->permittedUser()
+            $payload->permittedUser(),
+            $payload->userId()
         );
 
         $cache_key_group = new KeyGroup($payload->routeParameters());
@@ -72,7 +72,7 @@ class ClearCache implements ShouldQueue
 
             $trash->all();
         } else {
-            $cache_control->clearPrivateCacheKeys($cache_keys);
+            $cache_control->clearMatchingCacheKeys($cache_keys);
         }
     }
 }

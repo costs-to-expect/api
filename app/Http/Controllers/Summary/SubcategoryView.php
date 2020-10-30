@@ -38,15 +38,15 @@ class SubcategoryView extends Controller
         );
 
         $cache_control = new Cache\Control(
-            $this->user_id,
-            in_array((int) $resource_type_id, $this->permitted_resource_types, true)
+            in_array((int) $resource_type_id, $this->permitted_resource_types, true),
+            $this->user_id
         );
         $cache_control->setTtlOneMonth();
 
         $cache_summary = new Cache\Summary();
-        $cache_summary->setFromCache($cache_control->get(request()->getRequestUri()));
+        $cache_summary->setFromCache($cache_control->getByKey(request()->getRequestUri()));
 
-        if ($cache_control->cacheable() === false || $cache_summary->valid() === false) {
+        if ($cache_control->isRequestCacheable() === false || $cache_summary->valid() === false) {
 
             $search_parameters = Parameter\Search::fetch(
                 Config::get('api.subcategory.summary-searchable')
@@ -68,7 +68,7 @@ class SubcategoryView extends Controller
                 addSearch(Parameter\Search::xHeader());
 
             $cache_summary->create($collection, $headers->headers());
-            $cache_control->put(request()->getRequestUri(), $cache_summary->content());
+            $cache_control->putByKey(request()->getRequestUri(), $cache_summary->content());
         }
 
         return response()->json($cache_summary->collection(), 200, $cache_summary->headers());

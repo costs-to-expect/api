@@ -41,17 +41,17 @@ class ItemView extends Controller
         );
 
         $cache_control = new Cache\Control(
-            $this->user_id,
-            in_array((int) $resource_type_id, $this->permitted_resource_types, true)
+            in_array((int) $resource_type_id, $this->permitted_resource_types, true),
+            $this->user_id
         );
         $cache_control->setTtlOneWeek();
 
         $entity = Entity::item($resource_type_id);
 
         $cache_collection = new Cache\Collection();
-        $cache_collection->setFromCache($cache_control->get(request()->getRequestUri()));
+        $cache_collection->setFromCache($cache_control->getByKey(request()->getRequestUri()));
 
-        if ($cache_control->cacheable() === false || $cache_collection->valid() === false) {
+        if ($cache_control->isRequestCacheable() === false || $cache_collection->valid() === false) {
 
             $parameters = Parameter\Request::fetch(
                 array_keys($entity->requestParameters()),
@@ -117,7 +117,7 @@ class ItemView extends Controller
                 addFilters(Parameter\Filter::xHeader());
 
             $cache_collection->create($total, $collection, $pagination_parameters, $headers->headers());
-            $cache_control->put(request()->getRequestUri(), $cache_collection->content());
+            $cache_control->putByKey(request()->getRequestUri(), $cache_collection->content());
         }
 
         return response()->json($cache_collection->collection(), 200, $cache_collection->headers());

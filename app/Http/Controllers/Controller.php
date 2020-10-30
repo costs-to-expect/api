@@ -41,13 +41,13 @@ class Controller extends BaseController
         if (auth('api')->user() !== null && auth()->guard('api')->check() === true) {
             $this->user_id = auth('api')->user()->id; // Safe as check above ensures not null
 
-            $cache_control = new Control($this->user_id, true);
+            $cache_control = new Control(true, $this->user_id);
             $cache_control->setTtlOneHour();
 
             $cache_collection = new Collection();
-            $cache_collection->setFromCache($cache_control->get('/v2/permitted-resource-types'));
+            $cache_collection->setFromCache($cache_control->getByKey('/v2/permitted-resource-types'));
 
-            if ($cache_control->cacheable() === false || $cache_collection->valid() === false) {
+            if ($cache_control->isRequestCacheable() === false || $cache_collection->valid() === false) {
 
                 $permitted_resource_types = (new ResourceTypeAccess())->permittedResourceTypes($this->user_id);
 
@@ -57,7 +57,7 @@ class Controller extends BaseController
                     [],
                     []
                 );
-                $cache_control->put('/v2/permitted-resource-types', $cache_collection->content());
+                $cache_control->putByKey('/v2/permitted-resource-types', $cache_collection->content());
             }
 
             $this->permitted_resource_types = $cache_collection->collection();

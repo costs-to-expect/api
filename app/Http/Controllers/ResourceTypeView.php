@@ -34,13 +34,13 @@ class ResourceTypeView extends Controller
      */
     public function index(): JsonResponse
     {
-        $cache_control = new Cache\Control($this->user_id, true);
+        $cache_control = new Cache\Control( true, $this->user_id);
         $cache_control->setTtlOneWeek();
 
         $cache_collection = new Cache\Collection();
-        $cache_collection->setFromCache($cache_control->get(request()->getRequestUri()));
+        $cache_collection->setFromCache($cache_control->getByKey(request()->getRequestUri()));
 
-        if ($cache_control->cacheable() === false || $cache_collection->valid() === false) {
+        if ($cache_control->isRequestCacheable() === false || $cache_collection->valid() === false) {
 
             $search_parameters = Parameter\Search::fetch(
                 Config::get('api.resource-type.searchable')
@@ -86,7 +86,7 @@ class ResourceTypeView extends Controller
                 addSort(Parameter\Sort::xHeader());
 
             $cache_collection->create($total, $collection, $pagination_parameters, $headers->headers());
-            $cache_control->put(request()->getRequestUri(), $cache_collection->content());
+            $cache_control->putByKey(request()->getRequestUri(), $cache_collection->content());
         }
 
         return response()->json($cache_collection->collection(), 200, $cache_collection->headers());
