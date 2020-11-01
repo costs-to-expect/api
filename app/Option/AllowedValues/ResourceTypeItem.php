@@ -4,7 +4,7 @@ declare(strict_types=1);
 namespace App\Option\AllowedValues;
 
 use App\Entity\Item\Item as Entity;
-use App\Models\EntityConfig;
+use App\Models\EntityLimits;
 use App\Request\Hash;
 use App\Models\Category;
 use App\Models\Subcategory;
@@ -15,7 +15,7 @@ class ResourceTypeItem
 
     private Entity $entity;
 
-    private EntityConfig $model;
+    private EntityLimits $model;
 
     public function __construct(Entity $entity)
     {
@@ -23,7 +23,7 @@ class ResourceTypeItem
 
         $this->entity = $entity;
 
-        $this->model = new EntityConfig();
+        $this->model = new EntityLimits();
     }
 
     protected function allowedValuesForYear(int $resource_type_id): array

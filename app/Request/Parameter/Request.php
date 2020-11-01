@@ -4,7 +4,7 @@ declare(strict_types=1);
 namespace App\Request\Parameter;
 
 use App\Entity\Item\Entity;
-use App\Models\EntityConfig;
+use App\Models\EntityLimits;
 use App\Models\Category;
 use App\Models\ResourceType;
 use App\Models\Subcategory;
@@ -145,7 +145,7 @@ class Request
                         $min_year_limit = (int) Date('Y');
                         $max_year_limit = (int) Date('Y');
 
-                        $entity_model = new EntityConfig();
+                        $entity_model = new EntityLimits();
                         $entity = Entity::item($resource_type_id);
 
                         if ($resource_type_id !== null && $resource_id === null) {

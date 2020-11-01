@@ -5,7 +5,7 @@ namespace App\Option\AllowedValues;
 
 use App\Entity\Item\Item as Entity;
 use App\Models\Category;
-use App\Models\EntityConfig;
+use App\Models\EntityLimits;
 use App\Models\Subcategory;
 use App\Request\Hash;
 
@@ -15,7 +15,7 @@ class ResourceItem
 
     private Entity $entity;
 
-    private EntityConfig $model;
+    private EntityLimits $model;
 
     public function __construct(Entity $entity)
     {
@@ -23,7 +23,7 @@ class ResourceItem
 
         $this->entity = $entity;
 
-        $this->model = new EntityConfig();
+        $this->model = new EntityLimits();
     }
 
     /**
