@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Entity\Item\Entity;
+use App\Option\AllowedValues\Item\AllocatedExpense;
 use App\Option\ItemCollection;
 use App\Option\ItemItem;
 use App\Response\Cache;
@@ -11,6 +12,7 @@ use App\Request\Parameter;
 use App\Request\Route;
 use App\Response\Header\Headers;
 use App\Response\Pagination as UtilityPagination;
+use http\Params;
 use Illuminate\Http\JsonResponse;
 
 /**
@@ -209,7 +211,22 @@ class ItemView extends Controller
             (int) $resource_id
         );
 
-        $allowed_values = (new \App\Option\AllowedValues\ResourceItem($entity))->allowedValues(
+
+        $allowed_value_options = new AllocatedExpense(
+            (int) $resource_type_id,
+            (int) $resource_id,
+            $this->permitted_resource_types,
+            $this->include_public
+        );
+        $allowed_values = $allowed_value_options
+            ->setParameters(
+                $entity->requestParameters(),
+                $defined_parameters
+            )
+            ->fetch()
+            ->allowedValues();
+
+        /*$allowed_values = (new \App\Option\AllowedValues\ResourceItem($entity))->allowedValues(
             $resource_type_id,
             $resource_id,
             $this->permitted_resource_types,
@@ -217,7 +234,7 @@ class ItemView extends Controller
             $entity->requestParameters(),
             $defined_parameters,
             ($entity->type() !== 'simple-item')
-        );
+        );*/
 
         $response = new ItemCollection($permissions);
 
