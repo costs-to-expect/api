@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Option\AllowedValues;
+namespace App\Option\AllowedValue;
 
 use App\Request\Hash;
 

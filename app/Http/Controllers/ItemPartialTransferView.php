@@ -202,7 +202,7 @@ class ItemPartialTransferView extends Controller
         $response = new ItemPartialTransferTransfer($permissions);
 
         return $response->setAllowedValues(
-                (new \App\Option\AllowedValues\Resource())->allowedValues(
+                (new \App\Option\AllowedValue\Resource())->allowedValues(
                     $resource_type_id,
                     $resource_id
                 )

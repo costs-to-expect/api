@@ -184,7 +184,7 @@ class ItemSubcategoryView extends Controller
         return $response
             ->setEntity(Entity::item($resource_type_id))
             ->setAllowedValues(
-                (new \App\Option\AllowedValues\Subcategory())->allowedValues($item_category->category_id)
+                (new \App\Option\AllowedValue\Subcategory())->allowedValues($item_category->category_id)
             )
             ->create()
             ->response();

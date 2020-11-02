@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Option\AllowedValues\Item;
+namespace App\Option\AllowedValue\Item;
 
 use App\Entity\Item\Item as Entity;
 use App\Models\Category;
@@ -11,25 +11,25 @@ use App\Models\Subcategory;
 use App\Request\Hash;
 use App\Response\Responses;
 
-class AllocatedExpense
+abstract class Item
 {
-    private Hash $hash;
+    protected Hash $hash;
 
-    private Entity $entity;
+    protected Entity $entity;
 
-    private EntityLimits $range_limits;
+    protected EntityLimits $range_limits;
 
-    private int $resource_type_id;
-    private int $resource_id;
+    protected int $resource_type_id;
+    protected int $resource_id;
 
-    private array $permitted_resource_types;
+    protected array $permitted_resource_types;
 
-    private bool $include_public;
+    protected bool $include_public;
 
-    private array $available_parameters = [];
-    private array $defined_parameters = [];
+    protected array $available_parameters = [];
+    protected array $defined_parameters = [];
 
-    private array $values = [];
+    protected array $values = [];
 
     public function __construct(
         int $resource_type_id,
@@ -56,7 +56,7 @@ class AllocatedExpense
     public function setParameters(
         array $available_parameters,
         array $defined_parameters
-    ): AllocatedExpense
+    ): Item
     {
         $this->available_parameters = $available_parameters;
         $this->defined_parameters = $defined_parameters;
@@ -64,31 +64,9 @@ class AllocatedExpense
         return $this;
     }
 
-    public function fetch(): AllocatedExpense
-    {
-        $this->fetchValuesForYear();
+    abstract public function fetch(): Item;
 
-        $this->fetchValuesForMonth();
-
-        $this->fetchValuesForCategory();
-
-        $this->fetchValuesForSubcategory();
-
-        $this->fetchValuesForCurrency();
-
-        return $this;
-    }
-
-    private function setAllowedValueFields(): void
-    {
-        $this->values = [
-            'year' => null,
-            'month' => null,
-            'category' => null,
-            'subcategory' => null,
-            'currency_id' => null
-        ];
-    }
+    abstract protected function setAllowedValueFields(): void;
 
     public function allowedValues(): array
     {

@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Entity\Item\Entity;
-use App\Option\AllowedValues\Item\AllocatedExpense;
+use App\Option\AllowedValue\Item\AllocatedExpense;
 use App\Option\ItemCollection;
 use App\Option\ItemItem;
 use App\Response\Cache;
@@ -211,7 +211,6 @@ class ItemView extends Controller
             (int) $resource_id
         );
 
-
         $allowed_value_options = new AllocatedExpense(
             (int) $resource_type_id,
             (int) $resource_id,
@@ -226,19 +225,10 @@ class ItemView extends Controller
             ->fetch()
             ->allowedValues();
 
-        /*$allowed_values = (new \App\Option\AllowedValues\ResourceItem($entity))->allowedValues(
-            $resource_type_id,
-            $resource_id,
-            $this->permitted_resource_types,
-            $this->include_public,
-            $entity->requestParameters(),
-            $defined_parameters,
-            ($entity->type() !== 'simple-item')
-        );*/
-
         $response = new ItemCollection($permissions);
 
-        return $response->setEntity($entity)
+        return $response
+            ->setEntity($entity)
             ->setAllowedValues($allowed_values)
             ->create()
             ->response();
@@ -288,11 +278,11 @@ class ItemView extends Controller
         $entity_type = $entity->type();
 
         if ($entity_type === 'simple-expense' || $entity_type === 'allocated-expense') {
-            $allowed_values = (new \App\Option\AllowedValues\Currency())->allowedValues();
+            $allowed_values = (new \App\Option\AllowedValue\Currency())->allowedValues();
         }
 
         if ($entity_type === 'game') {
-            $allowed_values = (new \App\Option\AllowedValues\Winner())->allowedValues($resource_type_id);
+            $allowed_values = (new \App\Option\AllowedValue\Winner())->allowedValues($resource_type_id);
         }
 
         $response = new ItemItem($permissions);
