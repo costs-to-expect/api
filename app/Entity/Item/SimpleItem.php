@@ -4,7 +4,6 @@ declare(strict_types=1);
 namespace App\Entity\Item;
 
 use App\Models\Transformers\Transformer;
-use App\Request\Parameter\Request;
 use App\Request\Validate\Validator;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Date;
@@ -20,34 +19,9 @@ class SimpleItem extends Item
         parent::__construct();
     }
 
-    public function allowedValuesForItemCollection(
-        int $resource_type_id,
-        int $resource_id,
-        array $permitted_resource_types = [],
-        bool $include_public = false
-    ): array
+    public function allowedValuesItemCollectionClass(): string
     {
-        $available_parameters = array_keys($this->requestParameters());
-        $defined_parameters = Request::fetch(
-            $available_parameters,
-            $resource_type_id,
-            $resource_id
-        );
-
-        $allowed_values = new \App\Option\AllowedValue\Item\SimpleItem(
-            $resource_type_id,
-            $resource_id,
-            $permitted_resource_types,
-            $include_public,
-        );
-
-        return $allowed_values
-            ->setParameters(
-                $available_parameters,
-                $defined_parameters
-            )
-            ->fetch()
-            ->allowedValues();
+        return \App\Option\AllowedValue\Item\SimpleItem::class;
     }
 
     public function categoryAssignmentLimit(): int

@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace App\Entity\Item;
 
 use App\Models\Transformers\Transformer;
+use App\Request\Parameter\Request;
 use App\Request\Validate\Validator;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Config as LaravelConfig;
@@ -24,12 +25,38 @@ abstract class Item
         //
     }
 
-    abstract public function allowedValuesForItemCollection(
+    abstract protected function allowedValuesItemCollectionClass(): string;
+
+    public function allowedValuesForItemCollection(
         int $resource_type_id,
         int $resource_id,
         array $permitted_resource_types = [],
         bool $include_public = false
-    ): array;
+    ): array
+    {
+        $available_parameters = $this->requestParameters();
+        $defined_parameters = Request::fetch(
+            array_keys($available_parameters),
+            $resource_type_id,
+            $resource_id
+        );
+
+        $allowed_value_class = $this->allowedValuesItemCollectionClass();
+        $allowed_values = new $allowed_value_class(
+            $resource_type_id,
+            $resource_id,
+            $permitted_resource_types,
+            $include_public,
+        );
+
+        return $allowed_values
+            ->setParameters(
+                $available_parameters,
+                $defined_parameters
+            )
+            ->fetch()
+            ->allowedValues();
+    }
 
     public function categoryAssignmentLimit(): int
     {
