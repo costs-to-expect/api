@@ -5,6 +5,7 @@ namespace App\Entity\Item;
 
 use App\Models\Transformers\Transformer;
 use App\Request\Hash;
+use App\Request\Parameter\Request;
 use App\Request\Validate\Validator;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Date;
@@ -18,6 +19,36 @@ class SimpleExpense extends Item
         $this->resource_type_base_path = 'api.resource-type-item-type-simple-expense';
 
         parent::__construct();
+    }
+
+    public function allowedValuesForItemCollection(
+        int $resource_type_id,
+        int $resource_id,
+        array $permitted_resource_types = [],
+        bool $include_public = false
+    ): array
+    {
+        $available_parameters = array_keys($this->requestParameters());
+        $defined_parameters = Request::fetch(
+            $available_parameters,
+            $resource_type_id,
+            $resource_id
+        );
+
+        $allowed_values = new \App\Option\AllowedValue\Item\SimpleExpense(
+            $resource_type_id,
+            $resource_id,
+            $permitted_resource_types,
+            $include_public,
+        );
+
+        return $allowed_values
+            ->setParameters(
+                $available_parameters,
+                $defined_parameters
+            )
+            ->fetch()
+            ->allowedValues();
     }
 
     public function create(int $id): Model

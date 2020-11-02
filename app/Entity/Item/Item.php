@@ -24,6 +24,13 @@ abstract class Item
         //
     }
 
+    abstract public function allowedValuesForItemCollection(
+        int $resource_type_id,
+        int $resource_id,
+        array $permitted_resource_types = [],
+        bool $include_public = false
+    ): array;
+
     public function categoryAssignmentLimit(): int
     {
         return 1;

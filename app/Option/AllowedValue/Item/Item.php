@@ -44,8 +44,6 @@ abstract class Item
         $this->permitted_resource_types = $permitted_resource_types;
         $this->include_public = $include_public;
 
-        $this->setAllowedValueFields();
-
         $this->range_limits = new EntityLimits();
 
         $this->entity = new \App\Entity\Item\AllocatedExpense();

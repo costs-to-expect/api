@@ -20,6 +20,8 @@ class SimpleItem extends Item
         );
 
         $this->entity = new \App\Entity\Item\SimpleItem();
+
+        $this->setAllowedValueFields();
     }
 
     public function fetch(): Item

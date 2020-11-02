@@ -20,6 +20,8 @@ class SimpleExpense extends Item
         );
 
         $this->entity = new \App\Entity\Item\SimpleExpense();
+
+        $this->setAllowedValueFields();
     }
 
     public function fetch(): Item

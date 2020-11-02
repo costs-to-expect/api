@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace App\Entity\Item;
 
 use App\Request\Hash;
+use App\Request\Parameter\Request;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\Transformers\Transformer;
 use App\Request\Validate\Validator;
@@ -18,6 +19,36 @@ class AllocatedExpense extends Item
         $this->resource_type_base_path = 'api.resource-type-item-type-allocated-expense';
 
         parent::__construct();
+    }
+
+    public function allowedValuesForItemCollection(
+        int $resource_type_id,
+        int $resource_id,
+        array $permitted_resource_types = [],
+        bool $include_public = false
+    ): array
+    {
+        $available_parameters = $this->requestParameters();
+        $defined_parameters = Request::fetch(
+            array_keys($available_parameters),
+            $resource_type_id,
+            $resource_id
+        );
+
+        $allowed_values = new \App\Option\AllowedValue\Item\AllocatedExpense(
+            $resource_type_id,
+            $resource_id,
+            $permitted_resource_types,
+            $include_public,
+        );
+
+        return $allowed_values
+            ->setParameters(
+                $available_parameters,
+                $defined_parameters
+            )
+            ->fetch()
+            ->allowedValues();
     }
 
     /**

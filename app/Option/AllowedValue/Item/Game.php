@@ -22,10 +22,14 @@ class Game extends Item
         );
 
         $this->entity = new \App\Entity\Item\Game();
+
+        $this->setAllowedValueFields();
     }
 
     public function fetch(): Item
     {
+        $this->fetchValuesForWinner();
+
         return $this;
     }
 

@@ -20,6 +20,8 @@ class AllocatedExpense extends Item
         );
 
         $this->entity = new \App\Entity\Item\AllocatedExpense();
+
+        $this->setAllowedValueFields();
     }
 
     public function fetch(): Item
