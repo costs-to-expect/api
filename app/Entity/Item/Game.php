@@ -91,12 +91,16 @@ class Game extends Item
     public function update(array $patch, Model $instance): bool
     {
         foreach ($patch as $key => $value) {
-            if (($key === 'winner') && $value !== null) {
-                $winner = (new Hash())->decode('category', request()->input('winner'));
+            if ($key === 'winner_id') {
+                $key = 'winner';
 
-                $value = null;
-                if ($winner !== false) {
-                    $value = $winner;
+                if ($value !== null) {
+                    $winner = (new Hash())->decode('category', request()->input('winner_id'));
+
+                    $value = null;
+                    if ($winner !== false) {
+                        $value = $winner;
+                    }
                 }
             }
 

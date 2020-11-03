@@ -27,7 +27,7 @@ return [
                 'sometimes',
                 'json'
             ],
-            'winner' => [
+            'winner_id' => [
                 'sometimes',
                 'nullable',
                 'string',

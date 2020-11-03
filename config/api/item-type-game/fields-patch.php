@@ -17,8 +17,8 @@ return [
         'type' => 'json',
         'required' => false
     ],
-    'winner' => [
-        'field' => 'winner',
+    'winner_id' => [
+        'field' => 'winner_id',
         'title' => 'item-type-game/fields.title-winner',
         'description' => 'item-type-game/fields.description-winner',
         'type' => 'string',
@@ -28,7 +28,7 @@ return [
         ]
     ],
     'score' => [
-        'field' => 'winner',
+        'field' => 'score',
         'title' => 'item-type-game/fields.title-score',
         'description' => 'item-type-game/fields.description-score',
         'type' => 'integer',
