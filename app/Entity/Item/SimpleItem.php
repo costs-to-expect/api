@@ -24,6 +24,11 @@ class SimpleItem extends Item
         return \App\Option\AllowedValue\Item\SimpleItem::class;
     }
 
+    public function allowedValuesResourceTypeItemCollectionClass(): string
+    {
+        return \App\Option\AllowedValue\ResourceTypeItem\SimpleItem::class;
+    }
+
     public function categoryAssignmentLimit(): int
     {
         return 0;

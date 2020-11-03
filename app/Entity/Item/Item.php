@@ -26,6 +26,7 @@ abstract class Item
     }
 
     abstract protected function allowedValuesItemCollectionClass(): string;
+    abstract protected function allowedValuesResourceTypeItemCollectionClass(): string;
 
     public function allowedValuesForItemCollection(
         int $resource_type_id,
@@ -45,6 +46,34 @@ abstract class Item
         $allowed_values = new $allowed_value_class(
             $resource_type_id,
             $resource_id,
+            $permitted_resource_types,
+            $include_public,
+        );
+
+        return $allowed_values
+            ->setParameters(
+                $available_parameters,
+                $defined_parameters
+            )
+            ->fetch()
+            ->allowedValues();
+    }
+
+    public function allowedValuesForResourceTypeItemCollection(
+        int $resource_type_id,
+        array $permitted_resource_types = [],
+        bool $include_public = false
+    ): array
+    {
+        $available_parameters = $this->resourceTypeRequestParameters();
+        $defined_parameters = Request::fetch(
+            array_keys($available_parameters),
+            $resource_type_id
+        );
+
+        $allowed_value_class = $this->allowedValuesResourceTypeItemCollectionClass();
+        $allowed_values = new $allowed_value_class(
+            $resource_type_id,
             $permitted_resource_types,
             $include_public,
         );

@@ -136,24 +136,18 @@ class ResourceTypeItemView extends Controller
             $this->permitted_resource_types
         );
 
-        $defined_parameters = Parameter\Request::fetch(
-            array_keys($entity->resourceTypeRequestParameters()),
-            $resource_type_id
-        );
-
-        $allowed_values = (new \App\Option\AllowedValue\ResourceTypeItem($entity))->allowedValues(
-            $resource_type_id,
-            $this->permitted_resource_types,
-            $this->include_public,
-            $entity->resourceTypeRequestParameters(),
-            $defined_parameters
-        );
-
         $response = new ResourceTypeItemCollection($permissions);
 
-        return $response->setEntity($entity)->
-            setAllowedValues($allowed_values)->
-            create()->
-            response();
+        return $response
+            ->setEntity($entity)
+            ->setAllowedValues(
+                $entity->allowedValuesForResourceTypeItemCollection(
+                    $resource_type_id,
+                    $this->permitted_resource_types,
+                    $this->include_public
+                )
+            )
+            ->create()
+            ->response();
     }
 }

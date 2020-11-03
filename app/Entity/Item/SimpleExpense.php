@@ -25,6 +25,11 @@ class SimpleExpense extends Item
         return \App\Option\AllowedValue\Item\SimpleExpense::class;
     }
 
+    public function allowedValuesResourceTypeItemCollectionClass(): string
+    {
+        return \App\Option\AllowedValue\ResourceTypeItem\SimpleExpense::class;
+    }
+
     public function create(int $id): Model
     {
         $hash = new Hash();

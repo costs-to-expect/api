@@ -26,6 +26,11 @@ class Game extends Item
         return \App\Option\AllowedValue\Item\Game::class;
     }
 
+    public function allowedValuesResourceTypeItemCollectionClass(): string
+    {
+        return \App\Option\AllowedValue\ResourceTypeItem\Game::class;
+    }
+
     public function categoryAssignmentLimit(): int
     {
         return 5;

@@ -25,6 +25,11 @@ class AllocatedExpense extends Item
         return \App\Option\AllowedValue\Item\AllocatedExpense::class;
     }
 
+    public function allowedValuesResourceTypeItemCollectionClass(): string
+    {
+        return \App\Option\AllowedValue\ResourceTypeItem\AllocatedExpense::class;
+    }
+
     /**
      * Create and save the item and item type data
      *
