@@ -40,7 +40,7 @@ class ConvertGetParameters
                 if (is_int($id)) {
                     $request->request->add([$param => $id]);
                 } else {
-                    $request->request->add([$param => 'nill']);
+                    $request->request->remove($param);
                 }
             }
         }

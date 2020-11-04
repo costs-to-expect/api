@@ -50,7 +50,7 @@ class ConvertRouteParameters
                 if (is_int($id)) {
                     $request->route()->setParameter($param, $id);
                 } else {
-                    $request->route()->setParameter($param, 'nill');
+                    $request->route()->forgetParameter($param);
                 }
             }
         }
