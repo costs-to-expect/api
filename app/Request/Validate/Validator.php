@@ -119,7 +119,7 @@ abstract class Validator
         );
     }
 
-    public function updateExpenseItemValidator(): ?\Illuminate\Contracts\Validation\Validator
+    protected function updateExpenseItemValidator(): ?\Illuminate\Contracts\Validation\Validator
     {
         $merge_array = [];
         if (array_key_exists('currency_id', request()->all())) {
@@ -147,7 +147,7 @@ abstract class Validator
         );
     }
 
-    public function updateItemValidator(): ?\Illuminate\Contracts\Validation\Validator
+    protected function updateItemValidator(): ?\Illuminate\Contracts\Validation\Validator
     {
         $messages = [];
         foreach ($this->entity->patchValidationMessages() as $key => $custom_message) {

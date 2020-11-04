@@ -20,14 +20,9 @@ class AllocatedExpense extends Item
         parent::__construct();
     }
 
-    public function allowedValuesItemCollectionClass(): string
+    public function allowedValuesForItem(int $resource_type_id): array
     {
-        return \App\Option\AllowedValue\Item\AllocatedExpense::class;
-    }
-
-    public function allowedValuesResourceTypeItemCollectionClass(): string
-    {
-        return \App\Option\AllowedValue\ResourceTypeItem\AllocatedExpense::class;
+        return (new \App\Option\AllowedValue\Currency())->allowedValues();
     }
 
     /**
@@ -173,5 +168,15 @@ class AllocatedExpense extends Item
     public function summaryResourceTypeModel(): Model
     {
         return new \App\Models\ResourceTypeItem\Summary\AllocatedExpense();
+    }
+
+    protected function allowedValuesItemCollectionClass(): string
+    {
+        return \App\Option\AllowedValue\Item\AllocatedExpense::class;
+    }
+
+    protected function allowedValuesResourceTypeItemCollectionClass(): string
+    {
+        return \App\Option\AllowedValue\ResourceTypeItem\AllocatedExpense::class;
     }
 }

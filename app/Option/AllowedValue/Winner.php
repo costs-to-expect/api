@@ -18,7 +18,7 @@ class Winner
     {
         $categories = (new \App\Models\Category())->categoriesByResourceType($resource_type_id);
 
-        $parameters = ['winner' => ['allowed_values' => []]];
+        $parameters = ['winner_id' => ['allowed_values' => []]];
 
         foreach ($categories as $category) {
             $id = $this->hash->encode('category', $category['category_id']);
@@ -27,7 +27,7 @@ class Winner
                 \App\Response\Responses::unableToDecode();
             }
 
-            $parameters['winner']['allowed_values'][$id] = [
+            $parameters['winner_id']['allowed_values'][$id] = [
                 'value' => $id,
                 'name' => $category['category_name'],
                 'description' => $category['category_description']

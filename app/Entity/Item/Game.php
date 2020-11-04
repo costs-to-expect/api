@@ -21,14 +21,9 @@ class Game extends Item
         parent::__construct();
     }
 
-    public function allowedValuesItemCollectionClass(): string
+    public function allowedValuesForItem(int $resource_type_id): array
     {
-        return \App\Option\AllowedValue\Item\Game::class;
-    }
-
-    public function allowedValuesResourceTypeItemCollectionClass(): string
-    {
-        return \App\Option\AllowedValue\ResourceTypeItem\Game::class;
+        return (new \App\Option\AllowedValue\Winner())->allowedValues($resource_type_id);
     }
 
     public function categoryAssignmentLimit(): int
@@ -169,5 +164,15 @@ class Game extends Item
     public function summaryTransformerByResource(array $data_to_transform): Transformer
     {
         return new \App\Models\Transformers\Item\Summary\GameItemByResource($data_to_transform);
+    }
+
+    protected function allowedValuesItemCollectionClass(): string
+    {
+        return \App\Option\AllowedValue\Item\Game::class;
+    }
+
+    protected function allowedValuesResourceTypeItemCollectionClass(): string
+    {
+        return \App\Option\AllowedValue\ResourceTypeItem\Game::class;
     }
 }

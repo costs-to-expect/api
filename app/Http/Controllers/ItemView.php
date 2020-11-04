@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Entity\Item\Entity;
-use App\Option\AllowedValue\Item\AllocatedExpense;
 use App\Option\ItemCollection;
 use App\Option\ItemItem;
 use App\Response\Cache;
@@ -12,7 +11,6 @@ use App\Request\Parameter;
 use App\Request\Route;
 use App\Response\Header\Headers;
 use App\Response\Pagination as UtilityPagination;
-use http\Params;
 use Illuminate\Http\JsonResponse;
 
 /**
@@ -260,22 +258,11 @@ class ItemView extends Controller
             return \App\Response\Responses::notFound(trans('entities.item'));
         }
 
-        $allowed_values = [];
-
-        $entity_type = $entity->type();
-
-        if ($entity_type === 'simple-expense' || $entity_type === 'allocated-expense') {
-            $allowed_values = (new \App\Option\AllowedValue\Currency())->allowedValues();
-        }
-
-        if ($entity_type === 'game') {
-            $allowed_values = (new \App\Option\AllowedValue\Winner())->allowedValues($resource_type_id);
-        }
-
         $response = new ItemItem($permissions);
 
-        return $response->setEntity($entity)
-            ->setAllowedValues($allowed_values)
+        return $response
+            ->setEntity($entity)
+            ->setAllowedValues($entity->allowedValuesForItem((int) $resource_type_id))
             ->create()
             ->response();
     }

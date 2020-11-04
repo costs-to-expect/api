@@ -19,8 +19,8 @@ return [
     ],
     'winner_id' => [
         'field' => 'winner_id',
-        'title' => 'item-type-game/fields.title-winner',
-        'description' => 'item-type-game/fields.description-winner',
+        'title' => 'item-type-game/fields.title-winner_id',
+        'description' => 'item-type-game/fields.description-winner_id',
         'type' => 'string',
         'required' => false,
         'validation' => [

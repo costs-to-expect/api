@@ -25,8 +25,7 @@ abstract class Item
         //
     }
 
-    abstract protected function allowedValuesItemCollectionClass(): string;
-    abstract protected function allowedValuesResourceTypeItemCollectionClass(): string;
+    abstract public function allowedValuesForItem(int $resource_type_id): array;
 
     public function allowedValuesForItemCollection(
         int $resource_type_id,
@@ -242,4 +241,7 @@ abstract class Item
     abstract public function update(array $patch, Model $instance): bool;
 
     abstract public function validator(): Validator;
+
+    abstract protected function allowedValuesItemCollectionClass(): string;
+    abstract protected function allowedValuesResourceTypeItemCollectionClass(): string;
 }

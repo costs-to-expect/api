@@ -19,7 +19,7 @@ return [
     'description-statistics' => 'JSON containing the game statistics',
 
     'title-winner_id' => 'Winner Id',
-    'description-winner' => 'The hash of the winning player',
+    'description-winner_id' => 'The hash of the winning player',
 
     'title-score' => 'Score',
     'description-score' => 'The final score',

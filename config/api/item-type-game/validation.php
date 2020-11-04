@@ -30,8 +30,7 @@ return [
             'winner_id' => [
                 'sometimes',
                 'nullable',
-                'string',
-                'size:10'
+                'exists:category,id'
             ],
             'score' => [
                 'sometimes',
@@ -43,6 +42,8 @@ return [
                 'boolean'
             ]
         ],
-        'messages' => []
+        'messages' => [
+            'winner_id.exists' => 'item-type-game/validation.winner_id-exists'
+        ]
     ]
 ];
