@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Entity\Item\Entity;
 use App\Models\ItemPartialTransfer;
 use App\Models\Transformers\ItemPartialTransfer as ItemPartialTransferTransformer;
 use App\Option\ItemPartialTransferCollection;
@@ -43,6 +44,11 @@ class ItemPartialTransferView extends Controller
             $resource_type_id,
             $this->permitted_resource_types
         );
+
+        $entity = Entity::item($resource_type_id);
+        if ($entity->allowPartialTransfers() === false) {
+            return \App\Response\Responses::notSupported();
+        }
 
         $cache_collection = new Cache\Collection();
         $cache_collection->setFromCache($cache_control->getByKey(request()->getRequestUri()));
@@ -111,6 +117,11 @@ class ItemPartialTransferView extends Controller
             $this->permitted_resource_types
         );
 
+        $entity = Entity::item($resource_type_id);
+        if ($entity->allowPartialTransfers() === false) {
+            return \App\Response\Responses::notSupported();
+        }
+
         $item_partial_transfer = (new ItemPartialTransfer())->single(
             (int) $resource_type_id,
             (int) $item_partial_transfer_id
@@ -144,6 +155,11 @@ class ItemPartialTransferView extends Controller
             $this->permitted_resource_types
         );
 
+        $entity = Entity::item($resource_type_id);
+        if ($entity->allowPartialTransfers() === false) {
+            return \App\Response\Responses::notSupported();
+        }
+
         $permissions = Route\Permission::resourceType(
             (int) $resource_type_id,
             $this->permitted_resource_types
@@ -169,6 +185,11 @@ class ItemPartialTransferView extends Controller
             $this->permitted_resource_types
         );
 
+        $entity = Entity::item($resource_type_id);
+        if ($entity->allowPartialTransfers() === false) {
+            return \App\Response\Responses::notSupported();
+        }
+
         $permissions = Route\Permission::resourceType(
             (int) $resource_type_id,
             $this->permitted_resource_types
@@ -191,6 +212,11 @@ class ItemPartialTransferView extends Controller
             $item_id,
             $this->permitted_resource_types
         );
+
+        $entity = Entity::item($resource_type_id);
+        if ($entity->allowPartialTransfers() === false) {
+            return \App\Response\Responses::notSupported();
+        }
 
         $permissions = Route\Permission::item(
             $resource_type_id,

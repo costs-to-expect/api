@@ -25,6 +25,11 @@ class AllocatedExpense extends Item
         return (new \App\Option\AllowedValue\Currency())->allowedValues();
     }
 
+    public function allowPartialTransfers(): bool
+    {
+        return true;
+    }
+
     /**
      * Create and save the item and item type data
      *

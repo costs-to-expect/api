@@ -208,6 +208,22 @@ class Responses
         exit();
     }
 
+    public static function notSupported(?Exception $e = null): JsonResponse
+    {
+        $response = [
+            'message' => trans('responses.not-supported')
+        ];
+
+        if ($e instanceOf Exception) {
+            $response = self::addException($response, $e);
+        }
+
+        response()
+            ->json($response,405)
+            ->send();
+        exit();
+    }
+
     /**
      * 500 error, failed to save the model.
      *

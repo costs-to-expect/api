@@ -86,6 +86,11 @@ abstract class Item
             ->allowedValues();
     }
 
+    public function allowPartialTransfers(): bool
+    {
+        return false;
+    }
+
     public function categoryAssignmentLimit(): int
     {
         return 1;
