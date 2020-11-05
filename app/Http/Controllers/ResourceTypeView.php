@@ -27,11 +27,6 @@ class ResourceTypeView extends Controller
 {
     protected bool $allow_entire_collection = true;
 
-    /**
-     * Return all the resource types
-     *
-     * @return JsonResponse
-     */
     public function index(): JsonResponse
     {
         $cache_control = new Cache\Control( true, $this->user_id);
@@ -92,20 +87,8 @@ class ResourceTypeView extends Controller
         return response()->json($cache_collection->collection(), 200, $cache_collection->headers());
     }
 
-    /**
-     * Return a single resource type
-     *
-     * @param string $resource_type_id
-     *
-     * @return JsonResponse
-     */
-    public function show(string $resource_type_id): JsonResponse
+    public function show($resource_type_id): JsonResponse
     {
-        Route\Validate::resourceType(
-            $resource_type_id,
-            $this->permitted_resource_types
-        );
-
         $parameters = Parameter\Request::fetch(array_keys(Config::get('api.resource-type.parameters.item')));
 
         $resource_type = (new ResourceType())->single(
@@ -138,11 +121,6 @@ class ResourceTypeView extends Controller
         );
     }
 
-    /**
-     * Generate the OPTIONS request for the resource type list
-     *
-     * @return JsonResponse
-     */
     public function optionsIndex(): JsonResponse
     {
         $response = new ResourceTypeCollection(['view'=> $this->user_id !== null, 'manage'=> $this->user_id !== null]);
@@ -152,20 +130,8 @@ class ResourceTypeView extends Controller
             ->response();
     }
 
-    /**
-     * Generate the OPTIONS request fir a specific resource type
-     *
-     * @param string $resource_type_id
-     *
-     * @return JsonResponse
-     */
-    public function optionsShow(string $resource_type_id): JsonResponse
+    public function optionsShow($resource_type_id): JsonResponse
     {
-        Route\Validate::resourceType(
-            $resource_type_id,
-            $this->permitted_resource_types
-        );
-
         $permissions = Route\Permission::resourceType(
             $resource_type_id,
             $this->permitted_resource_types

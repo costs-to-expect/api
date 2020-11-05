@@ -95,6 +95,8 @@ class Validate
         }
     }
 
+
+
     /**
      * Validate the route, checks the route parameters based on the users
      * permitted resource types
@@ -107,8 +109,7 @@ class Validate
         $resource_type_id,
         array $permitted_resource_types,
         bool $write = false
-    )
-    {
+    ): void {
          if ($write === false) {
             if (
                 Validator\ResourceType::existsToUserForViewing(

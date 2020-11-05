@@ -36,6 +36,13 @@ class Controller extends BaseController
         $this->setPermittedResourceTypes();
     }
 
+    protected function excludePublicResourceTypes(): void
+    {
+        if (Boolean::convertedValue(request()->query('exclude-public')) === true) {
+            $this->include_public = false;
+        }
+    }
+
     protected function setPermittedResourceTypes(): void
     {
         if (auth('api')->user() !== null && auth()->guard('api')->check() === true) {
@@ -64,10 +71,8 @@ class Controller extends BaseController
         }
     }
 
-    protected function excludePublicResourceTypes(): void
+    protected function writeAccessToResourceType(int $resource_type_id): bool
     {
-        if (Boolean::convertedValue(request()->query('exclude-public')) === true) {
-            $this->include_public = false;
-        }
+        return in_array($resource_type_id, $this->permitted_resource_types, true) === true;
     }
 }

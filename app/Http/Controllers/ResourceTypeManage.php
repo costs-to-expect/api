@@ -8,7 +8,6 @@ use App\Models\PermittedUser;
 use App\Models\Resource;
 use App\Models\ResourceTypeItemType;
 use App\Response\Cache;
-use App\Request\Route;
 use App\Models\ResourceType;
 use App\Models\Transformers\ResourceType as ResourceTypeTransformer;
 use App\Request\Validate\ResourceType as ResourceTypeValidator;
@@ -100,11 +99,9 @@ class ResourceTypeManage extends Controller
         string $resource_type_id
     ): JsonResponse
     {
-        Route\Validate::resourceType(
-            $resource_type_id,
-            $this->permitted_resource_types,
-            true
-        );
+        if ($this->writeAccessToResourceType($resource_type_id) === false) {
+            \App\Response\Responses::notFoundOrNotAccessible(trans('entities.resource-type'));
+        }
 
         $resource_type_item_type = (new ResourceTypeItemType())->instance($resource_type_id);
         $permitted_user = (new PermittedUser())->instance($resource_type_id, $this->user_id);
@@ -168,11 +165,9 @@ class ResourceTypeManage extends Controller
         string $resource_type_id
     ): JsonResponse
     {
-        Route\Validate::resourceType(
-            $resource_type_id,
-            $this->permitted_resource_types,
-            true
-        );
+        if ($this->writeAccessToResourceType($resource_type_id) === false) {
+            \App\Response\Responses::notFoundOrNotAccessible(trans('entities.resource-type'));
+        }
 
         $resource_type = (new ResourceType())->instance($resource_type_id);
 

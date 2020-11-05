@@ -174,20 +174,11 @@ class ResourceType extends Model
         return $collection->get()->toArray();
     }
 
-    /**
-     * Return a single item
-     *
-     * @param integer $resource_type_id Resource type to return
-     * @param array $permitted_resource_types
-     * @param boolean $include_public
-     *
-     * @return array
-     */
     public function single(
         int $resource_type_id,
         array $permitted_resource_types = [],
         bool $include_public = false
-    ): array
+    ): ?array
     {
         $result = $this
             ->select(
@@ -220,9 +211,16 @@ class ResourceType extends Model
                 orWhereIn('resource_type.id', $permitted_resource_types);
         });
 
-        return $result
-            ->find($resource_type_id)
+        $result = $result
+            ->where($this->table . '.id', '=', $resource_type_id)
+            ->get()
             ->toArray();
+
+        if (count($result) === 0) {
+            return null;
+        }
+
+        return $result;
     }
 
     /**
