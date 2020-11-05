@@ -37,7 +37,7 @@ class ItemSubcategoryManage extends Controller
         string $resource_type_id,
         string $resource_id,
         string $item_id,
-        string $item_category_id
+        string $item_category_id = null
     ): JsonResponse
     {
         Route\Validate::item(
@@ -48,7 +48,7 @@ class ItemSubcategoryManage extends Controller
             true
         );
 
-        if ($item_category_id === 'nill') {
+        if ($item_category_id === null) {
             return \App\Response\Responses::notFound(trans('entities.item-subcategory'));
         }
 
@@ -123,8 +123,8 @@ class ItemSubcategoryManage extends Controller
         string $resource_type_id,
         string $resource_id,
         string $item_id,
-        string $item_category_id,
-        string $item_subcategory_id
+        string $item_category_id = null,
+        string $item_subcategory_id = null
     ): JsonResponse
     {
         Route\Validate::item(
@@ -135,7 +135,7 @@ class ItemSubcategoryManage extends Controller
             true
         );
 
-        if ($item_category_id === 'nill' || $item_subcategory_id === 'nill') {
+        if ($item_category_id === null || $item_subcategory_id === null) {
             return \App\Response\Responses::notFound(trans('entities.item-subcategory'));
         }
 

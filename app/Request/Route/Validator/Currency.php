@@ -24,7 +24,6 @@ class Currency
     public static function existsToUserForViewing($currency_id): bool
     {
         return !(
-            $currency_id === 'nill' ||
             (new ResourceTypeAccess())->currencyExistsToUser((int) $currency_id) === false
         );
     }

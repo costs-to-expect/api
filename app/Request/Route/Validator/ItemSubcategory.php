@@ -38,11 +38,6 @@ class ItemSubcategory
     ): bool
     {
         return (
-            $resource_type_id === 'nill' ||
-            $resource_id === 'nill' ||
-            $item_id === 'nill' ||
-            $item_category_id === 'nill' ||
-            $item_subcategory_id === 'nill' ||
             (new ResourceTypeAccess())->itemSubcategoryExistsToUser(
                 (int) $resource_type_id,
                 (int) $resource_id,
@@ -77,11 +72,6 @@ class ItemSubcategory
     ): bool
     {
         return !(
-            $resource_type_id === 'nill' ||
-            $resource_id === 'nill' ||
-            $item_id === 'nill' ||
-            $item_category_id === 'nill' ||
-            $item_subcategory_id === 'nill' ||
             (new ResourceTypeAccess())->itemSubcategoryExistsToUser(
                 (int) $resource_type_id,
                 (int) $resource_id,

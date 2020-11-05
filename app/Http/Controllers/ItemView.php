@@ -133,9 +133,9 @@ class ItemView extends Controller
      * @return JsonResponse
      */
     public function show(
-        string $resource_type_id,
-        string $resource_id,
-        string $item_id
+        $resource_type_id,
+        $resource_id,
+        $item_id
     ): JsonResponse
     {
         Route\Validate::item(

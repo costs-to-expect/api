@@ -33,9 +33,6 @@ class Subcategory
     ): bool
     {
         return !(
-            $resource_type_id === 'nill' ||
-            $category_id === 'nill' ||
-            $subcategory_id === 'nill' ||
             (new ResourceTypeAccess())->subcategoryExistsToUser(
                 (int) $resource_type_id,
                 (int) $category_id,
@@ -64,9 +61,6 @@ class Subcategory
     ): bool
     {
         return !(
-            $resource_type_id === 'nill' ||
-            $category_id === 'nill' ||
-            $subcategory_id === 'nill' ||
             (new ResourceTypeAccess())->subcategoryExistsToUser(
                 (int) $resource_type_id,
                 (int) $category_id,

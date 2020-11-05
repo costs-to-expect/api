@@ -31,7 +31,6 @@ class Category
     ): bool
     {
         return !(
-            $category_id === 'nill' ||
             (new ResourceTypeAccess())->categoryExistsToUser(
                 (int) $resource_type_id,
                 (int) $category_id,
@@ -57,7 +56,6 @@ class Category
     ): bool
     {
         return !(
-            $category_id === 'nill' ||
             (new ResourceTypeAccess())->categoryExistsToUser(
                 (int) $resource_type_id,
                 (int) $category_id,

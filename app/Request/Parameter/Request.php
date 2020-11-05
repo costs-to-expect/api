@@ -35,8 +35,7 @@ class Request
 
         foreach ($parameter_names as $parameter) {
             if (array_key_exists($parameter, $request_parameters) === true &&
-                $request_parameters[$parameter] !== null &&
-                $request_parameters[$parameter] !== 'nill') {
+                $request_parameters[$parameter] !== null) {
 
                 switch ($parameter) {
                     case 'include-resources';

@@ -35,10 +35,6 @@ class ItemCategory
     ): bool
     {
         return !(
-            $resource_type_id === 'nill' ||
-            $resource_id === 'nill' ||
-            $item_id === 'nill' ||
-            $item_category_id === 'nill' ||
             (new ResourceTypeAccess())->itemCategoryExistsToUser(
                 (int) $resource_type_id,
                 (int) $resource_id,
@@ -70,10 +66,6 @@ class ItemCategory
     ): bool
     {
         return !(
-            $resource_type_id === 'nill' ||
-            $resource_id === 'nill' ||
-            $item_id === 'nill' ||
-            $item_category_id === 'nill' ||
             (new ResourceTypeAccess())->itemCategoryExistsToUser(
                 (int) $resource_type_id,
                 (int) $resource_id,

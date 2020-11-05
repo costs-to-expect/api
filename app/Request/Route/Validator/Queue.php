@@ -22,7 +22,6 @@ class Queue
     public static function existsToUserForViewing($queue_id): bool
     {
         return !(
-            $queue_id === 'nill' ||
             (new ResourceTypeAccess())->queueExistsToUser((int) $queue_id) === false
         );
     }

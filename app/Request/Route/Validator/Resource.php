@@ -31,8 +31,6 @@ class Resource
     ): bool
     {
         return !(
-            $resource_type_id === 'nill' ||
-            $resource_id === 'nill' ||
             (new ResourceTypeAccess())->resourceExistsToUser(
                 (int) $resource_id,
                 (int) $resource_type_id,
@@ -58,8 +56,6 @@ class Resource
     ): bool
     {
         return !(
-            $resource_type_id === 'nill' ||
-            $resource_id === 'nill' ||
             (new ResourceTypeAccess())->resourceExistsToUser(
                 (int) $resource_id,
                 (int) $resource_type_id,

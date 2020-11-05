@@ -24,7 +24,6 @@ class ItemType
     public static function existsToUserForViewing($item_type_id): bool
     {
         return !(
-            $item_type_id === 'nill' ||
             (new ResourceTypeAccess())->itemTypeExistsToUser((int) $item_type_id) === false
         );
     }

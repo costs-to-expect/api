@@ -245,7 +245,7 @@ Route::group(
 
         Route::get(
             'resource-types/{resource_type_id}/resources/{resource_id}/items/{item_id}',
-            'ItemView@show'
+            [\App\Http\Controllers\ItemView::class, 'show']
         );
 
         Route::options(

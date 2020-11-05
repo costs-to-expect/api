@@ -37,11 +37,8 @@ class ConvertGetParameters
             $param_value = $request->query($param);
             if ($param_value !== null) {
                 $id = $hash->decode($param, $param_value);
-                if (is_int($id)) {
-                    $request->request->add([$param => $id]);
-                } else {
-                    $request->request->remove($param);
-                }
+                is_int($id) ? $value = $id : $value = null;
+                $request->request->add([$param => $value]);
             }
         }
 

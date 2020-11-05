@@ -23,8 +23,6 @@ class ItemSubtype
     public static function existsToUserForViewing($item_type_id, $item_subtype_id): bool
     {
         return !(
-            $item_type_id === 'nill' ||
-            $item_subtype_id === 'nill' ||
             (new ResourceTypeAccess())->itemSubTypeExistsToUser((int) $item_type_id, (int) $item_subtype_id) === false
         );
     }
