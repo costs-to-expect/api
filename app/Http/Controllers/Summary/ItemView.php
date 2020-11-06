@@ -6,7 +6,6 @@ use App\Entity\Item\Entity;
 use App\Http\Controllers\Controller;
 use App\Option\SummaryItemCollection;
 use App\Request\Parameter;
-use App\Request\Route;
 use App\Request\Validate\Boolean;
 use App\Response\Cache;
 use App\Response\Header\Headers;
@@ -788,12 +787,6 @@ class ItemView extends Controller
 
         $entity = Entity::item($resource_type_id);
 
-        $permissions = Route\Permission::resource(
-            $resource_type_id,
-            $resource_id,
-            $this->permitted_resource_types
-        );
-
         $defined_parameters = Parameter\Request::fetch(
             array_keys($entity->requestParameters()),
             (int) $resource_type_id,
@@ -809,7 +802,7 @@ class ItemView extends Controller
             $defined_parameters
         );
 
-        $response = new SummaryItemCollection($permissions);
+        $response = new SummaryItemCollection($this->permissions((int) $resource_type_id));
 
         return $response->setEntity($entity)
             ->setAllowedValues($allowed_values)

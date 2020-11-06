@@ -10,7 +10,6 @@ use App\Option\ItemTransferTransfer;
 use App\Response\Cache;
 use App\Response\Header\Headers;
 use App\Request\Parameter;
-use App\Request\Route;
 use App\Response\Pagination as UtilityPagination;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Config;
@@ -103,12 +102,7 @@ class ItemTransferView extends Controller
             \App\Response\Responses::notFoundOrNotAccessible(trans('entities.resource-type'));
         }
 
-        $permissions = Route\Permission::resourceType(
-            (int) $resource_type_id,
-            $this->permitted_resource_types
-        );
-
-        $response = new ItemTransferCollection($permissions);
+        $response = new ItemTransferCollection($this->permissions((int) $resource_type_id));
 
         return $response->create()->response();
     }
@@ -119,12 +113,7 @@ class ItemTransferView extends Controller
             \App\Response\Responses::notFoundOrNotAccessible(trans('entities.resource-type'));
         }
 
-        $permissions = Route\Permission::resourceType(
-            (int) $resource_type_id,
-            $this->permitted_resource_types
-        );
-
-        $response = new ItemTransferItem($permissions);
+        $response = new ItemTransferItem($this->permissions((int) $resource_type_id));
 
         return $response->create()->response();
     }
@@ -139,14 +128,7 @@ class ItemTransferView extends Controller
             \App\Response\Responses::notFoundOrNotAccessible(trans('entities.item'));
         }
 
-        $permissions = Route\Permission::item(
-            $resource_type_id,
-            $resource_id,
-            $item_id,
-            $this->permitted_resource_types
-        );
-
-        $response = new ItemTransferTransfer($permissions);
+        $response = new ItemTransferTransfer($this->permissions((int) $resource_type_id));
 
         return $response->setAllowedValues(
                 (new \App\Option\AllowedValue\Resource())->allowedValues(

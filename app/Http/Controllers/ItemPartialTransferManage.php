@@ -6,7 +6,6 @@ use App\Jobs\ClearCache;
 use App\Models\ItemPartialTransfer;
 use App\Models\Transformers\ItemPartialTransfer as ItemPartialTransferTransformer;
 use App\Response\Cache;
-use App\Request\Route;
 use App\Request\Validate\ItemPartialTransfer as ItemPartialTransferValidator;
 use App\Response\Responses;
 use Exception;

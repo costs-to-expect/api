@@ -7,7 +7,6 @@ use App\Models\Summary\Subcategory;
 use App\Option\SummarySubcategoryCollection;
 use App\Response\Cache;
 use App\Request\Parameter;
-use App\Request\Route;
 use App\Response\Header\Headers;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Config;
@@ -87,13 +86,7 @@ class SubcategoryView extends Controller
             \App\Response\Responses::notFoundOrNotAccessible(trans('entities.category'));
         }
 
-        $permissions = Route\Permission::category(
-            $resource_type_id,
-            $category_id,
-            $this->permitted_resource_types
-        );
-
-        $response = new SummarySubcategoryCollection($permissions);
+        $response = new SummarySubcategoryCollection($this->permissions((int) $resource_type_id));
 
         return $response->create()->response();
     }

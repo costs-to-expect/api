@@ -7,7 +7,6 @@ use App\Option\ItemSubcategoryCollection;
 use App\Option\ItemSubcategoryItem;
 use App\Response\Cache;
 use App\Response\Header\Header;
-use App\Request\Route;
 use App\Models\ItemCategory;
 use App\Models\ItemSubcategory;
 use App\Models\Transformers\ItemSubcategory as ItemSubcategoryTransformer;
@@ -133,13 +132,6 @@ class ItemSubcategoryView extends Controller
             \App\Response\Responses::notFoundOrNotAccessible(trans('entities.item-category'));
         }
 
-        $permissions = Route\Permission::item(
-            $resource_type_id,
-            $resource_id,
-            $item_id,
-            $this->permitted_resource_types
-        );
-
         if ($item_category_id === null) {
             return \App\Response\Responses::notFound(trans('entities.item-subcategory'));
         }
@@ -149,7 +141,7 @@ class ItemSubcategoryView extends Controller
             return \App\Response\Responses::notFound(trans('entities.item-category'));
         }
 
-        $response = new ItemSubcategoryCollection($permissions);
+        $response = new ItemSubcategoryCollection($this->permissions((int) $resource_type_id));
 
         return $response
             ->setEntity(Entity::item($resource_type_id))
@@ -172,13 +164,6 @@ class ItemSubcategoryView extends Controller
             \App\Response\Responses::notFoundOrNotAccessible(trans('entities.item-subcategory'));
         }
 
-        $permissions = Route\Permission::item(
-            $resource_type_id,
-            $resource_id,
-            $item_id,
-            $this->permitted_resource_types
-        );
-
         if ($item_category_id === null || $item_subcategory_id === null) {
             return \App\Response\Responses::notFound(trans('entities.item-subcategory'));
         }
@@ -195,7 +180,7 @@ class ItemSubcategoryView extends Controller
             return \App\Response\Responses::notFound(trans('entities.item-subcategory'));
         }
 
-        $response = new ItemSubcategoryItem($permissions);
+        $response = new ItemSubcategoryItem($this->permissions((int) $resource_type_id));
 
         return $response->create()->response();
     }

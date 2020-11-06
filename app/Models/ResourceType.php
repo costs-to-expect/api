@@ -193,36 +193,6 @@ class ResourceType extends Model
     }
 
     /**
-     * Return the an minimised collection, typically to be used in OPTIONS
-     *
-     * @param array $permitted_resource_types
-     * @param boolean $include_public
-     *
-     * @return array
-     */
-    public function minimisedCollection(
-        array $permitted_resource_types,
-        bool $include_public
-    ): array
-    {
-        $collection = $this->orderBy('resource_type.name')
-            ->select(
-                'resource_type.id AS resource_type_id',
-                'resource_type.name AS resource_type_name',
-                'resource_type.description AS resource_type_description'
-            );
-
-        $collection = Clause::applyPermittedResourceTypes(
-            $collection,
-            $permitted_resource_types,
-            $include_public
-        );
-
-        return $collection->get()->
-            toArray();
-    }
-
-    /**
      * Convert the model instance to an array for use with the transformer
      *
      * @param ResourceType

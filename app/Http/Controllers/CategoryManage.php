@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\Jobs\ClearCache;
 use App\Request\BodyValidation;
 Use App\Response\Cache;
-use App\Request\Route;
 use App\Models\Category;
 use App\Models\Transformers\Category as CategoryTransformer;
 use App\Request\Validate\Category as CategoryValidator;

@@ -8,7 +8,6 @@ use App\Option\CategoryItem;
 Use App\Response\Cache;
 use App\Response\Header\Header;
 use App\Request\Parameter;
-use App\Request\Route;
 use App\Response\Header\Headers;
 use App\Response\Pagination as UtilityPagination;
 use App\Models\Category;
@@ -165,12 +164,7 @@ class CategoryView extends Controller
             \App\Response\Responses::notFoundOrNotAccessible(trans('entities.resource-type'));
         }
 
-        $permissions = Route\Permission::resourceType(
-            (int) $resource_type_id,
-            $this->permitted_resource_types
-        );
-
-        $response = new CategoryCollection($permissions);
+        $response = new CategoryCollection($this->permissions((int) $resource_type_id));
 
         return $response->create()->response();
     }
@@ -189,13 +183,7 @@ class CategoryView extends Controller
             \App\Response\Responses::notFoundOrNotAccessible(trans('entities.category'));
         }
 
-        $permissions = Route\Permission::category(
-            $resource_type_id,
-            $category_id,
-            $this->permitted_resource_types
-        );
-
-        $response = new CategoryItem($permissions);
+        $response = new CategoryItem($this->permissions((int) $resource_type_id));
 
         return $response->create()->response();
     }

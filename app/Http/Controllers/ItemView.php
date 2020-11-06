@@ -8,7 +8,6 @@ use App\Option\ItemItem;
 use App\Response\Cache;
 use App\Response\Header\Header;
 use App\Request\Parameter;
-use App\Request\Route;
 use App\Response\Header\Headers;
 use App\Response\Pagination as UtilityPagination;
 use Illuminate\Http\JsonResponse;
@@ -190,13 +189,7 @@ class ItemView extends Controller
 
         $entity = Entity::item($resource_type_id);
 
-        $permissions = Route\Permission::resource(
-            $resource_type_id,
-            $resource_id,
-            $this->permitted_resource_types,
-        );
-
-        $response = new ItemCollection($permissions);
+        $response = new ItemCollection($this->permissions((int) $resource_type_id));
 
         return $response
             ->setEntity($entity)
@@ -231,13 +224,6 @@ class ItemView extends Controller
             \App\Response\Responses::notFoundOrNotAccessible(trans('entities.item'));
         }
 
-        $permissions = Route\Permission::item(
-            $resource_type_id,
-            $resource_id,
-            $item_id,
-            $this->permitted_resource_types,
-        );
-
         $entity = Entity::item($resource_type_id);
 
         $item_model = $entity->model();
@@ -248,7 +234,7 @@ class ItemView extends Controller
             return \App\Response\Responses::notFound(trans('entities.item'));
         }
 
-        $response = new ItemItem($permissions);
+        $response = new ItemItem($this->permissions((int) $resource_type_id));
 
         return $response
             ->setEntity($entity)

@@ -7,7 +7,6 @@ use App\Option\SubcategoryItem;
 use App\Response\Cache;
 use App\Response\Header\Header;
 use App\Request\Parameter;
-use App\Request\Route;
 use App\Response\Header\Headers;
 use App\Response\Pagination as UtilityPagination;
 use App\Models\Subcategory;
@@ -145,13 +144,7 @@ class SubcategoryView extends Controller
             \App\Response\Responses::notFoundOrNotAccessible(trans('entities.category'));
         }
 
-        $permissions = Route\Permission::category(
-            (int) $resource_type_id,
-            (int) $category_id,
-            $this->permitted_resource_types
-        );
-
-        $response = new SubcategoryCollection($permissions);
+        $response = new SubcategoryCollection($this->permissions((int) $resource_type_id));
 
         return $response->create()->response();
     }
@@ -175,14 +168,7 @@ class SubcategoryView extends Controller
             \App\Response\Responses::notFoundOrNotAccessible(trans('entities.subcategory'));
         }
 
-        $permissions = Route\Permission::subcategory(
-            (int) $resource_type_id,
-            (int) $category_id,
-            (int) $subcategory_id,
-            $this->permitted_resource_types
-        );
-
-        $response = new SubcategoryItem($permissions);
+        $response = new SubcategoryItem($this->permissions((int) $resource_type_id));
 
         return $response->create()->response();
     }

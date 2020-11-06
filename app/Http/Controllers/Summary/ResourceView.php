@@ -6,7 +6,6 @@ use App\Http\Controllers\Controller;
 use App\Option\SummaryResourceCollection;
 use App\Response\Cache;
 use App\Request\Parameter;
-use App\Request\Route;
 use App\Models\Summary\Resource;
 use App\Response\Header\Headers;
 use Illuminate\Http\JsonResponse;
@@ -85,12 +84,7 @@ class ResourceView extends Controller
             \App\Response\Responses::notFoundOrNotAccessible(trans('entities.resource-type'));
         }
 
-        $permissions = Route\Permission::resourceType(
-            $resource_type_id,
-            $this->permitted_resource_types
-        );
-
-        $response = new SummaryResourceCollection($permissions);
+        $response = new SummaryResourceCollection($this->permissions((int) $resource_type_id));
 
         return $response->create()->response();
     }

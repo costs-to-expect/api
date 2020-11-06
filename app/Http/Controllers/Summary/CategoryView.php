@@ -7,7 +7,6 @@ use App\Models\Summary\Category;
 use App\Option\SummaryCategoryCollection;
 use App\Response\Cache;
 use App\Request\Parameter;
-use App\Request\Route;
 use App\Response\Header\Headers;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Config;
@@ -85,12 +84,7 @@ class CategoryView extends Controller
             \App\Response\Responses::notFoundOrNotAccessible(trans('entities.resource-type'));
         }
 
-        $permissions = Route\Permission::resourceType(
-            $resource_type_id,
-            $this->permitted_resource_types
-        );
-
-        $response = new SummaryCategoryCollection($permissions);
+        $response = new SummaryCategoryCollection($this->permissions((int) $resource_type_id));
 
         return $response->create()->response();
     }

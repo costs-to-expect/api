@@ -6,7 +6,6 @@ use App\Entity\Item\Entity;
 use App\Option\ResourceTypeItemCollection;
 use App\Response\Cache;
 use App\Request\Parameter;
-use App\Request\Route;
 use App\Response\Header\Headers;
 use App\Response\Pagination as UtilityPagination;
 use Illuminate\Http\JsonResponse;
@@ -129,12 +128,7 @@ class ResourceTypeItemView extends Controller
 
         $entity = Entity::item($resource_type_id);
 
-        $permissions = Route\Permission::resourceType(
-            $resource_type_id,
-            $this->permitted_resource_types
-        );
-
-        $response = new ResourceTypeItemCollection($permissions);
+        $response = new ResourceTypeItemCollection($this->permissions((int) $resource_type_id));
 
         return $response
             ->setEntity($entity)

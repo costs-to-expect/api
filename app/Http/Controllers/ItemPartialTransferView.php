@@ -11,7 +11,6 @@ use App\Option\ItemPartialTransferTransfer;
 use App\Response\Cache;
 use App\Response\Header\Headers;
 use App\Request\Parameter;
-use App\Request\Route;
 use App\Response\Pagination as UtilityPagination;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Config;
@@ -148,12 +147,7 @@ class ItemPartialTransferView extends Controller
             return \App\Response\Responses::notSupported();
         }
 
-        $permissions = Route\Permission::resourceType(
-            (int) $resource_type_id,
-            $this->permitted_resource_types
-        );
-
-        $response = new ItemPartialTransferCollection($permissions);
+        $response = new ItemPartialTransferCollection($this->permissions((int) $resource_type_id));
 
         return $response->create()->response();
     }
@@ -177,12 +171,7 @@ class ItemPartialTransferView extends Controller
             return \App\Response\Responses::notSupported();
         }
 
-        $permissions = Route\Permission::resourceType(
-            (int) $resource_type_id,
-            $this->permitted_resource_types
-        );
-
-        $response = new ItemPartialTransferItem($permissions);
+        $response = new ItemPartialTransferItem($this->permissions((int) $resource_type_id));
 
         return $response->create()->response();
     }
@@ -202,14 +191,7 @@ class ItemPartialTransferView extends Controller
             return \App\Response\Responses::notSupported();
         }
 
-        $permissions = Route\Permission::item(
-            $resource_type_id,
-            $resource_id,
-            $item_id,
-            $this->permitted_resource_types
-        );
-
-        $response = new ItemPartialTransferTransfer($permissions);
+        $response = new ItemPartialTransferTransfer($this->permissions((int) $resource_type_id));
 
         return $response->setAllowedValues(
                 (new \App\Option\AllowedValue\Resource())->allowedValues(

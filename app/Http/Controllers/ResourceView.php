@@ -9,7 +9,6 @@ use App\Option\ResourceItem;
 use App\Response\Cache;
 use App\Response\Header\Header;
 use App\Request\Parameter;
-use App\Request\Route;
 use App\Response\Header\Headers;
 use App\Response\Pagination as UtilityPagination;
 use App\Models\Resource;
@@ -140,17 +139,12 @@ class ResourceView extends Controller
             \App\Response\Responses::notFoundOrNotAccessible(trans('entities.resource-type'));
         }
 
-        $permissions = Route\Permission::resourceType(
-            $resource_type_id,
-            $this->permitted_resource_types
-        );
-
         $resource_type = (new ResourceType())->single(
             $resource_type_id,
             $this->viewable_resource_types
         );
 
-        $response = new ResourceCollection($permissions);
+        $response = new ResourceCollection($this->permissions((int) $resource_type_id));
 
         return $response
             ->setAllowedValues((new ItemSubtype())->allowedValues($resource_type['resource_type_item_type_id']))
@@ -164,12 +158,6 @@ class ResourceView extends Controller
             \App\Response\Responses::notFoundOrNotAccessible(trans('entities.resource'));
         }
 
-        $permissions = Route\Permission::resource(
-            $resource_type_id,
-            $resource_id,
-            $this->permitted_resource_types
-        );
-
         $resource = (new Resource)->single(
             $resource_type_id,
             $resource_id
@@ -179,7 +167,7 @@ class ResourceView extends Controller
             return \App\Response\Responses::notFound(trans('entities.resource'));
         }
 
-        $response = new ResourceItem($permissions);
+        $response = new ResourceItem($this->permissions((int) $resource_type_id));
 
         return $response->create()->response();
     }

@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\Entity\Item\Entity;
 use App\Jobs\ClearCache;
 use App\Response\Cache;
-use App\Request\Route;
 use App\Models\ItemCategory;
 use App\Models\ItemSubcategory;
 use App\Models\Transformers\ItemSubcategory as ItemSubcategoryTransformer;

@@ -7,7 +7,6 @@ use App\Models\Transformers\PermittedUser as PermittedUserTransformer;
 use App\Option\PermittedUserCollection;
 use App\Response\Cache;
 use App\Request\Parameter;
-use App\Request\Route;
 use App\Response\Header\Headers;
 use App\Response\Pagination as UtilityPagination;
 use Illuminate\Http\JsonResponse;
@@ -102,12 +101,7 @@ class PermittedUserView extends Controller
             \App\Response\Responses::notFoundOrNotAccessible(trans('entities.resource-type'));
         }
 
-        $permissions = Route\Permission::resourceType(
-            $resource_type_id,
-            $this->permitted_resource_types
-        );
-
-        $response = new PermittedUserCollection($permissions);
+        $response = new PermittedUserCollection($this->permissions((int) $resource_type_id));
 
         return $response->create()->response();
     }

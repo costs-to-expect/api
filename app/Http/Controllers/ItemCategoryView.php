@@ -7,7 +7,6 @@ use App\Option\ItemCategoryCollection;
 use App\Option\ItemCategoryItem;
 use App\Response\Cache;
 use App\Response\Header\Header;
-use App\Request\Route;
 use App\Models\ItemCategory;
 use App\Models\Transformers\ItemCategory as ItemCategoryTransformer;
 use Illuminate\Http\JsonResponse;
@@ -109,14 +108,7 @@ class ItemCategoryView extends Controller
             \App\Response\Responses::notFoundOrNotAccessible(trans('entities.item'));
         }
 
-        $permissions = Route\Permission::item(
-            $resource_type_id,
-            $resource_id,
-            $item_id,
-            $this->permitted_resource_types
-        );
-
-        $response = new ItemCategoryCollection($permissions);
+        $response = new ItemCategoryCollection($this->permissions((int) $resource_type_id));
 
         return $response
             ->setEntity(Entity::item($resource_type_id))
@@ -137,13 +129,6 @@ class ItemCategoryView extends Controller
             \App\Response\Responses::notFoundOrNotAccessible(trans('entities.item'));
         }
 
-        $permissions = Route\Permission::item(
-            $resource_type_id,
-            $resource_id,
-            $item_id,
-            $this->permitted_resource_types
-        );
-
         if ($item_category_id === null) {
             return \App\Response\Responses::notFound(trans('entities.item-category'));
         }
@@ -159,7 +144,7 @@ class ItemCategoryView extends Controller
             return \App\Response\Responses::notFound(trans('entities.item-category'));
         }
 
-        $response = new ItemCategoryItem($permissions);
+        $response = new ItemCategoryItem($this->permissions((int) $resource_type_id));
 
         return $response->create()->response();
     }

@@ -6,7 +6,6 @@ use App\Jobs\ClearCache;
 use App\Models\ResourceItemSubtype;
 use App\Models\ResourceType;
 use App\Response\Cache;
-use App\Request\Route;
 use App\Models\Resource;
 use App\Models\Transformers\Resource as ResourceTransformer;
 use App\Request\Validate\Resource as ResourceValidator;

@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\Entity\Item\Entity;
 use App\Jobs\ClearCache;
 use App\Response\Cache;
-use App\Request\Route;
 use App\Models\ItemCategory;
 use App\Models\Transformers\ItemCategory as ItemCategoryTransformer;
 use App\Request\Validate\ItemCategory as ItemCategoryValidator;
