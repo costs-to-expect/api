@@ -43,11 +43,6 @@ class ResourceType extends Model
         return array_keys(Config::get('api.resource-type.validation.PATCH.fields'));
     }
 
-    /**
-     * Fetch all the public resource types
-     *
-     * @return array
-     */
     public function publicResourceTypes(): array
     {
         $public = [];

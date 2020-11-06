@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\ResourceType;
 use App\Models\ResourceTypeAccess;
 use App\Request\Hash;
 use App\Request\Validate\Boolean;
@@ -16,6 +17,8 @@ class Controller extends BaseController
     protected bool $include_public = true;
 
     protected array $permitted_resource_types = [];
+
+    protected array $viewable_resource_types = [];
 
     /**
      * @var integer|null
@@ -34,6 +37,8 @@ class Controller extends BaseController
         $this->excludePublicResourceTypes();
 
         $this->setPermittedResourceTypes();
+
+        $this->setViewableResourceTypes();
     }
 
     protected function excludePublicResourceTypes(): void
@@ -69,6 +74,34 @@ class Controller extends BaseController
 
             $this->permitted_resource_types = $cache_collection->collection();
         }
+    }
+
+    protected function setViewableResourceTypes(): void
+    {
+        $cache_control = new Control(true, $this->user_id);
+        $cache_control->setTtlOneHour();
+
+        $cache_collection = new Collection();
+        $cache_collection->setFromCache($cache_control->getByKey('/v2/viewable-resource-types'));
+
+        if ($cache_control->isRequestCacheable() === false || $cache_collection->valid() === false) {
+
+            $viewable_resource_types = array_merge(
+                (new ResourceType())->publicResourceTypes(),
+                $this->permitted_resource_types
+            );
+
+            $cache_collection->create(
+                count($viewable_resource_types),
+                $viewable_resource_types,
+                [],
+                []
+            );
+
+            $cache_control->putByKey('/v2/viewable-resource-types', $cache_collection->content());
+        }
+
+        $this->viewable_resource_types = $cache_collection->collection();
     }
 
     protected function writeAccessToResourceType(int $resource_type_id): bool

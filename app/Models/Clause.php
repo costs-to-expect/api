@@ -87,4 +87,12 @@ class Clause
 
         return $collection;
     }
+
+    public static function applyViewableResourceTypes(
+        $collection,
+        array $viewable_resource_types
+    )
+    {
+        return $collection->whereIn('resource_type.id', $viewable_resource_types);
+    }
 }
