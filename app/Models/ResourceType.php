@@ -59,27 +59,16 @@ class ResourceType extends Model
         return $public;
     }
 
-    /**
-     * Return the total number of resource types
-     *
-     * @param array $permitted_resource_types
-     * @param boolean $include_public
-     * @param array $search_parameters = []
-     *
-     * @return integer
-     */
     public function totalCount(
-        array $permitted_resource_types = [],
-        bool $include_public = true,
+        array $viewable_resource_types = [],
         array $search_parameters = []
     ): int
     {
         $collection = $this->select("resource_type.id");
 
-        $collection = Clause::applyPermittedResourceTypes(
+        $collection = Clause::applyViewableResourceTypes(
             $collection,
-            $permitted_resource_types,
-            $include_public
+            $viewable_resource_types
         );
 
         $collection = Clause::applySearch($collection, $this->table, $search_parameters);
@@ -92,21 +81,8 @@ class ResourceType extends Model
         return $this->hasMany(Resource::class, 'resource_type_id', 'id');
     }
 
-    /**
-     * Return the paginated collection
-     *
-     * @param array $permitted_resource_types
-     * @param boolean $include_public Are we including public resource types
-     * @param integer $offset Paging offset
-     * @param integer $limit Paging limit
-     * @param array $search_parameters
-     * @param array $sort_parameters
-     *
-     * @return array
-     */
     public function paginatedCollection(
-        array $permitted_resource_types = [],
-        bool $include_public = true,
+        array $viewable_resource_types = [],
         int $offset = 0,
         int $limit = 10,
         array $search_parameters = [],
@@ -139,10 +115,9 @@ class ResourceType extends Model
             ->join('item_type', 'resource_type_item_type.item_type_id', 'item_type.id')
             ->leftJoin("resource", "resource_type.id", "resource.id");
 
-        $collection = Clause::applyPermittedResourceTypes(
+        $collection = Clause::applyViewableResourceTypes(
             $collection,
-            $permitted_resource_types,
-            $include_public
+            $viewable_resource_types
         );
 
         $collection = Clause::applySearch($collection, $this->table, $search_parameters);
@@ -171,8 +146,7 @@ class ResourceType extends Model
 
     public function single(
         int $resource_type_id,
-        array $permitted_resource_types = [],
-        bool $include_public = false
+        array $viewable_resource_types = []
     ): ?array
     {
         $result = $this
@@ -201,10 +175,10 @@ class ResourceType extends Model
             ->join('item_type', 'resource_type_item_type.item_type_id', 'item_type.id')
             ->leftJoin("resource", "resource_type.id", "resource.id");
 
-        $result->where(static function ($result) use ($permitted_resource_types, $include_public) {
-            $result->where('resource_type.public', '=', (int) $include_public)->
-                orWhereIn('resource_type.id', $permitted_resource_types);
-        });
+        $result = Clause::applyViewableResourceTypes(
+            $result,
+            $viewable_resource_types
+        );
 
         $result = $result
             ->where($this->table . '.id', '=', $resource_type_id)
@@ -215,7 +189,7 @@ class ResourceType extends Model
             return null;
         }
 
-        return $result;
+        return $result[0];
     }
 
     /**

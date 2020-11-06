@@ -78,7 +78,11 @@ class Controller extends BaseController
 
     protected function setViewableResourceTypes(): void
     {
-        $cache_control = new Control(true, $this->user_id);
+        if (auth('api')->user() !== null && auth()->guard('api')->check() === true) {
+            $cache_control = new Control(true, $this->user_id);
+        } else {
+            $cache_control = new Control();
+        }
         $cache_control->setTtlOneHour();
 
         $cache_collection = new Collection();

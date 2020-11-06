@@ -46,20 +46,19 @@ class ResourceTypeView extends Controller
             );
 
             $total = (new ResourceType())->totalCount(
-                $this->permitted_resource_types,
-                $this->include_public,
+                $this->viewable_resource_types,
                 $search_parameters
             );
 
             $pagination = new UtilityPagination(request()->path(), $total);
-            $pagination_parameters = $pagination->allowPaginationOverride($this->allow_entire_collection)->
-                setSearchParameters($search_parameters)->
-                setSortParameters($sort_parameters)->
-                parameters();
+            $pagination_parameters = $pagination
+                ->allowPaginationOverride($this->allow_entire_collection)
+                ->setSearchParameters($search_parameters)
+                ->setSortParameters($sort_parameters)
+                ->parameters();
 
             $resource_types = (new ResourceType())->paginatedCollection(
-                $this->permitted_resource_types,
-                $this->include_public,
+                $this->viewable_resource_types,
                 $pagination_parameters['offset'],
                 $pagination_parameters['limit'],
                 $search_parameters,
@@ -74,11 +73,12 @@ class ResourceTypeView extends Controller
             );
 
             $headers = new Headers();
-            $headers->collection($pagination_parameters, count($resource_types), $total)->
-                addCacheControl($cache_control->visibility(), $cache_control->ttl())->
-                addETag($collection)->
-                addSearch(Parameter\Search::xHeader())->
-                addSort(Parameter\Sort::xHeader());
+            $headers
+                ->collection($pagination_parameters, count($resource_types), $total)
+                ->addCacheControl($cache_control->visibility(), $cache_control->ttl())
+                ->addETag($collection)
+                ->addSearch(Parameter\Search::xHeader())
+                ->addSort(Parameter\Sort::xHeader());
 
             $cache_collection->create($total, $collection, $pagination_parameters, $headers->headers());
             $cache_control->putByKey(request()->getRequestUri(), $cache_collection->content());
@@ -93,8 +93,7 @@ class ResourceTypeView extends Controller
 
         $resource_type = (new ResourceType())->single(
             $resource_type_id,
-            $this->permitted_resource_types,
-            $this->include_public
+            $this->viewable_resource_types
         );
 
         if ($resource_type === null) {
