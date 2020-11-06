@@ -135,8 +135,7 @@ class ResourceTypeItemView extends Controller
             ->setAllowedValues(
                 $entity->allowedValuesForResourceTypeItemCollection(
                     $resource_type_id,
-                    $this->permitted_resource_types,
-                    $this->include_public
+                    $this->viewable_resource_types
                 )
             )
             ->create()

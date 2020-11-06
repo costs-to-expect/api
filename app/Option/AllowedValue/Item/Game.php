@@ -10,15 +10,13 @@ class Game extends Item
     public function __construct(
         int $resource_type_id,
         int $resource_id,
-        array $permitted_resource_types,
-        bool $include_public = true
+        array $viewable_resource_types
     )
     {
         parent::__construct(
             $resource_type_id,
             $resource_id,
-            $permitted_resource_types,
-            $include_public
+            $viewable_resource_types
         );
 
         $this->entity = new \App\Entity\Item\Game();
@@ -48,8 +46,7 @@ class Game extends Item
 
             $winners = (new Category())->paginatedCollection(
                 $this->resource_type_id,
-                $this->permitted_resource_types,
-                $this->include_public,
+                $this->viewable_resource_types,
                 0,
                 100
             );

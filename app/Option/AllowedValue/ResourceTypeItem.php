@@ -73,16 +73,14 @@ class ResourceTypeItem
 
     protected function allowedValuesForCategory(
         int $resource_type_id,
-        array $permitted_resource_types,
-        bool $include_public
+        array $viewable_resource_types
     ): array
     {
         $parameters = ['category' => ['allowed_values' => []]];
 
         $categories = (new Category())->paginatedCollection(
             $resource_type_id,
-            $permitted_resource_types,
-            $include_public,
+            $viewable_resource_types,
             0,
             100
         );
@@ -135,8 +133,7 @@ class ResourceTypeItem
 
     public function allowedValues(
         int $resource_type_id,
-        array $permitted_resource_types,
-        bool $include_public,
+        array $viewable_resource_types,
         array $available_parameters,
         array $defined_parameters
     ): array
@@ -155,8 +152,7 @@ class ResourceTypeItem
        if (array_key_exists('category', $available_parameters) === true) {
             $categories = $this->allowedValuesForCategory(
                 $resource_type_id,
-                $permitted_resource_types,
-                $include_public
+                $viewable_resource_types
             );
         }
 

@@ -796,8 +796,7 @@ class ItemView extends Controller
         $allowed_values = (new \App\Option\AllowedValue\ResourceItem($entity))->allowedValues(
             $resource_type_id,
             $resource_id,
-            $this->permitted_resource_types,
-            $this->include_public,
+            $this->viewable_resource_types,
             $entity->requestParameters(),
             $defined_parameters
         );

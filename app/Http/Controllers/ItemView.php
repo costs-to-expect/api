@@ -197,8 +197,7 @@ class ItemView extends Controller
                 $entity->allowedValuesForItemCollection(
                     $resource_type_id,
                     $resource_id,
-                    $this->permitted_resource_types,
-                    $this->include_public
+                    $this->viewable_resource_types
                 )
             )
             ->create()

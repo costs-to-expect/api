@@ -7,14 +7,12 @@ class SimpleExpense extends Item
 {
     public function __construct(
         int $resource_type_id,
-        array $permitted_resource_types,
-        bool $include_public = true
+        array $viewable_resource_types
     )
     {
         parent::__construct(
             $resource_type_id,
-            $permitted_resource_types,
-            $include_public
+            $viewable_resource_types
         );
 
         $this->entity = new \App\Entity\Item\SimpleExpense();

@@ -22,9 +22,7 @@ abstract class Item
     protected int $resource_type_id;
     protected int $resource_id;
 
-    protected array $permitted_resource_types;
-
-    protected bool $include_public;
+    protected array $viewable_resource_types;
 
     protected array $available_parameters = [];
     protected array $defined_parameters = [];
@@ -34,15 +32,13 @@ abstract class Item
     public function __construct(
         int $resource_type_id,
         int $resource_id,
-        array $permitted_resource_types,
-        bool $include_public = true
+        array $viewable_resource_types
     )
     {
         $this->resource_type_id = $resource_type_id;
         $this->resource_id = $resource_id;
 
-        $this->permitted_resource_types = $permitted_resource_types;
-        $this->include_public = $include_public;
+        $this->viewable_resource_types = $viewable_resource_types;
 
         $this->range_limits = new EntityLimits();
 
@@ -85,8 +81,7 @@ abstract class Item
 
             $categories = (new Category())->paginatedCollection(
                 $this->resource_type_id,
-                $this->permitted_resource_types,
-                $this->include_public,
+                $this->viewable_resource_types,
                 0,
                 100
             );

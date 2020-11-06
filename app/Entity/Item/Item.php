@@ -30,8 +30,7 @@ abstract class Item
     public function allowedValuesForItemCollection(
         int $resource_type_id,
         int $resource_id,
-        array $permitted_resource_types = [],
-        bool $include_public = false
+        array $viewable_resource_types = []
     ): array
     {
         $available_parameters = $this->requestParameters();
@@ -45,8 +44,7 @@ abstract class Item
         $allowed_values = new $allowed_value_class(
             $resource_type_id,
             $resource_id,
-            $permitted_resource_types,
-            $include_public,
+            $viewable_resource_types
         );
 
         return $allowed_values
@@ -60,8 +58,7 @@ abstract class Item
 
     public function allowedValuesForResourceTypeItemCollection(
         int $resource_type_id,
-        array $permitted_resource_types = [],
-        bool $include_public = false
+        array $viewable_resource_types = []
     ): array
     {
         $available_parameters = $this->resourceTypeRequestParameters();
@@ -73,8 +70,7 @@ abstract class Item
         $allowed_value_class = $this->allowedValuesResourceTypeItemCollectionClass();
         $allowed_values = new $allowed_value_class(
             $resource_type_id,
-            $permitted_resource_types,
-            $include_public,
+            $viewable_resource_types
         );
 
         return $allowed_values

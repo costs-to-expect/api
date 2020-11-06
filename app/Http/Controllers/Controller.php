@@ -78,20 +78,25 @@ class Controller extends BaseController
 
     protected function setViewableResourceTypes(): void
     {
-        if (auth('api')->user() !== null && auth()->guard('api')->check() === true) {
+        if (
+            auth('api')->user() !== null &&
+            auth()->guard('api')->check() === true
+        ) {
             $cache_control = new Control(true, $this->user_id);
         } else {
             $cache_control = new Control();
         }
         $cache_control->setTtlOneHour();
 
+        $uri = '/v2/viewable-resource-types?exclude-public=' . ($this->include_public === true ? 'false' : 'true');
+
         $cache_collection = new Collection();
-        $cache_collection->setFromCache($cache_control->getByKey('/v2/viewable-resource-types'));
+        $cache_collection->setFromCache($cache_control->getByKey($uri));
 
         if ($cache_control->isRequestCacheable() === false || $cache_collection->valid() === false) {
 
             $viewable_resource_types = array_merge(
-                (new ResourceType())->publicResourceTypes(),
+                ($this->include_public === true ? (new ResourceType())->publicResourceTypes() : []),
                 $this->permitted_resource_types
             );
 
@@ -102,7 +107,7 @@ class Controller extends BaseController
                 []
             );
 
-            $cache_control->putByKey('/v2/viewable-resource-types', $cache_collection->content());
+            $cache_control->putByKey($uri, $cache_collection->content());
         }
 
         $this->viewable_resource_types = $cache_collection->collection();
