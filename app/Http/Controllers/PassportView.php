@@ -7,7 +7,6 @@ use Illuminate\Http;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
-use Laravel\Passport\HasApiTokens;
 
 /**
  * @package App\Http\Controllers

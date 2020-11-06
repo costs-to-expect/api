@@ -72,7 +72,9 @@ class QueueView extends Controller
      */
     public function show(string $queue_id): JsonResponse
     {
-        Route\Validate::queue((int) $queue_id);
+        if (\App\Request\Route\Validate\Queue::existsToUserForViewing($queue_id) === false) {
+            \App\Response\Responses::notFound(trans('entities.queue'));
+        }
 
         $job = (new Queue())->single($queue_id);
 
@@ -107,7 +109,9 @@ class QueueView extends Controller
      */
     public function optionsShow(string $queue_id): JsonResponse
     {
-        Route\Validate::queue((int) $queue_id);
+        if (\App\Request\Route\Validate\Queue::existsToUserForViewing($queue_id) === false) {
+            \App\Response\Responses::notFound(trans('entities.queue'));
+        }
 
         $response = new QueueItem(['view'=> $this->user_id !== null]);
 

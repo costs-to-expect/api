@@ -3,8 +3,6 @@ declare(strict_types=1);
 
 namespace App\Option\Method;
 
-use Illuminate\Support\Facades\Config;
-
 /**
  * Helper class to generate the data required to build the OPTIONS required for
  * a single HTTP Verb, in this case PATCH

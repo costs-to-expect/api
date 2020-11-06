@@ -6,7 +6,6 @@ namespace App\Models\ResourceTypeItem;
 use App\Interfaces\ResourceTypeItem\IModel;
 use App\Request\Validate\Boolean;
 use App\Models\Clause;
-use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Query\Builder as QueryBuilder;
 use Illuminate\Support\Facades\DB;

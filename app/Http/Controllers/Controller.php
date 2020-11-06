@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\ResourceType;
-use App\Models\ResourceTypeAccess;
+use App\Models\ResourceAccess;
 use App\Request\Hash;
 use App\Request\Validate\Boolean;
 use App\Response\Cache\Collection;
@@ -61,7 +61,7 @@ class Controller extends BaseController
 
             if ($cache_control->isRequestCacheable() === false || $cache_collection->valid() === false) {
 
-                $permitted_resource_types = (new ResourceTypeAccess())->permittedResourceTypes($this->user_id);
+                $permitted_resource_types = (new ResourceAccess())->permittedResourceTypes($this->user_id);
 
                 $cache_collection->create(
                     count($permitted_resource_types),

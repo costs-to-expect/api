@@ -4,8 +4,6 @@ namespace App\Listeners;
 
 use App\Events\InternalError;
 use App\Mail\InternalError as InternalErrorMail;
-use Illuminate\Queue\InteractsWithQueue;
-use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Mail;
 

@@ -11,6 +11,7 @@ use App\Request\Parameter;
 use App\Request\Route;
 use App\Response\Pagination as UtilityPagination;
 use App\Models\Transformers\ItemType as ItemTypeTransformer;
+use App\Response\Responses;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Config;
 
@@ -93,7 +94,9 @@ class ItemTypeView extends Controller
      */
     public function show(string $item_type_id): JsonResponse
     {
-        Route\Validate::itemType($item_type_id);
+        if (Route\Validate\ItemType::existsToUserForViewing($item_type_id) === false) {
+            Responses::notFound(trans('entities.item-type'));
+        }
 
         $item_type = (new ItemType())->single($item_type_id);
 
@@ -132,7 +135,9 @@ class ItemTypeView extends Controller
      */
     public function optionsShow(string $item_type_id): JsonResponse
     {
-        Route\Validate::itemType($item_type_id);
+        if (Route\Validate\ItemType::existsToUserForViewing($item_type_id) === false) {
+            Responses::notFound(trans('entities.item-type'));
+        }
 
         $response = new ItemTypeItem(['view'=> $this->user_id !== null]);
 

@@ -7,12 +7,6 @@ use App\Request\Validate\Boolean;
 use Illuminate\Database\Query\Builder as QueryBuilder;
 
 /**
- * Model helper class
- *
- * As with all utility classes, eventually they may be moved into libraries if
- * they gain more than a few functions and the creation of a library makes
- * sense.
- *
  * @mixin QueryBuilder
  * @author Dean Blackborough <dean@g3d-development.com>
  * @copyright Dean Blackborough 2018-2020
@@ -49,24 +43,6 @@ class Clause
         }
 
         return $collection;
-    }
-
-    public static function applyPermittedResourceTypes(
-        $collection,
-        array $permitted_resource_types,
-        bool $include_public = false
-    )
-    {
-        if ($include_public === true) {
-            $collection->where(static function ($collection) use ($permitted_resource_types) {
-                $collection->where('resource_type.public', '=', 1)->
-                    orWhereIn('resource_type.id', $permitted_resource_types);
-            });
-
-            return $collection;
-        }
-
-        return $collection->whereIn('resource_type.id', $permitted_resource_types);
     }
 
     public static function applyExcludeFutureUnpublished(

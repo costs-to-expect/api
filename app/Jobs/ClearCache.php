@@ -3,7 +3,7 @@
 namespace App\Jobs;
 
 use App\Models\ResourceType;
-use App\Models\ResourceTypeAccess;
+use App\Models\ResourceAccess;
 use App\Response\Cache\Control;
 use App\Response\Cache\Job;
 use App\Response\Cache\KeyGroup;
@@ -55,7 +55,7 @@ class ClearCache implements ShouldQueue
         $cache_keys = $cache_key_group->keys($payload->groupKey());
 
         if (array_key_exists('resource_type_id', $payload->routeParameters())) {
-            $permitted_users = (new ResourceTypeAccess())->permittedResourceTypeUsers(
+            $permitted_users = (new ResourceAccess())->permittedResourceTypeUsers(
                 $payload->routeParameters()['resource_type_id'],
                 $payload->userId()
             );

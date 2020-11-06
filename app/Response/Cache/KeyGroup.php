@@ -112,7 +112,8 @@ class KeyGroup
             case self::RESOURCE_TYPE_DELETE:
                 return [
                     $this->key->resourceTypes(),
-                    $this->key->permittedResourceTypes()
+                    $this->key->permittedResourceTypes(),
+                    $this->key->viewableResourceTypes()
                 ];
 
             default:

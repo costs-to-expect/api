@@ -90,7 +90,9 @@ class CurrencyView extends Controller
      */
     public function show(string $currency_id): JsonResponse
     {
-        Route\Validate::currency($currency_id);
+        if (\App\Request\Route\Validate\Currency::existsToUserForViewing($currency_id) === false) {
+            \App\Response\Responses::notFound(trans('entities.currency'));
+        }
 
         $currency = (new Currency())->single($currency_id);
 
@@ -129,7 +131,9 @@ class CurrencyView extends Controller
      */
     public function optionsShow(string $currency_id): JsonResponse
     {
-        Route\Validate::currency($currency_id);
+        if (\App\Request\Route\Validate\Currency::existsToUserForViewing($currency_id) === false) {
+            \App\Response\Responses::notFound(trans('entities.currency'));
+        }
 
         $response = new CurrencyItem(['view'=> $this->user_id !== null]);
 

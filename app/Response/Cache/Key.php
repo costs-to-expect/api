@@ -57,6 +57,11 @@ class Key
         return '/v2/permitted-resource-types';
     }
 
+    public function viewableResourceTypes(): string
+    {
+        return '/v2/viewable-resource-types';
+    }
+
     /**
      * @param int $resource_type_id
      *
