@@ -86,26 +86,28 @@ class ItemType extends Model
         return $collection->get()->toArray();
     }
 
-    /**
-     * Return a single item type
-     *
-     * @param integer $item_type_id
-     *
-     * @return array
-     */
-    public function single(int $item_type_id): array
+    public function single(int $item_type_id): ?array
     {
-        $result = $this->select(
-            'item_type.id AS item_type_id',
-            'item_type.name AS item_type_name',
-            'item_type.friendly_name AS item_type_friendly_name',
-            'item_type.description AS item_type_description',
-            'item_type.example AS item_type_example',
-            'item_type.created_at AS item_type_created_at'
-        );
+        $result = $this
+            ->select(
+                'item_type.id AS item_type_id',
+                'item_type.name AS item_type_name',
+                'item_type.friendly_name AS item_type_friendly_name',
+                'item_type.description AS item_type_description',
+                'item_type.example AS item_type_example',
+                'item_type.created_at AS item_type_created_at'
+            );
 
-        return $result->find($item_type_id)->
-            toArray();
+        $result = $result
+            ->where($this->table . '.id', '=', $item_type_id)
+            ->get()
+            ->toArray();
+
+        if (count($result) === 0) {
+            return null;
+        }
+
+        return $result[0];
     }
 
     /**

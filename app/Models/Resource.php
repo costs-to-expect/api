@@ -147,14 +147,18 @@ class Resource extends Model
             )
             ->join('resource_item_subtype', 'resource_item_subtype.resource_id', 'resource.id')
             ->join('item_subtype', 'resource_item_subtype.item_subtype_id', 'item_subtype.id')
-            ->where('resource_type_id', '=', $resource_type_id)
-            ->find($resource_id);
+            ->where('resource_type_id', '=', $resource_type_id);
 
-        if ($result !== null) {
-            return $result->toArray();
+        $result = $result
+            ->where($this->table . '.id', '=', $resource_id)
+            ->get()
+            ->toArray();
+
+        if (count($result) === 0) {
+            return null;
         }
 
-        return null;
+        return $result[0];
     }
 
     /**

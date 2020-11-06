@@ -88,13 +88,16 @@ class ItemSubtype extends Model
             )
             ->where("{$this->table}.item_type_id", '=', $item_type_id);
 
-        $item = $result->find($item_subtype_id);
+        $result = $result
+            ->where($this->table . '.id', '=', $item_subtype_id)
+            ->get()
+            ->toArray();
 
-        if ($item !== null) {
-            return $item->toArray();
+        if (count($result) === 0) {
+            return null;
         }
 
-        return null;
+        return $result[0];
     }
 
     public function totalCount(int $item_type_id, array $search_parameters = []): int

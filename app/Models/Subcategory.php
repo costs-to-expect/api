@@ -117,20 +117,25 @@ class Subcategory extends Model
         int $subcategory_id
     ): ?array
     {
-        $result = $this->select(
+        $result = $this
+            ->select(
                 'sub_category.id AS subcategory_id',
                 'sub_category.name AS subcategory_name',
                 'sub_category.description AS subcategory_description',
                 'sub_category.created_at AS subcategory_created_at'
-            )->
-            where('category_id', '=', $category_id)->
-            find($subcategory_id);
+            )
+            ->where('category_id', '=', $category_id);
 
-        if ($result !== null) {
-            return $result->toArray();
-        } else {
+        $result = $result
+            ->where($this->table . '.id', '=', $subcategory_id)
+            ->get()
+            ->toArray();
+
+        if (count($result) === 0) {
             return null;
         }
+
+        return $result[0];
     }
 
     public function instance(
