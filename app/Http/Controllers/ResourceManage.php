@@ -36,16 +36,13 @@ class ResourceManage extends Controller
      */
     public function create(string $resource_type_id): JsonResponse
     {
-        Route\Validate::resourceType(
-            $resource_type_id,
-            $this->permitted_resource_types,
-            true
-        );
+        if ($this->writeAccessToResourceType((int) $resource_type_id) === false) {
+            \App\Response\Responses::notFoundOrNotAccessible(trans('entities.resource-type'));
+        }
 
         $resource_type = (new ResourceType())->single(
             $resource_type_id,
-            $this->permitted_resource_types,
-            $this->include_public
+            $this->viewable_resource_types
         );
 
         $validator = (new ResourceValidator)->create([
@@ -59,7 +56,7 @@ class ResourceManage extends Controller
             ->setRouteParameters([
                 'resource_type_id' => $resource_type_id
             ])
-            ->setPermittedUser(in_array((int) $resource_type_id, $this->permitted_resource_types, true))
+            ->setPermittedUser($this->writeAccessToResourceType((int) $resource_type_id))
             ->setUserId($this->user_id);
 
         try {
@@ -112,12 +109,9 @@ class ResourceManage extends Controller
         string $resource_id
     ): JsonResponse
     {
-        Route\Validate::resource(
-            $resource_type_id,
-            $resource_id,
-            $this->permitted_resource_types,
-            true
-        );
+        if ($this->writeAccessToResourceType((int) $resource_type_id) === false) {
+            \App\Response\Responses::notFoundOrNotAccessible(trans('entities.resource'));
+        }
 
         $resource = (new Resource())->instance($resource_type_id, $resource_id);
         $resource_item_subtype = (new ResourceItemSubtype())->instance($resource_id);
@@ -132,7 +126,7 @@ class ResourceManage extends Controller
                 'resource_type_id' => $resource_type_id,
                 'resource_id' => $resource_id
             ])
-            ->setPermittedUser(in_array((int) $resource_type_id, $this->permitted_resource_types, true))
+            ->setPermittedUser($this->writeAccessToResourceType((int) $resource_type_id))
             ->setUserId($this->user_id);
 
         try {
@@ -164,12 +158,9 @@ class ResourceManage extends Controller
         string $resource_id
     ): JsonResponse
     {
-        Route\Validate::resource(
-            $resource_type_id,
-            $resource_id,
-            $this->permitted_resource_types,
-            true
-        );
+        if ($this->writeAccessToResourceType((int) $resource_type_id) === false) {
+            \App\Response\Responses::notFoundOrNotAccessible(trans('entities.resource'));
+        }
 
         $resource = (new Resource())->instance($resource_type_id, $resource_id);
 
@@ -201,7 +192,7 @@ class ResourceManage extends Controller
             ->setRouteParameters([
                 'resource_type_id' => $resource_type_id
             ])
-            ->setPermittedUser(in_array((int) $resource_type_id, $this->permitted_resource_types, true))
+            ->setPermittedUser($this->writeAccessToResourceType((int) $resource_type_id))
             ->setUserId($this->user_id);
 
         try {

@@ -29,13 +29,12 @@ class ResourceTypeItemView extends Controller
      */
     public function index(string $resource_type_id): JsonResponse
     {
-        Route\Validate::resourceType(
-            $resource_type_id,
-            $this->permitted_resource_types
-        );
+        if ($this->viewAccessToResourceType((int) $resource_type_id) === false) {
+            \App\Response\Responses::notFoundOrNotAccessible(trans('entities.resource-type'));
+        }
 
         $cache_control = new Cache\Control(
-            in_array((int) $resource_type_id, $this->permitted_resource_types, true),
+            $this->writeAccessToResourceType((int) $resource_type_id),
             $this->user_id
         );
         $cache_control->setTtlOneWeek();
@@ -124,10 +123,9 @@ class ResourceTypeItemView extends Controller
      */
     public function optionsIndex(string $resource_type_id): JsonResponse
     {
-        Route\Validate::resourceType(
-            $resource_type_id,
-            $this->permitted_resource_types
-        );
+        if ($this->viewAccessToResourceType((int) $resource_type_id) === false) {
+            \App\Response\Responses::notFoundOrNotAccessible(trans('entities.resource-type'));
+        }
 
         $entity = Entity::item($resource_type_id);
 

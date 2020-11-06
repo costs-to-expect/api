@@ -24,22 +24,14 @@ class PermittedUserView extends Controller
 {
     protected bool $allow_entire_collection = true;
 
-    /**
-     * Return all the permitted users for the given resource type
-     *
-     * @param string $resource_type_id
-     *
-     * @return JsonResponse
-     */
     public function index(string $resource_type_id): JsonResponse
     {
-        Route\Validate::resourceType(
-            $resource_type_id,
-            $this->permitted_resource_types
-        );
+        if ($this->viewAccessToResourceType((int) $resource_type_id) === false) {
+            \App\Response\Responses::notFoundOrNotAccessible(trans('entities.resource-type'));
+        }
 
         $cache_control = new Cache\Control(
-            in_array((int) $resource_type_id, $this->permitted_resource_types, true),
+            $this->writeAccessToResourceType((int) $resource_type_id),
             $this->user_id
         );
         $cache_control->setTtlOneMonth();
@@ -106,10 +98,9 @@ class PermittedUserView extends Controller
      */
     public function optionsIndex(string $resource_type_id): JsonResponse
     {
-        Route\Validate::resourceType(
-            $resource_type_id,
-            $this->permitted_resource_types
-        );
+        if ($this->viewAccessToResourceType((int) $resource_type_id) === false) {
+            \App\Response\Responses::notFoundOrNotAccessible(trans('entities.resource-type'));
+        }
 
         $permissions = Route\Permission::resourceType(
             $resource_type_id,

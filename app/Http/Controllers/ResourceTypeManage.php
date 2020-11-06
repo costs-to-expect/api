@@ -99,7 +99,7 @@ class ResourceTypeManage extends Controller
         string $resource_type_id
     ): JsonResponse
     {
-        if ($this->writeAccessToResourceType($resource_type_id) === false) {
+        if ($this->writeAccessToResourceType((int) $resource_type_id) === false) {
             \App\Response\Responses::notFoundOrNotAccessible(trans('entities.resource-type'));
         }
 
@@ -109,14 +109,12 @@ class ResourceTypeManage extends Controller
 
         $categories = (new Category())->total(
             $resource_type_id,
-            $this->permitted_resource_types,
-            $this->include_public
+            $this->viewable_resource_types
         );
 
         $resources = (new Resource())->totalCount(
             $resource_type_id,
-            $this->permitted_resource_types,
-            $this->include_public
+            $this->viewable_resource_types
         );
 
         $cache_job_payload = (new Cache\JobPayload())
@@ -124,7 +122,7 @@ class ResourceTypeManage extends Controller
             ->setRouteParameters([
                 'resource_type_id' => $resource_type_id
             ])
-            ->setPermittedUser(in_array((int) $resource_type_id, $this->permitted_resource_types, true))
+            ->setPermittedUser($this->writeAccessToResourceType((int) $resource_type_id))
             ->setUserId($this->user_id);
 
         if (
@@ -165,7 +163,7 @@ class ResourceTypeManage extends Controller
         string $resource_type_id
     ): JsonResponse
     {
-        if ($this->writeAccessToResourceType($resource_type_id) === false) {
+        if ($this->writeAccessToResourceType((int) $resource_type_id) === false) {
             \App\Response\Responses::notFoundOrNotAccessible(trans('entities.resource-type'));
         }
 
@@ -199,7 +197,7 @@ class ResourceTypeManage extends Controller
             ->setRouteParameters([
                 'resource_type_id' => $resource_type_id
             ])
-            ->setPermittedUser(in_array((int) $resource_type_id, $this->permitted_resource_types, true))
+            ->setPermittedUser($this->writeAccessToResourceType((int) $resource_type_id))
             ->setUserId($this->user_id);
 
         try {

@@ -26,24 +26,14 @@ class SubcategoryView extends Controller
 {
     protected bool $allow_entire_collection = true;
 
-    /**
-     * Return all the sub categories assigned to the given category
-     *
-     * @param $resource_type_id
-     * @param $category_id
-     *
-     * @return JsonResponse
-     */
     public function index($resource_type_id, $category_id): JsonResponse
     {
-        Route\Validate::category(
-            $resource_type_id,
-            $category_id,
-            $this->permitted_resource_types
-        );
+        if ($this->viewAccessToResourceType((int) $resource_type_id) === false) {
+            \App\Response\Responses::notFoundOrNotAccessible(trans('entities.category'));
+        }
 
         $cache_control = new Cache\Control(
-            in_array((int) $resource_type_id, $this->permitted_resource_types, true),
+            $this->writeAccessToResourceType((int) $resource_type_id),
             $this->user_id
         );
         $cache_control->setTtlOneMonth();
@@ -118,12 +108,9 @@ class SubcategoryView extends Controller
         $subcategory_id
     ): JsonResponse
     {
-        Route\Validate::subcategory(
-            $resource_type_id,
-            $category_id,
-            $subcategory_id,
-            $this->permitted_resource_types
-        );
+        if ($this->viewAccessToResourceType((int) $resource_type_id) === false) {
+            \App\Response\Responses::notFoundOrNotAccessible(trans('entities.subcategory'));
+        }
 
         $subcategory = (new Subcategory())->single(
             $category_id,
@@ -154,11 +141,9 @@ class SubcategoryView extends Controller
      */
     public function optionsIndex($resource_type_id, $category_id): JsonResponse
     {
-        Route\Validate::category(
-            $resource_type_id,
-            $category_id,
-            $this->permitted_resource_types
-        );
+        if ($this->viewAccessToResourceType((int) $resource_type_id) === false) {
+            \App\Response\Responses::notFoundOrNotAccessible(trans('entities.category'));
+        }
 
         $permissions = Route\Permission::category(
             (int) $resource_type_id,
@@ -186,12 +171,9 @@ class SubcategoryView extends Controller
         $subcategory_id
     ): JsonResponse
     {
-        Route\Validate::subcategory(
-            $resource_type_id,
-            $category_id,
-            $subcategory_id,
-            $this->permitted_resource_types
-        );
+        if ($this->viewAccessToResourceType((int) $resource_type_id) === false) {
+            \App\Response\Responses::notFoundOrNotAccessible(trans('entities.subcategory'));
+        }
 
         $permissions = Route\Permission::subcategory(
             (int) $resource_type_id,

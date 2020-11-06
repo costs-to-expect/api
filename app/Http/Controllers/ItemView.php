@@ -34,14 +34,12 @@ class ItemView extends Controller
         string $resource_id
     ): JsonResponse
     {
-        Route\Validate::resource(
-            $resource_type_id,
-            $resource_id,
-            $this->permitted_resource_types,
-        );
+        if ($this->viewAccessToResourceType((int) $resource_type_id) === false) {
+            \App\Response\Responses::notFoundOrNotAccessible(trans('entities.resource'));
+        }
 
         $cache_control = new Cache\Control(
-            in_array((int) $resource_type_id, $this->permitted_resource_types, true),
+            $this->writeAccessToResourceType((int) $resource_type_id),
             $this->user_id
         );
         $cache_control->setTtlOneWeek();
@@ -138,12 +136,9 @@ class ItemView extends Controller
         $item_id
     ): JsonResponse
     {
-        Route\Validate::item(
-            $resource_type_id,
-            $resource_id,
-            $item_id,
-            $this->permitted_resource_types
-        );
+        if ($this->viewAccessToResourceType((int) $resource_type_id) === false) {
+            \App\Response\Responses::notFoundOrNotAccessible(trans('entities.item'));
+        }
 
         $entity = Entity::item($resource_type_id);
 
@@ -189,11 +184,9 @@ class ItemView extends Controller
         string $resource_id
     ): JsonResponse
     {
-        Route\Validate::resource(
-            $resource_type_id,
-            $resource_id,
-            $this->permitted_resource_types,
-        );
+        if ($this->viewAccessToResourceType((int) $resource_type_id) === false) {
+            \App\Response\Responses::notFoundOrNotAccessible(trans('entities.resource'));
+        }
 
         $entity = Entity::item($resource_type_id);
 
@@ -234,12 +227,9 @@ class ItemView extends Controller
         string $item_id
     ): JsonResponse
     {
-        Route\Validate::item(
-            $resource_type_id,
-            $resource_id,
-            $item_id,
-            $this->permitted_resource_types
-        );
+        if ($this->viewAccessToResourceType((int) $resource_type_id) === false) {
+            \App\Response\Responses::notFoundOrNotAccessible(trans('entities.item'));
+        }
 
         $permissions = Route\Permission::item(
             $resource_type_id,

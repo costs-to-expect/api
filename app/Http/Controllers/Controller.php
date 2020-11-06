@@ -112,4 +112,9 @@ class Controller extends BaseController
     {
         return in_array($resource_type_id, $this->permitted_resource_types, true) === true;
     }
+
+    protected function viewAccessToResourceType(int $resource_type_id): bool
+    {
+        return in_array($resource_type_id, $this->viewable_resource_types, true) === true;
+    }
 }

@@ -34,16 +34,15 @@ class ItemPartialTransferView extends Controller
      */
     public function index($resource_type_id): JsonResponse
     {
+        if ($this->viewAccessToResourceType((int) $resource_type_id) === false) {
+            \App\Response\Responses::notFoundOrNotAccessible(trans('entities.resource-type'));
+        }
+
         $cache_control = new Cache\Control(
-            in_array((int) $resource_type_id, $this->permitted_resource_types, true),
+            $this->writeAccessToResourceType((int) $resource_type_id),
             $this->user_id
         );
         $cache_control->setTtlOneWeek();
-
-        Route\Validate::resourceType(
-            $resource_type_id,
-            $this->permitted_resource_types
-        );
 
         $entity = Entity::item($resource_type_id);
         if ($entity->allowPartialTransfers() === false) {
@@ -60,9 +59,8 @@ class ItemPartialTransferView extends Controller
             );
 
             $total = (new ItemPartialTransfer())->total(
-                (int)$resource_type_id,
-                $this->permitted_resource_types,
-                $this->include_public,
+                (int) $resource_type_id,
+                $this->viewable_resource_types,
                 $parameters
             );
 
@@ -73,8 +71,7 @@ class ItemPartialTransferView extends Controller
 
             $transfers = (new ItemPartialTransfer())->paginatedCollection(
                 (int)$resource_type_id,
-                $this->permitted_resource_types,
-                $this->include_public,
+                $this->viewable_resource_types,
                 $pagination_parameters['offset'],
                 $pagination_parameters['limit'],
                 $parameters
@@ -112,10 +109,9 @@ class ItemPartialTransferView extends Controller
         $item_partial_transfer_id
     ): JsonResponse
     {
-        Route\Validate::resourceType(
-            $resource_type_id,
-            $this->permitted_resource_types
-        );
+        if ($this->viewAccessToResourceType((int) $resource_type_id) === false) {
+            \App\Response\Responses::notFoundOrNotAccessible(trans('entities.resource-type'));
+        }
 
         $entity = Entity::item($resource_type_id);
         if ($entity->allowPartialTransfers() === false) {
@@ -141,19 +137,11 @@ class ItemPartialTransferView extends Controller
         );
     }
 
-    /**
-     * Generate the OPTIONS request for the partial transfers collection
-     *
-     * @param $resource_type_id
-     *
-     * @return JsonResponse
-     */
     public function optionsIndex($resource_type_id): JsonResponse
     {
-        Route\Validate::resourceType(
-            $resource_type_id,
-            $this->permitted_resource_types
-        );
+        if ($this->viewAccessToResourceType((int) $resource_type_id) === false) {
+            \App\Response\Responses::notFoundOrNotAccessible(trans('entities.item'));
+        }
 
         $entity = Entity::item($resource_type_id);
         if ($entity->allowPartialTransfers() === false) {
@@ -180,10 +168,9 @@ class ItemPartialTransferView extends Controller
      */
     public function optionsShow($resource_type_id, $item_partial_transfer_id): JsonResponse
     {
-        Route\Validate::resourceType(
-            $resource_type_id,
-            $this->permitted_resource_types
-        );
+        if ($this->viewAccessToResourceType((int) $resource_type_id) === false) {
+            \App\Response\Responses::notFoundOrNotAccessible(trans('entities.item-partial-transfer'));
+        }
 
         $entity = Entity::item($resource_type_id);
         if ($entity->allowPartialTransfers() === false) {
@@ -206,12 +193,9 @@ class ItemPartialTransferView extends Controller
         string $item_id
     ): JsonResponse
     {
-        Route\Validate::item(
-            $resource_type_id,
-            $resource_id,
-            $item_id,
-            $this->permitted_resource_types
-        );
+        if ($this->viewAccessToResourceType((int) $resource_type_id) === false) {
+            \App\Response\Responses::notFoundOrNotAccessible(trans('entities.item'));
+        }
 
         $entity = Entity::item($resource_type_id);
         if ($entity->allowPartialTransfers() === false) {

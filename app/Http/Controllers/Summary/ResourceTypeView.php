@@ -40,8 +40,7 @@ class ResourceTypeView extends Controller
             );
 
             $summary = (new ResourceType())->totalCount(
-                $this->permitted_resource_types,
-                $this->include_public,
+                $this->viewable_resource_types,
                 $search_parameters
             );
 

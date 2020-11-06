@@ -31,14 +31,12 @@ class SubcategoryView extends Controller
      */
     public function index($resource_type_id, $category_id): JsonResponse
     {
-        Route\Validate::category(
-            $resource_type_id,
-            $category_id,
-            $this->permitted_resource_types
-        );
+        if ($this->viewAccessToResourceType((int) $resource_type_id) === false) {
+            \App\Response\Responses::notFoundOrNotAccessible(trans('entities.category'));
+        }
 
         $cache_control = new Cache\Control(
-            in_array((int) $resource_type_id, $this->permitted_resource_types, true),
+            $this->writeAccessToResourceType((int) $resource_type_id),
             $this->user_id
         );
         $cache_control->setTtlOneMonth();
@@ -85,11 +83,9 @@ class SubcategoryView extends Controller
      */
     public function optionsIndex($resource_type_id, $category_id): JsonResponse
     {
-        Route\Validate::category(
-            $resource_type_id,
-            $category_id,
-            $this->permitted_resource_types
-        );
+        if ($this->viewAccessToResourceType((int) $resource_type_id) === false) {
+            \App\Response\Responses::notFoundOrNotAccessible(trans('entities.category'));
+        }
 
         $permissions = Route\Permission::category(
             $resource_type_id,

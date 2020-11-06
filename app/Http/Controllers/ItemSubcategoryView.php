@@ -39,15 +39,12 @@ class ItemSubcategoryView extends Controller
         string $item_category_id
     ): JsonResponse
     {
-        Route\Validate::item(
-            $resource_type_id,
-            $resource_id,
-            $item_id,
-            $this->permitted_resource_types
-        );
+        if ($this->viewAccessToResourceType((int) $resource_type_id) === false) {
+            \App\Response\Responses::notFoundOrNotAccessible(trans('entities.item-category'));
+        }
 
         $cache_control = new Cache\Control(
-            in_array((int) $resource_type_id, $this->permitted_resource_types, true),
+            $this->writeAccessToResourceType((int) $resource_type_id),
             $this->user_id
         );
         $cache_control->setTtlOneWeek();
@@ -87,17 +84,6 @@ class ItemSubcategoryView extends Controller
         return response()->json($cache_collection->collection(), 200, $cache_collection->headers());
     }
 
-    /**
-     * Return a single item
-     *
-     * @param string $resource_id
-     * @param string $resource_type_id
-     * @param string $item_id
-     * @param string $item_category_id
-     * @param string $item_subcategory_id
-     *
-     * @return JsonResponse
-     */
     public function show(
         string $resource_type_id,
         string $resource_id,
@@ -106,12 +92,9 @@ class ItemSubcategoryView extends Controller
         string $item_subcategory_id = null
     ): JsonResponse
     {
-        Route\Validate::item(
-            $resource_type_id,
-            $resource_id,
-            $item_id,
-            $this->permitted_resource_types
-        );
+        if ($this->viewAccessToResourceType((int) $resource_type_id) === false) {
+            \App\Response\Responses::notFoundOrNotAccessible(trans('entities.item-subcategory'));
+        }
 
         if ($item_category_id === null || $item_subcategory_id === null) {
             return \App\Response\Responses::notFound(trans('entities.item-subcategory'));
@@ -139,16 +122,6 @@ class ItemSubcategoryView extends Controller
         );
     }
 
-    /**
-     * Generate the OPTIONS request for the item list
-     *
-     * @param string $resource_type_id
-     * @param string $resource_id
-     * @param string $item_id
-     * @param string $item_category_id
-     *
-     * @return JsonResponse
-     */
     public function optionsIndex(
         string $resource_type_id,
         string $resource_id,
@@ -156,12 +129,9 @@ class ItemSubcategoryView extends Controller
         string $item_category_id = null
     ): JsonResponse
     {
-        Route\Validate::item(
-            $resource_type_id,
-            $resource_id,
-            $item_id,
-            $this->permitted_resource_types
-        );
+        if ($this->viewAccessToResourceType((int) $resource_type_id) === false) {
+            \App\Response\Responses::notFoundOrNotAccessible(trans('entities.item-category'));
+        }
 
         $permissions = Route\Permission::item(
             $resource_type_id,
@@ -190,17 +160,6 @@ class ItemSubcategoryView extends Controller
             ->response();
     }
 
-    /**
-     * Generate the OPTIONS request for a specific item
-     *
-     * @param string $resource_id
-     * @param string $resource_type_id
-     * @param string $item_id
-     * @param string $item_category_id
-     * @param string $item_subcategory_id
-     *
-     * @return JsonResponse
-     */
     public function optionsShow(
         string $resource_type_id,
         string $resource_id,
@@ -209,12 +168,9 @@ class ItemSubcategoryView extends Controller
         string $item_subcategory_id = null
     ): JsonResponse
     {
-        Route\Validate::item(
-            $resource_type_id,
-            $resource_id,
-            $item_id,
-            $this->permitted_resource_types
-        );
+        if ($this->viewAccessToResourceType((int) $resource_type_id) === false) {
+            \App\Response\Responses::notFoundOrNotAccessible(trans('entities.item-subcategory'));
+        }
 
         $permissions = Route\Permission::item(
             $resource_type_id,

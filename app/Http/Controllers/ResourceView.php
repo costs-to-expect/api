@@ -37,13 +37,12 @@ class ResourceView extends Controller
      */
     public function index(string $resource_type_id): JsonResponse
     {
-        Route\Validate::resourceType(
-            $resource_type_id,
-            $this->permitted_resource_types
-        );
+        if ($this->viewAccessToResourceType((int) $resource_type_id) === false) {
+            \App\Response\Responses::notFoundOrNotAccessible(trans('entities.resource-type'));
+        }
 
         $cache_control = new Cache\Control(
-            in_array((int) $resource_type_id, $this->permitted_resource_types, true),
+            $this->writeAccessToResourceType((int) $resource_type_id),
             $this->user_id
         );
         $cache_control->setTtlOneWeek();
@@ -63,8 +62,7 @@ class ResourceView extends Controller
 
             $total = (new Resource())->totalCount(
                 $resource_type_id,
-                $this->permitted_resource_types,
-                $this->include_public,
+                $this->viewable_resource_types,
                 $search_parameters
             );
 
@@ -116,11 +114,9 @@ class ResourceView extends Controller
         string $resource_id
     ): JsonResponse
     {
-        Route\Validate::resource(
-            $resource_type_id,
-            $resource_id,
-            $this->permitted_resource_types
-        );
+        if ($this->viewAccessToResourceType((int) $resource_type_id) === false) {
+            \App\Response\Responses::notFoundOrNotAccessible(trans('entities.resource'));
+        }
 
         $resource = (new Resource)->single($resource_type_id, $resource_id);
 
@@ -138,19 +134,11 @@ class ResourceView extends Controller
         );
     }
 
-    /**
-     * Generate the OPTIONS request for the resource list
-     *
-     * @param string $resource_type_id
-     *
-     * @return JsonResponse
-     */
     public function optionsIndex(string $resource_type_id): JsonResponse
     {
-        Route\Validate::resourceType(
-            $resource_type_id,
-            $this->permitted_resource_types
-        );
+        if ($this->viewAccessToResourceType((int) $resource_type_id) === false) {
+            \App\Response\Responses::notFoundOrNotAccessible(trans('entities.resource-type'));
+        }
 
         $permissions = Route\Permission::resourceType(
             $resource_type_id,
@@ -159,8 +147,7 @@ class ResourceView extends Controller
 
         $resource_type = (new ResourceType())->single(
             $resource_type_id,
-            $this->permitted_resource_types,
-            $this->include_public
+            $this->viewable_resource_types
         );
 
         $response = new ResourceCollection($permissions);
@@ -171,21 +158,11 @@ class ResourceView extends Controller
             ->response();
     }
 
-    /**
-     * Generate the OPTIONS request for a specific category
-     *
-     * @param string $resource_type_id
-     * @param string $resource_id
-     *
-     * @return JsonResponse
-     */
     public function optionsShow(string $resource_type_id, string $resource_id): JsonResponse
     {
-        Route\Validate::resource(
-            $resource_type_id,
-            $resource_id,
-            $this->permitted_resource_types
-        );
+        if ($this->viewAccessToResourceType((int) $resource_type_id) === false) {
+            \App\Response\Responses::notFoundOrNotAccessible(trans('entities.resource'));
+        }
 
         $permissions = Route\Permission::resource(
             $resource_type_id,

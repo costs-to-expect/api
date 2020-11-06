@@ -35,18 +35,16 @@ class ItemPartialTransferManage extends Controller
         $item_partial_transfer_id
     ): JsonResponse
     {
-        Route\Validate::resourceType(
-            $resource_type_id,
-            $this->permitted_resource_types,
-            true
-        );
+        if ($this->writeAccessToResourceType((int) $resource_type_id) === false) {
+            \App\Response\Responses::notFoundOrNotAccessible(trans('entities.item-partial-transfer'));
+        }
 
         $cache_job_payload = (new Cache\JobPayload())
             ->setGroupKey(Cache\KeyGroup::ITEM_PARTIAL_TRANSFER_DELETE)
             ->setRouteParameters([
                 'resource_type_id' => $resource_type_id
             ])
-            ->setPermittedUser(in_array((int) $resource_type_id, $this->permitted_resource_types, true))
+            ->setPermittedUser($this->writeAccessToResourceType((int) $resource_type_id))
             ->setUserId($this->user_id);
 
         try {
@@ -74,13 +72,9 @@ class ItemPartialTransferManage extends Controller
         string $item_id
     ): JsonResponse
     {
-        Route\Validate::item(
-            $resource_type_id,
-            $resource_id,
-            $item_id,
-            $this->permitted_resource_types,
-            true
-        );
+        if ($this->writeAccessToResourceType((int) $resource_type_id) === false) {
+            \App\Response\Responses::notFoundOrNotAccessible(trans('entities.item'));
+        }
 
         $validator = (new ItemPartialTransferValidator)->create(
             [
@@ -101,7 +95,7 @@ class ItemPartialTransferManage extends Controller
             ->setRouteParameters([
                 'resource_type_id' => $resource_type_id
             ])
-            ->setPermittedUser(in_array((int) $resource_type_id, $this->permitted_resource_types, true))
+            ->setPermittedUser($this->writeAccessToResourceType((int) $resource_type_id))
             ->setUserId($this->user_id);
 
         try {

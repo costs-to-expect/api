@@ -23,22 +23,11 @@ class ItemView extends Controller
 {
     private $model;
 
-    /**
-     * Return the TCO for the resource or pass the request off to the relevant
-     * method
-     *
-     * @param string $resource_type_id
-     * @param string $resource_id
-     *
-     * @return JsonResponse
-     */
     public function index(string $resource_type_id, string $resource_id): JsonResponse
     {
-        Route\Validate::resource(
-            $resource_type_id,
-            $resource_id,
-            $this->permitted_resource_types
-        );
+        if ($this->viewAccessToResourceType((int) $resource_type_id) === false) {
+            \App\Response\Responses::notFoundOrNotAccessible(trans('entities.resource'));
+        }
 
         $entity = Entity::item($resource_type_id);
 
@@ -239,7 +228,7 @@ class ItemView extends Controller
         array $parameters
     ): JsonResponse {
         $cache_control = new Cache\Control(
-            in_array((int) $resource_type_id, $this->permitted_resource_types, true),
+            $this->writeAccessToResourceType($resource_type_id),
             $this->user_id
         );
         $cache_control->setTtlOneWeek();
@@ -315,7 +304,7 @@ class ItemView extends Controller
         array $parameters
     ): JsonResponse {
         $cache_control = new Cache\Control(
-            in_array((int) $resource_type_id, $this->permitted_resource_types, true),
+            $this->writeAccessToResourceType($resource_type_id),
             $this->user_id
         );
         $cache_control->setTtlOneWeek();
@@ -366,7 +355,7 @@ class ItemView extends Controller
         array $parameters
     ): JsonResponse {
         $cache_control = new Cache\Control(
-            in_array((int) $resource_type_id, $this->permitted_resource_types, true),
+            $this->writeAccessToResourceType($resource_type_id),
             $this->user_id
         );
         $cache_control->setTtlOneWeek();
@@ -422,7 +411,7 @@ class ItemView extends Controller
         array $parameters
     ): JsonResponse {
         $cache_control = new Cache\Control(
-            in_array((int) $resource_type_id, $this->permitted_resource_types, true),
+            $this->writeAccessToResourceType($resource_type_id),
             $this->user_id
         );
         $cache_control->setTtlOneWeek();
@@ -475,7 +464,7 @@ class ItemView extends Controller
         array $parameters
     ): JsonResponse {
         $cache_control = new Cache\Control(
-            in_array((int) $resource_type_id, $this->permitted_resource_types, true),
+            $this->writeAccessToResourceType($resource_type_id),
             $this->user_id
         );
         $cache_control->setTtlOneWeek();
@@ -522,7 +511,7 @@ class ItemView extends Controller
         array $parameters
     ): JsonResponse {
         $cache_control = new Cache\Control(
-            in_array((int) $resource_type_id, $this->permitted_resource_types, true),
+            $this->writeAccessToResourceType($resource_type_id),
             $this->user_id
         );
         $cache_control->setTtlOneWeek();
@@ -573,7 +562,7 @@ class ItemView extends Controller
         array $parameters
     ): JsonResponse {
         $cache_control = new Cache\Control(
-            in_array((int) $resource_type_id, $this->permitted_resource_types, true),
+            $this->writeAccessToResourceType($resource_type_id),
             $this->user_id
         );
         $cache_control->setTtlOneWeek();
@@ -629,7 +618,7 @@ class ItemView extends Controller
         array $parameters
     ): JsonResponse {
         $cache_control = new Cache\Control(
-            in_array((int) $resource_type_id, $this->permitted_resource_types, true),
+            $this->writeAccessToResourceType($resource_type_id),
             $this->user_id
         );
         $cache_control->setTtlOneWeek();
@@ -694,7 +683,7 @@ class ItemView extends Controller
         array $filter_parameters = []
     ): JsonResponse {
         $cache_control = new Cache\Control(
-            in_array((int) $resource_type_id, $this->permitted_resource_types, true),
+            $this->writeAccessToResourceType($resource_type_id),
             $this->user_id
         );
         $cache_control->setTtlOneWeek();
@@ -749,7 +738,7 @@ class ItemView extends Controller
         array $parameters
     ): JsonResponse {
         $cache_control = new Cache\Control(
-            in_array((int) $resource_type_id, $this->permitted_resource_types, true),
+            $this->writeAccessToResourceType($resource_type_id),
             $this->user_id
         );
         $cache_control->setTtlOneWeek();
@@ -793,11 +782,9 @@ class ItemView extends Controller
      */
     public function optionsIndex(string $resource_type_id, string $resource_id): JsonResponse
     {
-        Route\Validate::resource(
-            $resource_type_id,
-            $resource_id,
-            $this->permitted_resource_types
-        );
+        if ($this->viewAccessToResourceType((int) $resource_type_id) === false) {
+            \App\Response\Responses::notFoundOrNotAccessible(trans('entities.resource'));
+        }
 
         $entity = Entity::item($resource_type_id);
 

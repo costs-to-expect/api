@@ -21,26 +21,14 @@ use Illuminate\Http\JsonResponse;
  */
 class ItemCategoryView extends Controller
 {
-    /**
-     * Return the category assigned to an item
-     *
-     * @param string $resource_type_id
-     * @param string $resource_id
-     * @param string $item_id
-     *
-     * @return JsonResponse
-     */
     public function index(string $resource_type_id, string $resource_id, string $item_id): JsonResponse
     {
-        Route\Validate::item(
-            $resource_type_id,
-            $resource_id,
-            $item_id,
-            $this->permitted_resource_types
-        );
+        if ($this->viewAccessToResourceType((int) $resource_type_id) === false) {
+            \App\Response\Responses::notFoundOrNotAccessible(trans('entities.item'));
+        }
 
         $cache_control = new Cache\Control(
-            in_array((int) $resource_type_id, $this->permitted_resource_types, true),
+            $this->writeAccessToResourceType((int) $resource_type_id),
             $this->user_id
         );
         $cache_control->setTtlOneWeek();
@@ -79,16 +67,6 @@ class ItemCategoryView extends Controller
         return response()->json($cache_collection->collection(), 200, $cache_collection->headers());
     }
 
-    /**
-     * Return a single item
-     *
-     * @param string $resource_id
-     * @param string $resource_type_id
-     * @param string $item_id
-     * @param string $item_category_id
-     *
-     * @return JsonResponse
-     */
     public function show(
         string $resource_type_id,
         string $resource_id,
@@ -96,12 +74,9 @@ class ItemCategoryView extends Controller
         string $item_category_id = null
     ): JsonResponse
     {
-        Route\Validate::item(
-            $resource_type_id,
-            $resource_id,
-            $item_id,
-            $this->permitted_resource_types
-        );
+        if ($this->viewAccessToResourceType((int) $resource_type_id) === false) {
+            \App\Response\Responses::notFoundOrNotAccessible(trans('entities.item'));
+        }
 
         if ($item_category_id === null) {
             return \App\Response\Responses::notFound(trans('entities.item-category'));
@@ -128,23 +103,11 @@ class ItemCategoryView extends Controller
         );
     }
 
-    /**
-     * Generate the OPTIONS request for the item list
-     *
-     * @param string $resource_type_id
-     * @param string $resource_id
-     * @param string $item_id
-     *
-     * @return JsonResponse
-     */
     public function optionsIndex(string $resource_type_id, string $resource_id, string $item_id): JsonResponse
     {
-        Route\Validate::item(
-            $resource_type_id,
-            $resource_id,
-            $item_id,
-            $this->permitted_resource_types
-        );
+        if ($this->viewAccessToResourceType((int) $resource_type_id) === false) {
+            \App\Response\Responses::notFoundOrNotAccessible(trans('entities.item'));
+        }
 
         $permissions = Route\Permission::item(
             $resource_type_id,
@@ -163,16 +126,6 @@ class ItemCategoryView extends Controller
             ->response();
     }
 
-    /**
-     * Generate the OPTIONS request for a specific item
-     *
-     * @param string $resource_id
-     * @param string $resource_type_id
-     * @param string $item_id
-     * @param string $item_category_id
-     *
-     * @return JsonResponse
-     */
     public function optionsShow(
         string $resource_type_id,
         string $resource_id,
@@ -180,12 +133,9 @@ class ItemCategoryView extends Controller
         string $item_category_id = null
     ): JsonResponse
     {
-        Route\Validate::item(
-            $resource_type_id,
-            $resource_id,
-            $item_id,
-            $this->permitted_resource_types
-        );
+        if ($this->viewAccessToResourceType((int) $resource_type_id) === false) {
+            \App\Response\Responses::notFoundOrNotAccessible(trans('entities.item'));
+        }
 
         $permissions = Route\Permission::item(
             $resource_type_id,

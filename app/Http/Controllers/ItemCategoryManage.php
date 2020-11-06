@@ -37,13 +37,9 @@ class ItemCategoryManage extends Controller
         string $item_id
     ): JsonResponse
     {
-        Route\Validate::item(
-            $resource_type_id,
-            $resource_id,
-            $item_id,
-            $this->permitted_resource_types,
-            true
-        );
+        if ($this->writeAccessToResourceType((int) $resource_type_id) === false) {
+            \App\Response\Responses::notFoundOrNotAccessible(trans('entities.item'));
+        }
 
         $entity = Entity::item($resource_type_id);
         $assigned = (new ItemCategory())->numberAssigned(
@@ -68,7 +64,7 @@ class ItemCategoryManage extends Controller
                 'resource_type_id' => $resource_type_id,
                 'resource_id' => $resource_id
             ])
-            ->setPermittedUser(in_array((int) $resource_type_id, $this->permitted_resource_types, true))
+            ->setPermittedUser($this->writeAccessToResourceType((int) $resource_type_id))
             ->setUserId($this->user_id);
 
         try {
@@ -113,14 +109,9 @@ class ItemCategoryManage extends Controller
         string $item_category_id
     ): JsonResponse
     {
-        Route\Validate::itemCategory(
-            $resource_type_id,
-            $resource_id,
-            $item_id,
-            $item_category_id,
-            $this->permitted_resource_types,
-            true
-        );
+        if ($this->writeAccessToResourceType((int) $resource_type_id) === false) {
+            \App\Response\Responses::notFoundOrNotAccessible(trans('entities.item-category'));
+        }
 
         $item_category = (new ItemCategory())->instance(
             $resource_type_id,
@@ -139,7 +130,7 @@ class ItemCategoryManage extends Controller
                 'resource_type_id' => $resource_type_id,
                 'resource_id' => $resource_id
             ])
-            ->setPermittedUser(in_array((int) $resource_type_id, $this->permitted_resource_types, true))
+            ->setPermittedUser($this->writeAccessToResourceType((int) $resource_type_id))
             ->setUserId($this->user_id);
 
         try {

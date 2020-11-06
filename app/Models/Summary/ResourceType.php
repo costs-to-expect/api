@@ -19,27 +19,16 @@ class ResourceType extends Model
 {
     protected $table = 'resource_type';
 
-    /**
-     * Return the total number of resource types
-     *
-     * @param array $permitted_resource_types
-     * @param boolean $include_public
-     * @param array $search_parameters = []
-     *
-     * @return integer
-     */
     public function totalCount(
-        array $permitted_resource_types = [],
-        bool $include_public = true,
+        array $viewable_resource_types = [],
         array $search_parameters = []
     ): int
     {
         $collection = $this->select("resource_type.id");
 
-        $collection = Clause::applyPermittedResourceTypes(
+        $collection = Clause::applyViewableResourceTypes(
             $collection,
-            $permitted_resource_types,
-            $include_public
+            $viewable_resource_types
         );
 
         $collection = Clause::applySearch($collection, $this->table, $search_parameters);

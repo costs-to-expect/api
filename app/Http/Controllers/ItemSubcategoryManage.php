@@ -40,13 +40,9 @@ class ItemSubcategoryManage extends Controller
         string $item_category_id = null
     ): JsonResponse
     {
-        Route\Validate::item(
-            $resource_type_id,
-            $resource_id,
-            $item_id,
-            $this->permitted_resource_types,
-            true
-        );
+        if ($this->writeAccessToResourceType((int) $resource_type_id) === false) {
+            \App\Response\Responses::notFoundOrNotAccessible(trans('entities.item-category'));
+        }
 
         if ($item_category_id === null) {
             return \App\Response\Responses::notFound(trans('entities.item-subcategory'));
@@ -80,7 +76,7 @@ class ItemSubcategoryManage extends Controller
                 'resource_type_id' => $resource_type_id,
                 'resource_id' => $resource_id
             ])
-            ->setPermittedUser(in_array((int) $resource_type_id, $this->permitted_resource_types, true))
+            ->setPermittedUser($this->writeAccessToResourceType((int) $resource_type_id))
             ->setUserId($this->user_id);
 
         try {
@@ -127,13 +123,9 @@ class ItemSubcategoryManage extends Controller
         string $item_subcategory_id = null
     ): JsonResponse
     {
-        Route\Validate::item(
-            $resource_type_id,
-            $resource_id,
-            $item_id,
-            $this->permitted_resource_types,
-            true
-        );
+        if ($this->writeAccessToResourceType((int) $resource_type_id) === false) {
+            \App\Response\Responses::notFoundOrNotAccessible(trans('entities.item-subcategory'));
+        }
 
         if ($item_category_id === null || $item_subcategory_id === null) {
             return \App\Response\Responses::notFound(trans('entities.item-subcategory'));
@@ -157,7 +149,7 @@ class ItemSubcategoryManage extends Controller
                 'resource_type_id' => $resource_type_id,
                 'resource_id' => $resource_id
             ])
-            ->setPermittedUser(in_array((int) $resource_type_id, $this->permitted_resource_types, true))
+            ->setPermittedUser($this->writeAccessToResourceType((int) $resource_type_id))
             ->setUserId($this->user_id);
 
         try {

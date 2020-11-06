@@ -34,12 +34,9 @@ class SubcategoryManage extends Controller
      */
     public function create($resource_type_id, $category_id): JsonResponse
     {
-        Route\Validate::category(
-            $resource_type_id,
-            $category_id,
-            $this->permitted_resource_types,
-            true
-        );
+        if ($this->writeAccessToResourceType((int) $resource_type_id) === false) {
+            \App\Response\Responses::notFoundOrNotAccessible(trans('entities.category'));
+        }
 
         $validator = (new SubcategoryValidator)->create(['category_id' => $category_id]);
         \App\Request\BodyValidation::validateAndReturnErrors($validator);
@@ -50,7 +47,7 @@ class SubcategoryManage extends Controller
                 'resource_type_id' => $resource_type_id,
                 'category_id' => $category_id
             ])
-            ->setPermittedUser(in_array((int) $resource_type_id, $this->permitted_resource_types, true))
+            ->setPermittedUser($this->writeAccessToResourceType((int) $resource_type_id))
             ->setUserId($this->user_id);
 
         try {
@@ -88,13 +85,9 @@ class SubcategoryManage extends Controller
         $subcategory_id
     ): JsonResponse
     {
-        Route\Validate::subcategory(
-            $resource_type_id,
-            $category_id,
-            $subcategory_id,
-            $this->permitted_resource_types,
-            true
-        );
+        if ($this->writeAccessToResourceType((int) $resource_type_id) === false) {
+            \App\Response\Responses::notFoundOrNotAccessible(trans('entities.subcategory'));
+        }
 
         $sub_category = (new Subcategory())->instance(
             $category_id,
@@ -111,7 +104,7 @@ class SubcategoryManage extends Controller
                 'resource_type_id' => $resource_type_id,
                 'category_id' => $category_id
             ])
-            ->setPermittedUser(in_array((int) $resource_type_id, $this->permitted_resource_types, true))
+            ->setPermittedUser($this->writeAccessToResourceType((int) $resource_type_id))
             ->setUserId($this->user_id);
 
         try {
@@ -142,13 +135,9 @@ class SubcategoryManage extends Controller
         $subcategory_id
     ): JsonResponse
     {
-        Route\Validate::subcategory(
-            $resource_type_id,
-            $category_id,
-            $subcategory_id,
-            $this->permitted_resource_types,
-            true
-        );
+        if ($this->writeAccessToResourceType((int) $resource_type_id) === false) {
+            \App\Response\Responses::notFoundOrNotAccessible(trans('entities.subcategory'));
+        }
 
         $subcategory = (new Subcategory())->instance($category_id, $subcategory_id);
 
@@ -181,7 +170,7 @@ class SubcategoryManage extends Controller
                 'resource_type_id' => $resource_type_id,
                 'category_id' => $category_id
             ])
-            ->setPermittedUser(in_array((int) $resource_type_id, $this->permitted_resource_types, true))
+            ->setPermittedUser($this->writeAccessToResourceType((int) $resource_type_id))
             ->setUserId($this->user_id);
 
         try {
