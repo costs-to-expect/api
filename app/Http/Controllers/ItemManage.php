@@ -27,7 +27,7 @@ class ItemManage extends Controller
     ): JsonResponse
     {
         if ($this->writeAccessToResourceType((int) $resource_type_id) === false) {
-            \App\Response\Responses::notFoundOrNotAccessible(trans('entities.item'));
+            \App\Response\Responses::notFoundOrNotAccessible(trans('entities.resource'));
         }
 
         $user_id = $this->user_id;

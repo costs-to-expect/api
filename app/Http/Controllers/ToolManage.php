@@ -13,11 +13,6 @@ use Illuminate\Http\JsonResponse;
  */
 class ToolManage extends Controller
 {
-     /**
-     * View the number of cached keys
-     *
-     * @return JsonResponse
-     */
     public function cache(): JsonResponse
     {
         $cache_control = new Cache\Control(true, $this->user_id);
@@ -32,11 +27,6 @@ class ToolManage extends Controller
         );
     }
 
-    /**
-     * Delete the cache
-     *
-     * @return JsonResponse
-     */
     public function deleteCache(): JsonResponse
     {
         $cache_control = new Cache\Control(true, $this->user_id);
@@ -47,6 +37,7 @@ class ToolManage extends Controller
             $cache_control->clearCacheKeyByItsFullName($key['key']);
         }
 
+        // This will leave two cache keys set in the base controller
         return Responses::successNoContent();
     }
 }

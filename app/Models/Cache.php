@@ -41,14 +41,11 @@ class Cache extends Model
         $result = $this
             ->where('expiration', '>', DB::raw('UNIX_TIMESTAMP()'))
             ->where('key', 'LIKE', $prefix . rtrim($key, '/') . '%');
-            /*->orWhere('key', '=', $prefix . $key);*/
 
         if ($include_summaries === true) {
             $summary_key = rtrim(str_replace('v2/', 'v2/summary/', $prefix . $key), '/');
 
-            $result
-                ->orWhere('key', 'LIKE', $summary_key . '%');
-                /*->orWhere('key', '=', $summary_key);*/
+            $result->orWhere('key', 'LIKE', $summary_key . '%');
         }
 
         return $result
