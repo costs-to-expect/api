@@ -2,6 +2,24 @@
 
 The complete changelog for the Costs to Expect REST API, our changelog follows the format defined at https://keepachangelog.com/en/1.0.0/
 
+## [v2.16.2] - 2020-11-07
+### Added
+- We are now locally caching the permitted and viewable resource types; this change means we can skip a more expensive query per API request whilst the response is cached, we are experimenting with the TTL.
+
+### Changed
+- We have added item `name` and `description` fields to the partial-transfers collection.
+- We have updated the schema for partial-transfers.
+- We have updated the game item-type; the `winner` field will now be null or an object, the object will have an `id` and a `name`.
+- We have updated the OPTIONS request for the `game` item-type; the allowed values for the winner field will display if necessary.
+- We have tweaked our middleware; we use our Hash class rather than duplicating the effort.
+- We have created several new classes to generate the allowed values data; these new classes are specific to each of our supported item-type. This change will speed up the OPTIONS requests for the non `allocated-expense` item type as we will no longer query the database when we know there will be no results.
+- We have added a check to limit access to the partial-transfers route. The 'allocated-expense' item-type supports the partial-transfers feature, partial-transfers don't make sense for the other item-types.
+- We have drastically simplified route validation. The API controls access to `resources` at the resource type level; we have updated all route checks to validate the requested resource type rather than validate specific access to the request entity.
+
+### Fixed
+- We have corrected several configuration file calls; our calls were looking at transfers, not partial transfers.
+- We have added localisation files for the `simple-item` and `game` item-type, several were missing.
+
 ## [v2.16.1] - 2020-10-18
 ### Changed
 - We have updated the `friendly_name` for item types; the updated names provide more information and make customising the App simpler.
