@@ -14,7 +14,7 @@ use Illuminate\Database\Query\Builder as QueryBuilder;
  * @copyright Dean Blackborough 2018-2020
  * @license https://github.com/costs-to-expect/api/blob/master/LICENSE
  */
-class EntityConfig extends Model
+class EntityLimits extends Model
 {
     /**
      * Work out the maximum year for the given date field in the given table.

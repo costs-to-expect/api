@@ -20,6 +20,16 @@ class AllocatedExpense extends Item
         parent::__construct();
     }
 
+    public function allowedValuesForItem(int $resource_type_id): array
+    {
+        return (new \App\Option\AllowedValue\Currency())->allowedValues();
+    }
+
+    public function allowPartialTransfers(): bool
+    {
+        return true;
+    }
+
     /**
      * Create and save the item and item type data
      *
@@ -163,5 +173,15 @@ class AllocatedExpense extends Item
     public function summaryResourceTypeModel(): Model
     {
         return new \App\Models\ResourceTypeItem\Summary\AllocatedExpense();
+    }
+
+    protected function allowedValuesItemCollectionClass(): string
+    {
+        return \App\Option\AllowedValue\Item\AllocatedExpense::class;
+    }
+
+    protected function allowedValuesResourceTypeItemCollectionClass(): string
+    {
+        return \App\Option\AllowedValue\ResourceTypeItem\AllocatedExpense::class;
     }
 }

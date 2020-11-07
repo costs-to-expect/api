@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Entity\Item\Entity;
 use App\Models\ItemPartialTransfer;
 use App\Models\Transformers\ItemPartialTransfer as ItemPartialTransferTransformer;
 use App\Option\ItemPartialTransferCollection;
@@ -10,7 +11,6 @@ use App\Option\ItemPartialTransferTransfer;
 use App\Response\Cache;
 use App\Response\Header\Headers;
 use App\Request\Parameter;
-use App\Request\Route;
 use App\Response\Pagination as UtilityPagination;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Config;
@@ -33,30 +33,33 @@ class ItemPartialTransferView extends Controller
      */
     public function index($resource_type_id): JsonResponse
     {
+        if ($this->viewAccessToResourceType((int) $resource_type_id) === false) {
+            \App\Response\Responses::notFoundOrNotAccessible(trans('entities.resource-type'));
+        }
+
         $cache_control = new Cache\Control(
-            $this->user_id,
-            in_array((int) $resource_type_id, $this->permitted_resource_types, true)
+            $this->writeAccessToResourceType((int) $resource_type_id),
+            $this->user_id
         );
         $cache_control->setTtlOneWeek();
 
-        Route\Validate::resourceType(
-            $resource_type_id,
-            $this->permitted_resource_types
-        );
+        $entity = Entity::item($resource_type_id);
+        if ($entity->allowPartialTransfers() === false) {
+            return \App\Response\Responses::notSupported();
+        }
 
         $cache_collection = new Cache\Collection();
-        $cache_collection->setFromCache($cache_control->get(request()->getRequestUri()));
+        $cache_collection->setFromCache($cache_control->getByKey(request()->getRequestUri()));
 
-        if ($cache_control->cacheable() === false || $cache_collection->valid() === false) {
+        if ($cache_control->isRequestCacheable() === false || $cache_collection->valid() === false) {
 
             $parameters = Parameter\Request::fetch(
-                array_keys(Config::get('api.item-transfer.parameters.collection'))
+                array_keys(Config::get('api.item-partial-transfer.parameters.collection'))
             );
 
             $total = (new ItemPartialTransfer())->total(
-                (int)$resource_type_id,
-                $this->permitted_resource_types,
-                $this->include_public,
+                (int) $resource_type_id,
+                $this->viewable_resource_types,
                 $parameters
             );
 
@@ -67,8 +70,7 @@ class ItemPartialTransferView extends Controller
 
             $transfers = (new ItemPartialTransfer())->paginatedCollection(
                 (int)$resource_type_id,
-                $this->permitted_resource_types,
-                $this->include_public,
+                $this->viewable_resource_types,
                 $pagination_parameters['offset'],
                 $pagination_parameters['limit'],
                 $parameters
@@ -87,7 +89,7 @@ class ItemPartialTransferView extends Controller
                 addETag($collection);
 
             $cache_collection->create($total, $collection, $pagination_parameters, $headers->headers());
-            $cache_control->put(request()->getRequestUri(), $cache_collection->content());
+            $cache_control->putByKey(request()->getRequestUri(), $cache_collection->content());
         }
 
         return response()->json($cache_collection->collection(), 200, $cache_collection->headers());
@@ -106,10 +108,14 @@ class ItemPartialTransferView extends Controller
         $item_partial_transfer_id
     ): JsonResponse
     {
-        Route\Validate::resourceType(
-            $resource_type_id,
-            $this->permitted_resource_types
-        );
+        if ($this->viewAccessToResourceType((int) $resource_type_id) === false) {
+            \App\Response\Responses::notFoundOrNotAccessible(trans('entities.resource-type'));
+        }
+
+        $entity = Entity::item($resource_type_id);
+        if ($entity->allowPartialTransfers() === false) {
+            return \App\Response\Responses::notSupported();
+        }
 
         $item_partial_transfer = (new ItemPartialTransfer())->single(
             (int) $resource_type_id,
@@ -130,26 +136,18 @@ class ItemPartialTransferView extends Controller
         );
     }
 
-    /**
-     * Generate the OPTIONS request for the partial transfers collection
-     *
-     * @param $resource_type_id
-     *
-     * @return JsonResponse
-     */
     public function optionsIndex($resource_type_id): JsonResponse
     {
-        Route\Validate::resourceType(
-            $resource_type_id,
-            $this->permitted_resource_types
-        );
+        if ($this->viewAccessToResourceType((int) $resource_type_id) === false) {
+            \App\Response\Responses::notFoundOrNotAccessible(trans('entities.item'));
+        }
 
-        $permissions = Route\Permission::resourceType(
-            (int) $resource_type_id,
-            $this->permitted_resource_types
-        );
+        $entity = Entity::item($resource_type_id);
+        if ($entity->allowPartialTransfers() === false) {
+            return \App\Response\Responses::notSupported();
+        }
 
-        $response = new ItemPartialTransferCollection($permissions);
+        $response = new ItemPartialTransferCollection($this->permissions((int) $resource_type_id));
 
         return $response->create()->response();
     }
@@ -164,17 +162,16 @@ class ItemPartialTransferView extends Controller
      */
     public function optionsShow($resource_type_id, $item_partial_transfer_id): JsonResponse
     {
-        Route\Validate::resourceType(
-            $resource_type_id,
-            $this->permitted_resource_types
-        );
+        if ($this->viewAccessToResourceType((int) $resource_type_id) === false) {
+            \App\Response\Responses::notFoundOrNotAccessible(trans('entities.item-partial-transfer'));
+        }
 
-        $permissions = Route\Permission::resourceType(
-            (int) $resource_type_id,
-            $this->permitted_resource_types
-        );
+        $entity = Entity::item($resource_type_id);
+        if ($entity->allowPartialTransfers() === false) {
+            return \App\Response\Responses::notSupported();
+        }
 
-        $response = new ItemPartialTransferItem($permissions);
+        $response = new ItemPartialTransferItem($this->permissions((int) $resource_type_id));
 
         return $response->create()->response();
     }
@@ -185,24 +182,19 @@ class ItemPartialTransferView extends Controller
         string $item_id
     ): JsonResponse
     {
-        Route\Validate::item(
-            $resource_type_id,
-            $resource_id,
-            $item_id,
-            $this->permitted_resource_types
-        );
+        if ($this->viewAccessToResourceType((int) $resource_type_id) === false) {
+            \App\Response\Responses::notFoundOrNotAccessible(trans('entities.item'));
+        }
 
-        $permissions = Route\Permission::item(
-            $resource_type_id,
-            $resource_id,
-            $item_id,
-            $this->permitted_resource_types
-        );
+        $entity = Entity::item($resource_type_id);
+        if ($entity->allowPartialTransfers() === false) {
+            return \App\Response\Responses::notSupported();
+        }
 
-        $response = new ItemPartialTransferTransfer($permissions);
+        $response = new ItemPartialTransferTransfer($this->permissions((int) $resource_type_id));
 
         return $response->setAllowedValues(
-                (new \App\Option\AllowedValues\Resource())->allowedValues(
+                (new \App\Option\AllowedValue\Resource())->allowedValues(
                     $resource_type_id,
                     $resource_id
                 )

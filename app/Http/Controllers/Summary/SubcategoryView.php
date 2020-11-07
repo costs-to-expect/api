@@ -7,7 +7,6 @@ use App\Models\Summary\Subcategory;
 use App\Option\SummarySubcategoryCollection;
 use App\Response\Cache;
 use App\Request\Parameter;
-use App\Request\Route;
 use App\Response\Header\Headers;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Config;
@@ -31,22 +30,20 @@ class SubcategoryView extends Controller
      */
     public function index($resource_type_id, $category_id): JsonResponse
     {
-        Route\Validate::category(
-            $resource_type_id,
-            $category_id,
-            $this->permitted_resource_types
-        );
+        if ($this->viewAccessToResourceType((int) $resource_type_id) === false) {
+            \App\Response\Responses::notFoundOrNotAccessible(trans('entities.category'));
+        }
 
         $cache_control = new Cache\Control(
-            $this->user_id,
-            in_array((int) $resource_type_id, $this->permitted_resource_types, true)
+            $this->writeAccessToResourceType((int) $resource_type_id),
+            $this->user_id
         );
         $cache_control->setTtlOneMonth();
 
         $cache_summary = new Cache\Summary();
-        $cache_summary->setFromCache($cache_control->get(request()->getRequestUri()));
+        $cache_summary->setFromCache($cache_control->getByKey(request()->getRequestUri()));
 
-        if ($cache_control->cacheable() === false || $cache_summary->valid() === false) {
+        if ($cache_control->isRequestCacheable() === false || $cache_summary->valid() === false) {
 
             $search_parameters = Parameter\Search::fetch(
                 Config::get('api.subcategory.summary-searchable')
@@ -68,7 +65,7 @@ class SubcategoryView extends Controller
                 addSearch(Parameter\Search::xHeader());
 
             $cache_summary->create($collection, $headers->headers());
-            $cache_control->put(request()->getRequestUri(), $cache_summary->content());
+            $cache_control->putByKey(request()->getRequestUri(), $cache_summary->content());
         }
 
         return response()->json($cache_summary->collection(), 200, $cache_summary->headers());
@@ -85,19 +82,11 @@ class SubcategoryView extends Controller
      */
     public function optionsIndex($resource_type_id, $category_id): JsonResponse
     {
-        Route\Validate::category(
-            $resource_type_id,
-            $category_id,
-            $this->permitted_resource_types
-        );
+        if ($this->viewAccessToResourceType((int) $resource_type_id) === false) {
+            \App\Response\Responses::notFoundOrNotAccessible(trans('entities.category'));
+        }
 
-        $permissions = Route\Permission::category(
-            $resource_type_id,
-            $category_id,
-            $this->permitted_resource_types
-        );
-
-        $response = new SummarySubcategoryCollection($permissions);
+        $response = new SummarySubcategoryCollection($this->permissions((int) $resource_type_id));
 
         return $response->create()->response();
     }

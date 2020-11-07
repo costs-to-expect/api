@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\Entity\Item\Entity;
 use App\Jobs\ClearCache;
 use App\Response\Cache;
-use App\Request\Route;
 use App\Models\ItemCategory;
 use App\Models\Transformers\ItemCategory as ItemCategoryTransformer;
 use App\Request\Validate\ItemCategory as ItemCategoryValidator;
@@ -37,13 +36,9 @@ class ItemCategoryManage extends Controller
         string $item_id
     ): JsonResponse
     {
-        Route\Validate::item(
-            $resource_type_id,
-            $resource_id,
-            $item_id,
-            $this->permitted_resource_types,
-            true
-        );
+        if ($this->writeAccessToResourceType((int) $resource_type_id) === false) {
+            \App\Response\Responses::notFoundOrNotAccessible(trans('entities.item'));
+        }
 
         $entity = Entity::item($resource_type_id);
         $assigned = (new ItemCategory())->numberAssigned(
@@ -59,7 +54,7 @@ class ItemCategoryManage extends Controller
         $validator = (new ItemCategoryValidator)->create();
         \App\Request\BodyValidation::validateAndReturnErrors(
             $validator,
-            (new \App\Option\AllowedValues\Category())->allowedValues($resource_type_id)
+            (new \App\Option\AllowedValue\Category())->allowedValues($resource_type_id)
         );
 
         $cache_job_payload = (new Cache\JobPayload())
@@ -68,7 +63,7 @@ class ItemCategoryManage extends Controller
                 'resource_type_id' => $resource_type_id,
                 'resource_id' => $resource_id
             ])
-            ->setPermittedUser(in_array((int) $resource_type_id, $this->permitted_resource_types, true))
+            ->setPermittedUser($this->writeAccessToResourceType((int) $resource_type_id))
             ->setUserId($this->user_id);
 
         try {
@@ -113,14 +108,9 @@ class ItemCategoryManage extends Controller
         string $item_category_id
     ): JsonResponse
     {
-        Route\Validate::itemCategory(
-            $resource_type_id,
-            $resource_id,
-            $item_id,
-            $item_category_id,
-            $this->permitted_resource_types,
-            true
-        );
+        if ($this->writeAccessToResourceType((int) $resource_type_id) === false) {
+            \App\Response\Responses::notFoundOrNotAccessible(trans('entities.item-category'));
+        }
 
         $item_category = (new ItemCategory())->instance(
             $resource_type_id,
@@ -139,7 +129,7 @@ class ItemCategoryManage extends Controller
                 'resource_type_id' => $resource_type_id,
                 'resource_id' => $resource_id
             ])
-            ->setPermittedUser(in_array((int) $resource_type_id, $this->permitted_resource_types, true))
+            ->setPermittedUser($this->writeAccessToResourceType((int) $resource_type_id))
             ->setUserId($this->user_id);
 
         try {

@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\Entity\Item\Entity;
 use App\Jobs\ClearCache;
 use App\Response\Cache;
-use App\Request\Route;
 use App\Models\ItemCategory;
 use App\Models\ItemSubcategory;
 use App\Models\Transformers\ItemSubcategory as ItemSubcategoryTransformer;
@@ -37,18 +36,14 @@ class ItemSubcategoryManage extends Controller
         string $resource_type_id,
         string $resource_id,
         string $item_id,
-        string $item_category_id
+        string $item_category_id = null
     ): JsonResponse
     {
-        Route\Validate::item(
-            $resource_type_id,
-            $resource_id,
-            $item_id,
-            $this->permitted_resource_types,
-            true
-        );
+        if ($this->writeAccessToResourceType((int) $resource_type_id) === false) {
+            \App\Response\Responses::notFoundOrNotAccessible(trans('entities.item-category'));
+        }
 
-        if ($item_category_id === 'nill') {
+        if ($item_category_id === null) {
             return \App\Response\Responses::notFound(trans('entities.item-subcategory'));
         }
 
@@ -71,7 +66,7 @@ class ItemSubcategoryManage extends Controller
         $validator = (new ItemSubcategoryValidator)->create(['category_id' => $item_category->category_id]);
         \App\Request\BodyValidation::validateAndReturnErrors(
             $validator,
-            (new \App\Option\AllowedValues\Subcategory())->allowedValues($item_category->category_id)
+            (new \App\Option\AllowedValue\Subcategory())->allowedValues($item_category->category_id)
         );
 
         $cache_job_payload = (new Cache\JobPayload())
@@ -80,7 +75,7 @@ class ItemSubcategoryManage extends Controller
                 'resource_type_id' => $resource_type_id,
                 'resource_id' => $resource_id
             ])
-            ->setPermittedUser(in_array((int) $resource_type_id, $this->permitted_resource_types, true))
+            ->setPermittedUser($this->writeAccessToResourceType((int) $resource_type_id))
             ->setUserId($this->user_id);
 
         try {
@@ -123,19 +118,15 @@ class ItemSubcategoryManage extends Controller
         string $resource_type_id,
         string $resource_id,
         string $item_id,
-        string $item_category_id,
-        string $item_subcategory_id
+        string $item_category_id = null,
+        string $item_subcategory_id = null
     ): JsonResponse
     {
-        Route\Validate::item(
-            $resource_type_id,
-            $resource_id,
-            $item_id,
-            $this->permitted_resource_types,
-            true
-        );
+        if ($this->writeAccessToResourceType((int) $resource_type_id) === false) {
+            \App\Response\Responses::notFoundOrNotAccessible(trans('entities.item-subcategory'));
+        }
 
-        if ($item_category_id === 'nill' || $item_subcategory_id === 'nill') {
+        if ($item_category_id === null || $item_subcategory_id === null) {
             return \App\Response\Responses::notFound(trans('entities.item-subcategory'));
         }
 
@@ -157,7 +148,7 @@ class ItemSubcategoryManage extends Controller
                 'resource_type_id' => $resource_type_id,
                 'resource_id' => $resource_id
             ])
-            ->setPermittedUser(in_array((int) $resource_type_id, $this->permitted_resource_types, true))
+            ->setPermittedUser($this->writeAccessToResourceType((int) $resource_type_id))
             ->setUserId($this->user_id);
 
         try {

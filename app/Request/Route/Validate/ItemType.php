@@ -1,9 +1,9 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Request\Route\Validator;
+namespace App\Request\Route\Validate;
 
-use App\Models\ResourceTypeAccess;
+use App\Models\ResourceAccess;
 
 /**
  * Validate the route params to an item type
@@ -24,8 +24,7 @@ class ItemType
     public static function existsToUserForViewing($item_type_id): bool
     {
         return !(
-            $item_type_id === 'nill' ||
-            (new ResourceTypeAccess())->itemTypeExistsToUser((int) $item_type_id) === false
+            (new ResourceAccess())->itemTypeExistsToUser((int) $item_type_id) === false
         );
     }
 }

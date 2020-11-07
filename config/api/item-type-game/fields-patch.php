@@ -8,7 +8,7 @@ return [
         'title' => 'item-type-game/fields.title-game',
         'description' => 'item-type-game/fields.description-game',
         'type' => 'json',
-        'required' => true
+        'required' => false
     ],
     'statistics' => [
         'field' => 'statistics',
@@ -17,10 +17,10 @@ return [
         'type' => 'json',
         'required' => false
     ],
-    'winner' => [
-        'field' => 'winner',
-        'title' => 'item-type-game/fields.title-winner',
-        'description' => 'item-type-game/fields.description-winner',
+    'winner_id' => [
+        'field' => 'winner_id',
+        'title' => 'item-type-game/fields.title-winner_id',
+        'description' => 'item-type-game/fields.description-winner_id',
         'type' => 'string',
         'required' => false,
         'validation' => [
@@ -28,7 +28,7 @@ return [
         ]
     ],
     'score' => [
-        'field' => 'winner',
+        'field' => 'score',
         'title' => 'item-type-game/fields.title-score',
         'description' => 'item-type-game/fields.description-score',
         'type' => 'integer',

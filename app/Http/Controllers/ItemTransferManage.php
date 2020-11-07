@@ -6,7 +6,6 @@ use App\Jobs\ClearCache;
 use App\Models\Item;
 use App\Models\ItemTransfer;
 use App\Response\Cache;
-use App\Request\Route;
 use App\Request\Validate\ItemTransfer as ItemTransferValidator;
 use Exception;
 use Illuminate\Database\QueryException;
@@ -28,13 +27,9 @@ class ItemTransferManage extends Controller
         string $item_id
     ): JsonResponse
     {
-        Route\Validate::item(
-            $resource_type_id,
-            $resource_id,
-            $item_id,
-            $this->permitted_resource_types,
-            true
-        );
+        if ($this->writeAccessToResourceType((int) $resource_type_id) === false) {
+            \App\Response\Responses::notFoundOrNotAccessible(trans('entities.item'));
+        }
 
         $user_id = $this->user_id;
 
@@ -51,7 +46,7 @@ class ItemTransferManage extends Controller
             ->setRouteParameters([
                 'resource_type_id' => $resource_type_id
             ])
-            ->setPermittedUser(in_array((int) $resource_type_id, $this->permitted_resource_types, true))
+            ->setPermittedUser($this->writeAccessToResourceType((int) $resource_type_id))
             ->setUserId($this->user_id);
 
         try {

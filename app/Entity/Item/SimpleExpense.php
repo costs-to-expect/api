@@ -20,6 +20,11 @@ class SimpleExpense extends Item
         parent::__construct();
     }
 
+    public function allowedValuesForItem(int $resource_type_id): array
+    {
+        return (new \App\Option\AllowedValue\Currency())->allowedValues();
+    }
+
     public function create(int $id): Model
     {
         $hash = new Hash();
@@ -136,5 +141,15 @@ class SimpleExpense extends Item
     public function summaryResourceTypeModel(): Model
     {
         return new \App\Models\ResourceTypeItem\Summary\SimpleExpense();
+    }
+
+    protected function allowedValuesItemCollectionClass(): string
+    {
+        return \App\Option\AllowedValue\Item\SimpleExpense::class;
+    }
+
+    protected function allowedValuesResourceTypeItemCollectionClass(): string
+    {
+        return \App\Option\AllowedValue\ResourceTypeItem\SimpleExpense::class;
     }
 }

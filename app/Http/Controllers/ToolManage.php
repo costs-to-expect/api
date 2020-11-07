@@ -13,16 +13,11 @@ use Illuminate\Http\JsonResponse;
  */
 class ToolManage extends Controller
 {
-     /**
-     * View the number of cached keys
-     *
-     * @return JsonResponse
-     */
     public function cache(): JsonResponse
     {
-        $cache_control = new Cache\Control($this->user_id, true);
+        $cache_control = new Cache\Control(true, $this->user_id);
 
-        $keys = $cache_control->matchingPrivateCacheKeys('', true);
+        $keys = $cache_control->fetchMatchingCacheKeys('', true);
 
         return response()->json(
             [
@@ -32,21 +27,17 @@ class ToolManage extends Controller
         );
     }
 
-    /**
-     * Delete the cache
-     *
-     * @return JsonResponse
-     */
     public function deleteCache(): JsonResponse
     {
-        $cache_control = new Cache\Control($this->user_id, true);
+        $cache_control = new Cache\Control(true, $this->user_id);
 
-        $keys = $cache_control->matchingPrivateCacheKeys('', true);
+        $keys = $cache_control->fetchMatchingCacheKeys('', true);
 
         foreach ($keys as $key) {
-            $cache_control->clearCacheKeyByFullName($key['key']);
+            $cache_control->clearCacheKeyByItsFullName($key['key']);
         }
 
+        // This will leave two cache keys set in the base controller
         return Responses::successNoContent();
     }
 }

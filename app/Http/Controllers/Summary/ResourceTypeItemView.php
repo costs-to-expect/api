@@ -7,7 +7,6 @@ use App\Http\Controllers\Controller;
 use App\Option\SummaryResourceTypeItemCollection;
 use App\Response\Cache;
 use App\Request\Parameter;
-use App\Request\Route;
 use App\Request\Validate\Boolean;
 use App\Response\Header\Headers;
 use Illuminate\Database\Eloquent\Model;
@@ -33,10 +32,9 @@ class ResourceTypeItemView extends Controller
      */
     public function index(string $resource_type_id): JsonResponse
     {
-        Route\Validate::resourceType(
-            $resource_type_id,
-            $this->permitted_resource_types
-        );
+        if ($this->viewAccessToResourceType((int) $resource_type_id) === false) {
+            \App\Response\Responses::notFoundOrNotAccessible(trans('entities.resource-type'));
+        }
 
         $entity = Entity::item($resource_type_id);
 
@@ -249,7 +247,7 @@ class ResourceTypeItemView extends Controller
         }
 
         $cache_summary->create($collection, $headers->headers());
-        $cache_control->put(request()->getRequestUri(), $cache_summary->content());
+        $cache_control->putByKey(request()->getRequestUri(), $cache_summary->content());
 
         return $cache_summary;
     }
@@ -268,15 +266,15 @@ class ResourceTypeItemView extends Controller
     ): JsonResponse
     {
         $cache_control = new Cache\Control(
-            $this->user_id,
-            in_array((int) $resource_type_id, $this->permitted_resource_types, true)
+            $this->writeAccessToResourceType($resource_type_id),
+            $this->user_id
         );
         $cache_control->setTtlOneWeek();
 
         $cache_summary = new Cache\Summary();
-        $cache_summary->setFromCache($cache_control->get(request()->getRequestUri()));
+        $cache_summary->setFromCache($cache_control->getByKey(request()->getRequestUri()));
 
-        if ($cache_control->cacheable() === false || $cache_summary->valid() === false) {
+        if ($cache_control->isRequestCacheable() === false || $cache_summary->valid() === false) {
 
             $summary = $this->model->summary(
                 $resource_type_id,
@@ -316,15 +314,15 @@ class ResourceTypeItemView extends Controller
     ): JsonResponse
     {
         $cache_control = new Cache\Control(
-            $this->user_id,
-            in_array((int) $resource_type_id, $this->permitted_resource_types, true)
+            $this->writeAccessToResourceType($resource_type_id),
+            $this->user_id
         );
         $cache_control->setTtlOneWeek();
 
         $cache_summary = new Cache\Summary();
-        $cache_summary->setFromCache($cache_control->get(request()->getRequestUri()));
+        $cache_summary->setFromCache($cache_control->getByKey(request()->getRequestUri()));
 
-        if ($cache_control->cacheable() === false || $cache_summary->valid() === false) {
+        if ($cache_control->isRequestCacheable() === false || $cache_summary->valid() === false) {
 
             $summary = $this->model->resourcesSummary(
                 $resource_type_id,
@@ -361,15 +359,15 @@ class ResourceTypeItemView extends Controller
     ): JsonResponse
     {
         $cache_control = new Cache\Control(
-            $this->user_id,
-            in_array((int) $resource_type_id, $this->permitted_resource_types, true)
+            $this->writeAccessToResourceType($resource_type_id),
+            $this->user_id
         );
         $cache_control->setTtlOneWeek();
 
         $cache_summary = new Cache\Summary();
-        $cache_summary->setFromCache($cache_control->get(request()->getRequestUri()));
+        $cache_summary->setFromCache($cache_control->getByKey(request()->getRequestUri()));
 
-        if ($cache_control->cacheable() === false || $cache_summary->valid() === false) {
+        if ($cache_control->isRequestCacheable() === false || $cache_summary->valid() === false) {
 
             $summary = $this->model->yearsSummary(
                 $resource_type_id,
@@ -408,15 +406,15 @@ class ResourceTypeItemView extends Controller
     ): JsonResponse
     {
         $cache_control = new Cache\Control(
-            $this->user_id,
-            in_array((int) $resource_type_id, $this->permitted_resource_types, true)
+            $this->writeAccessToResourceType($resource_type_id),
+            $this->user_id
         );
         $cache_control->setTtlOneWeek();
 
         $cache_summary = new Cache\Summary();
-        $cache_summary->setFromCache($cache_control->get(request()->getRequestUri()));
+        $cache_summary->setFromCache($cache_control->getByKey(request()->getRequestUri()));
 
-        if ($cache_control->cacheable() === false || $cache_summary->valid() === false) {
+        if ($cache_control->isRequestCacheable() === false || $cache_summary->valid() === false) {
 
             $summary = $this->model->yearSummary(
                 $resource_type_id,
@@ -462,15 +460,15 @@ class ResourceTypeItemView extends Controller
     ): JsonResponse
     {
         $cache_control = new Cache\Control(
-            $this->user_id,
-            in_array((int) $resource_type_id, $this->permitted_resource_types, true)
+            $this->writeAccessToResourceType($resource_type_id),
+            $this->user_id
         );
         $cache_control->setTtlOneWeek();
 
         $cache_summary = new Cache\Summary();
-        $cache_summary->setFromCache($cache_control->get(request()->getRequestUri()));
+        $cache_summary->setFromCache($cache_control->getByKey(request()->getRequestUri()));
 
-        if ($cache_control->cacheable() === false || $cache_summary->valid() === false) {
+        if ($cache_control->isRequestCacheable() === false || $cache_summary->valid() === false) {
 
             $summary = $this->model->monthsSummary(
                 $resource_type_id,
@@ -512,15 +510,15 @@ class ResourceTypeItemView extends Controller
     ): JsonResponse
     {
         $cache_control = new Cache\Control(
-            $this->user_id,
-            in_array((int) $resource_type_id, $this->permitted_resource_types, true)
+            $this->writeAccessToResourceType($resource_type_id),
+            $this->user_id
         );
         $cache_control->setTtlOneWeek();
 
         $cache_summary = new Cache\Summary();
-        $cache_summary->setFromCache($cache_control->get(request()->getRequestUri()));
+        $cache_summary->setFromCache($cache_control->getByKey(request()->getRequestUri()));
 
-        if ($cache_control->cacheable() === false || $cache_summary->valid() === false) {
+        if ($cache_control->isRequestCacheable() === false || $cache_summary->valid() === false) {
 
             $summary = $this->model->monthSummary(
                 $resource_type_id,
@@ -565,15 +563,15 @@ class ResourceTypeItemView extends Controller
     ): JsonResponse
     {
         $cache_control = new Cache\Control(
-            $this->user_id,
-            in_array((int) $resource_type_id, $this->permitted_resource_types, true)
+            $this->writeAccessToResourceType($resource_type_id),
+            $this->user_id
         );
         $cache_control->setTtlOneWeek();
 
         $cache_summary = new Cache\Summary();
-        $cache_summary->setFromCache($cache_control->get(request()->getRequestUri()));
+        $cache_summary->setFromCache($cache_control->getByKey(request()->getRequestUri()));
 
-        if ($cache_control->cacheable() === false || $cache_summary->valid() === false) {
+        if ($cache_control->isRequestCacheable() === false || $cache_summary->valid() === false) {
 
             $summary = $this->model->categoriesSummary(
                 $resource_type_id,
@@ -612,15 +610,15 @@ class ResourceTypeItemView extends Controller
     ): JsonResponse
     {
         $cache_control = new Cache\Control(
-            $this->user_id,
-            in_array((int) $resource_type_id, $this->permitted_resource_types, true)
+            $this->writeAccessToResourceType($resource_type_id),
+            $this->user_id
         );
         $cache_control->setTtlOneWeek();
 
         $cache_summary = new Cache\Summary();
-        $cache_summary->setFromCache($cache_control->get(request()->getRequestUri()));
+        $cache_summary->setFromCache($cache_control->getByKey(request()->getRequestUri()));
 
-        if ($cache_control->cacheable() === false || $cache_summary->valid() === false) {
+        if ($cache_control->isRequestCacheable() === false || $cache_summary->valid() === false) {
 
             $summary = $this->model->categorySummary(
                 $resource_type_id,
@@ -675,15 +673,15 @@ class ResourceTypeItemView extends Controller
     ): JsonResponse
     {
         $cache_control = new Cache\Control(
-            $this->user_id,
-            in_array((int) $resource_type_id, $this->permitted_resource_types, true)
+            $this->writeAccessToResourceType($resource_type_id),
+            $this->user_id
         );
         $cache_control->setTtlOneWeek();
 
         $cache_summary = new Cache\Summary();
-        $cache_summary->setFromCache($cache_control->get(request()->getRequestUri()));
+        $cache_summary->setFromCache($cache_control->getByKey(request()->getRequestUri()));
 
-        if ($cache_control->cacheable() === false || $cache_summary->valid() === false) {
+        if ($cache_control->isRequestCacheable() === false || $cache_summary->valid() === false) {
 
             $summary = $this->model->filteredSummary(
                 $resource_type_id,
@@ -731,15 +729,15 @@ class ResourceTypeItemView extends Controller
     ): JsonResponse
     {
         $cache_control = new Cache\Control(
-            $this->user_id,
-            in_array((int) $resource_type_id, $this->permitted_resource_types, true)
+            $this->writeAccessToResourceType($resource_type_id),
+            $this->user_id
         );
         $cache_control->setTtlOneWeek();
 
         $cache_summary = new Cache\Summary();
-        $cache_summary->setFromCache($cache_control->get(request()->getRequestUri()));
+        $cache_summary->setFromCache($cache_control->getByKey(request()->getRequestUri()));
 
-        if ($cache_control->cacheable() === false || $cache_summary->valid() === false) {
+        if ($cache_control->isRequestCacheable() === false || $cache_summary->valid() === false) {
 
             $summary = $this->model->subcategoriesSummary(
                 $resource_type_id,
@@ -781,15 +779,15 @@ class ResourceTypeItemView extends Controller
     ): JsonResponse
     {
         $cache_control = new Cache\Control(
-            $this->user_id,
-            in_array((int) $resource_type_id, $this->permitted_resource_types, true)
+            $this->writeAccessToResourceType($resource_type_id),
+            $this->user_id
         );
         $cache_control->setTtlOneWeek();
 
         $cache_summary = new Cache\Summary();
-        $cache_summary->setFromCache($cache_control->get(request()->getRequestUri()));
+        $cache_summary->setFromCache($cache_control->getByKey(request()->getRequestUri()));
 
-        if ($cache_control->cacheable() === false || $cache_summary->valid() === false) {
+        if ($cache_control->isRequestCacheable() === false || $cache_summary->valid() === false) {
 
             $summary = $this->model->subcategorySummary(
                 $resource_type_id,
@@ -819,43 +817,27 @@ class ResourceTypeItemView extends Controller
         return response()->json($cache_summary->collection(), 200, $cache_summary->headers());
     }
 
-
-    /**
-     * Generate the OPTIONS request for items summary route
-     *
-     * @param string $resource_type_id
-     *
-     * @return JsonResponse
-     *
-     */
     public function optionsIndex(string $resource_type_id): JsonResponse
     {
-        Route\Validate::resourceType(
-            $resource_type_id,
-            $this->permitted_resource_types
-        );
+        if ($this->viewAccessToResourceType((int) $resource_type_id) === false) {
+            \App\Response\Responses::notFoundOrNotAccessible(trans('entities.resource-type'));
+        }
 
         $entity = Entity::item($resource_type_id);
-
-        $permissions = Route\Permission::resourceType(
-            $resource_type_id,
-            $this->permitted_resource_types
-        );
 
         $defined_parameters = Parameter\Request::fetch(
             array_keys($entity->resourceTypeRequestParameters()),
             $resource_type_id
         );
 
-        $allowed_values = (new \App\Option\AllowedValues\ResourceTypeItem($entity))->allowedValues(
+        $allowed_values = (new \App\Option\AllowedValue\ResourceTypeItem($entity))->allowedValues(
             $resource_type_id,
-            $this->permitted_resource_types,
-            $this->include_public,
+            $this->viewable_resource_types,
             $entity->resourceTypeRequestParameters(),
             $defined_parameters
         );
 
-        $response = new SummaryResourceTypeItemCollection($permissions);
+        $response = new SummaryResourceTypeItemCollection($this->permissions((int) $resource_type_id));
 
         return $response->setEntity($entity)
             ->setAllowedValues($allowed_values)

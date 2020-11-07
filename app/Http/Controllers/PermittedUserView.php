@@ -7,7 +7,6 @@ use App\Models\Transformers\PermittedUser as PermittedUserTransformer;
 use App\Option\PermittedUserCollection;
 use App\Response\Cache;
 use App\Request\Parameter;
-use App\Request\Route;
 use App\Response\Header\Headers;
 use App\Response\Pagination as UtilityPagination;
 use Illuminate\Http\JsonResponse;
@@ -24,30 +23,22 @@ class PermittedUserView extends Controller
 {
     protected bool $allow_entire_collection = true;
 
-    /**
-     * Return all the permitted users for the given resource type
-     *
-     * @param string $resource_type_id
-     *
-     * @return JsonResponse
-     */
     public function index(string $resource_type_id): JsonResponse
     {
-        Route\Validate::resourceType(
-            $resource_type_id,
-            $this->permitted_resource_types
-        );
+        if ($this->viewAccessToResourceType((int) $resource_type_id) === false) {
+            \App\Response\Responses::notFoundOrNotAccessible(trans('entities.resource-type'));
+        }
 
         $cache_control = new Cache\Control(
-            $this->user_id,
-            in_array((int) $resource_type_id, $this->permitted_resource_types, true)
+            $this->writeAccessToResourceType((int) $resource_type_id),
+            $this->user_id
         );
         $cache_control->setTtlOneMonth();
 
         $cache_collection = new Cache\Collection();
-        $cache_collection->setFromCache($cache_control->get(request()->getRequestUri()));
+        $cache_collection->setFromCache($cache_control->getByKey(request()->getRequestUri()));
 
-        if ($cache_control->cacheable() === false || $cache_collection->valid() === false) {
+        if ($cache_control->isRequestCacheable() === false || $cache_collection->valid() === false) {
 
             $search_parameters = Parameter\Search::fetch(
                 Config::get('api.permitted-user.searchable')
@@ -91,7 +82,7 @@ class PermittedUserView extends Controller
                 addSort(Parameter\Sort::xHeader());
 
             $cache_collection->create($total, $collection, $pagination_parameters, $headers->headers());
-            $cache_control->put(request()->getRequestUri(), $cache_collection->content());
+            $cache_control->putByKey(request()->getRequestUri(), $cache_collection->content());
         }
 
         return response()->json($cache_collection->collection(), 200, $cache_collection->headers());
@@ -106,17 +97,11 @@ class PermittedUserView extends Controller
      */
     public function optionsIndex(string $resource_type_id): JsonResponse
     {
-        Route\Validate::resourceType(
-            $resource_type_id,
-            $this->permitted_resource_types
-        );
+        if ($this->viewAccessToResourceType((int) $resource_type_id) === false) {
+            \App\Response\Responses::notFoundOrNotAccessible(trans('entities.resource-type'));
+        }
 
-        $permissions = Route\Permission::resourceType(
-            $resource_type_id,
-            $this->permitted_resource_types
-        );
-
-        $response = new PermittedUserCollection($permissions);
+        $response = new PermittedUserCollection($this->permissions((int) $resource_type_id));
 
         return $response->create()->response();
     }

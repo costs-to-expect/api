@@ -4,7 +4,6 @@ declare(strict_types=1);
 namespace App\Models;
 
 use App\Request\Validate\Boolean;
-use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Query\Builder as QueryBuilder;
 use Illuminate\Support\Facades\DB;

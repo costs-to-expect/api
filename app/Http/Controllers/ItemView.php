@@ -8,7 +8,6 @@ use App\Option\ItemItem;
 use App\Response\Cache;
 use App\Response\Header\Header;
 use App\Request\Parameter;
-use App\Request\Route;
 use App\Response\Header\Headers;
 use App\Response\Pagination as UtilityPagination;
 use Illuminate\Http\JsonResponse;
@@ -34,24 +33,22 @@ class ItemView extends Controller
         string $resource_id
     ): JsonResponse
     {
-        Route\Validate::resource(
-            $resource_type_id,
-            $resource_id,
-            $this->permitted_resource_types,
-        );
+        if ($this->viewAccessToResourceType((int) $resource_type_id) === false) {
+            \App\Response\Responses::notFoundOrNotAccessible(trans('entities.resource'));
+        }
 
         $cache_control = new Cache\Control(
-            $this->user_id,
-            in_array((int) $resource_type_id, $this->permitted_resource_types, true)
+            $this->writeAccessToResourceType((int) $resource_type_id),
+            $this->user_id
         );
         $cache_control->setTtlOneWeek();
 
         $entity = Entity::item($resource_type_id);
 
         $cache_collection = new Cache\Collection();
-        $cache_collection->setFromCache($cache_control->get(request()->getRequestUri()));
+        $cache_collection->setFromCache($cache_control->getByKey(request()->getRequestUri()));
 
-        if ($cache_control->cacheable() === false || $cache_collection->valid() === false) {
+        if ($cache_control->isRequestCacheable() === false || $cache_collection->valid() === false) {
 
             $parameters = Parameter\Request::fetch(
                 array_keys($entity->requestParameters()),
@@ -117,7 +114,7 @@ class ItemView extends Controller
                 addFilters(Parameter\Filter::xHeader());
 
             $cache_collection->create($total, $collection, $pagination_parameters, $headers->headers());
-            $cache_control->put(request()->getRequestUri(), $cache_collection->content());
+            $cache_control->putByKey(request()->getRequestUri(), $cache_collection->content());
         }
 
         return response()->json($cache_collection->collection(), 200, $cache_collection->headers());
@@ -133,17 +130,14 @@ class ItemView extends Controller
      * @return JsonResponse
      */
     public function show(
-        string $resource_type_id,
-        string $resource_id,
-        string $item_id
+        $resource_type_id,
+        $resource_id,
+        $item_id
     ): JsonResponse
     {
-        Route\Validate::item(
-            $resource_type_id,
-            $resource_id,
-            $item_id,
-            $this->permitted_resource_types
-        );
+        if ($this->viewAccessToResourceType((int) $resource_type_id) === false) {
+            \App\Response\Responses::notFoundOrNotAccessible(trans('entities.item'));
+        }
 
         $entity = Entity::item($resource_type_id);
 
@@ -189,40 +183,23 @@ class ItemView extends Controller
         string $resource_id
     ): JsonResponse
     {
-        Route\Validate::resource(
-            $resource_type_id,
-            $resource_id,
-            $this->permitted_resource_types,
-        );
+        if ($this->viewAccessToResourceType((int) $resource_type_id) === false) {
+            \App\Response\Responses::notFoundOrNotAccessible(trans('entities.resource'));
+        }
 
         $entity = Entity::item($resource_type_id);
 
-        $permissions = Route\Permission::resource(
-            $resource_type_id,
-            $resource_id,
-            $this->permitted_resource_types,
-        );
+        $response = new ItemCollection($this->permissions((int) $resource_type_id));
 
-        $defined_parameters = Parameter\Request::fetch(
-            array_keys($entity->requestParameters()),
-            (int) $resource_type_id,
-            (int) $resource_id
-        );
-
-        $allowed_values = (new \App\Option\AllowedValues\ResourceItem($entity))->allowedValues(
-            $resource_type_id,
-            $resource_id,
-            $this->permitted_resource_types,
-            $this->include_public,
-            $entity->requestParameters(),
-            $defined_parameters,
-            ($entity->type() !== 'simple-item')
-        );
-
-        $response = new ItemCollection($permissions);
-
-        return $response->setEntity($entity)
-            ->setAllowedValues($allowed_values)
+        return $response
+            ->setEntity($entity)
+            ->setAllowedValues(
+                $entity->allowedValuesForItemCollection(
+                    $resource_type_id,
+                    $resource_id,
+                    $this->viewable_resource_types
+                )
+            )
             ->create()
             ->response();
     }
@@ -242,19 +219,9 @@ class ItemView extends Controller
         string $item_id
     ): JsonResponse
     {
-        Route\Validate::item(
-            $resource_type_id,
-            $resource_id,
-            $item_id,
-            $this->permitted_resource_types
-        );
-
-        $permissions = Route\Permission::item(
-            $resource_type_id,
-            $resource_id,
-            $item_id,
-            $this->permitted_resource_types,
-        );
+        if ($this->viewAccessToResourceType((int) $resource_type_id) === false) {
+            \App\Response\Responses::notFoundOrNotAccessible(trans('entities.item'));
+        }
 
         $entity = Entity::item($resource_type_id);
 
@@ -266,15 +233,11 @@ class ItemView extends Controller
             return \App\Response\Responses::notFound(trans('entities.item'));
         }
 
-        $allowed_values = [];
-        if ($entity->type() !== 'simple-item') {
-            $allowed_values = (new \App\Option\AllowedValues\Currency())->allowedValues();
-        }
+        $response = new ItemItem($this->permissions((int) $resource_type_id));
 
-        $response = new ItemItem($permissions);
-
-        return $response->setEntity($entity)
-            ->setAllowedValues($allowed_values)
+        return $response
+            ->setEntity($entity)
+            ->setAllowedValues($entity->allowedValuesForItem((int) $resource_type_id))
             ->create()
             ->response();
     }

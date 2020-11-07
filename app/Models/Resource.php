@@ -43,31 +43,20 @@ class Resource extends Model
         return array_keys(Config::get('api.resource.validation.PATCH.fields'));
     }
 
-    /**
-     * Return the total number of resources
-     *
-     * @param integer $resource_type_id
-     * @param array $permitted_resource_types
-     * @param boolean $include_public Include resources attached to public resource types
-     * @param array $search_parameters
-     *
-     * @return integer
-     */
     public function totalCount(
         int $resource_type_id,
-        array $permitted_resource_types,
-        bool $include_public,
+        array $viewable_resource_types,
         array $search_parameters = []
     ): int
     {
-        $collection = $this->select("resource.id")->
-            join('resource_type', 'resource.resource_type_id', 'resource_type.id')->
-            where('resource_type.id', '=', $resource_type_id);
+        $collection = $this
+            ->select("resource.id")
+            ->join('resource_type', 'resource.resource_type_id', 'resource_type.id')
+            ->where('resource_type.id', '=', $resource_type_id);
 
-        $collection = Clause::applyPermittedResourceTypes(
+        $collection = Clause::applyViewableResourceTypes(
             $collection,
-            $permitted_resource_types,
-            $include_public
+            $viewable_resource_types
         );
 
         $collection = Clause::applySearch($collection, $this->table, $search_parameters);
@@ -147,14 +136,18 @@ class Resource extends Model
             )
             ->join('resource_item_subtype', 'resource_item_subtype.resource_id', 'resource.id')
             ->join('item_subtype', 'resource_item_subtype.item_subtype_id', 'item_subtype.id')
-            ->where('resource_type_id', '=', $resource_type_id)
-            ->find($resource_id);
+            ->where('resource_type_id', '=', $resource_type_id);
 
-        if ($result !== null) {
-            return $result->toArray();
+        $result = $result
+            ->where($this->table . '.id', '=', $resource_id)
+            ->get()
+            ->toArray();
+
+        if (count($result) === 0) {
+            return null;
         }
 
-        return null;
+        return $result[0];
     }
 
     /**

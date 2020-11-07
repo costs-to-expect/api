@@ -222,21 +222,30 @@
                     <p>The changelog below shows all the fixes and improvements we have made, to view
                         the entire changelog please check <a href="https://github.com/costs-to-expect/api/releases">here</a>.</p>
 
+                    <h3>Added</h3>
+
+                    <ul>
+                        <li>We are now locally caching the permitted and viewable resource types; this change means we can skip a more expensive query per API request whilst the response is cached, we are experimenting with the TTL.</li>
+                    </ul>
+
                     <h3>Changed</h3>
 
                     <ul>
-                        <li>We have updated the `friendly_name` for item types; the updated names provide more information and make customising the App simpler.</li>
-                        <li>We have updated the `item-type` object included within the `resource type` object; the `item-type` object will include the `friendly_name` field.</li>
-                        <li>We have updated the description for our `game` item type; we are going to support dice games.</li>
-                        <li>We have removed the duplicated `includeUnpublished` functions and added a reusable method to our `Clause` class.</li>
-                        <li>We have disabled sessions for our web routes.</li>
+                        <li>We have added item `name` and `description` fields to the partial-transfers collection.</li>
+                        <li>We have updated the schema for partial-transfers.</li>
+                        <li>We have updated the game item-type; the `winner` field will now be null or an object, the object will have an `id` and a `name`.</li>
+                        <li>We have updated the OPTIONS request for the `game` item-type; the allowed values for the winner field will display if necessary.</li>
+                        <li>We have tweaked our middleware; we use our Hash class rather than duplicating the effort.</li>
+                        <li>We have created several new classes to generate the allowed values data; these new classes are specific to each of our supported item-type. This change will speed up the OPTIONS requests for the non `allocated-expense` item type as we will no longer query the database when we know there will be no results.</li>
+                        <li>We have added a check to limit access to the partial-transfers route. The 'allocated-expense' item-type supports the partial-transfers feature, partial-transfers don't make sense for the other item-types.</li>
+                        <li>We have drastically simplified route validation. The API controls access to `resources` at the resource type level; we have updated all route checks to validate the requested resource type rather than validate specific access to the request entity.</li>
                     </ul>
 
                     <h3>Fixed</h3>
 
                     <ul>
-                        <li>We have corrected an issue with our cache; we were incorrectly creating public cache entries rather than private cache entries. No data is leaking because the cache for resource types controls access and the resource type cache is correct.</li>
-                        <li>We have renamed the method which adds the clause to include unpublished costs. By default, the method excludes unpublished expenses, so we renamed the method to make the intention clear.</li>
+                        <li>We have corrected several configuration file calls; our calls were looking at transfers, not partial transfers.</li>
+                        <li>We have added localisation files for the `simple-item` and `game` item-type, several were missing.</li>
                     </ul>
                 </div>
             </div>

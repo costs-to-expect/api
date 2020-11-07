@@ -67,7 +67,7 @@ class Currency extends Model
         return $collection->get()->toArray();
     }
 
-    public function single(int $currency_id): array
+    public function single(int $currency_id): ?array
     {
         $result = $this->select(
             "{$this->table}.id AS {$this->table}_id",
@@ -76,13 +76,16 @@ class Currency extends Model
             "{$this->table}.created_at AS {$this->table}_created_at"
         );
 
-        $result = $result->find($currency_id);
+        $result = $result
+            ->where($this->table . '.id', '=', $currency_id)
+            ->get()
+            ->toArray();
 
-        if ($result !== null) {
-            return $result->toArray();
+        if (count($result) === 0) {
+            return null;
         }
 
-        return [];
+        return $result[0];
     }
 
     public function totalCount(array $search_parameters = []): int

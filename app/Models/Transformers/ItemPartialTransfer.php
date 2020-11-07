@@ -25,7 +25,9 @@ class ItemPartialTransfer extends Transformer
                 'name' => $to_transform['to_resource_name'],
             ],
             'item' => [
-                'id' => $this->hash->item()->encode($to_transform['item_id'])
+                'id' => $this->hash->item()->encode($to_transform['item_item_id']),
+                'name' => $to_transform['item_name'],
+                'description' => $to_transform['item_description']
             ],
             'percentage' => (int) ($to_transform['percentage']),
             'transferred' => [

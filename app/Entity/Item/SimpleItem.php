@@ -19,6 +19,11 @@ class SimpleItem extends Item
         parent::__construct();
     }
 
+    public function allowedValuesForItem(int $resource_type_id): array
+    {
+        return [];
+    }
+
     public function categoryAssignmentLimit(): int
     {
         return 0;
@@ -139,5 +144,15 @@ class SimpleItem extends Item
     {
         // Return default transformer, not relevant for type
         return new \App\Models\Transformers\Item\Summary\SimpleItemByResource($data_to_transform);
+    }
+
+    protected function allowedValuesItemCollectionClass(): string
+    {
+        return \App\Option\AllowedValue\Item\SimpleItem::class;
+    }
+
+    protected function allowedValuesResourceTypeItemCollectionClass(): string
+    {
+        return \App\Option\AllowedValue\ResourceTypeItem\SimpleItem::class;
     }
 }

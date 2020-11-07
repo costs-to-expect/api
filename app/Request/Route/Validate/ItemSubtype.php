@@ -1,9 +1,9 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Request\Route\Validator;
+namespace App\Request\Route\Validate;
 
-use App\Models\ResourceTypeAccess;
+use App\Models\ResourceAccess;
 
 /**
  * Validate the route params to an item subtype
@@ -23,9 +23,7 @@ class ItemSubtype
     public static function existsToUserForViewing($item_type_id, $item_subtype_id): bool
     {
         return !(
-            $item_type_id === 'nill' ||
-            $item_subtype_id === 'nill' ||
-            (new ResourceTypeAccess())->itemSubTypeExistsToUser((int) $item_type_id, (int) $item_subtype_id) === false
+            (new ResourceAccess())->itemSubTypeExistsToUser((int) $item_type_id, (int) $item_subtype_id) === false
         );
     }
 }

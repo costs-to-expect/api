@@ -10,7 +10,6 @@ use App\Option\ItemTransferTransfer;
 use App\Response\Cache;
 use App\Response\Header\Headers;
 use App\Request\Parameter;
-use App\Request\Route;
 use App\Response\Pagination as UtilityPagination;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Config;
@@ -33,30 +32,28 @@ class ItemTransferView extends Controller
      */
     public function index($resource_type_id): JsonResponse
     {
-        Route\Validate::resourceType(
-            $resource_type_id,
-            $this->permitted_resource_types
-        );
+        if ($this->viewAccessToResourceType((int) $resource_type_id) === false) {
+            \App\Response\Responses::notFoundOrNotAccessible(trans('entities.item-transfer'));
+        }
 
         $cache_control = new Cache\Control(
-            $this->user_id,
-            in_array((int) $resource_type_id, $this->permitted_resource_types, true)
+            $this->writeAccessToResourceType((int) $resource_type_id),
+            $this->user_id
         );
         $cache_control->setTtlOneWeek();
 
         $cache_collection = new Cache\Collection();
-        $cache_collection->setFromCache($cache_control->get(request()->getRequestUri()));
+        $cache_collection->setFromCache($cache_control->getByKey(request()->getRequestUri()));
 
-        if ($cache_control->cacheable() === false || $cache_collection->valid() === false) {
+        if ($cache_control->isRequestCacheable() === false || $cache_collection->valid() === false) {
 
             $parameters = Parameter\Request::fetch(
                 array_keys(Config::get('api.item-transfer.parameters.collection'))
             );
 
             $total = (new ItemTransfer())->total(
-                (int)$resource_type_id,
-                $this->permitted_resource_types,
-                $this->include_public,
+                (int) $resource_type_id,
+                $this->viewable_resource_types,
                 $parameters
             );
 
@@ -67,8 +64,7 @@ class ItemTransferView extends Controller
 
             $transfers = (new ItemTransfer())->paginatedCollection(
                 (int)$resource_type_id,
-                $this->permitted_resource_types,
-                $this->include_public,
+                $this->viewable_resource_types,
                 $pagination_parameters['offset'],
                 $pagination_parameters['limit'],
                 $parameters
@@ -87,7 +83,7 @@ class ItemTransferView extends Controller
                 addETag($collection);
 
             $cache_collection->create($total, $collection, $pagination_parameters, $headers->headers());
-            $cache_control->put(request()->getRequestUri(), $cache_collection->content());
+            $cache_control->putByKey(request()->getRequestUri(), $cache_collection->content());
         }
 
         return response()->json($cache_collection->collection(), 200, $cache_collection->headers());
@@ -102,42 +98,22 @@ class ItemTransferView extends Controller
      */
     public function optionsIndex($resource_type_id): JsonResponse
     {
-        Route\Validate::resourceType(
-            $resource_type_id,
-            $this->permitted_resource_types
-        );
+        if ($this->viewAccessToResourceType((int) $resource_type_id) === false) {
+            \App\Response\Responses::notFoundOrNotAccessible(trans('entities.resource-type'));
+        }
 
-        $permissions = Route\Permission::resourceType(
-            (int) $resource_type_id,
-            $this->permitted_resource_types
-        );
-
-        $response = new ItemTransferCollection($permissions);
+        $response = new ItemTransferCollection($this->permissions((int) $resource_type_id));
 
         return $response->create()->response();
     }
 
-    /**
-     * Generate the OPTIONS request for a specific item transfer
-     *
-     * @param $resource_type_id
-     * @param $item_transfer_id
-     *
-     * @return JsonResponse
-     */
     public function optionsShow($resource_type_id, $item_transfer_id): JsonResponse
     {
-        Route\Validate::resourceType(
-            $resource_type_id,
-            $this->permitted_resource_types
-        );
+        if ($this->viewAccessToResourceType((int) $resource_type_id) === false) {
+            \App\Response\Responses::notFoundOrNotAccessible(trans('entities.resource-type'));
+        }
 
-        $permissions = Route\Permission::resourceType(
-            (int) $resource_type_id,
-            $this->permitted_resource_types
-        );
-
-        $response = new ItemTransferItem($permissions);
+        $response = new ItemTransferItem($this->permissions((int) $resource_type_id));
 
         return $response->create()->response();
     }
@@ -148,24 +124,14 @@ class ItemTransferView extends Controller
         string $item_id
     ): JsonResponse
     {
-        Route\Validate::item(
-            $resource_type_id,
-            $resource_id,
-            $item_id,
-            $this->permitted_resource_types
-        );
+        if ($this->viewAccessToResourceType((int) $resource_type_id) === false) {
+            \App\Response\Responses::notFoundOrNotAccessible(trans('entities.item'));
+        }
 
-        $permissions = Route\Permission::item(
-            $resource_type_id,
-            $resource_id,
-            $item_id,
-            $this->permitted_resource_types
-        );
-
-        $response = new ItemTransferTransfer($permissions);
+        $response = new ItemTransferTransfer($this->permissions((int) $resource_type_id));
 
         return $response->setAllowedValues(
-                (new \App\Option\AllowedValues\Resource())->allowedValues(
+                (new \App\Option\AllowedValue\Resource())->allowedValues(
                     $resource_type_id,
                     $resource_id
                 )
@@ -187,10 +153,9 @@ class ItemTransferView extends Controller
         $item_transfer_id
     ): JsonResponse
     {
-        Route\Validate::resourceType(
-            (int) $resource_type_id,
-            $this->permitted_resource_types
-        );
+        if ($this->viewAccessToResourceType((int) $resource_type_id) === false) {
+            \App\Response\Responses::notFoundOrNotAccessible(trans('entities.item-transfer'));
+        }
 
         $item_transfer = (new ItemTransfer())->single(
             (int) $resource_type_id,

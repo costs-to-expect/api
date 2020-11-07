@@ -5,6 +5,7 @@ namespace App\Request\Validate\ItemType;
 
 use App\Entity\Item\Entity;
 use App\Request\Validate\Validator as BaseValidator;
+use Illuminate\Support\Facades\Validator as ValidatorFacade;
 
 /**
  * @author Dean Blackborough <dean@g3d-development.com>
@@ -27,6 +28,31 @@ class Game extends BaseValidator
 
     public function update(array $options = []): ?\Illuminate\Contracts\Validation\Validator
     {
-        return $this->updateItemValidator();
+        $merge_array = [];
+        if (array_key_exists('winner_id', request()->all())) {
+            $decode = $this->hash->category()->decode(request()->input('winner_id'));
+            $winner_id = null;
+            if (count($decode) === 1) {
+                $winner_id = $decode[0];
+            }
+
+            $merge_array = ['winner_id' => $winner_id];
+        }
+
+        $messages = [];
+        foreach ($this->entity->patchValidationMessages() as $key => $custom_message) {
+            $messages[$key] = trans($custom_message);
+        }
+
+        return ValidatorFacade::make(
+            array_merge(
+                request()->all(),
+                $merge_array
+            ),
+            $this->entity->patchValidation(),
+            $messages
+        );
     }
+
+
 }

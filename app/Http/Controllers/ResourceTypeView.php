@@ -3,13 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\Models\Resource;
-use App\Option\AllowedValues\ItemType;
+use App\Option\AllowedValue\ItemType;
 use App\Option\ResourceTypeCollection;
 use App\Option\ResourceTypeItem;
 use App\Response\Cache;
 use App\Response\Header\Headers;
 use App\Request\Parameter;
-use App\Request\Route;
 use App\Response\Pagination as UtilityPagination;
 use App\Models\ResourceType;
 use App\Models\Transformers\ResourceType as ResourceTypeTransformer;
@@ -27,20 +26,15 @@ class ResourceTypeView extends Controller
 {
     protected bool $allow_entire_collection = true;
 
-    /**
-     * Return all the resource types
-     *
-     * @return JsonResponse
-     */
     public function index(): JsonResponse
     {
-        $cache_control = new Cache\Control($this->user_id, true);
+        $cache_control = new Cache\Control( true, $this->user_id);
         $cache_control->setTtlOneWeek();
 
         $cache_collection = new Cache\Collection();
-        $cache_collection->setFromCache($cache_control->get(request()->getRequestUri()));
+        $cache_collection->setFromCache($cache_control->getByKey(request()->getRequestUri()));
 
-        if ($cache_control->cacheable() === false || $cache_collection->valid() === false) {
+        if ($cache_control->isRequestCacheable() === false || $cache_collection->valid() === false) {
 
             $search_parameters = Parameter\Search::fetch(
                 Config::get('api.resource-type.searchable')
@@ -51,20 +45,19 @@ class ResourceTypeView extends Controller
             );
 
             $total = (new ResourceType())->totalCount(
-                $this->permitted_resource_types,
-                $this->include_public,
+                $this->viewable_resource_types,
                 $search_parameters
             );
 
             $pagination = new UtilityPagination(request()->path(), $total);
-            $pagination_parameters = $pagination->allowPaginationOverride($this->allow_entire_collection)->
-                setSearchParameters($search_parameters)->
-                setSortParameters($sort_parameters)->
-                parameters();
+            $pagination_parameters = $pagination
+                ->allowPaginationOverride($this->allow_entire_collection)
+                ->setSearchParameters($search_parameters)
+                ->setSortParameters($sort_parameters)
+                ->parameters();
 
             $resource_types = (new ResourceType())->paginatedCollection(
-                $this->permitted_resource_types,
-                $this->include_public,
+                $this->viewable_resource_types,
                 $pagination_parameters['offset'],
                 $pagination_parameters['limit'],
                 $search_parameters,
@@ -79,39 +72,27 @@ class ResourceTypeView extends Controller
             );
 
             $headers = new Headers();
-            $headers->collection($pagination_parameters, count($resource_types), $total)->
-                addCacheControl($cache_control->visibility(), $cache_control->ttl())->
-                addETag($collection)->
-                addSearch(Parameter\Search::xHeader())->
-                addSort(Parameter\Sort::xHeader());
+            $headers
+                ->collection($pagination_parameters, count($resource_types), $total)
+                ->addCacheControl($cache_control->visibility(), $cache_control->ttl())
+                ->addETag($collection)
+                ->addSearch(Parameter\Search::xHeader())
+                ->addSort(Parameter\Sort::xHeader());
 
             $cache_collection->create($total, $collection, $pagination_parameters, $headers->headers());
-            $cache_control->put(request()->getRequestUri(), $cache_collection->content());
+            $cache_control->putByKey(request()->getRequestUri(), $cache_collection->content());
         }
 
         return response()->json($cache_collection->collection(), 200, $cache_collection->headers());
     }
 
-    /**
-     * Return a single resource type
-     *
-     * @param string $resource_type_id
-     *
-     * @return JsonResponse
-     */
-    public function show(string $resource_type_id): JsonResponse
+    public function show($resource_type_id): JsonResponse
     {
-        Route\Validate::resourceType(
-            $resource_type_id,
-            $this->permitted_resource_types
-        );
-
         $parameters = Parameter\Request::fetch(array_keys(Config::get('api.resource-type.parameters.item')));
 
         $resource_type = (new ResourceType())->single(
             $resource_type_id,
-            $this->permitted_resource_types,
-            $this->include_public
+            $this->viewable_resource_types
         );
 
         if ($resource_type === null) {
@@ -138,11 +119,6 @@ class ResourceTypeView extends Controller
         );
     }
 
-    /**
-     * Generate the OPTIONS request for the resource type list
-     *
-     * @return JsonResponse
-     */
     public function optionsIndex(): JsonResponse
     {
         $response = new ResourceTypeCollection(['view'=> $this->user_id !== null, 'manage'=> $this->user_id !== null]);
@@ -152,26 +128,9 @@ class ResourceTypeView extends Controller
             ->response();
     }
 
-    /**
-     * Generate the OPTIONS request fir a specific resource type
-     *
-     * @param string $resource_type_id
-     *
-     * @return JsonResponse
-     */
-    public function optionsShow(string $resource_type_id): JsonResponse
+    public function optionsShow($resource_type_id): JsonResponse
     {
-        Route\Validate::resourceType(
-            $resource_type_id,
-            $this->permitted_resource_types
-        );
-
-        $permissions = Route\Permission::resourceType(
-            $resource_type_id,
-            $this->permitted_resource_types
-        );
-
-        $response = new ResourceTypeItem($permissions);
+        $response = new ResourceTypeItem($this->permissions((int) $resource_type_id));
 
         return $response->create()->response();
     }

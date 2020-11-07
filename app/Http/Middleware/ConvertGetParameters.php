@@ -2,10 +2,9 @@
 
 namespace App\Http\Middleware;
 
+use App\Request\Hash;
 use Closure;
-use Hashids\Hashids;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Config;
 
 /**
  * Convert hashed GET params, decode the value and reset in the request
@@ -25,28 +24,21 @@ class ConvertGetParameters
      */
     public function handle($request, Closure $next)
     {
-        $config = Config::get('api.app.hashids');
+        $hash = new Hash();
 
-        $min_length = $config['min-length'];
-
-        $parameters = [
-            'category' => new Hashids($config['category'], $min_length),
-            'subcategory' => new Hashids($config['subcategory'], $min_length),
-            'resource-type' => new Hashids($config['resource-type'], $min_length),
-            'item' => new Hashids($config['item'], $min_length)
+        $params_to_convert = [
+            'category',
+            'subcategory',
+            'resource-type',
+            'item'
         ];
-
-        $params_to_convert = array_keys($parameters);
 
         foreach ($params_to_convert as $param) {
             $param_value = $request->query($param);
             if ($param_value !== null) {
-                $id = $parameters[$param]->decode($param_value);
-                if (is_array($id) && array_key_exists(0, $id)) {
-                    $request->request->add([$param => $id[0]]);
-                } else {
-                    $request->request->add([$param => 'nill']);
-                }
+                $id = $hash->decode($param, $param_value);
+                is_int($id) ? $value = $id : $value = null;
+                $request->request->add([$param => $value]);
             }
         }
 

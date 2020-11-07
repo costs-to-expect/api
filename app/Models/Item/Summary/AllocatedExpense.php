@@ -6,7 +6,6 @@ namespace App\Models\Item\Summary;
 use App\Interfaces\Item\ISummaryModelCategories;
 use App\Interfaces\Item\ISummaryModel;
 use App\Models\Clause;
-use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Query\Builder as QueryBuilder;
 use Illuminate\Support\Facades\DB;

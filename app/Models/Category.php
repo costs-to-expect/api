@@ -39,29 +39,20 @@ class Category extends Model
         return array_keys(Config::get('api.category.validation.PATCH.fields'));
     }
 
-    /**
-     * @param integer $resource_type_id
-     * @param array $permitted_resource_types
-     * @param boolean $include_public
-     * @param array $search_parameters
-     *
-     * @return integer
-     */
     public function total(
         int $resource_type_id,
-        array $permitted_resource_types,
-        bool $include_public,
+        array $viewable_resource_types,
         array $search_parameters = []
     ): int
     {
-        $collection = $this->select('category.id')->
-            join("resource_type", "category.resource_type_id", "resource_type.id")->
-            where('category.resource_type_id', '=', $resource_type_id);
+        $collection = $this
+            ->select('category.id')
+            ->join("resource_type", "category.resource_type_id", "resource_type.id")
+            ->where('category.resource_type_id', '=', $resource_type_id);
 
-        $collection = Clause::applyPermittedResourceTypes(
+        $collection = Clause::applyViewableResourceTypes(
             $collection,
-            $permitted_resource_types,
-            $include_public
+            $viewable_resource_types
         );
 
         $collection = Clause::applySearch($collection, $this->table, $search_parameters);
@@ -69,55 +60,41 @@ class Category extends Model
         return $collection->count();
     }
 
-    /**
-     * Return the paginated collection
-     *
-     * @param integer $resource_type_id
-     * @param array $permitted_resource_types
-     * @param boolean $include_public Should we include categories assigned to public resources
-     * @param integer $offset
-     * @param integer $limit
-     * @param array $search_parameters
-     * @param array $sort_parameters
-     *
-     * @return array
-     */
     public function paginatedCollection(
         int $resource_type_id,
-        array $permitted_resource_types,
-        bool $include_public,
+        array $viewable_resource_types,
         int $offset = 0,
         int $limit = 10,
         array $search_parameters = [],
         array $sort_parameters = []
     ): array {
-        $collection = $this->select(
-            'category.id AS category_id',
-            'category.name AS category_name',
-            'category.description AS category_description',
-            'category.created_at AS category_created_at',
-            'category.updated_at AS category_updated_at',
-            'resource_type.id AS resource_type_id',
-            'resource_type.name AS resource_type_name',
-            'resource_type.name AS resource_type_name'
-        )->
-        selectRaw('
-            (
-                SELECT 
-                    COUNT(`sub_category`.`id`) 
-                FROM 
-                    `sub_category` 
-                WHERE 
-                    `sub_category`.`category_id` = `category`.`id`
-            ) AS `category_subcategories`'
-        )->
-        join("resource_type", "category.resource_type_id", "resource_type.id")->
-        where('category.resource_type_id', '=', $resource_type_id);
+        $collection = $this
+            ->select(
+                'category.id AS category_id',
+                'category.name AS category_name',
+                'category.description AS category_description',
+                'category.created_at AS category_created_at',
+                'category.updated_at AS category_updated_at',
+                'resource_type.id AS resource_type_id',
+                'resource_type.name AS resource_type_name',
+                'resource_type.name AS resource_type_name'
+            )
+            ->selectRaw('
+                (
+                    SELECT 
+                        COUNT(`sub_category`.`id`) 
+                    FROM 
+                        `sub_category` 
+                    WHERE 
+                        `sub_category`.`category_id` = `category`.`id`
+                ) AS `category_subcategories`'
+            )
+            ->join("resource_type", "category.resource_type_id", "resource_type.id")
+            ->where('category.resource_type_id', '=', $resource_type_id);
 
-        $collection = Clause::applyPermittedResourceTypes(
+        $collection = Clause::applyViewableResourceTypes(
             $collection,
-            $permitted_resource_types,
-            $include_public
+            $viewable_resource_types
         );
 
         $collection = Clause::applySearch($collection, $this->table, $search_parameters);

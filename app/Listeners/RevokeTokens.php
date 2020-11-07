@@ -3,7 +3,6 @@
 namespace App\Listeners;
 
 use Illuminate\Support\Facades\DB;
-use Laravel\Passport\Client;
 use Laravel\Passport\Events\AccessTokenCreated;
 
 class RevokeTokens

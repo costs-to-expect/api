@@ -7,7 +7,6 @@ use App\Option\ItemSubcategoryCollection;
 use App\Option\ItemSubcategoryItem;
 use App\Response\Cache;
 use App\Response\Header\Header;
-use App\Request\Route;
 use App\Models\ItemCategory;
 use App\Models\ItemSubcategory;
 use App\Models\Transformers\ItemSubcategory as ItemSubcategoryTransformer;
@@ -39,23 +38,20 @@ class ItemSubcategoryView extends Controller
         string $item_category_id
     ): JsonResponse
     {
-        Route\Validate::item(
-            $resource_type_id,
-            $resource_id,
-            $item_id,
-            $this->permitted_resource_types
-        );
+        if ($this->viewAccessToResourceType((int) $resource_type_id) === false) {
+            \App\Response\Responses::notFoundOrNotAccessible(trans('entities.item-category'));
+        }
 
         $cache_control = new Cache\Control(
-            $this->user_id,
-            in_array((int) $resource_type_id, $this->permitted_resource_types, true)
+            $this->writeAccessToResourceType((int) $resource_type_id),
+            $this->user_id
         );
         $cache_control->setTtlOneWeek();
 
         $cache_collection = new Cache\Collection();
-        $cache_collection->setFromCache($cache_control->get(request()->getRequestUri()));
+        $cache_collection->setFromCache($cache_control->getByKey(request()->getRequestUri()));
 
-        if ($cache_control->cacheable() === false || $cache_collection->valid() === false) {
+        if ($cache_control->isRequestCacheable() === false || $cache_collection->valid() === false) {
 
             $item_sub_category = (new ItemSubcategory())->paginatedCollection(
                 $resource_type_id,
@@ -81,39 +77,25 @@ class ItemSubcategoryView extends Controller
             $headers->addCacheControl($cache_control->visibility(), $cache_control->ttl());
 
             $cache_collection->create(count($collection), $collection, [], $headers->headers());
-            $cache_control->put(request()->getRequestUri(), $cache_collection->content());
+            $cache_control->putByKey(request()->getRequestUri(), $cache_collection->content());
         }
 
         return response()->json($cache_collection->collection(), 200, $cache_collection->headers());
     }
 
-    /**
-     * Return a single item
-     *
-     * @param string $resource_id
-     * @param string $resource_type_id
-     * @param string $item_id
-     * @param string $item_category_id
-     * @param string $item_subcategory_id
-     *
-     * @return JsonResponse
-     */
     public function show(
         string $resource_type_id,
         string $resource_id,
         string $item_id,
-        string $item_category_id,
-        string $item_subcategory_id
+        string $item_category_id = null,
+        string $item_subcategory_id = null
     ): JsonResponse
     {
-        Route\Validate::item(
-            $resource_type_id,
-            $resource_id,
-            $item_id,
-            $this->permitted_resource_types
-        );
+        if ($this->viewAccessToResourceType((int) $resource_type_id) === false) {
+            \App\Response\Responses::notFoundOrNotAccessible(trans('entities.item-subcategory'));
+        }
 
-        if ($item_category_id === 'nill' || $item_subcategory_id === 'nill') {
+        if ($item_category_id === null || $item_subcategory_id === null) {
             return \App\Response\Responses::notFound(trans('entities.item-subcategory'));
         }
 
@@ -139,38 +121,18 @@ class ItemSubcategoryView extends Controller
         );
     }
 
-    /**
-     * Generate the OPTIONS request for the item list
-     *
-     * @param string $resource_type_id
-     * @param string $resource_id
-     * @param string $item_id
-     * @param string $item_category_id
-     *
-     * @return JsonResponse
-     */
     public function optionsIndex(
         string $resource_type_id,
         string $resource_id,
         string $item_id,
-        string $item_category_id
+        string $item_category_id = null
     ): JsonResponse
     {
-        Route\Validate::item(
-            $resource_type_id,
-            $resource_id,
-            $item_id,
-            $this->permitted_resource_types
-        );
+        if ($this->viewAccessToResourceType((int) $resource_type_id) === false) {
+            \App\Response\Responses::notFoundOrNotAccessible(trans('entities.item-category'));
+        }
 
-        $permissions = Route\Permission::item(
-            $resource_type_id,
-            $resource_id,
-            $item_id,
-            $this->permitted_resource_types
-        );
-
-        if ($item_category_id === 'nill') {
+        if ($item_category_id === null) {
             return \App\Response\Responses::notFound(trans('entities.item-subcategory'));
         }
 
@@ -179,51 +141,30 @@ class ItemSubcategoryView extends Controller
             return \App\Response\Responses::notFound(trans('entities.item-category'));
         }
 
-        $response = new ItemSubcategoryCollection($permissions);
+        $response = new ItemSubcategoryCollection($this->permissions((int) $resource_type_id));
 
         return $response
             ->setEntity(Entity::item($resource_type_id))
             ->setAllowedValues(
-                (new \App\Option\AllowedValues\Subcategory())->allowedValues($item_category->category_id)
+                (new \App\Option\AllowedValue\Subcategory())->allowedValues($item_category->category_id)
             )
             ->create()
             ->response();
     }
 
-    /**
-     * Generate the OPTIONS request for a specific item
-     *
-     * @param string $resource_id
-     * @param string $resource_type_id
-     * @param string $item_id
-     * @param string $item_category_id
-     * @param string $item_subcategory_id
-     *
-     * @return JsonResponse
-     */
     public function optionsShow(
         string $resource_type_id,
         string $resource_id,
         string $item_id,
-        string $item_category_id,
-        string $item_subcategory_id
+        string $item_category_id = null,
+        string $item_subcategory_id = null
     ): JsonResponse
     {
-        Route\Validate::item(
-            $resource_type_id,
-            $resource_id,
-            $item_id,
-            $this->permitted_resource_types
-        );
+        if ($this->viewAccessToResourceType((int) $resource_type_id) === false) {
+            \App\Response\Responses::notFoundOrNotAccessible(trans('entities.item-subcategory'));
+        }
 
-        $permissions = Route\Permission::item(
-            $resource_type_id,
-            $resource_id,
-            $item_id,
-            $this->permitted_resource_types
-        );
-
-        if ($item_category_id === 'nill' || $item_subcategory_id === 'nill') {
+        if ($item_category_id === null || $item_subcategory_id === null) {
             return \App\Response\Responses::notFound(trans('entities.item-subcategory'));
         }
 
@@ -239,7 +180,7 @@ class ItemSubcategoryView extends Controller
             return \App\Response\Responses::notFound(trans('entities.item-subcategory'));
         }
 
-        $response = new ItemSubcategoryItem($permissions);
+        $response = new ItemSubcategoryItem($this->permissions((int) $resource_type_id));
 
         return $response->create()->response();
     }

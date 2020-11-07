@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace App\Entity\Item;
 
 use App\Models\Transformers\Transformer;
+use App\Request\Hash;
 use App\Request\Validate\Validator;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Config as LaravelConfig;
@@ -18,6 +19,11 @@ class Game extends Item
         $this->resource_type_base_path = 'api.resource-type-item-type-game';
 
         parent::__construct();
+    }
+
+    public function allowedValuesForItem(int $resource_type_id): array
+    {
+        return (new \App\Option\AllowedValue\Winner())->allowedValues($resource_type_id);
     }
 
     public function categoryAssignmentLimit(): int
@@ -80,6 +86,19 @@ class Game extends Item
     public function update(array $patch, Model $instance): bool
     {
         foreach ($patch as $key => $value) {
+            if ($key === 'winner_id') {
+                $key = 'winner';
+
+                if ($value !== null) {
+                    $winner = (new Hash())->decode('category', request()->input('winner_id'));
+
+                    $value = null;
+                    if ($winner !== false) {
+                        $value = $winner;
+                    }
+                }
+            }
+
             $instance->$key = $value;
         }
 
@@ -145,5 +164,15 @@ class Game extends Item
     public function summaryTransformerByResource(array $data_to_transform): Transformer
     {
         return new \App\Models\Transformers\Item\Summary\GameItemByResource($data_to_transform);
+    }
+
+    protected function allowedValuesItemCollectionClass(): string
+    {
+        return \App\Option\AllowedValue\Item\Game::class;
+    }
+
+    protected function allowedValuesResourceTypeItemCollectionClass(): string
+    {
+        return \App\Option\AllowedValue\ResourceTypeItem\Game::class;
     }
 }

@@ -4,7 +4,7 @@ declare(strict_types=1);
 namespace App\Request\Parameter;
 
 use App\Entity\Item\Entity;
-use App\Models\EntityConfig;
+use App\Models\EntityLimits;
 use App\Models\Category;
 use App\Models\ResourceType;
 use App\Models\Subcategory;
@@ -35,8 +35,7 @@ class Request
 
         foreach ($parameter_names as $parameter) {
             if (array_key_exists($parameter, $request_parameters) === true &&
-                $request_parameters[$parameter] !== null &&
-                $request_parameters[$parameter] !== 'nill') {
+                $request_parameters[$parameter] !== null) {
 
                 switch ($parameter) {
                     case 'include-resources';
@@ -145,7 +144,7 @@ class Request
                         $min_year_limit = (int) Date('Y');
                         $max_year_limit = (int) Date('Y');
 
-                        $entity_model = new EntityConfig();
+                        $entity_model = new EntityLimits();
                         $entity = Entity::item($resource_type_id);
 
                         if ($resource_type_id !== null && $resource_id === null) {

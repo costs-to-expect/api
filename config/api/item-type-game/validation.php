@@ -20,17 +20,17 @@ return [
     'PATCH' => [
         'fields' => [
             'game' => [
-                'required',
+                'sometimes',
                 'json'
             ],
             'statistics' => [
                 'sometimes',
                 'json'
             ],
-            'winner' => [
+            'winner_id' => [
                 'sometimes',
-                'string',
-                'size:10'
+                'nullable',
+                'exists:category,id'
             ],
             'score' => [
                 'sometimes',
@@ -42,6 +42,8 @@ return [
                 'boolean'
             ]
         ],
-        'messages' => []
+        'messages' => [
+            'winner_id.exists' => 'item-type-game/validation.winner_id-exists'
+        ]
     ]
 ];

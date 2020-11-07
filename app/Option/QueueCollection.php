@@ -3,8 +3,6 @@ declare(strict_types=1);
 
 namespace App\Option;
 
-use Illuminate\Support\Facades\Config;
-
 class QueueCollection extends Response
 {
     public function create()

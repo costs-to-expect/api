@@ -20,27 +20,15 @@ class ItemTransfer extends Model
 
     protected $guarded = ['id', 'created_at', 'updated_at'];
 
-    /**
-     * Return the paginated collection
-     *
-     * @param integer $resource_type_id
-     * @param array $permitted_resource_types
-     * @param boolean $include_public
-     * @param integer $offset
-     * @param integer $limit
-     * @param array $parameters
-     *
-     * @return array
-     */
     public function paginatedCollection(
         int $resource_type_id,
-        array $permitted_resource_types,
-        bool $include_public,
+        array $viewable_resource_types,
         int $offset = 0,
         int $limit = 10,
         array $parameters = []
     ): array {
-        $collection = $this->select(
+        $collection = $this
+            ->select(
                 $this->table . '.id',
                 $this->table . '.item_id',
                 $this->table . '.created_at',
@@ -50,23 +38,22 @@ class ItemTransfer extends Model
                 'to_resource.name AS to_resource_name',
                 'users.id AS user_id',
                 'users.name AS user_name'
-            )->
-            join("resource_type",$this->table . ".resource_type_id","resource_type.id")->
-            join("resource AS from_resource",$this->table . ".from","from_resource.id")->
-            join("resource AS to_resource",$this->table . ".to","to_resource.id")->
-            join("item",$this->table . ".item_id","item.id")->
-            join("users",$this->table . ".transferred_by","users.id")->
-            where($this->table .'.resource_type_id', '=', $resource_type_id);
+            )
+            ->join("resource_type",$this->table . ".resource_type_id","resource_type.id")
+            ->join("resource AS from_resource",$this->table . ".from","from_resource.id")
+            ->join("resource AS to_resource",$this->table . ".to","to_resource.id")
+            ->join("item",$this->table . ".item_id","item.id")
+            ->join("users",$this->table . ".transferred_by","users.id")
+            ->where($this->table .'.resource_type_id', '=', $resource_type_id);
 
         if (array_key_exists('item', $parameters) === true &&
             $parameters['item'] !== null) {
             $collection->where($this->table .'.item_id', '=', $parameters['item']);
         }
 
-        $collection = Clause::applyPermittedResourceTypes(
+        $collection = Clause::applyViewableResourceTypes(
             $collection,
-            $permitted_resource_types,
-            $include_public
+            $viewable_resource_types
         );
 
         $collection->offset($offset);
@@ -115,38 +102,29 @@ class ItemTransfer extends Model
         }
     }
 
-    /**
-     * @param integer $resource_type_id
-     * @param array $permitted_resource_types
-     * @param boolean $include_public
-     * @param array $parameters
-     *
-     * @return integer
-     */
     public function total(
         int $resource_type_id,
-        array $permitted_resource_types,
-        bool $include_public,
+        array $viewable_resource_types,
         array $parameters = []
     ): int
     {
-        $collection = $this->select($this->table . '.id')->
-            join("resource_type",$this->table . ".resource_type_id","resource_type.id")->
-            join("resource AS from_resource",$this->table . ".from","from_resource.id")->
-            join("resource AS to_resource",$this->table . ".to","to_resource.id")->
-            join("item",$this->table . ".item_id","item.id")->
-            join("users",$this->table . ".transferred_by","users.id")->
-            where($this->table .'.resource_type_id', '=', $resource_type_id);
+        $collection = $this
+            ->select($this->table . '.id')
+            ->join("resource_type",$this->table . ".resource_type_id","resource_type.id")
+            ->join("resource AS from_resource",$this->table . ".from","from_resource.id")
+            ->join("resource AS to_resource",$this->table . ".to","to_resource.id")
+            ->join("item",$this->table . ".item_id","item.id")
+            ->join("users",$this->table . ".transferred_by","users.id")
+            ->where($this->table .'.resource_type_id', '=', $resource_type_id);
 
         if (array_key_exists('item', $parameters) === true &&
             $parameters['item'] !== null) {
             $collection->where($this->table .'.item_id', '=', $parameters['item']);
         }
 
-        $collection = Clause::applyPermittedResourceTypes(
+        $collection = Clause::applyViewableResourceTypes(
             $collection,
-            $permitted_resource_types,
-            $include_public
+            $viewable_resource_types
         );
 
         return $collection->count();

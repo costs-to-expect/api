@@ -77,26 +77,31 @@ class ItemCategory extends Model
         int $item_category_id
     ): ?array
     {
-        $result = $this->join('category', 'item_category.category_id', 'category.id')->
-            join('item', 'item_category.item_id', 'item.id')->
-            join('resource', 'item.resource_id', 'resource.id')->
-            where('item_category.item_id', '=', $item_id)->
-            where('resource.id', '=', $resource_id)->
-            where('resource.resource_type_id', '=', $resource_type_id)->
-            select(
+        $result = $this
+            ->join('category', 'item_category.category_id', 'category.id')
+            ->join('item', 'item_category.item_id', 'item.id')
+            ->join('resource', 'item.resource_id', 'resource.id')
+            ->where('item_category.item_id', '=', $item_id)
+            ->where('resource.id', '=', $resource_id)
+            ->where('resource.resource_type_id', '=', $resource_type_id)
+            ->select(
                 'item_category.id AS item_category_id',
                 'item_category.created_at AS item_category_created_at',
                 'category.id AS item_category_category_id',
                 'category.name AS item_category_category_name',
                 'category.description AS item_category_category_description'
-            )->
-            find($item_category_id);
+            );
 
-        if ($result !== null) {
-            return $result->toArray();
-        } else {
+        $result = $result
+            ->where($this->table . '.id', '=', $item_category_id)
+            ->get()
+            ->toArray();
+
+        if (count($result) === 0) {
             return null;
         }
+
+        return $result[0];
     }
 
     public function instance(

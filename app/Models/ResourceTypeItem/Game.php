@@ -67,17 +67,20 @@ class Game extends Model implements IModel
             "{$this->table}.description AS item_description",
             "{$this->table}.game AS item_game",
             "{$this->table}.statistics AS item_statistics",
-            "{$this->table}.winner AS item_winner",
+            "category.id AS item_winner_id",
+            "category.name AS item_winner_name",
             "{$this->table}.score AS item_score",
             "{$this->table}.complete AS item_complete",
             "{$this->table}.created_at AS item_created_at",
             "{$this->table}.updated_at AS item_updated_at"
         ];
 
-        $collection = $this->from('item')
+        $collection = $this
+            ->from('item')
             ->join($this->table, 'item.id', "{$this->table}.item_id")
             ->join('resource', 'item.resource_id', 'resource.id')
             ->join('resource_type', 'resource.resource_type_id', 'resource_type.id')
+            ->leftJoin('category', $this->table . '.winner', 'category.id')
             ->where('resource_type.id', '=', $resource_type_id);
 
         $collection = Clause::applySearch(
@@ -107,10 +110,9 @@ class Game extends Model implements IModel
             $collection->orderBy('item.created_at', 'desc');
         }
 
-        $collection->offset($offset);
-        $collection->limit($limit);
-
         return $collection
+            ->offset($offset)
+            ->limit($limit)
             ->select($select_fields)
             ->get()
             ->toArray();

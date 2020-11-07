@@ -11,6 +11,7 @@ use App\Request\Parameter;
 use App\Request\Route;
 use App\Response\Pagination as UtilityPagination;
 use App\Models\Transformers\ItemType as ItemTypeTransformer;
+use App\Response\Responses;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Config;
 
@@ -32,13 +33,13 @@ class ItemTypeView extends Controller
      */
     public function index(): JsonResponse
     {
-        $cache_control = new Cache\Control($this->user_id);
+        $cache_control = new Cache\Control();
         $cache_control->setTtlOneYear();
 
         $cache_collection = new Cache\Collection();
-        $cache_collection->setFromCache($cache_control->get(request()->getRequestUri()));
+        $cache_collection->setFromCache($cache_control->getByKey(request()->getRequestUri()));
 
-        if ($cache_control->cacheable() === false || $cache_collection->valid() === false) {
+        if ($cache_control->isRequestCacheable() === false || $cache_collection->valid() === false) {
 
             $search_parameters = Parameter\Search::fetch(
                 Config::get('api.item-type.searchable')
@@ -78,7 +79,7 @@ class ItemTypeView extends Controller
                 addSort(Parameter\Sort::xHeader());
 
             $cache_collection->create($total, $collection, $pagination_parameters, $headers->headers());
-            $cache_control->put(request()->getRequestUri(), $cache_collection->content());
+            $cache_control->putByKey(request()->getRequestUri(), $cache_collection->content());
         }
 
         return response()->json($cache_collection->collection(), 200, $cache_collection->headers());
@@ -93,7 +94,9 @@ class ItemTypeView extends Controller
      */
     public function show(string $item_type_id): JsonResponse
     {
-        Route\Validate::itemType($item_type_id);
+        if (Route\Validate\ItemType::existsToUserForViewing($item_type_id) === false) {
+            Responses::notFound(trans('entities.item-type'));
+        }
 
         $item_type = (new ItemType())->single($item_type_id);
 
@@ -132,7 +135,9 @@ class ItemTypeView extends Controller
      */
     public function optionsShow(string $item_type_id): JsonResponse
     {
-        Route\Validate::itemType($item_type_id);
+        if (Route\Validate\ItemType::existsToUserForViewing($item_type_id) === false) {
+            Responses::notFound(trans('entities.item-type'));
+        }
 
         $response = new ItemTypeItem(['view'=> $this->user_id !== null]);
 

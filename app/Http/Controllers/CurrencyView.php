@@ -8,7 +8,6 @@ use App\Option\CurrencyItem;
 use App\Response\Cache;
 use App\Response\Header\Headers;
 use App\Request\Parameter;
-use App\Request\Route;
 use App\Response\Pagination as UtilityPagination;
 use App\Models\Transformers\Currency as CurrencyTransformer;
 use Illuminate\Http\JsonResponse;
@@ -30,13 +29,13 @@ class CurrencyView extends Controller
      */
     public function index(): JsonResponse
     {
-        $cache_control = new Cache\Control($this->user_id);
+        $cache_control = new Cache\Control();
         $cache_control->setTtlOneYear();
 
         $cache_collection = new Cache\Collection();
-        $cache_collection->setFromCache($cache_control->get(request()->getRequestUri()));
+        $cache_collection->setFromCache($cache_control->getByKey(request()->getRequestUri()));
 
-        if ($cache_control->cacheable() === false || $cache_collection->valid() === false) {
+        if ($cache_control->isRequestCacheable() === false || $cache_collection->valid() === false) {
 
             $search_parameters = Parameter\Search::fetch(
                 Config::get('api.currency.searchable')
@@ -76,7 +75,7 @@ class CurrencyView extends Controller
                 addSort(Parameter\Sort::xHeader());
 
             $cache_collection->create($total, $collection, $pagination_parameters, $headers->headers());
-            $cache_control->put(request()->getRequestUri(), $cache_collection->content());
+            $cache_control->putByKey(request()->getRequestUri(), $cache_collection->content());
         }
 
         return response()->json($cache_collection->collection(), 200, $cache_collection->headers());
@@ -91,7 +90,9 @@ class CurrencyView extends Controller
      */
     public function show(string $currency_id): JsonResponse
     {
-        Route\Validate::currency($currency_id);
+        if (\App\Request\Route\Validate\Currency::existsToUserForViewing($currency_id) === false) {
+            \App\Response\Responses::notFound(trans('entities.currency'));
+        }
 
         $currency = (new Currency())->single($currency_id);
 
@@ -130,7 +131,9 @@ class CurrencyView extends Controller
      */
     public function optionsShow(string $currency_id): JsonResponse
     {
-        Route\Validate::currency($currency_id);
+        if (\App\Request\Route\Validate\Currency::existsToUserForViewing($currency_id) === false) {
+            \App\Response\Responses::notFound(trans('entities.currency'));
+        }
 
         $response = new CurrencyItem(['view'=> $this->user_id !== null]);
 

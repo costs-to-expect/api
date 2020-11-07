@@ -32,6 +32,17 @@ class Game extends Transformer
             ];
        }
 
+       $winner = null;
+       if (
+           array_key_exists('item_winner_id', $to_transform) &&
+           array_key_exists('item_winner_name', $to_transform) &&
+           $to_transform['item_winner_id'] !== null
+       ) {
+            $winner = [
+                'id' => $this->hash->category()->encode($to_transform['item_winner_id']),
+                'name' => $to_transform['item_winner_name']
+            ];
+       }
 
         $this->transformed = [
             'id' => $this->hash->item()->encode($to_transform['item_id']),
@@ -39,7 +50,7 @@ class Game extends Transformer
             'description' => $to_transform['item_description'],
             'game' => $game,
             'statistics' => $statistics,
-            'winner' => $to_transform['item_winner'],
+            'winner' => $winner,
             'score' => $to_transform['item_score'],
             'complete' => $to_transform['item_complete'],
             'created' => $to_transform['item_created_at'],

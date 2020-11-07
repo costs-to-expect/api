@@ -1,11 +1,11 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Option\AllowedValues;
+namespace App\Option\AllowedValue;
 
 use App\Entity\Item\Item as Entity;
 use App\Models\Category;
-use App\Models\EntityConfig;
+use App\Models\EntityLimits;
 use App\Models\Subcategory;
 use App\Request\Hash;
 
@@ -15,7 +15,7 @@ class ResourceItem
 
     private Entity $entity;
 
-    private EntityConfig $model;
+    private EntityLimits $model;
 
     public function __construct(Entity $entity)
     {
@@ -23,7 +23,7 @@ class ResourceItem
 
         $this->entity = $entity;
 
-        $this->model = new EntityConfig();
+        $this->model = new EntityLimits();
     }
 
     /**
@@ -32,8 +32,7 @@ class ResourceItem
     public function allowedValues(
         int $resource_type_id,
         int $resource_id,
-        array $permitted_resource_types,
-        bool $include_public,
+        array $viewable_resource_types,
         array $available_parameters,
         array $defined_parameters,
         bool $include_currencies = false
@@ -56,8 +55,7 @@ class ResourceItem
         if (array_key_exists('category', $available_parameters)) {
             $categories = $this->allowedValuesForCategory(
                 $resource_type_id,
-                $permitted_resource_types,
-                $include_public
+                $viewable_resource_types
             );
         }
 
@@ -90,25 +88,16 @@ class ResourceItem
         );
     }
 
-    /**
-     * @param integer $resource_type_id
-     * @param array $permitted_resource_types
-     * @param bool $include_public
-     *
-     * @return array
-     */
     protected function allowedValuesForCategory(
         int $resource_type_id,
-        array $permitted_resource_types,
-        bool $include_public
+        array $viewable_resource_types
     ): array
     {
         $parameters = ['category' => ['allowed_values' => []]];
 
         $categories = (new Category())->paginatedCollection(
             $resource_type_id,
-            $permitted_resource_types,
-            $include_public,
+            $viewable_resource_types,
             0,
             100
         );

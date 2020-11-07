@@ -2,20 +2,23 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\ResourceTypeAccess;
+use App\Models\ResourceType;
+use App\Models\ResourceAccess;
 use App\Request\Hash;
 use App\Request\Validate\Boolean;
+use App\Response\Cache\Collection;
+use App\Response\Cache\Control;
 use Illuminate\Routing\Controller as BaseController;
 
 class Controller extends BaseController
 {
     protected Hash $hash;
 
-    protected bool $include_public;
+    protected bool $include_public = true;
 
     protected array $permitted_resource_types = [];
 
-    protected ResourceTypeAccess $resource_type_access;
+    protected array $viewable_resource_types = [];
 
     /**
      * @var integer|null
@@ -31,30 +34,101 @@ class Controller extends BaseController
     {
         $this->hash = new Hash();
 
-        $this->resource_type_access = new ResourceTypeAccess();
+        $this->excludePublicResourceTypes();
 
-        $this->middleware(function ($request, $next) {
-            $this->setGlobalPropertyValues();
+        $this->setPermittedResourceTypes();
 
-            return $next($request);
-        });
+        $this->setViewableResourceTypes();
     }
 
-    /**
-     * Set the values for the controller properties, used by every controller
-     *
-     * @return void
-     */
-    protected function setGlobalPropertyValues(): void
+    protected function excludePublicResourceTypes(): void
     {
-        $this->include_public = true;
         if (Boolean::convertedValue(request()->query('exclude-public')) === true) {
             $this->include_public = false;
         }
+    }
 
+    protected function setPermittedResourceTypes(): void
+    {
         if (auth('api')->user() !== null && auth()->guard('api')->check() === true) {
             $this->user_id = auth('api')->user()->id; // Safe as check above ensures not null
-            $this->permitted_resource_types = $this->resource_type_access->permittedResourceTypes($this->user_id);
+
+            $cache_control = new Control(true, $this->user_id);
+            $cache_control->setTtlOneDay();
+
+            $cache_collection = new Collection();
+            $cache_collection->setFromCache($cache_control->getByKey('/v2/permitted-resource-types'));
+
+            if ($cache_control->isRequestCacheable() === false || $cache_collection->valid() === false) {
+
+                $permitted_resource_types = (new ResourceAccess())->permittedResourceTypes($this->user_id);
+
+                $cache_collection->create(
+                    count($permitted_resource_types),
+                    $permitted_resource_types,
+                    [],
+                    []
+                );
+                $cache_control->putByKey('/v2/permitted-resource-types', $cache_collection->content());
+            }
+
+            $this->permitted_resource_types = $cache_collection->collection();
         }
+    }
+
+    protected function setViewableResourceTypes(): void
+    {
+        $cache_control = new Control();
+
+        if (
+            auth('api')->user() !== null &&
+            auth()->guard('api')->check() === true
+        ) {
+            $cache_control = new Control(true, $this->user_id);
+        }
+
+        $cache_control->setTtlOneDay();
+
+        $uri = '/v2/viewable-resource-types?exclude-public=' . ($this->include_public === true ? 'false' : 'true');
+
+        $cache_collection = new Collection();
+        $cache_collection->setFromCache($cache_control->getByKey($uri));
+
+        if ($cache_control->isRequestCacheable() === false || $cache_collection->valid() === false) {
+
+            $viewable_resource_types = array_merge(
+                ($this->include_public === true ? (new ResourceType())->publicResourceTypes() : []),
+                $this->permitted_resource_types
+            );
+
+            $cache_collection->create(
+                count($viewable_resource_types),
+                $viewable_resource_types,
+                [],
+                []
+            );
+
+            $cache_control->putByKey($uri, $cache_collection->content());
+        }
+
+        $this->viewable_resource_types = $cache_collection->collection();
+    }
+
+    protected function writeAccessToResourceType(int $resource_type_id): bool
+    {
+        return in_array($resource_type_id, $this->permitted_resource_types, true) === true;
+    }
+
+    protected function viewAccessToResourceType(int $resource_type_id): bool
+    {
+        return in_array($resource_type_id, $this->viewable_resource_types, true) === true;
+    }
+
+    protected function permissions(int $resource_type_id): array
+    {
+        return [
+            'view' => $this->viewAccessToResourceType($resource_type_id),
+            'manage' => $this->writeAccessToResourceType($resource_type_id)
+        ];
     }
 }

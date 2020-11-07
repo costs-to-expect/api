@@ -2,9 +2,8 @@
 
 namespace App\Http\Middleware;
 
+use App\Request\Hash;
 use Closure;
-use Hashids\Hashids;
-use Illuminate\Support\Facades\Config;
 
 /**
  * Convert hashed route params, decode the value and reset in the route
@@ -24,24 +23,22 @@ class ConvertRouteParameters
      */
     public function handle($request, Closure $next)
     {
-        $config = Config::get('api.app.hashids');
-
-        $min_length = $config['min-length'];
+        $hash = new Hash();
 
         $route_params = [
-            'category_id' => new Hashids($config['category'], $min_length),
-            'subcategory_id' => new Hashids($config['subcategory'], $min_length),
-            'resource_type_id' => new Hashids($config['resource-type'], $min_length),
-            'resource_id' => new Hashids($config['resource'], $min_length),
-            'item_id' => new Hashids($config['item'], $min_length),
-            'item_category_id' => new Hashids($config['item-category'], $min_length),
-            'item_partial_transfer_id' => new Hashids($config['item-partial-transfer'], $min_length),
-            'item_subcategory_id' => new Hashids($config['item-subcategory'], $min_length),
-            'item_transfer_id' => new Hashids($config['item-transfer'], $min_length),
-            'item_type_id' => new Hashids($config['item-type'], $min_length),
-            'item_subtype_id' => new Hashids($config['item-subtype'], $min_length),
-            'currency_id' => new Hashids($config['currency'], $min_length),
-            'queue_id' => new Hashids($config['queue'], $min_length),
+            'category_id' => 'category',
+            'subcategory_id' => 'subcategory',
+            'resource_type_id' => 'resource-type',
+            'resource_id' => 'resource',
+            'item_id' => 'item',
+            'item_category_id' => 'item-category',
+            'item_partial_transfer_id' => 'item-partial-transfer',
+            'item_subcategory_id' => 'item-subcategory',
+            'item_transfer_id' => 'item-transfer',
+            'item_type_id' => 'item-type',
+            'item_subtype_id' => 'item-subtype',
+            'currency_id' => 'currency',
+            'queue_id' => 'queue',
         ];
 
         $params_to_convert = array_keys($route_params);
@@ -49,12 +46,9 @@ class ConvertRouteParameters
         foreach ($params_to_convert as $param) {
             $param_value = $request->route($param);
             if ($param_value !== null) {
-                $id = $route_params[$param]->decode($param_value);
-                if (is_array($id) && array_key_exists(0, $id)) {
-                    $request->route()->setParameter($param, $id[0]);
-                } else {
-                    $request->route()->setParameter($param, 'nill');
-                }
+                $id = $hash->decode($route_params[$param], $param_value);
+                is_int($id) ? $value = $id : $value = null;
+                $request->route()->setParameter($param, $value);
             }
         }
 

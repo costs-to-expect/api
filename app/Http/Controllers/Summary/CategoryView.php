@@ -7,7 +7,6 @@ use App\Models\Summary\Category;
 use App\Option\SummaryCategoryCollection;
 use App\Response\Cache;
 use App\Request\Parameter;
-use App\Request\Route;
 use App\Response\Header\Headers;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Config;
@@ -30,21 +29,20 @@ class CategoryView extends Controller
      */
     public function index($resource_type_id): JsonResponse
     {
-        Route\Validate::resourceType(
-            $resource_type_id,
-            $this->permitted_resource_types
-        );
+        if ($this->viewAccessToResourceType((int) $resource_type_id) === false) {
+            \App\Response\Responses::notFoundOrNotAccessible(trans('entities.resource-type'));
+        }
 
         $cache_control = new Cache\Control(
-            $this->user_id,
-            in_array((int) $resource_type_id, $this->permitted_resource_types, true)
+            $this->writeAccessToResourceType((int) $resource_type_id),
+            $this->user_id
         );
         $cache_control->setTtlOneMonth();
 
         $cache_summary = new Cache\Summary();
-        $cache_summary->setFromCache($cache_control->get(request()->getRequestUri()));
+        $cache_summary->setFromCache($cache_control->getByKey(request()->getRequestUri()));
 
-        if ($cache_control->cacheable() === false || $cache_summary->valid() === false) {
+        if ($cache_control->isRequestCacheable() === false || $cache_summary->valid() === false) {
 
             $search_parameters = Parameter\Search::fetch(
                 Config::get('api.category.summary-searchable')
@@ -52,8 +50,7 @@ class CategoryView extends Controller
 
             $summary = (new Category())->total(
                 $resource_type_id,
-                $this->permitted_resource_types,
-                $this->include_public,
+                $this->viewable_resource_types,
                 $search_parameters
             );
 
@@ -67,7 +64,7 @@ class CategoryView extends Controller
                 addSearch(Parameter\Search::xHeader());
 
             $cache_summary->create($collection, $headers->headers());
-            $cache_control->put(request()->getRequestUri(), $cache_summary->content());
+            $cache_control->putByKey(request()->getRequestUri(), $cache_summary->content());
         }
 
         return response()->json($cache_summary->collection(), 200, $cache_summary->headers());
@@ -83,17 +80,11 @@ class CategoryView extends Controller
      */
     public function optionsIndex($resource_type_id): JsonResponse
     {
-        Route\Validate::resourceType(
-            $resource_type_id,
-            $this->permitted_resource_types
-        );
+        if ($this->viewAccessToResourceType((int) $resource_type_id) === false) {
+            \App\Response\Responses::notFoundOrNotAccessible(trans('entities.resource-type'));
+        }
 
-        $permissions = Route\Permission::resourceType(
-            $resource_type_id,
-            $this->permitted_resource_types
-        );
-
-        $response = new SummaryCategoryCollection($permissions);
+        $response = new SummaryCategoryCollection($this->permissions((int) $resource_type_id));
 
         return $response->create()->response();
     }
