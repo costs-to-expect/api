@@ -9,6 +9,7 @@ use App\Request\Parameter;
 use App\Request\Validate\Boolean;
 use App\Response\Cache;
 use App\Response\Header\Headers;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\JsonResponse;
 
 /**
@@ -20,7 +21,7 @@ use Illuminate\Http\JsonResponse;
  */
 class ItemView extends Controller
 {
-    private $model;
+    private Model $model;
 
     public function index(string $resource_type_id, string $resource_id): JsonResponse
     {
