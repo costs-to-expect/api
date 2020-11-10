@@ -127,6 +127,11 @@ class Game extends Item
         return LaravelConfig::get($this->base_path . '.fields-patch', []);
     }
 
+    public function summaryClass(): string
+    {
+        return \App\Http\Controllers\Summary\Item\Game::class;
+    }
+
     public function summaryResourceTypeModel(): Model
     {
         return new \App\Models\ResourceTypeItem\Summary\Game();

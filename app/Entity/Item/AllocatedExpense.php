@@ -90,6 +90,11 @@ class AllocatedExpense extends Item
         return new \App\Models\Item\AllocatedExpense();
     }
 
+    public function summaryClass(): string
+    {
+        return \App\Http\Controllers\Summary\Item\AllocatedExpense::class;
+    }
+
     public function summaryModel(): Model
     {
         return new \App\Models\Item\Summary\AllocatedExpense();
