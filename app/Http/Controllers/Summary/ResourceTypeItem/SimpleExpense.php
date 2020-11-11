@@ -62,8 +62,6 @@ class SimpleExpense
 
         if (
             $this->decision_parameters['category'] !== null &&
-            $this->decision_parameters['year'] === null &&
-            $this->decision_parameters['month'] === null &&
             count($this->search_parameters) === 0
         ) {
             if ($this->decision_parameters['subcategories'] === true) {

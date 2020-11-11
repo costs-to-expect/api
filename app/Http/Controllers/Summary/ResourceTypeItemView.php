@@ -7,7 +7,6 @@ use App\Http\Controllers\Controller;
 use App\Option\SummaryResourceTypeItemCollection;
 use App\Request\Parameter;
 use App\Response\Responses;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\JsonResponse;
 
 /**
@@ -19,8 +18,6 @@ use Illuminate\Http\JsonResponse;
  */
 class ResourceTypeItemView extends Controller
 {
-    private Model $model;
-
     public function index(string $resource_type_id): JsonResponse
     {
         if ($this->viewAccessToResourceType((int)$resource_type_id) === false) {
