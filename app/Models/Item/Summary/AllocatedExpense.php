@@ -3,8 +3,6 @@ declare(strict_types=1);
 
 namespace App\Models\Item\Summary;
 
-use App\Interfaces\Item\ISummaryModelCategories;
-use App\Interfaces\Item\ISummaryModel;
 use App\Models\Clause;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Query\Builder as QueryBuilder;
@@ -16,7 +14,7 @@ use Illuminate\Support\Facades\DB;
  * @copyright Dean Blackborough 2018-2020
  * @license https://github.com/costs-to-expect/api/blob/master/LICENSE
  */
-class AllocatedExpense extends Model implements ISummaryModel, ISummaryModelCategories
+class AllocatedExpense extends Model
 {
     protected $guarded = ['id', 'actualised_total', 'created_at', 'updated_at'];
     protected $table = 'item';
@@ -113,21 +111,6 @@ class AllocatedExpense extends Model implements ISummaryModel, ISummaryModelCate
             ->toArray();
     }
 
-    /**
-     * Return a filter summary
-     *
-     * @param int $resource_type_id
-     * @param int $resource_id
-     * @param int|null $category_id
-     * @param int|null $subcategory_id
-     * @param int|null $year
-     * @param int|null $month
-     * @param array $parameters
-     * @param array $search_parameters
-     * @param array $filter_parameters
-     *
-     * @return array
-     */
     public function filteredSummary(
         int $resource_type_id,
         int $resource_id,

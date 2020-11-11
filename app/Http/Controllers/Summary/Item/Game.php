@@ -112,10 +112,6 @@ class Game
             $summary = $this->model->filteredSummary(
                 $this->resource_type_id,
                 $this->resource_id,
-                $this->decision_parameters['category'],
-                $this->decision_parameters['subcategory'],
-                $this->decision_parameters['year'],
-                $this->decision_parameters['month'],
                 $this->parameters,
                 $this->search_parameters,
                 $this->filter_parameters
