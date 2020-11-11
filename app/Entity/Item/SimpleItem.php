@@ -80,6 +80,11 @@ class SimpleItem extends Item
         return \App\Http\Controllers\Summary\Item\SimpleItem::class;
     }
 
+    public function resourceTypeSummaryClass(): string
+    {
+        return \App\Http\Controllers\Summary\ResourceTypeItem\SimpleItem::class;
+    }
+
     public function transformer(array $data_to_transform): Transformer
     {
         return new \App\Models\Transformers\Item\SimpleItem($data_to_transform);

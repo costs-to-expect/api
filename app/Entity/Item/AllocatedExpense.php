@@ -95,6 +95,11 @@ class AllocatedExpense extends Item
         return \App\Http\Controllers\Summary\Item\AllocatedExpense::class;
     }
 
+    public function resourceTypeSummaryClass(): string
+    {
+        return \App\Http\Controllers\Summary\ResourceTypeItem\AllocatedExpense::class;
+    }
+
     public function summaryModel(): Model
     {
         return new \App\Models\Item\Summary\AllocatedExpense();

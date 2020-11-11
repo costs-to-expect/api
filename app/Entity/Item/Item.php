@@ -189,6 +189,8 @@ abstract class Item
 
     abstract public function summaryClass(): string;
 
+    abstract public function resourceTypeSummaryClass(): string;
+
     public function summaryFilterParameters(): array
     {
         return LaravelConfig::get($this->base_path . '.summary-filterable', []);

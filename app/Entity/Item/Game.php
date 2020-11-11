@@ -132,6 +132,11 @@ class Game extends Item
         return \App\Http\Controllers\Summary\Item\Game::class;
     }
 
+    public function resourceTypeSummaryClass(): string
+    {
+        return \App\Http\Controllers\Summary\ResourceTypeItem\Game::class;
+    }
+
     public function summaryResourceTypeModel(): Model
     {
         return new \App\Models\ResourceTypeItem\Summary\Game();

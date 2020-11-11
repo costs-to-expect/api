@@ -70,6 +70,11 @@ class SimpleExpense extends Item
         return \App\Http\Controllers\Summary\Item\SimpleExpense::class;
     }
 
+    public function resourceTypeSummaryClass(): string
+    {
+        return \App\Http\Controllers\Summary\ResourceTypeItem\SimpleExpense::class;
+    }
+
     public function summaryModel(): Model
     {
         return new \App\Models\Item\Summary\SimpleExpense();

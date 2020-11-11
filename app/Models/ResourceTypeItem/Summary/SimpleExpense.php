@@ -3,8 +3,6 @@ declare(strict_types=1);
 
 namespace App\Models\ResourceTypeItem\Summary;
 
-use App\Interfaces\ResourceTypeItem\ISummaryModelCategories;
-use App\Interfaces\ResourceTypeItem\ISummaryModel;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Query\Builder as QueryBuilder;
 
@@ -16,7 +14,7 @@ use Illuminate\Database\Query\Builder as QueryBuilder;
  * @copyright Dean Blackborough 2018-2020
  * @license https://github.com/costs-to-expect/api/blob/master/LICENSE
  */
-class SimpleExpense extends Model implements ISummaryModel, ISummaryModelCategories
+class SimpleExpense extends Model
 {
     protected $guarded = ['id', 'created_at', 'updated_at'];
     protected $table = 'item';
@@ -171,22 +169,10 @@ class SimpleExpense extends Model implements ISummaryModel, ISummaryModelCategor
             ->toArray();
     }
 
-    /**
-     * @param int $resource_type_id
-     * @param int|null $category_id
-     * @param int|null $subcategory_id
-     * @param int|null $year
-     * @param int|null $month
-     * @param array $parameters
-     * @param array $search_parameters
-     * @return array
-     */
     public function filteredSummary(
         int $resource_type_id,
         int $category_id = null,
         int $subcategory_id = null,
-        int $year = null,
-        int $month = null,
         array $parameters = [],
         array $search_parameters = []
     ): array
