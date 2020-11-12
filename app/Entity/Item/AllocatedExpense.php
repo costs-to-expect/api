@@ -100,41 +100,6 @@ class AllocatedExpense extends Item
         return \App\Http\Controllers\Summary\ResourceTypeItem\AllocatedExpense::class;
     }
 
-    public function summaryModel(): Model
-    {
-        return new \App\Models\Item\Summary\AllocatedExpense();
-    }
-
-    public function summaryTransformer(array $data_to_transform): Transformer
-    {
-        return new \App\Models\Transformers\Item\Summary\ExpenseItem($data_to_transform);
-    }
-
-    public function summaryTransformerByCategory(array $data_to_transform): Transformer
-    {
-        return new \App\Models\Transformers\Item\Summary\ExpenseItemByCategory($data_to_transform);
-    }
-
-    public function summaryTransformerBySubcategory(array $data_to_transform): Transformer
-    {
-        return new \App\Models\Transformers\Item\Summary\ExpenseItemBySubcategory($data_to_transform);
-    }
-
-    public function summaryTransformerByMonth(array $data_to_transform): Transformer
-    {
-        return new \App\Models\Transformers\Item\Summary\ExpenseItemByMonth($data_to_transform);
-    }
-
-    public function summaryTransformerByYear(array $data_to_transform): Transformer
-    {
-        return new \App\Models\Transformers\Item\Summary\ExpenseItemByYear($data_to_transform);
-    }
-
-    public function summaryTransformerByResource(array $data_to_transform): Transformer
-    {
-        return new \App\Models\Transformers\Item\Summary\ExpenseItemByResource($data_to_transform);
-    }
-
     public function transformer(array $data_to_transform): Transformer
     {
         return new \App\Models\Transformers\Item\AllocatedExpense($data_to_transform);
@@ -178,11 +143,6 @@ class AllocatedExpense extends Item
     public function resourceTypeTransformer(array $data_to_transform): Transformer
     {
         return new \App\Models\Transformers\ResourceTypeItem\AllocatedExpense($data_to_transform);
-    }
-
-    public function summaryResourceTypeModel(): Model
-    {
-        return new \App\Models\ResourceTypeItem\Summary\AllocatedExpense();
     }
 
     protected function allowedValuesItemCollectionClass(): string

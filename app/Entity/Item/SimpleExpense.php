@@ -75,43 +75,6 @@ class SimpleExpense extends Item
         return \App\Http\Controllers\Summary\ResourceTypeItem\SimpleExpense::class;
     }
 
-    public function summaryModel(): Model
-    {
-        return new \App\Models\Item\Summary\SimpleExpense();
-    }
-
-    public function summaryTransformer(array $data_to_transform): Transformer
-    {
-        return new \App\Models\Transformers\Item\Summary\ExpenseItem($data_to_transform);
-    }
-
-    public function summaryTransformerByCategory(array $data_to_transform): Transformer
-    {
-        return new \App\Models\Transformers\Item\Summary\ExpenseItemByCategory($data_to_transform);
-    }
-
-    public function summaryTransformerBySubcategory(array $data_to_transform): Transformer
-    {
-        return new \App\Models\Transformers\Item\Summary\ExpenseItemBySubcategory($data_to_transform);
-    }
-
-    public function summaryTransformerByMonth(array $data_to_transform): Transformer
-    {
-        // Not relevant for this type
-        return new \App\Models\Transformers\Item\Summary\ExpenseItem($data_to_transform);
-    }
-
-    public function summaryTransformerByYear(array $data_to_transform): Transformer
-    {
-        // Not relevant for this type
-        return new \App\Models\Transformers\Item\Summary\ExpenseItem($data_to_transform);
-    }
-
-    public function summaryTransformerByResource(array $data_to_transform): Transformer
-    {
-        return new \App\Models\Transformers\Item\Summary\ExpenseItemByResource($data_to_transform);
-    }
-
     public function transformer(array $data_to_transform): Transformer
     {
         return new \App\Models\Transformers\Item\SimpleExpense($data_to_transform);
@@ -146,11 +109,6 @@ class SimpleExpense extends Item
     public function resourceTypeTransformer(array $data_to_transform): Transformer
     {
         return new \App\Models\Transformers\ResourceTypeItem\SimpleExpense($data_to_transform);
-    }
-
-    public function summaryResourceTypeModel(): Model
-    {
-        return new \App\Models\ResourceTypeItem\Summary\SimpleExpense();
     }
 
     protected function allowedValuesItemCollectionClass(): string

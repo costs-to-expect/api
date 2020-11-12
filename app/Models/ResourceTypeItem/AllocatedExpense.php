@@ -3,7 +3,6 @@ declare(strict_types=1);
 
 namespace App\Models\ResourceTypeItem;
 
-use App\Interfaces\ResourceTypeItem\IModel;
 use App\Request\Validate\Boolean;
 use App\Models\Clause;
 use Illuminate\Database\Eloquent\Model;
@@ -18,7 +17,7 @@ use Illuminate\Support\Facades\DB;
  * @copyright Dean Blackborough 2018-2020
  * @license https://github.com/costs-to-expect/api/blob/master/LICENSE
  */
-class AllocatedExpense extends Model implements IModel
+class AllocatedExpense extends Model
 {
     protected $table = 'item';
 

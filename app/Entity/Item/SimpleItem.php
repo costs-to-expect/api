@@ -60,11 +60,6 @@ class SimpleItem extends Item
         return 0;
     }
 
-    public function summaryModel(): Model
-    {
-        return new \App\Models\Item\Summary\SimpleItem();
-    }
-
     public function table(): string
     {
         return 'item_type_simple_item';
@@ -114,46 +109,6 @@ class SimpleItem extends Item
     public function resourceTypeTransformer(array $data_to_transform): Transformer
     {
         return new \App\Models\Transformers\ResourceTypeItem\SimpleItem($data_to_transform);
-    }
-
-    public function summaryResourceTypeModel(): Model
-    {
-        return new \App\Models\ResourceTypeItem\Summary\SimpleItem();
-    }
-
-    public function summaryTransformer(array $data_to_transform): Transformer
-    {
-        return new \App\Models\Transformers\Item\Summary\SimpleItem($data_to_transform);
-    }
-
-    public function summaryTransformerByCategory(array $data_to_transform): Transformer
-    {
-        // Return default transformer, not relevant for type
-        return new \App\Models\Transformers\Item\Summary\SimpleItem($data_to_transform);
-    }
-
-    public function summaryTransformerBySubcategory(array $data_to_transform): Transformer
-    {
-        // Return default transformer, not relevant for type
-        return new \App\Models\Transformers\Item\Summary\SimpleItem($data_to_transform);
-    }
-
-    public function summaryTransformerByMonth(array $data_to_transform): Transformer
-    {
-        // Return default transformer, not relevant for type
-        return new \App\Models\Transformers\Item\Summary\SimpleItem($data_to_transform);
-    }
-
-    public function summaryTransformerByYear(array $data_to_transform): Transformer
-    {
-        // Return default transformer, not relevant for type
-        return new \App\Models\Transformers\Item\Summary\SimpleItem($data_to_transform);
-    }
-
-    public function summaryTransformerByResource(array $data_to_transform): Transformer
-    {
-        // Return default transformer, not relevant for type
-        return new \App\Models\Transformers\Item\Summary\SimpleItemByResource($data_to_transform);
     }
 
     protected function allowedValuesItemCollectionClass(): string

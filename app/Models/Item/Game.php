@@ -3,7 +3,6 @@ declare(strict_types=1);
 
 namespace App\Models\Item;
 
-use App\Interfaces\Item\IModel;
 use App\Models\Category;
 use App\Models\Clause;
 use Illuminate\Database\Query\Builder as QueryBuilder;
@@ -15,7 +14,7 @@ use Illuminate\Database\Eloquent\Model;
  * @copyright Dean Blackborough 2018-2020
  * @license https://github.com/costs-to-expect/api/blob/master/LICENSE
  */
-class Game extends Model implements IModel
+class Game extends Model
 {
     protected $table = 'item_type_game';
 

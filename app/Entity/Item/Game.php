@@ -63,11 +63,6 @@ class Game extends Item
         return 0;
     }
 
-    public function summaryModel(): Model
-    {
-        return new \App\Models\Item\Summary\Game();
-    }
-
     public function table(): string
     {
         return 'item_type_game';
@@ -135,45 +130,6 @@ class Game extends Item
     public function resourceTypeSummaryClass(): string
     {
         return \App\Http\Controllers\Summary\ResourceTypeItem\Game::class;
-    }
-
-    public function summaryResourceTypeModel(): Model
-    {
-        return new \App\Models\ResourceTypeItem\Summary\Game();
-    }
-
-    public function summaryTransformer(array $data_to_transform): Transformer
-    {
-        return new \App\Models\Transformers\Item\Summary\Game($data_to_transform);
-    }
-
-    public function summaryTransformerByCategory(array $data_to_transform): Transformer
-    {
-        // Return default transformer, not relevant for type
-        return new \App\Models\Transformers\Item\Summary\Game($data_to_transform);
-    }
-
-    public function summaryTransformerBySubcategory(array $data_to_transform): Transformer
-    {
-        // Return default transformer, not relevant for type
-        return new \App\Models\Transformers\Item\Summary\Game($data_to_transform);
-    }
-
-    public function summaryTransformerByMonth(array $data_to_transform): Transformer
-    {
-        // Return default transformer, not relevant for type
-        return new \App\Models\Transformers\Item\Summary\Game($data_to_transform);
-    }
-
-    public function summaryTransformerByYear(array $data_to_transform): Transformer
-    {
-        // Return default transformer, not relevant for type
-        return new \App\Models\Transformers\Item\Summary\Game($data_to_transform);
-    }
-
-    public function summaryTransformerByResource(array $data_to_transform): Transformer
-    {
-        return new \App\Models\Transformers\Item\Summary\GameItemByResource($data_to_transform);
     }
 
     protected function allowedValuesItemCollectionClass(): string

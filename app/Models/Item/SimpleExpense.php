@@ -3,7 +3,6 @@ declare(strict_types=1);
 
 namespace App\Models\Item;
 
-use App\Interfaces\Item\IModel;
 use App\Models\Currency;
 use App\Request\Validate\Boolean;
 use App\Models\Clause;
@@ -18,7 +17,7 @@ use Illuminate\Database\Eloquent\Model;
  * @copyright Dean Blackborough 2018-2020
  * @license https://github.com/costs-to-expect/api/blob/master/LICENSE
  */
-class SimpleExpense extends Model implements IModel
+class SimpleExpense extends Model
 {
     protected $table = 'item_type_simple_expense';
 

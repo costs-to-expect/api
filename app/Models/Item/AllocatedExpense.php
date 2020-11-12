@@ -3,7 +3,6 @@ declare(strict_types=1);
 
 namespace App\Models\Item;
 
-use App\Interfaces\Item\IModel;
 use App\Models\Currency;
 use App\Request\Validate\Boolean;
 use App\Models\Clause;
@@ -19,7 +18,7 @@ use Illuminate\Support\Facades\DB;
  * @copyright Dean Blackborough 2018-2020
  * @license https://github.com/costs-to-expect/api/blob/master/LICENSE
  */
-class AllocatedExpense extends Model implements IModel
+class AllocatedExpense extends Model
 {
     protected $table = 'item_type_allocated_expense';
 
