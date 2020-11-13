@@ -5,57 +5,26 @@ namespace App\Http\Controllers\Summary\ResourceTypeItem;
 use App\Models\Transformers\Item\Summary\Game as GameTransformer;
 use App\Models\Transformers\Item\Summary\GameItemByResource;
 use App\Response\Cache;
-use App\Request\Parameter;
 use App\Request\Validate\Boolean;
-use App\Response\Header\Headers;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\JsonResponse;
 
-class Game
+class Game extends Item
 {
-    private int $resource_type_id;
-
-    private bool $permitted_user;
-
-    private ?int $user_id;
-
-    private array $parameters;
-
-    private array $decision_parameters = [];
-
-    private array $filter_parameters;
-
-    private array $search_parameters;
-
-    private Model $model;
-
     public function __construct(
         int $resource_type_id,
         bool $permitted_user = false,
         int $user_id = null
     )
     {
-        $this->resource_type_id = $resource_type_id;
-
-        $this->permitted_user = $permitted_user;
-        $this->user_id = $user_id;
+        parent::__construct(
+            $resource_type_id,
+            $permitted_user,
+            $user_id
+        );
 
         $this->model = new \App\Models\ResourceTypeItem\Summary\Game();
 
-        $entity = new \App\Entity\Item\Game();
-
-        $this->parameters = Parameter\Request::fetch(
-            array_keys($entity->summaryResourceTypeRequestParameters()),
-            $resource_type_id
-        );
-
-        $this->search_parameters = Parameter\Search::fetch(
-            $entity->summaryResourceTypeSearchParameters()
-        );
-
-        $this->filter_parameters = Parameter\Filter::fetch(
-            $entity->summaryResourceTypeFilterParameters()
-        );
+        $this->fetchAllRequestParameters(new \App\Entity\Item\Game());
 
         $this->removeDecisionParameters();
     }
@@ -74,37 +43,6 @@ class Game
         }
 
         return $this->summary();
-    }
-
-    protected function assignToCache(
-        array $summary,
-        array $collection,
-        Cache\Control $cache_control,
-        Cache\Summary $cache_summary
-    ): Cache\Summary
-    {
-        $headers = new Headers();
-
-        $headers
-            ->addCacheControl($cache_control->visibility(), $cache_control->ttl())
-            ->addETag($collection)
-            ->addParameters(Parameter\Request::xHeader())
-            ->addFilters(Parameter\Filter::xHeader())
-            ->addSearch(Parameter\Search::xHeader());
-
-        if (array_key_exists(0, $summary)) {
-            if (array_key_exists('last_updated', $summary[0]) === true) {
-                $headers->addLastUpdated($summary[0]['last_updated']);
-            }
-            if (array_key_exists('total_count', $summary[0]) === true) {
-                $headers->addTotalCount((int)$summary[0]['total_count']);
-            }
-        }
-
-        $cache_summary->create($collection, $headers->headers());
-        $cache_control->putByKey(request()->getRequestUri(), $cache_summary->content());
-
-        return $cache_summary;
     }
 
     protected function filteredSummary(): JsonResponse
