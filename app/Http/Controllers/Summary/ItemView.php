@@ -18,29 +18,12 @@ class ItemView extends Controller
             Responses::notFoundOrNotAccessible(trans('entities.resource'));
         }
 
-        $entity = Entity::item((int)$resource_type_id);
-
-        $parameters = Parameter\Request::fetch(
-            array_keys($entity->summaryRequestParameters()),
-            (int) $resource_type_id,
-            (int) $resource_id
-        );
-
-        $search_parameters = Parameter\Search::fetch(
-            $entity->summarySearchParameters()
-        );
-
-        $filter_parameters = Parameter\Filter::fetch(
-            $entity->filterParameters()
-        );
+        $entity = Entity::item((int) $resource_type_id);
 
         $summary_class = $entity->summaryClass();
         $summary = new $summary_class(
             (int) $resource_type_id,
             (int) $resource_id,
-            $parameters,
-            $filter_parameters,
-            $search_parameters,
             $this->writeAccessToResourceType($resource_type_id),
             $this->user_id
         );

@@ -35,9 +35,6 @@ class SimpleExpense
     public function __construct(
         int $resource_type_id,
         int $resource_id,
-        array $parameters,
-        array $filter_parameters = [],
-        array $search_parameters = [],
         bool $permitted_user = false,
         int $user_id = null
     )
@@ -50,9 +47,21 @@ class SimpleExpense
 
         $this->model = new \App\Models\Item\Summary\SimpleExpense();
 
-        $this->parameters = $parameters;
-        $this->filter_parameters = $filter_parameters;
-        $this->search_parameters = $search_parameters;
+        $entity = new \App\Entity\Item\SimpleExpense();
+
+        $this->parameters = Parameter\Request::fetch(
+            array_keys($entity->summaryRequestParameters()),
+            $resource_type_id,
+            $resource_id
+        );
+
+        $this->search_parameters = Parameter\Search::fetch(
+            $entity->summarySearchParameters()
+        );
+
+        $this->filter_parameters = Parameter\Filter::fetch(
+            $entity->summaryFilterParameters()
+        );
 
         $this->removeDecisionParameters();
     }

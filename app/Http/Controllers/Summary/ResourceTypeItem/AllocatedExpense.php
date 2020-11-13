@@ -35,9 +35,6 @@ class AllocatedExpense
 
     public function __construct(
         int $resource_type_id,
-        array $parameters,
-        array $filter_parameters = [],
-        array $search_parameters = [],
         bool $permitted_user = false,
         int $user_id = null
     )
@@ -49,9 +46,20 @@ class AllocatedExpense
 
         $this->model = new \App\Models\ResourceTypeItem\Summary\AllocatedExpense();
 
-        $this->parameters = $parameters;
-        $this->filter_parameters = $filter_parameters;
-        $this->search_parameters = $search_parameters;
+        $entity = new \App\Entity\Item\AllocatedExpense();
+
+        $this->parameters = Parameter\Request::fetch(
+            array_keys($entity->summaryResourceTypeRequestParameters()),
+            $resource_type_id
+        );
+
+        $this->search_parameters = Parameter\Search::fetch(
+            $entity->summaryResourceTypeSearchParameters()
+        );
+
+        $this->filter_parameters = Parameter\Filter::fetch(
+            $entity->summaryResourceTypeFilterParameters()
+        );
 
         $this->removeDecisionParameters();
     }

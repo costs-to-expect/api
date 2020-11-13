@@ -26,25 +26,9 @@ class ResourceTypeItemView extends Controller
 
         $entity = Entity::item((int)$resource_type_id);
 
-        $parameters = Parameter\Request::fetch(
-            array_keys($entity->summaryResourceTypeRequestParameters()),
-            (int) $resource_type_id
-        );
-
-        $search_parameters = Parameter\Search::fetch(
-            $entity->summaryResourceTypeSearchParameters()
-        );
-
-        $filter_parameters = Parameter\Filter::fetch(
-            $entity->summaryResourceTypeFilterParameters()
-        );
-
         $summary_class = $entity->resourceTypeSummaryClass();
         $summary = new $summary_class(
             (int) $resource_type_id,
-            $parameters,
-            $filter_parameters,
-            $search_parameters,
             $this->writeAccessToResourceType($resource_type_id),
             $this->user_id
         );
