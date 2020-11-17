@@ -10,7 +10,6 @@ use App\Models\Transformers\Item\Summary\ExpenseItemByYear;
 use App\Response\Cache;
 use App\Request\Validate\Boolean;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Support\Facades\Config as LaravelConfig;
 
 class AllocatedExpense extends Item
 {
@@ -30,11 +29,7 @@ class AllocatedExpense extends Item
 
         $this->model = new \App\Models\Item\Summary\AllocatedExpense();
 
-        $this->fetchAllRequestParameters(
-            LaravelConfig::get('api.resource-type-item-type-allocated-expense.summary-parameters', []),
-            LaravelConfig::get('api.resource-type-item-type-allocated-expense.summary-searchable', []),
-            LaravelConfig::get('api.resource-type-item-type-allocated-expense.summary-filterable', [])
-        );
+        $this->fetchAllRequestParameters(new \App\Entity\Item\AllocatedExpense());
 
         $this->removeDecisionParameters();
     }

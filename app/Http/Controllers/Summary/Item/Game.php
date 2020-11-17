@@ -4,7 +4,6 @@ namespace App\Http\Controllers\Summary\Item;
 
 use App\Response\Cache;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Support\Facades\Config as LaravelConfig;
 
 class Game extends Item
 {
@@ -24,11 +23,7 @@ class Game extends Item
 
         $this->model = new \App\Models\Item\Summary\Game();
 
-        $this->fetchAllRequestParameters(
-            LaravelConfig::get('api.item-type-game.summary-parameters', []),
-            LaravelConfig::get('api.item-type-game.summary-searchable', []),
-            LaravelConfig::get('api.item-type-game.summary-filterable', [])
-        );
+        $this->fetchAllRequestParameters(new \App\Entity\Item\Game());
 
         $this->removeDecisionParameters();
     }

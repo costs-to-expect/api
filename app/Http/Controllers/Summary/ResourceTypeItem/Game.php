@@ -7,7 +7,6 @@ use App\Models\Transformers\Item\Summary\GameItemByResource;
 use App\Response\Cache;
 use App\Request\Validate\Boolean;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Support\Facades\Config as LaravelConfig;
 
 class Game extends Item
 {
@@ -25,11 +24,7 @@ class Game extends Item
 
         $this->model = new \App\Models\ResourceTypeItem\Summary\Game();
 
-        $this->fetchAllRequestParameters(
-            LaravelConfig::get('api.resource-type-item-type-game.summary-parameters', []),
-            LaravelConfig::get('api.resource-type-item-type-game.summary-searchable', []),
-            LaravelConfig::get('api.resource-type-item-type-game.summary-filterable', [])
-        );
+        $this->fetchAllRequestParameters(new \App\Entity\Item\Game());
 
         $this->removeDecisionParameters();
     }
