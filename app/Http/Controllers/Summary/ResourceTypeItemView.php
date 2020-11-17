@@ -5,7 +5,6 @@ namespace App\Http\Controllers\Summary;
 use App\Entity\Item\Entity;
 use App\Http\Controllers\Controller;
 use App\Option\SummaryResourceTypeItemCollection;
-use App\Request\Parameter;
 use App\Response\Responses;
 use Illuminate\Http\JsonResponse;
 
@@ -44,16 +43,9 @@ class ResourceTypeItemView extends Controller
 
         $entity = Entity::item($resource_type_id);
 
-        $defined_parameters = Parameter\Request::fetch(
-            array_keys($entity->resourceTypeRequestParameters()),
-            $resource_type_id
-        );
-
-        $allowed_values = (new \App\AllowedValue\ResourceTypeItem($entity))->allowedValues(
-            $resource_type_id,
-            $this->viewable_resource_types,
-            $entity->resourceTypeRequestParameters(),
-            $defined_parameters
+        $allowed_values = $entity->allowedValuesForResourceTypeItemCollection(
+            (int) $resource_type_id,
+            $this->viewable_resource_types
         );
 
         $response = new SummaryResourceTypeItemCollection($this->permissions((int) $resource_type_id));

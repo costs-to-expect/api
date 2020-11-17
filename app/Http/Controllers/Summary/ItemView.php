@@ -4,9 +4,7 @@ namespace App\Http\Controllers\Summary;
 
 use App\Entity\Item\Entity;
 use App\Http\Controllers\Controller;
-use App\AllowedValue\ResourceItem;
 use App\Option\SummaryItemCollection;
-use App\Request\Parameter;
 use App\Response\Responses;
 use Illuminate\Http\JsonResponse;
 
@@ -39,18 +37,10 @@ class ItemView extends Controller
 
         $entity = Entity::item($resource_type_id);
 
-        $defined_parameters = Parameter\Request::fetch(
-            array_keys($entity->requestParameters()),
+        $allowed_values = $entity->allowedValuesForItemCollection(
             (int) $resource_type_id,
-            (int) $resource_id
-        );
-
-        $allowed_values = (new ResourceItem($entity))->allowedValues(
-            $resource_type_id,
-            $resource_id,
-            $this->viewable_resource_types,
-            $entity->requestParameters(),
-            $defined_parameters
+            (int) $resource_id,
+            $this->viewable_resource_types
         );
 
         $response = new SummaryItemCollection($this->permissions((int) $resource_type_id));
