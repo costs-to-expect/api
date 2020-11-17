@@ -7,7 +7,7 @@ class Cache extends Response
 {
     public function create()
     {
-        $get = new \App\Option\Method\GetRequest();
+        $get = new \App\Method\GetRequest();
         $this->verbs['GET'] = $get->setAuthenticationStatus($this->permissions['view'])->
             setAuthenticationRequirement(true)->
             setDescription('route-descriptions.request_GET_cache')->

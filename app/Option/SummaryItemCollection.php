@@ -7,7 +7,7 @@ class SummaryItemCollection extends Response
 {
     public function create()
     {
-        $get = new \App\Option\Method\GetRequest();
+        $get = new \App\Method\GetRequest();
         $this->verbs['GET'] = $get->setParameters($this->entity->summaryRequestParameters())
             ->setSearchableParameters($this->entity->summarySearchParameters())
             ->setFilterableParameters($this->entity->summaryFilterParameters())

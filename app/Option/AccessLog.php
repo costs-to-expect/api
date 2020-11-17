@@ -9,8 +9,8 @@ class AccessLog extends Response
 {
     public function create()
     {
-        $get = new \App\Option\Method\GetRequest();
-        $this->verbs['GET'] = $get->setParameters( Config::get('api.request-access-log.parameters.collection'))->
+        $get = new \App\Method\GetRequest();
+        $this->verbs['GET'] = $get->setParameters(Config::get('api.request-access-log.parameters.collection'))->
             setPaginationStatus(true)->
             setAuthenticationStatus($this->permissions['view'])->
             setDescription('route-descriptions.request_GET_access-log')->

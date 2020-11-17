@@ -9,7 +9,7 @@ class ItemPartialTransferCollection extends Response
 {
     public function create()
     {
-        $get = new \App\Option\Method\GetRequest();
+        $get = new \App\Method\GetRequest();
         $this->verbs['GET'] = $get->setParameters(Config::get('api.item-partial-transfer.parameters.collection'))->
             setPaginationStatus(true)->
             setAuthenticationStatus($this->permissions['view'])->

@@ -7,7 +7,7 @@ class QueueCollection extends Response
 {
     public function create()
     {
-        $get = new \App\Option\Method\GetRequest();
+        $get = new \App\Method\GetRequest();
         $this->verbs['GET'] = $get->setPaginationStatus(true, true)->
             setDescription('route-descriptions.queue_GET_index')->
             setAuthenticationStatus($this->permissions['view'])->

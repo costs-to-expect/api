@@ -7,7 +7,7 @@ class SummaryResourceTypeItemCollection extends Response
 {
     public function create()
     {
-        $get = new \App\Option\Method\GetRequest();
+        $get = new \App\Method\GetRequest();
         $this->verbs['GET'] = $get->setSearchableParameters($this->entity->summaryResourceTypeSearchParameters())
             ->setParameters($this->entity->summaryResourceTypeRequestParameters())
             ->setFilterableParameters($this->entity->summaryResourceTypeFilterParameters())

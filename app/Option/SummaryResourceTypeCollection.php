@@ -9,7 +9,7 @@ class SummaryResourceTypeCollection extends Response
 {
     public function create()
     {
-        $get = new \App\Option\Method\GetRequest();
+        $get = new \App\Method\GetRequest();
         $this->verbs['GET'] = $get->setParameters(Config::get('api.resource-type.summary-parameters'))->
             setDescription('route-descriptions.summary-resource-type-GET-index')->
             setAuthenticationStatus($this->permissions['view'])->

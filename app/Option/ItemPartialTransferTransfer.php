@@ -9,7 +9,7 @@ class ItemPartialTransferTransfer extends Response
 {
     public function create()
     {
-        $post = new \App\Option\Method\PostRequest();
+        $post = new \App\Method\PostRequest();
         $this->verbs['POST'] = $post->setFields(Config::get('api.item-partial-transfer.fields'))->
             setDynamicFields($this->allowed_values)->
             setDescription('route-descriptions.item_partial_transfer_POST')->

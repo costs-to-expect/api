@@ -1,34 +1,31 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Option\Method;
+namespace App\Method;
 
 /**
- * Helper class to generate the data required to build the OPTIONS required for
- * a single HTTP Verb, in this case PATCH
- *
  * @author Dean Blackborough <dean@g3d-development.com>
  * @copyright Dean Blackborough 2018-2020
  * @license https://github.com/costs-to-expect/api/blob/master/LICENSE
  */
-class PatchRequest extends Method
+class PostRequest extends Method
 {
     protected array $dynamic_fields;
-    protected array $fields_after_localisation;
     protected array $fields;
+    protected array $fields_after_localisation;
 
     public function __construct()
     {
         parent::__construct();
 
         $this->dynamic_fields = [];
-        $this->fields_after_localisation = [];
         $this->fields = [];
+        $this->fields_after_localisation = [];
     }
 
     public function setDynamicFields(
         array $fields = []
-    ): PatchRequest
+    ): PostRequest
     {
         $this->dynamic_fields = $fields;
 
@@ -37,7 +34,7 @@ class PatchRequest extends Method
 
     public function setFields(
         array $fields
-    ): PatchRequest
+    ): PostRequest
     {
         if (count($fields) > 0) {
             $this->fields = $fields;
@@ -61,7 +58,6 @@ class PatchRequest extends Method
             ) {
                 $field_data['title'] = trans($field_data['title']);
                 $field_data['description'] = trans($field_data['description']);
-                $field_data['required'] = false;
 
                 $this->fields_after_localisation[$field] = $field_data;
             }

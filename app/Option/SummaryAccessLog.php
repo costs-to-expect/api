@@ -9,7 +9,7 @@ class SummaryAccessLog extends Response
 {
     public function create()
     {
-        $get = new \App\Option\Method\GetRequest();
+        $get = new \App\Method\GetRequest();
         $this->verbs['GET'] = $get->setParameters(Config::get('api.request-access-log.parameters.collection'))->
             setDescription('route-descriptions.summary_GET_request_access-log')->
             setAuthenticationStatus($this->permissions['view'])->

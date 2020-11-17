@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Option\Method;
+namespace App\Method;
 
 use App\Entity\Api;
 

@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Option\Method;
+namespace App\Method;
 
 /**
  * @author Dean Blackborough <dean@g3d-development.com>

@@ -9,7 +9,7 @@ class ResourceTypeCollection extends Response
 {
     public function create()
     {
-        $get = new \App\Option\Method\GetRequest();
+        $get = new \App\Method\GetRequest();
         $this->verbs['GET'] = $get->setSortableParameters(Config::get('api.resource-type.sortable'))->
             setSearchableParameters(Config::get('api.resource-type.searchable'))->
             setPaginationStatus(true, true)->
@@ -17,7 +17,7 @@ class ResourceTypeCollection extends Response
             setAuthenticationStatus($this->permissions['view'])->
             option();
 
-        $post = new \App\Option\Method\PostRequest();
+        $post = new \App\Method\PostRequest();
         $this->verbs['POST'] = $post->setFields(Config::get('api.resource-type.fields'))->
             setDynamicFields($this->allowed_values)->
             setDescription('route-descriptions.resource_type_POST')->

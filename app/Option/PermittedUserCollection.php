@@ -9,7 +9,7 @@ class PermittedUserCollection extends Response
 {
     public function create()
     {
-        $get = new \App\Option\Method\GetRequest();
+        $get = new \App\Method\GetRequest();
         $this->verbs['GET'] = $get->setSortableParameters(Config::get('api.permitted-user.sortable'))->
             setSearchableParameters(Config::get('api.permitted-user.searchable'))->
             setPaginationStatus(true, true)->
@@ -17,7 +17,7 @@ class PermittedUserCollection extends Response
             setDescription('route-descriptions.permitted_user_GET_index')->
             option();
 
-        $post = new \App\Option\Method\PostRequest();
+        $post = new \App\Method\PostRequest();
         $this->verbs['POST'] = $post->setFields(Config::get('api.permitted-user.fields'))->
             setDescription('route-descriptions.permitted_user_POST')->
             setAuthenticationStatus($this->permissions['manage'])->
