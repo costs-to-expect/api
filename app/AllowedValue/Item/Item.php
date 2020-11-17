@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Option\AllowedValue\ResourceTypeItem;
+namespace App\AllowedValue\Item;
 
 use App\Entity\Item\Item as Entity;
 use App\Models\Category;
@@ -20,6 +20,7 @@ abstract class Item
     protected EntityLimits $range_limits;
 
     protected int $resource_type_id;
+    protected int $resource_id;
 
     protected array $viewable_resource_types;
 
@@ -30,10 +31,12 @@ abstract class Item
 
     public function __construct(
         int $resource_type_id,
+        int $resource_id,
         array $viewable_resource_types
     )
     {
         $this->resource_type_id = $resource_type_id;
+        $this->resource_id = $resource_id;
 
         $this->viewable_resource_types = $viewable_resource_types;
 
@@ -89,10 +92,10 @@ abstract class Item
                 $allowed_values[$category_id] = [
                     'value' => $category_id,
                     'name' => $category['category_name'],
-                    'description' => trans('resource-type-item-type-' . $this->entity->type() .
+                    'description' => trans('item-type-' . $this->entity->type() .
                             '/allowed-values.description-prefix-category') .
                         $category['category_name'] .
-                        trans('resource-type-item-type-' . $this->entity->type() .
+                        trans('item-type-' . $this->entity->type() .
                             '/allowed-values.description-suffix-category')
                 ];
             }
@@ -111,7 +114,7 @@ abstract class Item
                 $allowed_values[$i] = [
                     'value' => $i,
                     'name' => date("F", mktime(0, 0, 0, $i, 10)),
-                    'description' => trans('resource-type-item-type-' . $this->entity->type() .
+                    'description' => trans('item-type-' . $this->entity->type() .
                             '/allowed-values.description-prefix-month') .
                         date("F", mktime(0, 0, 0, $i, 1))
                 ];
@@ -166,8 +169,8 @@ abstract class Item
                 $allowed_values[$subcategory_id] = [
                     'value' => $subcategory_id,
                     'name' => $subcategory['subcategory_name'],
-                    'description' => trans('resource-type-item-type-' . $this->entity->type() . '/allowed-values.description-prefix-subcategory') .
-                        $subcategory['subcategory_name'] . trans('resource-type-item-type-' . $this->entity->type() . '/allowed-values.description-suffix-subcategory')
+                    'description' => trans('item-type-' . $this->entity->type() . '/allowed-values.description-prefix-subcategory') .
+                        $subcategory['subcategory_name'] . trans('item-type-' . $this->entity->type() . '/allowed-values.description-suffix-subcategory')
                 ];
             }
 
@@ -182,13 +185,15 @@ abstract class Item
             $allowed_values = [];
 
             for (
-                $i = $this->range_limits->minimumYearByResourceType(
+                $i = $this->range_limits->minimumYearByResourceTypeAndResource(
                     $this->resource_type_id,
+                    $this->resource_id,
                     $this->entity->table(),
                     $this->entity->dateRangeField()
                 );
-                $i <= $this->range_limits->maximumYearByResourceType(
+                $i <= $this->range_limits->maximumYearByResourceTypeAndResource(
                     $this->resource_type_id,
+                    $this->resource_id,
                     $this->entity->table(),
                     $this->entity->dateRangeField()
                 );
@@ -197,7 +202,7 @@ abstract class Item
                 $allowed_values[$i] = [
                     'value' => $i,
                     'name' => $i,
-                    'description' => trans('resource-type-item-type-' . $this->entity->type() .
+                    'description' => trans('item-type-' . $this->entity->type() .
                             '/allowed-values.description-prefix-year') . $i
                 ];
             }

@@ -1,17 +1,19 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Option\AllowedValue\ResourceTypeItem;
+namespace App\AllowedValue\Item;
 
 class AllocatedExpense extends Item
 {
     public function __construct(
         int $resource_type_id,
+        int $resource_id,
         array $viewable_resource_types
     )
     {
         parent::__construct(
             $resource_type_id,
+            $resource_id,
             $viewable_resource_types
         );
 

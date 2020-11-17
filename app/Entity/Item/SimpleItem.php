@@ -113,11 +113,11 @@ class SimpleItem extends Item
 
     protected function allowedValuesItemCollectionClass(): string
     {
-        return \App\Option\AllowedValue\Item\SimpleItem::class;
+        return \App\AllowedValue\Item\SimpleItem::class;
     }
 
     protected function allowedValuesResourceTypeItemCollectionClass(): string
     {
-        return \App\Option\AllowedValue\ResourceTypeItem\SimpleItem::class;
+        return \App\AllowedValue\ResourceTypeItem\SimpleItem::class;
     }
 }

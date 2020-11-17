@@ -54,7 +54,7 @@ class ItemCategoryManage extends Controller
         $validator = (new ItemCategoryValidator)->create();
         \App\Request\BodyValidation::validateAndReturnErrors(
             $validator,
-            (new \App\Option\AllowedValue\Category())->allowedValues($resource_type_id)
+            (new \App\AllowedValue\Category())->allowedValues($resource_type_id)
         );
 
         $cache_job_payload = (new Cache\JobPayload())

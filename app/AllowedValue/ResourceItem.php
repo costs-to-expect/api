@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Option\AllowedValue;
+namespace App\AllowedValue;
 
 use App\Entity\Item\Item as Entity;
 use App\Models\Category;

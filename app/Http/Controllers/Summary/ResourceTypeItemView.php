@@ -49,7 +49,7 @@ class ResourceTypeItemView extends Controller
             $resource_type_id
         );
 
-        $allowed_values = (new \App\Option\AllowedValue\ResourceTypeItem($entity))->allowedValues(
+        $allowed_values = (new \App\AllowedValue\ResourceTypeItem($entity))->allowedValues(
             $resource_type_id,
             $this->viewable_resource_types,
             $entity->resourceTypeRequestParameters(),

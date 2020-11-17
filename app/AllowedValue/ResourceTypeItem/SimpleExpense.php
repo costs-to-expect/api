@@ -1,33 +1,27 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Option\AllowedValue\Item;
+namespace App\AllowedValue\ResourceTypeItem;
 
-class AllocatedExpense extends Item
+class SimpleExpense extends Item
 {
     public function __construct(
         int $resource_type_id,
-        int $resource_id,
         array $viewable_resource_types
     )
     {
         parent::__construct(
             $resource_type_id,
-            $resource_id,
             $viewable_resource_types
         );
 
-        $this->entity = new \App\Entity\Item\AllocatedExpense();
+        $this->entity = new \App\Entity\Item\SimpleExpense();
 
         $this->setAllowedValueFields();
     }
 
     public function fetch(): Item
     {
-        $this->fetchValuesForYear();
-
-        $this->fetchValuesForMonth();
-
         $this->fetchValuesForCategory();
 
         $this->fetchValuesForSubcategory();
@@ -40,8 +34,6 @@ class AllocatedExpense extends Item
     protected function setAllowedValueFields(): void
     {
         $this->values = [
-            'year' => null,
-            'month' => null,
             'category' => null,
             'subcategory' => null,
             'currency_id' => null

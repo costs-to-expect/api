@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Option\AllowedValue\ResourceTypeItem;
+namespace App\AllowedValue\ResourceTypeItem;
 
 use App\Models\Category;
 

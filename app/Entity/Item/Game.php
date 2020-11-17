@@ -23,7 +23,7 @@ class Game extends Item
 
     public function allowedValuesForItem(int $resource_type_id): array
     {
-        return (new \App\Option\AllowedValue\Winner())->allowedValues($resource_type_id);
+        return (new \App\AllowedValue\Winner())->allowedValues($resource_type_id);
     }
 
     public function categoryAssignmentLimit(): int
@@ -134,11 +134,11 @@ class Game extends Item
 
     protected function allowedValuesItemCollectionClass(): string
     {
-        return \App\Option\AllowedValue\Item\Game::class;
+        return \App\AllowedValue\Item\Game::class;
     }
 
     protected function allowedValuesResourceTypeItemCollectionClass(): string
     {
-        return \App\Option\AllowedValue\ResourceTypeItem\Game::class;
+        return \App\AllowedValue\ResourceTypeItem\Game::class;
     }
 }

@@ -22,7 +22,7 @@ class SimpleExpense extends Item
 
     public function allowedValuesForItem(int $resource_type_id): array
     {
-        return (new \App\Option\AllowedValue\Currency())->allowedValues();
+        return (new \App\AllowedValue\Currency())->allowedValues();
     }
 
     public function create(int $id): Model
@@ -113,11 +113,11 @@ class SimpleExpense extends Item
 
     protected function allowedValuesItemCollectionClass(): string
     {
-        return \App\Option\AllowedValue\Item\SimpleExpense::class;
+        return \App\AllowedValue\Item\SimpleExpense::class;
     }
 
     protected function allowedValuesResourceTypeItemCollectionClass(): string
     {
-        return \App\Option\AllowedValue\ResourceTypeItem\SimpleExpense::class;
+        return \App\AllowedValue\ResourceTypeItem\SimpleExpense::class;
     }
 }

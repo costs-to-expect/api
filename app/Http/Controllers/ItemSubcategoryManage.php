@@ -66,7 +66,7 @@ class ItemSubcategoryManage extends Controller
         $validator = (new ItemSubcategoryValidator)->create(['category_id' => $item_category->category_id]);
         \App\Request\BodyValidation::validateAndReturnErrors(
             $validator,
-            (new \App\Option\AllowedValue\Subcategory())->allowedValues($item_category->category_id)
+            (new \App\AllowedValue\Subcategory())->allowedValues($item_category->category_id)
         );
 
         $cache_job_payload = (new Cache\JobPayload())

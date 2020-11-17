@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\ResourceType;
-use App\Option\AllowedValue\ItemSubtype;
+use App\AllowedValue\ItemSubtype;
 use App\Option\ResourceCollection;
 use App\Option\ResourceItem;
 use App\Response\Cache;

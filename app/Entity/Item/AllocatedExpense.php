@@ -22,7 +22,7 @@ class AllocatedExpense extends Item
 
     public function allowedValuesForItem(int $resource_type_id): array
     {
-        return (new \App\Option\AllowedValue\Currency())->allowedValues();
+        return (new \App\AllowedValue\Currency())->allowedValues();
     }
 
     public function allowPartialTransfers(): bool
@@ -147,11 +147,11 @@ class AllocatedExpense extends Item
 
     protected function allowedValuesItemCollectionClass(): string
     {
-        return \App\Option\AllowedValue\Item\AllocatedExpense::class;
+        return \App\AllowedValue\Item\AllocatedExpense::class;
     }
 
     protected function allowedValuesResourceTypeItemCollectionClass(): string
     {
-        return \App\Option\AllowedValue\ResourceTypeItem\AllocatedExpense::class;
+        return \App\AllowedValue\ResourceTypeItem\AllocatedExpense::class;
     }
 }

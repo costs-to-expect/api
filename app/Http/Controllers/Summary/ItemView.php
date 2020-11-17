@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Summary;
 
 use App\Entity\Item\Entity;
 use App\Http\Controllers\Controller;
-use App\Option\AllowedValue\ResourceItem;
+use App\AllowedValue\ResourceItem;
 use App\Option\SummaryItemCollection;
 use App\Request\Parameter;
 use App\Response\Responses;
