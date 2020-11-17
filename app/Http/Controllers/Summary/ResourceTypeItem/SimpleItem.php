@@ -7,6 +7,7 @@ use App\Models\Transformers\Item\Summary\SimpleItemByResource;
 use App\Response\Cache;
 use App\Request\Validate\Boolean;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\Config as LaravelConfig;
 
 class SimpleItem extends Item
 {
@@ -24,7 +25,11 @@ class SimpleItem extends Item
 
         $this->model = new \App\Models\ResourceTypeItem\Summary\SimpleItem();
 
-        $this->fetchAllRequestParameters(new \App\Entity\Item\SimpleItem());
+        $this->fetchAllRequestParameters(
+            LaravelConfig::get('api.resource-type-item-type-simple-item.summary-parameters', []),
+            LaravelConfig::get('api.resource-type-item-type-simple-item.summary-searchable', []),
+            LaravelConfig::get('api.resource-type-item-type-simple-item.summary-filterable', [])
+        );
 
         $this->removeDecisionParameters();
     }

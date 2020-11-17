@@ -8,6 +8,7 @@ use App\Models\Transformers\Item\Summary\ExpenseItemBySubcategory;
 use App\Response\Cache;
 use App\Request\Validate\Boolean;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\Config as LaravelConfig;
 
 class SimpleExpense extends Item
 {
@@ -27,7 +28,11 @@ class SimpleExpense extends Item
 
         $this->model = new \App\Models\Item\Summary\SimpleExpense();
 
-        $this->fetchAllRequestParameters(new \App\Entity\Item\SimpleExpense());
+        $this->fetchAllRequestParameters(
+            LaravelConfig::get('api.item-type-simple-expense.summary-parameters', []),
+            LaravelConfig::get('api.item-type-simple-expense.summary-searchable', []),
+            LaravelConfig::get('api.item-type-simple-expense.summary-filterable', [])
+        );
 
         $this->removeDecisionParameters();
     }

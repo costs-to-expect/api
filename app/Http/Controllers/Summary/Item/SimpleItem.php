@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Summary\Item;
 
 use App\Response\Cache;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\Config as LaravelConfig;
 
 class SimpleItem extends Item
 {
@@ -23,7 +24,11 @@ class SimpleItem extends Item
 
         $this->model = new \App\Models\Item\Summary\SimpleItem();
 
-        $this->fetchAllRequestParameters(new \App\Entity\Item\SimpleItem());
+        $this->fetchAllRequestParameters(
+            LaravelConfig::get('api.item-type-simple-item.summary-parameters', []),
+            LaravelConfig::get('api.item-type-simple-item.summary-searchable', []),
+            LaravelConfig::get('api.item-type-simple-item.summary-filterable', [])
+        );
 
         $this->removeDecisionParameters();
     }

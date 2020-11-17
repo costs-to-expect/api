@@ -77,20 +77,24 @@ abstract class Item
 
     abstract protected function removeDecisionParameters(): void;
 
-    protected function fetchAllRequestParameters(\App\Entity\Item\Item $entity): void
+    protected function fetchAllRequestParameters(
+        $request_parameters,
+        $search_parameters,
+        $filter_parameters
+    ): void
     {
         $this->parameters = Parameter\Request::fetch(
-            array_keys($entity->summaryRequestParameters()),
+            array_keys($request_parameters),
             $this->resource_type_id,
             $this->resource_id
         );
 
         $this->search_parameters = Parameter\Search::fetch(
-            $entity->summarySearchParameters()
+            $search_parameters
         );
 
         $this->filter_parameters = Parameter\Filter::fetch(
-            $entity->summaryFilterParameters()
+            $filter_parameters
         );
     }
 }
