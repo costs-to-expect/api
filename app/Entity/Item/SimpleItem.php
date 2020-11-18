@@ -101,6 +101,11 @@ class SimpleItem extends Item
         return new \App\Request\Validate\ItemType\SimpleItem();
     }
 
+    public function itemCollectionClass(): string
+    {
+        return \App\Http\Controllers\Item\SimpleItem::class;
+    }
+
     public function resourceTypeItemCollectionClass(): string
     {
         return \App\Http\Controllers\ResourceTypeItem\SimpleItem::class;

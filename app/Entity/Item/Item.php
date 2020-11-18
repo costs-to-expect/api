@@ -186,6 +186,7 @@ abstract class Item
     abstract public function summaryClass(): string;
 
     abstract public function resourceTypeSummaryClass(): string;
+    abstract public function itemCollectionClass(): string;
     abstract public function resourceTypeItemCollectionClass(): string;
 
     public function summaryFilterParameters(): array

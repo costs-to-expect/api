@@ -4,10 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Entity\Item\Entity;
 use App\Option\ResourceTypeItemCollection;
-use App\Response\Cache;
-use App\Request\Parameter;
-use App\Response\Header\Headers;
-use App\Response\Pagination as UtilityPagination;
 use Illuminate\Http\JsonResponse;
 
 /**
@@ -19,13 +15,6 @@ use Illuminate\Http\JsonResponse;
  */
 class ResourceTypeItemView extends Controller
 {
-    /**
-     * Return all the items based on the set filter options
-     *
-     * @param string $resource_type_id
-     *
-     * @return JsonResponse
-     */
     public function index(string $resource_type_id): JsonResponse
     {
         if ($this->viewAccessToResourceType((int) $resource_type_id) === false) {
@@ -44,13 +33,6 @@ class ResourceTypeItemView extends Controller
         return $collection->response();
     }
 
-    /**
-     * Generate the OPTIONS request for the items list
-     *
-     * @param string $resource_type_id
-     *
-     * @return JsonResponse
-     */
     public function optionsIndex(string $resource_type_id): JsonResponse
     {
         if ($this->viewAccessToResourceType((int) $resource_type_id) === false) {

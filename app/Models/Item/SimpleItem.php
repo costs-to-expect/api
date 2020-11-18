@@ -133,26 +133,11 @@ class SimpleItem extends Model
         return $collection->count();
     }
 
-    /**
-     * Return the results for the given request based on the supplied parameters
-     *
-     * @param integer $resource_type_id
-     * @param integer $resource_id
-     * @param integer $offset
-     * @param integer $limit
-     * @param array $parameters
-     * @param array $search_parameters
-     * @param array $filter_parameters
-     * @param array $sort_parameters
-     *
-     * @return array
-     */
-    public function paginatedCollection(
+     public function paginatedCollection(
         int $resource_type_id,
         int $resource_id,
         int $offset = 0,
         int $limit = 10,
-        array $parameters = [],
         array $search_parameters = [],
         array $filter_parameters = [],
         array $sort_parameters = []
