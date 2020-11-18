@@ -40,6 +40,10 @@ class ItemView extends Controller
         $entity = Entity::item((int) $resource_type_id);
 
         $collection_class = $entity->itemCollectionClass();
+
+        /**
+         * @var \App\Http\Controllers\Item\Item
+         */
         $collection = new $collection_class(
             (int) $resource_type_id,
             (int) $resource_id,
@@ -47,7 +51,7 @@ class ItemView extends Controller
             $this->user_id
         );
 
-        return $collection->response();
+        return $collection->collectionResponse();
     }
 
     /**
