@@ -101,16 +101,6 @@ class SimpleExpense extends Item
         return new \App\Request\Validate\ItemType\SimpleExpense();
     }
 
-    public function resourceTypeModel(): Model
-    {
-        return new \App\Models\ResourceTypeItem\SimpleExpense();
-    }
-
-    public function resourceTypeTransformer(array $data_to_transform): Transformer
-    {
-        return new \App\Models\Transformers\ResourceTypeItem\SimpleExpense($data_to_transform);
-    }
-
     public function resourceTypeItemCollectionClass(): string
     {
         return \App\Http\Controllers\ResourceTypeItem\SimpleExpense::class;

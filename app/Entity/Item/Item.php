@@ -153,8 +153,6 @@ abstract class Item
         return LaravelConfig::get($this->resource_type_base_path . '.filterable', []);
     }
 
-    abstract public function resourceTypeModel(): Model;
-
     public function resourceTypeRequestParameters(): array
     {
         return LaravelConfig::get($this->resource_type_base_path . '.parameters.collection', []);
@@ -169,8 +167,6 @@ abstract class Item
     {
         return LaravelConfig::get($this->resource_type_base_path . '.sortable', []);
     }
-
-    abstract public function resourceTypeTransformer(array $data_to_transform): Transformer;
 
     public function searchParameters(): array
     {

@@ -101,16 +101,6 @@ class SimpleItem extends Item
         return new \App\Request\Validate\ItemType\SimpleItem();
     }
 
-    public function resourceTypeModel(): Model
-    {
-        return new \App\Models\ResourceTypeItem\SimpleItem();
-    }
-
-    public function resourceTypeTransformer(array $data_to_transform): Transformer
-    {
-        return new \App\Models\Transformers\ResourceTypeItem\SimpleItem($data_to_transform);
-    }
-
     public function resourceTypeItemCollectionClass(): string
     {
         return \App\Http\Controllers\ResourceTypeItem\SimpleItem::class;

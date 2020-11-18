@@ -107,16 +107,6 @@ class Game extends Item
         return new \App\Request\Validate\ItemType\Game();
     }
 
-    public function resourceTypeModel(): Model
-    {
-        return new \App\Models\ResourceTypeItem\Game();
-    }
-
-    public function resourceTypeTransformer(array $data_to_transform): Transformer
-    {
-        return new \App\Models\Transformers\ResourceTypeItem\Game($data_to_transform);
-    }
-
     public function patchFields(): array
     {
         return LaravelConfig::get($this->base_path . '.fields-patch', []);

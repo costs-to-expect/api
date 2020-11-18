@@ -135,16 +135,6 @@ class AllocatedExpense extends Item
         return new \App\Request\Validate\ItemType\AllocatedExpense();
     }
 
-    public function resourceTypeModel(): Model
-    {
-        return new \App\Models\ResourceTypeItem\AllocatedExpense();
-    }
-
-    public function resourceTypeTransformer(array $data_to_transform): Transformer
-    {
-        return new \App\Models\Transformers\ResourceTypeItem\AllocatedExpense($data_to_transform);
-    }
-
     public function resourceTypeItemCollectionClass(): string
     {
         return \App\Http\Controllers\ResourceTypeItem\AllocatedExpense::class;
