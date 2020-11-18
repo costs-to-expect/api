@@ -145,6 +145,11 @@ class AllocatedExpense extends Item
         return new \App\Models\Transformers\ResourceTypeItem\AllocatedExpense($data_to_transform);
     }
 
+    public function resourceTypeItemCollectionClass(): string
+    {
+        return \App\Http\Controllers\ResourceTypeItem\AllocatedExpense::class;
+    }
+
     protected function allowedValuesItemCollectionClass(): string
     {
         return \App\AllowedValue\Item\AllocatedExpense::class;

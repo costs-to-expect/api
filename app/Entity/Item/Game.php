@@ -132,6 +132,11 @@ class Game extends Item
         return \App\Http\Controllers\Summary\ResourceTypeItem\Game::class;
     }
 
+    public function resourceTypeItemCollectionClass(): string
+    {
+        return \App\Http\Controllers\ResourceTypeItem\Game::class;
+    }
+
     protected function allowedValuesItemCollectionClass(): string
     {
         return \App\AllowedValue\Item\Game::class;

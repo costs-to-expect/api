@@ -23,19 +23,8 @@ class SimpleItem extends Model
 
     protected $guarded = ['id', 'created_at', 'updated_at'];
 
-    /**
-     * Return the total number of items for the requested resource type
-     *
-     * @param integer $resource_type_id
-     * @param array $parameters_collection
-     * @param array $search_parameters
-     * @param array $filter_parameters
-     *
-     * @return integer
-     */
     public function totalCount(
         int $resource_type_id,
-        array $parameters_collection = [],
         array $search_parameters = [],
         array $filter_parameters = []
     ): int
@@ -78,7 +67,6 @@ class SimpleItem extends Model
         int $resource_type_id,
         int $offset = 0,
         int $limit = 10,
-        array $parameters_collection = [],
         array $search_parameters = [],
         array $filter_parameters = [],
         array $sort_parameters = []

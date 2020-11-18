@@ -15,7 +15,7 @@ class SimpleExpense extends Item
             new \App\Entity\Item\SimpleExpense()
         );
 
-        $this->cache_control->setTtlOneWeek();
+        $this->cache_control->setTtlOneMonth();
 
         $cache_collection = new Cache\Collection();
         $cache_collection->setFromCache($this->cache_control->getByKey(request()->getRequestUri()));

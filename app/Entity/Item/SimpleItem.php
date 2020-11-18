@@ -111,6 +111,11 @@ class SimpleItem extends Item
         return new \App\Models\Transformers\ResourceTypeItem\SimpleItem($data_to_transform);
     }
 
+    public function resourceTypeItemCollectionClass(): string
+    {
+        return \App\Http\Controllers\ResourceTypeItem\SimpleItem::class;
+    }
+
     protected function allowedValuesItemCollectionClass(): string
     {
         return \App\AllowedValue\Item\SimpleItem::class;
