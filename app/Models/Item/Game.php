@@ -106,6 +106,10 @@ class Game extends Model
             ->where('resource_id', '=', $resource_id)
             ->where('resource.resource_type_id', '=', $resource_type_id);
 
+        if (array_key_exists('complete', $parameters) === true) {
+            $collection->where($this->table . '.complete', '=', 1);
+        }
+
         $collection = Clause::applySearch(
             $collection,
             $this->table,
@@ -152,6 +156,10 @@ class Game extends Model
             ->leftJoin('category', $this->table . '.winner', 'category.id')
             ->where('resource_id', '=', $resource_id)
             ->where('resource.resource_type_id', '=', $resource_type_id);
+
+        if (array_key_exists('complete', $parameters) === true) {
+            $collection->where($this->table . '.complete', '=', 1);
+        }
 
         $collection = Clause::applySearch(
             $collection,

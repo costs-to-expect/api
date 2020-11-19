@@ -33,6 +33,10 @@ class Game extends Model
             ->join('resource_type', 'resource.resource_type_id', 'resource_type.id')
             ->where('resource_type.id', '=', $resource_type_id);
 
+        if (array_key_exists('complete', $parameters_collection) === true) {
+            $collection->where($this->table . '.complete', '=', 1);
+        }
+
         $collection = Clause::applySearch(
             $collection,
             $this->table,
@@ -57,6 +61,8 @@ class Game extends Model
         array $sort_parameters = []
     ): array
     {
+
+
         $select_fields = [
             'resource.id AS resource_id',
             'resource.name AS resource_name',
@@ -81,6 +87,10 @@ class Game extends Model
             ->join('resource_type', 'resource.resource_type_id', 'resource_type.id')
             ->leftJoin('category', $this->table . '.winner', 'category.id')
             ->where('resource_type.id', '=', $resource_type_id);
+
+        if (array_key_exists('complete', $parameters_collection) === true) {
+            $collection->where($this->table . '.complete', '=', 1);
+        }
 
         $collection = Clause::applySearch(
             $collection,
