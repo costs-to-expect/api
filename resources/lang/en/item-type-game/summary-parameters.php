@@ -2,4 +2,7 @@
 
 declare(strict_types=1);
 
-return [];
+return [
+    'title-complete' => 'Complete games only',
+    'description-complete' => 'Optionally only show complete games',
+];

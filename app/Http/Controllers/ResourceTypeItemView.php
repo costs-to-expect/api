@@ -24,6 +24,10 @@ class ResourceTypeItemView extends Controller
         $entity = Entity::item((int) $resource_type_id);
 
         $collection_class = $entity->resourceTypeItemCollectionClass();
+
+        /**
+         * @var $collection \App\Http\Controllers\ResourceTypeItem\Item
+         */
         $collection = new $collection_class(
             (int) $resource_type_id,
             $this->writeAccessToResourceType($resource_type_id),

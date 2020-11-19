@@ -76,6 +76,7 @@ class Request
                 case 'include-subcategories':
                 case 'include-resources':
                 case 'include-unpublished':
+                case 'complete':
                     if (
                         array_key_exists($key, self::$parameters) === true &&
                         (
