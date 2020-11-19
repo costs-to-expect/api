@@ -8,6 +8,7 @@ use App\Request\Parameter\Request;
 use App\Request\Parameter\Search;
 use App\Request\Parameter\Sort;
 use App\Response\Cache;
+use App\Response\Header\Header;
 use App\Response\Header\Headers;
 use App\Response\Pagination as UtilityPagination;
 use Illuminate\Http\JsonResponse;
@@ -50,7 +51,7 @@ abstract class Item
     abstract public function collectionResponse(): JsonResponse;
     abstract public function showResponse(int $item_id): JsonResponse;
 
-    protected function headers(
+    protected function collectionHeaders(
         array $pagination_parameters,
         int $count,
         int $total,
@@ -66,6 +67,14 @@ abstract class Item
             ->addSort(Sort::xHeader())
             ->addParameters(Request::xHeader())
             ->addFilters(Filter::xHeader());
+
+        return $headers->headers();
+    }
+
+    protected function showHeaders(): array
+    {
+        $headers = new Header();
+        $headers->item();
 
         return $headers->headers();
     }

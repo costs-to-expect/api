@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Item;
 
 use App\Models\Transformers\Item\AllocatedExpense as Transformer;
 use App\Response\Cache;
+use App\Response\Header\Header;
 use Illuminate\Http\JsonResponse;
 
 class AllocatedExpense extends Item
@@ -62,7 +63,7 @@ class AllocatedExpense extends Item
                 $total,
                 $collection,
                 $pagination_parameters,
-                $this->headers(
+                $this->collectionHeaders(
                     $pagination_parameters,
                     count($items),
                     $total,
@@ -77,6 +78,28 @@ class AllocatedExpense extends Item
 
     public function showResponse(int $item_id): JsonResponse
     {
-        return response()->json([], 200, []);
+        $this->fetchAllRequestParameters(
+            new \App\Entity\Item\AllocatedExpense()
+        );
+
+        $item = (new \App\Models\Item\AllocatedExpense())->single(
+            $this->resource_type_id,
+            $this->resource_id,
+            $item_id,
+            $this->request_parameters
+        );
+
+        if ($item === null) {
+            return \App\Response\Responses::notFound(trans('entities.item'));
+        }
+
+        $headers = new Header();
+        $headers->item();
+
+        return response()->json(
+            (new Transformer($item))->asArray(),
+            200,
+            $headers->headers()
+        );
     }
 }

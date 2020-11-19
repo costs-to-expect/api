@@ -58,7 +58,7 @@ class SimpleExpense extends Item
                 $total,
                 $collection,
                 $pagination_parameters,
-                $this->headers(
+                $this->collectionHeaders(
                     $pagination_parameters,
                     count($items),
                     $total,

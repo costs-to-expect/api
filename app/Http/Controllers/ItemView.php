@@ -3,13 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Entity\Item\Entity;
+use App\Http\Controllers\Item\Item;
 use App\Option\ItemCollection;
 use App\Option\ItemItem;
-use App\Response\Cache;
 use App\Response\Header\Header;
 use App\Request\Parameter;
-use App\Response\Header\Headers;
-use App\Response\Pagination as UtilityPagination;
 use Illuminate\Http\JsonResponse;
 
 /**
@@ -42,7 +40,7 @@ class ItemView extends Controller
         $collection_class = $entity->itemCollectionClass();
 
         /**
-         * @var \App\Http\Controllers\Item\Item
+         * @var $collection Item
          */
         $collection = new $collection_class(
             (int) $resource_type_id,
@@ -74,34 +72,19 @@ class ItemView extends Controller
         }
 
         $entity = Entity::item($resource_type_id);
+        $collection_class = $entity->itemCollectionClass();
 
-        $parameters = Parameter\Request::fetch(
-            array_keys($entity->itemRequestParameters()),
+        /**
+         * @var $collection Item
+         */
+        $collection = new $collection_class(
             (int) $resource_type_id,
-            (int) $resource_id
+            (int) $resource_id,
+            $this->writeAccessToResourceType($resource_type_id),
+            $this->user_id
         );
 
-        $item_model = $entity->model();
-
-        $item = $item_model->single(
-            $resource_type_id,
-            $resource_id,
-            $item_id,
-            $parameters
-        );
-
-        if ($item === null) {
-            return \App\Response\Responses::notFound(trans('entities.item'));
-        }
-
-        $headers = new Header();
-        $headers->item();
-
-        return response()->json(
-            $entity->transformer($item)->asArray(),
-            200,
-            $headers->headers()
-        );
+        return $collection->showResponse($item_id);
     }
 
     /**
