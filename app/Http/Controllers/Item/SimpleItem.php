@@ -72,6 +72,25 @@ class SimpleItem extends Item
 
     public function showResponse(int $item_id): JsonResponse
     {
-        return response()->json([], 200, []);
+        $this->fetchAllRequestParameters(
+            new \App\Entity\Item\SimpleItem()
+        );
+
+        $item = (new \App\Models\Item\SimpleItem())->single(
+            $this->resource_type_id,
+            $this->resource_id,
+            $item_id,
+            $this->request_parameters
+        );
+
+        if ($item === null) {
+            return \App\Response\Responses::notFound(trans('entities.item'));
+        }
+
+        return response()->json(
+            (new Transformer($item))->asArray(),
+            200,
+            $this->showHeaders()
+        );
     }
 }

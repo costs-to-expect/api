@@ -135,7 +135,7 @@ class AllocatedExpense extends Item
         return new \App\Request\Validate\ItemType\AllocatedExpense();
     }
 
-    public function itemCollectionClass(): string
+    public function viewClass(): string
     {
         return \App\Http\Controllers\Item\AllocatedExpense::class;
     }

@@ -37,7 +37,7 @@ class ItemView extends Controller
 
         $entity = Entity::item((int) $resource_type_id);
 
-        $collection_class = $entity->itemCollectionClass();
+        $collection_class = $entity->viewClass();
 
         /**
          * @var $collection Item
@@ -72,7 +72,7 @@ class ItemView extends Controller
         }
 
         $entity = Entity::item($resource_type_id);
-        $collection_class = $entity->itemCollectionClass();
+        $collection_class = $entity->viewClass();
 
         /**
          * @var $collection Item

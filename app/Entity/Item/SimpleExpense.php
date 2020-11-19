@@ -101,7 +101,7 @@ class SimpleExpense extends Item
         return new \App\Request\Validate\ItemType\SimpleExpense();
     }
 
-    public function itemCollectionClass(): string
+    public function viewClass(): string
     {
         return \App\Http\Controllers\Item\SimpleExpense::class;
     }

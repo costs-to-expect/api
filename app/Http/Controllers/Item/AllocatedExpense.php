@@ -5,7 +5,6 @@ namespace App\Http\Controllers\Item;
 
 use App\Models\Transformers\Item\AllocatedExpense as Transformer;
 use App\Response\Cache;
-use App\Response\Header\Header;
 use Illuminate\Http\JsonResponse;
 
 class AllocatedExpense extends Item
@@ -93,13 +92,10 @@ class AllocatedExpense extends Item
             return \App\Response\Responses::notFound(trans('entities.item'));
         }
 
-        $headers = new Header();
-        $headers->item();
-
         return response()->json(
             (new Transformer($item))->asArray(),
             200,
-            $headers->headers()
+            $this->showHeaders()
         );
     }
 }

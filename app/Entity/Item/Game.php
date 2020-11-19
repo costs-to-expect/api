@@ -117,7 +117,7 @@ class Game extends Item
         return \App\Http\Controllers\Summary\Item\Game::class;
     }
 
-    public function itemCollectionClass(): string
+    public function viewClass(): string
     {
         return \App\Http\Controllers\Item\Game::class;
     }

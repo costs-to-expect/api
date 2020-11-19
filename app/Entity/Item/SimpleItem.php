@@ -101,7 +101,7 @@ class SimpleItem extends Item
         return new \App\Request\Validate\ItemType\SimpleItem();
     }
 
-    public function itemCollectionClass(): string
+    public function viewClass(): string
     {
         return \App\Http\Controllers\Item\SimpleItem::class;
     }
