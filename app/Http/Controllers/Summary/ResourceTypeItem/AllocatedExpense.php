@@ -101,7 +101,12 @@ class AllocatedExpense extends Item
             $this->permitted_user,
             $this->user_id
         );
-        $cache_control->setTtlOneWeek();
+
+        if ($cache_control->visibility() === 'public') {
+            $cache_control->setTtlOneWeek();
+        } else {
+            $cache_control->setTtlOneDay();
+        }
 
         $cache_summary = new Cache\Summary();
         $cache_summary->setFromCache($cache_control->getByKey(request()->getRequestUri()));
@@ -132,7 +137,12 @@ class AllocatedExpense extends Item
             $this->permitted_user,
             $this->user_id
         );
-        $cache_control->setTtlOneWeek();
+
+        if ($cache_control->visibility() === 'public') {
+            $cache_control->setTtlOneWeek();
+        } else {
+            $cache_control->setTtlOneDay();
+        }
 
         $cache_summary = new Cache\Summary();
         $cache_summary->setFromCache($cache_control->getByKey(request()->getRequestUri()));
@@ -170,7 +180,12 @@ class AllocatedExpense extends Item
             $this->permitted_user,
             $this->user_id
         );
-        $cache_control->setTtlOneWeek();
+
+        if ($cache_control->visibility() === 'public') {
+            $cache_control->setTtlOneWeek();
+        } else {
+            $cache_control->setTtlOneDay();
+        }
 
         $cache_summary = new Cache\Summary();
         $cache_summary->setFromCache($cache_control->getByKey(request()->getRequestUri()));
@@ -210,7 +225,12 @@ class AllocatedExpense extends Item
             $this->permitted_user,
             $this->user_id
         );
-        $cache_control->setTtlOneWeek();
+
+        if ($cache_control->visibility() === 'public') {
+            $cache_control->setTtlOneWeek();
+        } else {
+            $cache_control->setTtlOneDay();
+        }
 
         $cache_summary = new Cache\Summary();
         $cache_summary->setFromCache($cache_control->getByKey(request()->getRequestUri()));
@@ -242,7 +262,12 @@ class AllocatedExpense extends Item
             $this->permitted_user,
             $this->user_id
         );
-        $cache_control->setTtlOneWeek();
+
+        if ($cache_control->visibility() === 'public') {
+            $cache_control->setTtlOneWeek();
+        } else {
+            $cache_control->setTtlOneDay();
+        }
 
         $cache_summary = new Cache\Summary();
         $cache_summary->setFromCache($cache_control->getByKey(request()->getRequestUri()));
@@ -347,7 +372,12 @@ class AllocatedExpense extends Item
             $this->permitted_user,
             $this->user_id
         );
-        $cache_control->setTtlOneWeek();
+
+        if ($cache_control->visibility() === 'public') {
+            $cache_control->setTtlOneWeek();
+        } else {
+            $cache_control->setTtlOneDay();
+        }
 
         $cache_summary = new Cache\Summary();
         $cache_summary->setFromCache($cache_control->getByKey(request()->getRequestUri()));
@@ -378,7 +408,12 @@ class AllocatedExpense extends Item
             $this->permitted_user,
             $this->user_id
         );
-        $cache_control->setTtlOneWeek();
+
+        if ($cache_control->visibility() === 'public') {
+            $cache_control->setTtlOneWeek();
+        } else {
+            $cache_control->setTtlOneDay();
+        }
 
         $cache_summary = new Cache\Summary();
         $cache_summary->setFromCache($cache_control->getByKey(request()->getRequestUri()));
@@ -410,7 +445,12 @@ class AllocatedExpense extends Item
             $this->permitted_user,
             $this->user_id
         );
-        $cache_control->setTtlOneWeek();
+
+        if ($cache_control->visibility() === 'public') {
+            $cache_control->setTtlOneWeek();
+        } else {
+            $cache_control->setTtlOneDay();
+        }
 
         $cache_summary = new Cache\Summary();
         $cache_summary->setFromCache($cache_control->getByKey(request()->getRequestUri()));
@@ -449,7 +489,12 @@ class AllocatedExpense extends Item
             $this->permitted_user,
             $this->user_id
         );
-        $cache_control->setTtlOneWeek();
+
+        if ($cache_control->visibility() === 'public') {
+            $cache_control->setTtlOneWeek();
+        } else {
+            $cache_control->setTtlOneDay();
+        }
 
         $cache_summary = new Cache\Summary();
         $cache_summary->setFromCache($cache_control->getByKey(request()->getRequestUri()));
@@ -483,7 +528,12 @@ class AllocatedExpense extends Item
             $this->permitted_user,
             $this->user_id
         );
-        $cache_control->setTtlOneWeek();
+
+        if ($cache_control->visibility() === 'public') {
+            $cache_control->setTtlOneWeek();
+        } else {
+            $cache_control->setTtlOneDay();
+        }
 
         $cache_summary = new Cache\Summary();
         $cache_summary->setFromCache($cache_control->getByKey(request()->getRequestUri()));
@@ -514,7 +564,12 @@ class AllocatedExpense extends Item
             $this->permitted_user,
             $this->user_id
         );
-        $cache_control->setTtlOneWeek();
+
+        if ($cache_control->visibility() === 'public') {
+            $cache_control->setTtlOneWeek();
+        } else {
+            $cache_control->setTtlOneDay();
+        }
 
         $cache_summary = new Cache\Summary();
         $cache_summary->setFromCache($cache_control->getByKey(request()->getRequestUri()));
