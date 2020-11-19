@@ -79,7 +79,7 @@ class Game extends Item
 
     protected function removeDecisionParameters(): void
     {
-        // Do nothing
+        // Nothing here
     }
 
     protected function summary(): JsonResponse

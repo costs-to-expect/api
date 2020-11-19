@@ -46,6 +46,10 @@ class Game extends Model
             ->where("resource_type.id", "=", $resource_type_id)
             ->where("resource.id", "=", $resource_id);
 
+        if (array_key_exists('complete', $parameters) === true) {
+            $collection->where($this->sub_table . '.complete', '=', 1);
+        }
+
         $collection = Clause::applySearch(
             $collection,
             $this->sub_table,
@@ -96,6 +100,10 @@ class Game extends Model
             ->join('item_subtype', 'resource_item_subtype.item_subtype_id', 'item_subtype.id')
             ->where("resource_type.id", "=", $resource_type_id)
             ->where("resource.id", "=", $resource_id);
+
+        if (array_key_exists('complete', $parameters) === true) {
+            $collection->where($this->sub_table . '.complete', '=', 1);
+        }
 
         return $collection
             ->groupBy('resource.id', 'item_subtype.id')

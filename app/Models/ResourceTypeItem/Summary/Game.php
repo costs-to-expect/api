@@ -65,6 +65,10 @@ class Game extends Model
             ->join('resource_type', 'resource.resource_type_id', 'resource_type.id')
             ->where('resource_type.id', '=', $resource_type_id);
 
+        if (array_key_exists('complete', $parameters) === true) {
+            $collection->where($this->sub_table . '.complete', '=', 1);
+        }
+
         return $collection
             ->groupBy('resource.id', 'item_subtype.id')
             ->orderBy('resource.name')
@@ -87,6 +91,10 @@ class Game extends Model
             ->join("resource", "resource.id", "item.resource_id")
             ->join("resource_type", "resource_type.id", "resource.resource_type_id")
             ->where("resource_type.id", "=", $resource_type_id);
+
+        if (array_key_exists('complete', $parameters) === true) {
+            $collection->where($this->sub_table . '.complete', '=', 1);
+        }
 
         if (count($search_parameters) > 0) {
             foreach ($search_parameters as $field => $search_term) {
