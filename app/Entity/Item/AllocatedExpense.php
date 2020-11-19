@@ -3,10 +3,10 @@ declare(strict_types=1);
 
 namespace App\Entity\Item;
 
-use App\Request\Hash;
-use Illuminate\Database\Eloquent\Model;
 use App\Models\Transformers\Transformer;
+use App\Request\Hash;
 use App\Request\Validate\Validator;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Date;
 
 class AllocatedExpense extends Item
@@ -137,7 +137,7 @@ class AllocatedExpense extends Item
 
     public function viewClass(): string
     {
-        return \App\Http\Controllers\Item\AllocatedExpense::class;
+        return \App\ItemType\AllocatedExpense\Response::class;
     }
 
     public function resourceTypeItemCollectionClass(): string

@@ -1,13 +1,14 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Http\Controllers\Item;
+namespace App\ItemType\AllocatedExpense;
 
+use App\ItemType\Response as ItemTypeResponse;
 use App\Models\Transformers\Item\AllocatedExpense as Transformer;
 use App\Response\Cache;
 use Illuminate\Http\JsonResponse;
 
-class AllocatedExpense extends Item
+class Response extends ItemTypeResponse
 {
     public function collectionResponse(): JsonResponse
     {

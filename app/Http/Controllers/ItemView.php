@@ -3,11 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Entity\Item\Entity;
-use App\Http\Controllers\Item\Item;
+use App\ItemType\Response;
 use App\Option\ItemCollection;
 use App\Option\ItemItem;
-use App\Response\Header\Header;
-use App\Request\Parameter;
 use Illuminate\Http\JsonResponse;
 
 /**
@@ -40,7 +38,7 @@ class ItemView extends Controller
         $collection_class = $entity->viewClass();
 
         /**
-         * @var $collection Item
+         * @var $collection Response
          */
         $collection = new $collection_class(
             (int) $resource_type_id,
@@ -75,7 +73,7 @@ class ItemView extends Controller
         $collection_class = $entity->viewClass();
 
         /**
-         * @var $collection Item
+         * @var $collection Response
          */
         $collection = new $collection_class(
             (int) $resource_type_id,

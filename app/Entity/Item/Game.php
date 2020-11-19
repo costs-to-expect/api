@@ -119,7 +119,7 @@ class Game extends Item
 
     public function viewClass(): string
     {
-        return \App\Http\Controllers\Item\Game::class;
+        return \App\ItemType\Game\Response::class;
     }
 
     public function resourceTypeSummaryClass(): string

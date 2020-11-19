@@ -103,7 +103,7 @@ class SimpleExpense extends Item
 
     public function viewClass(): string
     {
-        return \App\Http\Controllers\Item\SimpleExpense::class;
+        return \App\ItemType\SimpleExpense\Response::class;
     }
 
     public function resourceTypeItemCollectionClass(): string

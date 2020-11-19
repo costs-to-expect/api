@@ -103,7 +103,7 @@ class SimpleItem extends Item
 
     public function viewClass(): string
     {
-        return \App\Http\Controllers\Item\SimpleItem::class;
+        return \App\ItemType\SimpleItem\Response::class;
     }
 
     public function resourceTypeItemCollectionClass(): string
