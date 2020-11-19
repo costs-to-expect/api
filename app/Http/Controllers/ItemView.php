@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Entity\Item\Entity;
+use App\ItemType\Entity;
 use App\ItemType\Response;
 use App\Option\ItemCollection;
 use App\Option\ItemItem;

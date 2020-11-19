@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace App\AllowedValue;
 
-use App\Entity\Item\Item as Entity;
+use App\ItemType\ItemType as Entity;
 use App\Models\Category;
 use App\Models\EntityLimits;
 use App\Models\Subcategory;

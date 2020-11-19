@@ -1,12 +1,16 @@
 <?php
 
-namespace App\Entity\Item;
+namespace App\ItemType;
 
+use App\Entity\Item\AllocatedExpense;
+use App\Entity\Item\Game;
+use App\Entity\Item\SimpleExpense;
+use App\Entity\Item\SimpleItem;
 use App\Models\ResourceTypeItemType;
 
 class Entity
 {
-    public static function item(int $resource_type_id): Item
+    public static function item(int $resource_type_id): ItemType
     {
         $type =(new ResourceTypeItemType())->itemType($resource_type_id);
 
@@ -17,7 +21,7 @@ class Entity
         throw new \RuntimeException('No entity definition for ' . $type, 500);
     }
 
-    public static function byType(string $item_type): Item
+    public static function byType(string $item_type): ItemType
     {
         switch ($item_type) {
             case 'allocated-expense':

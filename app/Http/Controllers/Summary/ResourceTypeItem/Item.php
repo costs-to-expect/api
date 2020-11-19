@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers\Summary\ResourceTypeItem;
 
-use App\Response\Cache;
 use App\Request\Parameter;
+use App\Response\Cache;
 use App\Response\Header\Headers;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\JsonResponse;
@@ -73,7 +73,7 @@ abstract class Item
 
     abstract protected function removeDecisionParameters(): void;
 
-    protected function fetchAllRequestParameters(\App\Entity\Item\Item $entity): void
+    protected function fetchAllRequestParameters(\App\ItemType\ItemType $entity): void
     {
         $this->parameters = Parameter\Request::fetch(
             array_keys($entity->summaryResourceTypeRequestParameters()),

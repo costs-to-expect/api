@@ -3,13 +3,14 @@ declare(strict_types=1);
 
 namespace App\Entity\Item;
 
+use App\ItemType\ItemType;
 use App\Models\Transformers\Transformer;
 use App\Request\Hash;
 use App\Request\Validate\Validator;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Date;
 
-class SimpleExpense extends Item
+class SimpleExpense extends ItemType
 {
     public function __construct()
     {

@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Entity\Item\Entity;
+use App\ItemType\Entity;
 use App\Option\ResourceTypeItemCollection;
 use Illuminate\Http\JsonResponse;
 

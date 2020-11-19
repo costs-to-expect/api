@@ -3,7 +3,6 @@ declare(strict_types=1);
 
 namespace App\AllowedValue\Item;
 
-use App\Entity\Item\Item as Entity;
 use App\Models\Category;
 use App\Models\Currency;
 use App\Models\EntityLimits;
@@ -15,7 +14,7 @@ abstract class Item
 {
     protected Hash $hash;
 
-    protected Entity $entity;
+    protected \App\ItemType\ItemType $entity;
 
     protected EntityLimits $range_limits;
 
@@ -41,8 +40,6 @@ abstract class Item
         $this->viewable_resource_types = $viewable_resource_types;
 
         $this->range_limits = new EntityLimits();
-
-        $this->entity = new \App\Entity\Item\AllocatedExpense();
 
         $this->hash = new Hash();
     }

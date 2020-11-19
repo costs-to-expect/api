@@ -2,15 +2,15 @@
 
 namespace App\Http\Controllers;
 
-use App\Entity\Item\Entity;
+use App\ItemType\Entity;
 use App\Models\ItemPartialTransfer;
 use App\Models\Transformers\ItemPartialTransfer as ItemPartialTransferTransformer;
 use App\Option\ItemPartialTransferCollection;
 use App\Option\ItemPartialTransferItem;
 use App\Option\ItemPartialTransferTransfer;
+use App\Request\Parameter;
 use App\Response\Cache;
 use App\Response\Header\Headers;
-use App\Request\Parameter;
 use App\Response\Pagination as UtilityPagination;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Config;

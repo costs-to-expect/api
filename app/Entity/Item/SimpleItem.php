@@ -3,12 +3,13 @@ declare(strict_types=1);
 
 namespace App\Entity\Item;
 
+use App\ItemType\ItemType;
 use App\Models\Transformers\Transformer;
 use App\Request\Validate\Validator;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Date;
 
-class SimpleItem extends Item
+class SimpleItem extends ItemType
 {
     public function __construct()
     {

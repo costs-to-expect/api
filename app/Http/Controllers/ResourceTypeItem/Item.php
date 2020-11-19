@@ -66,7 +66,7 @@ abstract class Item
     }
 
     protected function fetchAllRequestParameters(
-        \App\Entity\Item\Item $entity
+        \App\ItemType\ItemType $entity
     ): void
     {
         $this->request_parameters = Request::fetch(

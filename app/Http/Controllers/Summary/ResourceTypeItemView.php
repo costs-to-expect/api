@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers\Summary;
 
-use App\Entity\Item\Entity;
 use App\Http\Controllers\Controller;
+use App\ItemType\Entity;
 use App\Option\SummaryResourceTypeItemCollection;
 use App\Response\Responses;
 use Illuminate\Http\JsonResponse;

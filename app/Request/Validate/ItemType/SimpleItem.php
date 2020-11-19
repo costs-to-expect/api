@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace App\Request\Validate\ItemType;
 
-use App\Entity\Item\Entity;
+use App\ItemType\Entity;
 use App\Request\Validate\Validator as BaseValidator;
 
 /**

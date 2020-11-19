@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Entity\Item;
+namespace App\ItemType;
 
 use App\Models\Transformers\Transformer;
 use App\Request\Parameter\Request;
@@ -14,7 +14,7 @@ use Illuminate\Support\Facades\Config as LaravelConfig;
  * Add the ticket to Pivotal when/if happy with this.
  */
 
-abstract class Item
+abstract class ItemType
 {
     protected string $base_path;
 

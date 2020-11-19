@@ -2,14 +2,14 @@
 
 namespace App\Http\Controllers;
 
-use App\Entity\Item\Entity;
+use App\ItemType\Entity;
+use App\Models\ItemCategory;
+use App\Models\ItemSubcategory;
+use App\Models\Transformers\ItemSubcategory as ItemSubcategoryTransformer;
 use App\Option\ItemSubcategoryCollection;
 use App\Option\ItemSubcategoryItem;
 use App\Response\Cache;
 use App\Response\Header\Header;
-use App\Models\ItemCategory;
-use App\Models\ItemSubcategory;
-use App\Models\Transformers\ItemSubcategory as ItemSubcategoryTransformer;
 use Illuminate\Http\JsonResponse;
 
 /**
