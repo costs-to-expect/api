@@ -3,8 +3,8 @@
 namespace App\ItemType\Game;
 
 use App\ItemType\SummaryResourceTypeResponse as BaseSummaryResourceTypeResponse;
-use App\Models\Transformers\Item\Summary\Game as GameTransformer;
-use App\Models\Transformers\Item\Summary\GameItemByResource;
+use App\ItemType\Game\SummaryTransformer as GameTransformer;
+use App\ItemType\Game\SummaryTransformerByResource;
 use App\Request\Validate\Boolean;
 use App\Response\Cache;
 use Illuminate\Http\JsonResponse;
@@ -113,7 +113,7 @@ class SummaryResourceTypeResponse extends BaseSummaryResourceTypeResponse
                 $this->parameters
             );
 
-            $collection = (new GameItemByResource($summary))->asArray();
+            $collection = (new SummaryTransformerByResource($summary))->asArray();
 
             $this->assignToCache(
                 $summary,

@@ -3,11 +3,11 @@
 namespace App\ItemType\AllocatedExpense;
 
 use App\ItemType\SummaryResponse as BaseSummaryResponse;
-use App\Models\Transformers\Item\Summary\ExpenseItem;
-use App\Models\Transformers\Item\Summary\ExpenseItemByCategory;
-use App\Models\Transformers\Item\Summary\ExpenseItemByMonth;
-use App\Models\Transformers\Item\Summary\ExpenseItemBySubcategory;
-use App\Models\Transformers\Item\Summary\ExpenseItemByYear;
+use App\ItemType\AllocatedExpense\SummaryTransformer;
+use App\ItemType\AllocatedExpense\SummaryTransformerByCategory;
+use App\ItemType\AllocatedExpense\SummaryTransformerByMonth;
+use App\ItemType\AllocatedExpense\SummaryTransformerBySubcategory;
+use App\ItemType\AllocatedExpense\SummaryTransformerByYear;
 use App\Request\Validate\Boolean;
 use App\Response\Cache;
 use Illuminate\Http\JsonResponse;
@@ -117,7 +117,7 @@ class SummaryResponse extends BaseSummaryResponse
                 $this->parameters
             );
 
-            $collection = (new ExpenseItemByCategory($summary))->asArray();
+            $collection = (new SummaryTransformerByCategory($summary))->asArray();
 
             $this->assignToCache(
                 $summary,
@@ -155,7 +155,7 @@ class SummaryResponse extends BaseSummaryResponse
                 $this->parameters
             );
 
-            $collection = (new ExpenseItemByCategory($summary))->asArray();
+            $collection = (new SummaryTransformerByCategory($summary))->asArray();
 
             if (count($collection) === 1) {
                 $collection = $collection[0];
@@ -206,7 +206,7 @@ class SummaryResponse extends BaseSummaryResponse
 
             $collection = [];
             foreach ($summary as $subtotal) {
-                $collection[] = (new ExpenseItem($subtotal))->asArray();
+                $collection[] = (new SummaryTransformer($subtotal))->asArray();
             }
 
             $this->assignToCache(
@@ -245,7 +245,7 @@ class SummaryResponse extends BaseSummaryResponse
                 $this->parameters
             );
 
-            $collection = (new ExpenseItemByMonth($summary))->asArray();
+            $collection = (new SummaryTransformerByMonth($summary))->asArray();
 
             $this->assignToCache(
                 $summary,
@@ -284,7 +284,7 @@ class SummaryResponse extends BaseSummaryResponse
                 $this->parameters
             );
 
-            $collection = (new ExpenseItemByMonth($summary))->asArray();
+            $collection = (new SummaryTransformerByMonth($summary))->asArray();
 
             if (count($collection) === 1) {
                 $collection = $collection[0];
@@ -387,7 +387,7 @@ class SummaryResponse extends BaseSummaryResponse
                 $this->parameters
             );
 
-            $collection = (new ExpenseItemBySubcategory($summary))->asArray();
+            $collection = (new SummaryTransformerBySubcategory($summary))->asArray();
 
             $this->assignToCache(
                 $summary,
@@ -426,7 +426,7 @@ class SummaryResponse extends BaseSummaryResponse
                 $this->parameters
             );
 
-            $collection = (new ExpenseItemBySubcategory($summary))->asArray();
+            $collection = (new SummaryTransformerBySubcategory($summary))->asArray();
 
             if (count($collection) === 1) {
                 $collection = $collection[0];
@@ -471,7 +471,7 @@ class SummaryResponse extends BaseSummaryResponse
 
             $collection = [];
             foreach ($summary as $subtotal) {
-                $collection[] = (new ExpenseItem($subtotal))->asArray();
+                $collection[] = (new SummaryTransformer($subtotal))->asArray();
             }
 
             $this->assignToCache(
@@ -509,7 +509,7 @@ class SummaryResponse extends BaseSummaryResponse
                 $this->parameters
             );
 
-            $collection = (new ExpenseItemByYear($summary))->asArray();
+            $collection = (new SummaryTransformerByYear($summary))->asArray();
 
             $this->assignToCache(
                 $summary,
@@ -547,7 +547,7 @@ class SummaryResponse extends BaseSummaryResponse
                 $this->parameters
             );
 
-            $collection = (new ExpenseItemByYear($summary))->asArray();
+            $collection = (new SummaryTransformerByYear($summary))->asArray();
 
             if (count($collection) === 1) {
                 $collection = $collection[0];

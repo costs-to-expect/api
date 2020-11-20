@@ -1,24 +1,25 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Models\Transformers\Item\Summary;
+namespace App\ItemType\AllocatedExpense;
 
 use App\Models\Transformers\Transformer;
 
 /**
- * Transform the data from our queries into the format we want to display
- *
  * @author Dean Blackborough <dean@g3d-development.com>
  * @copyright Dean Blackborough 2018-2020
  * @license https://github.com/costs-to-expect/api/blob/master/LICENSE
  */
-class SimpleItem extends Transformer
+class SummaryTransformer extends Transformer
 {
     public function format(array $to_transform): void
     {
         $this->transformed = [
-            'count' => (int) $to_transform['total_count'],
-            'total' => (int) $to_transform['total']
+            'currency' => [
+                'code' => $to_transform['currency_code']
+            ],
+            'count' => $to_transform['total_count'],
+            'subtotal' => number_format((float) $to_transform['total'], 2, '.', '')
         ];
     }
 }

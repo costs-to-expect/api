@@ -3,8 +3,8 @@
 namespace App\ItemType\SimpleItem;
 
 use App\ItemType\SummaryResourceTypeResponse as BaseSummaryResourceTypeResponse;
-use App\Models\Transformers\Item\Summary\SimpleItem as SimpleItemTransformer;
-use App\Models\Transformers\Item\Summary\SimpleItemByResource;
+use App\ItemType\SimpleItem\SummaryTransformer as SimpleItemTransformer;
+use App\ItemType\SimpleItem\SummaryTransformerByResource;
 use App\Request\Validate\Boolean;
 use App\Response\Cache;
 use Illuminate\Http\JsonResponse;
@@ -113,7 +113,7 @@ class SummaryResourceTypeResponse extends BaseSummaryResourceTypeResponse
                 $this->parameters
             );
 
-            $collection = (new SimpleItemByResource($summary))->asArray();
+            $collection = (new SummaryTransformerByResource($summary))->asArray();
 
             $this->assignToCache(
                 $summary,
