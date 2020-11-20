@@ -12,7 +12,7 @@ class Game extends Item
     public function response(): JsonResponse
     {
         $this->fetchAllRequestParameters(
-            new \App\Entity\Item\Game()
+            new \App\ItemType\Game\Item()
         );
 
         $this->cache_control->setTtlOneWeek();

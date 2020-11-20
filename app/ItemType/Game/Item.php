@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Entity\Item;
+namespace App\ItemType\Game;
 
 use App\ItemType\ItemType;
 use App\Models\Transformers\Transformer;
@@ -11,7 +11,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Config as LaravelConfig;
 use Illuminate\Support\Facades\Date;
 
-class Game extends ItemType
+class Item extends ItemType
 {
     public function __construct()
     {

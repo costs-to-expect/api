@@ -13,7 +13,7 @@ class Response extends ItemTypeResponse
     public function collectionResponse(): JsonResponse
     {
         $this->fetchAllRequestParameters(
-            new \App\Entity\Item\Game()
+            new \App\ItemType\Game\Item()
         );
 
         $this->cache_control->setTtlOneWeek();
@@ -75,7 +75,7 @@ class Response extends ItemTypeResponse
     public function showResponse(int $item_id): JsonResponse
     {
         $this->fetchAllRequestParameters(
-            new \App\Entity\Item\Game()
+            new \App\ItemType\Game\Item()
         );
 
         $item = (new \App\Models\Item\Game())->single(

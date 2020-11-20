@@ -6,8 +6,8 @@ use App\Models\Transformers\Item\Summary\ExpenseItem;
 use App\Models\Transformers\Item\Summary\ExpenseItemByCategory;
 use App\Models\Transformers\Item\Summary\ExpenseItemByResource;
 use App\Models\Transformers\Item\Summary\ExpenseItemBySubcategory;
-use App\Response\Cache;
 use App\Request\Validate\Boolean;
+use App\Response\Cache;
 use Illuminate\Http\JsonResponse;
 
 class SimpleExpense extends Item
@@ -26,7 +26,7 @@ class SimpleExpense extends Item
 
         $this->model = new \App\Models\ResourceTypeItem\Summary\SimpleExpense();
 
-        $this->fetchAllRequestParameters(new \App\Entity\Item\SimpleExpense());
+        $this->fetchAllRequestParameters(new \App\ItemType\SimpleExpense\SimpleExpense());
 
         $this->removeDecisionParameters();
     }

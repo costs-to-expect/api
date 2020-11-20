@@ -1,19 +1,19 @@
 <?php
 declare(strict_types=1);
 
-namespace App\ItemType\SimpleExpense;
+namespace App\ItemType\SimpleItem;
 
 use App\ItemType\Response as ItemTypeResponse;
-use App\Models\Transformers\Item\SimpleExpense as Transformer;
+use App\Models\Transformers\Item\SimpleItem as Transformer;
 use App\Response\Cache;
 use Illuminate\Http\JsonResponse;
 
-class Response extends ItemTypeResponse
+class Item extends ItemTypeResponse
 {
     public function collectionResponse(): JsonResponse
     {
         $this->fetchAllRequestParameters(
-            new \App\Entity\Item\SimpleExpense()
+            new \App\ItemType\SimpleItem\SimpleItem()
         );
 
         $this->cache_control->setTtlOneMonth();
@@ -25,7 +25,7 @@ class Response extends ItemTypeResponse
             $this->cache_control->isRequestCacheable() === false ||
             $cache_collection->valid() === false
         ) {
-            $model = new \App\Models\Item\SimpleExpense();
+            $model = new \App\Models\Item\SimpleItem();
 
             $total = $model->totalCount(
                 $this->resource_type_id,
@@ -42,7 +42,6 @@ class Response extends ItemTypeResponse
                 $this->resource_id,
                 $pagination_parameters['offset'],
                 $pagination_parameters['limit'],
-                $this->request_parameters,
                 $this->search_parameters,
                 $this->filter_parameters,
                 $this->sort_fields
@@ -75,10 +74,10 @@ class Response extends ItemTypeResponse
     public function showResponse(int $item_id): JsonResponse
     {
         $this->fetchAllRequestParameters(
-            new \App\Entity\Item\SimpleExpense()
+            new \App\ItemType\SimpleItem\SimpleItem()
         );
 
-        $item = (new \App\Models\Item\SimpleExpense())->single(
+        $item = (new \App\Models\Item\SimpleItem())->single(
             $this->resource_type_id,
             $this->resource_id,
             $item_id,

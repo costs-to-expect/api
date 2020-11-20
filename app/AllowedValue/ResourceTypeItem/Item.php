@@ -39,7 +39,7 @@ abstract class Item
 
         $this->range_limits = new EntityLimits();
 
-        $this->entity = new \App\Entity\Item\AllocatedExpense();
+        $this->entity = new \App\ItemType\AllocatedExpense\Item();
 
         $this->hash = new Hash();
     }

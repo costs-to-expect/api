@@ -19,7 +19,7 @@ class Game extends Item
             $viewable_resource_types
         );
 
-        $this->entity = new \App\Entity\Item\Game();
+        $this->entity = new \App\ItemType\Game\Item();
 
         $this->setAllowedValueFields();
     }

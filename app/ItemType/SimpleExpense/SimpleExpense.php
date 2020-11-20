@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Entity\Item;
+namespace App\ItemType\SimpleExpense;
 
 use App\ItemType\ItemType;
 use App\Models\Transformers\Transformer;
@@ -104,7 +104,7 @@ class SimpleExpense extends ItemType
 
     public function viewClass(): string
     {
-        return \App\ItemType\SimpleExpense\Response::class;
+        return \App\ItemType\SimpleExpense\Item::class;
     }
 
     public function resourceTypeItemCollectionClass(): string

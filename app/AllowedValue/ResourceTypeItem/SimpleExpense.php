@@ -15,7 +15,7 @@ class SimpleExpense extends Item
             $viewable_resource_types
         );
 
-        $this->entity = new \App\Entity\Item\SimpleExpense();
+        $this->entity = new \App\ItemType\SimpleExpense\SimpleExpense();
 
         $this->setAllowedValueFields();
     }

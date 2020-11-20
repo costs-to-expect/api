@@ -15,7 +15,7 @@ class AllocatedExpense extends Item
             $viewable_resource_types
         );
 
-        $this->entity = new \App\Entity\Item\AllocatedExpense();
+        $this->entity = new \App\ItemType\AllocatedExpense\Item();
 
         $this->setAllowedValueFields();
     }

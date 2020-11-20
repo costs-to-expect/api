@@ -23,7 +23,7 @@ class Game extends Item
 
         $this->model = new \App\Models\Item\Summary\Game();
 
-        $this->fetchAllRequestParameters(new \App\Entity\Item\Game());
+        $this->fetchAllRequestParameters(new \App\ItemType\Game\Item());
 
         $this->removeDecisionParameters();
     }

@@ -13,7 +13,7 @@ class Response extends ItemTypeResponse
     public function collectionResponse(): JsonResponse
     {
         $this->fetchAllRequestParameters(
-            new \App\Entity\Item\AllocatedExpense()
+            new \App\ItemType\AllocatedExpense\Item()
         );
 
         if ($this->cache_control->visibility() === 'public') {
@@ -79,7 +79,7 @@ class Response extends ItemTypeResponse
     public function showResponse(int $item_id): JsonResponse
     {
         $this->fetchAllRequestParameters(
-            new \App\Entity\Item\AllocatedExpense()
+            new \App\ItemType\AllocatedExpense\Item()
         );
 
         $item = (new \App\Models\Item\AllocatedExpense())->single(

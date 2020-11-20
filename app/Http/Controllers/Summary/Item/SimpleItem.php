@@ -23,7 +23,7 @@ class SimpleItem extends Item
 
         $this->model = new \App\Models\Item\Summary\SimpleItem();
 
-        $this->fetchAllRequestParameters(new \App\Entity\Item\SimpleItem());
+        $this->fetchAllRequestParameters(new \App\ItemType\SimpleItem\SimpleItem());
 
         $this->removeDecisionParameters();
     }

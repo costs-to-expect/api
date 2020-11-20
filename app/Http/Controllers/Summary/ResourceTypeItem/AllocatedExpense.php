@@ -8,8 +8,8 @@ use App\Models\Transformers\Item\Summary\ExpenseItemByMonth;
 use App\Models\Transformers\Item\Summary\ExpenseItemByResource;
 use App\Models\Transformers\Item\Summary\ExpenseItemBySubcategory;
 use App\Models\Transformers\Item\Summary\ExpenseItemByYear;
-use App\Response\Cache;
 use App\Request\Validate\Boolean;
+use App\Response\Cache;
 use Illuminate\Http\JsonResponse;
 
 class AllocatedExpense extends Item
@@ -28,7 +28,7 @@ class AllocatedExpense extends Item
 
         $this->model = new \App\Models\ResourceTypeItem\Summary\AllocatedExpense();
 
-        $this->fetchAllRequestParameters(new \App\Entity\Item\AllocatedExpense());
+        $this->fetchAllRequestParameters(new \App\ItemType\AllocatedExpense\Item());
 
         $this->removeDecisionParameters();
     }

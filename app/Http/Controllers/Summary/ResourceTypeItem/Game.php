@@ -4,8 +4,8 @@ namespace App\Http\Controllers\Summary\ResourceTypeItem;
 
 use App\Models\Transformers\Item\Summary\Game as GameTransformer;
 use App\Models\Transformers\Item\Summary\GameItemByResource;
-use App\Response\Cache;
 use App\Request\Validate\Boolean;
+use App\Response\Cache;
 use Illuminate\Http\JsonResponse;
 
 class Game extends Item
@@ -24,7 +24,7 @@ class Game extends Item
 
         $this->model = new \App\Models\ResourceTypeItem\Summary\Game();
 
-        $this->fetchAllRequestParameters(new \App\Entity\Item\Game());
+        $this->fetchAllRequestParameters(new \App\ItemType\Game\Item());
 
         $this->removeDecisionParameters();
     }

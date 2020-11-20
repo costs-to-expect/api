@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Entity\Item;
+namespace App\ItemType\AllocatedExpense;
 
 use App\ItemType\ItemType;
 use App\Models\Transformers\Transformer;
@@ -10,7 +10,7 @@ use App\Request\Validate\Validator;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Date;
 
-class AllocatedExpense extends ItemType
+class Item extends ItemType
 {
     public function __construct()
     {

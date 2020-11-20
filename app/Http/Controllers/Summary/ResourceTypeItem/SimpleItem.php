@@ -4,8 +4,8 @@ namespace App\Http\Controllers\Summary\ResourceTypeItem;
 
 use App\Models\Transformers\Item\Summary\SimpleItem as SimpleItemTransformer;
 use App\Models\Transformers\Item\Summary\SimpleItemByResource;
-use App\Response\Cache;
 use App\Request\Validate\Boolean;
+use App\Response\Cache;
 use Illuminate\Http\JsonResponse;
 
 class SimpleItem extends Item
@@ -24,7 +24,7 @@ class SimpleItem extends Item
 
         $this->model = new \App\Models\ResourceTypeItem\Summary\SimpleItem();
 
-        $this->fetchAllRequestParameters(new \App\Entity\Item\SimpleItem());
+        $this->fetchAllRequestParameters(new \App\ItemType\SimpleItem\SimpleItem());
 
         $this->removeDecisionParameters();
     }

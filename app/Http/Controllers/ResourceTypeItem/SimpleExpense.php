@@ -12,7 +12,7 @@ class SimpleExpense extends Item
     public function response(): JsonResponse
     {
         $this->fetchAllRequestParameters(
-            new \App\Entity\Item\SimpleExpense()
+            new \App\ItemType\SimpleExpense\SimpleExpense()
         );
 
         $this->cache_control->setTtlOneMonth();

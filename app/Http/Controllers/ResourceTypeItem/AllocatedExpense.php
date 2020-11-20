@@ -12,7 +12,7 @@ class AllocatedExpense extends Item
     public function response(): JsonResponse
     {
         $this->fetchAllRequestParameters(
-            new \App\Entity\Item\AllocatedExpense()
+            new \App\ItemType\AllocatedExpense\Item()
         );
 
         if ($this->cache_control->visibility() === 'public') {

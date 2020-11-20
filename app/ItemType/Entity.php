@@ -2,10 +2,10 @@
 
 namespace App\ItemType;
 
-use App\Entity\Item\AllocatedExpense;
-use App\Entity\Item\Game;
-use App\Entity\Item\SimpleExpense;
-use App\Entity\Item\SimpleItem;
+use App\ItemType\AllocatedExpense\Item as AllocatedExpenseItem;
+use App\ItemType\Game\Item as GameItem;
+use App\ItemType\SimpleExpense\SimpleExpense as SimpleExpenseItem;
+use App\ItemType\SimpleItem\SimpleItem as SimpleItemItem;
 use App\Models\ResourceTypeItemType;
 
 class Entity
@@ -25,16 +25,16 @@ class Entity
     {
         switch ($item_type) {
             case 'allocated-expense':
-                return new AllocatedExpense();
+                return new AllocatedExpenseItem();
 
             case 'simple-expense':
-                return new SimpleExpense();
+                return new SimpleExpenseItem();
 
             case 'simple-item':
-                return new SimpleItem();
+                return new SimpleItemItem();
 
             case 'game':
-                return new Game();
+                return new GameItem();
 
             default:
                 throw new \OutOfRangeException('No entity definition for ' . $item_type, 500);
