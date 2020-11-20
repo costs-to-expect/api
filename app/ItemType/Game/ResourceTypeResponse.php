@@ -1,22 +1,22 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Http\Controllers\ResourceTypeItem;
+namespace App\ItemType\Game;
 
-use App\ItemType\Item;
-use App\Models\Transformers\ResourceTypeItem\SimpleExpense as Transformer;
+use App\ItemType\ResourceTypeResponse as BaseResourceTypeResponse;
+use App\Models\Transformers\ResourceTypeItem\Game as Transformer;
 use App\Response\Cache;
 use Illuminate\Http\JsonResponse;
 
-class SimpleExpense extends Item
+class ResourceTypeResponse extends BaseResourceTypeResponse
 {
     public function response(): JsonResponse
     {
         $this->fetchAllRequestParameters(
-            new \App\ItemType\SimpleExpense\Item()
+            new \App\ItemType\Game\Item()
         );
 
-        $this->cache_control->setTtlOneMonth();
+        $this->cache_control->setTtlOneWeek();
 
         $cache_collection = new Cache\Collection();
         $cache_collection->setFromCache($this->cache_control->getByKey(request()->getRequestUri()));
@@ -25,7 +25,7 @@ class SimpleExpense extends Item
             $this->cache_control->isRequestCacheable() === false ||
             $cache_collection->valid() === false
         ) {
-            $model = new \App\ItemType\SimpleExpense\ResourceTypeModel();
+            $model = new \App\ItemType\Game\ResourceTypeModel();
 
             $total = $model->totalCount(
                 $this->resource_type_id,

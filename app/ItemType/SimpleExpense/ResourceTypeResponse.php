@@ -1,26 +1,22 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Http\Controllers\ResourceTypeItem;
+namespace App\ItemType\SimpleExpense;
 
-use App\ItemType\Item;
-use App\Models\Transformers\ResourceTypeItem\AllocatedExpense as Transformer;
+use App\ItemType\ResourceTypeResponse as BaseResourceTypeResponse;
+use App\Models\Transformers\ResourceTypeItem\SimpleExpense as Transformer;
 use App\Response\Cache;
 use Illuminate\Http\JsonResponse;
 
-class AllocatedExpense extends Item
+class ResourceTypeResponse extends BaseResourceTypeResponse
 {
     public function response(): JsonResponse
     {
         $this->fetchAllRequestParameters(
-            new \App\ItemType\AllocatedExpense\Item()
+            new \App\ItemType\SimpleExpense\Item()
         );
 
-        if ($this->cache_control->visibility() === 'public') {
-            $this->cache_control->setTtlOneWeek();
-        } else {
-            $this->cache_control->setTtlOneDay();
-        }
+        $this->cache_control->setTtlOneMonth();
 
         $cache_collection = new Cache\Collection();
         $cache_collection->setFromCache($this->cache_control->getByKey(request()->getRequestUri()));
@@ -29,7 +25,7 @@ class AllocatedExpense extends Item
             $this->cache_control->isRequestCacheable() === false ||
             $cache_collection->valid() === false
         ) {
-            $model = new \App\ItemType\AllocatedExpense\ResourceTypeModel();
+            $model = new \App\ItemType\SimpleExpense\ResourceTypeModel();
 
             $total = $model->totalCount(
                 $this->resource_type_id,

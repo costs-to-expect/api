@@ -93,12 +93,12 @@ class Item extends ItemType
 
     public function summaryClass(): string
     {
-        return \App\Http\Controllers\Summary\Item\AllocatedExpense::class;
+        return \App\ItemType\AllocatedExpense\SummaryResponse::class;
     }
 
     public function resourceTypeSummaryClass(): string
     {
-        return \App\Http\Controllers\Summary\ResourceTypeItem\AllocatedExpense::class;
+        return \App\ItemType\AllocatedExpense\SummaryResourceTypeResponse::class;
     }
 
     public function transformer(array $data_to_transform): Transformer
@@ -143,7 +143,7 @@ class Item extends ItemType
 
     public function resourceTypeItemCollectionClass(): string
     {
-        return \App\Http\Controllers\ResourceTypeItem\AllocatedExpense::class;
+        return \App\ItemType\AllocatedExpense\ResourceTypeResponse::class;
     }
 
     protected function allowedValuesItemCollectionClass(): string

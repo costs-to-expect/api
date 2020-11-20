@@ -1,7 +1,8 @@
 <?php
 
-namespace App\Http\Controllers\Summary\ResourceTypeItem;
+namespace App\ItemType\SimpleExpense;
 
+use App\ItemType\SummaryResourceTypeResponse as BaseSummaryResourceTypeResponse;
 use App\Models\Transformers\Item\Summary\ExpenseItem;
 use App\Models\Transformers\Item\Summary\ExpenseItemByCategory;
 use App\Models\Transformers\Item\Summary\ExpenseItemByResource;
@@ -10,7 +11,7 @@ use App\Request\Validate\Boolean;
 use App\Response\Cache;
 use Illuminate\Http\JsonResponse;
 
-class SimpleExpense extends Item
+class SummaryResourceTypeResponse extends BaseSummaryResourceTypeResponse
 {
     public function __construct(
         int $resource_type_id,

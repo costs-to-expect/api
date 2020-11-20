@@ -1,14 +1,14 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Http\Controllers\ResourceTypeItem;
+namespace App\ItemType\SimpleItem;
 
-use App\ItemType\Item;
+use App\ItemType\ResourceTypeResponse as BaseResourceTypeResponse;
 use App\Models\Transformers\ResourceTypeItem\SimpleItem as Transformer;
 use App\Response\Cache;
 use Illuminate\Http\JsonResponse;
 
-class SimpleItem extends Item
+class ResourceTypeResponse extends BaseResourceTypeResponse
 {
     public function response(): JsonResponse
     {

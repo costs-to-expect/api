@@ -115,7 +115,7 @@ class Item extends ItemType
 
     public function summaryClass(): string
     {
-        return \App\Http\Controllers\Summary\Item\Game::class;
+        return \App\ItemType\Game\SummaryResponse::class;
     }
 
     public function viewClass(): string
@@ -125,12 +125,12 @@ class Item extends ItemType
 
     public function resourceTypeSummaryClass(): string
     {
-        return \App\Http\Controllers\Summary\ResourceTypeItem\Game::class;
+        return \App\ItemType\Game\SummaryResourceTypeResponse::class;
     }
 
     public function resourceTypeItemCollectionClass(): string
     {
-        return \App\Http\Controllers\ResourceTypeItem\Game::class;
+        return \App\ItemType\Game\ResourceTypeResponse::class;
     }
 
     protected function allowedValuesItemCollectionClass(): string

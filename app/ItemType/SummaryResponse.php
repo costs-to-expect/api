@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Summary\ResourceTypeItem;
+namespace App\ItemType;
 
 use App\Request\Parameter;
 use App\Response\Cache;
@@ -8,9 +8,11 @@ use App\Response\Header\Headers;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\JsonResponse;
 
-abstract class Item
+abstract class SummaryResponse
 {
     protected int $resource_type_id;
+
+    protected int $resource_id;
 
     protected bool $permitted_user;
 
@@ -28,11 +30,13 @@ abstract class Item
 
     public function __construct(
         int $resource_type_id,
+        int $resource_id,
         bool $permitted_user = false,
         int $user_id = null
     )
     {
         $this->resource_type_id = $resource_type_id;
+        $this->resource_id = $resource_id;
 
         $this->permitted_user = $permitted_user;
         $this->user_id = $user_id;
@@ -76,16 +80,17 @@ abstract class Item
     protected function fetchAllRequestParameters(\App\ItemType\ItemType $entity): void
     {
         $this->parameters = Parameter\Request::fetch(
-            array_keys($entity->summaryResourceTypeRequestParameters()),
-            $this->resource_type_id
+            array_keys($entity->summaryRequestParameters()),
+            $this->resource_type_id,
+            $this->resource_id
         );
 
         $this->search_parameters = Parameter\Search::fetch(
-            $entity->summaryResourceTypeSearchParameters()
+            $entity->summarySearchParameters()
         );
 
         $this->filter_parameters = Parameter\Filter::fetch(
-            $entity->summaryResourceTypeFilterParameters()
+            $entity->summaryFilterParameters()
         );
     }
 }

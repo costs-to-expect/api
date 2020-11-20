@@ -12,7 +12,7 @@ use App\Response\Header\Headers;
 use App\Response\Pagination as UtilityPagination;
 use Illuminate\Http\JsonResponse;
 
-abstract class Item
+abstract class ResourceTypeResponse
 {
     protected int $resource_type_id;
 

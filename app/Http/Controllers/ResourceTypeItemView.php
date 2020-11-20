@@ -26,7 +26,7 @@ class ResourceTypeItemView extends Controller
         $collection_class = $entity->resourceTypeItemCollectionClass();
 
         /**
-         * @var $collection \App\ItemType\Item
+         * @var $collection \App\ItemType\ResourceTypeResponse
          */
         $collection = new $collection_class(
             (int) $resource_type_id,

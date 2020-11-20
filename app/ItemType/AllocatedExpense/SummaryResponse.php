@@ -1,15 +1,18 @@
 <?php
 
-namespace App\Http\Controllers\Summary\Item;
+namespace App\ItemType\AllocatedExpense;
 
+use App\ItemType\SummaryResponse as BaseSummaryResponse;
 use App\Models\Transformers\Item\Summary\ExpenseItem;
 use App\Models\Transformers\Item\Summary\ExpenseItemByCategory;
+use App\Models\Transformers\Item\Summary\ExpenseItemByMonth;
 use App\Models\Transformers\Item\Summary\ExpenseItemBySubcategory;
+use App\Models\Transformers\Item\Summary\ExpenseItemByYear;
 use App\Request\Validate\Boolean;
 use App\Response\Cache;
 use Illuminate\Http\JsonResponse;
 
-class SimpleExpense extends Item
+class SummaryResponse extends BaseSummaryResponse
 {
     public function __construct(
         int $resource_type_id,
@@ -25,22 +28,44 @@ class SimpleExpense extends Item
             $user_id
         );
 
-        $this->model = new \App\ItemType\SimpleExpense\SummaryModel();
+        $this->model = new \App\ItemType\AllocatedExpense\SummaryModel();
 
-        $this->fetchAllRequestParameters(new \App\ItemType\SimpleExpense\Item());
+        $this->fetchAllRequestParameters(new \App\ItemType\AllocatedExpense\Item());
 
         $this->removeDecisionParameters();
     }
 
     public function response(): JsonResponse
     {
+        if ($this->decision_parameters['years'] === true) {
+            return $this->yearsSummary();
+        }
+
+        if (
+            $this->decision_parameters['year'] !== null &&
+            $this->decision_parameters['category'] === null &&
+            $this->decision_parameters['subcategory'] === null &&
+            count($this->search_parameters) === 0
+        ) {
+            if ($this->decision_parameters['months'] === true) {
+                return $this->monthsSummary();
+            }
+
+            if ($this->decision_parameters['month'] !== null) {
+                return $this->monthSummary();
+            }
+
+            return $this->yearSummary();
+        }
+
         if ($this->decision_parameters['categories'] === true) {
             return $this->categoriesSummary();
         }
 
         if (
             $this->decision_parameters['category'] !== null &&
-            count($this->filter_parameters) === 0 &&
+            $this->decision_parameters['year'] === null &&
+            $this->decision_parameters['month'] === null &&
             count($this->search_parameters) === 0
         ) {
             if ($this->decision_parameters['subcategories'] === true) {
@@ -57,6 +82,8 @@ class SimpleExpense extends Item
         if (
             $this->decision_parameters['category'] !== null ||
             $this->decision_parameters['subcategory'] !== null ||
+            $this->decision_parameters['year'] !== null ||
+            $this->decision_parameters['month'] !== null ||
             count($this->search_parameters) > 0 ||
             count($this->filter_parameters) > 0
         ) {
@@ -72,7 +99,12 @@ class SimpleExpense extends Item
             $this->permitted_user,
             $this->user_id
         );
-        $cache_control->setTtlOneWeek();
+
+        if ($cache_control->visibility() === 'public') {
+            $cache_control->setTtlOneWeek();
+        } else {
+            $cache_control->setTtlOneDay();
+        }
 
         $cache_summary = new Cache\Summary();
         $cache_summary->setFromCache($cache_control->getByKey(request()->getRequestUri()));
@@ -104,7 +136,12 @@ class SimpleExpense extends Item
             $this->permitted_user,
             $this->user_id
         );
-        $cache_control->setTtlOneWeek();
+
+        if ($cache_control->visibility() === 'public') {
+            $cache_control->setTtlOneWeek();
+        } else {
+            $cache_control->setTtlOneDay();
+        }
 
         $cache_summary = new Cache\Summary();
         $cache_summary->setFromCache($cache_control->getByKey(request()->getRequestUri()));
@@ -143,7 +180,12 @@ class SimpleExpense extends Item
             $this->permitted_user,
             $this->user_id
         );
-        $cache_control->setTtlOneWeek();
+
+        if ($cache_control->visibility() === 'public') {
+            $cache_control->setTtlOneWeek();
+        } else {
+            $cache_control->setTtlOneDay();
+        }
 
         $cache_summary = new Cache\Summary();
         $cache_summary->setFromCache($cache_control->getByKey(request()->getRequestUri()));
@@ -155,6 +197,8 @@ class SimpleExpense extends Item
                 $this->resource_id,
                 $this->decision_parameters['category'],
                 $this->decision_parameters['subcategory'],
+                $this->decision_parameters['year'],
+                $this->decision_parameters['month'],
                 $this->parameters,
                 $this->search_parameters,
                 $this->filter_parameters
@@ -176,12 +220,109 @@ class SimpleExpense extends Item
         return response()->json($cache_summary->collection(), 200, $cache_summary->headers());
     }
 
+    protected function monthsSummary(): JsonResponse
+    {
+        $cache_control = new Cache\Control(
+            $this->permitted_user,
+            $this->user_id
+        );
+
+        if ($cache_control->visibility() === 'public') {
+            $cache_control->setTtlOneWeek();
+        } else {
+            $cache_control->setTtlOneDay();
+        }
+
+        $cache_summary = new Cache\Summary();
+        $cache_summary->setFromCache($cache_control->getByKey(request()->getRequestUri()));
+
+        if ($cache_control->isRequestCacheable() === false || $cache_summary->valid() === false) {
+
+            $summary = $this->model->monthsSummary(
+                $this->resource_type_id,
+                $this->resource_id,
+                $this->decision_parameters['year'],
+                $this->parameters
+            );
+
+            $collection = (new ExpenseItemByMonth($summary))->asArray();
+
+            $this->assignToCache(
+                $summary,
+                $collection,
+                $cache_control,
+                $cache_summary
+            );
+        }
+
+        return response()->json($cache_summary->collection(), 200, $cache_summary->headers());
+    }
+
+    protected function monthSummary(): JsonResponse
+    {
+        $cache_control = new Cache\Control(
+            $this->permitted_user,
+            $this->user_id
+        );
+
+        if ($cache_control->visibility() === 'public') {
+            $cache_control->setTtlOneWeek();
+        } else {
+            $cache_control->setTtlOneDay();
+        }
+
+        $cache_summary = new Cache\Summary();
+        $cache_summary->setFromCache($cache_control->getByKey(request()->getRequestUri()));
+
+        if ($cache_control->isRequestCacheable() === false || $cache_summary->valid() === false) {
+
+            $summary = $this->model->monthSummary(
+                $this->resource_type_id,
+                $this->resource_id,
+                $this->decision_parameters['year'],
+                $this->decision_parameters['month'],
+                $this->parameters
+            );
+
+            $collection = (new ExpenseItemByMonth($summary))->asArray();
+
+            if (count($collection) === 1) {
+                $collection = $collection[0];
+            } else {
+                $collection = [];
+            }
+
+            $this->assignToCache(
+                $summary,
+                $collection,
+                $cache_control,
+                $cache_summary
+            );
+        }
+
+        return response()->json($cache_summary->collection(), 200, $cache_summary->headers());
+    }
+
     protected function removeDecisionParameters(): void
     {
+        $this->decision_parameters['years'] = false;
+        $this->decision_parameters['months'] = false;
         $this->decision_parameters['categories'] = false;
         $this->decision_parameters['subcategories'] = false;
+        $this->decision_parameters['year'] = null;
+        $this->decision_parameters['month'] = null;
         $this->decision_parameters['category'] = null;
         $this->decision_parameters['subcategory'] = null;
+
+        if (array_key_exists('years', $this->parameters) === true &&
+            Boolean::convertedValue($this->parameters['years']) === true) {
+            $this->decision_parameters['years'] = true;
+        }
+
+        if (array_key_exists('months', $this->parameters) === true &&
+            Boolean::convertedValue($this->parameters['months']) === true) {
+            $this->decision_parameters['months'] = true;
+        }
 
         if (array_key_exists('categories', $this->parameters) === true &&
             Boolean::convertedValue($this->parameters['categories']) === true) {
@@ -193,6 +334,14 @@ class SimpleExpense extends Item
             $this->decision_parameters['subcategories'] = true;
         }
 
+        if (array_key_exists('year', $this->parameters) === true) {
+            $this->decision_parameters['year'] = (int) $this->parameters['year'];
+        }
+
+        if (array_key_exists('month', $this->parameters) === true) {
+            $this->decision_parameters['month'] = (int) $this->parameters['month'];
+        }
+
         if (array_key_exists('category', $this->parameters) === true) {
             $this->decision_parameters['category'] = (int) $this->parameters['category'];
         }
@@ -202,6 +351,10 @@ class SimpleExpense extends Item
         }
 
         unset(
+            $this->parameters['years'],
+            $this->parameters['year'],
+            $this->parameters['months'],
+            $this->parameters['month'],
             $this->parameters['categories'],
             $this->parameters['category'],
             $this->parameters['subcategories'],
@@ -215,7 +368,12 @@ class SimpleExpense extends Item
             $this->permitted_user,
             $this->user_id
         );
-        $cache_control->setTtlOneWeek();
+
+        if ($cache_control->visibility() === 'public') {
+            $cache_control->setTtlOneWeek();
+        } else {
+            $cache_control->setTtlOneDay();
+        }
 
         $cache_summary = new Cache\Summary();
         $cache_summary->setFromCache($cache_control->getByKey(request()->getRequestUri()));
@@ -248,7 +406,12 @@ class SimpleExpense extends Item
             $this->permitted_user,
             $this->user_id
         );
-        $cache_control->setTtlOneWeek();
+
+        if ($cache_control->visibility() === 'public') {
+            $cache_control->setTtlOneWeek();
+        } else {
+            $cache_control->setTtlOneDay();
+        }
 
         $cache_summary = new Cache\Summary();
         $cache_summary->setFromCache($cache_control->getByKey(request()->getRequestUri()));
@@ -288,7 +451,12 @@ class SimpleExpense extends Item
             $this->permitted_user,
             $this->user_id
         );
-        $cache_control->setTtlOneWeek();
+
+        if ($cache_control->visibility() === 'public') {
+            $cache_control->setTtlOneWeek();
+        } else {
+            $cache_control->setTtlOneDay();
+        }
 
         $cache_summary = new Cache\Summary();
         $cache_summary->setFromCache($cache_control->getByKey(request()->getRequestUri()));
@@ -304,6 +472,87 @@ class SimpleExpense extends Item
             $collection = [];
             foreach ($summary as $subtotal) {
                 $collection[] = (new ExpenseItem($subtotal))->asArray();
+            }
+
+            $this->assignToCache(
+                $summary,
+                $collection,
+                $cache_control,
+                $cache_summary
+            );
+        }
+
+        return response()->json($cache_summary->collection(), 200, $cache_summary->headers());
+    }
+
+    protected function yearsSummary(): JsonResponse
+    {
+        $cache_control = new Cache\Control(
+            $this->permitted_user,
+            $this->user_id
+        );
+
+        if ($cache_control->visibility() === 'public') {
+            $cache_control->setTtlOneWeek();
+        } else {
+            $cache_control->setTtlOneDay();
+        }
+
+        $cache_summary = new Cache\Summary();
+        $cache_summary->setFromCache($cache_control->getByKey(request()->getRequestUri()));
+
+        if ($cache_control->isRequestCacheable() === false || $cache_summary->valid() === false) {
+
+            $summary = $this->model->yearsSummary(
+                $this->resource_type_id,
+                $this->resource_id,
+                $this->parameters
+            );
+
+            $collection = (new ExpenseItemByYear($summary))->asArray();
+
+            $this->assignToCache(
+                $summary,
+                $collection,
+                $cache_control,
+                $cache_summary
+            );
+        }
+
+        return response()->json($cache_summary->collection(), 200, $cache_summary->headers());
+    }
+
+    protected function yearSummary(): JsonResponse
+    {
+        $cache_control = new Cache\Control(
+            $this->permitted_user,
+            $this->user_id
+        );
+
+        if ($cache_control->visibility() === 'public') {
+            $cache_control->setTtlOneWeek();
+        } else {
+            $cache_control->setTtlOneDay();
+        }
+
+        $cache_summary = new Cache\Summary();
+        $cache_summary->setFromCache($cache_control->getByKey(request()->getRequestUri()));
+
+        if ($cache_control->isRequestCacheable() === false || $cache_summary->valid() === false) {
+
+            $summary = $this->model->yearSummary(
+                $this->resource_type_id,
+                $this->resource_id,
+                $this->decision_parameters['year'],
+                $this->parameters
+            );
+
+            $collection = (new ExpenseItemByYear($summary))->asArray();
+
+            if (count($collection) === 1) {
+                $collection = $collection[0];
+            } else {
+                $collection = [];
             }
 
             $this->assignToCache(
