@@ -83,7 +83,7 @@ class Item extends ItemType
 
     public function transformer(array $data_to_transform): Transformer
     {
-        return new \App\Models\Transformers\Item\SimpleItem($data_to_transform);
+        return new \App\ItemType\SimpleItem\Transformer($data_to_transform);
     }
 
     public function update(array $patch, Model $instance): bool

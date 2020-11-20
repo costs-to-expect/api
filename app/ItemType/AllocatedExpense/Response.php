@@ -4,7 +4,7 @@ declare(strict_types=1);
 namespace App\ItemType\AllocatedExpense;
 
 use App\ItemType\Response as ItemTypeResponse;
-use App\Models\Transformers\Item\AllocatedExpense as Transformer;
+use App\ItemType\AllocatedExpense\Transformer as Transformer;
 use App\Response\Cache;
 use Illuminate\Http\JsonResponse;
 

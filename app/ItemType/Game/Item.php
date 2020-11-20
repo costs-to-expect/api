@@ -76,7 +76,7 @@ class Item extends ItemType
 
     public function transformer(array $data_to_transform): Transformer
     {
-        return new \App\Models\Transformers\Item\Game($data_to_transform);
+        return new \App\ItemType\Game\Transformer($data_to_transform);
     }
 
     public function update(array $patch, Model $instance): bool

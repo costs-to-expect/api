@@ -4,7 +4,7 @@ declare(strict_types=1);
 namespace App\ItemType\SimpleItem;
 
 use App\ItemType\Response as ItemTypeResponse;
-use App\Models\Transformers\Item\SimpleItem as Transformer;
+use App\ItemType\SimpleItem\Transformer as Transformer;
 use App\Response\Cache;
 use Illuminate\Http\JsonResponse;
 
