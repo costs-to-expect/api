@@ -1,11 +1,12 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Models\Item\Summary;
+namespace App\ItemType\AllocatedExpense;
 
 use App\Models\Clause;
-use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Model as LaravelModel;
 use Illuminate\Database\Query\Builder as QueryBuilder;
+use Illuminate\Support\Facades\DB;
 
 /**
  * @mixin QueryBuilder
@@ -13,11 +14,11 @@ use Illuminate\Database\Query\Builder as QueryBuilder;
  * @copyright Dean Blackborough 2018-2020
  * @license https://github.com/costs-to-expect/api/blob/master/LICENSE
  */
-class SimpleExpense extends Model
+class SummaryModel extends LaravelModel
 {
-    protected $guarded = ['id', 'created_at', 'updated_at'];
+    protected $guarded = ['id', 'actualised_total', 'created_at', 'updated_at'];
     protected $table = 'item';
-    protected $sub_table = 'item_type_simple_expense';
+    protected $sub_table = 'item_type_allocated_expense';
 
     /**
      * Return the summary of items, grouped by category
@@ -34,15 +35,16 @@ class SimpleExpense extends Model
         array $parameters = []
     ): array
     {
-        $collection = $this
-            ->selectRaw("
+        $collection = $this->
+            selectRaw("
                 category.id, 
                 category.name AS name, 
                 category.description AS description,
                 currency.code AS currency_code,
-                SUM({$this->sub_table}.total) AS total, 
+                SUM({$this->sub_table}.actualised_total) AS total, 
                 COUNT({$this->sub_table}.item_id) AS total_count, 
-                MAX({$this->sub_table}.created_at) AS last_updated")
+                MAX({$this->sub_table}.created_at) AS last_updated
+            ")
             ->join($this->sub_table, 'item.id', "{$this->sub_table}.item_id")
             ->join("resource", "resource.id", "item.resource_id")
             ->join("resource_type", "resource_type.id", "resource.resource_type_id")
@@ -52,6 +54,8 @@ class SimpleExpense extends Model
             ->where("category.resource_type_id", "=", $resource_type_id)
             ->where("resource_type.id", "=", $resource_type_id)
             ->where("resource.id", "=", $resource_id);
+
+        $collection = Clause::applyExcludeFutureUnpublished($collection, $parameters);
 
         return $collection
             ->groupBy('item_category.category_id', 'currency.code')
@@ -83,8 +87,8 @@ class SimpleExpense extends Model
                 category.name AS name, 
                 category.description AS description, 
                 currency.code AS currency_code,
-                SUM({$this->sub_table}.total) AS total, 
-                COUNT({$this->sub_table}.item_id) AS total_count,
+                SUM({$this->sub_table}.actualised_total) AS total, 
+                COUNT({$this->sub_table}.item_id) AS total_count, 
                 MAX({$this->sub_table}.created_at) AS last_updated
             ")
             ->join($this->sub_table, 'item.id', "{$this->sub_table}.item_id")
@@ -98,6 +102,8 @@ class SimpleExpense extends Model
             ->where("resource.id", "=", $resource_id)
             ->where("category.id", "=", $category_id);
 
+        $collection = Clause::applyExcludeFutureUnpublished($collection, $parameters);
+
         return $collection
             ->groupBy('item_category.category_id', 'currency.code')
             ->orderBy("name")
@@ -110,6 +116,8 @@ class SimpleExpense extends Model
         int $resource_id,
         int $category_id = null,
         int $subcategory_id = null,
+        int $year = null,
+        int $month = null,
         array $parameters = [],
         array $search_parameters = [],
         array $filter_parameters = []
@@ -118,11 +126,11 @@ class SimpleExpense extends Model
         $collection = $this
             ->selectRaw("
                 currency.code AS currency_code,
-                SUM({$this->sub_table}.total) AS total, 
+                SUM({$this->sub_table}.actualised_total) AS total, 
                 COUNT({$this->sub_table}.item_id) AS total_count,
                 MAX({$this->sub_table}.created_at) AS last_updated
             ")
-            ->join($this->sub_table, 'item.id', "{$this->sub_table}.item_id")
+            ->join($this->sub_table, 'item.id', 'item_type_allocated_expense.item_id')
             ->join("resource", "resource.id", "item.resource_id")
             ->join("resource_type", "resource_type.id", "resource.resource_type_id")
             ->join("item_category", "item_category.item_id", "item.id")
@@ -140,19 +148,115 @@ class SimpleExpense extends Model
         if ($subcategory_id !== null) {
             $collection->where("sub_category.id", "=", $subcategory_id);
         }
+        if ($year !== null) {
+            $collection->whereRaw(DB::raw("YEAR({$this->sub_table}.effective_date) = {$year}"));
+        }
+        if ($month !== null) {
+            $collection->whereRaw(DB::raw("MONTH({$this->sub_table}.effective_date) = {$month}"));
+        }
 
         $collection = Clause::applySearch(
             $collection,
             $this->sub_table,
             $search_parameters
         );
+
         $collection = Clause::applyFiltering(
             $collection,
             $this->sub_table,
             $filter_parameters
         );
 
+        $collection = Clause::applyExcludeFutureUnpublished($collection, $parameters);
+
         return $collection
+            ->get()
+            ->toArray();
+    }
+
+    /**
+     * Return a monthly summary
+     *
+     * @param int $resource_type_id
+     * @param int $resource_id
+     * @param int $year
+     * @param array $parameters
+     *
+     * @return array
+     */
+    public function monthsSummary(
+        int $resource_type_id,
+        int $resource_id,
+        int $year,
+        array $parameters = []
+    ): array
+    {
+        $collection = $this
+            ->selectRaw("
+                MONTH({$this->sub_table}.effective_date) as month,
+                currency.code AS currency_code, 
+                SUM({$this->sub_table}.actualised_total) AS total,            
+                COUNT({$this->sub_table}.item_id) AS total_count, 
+                MAX({$this->sub_table}.created_at) AS last_updated
+            ")
+            ->join($this->sub_table, 'item.id', "{$this->sub_table}.item_id")
+            ->join("resource", "resource.id", "item.resource_id")
+            ->join("resource_type", "resource_type.id", "resource.resource_type_id")
+            ->join('currency', "{$this->sub_table}.currency_id", 'currency.id')
+            ->where("resource_type.id", "=", $resource_type_id)
+            ->where("resource.id", "=", $resource_id)
+            ->whereRaw(DB::raw("YEAR({$this->sub_table}.effective_date) = '{$year}'"));
+
+        $collection = Clause::applyExcludeFutureUnpublished($collection, $parameters);
+
+        return $collection
+            ->groupBy('month', 'currency.code')
+            ->orderBy('month')
+            ->get()
+            ->toArray();
+    }
+
+    /**
+     * Return a summary for a specific month
+     *
+     * @param int $resource_type_id
+     * @param int $resource_id
+     * @param int $year
+     * @param int $month
+     * @param array $parameters
+     *
+     * @return array
+     */
+    public function monthSummary(
+        int $resource_type_id,
+        int $resource_id,
+        int $year,
+        int $month,
+        array $parameters = []
+    ): array
+    {
+        $collection = $this
+            ->selectRaw("
+                MONTH({$this->sub_table}.effective_date) as month, 
+                currency.code AS currency_code,
+                SUM({$this->sub_table}.actualised_total) AS total, 
+                COUNT({$this->sub_table}.item_id) AS total_count,
+                MAX({$this->sub_table}.created_at) AS last_updated
+            ")
+            ->join($this->sub_table, 'item.id', "{$this->sub_table}.item_id")
+            ->join("resource", "resource.id", "item.resource_id")
+            ->join("resource_type", "resource_type.id", "resource.resource_type_id")
+            ->join('currency', "{$this->sub_table}.currency_id", 'currency.id')
+            ->where("resource_type.id", "=", $resource_type_id)
+            ->where("resource.id", "=", $resource_id)
+            ->whereRaw(DB::raw("YEAR({$this->sub_table}.effective_date) = '{$year}'"))
+            ->whereRaw(DB::raw("MONTH({$this->sub_table}.effective_date) = '{$month}'"));
+
+        $collection = Clause::applyExcludeFutureUnpublished($collection, $parameters);
+
+        return $collection
+            ->groupBy('month', 'currency.code')
+            ->orderBy('month')
             ->get()
             ->toArray();
     }
@@ -180,9 +284,10 @@ class SimpleExpense extends Model
                 sub_category.name AS name, 
                 sub_category.description AS description,
                 currency.code AS currency_code,
-                SUM({$this->sub_table}.total) AS total, 
+                SUM({$this->sub_table}.actualised_total) AS total, 
                 COUNT({$this->sub_table}.item_id) AS total_count, 
-                MAX({$this->sub_table}.created_at) AS last_updated")
+                MAX({$this->sub_table}.created_at) AS last_updated
+            ")
             ->join($this->sub_table, 'item.id', "{$this->sub_table}.item_id")
             ->join("resource", "resource.id", "item.resource_id")
             ->join("resource_type", "resource_type.id", "resource.resource_type_id")
@@ -194,6 +299,8 @@ class SimpleExpense extends Model
             ->where("resource_type.id", "=", $resource_type_id)
             ->where("resource.id", "=", $resource_id)
             ->where("category.id", "=", $category_id);
+
+        $collection = Clause::applyExcludeFutureUnpublished($collection, $parameters);
 
         return $collection
             ->groupBy('item_sub_category.sub_category_id', 'currency.code')
@@ -227,8 +334,8 @@ class SimpleExpense extends Model
                 sub_category.name AS name, 
                 sub_category.description AS description,
                 currency.code AS currency_code,
-                SUM({$this->sub_table}.total) AS total, 
-                COUNT({$this->sub_table}.item_id) AS total_count,
+                SUM({$this->sub_table}.actualised_total) AS total,
+                COUNT({$this->sub_table}.item_id) AS total_count, 
                 MAX({$this->sub_table}.created_at) AS last_updated
             ")
             ->join($this->sub_table, 'item.id', "{$this->sub_table}.item_id")
@@ -243,6 +350,8 @@ class SimpleExpense extends Model
             ->where("resource.id", "=", $resource_id)
             ->where("category.id", "=", $category_id)
             ->where("sub_category.id", "=", $subcategory_id);
+
+        $collection = Clause::applyExcludeFutureUnpublished($collection, $parameters);
 
         return $collection
             ->groupBy('item_sub_category.sub_category_id', 'currency.code')
@@ -268,8 +377,8 @@ class SimpleExpense extends Model
     {
         $collection = $this->selectRaw("
                 currency.code AS currency_code,
-                SUM({$this->sub_table}.total) AS total, 
-                COUNT({$this->sub_table}.item_id) AS total_count,
+                SUM({$this->sub_table}.actualised_total) AS total,
+                COUNT({$this->sub_table}.item_id) AS total_count, 
                 MAX({$this->sub_table}.created_at) AS last_updated
             ")
             ->join($this->sub_table, 'item.id', "{$this->sub_table}.item_id")
@@ -279,7 +388,89 @@ class SimpleExpense extends Model
             ->where('resource.resource_type_id', '=', $resource_type_id)
             ->groupBy('currency.code');
 
+        $collection = Clause::applyExcludeFutureUnpublished($collection, $parameters);
+
         return $collection
+            ->get()
+            ->toArray();
+    }
+
+    /**
+     * Return the summary grouped by years
+     *
+     * @param int $resource_type_id
+     * @param int $resource_id
+     * @param array $parameters
+     *
+     * @return array
+     */
+    public function yearsSummary(
+        int $resource_type_id,
+        int $resource_id,
+        array $parameters = []
+    ): array
+    {
+        $collection = $this
+            ->selectRaw("
+                YEAR({$this->sub_table}.effective_date) as year, 
+                currency.code AS currency_code,
+                SUM({$this->sub_table}.actualised_total) AS total, 
+                COUNT({$this->sub_table}.item_id) AS total_count, 
+                MAX({$this->sub_table}.created_at) AS last_updated
+            ")
+            ->join($this->sub_table, 'item.id', "{$this->sub_table}.item_id")
+            ->join("resource", "resource.id", "item.resource_id")
+            ->join("resource_type", "resource_type.id", "resource.resource_type_id")
+            ->join('currency', "{$this->sub_table}.currency_id", 'currency.id')
+            ->where("resource_type.id", "=", $resource_type_id)
+            ->where("resource.id", "=", $resource_id);
+
+        $collection = Clause::applyExcludeFutureUnpublished($collection, $parameters);
+
+        return $collection
+            ->groupBy('year', 'currency.code')
+            ->orderBy('year')
+            ->get()
+            ->toArray();
+    }
+
+    /**
+     * Return a summary for a specific year
+     *
+     * @param int $resource_type_id
+     * @param int $resource_id
+     * @param int $year
+     * @param array $parameters
+     *
+     * @return array
+     */
+    public function yearSummary(
+        int $resource_type_id,
+        int $resource_id,
+        int $year,
+        array $parameters = []
+    ): array
+    {
+        $collection = $this
+            ->selectRaw("
+                YEAR({$this->sub_table}.effective_date) as year, 
+                currency.code AS currency_code,
+                SUM({$this->sub_table}.actualised_total) AS total, 
+                COUNT({$this->sub_table}.item_id) AS total_count, 
+                MAX({$this->sub_table}.created_at) AS last_updated
+            ")
+            ->join($this->sub_table, 'item.id', "{$this->sub_table}.item_id")
+            ->join("resource", "resource.id", "item.resource_id")
+            ->join("resource_type", "resource_type.id", "resource.resource_type_id")
+            ->join('currency', "{$this->sub_table}.currency_id", 'currency.id')
+            ->where("resource_type.id", "=", $resource_type_id)
+            ->where("resource.id", "=", $resource_id)
+            ->whereRaw(DB::raw("YEAR({$this->sub_table}.effective_date) = '{$year}'"));
+
+        $collection = Clause::applyExcludeFutureUnpublished($collection, $parameters);
+
+        return $collection
+            ->groupBy('year', 'currency.code')
             ->get()
             ->toArray();
     }

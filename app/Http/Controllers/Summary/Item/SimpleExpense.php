@@ -25,7 +25,7 @@ class SimpleExpense extends Item
             $user_id
         );
 
-        $this->model = new \App\Models\Item\Summary\SimpleExpense();
+        $this->model = new \App\ItemType\SimpleExpense\SummaryModel();
 
         $this->fetchAllRequestParameters(new \App\ItemType\SimpleExpense\Item());
 

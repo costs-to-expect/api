@@ -21,7 +21,7 @@ class Game extends Item
             $user_id
         );
 
-        $this->model = new \App\Models\Item\Summary\Game();
+        $this->model = new \App\ItemType\Game\SummaryModel();
 
         $this->fetchAllRequestParameters(new \App\ItemType\Game\Item());
 

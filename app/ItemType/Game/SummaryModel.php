@@ -1,10 +1,10 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Models\Item\Summary;
+namespace App\ItemType\Game;
 
 use App\Models\Clause;
-use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Model as LaravelModel;
 use Illuminate\Database\Query\Builder as QueryBuilder;
 
 /**
@@ -13,7 +13,7 @@ use Illuminate\Database\Query\Builder as QueryBuilder;
  * @copyright Dean Blackborough 2018-2020
  * @license https://github.com/costs-to-expect/api/blob/master/LICENSE
  */
-class Game extends Model
+class SummaryModel extends LaravelModel
 {
     protected $guarded = ['id'];
     protected $table = 'item';
