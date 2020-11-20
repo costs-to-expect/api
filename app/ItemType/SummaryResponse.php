@@ -77,7 +77,7 @@ abstract class SummaryResponse
 
     abstract protected function removeDecisionParameters(): void;
 
-    protected function fetchAllRequestParameters(\App\ItemType\ItemType $entity): void
+    protected function fetchAllRequestParameters(ItemType $entity): void
     {
         $this->parameters = Parameter\Request::fetch(
             array_keys($entity->summaryRequestParameters()),

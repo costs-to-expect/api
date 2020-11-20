@@ -19,7 +19,7 @@ class AllowedValue extends BaseAllowedValue
             $viewable_resource_types
         );
 
-        $this->entity = new \App\ItemType\AllocatedExpense\Item();
+        $this->entity = new Item();
 
         $this->setAllowedValueFields();
     }

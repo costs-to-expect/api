@@ -73,12 +73,12 @@ class Item extends ItemType
 
     public function summaryClass(): string
     {
-        return \App\ItemType\SimpleItem\SummaryResponse::class;
+        return SummaryResponse::class;
     }
 
     public function resourceTypeSummaryClass(): string
     {
-        return \App\ItemType\SimpleItem\SummaryResourceTypeResponse::class;
+        return SummaryResourceTypeResponse::class;
     }
 
     public function transformer(array $data_to_transform): Transformer
@@ -104,21 +104,21 @@ class Item extends ItemType
 
     public function viewClass(): string
     {
-        return \App\ItemType\SimpleItem\Response::class;
+        return Response::class;
     }
 
     public function resourceTypeItemCollectionClass(): string
     {
-        return \App\ItemType\SimpleItem\ResourceTypeResponse::class;
+        return ResourceTypeResponse::class;
     }
 
     protected function allowedValuesItemCollectionClass(): string
     {
-        return \App\ItemType\SimpleItem\AllowedValue::class;
+        return AllowedValue::class;
     }
 
     protected function allowedValuesResourceTypeItemCollectionClass(): string
     {
-        return \App\ItemType\SimpleItem\ResourceTypeAllowedValue::class;
+        return ResourceTypeAllowedValue::class;
     }
 }

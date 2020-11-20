@@ -2,6 +2,7 @@
 
 namespace App\ItemType;
 
+use App\ItemType\SimpleItem\Item;
 use App\Request\Parameter;
 use App\Response\Cache;
 use App\Response\Header\Headers;
@@ -73,7 +74,7 @@ abstract class SummaryResourceTypeResponse
 
     abstract protected function removeDecisionParameters(): void;
 
-    protected function fetchAllRequestParameters(\App\ItemType\ItemType $entity): void
+    protected function fetchAllRequestParameters(Item $entity): void
     {
         $this->parameters = Parameter\Request::fetch(
             array_keys($entity->summaryResourceTypeRequestParameters()),

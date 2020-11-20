@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace App\ItemType\AllocatedExpense;
 
+use App\AllowedValue\Currency;
 use App\ItemType\ItemType;
 use App\Models\Transformers\Transformer;
 use App\Request\Hash;
@@ -23,7 +24,7 @@ class Item extends ItemType
 
     public function allowedValuesForItem(int $resource_type_id): array
     {
-        return (new \App\AllowedValue\Currency())->allowedValues();
+        return (new Currency())->allowedValues();
     }
 
     public function allowPartialTransfers(): bool
@@ -93,12 +94,12 @@ class Item extends ItemType
 
     public function summaryClass(): string
     {
-        return \App\ItemType\AllocatedExpense\SummaryResponse::class;
+        return SummaryResponse::class;
     }
 
     public function resourceTypeSummaryClass(): string
     {
-        return \App\ItemType\AllocatedExpense\SummaryResourceTypeResponse::class;
+        return SummaryResourceTypeResponse::class;
     }
 
     public function transformer(array $data_to_transform): Transformer
@@ -138,21 +139,21 @@ class Item extends ItemType
 
     public function viewClass(): string
     {
-        return \App\ItemType\AllocatedExpense\Response::class;
+        return Response::class;
     }
 
     public function resourceTypeItemCollectionClass(): string
     {
-        return \App\ItemType\AllocatedExpense\ResourceTypeResponse::class;
+        return ResourceTypeResponse::class;
     }
 
     protected function allowedValuesItemCollectionClass(): string
     {
-        return \App\ItemType\AllocatedExpense\AllowedValue::class;
+        return AllowedValue::class;
     }
 
     protected function allowedValuesResourceTypeItemCollectionClass(): string
     {
-        return \App\ItemType\AllocatedExpense\ResourceTypeAllowedValue::class;
+        return ResourceTypeAllowedValue::class;
     }
 }

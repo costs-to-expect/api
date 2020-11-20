@@ -18,7 +18,7 @@ class ResourceTypeAllowedValue extends BaseResourceTypeAllowedValue
             $viewable_resource_types
         );
 
-        $this->entity = new \App\ItemType\Game\Item();
+        $this->entity = new Item();
 
         $this->setAllowedValueFields();
     }

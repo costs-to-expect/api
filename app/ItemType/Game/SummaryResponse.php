@@ -22,9 +22,9 @@ class SummaryResponse extends BaseSummaryResponse
             $user_id
         );
 
-        $this->model = new \App\ItemType\Game\SummaryModel();
+        $this->model = new SummaryModel();
 
-        $this->fetchAllRequestParameters(new \App\ItemType\Game\Item());
+        $this->fetchAllRequestParameters(new Item());
 
         $this->removeDecisionParameters();
     }
@@ -64,7 +64,7 @@ class SummaryResponse extends BaseSummaryResponse
 
             $collection = [];
             foreach ($summary as $subtotal) {
-                $collection[] = (new \App\ItemType\Game\SummaryTransformer($subtotal))->asArray();
+                $collection[] = (new SummaryTransformer($subtotal))->asArray();
             }
 
             $this->assignToCache(
@@ -104,7 +104,7 @@ class SummaryResponse extends BaseSummaryResponse
 
             $collection = [];
             foreach ($summary as $subtotal) {
-                $collection[] = (new \App\ItemType\Game\SummaryTransformer($subtotal))->asArray();
+                $collection[] = (new SummaryTransformer($subtotal))->asArray();
             }
 
             $this->assignToCache(

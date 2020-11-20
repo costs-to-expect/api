@@ -3,8 +3,6 @@
 namespace App\ItemType\SimpleItem;
 
 use App\ItemType\SummaryResourceTypeResponse as BaseSummaryResourceTypeResponse;
-use App\ItemType\SimpleItem\SummaryTransformer as SimpleItemTransformer;
-use App\ItemType\SimpleItem\SummaryTransformerByResource;
 use App\Request\Validate\Boolean;
 use App\Response\Cache;
 use Illuminate\Http\JsonResponse;
@@ -23,9 +21,9 @@ class SummaryResourceTypeResponse extends BaseSummaryResourceTypeResponse
             $user_id
         );
 
-        $this->model = new \App\ItemType\SimpleItem\SummaryResourceTypeModel();
+        $this->model = new SummaryResourceTypeModel();
 
-        $this->fetchAllRequestParameters(new \App\ItemType\SimpleItem\Item());
+        $this->fetchAllRequestParameters(new Item());
 
         $this->removeDecisionParameters();
     }
@@ -67,7 +65,7 @@ class SummaryResourceTypeResponse extends BaseSummaryResourceTypeResponse
 
             $collection = [];
             foreach ($summary as $subtotal) {
-                $collection[] = (new SimpleItemTransformer($subtotal))->asArray();
+                $collection[] = (new SummaryTransformer($subtotal))->asArray();
             }
 
             $this->assignToCache(
@@ -146,7 +144,7 @@ class SummaryResourceTypeResponse extends BaseSummaryResourceTypeResponse
 
             $collection = [];
             foreach ($summary as $subtotal) {
-                $collection[] = (new SimpleItemTransformer($subtotal))->asArray();
+                $collection[] = (new SummaryTransformer($subtotal))->asArray();
             }
 
             $this->assignToCache(

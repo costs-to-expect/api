@@ -3,11 +3,6 @@
 namespace App\ItemType\AllocatedExpense;
 
 use App\ItemType\SummaryResponse as BaseSummaryResponse;
-use App\ItemType\AllocatedExpense\SummaryTransformer;
-use App\ItemType\AllocatedExpense\SummaryTransformerByCategory;
-use App\ItemType\AllocatedExpense\SummaryTransformerByMonth;
-use App\ItemType\AllocatedExpense\SummaryTransformerBySubcategory;
-use App\ItemType\AllocatedExpense\SummaryTransformerByYear;
 use App\Request\Validate\Boolean;
 use App\Response\Cache;
 use Illuminate\Http\JsonResponse;
@@ -28,9 +23,9 @@ class SummaryResponse extends BaseSummaryResponse
             $user_id
         );
 
-        $this->model = new \App\ItemType\AllocatedExpense\SummaryModel();
+        $this->model = new SummaryModel();
 
-        $this->fetchAllRequestParameters(new \App\ItemType\AllocatedExpense\Item());
+        $this->fetchAllRequestParameters(new Item());
 
         $this->removeDecisionParameters();
     }

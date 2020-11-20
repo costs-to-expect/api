@@ -4,8 +4,8 @@ declare(strict_types=1);
 namespace App\ItemType\Game;
 
 use App\ItemType\Response as ItemTypeResponse;
-use App\ItemType\Game\Transformer as Transformer;
 use App\Response\Cache;
+use App\Response\Responses;
 use Illuminate\Http\JsonResponse;
 
 class Response extends ItemTypeResponse
@@ -13,7 +13,7 @@ class Response extends ItemTypeResponse
     public function collectionResponse(): JsonResponse
     {
         $this->fetchAllRequestParameters(
-            new \App\ItemType\Game\Item()
+            new Item()
         );
 
         $this->cache_control->setTtlOneWeek();
@@ -25,7 +25,7 @@ class Response extends ItemTypeResponse
             $this->cache_control->isRequestCacheable() === false ||
             $cache_collection->valid() === false
         ) {
-            $model = new \App\ItemType\Game\Model();
+            $model = new Model();
 
             $total = $model->totalCount(
                 $this->resource_type_id,
@@ -75,10 +75,10 @@ class Response extends ItemTypeResponse
     public function showResponse(int $item_id): JsonResponse
     {
         $this->fetchAllRequestParameters(
-            new \App\ItemType\Game\Item()
+            new Item()
         );
 
-        $item = (new \App\ItemType\Game\Model())->single(
+        $item = (new Model())->single(
             $this->resource_type_id,
             $this->resource_id,
             $item_id,
@@ -86,7 +86,7 @@ class Response extends ItemTypeResponse
         );
 
         if ($item === null) {
-            return \App\Response\Responses::notFound(trans('entities.item'));
+            return Responses::notFound(trans('entities.item'));
         }
 
         return response()->json(

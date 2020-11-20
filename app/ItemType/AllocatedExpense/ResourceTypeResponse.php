@@ -13,7 +13,7 @@ class ResourceTypeResponse extends BaseResourceTypeResponse
     public function response(): JsonResponse
     {
         $this->fetchAllRequestParameters(
-            new \App\ItemType\AllocatedExpense\Item()
+            new Item()
         );
 
         if ($this->cache_control->visibility() === 'public') {
@@ -29,7 +29,7 @@ class ResourceTypeResponse extends BaseResourceTypeResponse
             $this->cache_control->isRequestCacheable() === false ||
             $cache_collection->valid() === false
         ) {
-            $model = new \App\ItemType\AllocatedExpense\ResourceTypeModel();
+            $model = new ResourceTypeModel();
 
             $total = $model->totalCount(
                 $this->resource_type_id,

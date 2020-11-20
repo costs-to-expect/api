@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace App\ItemType\Game;
 
+use App\AllowedValue\Winner;
 use App\ItemType\ItemType;
 use App\Models\Transformers\Transformer;
 use App\Request\Hash;
@@ -24,7 +25,7 @@ class Item extends ItemType
 
     public function allowedValuesForItem(int $resource_type_id): array
     {
-        return (new \App\AllowedValue\Winner())->allowedValues($resource_type_id);
+        return (new Winner())->allowedValues($resource_type_id);
     }
 
     public function categoryAssignmentLimit(): int
@@ -115,31 +116,31 @@ class Item extends ItemType
 
     public function summaryClass(): string
     {
-        return \App\ItemType\Game\SummaryResponse::class;
+        return SummaryResponse::class;
     }
 
     public function viewClass(): string
     {
-        return \App\ItemType\Game\Response::class;
+        return Response::class;
     }
 
     public function resourceTypeSummaryClass(): string
     {
-        return \App\ItemType\Game\SummaryResourceTypeResponse::class;
+        return SummaryResourceTypeResponse::class;
     }
 
     public function resourceTypeItemCollectionClass(): string
     {
-        return \App\ItemType\Game\ResourceTypeResponse::class;
+        return ResourceTypeResponse::class;
     }
 
     protected function allowedValuesItemCollectionClass(): string
     {
-        return \App\ItemType\Game\AllowedValue::class;
+        return AllowedValue::class;
     }
 
     protected function allowedValuesResourceTypeItemCollectionClass(): string
     {
-        return \App\ItemType\Game\ResourceTypeAllowedValue::class;
+        return ResourceTypeAllowedValue::class;
     }
 }

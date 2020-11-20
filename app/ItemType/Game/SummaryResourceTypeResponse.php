@@ -4,7 +4,6 @@ namespace App\ItemType\Game;
 
 use App\ItemType\SummaryResourceTypeResponse as BaseSummaryResourceTypeResponse;
 use App\ItemType\Game\SummaryTransformer as GameTransformer;
-use App\ItemType\Game\SummaryTransformerByResource;
 use App\Request\Validate\Boolean;
 use App\Response\Cache;
 use Illuminate\Http\JsonResponse;
@@ -23,9 +22,9 @@ class SummaryResourceTypeResponse extends BaseSummaryResourceTypeResponse
             $user_id
         );
 
-        $this->model = new \App\ItemType\Game\SummaryResourceTypeModel();
+        $this->model = new SummaryResourceTypeModel();
 
-        $this->fetchAllRequestParameters(new \App\ItemType\Game\Item());
+        $this->fetchAllRequestParameters(new Item());
 
         $this->removeDecisionParameters();
     }

@@ -14,7 +14,7 @@ abstract class AllowedValue
 {
     protected Hash $hash;
 
-    protected \App\ItemType\ItemType $entity;
+    protected ItemType $entity;
 
     protected EntityLimits $range_limits;
 

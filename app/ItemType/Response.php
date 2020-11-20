@@ -80,7 +80,7 @@ abstract class Response
     }
 
     protected function fetchAllRequestParameters(
-        \App\ItemType\ItemType $entity
+        ItemType $entity
     ): void
     {
         $this->request_parameters = Request::fetch(

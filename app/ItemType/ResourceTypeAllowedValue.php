@@ -39,8 +39,6 @@ abstract class ResourceTypeAllowedValue
 
         $this->range_limits = new EntityLimits();
 
-        $this->entity = new \App\ItemType\AllocatedExpense\Item();
-
         $this->hash = new Hash();
     }
 
