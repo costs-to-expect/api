@@ -26,7 +26,7 @@ class SimpleExpense extends Item
 
         $this->model = new \App\Models\ResourceTypeItem\Summary\SimpleExpense();
 
-        $this->fetchAllRequestParameters(new \App\ItemType\SimpleExpense\SimpleExpense());
+        $this->fetchAllRequestParameters(new \App\ItemType\SimpleExpense\Item());
 
         $this->removeDecisionParameters();
     }

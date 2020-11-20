@@ -3,96 +3,122 @@ declare(strict_types=1);
 
 namespace App\ItemType\SimpleExpense;
 
-use App\ItemType\Response as ItemTypeResponse;
-use App\Models\Transformers\Item\SimpleExpense as Transformer;
-use App\Response\Cache;
-use Illuminate\Http\JsonResponse;
+use App\ItemType\ItemType;
+use App\Models\Transformers\Transformer;
+use App\Request\Hash;
+use App\Request\Validate\Validator;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Date;
 
-class Item extends ItemTypeResponse
+class Item extends ItemType
 {
-    public function collectionResponse(): JsonResponse
+    public function __construct()
     {
-        $this->fetchAllRequestParameters(
-            new \App\ItemType\SimpleExpense\SimpleExpense()
-        );
+        $this->base_path = 'api.item-type-simple-expense';
 
-        $this->cache_control->setTtlOneMonth();
+        $this->resource_type_base_path = 'api.resource-type-item-type-simple-expense';
 
-        $cache_collection = new Cache\Collection();
-        $cache_collection->setFromCache($this->cache_control->getByKey(request()->getRequestUri()));
-
-        if (
-            $this->cache_control->isRequestCacheable() === false ||
-            $cache_collection->valid() === false
-        ) {
-            $model = new \App\Models\Item\SimpleExpense();
-
-            $total = $model->totalCount(
-                $this->resource_type_id,
-                $this->resource_id,
-                $this->request_parameters,
-                $this->search_parameters,
-                $this->filter_parameters
-            );
-
-            $pagination_parameters = $this->pagination_parameters($total);
-
-            $items = $model->paginatedCollection(
-                $this->resource_type_id,
-                $this->resource_id,
-                $pagination_parameters['offset'],
-                $pagination_parameters['limit'],
-                $this->request_parameters,
-                $this->search_parameters,
-                $this->filter_parameters,
-                $this->sort_fields
-            );
-
-            $collection = array_map(
-                static function ($item) {
-                    return (new Transformer($item))->asArray();
-                },
-                $items
-            );
-
-            $cache_collection->create(
-                $total,
-                $collection,
-                $pagination_parameters,
-                $this->collectionHeaders(
-                    $pagination_parameters,
-                    count($items),
-                    $total,
-                    $collection
-                )
-            );
-            $this->cache_control->putByKey(request()->getRequestUri(), $cache_collection->content());
-        }
-
-        return response()->json($cache_collection->collection(), 200, $cache_collection->headers());
+        parent::__construct();
     }
 
-    public function showResponse(int $item_id): JsonResponse
+    public function allowedValuesForItem(int $resource_type_id): array
     {
-        $this->fetchAllRequestParameters(
-            new \App\ItemType\SimpleExpense\SimpleExpense()
-        );
+        return (new \App\AllowedValue\Currency())->allowedValues();
+    }
 
-        $item = (new \App\Models\Item\SimpleExpense())->single(
-            $this->resource_type_id,
-            $this->resource_id,
-            $item_id,
-            $this->request_parameters
-        );
+    public function create(int $id): Model
+    {
+        $hash = new Hash();
+        $currency_id = $hash->decode('currency', request()->input('currency_id'));
 
-        if ($item === null) {
-            return \App\Response\Responses::notFound(trans('entities.item'));
+        $item = new \App\ItemType\SimpleExpense\Model([
+            'item_id' => $id,
+            'name' => request()->input('name'),
+            'description' => request()->input('description', null),
+            'currency_id' => $currency_id,
+            'total' => request()->input('total'),
+            'created_at' => Date::now(),
+            'updated_at' => null
+        ]);
+
+        $item->save();
+
+        return $item;
+    }
+
+    public function instance(int $id): Model
+    {
+        return (new \App\ItemType\SimpleExpense\Model())->instance($id);
+    }
+
+    public function model()
+    {
+        return new \App\ItemType\SimpleExpense\Model();
+    }
+
+    public function table(): string
+    {
+        return 'item_type_simple_expense';
+    }
+
+    public function type(): string
+    {
+        return 'simple-expense';
+    }
+
+    public function summaryClass(): string
+    {
+        return \App\Http\Controllers\Summary\Item\SimpleExpense::class;
+    }
+
+    public function resourceTypeSummaryClass(): string
+    {
+        return \App\Http\Controllers\Summary\ResourceTypeItem\SimpleExpense::class;
+    }
+
+    public function transformer(array $data_to_transform): Transformer
+    {
+        return new \App\Models\Transformers\Item\SimpleExpense($data_to_transform);
+    }
+
+    public function update(array $patch, Model $instance): bool
+    {
+        foreach ($patch as $key => $value) {
+            $instance->$key = $value;
+
+            if ($key === 'currency_id') {
+                $hash = new Hash();
+                $instance->$key = $hash->decode('currency', request()->input('currency_id'));
+            }
         }
 
-        return response()->json(
-            (new Transformer($item))->asArray(),
-            200,
-            $this->showHeaders()
-        );
+        $instance->updated_at = Date::now();
+
+        return $instance->save();
+    }
+
+    public function validator(): Validator
+    {
+        return new \App\Request\Validate\ItemType\SimpleExpense();
+    }
+
+    public function viewClass(): string
+    {
+        return \App\ItemType\SimpleExpense\Response::class;
+    }
+
+    public function resourceTypeItemCollectionClass(): string
+    {
+        return \App\Http\Controllers\ResourceTypeItem\SimpleExpense::class;
+    }
+
+    protected function allowedValuesItemCollectionClass(): string
+    {
+        return \App\AllowedValue\Item\SimpleExpense::class;
+    }
+
+    protected function allowedValuesResourceTypeItemCollectionClass(): string
+    {
+        return \App\AllowedValue\ResourceTypeItem\SimpleExpense::class;
     }
 }

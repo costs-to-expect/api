@@ -1,10 +1,10 @@
 <?php
 declare(strict_types=1);
 
-namespace App\ItemType\AllocatedExpense;
+namespace App\ItemType\SimpleItem;
 
 use App\ItemType\Response as ItemTypeResponse;
-use App\Models\Transformers\Item\AllocatedExpense as Transformer;
+use App\Models\Transformers\Item\SimpleItem as Transformer;
 use App\Response\Cache;
 use Illuminate\Http\JsonResponse;
 
@@ -13,14 +13,10 @@ class Response extends ItemTypeResponse
     public function collectionResponse(): JsonResponse
     {
         $this->fetchAllRequestParameters(
-            new \App\ItemType\AllocatedExpense\Item()
+            new \App\ItemType\SimpleItem\Item()
         );
 
-        if ($this->cache_control->visibility() === 'public') {
-            $this->cache_control->setTtlOneWeek();
-        } else {
-            $this->cache_control->setTtlOneDay();
-        }
+        $this->cache_control->setTtlOneMonth();
 
         $cache_collection = new Cache\Collection();
         $cache_collection->setFromCache($this->cache_control->getByKey(request()->getRequestUri()));
@@ -29,7 +25,7 @@ class Response extends ItemTypeResponse
             $this->cache_control->isRequestCacheable() === false ||
             $cache_collection->valid() === false
         ) {
-            $model = new \App\ItemType\AllocatedExpense\Model();
+            $model = new \App\ItemType\SimpleItem\Model();
 
             $total = $model->totalCount(
                 $this->resource_type_id,
@@ -46,7 +42,6 @@ class Response extends ItemTypeResponse
                 $this->resource_id,
                 $pagination_parameters['offset'],
                 $pagination_parameters['limit'],
-                $this->request_parameters,
                 $this->search_parameters,
                 $this->filter_parameters,
                 $this->sort_fields
@@ -79,10 +74,10 @@ class Response extends ItemTypeResponse
     public function showResponse(int $item_id): JsonResponse
     {
         $this->fetchAllRequestParameters(
-            new \App\ItemType\AllocatedExpense\Item()
+            new \App\ItemType\SimpleItem\Item()
         );
 
-        $item = (new \App\ItemType\AllocatedExpense\Model())->single(
+        $item = (new \App\ItemType\SimpleItem\Model())->single(
             $this->resource_type_id,
             $this->resource_id,
             $item_id,

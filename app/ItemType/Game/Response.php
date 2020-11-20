@@ -25,7 +25,7 @@ class Response extends ItemTypeResponse
             $this->cache_control->isRequestCacheable() === false ||
             $cache_collection->valid() === false
         ) {
-            $model = new \App\Models\Item\Game();
+            $model = new \App\ItemType\Game\Model();
 
             $total = $model->totalCount(
                 $this->resource_type_id,
@@ -78,7 +78,7 @@ class Response extends ItemTypeResponse
             new \App\ItemType\Game\Item()
         );
 
-        $item = (new \App\Models\Item\Game())->single(
+        $item = (new \App\ItemType\Game\Model())->single(
             $this->resource_type_id,
             $this->resource_id,
             $item_id,

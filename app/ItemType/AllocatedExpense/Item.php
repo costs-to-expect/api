@@ -43,7 +43,7 @@ class Item extends ItemType
         $hash = new Hash();
         $currency_id = $hash->decode('currency', request()->input('currency_id'));
 
-        $item = new \App\Models\Item\AllocatedExpense([
+        $item = new \App\ItemType\AllocatedExpense\Model([
             'item_id' => $id,
             'name' => request()->input('name'),
             'description' => request()->input('description', null),
@@ -73,7 +73,7 @@ class Item extends ItemType
 
     public function instance(int $id): Model
     {
-        return (new \App\Models\Item\AllocatedExpense())->instance($id);
+        return (new \App\ItemType\AllocatedExpense\Model())->instance($id);
     }
 
     public function table(): string
@@ -88,7 +88,7 @@ class Item extends ItemType
 
     public function model()
     {
-        return new \App\Models\Item\AllocatedExpense();
+        return new \App\ItemType\AllocatedExpense\Model();
     }
 
     public function summaryClass(): string

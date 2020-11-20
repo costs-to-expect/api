@@ -1,12 +1,12 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Models\Item;
+namespace App\ItemType\Game;
 
 use App\Models\Category;
 use App\Models\Clause;
+use Illuminate\Database\Eloquent\Model as LaravelModel;
 use Illuminate\Database\Query\Builder as QueryBuilder;
-use Illuminate\Database\Eloquent\Model;
 
 /**
  * @mixin QueryBuilder
@@ -14,7 +14,7 @@ use Illuminate\Database\Eloquent\Model;
  * @copyright Dean Blackborough 2018-2020
  * @license https://github.com/costs-to-expect/api/blob/master/LICENSE
  */
-class Game extends Model
+class Model extends LaravelModel
 {
     protected $table = 'item_type_game';
 
@@ -36,7 +36,7 @@ class Game extends Model
             first();
     }
 
-    public function instanceToArray(Model $item, Model $item_type): array
+    public function instanceToArray(LaravelModel $item, Model $item_type): array
     {
         return [
             'item_id' => $item->id,

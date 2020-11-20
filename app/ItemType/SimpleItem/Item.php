@@ -3,95 +3,122 @@ declare(strict_types=1);
 
 namespace App\ItemType\SimpleItem;
 
-use App\ItemType\Response as ItemTypeResponse;
-use App\Models\Transformers\Item\SimpleItem as Transformer;
-use App\Response\Cache;
-use Illuminate\Http\JsonResponse;
+use App\ItemType\ItemType;
+use App\Models\Transformers\Transformer;
+use App\Request\Validate\Validator;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Date;
 
-class Item extends ItemTypeResponse
+class Item extends ItemType
 {
-    public function collectionResponse(): JsonResponse
+    public function __construct()
     {
-        $this->fetchAllRequestParameters(
-            new \App\ItemType\SimpleItem\SimpleItem()
-        );
+        $this->base_path = 'api.item-type-simple-item';
 
-        $this->cache_control->setTtlOneMonth();
+        $this->resource_type_base_path = 'api.resource-type-item-type-simple-item';
 
-        $cache_collection = new Cache\Collection();
-        $cache_collection->setFromCache($this->cache_control->getByKey(request()->getRequestUri()));
-
-        if (
-            $this->cache_control->isRequestCacheable() === false ||
-            $cache_collection->valid() === false
-        ) {
-            $model = new \App\Models\Item\SimpleItem();
-
-            $total = $model->totalCount(
-                $this->resource_type_id,
-                $this->resource_id,
-                $this->request_parameters,
-                $this->search_parameters,
-                $this->filter_parameters
-            );
-
-            $pagination_parameters = $this->pagination_parameters($total);
-
-            $items = $model->paginatedCollection(
-                $this->resource_type_id,
-                $this->resource_id,
-                $pagination_parameters['offset'],
-                $pagination_parameters['limit'],
-                $this->search_parameters,
-                $this->filter_parameters,
-                $this->sort_fields
-            );
-
-            $collection = array_map(
-                static function ($item) {
-                    return (new Transformer($item))->asArray();
-                },
-                $items
-            );
-
-            $cache_collection->create(
-                $total,
-                $collection,
-                $pagination_parameters,
-                $this->collectionHeaders(
-                    $pagination_parameters,
-                    count($items),
-                    $total,
-                    $collection
-                )
-            );
-            $this->cache_control->putByKey(request()->getRequestUri(), $cache_collection->content());
-        }
-
-        return response()->json($cache_collection->collection(), 200, $cache_collection->headers());
+        parent::__construct();
     }
 
-    public function showResponse(int $item_id): JsonResponse
+    public function allowedValuesForItem(int $resource_type_id): array
     {
-        $this->fetchAllRequestParameters(
-            new \App\ItemType\SimpleItem\SimpleItem()
-        );
+        return [];
+    }
 
-        $item = (new \App\Models\Item\SimpleItem())->single(
-            $this->resource_type_id,
-            $this->resource_id,
-            $item_id,
-            $this->request_parameters
-        );
+    public function categoryAssignmentLimit(): int
+    {
+        return 0;
+    }
 
-        if ($item === null) {
-            return \App\Response\Responses::notFound(trans('entities.item'));
+    public function create(int $id): Model
+    {
+        $item = new \App\ItemType\SimpleItem\Model([
+            'item_id' => $id,
+            'name' => request()->input('name'),
+            'description' => request()->input('description', null),
+            'quantity' => request()->input('quantity', 1),
+            'created_at' => Date::now(),
+            'updated_at' => null
+        ]);
+
+        $item->save();
+
+        return $item;
+    }
+
+    public function instance(int $id): Model
+    {
+        return (new \App\ItemType\SimpleItem\Model())->instance($id);
+    }
+
+    public function model()
+    {
+        return new \App\ItemType\SimpleItem\Model();
+    }
+
+    public function subcategoryAssignmentLimit(): int
+    {
+        return 0;
+    }
+
+    public function table(): string
+    {
+        return 'item_type_simple_item';
+    }
+
+    public function type(): string
+    {
+        return 'simple-item';
+    }
+
+    public function summaryClass(): string
+    {
+        return \App\Http\Controllers\Summary\Item\SimpleItem::class;
+    }
+
+    public function resourceTypeSummaryClass(): string
+    {
+        return \App\Http\Controllers\Summary\ResourceTypeItem\SimpleItem::class;
+    }
+
+    public function transformer(array $data_to_transform): Transformer
+    {
+        return new \App\Models\Transformers\Item\SimpleItem($data_to_transform);
+    }
+
+    public function update(array $patch, Model $instance): bool
+    {
+        foreach ($patch as $key => $value) {
+            $instance->$key = $value;
         }
 
-        return response()->json(
-            (new Transformer($item))->asArray(),
-            200,
-            $this->showHeaders()
-        );
+        $instance->updated_at = Date::now();
+
+        return $instance->save();
+    }
+
+    public function validator(): Validator
+    {
+        return new \App\Request\Validate\ItemType\SimpleItem();
+    }
+
+    public function viewClass(): string
+    {
+        return \App\ItemType\SimpleItem\Response::class;
+    }
+
+    public function resourceTypeItemCollectionClass(): string
+    {
+        return \App\Http\Controllers\ResourceTypeItem\SimpleItem::class;
+    }
+
+    protected function allowedValuesItemCollectionClass(): string
+    {
+        return \App\AllowedValue\Item\SimpleItem::class;
+    }
+
+    protected function allowedValuesResourceTypeItemCollectionClass(): string
+    {
+        return \App\AllowedValue\ResourceTypeItem\SimpleItem::class;
     }
 }

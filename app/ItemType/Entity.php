@@ -4,8 +4,8 @@ namespace App\ItemType;
 
 use App\ItemType\AllocatedExpense\Item as AllocatedExpenseItem;
 use App\ItemType\Game\Item as GameItem;
-use App\ItemType\SimpleExpense\SimpleExpense as SimpleExpenseItem;
-use App\ItemType\SimpleItem\SimpleItem as SimpleItemItem;
+use App\ItemType\SimpleExpense\Item as SimpleExpenseItem;
+use App\ItemType\SimpleItem\Item as SimpleItemItem;
 use App\Models\ResourceTypeItemType;
 
 class Entity

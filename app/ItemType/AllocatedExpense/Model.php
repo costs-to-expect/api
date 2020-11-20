@@ -1,24 +1,22 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Models\Item;
+namespace App\ItemType\AllocatedExpense;
 
+use App\Models\Clause;
 use App\Models\Currency;
 use App\Request\Validate\Boolean;
-use App\Models\Clause;
+use Illuminate\Database\Eloquent\Model as LaravelModel;
 use Illuminate\Database\Query\Builder as QueryBuilder;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
 
 /**
- * Item type model
- *
  * @mixin QueryBuilder
  * @author Dean Blackborough <dean@g3d-development.com>
  * @copyright Dean Blackborough 2018-2020
  * @license https://github.com/costs-to-expect/api/blob/master/LICENSE
  */
-class AllocatedExpense extends Model
+class Model extends LaravelModel
 {
     protected $table = 'item_type_allocated_expense';
 
@@ -175,7 +173,7 @@ class AllocatedExpense extends Model
      *
      * @return array
      */
-    public function instanceToArray(Model $item, Model $item_type): array
+    public function instanceToArray(LaravelModel $item, Model $item_type): array
     {
         return [
             'item_id' => $item->id,

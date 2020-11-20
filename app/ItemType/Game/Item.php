@@ -34,7 +34,7 @@ class Item extends ItemType
 
     public function create(int $id): Model
     {
-        $item = new \App\Models\Item\Game([
+        $item = new \App\ItemType\Game\Model([
             'item_id' => $id,
             'name' => request()->input('name'),
             'description' => request()->input('description', null),
@@ -51,12 +51,12 @@ class Item extends ItemType
 
     public function instance(int $id): Model
     {
-        return (new \App\Models\Item\Game())->instance($id);
+        return (new \App\ItemType\Game\Model())->instance($id);
     }
 
     public function model()
     {
-        return new \App\Models\Item\Game();
+        return new \App\ItemType\Game\Model();
     }
 
     public function subcategoryAssignmentLimit(): int

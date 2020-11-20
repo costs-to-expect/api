@@ -17,7 +17,7 @@ class SimpleItem extends Item
             $viewable_resource_types
         );
 
-        $this->entity = new \App\ItemType\SimpleItem\SimpleItem();
+        $this->entity = new \App\ItemType\SimpleItem\Item();
 
         $this->setAllowedValueFields();
     }

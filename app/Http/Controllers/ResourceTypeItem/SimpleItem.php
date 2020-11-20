@@ -12,7 +12,7 @@ class SimpleItem extends Item
     public function response(): JsonResponse
     {
         $this->fetchAllRequestParameters(
-            new \App\ItemType\SimpleItem\SimpleItem()
+            new \App\ItemType\SimpleItem\Item()
         );
 
         $this->cache_control->setTtlOneMonth();
