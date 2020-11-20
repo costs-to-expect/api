@@ -12,10 +12,6 @@ class ResourceTypeResponse extends BaseResourceTypeResponse
 {
     public function response(): JsonResponse
     {
-        $this->fetchAllRequestParameters(
-            new Item()
-        );
-
         $this->cache_control->setTtlOneWeek();
 
         $cache_collection = new Cache\Collection();
@@ -26,6 +22,10 @@ class ResourceTypeResponse extends BaseResourceTypeResponse
             $cache_collection->valid() === false
         ) {
             $model = new ResourceTypeModel();
+
+            $this->fetchAllRequestParameters(
+                new Item()
+            );
 
             $total = $model->totalCount(
                 $this->resource_type_id,

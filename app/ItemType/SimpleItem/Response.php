@@ -12,10 +12,6 @@ class Response extends ItemTypeResponse
 {
     public function collectionResponse(): JsonResponse
     {
-        $this->fetchAllRequestParameters(
-            new Item()
-        );
-
         $this->cache_control->setTtlOneMonth();
 
         $cache_collection = new Cache\Collection();
@@ -26,6 +22,10 @@ class Response extends ItemTypeResponse
             $cache_collection->valid() === false
         ) {
             $model = new Model();
+
+            $this->fetchAllRequestParameters(
+                new Item()
+            );
 
             $total = $model->totalCount(
                 $this->resource_type_id,
