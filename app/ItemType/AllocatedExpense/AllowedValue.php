@@ -1,17 +1,21 @@
 <?php
 declare(strict_types=1);
 
-namespace App\AllowedValue\ResourceTypeItem;
+namespace App\ItemType\AllocatedExpense;
 
-class AllocatedExpense extends Item
+use App\ItemType\AllowedValue as BaseAllowedValue;
+
+class AllowedValue extends BaseAllowedValue
 {
     public function __construct(
         int $resource_type_id,
+        int $resource_id,
         array $viewable_resource_types
     )
     {
         parent::__construct(
             $resource_type_id,
+            $resource_id,
             $viewable_resource_types
         );
 
@@ -20,7 +24,7 @@ class AllocatedExpense extends Item
         $this->setAllowedValueFields();
     }
 
-    public function fetch(): Item
+    public function fetch(): BaseAllowedValue
     {
         $this->fetchValuesForYear();
 

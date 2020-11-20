@@ -1,11 +1,12 @@
 <?php
 declare(strict_types=1);
 
-namespace App\AllowedValue\ResourceTypeItem;
+namespace App\ItemType\Game;
 
+use App\ItemType\ResourceTypeAllowedValue as BaseResourceTypeAllowedValue;
 use App\Models\Category;
 
-class Game extends Item
+class ResourceTypeAllowedValue extends BaseResourceTypeAllowedValue
 {
     public function __construct(
         int $resource_type_id,
@@ -22,7 +23,7 @@ class Game extends Item
         $this->setAllowedValueFields();
     }
 
-    public function fetch(): Item
+    public function fetch(): BaseResourceTypeAllowedValue
     {
         $this->fetchValuesForWinner();
 

@@ -1,9 +1,11 @@
 <?php
 declare(strict_types=1);
 
-namespace App\AllowedValue\Item;
+namespace App\ItemType\SimpleItem;
 
-class SimpleItem extends Item
+use App\ItemType\AllowedValue as BaseAllowedValue;
+
+class AllowedValue extends BaseAllowedValue
 {
     public function __construct(
         int $resource_type_id,
@@ -22,7 +24,7 @@ class SimpleItem extends Item
         $this->setAllowedValueFields();
     }
 
-    public function fetch(): Item
+    public function fetch(): BaseAllowedValue
     {
         return $this;
     }

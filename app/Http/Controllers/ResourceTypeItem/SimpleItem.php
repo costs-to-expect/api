@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\ResourceTypeItem;
 
+use App\ItemType\Item;
 use App\Models\Transformers\ResourceTypeItem\SimpleItem as Transformer;
 use App\Response\Cache;
 use Illuminate\Http\JsonResponse;

@@ -135,11 +135,11 @@ class Item extends ItemType
 
     protected function allowedValuesItemCollectionClass(): string
     {
-        return \App\AllowedValue\Item\Game::class;
+        return \App\ItemType\Game\AllowedValue::class;
     }
 
     protected function allowedValuesResourceTypeItemCollectionClass(): string
     {
-        return \App\AllowedValue\ResourceTypeItem\Game::class;
+        return \App\ItemType\Game\ResourceTypeAllowedValue::class;
     }
 }

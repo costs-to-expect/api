@@ -114,11 +114,11 @@ class Item extends ItemType
 
     protected function allowedValuesItemCollectionClass(): string
     {
-        return \App\AllowedValue\Item\SimpleItem::class;
+        return \App\ItemType\SimpleItem\AllowedValue::class;
     }
 
     protected function allowedValuesResourceTypeItemCollectionClass(): string
     {
-        return \App\AllowedValue\ResourceTypeItem\SimpleItem::class;
+        return \App\ItemType\SimpleItem\ResourceTypeAllowedValue::class;
     }
 }

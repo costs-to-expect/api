@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Http\Controllers\ResourceTypeItem;
+namespace App\ItemType;
 
 use App\Request\Parameter\Filter;
 use App\Request\Parameter\Request;

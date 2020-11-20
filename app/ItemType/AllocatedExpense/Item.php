@@ -148,11 +148,11 @@ class Item extends ItemType
 
     protected function allowedValuesItemCollectionClass(): string
     {
-        return \App\AllowedValue\Item\AllocatedExpense::class;
+        return \App\ItemType\AllocatedExpense\AllowedValue::class;
     }
 
     protected function allowedValuesResourceTypeItemCollectionClass(): string
     {
-        return \App\AllowedValue\ResourceTypeItem\AllocatedExpense::class;
+        return \App\ItemType\AllocatedExpense\ResourceTypeAllowedValue::class;
     }
 }

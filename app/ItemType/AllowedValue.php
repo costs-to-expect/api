@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace App\AllowedValue\Item;
+namespace App\ItemType;
 
 use App\Models\Category;
 use App\Models\Currency;
@@ -10,7 +10,7 @@ use App\Models\Subcategory;
 use App\Request\Hash;
 use App\Response\Responses;
 
-abstract class Item
+abstract class AllowedValue
 {
     protected Hash $hash;
 
@@ -47,7 +47,7 @@ abstract class Item
     public function setParameters(
         array $available_parameters,
         array $defined_parameters
-    ): Item
+    ): AllowedValue
     {
         $this->available_parameters = $available_parameters;
         $this->defined_parameters = $defined_parameters;
@@ -55,7 +55,7 @@ abstract class Item
         return $this;
     }
 
-    abstract public function fetch(): Item;
+    abstract public function fetch(): AllowedValue;
 
     abstract protected function setAllowedValueFields(): void;
 
