@@ -105,7 +105,7 @@ class Item extends ItemType
 
     public function validator(): Validator
     {
-        return new \App\Request\Validate\ItemType\Game();
+        return new \App\ItemType\Game\Validator();
     }
 
     public function patchFields(): array

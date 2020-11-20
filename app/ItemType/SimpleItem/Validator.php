@@ -1,19 +1,17 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Request\Validate\ItemType;
+namespace App\ItemType\SimpleItem;
 
 use App\ItemType\Entity;
 use App\Request\Validate\Validator as BaseValidator;
 
 /**
- * Validation helper class for items, returns the generated validator objects
- *
  * @author Dean Blackborough <dean@g3d-development.com>
  * @copyright Dean Blackborough 2018-2020
  * @license https://github.com/costs-to-expect/api/blob/master/LICENSE
  */
-class SimpleItem extends BaseValidator
+class Validator extends BaseValidator
 {
     public function __construct()
     {

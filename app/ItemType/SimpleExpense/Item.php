@@ -99,7 +99,7 @@ class Item extends ItemType
 
     public function validator(): Validator
     {
-        return new \App\Request\Validate\ItemType\SimpleExpense();
+        return new \App\ItemType\SimpleExpense\Validator();
     }
 
     public function viewClass(): string

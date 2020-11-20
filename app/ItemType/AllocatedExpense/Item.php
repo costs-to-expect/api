@@ -133,7 +133,7 @@ class Item extends ItemType
 
     public function validator(): Validator
     {
-        return new \App\Request\Validate\ItemType\AllocatedExpense();
+        return new \App\ItemType\AllocatedExpense\Validator();
     }
 
     public function viewClass(): string

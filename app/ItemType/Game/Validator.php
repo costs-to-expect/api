@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Request\Validate\ItemType;
+namespace App\ItemType\Game;
 
 use App\ItemType\Entity;
 use App\Request\Validate\Validator as BaseValidator;
@@ -12,7 +12,7 @@ use Illuminate\Support\Facades\Validator as ValidatorFacade;
  * @copyright Dean Blackborough 2018-2020
  * @license https://github.com/costs-to-expect/api/blob/master/LICENSE
  */
-class Game extends BaseValidator
+class Validator extends BaseValidator
 {
     public function __construct()
     {
