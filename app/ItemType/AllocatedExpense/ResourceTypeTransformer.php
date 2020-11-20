@@ -1,18 +1,16 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Models\Transformers\ResourceTypeItem;
+namespace App\ItemType\AllocatedExpense;
 
-use App\Models\Transformers\Transformer;
+use App\Models\Transformers\Transformer as BaseTransformer;
 
 /**
- * Transform the data from our queries into the format we want to display
- *
  * @author Dean Blackborough <dean@g3d-development.com>
  * @copyright Dean Blackborough 2018-2020
  * @license https://github.com/costs-to-expect/api/blob/master/LICENSE
  */
-class SimpleExpense extends Transformer
+class ResourceTypeTransformer extends BaseTransformer
 {
     public function format(array $to_transform): void
     {
@@ -26,6 +24,9 @@ class SimpleExpense extends Transformer
                 'name' => $to_transform['item_currency_name'],
             ],
             'total' => number_format((float) $to_transform['item_total'], 2, '.', ''),
+            'percentage' => (int) $to_transform['item_percentage'],
+            'actualised_total' => number_format((float) $to_transform['item_actualised_total'], 2, '.', ''),
+            'effective_date' => $to_transform['item_effective_date'],
             'created' => $to_transform['item_created_at'],
             'updated' => $to_transform['item_updated_at'],
             'categories' => [],

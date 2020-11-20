@@ -1,18 +1,16 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Models\Transformers\ResourceTypeItem;
+namespace App\ItemType\SimpleItem;
 
-use App\Models\Transformers\Transformer;
+use App\Models\Transformers\Transformer as BaseTransformer;
 
 /**
- * Transform the data from our queries into the format we want to display
- *
  * @author Dean Blackborough <dean@g3d-development.com>
  * @copyright Dean Blackborough 2018-2020
  * @license https://github.com/costs-to-expect/api/blob/master/LICENSE
  */
-class SimpleItem extends Transformer
+class ResourceTypeTransformer extends BaseTransformer
 {
     public function format(array $to_transform): void
     {
