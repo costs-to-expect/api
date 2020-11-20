@@ -24,7 +24,7 @@ class SimpleExpense extends Item
             $user_id
         );
 
-        $this->model = new \App\Models\ResourceTypeItem\Summary\SimpleExpense();
+        $this->model = new \App\ItemType\SimpleExpense\SummaryResourceTypeModel();
 
         $this->fetchAllRequestParameters(new \App\ItemType\SimpleExpense\Item());
 

@@ -24,7 +24,7 @@ class Game extends Item
             $this->cache_control->isRequestCacheable() === false ||
             $cache_collection->valid() === false
         ) {
-            $model = new \App\Models\ResourceTypeItem\Game();
+            $model = new \App\ItemType\Game\ResourceTypeModel();
 
             $total = $model->totalCount(
                 $this->resource_type_id,

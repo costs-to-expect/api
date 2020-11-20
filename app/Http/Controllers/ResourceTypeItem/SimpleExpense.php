@@ -24,7 +24,7 @@ class SimpleExpense extends Item
             $this->cache_control->isRequestCacheable() === false ||
             $cache_collection->valid() === false
         ) {
-            $model = new \App\Models\ResourceTypeItem\SimpleExpense();
+            $model = new \App\ItemType\SimpleExpense\ResourceTypeModel();
 
             $total = $model->totalCount(
                 $this->resource_type_id,

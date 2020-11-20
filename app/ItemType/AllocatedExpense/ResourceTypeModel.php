@@ -1,23 +1,21 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Models\ResourceTypeItem;
+namespace App\ItemType\AllocatedExpense;
 
-use App\Request\Validate\Boolean;
 use App\Models\Clause;
-use Illuminate\Database\Eloquent\Model;
+use App\Request\Validate\Boolean;
+use Illuminate\Database\Eloquent\Model as LaravelModel;
 use Illuminate\Database\Query\Builder as QueryBuilder;
 use Illuminate\Support\Facades\DB;
 
 /**
- * Item model when fetching data by resource type
- *
  * @mixin QueryBuilder
  * @author Dean Blackborough <dean@g3d-development.com>
  * @copyright Dean Blackborough 2018-2020
  * @license https://github.com/costs-to-expect/api/blob/master/LICENSE
  */
-class AllocatedExpense extends Model
+class ResourceTypeModel extends LaravelModel
 {
     protected $table = 'item';
 

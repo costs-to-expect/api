@@ -28,7 +28,7 @@ class AllocatedExpense extends Item
             $this->cache_control->isRequestCacheable() === false ||
             $cache_collection->valid() === false
         ) {
-            $model = new \App\Models\ResourceTypeItem\AllocatedExpense();
+            $model = new \App\ItemType\AllocatedExpense\ResourceTypeModel();
 
             $total = $model->totalCount(
                 $this->resource_type_id,

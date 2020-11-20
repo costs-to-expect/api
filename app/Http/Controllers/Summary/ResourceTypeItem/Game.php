@@ -22,7 +22,7 @@ class Game extends Item
             $user_id
         );
 
-        $this->model = new \App\Models\ResourceTypeItem\Summary\Game();
+        $this->model = new \App\ItemType\Game\SummaryResourceTypeModel();
 
         $this->fetchAllRequestParameters(new \App\ItemType\Game\Item());
 

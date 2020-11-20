@@ -26,7 +26,7 @@ class AllocatedExpense extends Item
             $user_id
         );
 
-        $this->model = new \App\Models\ResourceTypeItem\Summary\AllocatedExpense();
+        $this->model = new \App\ItemType\AllocatedExpense\SummaryResourceTypeModel();
 
         $this->fetchAllRequestParameters(new \App\ItemType\AllocatedExpense\Item());
 

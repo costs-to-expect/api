@@ -22,7 +22,7 @@ class SimpleItem extends Item
             $user_id
         );
 
-        $this->model = new \App\Models\ResourceTypeItem\Summary\SimpleItem();
+        $this->model = new \App\ItemType\SimpleItem\SummaryResourceTypeModel();
 
         $this->fetchAllRequestParameters(new \App\ItemType\SimpleItem\Item());
 
