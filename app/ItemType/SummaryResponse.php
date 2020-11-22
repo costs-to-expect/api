@@ -28,6 +28,10 @@ abstract class SummaryResponse
 
     protected Model $model;
 
+    protected Cache\Control $cache_control;
+
+    protected Cache\Summary $cache_summary;
+
     public function __construct(
         int $resource_type_id,
         int $resource_id,
@@ -92,5 +96,17 @@ abstract class SummaryResponse
         $this->filter_parameters = Parameter\Filter::fetch(
             $entity->summaryFilterParameters()
         );
+    }
+
+    protected function setUpCache(): void
+    {
+        $this->cache_control = new Cache\Control(
+            $this->permitted_user,
+            $this->user_id
+        );
+        $this->cache_control->setTtlOneWeek();
+
+        $this->cache_summary = new Cache\Summary();
+        $this->cache_summary->setFromCache($this->cache_control->getByKey(request()->getRequestUri()));
     }
 }

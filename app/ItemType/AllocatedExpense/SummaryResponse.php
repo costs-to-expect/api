@@ -28,6 +28,8 @@ class SummaryResponse extends BaseSummaryResponse
         $this->fetchAllRequestParameters(new Item());
 
         $this->removeDecisionParameters();
+
+        $this->setUpCache();
     }
 
     public function response(): JsonResponse
@@ -90,21 +92,7 @@ class SummaryResponse extends BaseSummaryResponse
 
     protected function categoriesSummary(): JsonResponse
     {
-        $cache_control = new Cache\Control(
-            $this->permitted_user,
-            $this->user_id
-        );
-
-        if ($cache_control->visibility() === 'public') {
-            $cache_control->setTtlOneWeek();
-        } else {
-            $cache_control->setTtlOneDay();
-        }
-
-        $cache_summary = new Cache\Summary();
-        $cache_summary->setFromCache($cache_control->getByKey(request()->getRequestUri()));
-
-        if ($cache_control->isRequestCacheable() === false || $cache_summary->valid() === false) {
+        if ($this->cache_control->isRequestCacheable() === false || $this->cache_summary->valid() === false) {
 
             $summary = $this->model->categoriesSummary(
                 $this->resource_type_id,
@@ -117,31 +105,17 @@ class SummaryResponse extends BaseSummaryResponse
             $this->assignToCache(
                 $summary,
                 $collection,
-                $cache_control,
-                $cache_summary
+                $this->cache_control,
+                $this->cache_summary
             );
         }
 
-        return response()->json($cache_summary->collection(), 200, $cache_summary->headers());
+        return response()->json($this->cache_summary->collection(), 200, $this->cache_summary->headers());
     }
 
     protected function categorySummary(): JsonResponse
     {
-        $cache_control = new Cache\Control(
-            $this->permitted_user,
-            $this->user_id
-        );
-
-        if ($cache_control->visibility() === 'public') {
-            $cache_control->setTtlOneWeek();
-        } else {
-            $cache_control->setTtlOneDay();
-        }
-
-        $cache_summary = new Cache\Summary();
-        $cache_summary->setFromCache($cache_control->getByKey(request()->getRequestUri()));
-
-        if ($cache_control->isRequestCacheable() === false || $cache_summary->valid() === false) {
+        if ($this->cache_control->isRequestCacheable() === false || $this->cache_summary->valid() === false) {
 
             $summary = $this->model->categorySummary(
                 $this->resource_type_id,
@@ -161,31 +135,17 @@ class SummaryResponse extends BaseSummaryResponse
             $this->assignToCache(
                 $summary,
                 $collection,
-                $cache_control,
-                $cache_summary
+                $this->cache_control,
+                $this->cache_summary
             );
         }
 
-        return response()->json($cache_summary->collection(), 200, $cache_summary->headers());
+        return response()->json($this->cache_summary->collection(), 200, $this->cache_summary->headers());
     }
 
     protected function filteredSummary(): JsonResponse
     {
-        $cache_control = new Cache\Control(
-            $this->permitted_user,
-            $this->user_id
-        );
-
-        if ($cache_control->visibility() === 'public') {
-            $cache_control->setTtlOneWeek();
-        } else {
-            $cache_control->setTtlOneDay();
-        }
-
-        $cache_summary = new Cache\Summary();
-        $cache_summary->setFromCache($cache_control->getByKey(request()->getRequestUri()));
-
-        if ($cache_control->isRequestCacheable() === false || $cache_summary->valid() === false) {
+        if ($this->cache_control->isRequestCacheable() === false || $this->cache_summary->valid() === false) {
 
             $summary = $this->model->filteredSummary(
                 $this->resource_type_id,
@@ -207,31 +167,17 @@ class SummaryResponse extends BaseSummaryResponse
             $this->assignToCache(
                 $summary,
                 $collection,
-                $cache_control,
-                $cache_summary
+                $this->cache_control,
+                $this->cache_summary
             );
         }
 
-        return response()->json($cache_summary->collection(), 200, $cache_summary->headers());
+        return response()->json($this->cache_summary->collection(), 200, $this->cache_summary->headers());
     }
 
     protected function monthsSummary(): JsonResponse
     {
-        $cache_control = new Cache\Control(
-            $this->permitted_user,
-            $this->user_id
-        );
-
-        if ($cache_control->visibility() === 'public') {
-            $cache_control->setTtlOneWeek();
-        } else {
-            $cache_control->setTtlOneDay();
-        }
-
-        $cache_summary = new Cache\Summary();
-        $cache_summary->setFromCache($cache_control->getByKey(request()->getRequestUri()));
-
-        if ($cache_control->isRequestCacheable() === false || $cache_summary->valid() === false) {
+        if ($this->cache_control->isRequestCacheable() === false || $this->cache_summary->valid() === false) {
 
             $summary = $this->model->monthsSummary(
                 $this->resource_type_id,
@@ -245,31 +191,17 @@ class SummaryResponse extends BaseSummaryResponse
             $this->assignToCache(
                 $summary,
                 $collection,
-                $cache_control,
-                $cache_summary
+                $this->cache_control,
+                $this->cache_summary
             );
         }
 
-        return response()->json($cache_summary->collection(), 200, $cache_summary->headers());
+        return response()->json($this->cache_summary->collection(), 200, $this->cache_summary->headers());
     }
 
     protected function monthSummary(): JsonResponse
     {
-        $cache_control = new Cache\Control(
-            $this->permitted_user,
-            $this->user_id
-        );
-
-        if ($cache_control->visibility() === 'public') {
-            $cache_control->setTtlOneWeek();
-        } else {
-            $cache_control->setTtlOneDay();
-        }
-
-        $cache_summary = new Cache\Summary();
-        $cache_summary->setFromCache($cache_control->getByKey(request()->getRequestUri()));
-
-        if ($cache_control->isRequestCacheable() === false || $cache_summary->valid() === false) {
+        if ($this->cache_control->isRequestCacheable() === false || $this->cache_summary->valid() === false) {
 
             $summary = $this->model->monthSummary(
                 $this->resource_type_id,
@@ -290,12 +222,12 @@ class SummaryResponse extends BaseSummaryResponse
             $this->assignToCache(
                 $summary,
                 $collection,
-                $cache_control,
-                $cache_summary
+                $this->cache_control,
+                $this->cache_summary
             );
         }
 
-        return response()->json($cache_summary->collection(), 200, $cache_summary->headers());
+        return response()->json($this->cache_summary->collection(), 200, $this->cache_summary->headers());
     }
 
     protected function removeDecisionParameters(): void
@@ -359,21 +291,7 @@ class SummaryResponse extends BaseSummaryResponse
 
     protected function subcategoriesSummary(): JsonResponse
     {
-        $cache_control = new Cache\Control(
-            $this->permitted_user,
-            $this->user_id
-        );
-
-        if ($cache_control->visibility() === 'public') {
-            $cache_control->setTtlOneWeek();
-        } else {
-            $cache_control->setTtlOneDay();
-        }
-
-        $cache_summary = new Cache\Summary();
-        $cache_summary->setFromCache($cache_control->getByKey(request()->getRequestUri()));
-
-        if ($cache_control->isRequestCacheable() === false || $cache_summary->valid() === false) {
+        if ($this->cache_control->isRequestCacheable() === false || $this->cache_summary->valid() === false) {
 
             $summary = $this->model->subCategoriesSummary(
                 $this->resource_type_id,
@@ -387,31 +305,17 @@ class SummaryResponse extends BaseSummaryResponse
             $this->assignToCache(
                 $summary,
                 $collection,
-                $cache_control,
-                $cache_summary
+                $this->cache_control,
+                $this->cache_summary
             );
         }
 
-        return response()->json($cache_summary->collection(), 200, $cache_summary->headers());
+        return response()->json($this->cache_summary->collection(), 200, $this->cache_summary->headers());
     }
 
     protected function subcategorySummary(): JsonResponse
     {
-        $cache_control = new Cache\Control(
-            $this->permitted_user,
-            $this->user_id
-        );
-
-        if ($cache_control->visibility() === 'public') {
-            $cache_control->setTtlOneWeek();
-        } else {
-            $cache_control->setTtlOneDay();
-        }
-
-        $cache_summary = new Cache\Summary();
-        $cache_summary->setFromCache($cache_control->getByKey(request()->getRequestUri()));
-
-        if ($cache_control->isRequestCacheable() === false || $cache_summary->valid() === false) {
+        if ($this->cache_control->isRequestCacheable() === false || $this->cache_summary->valid() === false) {
 
             $summary = $this->model->subCategorySummary(
                 $this->resource_type_id,
@@ -432,31 +336,17 @@ class SummaryResponse extends BaseSummaryResponse
             $this->assignToCache(
                 $summary,
                 $collection,
-                $cache_control,
-                $cache_summary
+                $this->cache_control,
+                $this->cache_summary
             );
         }
 
-        return response()->json($cache_summary->collection(), 200, $cache_summary->headers());
+        return response()->json($this->cache_summary->collection(), 200, $this->cache_summary->headers());
     }
 
     protected function summary(): JsonResponse
     {
-        $cache_control = new Cache\Control(
-            $this->permitted_user,
-            $this->user_id
-        );
-
-        if ($cache_control->visibility() === 'public') {
-            $cache_control->setTtlOneWeek();
-        } else {
-            $cache_control->setTtlOneDay();
-        }
-
-        $cache_summary = new Cache\Summary();
-        $cache_summary->setFromCache($cache_control->getByKey(request()->getRequestUri()));
-
-        if ($cache_control->isRequestCacheable() === false || $cache_summary->valid() === false) {
+        if ($this->cache_control->isRequestCacheable() === false || $this->cache_summary->valid() === false) {
 
             $summary = $this->model->summary(
                 $this->resource_type_id,
@@ -472,31 +362,17 @@ class SummaryResponse extends BaseSummaryResponse
             $this->assignToCache(
                 $summary,
                 $collection,
-                $cache_control,
-                $cache_summary
+                $this->cache_control,
+                $this->cache_summary
             );
         }
 
-        return response()->json($cache_summary->collection(), 200, $cache_summary->headers());
+        return response()->json($this->cache_summary->collection(), 200, $this->cache_summary->headers());
     }
 
     protected function yearsSummary(): JsonResponse
     {
-        $cache_control = new Cache\Control(
-            $this->permitted_user,
-            $this->user_id
-        );
-
-        if ($cache_control->visibility() === 'public') {
-            $cache_control->setTtlOneWeek();
-        } else {
-            $cache_control->setTtlOneDay();
-        }
-
-        $cache_summary = new Cache\Summary();
-        $cache_summary->setFromCache($cache_control->getByKey(request()->getRequestUri()));
-
-        if ($cache_control->isRequestCacheable() === false || $cache_summary->valid() === false) {
+        if ($this->cache_control->isRequestCacheable() === false || $this->cache_summary->valid() === false) {
 
             $summary = $this->model->yearsSummary(
                 $this->resource_type_id,
@@ -509,31 +385,17 @@ class SummaryResponse extends BaseSummaryResponse
             $this->assignToCache(
                 $summary,
                 $collection,
-                $cache_control,
-                $cache_summary
+                $this->cache_control,
+                $this->cache_summary
             );
         }
 
-        return response()->json($cache_summary->collection(), 200, $cache_summary->headers());
+        return response()->json($this->cache_summary->collection(), 200, $this->cache_summary->headers());
     }
 
     protected function yearSummary(): JsonResponse
     {
-        $cache_control = new Cache\Control(
-            $this->permitted_user,
-            $this->user_id
-        );
-
-        if ($cache_control->visibility() === 'public') {
-            $cache_control->setTtlOneWeek();
-        } else {
-            $cache_control->setTtlOneDay();
-        }
-
-        $cache_summary = new Cache\Summary();
-        $cache_summary->setFromCache($cache_control->getByKey(request()->getRequestUri()));
-
-        if ($cache_control->isRequestCacheable() === false || $cache_summary->valid() === false) {
+        if ($this->cache_control->isRequestCacheable() === false || $this->cache_summary->valid() === false) {
 
             $summary = $this->model->yearSummary(
                 $this->resource_type_id,
@@ -553,11 +415,29 @@ class SummaryResponse extends BaseSummaryResponse
             $this->assignToCache(
                 $summary,
                 $collection,
-                $cache_control,
-                $cache_summary
+                $this->cache_control,
+                $this->cache_summary
             );
         }
 
-        return response()->json($cache_summary->collection(), 200, $cache_summary->headers());
+        return response()->json($this->cache_summary->collection(), 200, $this->cache_summary->headers());
+    }
+
+    // Overridden here, because we want a different TTL
+    protected function setUpCache(): void
+    {
+        $this->cache_control = new Cache\Control(
+            $this->permitted_user,
+            $this->user_id
+        );
+
+        if ($this->cache_control->visibility() === 'public') {
+            $this->cache_control->setTtlOneWeek();
+        } else {
+            $this->cache_control->setTtlOneDay();
+        }
+
+        $this->cache_summary = new Cache\Summary();
+        $this->cache_summary->setFromCache($this->cache_control->getByKey(request()->getRequestUri()));
     }
 }
