@@ -2,14 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Entity\Item\Entity;
+use App\ItemType\Entity;
+use App\ItemType\Response;
 use App\Option\ItemCollection;
 use App\Option\ItemItem;
-use App\Response\Cache;
-use App\Response\Header\Header;
-use App\Request\Parameter;
-use App\Response\Header\Headers;
-use App\Response\Pagination as UtilityPagination;
 use Illuminate\Http\JsonResponse;
 
 /**
@@ -37,87 +33,21 @@ class ItemView extends Controller
             \App\Response\Responses::notFoundOrNotAccessible(trans('entities.resource'));
         }
 
-        $cache_control = new Cache\Control(
-            $this->writeAccessToResourceType((int) $resource_type_id),
+        $entity = Entity::item((int) $resource_type_id);
+
+        $collection_class = $entity->viewClass();
+
+        /**
+         * @var $collection Response
+         */
+        $collection = new $collection_class(
+            (int) $resource_type_id,
+            (int) $resource_id,
+            $this->writeAccessToResourceType($resource_type_id),
             $this->user_id
         );
-        $cache_control->setTtlOneWeek();
 
-        $entity = Entity::item($resource_type_id);
-
-        $cache_collection = new Cache\Collection();
-        $cache_collection->setFromCache($cache_control->getByKey(request()->getRequestUri()));
-
-        if ($cache_control->isRequestCacheable() === false || $cache_collection->valid() === false) {
-
-            $parameters = Parameter\Request::fetch(
-                array_keys($entity->requestParameters()),
-                (int) $resource_type_id,
-                (int) $resource_id
-            );
-
-            $search_parameters = Parameter\Search::fetch(
-                $entity->searchParameters()
-            );
-
-            $filter_parameters = Parameter\Filter::fetch(
-                $entity->filterParameters()
-            );
-
-            $sort_parameters = Parameter\Sort::fetch(
-                $entity->sortParameters()
-            );
-
-            $item_model = $entity->model();
-
-            $total = $item_model->totalCount(
-                $resource_type_id,
-                $resource_id,
-                $parameters,
-                $search_parameters,
-                $filter_parameters
-            );
-
-            $pagination = new UtilityPagination(request()->path(), $total);
-            $pagination_parameters = $pagination->allowPaginationOverride($this->allow_entire_collection)->
-                setParameters($parameters)->
-                setSearchParameters($search_parameters)->
-                setSortParameters($sort_parameters)->
-                setFilteringParameters($filter_parameters)->
-                parameters();
-
-            $items = $item_model->paginatedCollection(
-                $resource_type_id,
-                $resource_id,
-                $pagination_parameters['offset'],
-                $pagination_parameters['limit'],
-                $parameters,
-                $search_parameters,
-                $filter_parameters,
-                $sort_parameters
-            );
-
-            $collection = array_map(
-                static function ($item) use ($entity) {
-                    return $entity->transformer($item)->asArray();
-                },
-                $items
-            );
-
-            $headers = new Headers();
-            $headers->collection($pagination_parameters, count($items), $total)->
-                addCacheControl($cache_control->visibility(), $cache_control->ttl())->
-                addETag($collection)->
-                addSearch(Parameter\Search::xHeader())->
-                addSort(Parameter\Sort::xHeader())->
-                addParameters(Parameter\Request::xHeader())->
-                addFilters(Parameter\Filter::xHeader());
-
-            $cache_collection->create($total, $collection, $pagination_parameters, $headers->headers());
-            $cache_control->putByKey(request()->getRequestUri(), $cache_collection->content());
-        }
-
-        return response()->json($cache_collection->collection(), 200, $cache_collection->headers());
+        return $collection->collectionResponse();
     }
 
     /**
@@ -140,34 +70,19 @@ class ItemView extends Controller
         }
 
         $entity = Entity::item($resource_type_id);
+        $collection_class = $entity->viewClass();
 
-        $parameters = Parameter\Request::fetch(
-            array_keys($entity->itemRequestParameters()),
+        /**
+         * @var $collection Response
+         */
+        $collection = new $collection_class(
             (int) $resource_type_id,
-            (int) $resource_id
+            (int) $resource_id,
+            $this->writeAccessToResourceType($resource_type_id),
+            $this->user_id
         );
 
-        $item_model = $entity->model();
-
-        $item = $item_model->single(
-            $resource_type_id,
-            $resource_id,
-            $item_id,
-            $parameters
-        );
-
-        if ($item === null) {
-            return \App\Response\Responses::notFound(trans('entities.item'));
-        }
-
-        $headers = new Header();
-        $headers->item();
-
-        return response()->json(
-            $entity->transformer($item)->asArray(),
-            200,
-            $headers->headers()
-        );
+        return $collection->showResponse($item_id);
     }
 
     /**

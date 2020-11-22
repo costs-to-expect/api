@@ -2,14 +2,14 @@
 
 namespace App\Http\Controllers;
 
-use App\Entity\Item\Entity;
+use App\ItemType\Entity;
+use App\Models\ItemCategory;
+use App\Models\ItemSubcategory;
+use App\Models\Transformers\ItemSubcategory as ItemSubcategoryTransformer;
 use App\Option\ItemSubcategoryCollection;
 use App\Option\ItemSubcategoryItem;
 use App\Response\Cache;
 use App\Response\Header\Header;
-use App\Models\ItemCategory;
-use App\Models\ItemSubcategory;
-use App\Models\Transformers\ItemSubcategory as ItemSubcategoryTransformer;
 use Illuminate\Http\JsonResponse;
 
 /**
@@ -146,7 +146,7 @@ class ItemSubcategoryView extends Controller
         return $response
             ->setEntity(Entity::item($resource_type_id))
             ->setAllowedValues(
-                (new \App\Option\AllowedValue\Subcategory())->allowedValues($item_category->category_id)
+                (new \App\AllowedValue\Subcategory())->allowedValues($item_category->category_id)
             )
             ->create()
             ->response();

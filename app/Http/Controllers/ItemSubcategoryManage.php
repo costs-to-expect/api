@@ -2,13 +2,13 @@
 
 namespace App\Http\Controllers;
 
-use App\Entity\Item\Entity;
+use App\ItemType\Entity;
 use App\Jobs\ClearCache;
-use App\Response\Cache;
 use App\Models\ItemCategory;
 use App\Models\ItemSubcategory;
 use App\Models\Transformers\ItemSubcategory as ItemSubcategoryTransformer;
 use App\Request\Validate\ItemSubcategory as ItemSubcategoryValidator;
+use App\Response\Cache;
 use Exception;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\JsonResponse;
@@ -66,7 +66,7 @@ class ItemSubcategoryManage extends Controller
         $validator = (new ItemSubcategoryValidator)->create(['category_id' => $item_category->category_id]);
         \App\Request\BodyValidation::validateAndReturnErrors(
             $validator,
-            (new \App\Option\AllowedValue\Subcategory())->allowedValues($item_category->category_id)
+            (new \App\AllowedValue\Subcategory())->allowedValues($item_category->category_id)
         );
 
         $cache_job_payload = (new Cache\JobPayload())

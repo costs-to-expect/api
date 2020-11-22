@@ -2,13 +2,13 @@
 
 namespace App\Http\Controllers;
 
-use App\Entity\Item\Entity;
+use App\ItemType\Entity;
+use App\Models\ItemCategory;
+use App\Models\Transformers\ItemCategory as ItemCategoryTransformer;
 use App\Option\ItemCategoryCollection;
 use App\Option\ItemCategoryItem;
 use App\Response\Cache;
 use App\Response\Header\Header;
-use App\Models\ItemCategory;
-use App\Models\Transformers\ItemCategory as ItemCategoryTransformer;
 use Illuminate\Http\JsonResponse;
 
 /**
@@ -113,7 +113,7 @@ class ItemCategoryView extends Controller
         return $response
             ->setEntity(Entity::item($resource_type_id))
             ->setAllowedValues(
-                (new \App\Option\AllowedValue\Category())->allowedValues($resource_type_id))
+                (new \App\AllowedValue\Category())->allowedValues($resource_type_id))
             ->create()
             ->response();
     }

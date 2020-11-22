@@ -2,12 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use App\Entity\Item\Entity;
+use App\ItemType\Entity;
 use App\Jobs\ClearCache;
-use App\Response\Cache;
 use App\Models\ItemCategory;
 use App\Models\Transformers\ItemCategory as ItemCategoryTransformer;
 use App\Request\Validate\ItemCategory as ItemCategoryValidator;
+use App\Response\Cache;
 use Exception;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\JsonResponse;
@@ -54,7 +54,7 @@ class ItemCategoryManage extends Controller
         $validator = (new ItemCategoryValidator)->create();
         \App\Request\BodyValidation::validateAndReturnErrors(
             $validator,
-            (new \App\Option\AllowedValue\Category())->allowedValues($resource_type_id)
+            (new \App\AllowedValue\Category())->allowedValues($resource_type_id)
         );
 
         $cache_job_payload = (new Cache\JobPayload())

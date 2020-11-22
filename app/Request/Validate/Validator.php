@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace App\Request\Validate;
 
-use App\Entity\Item\Item;
+use App\ItemType\ItemType;
 use App\Request\Hash;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Validator as ValidatorFacade;
@@ -19,7 +19,7 @@ abstract class Validator
 {
     protected Hash $hash;
 
-    protected Item $entity;
+    protected ItemType $entity;
 
     public function __construct()
     {

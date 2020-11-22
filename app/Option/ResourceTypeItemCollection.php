@@ -7,7 +7,7 @@ class ResourceTypeItemCollection extends Response
 {
     public function create()
     {
-        $get = new \App\Option\Method\GetRequest();
+        $get = new \App\Method\GetRequest();
         $this->verbs['GET'] = $get->setSortableParameters($this->entity->resourceTypeSortParameters())->
             setSearchableParameters($this->entity->resourceTypeSearchParameters())->
             setFilterableParameters($this->entity->resourceTypeFilterParameters())->

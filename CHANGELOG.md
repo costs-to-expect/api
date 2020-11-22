@@ -2,6 +2,22 @@
 
 The complete changelog for the Costs to Expect REST API, our changelog follows the format defined at https://keepachangelog.com/en/1.0.0/
 
+## [v2.17.0] - 2020-11-22
+### Added 
+- We have added a `complete` parameter for the `game` item-type; when the parameter is included and set to true, only complete games will be returned in collections and summaries.
+
+### Changed
+- We have added item-type based response classes for all item collections and summaries. Item and resource type items are unique; there are no shared dependencies. The shared dependencies were a result of the first two item-types being similar, with the addition of the game item-type, we have learnt our lesson.
+- We have tweaked the TTL for permitted, and viewable resource types. The TTL for public viewable resource types is higher than for private users.
+- With the addition of more item-type classes, we have tweaked our collection TTLs for public and private users.
+- We have moved our 'Method' classes; it doesn't make sense for them to sit inside the 'Option' namespace.
+- We have moved our 'AllowedValue' classes; it doesn't make sense for them to sit inside the 'Option' namespace.
+- We have reorganised all the item-type classes; we are keeping all the classes for each item-type together.
+- We have tweaked our response classes; we will do slightly less work when reading from the cache.
+
+### Removed
+- We have removed all our interfaces; the interfaces were not useful, and we are going a slightly different way with the item-type classes, interfaces will return.
+
 ## [v2.16.2] - 2020-11-07
 ### Added
 - We are now locally caching the permitted and viewable resource types; this change means we can skip a more expensive query per API request whilst the response is cached, we are experimenting with the TTL.

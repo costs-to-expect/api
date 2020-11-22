@@ -263,49 +263,41 @@ Route::group(
             'ItemTransferView@optionsTransfer'
         );
 
-        /*This route needs to be removed*/
         Route::get(
             'resource-types/{resource_type_id}/resources/{resource_id}/items/{item_id}/categories',
             'ItemCategoryView@index'
         );
 
-        /*This route needs to be removed*/
         Route::options(
             'resource-types/{resource_type_id}/resources/{resource_id}/items/{item_id}/categories',
             'ItemCategoryView@optionsIndex'
         );
 
-        /*This route needs to be removed*/
         Route::get(
             'resource-types/{resource_type_id}/resources/{resource_id}/items/{item_id}/categories/{item_category_id}',
             'ItemCategoryView@show'
         );
 
-        /*This route needs to be removed*/
         Route::options(
             'resource-types/{resource_type_id}/resources/{resource_id}/items/{item_id}/categories/{item_category_id}',
             'ItemCategoryView@optionsShow'
         );
 
-        /*This route needs to be removed*/
         Route::get(
             'resource-types/{resource_type_id}/resources/{resource_id}/items/{item_id}/categories/{item_category_id}/subcategories',
             'ItemSubcategoryView@index'
         );
 
-        /*This route needs to be removed*/
         Route::options(
             'resource-types/{resource_type_id}/resources/{resource_id}/items/{item_id}/categories/{item_category_id}/subcategories',
             'ItemSubcategoryView@optionsIndex'
         );
 
-        /*This route needs to be removed*/
         Route::get(
             'resource-types/{resource_type_id}/resources/{resource_id}/items/{item_id}/categories/{item_category_id}/subcategories/{item_subcategory_id}',
             'ItemSubcategoryView@show'
         );
 
-        /*This route needs to be removed*/
         Route::options(
             'resource-types/{resource_type_id}/resources/{resource_id}/items/{item_id}/categories/{item_category_id}/subcategories/{item_subcategory_id}',
             'ItemSubcategoryView@optionsShow'

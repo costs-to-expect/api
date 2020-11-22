@@ -7,7 +7,7 @@ class ItemSubtypeItem extends Response
 {
     public function create()
     {
-        $get = new \App\Option\Method\GetRequest();
+        $get = new \App\Method\GetRequest();
         $this->verbs['GET'] = $get
             ->setDescription('route-descriptions.item_subtype_GET_show')
             ->setAuthenticationStatus($this->permissions['view'])

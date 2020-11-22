@@ -3,6 +3,9 @@
 declare(strict_types=1);
 
 return [
-    'title-resources' => 'Resource',
-    'description-resources' => 'Return the games summary grouped by game'
+    'title-resources' => 'Game',
+    'description-resources' => 'Return the games summary grouped by game type',
+
+    'title-complete' => 'Complete games only',
+    'description-complete' => 'Optionally only show complete games',
 ];

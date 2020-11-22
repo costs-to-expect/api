@@ -7,7 +7,7 @@ class ItemCollection extends Response
 {
     public function create()
     {
-        $get = new \App\Option\Method\GetRequest();
+        $get = new \App\Method\GetRequest();
         $this->verbs['GET'] = $get->setSortableParameters($this->entity->sortParameters())
             ->setSearchableParameters($this->entity->searchParameters())
             ->setFilterableParameters($this->entity->filterParameters())
@@ -18,7 +18,7 @@ class ItemCollection extends Response
             ->setDescription('route-descriptions.item_GET_index')
             ->option();
 
-        $post = new \App\Option\Method\PostRequest();
+        $post = new \App\Method\PostRequest();
         $this->verbs['POST'] = $post->setFields($this->entity->postFields())
             ->setDescription( 'route-descriptions.item_POST')
             ->setAuthenticationRequirement(true)

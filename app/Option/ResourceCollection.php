@@ -9,7 +9,7 @@ class ResourceCollection extends Response
 {
     public function create()
     {
-        $get = new \App\Option\Method\GetRequest();
+        $get = new \App\Method\GetRequest();
         $this->verbs['GET'] = $get
             ->setSortableParameters(Config::get('api.resource.sortable'))
             ->setSearchableParameters(Config::get('api.resource.searchable'))
@@ -19,7 +19,7 @@ class ResourceCollection extends Response
             ->setDescription('route-descriptions.resource_GET_index')
             ->option();
 
-        $post = new \App\Option\Method\PostRequest();
+        $post = new \App\Method\PostRequest();
         $this->verbs['POST'] = $post
             ->setFields(Config::get('api.resource.fields'))
             ->setDynamicFields($this->allowed_values)
