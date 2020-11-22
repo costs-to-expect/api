@@ -5,7 +5,6 @@ namespace App\ItemType\Game;
 use App\ItemType\SummaryResourceTypeResponse as BaseSummaryResourceTypeResponse;
 use App\ItemType\Game\SummaryTransformer as GameTransformer;
 use App\Request\Validate\Boolean;
-use App\Response\Cache;
 use Illuminate\Http\JsonResponse;
 
 class SummaryResourceTypeResponse extends BaseSummaryResourceTypeResponse
@@ -21,6 +20,8 @@ class SummaryResourceTypeResponse extends BaseSummaryResourceTypeResponse
             $permitted_user,
             $user_id
         );
+        
+        $this->setUpCache();
 
         $this->model = new SummaryResourceTypeModel();
 
@@ -47,16 +48,7 @@ class SummaryResourceTypeResponse extends BaseSummaryResourceTypeResponse
 
     protected function filteredSummary(): JsonResponse
     {
-        $cache_control = new Cache\Control(
-            $this->permitted_user,
-            $this->user_id
-        );
-        $cache_control->setTtlOneWeek();
-
-        $cache_summary = new Cache\Summary();
-        $cache_summary->setFromCache($cache_control->getByKey(request()->getRequestUri()));
-
-        if ($cache_control->isRequestCacheable() === false || $cache_summary->valid() === false) {
+        if ($this->cache_control->isRequestCacheable() === false || $this->cache_summary->valid() === false) {
 
             $summary = $this->model->filteredSummary(
                 $this->resource_type_id,
@@ -72,12 +64,12 @@ class SummaryResourceTypeResponse extends BaseSummaryResourceTypeResponse
             $this->assignToCache(
                 $summary,
                 $collection,
-                $cache_control,
-                $cache_summary
+                $this->cache_control,
+                $this->cache_summary
             );
         }
 
-        return response()->json($cache_summary->collection(), 200, $cache_summary->headers());
+        return response()->json($this->cache_summary->collection(), 200, $this->cache_summary->headers());
     }
 
     protected function removeDecisionParameters(): void
@@ -96,16 +88,7 @@ class SummaryResourceTypeResponse extends BaseSummaryResourceTypeResponse
 
     protected function resourcesSummary(): JsonResponse
     {
-        $cache_control = new Cache\Control(
-            $this->permitted_user,
-            $this->user_id
-        );
-        $cache_control->setTtlOneWeek();
-
-        $cache_summary = new Cache\Summary();
-        $cache_summary->setFromCache($cache_control->getByKey(request()->getRequestUri()));
-
-        if ($cache_control->isRequestCacheable() === false || $cache_summary->valid() === false) {
+        if ($this->cache_control->isRequestCacheable() === false || $this->cache_summary->valid() === false) {
 
             $summary = $this->model->resourcesSummary(
                 $this->resource_type_id,
@@ -117,26 +100,17 @@ class SummaryResourceTypeResponse extends BaseSummaryResourceTypeResponse
             $this->assignToCache(
                 $summary,
                 $collection,
-                $cache_control,
-                $cache_summary
+                $this->cache_control,
+                $this->cache_summary
             );
         }
 
-        return response()->json($cache_summary->collection(), 200, $cache_summary->headers());
+        return response()->json($this->cache_summary->collection(), 200, $this->cache_summary->headers());
     }
 
     protected function summary(): JsonResponse
     {
-        $cache_control = new Cache\Control(
-            $this->permitted_user,
-            $this->user_id
-        );
-        $cache_control->setTtlOneWeek();
-
-        $cache_summary = new Cache\Summary();
-        $cache_summary->setFromCache($cache_control->getByKey(request()->getRequestUri()));
-
-        if ($cache_control->isRequestCacheable() === false || $cache_summary->valid() === false) {
+        if ($this->cache_control->isRequestCacheable() === false || $this->cache_summary->valid() === false) {
 
             $summary = $this->model->summary(
                 $this->resource_type_id,
@@ -151,11 +125,11 @@ class SummaryResourceTypeResponse extends BaseSummaryResourceTypeResponse
             $this->assignToCache(
                 $summary,
                 $collection,
-                $cache_control,
-                $cache_summary
+                $this->cache_control,
+                $this->cache_summary
             );
         }
 
-        return response()->json($cache_summary->collection(), 200, $cache_summary->headers());
+        return response()->json($this->cache_summary->collection(), 200, $this->cache_summary->headers());
     }
 }

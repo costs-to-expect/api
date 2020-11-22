@@ -23,13 +23,34 @@ class SummaryResponse extends BaseSummaryResponse
             $user_id
         );
 
+        $this->setUpCache();
+
         $this->model = new SummaryModel();
+
+        $this->shortCircuit(); // Skip working out which for obvious routes
 
         $this->fetchAllRequestParameters(new Item());
 
         $this->removeDecisionParameters();
+    }
 
-        $this->setUpCache();
+    protected function shortCircuit(): ?JsonResponse
+    {
+        $parameters = request()->getQueryString();
+        if ($parameters === null) {
+            $this->parameters = [];
+            return $this->summary();
+        }
+        if ($parameters === 'categories=true') {
+            $this->parameters = ['categories' => true];
+            return $this->categoriesSummary();
+        }
+        if ($parameters === 'years=true') {
+            $this->parameters = ['years' => true];
+            return $this->yearsSummary();
+        }
+
+        return null;
     }
 
     public function response(): JsonResponse
