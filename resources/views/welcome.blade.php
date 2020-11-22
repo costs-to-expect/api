@@ -225,27 +225,25 @@
                     <h3>Added</h3>
 
                     <ul>
-                        <li>We are now locally caching the permitted and viewable resource types; this change means we can skip a more expensive query per API request whilst the response is cached, we are experimenting with the TTL.</li>
+                        <li>We have added a `complete` parameter for the `game` item-type; when the parameter is included and set to true, only complete games will be returned in collections and summaries.</li>
                     </ul>
 
                     <h3>Changed</h3>
 
                     <ul>
-                        <li>We have added item `name` and `description` fields to the partial-transfers collection.</li>
-                        <li>We have updated the schema for partial-transfers.</li>
-                        <li>We have updated the game item-type; the `winner` field will now be null or an object, the object will have an `id` and a `name`.</li>
-                        <li>We have updated the OPTIONS request for the `game` item-type; the allowed values for the winner field will display if necessary.</li>
-                        <li>We have tweaked our middleware; we use our Hash class rather than duplicating the effort.</li>
-                        <li>We have created several new classes to generate the allowed values data; these new classes are specific to each of our supported item-type. This change will speed up the OPTIONS requests for the non `allocated-expense` item type as we will no longer query the database when we know there will be no results.</li>
-                        <li>We have added a check to limit access to the partial-transfers route. The 'allocated-expense' item-type supports the partial-transfers feature, partial-transfers don't make sense for the other item-types.</li>
-                        <li>We have drastically simplified route validation. The API controls access to `resources` at the resource type level; we have updated all route checks to validate the requested resource type rather than validate specific access to the request entity.</li>
+                        <li>We have added item-type based response classes for all item collections and summaries. Item and resource type items are unique; there are no shared dependencies. The shared dependencies were a result of the first two item-types being similar, with the addition of the game item-type, we have learnt our lesson.</li>
+                        <li>We have tweaked the TTL for permitted, and viewable resource types. The TTL for public viewable resource types is higher than for private users.</li>
+                        <li>With the addition of more item-type classes, we have tweaked our collection TTLs for public and private users.</li>
+                        <li>We have moved our 'Method' classes; it doesn't make sense for them to sit inside the 'Option' namespace.</li>
+                        <li>We have moved our 'AllowedValue' classes; it doesn't make sense for them to sit inside the 'Option' namespace.</li>
+                        <li>We have reorganised all the item-type classes; we are keeping all the classes for each item-type together.</li>
+                        <li>We have tweaked our response classes; we will do slightly less work when reading from the cache.</li>
                     </ul>
 
                     <h3>Fixed</h3>
 
                     <ul>
-                        <li>We have corrected several configuration file calls; our calls were looking at transfers, not partial transfers.</li>
-                        <li>We have added localisation files for the `simple-item` and `game` item-type, several were missing.</li>
+                        <li>We have removed all our interfaces; the interfaces were not useful, and we are going a slightly different way with the item-type classes, interfaces will return.</li>
                     </ul>
                 </div>
             </div>
