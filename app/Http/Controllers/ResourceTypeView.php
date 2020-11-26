@@ -64,6 +64,11 @@ class ResourceTypeView extends Controller
                 $sort_parameters
             );
 
+            $last_updated = null;
+            if (count($resource_types) && array_key_exists('last_updated', $resource_types[0])) {
+                $last_updated = $resource_types[0]['last_updated'];
+            }
+
             $collection = array_map(
                 static function ($resource_type) {
                     return (new ResourceTypeTransformer($resource_type))->asArray();
@@ -78,6 +83,10 @@ class ResourceTypeView extends Controller
                 ->addETag($collection)
                 ->addSearch(Parameter\Search::xHeader())
                 ->addSort(Parameter\Sort::xHeader());
+
+            if ($last_updated !== null) {
+                $headers->addLastUpdated($last_updated);
+            }
 
             $cache_collection->create($total, $collection, $pagination_parameters, $headers->headers());
             $cache_control->putByKey(request()->getRequestUri(), $cache_collection->content());
