@@ -55,7 +55,8 @@ abstract class Response
         array $pagination_parameters,
         int $count,
         int $total,
-        array $collection
+        array $collection,
+        string $last_updated = null
     ): array
     {
         $headers = new Headers();
@@ -67,6 +68,10 @@ abstract class Response
             ->addSort(Sort::xHeader())
             ->addParameters(Request::xHeader())
             ->addFilters(Filter::xHeader());
+
+        if ($last_updated !== null) {
+            $headers->addLastUpdated($last_updated);
+        }
 
         return $headers->headers();
     }

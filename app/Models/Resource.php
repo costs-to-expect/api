@@ -93,6 +93,22 @@ class Resource extends Model
                 'item_subtype.name AS resource_item_subtype_name',
                 'item_subtype.description AS resource_item_subtype_description'
             )
+            ->selectRaw('
+                (
+                    SELECT 
+                        GREATEST(
+                            MAX(resource.created_at), 
+                            IFNULL(MAX(resource.updated_at), 0)
+                        )
+                    FROM 
+                        resource
+                    WHERE
+                        `resource_type_id` = ? 
+                ) AS last_updated',
+                [
+                    $resource_type_id
+                ]
+            )
             ->join('resource_item_subtype', 'resource_item_subtype.resource_id', 'resource.id')
             ->join('item_subtype', 'resource_item_subtype.item_subtype_id', 'item_subtype.id')
             ->where('resource_type_id', '=', $resource_type_id);
