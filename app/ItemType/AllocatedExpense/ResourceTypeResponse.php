@@ -50,6 +50,11 @@ class ResourceTypeResponse extends BaseResourceTypeResponse
                 $this->sort_fields
             );
 
+            $last_updated = null;
+            if (count($items) && array_key_exists('last_updated', $items[0])) {
+                $last_updated = $items[0]['last_updated'];
+            }
+
             $collection = array_map(
                 static function ($item) {
                     return (new Transformer($item))->asArray();
@@ -65,7 +70,8 @@ class ResourceTypeResponse extends BaseResourceTypeResponse
                     $pagination_parameters,
                     count($items),
                     $total,
-                    $collection
+                    $collection,
+                    $last_updated
                 )
             );
             $this->cache_control->putByKey(request()->getRequestUri(), $cache_collection->content());

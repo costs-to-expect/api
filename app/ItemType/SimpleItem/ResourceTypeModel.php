@@ -120,10 +120,33 @@ class ResourceTypeModel extends LaravelModel
             $collection->orderBy('item.created_at', 'desc');
         }
 
-        $collection->offset($offset);
-        $collection->limit($limit);
-        $collection->select($select_fields);
-
-        return $collection->get()->toArray();
+        $collection
+            ->offset($offset)
+            ->limit($limit)
+            ->select($select_fields)
+            ->selectRaw("
+                (
+                    SELECT 
+                        GREATEST(
+                            MAX(`{$this->item_table}`.`created_at`), 
+                            IFNULL(MAX(`{$this->item_table}`.`updated_at`), 0)
+                        )
+                    FROM 
+                        `{$this->item_table}`
+                    INNER JOIN 
+                        `item` ON 
+                            {$this->item_table}.`id` = `{$this->table}`.`id`
+                    INNER JOIN 
+                        `resource` ON 
+                            `item`.`resource_id` = `resource`.`id`
+                    WHERE
+                        `resource`.`resource_type_id` = ? 
+                ) AS `last_updated`",
+                [
+                    $resource_type_id
+                ]
+            )
+            ->get()
+            ->toArray();
     }
 }
