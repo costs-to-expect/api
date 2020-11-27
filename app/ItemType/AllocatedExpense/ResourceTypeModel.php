@@ -260,7 +260,7 @@ class ResourceTypeModel extends LaravelModel
                         `{$this->item_table}`
                     INNER JOIN 
                         `item` ON 
-                            {$this->item_table}.`id` = `{$this->table}`.`id`
+                            {$this->item_table}.`item_id` = `{$this->table}`.`id`
                     INNER JOIN 
                         `resource` ON 
                             `item`.`resource_id` = `resource`.`id`
