@@ -6,7 +6,7 @@ use App\Jobs\ClearCache;
 use App\Request\BodyValidation;
 Use App\Response\Cache;
 use App\Models\Category;
-use App\Models\Transformers\Category as CategoryTransformer;
+use App\Transformers\Category as CategoryTransformer;
 use App\Request\Validate\Category as CategoryValidator;
 use App\Response\Responses;
 use Exception;

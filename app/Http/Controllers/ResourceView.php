@@ -12,7 +12,7 @@ use App\Request\Parameter;
 use App\Response\Header\Headers;
 use App\Response\Pagination as UtilityPagination;
 use App\Models\Resource;
-use App\Models\Transformers\Resource as ResourceTransformer;
+use App\Transformers\Resource as ResourceTransformer;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Config;
 

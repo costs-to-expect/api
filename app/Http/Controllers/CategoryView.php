@@ -11,7 +11,7 @@ use App\Request\Parameter;
 use App\Response\Header\Headers;
 use App\Response\Pagination as UtilityPagination;
 use App\Models\Category;
-use App\Models\Transformers\Category as CategoryTransformer;
+use App\Transformers\Category as CategoryTransformer;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Config;
 

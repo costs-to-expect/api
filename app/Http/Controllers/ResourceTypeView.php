@@ -11,7 +11,7 @@ use App\Response\Header\Headers;
 use App\Request\Parameter;
 use App\Response\Pagination as UtilityPagination;
 use App\Models\ResourceType;
-use App\Models\Transformers\ResourceType as ResourceTypeTransformer;
+use App\Transformers\ResourceType as ResourceTypeTransformer;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Config;
 

@@ -10,7 +10,7 @@ use App\Request\Parameter;
 use App\Response\Header\Headers;
 use App\Response\Pagination as UtilityPagination;
 use App\Models\Subcategory;
-use App\Models\Transformers\Subcategory as SubcategoryTransformer;
+use App\Transformers\Subcategory as SubcategoryTransformer;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Config;
 

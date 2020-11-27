@@ -9,7 +9,7 @@ use App\Response\Cache;
 use App\Response\Header\Headers;
 use App\Request\Parameter;
 use App\Response\Pagination as UtilityPagination;
-use App\Models\Transformers\Currency as CurrencyTransformer;
+use App\Transformers\Currency as CurrencyTransformer;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Config;
 

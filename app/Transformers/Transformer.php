@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Models\Transformers;
+namespace App\Transformers;
 
 use App\Request\Hash;
 

@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace App\ItemType\SimpleExpense;
 
-use App\Models\Transformers\Transformer as BaseTransformer;
+use App\Transformers\Transformer as BaseTransformer;
 
 /**
  * @author Dean Blackborough <dean@g3d-development.com>
