@@ -25,7 +25,7 @@ class ResourceType extends Model
     ): array
     {
         $collection = $this
-            ->selectRaw('SUM(resource_type.id) AS total')
+            ->selectRaw('COUNT(resource_type.id) AS total')
             ->selectRaw(
                 "GREATEST(
                     MAX(`{$this->table}`.`created_at`),
