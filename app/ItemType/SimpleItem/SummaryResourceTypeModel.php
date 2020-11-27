@@ -34,9 +34,30 @@ class SummaryResourceTypeModel extends LaravelModel
         $collection = $this
             ->selectRaw("
                 SUM({$this->sub_table}.quantity) AS total, 
-                COUNT({$this->sub_table}.item_id) AS total_count, 
-                MAX({$this->sub_table}.created_at) AS last_updated
+                COUNT({$this->sub_table}.item_id) AS total_count
             ")
+            ->selectRaw("
+                (
+                    SELECT 
+                        GREATEST(
+                            MAX(`{$this->sub_table}`.`created_at`), 
+                            IFNULL(MAX(`{$this->sub_table}`.`updated_at`), 0)
+                        )
+                    FROM 
+                        `{$this->sub_table}` 
+                    JOIN 
+                        `item` ON 
+                            `{$this->sub_table}`.`item_id` = `{$this->table}`.`id`
+                    JOIN 
+                        `resource` ON 
+                            `{$this->table}`.`resource_id` = `resource`.`id`
+                    WHERE
+                        `resource`.`resource_type_id` = ? 
+                ) AS `last_updated`",
+                [
+                    $resource_type_id
+                ]
+            )
             ->join($this->sub_table, 'item.id', "{$this->sub_table}.item_id")
             ->join('resource', 'item.resource_id', 'resource.id')
             ->join('resource_type', 'resource.resource_type_id', 'resource_type.id')

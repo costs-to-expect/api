@@ -89,6 +89,22 @@ class Category extends Model
                         `sub_category`.`category_id` = `category`.`id`
                 ) AS `category_subcategories`'
             )
+            ->selectRaw('
+                (
+                    SELECT 
+                        GREATEST(
+                            MAX(category.created_at), 
+                            IFNULL(MAX(category.updated_at), 0)
+                        )
+                    FROM 
+                        category
+                    WHERE 
+                        category.resource_type_id = ? 
+                ) AS last_updated',
+                [
+                    $resource_type_id
+                ]
+            )
             ->join("resource_type", "category.resource_type_id", "resource_type.id")
             ->where('category.resource_type_id', '=', $resource_type_id);
 

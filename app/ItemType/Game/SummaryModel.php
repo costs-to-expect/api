@@ -35,9 +35,27 @@ class SummaryModel extends LaravelModel
                 `item_subtype`.`id` AS resource_item_subtype_id,
                 `item_subtype`.`name` AS resource_item_subtype_name,
                 `item_subtype`.`description` AS resource_item_subtype_description,
-                COUNT({$this->sub_table}.item_id) AS count, 
-                MAX({$this->sub_table}.created_at) AS last_updated
+                COUNT({$this->sub_table}.item_id) AS count
             ")
+            ->selectRaw("
+                (
+                    SELECT 
+                        GREATEST(
+                            MAX(`{$this->sub_table}`.`created_at`), 
+                            IFNULL(MAX(`{$this->sub_table}`.`updated_at`), 0)
+                        )
+                    FROM 
+                        `{$this->sub_table}` 
+                    JOIN 
+                        `item` ON 
+                            `{$this->sub_table}`.`item_id` = `{$this->table}`.`id`
+                    WHERE
+                        `item`.`resource_id` = ? 
+                ) AS `last_updated`",
+                [
+                    $resource_id
+                ]
+            )
             ->join($this->sub_table, 'item.id', "{$this->sub_table}.item_id")
             ->join("resource", "resource.id", "item.resource_id")
             ->join("resource_type", "resource_type.id", "resource.resource_type_id")
@@ -90,9 +108,27 @@ class SummaryModel extends LaravelModel
                 `item_subtype`.`id` AS resource_item_subtype_id,
                 `item_subtype`.`name` AS resource_item_subtype_name,
                 `item_subtype`.`description` AS resource_item_subtype_description,
-                COUNT({$this->sub_table}.item_id) AS count, 
-                MAX({$this->sub_table}.created_at) AS last_updated
+                COUNT({$this->sub_table}.item_id) AS count
             ")
+            ->selectRaw("
+                (
+                    SELECT 
+                        GREATEST(
+                            MAX(`{$this->sub_table}`.`created_at`), 
+                            IFNULL(MAX(`{$this->sub_table}`.`updated_at`), 0)
+                        )
+                    FROM 
+                        `{$this->sub_table}` 
+                    JOIN 
+                        `item` ON 
+                            `{$this->sub_table}`.`item_id` = `{$this->table}`.`id`
+                    WHERE
+                        `item`.`resource_id` = ? 
+                ) AS `last_updated`",
+                [
+                    $resource_id
+                ]
+            )
             ->join($this->sub_table, 'item.id', "{$this->sub_table}.item_id")
             ->join("resource", "resource.id", "item.resource_id")
             ->join("resource_type", "resource_type.id", "resource.resource_type_id")

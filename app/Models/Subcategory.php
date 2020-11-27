@@ -77,15 +77,32 @@ class Subcategory extends Model
         array $sort_parameters = []
     ): array
     {
-        $collection = $this->select(
+        $collection = $this
+            ->select(
                 'sub_category.id AS subcategory_id',
                 'sub_category.name AS subcategory_name',
                 'sub_category.description AS subcategory_description',
                 'sub_category.created_at AS subcategory_created_at'
-            )->
-            join('category', 'sub_category.category_id', 'category.id')->
-            where('sub_category.category_id', '=', $category_id)->
-            where('category.resource_type_id', '=', $resource_type_id);
+            )
+            ->selectRaw('
+                (
+                    SELECT 
+                        GREATEST(
+                            MAX(sub_category.created_at), 
+                            IFNULL(MAX(sub_category.updated_at), 0)
+                        )
+                    FROM 
+                        sub_category
+                    WHERE 
+                        sub_category.category_id = ? 
+                ) AS last_updated',
+                [
+                    $category_id
+                ]
+            )
+            ->join('category', 'sub_category.category_id', 'category.id')
+            ->where('sub_category.category_id', '=', $category_id)
+            ->where('category.resource_type_id', '=', $resource_type_id);
 
         $collection = Clause::applySearch($collection, $this->table, $search_parameters);
 
