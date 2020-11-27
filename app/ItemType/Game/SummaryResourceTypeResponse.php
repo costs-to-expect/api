@@ -95,6 +95,8 @@ class SummaryResourceTypeResponse extends BaseSummaryResourceTypeResponse
                 $this->parameters
             );
 
+            print_r($summary); die;
+
             $collection = (new SummaryTransformerByResource($summary))->asArray();
 
             $this->assignToCache(

@@ -31,8 +31,7 @@ class ResourceType extends Model
                     MAX(`{$this->table}`.`created_at`),
                     IFNULL(MAX(`{$this->table}`.`updated_at`), 0)
                 ) AS last_updated"
-            )
-            ->groupBy("{$this->table}.id");
+            );
 
         $collection = Clause::applyViewableResourceTypes(
             $collection,
