@@ -22,9 +22,17 @@ class ResourceType extends Model
     public function totalCount(
         array $viewable_resource_types = [],
         array $search_parameters = []
-    ): int
+    ): array
     {
-        $collection = $this->select("resource_type.id");
+        $collection = $this
+            ->selectRaw('SUM(resource_type.id) AS total')
+            ->selectRaw(
+                "GREATEST(
+                    MAX(`{$this->table}`.`created_at`),
+                    IFNULL(MAX(`{$this->table}`.`updated_at`), 0)
+                ) AS last_updated"
+            )
+            ->groupBy("{$this->table}.id");
 
         $collection = Clause::applyViewableResourceTypes(
             $collection,
@@ -33,6 +41,8 @@ class ResourceType extends Model
 
         $collection = Clause::applySearch($collection, $this->table, $search_parameters);
 
-        return $collection->count();
+        return $collection
+            ->get()
+            ->toArray();
     }
 }

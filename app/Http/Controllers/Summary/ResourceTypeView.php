@@ -44,14 +44,29 @@ class ResourceTypeView extends Controller
                 $search_parameters
             );
 
+            $total = 0;
+            $last_updated = null;
+            if (count($summary) === 1 && array_key_exists('total', $summary[0])) {
+                $total = (int) $summary[0]['total'];
+
+                if (array_key_exists('last_updated', $summary[0])) {
+                    $last_updated = $summary[0]['last_updated'];
+                }
+            }
+
             $collection = [
-                'resource_types' => $summary
+                'resource_types' => $total
             ];
 
             $headers = new Headers();
-            $headers->addCacheControl($cache_control->visibility(), $cache_control->ttl())->
-                addETag($collection)->
-                addSearch(Parameter\Search::xHeader());
+            $headers
+                ->addCacheControl($cache_control->visibility(), $cache_control->ttl())
+                ->addETag($collection)
+                ->addSearch(Parameter\Search::xHeader());
+
+            if ($last_updated !== null) {
+                $headers->addLastUpdated($last_updated);
+            }
 
             $cache_summary->create($collection, $headers->headers());
             $cache_control->putByKey(request()->getRequestUri(), $cache_summary->content());
