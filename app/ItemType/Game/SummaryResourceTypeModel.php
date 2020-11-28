@@ -78,6 +78,28 @@ class SummaryResourceTypeModel extends LaravelModel
                 `item_subtype`.`description` AS resource_item_subtype_description,
                 COUNT(`{$this->sub_table}`.`item_id`) AS count"
             )
+            ->selectRaw("
+                (
+                    SELECT 
+                        GREATEST(
+                            MAX(`{$this->sub_table}`.`created_at`), 
+                            IFNULL(MAX(`{$this->sub_table}`.`updated_at`), 0)
+                        )
+                    FROM 
+                        `{$this->sub_table}` 
+                    JOIN 
+                        `item` ON 
+                            `{$this->sub_table}`.`item_id` = `{$this->table}`.`id`
+                    JOIN 
+                        `resource` ON 
+                            `{$this->table}`.`resource_id` = `resource`.`id`
+                    WHERE
+                        `resource`.`resource_type_id` = ? 
+                ) AS `last_updated`",
+                [
+                    $resource_type_id
+                ]
+            )
             ->join($this->sub_table, 'item.id', "{$this->sub_table}.item_id")
             ->join('resource', 'item.resource_id', 'resource.id')
             ->join('resource_item_subtype', 'resource_item_subtype.resource_id', 'resource.id')

@@ -63,8 +63,6 @@ class ResourceTypeModel extends LaravelModel
         array $sort_parameters = []
     ): array
     {
-
-
         $select_fields = [
             'resource.id AS resource_id',
             'resource.name AS resource_name',
