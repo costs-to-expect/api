@@ -5,7 +5,7 @@ namespace App\ItemType\SimpleExpense;
 
 use App\AllowedValue\Currency;
 use App\ItemType\ItemType;
-use App\Models\Transformers\Transformer;
+use App\Transformers\Transformer;
 use App\Request\Hash;
 use App\Request\Validate\Validator;
 use Illuminate\Database\Eloquent\Model;

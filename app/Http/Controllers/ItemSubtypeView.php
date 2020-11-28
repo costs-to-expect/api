@@ -11,7 +11,7 @@ use App\Request\Parameter;
 use App\Request\Route;
 use App\Response\Header\Headers;
 use App\Response\Pagination as UtilityPagination;
-use App\Models\Transformers\ItemSubtype as ItemSubtypeTransformer;
+use App\Transformers\ItemSubtype as ItemSubtypeTransformer;
 use App\Response\Responses;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Config;

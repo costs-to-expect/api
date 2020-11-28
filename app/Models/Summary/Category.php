@@ -23,10 +23,26 @@ class Category extends Model
         int $resource_type_id,
         array $viewable_resource_types,
         array $search_parameters = []
-    ): int
+    ): array
     {
         $collection = $this
-            ->select('category.id')
+            ->selectRaw("COUNT(`{$this->table}`.`id`) AS total")
+            ->selectRaw("
+                (
+                    SELECT 
+                        GREATEST(
+                            MAX(`{$this->table}`.`created_at`), 
+                            IFNULL(MAX(`{$this->table}`.`updated_at`), 0)
+                        )
+                    FROM 
+                        `{$this->table}` 
+                    WHERE
+                        `{$this->table}`.`resource_type_id` = ? 
+                ) AS `last_updated`",
+                [
+                    $resource_type_id
+                ]
+            )
             ->join("resource_type", "category.resource_type_id", "resource_type.id")
             ->where('category.resource_type_id', '=', $resource_type_id);
 
@@ -37,6 +53,8 @@ class Category extends Model
 
         $collection = Clause::applySearch($collection, $this->table, $search_parameters);
 
-        return $collection->count();
+        return $collection
+            ->get()
+            ->toArray();
     }
 }

@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Jobs\ClearCache;
 use App\Models\ItemPartialTransfer;
-use App\Models\Transformers\ItemPartialTransfer as ItemPartialTransferTransformer;
+use App\Transformers\ItemPartialTransfer as ItemPartialTransferTransformer;
 use App\Response\Cache;
 use App\Request\Validate\ItemPartialTransfer as ItemPartialTransferValidator;
 use App\Response\Responses;

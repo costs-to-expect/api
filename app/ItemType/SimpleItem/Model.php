@@ -192,9 +192,29 @@ class Model extends LaravelModel
         $collection->offset($offset);
         $collection->limit($limit);
 
-        return $collection->select($select_fields)->
-            get()->
-            toArray();
+        return $collection
+            ->select($select_fields)
+            ->selectRaw("
+                (
+                    SELECT 
+                        GREATEST(
+                            MAX(`{$this->table}`.`created_at`), 
+                            IFNULL(MAX(`{$this->table}`.`updated_at`), 0)
+                        )
+                    FROM 
+                        `{$this->table}` 
+                    JOIN 
+                        `item` ON 
+                            `{$this->table}`.`item_id` = `item`.`id`
+                    WHERE
+                        `item`.`resource_id` = ? 
+                ) AS `last_updated`",
+                [
+                    $resource_id
+                ]
+            )
+            ->get()
+            ->toArray();
     }
 
     public function hasCategoryAssignments(int $item_id): bool

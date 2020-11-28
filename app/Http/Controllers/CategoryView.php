@@ -11,7 +11,7 @@ use App\Request\Parameter;
 use App\Response\Header\Headers;
 use App\Response\Pagination as UtilityPagination;
 use App\Models\Category;
-use App\Models\Transformers\Category as CategoryTransformer;
+use App\Transformers\Category as CategoryTransformer;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Config;
 
@@ -77,6 +77,11 @@ class CategoryView extends Controller
                 $sort_parameters
             );
 
+            $last_updated = null;
+            if (count($categories) && array_key_exists('last_updated', $categories[0])) {
+                $last_updated = $categories[0]['last_updated'];
+            }
+
             $collection = array_map(
                 static function ($category) {
                     return (new CategoryTransformer($category))->asArray();
@@ -85,11 +90,16 @@ class CategoryView extends Controller
             );
 
             $headers = new Headers();
-            $headers->collection($pagination_parameters, count($categories), $total)->
-                addCacheControl($cache_control->visibility(), $cache_control->ttl())->
-                addETag($collection)->
-                addSearch(Parameter\Search::xHeader())->
-                addSort(Parameter\Sort::xHeader());
+            $headers
+                ->collection($pagination_parameters, count($categories), $total)
+                ->addCacheControl($cache_control->visibility(), $cache_control->ttl())
+                ->addETag($collection)
+                ->addSearch(Parameter\Search::xHeader())
+                ->addSort(Parameter\Sort::xHeader());
+
+            if ($last_updated !== null) {
+                $headers->addLastUpdated($last_updated);
+            }
 
             $cache_collection->create($total, $collection, $pagination_parameters, $headers->headers());
             $cache_control->putByKey(request()->getRequestUri(), $cache_collection->content());

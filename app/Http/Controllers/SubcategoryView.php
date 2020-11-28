@@ -10,7 +10,7 @@ use App\Request\Parameter;
 use App\Response\Header\Headers;
 use App\Response\Pagination as UtilityPagination;
 use App\Models\Subcategory;
-use App\Models\Transformers\Subcategory as SubcategoryTransformer;
+use App\Transformers\Subcategory as SubcategoryTransformer;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Config;
 
@@ -71,6 +71,11 @@ class SubcategoryView extends Controller
                 $sort_parameters
             );
 
+            $last_updated = null;
+            if (count($subcategories) && array_key_exists('last_updated', $subcategories[0])) {
+                $last_updated = $subcategories[0]['last_updated'];
+            }
+
             $collection = array_map(
                 static function ($subcategory) {
                     return (new SubcategoryTransformer($subcategory))->asArray();
@@ -79,11 +84,16 @@ class SubcategoryView extends Controller
             );
 
             $headers = new Headers();
-            $headers->collection($pagination_parameters, count($subcategories), $total)->
-                addCacheControl($cache_control->visibility(), $cache_control->ttl())->
-                addETag($collection)->
-                addSearch(Parameter\Search::xHeader())->
-                addSort(Parameter\Sort::xHeader());
+            $headers
+                ->collection($pagination_parameters, count($subcategories), $total)
+                ->addCacheControl($cache_control->visibility(), $cache_control->ttl())
+                ->addETag($collection)
+                ->addSearch(Parameter\Search::xHeader())
+                ->addSort(Parameter\Sort::xHeader());
+
+            if ($last_updated !== null) {
+                $headers->addLastUpdated($last_updated);
+            }
 
             $cache_collection->create($total, $collection, $pagination_parameters, $headers->headers());
             $cache_control->putByKey(request()->getRequestUri(), $cache_collection->content());

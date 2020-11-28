@@ -7,7 +7,7 @@ use App\Models\ResourceItemSubtype;
 use App\Models\ResourceType;
 use App\Response\Cache;
 use App\Models\Resource;
-use App\Models\Transformers\Resource as ResourceTransformer;
+use App\Transformers\Resource as ResourceTransformer;
 use App\Request\Validate\Resource as ResourceValidator;
 use App\Response\Responses;
 use Exception;

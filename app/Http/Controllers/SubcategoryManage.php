@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use App\Jobs\ClearCache;
 use App\Response\Cache;
 use App\Models\Subcategory;
-use App\Models\Transformers\Subcategory as SubcategoryTransformer;
+use App\Transformers\Subcategory as SubcategoryTransformer;
 use App\Request\Validate\Subcategory as SubcategoryValidator;
 use App\Response\Responses;
 use Exception;

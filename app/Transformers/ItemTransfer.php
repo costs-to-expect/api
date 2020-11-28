@@ -1,7 +1,9 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Models\Transformers;
+namespace App\Transformers;
+
+use App\Transformers\Transformer;
 
 /**
  * Transform the data from our queries into the format we want to display

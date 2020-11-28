@@ -19,25 +19,38 @@ class Subcategory extends Model
 {
     protected $table = 'sub_category';
 
-    /**
-     * @param integer $resource_type_id
-     * @param integer $category_id
-     * @param array $search_parameters
-     *
-     * @return integer
-     */
     public function totalCount(
         int $resource_type_id,
         int $category_id,
         array $search_parameters = []
-    ): int
+    ): array
     {
-        $collection = $this->join('category', 'sub_category.category_id', 'category.id')->
-            where('sub_category.category_id', '=', $category_id)->
-            where('category.resource_type_id', '=', $resource_type_id);
+        $collection = $this
+            ->selectRaw("COUNT(`{$this->table}`.`id`) AS total")
+            ->selectRaw("
+                (
+                    SELECT 
+                        GREATEST(
+                            MAX(`{$this->table}`.`created_at`), 
+                            IFNULL(MAX(`{$this->table}`.`updated_at`), 0)
+                        )
+                    FROM 
+                        `{$this->table}` 
+                    WHERE
+                        `{$this->table}`.`category_id` = ? 
+                ) AS `last_updated`",
+                [
+                    $category_id
+                ]
+            )
+            ->join('category', 'sub_category.category_id', 'category.id')
+            ->where('sub_category.category_id', '=', $category_id)
+            ->where('category.resource_type_id', '=', $resource_type_id);
 
         $collection = Clause::applySearch($collection, $this->table, $search_parameters);
 
-        return $collection->count();
+        return $collection
+            ->get()
+            ->toArray();
     }
 }

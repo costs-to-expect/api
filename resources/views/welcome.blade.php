@@ -225,25 +225,16 @@
                     <h3>Added</h3>
 
                     <ul>
-                        <li>We have added a `complete` parameter for the `game` item-type; when the parameter is included and set to true, only complete games will be returned in collections and summaries.</li>
-                    </ul>
-
-                    <h3>Changed</h3>
-
-                    <ul>
-                        <li>We have added item-type based response classes for all item collections and summaries. Item and resource type items are unique; there are no shared dependencies. The shared dependencies were a result of the first two item-types being similar, with the addition of the game item-type, we have learnt our lesson.</li>
-                        <li>We have tweaked the TTL for permitted, and viewable resource types. The TTL for public viewable resource types is higher than for private users.</li>
-                        <li>With the addition of more item-type classes, we have tweaked our collection TTLs for public and private users.</li>
-                        <li>We have moved our 'Method' classes; it doesn't make sense for them to sit inside the 'Option' namespace.</li>
-                        <li>We have moved our 'AllowedValue' classes; it doesn't make sense for them to sit inside the 'Option' namespace.</li>
-                        <li>We have reorganised all the item-type classes; we are keeping all the classes for each item-type together.</li>
-                        <li>We have tweaked our response classes; we will do slightly less work when reading from the cache.</li>
+                        <li>We have added the `X-Last-Updated` header to the `resource-types`, `resources`, `categories`, `subcategories`, `items` and `resource items` collection routes.</li>
+                        <li>We have added the `X-Last-Updated` header to additional summary routes; the header was missing, and we are going to use it.</li>
+                        <li>We have increased the coverage of our request test suite.</li>
+                        <li>We have relocated our `Transformer` classes; we have moved them out of the `Models` namespace.</li>
                     </ul>
 
                     <h3>Fixed</h3>
 
                     <ul>
-                        <li>We have removed all our interfaces; the interfaces were not useful, and we are going a slightly different way with the item-type classes, interfaces will return.</li>
+                        <li>We have updated the way we calculated the value for `X-Last-Updated`. We are using the max of the `created at` and `updated at`, not just looking at the `created at` time.</li>
                     </ul>
                 </div>
             </div>

@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use App\ItemType\Entity;
 use App\Jobs\ClearCache;
 use App\Models\ItemCategory;
-use App\Models\Transformers\ItemCategory as ItemCategoryTransformer;
+use App\Transformers\ItemCategory as ItemCategoryTransformer;
 use App\Request\Validate\ItemCategory as ItemCategoryValidator;
 use App\Response\Cache;
 use Exception;

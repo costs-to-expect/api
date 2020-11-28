@@ -6,7 +6,7 @@ use App\ItemType\Entity;
 use App\Jobs\ClearCache;
 use App\Models\ItemCategory;
 use App\Models\ItemSubcategory;
-use App\Models\Transformers\ItemSubcategory as ItemSubcategoryTransformer;
+use App\Transformers\ItemSubcategory as ItemSubcategoryTransformer;
 use App\Request\Validate\ItemSubcategory as ItemSubcategoryValidator;
 use App\Response\Cache;
 use Exception;

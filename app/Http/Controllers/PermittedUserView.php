@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\PermittedUser;
-use App\Models\Transformers\PermittedUser as PermittedUserTransformer;
+use App\Transformers\PermittedUser as PermittedUserTransformer;
 use App\Option\PermittedUserCollection;
 use App\Response\Cache;
 use App\Request\Parameter;

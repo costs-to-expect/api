@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use App\ItemType\Entity;
 use App\Models\ItemCategory;
-use App\Models\Transformers\ItemCategory as ItemCategoryTransformer;
+use App\Transformers\ItemCategory as ItemCategoryTransformer;
 use App\Option\ItemCategoryCollection;
 use App\Option\ItemCategoryItem;
 use App\Response\Cache;

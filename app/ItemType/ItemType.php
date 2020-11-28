@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace App\ItemType;
 
-use App\Models\Transformers\Transformer;
+use App\Transformers\Transformer;
 use App\Request\Parameter\Request;
 use App\Request\Validate\Validator;
 use Illuminate\Database\Eloquent\Model;

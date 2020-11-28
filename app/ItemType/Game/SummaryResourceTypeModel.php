@@ -28,9 +28,30 @@ class SummaryResourceTypeModel extends LaravelModel
                 `resource_type`.`id` AS resource_type_id, 
                 `resource_type`.`name` AS resource_type_name, 
                 `resource_type`.`description` AS resource_type_description, 
-                COUNT({$this->sub_table}.item_id) AS count, 
-                MAX({$this->sub_table}.created_at) AS last_updated
+                COUNT({$this->sub_table}.item_id) AS count
             ")
+            ->selectRaw("
+                (
+                    SELECT 
+                        GREATEST(
+                            MAX(`{$this->sub_table}`.`created_at`), 
+                            IFNULL(MAX(`{$this->sub_table}`.`updated_at`), 0)
+                        )
+                    FROM 
+                        `{$this->sub_table}` 
+                    JOIN 
+                        `item` ON 
+                            `{$this->sub_table}`.`item_id` = `{$this->table}`.`id`
+                    JOIN 
+                        `resource` ON 
+                            `{$this->table}`.`resource_id` = `resource`.`id`
+                    WHERE
+                        `resource`.`resource_type_id` = ? 
+                ) AS `last_updated`",
+                [
+                    $resource_type_id
+                ]
+            )
             ->join($this->sub_table, 'item.id', "{$this->sub_table}.item_id")
             ->join('resource', 'item.resource_id', 'resource.id')
             ->join('resource_type', 'resource.resource_type_id', 'resource_type.id')
@@ -55,8 +76,29 @@ class SummaryResourceTypeModel extends LaravelModel
                 `item_subtype`.`id` AS resource_item_subtype_id,
                 `item_subtype`.`name` AS resource_item_subtype_name,
                 `item_subtype`.`description` AS resource_item_subtype_description,
-                COUNT(`{$this->sub_table}`.`item_id`) AS count, 
-                MAX(`{$this->sub_table}`.`created_at`) AS last_updated"
+                COUNT(`{$this->sub_table}`.`item_id`) AS count"
+            )
+            ->selectRaw("
+                (
+                    SELECT 
+                        GREATEST(
+                            MAX(`{$this->sub_table}`.`created_at`), 
+                            IFNULL(MAX(`{$this->sub_table}`.`updated_at`), 0)
+                        )
+                    FROM 
+                        `{$this->sub_table}` 
+                    JOIN 
+                        `item` ON 
+                            `{$this->sub_table}`.`item_id` = `{$this->table}`.`id`
+                    JOIN 
+                        `resource` ON 
+                            `{$this->table}`.`resource_id` = `resource`.`id`
+                    WHERE
+                        `resource`.`resource_type_id` = ? 
+                ) AS `last_updated`",
+                [
+                    $resource_type_id
+                ]
             )
             ->join($this->sub_table, 'item.id', "{$this->sub_table}.item_id")
             ->join('resource', 'item.resource_id', 'resource.id')
@@ -84,9 +126,30 @@ class SummaryResourceTypeModel extends LaravelModel
     {
         $collection = $this
             ->selectRaw("
-                COUNT({$this->sub_table}.item_id) AS count, 
-                MAX({$this->sub_table}.created_at) AS last_updated
+                COUNT({$this->sub_table}.item_id) AS count
             ")
+            ->selectRaw("
+                (
+                    SELECT 
+                        GREATEST(
+                            MAX(`{$this->sub_table}`.`created_at`), 
+                            IFNULL(MAX(`{$this->sub_table}`.`updated_at`), 0)
+                        )
+                    FROM 
+                        `{$this->sub_table}` 
+                    JOIN 
+                        `item` ON 
+                            `{$this->sub_table}`.`item_id` = `{$this->table}`.`id`
+                    JOIN 
+                        `resource` ON 
+                            `{$this->table}`.`resource_id` = `resource`.`id`
+                    WHERE
+                        `resource`.`resource_type_id` = ? 
+                ) AS `last_updated`",
+                [
+                    $resource_type_id
+                ]
+            )
             ->join($this->sub_table, 'item.id', "{$this->sub_table}.item_id")
             ->join("resource", "resource.id", "item.resource_id")
             ->join("resource_type", "resource_type.id", "resource.resource_type_id")

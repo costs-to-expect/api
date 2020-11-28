@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use App\ItemType\Entity;
 use App\Models\ItemPartialTransfer;
-use App\Models\Transformers\ItemPartialTransfer as ItemPartialTransferTransformer;
+use App\Transformers\ItemPartialTransfer as ItemPartialTransferTransformer;
 use App\Option\ItemPartialTransferCollection;
 use App\Option\ItemPartialTransferItem;
 use App\Option\ItemPartialTransferTransfer;

@@ -10,7 +10,7 @@ use App\Response\Header\Headers;
 use App\Request\Parameter;
 use App\Request\Route;
 use App\Response\Pagination as UtilityPagination;
-use App\Models\Transformers\Queue as QueueTransformer;
+use App\Transformers\Queue as QueueTransformer;
 use Illuminate\Http\JsonResponse;
 
 /**

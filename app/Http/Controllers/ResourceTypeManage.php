@@ -9,7 +9,7 @@ use App\Models\Resource;
 use App\Models\ResourceTypeItemType;
 use App\Response\Cache;
 use App\Models\ResourceType;
-use App\Models\Transformers\ResourceType as ResourceTypeTransformer;
+use App\Transformers\ResourceType as ResourceTypeTransformer;
 use App\Request\Validate\ResourceType as ResourceTypeValidator;
 use Exception;
 use Illuminate\Database\QueryException;

@@ -111,6 +111,17 @@ class ResourceType extends Model
                         resource.resource_type_id = resource_type.id
                 ) AS resource_type_resources'
             )
+            ->selectRaw('
+                (
+                    SELECT 
+                        GREATEST(
+                            MAX(resource_type.created_at), 
+                            IFNULL(MAX(resource_type.updated_at), 0)
+                        )
+                    FROM 
+                        resource_type 
+                ) AS last_updated'
+            )
             ->join('resource_type_item_type', 'resource_type.id', 'resource_type_item_type.resource_type_id')
             ->join('item_type', 'resource_type_item_type.item_type_id', 'item_type.id')
             ->leftJoin("resource", "resource_type.id", "resource.id");

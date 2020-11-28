@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\ItemTransfer;
-use App\Models\Transformers\ItemTransfer as ItemTransferTransformer;
+use App\Transformers\ItemTransfer as ItemTransferTransformer;
 use App\Option\ItemTransferCollection;
 use App\Option\ItemTransferItem;
 use App\Option\ItemTransferTransfer;
