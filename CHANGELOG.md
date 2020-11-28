@@ -2,6 +2,16 @@
 
 The complete changelog for the Costs to Expect REST API, our changelog follows the format defined at https://keepachangelog.com/en/1.0.0/
 
+## [v2.17.1] - 2020-11-28
+### Changed
+- We have added the `X-Last-Updated` header to the `resource-types`, `resources`, `categories`, `subcategories`, `items` and `resource items` collection routes.
+- We have added the `X-Last-Updated` header to additional summary routes; the header was missing, and we are going to use it.
+- We have increased the coverage of our request test suite.
+- We have relocated our `Transformer` classes; we have moved them out of the `Models` namespace.
+
+### Fixed
+- We have updated the way we calculated the value for `X-Last-Updated`. We are using the max of the `created at` and `updated at`, not just looking at the `created at` time.
+
 ## [v2.17.0] - 2020-11-22
 ### Added 
 - We have added a `complete` parameter for the `game` item-type; when the parameter is included and set to true, only complete games will be returned in collections and summaries.
