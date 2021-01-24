@@ -11,15 +11,15 @@
     "require": {
         "php": "^7.4",
         "ext-json": "*",
-        "lcobucci/jwt": "3.3.0",
         "doctrine/dbal": "^2.9",
         "fideloper/proxy": "^4.0",
         "guzzlehttp/guzzle": "^6.3",
         "hashids/hashids": "^3.0",
         "laravel/framework": "^7.0",
         "laravel/helpers": "^1.2",
-        "laravel/passport": "^7.0",
-        "laravel/tinker": "^2.0"
+        "laravel/sanctum": "^2.8",
+        "laravel/tinker": "^2.0",
+        "lcobucci/jwt": "3.3.0"
     },
     "require-dev": {
         "filp/whoops": "^2.0",

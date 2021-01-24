@@ -12,10 +12,6 @@ class EventServiceProvider extends ServiceProvider
      * @var array
      */
     protected $listen = [
-        'Laravel\Passport\Events\AccessTokenCreated' => [
-            'App\Listeners\RevokeTokens',
-            'App\Listeners\PruneTokens'
-        ],
         'App\Events\RequestError' => [
             'App\Listeners\CaptureAndSendRequestError'
         ],

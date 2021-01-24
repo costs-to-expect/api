@@ -32,16 +32,12 @@ class PassportView extends Controller
 
             if ($user !== null) {
 
-                $token = $user->createToken('costs-to-expect-api');
+                $token = request()->user()->createToken('costs-to-expect-api');
 
                 return response()->json(
                     [
-                        'id' => $this->hash->user()->encode(Auth::id()),
                         'type' => 'Bearer',
-                        'token' => $token->accessToken,
-                        'created' => $token->token->created_at,
-                        'updated' => $token->token->updated_at,
-                        'expires' => $token->token->expires_at
+                        'token' => $token->plainTextToken,
                     ],
                     201
                 );
@@ -55,7 +51,7 @@ class PassportView extends Controller
 
     public function check()
     {
-        return response()->json(['auth' => Auth::guard('api')->check()], 200);
+        return response()->json(['auth' => Auth::guard('api')->check()]);
     }
 
     /**
@@ -105,15 +101,25 @@ class PassportView extends Controller
      */
     public function user()
     {
-        $user = Auth::user();
+        if (auth()->guard('api')->check() === true && $user = auth()->guard('api')->user() !== null) {
 
-        if ($user === null) {
-            abort(403);
+            $user = auth()->guard('api')->user();
+
+            if ($user !== null) {
+
+                $user = [
+                    'id' => $this->hash->user()->encode($user->id),
+                    'name' => $user->name,
+                    'email' => $user->email
+                ];
+
+                return response()->json($user);
+            }
+
+            return response()->json(['message' => 'Unauthorised, credentials invalid'], 403);
+
         }
 
-        $user = $user->toArray();
-        $user['id'] = $this->hash->user()->encode($user['id']);
-
-        return response()->json($user, 200);
+        return response()->json(['message' => 'Unauthorised, credentials invalid'], 403);
     }
 }
