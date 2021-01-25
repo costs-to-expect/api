@@ -6,6 +6,7 @@ use App\Models\PasswordCreates;
 use App\User;
 use Illuminate\Http;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
@@ -15,12 +16,75 @@ use Illuminate\Support\Str;
  */
 class Authentication extends Controller
 {
-    /**
-     * login to the API and create an access token
-     *
-     * @return Http\JsonResponse
-     */
-    public function login()
+    public function check(): Http\JsonResponse
+    {
+        return response()->json(['auth' => Auth::guard('api')->check()]);
+    }
+
+    public function createPassword(): Http\JsonResponse
+    {
+        $email = Str::replaceFirst(' ', '+', request()->query('email'));
+        $token = request()->query('token');
+
+        $tokens = DB::table('password_creates')
+            ->where('email', '=', $email)
+            ->first();
+
+        if ($tokens === null || Hash::check($token, $tokens->token) === false) {
+            return response()->json(
+                ['message'=>'Sorry, the email and token you supplied are invalid'],
+                401
+            );
+        }
+
+        $validator = Validator::make(
+            request()->only(['password', 'password_confirmation']),
+            [
+                'password' => [
+                    'required',
+                    'min:10'
+                ],
+                'password_confirmation' => [
+                    'required',
+                    'same:password',
+                ]
+            ]
+        );
+
+        if ($validator->fails()) {
+            return response()->json(
+                [
+                    'message' => 'Validation error, please review the below',
+                    'fields' => $validator->errors()
+                ],
+                422
+            );
+        }
+
+        try {
+
+            $user = User::with([])
+                ->where('email', '=', $email)
+                ->first();
+
+            if ($user !== null) {
+                $user->password = Hash::make(request()->input('password'));
+                $user->save();
+
+                DB::table('password_creates')
+                    ->where('email', '=', request()->input(['email']))
+                    ->delete();
+
+                return response()->json(['message' => 'Password created'], 201);
+            }
+
+            return response()->json(['message' => 'Unable to fetch your account to create password, please try again later'], 500);
+        } catch (\Exception $e) {
+            return response()->json(['message' => 'Unable to create password, please try again later'], 500);
+        }
+    }
+
+    public function login(): Http\JsonResponse
     {
         if (
             Auth::attempt(
@@ -33,9 +97,7 @@ class Authentication extends Controller
             $user = Auth::user();
 
             if ($user !== null) {
-
                 $token = request()->user()->createToken('costs-to-expect-api');
-
                 return response()->json(
                     [
                         'type' => 'Bearer',
@@ -49,11 +111,6 @@ class Authentication extends Controller
         }
 
         return response()->json(['message' => 'Unauthorised, credentials invalid'], 401);
-    }
-
-    public function check()
-    {
-        return response()->json(['auth' => Auth::guard('api')->check()]);
     }
 
     public function register(): Http\JsonResponse
@@ -89,7 +146,7 @@ class Authentication extends Controller
 
             $password = new PasswordCreates();
             $password->email = $email;
-            $password->token = $create_token;
+            $password->token = Hash::make($create_token);
             $password->created_at = now()->toDateTimeString();
             $password->save();
 
@@ -99,19 +156,15 @@ class Authentication extends Controller
 
         return response()->json(
             [
-                'message' => 'You account has been created, please head to /v2/auth/create-password?token='.
-                    $create_token . '&email=' . $email . ' to create your password.'
+                'message' => "Your account has been created, please POST 'password' and 'confirm_password' to " .
+                    'v2/auth/create-password?token=' . $create_token .
+                    '&email=' . $email . ' to create your password'
             ],
             201
         );
     }
 
-    /**
-     * Return user details
-     *
-     * @return Http\JsonResponse
-     */
-    public function user()
+    public function user(): Http\JsonResponse
     {
         if (
             auth()->guard('api')->check() === true &&

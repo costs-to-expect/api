@@ -28,6 +28,11 @@ Route::group(
                 'auth/register',
                 'Authentication@register'
             );
+
+            Route::post(
+                'auth/create-password',
+                [\App\Http\Controllers\Authentication::class, 'createPassword']
+            )->name('auth.create-password');
         }
     }
 );

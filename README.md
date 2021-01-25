@@ -60,12 +60,12 @@ drivers have been set to our defaults, sessions, cache, and the queue default to
 * `docker-compose exec api composer install` 
 * `docker-compose exec api php artisan key:generate`
 * `docker-compose exec api php artisan migrate`
-* `docker-compose exec api php artisan passport:install`
 * `docker-compose exec api php artisan queue:work`
 * Run an OPTIONS request on `http://[your.domail.local:8080]/v2/resource_types`, you will see an OPTIONS response, 
 alternatively a GET request to `http://[your.domail.local:8080]/v1` will show all the defined routes.
-* You can add a development user by POSTing to `http://[your.domail.local:8080]/v2/auth/register`. A bearer will be in the 
- response from POSTing to `http://[your.domail.local:8080]/v2/auth/login` - you will need a bearer for all the routes that require authentication.
+* You can create a user by POSTing to `http://[your.domail.local:8080]/v2/auth/register`. 
+* You create a password by POSTing a password and password_confirmation to the URI register response. 
+* You login by posting to `http://[your.domail.local:8080]/v2/auth/login` - you will need a bearer for all the routes that require authentication.
 * Our API defaults to Mailgun, populate `MAILGUN_DOMAIN` and `MAILGUN_SECRET` with the relevant values from your account, 
 you will also need to set `MAIL_FROM_ADDRESS` and `MAIL_TO_ADDRESS`. You may need to set `Authorized Recipients` in Mailgun. 
 
@@ -130,9 +130,10 @@ additionally, the same is true if you are assigned to a resource type.
 | :--- | :--- |
 | GET/HEAD | v2/ |
 | OPTIONS  | v2/ | 
+| GET/HEAD | v2/auth/check |
+| POST     | v2/auth/create-password | 
 | POST     | v2/auth/login |
 | POST     | v2/auth/register  |
-| GET/HEAD | v2/auth/check |
 | GET/HEAD | v2/auth/user |
 | GET/HEAD | v2/changelog |
 | OPTIONS  | v2/changelog |
