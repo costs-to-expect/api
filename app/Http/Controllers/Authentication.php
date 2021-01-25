@@ -2,16 +2,18 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\PasswordCreates;
 use App\User;
 use Illuminate\Http;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Str;
 
 /**
  * @package App\Http\Controllers
  */
-class PassportView extends Controller
+class Authentication extends Controller
 {
     /**
      * login to the API and create an access token
@@ -54,20 +56,13 @@ class PassportView extends Controller
         return response()->json(['auth' => Auth::guard('api')->check()]);
     }
 
-    /**
-     * Register with the API will return the token
-     *
-     * @return Http\JsonResponse
-     */
-    public function register()
+    public function register(): Http\JsonResponse
     {
         $validator = Validator::make(
             request()->all(),
             [
                 'name' => 'required',
                 'email' => 'required|email',
-                'password' => 'required',
-                'password_confirmation' => 'required|same:password',
             ]
         );
 
@@ -81,17 +76,34 @@ class PassportView extends Controller
             );
         }
 
-        $input = request()->all();
-
-        $input['password'] = Hash::make($input['password']);
-
         try {
-            User::create($input);
+            $email = request()->input('email');
+
+            $user = new User();
+            $user->name = request()->input('name');
+            $user->email = request()->input('email');
+            $user->password = Hash::make(Str::random(20));
+            $user->save();
+
+            $create_token = Str::random(20);
+
+            $password = new PasswordCreates();
+            $password->email = $email;
+            $password->token = $create_token;
+            $password->created_at = now()->toDateTimeString();
+            $password->save();
+
         } catch (\Exception $e) {
-            return response()->json(['error' => 'Unable to create user'], 500);
+            return response()->json(['error' => 'Unable to create the account, please try again later'], 500);
         }
 
-        return response()->json([], 204);
+        return response()->json(
+            [
+                'message' => 'You account has been created, please head to /v2/auth/create-password?token='.
+                    $create_token . '&email=' . $email . ' to create your password.'
+            ],
+            201
+        );
     }
 
     /**
@@ -101,12 +113,13 @@ class PassportView extends Controller
      */
     public function user()
     {
-        if (auth()->guard('api')->check() === true && $user = auth()->guard('api')->user() !== null) {
-
+        if (
+            auth()->guard('api')->check() === true &&
+            $user = auth()->guard('api')->user() !== null
+        ) {
             $user = auth()->guard('api')->user();
 
             if ($user !== null) {
-
                 $user = [
                     'id' => $this->hash->user()->encode($user->id),
                     'name' => $user->name,

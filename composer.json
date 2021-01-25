@@ -2,9 +2,11 @@
     "name": "costs-to-expect/api",
     "description": "The API for https://api.costs-to-expect.com",
     "keywords": [
-        "api",
-        "laravel",
-        "child cost"
+        "API",
+        "REST API",
+        "Laravel",
+        "Child cost",
+        "Expense API"
     ],
     "license": "MIT",
     "type": "project",
@@ -22,6 +24,7 @@
         "lcobucci/jwt": "3.3.0"
     },
     "require-dev": {
+        "roave/security-advisories": "dev-master",
         "filp/whoops": "^2.0",
         "fzaninotto/faker": "^1.4",
         "mockery/mockery": "^1.0",
@@ -60,9 +63,9 @@
         ]
     },
     "config": {
+        "optimize-autoloader": true,
         "preferred-install": "dist",
-        "sort-packages": true,
-        "classmap-authoritative": true
+        "sort-packages": true
     },
     "minimum-stability": "dev",
     "prefer-stable": true

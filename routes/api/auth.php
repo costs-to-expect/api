@@ -10,23 +10,23 @@ Route::group(
     function () {
         Route::post(
             'auth/login',
-            'PassportView@login'
+            'Authentication@login'
         );
 
         Route::get(
             'auth/user',
-            'PassportView@user'
+            'Authentication@user'
         );
 
         Route::get(
             'auth/check',
-            'PassportView@check'
+            'Authentication@check'
         );
 
         if (Config::get('api.app.config.registrations') === true) {
             Route::post(
                 'auth/register',
-                'PassportView@register'
+                'Authentication@register'
             );
         }
     }

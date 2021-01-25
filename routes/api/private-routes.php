@@ -14,7 +14,7 @@ Route::group(
     static function () {
         Route::get(
             'auth/user',
-            'PassportView@user'
+            'Authentication@user'
         );
 
         Route::post(
