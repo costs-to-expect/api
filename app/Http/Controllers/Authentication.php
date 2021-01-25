@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\PasswordCreates;
+use App\Models\PasswordResets;
 use App\User;
 use Illuminate\Http;
 use Illuminate\Support\Facades\Auth;
@@ -11,9 +12,6 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
 
-/**
- * @package App\Http\Controllers
- */
 class Authentication extends Controller
 {
     public function check(): Http\JsonResponse
@@ -32,7 +30,9 @@ class Authentication extends Controller
 
         if ($tokens === null || Hash::check($token, $tokens->token) === false) {
             return response()->json(
-                ['message'=>'Sorry, the email and token you supplied are invalid'],
+                [
+                    'message'=>'Sorry, the email and token you supplied are invalid'
+                ],
                 401
             );
         }
@@ -62,7 +62,6 @@ class Authentication extends Controller
         }
 
         try {
-
             $user = User::with([])
                 ->where('email', '=', $email)
                 ->first();
@@ -78,10 +77,128 @@ class Authentication extends Controller
                 return response()->json(['message' => 'Password created'], 201);
             }
 
+            return response()->json(['message' => 'Unable to fetch your account to create password, please try again later'], 404);
+        } catch (\Exception $e) {
+            return response()->json(['message' => 'Unable to create password, please try again later'], 500);
+        }
+    }
+
+    public function createNewPassword(): Http\JsonResponse
+    {
+        $email = Str::replaceFirst(' ', '+', request()->query('email'));
+        $token = request()->query('token');
+
+        $tokens = DB::table('password_resets')
+            ->where('email', '=', $email)
+            ->first();
+
+        if ($tokens === null || Hash::check($token, $tokens->token) === false) {
+            return response()->json(
+                [
+                    'message'=>'Sorry, the email and token you supplied are invalid'
+                ],
+                404
+            );
+        }
+
+        $validator = Validator::make(
+            request()->only(['password', 'password_confirmation']),
+            [
+                'password' => [
+                    'required',
+                    'min:10'
+                ],
+                'password_confirmation' => [
+                    'required',
+                    'same:password',
+                ]
+            ]
+        );
+
+        if ($validator->fails()) {
+            return response()->json(
+                [
+                    'message' => 'Validation error, please review the below',
+                    'fields' => $validator->errors()
+                ],
+                422
+            );
+        }
+
+        try {
+            $user = User::with([])
+                ->where('email', '=', $email)
+                ->first();
+
+            if ($user !== null) {
+                $user->password = Hash::make(request()->input('password'));
+                $user->save();
+
+                DB::table('password_resets')
+                    ->where('email', '=', request()->input(['email']))
+                    ->delete();
+
+                return response()->json(['message' => 'Password created'], 201);
+            }
+
             return response()->json(['message' => 'Unable to fetch your account to create password, please try again later'], 500);
         } catch (\Exception $e) {
             return response()->json(['message' => 'Unable to create password, please try again later'], 500);
         }
+    }
+
+    public function forgotPassword(): Http\JsonResponse
+    {
+        $validator = Validator::make(
+            request()->only(['email']),
+            [
+                'email' => 'required|email',
+            ]
+        );
+
+        if ($validator->fails()) {
+            return response()->json(
+                [
+                    'message' => 'Validation error, please review the errors below',
+                    'fields' => $validator->errors()
+                ],
+                422
+            );
+        }
+
+        $email = request()->input('email');
+
+        $user = User::with([])
+            ->where('email', '=', $email)
+            ->first();
+
+        if ($user !== null) {
+            try {
+                $user->password = Hash::make(Str::random(20));
+                $user->save();
+
+                $create_token = Str::random(20);
+
+                $password = new PasswordResets();
+                $password->email = $email;
+                $password->token = Hash::make($create_token);
+                $password->created_at = now()->toDateTimeString();
+                $password->save();
+            } catch (\Exception $e) {
+                return response()->json(['error' => 'Unable to process your forgot password request, please try again later'], 500);
+            }
+
+            return response()->json(
+                [
+                    'message' => "You can generate a new password by POSTing 'password' and 'confirm_password' to " .
+                        'v2/auth/create-new-password?token=' . $create_token .
+                        '&email=' . $email
+                ],
+                201
+            );
+        }
+
+        return response()->json(['message' => 'Unable to fetch your user account, please try again later'], 404);
     }
 
     public function login(): Http\JsonResponse
@@ -178,12 +295,9 @@ class Authentication extends Controller
                     'name' => $user->name,
                     'email' => $user->email
                 ];
-
                 return response()->json($user);
             }
-
             return response()->json(['message' => 'Unauthorised, credentials invalid'], 403);
-
         }
 
         return response()->json(['message' => 'Unauthorised, credentials invalid'], 403);
