@@ -25,7 +25,7 @@ Route::group(
 
         Route::get(
             'changelog',
-            'IndexView@changeLog'
+            [\App\Http\Controllers\IndexView::class, 'changeLog']
         );
 
         Route::options(
