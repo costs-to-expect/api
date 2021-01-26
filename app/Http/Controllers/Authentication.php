@@ -74,7 +74,7 @@ class Authentication extends Controller
                     ->where('email', '=', request()->input(['email']))
                     ->delete();
 
-                return response()->json(['message' => 'Password created'], 201);
+                return response()->json([], 204);
             }
 
             return response()->json(['message' => 'Unable to fetch your account to create password, please try again later'], 404);
@@ -138,7 +138,7 @@ class Authentication extends Controller
                     ->where('email', '=', request()->input(['email']))
                     ->delete();
 
-                return response()->json(['message' => 'Password created'], 201);
+                return response()->json([], 204);
             }
 
             return response()->json(['message' => 'Unable to fetch your account to create password, please try again later'], 500);
@@ -314,7 +314,7 @@ class Authentication extends Controller
             $user->password = Hash::make(request()->input('password'));
             $user->save();
 
-            return response()->json(['message' => 'Password updated'], 201);
+            return response()->json([], 204);
         }
 
         return response()->json(['message' => 'Unauthorised, credentials invalid'], 401);
