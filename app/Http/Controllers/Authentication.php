@@ -217,6 +217,7 @@ class Authentication extends Controller
                 $token = request()->user()->createToken('costs-to-expect-api');
                 return response()->json(
                     [
+                        'id' => $this->hash->user()->encode($user->id),
                         'type' => 'Bearer',
                         'token' => $token->plainTextToken,
                     ],

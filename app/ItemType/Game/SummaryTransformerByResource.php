@@ -7,7 +7,7 @@ use App\Transformers\Transformer;
 
 /**
  * @author Dean Blackborough <dean@g3d-development.com>
- * @copyright Dean Blackborough 2018-2020
+ * @copyright Dean Blackborough 2018-2021
  * @license https://github.com/costs-to-expect/api/blob/master/LICENSE
  */
 class SummaryTransformerByResource extends Transformer
