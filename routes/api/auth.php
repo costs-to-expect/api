@@ -20,14 +20,15 @@ Route::group(
         )->name('auth.create-new-password');
 
         Route::post(
+            'auth/forgot-password',
+            [Authentication::class, 'forgotPassword']
+        )->name('auth.forgot-password');
+
+        Route::post(
             'auth/login',
             [Authentication::class, 'login']
         )->name('auth.login');
 
-        Route::post(
-            'auth/forgot-password',
-            [Authentication::class, 'forgotPassword']
-        )->name('auth.forgot-password');
 
         if (Config::get('api.app.config.registrations') === true) {
             Route::post(

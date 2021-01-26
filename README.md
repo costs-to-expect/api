@@ -4,11 +4,11 @@
 
 Costs to Expect is a service which focuses on tracking and forecasting expenses. 
 The Costs to Expect API is the backbone of the service and is not going to be 
-limited to expenses; however, we figured that it was an excellent place to start. 
+limited to tracking expenses; however, we figured that it was an excellent place to start. 
 
 ## Documentation
 
-The documentation for Costs to Expect API can be found at 
+The documentation for the Costs to Expect API can be found at 
 [postman.costs-to-expect.com](https://postman.costs-to-expect.com?version=latest). 
 
 ### The App
@@ -20,7 +20,8 @@ The [alpha](https://app.costs-to-expect.com) for the service is online, we are
  to see how we are progressing. 
 
 ### The Website
-A small part of the service is tracking the costs to raise a child in the UK, 
+
+A small part of the service is tracking our costs to raise our children in the UK, 
 more detail can be found at [Costs to Expect](https://www.costs-to-expect.com).
 
 ## Set up
@@ -37,7 +38,7 @@ directory and run the below.
 * $ `docker-compose build`
 * $ `docker-compose up`
 
-*We include a network for local development purposed, I need the Costs to Expect 
+*We include a network for local development purposes, I need the Costs to Expect 
 Website and App to communicate with a local API. You probably don't need this 
 so remove the network section from the docker-compose file and don't create the 
 network.*
@@ -77,29 +78,12 @@ you will also need to set `MAIL_FROM_ADDRESS` and `MAIL_TO_ADDRESS`. You may nee
 * Successful PATCH requests will return 204.
 * Successful DELETE requests will return a 204.
 * Non 2xx results will return an object with a message field and optionally a fields array. When we 
-return a validation error, the response will be 422 and the fields array will contain the validation errors.
+return a validation error, the response will be 422 and include a fields array which will contain any validation errors.
 
 ### Caching
 
 We include local level caching in the API, as time goes on we will move towards
 conditional caching, specifically including an Etag header and returning a 304 response.
-
-The TTL for the cache types is a below. As expected, caches will be 
-invalidated if the API detects a change.
-
-#### Collections
-
-- Item types: One year
-- Resource types: One week
-- Partial transfers: One week
-- Transfers: One week
-- Permitted users: One month
-- Categories: One month
-- Subcategories: One month
-- Resources: One week
-- Items: One week
-- Item categories: One week
-- Item subcategories: One week
 
 ## Headers
 
@@ -116,15 +100,16 @@ behind each of our custom headers.
 | X-Link-Previous | Pagination: URI for previous result set if relevant |
 | X-Link-Next | Pagination: URI for next result set if relevant |
 | X-Link-Next | Pagination: URI for next result set if relevant |
+| X-Last-Updated | The last time the collection was updated |
 | X-Sort | Sort options applied to request after validation |
 | X-Search | Search options applied to request after validation |
 | X-Parameters | Request parameters applied to request after validation |
 
 ## Routes
 
-Access to a route will be limited based upon your permitted resource types. 
-When you create a resource type you have full access to everything below, 
-additionally, the same is true if you are assigned to a resource type.
+Access to a route will be limited based upon a users permitted resource types. 
+When you create a resource type you have full access to everything below it, 
+additionally, the same is true if you are assigned as a permitted user to a resource type.
 
 | HTTP Verb(s) | Route |
 | :--- | :--- |
@@ -132,8 +117,12 @@ additionally, the same is true if you are assigned to a resource type.
 | OPTIONS  | v2/ | 
 | GET/HEAD | v2/auth/check |
 | POST     | v2/auth/create-password | 
+| POST     | v2/auth/create-new-password  |
+| POST     | v2/auth/forgot-password  |
 | POST     | v2/auth/login |
 | POST     | v2/auth/register  |
+| POST     | v2/auth/update-password  |
+| POST     | v2/auth/update-profile  |
 | GET/HEAD | v2/auth/user |
 | GET/HEAD | v2/changelog |
 | OPTIONS  | v2/changelog |
@@ -222,12 +211,13 @@ additionally, the same is true if you are assigned to a resource type.
 
 ## Summary routes
 
-Eventually, there will be a summary route for every API GET endpoint. Until 
-that point, the summary routes that exists are detailed below. Some use GET 
+Eventually, there will be a summary route for every API collection GET endpoint. Until 
+that point, the summary routes that exists are detailed below. Some allow GET 
 parameters to breakdown the data, one example being 
-`v2/summary/resource-types/{resource_type_id}/items`. Review the OPTIONS 
-request for each summary route to see the supported parameters, these should 
-largely match the non summary route.
+`v2/summary/resource-types/{resource_type_id}/items`. 
+
+Review the OPTIONS request for each summary route to see the supported parameters, these should 
+largely match the matching non-summary route.
 
 | HTTP Verb(s) | Route |
 | :--- | :--- |
