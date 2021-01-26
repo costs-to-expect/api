@@ -56,6 +56,11 @@ Route::group(
             [Authentication::class, 'updatePassword']
         )->name('auth.update-password');
 
+        Route::post(
+            'auth/update-profile',
+            [Authentication::class, 'updateProfile']
+        )->name('auth.update-profile');
+
         Route::get(
             'auth/user',
             [Authentication::class, 'user']

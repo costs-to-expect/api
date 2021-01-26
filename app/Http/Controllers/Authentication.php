@@ -320,6 +320,62 @@ class Authentication extends Controller
         return response()->json(['message' => 'Unauthorised, credentials invalid'], 401);
     }
 
+    public function updateProfile(): Http\JsonResponse
+    {
+        $validator = Validator::make(
+            request()->only(['name', 'email']),
+            [
+                'name' => [
+                    'sometimes'
+                ],
+                'email' => [
+                    'sometimes',
+                    'email'
+                ]
+            ]
+        );
+
+        if ($validator->fails()) {
+            return response()->json(
+                [
+                    'message' => 'Validation error, please review the messages',
+                    'fields' => $validator->errors()
+                ],
+                422
+            );
+        }
+
+        $user = auth()->guard('api')->user();
+
+        if ($user !== null) {
+            $fields = [];
+            if (request()->input('name') !== null) {
+                $fields['name'] = request()->input('name');
+            }
+            if (request()->input('email') !== null) {
+                $fields['email'] = request()->input('email');
+            }
+
+            if (count($fields) === 0) {
+                return response()->json(['message' => 'You have provided any fields to change'], 400);
+            }
+
+            try {
+                foreach ($fields as $field => $value) {
+                    $user->$field = $value;
+                }
+
+                $user->save();
+            } catch (\Exception $e) {
+                return response()->json(['message' => 'Unable to update your profile, please try again'], 401);
+            }
+
+            return response()->json([], 204);
+        }
+
+        return response()->json(['message' => 'Unauthorised, credentials invalid'], 401);
+    }
+
     public function user(): Http\JsonResponse
     {
         $user = auth()->guard('api')->user();
