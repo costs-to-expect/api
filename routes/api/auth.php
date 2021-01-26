@@ -29,11 +29,6 @@ Route::group(
             [Authentication::class, 'forgotPassword']
         )->name('auth.forgot-password');
 
-        Route::get(
-            'auth/user',
-            [Authentication::class, 'user']
-        )->name('auth.user');
-
         if (Config::get('api.app.config.registrations') === true) {
             Route::post(
                 'auth/register',
@@ -47,3 +42,24 @@ Route::group(
         }
     }
 );
+
+Route::group(
+    [
+        'prefix' => Config::get('api.app.version.prefix'),
+        'middleware' => [
+            'auth:sanctum'
+        ]
+    ],
+    static function () {
+        Route::post(
+            'auth/update-password',
+            [Authentication::class, 'updatePassword']
+        )->name('auth.update-password');
+
+        Route::get(
+            'auth/user',
+            [Authentication::class, 'user']
+        )->name('auth.user');
+    }
+);
+

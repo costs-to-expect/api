@@ -282,25 +282,57 @@ class Authentication extends Controller
         );
     }
 
-    public function user(): Http\JsonResponse
+    public function updatePassword(): Http\JsonResponse
     {
-        if (
-            auth()->guard('api')->check() === true &&
-            $user = auth()->guard('api')->user() !== null
-        ) {
-            $user = auth()->guard('api')->user();
+        $validator = Validator::make(
+            request()->only(['password', 'password_confirmation']),
+            [
+                'password' => [
+                    'required',
+                    'min:10'
+                ],
+                'password_confirmation' => [
+                    'required',
+                    'same:password',
+                ]
+            ]
+        );
 
-            if ($user !== null) {
-                $user = [
-                    'id' => $this->hash->user()->encode($user->id),
-                    'name' => $user->name,
-                    'email' => $user->email
-                ];
-                return response()->json($user);
-            }
-            return response()->json(['message' => 'Unauthorised, credentials invalid'], 403);
+        if ($validator->fails()) {
+            return response()->json(
+                [
+                    'message' => 'Validation error, please review the messages',
+                    'fields' => $validator->errors()
+                ],
+                422
+            );
         }
 
-        return response()->json(['message' => 'Unauthorised, credentials invalid'], 403);
+        $user = auth()->guard('api')->user();
+
+        if ($user !== null) {
+            $user->password = Hash::make(request()->input('password'));
+            $user->save();
+
+            return response()->json(['message' => 'Password updated'], 201);
+        }
+
+        return response()->json(['message' => 'Unauthorised, credentials invalid'], 401);
+    }
+
+    public function user(): Http\JsonResponse
+    {
+        $user = auth()->guard('api')->user();
+
+        if ($user !== null) {
+            $user = [
+                'id' => $this->hash->user()->encode($user->id),
+                'name' => $user->name,
+                'email' => $user->email
+            ];
+            return response()->json($user);
+        }
+
+        return response()->json(['message' => 'Unauthorised, credentials invalid'], 401);
     }
 }
