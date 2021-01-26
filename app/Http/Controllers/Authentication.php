@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\PasswordCreates;
 use App\Models\PasswordResets;
+use App\Notifications\Registered;
 use App\User;
 use Illuminate\Http;
 use Illuminate\Support\Facades\Auth;
@@ -267,6 +268,8 @@ class Authentication extends Controller
             $password->token = Hash::make($create_token);
             $password->created_at = now()->toDateTimeString();
             $password->save();
+
+            $user->notify(new Registered($user, $create_token));
 
         } catch (\Exception $e) {
             return response()->json(['error' => 'Unable to create the account, please try again later'], 500);
