@@ -225,16 +225,17 @@
                     <h3>Added</h3>
 
                     <ul>
-                        <li>We have added the `X-Last-Updated` header to the `resource-types`, `resources`, `categories`, `subcategories`, `items` and `resource items` collection routes.</li>
-                        <li>We have added the `X-Last-Updated` header to additional summary routes; the header was missing, and we are going to use it.</li>
-                        <li>We have increased the coverage of our request test suite.</li>
-                        <li>We have relocated our `Transformer` classes; we have moved them out of the `Models` namespace.</li>
+                        <li>We have opened up registration on the API; you can register, login, and use all the expected authentication features.</li>
+                        <li>We have added notification emails for registration and forgot password requests.</li>
                     </ul>
 
-                    <h3>Fixed</h3>
+                    <h3>Changed</h3>
 
                     <ul>
-                        <li>We have updated the way we calculated the value for `X-Last-Updated`. We are using the max of the `created at` and `updated at`, not just looking at the `created at` time.</li>
+                        <li>We have switched to Laravel Sanctum and removed all references to Laravel Passport, Sanctum makes more sense for our API.</li>
+                        <li>We have updated to Laravel version 8.</li>
+                        <li>We have tweaked our Docker setup and removed composer and phpunit.</li>
+                        <li>Content updates.</li>
                     </ul>
                 </div>
             </div>

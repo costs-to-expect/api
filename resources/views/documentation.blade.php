@@ -142,8 +142,8 @@
                     <p>Our documentation is
                         available at <a href="https://postman.costs-to-expect.com">https://postman.costs-to-expect.com</a>.</p>
 
-                    <p>We will ensure that all our docs are always be up to date;
-                        the docs will always refer to the released live version
+                    <p>We will ensure that our docs are always up to date;
+                        the docs will always refer to the live version
                         of the API. </p>
 
                     <p>In addition to the published documentation, we include

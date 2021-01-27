@@ -3,9 +3,6 @@ services:
   api:
     build:
       context: .
-      args:
-        - WITH_XDEBUG=${WITH_XDEBUG}
-        - WITH_COMPOSER=${WITH_COMPOSER}
       dockerfile: .docker/api/Dockerfile
     image: costs-to-expect-api
     ports:

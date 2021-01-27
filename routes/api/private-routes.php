@@ -7,14 +7,14 @@ Route::group(
     [
         'prefix' => Config::get('api.app.version.prefix'),
         'middleware' => [
-            'auth:api',
+            'auth:sanctum',
             'convert.route.parameters'
         ]
     ],
     static function () {
         Route::get(
             'auth/user',
-            'PassportView@user'
+            'Authentication@user'
         );
 
         Route::post(
