@@ -1,5 +1,6 @@
 
 
+DROP TABLE IF EXISTS users;
 CREATE TABLE IF NOT EXISTS `users` (
     `id` BIGINT(20) UNSIGNED NOT NULL AUTO_INCREMENT,
     `name` VARCHAR(255) COLLATE utf8mb4_unicode_ci NOT NULL,
@@ -13,6 +14,7 @@ CREATE TABLE IF NOT EXISTS `users` (
 ) ENGINE=INNODB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 
+DROP TABLE IF EXISTS item_type;
 CREATE TABLE IF NOT EXISTS `item_type` (
     `id` INT(3) UNSIGNED NOT NULL AUTO_INCREMENT,
     `name` VARCHAR(25) COLLATE utf8mb4_unicode_ci NOT NULL,
@@ -26,6 +28,7 @@ CREATE TABLE IF NOT EXISTS `item_type` (
 ) ENGINE=INNODB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 
+DROP TABLE IF EXISTS item_subtype;
 CREATE TABLE IF NOT EXISTS `item_subtype` (
     `id` TINYINT(3) UNSIGNED NOT NULL AUTO_INCREMENT,
     `item_type_id` INT(10) UNSIGNED NOT NULL,
@@ -41,6 +44,18 @@ CREATE TABLE IF NOT EXISTS `item_subtype` (
 ) ENGINE=INNODB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 
+DROP TABLE IF EXISTS currency;
+CREATE TABLE IF NOT EXISTS `currency` (
+    `id` tinyint(3) unsigned NOT NULL AUTO_INCREMENT,
+    `code` char(3) COLLATE utf8mb4_unicode_ci NOT NULL,
+    `name` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+    `created_at` timestamp NULL DEFAULT NULL,
+    `updated_at` timestamp NULL DEFAULT NULL,
+    PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+
+DROP TABLE IF EXISTS resource_type;
 CREATE TABLE IF NOT EXISTS `resource_type` (
     `id` BIGINT(20) UNSIGNED NOT NULL AUTO_INCREMENT,
     `public` TINYINT(1) NOT NULL DEFAULT '0',
@@ -53,6 +68,7 @@ CREATE TABLE IF NOT EXISTS `resource_type` (
 ) ENGINE=INNODB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 
+DROP TABLE IF EXISTS resource;
 CREATE TABLE IF NOT EXISTS `resource` (
     `id` BIGINT(20) UNSIGNED NOT NULL AUTO_INCREMENT,
     `resource_type_id` BIGINT(20) UNSIGNED NOT NULL,
@@ -67,6 +83,7 @@ CREATE TABLE IF NOT EXISTS `resource` (
 ) ENGINE=INNODB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 
+DROP TABLE IF EXISTS permitted_user;
 CREATE TABLE IF NOT EXISTS `permitted_user` (
     `id` BIGINT(20) UNSIGNED NOT NULL AUTO_INCREMENT,
     `resource_type_id` BIGINT(20) UNSIGNED NOT NULL,
@@ -84,6 +101,7 @@ CREATE TABLE IF NOT EXISTS `permitted_user` (
 ) ENGINE=INNODB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 
+DROP TABLE IF EXISTS category;
 CREATE TABLE IF NOT EXISTS `category` (
     `id` BIGINT(20) UNSIGNED NOT NULL AUTO_INCREMENT,
     `resource_type_id` BIGINT(20) UNSIGNED NOT NULL DEFAULT '1',
@@ -98,6 +116,7 @@ CREATE TABLE IF NOT EXISTS `category` (
 ) ENGINE=INNODB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 
+DROP TABLE IF EXISTS sub_category;
 CREATE TABLE IF NOT EXISTS `sub_category` (
     `id` BIGINT(20) UNSIGNED NOT NULL AUTO_INCREMENT,
     `category_id` BIGINT(20) UNSIGNED NOT NULL,
@@ -111,16 +130,7 @@ CREATE TABLE IF NOT EXISTS `sub_category` (
 ) ENGINE=INNODB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 
-CREATE TABLE IF NOT EXISTS `currency` (
-    `id` TINYINT(3) UNSIGNED NOT NULL AUTO_INCREMENT,
-    `code` CHAR(3) COLLATE utf8mb4_unicode_ci NOT NULL,
-    `name` VARCHAR(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-    `created_at` TIMESTAMP NULL DEFAULT NULL,
-    `updated_at` TIMESTAMP NULL DEFAULT NULL,
-    PRIMARY KEY (`id`)
-) ENGINE=INNODB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
-
+DROP TABLE IF EXISTS item;
 CREATE TABLE IF NOT EXISTS `item` (
     `id` BIGINT(20) UNSIGNED NOT NULL AUTO_INCREMENT,
     `resource_id` BIGINT(20) UNSIGNED NOT NULL,
@@ -138,6 +148,7 @@ CREATE TABLE IF NOT EXISTS `item` (
 ) ENGINE=INNODB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 
+DROP TABLE IF EXISTS item_category;
 CREATE TABLE IF NOT EXISTS `item_category` (
     `id` BIGINT(20) UNSIGNED NOT NULL AUTO_INCREMENT,
     `item_id` BIGINT(20) UNSIGNED NOT NULL,
@@ -152,6 +163,7 @@ CREATE TABLE IF NOT EXISTS `item_category` (
 ) ENGINE=INNODB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 
+DROP TABLE IF EXISTS item_sub_category;
 CREATE TABLE IF NOT EXISTS `item_sub_category` (
     `id` BIGINT(20) UNSIGNED NOT NULL AUTO_INCREMENT,
     `item_category_id` BIGINT(20) UNSIGNED NOT NULL,
@@ -166,6 +178,7 @@ CREATE TABLE IF NOT EXISTS `item_sub_category` (
 ) ENGINE=INNODB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 
+DROP TABLE IF EXISTS item_type_allocated_expense;
 CREATE TABLE IF NOT EXISTS `item_type_allocated_expense` (
     `id` BIGINT(20) UNSIGNED NOT NULL AUTO_INCREMENT,
     `item_id` BIGINT(20) UNSIGNED NOT NULL,
@@ -189,6 +202,7 @@ CREATE TABLE IF NOT EXISTS `item_type_allocated_expense` (
 ) ENGINE=INNODB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 
+DROP TABLE IF EXISTS item_type_game;
 CREATE TABLE IF NOT EXISTS `item_type_game` (
     `id` BIGINT(20) UNSIGNED NOT NULL AUTO_INCREMENT,
     `item_id` BIGINT(20) UNSIGNED NOT NULL,
@@ -207,6 +221,7 @@ CREATE TABLE IF NOT EXISTS `item_type_game` (
 ) ENGINE=INNODB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 
+DROP TABLE IF EXISTS item_type_simple_expense;
 CREATE TABLE IF NOT EXISTS `item_type_simple_expense` (
     `id` BIGINT(20) UNSIGNED NOT NULL AUTO_INCREMENT,
     `item_id` BIGINT(20) UNSIGNED NOT NULL,
@@ -224,6 +239,7 @@ CREATE TABLE IF NOT EXISTS `item_type_simple_expense` (
 ) ENGINE=INNODB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 
+DROP TABLE IF EXISTS item_type_simple_item;
 CREATE TABLE IF NOT EXISTS `item_type_simple_item` (
     `id` BIGINT(20) UNSIGNED NOT NULL AUTO_INCREMENT,
     `item_id` BIGINT(20) UNSIGNED NOT NULL,
@@ -238,6 +254,7 @@ CREATE TABLE IF NOT EXISTS `item_type_simple_item` (
 ) ENGINE=INNODB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 
+DROP TABLE IF EXISTS item_transfer;
 CREATE TABLE IF NOT EXISTS `item_transfer` (
     `id` BIGINT(20) UNSIGNED NOT NULL AUTO_INCREMENT,
     `resource_type_id` BIGINT(20) UNSIGNED NOT NULL,
@@ -261,6 +278,7 @@ CREATE TABLE IF NOT EXISTS `item_transfer` (
 ) ENGINE=INNODB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 
+DROP TABLE IF EXISTS item_partial_transfer;
 CREATE TABLE IF NOT EXISTS `item_partial_transfer` (
     `id` BIGINT(20) UNSIGNED NOT NULL AUTO_INCREMENT,
     `resource_type_id` BIGINT(20) UNSIGNED NOT NULL,
@@ -285,6 +303,7 @@ CREATE TABLE IF NOT EXISTS `item_partial_transfer` (
 ) ENGINE=INNODB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 
+DROP TABLE IF EXISTS request_error_log;
 CREATE TABLE IF NOT EXISTS `request_error_log` (
     `id` BIGINT(20) UNSIGNED NOT NULL AUTO_INCREMENT,
     `method` CHAR(8) COLLATE utf8mb4_unicode_ci NOT NULL,
@@ -300,6 +319,7 @@ CREATE TABLE IF NOT EXISTS `request_error_log` (
 ) ENGINE=INNODB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 
+DROP TABLE IF EXISTS resource_item_subtype;
 CREATE TABLE IF NOT EXISTS `resource_item_subtype` (
     `id` BIGINT(20) UNSIGNED NOT NULL AUTO_INCREMENT,
     `resource_id` BIGINT(20) UNSIGNED NOT NULL,
@@ -314,7 +334,8 @@ CREATE TABLE IF NOT EXISTS `resource_item_subtype` (
 ) ENGINE=INNODB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 
-CREATE TABLE IF NOT EXISTS `resource_type_item_type` (
+DROP TABLE IF EXISTS resource_item_subtype;
+CREATE TABLE IF NOT EXISTS `resource_item_subtype` (
     `id` BIGINT(20) UNSIGNED NOT NULL AUTO_INCREMENT,
     `resource_type_id` BIGINT(20) UNSIGNED DEFAULT NULL,
     `item_type_id` INT(3) UNSIGNED DEFAULT NULL,
@@ -328,6 +349,7 @@ CREATE TABLE IF NOT EXISTS `resource_type_item_type` (
 ) ENGINE=INNODB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 
+DROP TABLE IF EXISTS cache;
 CREATE TABLE IF NOT EXISTS `cache` (
     `key` VARCHAR(255) COLLATE utf8mb4_unicode_ci NOT NULL,
     `value` MEDIUMTEXT COLLATE utf8mb4_unicode_ci NOT NULL,
@@ -336,6 +358,7 @@ CREATE TABLE IF NOT EXISTS `cache` (
 ) ENGINE=INNODB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 
+DROP TABLE IF EXISTS sessions;
 CREATE TABLE IF NOT EXISTS `sessions` (
     `id` VARCHAR(255) COLLATE utf8mb4_unicode_ci NOT NULL,
     `user_id` BIGINT(20) UNSIGNED DEFAULT NULL,
@@ -347,22 +370,7 @@ CREATE TABLE IF NOT EXISTS `sessions` (
 ) ENGINE=INNODB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 
-CREATE TABLE IF NOT EXISTS `personal_access_tokens` (
-    `id` BIGINT(20) UNSIGNED NOT NULL AUTO_INCREMENT,
-    `tokenable_type` VARCHAR(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-    `tokenable_id` BIGINT(20) UNSIGNED NOT NULL,
-    `name` VARCHAR(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-    `token` VARCHAR(64) COLLATE utf8mb4_unicode_ci NOT NULL,
-    `abilities` TEXT COLLATE utf8mb4_unicode_ci,
-    `last_used_at` TIMESTAMP NULL DEFAULT NULL,
-    `created_at` TIMESTAMP NULL DEFAULT NULL,
-    `updated_at` TIMESTAMP NULL DEFAULT NULL,
-    PRIMARY KEY (`id`),
-    UNIQUE KEY `pat_token_unique` (`token`),
-    KEY `pat_tokenable_id_index` (`tokenable_type`,`tokenable_id`)
-) ENGINE=INNODB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
-
+DROP TABLE IF EXISTS error_log;
 CREATE TABLE IF NOT EXISTS `error_log` (
     `id` BIGINT(20) UNSIGNED NOT NULL AUTO_INCREMENT,
     `message` TEXT COLLATE utf8mb4_unicode_ci NOT NULL,
@@ -375,6 +383,7 @@ CREATE TABLE IF NOT EXISTS `error_log` (
 ) ENGINE=INNODB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 
+DROP TABLE IF EXISTS failed_jobs;
 CREATE TABLE IF NOT EXISTS `failed_jobs` (
     `id` BIGINT(20) UNSIGNED NOT NULL AUTO_INCREMENT,
     `connection` TEXT COLLATE utf8mb4_unicode_ci NOT NULL,
@@ -386,6 +395,7 @@ CREATE TABLE IF NOT EXISTS `failed_jobs` (
 ) ENGINE=INNODB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 
+DROP TABLE IF EXISTS jobs;
 CREATE TABLE IF NOT EXISTS `jobs` (
     `id` BIGINT(20) UNSIGNED NOT NULL AUTO_INCREMENT,
     `queue` VARCHAR(255) COLLATE utf8mb4_unicode_ci NOT NULL,
@@ -399,6 +409,7 @@ CREATE TABLE IF NOT EXISTS `jobs` (
 ) ENGINE=INNODB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 
+DROP TABLE IF EXISTS migrations;
 CREATE TABLE IF NOT EXISTS `migrations` (
     `id` INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
     `migration` VARCHAR(255) COLLATE utf8mb4_unicode_ci NOT NULL,
@@ -407,6 +418,7 @@ CREATE TABLE IF NOT EXISTS `migrations` (
 ) ENGINE=INNODB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 
+DROP TABLE IF EXISTS password_creates;
 CREATE TABLE IF NOT EXISTS `password_creates` (
     `email` VARCHAR(255) COLLATE utf8mb4_unicode_ci NOT NULL,
     `token` VARCHAR(255) COLLATE utf8mb4_unicode_ci NOT NULL,
@@ -415,6 +427,7 @@ CREATE TABLE IF NOT EXISTS `password_creates` (
 ) ENGINE=INNODB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 
+DROP TABLE IF EXISTS password_resets;
 CREATE TABLE IF NOT EXISTS `password_resets` (
     `email` VARCHAR(255) COLLATE utf8mb4_unicode_ci NOT NULL,
     `token` VARCHAR(255) COLLATE utf8mb4_unicode_ci NOT NULL,

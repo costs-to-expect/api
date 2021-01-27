@@ -1,11 +1,10 @@
+-- Initial data for the API
 -- Supported currencies
-INSERT
-INTO
-    `currency`(`id`, `code`, `name`, `created_at`, `updated_at`)
+INSERT INTO `currency` (`id`, `code`, `name`, `created_at`, `updated_at`)
 VALUES
-    (1, 'GBP', 'Sterling', '2020-09-28 10:27:34', NULL),
-    (2, 'USD', 'US Dollar', '2020-09-28 10:27:34', NULL),
-    (3, 'EUR', 'Euro', '2020-09-28 10:27:34', NULL);
+(1, 'GBP', 'Sterling', '2020-09-28 10:27:34', NULL),
+(2, 'USD', 'US Dollar', '2020-09-28 10:27:34', NULL),
+(3, 'EUR', 'Euro', '2020-09-28 10:27:34', NULL);
 
 -- Supported item types
 insert  into `item_type`(`id`,`name`,`friendly_name`,`description`,`example`,`created_at`,`updated_at`) values
