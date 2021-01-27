@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\PasswordCreates;
 use App\Models\PasswordResets;
+use App\Notifications\ForgotPassword;
 use App\Notifications\Registered;
 use App\User;
 use Illuminate\Http;
@@ -22,7 +23,7 @@ class Authentication extends Controller
 
     public function createPassword(): Http\JsonResponse
     {
-        $email = Str::replaceFirst(' ', '+', request()->query('email'));
+        $email = Str::replaceFirst(' ', '+', urldecode(request()->query('email')));
         $token = request()->query('token');
 
         $tokens = DB::table('password_creates')
@@ -32,7 +33,7 @@ class Authentication extends Controller
         if ($tokens === null || Hash::check($token, $tokens->token) === false) {
             return response()->json(
                 [
-                    'message'=>'Sorry, the email and token you supplied are invalid'
+                    'message'=>'Sorry, the email and or token you supplied are invalid'
                 ],
                 401
             );
@@ -86,7 +87,7 @@ class Authentication extends Controller
 
     public function createNewPassword(): Http\JsonResponse
     {
-        $email = Str::replaceFirst(' ', '+', request()->query('email'));
+        $email = Str::replaceFirst(' ', '+', urldecode(request()->query('email')));
         $token = request()->query('token');
 
         $tokens = DB::table('password_resets')
@@ -175,9 +176,6 @@ class Authentication extends Controller
 
         if ($user !== null) {
             try {
-                $user->password = Hash::make(Str::random(20));
-                $user->save();
-
                 $create_token = Str::random(20);
 
                 $password = new PasswordResets();
@@ -185,15 +183,15 @@ class Authentication extends Controller
                 $password->token = Hash::make($create_token);
                 $password->created_at = now()->toDateTimeString();
                 $password->save();
+
+                $user->notify(new ForgotPassword($user, $create_token));
             } catch (\Exception $e) {
                 return response()->json(['error' => 'Unable to process your forgot password request, please try again later'], 500);
             }
 
             return response()->json(
                 [
-                    'message' => "You can generate a new password by POSTing 'password' and 'confirm_password' to " .
-                        'v2/auth/create-new-password?token=' . $create_token .
-                        '&email=' . $email
+                    'message' => 'Request received, please check your email for instructions on how to create your new password'
                 ],
                 201
             );
@@ -277,9 +275,7 @@ class Authentication extends Controller
 
         return response()->json(
             [
-                'message' => "Your account has been created, please POST 'password' and 'confirm_password' to " .
-                    'v2/auth/create-password?token=' . $create_token .
-                    '&email=' . $email . ' to create your password'
+                'message' => 'Account created, please check you email, we include instructions on creating your password'
             ],
             201
         );
