@@ -2,6 +2,17 @@
 
 The complete changelog for the Costs to Expect REST API, our changelog follows the format defined at https://keepachangelog.com/en/1.0.0/
 
+## [v2.18.0] - 2021-01-27
+### Added
+- We have opened up registration on the API; you can register, login, and use all the expected authentication features.
+- We have added notification emails for registration and forgot password requests.
+
+### Changed
+- We have switched to Laravel Sanctum and removed all references to Laravel Passport, Sanctum makes more sense for our API.
+- We have updated to Laravel version 8.
+- We have tweaked our Docker setup and removed composer and phpunit.
+- Content updates
+
 ## [v2.17.1] - 2020-11-28
 ### Changed
 - We have added the `X-Last-Updated` header to the `resource-types`, `resources`, `categories`, `subcategories`, `items` and `resource items` collection routes.
