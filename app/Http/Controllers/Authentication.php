@@ -9,6 +9,7 @@ use App\Notifications\Registered;
 use App\User;
 use Illuminate\Http;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
@@ -191,7 +192,16 @@ class Authentication extends Controller
 
             return response()->json(
                 [
-                    'message' => 'Request received, please check your email for instructions on how to create your new password'
+                    'message' => 'Request received, please check your email for instructions on how to create your new password',
+                    'uris' => [
+                        'create-new-password' => [
+                            'uri' => Config::get('api.app.version.prefix') . '/auth/create-new-password?token=' . $create_token . '&email=' . $email,
+                            'parameters' => [
+                                'token' => $create_token,
+                                'email' => $email
+                            ]
+                        ]
+                    ]
                 ],
                 201
             );
@@ -275,7 +285,16 @@ class Authentication extends Controller
 
         return response()->json(
             [
-                'message' => 'Account created, please check you email, we include instructions on creating your password'
+                'message' => 'Account created, please check you email for information on how to create your password',
+                'uris' => [
+                    'create-password' => [
+                        'uri' => Config::get('api.app.version.prefix') . '/auth/create-password?token=' . $create_token . '&email=' . $email,
+                        'parameters' => [
+                            'token' => $create_token,
+                            'email' => $email
+                        ]
+                    ]
+                ]
             ],
             201
         );
