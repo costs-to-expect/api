@@ -13,12 +13,17 @@ abstract class TestCase extends BaseTestCase
     protected string $test_account_name;
     protected string $test_account_email;
 
+    protected string $test_account_create_password_token;
+    protected string $test_account_create_new_password_token;
+
     protected function setUp(): void
     {
         parent::setUp();
 
         $this->test_account_name = $this->faker->name;
         $this->test_account_email = $this->faker->email;
+        $this->test_account_create_password_token = '';
+        $this->test_account_create_new_password_token = '';
 
         $result = DB::select(DB::raw("SHOW TABLES LIKE 'users';"));
 
