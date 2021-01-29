@@ -22,7 +22,7 @@ class AuthenticationTest extends TestCase
     }
 
     /** @test */
-    public function create_password_errors_with_invalid_email()
+    public function create_password_errors_with_invalid_email(): void
     {
         $response = $this->post(
             route('auth.register'),
@@ -48,7 +48,7 @@ class AuthenticationTest extends TestCase
     }
 
     /** @test */
-    public function create_password_errors_with_invalid_token()
+    public function create_password_errors_with_invalid_token(): void
     {
         $email = $this->faker->email;
 
@@ -74,7 +74,7 @@ class AuthenticationTest extends TestCase
     }
 
     /** @test */
-    public function create_password_errors_with_invalid_token_and_email()
+    public function create_password_errors_with_invalid_token_and_email(): void
     {
         $response = $this->post(
             route('auth.create-password', ['email' => $this->faker->email, 'token' => $this->faker->uuid]),
@@ -85,7 +85,7 @@ class AuthenticationTest extends TestCase
     }
 
     /** @test */
-    public function create_password_fails_with_no_payload()
+    public function create_password_fails_with_no_payload(): void
     {
         $email = $this->faker->email;
 
@@ -111,7 +111,7 @@ class AuthenticationTest extends TestCase
     }
 
     /** @test */
-    public function create_password_fails_with_invalid_payload()
+    public function create_password_fails_with_invalid_payload(): void
     {
         $email = $this->faker->email;
 
@@ -139,7 +139,7 @@ class AuthenticationTest extends TestCase
     }
 
     /** @test */
-    public function create_password_success()
+    public function create_password_success(): void
     {
         $email = $this->faker->email;
         $password = $this->faker->password(10);
@@ -168,7 +168,7 @@ class AuthenticationTest extends TestCase
     }
 
     /** @test */
-    public function registration_errors_with_bad_email()
+    public function registration_errors_with_bad_email(): void
     {
         $response = $this->post(
             route('auth.register'),
@@ -182,7 +182,7 @@ class AuthenticationTest extends TestCase
     }
 
     /** @test */
-    public function registration_errors_with_no_email()
+    public function registration_errors_with_no_email(): void
     {
         $response = $this->post(
             route('auth.register'),
@@ -195,7 +195,7 @@ class AuthenticationTest extends TestCase
     }
 
     /** @test */
-    public function registration_errors_with_no_name()
+    public function registration_errors_with_no_name(): void
     {
         $response = $this->post(
             route('auth.register'),
@@ -208,7 +208,7 @@ class AuthenticationTest extends TestCase
     }
 
     /** @test */
-    public function registration_errors_with_no_payload()
+    public function registration_errors_with_no_payload(): void
     {
         $response = $this->post(
             route('auth.register'),
