@@ -8,6 +8,20 @@ use Tests\TestCase;
 class AuthenticationTest extends TestCase
 {
     /** @test */
+    public function check_success(): void
+    {
+        $this->actingAs(User::find(1));
+
+        $this->get('v2/auth/check')->assertExactJson(['auth'=>true]);
+    }
+
+    /** @test */
+    public function check_false(): void
+    {
+        $this->get('v2/auth/check')->assertExactJson(['auth'=>false]);
+    }
+
+    /** @test */
     public function create_password_errors_with_invalid_email()
     {
         $response = $this->post(
