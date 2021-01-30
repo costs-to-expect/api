@@ -179,11 +179,15 @@ class Authentication extends Controller
             try {
                 $create_token = Str::random(20);
 
-                $password = new PasswordResets();
-                $password->email = $email;
-                $password->token = Hash::make($create_token);
-                $password->created_at = now()->toDateTimeString();
-                $password->save();
+                PasswordResets::updateOrCreate(
+                    [
+                        'email' => $email
+                    ],
+                    [
+                        'email' => $email,
+                        'token' => $create_token
+                    ]
+                );
 
                 $user->notify(new ForgotPassword($user, $create_token));
             } catch (\Exception $e) {
@@ -260,7 +264,7 @@ class Authentication extends Controller
             );
         }
 
-        try {
+        //try {
             $email = request()->input('email');
 
             $user = new User();
@@ -271,17 +275,21 @@ class Authentication extends Controller
 
             $create_token = Str::random(20);
 
-            $password = new PasswordCreates();
-            $password->email = $email;
-            $password->token = Hash::make($create_token);
-            $password->created_at = now()->toDateTimeString();
-            $password->save();
+            PasswordCreates::updateOrCreate(
+                [
+                    'email' => $email
+                ],
+                [
+                    'email' => $email,
+                    'token' => $create_token
+                ]
+            );
 
             $user->notify(new Registered($user, $create_token));
 
-        } catch (\Exception $e) {
-            return response()->json(['error' => 'Unable to create the account, please try again later'], 500);
-        }
+        //} catch (\Exception $e) {
+          //  return response()->json(['error' => 'Unable to create the account, please try again later'], 500);
+        //}
 
         return response()->json(
             [

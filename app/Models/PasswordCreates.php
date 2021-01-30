@@ -17,4 +17,9 @@ class PasswordCreates extends Model
     protected $table = 'password_creates';
 
     public $timestamps = false;
+
+    public $fillable = [
+        'email',
+        'token'
+    ];
 }
