@@ -185,7 +185,7 @@ class Authentication extends Controller
                     ],
                     [
                         'email' => $email,
-                        'token' => $create_token
+                        'token' => Hash::make($create_token)
                     ]
                 );
 
@@ -281,7 +281,7 @@ class Authentication extends Controller
                 ],
                 [
                     'email' => $email,
-                    'token' => $create_token
+                    'token' => Hash::make($create_token)
                 ]
             );
 
