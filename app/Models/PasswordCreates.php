@@ -22,4 +22,6 @@ class PasswordCreates extends Model
         'email',
         'token'
     ];
+
+    protected $primaryKey = 'email';
 }

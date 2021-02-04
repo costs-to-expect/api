@@ -22,4 +22,6 @@ class PasswordResets extends Model
         'email',
         'token'
     ];
+
+    protected $primaryKey = 'email';
 }

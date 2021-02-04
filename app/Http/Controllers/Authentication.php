@@ -189,7 +189,11 @@ class Authentication extends Controller
                     ]
                 );
 
-                $user->notify(new ForgotPassword($user, $create_token));
+                $send = request()->query('send');
+
+                if ($send === null && app()->environment() !== 'local') {
+                    $user->notify(new ForgotPassword($user, $create_token));
+                }
             } catch (\Exception $e) {
                 return response()->json(['error' => 'Unable to process your forgot password request, please try again later'], 500);
             }
@@ -264,7 +268,7 @@ class Authentication extends Controller
             );
         }
 
-        //try {
+        try {
             $email = request()->input('email');
 
             $user = new User();
@@ -285,11 +289,15 @@ class Authentication extends Controller
                 ]
             );
 
-            $user->notify(new Registered($user, $create_token));
+            $send = request()->query('send');
 
-        //} catch (\Exception $e) {
-          //  return response()->json(['error' => 'Unable to create the account, please try again later'], 500);
-        //}
+            if ($send === null && app()->environment() !== 'local') {
+                $user->notify(new Registered($user, $create_token));
+            }
+
+        } catch (\Exception $e) {
+            return response()->json(['error' => 'Unable to create the account, please try again later'], 500);
+        }
 
         return response()->json(
             [
