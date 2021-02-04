@@ -191,7 +191,7 @@ class Authentication extends Controller
 
                 $send = request()->query('send');
 
-                if ($send === null && app()->environment() !== 'local') {
+                if (app()->environment() === 'production' && request()->query('send') === null) {
                     $user->notify(new ForgotPassword($user, $create_token));
                 }
             } catch (\Exception $e) {
@@ -289,8 +289,7 @@ class Authentication extends Controller
                 ]
             );
 
-            $send = request()->query('send');
-            if ($send === null && app()->environment() !== 'local') {
+            if (app()->environment() === 'production' && request()->query('send') === null) {
                 $user->notify(new Registered($user, $create_token));
             }
 
