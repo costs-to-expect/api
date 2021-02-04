@@ -290,7 +290,6 @@ class Authentication extends Controller
             );
 
             $send = request()->query('send');
-
             if ($send === null && app()->environment() !== 'local') {
                 $user->notify(new Registered($user, $create_token));
             }

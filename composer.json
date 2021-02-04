@@ -20,8 +20,7 @@
         "laravel/framework": "^8.0",
         "laravel/helpers": "^1.2",
         "laravel/sanctum": "^2.8",
-        "laravel/tinker": "^2.0",
-        "lcobucci/jwt": "3.3.0"
+        "laravel/tinker": "^2.0"
     },
     "require-dev": {
         "roave/security-advisories": "dev-master",
