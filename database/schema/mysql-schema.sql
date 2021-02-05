@@ -68,6 +68,21 @@ CREATE TABLE IF NOT EXISTS `resource_type` (
 ) ENGINE=INNODB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 
+DROP TABLE IF EXISTS resource_type_item_type;
+CREATE TABLE `resource_type_item_type` (
+    `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+    `resource_type_id` bigint(20) unsigned DEFAULT NULL,
+    `item_type_id` int(3) unsigned DEFAULT NULL,
+    `created_at` timestamp NULL DEFAULT NULL,
+    `updated_at` timestamp NULL DEFAULT NULL,
+    PRIMARY KEY (`id`),
+    KEY `resource_type_id` (`resource_type_id`),
+    KEY `item_type_id` (`item_type_id`),
+    CONSTRAINT `rtit_resource_type_id_foreign` FOREIGN KEY (`resource_type_id`) REFERENCES `resource_type` (`id`),
+    CONSTRAINT `rtit_item_type_id_foreign` FOREIGN KEY (`item_type_id`) REFERENCES `item_type` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+
 DROP TABLE IF EXISTS resource;
 CREATE TABLE IF NOT EXISTS `resource` (
     `id` BIGINT(20) UNSIGNED NOT NULL AUTO_INCREMENT,

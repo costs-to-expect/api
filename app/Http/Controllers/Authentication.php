@@ -189,8 +189,6 @@ class Authentication extends Controller
                     ]
                 );
 
-                $send = request()->query('send');
-
                 if (app()->environment() === 'production' && request()->query('send') === null) {
                     $user->notify(new ForgotPassword($user, $create_token));
                 }

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Response\Cache;
 
+use App\Models\Cache;
 use Illuminate\Support\Facades\Cache as LaravelCache;
 use Illuminate\Support\Facades\Config;
 
@@ -63,13 +64,10 @@ class Control
         }
     }
 
-    public function clearMatchingPublicCacheKeys(
-        array $key_wildcards,
-        bool $include_summaries = true
-    ): void
+    public function clearMatchingPublicCacheKeys(array $key_wildcards): void
     {
         foreach ($key_wildcards as $key_wildcard) {
-            $keys = $this->fetchMatchingPublicCacheKeys($key_wildcard, $include_summaries);
+            $keys = $this->fetchMatchingPublicCacheKeys($key_wildcard);
 
             foreach ($keys as $key) {
                 $this->clearCacheKeyByItsFullName($key['key']);
@@ -83,13 +81,10 @@ class Control
         LaravelCache::forget(str_replace_first($this->laravel_cache_prefix, '', $key));
     }
 
-    public function clearMatchingCacheKeys(
-        array $key_wildcards,
-        bool $include_summaries = true
-    ): void
+    public function clearMatchingCacheKeys(array $key_wildcards): void
     {
         foreach ($key_wildcards as $key_wildcard) {
-            $keys = $this->fetchMatchingCacheKeys($key_wildcard, $include_summaries);
+            $keys = $this->fetchMatchingCacheKeys($key_wildcard);
 
             foreach ($keys as $key) {
                 $this->clearCacheKeyByItsFullName($key['key']);
@@ -162,26 +157,22 @@ class Control
     }
 
     public function fetchMatchingCacheKeys(
-        string $key_wildcard,
-        bool $include_summaries = false
+        string $key_wildcard
     ): array
     {
-        return (new \App\Models\Cache())->matchingKeys(
+        return (new Cache())->matchingKeys(
             $this->laravel_cache_prefix . $this->cache_prefix,
-            $key_wildcard,
-            $include_summaries
+            $key_wildcard
         );
     }
 
     public function fetchMatchingPublicCacheKeys(
-        string $key_wildcard,
-        bool $include_summaries = false
+        string $key_wildcard
     ): array
     {
-        return (new \App\Models\Cache())->matchingKeys(
+        return (new Cache())->matchingKeys(
             $this->laravel_cache_prefix . $this->public_cache_prefix,
-            $key_wildcard,
-            $include_summaries
+            $key_wildcard
         );
     }
 }
