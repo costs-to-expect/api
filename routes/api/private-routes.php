@@ -20,7 +20,7 @@ Route::group(
         Route::post(
             'resource-types',
             'ResourceTypeManage@create'
-        );
+        )->name('resource-type.create');
 
         Route::post(
             'resource-types/{resource_type_id}/categories',

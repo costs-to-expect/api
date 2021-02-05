@@ -37,7 +37,10 @@ class ResourceTypeManage extends Controller
         $validator = (new ResourceTypeValidator)->create([
             'user_id' => $this->user_id
         ]);
-        \App\Request\BodyValidation::validateAndReturnErrors($validator);
+
+        if ($validator->fails()) {
+            return \App\Request\BodyValidation::validateAndReturnErrors($validator);
+        }
 
         $cache_job_payload = (new Cache\JobPayload())
             ->setGroupKey(Cache\KeyGroup::RESOURCE_TYPE_CREATE)

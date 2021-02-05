@@ -67,12 +67,12 @@ class BodyValidation
      *
      * @return JsonResponse|null
      */
-    public static function validateAndReturnErrors(
+    public static function validateAndReturnErrors( // Rename this
         Validator $validator,
         array $allowed_values = []
     ): ?JsonResponse
     {
-        if ($validator->fails() === true) {
+        //if ($validator->fails() === true) {
             $validation_errors = [];
 
             foreach ($validator->errors()->toArray() as $field => $errors) {
@@ -86,7 +86,7 @@ class BodyValidation
             }
 
             return \App\Response\Responses::validationErrors($validation_errors);
-        }
+        //}
 
         return null;
     }
