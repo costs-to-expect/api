@@ -48,7 +48,10 @@ class ResourceManage extends Controller
             'resource_type_id' => $resource_type_id,
             'item_type_id' => $resource_type['resource_type_item_type_id']
         ]);
-        \App\Request\BodyValidation::validateAndReturnErrors($validator);
+
+        if ($validator->fails()) {
+            \App\Request\BodyValidation::returnValidationErrors($validator);
+        }
 
         $cache_job_payload = (new Cache\JobPayload())
             ->setGroupKey(Cache\KeyGroup::RESOURCE_CREATE)
@@ -173,7 +176,10 @@ class ResourceManage extends Controller
             'resource_type_id' => (int)$resource_type_id,
             'resource_id' => (int)$resource_id
         ]);
-        \App\Request\BodyValidation::validateAndReturnErrors($validator);
+
+        if ($validator->fails()) {
+            \App\Request\BodyValidation::returnValidationErrors($validator);
+        }
 
         \App\Request\BodyValidation::checkForInvalidFields(
             array_merge(

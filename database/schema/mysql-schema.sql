@@ -335,33 +335,18 @@ CREATE TABLE IF NOT EXISTS `request_error_log` (
 
 
 DROP TABLE IF EXISTS resource_item_subtype;
-CREATE TABLE IF NOT EXISTS `resource_item_subtype` (
-    `id` BIGINT(20) UNSIGNED NOT NULL AUTO_INCREMENT,
-    `resource_id` BIGINT(20) UNSIGNED NOT NULL,
-    `item_subtype_id` TINYINT(3) UNSIGNED NOT NULL,
-    `created_at` TIMESTAMP NULL DEFAULT NULL,
-    `updated_at` TIMESTAMP NULL DEFAULT NULL,
+CREATE TABLE `resource_item_subtype` (
+    `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT,
+    `resource_id` bigint(20) UNSIGNED NOT NULL,
+    `item_subtype_id` tinyint(3) UNSIGNED NOT NULL,
+    `created_at` timestamp NULL DEFAULT NULL,
+    `updated_at` timestamp NULL DEFAULT NULL,
     PRIMARY KEY (`id`),
     UNIQUE KEY `resource_item_subtype_resource_id_item_subtype_id_unique` (`resource_id`,`item_subtype_id`),
     KEY `resource_item_subtype_item_subtype_id_foreign` (`item_subtype_id`),
-    CONSTRAINT `resource_item_subtype_item_subtype_id_foreign` FOREIGN KEY (`item_subtype_id`) REFERENCES `item_subtype` (`id`),
-    CONSTRAINT `resource_item_subtype_resource_id_foreign` FOREIGN KEY (`resource_id`) REFERENCES `resource` (`id`)
-) ENGINE=INNODB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
-
-DROP TABLE IF EXISTS resource_item_subtype;
-CREATE TABLE IF NOT EXISTS `resource_item_subtype` (
-    `id` BIGINT(20) UNSIGNED NOT NULL AUTO_INCREMENT,
-    `resource_type_id` BIGINT(20) UNSIGNED DEFAULT NULL,
-    `item_type_id` INT(3) UNSIGNED DEFAULT NULL,
-    `created_at` TIMESTAMP NULL DEFAULT NULL,
-    `updated_at` TIMESTAMP NULL DEFAULT NULL,
-    PRIMARY KEY (`id`),
-    KEY `resource_type_id` (`resource_type_id`),
-    KEY `item_type_id` (`item_type_id`),
-    CONSTRAINT `resource_type_item_type_ibfk_1` FOREIGN KEY (`resource_type_id`) REFERENCES `resource_type` (`id`),
-    CONSTRAINT `resource_type_item_type_ibfk_2` FOREIGN KEY (`item_type_id`) REFERENCES `item_type` (`id`)
-) ENGINE=INNODB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+  CONSTRAINT `risi_subtype_id_foreign` FOREIGN KEY (`item_subtype_id`) REFERENCES `item_subtype` (`id`),
+  CONSTRAINT `ris_resource_id_foreign` FOREIGN KEY (`resource_id`) REFERENCES `resource` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 
 DROP TABLE IF EXISTS cache;

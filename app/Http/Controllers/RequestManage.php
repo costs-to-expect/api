@@ -26,7 +26,10 @@ class RequestManage extends Controller
     public function createErrorLog(): JsonResponse
     {
         $validator = (new RequestErrorLogValidator())->create();
-        \App\Request\BodyValidation::validateAndReturnErrors($validator);
+
+        if ($validator->fails()) {
+            \App\Request\BodyValidation::returnValidationErrors($validator);
+        }
 
         try {
             $request_error_log = new RequestErrorLog([

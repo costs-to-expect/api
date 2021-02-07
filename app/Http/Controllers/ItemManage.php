@@ -36,7 +36,10 @@ class ItemManage extends Controller
 
         $validation = $entity->validator();
         $validator = $validation->create();
-        \App\Request\BodyValidation::validateAndReturnErrors($validator);
+
+        if ($validator->fails()) {
+            \App\Request\BodyValidation::returnValidationErrors($validator);
+        }
 
         $model = $entity->model();
 
@@ -92,7 +95,10 @@ class ItemManage extends Controller
 
         $validation = $entity->validator();
         $validator = $validation->update();
-        \App\Request\BodyValidation::validateAndReturnErrors($validator);
+
+        if ($validator->fails()) {
+            \App\Request\BodyValidation::returnValidationErrors($validator);
+        }
 
         $cache_job_payload = (new Cache\JobPayload())
             ->setGroupKey(Cache\KeyGroup::ITEM_DELETE)

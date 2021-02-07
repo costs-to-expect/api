@@ -39,7 +39,7 @@ class ResourceTypeManage extends Controller
         ]);
 
         if ($validator->fails()) {
-            return \App\Request\BodyValidation::validateAndReturnErrors($validator);
+            return \App\Request\BodyValidation::returnValidationErrors($validator);
         }
 
         $cache_job_payload = (new Cache\JobPayload())
@@ -182,7 +182,10 @@ class ResourceTypeManage extends Controller
             'resource_type_id' => (int) ($resource_type_id),
             'user_id' => $this->user_id
         ]);
-        \App\Request\BodyValidation::validateAndReturnErrors($validator);
+
+        if ($validator->fails()) {
+            \App\Request\BodyValidation::returnValidationErrors($validator);
+        }
 
         \App\Request\BodyValidation::checkForInvalidFields(
             array_merge(
