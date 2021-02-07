@@ -179,9 +179,9 @@ class Authentication extends Controller
             try {
                 $create_token = Str::random(20);
 
-                PasswordResets::updateOrCreate(
+                DB::table('password_resets')->updateOrInsert(
                     [
-                        'email' => $email
+                        'email' => $email,
                     ],
                     [
                         'email' => $email,
@@ -277,9 +277,9 @@ class Authentication extends Controller
 
             $create_token = Str::random(20);
 
-            PasswordCreates::updateOrCreate(
+            DB::table('password_creates')->updateOrInsert(
                 [
-                    'email' => $email
+                    'email' => $email,
                 ],
                 [
                     'email' => $email,
