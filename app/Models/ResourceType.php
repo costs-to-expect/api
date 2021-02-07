@@ -221,7 +221,8 @@ class ResourceType extends Model
             'resource_type_item_type_id' => $resource_type->item_type->id,
             'resource_type_item_type_name' => $resource_type->item_type->name,
             'resource_type_item_type_friendly_name' => $resource_type->item_type->friendly_name,
-            'resource_type_item_type_description' => $resource_type->item_type->description
+            'resource_type_item_type_description' => $resource_type->item_type->description,
+            'resource_type_resources' => 0
         ];
     }
 
