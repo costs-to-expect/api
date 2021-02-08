@@ -28,25 +28,22 @@ class Cache extends Model
      *
      * @param string $prefix
      * @param string $key
-     * @param bool $include_summaries
      *
      * @return array
      */
     public function matchingKeys(
         string $prefix,
-        string $key,
-        bool $include_summaries = false
+        string $key
     ): array
     {
+        $summary_key = rtrim(str_replace('v2/', 'v2/summary/', $prefix . $key), '/');
+
         $result = $this
             ->where('expiration', '>', DB::raw('UNIX_TIMESTAMP()'))
-            ->where('key', 'LIKE', $prefix . rtrim($key, '/') . '%');
-
-        if ($include_summaries === true) {
-            $summary_key = rtrim(str_replace('v2/', 'v2/summary/', $prefix . $key), '/');
-
-            $result->orWhere('key', 'LIKE', $summary_key . '%');
-        }
+            ->where(static function($query) use ($prefix, $key, $summary_key) {
+                $query->where('key', 'LIKE', $prefix . rtrim($key, '/') . '%')
+                    ->orWhere('key', 'LIKE', $summary_key . '%');
+            });
 
         return $result
             ->select('key')

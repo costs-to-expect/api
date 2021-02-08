@@ -15,7 +15,7 @@ class ForgotPassword extends Notification implements ShouldQueue
     private User $user;
     private string $token;
 
-    public function __construct(User $user, string $token)
+    public function __construct($user, string $token)
     {
         $this->user = $user;
         $this->token = $token;

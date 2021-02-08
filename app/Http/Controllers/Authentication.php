@@ -9,6 +9,7 @@ use App\Notifications\Registered;
 use App\User;
 use Illuminate\Http;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
@@ -178,20 +179,35 @@ class Authentication extends Controller
             try {
                 $create_token = Str::random(20);
 
-                $password = new PasswordResets();
-                $password->email = $email;
-                $password->token = Hash::make($create_token);
-                $password->created_at = now()->toDateTimeString();
-                $password->save();
+                DB::table('password_resets')->updateOrInsert(
+                    [
+                        'email' => $email,
+                    ],
+                    [
+                        'email' => $email,
+                        'token' => Hash::make($create_token)
+                    ]
+                );
 
-                $user->notify(new ForgotPassword($user, $create_token));
+                if (app()->environment() === 'production' && request()->query('send') === null) {
+                    $user->notify(new ForgotPassword($user, $create_token));
+                }
             } catch (\Exception $e) {
                 return response()->json(['error' => 'Unable to process your forgot password request, please try again later'], 500);
             }
 
             return response()->json(
                 [
-                    'message' => 'Request received, please check your email for instructions on how to create your new password'
+                    'message' => 'Request received, please check your email for instructions on how to create your new password',
+                    'uris' => [
+                        'create-new-password' => [
+                            'uri' => Config::get('api.app.version.prefix') . '/auth/create-new-password?token=' . $create_token . '&email=' . $email,
+                            'parameters' => [
+                                'token' => $create_token,
+                                'email' => $email
+                            ]
+                        ]
+                    ]
                 ],
                 201
             );
@@ -261,13 +277,19 @@ class Authentication extends Controller
 
             $create_token = Str::random(20);
 
-            $password = new PasswordCreates();
-            $password->email = $email;
-            $password->token = Hash::make($create_token);
-            $password->created_at = now()->toDateTimeString();
-            $password->save();
+            DB::table('password_creates')->updateOrInsert(
+                [
+                    'email' => $email,
+                ],
+                [
+                    'email' => $email,
+                    'token' => Hash::make($create_token)
+                ]
+            );
 
-            $user->notify(new Registered($user, $create_token));
+            if (app()->environment() === 'production' && request()->query('send') === null) {
+                $user->notify(new Registered($user, $create_token));
+            }
 
         } catch (\Exception $e) {
             return response()->json(['error' => 'Unable to create the account, please try again later'], 500);
@@ -275,7 +297,16 @@ class Authentication extends Controller
 
         return response()->json(
             [
-                'message' => 'Account created, please check you email, we include instructions on creating your password'
+                'message' => 'Account created, please check you email for information on how to create your password',
+                'uris' => [
+                    'create-password' => [
+                        'uri' => Config::get('api.app.version.prefix') . '/auth/create-password?token=' . $create_token . '&email=' . $email,
+                        'parameters' => [
+                            'token' => $create_token,
+                            'email' => $email
+                        ]
+                    ]
+                ]
             ],
             201
         );

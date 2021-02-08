@@ -36,7 +36,9 @@ class CategoryManage extends Controller
         $validator = (new CategoryValidator)->create([
             'resource_type_id' => $resource_type_id
         ]);
-        BodyValidation::validateAndReturnErrors($validator);
+        if ($validator->fails()) {
+            return \App\Request\BodyValidation::returnValidationErrors($validator);
+        }
 
         $cache_job_payload = (new Cache\JobPayload())
             ->setGroupKey(Cache\KeyGroup::CATEGORY_CREATE)
@@ -140,7 +142,9 @@ class CategoryManage extends Controller
             return Responses::failedToSelectModelForUpdateOrDelete();
         }
 
-        BodyValidation::validateAndReturnErrors($validator);
+        if ($validator->fails()) {
+            return \App\Request\BodyValidation::returnValidationErrors($validator);
+        }
 
         BodyValidation::checkForInvalidFields(
             array_merge(

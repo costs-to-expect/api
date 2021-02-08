@@ -38,7 +38,10 @@ class SubcategoryManage extends Controller
         }
 
         $validator = (new SubcategoryValidator)->create(['category_id' => $category_id]);
-        \App\Request\BodyValidation::validateAndReturnErrors($validator);
+
+        if ($validator->fails()) {
+            \App\Request\BodyValidation::returnValidationErrors($validator);
+        }
 
         $cache_job_payload = (new Cache\JobPayload())
             ->setGroupKey(Cache\KeyGroup::SUBCATEGORY_CREATE)
@@ -150,7 +153,10 @@ class SubcategoryManage extends Controller
             'category_id' => (int)$category_id,
             'subcategory_id' => (int)$subcategory_id
         ]);
-        \App\Request\BodyValidation::validateAndReturnErrors($validator);
+
+        if ($validator->fails()) {
+            \App\Request\BodyValidation::returnValidationErrors($validator);
+        }
 
         \App\Request\BodyValidation::checkForInvalidFields(
             array_merge(

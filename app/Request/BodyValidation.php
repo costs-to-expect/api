@@ -24,7 +24,7 @@ class BodyValidation
      * if there are any invalid fields in the request, simpler to fail hard than
      * simply ignore invalid values
      *
-     * @param array $patchable_fields
+     * @param  array  $patchable_fields
      *
      * @return JsonResponse|null
      */
@@ -59,35 +59,22 @@ class BodyValidation
         return null;
     }
 
-    /**
-     * Return the errors from the validator
-     *
-     * @param $validator
-     * @param array $allowed_values
-     *
-     * @return JsonResponse|null
-     */
-    public static function validateAndReturnErrors(
+    public static function returnValidationErrors( // Rename this
         Validator $validator,
         array $allowed_values = []
-    ): ?JsonResponse
-    {
-        if ($validator->fails() === true) {
-            $validation_errors = [];
+    ): ?JsonResponse {
+        $validation_errors = [];
 
-            foreach ($validator->errors()->toArray() as $field => $errors) {
-                foreach ($errors as $error) {
-                    $validation_errors[$field]['errors'][] = $error;
-                }
+        foreach ($validator->errors()->toArray() as $field => $errors) {
+            foreach ($errors as $error) {
+                $validation_errors[$field]['errors'][] = $error;
             }
-
-            if (count($allowed_values) > 0) {
-                $validation_errors = array_merge_recursive($validation_errors, $allowed_values);
-            }
-
-            return \App\Response\Responses::validationErrors($validation_errors);
         }
 
-        return null;
+        if (count($allowed_values) > 0) {
+            $validation_errors = array_merge_recursive($validation_errors, $allowed_values);
+        }
+
+        return \App\Response\Responses::validationErrors($validation_errors);
     }
 }

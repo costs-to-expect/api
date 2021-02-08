@@ -2,6 +2,19 @@
 
 The complete changelog for the Costs to Expect REST API, our changelog follows the format defined at https://keepachangelog.com/en/1.0.0/
 
+## [v2.19.0] - 2012-02-08
+### Added
+- We have started transferring our Postman response tests to local feature tests.
+- We have added tests for the `Authentication` controller.
+- We have started writing tests for the `ResourceTypeManage` controller.
+- We have updated `/auth/forgot-password` and `/auth/register`, both now support a `send` GET parameter, if defined, no email will be issued.
+
+### Changed
+- We are tweaking the first install; we have squashed all the migrations and tweaked the Docker setup. We have added an `initial-install.sql` file, this includes the required data for the API.
+- We have made minor changes to how we return validation errors; we were calling `exit` and stalling our tests.
+- We have updated the responses for `/auth/forgot-password` and `/auth/register`; responses include the required follow-on URIs and parameters.
+- We have updated the README, we have added a `Tests` section and updated the setup steps.
+
 ## [v2.18.0] - 2021-01-27
 ### Added
 - We have opened up registration on the API; you can register, login, and use all the expected authentication features.

@@ -47,15 +47,15 @@
                 }
             }
 
-        },
-        "required": [
-            "id",
-            "name",
-            "description",
-            "created",
-            "public",
-            "item_type",
-            "resources"
-        ]
-    }
+        }
+    },
+    "required": [
+        "id",
+        "name",
+        "description",
+        "created",
+        "public",
+        "item_type",
+        "resources"
+    ]
 }

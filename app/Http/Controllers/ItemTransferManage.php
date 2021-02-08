@@ -39,7 +39,10 @@ class ItemTransferManage extends Controller
                 'existing_resource_id' => $resource_id
             ]
         );
-        \App\Request\BodyValidation::validateAndReturnErrors($validator);
+
+        if ($validator->fails()) {
+            \App\Request\BodyValidation::returnValidationErrors($validator);
+        }
 
         $cache_job_payload = (new Cache\JobPayload())
             ->setGroupKey(Cache\KeyGroup::ITEM_TRANSFER_CREATE)

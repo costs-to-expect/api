@@ -10,3 +10,4 @@ yarn-error.log
 .env
 /.docker/mysql/data
 _ide_helper.php
+.phpunit.result.cache
