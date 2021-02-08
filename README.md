@@ -61,7 +61,6 @@ drivers have been set to our defaults, sessions, cache, and the queue default to
 * `docker-compose exec api composer install` 
 * `docker-compose exec api php artisan key:generate`
 * `docker-compose exec api php artisan migrate`
-* You need to import the data in `database/initial-data.sql`, this includes the required data for the API.
 * `docker-compose exec api php artisan queue:work`
 * Run an OPTIONS request on `http://[your.domail.local:8080]/v2/resource_types`, you will see an OPTIONS response, 
 alternatively a GET request to `http://[your.domail.local:8080]/v1` will show all the defined routes.
