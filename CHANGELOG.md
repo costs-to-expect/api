@@ -2,7 +2,7 @@
 
 The complete changelog for the Costs to Expect REST API, our changelog follows the format defined at https://keepachangelog.com/en/1.0.0/
 
-## [v2.19.0] - 2012-02-08
+## [v2.19.0] - 2021-02-08
 ### Added
 - We have started transferring our Postman response tests to local feature tests.
 - We have added tests for the `Authentication` controller.
