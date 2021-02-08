@@ -61,12 +61,13 @@ drivers have been set to our defaults, sessions, cache, and the queue default to
 * `docker-compose exec api composer install` 
 * `docker-compose exec api php artisan key:generate`
 * `docker-compose exec api php artisan migrate`
+* You need to import the data in `database/initial-data.sql`, this includes the required data for the API.
 * `docker-compose exec api php artisan queue:work`
 * Run an OPTIONS request on `http://[your.domail.local:8080]/v2/resource_types`, you will see an OPTIONS response, 
 alternatively a GET request to `http://[your.domail.local:8080]/v1` will show all the defined routes.
 * You can create a user by POSTing to `http://[your.domail.local:8080]/v2/auth/register`. 
 * You create a password by POSTing a password and password_confirmation to the URI register response. 
-* You login by posting to `http://[your.domail.local:8080]/v2/auth/login` - you will need a bearer for all the routes that require authentication.
+* You can sign-in by posting to `http://[your.domail.local:8080]/v2/auth/login` - you will need a bearer for all the routes that require authentication.
 * Our API defaults to Mailgun, populate `MAILGUN_DOMAIN` and `MAILGUN_SECRET` with the relevant values from your account, 
 you will also need to set `MAIL_FROM_ADDRESS` and `MAIL_TO_ADDRESS`. You may need to set `Authorized Recipients` in Mailgun. 
 
@@ -233,3 +234,26 @@ largely match the matching non-summary route.
 | OPTIONS  | v2/summary/resource-types/{resource_type_id}/resources |
 | GET/HEAD | v2/summary/resource-types/{resource_type_id}/resources/{resource_id}/items |
 | OPTIONS  | v2/summary/resource-types/{resource_type_id}/resources/{resource_id}/items |
+
+## Tests
+
+We are in the process of moving our feature tests from Postman, we are moving them locally and using PHPUnit.
+
+You can see our progress in the table below. We are hoping to add tests in each new release. We are 
+not too concerned about missing anything as we still have all our tests in Postman, we won't disable our test monitor until 
+our local test suite is as complete as the Postman request tests.
+
+| Controller | Progress |
+| :--- | :--- |
+| Authentication | Complete (34) |
+| CategoryManage  | Not started |
+| ItemCategoryManage  | Not started |
+| ItemManage  | Not started |
+| ItemPartialTransferManage  | Not started |
+| ItemSubcategoryManage  | Not started |
+| ItemTransferManage  | Not started |
+| RequestManage  | Not started |
+| ResourceManage  | Not started |
+| ResourceTypeManage  | In progress (2) |
+| SubcategoryManage  | Not started |
+| ToolManage  | Not started |
