@@ -21,6 +21,17 @@ class ResourceTypeManageTest extends TestCase
     }
 
     /** @test */
+    public function create_resource_type_fails_not_signed_in(): void
+    {
+        $response = $this->post(
+            route('resource-type.create'),
+            []
+        );
+
+        $response->assertStatus(403);
+    }
+
+    /** @test */
     public function create_resource_type_success(): void
     {
         $this->actingAs(User::find(1));
