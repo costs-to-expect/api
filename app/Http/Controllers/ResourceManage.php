@@ -170,7 +170,9 @@ class ResourceManage extends Controller
             return Responses::failedToSelectModelForUpdateOrDelete();
         }
 
-        \App\Request\BodyValidation::checkForEmptyPatch();
+        if (count(request()->all()) === 0) {
+            return \App\Response\Responses::nothingToPatch();
+        }
 
         $validator = (new ResourceValidator())->update([
             'resource_type_id' => (int)$resource_type_id,

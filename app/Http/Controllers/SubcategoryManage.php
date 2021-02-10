@@ -147,7 +147,9 @@ class SubcategoryManage extends Controller
             return Responses::failedToSelectModelForUpdateOrDelete();
         }
 
-        \App\Request\BodyValidation::checkForEmptyPatch();
+        if (count(request()->all()) === 0) {
+            return \App\Response\Responses::nothingToPatch();
+        }
 
         $validator = (new SubcategoryValidator())->update([
             'category_id' => (int)$category_id,

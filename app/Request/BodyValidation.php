@@ -44,21 +44,6 @@ class BodyValidation
         return null;
     }
 
-    /**
-     * Check the request to see if there are any fields in the request, if not
-     * we simply throw an error
-     *
-     * @return JsonResponse|null
-     */
-    public static function checkForEmptyPatch(): ?JsonResponse
-    {
-        if (count(request()->all()) === 0) {
-            return \App\Response\Responses::nothingToPatch();
-        }
-
-        return null;
-    }
-
     public static function returnValidationErrors( // Rename this
         Validator $validator,
         array $allowed_values = []

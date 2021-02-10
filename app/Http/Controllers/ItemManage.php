@@ -89,7 +89,9 @@ class ItemManage extends Controller
 
         $entity = Entity::item($resource_type_id);
 
-        \App\Request\BodyValidation::checkForEmptyPatch();
+        if (count(request()->all()) === 0) {
+            return \App\Response\Responses::nothingToPatch();
+        }
 
         \App\Request\BodyValidation::checkForInvalidFields(array_keys($entity->patchValidation()));
 

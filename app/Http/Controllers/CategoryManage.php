@@ -131,7 +131,9 @@ class CategoryManage extends Controller
             return Responses::failedToSelectModelForUpdateOrDelete();
         }
 
-        BodyValidation::checkForEmptyPatch();
+        if (count(request()->all()) === 0) {
+            return \App\Response\Responses::nothingToPatch();
+        }
 
         $validator = (new CategoryValidator)->update([
             'resource_type_id' => (int) $category->resource_type_id,

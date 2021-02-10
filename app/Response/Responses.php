@@ -184,11 +184,10 @@ class Responses
             $response = self::addException($response, $e);
         }
 
-        response()->json(
+        return response()->json(
             $response,
             403
-        )->send();
-        exit();
+        );
     }
 
     public static function categoryAssignmentLimit(int $limit, ?Exception $e = null): JsonResponse
@@ -349,11 +348,10 @@ class Responses
             $response = self::addException($response, $e);
         }
 
-        response()->json(
+        return response()->json(
             $response,
             400
-        )->send();
-        exit();
+        );
     }
 
     /**
