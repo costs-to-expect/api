@@ -290,8 +290,7 @@ class Responses
             $response = self::addException($response, $e);
         }
 
-        response()->json($response,204)->send();
-        exit;
+        return response()->json($response,204);
     }
 
     public static function subcategoryAssignmentLimit(int $limit, ?Exception $e = null): JsonResponse

@@ -46,12 +46,12 @@ class ResourceTypeName implements Rule
             ];
         }
 
-        $exists = DB::table('resource_type')->
-            join('permitted_user', 'resource_type.id', '=', 'permitted_user.resource_type_id')->
-            where($where_clauses)->
-            get();
+        $count = DB::table('resource_type')
+            ->join('permitted_user', 'resource_type.id', '=', 'permitted_user.resource_type_id')
+            ->where($where_clauses)
+            ->count();
 
-        return count($exists) === 0;
+        return $count === 0;
     }
 
     /**

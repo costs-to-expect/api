@@ -66,7 +66,7 @@ class ItemSubcategoryManage extends Controller
         $validator = (new ItemSubcategoryValidator)->create(['category_id' => $item_category->category_id]);
 
         if ($validator->fails()) {
-            \App\Request\BodyValidation::returnValidationErrors(
+            return \App\Request\BodyValidation::returnValidationErrors(
                 $validator,
                 (new \App\AllowedValue\Subcategory())->allowedValues($item_category->category_id)
             );

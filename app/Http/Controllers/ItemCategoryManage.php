@@ -54,7 +54,7 @@ class ItemCategoryManage extends Controller
         $validator = (new ItemCategoryValidator)->create();
 
         if ($validator->fails()) {
-            \App\Request\BodyValidation::returnValidationErrors(
+            return \App\Request\BodyValidation::returnValidationErrors(
                 $validator,
                 (new \App\AllowedValue\Category())->allowedValues($resource_type_id)
             );

@@ -182,12 +182,12 @@ class ResourceTypeManage extends Controller
         }
 
         $validator = (new ResourceTypeValidator())->update([
-            'resource_type_id' => (int) ($resource_type_id),
+            'resource_type_id' => (int) $resource_type_id,
             'user_id' => $this->user_id
         ]);
 
         if ($validator->fails()) {
-            \App\Request\BodyValidation::returnValidationErrors($validator);
+            return \App\Request\BodyValidation::returnValidationErrors($validator);
         }
 
         $invalid_fields = \App\Request\BodyValidation::checkForInvalidFields(

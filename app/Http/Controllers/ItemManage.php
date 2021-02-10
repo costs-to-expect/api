@@ -39,7 +39,7 @@ class ItemManage extends Controller
         $validator = $validation->create();
 
         if ($validator->fails()) {
-            \App\Request\BodyValidation::returnValidationErrors($validator);
+            return \App\Request\BodyValidation::returnValidationErrors($validator);
         }
 
         $model = $entity->model();
@@ -104,7 +104,7 @@ class ItemManage extends Controller
         $validator = $validation->update();
 
         if ($validator->fails()) {
-            \App\Request\BodyValidation::returnValidationErrors($validator);
+            return \App\Request\BodyValidation::returnValidationErrors($validator);
         }
 
         $cache_job_payload = (new Cache\JobPayload())

@@ -41,7 +41,7 @@ class ItemTransferManage extends Controller
         );
 
         if ($validator->fails()) {
-            \App\Request\BodyValidation::returnValidationErrors($validator);
+            return \App\Request\BodyValidation::returnValidationErrors($validator);
         }
 
         $cache_job_payload = (new Cache\JobPayload())

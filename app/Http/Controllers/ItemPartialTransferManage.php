@@ -83,7 +83,7 @@ class ItemPartialTransferManage extends Controller
         );
 
         if ($validator->fails()) {
-            \App\Request\BodyValidation::returnValidationErrors($validator);
+            return \App\Request\BodyValidation::returnValidationErrors($validator);
         }
 
         $new_resource_id = $this->hash->decode('resource', request()->input('resource_id'));

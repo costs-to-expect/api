@@ -50,7 +50,7 @@ class ResourceManage extends Controller
         ]);
 
         if ($validator->fails()) {
-            \App\Request\BodyValidation::returnValidationErrors($validator);
+            return \App\Request\BodyValidation::returnValidationErrors($validator);
         }
 
         $cache_job_payload = (new Cache\JobPayload())
@@ -180,7 +180,7 @@ class ResourceManage extends Controller
         ]);
 
         if ($validator->fails()) {
-            \App\Request\BodyValidation::returnValidationErrors($validator);
+            return \App\Request\BodyValidation::returnValidationErrors($validator);
         }
 
         $invalid_fields = \App\Request\BodyValidation::checkForInvalidFields(
