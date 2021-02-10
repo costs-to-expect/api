@@ -373,11 +373,10 @@ class Responses
             $response = self::addException($response, $e);
         }
 
-        response()->json(
+        return response()->json(
             $response,
             400
-        )->send();
-        exit();
+        );
     }
 
     /**

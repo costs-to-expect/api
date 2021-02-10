@@ -183,12 +183,16 @@ class ResourceManage extends Controller
             \App\Request\BodyValidation::returnValidationErrors($validator);
         }
 
-        \App\Request\BodyValidation::checkForInvalidFields(
+        $invalid_fields = \App\Request\BodyValidation::checkForInvalidFields(
             array_merge(
                 (new Resource())->patchableFields(),
                 (new ResourceValidator())->dynamicDefinedFields()
             )
         );
+
+        if (count($invalid_fields) > 0) {
+            return Responses::invalidFieldsInRequest($invalid_fields);
+        }
 
         foreach (request()->all() as $key => $value) {
             $resource->$key = $value;

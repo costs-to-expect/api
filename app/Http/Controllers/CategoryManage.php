@@ -148,12 +148,16 @@ class CategoryManage extends Controller
             return \App\Request\BodyValidation::returnValidationErrors($validator);
         }
 
-        BodyValidation::checkForInvalidFields(
+        $invalid_fields = BodyValidation::checkForInvalidFields(
             array_merge(
                 (new Category())->patchableFields(),
                 (new CategoryValidator)->dynamicDefinedFields()
             )
         );
+
+        if (count($invalid_fields) > 0) {
+            return Responses::invalidFieldsInRequest($invalid_fields);
+        }
 
         foreach (request()->all() as $key => $value) {
             $category->$key = $value;

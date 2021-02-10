@@ -9,6 +9,7 @@ use App\Models\Resource;
 use App\Models\ResourceTypeItemType;
 use App\Response\Cache;
 use App\Models\ResourceType;
+use App\Response\Responses;
 use App\Transformers\ResourceType as ResourceTypeTransformer;
 use App\Request\Validate\ResourceType as ResourceTypeValidator;
 use Exception;
@@ -189,12 +190,16 @@ class ResourceTypeManage extends Controller
             \App\Request\BodyValidation::returnValidationErrors($validator);
         }
 
-        \App\Request\BodyValidation::checkForInvalidFields(
+        $invalid_fields = \App\Request\BodyValidation::checkForInvalidFields(
             array_merge(
                 (new ResourceType())->patchableFields(),
                 (new ResourceTypeValidator())->dynamicDefinedFields()
             )
         );
+
+        if (count($invalid_fields) > 0) {
+            return Responses::invalidFieldsInRequest($invalid_fields);
+        }
 
         foreach (request()->all() as $key => $value) {
             $resource_type->$key = $value;

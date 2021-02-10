@@ -160,12 +160,16 @@ class SubcategoryManage extends Controller
             \App\Request\BodyValidation::returnValidationErrors($validator);
         }
 
-        \App\Request\BodyValidation::checkForInvalidFields(
+        $invalid_fields = \App\Request\BodyValidation::checkForInvalidFields(
             array_merge(
                 (new Subcategory())->patchableFields(),
                 (new SubcategoryValidator)->dynamicDefinedFields()
             )
         );
+
+        if (count($invalid_fields) > 0) {
+            return Responses::invalidFieldsInRequest($invalid_fields);
+        }
 
         foreach (request()->all() as $key => $value) {
             $subcategory->$key = $value;

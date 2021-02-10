@@ -28,7 +28,7 @@ class BodyValidation
      *
      * @return JsonResponse|null
      */
-    public static function checkForInvalidFields(array $patchable_fields): ?JsonResponse
+    public static function checkForInvalidFields(array $patchable_fields): array
     {
         $invalid_fields = [];
         foreach (request()->all() as $key => $value) {
@@ -37,11 +37,12 @@ class BodyValidation
             }
         }
 
-        if (count($invalid_fields) !== 0) {
-            return \App\Response\Responses::invalidFieldsInRequest($invalid_fields);
-        }
+        return $invalid_fields;
+    }
 
-        return null;
+    public static function returnInvalidFieldsInRequest(array $invalid_fields)
+    {
+        return \App\Response\Responses::invalidFieldsInRequest($invalid_fields);
     }
 
     public static function returnValidationErrors( // Rename this

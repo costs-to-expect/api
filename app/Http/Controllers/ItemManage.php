@@ -7,6 +7,7 @@ use App\Jobs\ClearCache;
 use App\Models\Item;
 use App\Models\ItemTransfer;
 use App\Response\Cache;
+use App\Response\Responses;
 use Exception;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\JsonResponse;
@@ -93,7 +94,11 @@ class ItemManage extends Controller
             return \App\Response\Responses::nothingToPatch();
         }
 
-        \App\Request\BodyValidation::checkForInvalidFields(array_keys($entity->patchValidation()));
+        $invalid_fields = \App\Request\BodyValidation::checkForInvalidFields(array_keys($entity->patchValidation()));
+
+        if (count($invalid_fields) > 0) {
+            return Responses::invalidFieldsInRequest($invalid_fields);
+        }
 
         $validation = $entity->validator();
         $validator = $validation->update();
