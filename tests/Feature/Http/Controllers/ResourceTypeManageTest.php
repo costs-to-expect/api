@@ -12,8 +12,7 @@ class ResourceTypeManageTest extends TestCase
     {
         $this->actingAs(User::find(1));
 
-        $response = $this->post(
-            route('resource-type.create'),
+        $response = $this->postResourceType(
             [
                 'name' => $this->faker->text(200),
                 'description' => $this->faker->text(200),
@@ -29,8 +28,7 @@ class ResourceTypeManageTest extends TestCase
     {
         $this->actingAs(User::find(1));
 
-        $response = $this->post(
-            route('resource-type.create'),
+        $response = $this->postResourceType(
             [
                 'name' => $this->faker->text(200),
                 'item_type_id' => 'OqZwKX16bW'
@@ -45,8 +43,7 @@ class ResourceTypeManageTest extends TestCase
     {
         $this->actingAs(User::find(1));
 
-        $response = $this->post(
-            route('resource-type.create'),
+        $response = $this->postResourceType(
             [
                 'description' => $this->faker->text(200),
                 'item_type_id' => 'OqZwKX16bW'
@@ -61,8 +58,7 @@ class ResourceTypeManageTest extends TestCase
     {
         $this->actingAs(User::find(1));
 
-        $response = $this->post(
-            route('resource-type.create'),
+        $response = $this->postResourceType(
             []
         );
 
@@ -76,8 +72,7 @@ class ResourceTypeManageTest extends TestCase
 
         $name = $this->faker->text(10);
 
-        $response = $this->post(
-            route('resource-type.create'),
+        $response = $this->postResourceType(
             [
                 'name' => $name,
                 'description' => $this->faker->text,
@@ -90,8 +85,7 @@ class ResourceTypeManageTest extends TestCase
         $this->assertJsonIsResourceType($response->content());
 
         // Create the second with the same name
-        $response = $this->post(
-            route('resource-type.create'),
+        $response = $this->postResourceType(
             [
                 'name' => $name,
                 'description' => $this->faker->text,
@@ -106,8 +100,7 @@ class ResourceTypeManageTest extends TestCase
     /** @test */
     public function create_resource_type_fails_not_signed_in(): void
     {
-        $response = $this->post(
-            route('resource-type.create'),
+        $response = $this->postResourceType(
             []
         );
 
@@ -119,8 +112,7 @@ class ResourceTypeManageTest extends TestCase
     {
         $this->actingAs(User::find(1));
 
-        $response = $this->post(
-            route('resource-type.create'),
+        $response = $this->postResourceType(
             [
                 'name' => $this->faker->text(255),
                 'description' => $this->faker->text,
@@ -138,8 +130,7 @@ class ResourceTypeManageTest extends TestCase
     {
         $this->actingAs(User::find(1));
 
-        $response = $this->post(
-            route('resource-type.create'),
+        $response = $this->postResourceType(
             [
                 'name' => $this->faker->text(255),
                 'description' => $this->faker->text,
@@ -153,10 +144,7 @@ class ResourceTypeManageTest extends TestCase
 
         $id = $response->json('id');
 
-        $response = $this->delete(
-            route('resource-type.delete', ['resource_type_id' => $id]),
-            []
-        );
+        $response = $this->deleteResourceType($id);
 
         $response->assertStatus(204);
     }
@@ -166,8 +154,7 @@ class ResourceTypeManageTest extends TestCase
     {
         $this->actingAs(User::find(1));
 
-        $response = $this->post(
-            route('resource-type.create'),
+        $response = $this->postResourceType(
             [
                 'name' => $this->faker->text(255),
                 'description' => $this->faker->text,
@@ -181,8 +168,8 @@ class ResourceTypeManageTest extends TestCase
 
         $id = $response->json('id');
 
-        $response = $this->patch(
-            route('resource-type.update', ['resource_type_id' => $id]),
+        $response = $this->patchResourceType(
+            $id,
             [
                 'extra' => $this->faker->text(100)
             ]
@@ -196,8 +183,7 @@ class ResourceTypeManageTest extends TestCase
     {
         $this->actingAs(User::find(1));
 
-        $response = $this->post(
-            route('resource-type.create'),
+        $response = $this->postResourceType(
             [
                 'name' => $this->faker->text(255),
                 'description' => $this->faker->text,
@@ -211,10 +197,9 @@ class ResourceTypeManageTest extends TestCase
 
         $id = $response->json('id');
 
-        $response = $this->patch(
-            route('resource-type.update', ['resource_type_id' => $id]),
-            [
-            ]
+        $response = $this->patchResourceType(
+            $id,
+            []
         );
 
         $response->assertStatus(400);
@@ -228,8 +213,7 @@ class ResourceTypeManageTest extends TestCase
         $name = $this->faker->text(15);
 
         // Create the first resource type
-        $response = $this->post(
-            route('resource-type.create'),
+        $response = $this->postResourceType(
             [
                 'name' => $name,
                 'description' => $this->faker->text(255),
@@ -242,8 +226,7 @@ class ResourceTypeManageTest extends TestCase
         $this->assertJsonIsResourceType($response->content());
 
         // Create the second resource type
-        $response = $this->post(
-            route('resource-type.create'),
+        $response = $this->postResourceType(
             [
                 'name' => $this->faker->text(15),
                 'description' => $this->faker->text(255),
@@ -258,8 +241,8 @@ class ResourceTypeManageTest extends TestCase
         $id = $response->json('id');
 
         // Update with same name as the first
-        $response = $this->patch(
-            route('resource-type.update', ['resource_type_id' => $id]),
+        $response = $this->patchResourceType(
+            $id,
             [
                 'name' => $name
             ]
@@ -273,8 +256,7 @@ class ResourceTypeManageTest extends TestCase
     {
         $this->actingAs(User::find(1));
 
-        $response = $this->post(
-            route('resource-type.create'),
+        $response = $this->postResourceType(
             [
                 'name' => $this->faker->text(255),
                 'description' => $this->faker->text,
@@ -288,8 +270,8 @@ class ResourceTypeManageTest extends TestCase
 
         $id = $response->json('id');
 
-        $response = $this->patch(
-            route('resource-type.update', ['resource_type_id' => $id]),
+        $response = $this->patchResourceType(
+            $id,
             [
                 'name' => $this->faker->text(100)
             ]

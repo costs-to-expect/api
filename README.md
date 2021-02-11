@@ -244,7 +244,7 @@ our local test suite is as complete as the Postman request tests.
 
 | Controller | Progress |
 | :--- | :--- |
-| Authentication | Complete (34) |
+| Authentication | Complete (34 Tests/62 Assertions) |
 | CategoryManage  | Not started |
 | ItemCategoryManage  | Not started |
 | ItemManage  | Not started |
@@ -252,7 +252,7 @@ our local test suite is as complete as the Postman request tests.
 | ItemSubcategoryManage  | Not started |
 | ItemTransferManage  | Not started |
 | RequestManage  | Not started |
-| ResourceManage  | Not started |
-| ResourceTypeManage  | In progress (11) |
+| ResourceManage  | In Progress (0 Tests/0 Assertions) |
+| ResourceTypeManage  | Complete (12 Tests/27 Assertions) |
 | SubcategoryManage  | Not started |
 | ToolManage  | Not started |
