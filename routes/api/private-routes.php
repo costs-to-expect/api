@@ -35,7 +35,7 @@ Route::group(
         Route::post(
             'resource-types/{resource_type_id}/resources',
             'ResourceManage@create'
-        );
+        )->name('resource.create');
 
         Route::post(
             'resource-types/{resource_type_id}/resources/{resource_id}/items',

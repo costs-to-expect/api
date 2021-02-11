@@ -64,6 +64,14 @@ abstract class TestCase extends BaseTestCase
         );
     }
 
+    protected function postResource(string $resource_type_id, array $payload): TestResponse
+    {
+        return $this->post(
+            route('resource.create', ['resource_type_id' => $resource_type_id]),
+            $payload
+        );
+    }
+
     protected function postResourceType(array $payload): TestResponse
     {
         return $this->post(route('resource-type.create'), $payload);
