@@ -65,7 +65,7 @@ Route::group(
         Route::delete(
             'resource-types/{resource_type_id}',
             'ResourceTypeManage@delete'
-        );
+        )->name('resource-type.delete');
 
         Route::delete(
             'resource-types/{resource_type_id}/categories/{category_id}',

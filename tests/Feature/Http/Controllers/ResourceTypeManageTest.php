@@ -134,6 +134,34 @@ class ResourceTypeManageTest extends TestCase
     }
 
     /** @test */
+    public function delete_resource_type_success(): void
+    {
+        $this->actingAs(User::find(1));
+
+        $response = $this->post(
+            route('resource-type.create'),
+            [
+                'name' => $this->faker->text(255),
+                'description' => $this->faker->text,
+                'item_type_id' => 'OqZwKX16bW',
+                'public' => false
+            ]
+        );
+
+        $response->assertStatus(201);
+        $this->assertJsonIsResourceType($response->content());
+
+        $id = $response->json('id');
+
+        $response = $this->delete(
+            route('resource-type.delete', ['resource_type_id' => $id]),
+            []
+        );
+
+        $response->assertStatus(204);
+    }
+
+    /** @test */
     public function update_resource_type_fails_extra_fields_in_payload(): void
     {
         $this->actingAs(User::find(1));
