@@ -2,6 +2,22 @@
 
 The complete changelog for the Costs to Expect REST API, our changelog follows the format defined at https://keepachangelog.com/en/1.0.0/
 
+## [v2.19.1] - 2021-02-12
+### Added
+- We have added additional `resource-type` tests.
+- We have started work on `resource` tests.
+
+### Changed
+- The cache setting for the API can now be set in `.env`.
+- We have updated phpunit.xml; the local cache will be disabled for tests.
+- We have updated our Docker setup; we have switched from MySQL 5.7 to 8.0 and PHP 7.4 to PHP 8.0.
+- We have moved our Cache classes into `App\Cache`.
+- We have updated our `ConvertRouteParameters` middleware; our middleware now returns a 404 for invalid route parameters.
+
+### Fixed
+- We have updated some of our responses; the response no longer call `exit()` and are therefore testable.
+- We have fixed our `ResourceTypeName` validator; our validator will no longer allow duplicate names.
+
 ## [v2.19.0] - 2021-02-08
 ### Added
 - We have started transferring our Postman response tests to local feature tests.
