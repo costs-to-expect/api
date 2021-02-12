@@ -2,12 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\ResourceType;
+use App\Cache\Collection;
+use App\Cache\Control;
 use App\Models\ResourceAccess;
+use App\Models\ResourceType;
 use App\Request\Hash;
 use App\Request\Validate\Boolean;
-use App\Response\Cache\Collection;
-use App\Response\Cache\Control;
 use Illuminate\Routing\Controller as BaseController;
 
 class Controller extends BaseController

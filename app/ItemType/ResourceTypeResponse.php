@@ -7,7 +7,6 @@ use App\Request\Parameter\Filter;
 use App\Request\Parameter\Request;
 use App\Request\Parameter\Search;
 use App\Request\Parameter\Sort;
-use App\Response\Cache;
 use App\Response\Header\Headers;
 use App\Response\Pagination as UtilityPagination;
 use Illuminate\Http\JsonResponse;
@@ -20,7 +19,7 @@ abstract class ResourceTypeResponse
 
     protected ?int $user_id;
 
-    protected Cache\Control $cache_control;
+    protected \App\Cache\Control $cache_control;
 
     protected array $request_parameters;
     protected array $search_parameters;
@@ -37,7 +36,7 @@ abstract class ResourceTypeResponse
         $this->permitted_user = $permitted_user;
         $this->user_id = $user_id;
 
-        $this->cache_control = new Cache\Control(
+        $this->cache_control = new \App\Cache\Control(
             $this->permitted_user,
             $this->user_id
         );

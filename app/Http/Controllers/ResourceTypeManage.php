@@ -6,12 +6,11 @@ use App\Jobs\ClearCache;
 use App\Models\Category;
 use App\Models\PermittedUser;
 use App\Models\Resource;
-use App\Models\ResourceTypeItemType;
-use App\Response\Cache;
 use App\Models\ResourceType;
+use App\Models\ResourceTypeItemType;
+use App\Request\Validate\ResourceType as ResourceTypeValidator;
 use App\Response\Responses;
 use App\Transformers\ResourceType as ResourceTypeTransformer;
-use App\Request\Validate\ResourceType as ResourceTypeValidator;
 use Exception;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\JsonResponse;
@@ -43,8 +42,8 @@ class ResourceTypeManage extends Controller
             return \App\Request\BodyValidation::returnValidationErrors($validator);
         }
 
-        $cache_job_payload = (new Cache\JobPayload())
-            ->setGroupKey(Cache\KeyGroup::RESOURCE_TYPE_CREATE)
+        $cache_job_payload = (new \App\Cache\JobPayload())
+            ->setGroupKey(\App\Cache\KeyGroup::RESOURCE_TYPE_CREATE)
             ->setRouteParameters([])
             ->setPermittedUser(true)
             ->setUserId($this->user_id);
@@ -121,8 +120,8 @@ class ResourceTypeManage extends Controller
             $this->viewable_resource_types
         );
 
-        $cache_job_payload = (new Cache\JobPayload())
-            ->setGroupKey(Cache\KeyGroup::RESOURCE_TYPE_DELETE)
+        $cache_job_payload = (new \App\Cache\JobPayload())
+            ->setGroupKey(\App\Cache\KeyGroup::RESOURCE_TYPE_DELETE)
             ->setRouteParameters([
                 'resource_type_id' => $resource_type_id
             ])
@@ -205,8 +204,8 @@ class ResourceTypeManage extends Controller
             $resource_type->$key = $value;
         }
 
-        $cache_job_payload = (new Cache\JobPayload())
-            ->setGroupKey(Cache\KeyGroup::RESOURCE_TYPE_UPDATE)
+        $cache_job_payload = (new \App\Cache\JobPayload())
+            ->setGroupKey(\App\Cache\KeyGroup::RESOURCE_TYPE_UPDATE)
             ->setRouteParameters([
                 'resource_type_id' => $resource_type_id
             ])

@@ -5,11 +5,10 @@ namespace App\Http\Controllers;
 use App\ItemType\Entity;
 use App\Models\ItemCategory;
 use App\Models\ItemSubcategory;
-use App\Transformers\ItemSubcategory as ItemSubcategoryTransformer;
 use App\Option\ItemSubcategoryCollection;
 use App\Option\ItemSubcategoryItem;
-use App\Response\Cache;
 use App\Response\Header\Header;
+use App\Transformers\ItemSubcategory as ItemSubcategoryTransformer;
 use Illuminate\Http\JsonResponse;
 
 /**
@@ -42,13 +41,13 @@ class ItemSubcategoryView extends Controller
             \App\Response\Responses::notFoundOrNotAccessible(trans('entities.item-category'));
         }
 
-        $cache_control = new Cache\Control(
+        $cache_control = new \App\Cache\Control(
             $this->writeAccessToResourceType((int) $resource_type_id),
             $this->user_id
         );
         $cache_control->setTtlOneWeek();
 
-        $cache_collection = new Cache\Collection();
+        $cache_collection = new \App\Cache\Collection();
         $cache_collection->setFromCache($cache_control->getByKey(request()->getRequestUri()));
 
         if ($cache_control->isRequestCacheable() === false || $cache_collection->valid() === false) {

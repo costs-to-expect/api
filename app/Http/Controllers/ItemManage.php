@@ -6,7 +6,6 @@ use App\ItemType\Entity;
 use App\Jobs\ClearCache;
 use App\Models\Item;
 use App\Models\ItemTransfer;
-use App\Response\Cache;
 use App\Response\Responses;
 use Exception;
 use Illuminate\Database\QueryException;
@@ -44,8 +43,8 @@ class ItemManage extends Controller
 
         $model = $entity->model();
 
-        $cache_job_payload = (new Cache\JobPayload())
-            ->setGroupKey(Cache\KeyGroup::ITEM_CREATE)
+        $cache_job_payload = (new \App\Cache\JobPayload())
+            ->setGroupKey(\App\Cache\KeyGroup::ITEM_CREATE)
             ->setRouteParameters([
                 'resource_type_id' => $resource_type_id,
                 'resource_id' => $resource_id
@@ -107,8 +106,8 @@ class ItemManage extends Controller
             return \App\Request\BodyValidation::returnValidationErrors($validator);
         }
 
-        $cache_job_payload = (new Cache\JobPayload())
-            ->setGroupKey(Cache\KeyGroup::ITEM_DELETE)
+        $cache_job_payload = (new \App\Cache\JobPayload())
+            ->setGroupKey(\App\Cache\KeyGroup::ITEM_DELETE)
             ->setRouteParameters([
                 'resource_type_id' => $resource_type_id,
                 'resource_id' => $resource_id
@@ -153,8 +152,8 @@ class ItemManage extends Controller
 
         $entity = Entity::item($resource_type_id);
 
-        $cache_job_payload = (new Cache\JobPayload())
-            ->setGroupKey(Cache\KeyGroup::ITEM_DELETE)
+        $cache_job_payload = (new \App\Cache\JobPayload())
+            ->setGroupKey(\App\Cache\KeyGroup::ITEM_DELETE)
             ->setRouteParameters([
                 'resource_type_id' => $resource_type_id,
                 'resource_id' => $resource_id

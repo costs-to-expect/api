@@ -5,7 +5,6 @@ namespace App\Http\Controllers\Summary;
 use App\Http\Controllers\Controller;
 use App\Models\Summary\Category;
 use App\Option\SummaryCategoryCollection;
-use App\Response\Cache;
 use App\Request\Parameter;
 use App\Response\Header\Headers;
 use Illuminate\Http\JsonResponse;
@@ -33,13 +32,13 @@ class CategoryView extends Controller
             \App\Response\Responses::notFoundOrNotAccessible(trans('entities.resource-type'));
         }
 
-        $cache_control = new Cache\Control(
+        $cache_control = new \App\Cache\Control(
             $this->writeAccessToResourceType((int) $resource_type_id),
             $this->user_id
         );
         $cache_control->setTtlOneMonth();
 
-        $cache_summary = new Cache\Summary();
+        $cache_summary = new \App\Cache\Summary();
         $cache_summary->setFromCache($cache_control->getByKey(request()->getRequestUri()));
 
         if ($cache_control->isRequestCacheable() === false || $cache_summary->valid() === false) {

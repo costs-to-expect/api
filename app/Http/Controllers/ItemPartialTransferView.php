@@ -4,14 +4,13 @@ namespace App\Http\Controllers;
 
 use App\ItemType\Entity;
 use App\Models\ItemPartialTransfer;
-use App\Transformers\ItemPartialTransfer as ItemPartialTransferTransformer;
 use App\Option\ItemPartialTransferCollection;
 use App\Option\ItemPartialTransferItem;
 use App\Option\ItemPartialTransferTransfer;
 use App\Request\Parameter;
-use App\Response\Cache;
 use App\Response\Header\Headers;
 use App\Response\Pagination as UtilityPagination;
+use App\Transformers\ItemPartialTransfer as ItemPartialTransferTransformer;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Config;
 
@@ -37,7 +36,7 @@ class ItemPartialTransferView extends Controller
             \App\Response\Responses::notFoundOrNotAccessible(trans('entities.resource-type'));
         }
 
-        $cache_control = new Cache\Control(
+        $cache_control = new \App\Cache\Control(
             $this->writeAccessToResourceType((int) $resource_type_id),
             $this->user_id
         );
@@ -48,7 +47,7 @@ class ItemPartialTransferView extends Controller
             return \App\Response\Responses::notSupported();
         }
 
-        $cache_collection = new Cache\Collection();
+        $cache_collection = new \App\Cache\Collection();
         $cache_collection->setFromCache($cache_control->getByKey(request()->getRequestUri()));
 
         if ($cache_control->isRequestCacheable() === false || $cache_collection->valid() === false) {

@@ -3,13 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\Jobs\ClearCache;
+use App\Models\Resource;
 use App\Models\ResourceItemSubtype;
 use App\Models\ResourceType;
-use App\Response\Cache;
-use App\Models\Resource;
-use App\Transformers\Resource as ResourceTransformer;
 use App\Request\Validate\Resource as ResourceValidator;
 use App\Response\Responses;
+use App\Transformers\Resource as ResourceTransformer;
 use Exception;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\JsonResponse;
@@ -53,8 +52,8 @@ class ResourceManage extends Controller
             return \App\Request\BodyValidation::returnValidationErrors($validator);
         }
 
-        $cache_job_payload = (new Cache\JobPayload())
-            ->setGroupKey(Cache\KeyGroup::RESOURCE_CREATE)
+        $cache_job_payload = (new \App\Cache\JobPayload())
+            ->setGroupKey(\App\Cache\KeyGroup::RESOURCE_CREATE)
             ->setRouteParameters([
                 'resource_type_id' => $resource_type_id
             ])
@@ -122,8 +121,8 @@ class ResourceManage extends Controller
             return Responses::failedToSelectModelForUpdateOrDelete();
         }
 
-        $cache_job_payload = (new Cache\JobPayload())
-            ->setGroupKey(Cache\KeyGroup::RESOURCE_DELETE)
+        $cache_job_payload = (new \App\Cache\JobPayload())
+            ->setGroupKey(\App\Cache\KeyGroup::RESOURCE_DELETE)
             ->setRouteParameters([
                 'resource_type_id' => $resource_type_id,
                 'resource_id' => $resource_id
@@ -198,8 +197,8 @@ class ResourceManage extends Controller
             $resource->$key = $value;
         }
 
-        $cache_job_payload = (new Cache\JobPayload())
-            ->setGroupKey(Cache\KeyGroup::RESOURCE_UPDATE)
+        $cache_job_payload = (new \App\Cache\JobPayload())
+            ->setGroupKey(\App\Cache\KeyGroup::RESOURCE_UPDATE)
             ->setRouteParameters([
                 'resource_type_id' => $resource_type_id
             ])

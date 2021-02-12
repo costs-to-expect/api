@@ -4,7 +4,6 @@ namespace App\ItemType\AllocatedExpense;
 
 use App\ItemType\SummaryResponse as BaseSummaryResponse;
 use App\Request\Validate\Boolean;
-use App\Response\Cache;
 use Illuminate\Http\JsonResponse;
 
 class SummaryResponse extends BaseSummaryResponse
@@ -447,7 +446,7 @@ class SummaryResponse extends BaseSummaryResponse
     // Overridden here, because we want a different TTL
     protected function setUpCache(): void
     {
-        $this->cache_control = new Cache\Control(
+        $this->cache_control = new \App\Cache\Control(
             $this->permitted_user,
             $this->user_id
         );
@@ -458,7 +457,7 @@ class SummaryResponse extends BaseSummaryResponse
             $this->cache_control->setTtlOneDay();
         }
 
-        $this->cache_summary = new Cache\Summary();
+        $this->cache_summary = new \App\Cache\Summary();
         $this->cache_summary->setFromCache($this->cache_control->getByKey(request()->getRequestUri()));
     }
 }
