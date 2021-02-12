@@ -121,7 +121,7 @@ Route::group(
         Route::options(
             'resource-types',
             'ResourceTypeView@optionsIndex'
-        );
+        )->name('resource-type.list');
 
         Route::get(
             'resource-types/{resource_type_id}',

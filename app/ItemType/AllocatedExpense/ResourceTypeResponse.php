@@ -3,9 +3,8 @@ declare(strict_types=1);
 
 namespace App\ItemType\AllocatedExpense;
 
-use App\ItemType\ResourceTypeResponse as BaseResourceTypeResponse;
 use App\ItemType\AllocatedExpense\ResourceTypeTransformer as Transformer;
-use App\Response\Cache;
+use App\ItemType\ResourceTypeResponse as BaseResourceTypeResponse;
 use Illuminate\Http\JsonResponse;
 
 class ResourceTypeResponse extends BaseResourceTypeResponse
@@ -18,7 +17,7 @@ class ResourceTypeResponse extends BaseResourceTypeResponse
             $this->cache_control->setTtlOneDay();
         }
 
-        $cache_collection = new Cache\Collection();
+        $cache_collection = new \App\Cache\Collection();
         $cache_collection->setFromCache($this->cache_control->getByKey(request()->getRequestUri()));
 
         if (

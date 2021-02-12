@@ -4,10 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Jobs\ClearCache;
 use App\Models\ItemPartialTransfer;
-use App\Transformers\ItemPartialTransfer as ItemPartialTransferTransformer;
-use App\Response\Cache;
 use App\Request\Validate\ItemPartialTransfer as ItemPartialTransferValidator;
 use App\Response\Responses;
+use App\Transformers\ItemPartialTransfer as ItemPartialTransferTransformer;
 use Exception;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\JsonResponse;
@@ -38,8 +37,8 @@ class ItemPartialTransferManage extends Controller
             \App\Response\Responses::notFoundOrNotAccessible(trans('entities.item-partial-transfer'));
         }
 
-        $cache_job_payload = (new Cache\JobPayload())
-            ->setGroupKey(Cache\KeyGroup::ITEM_PARTIAL_TRANSFER_DELETE)
+        $cache_job_payload = (new \App\Cache\JobPayload())
+            ->setGroupKey(\App\Cache\KeyGroup::ITEM_PARTIAL_TRANSFER_DELETE)
             ->setRouteParameters([
                 'resource_type_id' => $resource_type_id
             ])
@@ -83,7 +82,7 @@ class ItemPartialTransferManage extends Controller
         );
 
         if ($validator->fails()) {
-            \App\Request\BodyValidation::returnValidationErrors($validator);
+            return \App\Request\BodyValidation::returnValidationErrors($validator);
         }
 
         $new_resource_id = $this->hash->decode('resource', request()->input('resource_id'));
@@ -92,8 +91,8 @@ class ItemPartialTransferManage extends Controller
             return Responses::unableToDecode();
         }
 
-        $cache_job_payload = (new Cache\JobPayload())
-            ->setGroupKey(Cache\KeyGroup::ITEM_PARTIAL_TRANSFER_CREATE)
+        $cache_job_payload = (new \App\Cache\JobPayload())
+            ->setGroupKey(\App\Cache\KeyGroup::ITEM_PARTIAL_TRANSFER_CREATE)
             ->setRouteParameters([
                 'resource_type_id' => $resource_type_id
             ])

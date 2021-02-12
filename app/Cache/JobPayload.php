@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Response\Cache;
+namespace App\Cache;
 
 /**
  * Generate the data we need the ClearResourceTypeIdCache job. The job

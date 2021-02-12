@@ -35,7 +35,7 @@ Route::group(
         Route::post(
             'resource-types/{resource_type_id}/resources',
             'ResourceManage@create'
-        );
+        )->name('resource.create');
 
         Route::post(
             'resource-types/{resource_type_id}/resources/{resource_id}/items',
@@ -65,7 +65,7 @@ Route::group(
         Route::delete(
             'resource-types/{resource_type_id}',
             'ResourceTypeManage@delete'
-        );
+        )->name('resource-type.delete');
 
         Route::delete(
             'resource-types/{resource_type_id}/categories/{category_id}',
@@ -105,7 +105,7 @@ Route::group(
         Route::patch(
             'resource-types/{resource_type_id}',
             'ResourceTypeManage@update'
-        );
+        )->name('resource-type.update');
 
         Route::patch(
             'resource-types/{resource_type_id}/categories/{category_id}',

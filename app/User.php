@@ -2,10 +2,14 @@
 
 namespace App;
 
+use Illuminate\Database\Query\Builder as QueryBuilder;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Laravel\Sanctum\HasApiTokens;
 
+/**
+ * @mixin QueryBuilder
+ */
 class User extends Authenticatable
 {
     use HasApiTokens, Notifiable;

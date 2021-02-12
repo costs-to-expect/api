@@ -3,14 +3,13 @@
 namespace App\Http\Controllers;
 
 use App\Models\ItemTransfer;
-use App\Transformers\ItemTransfer as ItemTransferTransformer;
 use App\Option\ItemTransferCollection;
 use App\Option\ItemTransferItem;
 use App\Option\ItemTransferTransfer;
-use App\Response\Cache;
-use App\Response\Header\Headers;
 use App\Request\Parameter;
+use App\Response\Header\Headers;
 use App\Response\Pagination as UtilityPagination;
+use App\Transformers\ItemTransfer as ItemTransferTransformer;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Config;
 
@@ -36,13 +35,13 @@ class ItemTransferView extends Controller
             \App\Response\Responses::notFoundOrNotAccessible(trans('entities.item-transfer'));
         }
 
-        $cache_control = new Cache\Control(
+        $cache_control = new \App\Cache\Control(
             $this->writeAccessToResourceType((int) $resource_type_id),
             $this->user_id
         );
         $cache_control->setTtlOneWeek();
 
-        $cache_collection = new Cache\Collection();
+        $cache_collection = new \App\Cache\Collection();
         $cache_collection->setFromCache($cache_control->getByKey(request()->getRequestUri()));
 
         if ($cache_control->isRequestCacheable() === false || $cache_collection->valid() === false) {

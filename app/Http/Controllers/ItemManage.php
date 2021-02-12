@@ -6,7 +6,7 @@ use App\ItemType\Entity;
 use App\Jobs\ClearCache;
 use App\Models\Item;
 use App\Models\ItemTransfer;
-use App\Response\Cache;
+use App\Response\Responses;
 use Exception;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\JsonResponse;
@@ -38,13 +38,13 @@ class ItemManage extends Controller
         $validator = $validation->create();
 
         if ($validator->fails()) {
-            \App\Request\BodyValidation::returnValidationErrors($validator);
+            return \App\Request\BodyValidation::returnValidationErrors($validator);
         }
 
         $model = $entity->model();
 
-        $cache_job_payload = (new Cache\JobPayload())
-            ->setGroupKey(Cache\KeyGroup::ITEM_CREATE)
+        $cache_job_payload = (new \App\Cache\JobPayload())
+            ->setGroupKey(\App\Cache\KeyGroup::ITEM_CREATE)
             ->setRouteParameters([
                 'resource_type_id' => $resource_type_id,
                 'resource_id' => $resource_id
@@ -89,19 +89,25 @@ class ItemManage extends Controller
 
         $entity = Entity::item($resource_type_id);
 
-        \App\Request\BodyValidation::checkForEmptyPatch();
+        if (count(request()->all()) === 0) {
+            return \App\Response\Responses::nothingToPatch();
+        }
 
-        \App\Request\BodyValidation::checkForInvalidFields(array_keys($entity->patchValidation()));
+        $invalid_fields = \App\Request\BodyValidation::checkForInvalidFields(array_keys($entity->patchValidation()));
+
+        if (count($invalid_fields) > 0) {
+            return Responses::invalidFieldsInRequest($invalid_fields);
+        }
 
         $validation = $entity->validator();
         $validator = $validation->update();
 
         if ($validator->fails()) {
-            \App\Request\BodyValidation::returnValidationErrors($validator);
+            return \App\Request\BodyValidation::returnValidationErrors($validator);
         }
 
-        $cache_job_payload = (new Cache\JobPayload())
-            ->setGroupKey(Cache\KeyGroup::ITEM_DELETE)
+        $cache_job_payload = (new \App\Cache\JobPayload())
+            ->setGroupKey(\App\Cache\KeyGroup::ITEM_DELETE)
             ->setRouteParameters([
                 'resource_type_id' => $resource_type_id,
                 'resource_id' => $resource_id
@@ -146,8 +152,8 @@ class ItemManage extends Controller
 
         $entity = Entity::item($resource_type_id);
 
-        $cache_job_payload = (new Cache\JobPayload())
-            ->setGroupKey(Cache\KeyGroup::ITEM_DELETE)
+        $cache_job_payload = (new \App\Cache\JobPayload())
+            ->setGroupKey(\App\Cache\KeyGroup::ITEM_DELETE)
             ->setRouteParameters([
                 'resource_type_id' => $resource_type_id,
                 'resource_id' => $resource_id

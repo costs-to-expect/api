@@ -2,12 +2,12 @@
 
 namespace App\Jobs;
 
-use App\Models\ResourceType;
+use App\Cache\Control;
+use App\Cache\Job;
+use App\Cache\KeyGroup;
+use App\Cache\Trash;
 use App\Models\ResourceAccess;
-use App\Response\Cache\Control;
-use App\Response\Cache\Job;
-use App\Response\Cache\KeyGroup;
-use App\Response\Cache\Trash;
+use App\Models\ResourceType;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;

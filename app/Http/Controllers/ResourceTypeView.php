@@ -2,15 +2,14 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Resource;
 use App\AllowedValue\ItemType;
+use App\Models\Resource;
+use App\Models\ResourceType;
 use App\Option\ResourceTypeCollection;
 use App\Option\ResourceTypeItem;
-use App\Response\Cache;
-use App\Response\Header\Headers;
 use App\Request\Parameter;
+use App\Response\Header\Headers;
 use App\Response\Pagination as UtilityPagination;
-use App\Models\ResourceType;
 use App\Transformers\ResourceType as ResourceTypeTransformer;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Config;
@@ -28,10 +27,10 @@ class ResourceTypeView extends Controller
 
     public function index(): JsonResponse
     {
-        $cache_control = new Cache\Control( true, $this->user_id);
+        $cache_control = new \App\Cache\Control( true, $this->user_id);
         $cache_control->setTtlOneWeek();
 
-        $cache_collection = new Cache\Collection();
+        $cache_collection = new \App\Cache\Collection();
         $cache_collection->setFromCache($cache_control->getByKey(request()->getRequestUri()));
 
         if ($cache_control->isRequestCacheable() === false || $cache_collection->valid() === false) {

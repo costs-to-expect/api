@@ -3,7 +3,6 @@
 namespace App\ItemType;
 
 use App\Request\Parameter;
-use App\Response\Cache;
 use App\Response\Header\Headers;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\JsonResponse;
@@ -26,9 +25,9 @@ abstract class SummaryResourceTypeResponse
 
     protected Model $model;
 
-    protected Cache\Control $cache_control;
+    protected \App\Cache\Control $cache_control;
 
-    protected Cache\Summary $cache_summary;
+    protected \App\Cache\Summary $cache_summary;
 
     public function __construct(
         int $resource_type_id,
@@ -47,9 +46,9 @@ abstract class SummaryResourceTypeResponse
     protected function assignToCache(
         array $summary,
         array $collection,
-        Cache\Control $cache_control,
-        Cache\Summary $cache_summary
-    ): Cache\Summary
+        \App\Cache\Control $cache_control,
+        \App\Cache\Summary $cache_summary
+    ): \App\Cache\Summary
     {
         $headers = new Headers();
 
@@ -95,13 +94,13 @@ abstract class SummaryResourceTypeResponse
 
     protected function setUpCache(): void
     {
-        $this->cache_control = new Cache\Control(
+        $this->cache_control = new \App\Cache\Control(
             $this->permitted_user,
             $this->user_id
         );
         $this->cache_control->setTtlOneWeek();
 
-        $this->cache_summary = new Cache\Summary();
+        $this->cache_summary = new \App\Cache\Summary();
         $this->cache_summary->setFromCache($this->cache_control->getByKey(request()->getRequestUri()));
     }
 }

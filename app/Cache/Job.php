@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Response\Cache;
+namespace App\Cache;
 
 /**
  * Decode the payload for a job

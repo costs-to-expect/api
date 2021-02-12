@@ -5,9 +5,8 @@ namespace App\Http\Controllers;
 use App\Models\Currency;
 use App\Option\CurrencyCollection;
 use App\Option\CurrencyItem;
-use App\Response\Cache;
-use App\Response\Header\Headers;
 use App\Request\Parameter;
+use App\Response\Header\Headers;
 use App\Response\Pagination as UtilityPagination;
 use App\Transformers\Currency as CurrencyTransformer;
 use Illuminate\Http\JsonResponse;
@@ -29,10 +28,10 @@ class CurrencyView extends Controller
      */
     public function index(): JsonResponse
     {
-        $cache_control = new Cache\Control();
+        $cache_control = new \App\Cache\Control();
         $cache_control->setTtlOneYear();
 
-        $cache_collection = new Cache\Collection();
+        $cache_collection = new \App\Cache\Collection();
         $cache_collection->setFromCache($cache_control->getByKey(request()->getRequestUri()));
 
         if ($cache_control->isRequestCacheable() === false || $cache_collection->valid() === false) {

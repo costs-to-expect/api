@@ -5,9 +5,8 @@ namespace App\Http\Controllers;
 use App\ItemType\Entity;
 use App\Jobs\ClearCache;
 use App\Models\ItemCategory;
-use App\Transformers\ItemCategory as ItemCategoryTransformer;
 use App\Request\Validate\ItemCategory as ItemCategoryValidator;
-use App\Response\Cache;
+use App\Transformers\ItemCategory as ItemCategoryTransformer;
 use Exception;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\JsonResponse;
@@ -54,14 +53,14 @@ class ItemCategoryManage extends Controller
         $validator = (new ItemCategoryValidator)->create();
 
         if ($validator->fails()) {
-            \App\Request\BodyValidation::returnValidationErrors(
+            return \App\Request\BodyValidation::returnValidationErrors(
                 $validator,
                 (new \App\AllowedValue\Category())->allowedValues($resource_type_id)
             );
         }
 
-        $cache_job_payload = (new Cache\JobPayload())
-            ->setGroupKey(Cache\KeyGroup::ITEM_CATEGORY_CREATE)
+        $cache_job_payload = (new \App\Cache\JobPayload())
+            ->setGroupKey(\App\Cache\KeyGroup::ITEM_CATEGORY_CREATE)
             ->setRouteParameters([
                 'resource_type_id' => $resource_type_id,
                 'resource_id' => $resource_id
@@ -126,8 +125,8 @@ class ItemCategoryManage extends Controller
             return \App\Response\Responses::notFound(trans('entities.item-category'));
         }
 
-        $cache_job_payload = (new Cache\JobPayload())
-            ->setGroupKey(Cache\KeyGroup::ITEM_CATEGORY_DELETE)
+        $cache_job_payload = (new \App\Cache\JobPayload())
+            ->setGroupKey(\App\Cache\KeyGroup::ITEM_CATEGORY_DELETE)
             ->setRouteParameters([
                 'resource_type_id' => $resource_type_id,
                 'resource_id' => $resource_id

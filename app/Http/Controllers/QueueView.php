@@ -5,10 +5,9 @@ namespace App\Http\Controllers;
 use App\Models\Queue;
 use App\Option\QueueCollection;
 use App\Option\QueueItem;
-use App\Response\Cache;
-use App\Response\Header\Headers;
 use App\Request\Parameter;
 use App\Request\Route;
+use App\Response\Header\Headers;
 use App\Response\Pagination as UtilityPagination;
 use App\Transformers\Queue as QueueTransformer;
 use Illuminate\Http\JsonResponse;
@@ -27,10 +26,10 @@ class QueueView extends Controller
      */
     public function index(): JsonResponse
     {
-        $cache_control = new Cache\Control();
+        $cache_control = new \App\Cache\Control();
         $cache_control->setTtlFivesMinutes();
 
-        $cache_collection = new Cache\Collection();
+        $cache_collection = new \App\Cache\Collection();
         $cache_collection->setFromCache($cache_control->getByKey(request()->getRequestUri()));
 
         if ($cache_control->isRequestCacheable() === false || $cache_collection->valid() === false) {

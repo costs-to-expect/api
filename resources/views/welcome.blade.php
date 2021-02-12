@@ -225,17 +225,25 @@
                     <h3>Added</h3>
 
                     <ul>
-                        <li>We have opened up registration on the API; you can register, login, and use all the expected authentication features.</li>
-                        <li>We have added notification emails for registration and forgot password requests.</li>
+                        <li>We have added additional `resource-type` tests.</li>
+                        <li>We have started work on `resource` tests.</li>
                     </ul>
 
                     <h3>Changed</h3>
 
                     <ul>
-                        <li>We have switched to Laravel Sanctum and removed all references to Laravel Passport, Sanctum makes more sense for our API.</li>
-                        <li>We have updated to Laravel version 8.</li>
-                        <li>We have tweaked our Docker setup and removed composer and phpunit.</li>
-                        <li>Content updates.</li>
+                        <li>The cache setting for the API can now be set in `.env`.</li>
+                        <li>We have updated phpunit.xml; the local cache will be disabled for tests.</li>
+                        <li>We have updated our Docker setup; we have switched from MySQL 5.7 to 8.0 and PHP 7.4 to PHP 8.0.</li>
+                        <li>We have moved our Cache classes into `App\Cache`.</li>
+                        <li>We have updated our `ConvertRouteParameters` middleware; our middleware now returns a 404 for invalid route parameters.</li>
+                    </ul>
+
+                    <h3>Fixed</h3>
+
+                    <ul>
+                        <li>We have updated some of our responses; the response no longer call `exit()` and are therefore testable.</li>
+                        <li>We have fixed our `ResourceTypeName` validator; our validator will no longer allow duplicate names.</li>
                     </ul>
                 </div>
             </div>

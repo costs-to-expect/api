@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Response\Cache;
 use App\Response\Responses;
 use Illuminate\Http\JsonResponse;
 
@@ -15,7 +14,7 @@ class ToolManage extends Controller
 {
     public function cache(): JsonResponse
     {
-        $cache_control = new Cache\Control(true, $this->user_id);
+        $cache_control = new \App\Cache\Control(true, $this->user_id);
 
         $keys = $cache_control->fetchMatchingCacheKeys('', true);
 
@@ -29,7 +28,7 @@ class ToolManage extends Controller
 
     public function deleteCache(): JsonResponse
     {
-        $cache_control = new Cache\Control(true, $this->user_id);
+        $cache_control = new \App\Cache\Control(true, $this->user_id);
 
         $keys = $cache_control->fetchMatchingCacheKeys('', true);
 

@@ -4,7 +4,6 @@ declare(strict_types=1);
 namespace App\ItemType\SimpleItem;
 
 use App\ItemType\Response as ItemTypeResponse;
-use App\Response\Cache;
 use App\Response\Responses;
 use Illuminate\Http\JsonResponse;
 
@@ -14,7 +13,7 @@ class Response extends ItemTypeResponse
     {
         $this->cache_control->setTtlOneMonth();
 
-        $cache_collection = new Cache\Collection();
+        $cache_collection = new \App\Cache\Collection();
         $cache_collection->setFromCache($this->cache_control->getByKey(request()->getRequestUri()));
 
         if (

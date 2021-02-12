@@ -6,11 +6,11 @@ use App\Jobs\ClearCache;
 use App\Models\Category;
 use App\Models\PermittedUser;
 use App\Models\Resource;
-use App\Models\ResourceTypeItemType;
-use App\Response\Cache;
 use App\Models\ResourceType;
-use App\Transformers\ResourceType as ResourceTypeTransformer;
+use App\Models\ResourceTypeItemType;
 use App\Request\Validate\ResourceType as ResourceTypeValidator;
+use App\Response\Responses;
+use App\Transformers\ResourceType as ResourceTypeTransformer;
 use Exception;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\JsonResponse;
@@ -42,8 +42,8 @@ class ResourceTypeManage extends Controller
             return \App\Request\BodyValidation::returnValidationErrors($validator);
         }
 
-        $cache_job_payload = (new Cache\JobPayload())
-            ->setGroupKey(Cache\KeyGroup::RESOURCE_TYPE_CREATE)
+        $cache_job_payload = (new \App\Cache\JobPayload())
+            ->setGroupKey(\App\Cache\KeyGroup::RESOURCE_TYPE_CREATE)
             ->setRouteParameters([])
             ->setPermittedUser(true)
             ->setUserId($this->user_id);
@@ -120,8 +120,8 @@ class ResourceTypeManage extends Controller
             $this->viewable_resource_types
         );
 
-        $cache_job_payload = (new Cache\JobPayload())
-            ->setGroupKey(Cache\KeyGroup::RESOURCE_TYPE_DELETE)
+        $cache_job_payload = (new \App\Cache\JobPayload())
+            ->setGroupKey(\App\Cache\KeyGroup::RESOURCE_TYPE_DELETE)
             ->setRouteParameters([
                 'resource_type_id' => $resource_type_id
             ])
@@ -176,30 +176,36 @@ class ResourceTypeManage extends Controller
             return \App\Response\Responses::failedToSelectModelForUpdateOrDelete();
         }
 
-        \App\Request\BodyValidation::checkForEmptyPatch();
+        if (count(request()->all()) === 0) {
+            return \App\Response\Responses::nothingToPatch();
+        }
 
         $validator = (new ResourceTypeValidator())->update([
-            'resource_type_id' => (int) ($resource_type_id),
+            'resource_type_id' => (int) $resource_type_id,
             'user_id' => $this->user_id
         ]);
 
         if ($validator->fails()) {
-            \App\Request\BodyValidation::returnValidationErrors($validator);
+            return \App\Request\BodyValidation::returnValidationErrors($validator);
         }
 
-        \App\Request\BodyValidation::checkForInvalidFields(
+        $invalid_fields = \App\Request\BodyValidation::checkForInvalidFields(
             array_merge(
                 (new ResourceType())->patchableFields(),
                 (new ResourceTypeValidator())->dynamicDefinedFields()
             )
         );
 
+        if (count($invalid_fields) > 0) {
+            return Responses::invalidFieldsInRequest($invalid_fields);
+        }
+
         foreach (request()->all() as $key => $value) {
             $resource_type->$key = $value;
         }
 
-        $cache_job_payload = (new Cache\JobPayload())
-            ->setGroupKey(Cache\KeyGroup::RESOURCE_TYPE_UPDATE)
+        $cache_job_payload = (new \App\Cache\JobPayload())
+            ->setGroupKey(\App\Cache\KeyGroup::RESOURCE_TYPE_UPDATE)
             ->setRouteParameters([
                 'resource_type_id' => $resource_type_id
             ])

@@ -3,11 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Jobs\ClearCache;
-use App\Response\Cache;
 use App\Models\Subcategory;
-use App\Transformers\Subcategory as SubcategoryTransformer;
 use App\Request\Validate\Subcategory as SubcategoryValidator;
 use App\Response\Responses;
+use App\Transformers\Subcategory as SubcategoryTransformer;
 use Exception;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\JsonResponse;
@@ -40,11 +39,11 @@ class SubcategoryManage extends Controller
         $validator = (new SubcategoryValidator)->create(['category_id' => $category_id]);
 
         if ($validator->fails()) {
-            \App\Request\BodyValidation::returnValidationErrors($validator);
+            return \App\Request\BodyValidation::returnValidationErrors($validator);
         }
 
-        $cache_job_payload = (new Cache\JobPayload())
-            ->setGroupKey(Cache\KeyGroup::SUBCATEGORY_CREATE)
+        $cache_job_payload = (new \App\Cache\JobPayload())
+            ->setGroupKey(\App\Cache\KeyGroup::SUBCATEGORY_CREATE)
             ->setRouteParameters([
                 'resource_type_id' => $resource_type_id,
                 'category_id' => $category_id
@@ -100,8 +99,8 @@ class SubcategoryManage extends Controller
             return Responses::notFound(trans('entities.subcategory'));
         }
 
-        $cache_job_payload = (new Cache\JobPayload())
-            ->setGroupKey(Cache\KeyGroup::SUBCATEGORY_DELETE)
+        $cache_job_payload = (new \App\Cache\JobPayload())
+            ->setGroupKey(\App\Cache\KeyGroup::SUBCATEGORY_DELETE)
             ->setRouteParameters([
                 'resource_type_id' => $resource_type_id,
                 'category_id' => $category_id
@@ -147,7 +146,9 @@ class SubcategoryManage extends Controller
             return Responses::failedToSelectModelForUpdateOrDelete();
         }
 
-        \App\Request\BodyValidation::checkForEmptyPatch();
+        if (count(request()->all()) === 0) {
+            return \App\Response\Responses::nothingToPatch();
+        }
 
         $validator = (new SubcategoryValidator())->update([
             'category_id' => (int)$category_id,
@@ -155,22 +156,26 @@ class SubcategoryManage extends Controller
         ]);
 
         if ($validator->fails()) {
-            \App\Request\BodyValidation::returnValidationErrors($validator);
+            return \App\Request\BodyValidation::returnValidationErrors($validator);
         }
 
-        \App\Request\BodyValidation::checkForInvalidFields(
+        $invalid_fields = \App\Request\BodyValidation::checkForInvalidFields(
             array_merge(
                 (new Subcategory())->patchableFields(),
                 (new SubcategoryValidator)->dynamicDefinedFields()
             )
         );
 
+        if (count($invalid_fields) > 0) {
+            return Responses::invalidFieldsInRequest($invalid_fields);
+        }
+
         foreach (request()->all() as $key => $value) {
             $subcategory->$key = $value;
         }
 
-        $cache_job_payload = (new Cache\JobPayload())
-            ->setGroupKey(Cache\KeyGroup::SUBCATEGORY_UPDATE)
+        $cache_job_payload = (new \App\Cache\JobPayload())
+            ->setGroupKey(\App\Cache\KeyGroup::SUBCATEGORY_UPDATE)
             ->setRouteParameters([
                 'resource_type_id' => $resource_type_id,
                 'category_id' => $category_id

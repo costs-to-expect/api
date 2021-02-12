@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\Jobs\ClearCache;
 use App\Models\Item;
 use App\Models\ItemTransfer;
-use App\Response\Cache;
 use App\Request\Validate\ItemTransfer as ItemTransferValidator;
 use Exception;
 use Illuminate\Database\QueryException;
@@ -41,11 +40,11 @@ class ItemTransferManage extends Controller
         );
 
         if ($validator->fails()) {
-            \App\Request\BodyValidation::returnValidationErrors($validator);
+            return \App\Request\BodyValidation::returnValidationErrors($validator);
         }
 
-        $cache_job_payload = (new Cache\JobPayload())
-            ->setGroupKey(Cache\KeyGroup::ITEM_TRANSFER_CREATE)
+        $cache_job_payload = (new \App\Cache\JobPayload())
+            ->setGroupKey(\App\Cache\KeyGroup::ITEM_TRANSFER_CREATE)
             ->setRouteParameters([
                 'resource_type_id' => $resource_type_id
             ])

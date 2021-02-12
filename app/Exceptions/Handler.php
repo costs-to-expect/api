@@ -52,7 +52,7 @@ class Handler extends ExceptionHandler
     public function render($request, \Throwable $exception)
     {
         if ($exception instanceof AuthenticationException) {
-            \App\Response\Responses::authenticationRequired();
+            return \App\Response\Responses::authenticationRequired();
         }
 
         $status_code = 500;

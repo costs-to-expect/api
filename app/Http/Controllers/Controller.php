@@ -2,12 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\ResourceType;
+use App\Cache\Collection;
+use App\Cache\Control;
 use App\Models\ResourceAccess;
+use App\Models\ResourceType;
 use App\Request\Hash;
 use App\Request\Validate\Boolean;
-use App\Response\Cache\Collection;
-use App\Response\Cache\Control;
 use Illuminate\Routing\Controller as BaseController;
 
 class Controller extends BaseController
@@ -50,7 +50,10 @@ class Controller extends BaseController
 
     protected function setPermittedResourceTypes(): void
     {
-        if (auth('api')->user() !== null && auth()->guard('api')->check() === true) {
+        if (
+            auth('api')->user() !== null &&
+            auth()->guard('api')->check() === true
+        ) {
             $this->user_id = auth('api')->user()->id; // Safe as check above ensures not null
 
             $cache_control = new Control(true, $this->user_id);
