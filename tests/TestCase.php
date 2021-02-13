@@ -35,6 +35,11 @@ abstract class TestCase extends BaseTestCase
         }
     }
 
+    protected function assertJsonIsResource($content): void
+    {
+        $this->assertJsonMatchesSchema($content, 'api/schema/resource.json');
+    }
+
     protected function assertJsonIsResourceType($content): void
     {
         $this->assertJsonMatchesSchema($content, 'api/schema/resource-type.json');

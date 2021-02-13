@@ -59,12 +59,12 @@ class ResourceManageTest extends TestCase
             [
                 'name' => $this->faker->text(200),
                 'description' => $this->faker->text(200),
-                'data' => '{"field":true}',
                 'item_subtype_id' => 'a56kbWV82n'
             ]
         );
 
         $response->assertStatus(201);
+        $this->assertJsonIsResource($response->content());
     }
 
     /** @test */
@@ -96,5 +96,6 @@ class ResourceManageTest extends TestCase
         );
 
         $response->assertStatus(201);
+        $this->assertJsonIsResource($response->content());
     }
 }

@@ -10,8 +10,8 @@
         "description": {
             "type": "string"
         },
-        "effective_date": {
-            "type": "string"
+        "data": {
+            "type": ["object", "null"]
         },
         "item_subtype": {
             "type": "object",
@@ -25,18 +25,23 @@
                 "description": {
                     "type": "string"
                 }
-            }
+            },
+            "required": [
+                "id",
+                "name",
+                "description"
+            ]
         },
         "created": {
             "type": "string"
-        },
-        "required": [
-            "id",
-            "name",
-            "description",
-            "effective_date",
-            "item_subtype",
-            "created"
-        ]
-    }
+        }
+    },
+    "required": [
+        "id",
+        "name",
+        "description",
+        "data",
+        "item_subtype",
+        "created"
+    ]
 }
