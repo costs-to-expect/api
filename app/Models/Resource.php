@@ -87,6 +87,7 @@ class Resource extends Model
                 'resource.id AS resource_id',
                 'resource.name AS resource_name',
                 'resource.description AS resource_description',
+                'resource.data AS resource_data',
                 'resource.created_at AS resource_created_at',
                 'item_subtype.id AS resource_item_subtype_id',
                 'item_subtype.name AS resource_item_subtype_name',
@@ -143,6 +144,7 @@ class Resource extends Model
                 'resource.id AS resource_id',
                 'resource.name AS resource_name',
                 'resource.description AS resource_description',
+                'resource.data AS resource_data',
                 'resource.created_at AS resource_created_at',
                 'item_subtype.id AS resource_item_subtype_id',
                 'item_subtype.name AS resource_item_subtype_name',
@@ -187,7 +189,8 @@ class Resource extends Model
         return $collection->select(
                 'resource.id AS resource_id',
                 'resource.name AS resource_name',
-                'resource.description AS resource_description'
+                'resource.description AS resource_description',
+                'resource.data AS resource_data'
             )->
             get()->
             toArray();
@@ -199,6 +202,7 @@ class Resource extends Model
             'resource_id' => $resource->id,
             'resource_name' => $resource->name,
             'resource_description' => $resource->description,
+            'resource_data' => $resource->data,
             'resource_created_at' => $resource->created_at->toDateTimeString(),
             'resource_item_subtype_id' => $resource->item_subtype->id,
             'resource_item_subtype_name' => $resource->item_subtype->name,
@@ -215,7 +219,8 @@ class Resource extends Model
             ->select(
                 'resource.id',
                 'resource.name',
-                'resource.description'
+                'resource.description',
+                'resource.data'
             )
             ->where('resource_type_id', '=', $resource_type_id)
             ->where('id', '=', $resource_id)

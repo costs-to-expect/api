@@ -21,6 +21,13 @@ return [
         'type' => 'string',
         'required' => true
     ],
+    'data' => [
+        'field' => 'data',
+        'title' => 'resource/fields.title-data',
+        'description' => 'resource/fields.description-data',
+        'type' => 'json',
+        'required' => false
+    ],
     'item_subtype_id' => [
         'field' => 'item_subtype_id',
         'title' => 'resource/fields.title-item_subtype_id',

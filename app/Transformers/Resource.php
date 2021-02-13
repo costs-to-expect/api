@@ -3,8 +3,6 @@ declare(strict_types=1);
 
 namespace App\Transformers;
 
-use App\Transformers\Transformer;
-
 /**
  * Transform the data from our queries into the format we want to display
  *
@@ -16,10 +14,23 @@ class Resource extends Transformer
 {
     public function format(array $to_transform): void
     {
+        $data = null;
+
+        try {
+            if (array_key_exists('resource_data', $to_transform) && $to_transform['resource_data'] !== null) {
+                $data = json_decode($to_transform['resource_data'], true, 512, JSON_THROW_ON_ERROR);
+            }
+        } catch (\JsonException $e) {
+            $data = [
+                'error' => 'Unable to decode data'
+            ];
+        }
+
         $this->transformed = [
             'id' => $this->hash->resource()->encode($to_transform['resource_id']),
             'name' => $to_transform['resource_name'],
             'description' => $to_transform['resource_description'],
+            'data' => $data,
             'created' => $to_transform['resource_created_at']
         ];
 

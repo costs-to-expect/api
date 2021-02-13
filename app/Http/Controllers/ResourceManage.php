@@ -65,7 +65,8 @@ class ResourceManage extends Controller
                 $resource = new Resource([
                     'resource_type_id' => $resource_type_id,
                     'name' => request()->input('name'),
-                    'description' => request()->input('description')
+                    'description' => request()->input('description'),
+                    'data' => request()->input('data')
                 ]);
                 $resource->save();
 

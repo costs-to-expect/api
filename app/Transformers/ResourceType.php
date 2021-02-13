@@ -3,9 +3,7 @@ declare(strict_types=1);
 
 namespace App\Transformers;
 
-use App\Transformers\Transformer;
 use App\Transformers\Resource as ResourceTransformer;
-use App\Transformers\Resource;
 
 /**
  * Transform the data from our queries into the format we want to display
@@ -18,7 +16,7 @@ class ResourceType extends Transformer
 {
     public function format(array $to_transform): void
     {
-        $data = [];
+        $data = null;
 
         try {
             if (array_key_exists('resource_type_data', $to_transform) && $to_transform['resource_type_data'] !== null) {

@@ -8,6 +8,10 @@ return [
             'description' => [
                 'required',
                 'string'
+            ],
+            'data' => [
+                'sometimes',
+                'json'
             ]
         ],
         'messages' => [
@@ -19,6 +23,10 @@ return [
             'description' => [
                 'sometimes',
                 'string'
+            ],
+            'data' => [
+                'sometimes',
+                'json'
             ]
         ],
         'messages' => [

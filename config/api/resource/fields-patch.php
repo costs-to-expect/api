@@ -20,5 +20,12 @@ return [
         'description' => 'resource/fields.description-description',
         'type' => 'string',
         'required' => true
-    ]
+    ],
+    'data' => [
+        'field' => 'data',
+        'title' => 'resource/fields.title-data',
+        'description' => 'resource/fields.description-data',
+        'type' => 'json',
+        'required' => false
+    ],
 ];
