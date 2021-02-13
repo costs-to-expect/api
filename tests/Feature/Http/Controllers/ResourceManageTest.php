@@ -29,7 +29,6 @@ class ResourceManageTest extends TestCase
             [
                 'name' => $this->faker->text(200),
                 'description' => $this->faker->text(200),
-                'effective_date' => '2002-01-01',
                 'item_subtype_id' => 'a56kbWV82n'
             ]
         );

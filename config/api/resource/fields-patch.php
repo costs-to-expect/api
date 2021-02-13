@@ -20,12 +20,5 @@ return [
         'description' => 'resource/fields.description-description',
         'type' => 'string',
         'required' => true
-    ],
-    'effective_date' => [
-        'field' => 'effective_date',
-        'title' => 'resource/fields.title-effective_date',
-        'description' => 'resource/fields.description-effective_date',
-        'type' => 'date (yyyy-mm-dd)',
-        'required' => true
     ]
 ];

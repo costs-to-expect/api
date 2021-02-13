@@ -218,6 +218,7 @@ class ResourceType extends Model
             'resource_type_id' => $resource_type->id,
             'resource_type_name' => $resource_type->name,
             'resource_type_description' => $resource_type->description,
+            'resource_type_data' => $resource_type->data,
             'resource_type_created_at' => $resource_type->created_at->toDateTimeString(),
             'resource_type_public' => $resource_type->public,
             'resource_type_item_type_id' => $resource_type->item_type->id,

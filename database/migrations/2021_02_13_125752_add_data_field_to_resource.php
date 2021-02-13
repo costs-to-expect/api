@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class AddDataFieldToResourceType extends Migration
+class AddDataFieldToResource extends Migration
 {
     /**
      * Run the migrations.
@@ -13,7 +13,9 @@ class AddDataFieldToResourceType extends Migration
      */
     public function up()
     {
-        Schema::table('resource_type', function (Blueprint $table) {
+        Schema::table('resource', function (Blueprint $table) {
+            $table->dropColumn('effective_date');
+
             $table->longText('data')
                 ->after('description')
                 ->nullable();

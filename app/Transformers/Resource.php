@@ -20,7 +20,6 @@ class Resource extends Transformer
             'id' => $this->hash->resource()->encode($to_transform['resource_id']),
             'name' => $to_transform['resource_name'],
             'description' => $to_transform['resource_description'],
-            'effective_date' => $to_transform['resource_effective_date'],
             'created' => $to_transform['resource_created_at']
         ];
 

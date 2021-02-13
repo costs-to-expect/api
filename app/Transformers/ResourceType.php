@@ -21,7 +21,7 @@ class ResourceType extends Transformer
         $data = [];
 
         try {
-            if (array_key_exists('resource_type_data', $to_transform)) {
+            if (array_key_exists('resource_type_data', $to_transform) && $to_transform['resource_type_data'] !== null) {
                 $data = json_decode($to_transform['resource_type_data'], true, 512, JSON_THROW_ON_ERROR);
             }
         } catch (\JsonException $e) {
