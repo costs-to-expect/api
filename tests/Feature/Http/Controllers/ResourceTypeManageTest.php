@@ -8,6 +8,23 @@ use Tests\TestCase;
 class ResourceTypeManageTest extends TestCase
 {
     /** @test */
+    public function create_resource_type_fails_data_field_not_valid_json(): void
+    {
+        $this->actingAs(User::find(1));
+
+        $response = $this->postResourceType(
+            [
+                'name' => $this->faker->text(200),
+                'description' => $this->faker->text(200),
+                'data' => '{"field": "value}',
+                'item_type_id' => 'OqZwKX16bW',
+            ]
+        );
+
+        $response->assertStatus(422);
+    }
+
+    /** @test */
     public function create_resource_type_fails_item_type_invalid(): void
     {
         $this->actingAs(User::find(1));
@@ -116,6 +133,25 @@ class ResourceTypeManageTest extends TestCase
             [
                 'name' => $this->faker->text(255),
                 'description' => $this->faker->text,
+                'item_type_id' => 'OqZwKX16bW',
+                'public' => false
+            ]
+        );
+
+        $response->assertStatus(201);
+        $this->assertJsonIsResourceType($response->content());
+    }
+
+    /** @test */
+    public function create_resource_type_success_include_data_field(): void
+    {
+        $this->actingAs(User::find(1));
+
+        $response = $this->postResourceType(
+            [
+                'name' => $this->faker->text(255),
+                'description' => $this->faker->text,
+                'data' => '{"field": "value"}',
                 'item_type_id' => 'OqZwKX16bW',
                 'public' => false
             ]

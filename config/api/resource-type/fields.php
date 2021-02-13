@@ -20,6 +20,13 @@ return [
         'type' => 'string',
         'required' => true
     ],
+    'data' => [
+        'field' => 'data',
+        'title' => 'resource-type/fields.title-data',
+        'description' => 'resource-type/fields.description-data',
+        'type' => 'json',
+        'required' => false
+    ],
     'item_type_id' => [
         'field' => 'item_type_id',
         'title' => 'resource-type/fields.title-item_type_id',

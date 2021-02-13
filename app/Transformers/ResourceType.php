@@ -18,10 +18,23 @@ class ResourceType extends Transformer
 {
     public function format(array $to_transform): void
     {
+        $data = [];
+
+        try {
+            if (array_key_exists('resource_type_data', $to_transform)) {
+                $data = json_decode($to_transform['resource_type_data'], true, 512, JSON_THROW_ON_ERROR);
+            }
+        } catch (\JsonException $e) {
+            $data = [
+                'error' => 'Unable to decode data'
+            ];
+        }
+
         $this->transformed = [
             'id' => $this->hash->resourceType()->encode($to_transform['resource_type_id']),
             'name' => $to_transform['resource_type_name'],
             'description' => $to_transform['resource_type_description'],
+            'data' => $data,
             'created' => $to_transform['resource_type_created_at'],
             'public' => (bool) $to_transform['resource_type_public'],
         ];

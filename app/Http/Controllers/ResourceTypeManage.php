@@ -53,6 +53,7 @@ class ResourceTypeManage extends Controller
                 $resource_type = new ResourceType([
                     'name' => request()->input('name'),
                     'description' => request()->input('description'),
+                    'data' => request()->input('data'),
                     'public' => request()->input('public', 0)
                 ]);
                 $resource_type->save();
