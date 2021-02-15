@@ -7,7 +7,7 @@ use App\Request\Parameter\Filter;
 use App\Request\Parameter\Request;
 use App\Request\Parameter\Search;
 use App\Request\Parameter\Sort;
-use App\Response\Header\Headers;
+use App\Response\Header\Header;
 use App\Response\Pagination as UtilityPagination;
 use Illuminate\Http\JsonResponse;
 
@@ -52,7 +52,7 @@ abstract class ResourceTypeResponse
         string $last_updated = null
     ): array
     {
-        $headers = new Headers();
+        $headers = new Header();
         $headers
             ->collection($pagination_parameters, $count, $total)
             ->addCacheControl($this->cache_control->visibility(), $this->cache_control->ttl())
@@ -60,7 +60,7 @@ abstract class ResourceTypeResponse
             ->addSearch(Search::xHeader())
             ->addSort(Sort::xHeader())
             ->addParameters(Request::xHeader())
-            ->addFilters(Filter::xHeader());
+            ->addFilter(Filter::xHeader());
 
         if ($last_updated !== null) {
             $headers->addLastUpdated($last_updated);

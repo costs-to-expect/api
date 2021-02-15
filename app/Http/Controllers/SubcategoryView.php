@@ -7,7 +7,6 @@ use App\Option\SubcategoryCollection;
 use App\Option\SubcategoryItem;
 use App\Request\Parameter;
 use App\Response\Header\Header;
-use App\Response\Header\Headers;
 use App\Response\Pagination as UtilityPagination;
 use App\Transformers\Subcategory as SubcategoryTransformer;
 use Illuminate\Http\JsonResponse;
@@ -82,7 +81,7 @@ class SubcategoryView extends Controller
                 $subcategories
             );
 
-            $headers = new Headers();
+            $headers = new Header();
             $headers
                 ->collection($pagination_parameters, count($subcategories), $total)
                 ->addCacheControl($cache_control->visibility(), $cache_control->ttl())

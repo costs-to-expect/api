@@ -30,16 +30,6 @@ class Header
         ];
     }
 
-    /**
-     * Generate the initial headers necessary for a collection
-     *
-     * @param array $pagination Pagination data array, assumed indexes, offset,
-     * limit, links (with previous and next indexes)
-     * @param int $count Results in request
-     * @param int $total_count Results in entire collection
-     *
-     * @return Header
-     */
     public function collection(
         array $pagination,
         int $count,
@@ -61,11 +51,6 @@ class Header
         return $this;
     }
 
-    /**
-     * Generate the initial headers necessary for an item
-     *
-     * @return Header
-     */
     public function item(): Header
     {
         $this->headers = array_merge(
@@ -79,15 +64,6 @@ class Header
         return $this;
     }
 
-    /**
-     * Add a header to the headers array, does not check to see if the header
-     * already exists, overwrites if previously set
-     *
-     * @param string $name Header name
-     * @param mixed $value Header value
-     *
-     * @return Header
-     */
     public function add(
         string $name,
         $value
@@ -98,26 +74,11 @@ class Header
         return $this;
     }
 
-    /**
-     * Add the cache control header
-     *
-     * @param string $visibility
-     * @param int $max_age
-     *
-     * @return Header
-     */
     public function addCacheControl($visibility, $max_age = 31536000): Header
     {
         return $this->add('Cache-Control', "{$visibility}, max-age={$max_age}");
     }
 
-    /**
-     * Add the eTag
-     *
-     * @param array $content The response data array
-     *
-     * @return Header
-     */
     public function addETag(array $content): Header
     {
         $json = json_encode($content, JSON_THROW_ON_ERROR | 15);
@@ -129,59 +90,40 @@ class Header
         return $this;
     }
 
-    /**
-     * Add the X-Filter header
-     *
-     * @param mixed $value
-     *
-     * @return Header
-     */
-    public function addFilter($value): Header
+    public function addFilter(?string $value = null): Header
     {
-        return $this->add('X-Filter', $value);
+        if ($value !== null) {
+            $this->add('X-Filter', $value);
+        }
+
+        return $this;
     }
 
-    /**
-     * Add the X-Parameters header
-     *
-     * @param mixed $value
-     *
-     * @return Header
-     */
+    public function addLastUpdated(string $last_updated): Header
+    {
+        return $this->add('X-Last-Updated', $last_updated);
+    }
+
     public function addParameters($value): Header
     {
         return $this->add('X-Parameters', $value);
     }
 
-    /**
-     * Add the X-Sort header
-     *
-     * @param mixed $value
-     *
-     * @return Header
-     */
     public function addSort($value): Header
     {
         return $this->add('X-Sort', $value);
     }
 
-    /**
-     * Add the X-Search header
-     *
-     * @param mixed $value
-     *
-     * @return Header
-     */
     public function addSearch($value): Header
     {
         return $this->add('X-Search', $value);
     }
 
-    /**
-     * Return the headers array
-     *
-     * @return array
-     */
+    public function addTotalCount(int $total): Header
+    {
+        return $this->add('X-Total-Count', $total);
+    }
+
     public function headers(): array
     {
         return $this->headers;

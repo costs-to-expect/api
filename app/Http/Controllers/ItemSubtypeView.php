@@ -8,7 +8,6 @@ use App\Option\ItemSubtypeItem;
 use App\Request\Parameter;
 use App\Request\Route;
 use App\Response\Header\Header;
-use App\Response\Header\Headers;
 use App\Response\Pagination as UtilityPagination;
 use App\Response\Responses;
 use App\Transformers\ItemSubtype as ItemSubtypeTransformer;
@@ -72,7 +71,7 @@ class ItemSubtypeView extends Controller
                 $subtypes
             );
 
-            $headers = new Headers();
+            $headers = new Header();
             $headers->collection($pagination_parameters, count($subtypes), $total)->
                 addCacheControl($cache_control->visibility(), $cache_control->ttl())->
                 addETag($collection)->

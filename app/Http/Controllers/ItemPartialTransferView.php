@@ -8,7 +8,7 @@ use App\Option\ItemPartialTransferCollection;
 use App\Option\ItemPartialTransferItem;
 use App\Option\ItemPartialTransferTransfer;
 use App\Request\Parameter;
-use App\Response\Header\Headers;
+use App\Response\Header\Header;
 use App\Response\Pagination as UtilityPagination;
 use App\Transformers\ItemPartialTransfer as ItemPartialTransferTransformer;
 use Illuminate\Http\JsonResponse;
@@ -82,7 +82,7 @@ class ItemPartialTransferView extends Controller
                 $transfers
             );
 
-            $headers = new Headers();
+            $headers = new Header();
             $headers->collection($pagination_parameters, count($transfers), $total)->
                 addCacheControl($cache_control->visibility(), $cache_control->ttl())->
                 addETag($collection);
@@ -125,7 +125,7 @@ class ItemPartialTransferView extends Controller
             return \App\Response\Responses::notFound(trans('entities.item_partial_transfer'));
         }
 
-        $headers = new Headers();
+        $headers = new Header();
         $headers->item();
 
         return response()->json(

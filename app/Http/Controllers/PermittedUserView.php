@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\PermittedUser;
 use App\Option\PermittedUserCollection;
 use App\Request\Parameter;
-use App\Response\Header\Headers;
+use App\Response\Header\Header;
 use App\Response\Pagination as UtilityPagination;
 use App\Transformers\PermittedUser as PermittedUserTransformer;
 use Illuminate\Http\JsonResponse;
@@ -73,7 +73,7 @@ class PermittedUserView extends Controller
                 $permitted_users
             );
 
-            $headers = new Headers();
+            $headers = new Header();
             $headers->collection($pagination_parameters, count($permitted_users), $total)->
                 addCacheControl($cache_control->visibility(), $cache_control->ttl())->
                 addETag($collection)->

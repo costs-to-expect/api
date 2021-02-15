@@ -3,7 +3,7 @@
 namespace App\ItemType;
 
 use App\Request\Parameter;
-use App\Response\Header\Headers;
+use App\Response\Header\Header;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\JsonResponse;
 
@@ -50,13 +50,13 @@ abstract class SummaryResourceTypeResponse
         \App\Cache\Summary $cache_summary
     ): \App\Cache\Summary
     {
-        $headers = new Headers();
+        $headers = new Header();
 
         $headers
             ->addCacheControl($cache_control->visibility(), $cache_control->ttl())
             ->addETag($collection)
             ->addParameters(Parameter\Request::xHeader())
-            ->addFilters(Parameter\Filter::xHeader())
+            ->addFilter(Parameter\Filter::xHeader())
             ->addSearch(Parameter\Search::xHeader());
 
         if (array_key_exists(0, $summary)) {

@@ -8,7 +8,6 @@ use App\Option\CategoryCollection;
 use App\Option\CategoryItem;
 use App\Request\Parameter;
 use App\Response\Header\Header;
-use App\Response\Header\Headers;
 use App\Response\Pagination as UtilityPagination;
 use App\Transformers\Category as CategoryTransformer;
 use Illuminate\Http\JsonResponse;
@@ -88,7 +87,7 @@ class CategoryView extends Controller
                 $categories
             );
 
-            $headers = new Headers();
+            $headers = new Header();
             $headers
                 ->collection($pagination_parameters, count($categories), $total)
                 ->addCacheControl($cache_control->visibility(), $cache_control->ttl())
