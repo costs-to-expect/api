@@ -12,7 +12,7 @@ class SummaryItemCollection extends Response
             ->setParameters($this->entity->summaryRequestParameters())
             ->setSearchableParameters($this->entity->summarySearchParameters())
             ->setFilterableParameters($this->entity->summaryFilterParameters())
-            ->setDynamicParameters($this->allowed_values)
+            ->setDynamicParameters($this->allowed_parameters)
             ->setDescription('route-descriptions.summary_GET_resource-type_resource_items')
             ->setAuthenticationStatus($this->permissions['view'])
             ->option();

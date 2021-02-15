@@ -11,7 +11,7 @@ class ItemTransferTransfer extends Response
     {
         $post = new \App\Method\PostRequest();
         $this->verbs['POST'] = $post->setFields(Config::get('api.item-transfer.fields'))->
-            setDynamicFields($this->allowed_values)->
+            setDynamicFields($this->allowed_fields)->
             setDescription('route-descriptions.item_transfer_POST')->
             setAuthenticationStatus($this->permissions['manage'])->
             setAuthenticationRequirement(true)->

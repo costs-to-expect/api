@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\AllowedValue\Currency;
 use App\ItemType\Entity;
 use App\ItemType\Response;
 use App\Option\ItemCollection;
@@ -108,13 +109,14 @@ class ItemView extends Controller
 
         return $response
             ->setEntity($entity)
-            ->setAllowedValues(
+            ->setAllowedParameters(
                 $entity->allowedValuesForItemCollection(
                     $resource_type_id,
                     $resource_id,
                     $this->viewable_resource_types
                 )
             )
+            ->setAllowedFields((new Currency())->allowedValues())
             ->create()
             ->response();
     }
@@ -152,7 +154,7 @@ class ItemView extends Controller
 
         return $response
             ->setEntity($entity)
-            ->setAllowedValues($entity->allowedValuesForItem((int) $resource_type_id))
+            ->setAllowedFields($entity->allowedValuesForItem((int) $resource_type_id))
             ->create()
             ->response();
     }

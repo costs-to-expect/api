@@ -131,7 +131,7 @@ class ResourceTypeView extends Controller
     {
         $response = new ResourceTypeCollection(['view'=> $this->user_id !== null, 'manage'=> $this->user_id !== null]);
 
-        return $response->setAllowedValues((new ItemType())->allowedValues())
+        return $response->setAllowedFields((new ItemType())->allowedValues())
             ->create()
             ->response();
     }

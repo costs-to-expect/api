@@ -192,7 +192,7 @@ class ItemPartialTransferView extends Controller
 
         $response = new ItemPartialTransferTransfer($this->permissions((int) $resource_type_id));
 
-        return $response->setAllowedValues(
+        return $response->setAllowedFields(
                 (new \App\AllowedValue\Resource())->allowedValues(
                     $resource_type_id,
                     $resource_id

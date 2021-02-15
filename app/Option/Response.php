@@ -12,7 +12,9 @@ abstract class Response
 
     protected array $permissions;
 
-    protected array $allowed_values;
+    protected array $allowed_fields;
+
+    protected array $allowed_parameters;
 
     protected ItemType $entity;
 
@@ -22,7 +24,7 @@ abstract class Response
 
         $this->permissions = $permissions;
 
-        $this->allowed_values = [];
+        $this->allowed_fields = [];
     }
 
     abstract public function create();
@@ -50,17 +52,20 @@ abstract class Response
         exit;
     }
 
-    public function setAllowedValues(array $allowed_values): Response
+    public function setAllowedFields(array $allowed_fields): Response
     {
-        $this->allowed_values = $allowed_values;
+        $this->allowed_fields = $allowed_fields;
 
         return $this;
     }
 
-    /**
-     * @todo This is a new method to work with the WIP new config based item
-     * approach, we are going to develop this slowly to see how it works
-     */
+    public function setAllowedParameters(array $allowed_parameters): Response
+    {
+        $this->allowed_parameters = $allowed_parameters;
+
+        return $this;
+    }
+
     public function setEntity(ItemType $entity): Response
     {
         $this->entity = $entity;

@@ -111,7 +111,7 @@ class ItemCategoryView extends Controller
 
         return $response
             ->setEntity(Entity::item($resource_type_id))
-            ->setAllowedValues(
+            ->setAllowedFields(
                 (new \App\AllowedValue\Category())->allowedValues($resource_type_id))
             ->create()
             ->response();

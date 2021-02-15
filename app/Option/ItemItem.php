@@ -24,7 +24,7 @@ class ItemItem extends Response
             ->setDescription('route-descriptions.item_PATCH')
             ->setAuthenticationStatus($this->permissions['manage'])
             ->setAuthenticationRequirement(true)
-            ->setDynamicFields($this->allowed_values)
+            ->setDynamicFields($this->allowed_fields)
             ->option();
 
         return $this;
