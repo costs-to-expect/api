@@ -7,7 +7,7 @@ use App\Option\QueueCollection;
 use App\Option\QueueItem;
 use App\Request\Parameter;
 use App\Request\Route;
-use App\Response\Header\Header;
+use App\Response\Header;
 use App\Response\Pagination as UtilityPagination;
 use App\Transformers\Queue as QueueTransformer;
 use Illuminate\Http\JsonResponse;

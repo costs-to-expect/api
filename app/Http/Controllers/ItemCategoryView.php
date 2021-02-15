@@ -6,7 +6,7 @@ use App\ItemType\Entity;
 use App\Models\ItemCategory;
 use App\Option\ItemCategoryCollection;
 use App\Option\ItemCategoryItem;
-use App\Response\Header\Header;
+use App\Response\Header;
 use App\Transformers\ItemCategory as ItemCategoryTransformer;
 use Illuminate\Http\JsonResponse;
 

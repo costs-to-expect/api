@@ -8,7 +8,7 @@ use App\Option\ItemPartialTransferCollection;
 use App\Option\ItemPartialTransferItem;
 use App\Option\ItemPartialTransferTransfer;
 use App\Request\Parameter;
-use App\Response\Header\Header;
+use App\Response\Header;
 use App\Response\Pagination as UtilityPagination;
 use App\Transformers\ItemPartialTransfer as ItemPartialTransferTransformer;
 use Illuminate\Http\JsonResponse;

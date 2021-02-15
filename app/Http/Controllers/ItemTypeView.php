@@ -7,7 +7,7 @@ use App\Option\ItemTypeCollection;
 use App\Option\ItemTypeItem;
 use App\Request\Parameter;
 use App\Request\Route;
-use App\Response\Header\Header;
+use App\Response\Header;
 use App\Response\Pagination as UtilityPagination;
 use App\Response\Responses;
 use App\Transformers\ItemType as ItemTypeTransformer;

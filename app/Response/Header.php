@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Response\Header;
+namespace App\Response;
 
 /**
  * Generate the headers for the request.

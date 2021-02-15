@@ -7,7 +7,7 @@ use App\Request\Parameter\Filter;
 use App\Request\Parameter\Request;
 use App\Request\Parameter\Search;
 use App\Request\Parameter\Sort;
-use App\Response\Header\Header;
+use App\Response\Header;
 use App\Response\Pagination as UtilityPagination;
 use Illuminate\Http\JsonResponse;
 

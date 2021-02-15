@@ -6,7 +6,7 @@ use App\Models\Subcategory;
 use App\Option\SubcategoryCollection;
 use App\Option\SubcategoryItem;
 use App\Request\Parameter;
-use App\Response\Header\Header;
+use App\Response\Header;
 use App\Response\Pagination as UtilityPagination;
 use App\Transformers\Subcategory as SubcategoryTransformer;
 use Illuminate\Http\JsonResponse;

@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Option\Changelog;
 use App\Option\Root;
-use App\Response\Header\Header;
+use App\Response\Header;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Str;

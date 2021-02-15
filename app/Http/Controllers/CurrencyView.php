@@ -6,7 +6,7 @@ use App\Models\Currency;
 use App\Option\CurrencyCollection;
 use App\Option\CurrencyItem;
 use App\Request\Parameter;
-use App\Response\Header\Header;
+use App\Response\Header;
 use App\Response\Pagination as UtilityPagination;
 use App\Transformers\Currency as CurrencyTransformer;
 use Illuminate\Http\JsonResponse;

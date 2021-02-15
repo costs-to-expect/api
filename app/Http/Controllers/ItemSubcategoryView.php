@@ -7,7 +7,7 @@ use App\Models\ItemCategory;
 use App\Models\ItemSubcategory;
 use App\Option\ItemSubcategoryCollection;
 use App\Option\ItemSubcategoryItem;
-use App\Response\Header\Header;
+use App\Response\Header;
 use App\Transformers\ItemSubcategory as ItemSubcategoryTransformer;
 use Illuminate\Http\JsonResponse;
 

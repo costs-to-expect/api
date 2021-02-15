@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\PermittedUser;
 use App\Option\PermittedUserCollection;
 use App\Request\Parameter;
-use App\Response\Header\Header;
+use App\Response\Header;
 use App\Response\Pagination as UtilityPagination;
 use App\Transformers\PermittedUser as PermittedUserTransformer;
 use Illuminate\Http\JsonResponse;

@@ -6,7 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Summary\Category;
 use App\Option\SummaryCategoryCollection;
 use App\Request\Parameter;
-use App\Response\Header\Header;
+use App\Response\Header;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Config;
 
