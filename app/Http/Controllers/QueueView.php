@@ -7,7 +7,7 @@ use App\Option\QueueCollection;
 use App\Option\QueueItem;
 use App\Request\Parameter;
 use App\Request\Route;
-use App\Response\Header\Headers;
+use App\Response\Header;
 use App\Response\Pagination as UtilityPagination;
 use App\Transformers\Queue as QueueTransformer;
 use Illuminate\Http\JsonResponse;
@@ -52,7 +52,7 @@ class QueueView extends Controller
                 $jobs
             );
 
-            $headers = new Headers();
+            $headers = new Header();
             $headers->collection($pagination_parameters, count($jobs), $total)->
                 addCacheControl($cache_control->visibility(), $cache_control->ttl())->
                 addETag($collection)->
@@ -81,7 +81,7 @@ class QueueView extends Controller
             return \App\Response\Responses::notFound(trans('entities.queue'));
         }
 
-        $headers = new Headers();
+        $headers = new Header();
         $headers->item();
 
         return response()->json(

@@ -94,7 +94,8 @@ class Category extends Model
                     SELECT 
                         GREATEST(
                             MAX(category.created_at), 
-                            IFNULL(MAX(category.updated_at), 0)
+                            IFNULL(MAX(category.updated_at), 0),
+                            0
                         )
                     FROM 
                         category

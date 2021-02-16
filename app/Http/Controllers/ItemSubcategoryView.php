@@ -7,7 +7,7 @@ use App\Models\ItemCategory;
 use App\Models\ItemSubcategory;
 use App\Option\ItemSubcategoryCollection;
 use App\Option\ItemSubcategoryItem;
-use App\Response\Header\Header;
+use App\Response\Header;
 use App\Transformers\ItemSubcategory as ItemSubcategoryTransformer;
 use Illuminate\Http\JsonResponse;
 
@@ -144,7 +144,7 @@ class ItemSubcategoryView extends Controller
 
         return $response
             ->setEntity(Entity::item($resource_type_id))
-            ->setAllowedValues(
+            ->setAllowedFields(
                 (new \App\AllowedValue\Subcategory())->allowedValues($item_category->category_id)
             )
             ->create()

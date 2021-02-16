@@ -6,7 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Summary\Subcategory;
 use App\Option\SummarySubcategoryCollection;
 use App\Request\Parameter;
-use App\Response\Header\Headers;
+use App\Response\Header;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Config;
 
@@ -68,7 +68,7 @@ class SubcategoryView extends Controller
                 'subcategories' => $total
             ];
 
-            $headers = new Headers();
+            $headers = new Header();
             $headers
                 ->addCacheControl($cache_control->visibility(), $cache_control->ttl())
                 ->addETag($collection)

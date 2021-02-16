@@ -7,7 +7,7 @@ use App\Option\ItemTypeCollection;
 use App\Option\ItemTypeItem;
 use App\Request\Parameter;
 use App\Request\Route;
-use App\Response\Header\Headers;
+use App\Response\Header;
 use App\Response\Pagination as UtilityPagination;
 use App\Response\Responses;
 use App\Transformers\ItemType as ItemTypeTransformer;
@@ -70,7 +70,7 @@ class ItemTypeView extends Controller
                 $item_types
             );
 
-            $headers = new Headers();
+            $headers = new Header();
             $headers->collection($pagination_parameters, count($item_types), $total)->
                 addCacheControl($cache_control->visibility(), $cache_control->ttl())->
                 addETag($collection)->
@@ -103,7 +103,7 @@ class ItemTypeView extends Controller
             return \App\Response\Responses::notFound(trans('entities.item-type'));
         }
 
-        $headers = new Headers();
+        $headers = new Header();
         $headers->item();
 
         return response()->json(

@@ -2,6 +2,24 @@
 
 The complete changelog for the Costs to Expect REST API, our changelog follows the format defined at https://keepachangelog.com/en/1.0.0/
 
+## [v2.20.0] - 2021-02-15
+### Added
+- We have added a JSON `data` field to resource types. The `data` field can be used to store any optional data specific to your resource type.
+- We have added a JSON `data` field to resources. The `data` field can be used to store any optional data specific to your resource.
+- We have added additional tests.
+
+### Changed
+- We have updated our dev dependencies and switched to a new faker library.
+- We have moved the `Header` class to the `App\Response` namespace.
+- We have tweaked our `Option` classes; we no longer use the same data array to generate Post and Get responses.
+
+### Fixed
+- We have corrected our resource-type and resources schemas; the required properties nesting is correct.
+
+### Removed
+- We have removed the `effective_date` field from resources; the new `data` field will take over responsibility for storing this data as necessary.
+- We have removed the `Response\Header\Headers` class; the class is mostly duplicated code and serves no purpose.
+
 ## [v2.19.1] - 2021-02-12
 ### Added
 - We have added additional `resource-type` tests.

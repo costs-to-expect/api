@@ -17,7 +17,7 @@ class ItemCategoryCollection extends Response
 
         $post = new \App\Method\PostRequest();
         $this->verbs['POST'] = $post->setFields(Config::get('api.item-category.fields'))->
-            setDynamicFields($this->allowed_values)->
+            setDynamicFields($this->allowed_fields)->
             setAuthenticationRequirement(true)->
             setAuthenticationStatus($this->permissions['manage'])->
             setDescription('route-descriptions.item_category_POST_' . $this->entity->type())->

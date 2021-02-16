@@ -8,8 +8,7 @@ use App\Models\ResourceType;
 use App\Option\ResourceCollection;
 use App\Option\ResourceItem;
 use App\Request\Parameter;
-use App\Response\Header\Header;
-use App\Response\Header\Headers;
+use App\Response\Header;
 use App\Response\Pagination as UtilityPagination;
 use App\Transformers\Resource as ResourceTransformer;
 use Illuminate\Http\JsonResponse;
@@ -90,7 +89,7 @@ class ResourceView extends Controller
                 $resources
             );
 
-            $headers = new Headers();
+            $headers = new Header();
             $headers
                 ->collection($pagination_parameters, count($resources), $total)
                 ->addCacheControl($cache_control->visibility(), $cache_control->ttl())
@@ -156,7 +155,7 @@ class ResourceView extends Controller
         $response = new ResourceCollection($this->permissions((int) $resource_type_id));
 
         return $response
-            ->setAllowedValues((new ItemSubtype())->allowedValues($resource_type['resource_type_item_type_id']))
+            ->setAllowedFields((new ItemSubtype())->allowedValues($resource_type['resource_type_item_type_id']))
             ->create()
             ->response();
     }

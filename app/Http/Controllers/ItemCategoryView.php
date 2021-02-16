@@ -6,7 +6,7 @@ use App\ItemType\Entity;
 use App\Models\ItemCategory;
 use App\Option\ItemCategoryCollection;
 use App\Option\ItemCategoryItem;
-use App\Response\Header\Header;
+use App\Response\Header;
 use App\Transformers\ItemCategory as ItemCategoryTransformer;
 use Illuminate\Http\JsonResponse;
 
@@ -111,7 +111,7 @@ class ItemCategoryView extends Controller
 
         return $response
             ->setEntity(Entity::item($resource_type_id))
-            ->setAllowedValues(
+            ->setAllowedFields(
                 (new \App\AllowedValue\Category())->allowedValues($resource_type_id))
             ->create()
             ->response();

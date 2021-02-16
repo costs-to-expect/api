@@ -9,14 +9,13 @@ return [
                 'required',
                 'string'
             ],
-            'effective_date' => [
-                'required',
-                'date_format:Y-m-d'
+            'data' => [
+                'sometimes',
+                'json'
             ]
         ],
         'messages' => [
             'name.unique' => 'resource/validation.name-unique',
-            'effective_date.date_format' => 'resource/validation.effective_date-date_format'
         ]
     ],
     'PATCH' => [
@@ -25,14 +24,13 @@ return [
                 'sometimes',
                 'string'
             ],
-            'effective_date' => [
+            'data' => [
                 'sometimes',
-                'date_format:Y-m-d'
+                'json'
             ]
         ],
         'messages' => [
             'name.unique' => 'resource/validation.name-unique',
-            'effective_date.date_format' => 'resource/validation.effective_date-date_format'
         ]
     ]
 ];

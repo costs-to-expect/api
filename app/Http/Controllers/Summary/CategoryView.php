@@ -6,7 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Summary\Category;
 use App\Option\SummaryCategoryCollection;
 use App\Request\Parameter;
-use App\Response\Header\Headers;
+use App\Response\Header;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Config;
 
@@ -67,7 +67,7 @@ class CategoryView extends Controller
                 'categories' => $total
             ];
 
-            $headers = new Headers();
+            $headers = new Header();
             $headers
                 ->addCacheControl($cache_control->visibility(), $cache_control->ttl())
                 ->addETag($collection)

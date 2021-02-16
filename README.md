@@ -252,7 +252,7 @@ our local test suite is as complete as the Postman request tests.
 | ItemSubcategoryManage  | Not started |
 | ItemTransferManage  | Not started |
 | RequestManage  | Not started |
-| ResourceManage  | In Progress (1 Tests/2 Assertions) |
-| ResourceTypeManage  | Complete (12 Tests/27 Assertions) |
+| ResourceManage  | In Progress (3 Tests/8 Assertions) |
+| ResourceTypeManage  | Complete (14 Tests/30 Assertions) |
 | SubcategoryManage  | Not started |
 | ToolManage  | Not started |

@@ -222,7 +222,8 @@ class ResourceTypeModel extends LaravelModel
                     SELECT 
                         GREATEST(
                             MAX(`{$this->item_table}`.`created_at`), 
-                            IFNULL(MAX(`{$this->item_table}`.`updated_at`), 0)
+                            IFNULL(MAX(`{$this->item_table}`.`updated_at`), 0),
+                            0
                         )
                     FROM 
                         `{$this->item_table}`

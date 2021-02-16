@@ -12,7 +12,7 @@ class ItemCollection extends Response
             ->setSearchableParameters($this->entity->searchParameters())
             ->setFilterableParameters($this->entity->filterParameters())
             ->setParameters($this->entity->requestParameters())
-            ->setDynamicParameters($this->allowed_values)
+            ->setDynamicParameters($this->allowed_parameters)
             ->setPaginationStatus(true)
             ->setAuthenticationStatus($this->permissions['view'])
             ->setDescription('route-descriptions.item_GET_index')
@@ -23,7 +23,7 @@ class ItemCollection extends Response
             ->setDescription( 'route-descriptions.item_POST')
             ->setAuthenticationRequirement(true)
             ->setAuthenticationStatus($this->permissions['manage'])
-            ->setDynamicFields($this->allowed_values)
+            ->setDynamicFields($this->allowed_fields)
             ->option();
 
         return $this;

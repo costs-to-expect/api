@@ -42,7 +42,8 @@ class SummaryModel extends LaravelModel
                     SELECT 
                         GREATEST(
                             MAX(`{$this->sub_table}`.`created_at`), 
-                            IFNULL(MAX(`{$this->sub_table}`.`updated_at`), 0)
+                            IFNULL(MAX(`{$this->sub_table}`.`updated_at`), 0),
+                            0
                         )
                     FROM 
                         `{$this->sub_table}` 
@@ -115,7 +116,8 @@ class SummaryModel extends LaravelModel
                     SELECT 
                         GREATEST(
                             MAX(`{$this->sub_table}`.`created_at`), 
-                            IFNULL(MAX(`{$this->sub_table}`.`updated_at`), 0)
+                            IFNULL(MAX(`{$this->sub_table}`.`updated_at`), 0),
+                            0
                         )
                     FROM 
                         `{$this->sub_table}` 

@@ -6,7 +6,7 @@ use App\Models\Currency;
 use App\Option\CurrencyCollection;
 use App\Option\CurrencyItem;
 use App\Request\Parameter;
-use App\Response\Header\Headers;
+use App\Response\Header;
 use App\Response\Pagination as UtilityPagination;
 use App\Transformers\Currency as CurrencyTransformer;
 use Illuminate\Http\JsonResponse;
@@ -66,7 +66,7 @@ class CurrencyView extends Controller
                 $currencies
             );
 
-            $headers = new Headers();
+            $headers = new Header();
             $headers->collection($pagination_parameters, count($currencies), $total)->
                 addCacheControl($cache_control->visibility(), $cache_control->ttl())->
                 addETag($collection)->
@@ -99,7 +99,7 @@ class CurrencyView extends Controller
             return \App\Response\Responses::notFound(trans('entities.currency'));
         }
 
-        $headers = new Headers();
+        $headers = new Header();
         $headers->item();
 
         return response()->json(

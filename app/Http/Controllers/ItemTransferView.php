@@ -7,7 +7,7 @@ use App\Option\ItemTransferCollection;
 use App\Option\ItemTransferItem;
 use App\Option\ItemTransferTransfer;
 use App\Request\Parameter;
-use App\Response\Header\Headers;
+use App\Response\Header;
 use App\Response\Pagination as UtilityPagination;
 use App\Transformers\ItemTransfer as ItemTransferTransformer;
 use Illuminate\Http\JsonResponse;
@@ -76,7 +76,7 @@ class ItemTransferView extends Controller
                 $transfers
             );
 
-            $headers = new Headers();
+            $headers = new Header();
             $headers->collection($pagination_parameters, count($transfers), $total)->
                 addCacheControl($cache_control->visibility(), $cache_control->ttl())->
                 addETag($collection);
@@ -129,7 +129,7 @@ class ItemTransferView extends Controller
 
         $response = new ItemTransferTransfer($this->permissions((int) $resource_type_id));
 
-        return $response->setAllowedValues(
+        return $response->setAllowedFields(
                 (new \App\AllowedValue\Resource())->allowedValues(
                     $resource_type_id,
                     $resource_id
@@ -165,7 +165,7 @@ class ItemTransferView extends Controller
             return \App\Response\Responses::notFound(trans('entities.item_transfer'));
         }
 
-        $headers = new Headers();
+        $headers = new Header();
         $headers->item();
 
         return response()->json(

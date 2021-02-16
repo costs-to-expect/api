@@ -17,7 +17,7 @@ class ItemSubcategoryCollection extends Response
 
         $post = new \App\Method\PostRequest();
         $this->verbs['POST'] = $post->setFields(Config::get('api.item-subcategory.fields'))->
-            setDynamicFields($this->allowed_values)->
+            setDynamicFields($this->allowed_fields)->
             setDescription('route-descriptions.item_sub_category_POST_' . $this->entity->type())->
             setAuthenticationStatus($this->permissions['manage'])->
             setAuthenticationRequirement(true)->

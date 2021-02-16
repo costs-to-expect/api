@@ -225,25 +225,30 @@
                     <h3>Added</h3>
 
                     <ul>
-                        <li>We have added additional `resource-type` tests.</li>
-                        <li>We have started work on `resource` tests.</li>
+                        <li>We have added a JSON `data` field to resource types. The `data` field can be used to store any optional data specific to your resource type.</li>
+                        <li>We have added a JSON `data` field to resources. The `data` field can be used to store any optional data specific to your resource.</li>
+                        <li>We have added additional tests.</li>
                     </ul>
 
                     <h3>Changed</h3>
 
                     <ul>
-                        <li>The cache setting for the API can now be set in `.env`.</li>
-                        <li>We have updated phpunit.xml; the local cache will be disabled for tests.</li>
-                        <li>We have updated our Docker setup; we have switched from MySQL 5.7 to 8.0 and PHP 7.4 to PHP 8.0.</li>
-                        <li>We have moved our Cache classes into `App\Cache`.</li>
-                        <li>We have updated our `ConvertRouteParameters` middleware; our middleware now returns a 404 for invalid route parameters.</li>
+                        <li>We have updated our dev dependencies and switched to a new faker library.</li>
+                        <li>We have moved the `Header` class to the `App\Response` namespace.</li>
+                        <li>We have tweaked our `Option` classes; we no longer use the same data array to generate Post and Get responses.</li>
                     </ul>
 
                     <h3>Fixed</h3>
 
                     <ul>
-                        <li>We have updated some of our responses; the response no longer call `exit()` and are therefore testable.</li>
-                        <li>We have fixed our `ResourceTypeName` validator; our validator will no longer allow duplicate names.</li>
+                        <li>We have corrected our resource-type and resources schemas; the required properties nesting is correct.</li>
+                    </ul>
+
+                    <h3>Removed</h3>
+
+                    <ul>
+                        <li>We have removed the `effective_date` field from resources; the new `data` field will take over responsibility for storing this data as necessary.</li>
+                        <li>We have removed the `Response\Header\Headers` class; the class is mostly duplicated code and serves no purpose.</li>
                     </ul>
                 </div>
             </div>

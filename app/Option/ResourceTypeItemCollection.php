@@ -13,7 +13,7 @@ class ResourceTypeItemCollection extends Response
             setFilterableParameters($this->entity->resourceTypeFilterParameters())->
             setPaginationStatus(true)->
             setParameters($this->entity->resourceTypeRequestParameters())->
-            setDynamicParameters($this->allowed_values)->
+            setDynamicParameters($this->allowed_parameters)->
             setDescription('route-descriptions.resource_type_item_GET_index')->
             setAuthenticationStatus($this->permissions['view'])->
             option();

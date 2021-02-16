@@ -9,6 +9,9 @@ return [
     'title-description' => 'Resource type description',
     'description-description' => 'Enter a description for the resource type',
 
+    'title-data' => 'Optional data',
+    'description-data' => 'Enter any optional data, simply needs to be JSON',
+
     'title-item_type_id' => 'Item type',
     'description-item_type_id' => 'The item type to use for this resource type',
 

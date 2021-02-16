@@ -16,7 +16,7 @@ abstract class Method
 
     protected bool $authenticated;
 
-    protected $description;
+    protected string $description;
 
     protected Api $api_config;
 

@@ -21,6 +21,13 @@ return [
         'type' => 'string',
         'required' => true
     ],
+    'data' => [
+        'field' => 'data',
+        'title' => 'resource/fields.title-data',
+        'description' => 'resource/fields.description-data',
+        'type' => 'json',
+        'required' => false
+    ],
     'item_subtype_id' => [
         'field' => 'item_subtype_id',
         'title' => 'resource/fields.title-item_subtype_id',
@@ -29,13 +36,6 @@ return [
         'validation' => [
             'length' => 10
         ],
-        'required' => true
-    ],
-    'effective_date' => [
-        'field' => 'effective_date',
-        'title' => 'resource/fields.title-effective_date',
-        'description' => 'resource/fields.description-effective_date',
-        'type' => 'date (yyyy-mm-dd)',
         'required' => true
     ]
 ];

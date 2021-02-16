@@ -6,7 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Summary\Resource;
 use App\Option\SummaryResourceCollection;
 use App\Request\Parameter;
-use App\Response\Header\Headers;
+use App\Response\Header;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Config;
 
@@ -67,7 +67,7 @@ class ResourceView extends Controller
                 'resources' => $total
             ];
 
-            $headers = new Headers();
+            $headers = new Header();
             $headers
                 ->addCacheControl($cache_control->visibility(), $cache_control->ttl())
                 ->addETag($collection)

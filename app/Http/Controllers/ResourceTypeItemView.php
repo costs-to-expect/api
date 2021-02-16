@@ -49,7 +49,7 @@ class ResourceTypeItemView extends Controller
 
         return $response
             ->setEntity($entity)
-            ->setAllowedValues(
+            ->setAllowedParameters(
                 $entity->allowedValuesForResourceTypeItemCollection(
                     $resource_type_id,
                     $this->viewable_resource_types
