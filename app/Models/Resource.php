@@ -98,7 +98,8 @@ class Resource extends Model
                     SELECT 
                         GREATEST(
                             MAX(resource.created_at), 
-                            IFNULL(MAX(resource.updated_at), 0)
+                            IFNULL(MAX(resource.updated_at), 0),
+                            0
                         )
                     FROM 
                         resource

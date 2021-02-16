@@ -117,7 +117,8 @@ class ResourceType extends Model
                     SELECT 
                         GREATEST(
                             MAX(resource_type.created_at), 
-                            IFNULL(MAX(resource_type.updated_at), 0)
+                            IFNULL(MAX(resource_type.updated_at), 0),
+                            0
                         )
                     FROM 
                         resource_type 

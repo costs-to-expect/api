@@ -197,7 +197,8 @@ class Model extends LaravelModel
                     SELECT 
                         GREATEST(
                             MAX(`{$this->table}`.`created_at`), 
-                            IFNULL(MAX(`{$this->table}`.`updated_at`), 0)
+                            IFNULL(MAX(`{$this->table}`.`updated_at`), 0),
+                            0
                         )
                     FROM 
                         `{$this->table}` 

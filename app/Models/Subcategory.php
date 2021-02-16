@@ -89,7 +89,8 @@ class Subcategory extends Model
                     SELECT 
                         GREATEST(
                             MAX(sub_category.created_at), 
-                            IFNULL(MAX(sub_category.updated_at), 0)
+                            IFNULL(MAX(sub_category.updated_at), 0),
+                            0
                         )
                     FROM 
                         sub_category
