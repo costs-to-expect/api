@@ -222,33 +222,12 @@
                     <p>The changelog below shows all the fixes and improvements we have made, to view
                         the entire changelog please check <a href="https://github.com/costs-to-expect/api/releases">here</a>.</p>
 
-                    <h3>Added</h3>
-
-                    <ul>
-                        <li>We have added a JSON `data` field to resource types. The `data` field can be used to store any optional data specific to your resource type.</li>
-                        <li>We have added a JSON `data` field to resources. The `data` field can be used to store any optional data specific to your resource.</li>
-                        <li>We have added additional tests.</li>
-                    </ul>
-
                     <h3>Changed</h3>
 
                     <ul>
-                        <li>We have updated our dev dependencies and switched to a new faker library.</li>
-                        <li>We have moved the `Header` class to the `App\Response` namespace.</li>
-                        <li>We have tweaked our `Option` classes; we no longer use the same data array to generate Post and Get responses.</li>
-                    </ul>
-
-                    <h3>Fixed</h3>
-
-                    <ul>
-                        <li>We have corrected our resource-type and resources schemas; the required properties nesting is correct.</li>
-                    </ul>
-
-                    <h3>Removed</h3>
-
-                    <ul>
-                        <li>We have removed the `effective_date` field from resources; the new `data` field will take over responsibility for storing this data as necessary.</li>
-                        <li>We have removed the `Response\Header\Headers` class; the class is mostly duplicated code and serves no purpose.</li>
+                        <li>We have updated our password requirements; the minimum length must now be 12 characters.</li>
+                        <li>We have updated our back-end dependencies.</li>
+                        <li>Cache clear jobs are dispatched immediately; we no longer delay items in the queue.</li>
                     </ul>
                 </div>
             </div>

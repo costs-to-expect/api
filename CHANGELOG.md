@@ -2,6 +2,12 @@
 
 The complete changelog for the Costs to Expect REST API, our changelog follows the format defined at https://keepachangelog.com/en/1.0.0/
 
+## [v2.21.0] - 2021-04-29
+### Changed
+- We have updated our password requirements; the minimum length must now be 12 characters.
+- We have updated our back-end dependencies.
+- Cache clear jobs are dispatched immediately; we no longer delay items in the queue.
+
 ## [v2.20.0] - 2021-02-15
 ### Added
 - We have added a JSON `data` field to resource types. The `data` field can be used to store any optional data specific to your resource type.

@@ -2,8 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\PasswordCreates;
-use App\Models\PasswordResets;
 use App\Notifications\ForgotPassword;
 use App\Notifications\Registered;
 use App\User;
@@ -45,7 +43,7 @@ class Authentication extends Controller
             [
                 'password' => [
                     'required',
-                    'min:10'
+                    'min:12'
                 ],
                 'password_confirmation' => [
                     'required',
@@ -109,7 +107,7 @@ class Authentication extends Controller
             [
                 'password' => [
                     'required',
-                    'min:10'
+                    'min:12'
                 ],
                 'password_confirmation' => [
                     'required',
@@ -319,7 +317,7 @@ class Authentication extends Controller
             [
                 'password' => [
                     'required',
-                    'min:10'
+                    'min:12'
                 ],
                 'password_confirmation' => [
                     'required',

@@ -85,7 +85,7 @@ class ResourceManage extends Controller
                 return $resource;
             });
 
-            ClearCache::dispatch($cache_job_payload->payload())->delay(now()->addMinute());
+            ClearCache::dispatch($cache_job_payload->payload());
 
         } catch (Exception $e) {
             return Responses::failedToSaveModelForCreate();
@@ -136,7 +136,7 @@ class ResourceManage extends Controller
                 $resource->delete();
             });
 
-            ClearCache::dispatchNow($cache_job_payload->payload());
+            ClearCache::dispatch($cache_job_payload->payload());
 
             return Responses::successNoContent();
         } catch (QueryException $e) {
@@ -208,7 +208,7 @@ class ResourceManage extends Controller
         try {
             $resource->save();
 
-            ClearCache::dispatch($cache_job_payload->payload())->delay(now()->addMinute());
+            ClearCache::dispatch($cache_job_payload->payload());
             
         } catch (Exception $e) {
             return Responses::failedToSaveModelForUpdate();
