@@ -225,9 +225,9 @@
                     <h3>Changed</h3>
 
                     <ul>
-                        <li>We have updated our password requirements; the minimum length must not be 12 characters.</li>
+                        <li>We have updated our password requirements; the minimum length must now be 12 characters.</li>
                         <li>We have updated our back-end dependencies.</li>
-                        <li>Cache clear jobs are dispatched immediately, we no longer delay items in the queue.</li>
+                        <li>Cache clear jobs are dispatched immediately; we no longer delay items in the queue.</li>
                     </ul>
                 </div>
             </div>

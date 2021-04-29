@@ -4,9 +4,9 @@ The complete changelog for the Costs to Expect REST API, our changelog follows t
 
 ## [v2.21.0] - 2021-04-29
 ### Changed
-- We have updated our password requirements; the minimum length must not be 12 characters.
+- We have updated our password requirements; the minimum length must now be 12 characters.
 - We have updated our back-end dependencies.
-- Cache clear jobs are dispatched immediately, we no longer delay items in the queue.
+- Cache clear jobs are dispatched immediately; we no longer delay items in the queue.
 
 ## [v2.20.0] - 2021-02-15
 ### Added
