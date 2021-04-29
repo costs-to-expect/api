@@ -25,7 +25,7 @@ class AuthenticationTest extends TestCase
     public function create_new_password_errors_with_invalid_email(): void
     {
         $email = $this->faker->email;
-        $password = $this->faker->password(10);
+        $password = $this->faker->password(12);
 
         $response = $this->post(
             route('auth.register'),
@@ -75,7 +75,7 @@ class AuthenticationTest extends TestCase
     public function create_new_password_errors_with_invalid_token(): void
     {
         $email = $this->faker->email;
-        $password = $this->faker->password(10);
+        $password = $this->faker->password(12);
 
         $response = $this->post(
             route('auth.register'),
@@ -125,7 +125,7 @@ class AuthenticationTest extends TestCase
     public function create_new_password_errors_with_invalid_token_and_email(): void
     {
         $email = $this->faker->email;
-        $password = $this->faker->password(10);
+        $password = $this->faker->password(12);
 
         $response = $this->post(
             route('auth.register'),
@@ -175,7 +175,7 @@ class AuthenticationTest extends TestCase
     public function create_new_password_errors_with_no_payload(): void
     {
         $email = $this->faker->email;
-        $password = $this->faker->password(10);
+        $password = $this->faker->password(12);
 
         $response = $this->post(
             route('auth.register'),
@@ -222,7 +222,7 @@ class AuthenticationTest extends TestCase
     public function create_new_password_success(): void
     {
         $email = $this->faker->email;
-        $password = $this->faker->password(10);
+        $password = $this->faker->password(12);
 
         $response = $this->post(
             route('auth.register'),
@@ -286,8 +286,8 @@ class AuthenticationTest extends TestCase
         $response = $this->post(
             route('auth.create-password', ['email' => $this->faker->email, 'token' => $token]),
             [
-                'password' => $this->faker->password(10),
-                'password_confirmation' => $this->faker->password(10)
+                'password' => $this->faker->password(12),
+                'password_confirmation' => $this->faker->password(12)
             ]
         );
 
@@ -312,8 +312,8 @@ class AuthenticationTest extends TestCase
         $response = $this->post(
             route('auth.create-password', ['email' => $email, 'token' => $this->faker->uuid]),
             [
-                'password' => $this->faker->password(10),
-                'password_confirmation' => $this->faker->password(10)
+                'password' => $this->faker->password(12),
+                'password_confirmation' => $this->faker->password(12)
             ]
         );
 
@@ -377,8 +377,8 @@ class AuthenticationTest extends TestCase
         $response = $this->post(
             route('auth.create-password', ['email' => $email, 'token' => $token]),
             [
-                'password' => $this->faker->password(10),
-                'password_confirmation' => $this->faker->password(10)
+                'password' => $this->faker->password(12),
+                'password_confirmation' => $this->faker->password(12)
             ]
         );
 
@@ -389,7 +389,7 @@ class AuthenticationTest extends TestCase
     public function create_password_success(): void
     {
         $email = $this->faker->email;
-        $password = $this->faker->password(10);
+        $password = $this->faker->password(12);
 
         $response = $this->post(
             route('auth.register'),
@@ -442,7 +442,7 @@ class AuthenticationTest extends TestCase
     public function forgot_password_success(): void
     {
         $email = $this->faker->email;
-        $password = $this->faker->password(10);
+        $password = $this->faker->password(12);
 
         $response = $this->post(
             route('auth.register'),
@@ -480,7 +480,7 @@ class AuthenticationTest extends TestCase
     public function login_errors_with_bad_email(): void
     {
         $email = $this->faker->email;
-        $password = $this->faker->password(10);
+        $password = $this->faker->password(12);
 
         $response = $this->post(
             route('auth.register'),
@@ -519,7 +519,7 @@ class AuthenticationTest extends TestCase
     public function login_errors_with_bad_password(): void
     {
         $email = $this->faker->email;
-        $password = $this->faker->password(10);
+        $password = $this->faker->password(12);
 
         $response = $this->post(
             route('auth.register'),
@@ -558,7 +558,7 @@ class AuthenticationTest extends TestCase
     public function login_success(): void
     {
         $email = $this->faker->email;
-        $password = $this->faker->password(10);
+        $password = $this->faker->password(12);
 
         $response = $this->post(
             route('auth.register'),
@@ -704,7 +704,7 @@ class AuthenticationTest extends TestCase
         $response = $this->post(
             'v2/auth/update-password',
             [
-                'password' => $this->faker->password(10),
+                'password' => $this->faker->password(12),
                 'password_confirmation' => $this->faker->password(12)
             ]
         );
@@ -731,7 +731,7 @@ class AuthenticationTest extends TestCase
     {
         $this->actingAs(User::find(1));
 
-        $new_password = $this->faker->password(10);
+        $new_password = $this->faker->password(12);
 
         $response = $this->post(
             'v2/auth/update-password',
