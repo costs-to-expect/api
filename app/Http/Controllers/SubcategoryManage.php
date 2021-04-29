@@ -111,7 +111,7 @@ class SubcategoryManage extends Controller
         try {
             $sub_category->delete();
 
-            ClearCache::dispatchNow($cache_job_payload->payload());
+            ClearCache::dispatch($cache_job_payload->payload());
 
             return Responses::successNoContent();
         } catch (QueryException $e) {

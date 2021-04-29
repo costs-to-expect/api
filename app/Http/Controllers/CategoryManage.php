@@ -100,7 +100,7 @@ class CategoryManage extends Controller
         try {
             $category->delete();
 
-            ClearCache::dispatchNow($cache_job_payload->payload());
+            ClearCache::dispatch($cache_job_payload->payload());
 
             return Responses::successNoContent();
         } catch (QueryException $e) {
