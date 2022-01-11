@@ -250,6 +250,13 @@ class Authentication extends Controller
         return response()->json(['message' => 'Unauthorised, credentials invalid'], 401);
     }
 
+    public function logout(Request $request): Http\JsonResponse
+    {
+        Auth::logout();
+
+        return response()->json(['message' => 'Account signed out'], 200);
+    }
+
     public function register(Request $request): Http\JsonResponse
     {
         $validator = Validator::make(

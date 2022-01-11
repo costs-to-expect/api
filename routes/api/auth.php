@@ -29,6 +29,11 @@ Route::group(
             [Authentication::class, 'login']
         )->name('auth.login');
 
+        Route::get(
+            'auth/logout',
+            [Authentication::class, 'logout']
+        )->name('auth.logout');
+
 
         if (Config::get('api.app.config.registrations') === true) {
             Route::post(

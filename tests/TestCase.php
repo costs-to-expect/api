@@ -54,10 +54,17 @@ abstract class TestCase extends BaseTestCase
         self::assertTrue($result->isValid());
     }
 
+    protected function deleteResource(string $resource_type_id, $resource_id): TestResponse
+    {
+        return $this->delete(
+            route('resource.delete', ['resource_type_id' => $resource_type_id, 'resource_is' => $resource_id]), []
+        );
+    }
+
     protected function deleteResourceType(string $resource_type_id): TestResponse
     {
         return $this->delete(
-            route('resource-type.update', ['resource_type_id' => $resource_type_id]), []
+            route('resource-type.delete', ['resource_type_id' => $resource_type_id]), []
         );
     }
 
@@ -80,5 +87,42 @@ abstract class TestCase extends BaseTestCase
     protected function postResourceType(array $payload): TestResponse
     {
         return $this->post(route('resource-type.create'), $payload);
+    }
+
+    protected function helperCreateResourceType(): string
+    {
+        $response = $this->postResourceType(
+            [
+                'name' => $this->faker->text(255),
+                'description' => $this->faker->text,
+                'data' => '{"field":true}',
+                'item_type_id' => 'OqZwKX16bW',
+                'public' => false
+            ]
+        );
+
+        if ($response->assertStatus(201)) {
+            return $response->json('id');
+        }
+
+        $this->fail('Unable to create the resource type');
+    }
+
+    protected function helperCreateResource(string $resource_type_id): string
+    {
+        $response = $this->postResource(
+            $resource_type_id,
+            [
+                'name' => $this->faker->text(200),
+                'description' => $this->faker->text(200),
+                'item_subtype_id' => 'a56kbWV82n'
+            ]
+        );
+
+        if ($response->assertStatus(201)) {
+            return $response->json('id');
+        }
+
+        $this->fail('Unable to create the resource');
     }
 }

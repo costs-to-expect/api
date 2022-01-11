@@ -83,7 +83,7 @@ class Responses
 
         response()->json(
             $response,
-            404
+            ($type !== null ? 404 : 403)
         )->send();
         exit;
     }
