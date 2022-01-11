@@ -119,6 +119,7 @@ additionally, the same is true if you are assigned as a permitted user to a reso
 | POST         | v2/auth/create-new-password                                                                                                                    |
 | POST         | v2/auth/forgot-password                                                                                                                        |
 | POST         | v2/auth/login                                                                                                                                  |
+| GET          | v2/auth/logout                                                                                                                                 |
 | POST         | v2/auth/register                                                                                                                               |
 | POST         | v2/auth/update-password                                                                                                                        |
 | POST         | v2/auth/update-profile                                                                                                                         |
@@ -241,17 +242,18 @@ You can see our progress in the table below. We are hoping to add tests in each 
 not too concerned about missing anything as we still have all our tests in Postman, we won't disable our test monitor until 
 our local test suite is as complete as the Postman request tests.
 
-| Controller                | Progress                           |
-|:--------------------------|:-----------------------------------|
-| Authentication            | Complete (34 Tests/62 Assertions)  |
-| CategoryManage            | Not started                        |
-| ItemCategoryManage        | Not started                        |
-| ItemManage                | Not started                        |
-| ItemPartialTransferManage | Not started                        |
-| ItemSubcategoryManage     | Not started                        |
-| ItemTransferManage        | Not started                        |
-| RequestManage             | Not started                        |
-| ResourceManage            | In Progress (3 Tests/8 Assertions) |
-| ResourceTypeManage        | Complete (14 Tests/30 Assertions)  |
-| SubcategoryManage         | Not started                        |
-| ToolManage                | Not started                        |
+| Controller                | Progress                              |
+|:--------------------------|:--------------------------------------|
+| Authentication            | Complete (34 Tests/62 Assertions)     |
+| CategoryManage            | Not started                           |
+| ItemCategoryManage        | Not started                           |
+| ItemManage                | Not started                           |
+| ItemPartialTransferManage | Not started                           |
+| ItemSubcategoryManage     | Not started                           |
+| ItemTransferManage        | Not started                           |
+| RequestManage             | Not started                           |
+| ResourceManage            | Complete (13 Tests/35 Assertions)     |
+| ResourceTypeManage        | Complete (14 Tests/30 Assertions)     |
+| SubcategoryManage         | Not started                           |
+| ToolManage                | Not started                           |
+| Total                     | In Progress (61 Tests/127 Assertions) |

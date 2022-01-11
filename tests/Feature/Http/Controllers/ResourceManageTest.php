@@ -183,7 +183,107 @@ class ResourceManageTest extends TestCase
         $resource_type_id = $this->helperCreateResourceType();
         $id = $this->helperCreateResource($resource_type_id);
 
-        $response = $this->deleteResourceType($id);
+        $response = $this->deleteResource($resource_type_id, $id);
+
+        $response->assertStatus(204);
+    }
+
+    /** @test */
+    public function update_resource_fails_extra_fields_in_payload(): void
+    {
+        $this->actingAs(User::find(1));
+
+        $resource_type_id = $this->helperCreateResourceType();
+        $resource_id = $this->helperCreateResource($resource_type_id);
+
+        $response = $this->patchResource(
+            $resource_type_id,
+            $resource_id,
+            [
+                'extra' => $this->faker->text(100)
+            ]
+        );
+
+        $response->assertStatus(400);
+    }
+
+    /** @test */
+    public function update_resource_fails_non_payload(): void
+    {
+        $this->actingAs(User::find(1));
+
+        $resource_type_id = $this->helperCreateResourceType();
+        $resource_id = $this->helperCreateResource($resource_type_id);
+
+        $response = $this->patchResource(
+            $resource_type_id,
+            $resource_id,
+            []
+        );
+
+        $response->assertStatus(400);
+    }
+
+    /** @test */
+    public function update_resource_fails_non_unique_name(): void
+    {
+        $this->actingAs(User::find(1));
+
+        $resource_type_id = $this->helperCreateResourceType();
+
+        // Create first resource
+        $name = $this->faker->text(200);
+        $response = $this->postResource(
+            $resource_type_id,
+            [
+                'name' => $name,
+                'description' => $this->faker->text(200),
+                'item_subtype_id' => 'a56kbWV82n'
+            ]
+        );
+
+        $response->assertStatus(201);
+
+        // Create second resource
+        $response = $this->postResource(
+            $resource_type_id,
+            [
+                'name' => $this->faker->text(200),
+                'description' => $this->faker->text(200),
+                'item_subtype_id' => 'a56kbWV82n'
+            ]
+        );
+
+        $response->assertStatus(201);
+        $resource_id = $response->json('id');
+
+        // Set name of second resource to first name
+        $response = $this->patchResource(
+            $resource_type_id,
+            $resource_id,
+            [
+                'name' => $name
+            ]
+        );
+
+        $response->assertStatus(422);
+    }
+
+    /** @test */
+    public function update_resource_success(): void
+    {
+        $this->actingAs(User::find(1));
+
+        $resource_type_id = $this->helperCreateResourceType();
+        $resource_id = $this->helperCreateResource($resource_type_id);
+
+        $response = $this->patchResource(
+            $resource_type_id,
+            $resource_id,
+            [
+                'name' => $this->faker->text(25)
+            ]
+        );
 
         $response->assertStatus(204);
     }

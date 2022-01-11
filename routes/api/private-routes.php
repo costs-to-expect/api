@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\ResourceManage;
+use App\Http\Controllers\ResourceTypeManage;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Route;
 
@@ -19,7 +21,7 @@ Route::group(
 
         Route::post(
             'resource-types',
-            'ResourceTypeManage@create'
+            [ResourceTypeManage::class, 'create']
         )->name('resource-type.create');
 
         Route::post(
@@ -34,7 +36,7 @@ Route::group(
 
         Route::post(
             'resource-types/{resource_type_id}/resources',
-            'ResourceManage@create'
+            [ResourceManage::class, 'create']
         )->name('resource.create');
 
         Route::post(
@@ -64,7 +66,7 @@ Route::group(
 
         Route::delete(
             'resource-types/{resource_type_id}',
-            'ResourceTypeManage@delete'
+            [ResourceTypeManage::class, 'delete']
         )->name('resource-type.delete');
 
         Route::delete(
@@ -84,8 +86,8 @@ Route::group(
 
         Route::delete(
             'resource-types/{resource_type_id}/resources/{resource_id}',
-            'ResourceManage@delete'
-        );
+            [ResourceManage::class, 'delete']
+        )->name('resource.delete');
 
         Route::delete(
             'resource-types/{resource_type_id}/resources/{resource_id}/items/{item_id}',
@@ -104,7 +106,7 @@ Route::group(
 
         Route::patch(
             'resource-types/{resource_type_id}',
-            'ResourceTypeManage@update'
+            [ResourceTypeManage::class, 'update']
         )->name('resource-type.update');
 
         Route::patch(
@@ -119,8 +121,8 @@ Route::group(
 
         Route::patch(
             'resource-types/{resource_type_id}/resources/{resource_id}',
-            'ResourceManage@update'
-        );
+            [ResourceManage::class, 'update']
+        )->name('resource.update');
 
         Route::patch(
             'resource-types/{resource_type_id}/resources/{resource_id}/items/{item_id}',

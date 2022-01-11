@@ -149,7 +149,7 @@ class ResourceTypeManageTest extends TestCase
 
         $response = $this->postResourceType(
             [
-                'name' => $this->faker->text(255),
+                'name' => $this->faker->text(10),
                 'description' => $this->faker->text,
                 'data' => '{"field": "value"}',
                 'item_type_id' => 'OqZwKX16bW',
@@ -168,7 +168,7 @@ class ResourceTypeManageTest extends TestCase
 
         $response = $this->postResourceType(
             [
-                'name' => $this->faker->text(255),
+                'name' => $this->faker->text(10),
                 'description' => $this->faker->text,
                 'item_type_id' => 'OqZwKX16bW',
                 'public' => false
@@ -192,7 +192,7 @@ class ResourceTypeManageTest extends TestCase
 
         $response = $this->postResourceType(
             [
-                'name' => $this->faker->text(255),
+                'name' => $this->faker->text(10),
                 'description' => $this->faker->text,
                 'item_type_id' => 'OqZwKX16bW',
                 'public' => false
@@ -221,7 +221,7 @@ class ResourceTypeManageTest extends TestCase
 
         $response = $this->postResourceType(
             [
-                'name' => $this->faker->text(255),
+                'name' => $this->faker->text(10),
                 'description' => $this->faker->text,
                 'item_type_id' => 'OqZwKX16bW',
                 'public' => false

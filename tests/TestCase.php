@@ -57,7 +57,7 @@ abstract class TestCase extends BaseTestCase
     protected function deleteResource(string $resource_type_id, $resource_id): TestResponse
     {
         return $this->delete(
-            route('resource.delete', ['resource_type_id' => $resource_type_id, 'resource_is' => $resource_id]), []
+            route('resource.delete', ['resource_type_id' => $resource_type_id, 'resource_id' => $resource_id]), []
         );
     }
 
@@ -72,6 +72,20 @@ abstract class TestCase extends BaseTestCase
     {
         return $this->patch(
             route('resource-type.update', ['resource_type_id' => $resource_type_id]),
+            $payload
+        );
+    }
+
+    protected function patchResource(string $resource_type_id, string $resource_id, array $payload): TestResponse
+    {
+        return $this->patch(
+            route(
+                'resource.update',
+                [
+                    'resource_type_id' => $resource_type_id,
+                    'resource_id' => $resource_id
+                ]
+            ),
             $payload
         );
     }
