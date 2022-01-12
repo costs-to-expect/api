@@ -39,6 +39,10 @@ Route::group(
             [Authentication::class, 'login']
         )->name('auth.login');
 
+        Route::options(
+            'auth/login',
+            [Authentication::class, 'optionsLogin']);
+
         Route::get(
             'auth/logout',
             [Authentication::class, 'logout']

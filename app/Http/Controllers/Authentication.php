@@ -6,6 +6,7 @@ use App\Notifications\ForgotPassword;
 use App\Notifications\Registered;
 use App\Option\CreateNewPassword;
 use App\Option\CreatePassword;
+use App\Option\Login;
 use App\User;
 use Exception;
 use Illuminate\Http;
@@ -271,6 +272,13 @@ class Authentication extends Controller
         }
 
         return response()->json(['message' => 'Unauthorised, credentials invalid'], 401);
+    }
+
+    public function optionsLogin(): Http\JsonResponse
+    {
+        $response = new Login([]);
+
+        return $response->create()->response();
     }
 
     public function logout(): Http\JsonResponse
