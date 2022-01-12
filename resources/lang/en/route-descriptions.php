@@ -9,6 +9,7 @@ return [
     'auth_login_POST' => 'Login to the API',
     'auth_register_POST' => 'Register with the API',
     'auth_update_password_POST' => 'Update your account password',
+    'auth_update_profile_POST' => 'Update your account profile',
 
     'api_GET_index' => 'Return all the API routes',
     'api_GET_changelog' => 'Return the complete API changelog',
