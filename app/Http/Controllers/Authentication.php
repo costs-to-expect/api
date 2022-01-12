@@ -490,4 +490,11 @@ class Authentication extends Controller
 
         return response()->json(['message' => 'Unauthorised, credentials invalid'], 401);
     }
+
+    public function optionsUser(): Http\JsonResponse
+    {
+        $response = new \App\Option\User(['view'=> $this->user_id !== null]);
+
+        return $response->create()->response();
+    }
 }

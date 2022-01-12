@@ -58,6 +58,11 @@ Route::group(
             [Authentication::class, 'optionsUpdateProfile']
         );
 
+        Route::options(
+            'auth/user',
+            [Authentication::class, 'optionsUser']
+        );
+
         if (Config::get('api.app.config.registrations') === true) {
             Route::post(
                 'auth/register',

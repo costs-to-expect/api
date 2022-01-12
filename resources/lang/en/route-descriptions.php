@@ -10,6 +10,7 @@ return [
     'auth_register_POST' => 'Register with the API',
     'auth_update_password_POST' => 'Update your account password',
     'auth_update_profile_POST' => 'Update your account profile',
+    'auth_user_GET' => 'Return the account details for the signed-in user',
 
     'api_GET_index' => 'Return all the API routes',
     'api_GET_changelog' => 'Return the complete API changelog',

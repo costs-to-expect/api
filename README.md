@@ -131,6 +131,7 @@ additionally, the same is true if you are assigned as a permitted user to a reso
 | OPTIONS      | v2/auth/update-profile                                                                                                                         |
 | POST         | v2/auth/update-profile                                                                                                                         |
 | GET/HEAD     | v2/auth/user                                                                                                                                   |
+| OPTIONS      | v2/auth/user                                                                                                                                   |
 | GET/HEAD     | v2/changelog                                                                                                                                   |
 | OPTIONS      | v2/changelog                                                                                                                                   |
 | GET/HEAD     | v2/currencies                                                                                                                                  |
