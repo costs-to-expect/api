@@ -126,6 +126,7 @@ additionally, the same is true if you are assigned as a permitted user to a reso
 | GET          | v2/auth/logout                                                                                                                                 |
 | OPTIONS      | v2/auth/register                                                                                                                               |
 | POST         | v2/auth/register                                                                                                                               |
+| OPTIONS      | v2/auth/update-password                                                                                                                        |
 | POST         | v2/auth/update-password                                                                                                                        |
 | POST         | v2/auth/update-profile                                                                                                                         |
 | GET/HEAD     | v2/auth/user                                                                                                                                   |

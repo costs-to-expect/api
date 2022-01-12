@@ -48,6 +48,10 @@ Route::group(
             [Authentication::class, 'logout']
         )->name('auth.logout');
 
+        Route::options(
+            'auth/update-password',
+            [Authentication::class, 'optionsUpdatePassword']
+        );
 
         if (Config::get('api.app.config.registrations') === true) {
             Route::post(

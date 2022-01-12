@@ -8,6 +8,7 @@ return [
     'auth_forgot_password_POST' => 'Start the reset password process',
     'auth_login_POST' => 'Login to the API',
     'auth_register_POST' => 'Register with the API',
+    'auth_update_password_POST' => 'Update your account password',
 
     'api_GET_index' => 'Return all the API routes',
     'api_GET_changelog' => 'Return the complete API changelog',

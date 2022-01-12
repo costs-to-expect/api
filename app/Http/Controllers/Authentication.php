@@ -8,6 +8,7 @@ use App\Option\CreateNewPassword;
 use App\Option\CreatePassword;
 use App\Option\Login;
 use App\Option\Register;
+use App\Option\UpdatePassword;
 use App\User;
 use Exception;
 use Illuminate\Http;
@@ -399,6 +400,13 @@ class Authentication extends Controller
         }
 
         return response()->json(['message' => 'Unauthorised, credentials invalid'], 401);
+    }
+
+    public function optionsUpdatePassword(): Http\JsonResponse
+    {
+        $response = new UpdatePassword(['view'=> $this->user_id !== null, 'manage'=> $this->user_id !== null]);
+
+        return $response->create()->response();
     }
 
     public function updateProfile(Request $request): Http\JsonResponse
