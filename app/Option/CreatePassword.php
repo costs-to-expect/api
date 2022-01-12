@@ -5,14 +5,14 @@ namespace App\Option;
 
 use Illuminate\Support\Facades\Config;
 
-class CreateNewPassword extends Response
+class CreatePassword extends Response
 {
     public function create()
     {
         $post = new \App\Method\PostRequest();
         $this->verbs['POST'] = $post->setFields(Config::get('api.auth.create-password.fields'))
             ->setAuthenticationRequirement()
-            ->setDescription('route-descriptions.auth_create_new_password_POST')
+            ->setDescription('route-descriptions.auth_create_password_POST')
             ->option();
 
         return $this;

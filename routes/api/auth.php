@@ -50,6 +50,11 @@ Route::group(
                 'auth/create-password',
                 [Authentication::class, 'createPassword']
             )->name('auth.create-password');
+
+            Route::options(
+                'auth/create-password',
+                [Authentication::class, 'optionsCreatePassword']
+            );
         }
     }
 );

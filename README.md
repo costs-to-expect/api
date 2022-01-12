@@ -116,7 +116,8 @@ additionally, the same is true if you are assigned as a permitted user to a reso
 | OPTIONS      | v2/                                                                                                                                            | 
 | GET/HEAD     | v2/auth/check                                                                                                                                  |
 | OPTIONS      | v2/auth/create-password                                                                                                                        |
-| POST         | v2/auth/create-password                                                                                                                        | 
+| POST         | v2/auth/create-password                                                                                                                        |
+| OPTIONS      | v2/auth/create-new-password                                                                                                                    |
 | POST         | v2/auth/create-new-password                                                                                                                    |
 | POST         | v2/auth/forgot-password                                                                                                                        |
 | POST         | v2/auth/login                                                                                                                                  |
