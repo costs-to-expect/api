@@ -29,6 +29,13 @@ class Authentication extends Controller
         return response()->json(['auth' => Auth::guard('api')->check()]);
     }
 
+    public function optionsCheck(): Http\JsonResponse
+    {
+        $response = new \App\Option\Check([]);
+
+        return $response->create()->response();
+    }
+
     public function createPassword(Request $request): Http\JsonResponse
     {
         $email = Str::replaceFirst(' ', '+', urldecode($request->query('email')));

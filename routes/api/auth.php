@@ -63,6 +63,11 @@ Route::group(
             [Authentication::class, 'optionsUser']
         );
 
+        Route::options(
+            'auth/check',
+            [Authentication::class, 'optionsCheck']
+        );
+
         if (Config::get('api.app.config.registrations') === true) {
             Route::post(
                 'auth/register',
