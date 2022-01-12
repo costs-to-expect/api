@@ -7,6 +7,7 @@ use App\Notifications\Registered;
 use App\Option\CreateNewPassword;
 use App\Option\CreatePassword;
 use App\Option\Login;
+use App\Option\Register;
 use App\User;
 use Exception;
 use Illuminate\Http;
@@ -353,6 +354,13 @@ class Authentication extends Controller
             ],
             201
         );
+    }
+
+    public function optionsRegister(): Http\JsonResponse
+    {
+        $response = new Register([]);
+
+        return $response->create()->response();
     }
 
     public function updatePassword(Request $request): Http\JsonResponse

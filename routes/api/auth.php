@@ -52,8 +52,13 @@ Route::group(
         if (Config::get('api.app.config.registrations') === true) {
             Route::post(
                 'auth/register',
-                'Authentication@register'
+                [Authentication::class, 'register']
             )->name('auth.register');
+
+            Route::options(
+                'auth/register',
+                [Authentication::class, 'optionsRegister']
+            );
 
             Route::post(
                 'auth/create-password',

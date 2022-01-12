@@ -7,6 +7,7 @@ return [
     'auth_create_password_POST' => 'Create the password for your account, `token` and `email` are request parameters',
     'auth_forgot_password_POST' => 'Start the reset password process',
     'auth_login_POST' => 'Login to the API',
+    'auth_register_POST' => 'Register with the API',
 
     'api_GET_index' => 'Return all the API routes',
     'api_GET_changelog' => 'Return the complete API changelog',
