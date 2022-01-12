@@ -29,6 +29,11 @@ Route::group(
             [Authentication::class, 'forgotPassword']
         )->name('auth.forgot-password');
 
+        Route::options(
+            'auth/forgot-password',
+            [Authentication::class, 'optionsForgotPassword']
+        );
+
         Route::post(
             'auth/login',
             [Authentication::class, 'login']

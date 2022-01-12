@@ -5,8 +5,8 @@ declare(strict_types=1);
 return [
     'password' => [
         'field' => 'password',
-        'title' => 'auth/create-new-password/fields.title-password',
-        'description' => 'auth/create-new-password/fields.description-password',
+        'title' => 'auth/create-password/fields.title-password',
+        'description' => 'auth/create-password/fields.description-password',
         'type' => 'string',
         'validation' => [
             'min-length' => 12
@@ -15,8 +15,8 @@ return [
     ],
     'password_confirmation' => [
         'field' => 'description',
-        'title' => 'category/fields.title-description',
-        'description' => 'category/fields.description-description',
+        'title' => 'auth/create-password/fields.title-password_confirmation',
+        'description' => 'auth/create-password/fields.description-password_confirmation',
         'type' => 'string',
         'validation' => [
             'matches' => 'password',

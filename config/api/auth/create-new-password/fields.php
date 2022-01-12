@@ -15,8 +15,8 @@ return [
     ],
     'password_confirmation' => [
         'field' => 'description',
-        'title' => 'category/fields.title-description',
-        'description' => 'category/fields.description-description',
+        'title' => 'auth/create-new-password/fields.title-password_confirmation',
+        'description' => 'auth/create-new-password/fields.description-password_confirmation',
         'type' => 'string',
         'validation' => [
             'matches' => 'password',

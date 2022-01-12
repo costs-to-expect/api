@@ -236,6 +236,13 @@ class Authentication extends Controller
         return response()->json(['message' => 'Unable to fetch your user account, please try again later'], 404);
     }
 
+    public function optionsForgotPassword(): Http\JsonResponse
+    {
+        $response = new \App\Option\ForgotPassword([]);
+
+        return $response->create()->response();
+    }
+
     public function login(Request $request): Http\JsonResponse
     {
         if (

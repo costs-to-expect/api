@@ -119,6 +119,7 @@ additionally, the same is true if you are assigned as a permitted user to a reso
 | POST         | v2/auth/create-password                                                                                                                        |
 | OPTIONS      | v2/auth/create-new-password                                                                                                                    |
 | POST         | v2/auth/create-new-password                                                                                                                    |
+| OPTIONS      | v2/auth/forgot-password                                                                                                                        |
 | POST         | v2/auth/forgot-password                                                                                                                        |
 | POST         | v2/auth/login                                                                                                                                  |
 | GET          | v2/auth/logout                                                                                                                                 |
