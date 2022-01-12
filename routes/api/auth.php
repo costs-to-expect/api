@@ -19,6 +19,11 @@ Route::group(
             [Authentication::class, 'createNewPassword']
         )->name('auth.create-new-password');
 
+        Route::options(
+            'auth/create-new-password',
+            [Authentication::class, 'optionsCreateNewPassword']
+        );
+
         Route::post(
             'auth/forgot-password',
             [Authentication::class, 'forgotPassword']

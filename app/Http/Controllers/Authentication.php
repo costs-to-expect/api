@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Notifications\ForgotPassword;
 use App\Notifications\Registered;
+use App\Option\CreateNewPassword;
 use App\User;
 use Exception;
 use Illuminate\Http;
@@ -86,6 +87,13 @@ class Authentication extends Controller
             Log::error($e->getMessage());
             return response()->json(['message' => 'Unable to create password, please try again later'], 500);
         }
+    }
+
+    public function optionsCreateNewPassword(): Http\JsonResponse
+    {
+        $response = new CreateNewPassword([]);
+
+        return $response->create()->response();
     }
 
     public function createNewPassword(Request $request): Http\JsonResponse
@@ -250,7 +258,7 @@ class Authentication extends Controller
         return response()->json(['message' => 'Unauthorised, credentials invalid'], 401);
     }
 
-    public function logout(Request $request): Http\JsonResponse
+    public function logout(): Http\JsonResponse
     {
         Auth::logout();
 

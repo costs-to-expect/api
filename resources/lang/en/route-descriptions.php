@@ -3,6 +3,8 @@
 declare(strict_types=1);
 
 return [
+    'auth_create_new_password_POST' => 'Create the password for your account',
+
     'api_GET_index' => 'Return all the API routes',
     'api_GET_changelog' => 'Return the complete API changelog',
 
