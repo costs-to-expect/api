@@ -122,6 +122,16 @@ abstract class TestCase extends BaseTestCase
         $this->fail('Unable to create the resource type');
     }
 
+    protected function fetchResourceType(array $parameters = []): TestResponse
+    {
+        return $this->get(route('resource-type.show', $parameters));
+    }
+
+    protected function fetchResourceTypes(array $parameters = []): TestResponse
+    {
+        return $this->get(route('resource-type.list', $parameters));
+    }
+
     protected function helperCreateResource(string $resource_type_id): string
     {
         $response = $this->postResource(
