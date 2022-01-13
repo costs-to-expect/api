@@ -8,8 +8,6 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
 
 /**
- * Manage the our cache
- *
  * @mixin QueryBuilder
  * @author Dean Blackborough <dean@g3d-development.com>
  * @copyright Dean Blackborough 2018-2022

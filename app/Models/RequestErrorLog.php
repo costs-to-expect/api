@@ -7,9 +7,16 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Query\Builder as QueryBuilder;
 
 /**
- * Request error log
- *
  * @mixin QueryBuilder
+ *
+ * @property int $id
+ * @property string $method
+ * @property string $source
+ * @property string $debug
+ * @property int $expected_status_code
+ * @property int $returned_status_code
+ * @property string $request_uri
+ *
  * @author Dean Blackborough <dean@g3d-development.com>
  * @copyright Dean Blackborough 2018-2022
  * @license https://github.com/costs-to-expect/api/blob/master/LICENSE
@@ -20,7 +27,7 @@ class RequestErrorLog extends Model
 
     protected $guarded = ['id', 'created_at', 'updated_at'];
 
-    public function totalCount()
+    public function totalCount(): int
     {
         return $this->count();
     }
@@ -38,11 +45,11 @@ class RequestErrorLog extends Model
                 'request_error_log.source AS request_error_log_source',
                 'request_error_log.created_at AS request_error_log_created_at',
                 'request_error_log.debug AS request_error_log_debug'
-            )->
-            orderByDesc('created_at')->
-            offset($offset)->
-            limit($limit)->
-            get()->
-            toArray();
+            )
+            ->orderByDesc('created_at')
+            ->offset($offset)
+            ->limit($limit)
+            ->get()
+            ->toArray();
     }
 }

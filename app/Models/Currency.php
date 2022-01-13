@@ -8,6 +8,11 @@ use Illuminate\Database\Eloquent\Model;
 
 /**
  * @mixin QueryBuilder
+ *
+ * @property int $id
+ * @property string $code
+ * @property string $name
+ *
  * @author Dean Blackborough <dean@g3d-development.com>
  * @copyright Dean Blackborough 2018-2022
  * @license https://github.com/costs-to-expect/api/blob/master/LICENSE
@@ -49,11 +54,11 @@ class Currency extends Model
             foreach ($sort_parameters as $field => $direction) {
                 switch ($field) {
                     case 'created':
-                        $collection->orderBy("{$this->table}.created_at", $direction);
+                        $collection->orderBy($this->table . '.created_at', $direction);
                         break;
 
                     default:
-                        $collection->orderBy("{$this->table}." . $field, $direction);
+                        $collection->orderBy($this->table . '.' . $field, $direction);
                         break;
                 }
             }

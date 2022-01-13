@@ -7,9 +7,14 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Query\Builder as QueryBuilder;
 
 /**
- * Error log
- *
  * @mixin QueryBuilder
+ *
+ * @property int $id
+ * @property string $message
+ * @property string $file
+ * @property string $line
+ * @property string $trace
+ *
  * @author Dean Blackborough <dean@g3d-development.com>
  * @copyright Dean Blackborough 2018-2022
  * @license https://github.com/costs-to-expect/api/blob/master/LICENSE

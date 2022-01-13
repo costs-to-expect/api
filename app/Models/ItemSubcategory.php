@@ -5,11 +5,16 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Builder as QueryBuilder;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 /**
- * Item model
- *
  * @mixin QueryBuilder
+ *
+ * @property int $id
+ * @property int $item_category_id
+ * @property int $sub_category_id
+ *
  * @author Dean Blackborough <dean@g3d-development.com>
  * @copyright Dean Blackborough 2018-2022
  * @license https://github.com/costs-to-expect/api/blob/master/LICENSE
@@ -20,17 +25,17 @@ class ItemSubcategory extends Model
 
     protected $guarded = ['id', 'created_at', 'updated_at'];
 
-    public function sub_category()
+    public function sub_category(): HasOne
     {
         return $this->hasOne(Subcategory::class, 'id', 'sub_category_id');
     }
 
-    public function item()
+    public function item(): HasOne
     {
         return $this->hasOne(Item::class, 'id', 'item_id');
     }
 
-    public function item_category()
+    public function item_category(): BelongsTo
     {
         return $this->belongsTo(ItemCategory::class, 'item_category_id', 'id');
     }
@@ -145,13 +150,6 @@ class ItemSubcategory extends Model
             find($item_subcategory_id);
     }
 
-    /**
-     * Convert the model instance to an array for use with the transformer
-     *
-     * @param ItemSubcategory $item_sub_category
-     *
-     * @return array
-     */
     public function instanceToArray(ItemSubcategory $item_sub_category): array
     {
         return [
