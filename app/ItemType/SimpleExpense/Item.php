@@ -5,6 +5,12 @@ namespace App\ItemType\SimpleExpense;
 
 use App\AllowedValue\Currency;
 use App\ItemType\ItemType;
+use App\ItemType\SimpleExpense\AllowedValue\AllowedValue;
+use App\ItemType\SimpleExpense\AllowedValue\ResourceTypeAllowedValue;
+use App\ItemType\SimpleExpense\Response\ApiResourceTypeResponse;
+use App\ItemType\SimpleExpense\Response\ApiResponse;
+use App\ItemType\SimpleExpense\Response\ApiSummaryResourceTypeResponse;
+use App\ItemType\SimpleExpense\Response\ApiSummaryResponse;
 use App\Transformers\Transformer;
 use App\Request\Hash;
 use App\Request\Validate\Validator;
@@ -74,7 +80,7 @@ class Item extends ItemType
 
     public function resourceTypeSummaryClass(): string
     {
-        return SummaryResourceTypeApiResponse::class;
+        return ApiSummaryResourceTypeResponse::class;
     }
 
     public function transformer(array $data_to_transform): Transformer
@@ -110,7 +116,7 @@ class Item extends ItemType
 
     public function resourceTypeItemCollectionClass(): string
     {
-        return ResourceTypeApiResponse::class;
+        return ApiResourceTypeResponse::class;
     }
 
     protected function allowedValuesItemCollectionClass(): string

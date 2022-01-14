@@ -4,6 +4,12 @@ declare(strict_types=1);
 namespace App\ItemType\SimpleItem;
 
 use App\ItemType\ItemType;
+use App\ItemType\SimpleItem\AllowedValue\AllowedValue;
+use App\ItemType\SimpleItem\AllowedValue\ResourceTypeAllowedValue;
+use App\ItemType\SimpleItem\Response\ApiResourceTypeResponse;
+use App\ItemType\SimpleItem\Response\ApiResponse;
+use App\ItemType\SimpleItem\Response\ApiSummaryResourceTypeResponse;
+use App\ItemType\SimpleItem\Response\ApiSummaryResponse;
 use App\Transformers\Transformer;
 use App\Request\Validate\Validator;
 use Illuminate\Database\Eloquent\Model;
@@ -78,7 +84,7 @@ class Item extends ItemType
 
     public function resourceTypeSummaryClass(): string
     {
-        return SummaryResourceTypeApiResponse::class;
+        return ApiSummaryResourceTypeResponse::class;
     }
 
     public function transformer(array $data_to_transform): Transformer
@@ -109,7 +115,7 @@ class Item extends ItemType
 
     public function resourceTypeItemCollectionClass(): string
     {
-        return ResourceTypeApiResponse::class;
+        return ApiResourceTypeResponse::class;
     }
 
     protected function allowedValuesItemCollectionClass(): string

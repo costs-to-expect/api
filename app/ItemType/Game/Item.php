@@ -4,6 +4,12 @@ declare(strict_types=1);
 namespace App\ItemType\Game;
 
 use App\AllowedValue\Winner;
+use App\ItemType\Game\AllowedValue\AllowedValue;
+use App\ItemType\Game\AllowedValue\ResourceTypeAllowedValue;
+use App\ItemType\Game\Response\ApiResourceTypeResponse;
+use App\ItemType\Game\Response\ApiResponse;
+use App\ItemType\Game\Response\ApiSummaryResourceTypeResponse;
+use App\ItemType\Game\Response\ApiSummaryResponse;
 use App\ItemType\ItemType;
 use App\Transformers\Transformer;
 use App\Request\Hash;
@@ -126,12 +132,12 @@ class Item extends ItemType
 
     public function resourceTypeSummaryClass(): string
     {
-        return SummaryResourceTypeApiResponse::class;
+        return ApiSummaryResourceTypeResponse::class;
     }
 
     public function resourceTypeItemCollectionClass(): string
     {
-        return ResourceTypeApiResponse::class;
+        return ApiResourceTypeResponse::class;
     }
 
     protected function allowedValuesItemCollectionClass(): string

@@ -4,12 +4,12 @@ namespace App\Http\Controllers;
 
 use App\Notifications\ForgotPassword;
 use App\Notifications\Registered;
-use App\Option\CreateNewPassword;
-use App\Option\CreatePassword;
-use App\Option\Login;
-use App\Option\Register;
-use App\Option\UpdatePassword;
-use App\Option\UpdateProfile;
+use App\Option\Auth\CreateNewPassword;
+use App\Option\Auth\CreatePassword;
+use App\Option\Auth\Login;
+use App\Option\Auth\Register;
+use App\Option\Auth\UpdatePassword;
+use App\Option\Auth\UpdateProfile;
 use App\User;
 use Exception;
 use Illuminate\Http;
@@ -31,7 +31,7 @@ class Authentication extends Controller
 
     public function optionsCheck(): Http\JsonResponse
     {
-        $response = new \App\Option\Check([]);
+        $response = new \App\Option\Auth\Check([]);
 
         return $response->create()->response();
     }
@@ -249,7 +249,7 @@ class Authentication extends Controller
 
     public function optionsForgotPassword(): Http\JsonResponse
     {
-        $response = new \App\Option\ForgotPassword([]);
+        $response = new \App\Option\Auth\ForgotPassword([]);
 
         return $response->create()->response();
     }
@@ -500,7 +500,7 @@ class Authentication extends Controller
 
     public function optionsUser(): Http\JsonResponse
     {
-        $response = new \App\Option\User(['view'=> $this->user_id !== null]);
+        $response = new \App\Option\Auth\User(['view'=> $this->user_id !== null]);
 
         return $response->create()->response();
     }

@@ -4,6 +4,12 @@ declare(strict_types=1);
 namespace App\ItemType\AllocatedExpense;
 
 use App\AllowedValue\Currency;
+use App\ItemType\AllocatedExpense\AllowedValue\AllowedValue;
+use App\ItemType\AllocatedExpense\AllowedValue\ResourceTypeAllowedValue;
+use App\ItemType\AllocatedExpense\Response\ApiResourceTypeResponse;
+use App\ItemType\AllocatedExpense\Response\ApiResponse;
+use App\ItemType\AllocatedExpense\Response\ApiSummaryResourceTypeResponse;
+use App\ItemType\AllocatedExpense\Response\ApiSummaryResponse;
 use App\ItemType\ItemType;
 use App\Transformers\Transformer;
 use App\Request\Hash;
@@ -99,7 +105,7 @@ class Item extends ItemType
 
     public function resourceTypeSummaryClass(): string
     {
-        return SummaryResourceTypeApiResponse::class;
+        return ApiSummaryResourceTypeResponse::class;
     }
 
     public function transformer(array $data_to_transform): Transformer
@@ -144,7 +150,7 @@ class Item extends ItemType
 
     public function resourceTypeItemCollectionClass(): string
     {
-        return ResourceTypeApiResponse::class;
+        return ApiResourceTypeResponse::class;
     }
 
     protected function allowedValuesItemCollectionClass(): string
