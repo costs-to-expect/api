@@ -220,17 +220,17 @@ Route::group(
 
         Route::options(
             'resource-types/{resource_type_id}/resources',
-            [\App\Http\Controllers\ResourceTypeView::class, 'optionsIndex']
+            [\App\Http\Controllers\ResourceView::class, 'optionsIndex']
         )->name('resource.list.options');
 
         Route::get(
             'resource-types/{resource_type_id}/resources/{resource_id}',
-            [\App\Http\Controllers\ResourceTypeView::class, 'show']
+            [\App\Http\Controllers\ResourceView::class, 'show']
         )->name('resource.show');
 
         Route::options(
             'resource-types/{resource_type_id}/resources/{resource_id}',
-            [\App\Http\Controllers\ResourceTypeView::class, 'optionsShow']
+            [\App\Http\Controllers\ResourceView::class, 'optionsShow']
         )->name('resource.show.options');
 
         Route::get(

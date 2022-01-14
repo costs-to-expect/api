@@ -35,7 +35,7 @@ class Item extends ItemType
 
     public function create(int $id): Model
     {
-        $item = new \App\ItemType\Game\Model([
+        $item = new Models\Item([
             'item_id' => $id,
             'name' => request()->input('name'),
             'description' => request()->input('description', null),
@@ -52,12 +52,12 @@ class Item extends ItemType
 
     public function instance(int $id): Model
     {
-        return (new \App\ItemType\Game\Model())->instance($id);
+        return (new Models\Item())->instance($id);
     }
 
     public function model()
     {
-        return new \App\ItemType\Game\Model();
+        return new Models\Item();
     }
 
     public function subcategoryAssignmentLimit(): int
@@ -116,22 +116,22 @@ class Item extends ItemType
 
     public function summaryClass(): string
     {
-        return SummaryResponse::class;
+        return ApiSummaryResponse::class;
     }
 
     public function viewClass(): string
     {
-        return Response::class;
+        return ApiResponse::class;
     }
 
     public function resourceTypeSummaryClass(): string
     {
-        return SummaryResourceTypeResponse::class;
+        return SummaryResourceTypeApiResponse::class;
     }
 
     public function resourceTypeItemCollectionClass(): string
     {
-        return ResourceTypeResponse::class;
+        return ResourceTypeApiResponse::class;
     }
 
     protected function allowedValuesItemCollectionClass(): string

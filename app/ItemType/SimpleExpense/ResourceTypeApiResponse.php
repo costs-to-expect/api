@@ -3,11 +3,12 @@ declare(strict_types=1);
 
 namespace App\ItemType\SimpleExpense;
 
-use App\ItemType\ResourceTypeResponse as BaseResourceTypeResponse;
+use App\ItemType\ResourceTypeApiResponse as BaseResourceTypeResponse;
+use App\ItemType\SimpleExpense\Models\ResourceTypeItem;
 use App\ItemType\SimpleExpense\ResourceTypeTransformer as Transformer;
 use Illuminate\Http\JsonResponse;
 
-class ResourceTypeResponse extends BaseResourceTypeResponse
+class ResourceTypeApiResponse extends BaseResourceTypeResponse
 {
     public function response(): JsonResponse
     {
@@ -20,7 +21,7 @@ class ResourceTypeResponse extends BaseResourceTypeResponse
             $this->cache_control->isRequestCacheable() === false ||
             $cache_collection->valid() === false
         ) {
-            $model = new ResourceTypeModel();
+            $model = new ResourceTypeItem();
 
             $this->fetchAllRequestParameters(
                 new Item()

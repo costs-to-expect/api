@@ -37,14 +37,14 @@ class Item extends ItemType
      *
      * @param integer $id
      *
-     * @return Model
+     * @return \App\ItemType\AllocatedExpense\Models\Model
      */
     public function create($id): Model
     {
         $hash = new Hash();
         $currency_id = $hash->decode('currency', request()->input('currency_id'));
 
-        $item = new \App\ItemType\AllocatedExpense\Model([
+        $item = new Models\Item([
             'item_id' => $id,
             'name' => request()->input('name'),
             'description' => request()->input('description', null),
@@ -74,7 +74,7 @@ class Item extends ItemType
 
     public function instance(int $id): Model
     {
-        return (new \App\ItemType\AllocatedExpense\Model())->instance($id);
+        return (new Models\Item())->instance($id);
     }
 
     public function table(): string
@@ -89,17 +89,17 @@ class Item extends ItemType
 
     public function model()
     {
-        return new \App\ItemType\AllocatedExpense\Model();
+        return new Models\Item();
     }
 
     public function summaryClass(): string
     {
-        return SummaryResponse::class;
+        return ApiSummaryResponse::class;
     }
 
     public function resourceTypeSummaryClass(): string
     {
-        return SummaryResourceTypeResponse::class;
+        return SummaryResourceTypeApiResponse::class;
     }
 
     public function transformer(array $data_to_transform): Transformer
@@ -139,12 +139,12 @@ class Item extends ItemType
 
     public function viewClass(): string
     {
-        return Response::class;
+        return ApiResponse::class;
     }
 
     public function resourceTypeItemCollectionClass(): string
     {
-        return ResourceTypeResponse::class;
+        return ResourceTypeApiResponse::class;
     }
 
     protected function allowedValuesItemCollectionClass(): string

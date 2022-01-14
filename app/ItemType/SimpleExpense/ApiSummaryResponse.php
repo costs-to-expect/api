@@ -2,11 +2,11 @@
 
 namespace App\ItemType\SimpleExpense;
 
-use App\ItemType\SummaryResponse as BaseSummaryResponse;
+use App\ItemType\ApiSummaryResponse as BaseSummaryResponse;
 use App\Request\Validate\Boolean;
 use Illuminate\Http\JsonResponse;
 
-class SummaryResponse extends BaseSummaryResponse
+class ApiSummaryResponse extends BaseSummaryResponse
 {
     public function __construct(
         int $resource_type_id,

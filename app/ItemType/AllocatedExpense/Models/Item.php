@@ -1,25 +1,27 @@
 <?php
 declare(strict_types=1);
 
-namespace App\ItemType\SimpleExpense;
+namespace App\ItemType\AllocatedExpense\Models;
 
 use App\Models\Clause;
 use App\Models\Currency;
 use App\Request\Validate\Boolean;
 use Illuminate\Database\Eloquent\Model as LaravelModel;
 use Illuminate\Database\Query\Builder as QueryBuilder;
+use Illuminate\Support\Facades\DB;
 
 /**
  * @mixin QueryBuilder
+ *
  * @author Dean Blackborough <dean@g3d-development.com>
  * @copyright Dean Blackborough 2018-2022
  * @license https://github.com/costs-to-expect/api/blob/master/LICENSE
  */
-class Model extends LaravelModel
+class Item extends LaravelModel
 {
-    protected $table = 'item_type_simple_expense';
+    protected $table = 'item_type_allocated_expense';
 
-    protected $guarded = ['id'];
+    protected $guarded = ['id', 'actualised_total'];
 
     public $timestamps = false;
 
@@ -28,36 +30,20 @@ class Model extends LaravelModel
         return $this->hasOne(Currency::class, 'id', 'currency_id');
     }
 
-    public function instance(int $item_id): ?Model
+    public function setActualisedTotal($total, $percentage)
+    {
+        $this->attributes['actualised_total'] = ($percentage === 100) ? $total : $total * ($percentage/100);
+    }
+
+    public function instance(int $item_id): ?Item
     {
         return $this->where('item_id', '=', $item_id)->
             select(
-                'item_type_simple_expense.id'
+                'item_type_allocated_expense.id',
+                'item_type_allocated_expense.percentage',
+                'item_type_allocated_expense.total'
             )->
             first();
-    }
-
-    /**
-     * Convert the model instance to an array for use with the transformer
-     *
-     * @param Model $item
-     * @param Model $item_type
-     *
-     * @return array
-     */
-    public function instanceToArray(LaravelModel $item, Model $item_type): array
-    {
-        return [
-            'item_id' => $item->id,
-            'item_name' => $item_type->name,
-            'item_description' => $item_type->description,
-            'item_currency_id' => $item_type->currency->id,
-            'item_currency_code' => $item_type->currency->code,
-            'item_currency_name' => $item_type->currency->name,
-            'item_total' => $item_type->total,
-            'item_created_at' => ($item_type->created_at !== null) ? $item_type->created_at->toDateTimeString() : null,
-            'item_updated_at' => ($item_type->updated_at !== null) ? $item_type->updated_at->toDateTimeString() : null,
-        ];
     }
 
     /**
@@ -76,24 +62,27 @@ class Model extends LaravelModel
     ): ?array
     {
         $fields = [
-            'item.id AS item_id',
+            "item.id AS item_id",
             "{$this->table}.name AS item_name",
             "{$this->table}.description AS item_description",
             "currency.id AS item_currency_id",
             "currency.code AS item_currency_code",
             "currency.name AS item_currency_name",
+            "{$this->table}.effective_date AS item_effective_date",
             "{$this->table}.total AS item_total",
+            "{$this->table}.percentage AS item_percentage",
+            "{$this->table}.actualised_total AS item_actualised_total",
             "{$this->table}.created_at AS item_created_at",
             "{$this->table}.updated_at AS item_updated_at"
         ];
 
         $result = $this->from('item')->
-            join('item_type_simple_expense', 'item.id', 'item_type_simple_expense.item_id')->
+            join('item_type_allocated_expense', 'item.id', 'item_type_allocated_expense.item_id')->
             join('resource', 'item.resource_id', 'resource.id')->
-            join('currency', 'item_type_simple_expense.currency_id', 'currency.id')->
-            where('item.resource_id', '=', $resource_id)->
+            join('currency', 'item_type_allocated_expense.currency_id', 'currency.id')->
+            where('resource_id', '=', $resource_id)->
             where('resource.resource_type_id', '=', $resource_type_id)->
-            where('item_type_simple_expense.item_id', '=', $item_id)->
+            where('item_type_allocated_expense.item_id', '=', $item_id)->
             where('item.id', '=', $item_id);
 
         // We can only do this here because there will only ever be one category assignment
@@ -114,7 +103,7 @@ class Model extends LaravelModel
                 Boolean::convertedValue($parameters['include-subcategories']) === true
             ) {
                 $result->leftJoin('item_sub_category', 'item_category.id', 'item_sub_category.item_category_id')->
-                    leftJoin('sub_category', 'item_sub_category.sub_category_id', 'sub_category.id');
+                leftJoin('sub_category', 'item_sub_category.sub_category_id', 'sub_category.id');
 
                 $fields[] = 'item_sub_category.id AS item_subcategory_id';
                 $fields[] = 'sub_category.id AS subcategory_id';
@@ -126,10 +115,82 @@ class Model extends LaravelModel
         $item = $result->select($fields)->first();
 
         if ($item !== null) {
-            return $item->toArray();
-        } else {
-            return null;
+           return $item->toArray();
+       }
+
+        return null;
+    }
+
+    /**
+     * Work out the maximum effective date year for the requested resource id,
+     * defaults to the current year if no data exists
+     *
+     * @param integer $resource_id
+     *
+     * @return integer
+     */
+    public function maximumEffectiveDateYear(int $resource_id): int
+    {
+        $result = $this->join('item', 'item_type_allocated_expense.item_id', 'item.id')->
+            where('item.resource_id', '=', $resource_id)->
+            selectRaw('YEAR(MAX(`item_type_allocated_expense`.`effective_date`)) AS `year_limit`')->
+            first();
+
+        if ($result === null) {
+            return (int) (date('Y'));
         }
+
+        return (int) ($result->year_limit);
+
+    }
+
+    /**
+     * Work out the minimum effective date year for the requested resource id,
+     * defaults to the current year if no data exists
+     *
+     * @param integer $resource_id
+     *
+     * @return integer
+     */
+    public function minimumEffectiveDateYear(int $resource_id): int
+    {
+        $result = $this->join('item', 'item_type_allocated_expense.item_id', 'item.id')->
+            where('item.resource_id', '=', $resource_id)->
+            selectRaw('YEAR(MIN(`item_type_allocated_expense`.`effective_date`)) AS `year_limit`')->
+            first();
+
+        if ($result === null) {
+            return (int) (date('Y'));
+        }
+
+        return (int) ($result->year_limit);
+    }
+
+    /**
+     * Convert the model instance to an array for use with the transformer
+     *
+     * @param Item $item
+     * @param Item $item_type
+     *
+     * @return array
+     */
+    public function instanceToArray(LaravelModel $item, Item $item_type): array
+    {
+        return [
+            'item_id' => $item->id,
+            'item_name' => $item_type->name,
+            'item_description' => $item_type->description,
+            'item_effective_date' => $item_type->effective_date,
+            'item_publish_after' => $item_type->publish_after,
+            'item_currency_id' => $item_type->currency->id,
+            'item_currency_code' => $item_type->currency->code,
+            'item_currency_name' => $item_type->currency->name,
+            'item_total' => $item_type->total,
+            'item_percentage' => $item_type->percentage,
+            'item_actualised_total' => $item_type->actualised_total,
+            'item_created_at' => ($item_type->created_at !== null) ? $item_type->created_at->toDateTimeString() : null,
+            'item_updated_at' => ($item_type->updated_at !== null) ? $item_type->updated_at->toDateTimeString() : null,
+        ];
     }
 
     /**
@@ -153,10 +214,24 @@ class Model extends LaravelModel
     ): int
     {
         $collection = $this->from('item')->
-            join($this->table, 'item.id', $this->table . '.item_id')->
+            join('item_type_allocated_expense', 'item.id', 'item_type_allocated_expense.item_id')->
             join('resource', 'item.resource_id', 'resource.id')->
             where('resource_id', '=', $resource_id)->
             where('resource.resource_type_id', '=', $resource_type_id);
+
+        if (
+            array_key_exists('year', $parameters) === true &&
+            $parameters['year'] !== null
+        ) {
+            $collection->whereRaw(DB::raw("YEAR(item_type_allocated_expense.effective_date) = '{$parameters['year']}'"));
+        }
+
+        if (
+            array_key_exists('month', $parameters) === true &&
+            $parameters['month'] !== null
+        ) {
+            $collection->whereRaw(DB::raw("MONTH(item_type_allocated_expense.effective_date) = '{$parameters['month']}'"));
+        }
 
         if (
             array_key_exists('category', $parameters) === true &&
@@ -186,6 +261,8 @@ class Model extends LaravelModel
             $this->table,
             $filter_parameters
         );
+
+        $collection = Clause::applyExcludeFutureUnpublished($collection, $parameters);
 
         return $collection->count();
     }
@@ -219,10 +296,13 @@ class Model extends LaravelModel
             'item.id AS item_id',
             "{$this->table}.name AS item_name",
             "{$this->table}.description AS item_description",
+            "{$this->table}.effective_date AS item_effective_date",
             "currency.id AS item_currency_id",
             "currency.code AS item_currency_code",
             "currency.name AS item_currency_name",
             "{$this->table}.total AS item_total",
+            "{$this->table}.percentage AS item_percentage",
+            "{$this->table}.actualised_total AS item_actualised_total",
             "{$this->table}.created_at AS item_created_at",
             "{$this->table}.updated_at AS item_updated_at"
         ];
@@ -231,8 +311,8 @@ class Model extends LaravelModel
         $subcategory_join = false;
 
         $collection = $this->from('item')->
-            join('item_type_simple_expense', 'item.id', 'item_type_simple_expense.item_id')->
-            join('currency', 'item_type_simple_expense.currency_id', 'currency.id')->
+            join('item_type_allocated_expense', 'item.id', 'item_type_allocated_expense.item_id')->
+            join('currency', 'item_type_allocated_expense.currency_id', 'currency.id')->
             join('resource', 'item.resource_id', 'resource.id')->
             where('resource_id', '=', $resource_id)->
             where('resource.resource_type_id', '=', $resource_type_id);
@@ -243,7 +323,7 @@ class Model extends LaravelModel
             Boolean::convertedValue($parameters['include-categories']) === true
         ) {
             $collection->leftJoin('item_category', 'item.id', 'item_category.item_id')->
-                leftJoin('category', 'item_category.category_id', 'category.id');
+            leftJoin('category', 'item_category.category_id', 'category.id');
 
             $category_join = true;
 
@@ -262,7 +342,7 @@ class Model extends LaravelModel
                 Boolean::convertedValue($parameters['include-subcategories']) === true
             ) {
                 $collection->leftJoin('item_sub_category', 'item_category.id', 'item_sub_category.item_category_id')->
-                    leftJoin('sub_category', 'item_sub_category.sub_category_id', 'sub_category.id');
+                leftJoin('sub_category', 'item_sub_category.sub_category_id', 'sub_category.id');
 
                 $subcategory_join = true;
 
@@ -276,6 +356,16 @@ class Model extends LaravelModel
                     $collection->where('item_sub_category.sub_category_id', '=', $parameters['subcategory']);
                 }
             }
+        }
+
+        if (array_key_exists('year', $parameters) === true &&
+            $parameters['year'] !== null) {
+            $collection->whereRaw(DB::raw("YEAR(item_type_allocated_expense.effective_date) = '{$parameters['year']}'"));
+        }
+
+        if (array_key_exists('month', $parameters) === true &&
+            $parameters['month'] !== null) {
+            $collection->whereRaw(DB::raw("MONTH(item_type_allocated_expense.effective_date) = '{$parameters['month']}'"));
         }
 
         if (
@@ -298,16 +388,10 @@ class Model extends LaravelModel
             $collection->where('item_sub_category.sub_category_id', '=', $parameters['subcategory']);
         }
 
-        $collection = Clause::applySearch(
-            $collection,
-            $this->table,
-            $search_parameters
-        );
-        $collection = Clause::applyFiltering(
-            $collection,
-            $this->table,
-            $filter_parameters
-        );
+        $collection = Clause::applySearch($collection, 'item_type_allocated_expense', $search_parameters);
+        $collection = Clause::applyFiltering($collection, 'item_type_allocated_expense', $filter_parameters);
+
+        $collection = Clause::applyExcludeFutureUnpublished($collection, $parameters);
 
         if (count($sort_parameters) > 0) {
             foreach ($sort_parameters as $field => $direction) {
@@ -316,10 +400,12 @@ class Model extends LaravelModel
                         $collection->orderBy('item.created_at', $direction);
                         break;
 
+                    case 'actualised_total':
                     case 'description':
+                    case 'effective_date':
                     case 'name':
                     case 'total':
-                        $collection->orderBy('item_type_simple_expense.' . $field, $direction);
+                        $collection->orderBy('item_type_allocated_expense.' . $field, $direction);
                         break;
 
                     default:
@@ -328,6 +414,7 @@ class Model extends LaravelModel
                 }
             }
         } else {
+            $collection->orderBy('item_type_allocated_expense.effective_date', 'desc');
             $collection->orderBy('item.created_at', 'desc');
         }
 
@@ -363,11 +450,11 @@ class Model extends LaravelModel
     public function hasCategoryAssignments(int $item_id): bool
     {
         $assignments = $this->from('item')->
-        leftJoin('item_category', 'item.id', '=', 'item_category.item_id')->
-        leftJoin('item_sub_category', 'item_category.id', '=', 'item_sub_category.item_category_id')->
-        where('item.id', '=', $item_id)->
-        select('item_category.id AS item_category_id', 'item_sub_category.id AS item_sub_category_id')->
-        first();
+            leftJoin('item_category', 'item.id', '=', 'item_category.item_id')->
+            leftJoin('item_sub_category', 'item_category.id', '=', 'item_sub_category.item_category_id')->
+            where('item.id', '=', $item_id)->
+            select('item_category.id AS item_category_id', 'item_sub_category.id AS item_sub_category_id')->
+            first();
 
         if ($assignments !== null) {
             $categories = $assignments->toArray();

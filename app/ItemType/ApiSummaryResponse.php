@@ -7,7 +7,7 @@ use App\Response\Header;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\JsonResponse;
 
-abstract class SummaryResponse
+abstract class ApiSummaryResponse
 {
     protected int $resource_type_id;
 

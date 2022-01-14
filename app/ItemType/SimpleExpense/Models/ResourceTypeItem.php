@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace App\ItemType\SimpleExpense;
+namespace App\ItemType\SimpleExpense\Models;
 
 use App\Models\Clause;
 use App\Request\Validate\Boolean;
@@ -14,7 +14,7 @@ use Illuminate\Database\Query\Builder as QueryBuilder;
  * @copyright Dean Blackborough 2018-2022
  * @license https://github.com/costs-to-expect/api/blob/master/LICENSE
  */
-class ResourceTypeModel extends LaravelModel
+class ResourceTypeItem extends LaravelModel
 {
     protected $table = 'item';
 

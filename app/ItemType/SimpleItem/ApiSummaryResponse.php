@@ -1,11 +1,11 @@
 <?php
 
-namespace App\ItemType\Game;
+namespace App\ItemType\SimpleItem;
 
-use App\ItemType\SummaryResponse as BaseSummaryResponse;
+use App\ItemType\ApiSummaryResponse as BaseSummaryResponse;
 use Illuminate\Http\JsonResponse;
 
-class SummaryResponse extends BaseSummaryResponse
+class ApiSummaryResponse extends BaseSummaryResponse
 {
     public function __construct(
         int $resource_type_id,
@@ -20,7 +20,7 @@ class SummaryResponse extends BaseSummaryResponse
             $permitted_user,
             $user_id
         );
-
+        
         $this->setUpCache();
 
         $this->model = new SummaryModel();
@@ -72,7 +72,7 @@ class SummaryResponse extends BaseSummaryResponse
 
     protected function removeDecisionParameters(): void
     {
-        // Nothing here
+        // Do nothing
     }
 
     protected function summary(): JsonResponse

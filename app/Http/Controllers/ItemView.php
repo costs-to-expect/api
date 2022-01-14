@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use App\AllowedValue\Currency;
 use App\ItemType\Entity;
-use App\ItemType\Response;
+use App\ItemType\ApiResponse;
 use App\Option\ItemCollection;
 use App\Option\ItemItem;
 use Illuminate\Http\JsonResponse;
@@ -16,15 +16,6 @@ use Illuminate\Http\JsonResponse;
  */
 class ItemView extends Controller
 {
-    /**
-     * Return all the items for the resource type and resource applying
-     * any filtering, pagination and ordering
-     *
-     * @param string $resource_type_id
-     * @param string $resource_id
-     *
-     * @return JsonResponse
-     */
     public function index(
         string $resource_type_id,
         string $resource_id
@@ -39,7 +30,7 @@ class ItemView extends Controller
         $collection_class = $entity->viewClass();
 
         /**
-         * @var $collection Response
+         * @var $collection ApiResponse
          */
         $collection = new $collection_class(
             (int) $resource_type_id,
@@ -74,7 +65,7 @@ class ItemView extends Controller
         $collection_class = $entity->viewClass();
 
         /**
-         * @var $collection Response
+         * @var $collection ApiResponse
          */
         $collection = new $collection_class(
             (int) $resource_type_id,

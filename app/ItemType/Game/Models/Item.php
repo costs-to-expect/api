@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace App\ItemType\Game;
+namespace App\ItemType\Game\Models;
 
 use App\Models\Category;
 use App\Models\Clause;
@@ -14,7 +14,7 @@ use Illuminate\Database\Query\Builder as QueryBuilder;
  * @copyright Dean Blackborough 2018-2022
  * @license https://github.com/costs-to-expect/api/blob/master/LICENSE
  */
-class Model extends LaravelModel
+class Item extends LaravelModel
 {
     protected $table = 'item_type_game';
 
@@ -27,7 +27,7 @@ class Model extends LaravelModel
         return $this->hasOne(Category::class, 'id', 'winner_id');
     }
 
-    public function instance(int $item_id): ?Model
+    public function instance(int $item_id): ?Item
     {
         return $this->where('item_id', '=', $item_id)->
             select(
@@ -36,7 +36,7 @@ class Model extends LaravelModel
             first();
     }
 
-    public function instanceToArray(LaravelModel $item, Model $item_type): array
+    public function instanceToArray(LaravelModel $item, Item $item_type): array
     {
         return [
             'item_id' => $item->id,

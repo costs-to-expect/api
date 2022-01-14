@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace App\ItemType\SimpleItem;
+namespace App\ItemType\SimpleItem\Models;
 
 use App\Models\Clause;
 use Illuminate\Database\Eloquent\Model as LaravelModel;
@@ -13,7 +13,7 @@ use Illuminate\Database\Query\Builder as QueryBuilder;
  * @copyright Dean Blackborough 2018-2022
  * @license https://github.com/costs-to-expect/api/blob/master/LICENSE
  */
-class Model extends LaravelModel
+class Item extends LaravelModel
 {
     protected $table = 'item_type_simple_item';
 
@@ -21,7 +21,7 @@ class Model extends LaravelModel
 
     public $timestamps = false;
 
-    public function instance(int $item_id): ?Model
+    public function instance(int $item_id): ?Item
     {
         return $this->where('item_id', '=', $item_id)->
             select(
@@ -33,12 +33,12 @@ class Model extends LaravelModel
     /**
      * Convert the model instance to an array for use with the item transformer
      *
-     * @param Model $item
-     * @param Model $item_type
+     * @param Item $item
+     * @param Item $item_type
      *
      * @return array
      */
-    public function instanceToArray(LaravelModel $item, Model $item_type): array
+    public function instanceToArray(LaravelModel $item, Item $item_type): array
     {
         return [
             'item_id' => $item->id,

@@ -1,13 +1,12 @@
 <?php
 
-namespace App\ItemType\Game;
+namespace App\ItemType\SimpleItem;
 
-use App\ItemType\SummaryResourceTypeResponse as BaseSummaryResourceTypeResponse;
-use App\ItemType\Game\SummaryTransformer as GameTransformer;
+use App\ItemType\SummaryResourceTypeApiResponse as BaseSummaryResourceTypeResponse;
 use App\Request\Validate\Boolean;
 use Illuminate\Http\JsonResponse;
 
-class SummaryResourceTypeResponse extends BaseSummaryResourceTypeResponse
+class SummaryResourceTypeApiResponse extends BaseSummaryResourceTypeResponse
 {
     public function __construct(
         int $resource_type_id,
@@ -58,7 +57,7 @@ class SummaryResourceTypeResponse extends BaseSummaryResourceTypeResponse
 
             $collection = [];
             foreach ($summary as $subtotal) {
-                $collection[] = (new GameTransformer($subtotal))->asArray();
+                $collection[] = (new SummaryTransformer($subtotal))->asArray();
             }
 
             $this->assignToCache(
@@ -119,7 +118,7 @@ class SummaryResourceTypeResponse extends BaseSummaryResourceTypeResponse
 
             $collection = [];
             foreach ($summary as $subtotal) {
-                $collection[] = (new GameTransformer($subtotal))->asArray();
+                $collection[] = (new SummaryTransformer($subtotal))->asArray();
             }
 
             $this->assignToCache(

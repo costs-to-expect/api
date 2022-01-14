@@ -2,29 +2,27 @@
 
 namespace App\ItemType\AllocatedExpense;
 
-use App\ItemType\SummaryResponse as BaseSummaryResponse;
+use App\ItemType\SummaryResourceTypeApiResponse as BaseSummaryResourceTypeResponse;
 use App\Request\Validate\Boolean;
 use Illuminate\Http\JsonResponse;
 
-class SummaryResponse extends BaseSummaryResponse
+class SummaryResourceTypeApiResponse extends BaseSummaryResourceTypeResponse
 {
     public function __construct(
         int $resource_type_id,
-        int $resource_id,
         bool $permitted_user = false,
         int $user_id = null
     )
     {
         parent::__construct(
             $resource_type_id,
-            $resource_id,
             $permitted_user,
             $user_id
         );
 
         $this->setUpCache();
 
-        $this->model = new SummaryModel();
+        $this->model = new SummaryResourceTypeModel();
 
         $this->shortCircuit(); // Skip working out which for obvious routes
 
@@ -96,6 +94,10 @@ class SummaryResponse extends BaseSummaryResponse
             return $this->categorySummary();
         }
 
+        if ($this->decision_parameters['resources'] === true) {
+            return $this->resourcesSummary();
+        }
+
         if (
             $this->decision_parameters['category'] !== null ||
             $this->decision_parameters['subcategory'] !== null ||
@@ -116,7 +118,6 @@ class SummaryResponse extends BaseSummaryResponse
 
             $summary = $this->model->categoriesSummary(
                 $this->resource_type_id,
-                $this->resource_id,
                 $this->parameters
             );
 
@@ -139,7 +140,6 @@ class SummaryResponse extends BaseSummaryResponse
 
             $summary = $this->model->categorySummary(
                 $this->resource_type_id,
-                $this->resource_id,
                 $this->decision_parameters['category'],
                 $this->parameters
             );
@@ -169,7 +169,6 @@ class SummaryResponse extends BaseSummaryResponse
 
             $summary = $this->model->filteredSummary(
                 $this->resource_type_id,
-                $this->resource_id,
                 $this->decision_parameters['category'],
                 $this->decision_parameters['subcategory'],
                 $this->decision_parameters['year'],
@@ -201,7 +200,6 @@ class SummaryResponse extends BaseSummaryResponse
 
             $summary = $this->model->monthsSummary(
                 $this->resource_type_id,
-                $this->resource_id,
                 $this->decision_parameters['year'],
                 $this->parameters
             );
@@ -225,7 +223,6 @@ class SummaryResponse extends BaseSummaryResponse
 
             $summary = $this->model->monthSummary(
                 $this->resource_type_id,
-                $this->resource_id,
                 $this->decision_parameters['year'],
                 $this->decision_parameters['month'],
                 $this->parameters
@@ -252,6 +249,7 @@ class SummaryResponse extends BaseSummaryResponse
 
     protected function removeDecisionParameters(): void
     {
+        $this->decision_parameters['resources'] = false;
         $this->decision_parameters['years'] = false;
         $this->decision_parameters['months'] = false;
         $this->decision_parameters['categories'] = false;
@@ -260,6 +258,11 @@ class SummaryResponse extends BaseSummaryResponse
         $this->decision_parameters['month'] = null;
         $this->decision_parameters['category'] = null;
         $this->decision_parameters['subcategory'] = null;
+
+        if (array_key_exists('resources', $this->parameters) === true &&
+            Boolean::convertedValue($this->parameters['resources']) === true) {
+            $this->decision_parameters['resources'] = true;
+        }
 
         if (array_key_exists('years', $this->parameters) === true &&
             Boolean::convertedValue($this->parameters['years']) === true) {
@@ -298,6 +301,7 @@ class SummaryResponse extends BaseSummaryResponse
         }
 
         unset(
+            $this->parameters['resources'],
             $this->parameters['years'],
             $this->parameters['year'],
             $this->parameters['months'],
@@ -309,13 +313,34 @@ class SummaryResponse extends BaseSummaryResponse
         );
     }
 
+    protected function resourcesSummary(): JsonResponse
+    {
+        if ($this->cache_control->isRequestCacheable() === false || $this->cache_summary->valid() === false) {
+
+            $summary = $this->model->resourcesSummary(
+                $this->resource_type_id,
+                $this->parameters
+            );
+
+            $collection = (new SummaryTransformerByResource($summary))->asArray();
+
+            $this->assignToCache(
+                $summary,
+                $collection,
+                $this->cache_control,
+                $this->cache_summary
+            );
+        }
+
+        return response()->json($this->cache_summary->collection(), 200, $this->cache_summary->headers());
+    }
+
     protected function subcategoriesSummary(): JsonResponse
     {
         if ($this->cache_control->isRequestCacheable() === false || $this->cache_summary->valid() === false) {
 
             $summary = $this->model->subCategoriesSummary(
                 $this->resource_type_id,
-                $this->resource_id,
                 $this->decision_parameters['category'],
                 $this->parameters
             );
@@ -339,7 +364,6 @@ class SummaryResponse extends BaseSummaryResponse
 
             $summary = $this->model->subCategorySummary(
                 $this->resource_type_id,
-                $this->resource_id,
                 $this->decision_parameters['category'],
                 $this->decision_parameters['subcategory'],
                 $this->parameters
@@ -370,7 +394,6 @@ class SummaryResponse extends BaseSummaryResponse
 
             $summary = $this->model->summary(
                 $this->resource_type_id,
-                $this->resource_id,
                 $this->parameters
             );
 
@@ -396,7 +419,6 @@ class SummaryResponse extends BaseSummaryResponse
 
             $summary = $this->model->yearsSummary(
                 $this->resource_type_id,
-                $this->resource_id,
                 $this->parameters
             );
 
@@ -419,7 +441,6 @@ class SummaryResponse extends BaseSummaryResponse
 
             $summary = $this->model->yearSummary(
                 $this->resource_type_id,
-                $this->resource_id,
                 $this->decision_parameters['year'],
                 $this->parameters
             );

@@ -1,13 +1,14 @@
 <?php
 declare(strict_types=1);
 
-namespace App\ItemType\SimpleItem;
+namespace App\ItemType\SimpleExpense;
 
-use App\ItemType\Response as ItemTypeResponse;
+use App\ItemType\ApiResponse as ItemTypeResponse;
+use App\ItemType\SimpleExpense\Models\Item;
 use App\Response\Responses;
 use Illuminate\Http\JsonResponse;
 
-class Response extends ItemTypeResponse
+class ApiResponse extends ItemTypeResponse
 {
     public function collectionResponse(): JsonResponse
     {
@@ -20,7 +21,7 @@ class Response extends ItemTypeResponse
             $this->cache_control->isRequestCacheable() === false ||
             $cache_collection->valid() === false
         ) {
-            $model = new Model();
+            $model = new Item();
 
             $this->fetchAllRequestParameters(
                 new Item()
@@ -41,6 +42,7 @@ class Response extends ItemTypeResponse
                 $this->resource_id,
                 $pagination_parameters['offset'],
                 $pagination_parameters['limit'],
+                $this->request_parameters,
                 $this->search_parameters,
                 $this->filter_parameters,
                 $this->sort_fields
@@ -82,7 +84,7 @@ class Response extends ItemTypeResponse
             new Item()
         );
 
-        $item = (new Model())->single(
+        $item = (new Item())->single(
             $this->resource_type_id,
             $this->resource_id,
             $item_id,

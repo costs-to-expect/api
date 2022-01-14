@@ -1,21 +1,18 @@
 <?php
 declare(strict_types=1);
 
-namespace App\ItemType\AllocatedExpense;
+namespace App\ItemType\SimpleItem;
 
-use App\ItemType\Response as ItemTypeResponse;
-use App\Response\Responses;
+use App\ItemType\ResourceTypeApiResponse as BaseResourceTypeResponse;
+use App\ItemType\SimpleItem\Models\ResourceTypeItem;
+use App\ItemType\SimpleItem\ResourceTypeTransformer as Transformer;
 use Illuminate\Http\JsonResponse;
 
-class Response extends ItemTypeResponse
+class ResourceTypeApiResponse extends BaseResourceTypeResponse
 {
-    public function collectionResponse(): JsonResponse
+    public function response(): JsonResponse
     {
-        if ($this->cache_control->visibility() === 'public') {
-            $this->cache_control->setTtlOneWeek();
-        } else {
-            $this->cache_control->setTtlOneDay();
-        }
+        $this->cache_control->setTtlOneMonth();
 
         $cache_collection = new \App\Cache\Collection();
         $cache_collection->setFromCache($this->cache_control->getByKey(request()->getRequestUri()));
@@ -24,7 +21,7 @@ class Response extends ItemTypeResponse
             $this->cache_control->isRequestCacheable() === false ||
             $cache_collection->valid() === false
         ) {
-            $model = new Model();
+            $model = new ResourceTypeItem();
 
             $this->fetchAllRequestParameters(
                 new Item()
@@ -32,8 +29,6 @@ class Response extends ItemTypeResponse
 
             $total = $model->totalCount(
                 $this->resource_type_id,
-                $this->resource_id,
-                $this->request_parameters,
                 $this->search_parameters,
                 $this->filter_parameters
             );
@@ -42,10 +37,8 @@ class Response extends ItemTypeResponse
 
             $items = $model->paginatedCollection(
                 $this->resource_type_id,
-                $this->resource_id,
                 $pagination_parameters['offset'],
                 $pagination_parameters['limit'],
-                $this->request_parameters,
                 $this->search_parameters,
                 $this->filter_parameters,
                 $this->sort_fields
@@ -67,7 +60,7 @@ class Response extends ItemTypeResponse
                 $total,
                 $collection,
                 $pagination_parameters,
-                $this->collectionHeaders(
+                $this->headers(
                     $pagination_parameters,
                     count($items),
                     $total,
@@ -79,29 +72,5 @@ class Response extends ItemTypeResponse
         }
 
         return response()->json($cache_collection->collection(), 200, $cache_collection->headers());
-    }
-
-    public function showResponse(int $item_id): JsonResponse
-    {
-        $this->fetchAllRequestParameters(
-            new Item()
-        );
-
-        $item = (new Model())->single(
-            $this->resource_type_id,
-            $this->resource_id,
-            $item_id,
-            $this->request_parameters
-        );
-
-        if ($item === null) {
-            return Responses::notFound(trans('entities.item'));
-        }
-
-        return response()->json(
-            (new Transformer($item))->asArray(),
-            200,
-            $this->showHeaders()
-        );
     }
 }

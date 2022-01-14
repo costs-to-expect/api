@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace App\ItemType\AllocatedExpense;
+namespace App\ItemType\AllocatedExpense\Models;
 
 use App\Models\Clause;
 use App\Request\Validate\Boolean;
@@ -15,7 +15,7 @@ use Illuminate\Support\Facades\DB;
  * @copyright Dean Blackborough 2018-2022
  * @license https://github.com/costs-to-expect/api/blob/master/LICENSE
  */
-class ResourceTypeModel extends LaravelModel
+class ResourceTypeItem extends LaravelModel
 {
     protected $table = 'item';
 
