@@ -3,13 +3,18 @@ declare(strict_types=1);
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Query\Builder as QueryBuilder;
 use Illuminate\Database\Eloquent\Model;
 
 /**
- * Item model
- *
  * @mixin QueryBuilder
+ *
+ * @property int $id
+ * @property int $resource_id
+ * @property int $created_by
+ * @property int $updated_by
+ *
  * @author Dean Blackborough <dean@g3d-development.com>
  * @copyright Dean Blackborough 2018-2022
  * @license https://github.com/costs-to-expect/api/blob/master/LICENSE
@@ -20,7 +25,7 @@ class Item extends Model
 
     protected $guarded = ['id', 'created_at', 'updated_at'];
 
-    public function resource()
+    public function resource(): BelongsTo
     {
         return $this->belongsTo(Resource::class, 'resource_id', 'id');
     }

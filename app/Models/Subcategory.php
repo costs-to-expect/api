@@ -3,14 +3,19 @@ declare(strict_types=1);
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Query\Builder as QueryBuilder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Config;
 
 /**
- * Sub category model
- *
  * @mixin QueryBuilder
+ *
+ * @property int $id
+ * @property int $category_id
+ * @property string $name
+ * @property string $description
+ *
  * @author Dean Blackborough <dean@g3d-development.com>
  * @copyright Dean Blackborough 2018-2022
  * @license https://github.com/costs-to-expect/api/blob/master/LICENSE
@@ -21,53 +26,31 @@ class Subcategory extends Model
 
     protected $guarded = ['id', 'created_at', 'updated_at'];
 
-    public function category()
+    public function category(): BelongsTo
     {
         return $this->belongsTo(Category::class, 'category_id', 'id');
     }
 
-    /**
-     * Return an array of the fields that can be PATCHed.
-     *
-     * @return array
-     */
     public function patchableFields(): array
     {
         return array_keys(Config::get('api.subcategory.validation.PATCH.fields'));
     }
 
-    /**
-     * @param integer $resource_type_id
-     * @param integer $category_id
-     * @param array $search_parameters
-     *
-     * @return integer
-     */
     public function totalCount(
         int $resource_type_id,
         int $category_id,
         array $search_parameters = []
     ): int
     {
-        $collection = $this->join('category', 'sub_category.category_id', 'category.id')->
-            where('sub_category.category_id', '=', $category_id)->
-            where('category.resource_type_id', '=', $resource_type_id);
+        $collection = $this->join('category', 'sub_category.category_id', 'category.id')
+            ->where('sub_category.category_id', '=', $category_id)
+            ->where('category.resource_type_id', '=', $resource_type_id);
 
         $collection = Clause::applySearch($collection, $this->table, $search_parameters);
 
         return $collection->count();
     }
 
-    /**
-     * @param integer $resource_type_id
-     * @param integer $category_id
-     * @param integer $offset
-     * @param integer $limit
-     * @param array $search_parameters
-     * @param array $sort_parameters
-     *
-     * @return array
-     */
     public function paginatedCollection(
         int $resource_type_id,
         int $category_id,
@@ -111,16 +94,16 @@ class Subcategory extends Model
             foreach ($sort_parameters as $field => $direction) {
                 switch ($field) {
                     case 'created':
-                        $collection->orderBy('sub_category.created_at', $direction);
+                        $collection->orderBy($this->table . '.created_at', $direction);
                         break;
 
                     default:
-                        $collection->orderBy('sub_category.' . $field, $direction);
+                        $collection->orderBy($this->table . '.' . $field, $direction);
                         break;
                 }
             }
         } else {
-            $collection->orderBy('sub_category.name', 'asc');
+            $collection->orderBy($this->table . '.name', 'asc');
         }
 
         $collection->offset($offset)->
@@ -170,13 +153,6 @@ class Subcategory extends Model
             find($subcategory_id);
     }
 
-    /**
-     * Convert the model instance to an array for use with the transformer
-     *
-     * @param Subcategory $subcategory
-     *
-     * @return array
-     */
     public function instanceToArray(Subcategory $subcategory): array
     {
         return [

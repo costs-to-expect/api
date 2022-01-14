@@ -7,9 +7,15 @@ use Illuminate\Database\Eloquent\Builder as QueryBuilder;
 use Illuminate\Database\Eloquent\Model;
 
 /**
- * Item type model
- *
  * @mixin QueryBuilder
+ *
+ * @propery int $id
+ * @propery int $resource_type_id
+ * @propery int $from
+ * @propery int $to
+ * @propery int $item_id
+ * @propery int $transferred_by
+ *
  * @author Dean Blackborough <dean@g3d-development.com>
  * @copyright Dean Blackborough 2018-2022
  * @license https://github.com/costs-to-expect/api/blob/master/LICENSE
@@ -62,14 +68,6 @@ class ItemTransfer extends Model
         return $collection->get()->toArray();
     }
 
-    /**
-     * Return a single partial transfer
-     *
-     * @param integer $resource_type_id
-     * @param integer $item_partial_transfer_id
-     *
-     * @return array|null
-     */
     public function single(
         int $resource_type_id,
         int $item_partial_transfer_id
@@ -97,9 +95,9 @@ class ItemTransfer extends Model
 
         if ($result === null) {
             return null;
-        } else {
-            return $result->toArray();
         }
+
+        return $result->toArray();
     }
 
     public function total(
@@ -130,12 +128,7 @@ class ItemTransfer extends Model
         return $collection->count();
     }
 
-    /**
-     * @param int $item_id
-     *
-     * @return mixed
-     */
-    public function deleteTransfers(int $item_id)
+    public function deleteTransfers(int $item_id): ?bool
     {
         return $this->where($this->table . '.item_id', '=', $item_id)->delete();
     }

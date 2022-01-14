@@ -7,9 +7,13 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Query\Builder as QueryBuilder;
 
 /**
- * Error log
- *
  * @mixin QueryBuilder
+ *
+ * @property int $id
+ * @property int $resource_type_id
+ * @property int $user_id
+ * @property int $added_by
+ *
  * @author Dean Blackborough <dean@g3d-development.com>
  * @copyright Dean Blackborough 2018-2022
  * @license https://github.com/costs-to-expect/api/blob/master/LICENSE
@@ -20,14 +24,6 @@ class PermittedUser extends Model
 
     protected $guarded = ['id'];
 
-    /**
-     * Return an instance of a permitted user
-     *
-     * @param integer $resource_type_id
-     * @param integer $user_id
-     *
-     * @return ResourceAccess|null
-     */
     public function instance(int $resource_type_id, int $user_id): ?PermittedUser
     {
         return $this->where('resource_type_id', '=', $resource_type_id)->
@@ -35,14 +31,6 @@ class PermittedUser extends Model
             first();
     }
 
-    /**
-     * Return the total number of permitted users for the resource type
-     *
-     * @param integer $resource_type_id
-     * @param array $search_parameters
-     *
-     * @return integer
-     */
     public function totalCount(
         int $resource_type_id,
         array $search_parameters = []
@@ -57,17 +45,6 @@ class PermittedUser extends Model
         return $collection->count('permitted_user.id');
     }
 
-    /**
-     * Return the permitted users based on the given conditions
-     *
-     * @param integer $resource_type_id
-     * @param integer $offset
-     * @param integer $limit
-     * @param array $search_parameters
-     * @param array $sort_parameters
-     *
-     * @return array
-     */
     public function paginatedCollection(
         int $resource_type_id,
         int $offset = 0,
@@ -91,7 +68,7 @@ class PermittedUser extends Model
             foreach ($sort_parameters as $field => $direction) {
                 switch ($field) {
                     case 'created':
-                        $collection->orderBy('permitted_user.created_at', $direction);
+                        $collection->orderBy($this->table . '.created_at', $direction);
                         break;
 
                     default:
@@ -100,9 +77,12 @@ class PermittedUser extends Model
                 }
             }
         } else {
-            $collection->orderBy('permitted_user.created_at', 'desc');
+            $collection->orderBy($this->table . '.created_at', 'desc');
         }
 
-        return $collection->offset($offset)->limit($limit)->get()->toArray();
+        return $collection->offset($offset)
+            ->limit($limit)
+            ->get()
+            ->toArray();
     }
 }

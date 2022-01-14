@@ -7,25 +7,14 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Query\Builder as QueryBuilder;
 
 /**
- * Item model when fetching data by resource type
- *
  * @mixin QueryBuilder
+ *
  * @author Dean Blackborough <dean@g3d-development.com>
  * @copyright Dean Blackborough 2018-2022
  * @license https://github.com/costs-to-expect/api/blob/master/LICENSE
  */
 class EntityLimits extends Model
 {
-    /**
-     * Work out the maximum year for the given date field in the given table.
-     * We default to the current year if there are no records
-     *
-     * @param integer $resource_type_id
-     * @param string $table
-     * @param string $field
-     *
-     * @return integer
-     */
     public function maximumYearByResourceType(
         int $resource_type_id,
         string $table,
@@ -40,16 +29,6 @@ class EntityLimits extends Model
         );
     }
 
-    /**
-     * Work out the maximum year for the given date field in the given table.
-     * We default to the current year if there are no records
-     *
-     * @param integer $resource_type_id
-     * @param string $table
-     * @param string $field
-     *
-     * @return integer
-     */
     public function minimumYearByResourceType(
         int $resource_type_id,
         string $table,
@@ -64,17 +43,6 @@ class EntityLimits extends Model
         );
     }
 
-    /**
-     * Work out the maximum year for the given date field in the given table.
-     * We default to the current year if there are no records
-     *
-     * @param integer $resource_type_id
-     * @param integer $resource_id
-     * @param string $table
-     * @param string $field
-     *
-     * @return integer
-     */
     public function maximumYearByResourceTypeAndResource(
         int $resource_type_id,
         int $resource_id,
@@ -91,17 +59,6 @@ class EntityLimits extends Model
         );
     }
 
-    /**
-     * Work out the minimum year for the given date field in the given table.
-     * We default to the current year if there are no records
-     *
-     * @param integer $resource_type_id
-     * @param integer $resource_id
-     * @param string $table
-     * @param string $field
-     *
-     * @return integer
-     */
     public function minimumYearByResourceTypeAndResource(
         int $resource_type_id,
         int $resource_id,

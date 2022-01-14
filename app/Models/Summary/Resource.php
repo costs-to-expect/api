@@ -8,9 +8,14 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Query\Builder as QueryBuilder;
 
 /**
- * Resource model
- *
  * @mixin QueryBuilder
+ *
+ * @property int $id
+ * @property int $resource_type_id
+ * @property string $name
+ * @property string $description
+ * @property string $data
+ *
  * @author Dean Blackborough <dean@g3d-development.com>
  * @copyright Dean Blackborough 2018-2022
  * @license https://github.com/costs-to-expect/api/blob/master/LICENSE
@@ -54,8 +59,7 @@ class Resource extends Model
 
         $collection = Clause::applySearch($collection, $this->table, $search_parameters);
 
-        return $collection
-            ->get()
+        return $collection->get()
             ->toArray();
     }
 }

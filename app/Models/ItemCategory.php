@@ -5,11 +5,15 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Builder as QueryBuilder;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 /**
- * Item category model
- *
  * @mixin QueryBuilder
+ *
+ * @property int $id
+ * @property int $item_id
+ * @property int $category_id
+ *
  * @author Dean Blackborough <dean@g3d-development.com>
  * @copyright Dean Blackborough 2018-2022
  * @license https://github.com/costs-to-expect/api/blob/master/LICENSE
@@ -20,12 +24,12 @@ class ItemCategory extends Model
 
     protected $guarded = ['id', 'created_at', 'updated_at'];
 
-    public function category()
+    public function category(): HasOne
     {
         return $this->hasOne(Category::class, 'id', 'category_id');
     }
 
-    public function item()
+    public function item(): HasOne
     {
         return $this->hasOne(Item::class, 'id', 'item_id');
     }
@@ -51,7 +55,7 @@ class ItemCategory extends Model
         int $item_id,
         int $offset = 0,
         int $limit = 10
-    )
+    ): array
     {
         return $this->join('category', 'item_category.category_id', 'category.id')->
             join('item', 'item_category.item_id', 'item.id')->
@@ -128,13 +132,6 @@ class ItemCategory extends Model
             find($item_category_id);
     }
 
-    /**
-     * Convert the model instance to an array for use with the transformer
-     *
-     * @param ItemCategory $item_category
-     *
-     * @return array
-     */
     public function instanceToArray(ItemCategory $item_category): array
     {
         return [

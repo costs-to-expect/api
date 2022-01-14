@@ -8,6 +8,15 @@ use Illuminate\Database\Eloquent\Model;
 
 /**
  * @mixin QueryBuilder
+ *
+ * @property int $id
+ * @property string $queue
+ * @property string $payload
+ * @property int $attempts
+ * @property int $reserved_at
+ * @property int $available_at
+ * @property int $created_at
+ *
  * @author Dean Blackborough <dean@g3d-development.com>
  * @copyright Dean Blackborough 2018-2022
  * @license https://github.com/costs-to-expect/api/blob/master/LICENSE
@@ -59,8 +68,7 @@ class Queue extends Model
 
     public function totalCount(): int
     {
-        $collection = $this->select("{$this->table}.id");
-
-        return $collection->count();
+        return $this->select($this->table . '.id')
+            ->count();
     }
 }
