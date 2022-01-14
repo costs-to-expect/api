@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace App\ItemType\AllocatedExpense;
 
 use App\ItemType\AllocatedExpense\Models\Item;
+use App\ItemType\AllocatedExpense\Transformers\Transformer;
 use App\ItemType\ApiResponse as ItemTypeResponse;
 use App\Response\Responses;
 use Illuminate\Http\JsonResponse;

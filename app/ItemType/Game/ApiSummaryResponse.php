@@ -3,6 +3,8 @@
 namespace App\ItemType\Game;
 
 use App\ItemType\ApiSummaryResponse as BaseSummaryResponse;
+use App\ItemType\Game\Models\SummaryModel;
+use App\ItemType\Game\Transformers\SummaryTransformer;
 use Illuminate\Http\JsonResponse;
 
 class ApiSummaryResponse extends BaseSummaryResponse

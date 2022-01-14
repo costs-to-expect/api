@@ -2,6 +2,11 @@
 
 namespace App\ItemType\SimpleExpense;
 
+use App\ItemType\SimpleExpense\Models\SummaryResourceTypeModel;
+use App\ItemType\SimpleExpense\Transformers\SummaryTransformer;
+use App\ItemType\SimpleExpense\Transformers\SummaryTransformerByCategory;
+use App\ItemType\SimpleExpense\Transformers\SummaryTransformerByResource;
+use App\ItemType\SimpleExpense\Transformers\SummaryTransformerBySubcategory;
 use App\ItemType\SummaryResourceTypeApiResponse as BaseSummaryResourceTypeResponse;
 use App\Request\Validate\Boolean;
 use Illuminate\Http\JsonResponse;

@@ -3,6 +3,8 @@
 namespace App\ItemType\SimpleItem;
 
 use App\ItemType\ApiSummaryResponse as BaseSummaryResponse;
+use App\ItemType\SimpleItem\Models\SummaryModel;
+use App\ItemType\SimpleItem\Transformers\SummaryTransformer;
 use Illuminate\Http\JsonResponse;
 
 class ApiSummaryResponse extends BaseSummaryResponse

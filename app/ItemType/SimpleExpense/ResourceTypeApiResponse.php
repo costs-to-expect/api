@@ -5,7 +5,7 @@ namespace App\ItemType\SimpleExpense;
 
 use App\ItemType\ResourceTypeApiResponse as BaseResourceTypeResponse;
 use App\ItemType\SimpleExpense\Models\ResourceTypeItem;
-use App\ItemType\SimpleExpense\ResourceTypeTransformer as Transformer;
+use App\ItemType\SimpleExpense\Transformers\ResourceTypeTransformer as Transformer;
 use Illuminate\Http\JsonResponse;
 
 class ResourceTypeApiResponse extends BaseResourceTypeResponse

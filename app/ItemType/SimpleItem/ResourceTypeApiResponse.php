@@ -5,7 +5,7 @@ namespace App\ItemType\SimpleItem;
 
 use App\ItemType\ResourceTypeApiResponse as BaseResourceTypeResponse;
 use App\ItemType\SimpleItem\Models\ResourceTypeItem;
-use App\ItemType\SimpleItem\ResourceTypeTransformer as Transformer;
+use App\ItemType\SimpleItem\Transformers\ResourceTypeTransformer as Transformer;
 use Illuminate\Http\JsonResponse;
 
 class ResourceTypeApiResponse extends BaseResourceTypeResponse

@@ -2,6 +2,9 @@
 
 namespace App\ItemType\SimpleItem;
 
+use App\ItemType\SimpleItem\Models\SummaryResourceTypeModel;
+use App\ItemType\SimpleItem\Transformers\SummaryTransformer;
+use App\ItemType\SimpleItem\Transformers\SummaryTransformerByResource;
 use App\ItemType\SummaryResourceTypeApiResponse as BaseSummaryResourceTypeResponse;
 use App\Request\Validate\Boolean;
 use Illuminate\Http\JsonResponse;

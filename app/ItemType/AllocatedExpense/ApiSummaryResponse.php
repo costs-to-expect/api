@@ -2,6 +2,12 @@
 
 namespace App\ItemType\AllocatedExpense;
 
+use App\ItemType\AllocatedExpense\Models\SummaryModel;
+use App\ItemType\AllocatedExpense\Transformers\SummaryTransformer;
+use App\ItemType\AllocatedExpense\Transformers\SummaryTransformerByCategory;
+use App\ItemType\AllocatedExpense\Transformers\SummaryTransformerByMonth;
+use App\ItemType\AllocatedExpense\Transformers\SummaryTransformerBySubcategory;
+use App\ItemType\AllocatedExpense\Transformers\SummaryTransformerByYear;
 use App\ItemType\ApiSummaryResponse as BaseSummaryResponse;
 use App\Request\Validate\Boolean;
 use Illuminate\Http\JsonResponse;

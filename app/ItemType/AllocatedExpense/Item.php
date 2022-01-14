@@ -104,7 +104,7 @@ class Item extends ItemType
 
     public function transformer(array $data_to_transform): Transformer
     {
-        return new \App\ItemType\AllocatedExpense\Transformer($data_to_transform);
+        return new Transformers\Transformer($data_to_transform);
     }
 
     public function update(array $patch, Model $instance): bool

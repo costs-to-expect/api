@@ -4,7 +4,7 @@ declare(strict_types=1);
 namespace App\ItemType\Game;
 
 use App\ItemType\Game\Models\ResourceTypeItem;
-use App\ItemType\Game\ResourceTypeTransformer as Transformer;
+use App\ItemType\Game\Transformers\ResourceTypeTransformer as Transformer;
 use App\ItemType\ResourceTypeApiResponse as BaseResourceTypeResponse;
 use Illuminate\Http\JsonResponse;
 

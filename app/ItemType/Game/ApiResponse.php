@@ -5,6 +5,7 @@ namespace App\ItemType\Game;
 
 use App\ItemType\ApiResponse as ItemTypeResponse;
 use App\ItemType\Game\Models\Item;
+use App\ItemType\Game\Transformers\Transformer;
 use App\Response\Responses;
 use Illuminate\Http\JsonResponse;
 

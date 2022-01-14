@@ -5,6 +5,7 @@ namespace App\ItemType\SimpleItem;
 
 use App\ItemType\ApiResponse as ItemTypeResponse;
 use App\ItemType\SimpleItem\Models\Item;
+use App\ItemType\SimpleItem\Transformers\Transformer;
 use App\Response\Responses;
 use Illuminate\Http\JsonResponse;
 

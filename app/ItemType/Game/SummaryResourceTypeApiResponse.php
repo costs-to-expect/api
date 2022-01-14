@@ -2,8 +2,10 @@
 
 namespace App\ItemType\Game;
 
+use App\ItemType\Game\Models\SummaryResourceTypeModel;
+use App\ItemType\Game\Transformers\SummaryTransformerByResource;
 use App\ItemType\SummaryResourceTypeApiResponse as BaseSummaryResourceTypeResponse;
-use App\ItemType\Game\SummaryTransformer as GameTransformer;
+use App\ItemType\Game\Transformers\SummaryTransformer as GameTransformer;
 use App\Request\Validate\Boolean;
 use Illuminate\Http\JsonResponse;
 
