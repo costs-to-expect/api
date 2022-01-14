@@ -128,7 +128,7 @@ class ItemTransfer extends Model
         return $collection->count();
     }
 
-    public function deleteTransfers(int $item_id): ?bool
+    public function deleteTransfers(int $item_id): ?int
     {
         return $this->where($this->table . '.item_id', '=', $item_id)->delete();
     }

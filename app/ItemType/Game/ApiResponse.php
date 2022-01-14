@@ -24,7 +24,7 @@ class ApiResponse extends ItemTypeResponse
             $model = new Item();
 
             $this->fetchAllRequestParameters(
-                new Item()
+                new \App\ItemType\Game\Item()
             );
 
             $total = $model->totalCount(
@@ -81,7 +81,7 @@ class ApiResponse extends ItemTypeResponse
     public function showResponse(int $item_id): JsonResponse
     {
         $this->fetchAllRequestParameters(
-            new Item()
+            new \App\ItemType\Game\Item()
         );
 
         $item = (new Item())->single(
