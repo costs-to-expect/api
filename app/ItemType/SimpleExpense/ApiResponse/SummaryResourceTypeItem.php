@@ -3,7 +3,6 @@
 namespace App\ItemType\SimpleExpense\ApiResponse;
 
 use App\ItemType\SimpleExpense\Item;
-use App\ItemType\SimpleExpense\Models\SummaryResourceTypeModel;
 use App\ItemType\SimpleExpense\Transformers\SummaryTransformer;
 use App\ItemType\SimpleExpense\Transformers\SummaryTransformerByCategory;
 use App\ItemType\SimpleExpense\Transformers\SummaryTransformerByResource;
@@ -13,7 +12,7 @@ use App\Request\Validate\Boolean;
 use Illuminate\Http\JsonResponse;
 use function response;
 
-class ApiSummaryResourceTypeResponse extends BaseSummaryResourceTypeResponse
+class SummaryResourceTypeItem extends BaseSummaryResourceTypeResponse
 {
     public function __construct(
         int $resource_type_id,
@@ -29,7 +28,7 @@ class ApiSummaryResourceTypeResponse extends BaseSummaryResourceTypeResponse
 
         $this->setUpCache();
 
-        $this->model = new SummaryResourceTypeModel();
+        $this->model = new \App\ItemType\SimpleExpense\Models\SummaryResourceTypeModel();
 
         $this->fetchAllRequestParameters(new Item());
 

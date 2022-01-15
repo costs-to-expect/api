@@ -1,21 +1,24 @@
 <?php
 declare(strict_types=1);
 
-namespace App\ItemType\SimpleExpense\ApiResponse;
+namespace App\ItemType\AllocatedExpense\ApiResponse;
 
+use App\ItemType\AllocatedExpense\Item;
+use App\ItemType\AllocatedExpense\Transformers\ResourceTypeTransformer as Transformer;
 use App\ItemType\ApiResourceTypeResponse as BaseResourceTypeResponse;
-use App\ItemType\SimpleExpense\Item;
-use App\ItemType\SimpleExpense\Models\ResourceTypeItem;
-use App\ItemType\SimpleExpense\Transformers\ResourceTypeTransformer as Transformer;
 use Illuminate\Http\JsonResponse;
 use function request;
 use function response;
 
-class ApiResourceTypeResponse extends BaseResourceTypeResponse
+class ResourceTypeItem extends BaseResourceTypeResponse
 {
     public function response(): JsonResponse
     {
-        $this->cache_control->setTtlOneMonth();
+        if ($this->cache_control->visibility() === 'public') {
+            $this->cache_control->setTtlOneWeek();
+        } else {
+            $this->cache_control->setTtlOneDay();
+        }
 
         $cache_collection = new \App\Cache\Collection();
         $cache_collection->setFromCache($this->cache_control->getByKey(request()->getRequestUri()));
@@ -24,7 +27,7 @@ class ApiResourceTypeResponse extends BaseResourceTypeResponse
             $this->cache_control->isRequestCacheable() === false ||
             $cache_collection->valid() === false
         ) {
-            $model = new ResourceTypeItem();
+            $model = new \App\ItemType\AllocatedExpense\Models\ResourceTypeItem();
 
             $this->fetchAllRequestParameters(
                 new Item()

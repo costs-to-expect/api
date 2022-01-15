@@ -3,7 +3,6 @@
 namespace App\ItemType\AllocatedExpense\ApiResponse;
 
 use App\ItemType\AllocatedExpense\Item;
-use App\ItemType\AllocatedExpense\Models\SummaryResourceTypeModel;
 use App\ItemType\AllocatedExpense\Transformers\SummaryTransformer;
 use App\ItemType\AllocatedExpense\Transformers\SummaryTransformerByCategory;
 use App\ItemType\AllocatedExpense\Transformers\SummaryTransformerByMonth;
@@ -16,7 +15,7 @@ use Illuminate\Http\JsonResponse;
 use function request;
 use function response;
 
-class ApiSummaryResourceTypeResponse extends BaseSummaryResourceTypeResponse
+class SummaryResourceTypeItem extends BaseSummaryResourceTypeResponse
 {
     public function __construct(
         int $resource_type_id,
@@ -32,7 +31,7 @@ class ApiSummaryResourceTypeResponse extends BaseSummaryResourceTypeResponse
 
         $this->setUpCache();
 
-        $this->model = new SummaryResourceTypeModel();
+        $this->model = new \App\ItemType\AllocatedExpense\Models\SummaryResourceTypeItem();
 
         $this->shortCircuit(); // Skip working out which for obvious routes
 

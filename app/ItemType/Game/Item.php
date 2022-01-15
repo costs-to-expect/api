@@ -5,8 +5,6 @@ namespace App\ItemType\Game;
 
 use App\AllowedValue\Winner;
 use App\ItemType\Game\AllowedValue\ResourceTypeItem;
-use App\ItemType\Game\ApiResponse\ApiResourceTypeResponse;
-use App\ItemType\Game\ApiResponse\ApiSummaryResourceTypeResponse;
 use App\ItemType\Game\ApiResponse\Summary;
 use App\ItemType\ItemType;
 use App\Transformers\Transformer;
@@ -120,7 +118,7 @@ class Item extends ItemType
 
     public function summaryClass(): string
     {
-        return Summary::class;
+        return ApiResponse\Summary::class;
     }
 
     public function viewClass(): string
@@ -130,12 +128,12 @@ class Item extends ItemType
 
     public function resourceTypeSummaryClass(): string
     {
-        return ApiSummaryResourceTypeResponse::class;
+        return ApiResponse\SummaryResourceTypeItem::class;
     }
 
     public function resourceTypeItemCollectionClass(): string
     {
-        return ApiResourceTypeResponse::class;
+        return ApiResponse\ResourceTypeItem::class;
     }
 
     protected function allowedValuesItemCollectionClass(): string
