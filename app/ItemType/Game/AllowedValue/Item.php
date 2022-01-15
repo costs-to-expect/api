@@ -3,29 +3,30 @@ declare(strict_types=1);
 
 namespace App\ItemType\Game\AllowedValue;
 
-use App\ItemType\Game\Item;
-use App\ItemType\ResourceTypeAllowedValue as BaseResourceTypeAllowedValue;
+use App\ItemType\AllowedValue;
 use App\Models\Category;
 use function trans;
 
-class ResourceTypeAllowedValue extends BaseResourceTypeAllowedValue
+class Item extends AllowedValue
 {
     public function __construct(
         int $resource_type_id,
+        int $resource_id,
         array $viewable_resource_types
     )
     {
         parent::__construct(
             $resource_type_id,
+            $resource_id,
             $viewable_resource_types
         );
 
-        $this->entity = new Item();
+        $this->entity = new \App\ItemType\Game\Item();
 
         $this->setAllowedValueFields();
     }
 
-    public function fetch(): BaseResourceTypeAllowedValue
+    public function fetch(): AllowedValue
     {
         $this->fetchValuesForWinner();
 
@@ -58,10 +59,10 @@ class ResourceTypeAllowedValue extends BaseResourceTypeAllowedValue
                 $allowed_values[$winner_id] = [
                     'value' => $winner_id,
                     'name' => $winner['category_name'],
-                    'description' => trans('resource-type-item-type-' . $this->entity->type() .
+                    'description' => trans('item-type-' . $this->entity->type() .
                             '/allowed-values.description-prefix-winner_id') .
                         $winner['category_name'] .
-                        trans('resource-type-item-type-' . $this->entity->type() .
+                        trans('item-type-' . $this->entity->type() .
                             '/allowed-values.description-suffix-winner_id')
                 ];
             }

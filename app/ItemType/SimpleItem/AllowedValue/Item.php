@@ -3,27 +3,28 @@ declare(strict_types=1);
 
 namespace App\ItemType\SimpleItem\AllowedValue;
 
-use App\ItemType\ResourceTypeAllowedValue as BaseResourceTypeAllowedValue;
-use App\ItemType\SimpleItem\Item;
+use App\ItemType\AllowedValue;
 
-class ResourceTypeAllowedValue extends BaseResourceTypeAllowedValue
+class Item extends AllowedValue
 {
     public function __construct(
         int $resource_type_id,
+        int $resource_id,
         array $viewable_resource_types
     )
     {
         parent::__construct(
             $resource_type_id,
+            $resource_id,
             $viewable_resource_types
         );
 
-        $this->entity = new Item();
+        $this->entity = new \App\ItemType\SimpleItem\Item();
 
         $this->setAllowedValueFields();
     }
 
-    public function fetch(): BaseResourceTypeAllowedValue
+    public function fetch(): AllowedValue
     {
         return $this;
     }

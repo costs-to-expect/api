@@ -4,8 +4,7 @@ declare(strict_types=1);
 namespace App\ItemType\AllocatedExpense;
 
 use App\AllowedValue\Currency;
-use App\ItemType\AllocatedExpense\AllowedValue\AllowedValue;
-use App\ItemType\AllocatedExpense\AllowedValue\ResourceTypeAllowedValue;
+use App\ItemType\AllocatedExpense\AllowedValue\ResourceTypeItem;
 use App\ItemType\AllocatedExpense\Response\ApiResourceTypeResponse;
 use App\ItemType\AllocatedExpense\Response\ApiResponse;
 use App\ItemType\AllocatedExpense\Response\ApiSummaryResourceTypeResponse;
@@ -155,11 +154,11 @@ class Item extends ItemType
 
     protected function allowedValuesItemCollectionClass(): string
     {
-        return AllowedValue::class;
+        return AllowedValue\Item::class;
     }
 
     protected function allowedValuesResourceTypeItemCollectionClass(): string
     {
-        return ResourceTypeAllowedValue::class;
+        return ResourceTypeItem::class;
     }
 }

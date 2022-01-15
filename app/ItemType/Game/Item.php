@@ -4,8 +4,7 @@ declare(strict_types=1);
 namespace App\ItemType\Game;
 
 use App\AllowedValue\Winner;
-use App\ItemType\Game\AllowedValue\AllowedValue;
-use App\ItemType\Game\AllowedValue\ResourceTypeAllowedValue;
+use App\ItemType\Game\AllowedValue\ResourceTypeItem;
 use App\ItemType\Game\Response\ApiResourceTypeResponse;
 use App\ItemType\Game\Response\ApiResponse;
 use App\ItemType\Game\Response\ApiSummaryResourceTypeResponse;
@@ -142,11 +141,11 @@ class Item extends ItemType
 
     protected function allowedValuesItemCollectionClass(): string
     {
-        return AllowedValue::class;
+        return AllowedValue\Item::class;
     }
 
     protected function allowedValuesResourceTypeItemCollectionClass(): string
     {
-        return ResourceTypeAllowedValue::class;
+        return ResourceTypeItem::class;
     }
 }

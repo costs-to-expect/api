@@ -3,10 +3,9 @@ declare(strict_types=1);
 
 namespace App\ItemType\AllocatedExpense\AllowedValue;
 
-use App\ItemType\AllocatedExpense\Item;
-use App\ItemType\AllowedValue as BaseAllowedValue;
+use App\ItemType\AllowedValue;
 
-class AllowedValue extends BaseAllowedValue
+class Item extends AllowedValue
 {
     public function __construct(
         int $resource_type_id,
@@ -20,12 +19,12 @@ class AllowedValue extends BaseAllowedValue
             $viewable_resource_types
         );
 
-        $this->entity = new Item();
+        $this->entity = new \App\ItemType\AllocatedExpense\Item();
 
         $this->setAllowedValueFields();
     }
 
-    public function fetch(): BaseAllowedValue
+    public function fetch(): AllowedValue
     {
         $this->fetchValuesForYear();
 

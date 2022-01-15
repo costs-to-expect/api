@@ -5,8 +5,7 @@ namespace App\ItemType\SimpleExpense;
 
 use App\AllowedValue\Currency;
 use App\ItemType\ItemType;
-use App\ItemType\SimpleExpense\AllowedValue\AllowedValue;
-use App\ItemType\SimpleExpense\AllowedValue\ResourceTypeAllowedValue;
+use App\ItemType\SimpleExpense\AllowedValue\ResourceTypeItem;
 use App\ItemType\SimpleExpense\Response\ApiResourceTypeResponse;
 use App\ItemType\SimpleExpense\Response\ApiResponse;
 use App\ItemType\SimpleExpense\Response\ApiSummaryResourceTypeResponse;
@@ -121,11 +120,11 @@ class Item extends ItemType
 
     protected function allowedValuesItemCollectionClass(): string
     {
-        return AllowedValue::class;
+        return AllowedValue\Item::class;
     }
 
     protected function allowedValuesResourceTypeItemCollectionClass(): string
     {
-        return ResourceTypeAllowedValue::class;
+        return ResourceTypeItem::class;
     }
 }

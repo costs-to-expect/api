@@ -4,8 +4,7 @@ declare(strict_types=1);
 namespace App\ItemType\SimpleItem;
 
 use App\ItemType\ItemType;
-use App\ItemType\SimpleItem\AllowedValue\AllowedValue;
-use App\ItemType\SimpleItem\AllowedValue\ResourceTypeAllowedValue;
+use App\ItemType\SimpleItem\AllowedValue\ResourceTypeItem;
 use App\ItemType\SimpleItem\Response\ApiResourceTypeResponse;
 use App\ItemType\SimpleItem\Response\ApiResponse;
 use App\ItemType\SimpleItem\Response\ApiSummaryResourceTypeResponse;
@@ -120,11 +119,11 @@ class Item extends ItemType
 
     protected function allowedValuesItemCollectionClass(): string
     {
-        return AllowedValue::class;
+        return AllowedValue\Item::class;
     }
 
     protected function allowedValuesResourceTypeItemCollectionClass(): string
     {
-        return ResourceTypeAllowedValue::class;
+        return ResourceTypeItem::class;
     }
 }
