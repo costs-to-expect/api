@@ -5,10 +5,9 @@ namespace App\ItemType\SimpleItem;
 
 use App\ItemType\ItemType;
 use App\ItemType\SimpleItem\AllowedValue\ResourceTypeItem;
-use App\ItemType\SimpleItem\Response\ApiResourceTypeResponse;
-use App\ItemType\SimpleItem\Response\ApiResponse;
-use App\ItemType\SimpleItem\Response\ApiSummaryResourceTypeResponse;
-use App\ItemType\SimpleItem\Response\ApiSummaryResponse;
+use App\ItemType\SimpleItem\ApiResponse\ApiResourceTypeResponse;
+use App\ItemType\SimpleItem\ApiResponse\ApiSummaryResourceTypeResponse;
+use App\ItemType\SimpleItem\ApiResponse\Summary;
 use App\Transformers\Transformer;
 use App\Request\Validate\Validator;
 use Illuminate\Database\Eloquent\Model;
@@ -78,7 +77,7 @@ class Item extends ItemType
 
     public function summaryClass(): string
     {
-        return ApiSummaryResponse::class;
+        return Summary::class;
     }
 
     public function resourceTypeSummaryClass(): string
@@ -109,7 +108,7 @@ class Item extends ItemType
 
     public function viewClass(): string
     {
-        return ApiResponse::class;
+        return ApiResponse\Item::class;
     }
 
     public function resourceTypeItemCollectionClass(): string

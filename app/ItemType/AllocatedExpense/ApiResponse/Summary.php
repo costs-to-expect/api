@@ -1,6 +1,6 @@
 <?php
 
-namespace App\ItemType\AllocatedExpense\Response;
+namespace App\ItemType\AllocatedExpense\ApiResponse;
 
 use App\ItemType\AllocatedExpense\Item;
 use App\ItemType\AllocatedExpense\Models\SummaryModel;
@@ -15,7 +15,7 @@ use Illuminate\Http\JsonResponse;
 use function request;
 use function response;
 
-class ApiSummaryResponse extends BaseSummaryResponse
+class Summary extends BaseSummaryResponse
 {
     public function __construct(
         int $resource_type_id,

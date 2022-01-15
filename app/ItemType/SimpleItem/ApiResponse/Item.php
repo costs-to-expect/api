@@ -1,10 +1,9 @@
 <?php
 declare(strict_types=1);
 
-namespace App\ItemType\SimpleItem\Response;
+namespace App\ItemType\SimpleItem\ApiResponse;
 
 use App\ItemType\ApiResponse as ItemTypeResponse;
-use App\ItemType\SimpleItem\Models\Item;
 use App\ItemType\SimpleItem\Transformers\Transformer;
 use App\Response\Responses;
 use Illuminate\Http\JsonResponse;
@@ -12,7 +11,7 @@ use function request;
 use function response;
 use function trans;
 
-class ApiResponse extends ItemTypeResponse
+class Item extends ItemTypeResponse
 {
     public function collectionResponse(): JsonResponse
     {
@@ -25,7 +24,7 @@ class ApiResponse extends ItemTypeResponse
             $this->cache_control->isRequestCacheable() === false ||
             $cache_collection->valid() === false
         ) {
-            $model = new Item();
+            $model = new \App\ItemType\SimpleItem\Models\Item();
 
             $this->fetchAllRequestParameters(
                 new \App\ItemType\SimpleItem\Item()
@@ -87,7 +86,7 @@ class ApiResponse extends ItemTypeResponse
             new \App\ItemType\SimpleItem\Item()
         );
 
-        $item = (new Item())->single(
+        $item = (new \App\ItemType\SimpleItem\Models\Item())->single(
             $this->resource_type_id,
             $this->resource_id,
             $item_id,

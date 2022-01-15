@@ -1,6 +1,6 @@
 <?php
 
-namespace App\ItemType\Game\Response;
+namespace App\ItemType\Game\ApiResponse;
 
 use App\ItemType\Game\Item;
 use App\ItemType\Game\Models\SummaryResourceTypeModel;

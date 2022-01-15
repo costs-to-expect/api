@@ -1,11 +1,11 @@
 <?php
 declare(strict_types=1);
 
-namespace App\ItemType\AllocatedExpense\Response;
+namespace App\ItemType\Game\ApiResponse;
 
-use App\ItemType\AllocatedExpense\Item;
-use App\ItemType\AllocatedExpense\Models\ResourceTypeItem;
-use App\ItemType\AllocatedExpense\Transformers\ResourceTypeTransformer as Transformer;
+use App\ItemType\Game\Item;
+use App\ItemType\Game\Models\ResourceTypeItem;
+use App\ItemType\Game\Transformers\ResourceTypeTransformer as Transformer;
 use App\ItemType\ApiResourceTypeResponse as BaseResourceTypeResponse;
 use Illuminate\Http\JsonResponse;
 use function request;
@@ -15,11 +15,7 @@ class ApiResourceTypeResponse extends BaseResourceTypeResponse
 {
     public function response(): JsonResponse
     {
-        if ($this->cache_control->visibility() === 'public') {
-            $this->cache_control->setTtlOneWeek();
-        } else {
-            $this->cache_control->setTtlOneDay();
-        }
+        $this->cache_control->setTtlOneWeek();
 
         $cache_collection = new \App\Cache\Collection();
         $cache_collection->setFromCache($this->cache_control->getByKey(request()->getRequestUri()));

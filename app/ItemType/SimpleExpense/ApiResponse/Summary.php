@@ -1,6 +1,6 @@
 <?php
 
-namespace App\ItemType\SimpleExpense\Response;
+namespace App\ItemType\SimpleExpense\ApiResponse;
 
 use App\ItemType\ApiSummaryResponse as BaseSummaryResponse;
 use App\ItemType\SimpleExpense\Item;
@@ -12,7 +12,7 @@ use App\Request\Validate\Boolean;
 use Illuminate\Http\JsonResponse;
 use function response;
 
-class ApiSummaryResponse extends BaseSummaryResponse
+class Summary extends BaseSummaryResponse
 {
     public function __construct(
         int $resource_type_id,

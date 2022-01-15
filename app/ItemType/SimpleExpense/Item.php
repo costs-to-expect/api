@@ -6,10 +6,9 @@ namespace App\ItemType\SimpleExpense;
 use App\AllowedValue\Currency;
 use App\ItemType\ItemType;
 use App\ItemType\SimpleExpense\AllowedValue\ResourceTypeItem;
-use App\ItemType\SimpleExpense\Response\ApiResourceTypeResponse;
-use App\ItemType\SimpleExpense\Response\ApiResponse;
-use App\ItemType\SimpleExpense\Response\ApiSummaryResourceTypeResponse;
-use App\ItemType\SimpleExpense\Response\ApiSummaryResponse;
+use App\ItemType\SimpleExpense\ApiResponse\ApiResourceTypeResponse;
+use App\ItemType\SimpleExpense\ApiResponse\ApiSummaryResourceTypeResponse;
+use App\ItemType\SimpleExpense\ApiResponse\Summary;
 use App\Transformers\Transformer;
 use App\Request\Hash;
 use App\Request\Validate\Validator;
@@ -74,7 +73,7 @@ class Item extends ItemType
 
     public function summaryClass(): string
     {
-        return ApiSummaryResponse::class;
+        return Summary::class;
     }
 
     public function resourceTypeSummaryClass(): string
@@ -110,7 +109,7 @@ class Item extends ItemType
 
     public function viewClass(): string
     {
-        return ApiResponse::class;
+        return ApiResponse\Item::class;
     }
 
     public function resourceTypeItemCollectionClass(): string

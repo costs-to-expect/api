@@ -1,6 +1,6 @@
 <?php
 
-namespace App\ItemType\Game\Response;
+namespace App\ItemType\Game\ApiResponse;
 
 use App\ItemType\ApiSummaryResponse as BaseSummaryResponse;
 use App\ItemType\Game\Item;
@@ -9,7 +9,7 @@ use App\ItemType\Game\Transformers\SummaryTransformer;
 use Illuminate\Http\JsonResponse;
 use function response;
 
-class ApiSummaryResponse extends BaseSummaryResponse
+class Summary extends BaseSummaryResponse
 {
     public function __construct(
         int $resource_type_id,

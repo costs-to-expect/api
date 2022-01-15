@@ -1,22 +1,21 @@
 <?php
 declare(strict_types=1);
 
-namespace App\ItemType\Game\Response;
+namespace App\ItemType\SimpleExpense\ApiResponse;
 
 use App\ItemType\ApiResponse as ItemTypeResponse;
-use App\ItemType\Game\Models\Item;
-use App\ItemType\Game\Transformers\Transformer;
+use App\ItemType\SimpleExpense\Transformers\Transformer;
 use App\Response\Responses;
 use Illuminate\Http\JsonResponse;
 use function request;
 use function response;
 use function trans;
 
-class ApiResponse extends ItemTypeResponse
+class Item extends ItemTypeResponse
 {
     public function collectionResponse(): JsonResponse
     {
-        $this->cache_control->setTtlOneWeek();
+        $this->cache_control->setTtlOneMonth();
 
         $cache_collection = new \App\Cache\Collection();
         $cache_collection->setFromCache($this->cache_control->getByKey(request()->getRequestUri()));
@@ -25,10 +24,10 @@ class ApiResponse extends ItemTypeResponse
             $this->cache_control->isRequestCacheable() === false ||
             $cache_collection->valid() === false
         ) {
-            $model = new Item();
+            $model = new \App\ItemType\SimpleExpense\Models\Item();
 
             $this->fetchAllRequestParameters(
-                new \App\ItemType\Game\Item()
+                new \App\ItemType\SimpleExpense\Item()
             );
 
             $total = $model->totalCount(
@@ -85,10 +84,10 @@ class ApiResponse extends ItemTypeResponse
     public function showResponse(int $item_id): JsonResponse
     {
         $this->fetchAllRequestParameters(
-            new \App\ItemType\Game\Item()
+            new \App\ItemType\SimpleExpense\Item()
         );
 
-        $item = (new Item())->single(
+        $item = (new \App\ItemType\SimpleExpense\Models\Item())->single(
             $this->resource_type_id,
             $this->resource_id,
             $item_id,

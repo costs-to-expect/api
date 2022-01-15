@@ -1,12 +1,12 @@
 <?php
 declare(strict_types=1);
 
-namespace App\ItemType\SimpleItem\Response;
+namespace App\ItemType\AllocatedExpense\ApiResponse;
 
+use App\ItemType\AllocatedExpense\Item;
+use App\ItemType\AllocatedExpense\Models\ResourceTypeItem;
+use App\ItemType\AllocatedExpense\Transformers\ResourceTypeTransformer as Transformer;
 use App\ItemType\ApiResourceTypeResponse as BaseResourceTypeResponse;
-use App\ItemType\SimpleItem\Item;
-use App\ItemType\SimpleItem\Models\ResourceTypeItem;
-use App\ItemType\SimpleItem\Transformers\ResourceTypeTransformer as Transformer;
 use Illuminate\Http\JsonResponse;
 use function request;
 use function response;
@@ -15,7 +15,11 @@ class ApiResourceTypeResponse extends BaseResourceTypeResponse
 {
     public function response(): JsonResponse
     {
-        $this->cache_control->setTtlOneMonth();
+        if ($this->cache_control->visibility() === 'public') {
+            $this->cache_control->setTtlOneWeek();
+        } else {
+            $this->cache_control->setTtlOneDay();
+        }
 
         $cache_collection = new \App\Cache\Collection();
         $cache_collection->setFromCache($this->cache_control->getByKey(request()->getRequestUri()));
@@ -32,6 +36,7 @@ class ApiResourceTypeResponse extends BaseResourceTypeResponse
 
             $total = $model->totalCount(
                 $this->resource_type_id,
+                $this->request_parameters,
                 $this->search_parameters,
                 $this->filter_parameters
             );
@@ -42,6 +47,7 @@ class ApiResourceTypeResponse extends BaseResourceTypeResponse
                 $this->resource_type_id,
                 $pagination_parameters['offset'],
                 $pagination_parameters['limit'],
+                $this->request_parameters,
                 $this->search_parameters,
                 $this->filter_parameters,
                 $this->sort_fields

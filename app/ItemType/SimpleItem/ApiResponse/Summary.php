@@ -1,33 +1,33 @@
 <?php
 
-namespace App\ItemType\SimpleItem\Response;
+namespace App\ItemType\SimpleItem\ApiResponse;
 
+use App\ItemType\ApiSummaryResponse as BaseSummaryResponse;
 use App\ItemType\SimpleItem\Item;
-use App\ItemType\SimpleItem\Models\SummaryResourceTypeModel;
+use App\ItemType\SimpleItem\Models\SummaryModel;
 use App\ItemType\SimpleItem\Transformers\SummaryTransformer;
-use App\ItemType\SimpleItem\Transformers\SummaryTransformerByResource;
-use App\ItemType\ApiSummaryResourceTypeResponse as BaseSummaryResourceTypeResponse;
-use App\Request\Validate\Boolean;
 use Illuminate\Http\JsonResponse;
 use function response;
 
-class ApiSummaryResourceTypeResponse extends BaseSummaryResourceTypeResponse
+class Summary extends BaseSummaryResponse
 {
     public function __construct(
         int $resource_type_id,
+        int $resource_id,
         bool $permitted_user = false,
         int $user_id = null
     )
     {
         parent::__construct(
             $resource_type_id,
+            $resource_id,
             $permitted_user,
             $user_id
         );
         
         $this->setUpCache();
 
-        $this->model = new SummaryResourceTypeModel();
+        $this->model = new SummaryModel();
 
         $this->fetchAllRequestParameters(new Item());
 
@@ -36,10 +36,6 @@ class ApiSummaryResourceTypeResponse extends BaseSummaryResourceTypeResponse
 
     public function response(): JsonResponse
     {
-        if ($this->decision_parameters['resources'] === true) {
-            return $this->resourcesSummary();
-        }
-
         if (
             count($this->search_parameters) > 0 ||
             count($this->filter_parameters) > 0
@@ -56,8 +52,10 @@ class ApiSummaryResourceTypeResponse extends BaseSummaryResourceTypeResponse
 
             $summary = $this->model->filteredSummary(
                 $this->resource_type_id,
+                $this->resource_id,
                 $this->parameters,
-                $this->search_parameters
+                $this->search_parameters,
+                $this->filter_parameters
             );
 
             $collection = [];
@@ -78,38 +76,7 @@ class ApiSummaryResourceTypeResponse extends BaseSummaryResourceTypeResponse
 
     protected function removeDecisionParameters(): void
     {
-        $this->decision_parameters['resources'] = false;
-
-        if (array_key_exists('resources', $this->parameters) === true &&
-            Boolean::convertedValue($this->parameters['resources']) === true) {
-            $this->decision_parameters['resources'] = true;
-        }
-
-        unset(
-            $this->parameters['resources'],
-        );
-    }
-
-    protected function resourcesSummary(): JsonResponse
-    {
-        if ($this->cache_control->isRequestCacheable() === false || $this->cache_summary->valid() === false) {
-
-            $summary = $this->model->resourcesSummary(
-                $this->resource_type_id,
-                $this->parameters
-            );
-
-            $collection = (new SummaryTransformerByResource($summary))->asArray();
-
-            $this->assignToCache(
-                $summary,
-                $collection,
-                $this->cache_control,
-                $this->cache_summary
-            );
-        }
-
-        return response()->json($this->cache_summary->collection(), 200, $this->cache_summary->headers());
+        // Do nothing
     }
 
     protected function summary(): JsonResponse
@@ -118,6 +85,7 @@ class ApiSummaryResourceTypeResponse extends BaseSummaryResourceTypeResponse
 
             $summary = $this->model->summary(
                 $this->resource_type_id,
+                $this->resource_id,
                 $this->parameters
             );
 

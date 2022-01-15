@@ -5,10 +5,9 @@ namespace App\ItemType\AllocatedExpense;
 
 use App\AllowedValue\Currency;
 use App\ItemType\AllocatedExpense\AllowedValue\ResourceTypeItem;
-use App\ItemType\AllocatedExpense\Response\ApiResourceTypeResponse;
-use App\ItemType\AllocatedExpense\Response\ApiResponse;
-use App\ItemType\AllocatedExpense\Response\ApiSummaryResourceTypeResponse;
-use App\ItemType\AllocatedExpense\Response\ApiSummaryResponse;
+use App\ItemType\AllocatedExpense\ApiResponse\ApiResourceTypeResponse;
+use App\ItemType\AllocatedExpense\ApiResponse\ApiSummaryResourceTypeResponse;
+use App\ItemType\AllocatedExpense\ApiResponse\Summary;
 use App\ItemType\ItemType;
 use App\Transformers\Transformer;
 use App\Request\Hash;
@@ -99,7 +98,7 @@ class Item extends ItemType
 
     public function summaryClass(): string
     {
-        return ApiSummaryResponse::class;
+        return Summary::class;
     }
 
     public function resourceTypeSummaryClass(): string
@@ -144,7 +143,7 @@ class Item extends ItemType
 
     public function viewClass(): string
     {
-        return ApiResponse::class;
+        return \App\ItemType\AllocatedExpense\ApiResponse\Item::class;
     }
 
     public function resourceTypeItemCollectionClass(): string

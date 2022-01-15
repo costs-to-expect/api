@@ -1,21 +1,25 @@
 <?php
 declare(strict_types=1);
 
-namespace App\ItemType\SimpleExpense\Response;
+namespace App\ItemType\AllocatedExpense\ApiResponse;
 
-use App\ItemType\ApiResourceTypeResponse as BaseResourceTypeResponse;
-use App\ItemType\SimpleExpense\Item;
-use App\ItemType\SimpleExpense\Models\ResourceTypeItem;
-use App\ItemType\SimpleExpense\Transformers\ResourceTypeTransformer as Transformer;
+use App\ItemType\AllocatedExpense\Transformers\Transformer;
+use App\ItemType\ApiResponse as ItemTypeResponse;
+use App\Response\Responses;
 use Illuminate\Http\JsonResponse;
 use function request;
 use function response;
+use function trans;
 
-class ApiResourceTypeResponse extends BaseResourceTypeResponse
+class Item extends ItemTypeResponse
 {
-    public function response(): JsonResponse
+    public function collectionResponse(): JsonResponse
     {
-        $this->cache_control->setTtlOneMonth();
+        if ($this->cache_control->visibility() === 'public') {
+            $this->cache_control->setTtlOneWeek();
+        } else {
+            $this->cache_control->setTtlOneDay();
+        }
 
         $cache_collection = new \App\Cache\Collection();
         $cache_collection->setFromCache($this->cache_control->getByKey(request()->getRequestUri()));
@@ -24,14 +28,15 @@ class ApiResourceTypeResponse extends BaseResourceTypeResponse
             $this->cache_control->isRequestCacheable() === false ||
             $cache_collection->valid() === false
         ) {
-            $model = new ResourceTypeItem();
+            $model = new \App\ItemType\AllocatedExpense\Models\Item();
 
             $this->fetchAllRequestParameters(
-                new Item()
+                new \App\ItemType\AllocatedExpense\Item()
             );
 
             $total = $model->totalCount(
                 $this->resource_type_id,
+                $this->resource_id,
                 $this->request_parameters,
                 $this->search_parameters,
                 $this->filter_parameters
@@ -41,6 +46,7 @@ class ApiResourceTypeResponse extends BaseResourceTypeResponse
 
             $items = $model->paginatedCollection(
                 $this->resource_type_id,
+                $this->resource_id,
                 $pagination_parameters['offset'],
                 $pagination_parameters['limit'],
                 $this->request_parameters,
@@ -65,7 +71,7 @@ class ApiResourceTypeResponse extends BaseResourceTypeResponse
                 $total,
                 $collection,
                 $pagination_parameters,
-                $this->headers(
+                $this->collectionHeaders(
                     $pagination_parameters,
                     count($items),
                     $total,
@@ -77,5 +83,29 @@ class ApiResourceTypeResponse extends BaseResourceTypeResponse
         }
 
         return response()->json($cache_collection->collection(), 200, $cache_collection->headers());
+    }
+
+    public function showResponse(int $item_id): JsonResponse
+    {
+        $this->fetchAllRequestParameters(
+            new \App\ItemType\AllocatedExpense\Item()
+        );
+
+        $item = (new \App\ItemType\AllocatedExpense\Models\Item())->single(
+            $this->resource_type_id,
+            $this->resource_id,
+            $item_id,
+            $this->request_parameters
+        );
+
+        if ($item === null) {
+            return Responses::notFound(trans('entities.item'));
+        }
+
+        return response()->json(
+            (new Transformer($item))->asArray(),
+            200,
+            $this->showHeaders()
+        );
     }
 }
