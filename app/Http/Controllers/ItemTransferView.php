@@ -129,7 +129,7 @@ class ItemTransferView extends Controller
 
         $response = new ItemTransferTransfer($this->permissions((int) $resource_type_id));
 
-        return $response->setAllowedFields(
+        return $response->setDynamicAllowedFields(
                 (new \App\AllowedValue\Resource())->allowedValues(
                     $resource_type_id,
                     $resource_id

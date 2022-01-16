@@ -169,7 +169,7 @@ class ItemView extends Controller
             \App\Response\Responses::notFoundOrNotAccessible(trans('entities.resource'));
         }
 
-        $entity = Entity::item($resource_type_id);
+        /*$entity = Entity::item($resource_type_id);
 
         $response = new ItemCollection($this->permissions((int) $resource_type_id));
 
@@ -184,7 +184,83 @@ class ItemView extends Controller
             )
             ->setAllowedFields((new Currency())->allowedValues())
             ->create()
-            ->response();
+            ->response();*/
+
+        $item_type = Entity::itemType((int) $resource_type_id);
+
+        return match ($item_type) {
+            'allocated-expense' => $this->optionsAllocatedExpenseCollection((int) $resource_type_id, (int) $resource_id),
+            'game' => $this->optionsGameCollection((int) $resource_type_id, (int) $resource_id),
+            'simple-expense' => $this->optionsSimpleExpenseCollection((int) $resource_type_id, (int) $resource_id),
+            'simple-item' => $this->optionsSimpleItemCollection((int) $resource_type_id, (int) $resource_id),
+            default => throw new \OutOfRangeException('No entity definition for ' . $item_type, 500),
+        };
+    }
+
+    private function optionsAllocatedExpenseCollection(int $resource_type_id, int $resource_id): JsonResponse
+    {
+        $item = new \App\ItemType\AllocatedExpense\Item();
+        $response = new \App\Option\Item\AllocatedExpenseCollection($this->permissions($resource_type_id));
+
+        return $response->setDynamicAllowedParameters(
+            $item->allowedValuesForItemCollection(
+                $resource_type_id,
+                $resource_id,
+                $this->viewable_resource_types
+            )
+        )
+        ->setDynamicAllowedFields((new Currency())->allowedValues())
+        ->create()
+        ->response();
+    }
+
+    private function optionsGameCollection(int $resource_type_id, int $resource_id): JsonResponse
+    {
+        $item = new \App\ItemType\Game\Item();
+        $response = new \App\Option\Item\GameCollection($this->permissions($resource_type_id));
+
+        return $response->setDynamicAllowedParameters(
+            $item->allowedValuesForItemCollection(
+                $resource_type_id,
+                $resource_id,
+                $this->viewable_resource_types
+            )
+        )
+        ->create()
+        ->response();
+    }
+
+    private function optionsSimpleExpenseCollection(int $resource_type_id, int $resource_id): JsonResponse
+    {
+        $item = new \App\ItemType\SimpleExpense\Item();
+        $response = new \App\Option\Item\SimpleExpenseCollection($this->permissions($resource_type_id));
+
+        return $response->setDynamicAllowedParameters(
+            $item->allowedValuesForItemCollection(
+                $resource_type_id,
+                $resource_id,
+                $this->viewable_resource_types
+            )
+        )
+        ->setDynamicAllowedFields((new Currency())->allowedValues())
+        ->create()
+        ->response();
+    }
+
+    private function optionsSimpleItemCollection(int $resource_type_id, int $resource_id): JsonResponse
+    {
+        $item = new \App\ItemType\SimpleItem\Item();
+        $response = new \App\Option\Item\SimpleItemCollection($this->permissions($resource_type_id));
+
+        return $response->setDynamicAllowedParameters(
+            $item->allowedValuesForItemCollection(
+                $resource_type_id,
+                $resource_id,
+                $this->viewable_resource_types
+            )
+        )
+        ->create()
+        ->response();
     }
 
     /**
@@ -220,7 +296,7 @@ class ItemView extends Controller
 
         return $response
             ->setEntity($entity)
-            ->setAllowedFields($entity->allowedValuesForItem((int) $resource_type_id))
+            ->setDynamicAllowedFields($entity->allowedValuesForItem((int) $resource_type_id))
             ->create()
             ->response();
     }

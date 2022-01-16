@@ -154,7 +154,7 @@ class ResourceView extends Controller
 
         $response = new ResourceCollection($this->permissions((int) $resource_type_id));
 
-        return $response->setAllowedFields((new ItemSubtype())->allowedValues($resource_type['resource_type_item_type_id']))
+        return $response->setDynamicAllowedFields((new ItemSubtype())->allowedValues($resource_type['resource_type_item_type_id']))
             ->create()
             ->response();
     }

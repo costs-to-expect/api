@@ -52,14 +52,14 @@ abstract class Response
         exit;
     }
 
-    public function setAllowedFields(array $allowed_fields): Response
+    public function setDynamicAllowedFields(array $allowed_fields): Response
     {
         $this->allowed_fields = $allowed_fields;
 
         return $this;
     }
 
-    public function setAllowedParameters(array $allowed_parameters): Response
+    public function setDynamicAllowedParameters(array $allowed_parameters): Response
     {
         $this->allowed_parameters = $allowed_parameters;
 

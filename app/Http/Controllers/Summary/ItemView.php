@@ -46,7 +46,7 @@ class ItemView extends Controller
         $response = new SummaryItemCollection($this->permissions((int) $resource_type_id));
 
         return $response->setEntity($entity)
-            ->setAllowedParameters($allowed_values)
+            ->setDynamicAllowedParameters($allowed_values)
             ->create()
             ->response();
     }
