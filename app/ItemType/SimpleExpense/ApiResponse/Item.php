@@ -4,7 +4,6 @@ declare(strict_types=1);
 namespace App\ItemType\SimpleExpense\ApiResponse;
 
 use App\ItemType\ApiResponse as ItemTypeResponse;
-use App\ItemType\SimpleExpense\Transformers\Transformer;
 use App\Response\Responses;
 use Illuminate\Http\JsonResponse;
 use function request;
@@ -58,7 +57,7 @@ class Item extends ItemTypeResponse
 
             $collection = array_map(
                 static function ($item) {
-                    return (new Transformer($item))->asArray();
+                    return (new \App\ItemType\SimpleExpense\Transformers\Transformer($item))->asArray();
                 },
                 $items
             );
@@ -99,7 +98,7 @@ class Item extends ItemTypeResponse
         }
 
         return response()->json(
-            (new Transformer($item))->asArray(),
+            (new \App\ItemType\SimpleExpense\Transformers\Transformer($item))->asArray(),
             200,
             $this->showHeaders()
         );

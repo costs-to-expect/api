@@ -3,11 +3,6 @@
 namespace App\ItemType\AllocatedExpense\ApiResponse;
 
 use App\ItemType\AllocatedExpense\Item;
-use App\ItemType\AllocatedExpense\Transformers\SummaryTransformer;
-use App\ItemType\AllocatedExpense\Transformers\SummaryTransformerByCategory;
-use App\ItemType\AllocatedExpense\Transformers\SummaryTransformerByMonth;
-use App\ItemType\AllocatedExpense\Transformers\SummaryTransformerBySubcategory;
-use App\ItemType\AllocatedExpense\Transformers\SummaryTransformerByYear;
 use App\ItemType\ApiSummaryResponse as BaseSummaryResponse;
 use App\Request\Validate\Boolean;
 use Illuminate\Http\JsonResponse;
@@ -128,7 +123,7 @@ class Summary extends BaseSummaryResponse
                 $this->parameters
             );
 
-            $collection = (new SummaryTransformerByCategory($summary))->asArray();
+            $collection = (new \App\ItemType\AllocatedExpense\Transformers\SummaryTransformerByCategory($summary))->asArray();
 
             $this->assignToCache(
                 $summary,
@@ -152,7 +147,7 @@ class Summary extends BaseSummaryResponse
                 $this->parameters
             );
 
-            $collection = (new SummaryTransformerByCategory($summary))->asArray();
+            $collection = (new \App\ItemType\AllocatedExpense\Transformers\SummaryTransformerByCategory($summary))->asArray();
 
             if (count($collection) === 1) {
                 $collection = $collection[0];
@@ -189,7 +184,7 @@ class Summary extends BaseSummaryResponse
 
             $collection = [];
             foreach ($summary as $subtotal) {
-                $collection[] = (new SummaryTransformer($subtotal))->asArray();
+                $collection[] = (new \App\ItemType\AllocatedExpense\Transformers\SummaryTransformer($subtotal))->asArray();
             }
 
             $this->assignToCache(
@@ -214,7 +209,7 @@ class Summary extends BaseSummaryResponse
                 $this->parameters
             );
 
-            $collection = (new SummaryTransformerByMonth($summary))->asArray();
+            $collection = (new \App\ItemType\AllocatedExpense\Transformers\SummaryTransformerByMonth($summary))->asArray();
 
             $this->assignToCache(
                 $summary,
@@ -239,7 +234,7 @@ class Summary extends BaseSummaryResponse
                 $this->parameters
             );
 
-            $collection = (new SummaryTransformerByMonth($summary))->asArray();
+            $collection = (new \App\ItemType\AllocatedExpense\Transformers\SummaryTransformerByMonth($summary))->asArray();
 
             if (count($collection) === 1) {
                 $collection = $collection[0];
@@ -328,7 +323,7 @@ class Summary extends BaseSummaryResponse
                 $this->parameters
             );
 
-            $collection = (new SummaryTransformerBySubcategory($summary))->asArray();
+            $collection = (new \App\ItemType\AllocatedExpense\Transformers\SummaryTransformerBySubcategory($summary))->asArray();
 
             $this->assignToCache(
                 $summary,
@@ -353,7 +348,7 @@ class Summary extends BaseSummaryResponse
                 $this->parameters
             );
 
-            $collection = (new SummaryTransformerBySubcategory($summary))->asArray();
+            $collection = (new \App\ItemType\AllocatedExpense\Transformers\SummaryTransformerBySubcategory($summary))->asArray();
 
             if (count($collection) === 1) {
                 $collection = $collection[0];
@@ -384,7 +379,7 @@ class Summary extends BaseSummaryResponse
 
             $collection = [];
             foreach ($summary as $subtotal) {
-                $collection[] = (new SummaryTransformer($subtotal))->asArray();
+                $collection[] = (new \App\ItemType\AllocatedExpense\Transformers\SummaryTransformer($subtotal))->asArray();
             }
 
             $this->assignToCache(
@@ -408,7 +403,7 @@ class Summary extends BaseSummaryResponse
                 $this->parameters
             );
 
-            $collection = (new SummaryTransformerByYear($summary))->asArray();
+            $collection = (new \App\ItemType\AllocatedExpense\Transformers\SummaryTransformerByYear($summary))->asArray();
 
             $this->assignToCache(
                 $summary,
@@ -432,7 +427,7 @@ class Summary extends BaseSummaryResponse
                 $this->parameters
             );
 
-            $collection = (new SummaryTransformerByYear($summary))->asArray();
+            $collection = (new \App\ItemType\AllocatedExpense\Transformers\SummaryTransformerByYear($summary))->asArray();
 
             if (count($collection) === 1) {
                 $collection = $collection[0];

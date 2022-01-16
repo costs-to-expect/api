@@ -5,7 +5,6 @@ namespace App\ItemType\SimpleItem\ApiResponse;
 
 use App\ItemType\ApiResourceTypeResponse as BaseResourceTypeResponse;
 use App\ItemType\SimpleItem\Item;
-use App\ItemType\SimpleItem\Transformers\ResourceTypeTransformer as Transformer;
 use Illuminate\Http\JsonResponse;
 use function request;
 use function response;
@@ -53,7 +52,7 @@ class ResourceTypeItem extends BaseResourceTypeResponse
 
             $collection = array_map(
                 static function ($item) {
-                    return (new Transformer($item))->asArray();
+                    return (new \App\ItemType\SimpleItem\Transformers\ResourceTypeTransformer($item))->asArray();
                 },
                 $items
             );

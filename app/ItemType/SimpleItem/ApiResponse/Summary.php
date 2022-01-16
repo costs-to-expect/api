@@ -4,7 +4,6 @@ namespace App\ItemType\SimpleItem\ApiResponse;
 
 use App\ItemType\ApiSummaryResponse as BaseSummaryResponse;
 use App\ItemType\SimpleItem\Item;
-use App\ItemType\SimpleItem\Transformers\SummaryTransformer;
 use Illuminate\Http\JsonResponse;
 use function response;
 
@@ -59,7 +58,7 @@ class Summary extends BaseSummaryResponse
 
             $collection = [];
             foreach ($summary as $subtotal) {
-                $collection[] = (new SummaryTransformer($subtotal))->asArray();
+                $collection[] = (new \App\ItemType\SimpleItem\Transformers\SummaryTransformer($subtotal))->asArray();
             }
 
             $this->assignToCache(
@@ -90,7 +89,7 @@ class Summary extends BaseSummaryResponse
 
             $collection = [];
             foreach ($summary as $subtotal) {
-                $collection[] = (new SummaryTransformer($subtotal))->asArray();
+                $collection[] = (new \App\ItemType\SimpleItem\Transformers\SummaryTransformer($subtotal))->asArray();
             }
 
             $this->assignToCache(

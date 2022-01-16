@@ -3,9 +3,7 @@
 namespace App\ItemType\Game\ApiResponse;
 
 use App\ItemType\Game\Item;
-use App\ItemType\Game\Transformers\SummaryTransformerByResource;
 use App\ItemType\ApiSummaryResourceTypeResponse as BaseSummaryResourceTypeResponse;
-use App\ItemType\Game\Transformers\SummaryTransformer as GameTransformer;
 use App\Request\Validate\Boolean;
 use Illuminate\Http\JsonResponse;
 use function response;
@@ -61,7 +59,7 @@ class SummaryResourceTypeItem extends BaseSummaryResourceTypeResponse
 
             $collection = [];
             foreach ($summary as $subtotal) {
-                $collection[] = (new GameTransformer($subtotal))->asArray();
+                $collection[] = (new \App\ItemType\Game\Transformers\SummaryTransformer($subtotal))->asArray();
             }
 
             $this->assignToCache(
@@ -98,7 +96,7 @@ class SummaryResourceTypeItem extends BaseSummaryResourceTypeResponse
                 $this->parameters
             );
 
-            $collection = (new SummaryTransformerByResource($summary))->asArray();
+            $collection = (new \App\ItemType\Game\Transformers\SummaryTransformerByResource($summary))->asArray();
 
             $this->assignToCache(
                 $summary,
@@ -122,7 +120,7 @@ class SummaryResourceTypeItem extends BaseSummaryResourceTypeResponse
 
             $collection = [];
             foreach ($summary as $subtotal) {
-                $collection[] = (new GameTransformer($subtotal))->asArray();
+                $collection[] = (new \App\ItemType\Game\Transformers\SummaryTransformer($subtotal))->asArray();
             }
 
             $this->assignToCache(

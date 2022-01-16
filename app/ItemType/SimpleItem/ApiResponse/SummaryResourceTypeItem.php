@@ -3,8 +3,6 @@
 namespace App\ItemType\SimpleItem\ApiResponse;
 
 use App\ItemType\SimpleItem\Item;
-use App\ItemType\SimpleItem\Transformers\SummaryTransformer;
-use App\ItemType\SimpleItem\Transformers\SummaryTransformerByResource;
 use App\ItemType\ApiSummaryResourceTypeResponse as BaseSummaryResourceTypeResponse;
 use App\Request\Validate\Boolean;
 use Illuminate\Http\JsonResponse;
@@ -61,7 +59,7 @@ class SummaryResourceTypeItem extends BaseSummaryResourceTypeResponse
 
             $collection = [];
             foreach ($summary as $subtotal) {
-                $collection[] = (new SummaryTransformer($subtotal))->asArray();
+                $collection[] = (new \App\ItemType\SimpleItem\Transformers\SummaryTransformer($subtotal))->asArray();
             }
 
             $this->assignToCache(
@@ -98,7 +96,7 @@ class SummaryResourceTypeItem extends BaseSummaryResourceTypeResponse
                 $this->parameters
             );
 
-            $collection = (new SummaryTransformerByResource($summary))->asArray();
+            $collection = (new \App\ItemType\SimpleItem\Transformers\SummaryTransformerByResource($summary))->asArray();
 
             $this->assignToCache(
                 $summary,
@@ -122,7 +120,7 @@ class SummaryResourceTypeItem extends BaseSummaryResourceTypeResponse
 
             $collection = [];
             foreach ($summary as $subtotal) {
-                $collection[] = (new SummaryTransformer($subtotal))->asArray();
+                $collection[] = (new \App\ItemType\SimpleItem\Transformers\SummaryTransformer($subtotal))->asArray();
             }
 
             $this->assignToCache(

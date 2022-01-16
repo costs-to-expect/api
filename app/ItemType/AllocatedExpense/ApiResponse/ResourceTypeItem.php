@@ -4,7 +4,6 @@ declare(strict_types=1);
 namespace App\ItemType\AllocatedExpense\ApiResponse;
 
 use App\ItemType\AllocatedExpense\Item;
-use App\ItemType\AllocatedExpense\Transformers\ResourceTypeTransformer as Transformer;
 use App\ItemType\ApiResourceTypeResponse as BaseResourceTypeResponse;
 use Illuminate\Http\JsonResponse;
 use function request;
@@ -59,7 +58,7 @@ class ResourceTypeItem extends BaseResourceTypeResponse
 
             $collection = array_map(
                 static function ($item) {
-                    return (new Transformer($item))->asArray();
+                    return (new \App\ItemType\AllocatedExpense\Transformers\ResourceTypeTransformer($item))->asArray();
                 },
                 $items
             );
