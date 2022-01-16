@@ -67,14 +67,14 @@ class Item extends ItemType
         return 'simple-expense';
     }
 
-    public function summaryClass(): string
+    public function apiSummaryResponseClass(): string
     {
         return ApiResponse\Summary::class;
     }
 
-    public function resourceTypeSummaryClass(): string
+    public function apiSummaryResourceTypeItemResponseClass(): string
     {
-        return ApiResponse\SummaryResourceTypeItem::class;
+        return ApiResponse\SummaryResourceTypeItemItem::class;
     }
 
     public function transformer(array $data_to_transform): Transformer
@@ -103,14 +103,14 @@ class Item extends ItemType
         return new \App\ItemType\SimpleExpense\Validator();
     }
 
-    public function viewClass(): string
+    public function apiItemResponseClass(): string
     {
         return ApiResponse\Item::class;
     }
 
-    public function resourceTypeItemCollectionClass(): string
+    public function apiResourceTypeItemResponseClass(): string
     {
-        return ApiResponse\ResourceTypeItem::class;
+        return ApiResponse\ResourceTypeItemItem::class;
     }
 
     protected function allowedValuesItemCollectionClass(): string

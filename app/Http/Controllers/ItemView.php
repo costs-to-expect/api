@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use App\AllowedValue\Currency;
 use App\ItemType\Entity;
-use App\ItemType\ApiResponse;
+use App\ItemType\ApiItemResponse;
 use App\Option\ItemCollection;
 use App\Option\ItemItem;
 use Illuminate\Http\JsonResponse;
@@ -27,10 +27,10 @@ class ItemView extends Controller
 
         $entity = Entity::item((int) $resource_type_id);
 
-        $collection_class = $entity->viewClass();
+        $collection_class = $entity->apiItemResponseClass();
 
         /**
-         * @var $collection ApiResponse
+         * @var $collection ApiItemResponse
          */
         $collection = new $collection_class(
             (int) $resource_type_id,
@@ -62,10 +62,10 @@ class ItemView extends Controller
         }
 
         $entity = Entity::item($resource_type_id);
-        $collection_class = $entity->viewClass();
+        $collection_class = $entity->apiItemResponseClass();
 
         /**
-         * @var $collection ApiResponse
+         * @var $collection ApiItemResponse
          */
         $collection = new $collection_class(
             (int) $resource_type_id,

@@ -18,7 +18,7 @@ class ItemView extends Controller
 
         $entity = Entity::item((int) $resource_type_id);
 
-        $summary_class = $entity->summaryClass();
+        $summary_class = $entity->apiSummaryResponseClass();
         $summary = new $summary_class(
             (int) $resource_type_id,
             (int) $resource_id,

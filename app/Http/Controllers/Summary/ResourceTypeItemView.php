@@ -25,7 +25,7 @@ class ResourceTypeItemView extends Controller
 
         $entity = Entity::item((int)$resource_type_id);
 
-        $summary_class = $entity->resourceTypeSummaryClass();
+        $summary_class = $entity->apiSummaryResourceTypeItemResponseClass();
         $summary = new $summary_class(
             (int) $resource_type_id,
             $this->writeAccessToResourceType($resource_type_id),

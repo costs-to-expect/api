@@ -183,11 +183,10 @@ abstract class ItemType
         return 1;
     }
 
-    abstract public function summaryClass(): string;
-
-    abstract public function resourceTypeSummaryClass(): string;
-    abstract public function viewClass(): string;
-    abstract public function resourceTypeItemCollectionClass(): string;
+    abstract public function apiSummaryResponseClass(): string;
+    abstract public function apiSummaryResourceTypeItemResponseClass(): string;
+    abstract public function apiItemResponseClass(): string;
+    abstract public function apiResourceTypeItemResponseClass(): string;
 
     public function summaryFilterParameters(): array
     {

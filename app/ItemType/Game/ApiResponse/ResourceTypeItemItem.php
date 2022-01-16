@@ -1,19 +1,19 @@
 <?php
 declare(strict_types=1);
 
-namespace App\ItemType\SimpleExpense\ApiResponse;
+namespace App\ItemType\Game\ApiResponse;
 
-use App\ItemType\ApiResourceTypeResponse;
-use App\ItemType\SimpleExpense\Item;
+use App\ItemType\Game\Item;
+use App\ItemType\ApiResourceTypeItemResponse;
 use Illuminate\Http\JsonResponse;
 use function request;
 use function response;
 
-class ResourceTypeItem extends ApiResourceTypeResponse
+class ResourceTypeItemItem extends ApiResourceTypeItemResponse
 {
     public function response(): JsonResponse
     {
-        $this->cache_control->setTtlOneMonth();
+        $this->cache_control->setTtlOneWeek();
 
         $cache_collection = new \App\Cache\Collection();
         $cache_collection->setFromCache($this->cache_control->getByKey(request()->getRequestUri()));
@@ -22,7 +22,7 @@ class ResourceTypeItem extends ApiResourceTypeResponse
             $this->cache_control->isRequestCacheable() === false ||
             $cache_collection->valid() === false
         ) {
-            $model = new \App\ItemType\SimpleExpense\Models\ResourceTypeItem();
+            $model = new \App\ItemType\Game\Models\ResourceTypeItem();
 
             $this->fetchAllRequestParameters(
                 new Item()
@@ -54,7 +54,7 @@ class ResourceTypeItem extends ApiResourceTypeResponse
 
             $collection = array_map(
                 static function ($item) {
-                    return (new \App\ItemType\SimpleExpense\Transformers\ResourceTypeItem($item))->asArray();
+                    return (new \App\ItemType\Game\Transformers\ResourceTypeItem($item))->asArray();
                 },
                 $items
             );

@@ -4,12 +4,12 @@ declare(strict_types=1);
 namespace App\ItemType\AllocatedExpense\ApiResponse;
 
 use App\ItemType\AllocatedExpense\Item;
-use App\ItemType\ApiResourceTypeResponse;
+use App\ItemType\ApiResourceTypeItemResponse;
 use Illuminate\Http\JsonResponse;
 use function request;
 use function response;
 
-class ResourceTypeItem extends ApiResourceTypeResponse
+class ResourceTypeItemItem extends ApiResourceTypeItemResponse
 {
     public function response(): JsonResponse
     {

@@ -3,14 +3,14 @@ declare(strict_types=1);
 
 namespace App\ItemType\Game\ApiResponse;
 
-use App\ItemType\ApiResponse;
+use App\ItemType\ApiItemResponse;
 use App\Response\Responses;
 use Illuminate\Http\JsonResponse;
 use function request;
 use function response;
 use function trans;
 
-class Item extends ApiResponse
+class Item extends ApiItemResponse
 {
     public function collectionResponse(): JsonResponse
     {
