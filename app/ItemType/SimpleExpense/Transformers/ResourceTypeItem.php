@@ -3,14 +3,14 @@ declare(strict_types=1);
 
 namespace App\ItemType\SimpleExpense\Transformers;
 
-use App\Transformers\Transformer as BaseTransformer;
+use App\Transformers\Transformer;
 
 /**
  * @author Dean Blackborough <dean@g3d-development.com>
  * @copyright Dean Blackborough 2018-2022
  * @license https://github.com/costs-to-expect/api/blob/master/LICENSE
  */
-class ResourceTypeItem extends BaseTransformer
+class ResourceTypeItem extends Transformer
 {
     public function format(array $to_transform): void
     {

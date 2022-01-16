@@ -3,14 +3,14 @@ declare(strict_types=1);
 
 namespace App\ItemType\AllocatedExpense\ApiResponse;
 
-use App\ItemType\ApiResponse as ItemTypeResponse;
+use App\ItemType\ApiResponse;
 use App\Response\Responses;
 use Illuminate\Http\JsonResponse;
 use function request;
 use function response;
 use function trans;
 
-class Item extends ItemTypeResponse
+class Item extends ApiResponse
 {
     public function collectionResponse(): JsonResponse
     {

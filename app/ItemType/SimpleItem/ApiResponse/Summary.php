@@ -2,12 +2,12 @@
 
 namespace App\ItemType\SimpleItem\ApiResponse;
 
-use App\ItemType\ApiSummaryResponse as BaseSummaryResponse;
+use App\ItemType\ApiSummaryResponse;
 use App\ItemType\SimpleItem\Item;
 use Illuminate\Http\JsonResponse;
 use function response;
 
-class Summary extends BaseSummaryResponse
+class Summary extends ApiSummaryResponse
 {
     public function __construct(
         int $resource_type_id,

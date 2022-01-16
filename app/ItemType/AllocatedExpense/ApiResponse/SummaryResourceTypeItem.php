@@ -3,13 +3,13 @@
 namespace App\ItemType\AllocatedExpense\ApiResponse;
 
 use App\ItemType\AllocatedExpense\Item;
-use App\ItemType\ApiSummaryResourceTypeResponse as BaseSummaryResourceTypeResponse;
+use App\ItemType\ApiSummaryResourceTypeResponse;
 use App\Request\Validate\Boolean;
 use Illuminate\Http\JsonResponse;
 use function request;
 use function response;
 
-class SummaryResourceTypeItem extends BaseSummaryResourceTypeResponse
+class SummaryResourceTypeItem extends ApiSummaryResourceTypeResponse
 {
     public function __construct(
         int $resource_type_id,
