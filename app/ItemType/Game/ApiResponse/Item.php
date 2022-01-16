@@ -57,7 +57,7 @@ class Item extends ItemTypeResponse
 
             $collection = array_map(
                 static function ($item) {
-                    return (new \App\ItemType\Game\Transformers\Transformer($item))->asArray();
+                    return (new \App\ItemType\Game\Transformers\Item($item))->asArray();
                 },
                 $items
             );
@@ -98,7 +98,7 @@ class Item extends ItemTypeResponse
         }
 
         return response()->json(
-            (new \App\ItemType\Game\Transformers\Transformer($item))->asArray(),
+            (new \App\ItemType\Game\Transformers\Item($item))->asArray(),
             200,
             $this->showHeaders()
         );

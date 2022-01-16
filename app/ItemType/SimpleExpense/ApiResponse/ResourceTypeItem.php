@@ -54,7 +54,7 @@ class ResourceTypeItem extends BaseResourceTypeResponse
 
             $collection = array_map(
                 static function ($item) {
-                    return (new \App\ItemType\SimpleExpense\Transformers\ResourceTypeTransformer($item))->asArray();
+                    return (new \App\ItemType\SimpleExpense\Transformers\ResourceTypeItem($item))->asArray();
                 },
                 $items
             );

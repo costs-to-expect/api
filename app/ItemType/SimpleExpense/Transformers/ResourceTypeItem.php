@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace App\ItemType\AllocatedExpense\Transformers;
+namespace App\ItemType\SimpleExpense\Transformers;
 
 use App\Transformers\Transformer as BaseTransformer;
 
@@ -10,7 +10,7 @@ use App\Transformers\Transformer as BaseTransformer;
  * @copyright Dean Blackborough 2018-2022
  * @license https://github.com/costs-to-expect/api/blob/master/LICENSE
  */
-class ResourceTypeTransformer extends BaseTransformer
+class ResourceTypeItem extends BaseTransformer
 {
     public function format(array $to_transform): void
     {
@@ -24,9 +24,6 @@ class ResourceTypeTransformer extends BaseTransformer
                 'name' => $to_transform['item_currency_name'],
             ],
             'total' => number_format((float) $to_transform['item_total'], 2, '.', ''),
-            'percentage' => (int) $to_transform['item_percentage'],
-            'actualised_total' => number_format((float) $to_transform['item_actualised_total'], 2, '.', ''),
-            'effective_date' => $to_transform['item_effective_date'],
             'created' => $to_transform['item_created_at'],
             'updated' => $to_transform['item_updated_at'],
             'categories' => [],

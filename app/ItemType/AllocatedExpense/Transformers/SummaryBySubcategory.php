@@ -10,22 +10,23 @@ use App\Transformers\Transformer;
  * @copyright Dean Blackborough 2018-2022
  * @license https://github.com/costs-to-expect/api/blob/master/LICENSE
  */
-class SummaryTransformerByYear extends Transformer
+class SummaryBySubcategory extends Transformer
 {
     public function format(array $to_transform): void
     {
         $temporary = [];
 
         foreach ($to_transform as $summary) {
-            if (array_key_exists($summary['year'], $temporary) === false) {
-                $temporary[$summary['year']] = [
-                    'id' => $summary['year'],
-                    'year' => $summary['year'],
+            if (array_key_exists($summary['id'], $temporary) === false) {
+                $temporary[$summary['id']] = [
+                    'id' => $this->hash->subcategory()->encode($summary['id']),
+                    'name' => $summary['name'],
+                    'description' => $summary['description'],
                     'subtotals' => []
                 ];
             }
 
-            $temporary[$summary['year']]['subtotals'][] = [
+            $temporary[$summary['id']]['subtotals'][] = [
                 'currency' => [
                     'code' => $summary['currency_code'],
                 ],

@@ -10,7 +10,7 @@ use App\Transformers\Transformer;
  * @copyright Dean Blackborough 2018-2022
  * @license https://github.com/costs-to-expect/api/blob/master/LICENSE
  */
-class SummaryTransformerByCategory extends Transformer
+class SummaryByResource extends Transformer
 {
     public function format(array $to_transform): void
     {
@@ -19,9 +19,8 @@ class SummaryTransformerByCategory extends Transformer
         foreach ($to_transform as $summary) {
             if (array_key_exists($summary['id'], $temporary) === false) {
                 $temporary[$summary['id']] = [
-                    'id' => $this->hash->category()->encode($summary['id']),
+                    'id' => $this->hash->resource()->encode($summary['id']),
                     'name' => $summary['name'],
-                    'description' => $summary['description'],
                     'subtotals' => []
                 ];
             }

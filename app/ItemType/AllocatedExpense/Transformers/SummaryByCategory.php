@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace App\ItemType\SimpleExpense\Transformers;
+namespace App\ItemType\AllocatedExpense\Transformers;
 
 use App\Transformers\Transformer;
 
@@ -10,7 +10,7 @@ use App\Transformers\Transformer;
  * @copyright Dean Blackborough 2018-2022
  * @license https://github.com/costs-to-expect/api/blob/master/LICENSE
  */
-class SummaryTransformerByCategory extends Transformer
+class SummaryByCategory extends Transformer
 {
     public function format(array $to_transform): void
     {

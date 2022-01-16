@@ -10,7 +10,7 @@ use App\Transformers\Transformer as BaseTransformer;
  * @copyright Dean Blackborough 2018-2022
  * @license https://github.com/costs-to-expect/api/blob/master/LICENSE
  */
-class Transformer extends BaseTransformer
+class ResourceTypeItem extends BaseTransformer
 {
     public function format(array $to_transform): void
     {
@@ -30,17 +30,17 @@ class Transformer extends BaseTransformer
             ];
        }
 
-       $winner = null;
-       if (
-           array_key_exists('item_winner_id', $to_transform) &&
-           array_key_exists('item_winner_name', $to_transform) &&
-           $to_transform['item_winner_id'] !== null
-       ) {
+        $winner = null;
+        if (
+            array_key_exists('item_winner_id', $to_transform) &&
+            array_key_exists('item_winner_name', $to_transform) &&
+            $to_transform['item_winner_id'] !== null
+        ) {
             $winner = [
                 'id' => $this->hash->category()->encode($to_transform['item_winner_id']),
                 'name' => $to_transform['item_winner_name']
             ];
-       }
+        }
 
         $this->transformed = [
             'id' => $this->hash->item()->encode($to_transform['item_id']),
@@ -52,7 +52,12 @@ class Transformer extends BaseTransformer
             'score' => $to_transform['item_score'],
             'complete' => $to_transform['item_complete'],
             'created' => $to_transform['item_created_at'],
-            'updated' => $to_transform['item_updated_at']
+            'updated' => $to_transform['item_updated_at'],
+            'resource' => [
+                'id' => $this->hash->resource()->encode($to_transform['resource_id']),
+                'name' => $to_transform['resource_name'],
+                'description' => $to_transform['resource_description']
+            ]
         ];
     }
 }

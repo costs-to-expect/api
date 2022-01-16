@@ -10,22 +10,22 @@ use App\Transformers\Transformer;
  * @copyright Dean Blackborough 2018-2022
  * @license https://github.com/costs-to-expect/api/blob/master/LICENSE
  */
-class SummaryTransformerByResource extends Transformer
+class SummaryByMonth extends Transformer
 {
     public function format(array $to_transform): void
     {
         $temporary = [];
 
         foreach ($to_transform as $summary) {
-            if (array_key_exists($summary['id'], $temporary) === false) {
-                $temporary[$summary['id']] = [
-                    'id' => $this->hash->resource()->encode($summary['id']),
-                    'name' => $summary['name'],
+            if (array_key_exists($summary['month'], $temporary) === false) {
+                $temporary[$summary['month']] = [
+                    'id' => $summary['month'],
+                    'month' => date("F", mktime(0, 0, 0, $summary['month'], 1)),
                     'subtotals' => []
                 ];
             }
 
-            $temporary[$summary['id']]['subtotals'][] = [
+            $temporary[$summary['month']]['subtotals'][] = [
                 'currency' => [
                     'code' => $summary['currency_code'],
                 ],

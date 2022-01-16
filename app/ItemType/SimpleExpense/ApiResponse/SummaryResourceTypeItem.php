@@ -77,7 +77,7 @@ class SummaryResourceTypeItem extends BaseSummaryResourceTypeResponse
                 $this->parameters
             );
 
-            $collection = (new \App\ItemType\SimpleExpense\Transformers\SummaryTransformerByCategory($summary))->asArray();
+            $collection = (new \App\ItemType\SimpleExpense\Transformers\SummaryByCategory($summary))->asArray();
 
             $this->assignToCache(
                 $summary,
@@ -100,7 +100,7 @@ class SummaryResourceTypeItem extends BaseSummaryResourceTypeResponse
                 $this->parameters
             );
 
-            $collection = (new \App\ItemType\SimpleExpense\Transformers\SummaryTransformerByCategory($summary))->asArray();
+            $collection = (new \App\ItemType\SimpleExpense\Transformers\SummaryByCategory($summary))->asArray();
 
             if (count($collection) === 1) {
                 $collection = $collection[0];
@@ -133,7 +133,7 @@ class SummaryResourceTypeItem extends BaseSummaryResourceTypeResponse
 
             $collection = [];
             foreach ($summary as $subtotal) {
-                $collection[] = (new \App\ItemType\SimpleExpense\Transformers\SummaryTransformer($subtotal))->asArray();
+                $collection[] = (new \App\ItemType\SimpleExpense\Transformers\Summary($subtotal))->asArray();
             }
 
             $this->assignToCache(
@@ -196,7 +196,7 @@ class SummaryResourceTypeItem extends BaseSummaryResourceTypeResponse
                 $this->parameters
             );
 
-            $collection = (new \App\ItemType\SimpleExpense\Transformers\SummaryTransformerByResource($summary))->asArray();
+            $collection = (new \App\ItemType\SimpleExpense\Transformers\SummaryByResource($summary))->asArray();
 
             $this->assignToCache(
                 $summary,
@@ -219,7 +219,7 @@ class SummaryResourceTypeItem extends BaseSummaryResourceTypeResponse
                 $this->parameters
             );
 
-            $collection = (new \App\ItemType\SimpleExpense\Transformers\SummaryTransformerBySubcategory($summary))->asArray();
+            $collection = (new \App\ItemType\SimpleExpense\Transformers\SummaryBySubcategory($summary))->asArray();
 
             $this->assignToCache(
                 $summary,
@@ -243,7 +243,7 @@ class SummaryResourceTypeItem extends BaseSummaryResourceTypeResponse
                 $this->parameters
             );
 
-            $collection = (new \App\ItemType\SimpleExpense\Transformers\SummaryTransformerBySubcategory($summary))->asArray();
+            $collection = (new \App\ItemType\SimpleExpense\Transformers\SummaryBySubcategory($summary))->asArray();
 
             if (count($collection) === 1) {
                 $collection = $collection[0];
@@ -273,7 +273,7 @@ class SummaryResourceTypeItem extends BaseSummaryResourceTypeResponse
 
             $collection = [];
             foreach ($summary as $subtotal) {
-                $collection[] = (new \App\ItemType\SimpleExpense\Transformers\SummaryTransformer($subtotal))->asArray();
+                $collection[] = (new \App\ItemType\SimpleExpense\Transformers\Summary($subtotal))->asArray();
             }
 
             $this->assignToCache(

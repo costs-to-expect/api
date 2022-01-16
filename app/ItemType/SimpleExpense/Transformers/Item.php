@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace App\ItemType\SimpleItem\Transformers;
+namespace App\ItemType\SimpleExpense\Transformers;
 
 use App\Transformers\Transformer as BaseTransformer;
 
@@ -10,7 +10,7 @@ use App\Transformers\Transformer as BaseTransformer;
  * @copyright Dean Blackborough 2018-2022
  * @license https://github.com/costs-to-expect/api/blob/master/LICENSE
  */
-class Transformer extends BaseTransformer
+class Item extends BaseTransformer
 {
     public function format(array $to_transform): void
     {
@@ -18,9 +18,17 @@ class Transformer extends BaseTransformer
             'id' => $this->hash->item()->encode($to_transform['item_id']),
             'name' => $to_transform['item_name'],
             'description' => $to_transform['item_description'],
-            'quantity' => (int) $to_transform['item_quantity'],
+            'currency' => [
+                'id' => $this->hash->currency()->encode($to_transform['item_currency_id']),
+                'code' => $to_transform['item_currency_code'],
+                'name' => $to_transform['item_currency_name'],
+            ],
+            'total' => number_format((float) $to_transform['item_total'],2, '.', ''),
+            'categories' => [],
             'created' => $to_transform['item_created_at'],
             'updated' => $to_transform['item_updated_at']
         ];
+
+        $this->assignCategories($to_transform);
     }
 }

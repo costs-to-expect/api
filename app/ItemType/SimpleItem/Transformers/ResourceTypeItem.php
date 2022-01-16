@@ -10,7 +10,7 @@ use App\Transformers\Transformer as BaseTransformer;
  * @copyright Dean Blackborough 2018-2022
  * @license https://github.com/costs-to-expect/api/blob/master/LICENSE
  */
-class ResourceTypeTransformer extends BaseTransformer
+class ResourceTypeItem extends BaseTransformer
 {
     public function format(array $to_transform): void
     {
