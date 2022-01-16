@@ -26,7 +26,7 @@ class SummaryResourceTypeItem extends BaseSummaryResourceTypeResponse
         
         $this->setUpCache();
 
-        $this->model = new \App\ItemType\SimpleItem\Models\SummaryResourceTypeModel();
+        $this->model = new \App\ItemType\SimpleItem\Models\SummaryResourceTypeItem();
 
         $this->fetchAllRequestParameters(new Item());
 

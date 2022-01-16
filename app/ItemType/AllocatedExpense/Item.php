@@ -32,13 +32,6 @@ class Item extends ItemType
         return true;
     }
 
-    /**
-     * Create and save the item and item type data
-     *
-     * @param integer $id
-     *
-     * @return \App\ItemType\AllocatedExpense\Models\Model
-     */
     public function create($id): Model
     {
         $hash = new Hash();

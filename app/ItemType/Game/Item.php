@@ -4,8 +4,6 @@ declare(strict_types=1);
 namespace App\ItemType\Game;
 
 use App\AllowedValue\Winner;
-use App\ItemType\Game\AllowedValue\ResourceTypeItem;
-use App\ItemType\Game\ApiResponse\Summary;
 use App\ItemType\ItemType;
 use App\Transformers\Transformer;
 use App\Request\Hash;
@@ -143,6 +141,6 @@ class Item extends ItemType
 
     protected function allowedValuesResourceTypeItemCollectionClass(): string
     {
-        return ResourceTypeItem::class;
+        return AllowedValue\ResourceTypeItem::class;
     }
 }

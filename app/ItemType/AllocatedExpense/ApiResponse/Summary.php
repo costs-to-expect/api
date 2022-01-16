@@ -3,7 +3,6 @@
 namespace App\ItemType\AllocatedExpense\ApiResponse;
 
 use App\ItemType\AllocatedExpense\Item;
-use App\ItemType\AllocatedExpense\Models\SummaryModel;
 use App\ItemType\AllocatedExpense\Transformers\SummaryTransformer;
 use App\ItemType\AllocatedExpense\Transformers\SummaryTransformerByCategory;
 use App\ItemType\AllocatedExpense\Transformers\SummaryTransformerByMonth;
@@ -33,7 +32,7 @@ class Summary extends BaseSummaryResponse
 
         $this->setUpCache();
 
-        $this->model = new SummaryModel();
+        $this->model = new \App\ItemType\AllocatedExpense\Models\Summary();
 
         $this->shortCircuit(); // Skip working out which for obvious routes
 

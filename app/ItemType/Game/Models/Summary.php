@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace App\ItemType\SimpleItem\Models;
+namespace App\ItemType\Game\Models;
 
 use App\Models\Clause;
 use Illuminate\Database\Eloquent\Model as LaravelModel;
@@ -9,15 +9,16 @@ use Illuminate\Database\Query\Builder as QueryBuilder;
 
 /**
  * @mixin QueryBuilder
+ *
  * @author Dean Blackborough <dean@g3d-development.com>
  * @copyright Dean Blackborough 2018-2022
  * @license https://github.com/costs-to-expect/api/blob/master/LICENSE
  */
-class SummaryModel extends LaravelModel
+class Summary extends LaravelModel
 {
-    protected $guarded = ['id', 'created_at', 'updated_at'];
+    protected $guarded = ['id'];
     protected $table = 'item';
-    protected $sub_table = 'item_type_simple_item';
+    protected $sub_table = 'item_type_game';
 
     public function filteredSummary(
         int $resource_type_id,
@@ -27,10 +28,15 @@ class SummaryModel extends LaravelModel
         array $filter_parameters = []
     ): array
     {
-        $collection = $this->
-            selectRaw("
-                SUM({$this->sub_table}.quantity) AS total, 
-                COUNT({$this->sub_table}.item_id) AS total_count
+        $collection = $this
+            ->selectRaw("
+                `resource`.`id` AS resource_id, 
+                `resource`.`name` AS resource_name, 
+                `resource`.`description` AS resource_description, 
+                `item_subtype`.`id` AS resource_item_subtype_id,
+                `item_subtype`.`name` AS resource_item_subtype_name,
+                `item_subtype`.`description` AS resource_item_subtype_description,
+                COUNT({$this->sub_table}.item_id) AS count
             ")
             ->selectRaw("
                 (
@@ -55,8 +61,14 @@ class SummaryModel extends LaravelModel
             ->join($this->sub_table, 'item.id', "{$this->sub_table}.item_id")
             ->join("resource", "resource.id", "item.resource_id")
             ->join("resource_type", "resource_type.id", "resource.resource_type_id")
+            ->join('resource_item_subtype', 'resource_item_subtype.resource_id', 'resource.id')
+            ->join('item_subtype', 'resource_item_subtype.item_subtype_id', 'item_subtype.id')
             ->where("resource_type.id", "=", $resource_type_id)
             ->where("resource.id", "=", $resource_id);
+
+        if (array_key_exists('complete', $parameters) === true) {
+            $collection->where($this->sub_table . '.complete', '=', 1);
+        }
 
         $collection = Clause::applySearch(
             $collection,
@@ -69,8 +81,10 @@ class SummaryModel extends LaravelModel
             $filter_parameters
         );
 
-        return $collection->get()->
-            toArray();
+        return $collection
+            ->groupBy('resource.id', 'item_subtype.id')
+            ->get()
+            ->toArray();
     }
 
     /**
@@ -88,9 +102,15 @@ class SummaryModel extends LaravelModel
         array $parameters = []
     ): array
     {
-        $collection = $this->selectRaw("
-                SUM({$this->sub_table}.quantity) AS total, 
-                COUNT({$this->sub_table}.item_id) AS total_count
+        $collection = $this
+            ->selectRaw("
+                `resource`.`id` AS resource_id, 
+                `resource`.`name` AS resource_name, 
+                `resource`.`description` AS resource_description,
+                `item_subtype`.`id` AS resource_item_subtype_id,
+                `item_subtype`.`name` AS resource_item_subtype_name,
+                `item_subtype`.`description` AS resource_item_subtype_description,
+                COUNT({$this->sub_table}.item_id) AS count
             ")
             ->selectRaw("
                 (
@@ -113,11 +133,19 @@ class SummaryModel extends LaravelModel
                 ]
             )
             ->join($this->sub_table, 'item.id', "{$this->sub_table}.item_id")
-            ->join('resource', 'item.resource_id', 'resource.id')
-            ->where('resource_id', '=', $resource_id)
-            ->where('resource.resource_type_id', '=', $resource_type_id);
+            ->join("resource", "resource.id", "item.resource_id")
+            ->join("resource_type", "resource_type.id", "resource.resource_type_id")
+            ->join('resource_item_subtype', 'resource_item_subtype.resource_id', 'resource.id')
+            ->join('item_subtype', 'resource_item_subtype.item_subtype_id', 'item_subtype.id')
+            ->where("resource_type.id", "=", $resource_type_id)
+            ->where("resource.id", "=", $resource_id);
+
+        if (array_key_exists('complete', $parameters) === true) {
+            $collection->where($this->sub_table . '.complete', '=', 1);
+        }
 
         return $collection
+            ->groupBy('resource.id', 'item_subtype.id')
             ->get()
             ->toArray();
     }

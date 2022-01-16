@@ -4,7 +4,6 @@ namespace App\ItemType\SimpleExpense\ApiResponse;
 
 use App\ItemType\ApiSummaryResponse as BaseSummaryResponse;
 use App\ItemType\SimpleExpense\Item;
-use App\ItemType\SimpleExpense\Models\SummaryModel;
 use App\ItemType\SimpleExpense\Transformers\SummaryTransformer;
 use App\ItemType\SimpleExpense\Transformers\SummaryTransformerByCategory;
 use App\ItemType\SimpleExpense\Transformers\SummaryTransformerBySubcategory;
@@ -30,7 +29,7 @@ class Summary extends BaseSummaryResponse
         
         $this->setUpCache();
 
-        $this->model = new SummaryModel();
+        $this->model = new \App\ItemType\SimpleExpense\Models\Summary();
 
         $this->fetchAllRequestParameters(new Item());
 

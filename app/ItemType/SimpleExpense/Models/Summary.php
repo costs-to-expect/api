@@ -13,7 +13,7 @@ use Illuminate\Database\Query\Builder as QueryBuilder;
  * @copyright Dean Blackborough 2018-2022
  * @license https://github.com/costs-to-expect/api/blob/master/LICENSE
  */
-class SummaryModel extends LaravelModel
+class Summary extends LaravelModel
 {
     protected $guarded = ['id', 'created_at', 'updated_at'];
     protected $table = 'item';

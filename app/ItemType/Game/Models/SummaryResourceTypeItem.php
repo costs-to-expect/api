@@ -8,11 +8,12 @@ use Illuminate\Database\Query\Builder as QueryBuilder;
 
 /**
  * @mixin QueryBuilder
+ *
  * @author Dean Blackborough <dean@g3d-development.com>
  * @copyright Dean Blackborough 2018-2022
  * @license https://github.com/costs-to-expect/api/blob/master/LICENSE
  */
-class SummaryResourceTypeModel extends LaravelModel
+class SummaryResourceTypeItem extends LaravelModel
 {
     protected $guarded = ['id'];
     protected $table = 'item';

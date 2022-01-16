@@ -4,7 +4,6 @@ namespace App\ItemType\SimpleItem\ApiResponse;
 
 use App\ItemType\ApiSummaryResponse as BaseSummaryResponse;
 use App\ItemType\SimpleItem\Item;
-use App\ItemType\SimpleItem\Models\SummaryModel;
 use App\ItemType\SimpleItem\Transformers\SummaryTransformer;
 use Illuminate\Http\JsonResponse;
 use function response;
@@ -27,7 +26,7 @@ class Summary extends BaseSummaryResponse
         
         $this->setUpCache();
 
-        $this->model = new SummaryModel();
+        $this->model = new \App\ItemType\SimpleItem\Models\Summary();
 
         $this->fetchAllRequestParameters(new Item());
 
