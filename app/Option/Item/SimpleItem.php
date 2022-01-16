@@ -1,14 +1,19 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Option;
+namespace App\Option\Item;
 
-class ItemItem extends Response
+use App\ItemType\SimpleItem\Item;
+use App\Option\Response;
+
+class SimpleItem extends Response
 {
     public function create()
     {
+        $item = new Item();
+
         $get = new \App\Method\GetRequest();
-        $this->verbs['GET'] = $get->setParameters($this->entity->itemRequestParameters())
+        $this->verbs['GET'] = $get->setParameters($item->itemRequestParameters())
             ->setAuthenticationStatus($this->permissions['view'])
             ->setDescription('route-descriptions.item_GET_show')
             ->option();
@@ -20,7 +25,7 @@ class ItemItem extends Response
             ->option();
 
         $patch = new \App\Method\PatchRequest();
-        $this->verbs['PATCH'] = $patch->setFields($this->entity->patchFields())
+        $this->verbs['PATCH'] = $patch->setFields($item->patchFields())
             ->setDescription('route-descriptions.item_PATCH')
             ->setAuthenticationStatus($this->permissions['manage'])
             ->setAuthenticationRequirement(true)

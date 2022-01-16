@@ -4,8 +4,6 @@ namespace App\Http\Controllers;
 
 use App\AllowedValue\Currency;
 use App\ItemType\Entity;
-use App\Option\ItemCollection;
-use App\Option\ItemItem;
 use Illuminate\Http\JsonResponse;
 
 /**
@@ -169,23 +167,6 @@ class ItemView extends Controller
             \App\Response\Responses::notFoundOrNotAccessible(trans('entities.resource'));
         }
 
-        /*$entity = Entity::item($resource_type_id);
-
-        $response = new ItemCollection($this->permissions((int) $resource_type_id));
-
-        return $response
-            ->setEntity($entity)
-            ->setAllowedParameters(
-                $entity->allowedValuesForItemCollection(
-                    $resource_type_id,
-                    $resource_id,
-                    $this->viewable_resource_types
-                )
-            )
-            ->setAllowedFields((new Currency())->allowedValues())
-            ->create()
-            ->response();*/
-
         $item_type = Entity::itemType((int) $resource_type_id);
 
         return match ($item_type) {
@@ -263,16 +244,28 @@ class ItemView extends Controller
         ->response();
     }
 
-    /**
-     * Generate the OPTIONS request for a specific item
-     *
-     * @param string $resource_id
-     * @param string $resource_type_id
-     * @param string $item_id
-     *
-     * @return JsonResponse
-     */
     public function optionsShow(
+        string $resource_type_id,
+        string $resource_id,
+        string $item_id
+    ): JsonResponse
+    {
+        if ($this->viewAccessToResourceType((int) $resource_type_id) === false) {
+            \App\Response\Responses::notFoundOrNotAccessible(trans('entities.resource'));
+        }
+
+        $item_type = Entity::itemType((int) $resource_type_id);
+
+        return match ($item_type) {
+            'allocated-expense' => $this->optionsAllocatedExpenseShow((int) $resource_type_id, (int) $resource_id, (int) $item_id),
+            'game' => $this->optionsGameShow((int) $resource_type_id, (int) $resource_id, (int) $item_id),
+            'simple-expense' => $this->optionsSimpleExpenseShow((int) $resource_type_id, (int) $resource_id, (int) $item_id),
+            'simple-item' => $this->optionsSimpleItemShow((int) $resource_type_id, (int) $resource_id, (int) $item_id),
+            default => throw new \OutOfRangeException('No entity definition for ' . $item_type, 500),
+        };
+    }
+
+    public function optionsAllocatedExpenseShow(
         string $resource_type_id,
         string $resource_id,
         string $item_id
@@ -282,21 +275,100 @@ class ItemView extends Controller
             \App\Response\Responses::notFoundOrNotAccessible(trans('entities.item'));
         }
 
-        $entity = Entity::item($resource_type_id);
+        $item = new \App\ItemType\AllocatedExpense\Item();
+        $model = new \App\ItemType\AllocatedExpense\Models\Item();
+        $item_data = $model->single($resource_type_id, $resource_id, $item_id);
 
-        $item_model = $entity->model();
-
-        $item = $item_model->single($resource_type_id, $resource_id, $item_id);
-
-        if ($item === null) {
+        if ($item_data === null) {
             return \App\Response\Responses::notFound(trans('entities.item'));
         }
 
-        $response = new ItemItem($this->permissions((int) $resource_type_id));
+        $response = new \App\Option\Item\AllocatedExpense($this->permissions((int) $resource_type_id));
 
-        return $response
-            ->setEntity($entity)
-            ->setDynamicAllowedFields($entity->allowedValuesForItem((int) $resource_type_id))
+        return $response->setDynamicAllowedFields(
+                $item->allowedValuesForItem((int) $resource_type_id)
+            )
+            ->create()
+            ->response();
+    }
+
+    public function optionsGameShow(
+        string $resource_type_id,
+        string $resource_id,
+        string $item_id
+    ): JsonResponse
+    {
+        if ($this->viewAccessToResourceType((int) $resource_type_id) === false) {
+            \App\Response\Responses::notFoundOrNotAccessible(trans('entities.item'));
+        }
+
+        $item = new \App\ItemType\Game\Item();
+        $model = new \App\ItemType\Game\Models\Item();
+        $item_data = $model->single($resource_type_id, $resource_id, $item_id);
+
+        if ($item_data === null) {
+            return \App\Response\Responses::notFound(trans('entities.item'));
+        }
+
+        $response = new \App\Option\Item\Game($this->permissions((int) $resource_type_id));
+
+        return $response->setDynamicAllowedFields(
+                $item->allowedValuesForItem((int) $resource_type_id)
+            )
+            ->create()
+            ->response();
+    }
+
+    public function optionsSimpleExpenseShow(
+        string $resource_type_id,
+        string $resource_id,
+        string $item_id
+    ): JsonResponse
+    {
+        if ($this->viewAccessToResourceType((int) $resource_type_id) === false) {
+            \App\Response\Responses::notFoundOrNotAccessible(trans('entities.item'));
+        }
+
+        $item = new \App\ItemType\SimpleExpense\Item();
+        $model = new \App\ItemType\SimpleExpense\Models\Item();
+        $item_data = $model->single($resource_type_id, $resource_id, $item_id);
+
+        if ($item_data === null) {
+            return \App\Response\Responses::notFound(trans('entities.item'));
+        }
+
+        $response = new \App\Option\Item\SimpleExpense($this->permissions((int) $resource_type_id));
+
+        return $response->setDynamicAllowedFields(
+                $item->allowedValuesForItem((int) $resource_type_id)
+            )
+            ->create()
+            ->response();
+    }
+
+    public function optionsSimpleItemShow(
+        string $resource_type_id,
+        string $resource_id,
+        string $item_id
+    ): JsonResponse
+    {
+        if ($this->viewAccessToResourceType((int) $resource_type_id) === false) {
+            \App\Response\Responses::notFoundOrNotAccessible(trans('entities.item'));
+        }
+
+        $item = new \App\ItemType\SimpleItem\Item();
+        $model = new \App\ItemType\SimpleItem\Models\Item();
+        $item_data = $model->single($resource_type_id, $resource_id, $item_id);
+
+        if ($item_data === null) {
+            return \App\Response\Responses::notFound(trans('entities.item'));
+        }
+
+        $response = new \App\Option\Item\SimpleItem($this->permissions((int) $resource_type_id));
+
+        return $response->setDynamicAllowedFields(
+                $item->allowedValuesForItem((int) $resource_type_id)
+            )
             ->create()
             ->response();
     }
