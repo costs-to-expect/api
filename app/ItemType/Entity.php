@@ -10,6 +10,17 @@ use App\Models\ResourceTypeItemType;
 
 class Entity
 {
+    public static function itemType(int $resource_type_id): string
+    {
+        $type = (new ResourceTypeItemType())->itemType($resource_type_id);
+
+        if ($type !== null) {
+            return $type;
+        }
+
+        throw new \RuntimeException('No entity definition for ' . $type, 500);
+    }
+
     public static function item(int $resource_type_id): ItemType
     {
         $type = (new ResourceTypeItemType())->itemType($resource_type_id);

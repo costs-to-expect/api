@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use App\AllowedValue\Currency;
 use App\ItemType\Entity;
-use App\ItemType\ApiItemResponse;
 use App\Option\ItemCollection;
 use App\Option\ItemItem;
 use Illuminate\Http\JsonResponse;
@@ -25,32 +24,65 @@ class ItemView extends Controller
             \App\Response\Responses::notFoundOrNotAccessible(trans('entities.resource'));
         }
 
-        $entity = Entity::item((int) $resource_type_id);
+        $item_type = Entity::itemType((int) $resource_type_id);
 
-        $collection_class = $entity->apiItemResponseClass();
+        return match ($item_type) {
+            'allocated-expense' => $this->allocatedExpenseCollection((int) $resource_type_id, (int) $resource_id),
+            'simple-expense' => $this->simpleExpenseCollection((int) $resource_type_id, (int) $resource_id),
+            'simple-item' => $this->simpleItemCollection((int) $resource_type_id, (int) $resource_id),
+            'game' => $this->gameCollection((int) $resource_type_id, (int) $resource_id),
+            default => throw new \OutOfRangeException('No entity definition for ' . $item_type, 500),
+        };
+    }
 
-        /**
-         * @var $collection ApiItemResponse
-         */
-        $collection = new $collection_class(
-            (int) $resource_type_id,
-            (int) $resource_id,
+    private function allocatedExpenseCollection(int $resource_type_id, int $resource_id): JsonResponse
+    {
+        $response = new \App\ItemType\AllocatedExpense\ApiResponse\Item(
+            $resource_type_id,
+            $resource_id,
             $this->writeAccessToResourceType($resource_type_id),
             $this->user_id
         );
 
-        return $collection->collectionResponse();
+        return $response->collectionResponse();
     }
 
-    /**
-     * Return a single item
-     *
-     * @param string $resource_id
-     * @param string $resource_type_id
-     * @param string $item_id
-     *
-     * @return JsonResponse
-     */
+    private function gameCollection(int $resource_type_id, int $resource_id): JsonResponse
+    {
+        $response = new \App\ItemType\Game\ApiResponse\Item(
+            $resource_type_id,
+            $resource_id,
+            $this->writeAccessToResourceType($resource_type_id),
+            $this->user_id
+        );
+
+        return $response->collectionResponse();
+    }
+
+    private function simpleExpenseCollection(int $resource_type_id, int $resource_id): JsonResponse
+    {
+        $response = new \App\ItemType\SimpleExpense\ApiResponse\Item(
+            $resource_type_id,
+            $resource_id,
+            $this->writeAccessToResourceType($resource_type_id),
+            $this->user_id
+        );
+
+        return $response->collectionResponse();
+    }
+
+    private function simpleItemCollection(int $resource_type_id, int $resource_id): JsonResponse
+    {
+        $response = new \App\ItemType\SimpleItem\ApiResponse\Item(
+            $resource_type_id,
+            $resource_id,
+            $this->writeAccessToResourceType($resource_type_id),
+            $this->user_id
+        );
+
+        return $response->collectionResponse();
+    }
+
     public function show(
         $resource_type_id,
         $resource_id,
@@ -58,23 +90,66 @@ class ItemView extends Controller
     ): JsonResponse
     {
         if ($this->viewAccessToResourceType((int) $resource_type_id) === false) {
-            \App\Response\Responses::notFoundOrNotAccessible(trans('entities.item'));
+            \App\Response\Responses::notFoundOrNotAccessible(trans('entities.resource'));
         }
 
-        $entity = Entity::item($resource_type_id);
-        $collection_class = $entity->apiItemResponseClass();
+        $item_type = Entity::itemType((int) $resource_type_id);
 
-        /**
-         * @var $collection ApiItemResponse
-         */
-        $collection = new $collection_class(
-            (int) $resource_type_id,
-            (int) $resource_id,
+        return match ($item_type) {
+            'allocated-expense' => $this->allocatedExpense((int) $resource_type_id, (int) $resource_id, (int) $item_id),
+            'simple-expense' => $this->simpleExpense((int) $resource_type_id, (int) $resource_id, (int) $item_id),
+            'simple-item' => $this->simpleItem((int) $resource_type_id, (int) $resource_id, (int) $item_id),
+            'game' => $this->game((int) $resource_type_id, (int) $resource_id, (int) $item_id),
+            default => throw new \OutOfRangeException('No entity definition for ' . $item_type, 500),
+        };
+    }
+
+    private function allocatedExpense(int $resource_type_id, int $resource_id, int $item_id): JsonResponse
+    {
+        $response = new \App\ItemType\AllocatedExpense\ApiResponse\Item(
+            $resource_type_id,
+            $resource_id,
             $this->writeAccessToResourceType($resource_type_id),
             $this->user_id
         );
 
-        return $collection->showResponse($item_id);
+        return $response->showResponse($item_id);
+    }
+
+    private function game(int $resource_type_id, int $resource_id, int $item_id): JsonResponse
+    {
+        $response = new \App\ItemType\Game\ApiResponse\Item(
+            $resource_type_id,
+            $resource_id,
+            $this->writeAccessToResourceType($resource_type_id),
+            $this->user_id
+        );
+
+        return $response->showResponse($item_id);
+    }
+
+    private function simpleExpense(int $resource_type_id, int $resource_id, int $item_id): JsonResponse
+    {
+        $response = new \App\ItemType\SimpleExpense\ApiResponse\Item(
+            $resource_type_id,
+            $resource_id,
+            $this->writeAccessToResourceType($resource_type_id),
+            $this->user_id
+        );
+
+        return $response->showResponse($item_id);
+    }
+
+    private function simpleItem(int $resource_type_id, int $resource_id, int $item_id): JsonResponse
+    {
+        $response = new \App\ItemType\SimpleItem\ApiResponse\Item(
+            $resource_type_id,
+            $resource_id,
+            $this->writeAccessToResourceType($resource_type_id),
+            $this->user_id
+        );
+
+        return $response->showResponse($item_id);
     }
 
     /**
