@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\ItemType\Entity;
-use App\Option\ResourceTypeItemCollection;
 use Illuminate\Http\JsonResponse;
 
 /**
@@ -21,20 +20,59 @@ class ResourceTypeItemView extends Controller
             \App\Response\Responses::notFoundOrNotAccessible(trans('entities.resource-type'));
         }
 
-        $entity = Entity::item((int) $resource_type_id);
+        $item_type = Entity::itemType((int) $resource_type_id);
 
-        $collection_class = $entity->apiResourceTypeItemResponseClass();
+        return match ($item_type) {
+            'allocated-expense' => $this->allocatedExpenseCollection((int) $resource_type_id),
+            'game' => $this->gameCollection((int) $resource_type_id),
+            'simple-expense' => $this->simpleExpenseCollection((int) $resource_type_id),
+            'simple-item' => $this->simpleItemCollection((int) $resource_type_id),
+            default => throw new \OutOfRangeException('No item type definition for ' . $item_type, 500),
+        };
+    }
 
-        /**
-         * @var $collection \App\ItemType\ApiResourceTypeItemResponse
-         */
-        $collection = new $collection_class(
-            (int) $resource_type_id,
+    private function allocatedExpenseCollection(int $resource_type_id): JsonResponse
+    {
+        $response = new \App\ItemType\AllocatedExpense\ApiResponse\ResourceTypeItemItem(
+            $resource_type_id,
             $this->writeAccessToResourceType($resource_type_id),
             $this->user_id
         );
 
-        return $collection->response();
+        return $response->response();
+    }
+
+    private function gameCollection(int $resource_type_id): JsonResponse
+    {
+        $response = new \App\ItemType\Game\ApiResponse\ResourceTypeItemItem(
+            $resource_type_id,
+            $this->writeAccessToResourceType($resource_type_id),
+            $this->user_id
+        );
+
+        return $response->response();
+    }
+
+    private function simpleExpenseCollection(int $resource_type_id): JsonResponse
+    {
+        $response = new \App\ItemType\SimpleExpense\ApiResponse\ResourceTypeItemItem(
+            $resource_type_id,
+            $this->writeAccessToResourceType($resource_type_id),
+            $this->user_id
+        );
+
+        return $response->response();
+    }
+
+    private function simpleItemCollection(int $resource_type_id): JsonResponse
+    {
+        $response = new \App\ItemType\SimpleItem\ApiResponse\ResourceTypeItemItem(
+            $resource_type_id,
+            $this->writeAccessToResourceType($resource_type_id),
+            $this->user_id
+        );
+
+        return $response->response();
     }
 
     public function optionsIndex(string $resource_type_id): JsonResponse
@@ -43,19 +81,74 @@ class ResourceTypeItemView extends Controller
             \App\Response\Responses::notFoundOrNotAccessible(trans('entities.resource-type'));
         }
 
-        $entity = Entity::item($resource_type_id);
+        $item_type = Entity::itemType((int) $resource_type_id);
 
-        $response = new ResourceTypeItemCollection($this->permissions((int) $resource_type_id));
+        return match ($item_type) {
+            'allocated-expense' => $this->optionsAllocatedExpenseCollection((int) $resource_type_id),
+            'game' => $this->optionsGameCollection((int) $resource_type_id),
+            'simple-expense' => $this->optionsSimpleExpenseCollection((int) $resource_type_id),
+            'simple-item' => $this->optionsSimpleItemCollection((int) $resource_type_id),
+            default => throw new \OutOfRangeException('No options item type definition for ' . $item_type, 500),
+        };
+    }
 
-        return $response
-            ->setEntity($entity)
-            ->setDynamicAllowedParameters(
-                $entity->allowedValuesForResourceTypeItemCollection(
-                    $resource_type_id,
-                    $this->viewable_resource_types
-                )
+    private function optionsAllocatedExpenseCollection(int $resource_type_id): JsonResponse
+    {
+        $item = new \App\ItemType\AllocatedExpense\Item();
+        $response = new \App\Option\ResourceTypeItem\AllocatedExpenseCollection($this->permissions($resource_type_id));
+
+        return $response->setDynamicAllowedParameters(
+            $item->allowedValuesForResourceTypeItemCollection(
+                $resource_type_id,
+                $this->viewable_resource_types
             )
-            ->create()
-            ->response();
+        )
+        ->create()
+        ->response();
+    }
+
+    private function optionsGameCollection(int $resource_type_id): JsonResponse
+    {
+        $item = new \App\ItemType\Game\Item();
+        $response = new \App\Option\ResourceTypeItem\GameCollection($this->permissions($resource_type_id));
+
+        return $response->setDynamicAllowedParameters(
+            $item->allowedValuesForResourceTypeItemCollection(
+                $resource_type_id,
+                $this->viewable_resource_types
+            )
+        )
+        ->create()
+        ->response();
+    }
+
+    private function optionsSimpleExpenseCollection(int $resource_type_id): JsonResponse
+    {
+        $item = new \App\ItemType\SimpleExpense\Item();
+        $response = new \App\Option\ResourceTypeItem\SimpleExpenseCollection($this->permissions($resource_type_id));
+
+        return $response->setDynamicAllowedParameters(
+            $item->allowedValuesForResourceTypeItemCollection(
+                $resource_type_id,
+                $this->viewable_resource_types
+            )
+        )
+        ->create()
+        ->response();
+    }
+
+    private function optionsSimpleItemCollection(int $resource_type_id): JsonResponse
+    {
+        $item = new \App\ItemType\SimpleItem\Item();
+        $response = new \App\Option\ResourceTypeItem\SimpleItemCollection($this->permissions($resource_type_id));
+
+        return $response->setDynamicAllowedParameters(
+            $item->allowedValuesForResourceTypeItemCollection(
+                $resource_type_id,
+                $this->viewable_resource_types
+            )
+        )
+        ->create()
+        ->response();
     }
 }

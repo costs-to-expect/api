@@ -29,7 +29,7 @@ class ItemView extends Controller
             'simple-expense' => $this->simpleExpenseCollection((int) $resource_type_id, (int) $resource_id),
             'simple-item' => $this->simpleItemCollection((int) $resource_type_id, (int) $resource_id),
             'game' => $this->gameCollection((int) $resource_type_id, (int) $resource_id),
-            default => throw new \OutOfRangeException('No entity definition for ' . $item_type, 500),
+            default => throw new \OutOfRangeException('No item type definition for ' . $item_type, 500),
         };
     }
 
@@ -98,7 +98,7 @@ class ItemView extends Controller
             'simple-expense' => $this->simpleExpense((int) $resource_type_id, (int) $resource_id, (int) $item_id),
             'simple-item' => $this->simpleItem((int) $resource_type_id, (int) $resource_id, (int) $item_id),
             'game' => $this->game((int) $resource_type_id, (int) $resource_id, (int) $item_id),
-            default => throw new \OutOfRangeException('No entity definition for ' . $item_type, 500),
+            default => throw new \OutOfRangeException('No item type definition for ' . $item_type, 500),
         };
     }
 
@@ -174,7 +174,7 @@ class ItemView extends Controller
             'game' => $this->optionsGameCollection((int) $resource_type_id, (int) $resource_id),
             'simple-expense' => $this->optionsSimpleExpenseCollection((int) $resource_type_id, (int) $resource_id),
             'simple-item' => $this->optionsSimpleItemCollection((int) $resource_type_id, (int) $resource_id),
-            default => throw new \OutOfRangeException('No entity definition for ' . $item_type, 500),
+            default => throw new \OutOfRangeException('No options item type definition for ' . $item_type, 500),
         };
     }
 
