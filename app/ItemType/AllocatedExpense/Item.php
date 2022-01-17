@@ -92,7 +92,7 @@ class Item extends ItemType
 
     public function apiSummaryResourceTypeItemResponseClass(): string
     {
-        return ApiResponse\SummaryResourceTypeItemItem::class;
+        return ApiResponse\SummaryResourceTypeItem::class;
     }
 
     public function transformer(array $data_to_transform): Transformer
@@ -137,7 +137,7 @@ class Item extends ItemType
 
     public function apiResourceTypeItemResponseClass(): string
     {
-        return ApiResponse\ResourceTypeItemItem::class;
+        return ApiResponse\ResourceTypeItem::class;
     }
 
     protected function allowedValuesItemCollectionClass(): string

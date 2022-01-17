@@ -1,23 +1,19 @@
 <?php
 declare(strict_types=1);
 
-namespace App\ItemType\AllocatedExpense\ApiResponse;
+namespace App\ItemType\SimpleItem\ApiResponse;
 
-use App\ItemType\AllocatedExpense\Item;
 use App\ItemType\ApiResourceTypeItemResponse;
+use App\ItemType\SimpleItem\Item;
 use Illuminate\Http\JsonResponse;
 use function request;
 use function response;
 
-class ResourceTypeItemItem extends ApiResourceTypeItemResponse
+class ResourceTypeItem extends ApiResourceTypeItemResponse
 {
     public function response(): JsonResponse
     {
-        if ($this->cache_control->visibility() === 'public') {
-            $this->cache_control->setTtlOneWeek();
-        } else {
-            $this->cache_control->setTtlOneDay();
-        }
+        $this->cache_control->setTtlOneMonth();
 
         $cache_collection = new \App\Cache\Collection();
         $cache_collection->setFromCache($this->cache_control->getByKey(request()->getRequestUri()));
@@ -26,7 +22,7 @@ class ResourceTypeItemItem extends ApiResourceTypeItemResponse
             $this->cache_control->isRequestCacheable() === false ||
             $cache_collection->valid() === false
         ) {
-            $model = new \App\ItemType\AllocatedExpense\Models\ResourceTypeItem();
+            $model = new \App\ItemType\SimpleItem\Models\ResourceTypeItem();
 
             $this->fetchAllRequestParameters(
                 new Item()
@@ -34,7 +30,6 @@ class ResourceTypeItemItem extends ApiResourceTypeItemResponse
 
             $total = $model->totalCount(
                 $this->resource_type_id,
-                $this->request_parameters,
                 $this->search_parameters,
                 $this->filter_parameters
             );
@@ -45,7 +40,6 @@ class ResourceTypeItemItem extends ApiResourceTypeItemResponse
                 $this->resource_type_id,
                 $pagination_parameters['offset'],
                 $pagination_parameters['limit'],
-                $this->request_parameters,
                 $this->search_parameters,
                 $this->filter_parameters,
                 $this->sort_fields
@@ -58,7 +52,7 @@ class ResourceTypeItemItem extends ApiResourceTypeItemResponse
 
             $collection = array_map(
                 static function ($item) {
-                    return (new \App\ItemType\AllocatedExpense\Transformers\ResourceTypeItem($item))->asArray();
+                    return (new \App\ItemType\SimpleItem\Transformers\ResourceTypeItem($item))->asArray();
                 },
                 $items
             );

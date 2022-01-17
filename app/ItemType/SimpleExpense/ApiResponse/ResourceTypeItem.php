@@ -1,15 +1,15 @@
 <?php
 declare(strict_types=1);
 
-namespace App\ItemType\SimpleItem\ApiResponse;
+namespace App\ItemType\SimpleExpense\ApiResponse;
 
 use App\ItemType\ApiResourceTypeItemResponse;
-use App\ItemType\SimpleItem\Item;
+use App\ItemType\SimpleExpense\Item;
 use Illuminate\Http\JsonResponse;
 use function request;
 use function response;
 
-class ResourceTypeItemItem extends ApiResourceTypeItemResponse
+class ResourceTypeItem extends ApiResourceTypeItemResponse
 {
     public function response(): JsonResponse
     {
@@ -22,7 +22,7 @@ class ResourceTypeItemItem extends ApiResourceTypeItemResponse
             $this->cache_control->isRequestCacheable() === false ||
             $cache_collection->valid() === false
         ) {
-            $model = new \App\ItemType\SimpleItem\Models\ResourceTypeItem();
+            $model = new \App\ItemType\SimpleExpense\Models\ResourceTypeItem();
 
             $this->fetchAllRequestParameters(
                 new Item()
@@ -30,6 +30,7 @@ class ResourceTypeItemItem extends ApiResourceTypeItemResponse
 
             $total = $model->totalCount(
                 $this->resource_type_id,
+                $this->request_parameters,
                 $this->search_parameters,
                 $this->filter_parameters
             );
@@ -40,6 +41,7 @@ class ResourceTypeItemItem extends ApiResourceTypeItemResponse
                 $this->resource_type_id,
                 $pagination_parameters['offset'],
                 $pagination_parameters['limit'],
+                $this->request_parameters,
                 $this->search_parameters,
                 $this->filter_parameters,
                 $this->sort_fields
@@ -52,7 +54,7 @@ class ResourceTypeItemItem extends ApiResourceTypeItemResponse
 
             $collection = array_map(
                 static function ($item) {
-                    return (new \App\ItemType\SimpleItem\Transformers\ResourceTypeItem($item))->asArray();
+                    return (new \App\ItemType\SimpleExpense\Transformers\ResourceTypeItem($item))->asArray();
                 },
                 $items
             );

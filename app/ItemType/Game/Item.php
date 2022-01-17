@@ -126,12 +126,12 @@ class Item extends ItemType
 
     public function apiSummaryResourceTypeItemResponseClass(): string
     {
-        return ApiResponse\SummaryResourceTypeItemItem::class;
+        return ApiResponse\SummaryResourceTypeItem::class;
     }
 
     public function apiResourceTypeItemResponseClass(): string
     {
-        return ApiResponse\ResourceTypeItemItem::class;
+        return ApiResponse\ResourceTypeItem::class;
     }
 
     protected function allowedValuesItemCollectionClass(): string

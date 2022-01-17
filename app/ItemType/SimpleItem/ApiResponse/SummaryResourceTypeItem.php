@@ -1,14 +1,14 @@
 <?php
 
-namespace App\ItemType\Game\ApiResponse;
+namespace App\ItemType\SimpleItem\ApiResponse;
 
-use App\ItemType\Game\Item;
+use App\ItemType\SimpleItem\Item;
 use App\ItemType\ApiSummaryResourceTypeItemResponse;
 use App\Request\Validate\Boolean;
 use Illuminate\Http\JsonResponse;
 use function response;
 
-class SummaryResourceTypeItemItem extends ApiSummaryResourceTypeItemResponse
+class SummaryResourceTypeItem extends ApiSummaryResourceTypeItemResponse
 {
     public function __construct(
         int $resource_type_id,
@@ -24,7 +24,7 @@ class SummaryResourceTypeItemItem extends ApiSummaryResourceTypeItemResponse
         
         $this->setUpCache();
 
-        $this->model = new \App\ItemType\Game\Models\SummaryResourceTypeItem();
+        $this->model = new \App\ItemType\SimpleItem\Models\SummaryResourceTypeItem();
 
         $this->fetchAllRequestParameters(new Item());
 
@@ -59,7 +59,7 @@ class SummaryResourceTypeItemItem extends ApiSummaryResourceTypeItemResponse
 
             $collection = [];
             foreach ($summary as $subtotal) {
-                $collection[] = (new \App\ItemType\Game\Transformers\Summary($subtotal))->asArray();
+                $collection[] = (new \App\ItemType\SimpleItem\Transformers\Summary($subtotal))->asArray();
             }
 
             $this->assignToCache(
@@ -96,7 +96,7 @@ class SummaryResourceTypeItemItem extends ApiSummaryResourceTypeItemResponse
                 $this->parameters
             );
 
-            $collection = (new \App\ItemType\Game\Transformers\SummaryByResource($summary))->asArray();
+            $collection = (new \App\ItemType\SimpleItem\Transformers\SummaryByResource($summary))->asArray();
 
             $this->assignToCache(
                 $summary,
@@ -120,7 +120,7 @@ class SummaryResourceTypeItemItem extends ApiSummaryResourceTypeItemResponse
 
             $collection = [];
             foreach ($summary as $subtotal) {
-                $collection[] = (new \App\ItemType\Game\Transformers\Summary($subtotal))->asArray();
+                $collection[] = (new \App\ItemType\SimpleItem\Transformers\Summary($subtotal))->asArray();
             }
 
             $this->assignToCache(

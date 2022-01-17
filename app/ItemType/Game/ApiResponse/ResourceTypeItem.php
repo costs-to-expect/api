@@ -9,7 +9,7 @@ use Illuminate\Http\JsonResponse;
 use function request;
 use function response;
 
-class ResourceTypeItemItem extends ApiResourceTypeItemResponse
+class ResourceTypeItem extends ApiResourceTypeItemResponse
 {
     public function response(): JsonResponse
     {
