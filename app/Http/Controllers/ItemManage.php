@@ -10,7 +10,9 @@ use App\Response\Responses;
 use Exception;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\Config as LaravelConfig;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Validator as ValidatorFacade;
 
 /**
  * Manage items
@@ -30,18 +32,47 @@ class ItemManage extends Controller
             \App\Response\Responses::notFoundOrNotAccessible(trans('entities.resource'));
         }
 
-        $user_id = $this->user_id;
+        $item_type = Entity::itemType((int) $resource_type_id);
 
-        $entity = Entity::item($resource_type_id);
+        return match ($item_type) {
+            'allocated-expense' => $this->createAllocatedExpense((int) $resource_type_id, (int) $resource_id),
+            'simple-expense' => $this->createSimpleExpense((int) $resource_type_id, (int) $resource_id),
+            'simple-item' => $this->createSimpleItem((int) $resource_type_id, (int) $resource_id),
+            'game' => $this->createGame((int) $resource_type_id, (int) $resource_id),
+            default => throw new \OutOfRangeException('No item type definition for ' . $item_type, 500),
+        };
+    }
 
-        $validation = $entity->validator();
-        $validator = $validation->create();
+    private function createAllocatedExpense(
+        int $resource_type_id,
+        int $resource_id
+    ): JsonResponse
+    {
+        $messages = [];
+        foreach (LaravelConfig::get('api.item-type-allocated-expense.validation.POST.messages', []) as $key => $custom_message) {
+            $messages[$key] = trans($custom_message);
+        }
+
+        $decode = $this->hash->currency()->decode(request()->input('currency_id'));
+        $currency_id = null;
+        if (count($decode) === 1) {
+            $currency_id = $decode[0];
+        }
+
+        $validator = ValidatorFacade::make(
+            array_merge(
+                request()->all(),
+                ['currency_id' => $currency_id]
+            ),
+            LaravelConfig::get('api.item-type-allocated-expense.validation.POST.fields', []),
+            $messages
+        );
 
         if ($validator->fails()) {
             return \App\Request\BodyValidation::returnValidationErrors($validator);
         }
 
-        $model = $entity->model();
+        $item = new \App\ItemType\AllocatedExpense\Item();
 
         $cache_job_payload = (new \App\Cache\JobPayload())
             ->setGroupKey(\App\Cache\KeyGroup::ITEM_CREATE)
@@ -49,20 +80,19 @@ class ItemManage extends Controller
                 'resource_type_id' => $resource_type_id,
                 'resource_id' => $resource_id
             ])
-            ->setPermittedUser($this->writeAccessToResourceType((int) $resource_type_id))
-            ->setUserId($user_id);
+            ->setPermittedUser($this->writeAccessToResourceType($resource_type_id))
+            ->setUserId($this->user_id);
 
         try {
-            [$item, $item_type] = DB::transaction(static function() use ($resource_id, $user_id, $entity) {
-                $item = new Item([
+            [$item_instance, $item_type_instance] = DB::transaction(function() use ($resource_id, $item) {
+                $item_instance = new Item([
                     'resource_id' => $resource_id,
-                    'created_by' => $user_id
+                    'created_by' => $this->user_id
                 ]);
-                $item->save();
+                $item_instance->save();
+                $item_type_instance = $item->create($item_instance->id);
 
-                $item_type = $entity->create((int) $item->id);
-
-                return [$item, $item_type];
+                return [$item_instance, $item_type_instance];
             });
 
             ClearCache::dispatch($cache_job_payload->payload());
@@ -71,8 +101,186 @@ class ItemManage extends Controller
             return \App\Response\Responses::failedToSaveModelForCreate();
         }
 
+        $model = new \App\ItemType\AllocatedExpense\Models\Item();
         return response()->json(
-            $entity->transformer($model->instanceToArray($item, $item_type))->asArray(),
+            $item->transformer($model->instanceToArray($item_instance, $item_type_instance))->asArray(),
+            201
+        );
+    }
+
+    private function createGame(
+        int $resource_type_id,
+        int $resource_id
+    ): JsonResponse
+    {
+        $messages = [];
+        foreach (LaravelConfig::get('api.item-type-game.validation.POST.messages', []) as $key => $custom_message) {
+            $messages[$key] = trans($custom_message);
+        }
+
+        $validator = ValidatorFacade::make(
+            request()->all(),
+            LaravelConfig::get('api.item-type-game.validation.POST.fields', []),
+            $messages
+        );
+
+        if ($validator->fails()) {
+            return \App\Request\BodyValidation::returnValidationErrors($validator);
+        }
+
+        $item = new \App\ItemType\Game\Item();
+
+        $cache_job_payload = (new \App\Cache\JobPayload())
+            ->setGroupKey(\App\Cache\KeyGroup::ITEM_CREATE)
+            ->setRouteParameters([
+                'resource_type_id' => $resource_type_id,
+                'resource_id' => $resource_id
+            ])
+            ->setPermittedUser($this->writeAccessToResourceType($resource_type_id))
+            ->setUserId($this->user_id);
+
+        try {
+            [$item_instance, $item_type_instance] = DB::transaction(function() use ($resource_id, $item) {
+                $item_instance = new Item([
+                    'resource_id' => $resource_id,
+                    'created_by' => $this->user_id
+                ]);
+                $item_instance->save();
+                $item_type_instance = $item->create($item_instance->id);
+
+                return [$item_instance, $item_type_instance];
+            });
+
+            ClearCache::dispatch($cache_job_payload->payload());
+
+        } catch (Exception $e) {
+            return \App\Response\Responses::failedToSaveModelForCreate();
+        }
+
+        $model = new \App\ItemType\Game\Models\Item();
+        return response()->json(
+            $item->transformer($model->instanceToArray($item_instance, $item_type_instance))->asArray(),
+            201
+        );
+    }
+
+    private function createSimpleExpense(
+        int $resource_type_id,
+        int $resource_id
+    ): JsonResponse
+    {
+        $messages = [];
+        foreach (LaravelConfig::get('api.item-type-simple-expense.validation.POST.messages', []) as $key => $custom_message) {
+            $messages[$key] = trans($custom_message);
+        }
+
+        $decode = $this->hash->currency()->decode(request()->input('currency_id'));
+        $currency_id = null;
+        if (count($decode) === 1) {
+            $currency_id = $decode[0];
+        }
+
+        $validator = ValidatorFacade::make(
+            array_merge(
+                request()->all(),
+                ['currency_id' => $currency_id]
+            ),
+            LaravelConfig::get('api.item-type-simple-expense.validation.POST.fields', []),
+            $messages
+        );
+
+        if ($validator->fails()) {
+            return \App\Request\BodyValidation::returnValidationErrors($validator);
+        }
+
+        $item = new \App\ItemType\SimpleExpense\Item();
+
+        $cache_job_payload = (new \App\Cache\JobPayload())
+            ->setGroupKey(\App\Cache\KeyGroup::ITEM_CREATE)
+            ->setRouteParameters([
+                'resource_type_id' => $resource_type_id,
+                'resource_id' => $resource_id
+            ])
+            ->setPermittedUser($this->writeAccessToResourceType($resource_type_id))
+            ->setUserId($this->user_id);
+
+        try {
+            [$item_instance, $item_type_instance] = DB::transaction(function() use ($resource_id, $item) {
+                $item_instance = new Item([
+                    'resource_id' => $resource_id,
+                    'created_by' => $this->user_id
+                ]);
+                $item_instance->save();
+                $item_type_instance = $item->create($item_instance->id);
+
+                return [$item_instance, $item_type_instance];
+            });
+
+            ClearCache::dispatch($cache_job_payload->payload());
+
+        } catch (Exception $e) {
+            return \App\Response\Responses::failedToSaveModelForCreate();
+        }
+
+        $model = new \App\ItemType\SimpleExpense\Models\Item();
+        return response()->json(
+            $item->transformer($model->instanceToArray($item_instance, $item_type_instance))->asArray(),
+            201
+        );
+    }
+
+    private function createSimpleItem(
+        int $resource_type_id,
+        int $resource_id
+    ): JsonResponse
+    {
+        $messages = [];
+        foreach (LaravelConfig::get('api.item-type-simple-item.validation.POST.messages', []) as $key => $custom_message) {
+            $messages[$key] = trans($custom_message);
+        }
+
+        $validator = ValidatorFacade::make(
+            request()->all(),
+            LaravelConfig::get('api.item-type-simple-item.validation.POST.fields', []),
+            $messages
+        );
+
+        if ($validator->fails()) {
+            return \App\Request\BodyValidation::returnValidationErrors($validator);
+        }
+
+        $item = new \App\ItemType\SimpleItem\Item();
+
+        $cache_job_payload = (new \App\Cache\JobPayload())
+            ->setGroupKey(\App\Cache\KeyGroup::ITEM_CREATE)
+            ->setRouteParameters([
+                'resource_type_id' => $resource_type_id,
+                'resource_id' => $resource_id
+            ])
+            ->setPermittedUser($this->writeAccessToResourceType($resource_type_id))
+            ->setUserId($this->user_id);
+
+        try {
+            [$item_instance, $item_type_instance] = DB::transaction(function() use ($resource_id, $item) {
+                $item_instance = new Item([
+                    'resource_id' => $resource_id,
+                    'created_by' => $this->user_id
+                ]);
+                $item_instance->save();
+                $item_type_instance = $item->create($item_instance->id);
+
+                return [$item_instance, $item_type_instance];
+            });
+
+            ClearCache::dispatch($cache_job_payload->payload());
+
+        } catch (Exception $e) {
+            return \App\Response\Responses::failedToSaveModelForCreate();
+        }
+
+        $model = new \App\ItemType\SimpleItem\Models\Item();
+        return response()->json(
+            $item->transformer($model->instanceToArray($item_instance, $item_type_instance))->asArray(),
             201
         );
     }
