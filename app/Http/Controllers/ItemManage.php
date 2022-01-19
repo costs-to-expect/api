@@ -301,57 +301,15 @@ class ItemManage extends Controller
             \App\Response\Responses::notFoundOrNotAccessible(trans('entities.item'));
         }
 
-        $entity = Entity::item($resource_type_id);
+        $item_type = Entity::itemType((int) $resource_type_id);
 
-        if (count(request()->all()) === 0) {
-            return \App\Response\Responses::nothingToPatch();
-        }
-
-        $invalid_fields = \App\Request\BodyValidation::checkForInvalidFields(array_keys($entity->patchValidation()));
-
-        if (count($invalid_fields) > 0) {
-            return Responses::invalidFieldsInRequest($invalid_fields);
-        }
-
-        $validation = $entity->validator();
-        $validator = $validation->update();
-
-        if ($validator->fails()) {
-            return \App\Request\BodyValidation::returnValidationErrors($validator);
-        }
-
-        $cache_job_payload = (new \App\Cache\JobPayload())
-            ->setGroupKey(\App\Cache\KeyGroup::ITEM_DELETE)
-            ->setRouteParameters([
-                'resource_type_id' => $resource_type_id,
-                'resource_id' => $resource_id
-            ])
-            ->setPermittedUser($this->writeAccessToResourceType((int) $resource_type_id))
-            ->setUserId($this->user_id);
-
-        $item = (new Item())->instance($resource_type_id, $resource_id, $item_id);
-        $item_type = $entity->instance((int) $item_id);
-
-        if ($item === null || $item_type === null) {
-            return \App\Response\Responses::failedToSelectModelForUpdateOrDelete();
-        }
-
-        try {
-            $item->updated_by = $this->user_id;
-
-            DB::transaction(static function() use ($item, $entity, $item_type) {
-                if ($item->save() === true) {
-                    $entity->update(request()->all(), $item_type);
-                }
-            });
-
-            ClearCache::dispatch($cache_job_payload->payload());
-
-        } catch (Exception $e) {
-            return \App\Response\Responses::failedToSaveModelForUpdate();
-        }
-
-        return \App\Response\Responses::successNoContent();
+        return match ($item_type) {
+            'allocated-expense' => $this->updateAllocatedExpense((int) $resource_type_id, (int) $resource_id, (int) $item_id),
+            'game' => $this->updateGame((int) $resource_type_id, (int) $resource_id, (int) $item_id),
+            'simple-expense' => $this->updateSimpleExpense((int) $resource_type_id, (int) $resource_id, (int) $item_id),
+            'simple-item' => $this->updateSimpleItem((int) $resource_type_id, (int) $resource_id, (int) $item_id),
+            default => throw new \OutOfRangeException('No item type definition for ' . $item_type, 500),
+        };
     }
 
     private function updateAllocatedExpense(int $resource_type_id, int $resource_id, int $item_id): JsonResponse
