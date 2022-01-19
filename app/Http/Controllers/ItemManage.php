@@ -21,10 +21,7 @@ use Illuminate\Support\Facades\Validator as ValidatorFacade;
  */
 class ItemManage extends Controller
 {
-    public function create(
-        string $resource_type_id,
-        string $resource_id
-    ): JsonResponse
+    public function create(string $resource_type_id, string $resource_id): JsonResponse
     {
         if ($this->writeAccessToResourceType((int) $resource_type_id) === false) {
             \App\Response\Responses::notFoundOrNotAccessible(trans('entities.resource'));
@@ -41,10 +38,7 @@ class ItemManage extends Controller
         };
     }
 
-    private function createAllocatedExpense(
-        int $resource_type_id,
-        int $resource_id
-    ): JsonResponse
+    private function createAllocatedExpense(int $resource_type_id, int $resource_id): JsonResponse
     {
         $config_base_path = 'api.item-type-allocated-expense';
 
@@ -108,10 +102,7 @@ class ItemManage extends Controller
         );
     }
 
-    private function createGame(
-        int $resource_type_id,
-        int $resource_id
-    ): JsonResponse
+    private function createGame(int $resource_type_id, int $resource_id): JsonResponse
     {
         $config_base_path = 'api.item-type-game';
 
@@ -166,10 +157,7 @@ class ItemManage extends Controller
         );
     }
 
-    private function createSimpleExpense(
-        int $resource_type_id,
-        int $resource_id
-    ): JsonResponse
+    private function createSimpleExpense(int $resource_type_id, int $resource_id): JsonResponse
     {
         $config_base_path = 'api.item-type-simple-expense';
 
@@ -233,10 +221,7 @@ class ItemManage extends Controller
         );
     }
 
-    private function createSimpleItem(
-        int $resource_type_id,
-        int $resource_id
-    ): JsonResponse
+    private function createSimpleItem(int $resource_type_id, int $resource_id): JsonResponse
     {
         $config_base_path = 'api.item-type-simple-item';
 
@@ -291,11 +276,7 @@ class ItemManage extends Controller
         );
     }
 
-    public function update(
-        string $resource_type_id,
-        string $resource_id,
-        string $item_id
-    ): JsonResponse
+    public function update(string $resource_type_id, string $resource_id,string $item_id): JsonResponse
     {
         if ($this->writeAccessToResourceType((int) $resource_type_id) === false) {
             \App\Response\Responses::notFoundOrNotAccessible(trans('entities.item'));
