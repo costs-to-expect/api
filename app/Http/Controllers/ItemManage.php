@@ -15,8 +15,6 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator as ValidatorFacade;
 
 /**
- * Manage items
- *
  * @author Dean Blackborough <dean@g3d-development.com>
  * @copyright Dean Blackborough 2018-2022
  * @license https://github.com/costs-to-expect/api/blob/master/LICENSE
@@ -48,8 +46,10 @@ class ItemManage extends Controller
         int $resource_id
     ): JsonResponse
     {
+        $config_base_path = 'api.item-type-allocated-expense';
+
         $messages = [];
-        foreach (LaravelConfig::get('api.item-type-allocated-expense.validation.POST.messages', []) as $key => $custom_message) {
+        foreach (LaravelConfig::get($config_base_path . '.validation.POST.messages', []) as $key => $custom_message) {
             $messages[$key] = trans($custom_message);
         }
 
@@ -64,7 +64,7 @@ class ItemManage extends Controller
                 request()->all(),
                 ['currency_id' => $currency_id]
             ),
-            LaravelConfig::get('api.item-type-allocated-expense.validation.POST.fields', []),
+            LaravelConfig::get($config_base_path . '.validation.POST.fields', []),
             $messages
         );
 
@@ -113,14 +113,16 @@ class ItemManage extends Controller
         int $resource_id
     ): JsonResponse
     {
+        $config_base_path = 'api.item-type-game';
+
         $messages = [];
-        foreach (LaravelConfig::get('api.item-type-game.validation.POST.messages', []) as $key => $custom_message) {
+        foreach (LaravelConfig::get($config_base_path . '.validation.POST.messages', []) as $key => $custom_message) {
             $messages[$key] = trans($custom_message);
         }
 
         $validator = ValidatorFacade::make(
             request()->all(),
-            LaravelConfig::get('api.item-type-game.validation.POST.fields', []),
+            LaravelConfig::get($config_base_path . '.validation.POST.fields', []),
             $messages
         );
 
@@ -169,8 +171,10 @@ class ItemManage extends Controller
         int $resource_id
     ): JsonResponse
     {
+        $config_base_path = 'api.item-type-simple-expense';
+
         $messages = [];
-        foreach (LaravelConfig::get('api.item-type-simple-expense.validation.POST.messages', []) as $key => $custom_message) {
+        foreach (LaravelConfig::get($config_base_path . '.validation.POST.messages', []) as $key => $custom_message) {
             $messages[$key] = trans($custom_message);
         }
 
@@ -185,7 +189,7 @@ class ItemManage extends Controller
                 request()->all(),
                 ['currency_id' => $currency_id]
             ),
-            LaravelConfig::get('api.item-type-simple-expense.validation.POST.fields', []),
+            LaravelConfig::get($config_base_path . '.validation.POST.fields', []),
             $messages
         );
 
@@ -234,14 +238,16 @@ class ItemManage extends Controller
         int $resource_id
     ): JsonResponse
     {
+        $config_base_path = 'api.item-type-simple-item';
+
         $messages = [];
-        foreach (LaravelConfig::get('api.item-type-simple-item.validation.POST.messages', []) as $key => $custom_message) {
+        foreach (LaravelConfig::get($config_base_path . '.validation.POST.messages', []) as $key => $custom_message) {
             $messages[$key] = trans($custom_message);
         }
 
         $validator = ValidatorFacade::make(
             request()->all(),
-            LaravelConfig::get('api.item-type-simple-item.validation.POST.fields', []),
+            LaravelConfig::get($config_base_path . '.validation.POST.fields', []),
             $messages
         );
 
@@ -336,6 +342,298 @@ class ItemManage extends Controller
             DB::transaction(static function() use ($item, $entity, $item_type) {
                 if ($item->save() === true) {
                     $entity->update(request()->all(), $item_type);
+                }
+            });
+
+            ClearCache::dispatch($cache_job_payload->payload());
+
+        } catch (Exception $e) {
+            return \App\Response\Responses::failedToSaveModelForUpdate();
+        }
+
+        return \App\Response\Responses::successNoContent();
+    }
+
+    private function updateAllocatedExpense(int $resource_type_id, int $resource_id, int $item_id): JsonResponse
+    {
+        $config_base_path = 'api.item-type-allocated-expense';
+
+        if (count(request()->all()) === 0) {
+            return \App\Response\Responses::nothingToPatch();
+        }
+
+        $invalid_fields = \App\Request\BodyValidation::checkForInvalidFields(
+            array_keys(LaravelConfig::get($config_base_path . '.validation.PATCH.fields', []))
+        );
+
+        if (count($invalid_fields) > 0) {
+            return Responses::invalidFieldsInRequest($invalid_fields);
+        }
+
+        $merge_array = [];
+        if (array_key_exists('currency_id', request()->all())) {
+            $decode = $this->hash->currency()->decode(request()->input('currency_id'));
+            $currency_id = null;
+            if (count($decode) === 1) {
+                $currency_id = $decode[0];
+            }
+
+            $merge_array = ['currency_id' => $currency_id];
+        }
+
+        $messages = [];
+        foreach (LaravelConfig::get($config_base_path . '.validation.PATCH.messages', []) as $key => $custom_message) {
+            $messages[$key] = trans($custom_message);
+        }
+
+        $validator = ValidatorFacade::make(
+            array_merge(
+                request()->all(),
+                $merge_array
+            ),
+            LaravelConfig::get($config_base_path . '.validation.PATCH.fields', []),
+            $messages
+        );
+
+        if ($validator->fails()) {
+            return \App\Request\BodyValidation::returnValidationErrors($validator);
+        }
+
+        $cache_job_payload = (new \App\Cache\JobPayload())
+            ->setGroupKey(\App\Cache\KeyGroup::ITEM_DELETE)
+            ->setRouteParameters([
+                'resource_type_id' => $resource_type_id,
+                'resource_id' => $resource_id
+            ])
+            ->setPermittedUser($this->writeAccessToResourceType($resource_type_id))
+            ->setUserId($this->user_id);
+
+        $item_instance = (new Item())->instance($resource_type_id, $resource_id, $item_id);
+        $item_type_instance = (new \App\ItemType\AllocatedExpense\Models\Item())->instance($item_id);
+
+        if ($item_instance === null || $item_type_instance === null) {
+            return \App\Response\Responses::failedToSelectModelForUpdateOrDelete();
+        }
+
+        try {
+            $item_instance->updated_by = $this->user_id;
+
+            DB::transaction(static function() use ($item_instance, $item_type_instance) {
+                if ($item_instance->save() === true) {
+                    $allocated_expense = new \App\ItemType\AllocatedExpense\Item();
+                    $allocated_expense->update(request()->all(), $item_type_instance);
+                }
+            });
+
+            ClearCache::dispatch($cache_job_payload->payload());
+
+        } catch (Exception $e) {
+            return \App\Response\Responses::failedToSaveModelForUpdate();
+        }
+
+        return \App\Response\Responses::successNoContent();
+    }
+
+    private function updateGame(int $resource_type_id, int $resource_id, int $item_id): JsonResponse
+    {
+        $config_base_path = 'api.item-type-game';
+
+        if (count(request()->all()) === 0) {
+            return \App\Response\Responses::nothingToPatch();
+        }
+
+        $invalid_fields = \App\Request\BodyValidation::checkForInvalidFields(
+            array_keys(LaravelConfig::get($config_base_path . '.validation.PATCH.fields', []))
+        );
+
+        if (count($invalid_fields) > 0) {
+            return Responses::invalidFieldsInRequest($invalid_fields);
+        }
+
+        $messages = [];
+        foreach (LaravelConfig::get($config_base_path . '.validation.PATCH.messages', []) as $key => $custom_message) {
+            $messages[$key] = trans($custom_message);
+        }
+
+        $validator = ValidatorFacade::make(
+            request()->all(),
+            LaravelConfig::get($config_base_path . '.validation.PATCH.fields', []),
+            $messages
+        );
+
+        if ($validator->fails()) {
+            return \App\Request\BodyValidation::returnValidationErrors($validator);
+        }
+
+        $cache_job_payload = (new \App\Cache\JobPayload())
+            ->setGroupKey(\App\Cache\KeyGroup::ITEM_DELETE)
+            ->setRouteParameters([
+                'resource_type_id' => $resource_type_id,
+                'resource_id' => $resource_id
+            ])
+            ->setPermittedUser($this->writeAccessToResourceType($resource_type_id))
+            ->setUserId($this->user_id);
+
+        $item_instance = (new Item())->instance($resource_type_id, $resource_id, $item_id);
+        $item_type_instance = (new \App\ItemType\Game\Models\Item())->instance($item_id);
+
+        if ($item_instance === null || $item_type_instance === null) {
+            return \App\Response\Responses::failedToSelectModelForUpdateOrDelete();
+        }
+
+        try {
+            $item_instance->updated_by = $this->user_id;
+
+            DB::transaction(static function() use ($item_instance, $item_type_instance) {
+                if ($item_instance->save() === true) {
+                    $allocated_expense = new \App\ItemType\Game\Item();
+                    $allocated_expense->update(request()->all(), $item_type_instance);
+                }
+            });
+
+            ClearCache::dispatch($cache_job_payload->payload());
+
+        } catch (Exception $e) {
+            return \App\Response\Responses::failedToSaveModelForUpdate();
+        }
+
+        return \App\Response\Responses::successNoContent();
+    }
+
+    private function updateSimpleExpense(int $resource_type_id, int $resource_id, int $item_id): JsonResponse
+    {
+        $config_base_path = 'api.item-type-simple-expense';
+
+        if (count(request()->all()) === 0) {
+            return \App\Response\Responses::nothingToPatch();
+        }
+
+        $invalid_fields = \App\Request\BodyValidation::checkForInvalidFields(
+            array_keys(LaravelConfig::get($config_base_path . '.validation.PATCH.fields', []))
+        );
+
+        if (count($invalid_fields) > 0) {
+            return Responses::invalidFieldsInRequest($invalid_fields);
+        }
+
+        $merge_array = [];
+        if (array_key_exists('currency_id', request()->all())) {
+            $decode = $this->hash->currency()->decode(request()->input('currency_id'));
+            $currency_id = null;
+            if (count($decode) === 1) {
+                $currency_id = $decode[0];
+            }
+
+            $merge_array = ['currency_id' => $currency_id];
+        }
+
+        $messages = [];
+        foreach (LaravelConfig::get($config_base_path . '.validation.PATCH.messages', []) as $key => $custom_message) {
+            $messages[$key] = trans($custom_message);
+        }
+
+        $validator = ValidatorFacade::make(
+            array_merge(
+                request()->all(),
+                $merge_array
+            ),
+            LaravelConfig::get($config_base_path . '.validation.PATCH.fields', []),
+            $messages
+        );
+
+        if ($validator->fails()) {
+            return \App\Request\BodyValidation::returnValidationErrors($validator);
+        }
+
+        $cache_job_payload = (new \App\Cache\JobPayload())
+            ->setGroupKey(\App\Cache\KeyGroup::ITEM_DELETE)
+            ->setRouteParameters([
+                'resource_type_id' => $resource_type_id,
+                'resource_id' => $resource_id
+            ])
+            ->setPermittedUser($this->writeAccessToResourceType($resource_type_id))
+            ->setUserId($this->user_id);
+
+        $item_instance = (new Item())->instance($resource_type_id, $resource_id, $item_id);
+        $item_type_instance = (new \App\ItemType\SimpleExpense\Models\Item())->instance($item_id);
+
+        if ($item_instance === null || $item_type_instance === null) {
+            return \App\Response\Responses::failedToSelectModelForUpdateOrDelete();
+        }
+
+        try {
+            $item_instance->updated_by = $this->user_id;
+
+            DB::transaction(static function() use ($item_instance, $item_type_instance) {
+                if ($item_instance->save() === true) {
+                    $allocated_expense = new \App\ItemType\SimpleExpense\Item();
+                    $allocated_expense->update(request()->all(), $item_type_instance);
+                }
+            });
+
+            ClearCache::dispatch($cache_job_payload->payload());
+
+        } catch (Exception $e) {
+            return \App\Response\Responses::failedToSaveModelForUpdate();
+        }
+
+        return \App\Response\Responses::successNoContent();
+    }
+
+    private function updateSimpleItem(int $resource_type_id, int $resource_id, int $item_id): JsonResponse
+    {
+        $config_base_path = 'api.item-type-simple-item';
+
+        if (count(request()->all()) === 0) {
+            return \App\Response\Responses::nothingToPatch();
+        }
+
+        $invalid_fields = \App\Request\BodyValidation::checkForInvalidFields(
+            array_keys(LaravelConfig::get($config_base_path . '.validation.PATCH.fields', []))
+        );
+
+        if (count($invalid_fields) > 0) {
+            return Responses::invalidFieldsInRequest($invalid_fields);
+        }
+
+        $messages = [];
+        foreach (LaravelConfig::get($config_base_path . '.validation.PATCH.messages', []) as $key => $custom_message) {
+            $messages[$key] = trans($custom_message);
+        }
+
+        $validator = ValidatorFacade::make(
+            request()->all(),
+            LaravelConfig::get($config_base_path . '.validation.PATCH.fields', []),
+            $messages
+        );
+
+        if ($validator->fails()) {
+            return \App\Request\BodyValidation::returnValidationErrors($validator);
+        }
+
+        $cache_job_payload = (new \App\Cache\JobPayload())
+            ->setGroupKey(\App\Cache\KeyGroup::ITEM_DELETE)
+            ->setRouteParameters([
+                'resource_type_id' => $resource_type_id,
+                'resource_id' => $resource_id
+            ])
+            ->setPermittedUser($this->writeAccessToResourceType($resource_type_id))
+            ->setUserId($this->user_id);
+
+        $item_instance = (new Item())->instance($resource_type_id, $resource_id, $item_id);
+        $item_type_instance = (new \App\ItemType\SimpleItem\Models\Item())->instance($item_id);
+
+        if ($item_instance === null || $item_type_instance === null) {
+            return \App\Response\Responses::failedToSelectModelForUpdateOrDelete();
+        }
+
+        try {
+            $item_instance->updated_by = $this->user_id;
+
+            DB::transaction(static function() use ($item_instance, $item_type_instance) {
+                if ($item_instance->save() === true) {
+                    $allocated_expense = new \App\ItemType\SimpleItem\Item();
+                    $allocated_expense->update(request()->all(), $item_type_instance);
                 }
             });
 
