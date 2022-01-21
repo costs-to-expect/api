@@ -16,8 +16,6 @@ use App\Transformers\ItemCategory as ItemCategoryTransformer;
 use Illuminate\Http\JsonResponse;
 
 /**
- * Manage the category for an item row
- *
  * @author Dean Blackborough <dean@g3d-development.com>
  * @copyright Dean Blackborough 2018-2022
  * @license https://github.com/costs-to-expect/api/blob/master/LICENSE
@@ -36,7 +34,7 @@ class ItemCategoryView extends Controller
             'allocated-expense' => $this->allocatedExpenseCollection((int) $resource_type_id, (int) $resource_id, (int) $item_id),
             'game' => $this->gameCollection((int) $resource_type_id, (int) $resource_id, (int) $item_id),
             'simple-expense' => $this->simpleExpenseCollection((int) $resource_type_id, (int) $resource_id, (int) $item_id),
-            'simple-item' => $this->simpleItemCollection((int) $resource_type_id, (int) $resource_id, (int) $item_id),
+            'simple-item' => \App\Response\Responses::notSupported(),
             default => throw new \OutOfRangeException('No item type definition for ' . $item_type, 500),
         };
     }
@@ -167,11 +165,6 @@ class ItemCategoryView extends Controller
         return response()->json($cache_collection->collection(), 200, $cache_collection->headers());
     }
 
-    private function simpleItemCollection(int $resource_type_id, int $resource_id, int $item_id): JsonResponse
-    {
-        return \App\Response\Responses::notSupported();
-    }
-
     public function show(
         string $resource_type_id,
         string $resource_id,
@@ -187,6 +180,22 @@ class ItemCategoryView extends Controller
             return \App\Response\Responses::notFound(trans('entities.item-category'));
         }
 
+        $item_type = Entity::itemType((int) $resource_type_id);
+
+        return match ($item_type) {
+            'allocated-expense', 'game', 'simple-expense' => $this->itemCategory((int) $resource_type_id, (int) $resource_id, (int) $item_id, (int) $item_category_id),
+            'simple-item' => Responses::notSupported(),
+            default => throw new \OutOfRangeException('No item type definition for ' . $item_type, 500),
+        };
+    }
+
+    private function itemCategory(
+        int $resource_type_id,
+        int $resource_id,
+        int $item_id,
+        int $item_category_id = null
+    ): JsonResponse
+    {
         $item_category = (new ItemCategory())->single(
             $resource_type_id,
             $resource_id,
@@ -220,7 +229,7 @@ class ItemCategoryView extends Controller
             'allocated-expense' => $this->optionsAllocatedExpenseCollection((int) $resource_type_id),
             'game' => $this->optionsGameCollection((int) $resource_type_id),
             'simple-expense' => $this->optionsSimpleExpenseCollection((int) $resource_type_id),
-            'simple-item' => $this->optionsSimpleItemCollection((int) $resource_type_id),
+            'simple-item' => Responses::notSupported(),
             default => throw new \OutOfRangeException('No item type definition for ' . $item_type, 500),
         };
     }
@@ -268,11 +277,6 @@ class ItemCategoryView extends Controller
                 (new \App\AllowedValue\Category())->allowedValues($resource_type_id))
             ->create()
             ->response();
-    }
-
-    private function optionsSimpleItemCollection(int $resource_type_id): JsonResponse
-    {
-        return Responses::notSupported();
     }
 
     public function optionsShow(
@@ -368,15 +372,5 @@ class ItemCategoryView extends Controller
         $response = new SimpleExpense($this->permissions((int) $resource_type_id));
 
         return $response->create()->response();
-    }
-
-    private function optionsSimpleItemShow(
-        int $resource_type_id,
-        int $resource_id,
-        int $item_id,
-        int $item_category_id
-    ): JsonResponse
-    {
-        return Responses::notSupported();
     }
 }
