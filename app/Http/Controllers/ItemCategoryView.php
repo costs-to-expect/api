@@ -31,102 +31,16 @@ class ItemCategoryView extends Controller
         $item_type = Entity::itemType((int) $resource_type_id);
 
         return match ($item_type) {
-            'allocated-expense' => $this->allocatedExpenseCollection((int) $resource_type_id, (int) $resource_id, (int) $item_id),
-            'game' => $this->gameCollection((int) $resource_type_id, (int) $resource_id, (int) $item_id),
-            'simple-expense' => $this->simpleExpenseCollection((int) $resource_type_id, (int) $resource_id, (int) $item_id),
+            'allocated-expense', 'game', 'simple-expense' => $this->itemCategoryCollection((int) $resource_type_id, (int) $resource_id, (int) $item_id),
             'simple-item' => \App\Response\Responses::notSupported(),
             default => throw new \OutOfRangeException('No item type definition for ' . $item_type, 500),
         };
     }
 
-    private function allocatedExpenseCollection(int $resource_type_id, int $resource_id, int $item_id): JsonResponse
+    private function itemCategoryCollection(int $resource_type_id, int $resource_id, int $item_id): JsonResponse
     {
         $cache_control = new \App\Cache\Control(
             $this->writeAccessToResourceType((int) $resource_type_id),
-            $this->user_id
-        );
-        $cache_control->setTtlOneWeek();
-
-        $cache_collection = new \App\Cache\Collection();
-        $cache_collection->setFromCache($cache_control->getByKey(request()->getRequestUri()));
-
-        if ($cache_control->isRequestCacheable() === false || $cache_collection->valid() === false) {
-
-            $item_category = (new ItemCategory())->paginatedCollection(
-                $resource_type_id,
-                $resource_id,
-                $item_id
-            );
-
-            if ((count($item_category) === 0)) {
-                $collection = [];
-            } else {
-                $collection = array_map(
-                    static function ($category) {
-                        return (new ItemCategoryTransformer($category))->asArray();
-                    },
-                    $item_category
-                );
-            }
-
-            $headers = new Header();
-            $headers->add('X-Total-Count', count($collection));
-            $headers->add('X-Count', count($collection));
-            $headers->addCacheControl($cache_control->visibility(), $cache_control->ttl());
-
-            $cache_collection->create(count($collection), $collection, [], $headers->headers());
-            $cache_control->putByKey(request()->getRequestUri(), $cache_collection->content());
-        }
-
-        return response()->json($cache_collection->collection(), 200, $cache_collection->headers());
-    }
-
-    private function gameCollection(int $resource_type_id, int $resource_id, int $item_id): JsonResponse
-    {
-        $cache_control = new \App\Cache\Control(
-            $this->writeAccessToResourceType((int) $resource_type_id),
-            $this->user_id
-        );
-        $cache_control->setTtlOneWeek();
-
-        $cache_collection = new \App\Cache\Collection();
-        $cache_collection->setFromCache($cache_control->getByKey(request()->getRequestUri()));
-
-        if ($cache_control->isRequestCacheable() === false || $cache_collection->valid() === false) {
-
-            $item_category = (new ItemCategory())->paginatedCollection(
-                $resource_type_id,
-                $resource_id,
-                $item_id
-            );
-
-            if ((count($item_category) === 0)) {
-                $collection = [];
-            } else {
-                $collection = array_map(
-                    static function ($category) {
-                        return (new ItemCategoryTransformer($category))->asArray();
-                    },
-                    $item_category
-                );
-            }
-
-            $headers = new Header();
-            $headers->add('X-Total-Count', count($collection));
-            $headers->add('X-Count', count($collection));
-            $headers->addCacheControl($cache_control->visibility(), $cache_control->ttl());
-
-            $cache_collection->create(count($collection), $collection, [], $headers->headers());
-            $cache_control->putByKey(request()->getRequestUri(), $cache_collection->content());
-        }
-
-        return response()->json($cache_collection->collection(), 200, $cache_collection->headers());
-    }
-
-    private function simpleExpenseCollection(int $resource_type_id, int $resource_id, int $item_id): JsonResponse
-    {
-        $cache_control = new \App\Cache\Control(
-            $this->writeAccessToResourceType($resource_type_id),
             $this->user_id
         );
         $cache_control->setTtlOneWeek();
