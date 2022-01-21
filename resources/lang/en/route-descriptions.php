@@ -65,7 +65,6 @@ return [
 
     'item_category_POST_allocated-expense' => 'Assign a maximum of one category to the selected allocated-expense',
     'item_category_POST_simple-expense' => 'Assign a maximum of one category to the selected simple-expense',
-    'item_category_POST_simple-item' => 'Category assignment not support for simple-item',
     'item_category_POST_game' => 'Assign the categories (players) to the selected game',
 
     'item_category_PATCH' => 'Update the category assigned to the selected item',
@@ -76,7 +75,6 @@ return [
 
     'item_sub_category_POST_allocated-expense' => 'Assign a maximum of one subcategory to the selected allocated-expense',
     'item_sub_category_POST_simple-expense' => 'Assign a maximum of one subcategory to the selected simple-expense',
-    'item_sub_category_POST_simple-item' => 'Subcategory assignment not support for simple-item',
 
     'item_sub_category_PATCH' => 'Update the subcategory assigned to the selected item',
     'item_sub_category_DELETE' => 'Delete the subcategory assigned to the selected item',
