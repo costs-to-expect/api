@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Cache\JobPayload;
+use App\Cache\KeyGroup;
 use App\ItemType\Entity;
 use App\Jobs\ClearCache;
 use App\Models\Item;
@@ -24,7 +26,7 @@ class ItemManage extends Controller
     public function create(string $resource_type_id, string $resource_id): JsonResponse
     {
         if ($this->writeAccessToResourceType((int) $resource_type_id) === false) {
-            \App\Response\Responses::notFoundOrNotAccessible(trans('entities.resource'));
+            Responses::notFoundOrNotAccessible(trans('entities.resource'));
         }
 
         $item_type = Entity::itemType((int) $resource_type_id);
@@ -68,8 +70,8 @@ class ItemManage extends Controller
 
         $item = new \App\ItemType\AllocatedExpense\Item();
 
-        $cache_job_payload = (new \App\Cache\JobPayload())
-            ->setGroupKey(\App\Cache\KeyGroup::ITEM_CREATE)
+        $cache_job_payload = (new JobPayload())
+            ->setGroupKey(KeyGroup::ITEM_CREATE)
             ->setRouteParameters([
                 'resource_type_id' => $resource_type_id,
                 'resource_id' => $resource_id
@@ -92,7 +94,7 @@ class ItemManage extends Controller
             ClearCache::dispatch($cache_job_payload->payload());
 
         } catch (Exception $e) {
-            return \App\Response\Responses::failedToSaveModelForCreate();
+            return Responses::failedToSaveModelForCreate();
         }
 
         $model = new \App\ItemType\AllocatedExpense\Models\Item();
@@ -123,8 +125,8 @@ class ItemManage extends Controller
 
         $item = new \App\ItemType\Game\Item();
 
-        $cache_job_payload = (new \App\Cache\JobPayload())
-            ->setGroupKey(\App\Cache\KeyGroup::ITEM_CREATE)
+        $cache_job_payload = (new JobPayload())
+            ->setGroupKey(KeyGroup::ITEM_CREATE)
             ->setRouteParameters([
                 'resource_type_id' => $resource_type_id,
                 'resource_id' => $resource_id
@@ -147,7 +149,7 @@ class ItemManage extends Controller
             ClearCache::dispatch($cache_job_payload->payload());
 
         } catch (Exception $e) {
-            return \App\Response\Responses::failedToSaveModelForCreate();
+            return Responses::failedToSaveModelForCreate();
         }
 
         $model = new \App\ItemType\Game\Models\Item();
@@ -187,8 +189,8 @@ class ItemManage extends Controller
 
         $item = new \App\ItemType\SimpleExpense\Item();
 
-        $cache_job_payload = (new \App\Cache\JobPayload())
-            ->setGroupKey(\App\Cache\KeyGroup::ITEM_CREATE)
+        $cache_job_payload = (new JobPayload())
+            ->setGroupKey(KeyGroup::ITEM_CREATE)
             ->setRouteParameters([
                 'resource_type_id' => $resource_type_id,
                 'resource_id' => $resource_id
@@ -211,7 +213,7 @@ class ItemManage extends Controller
             ClearCache::dispatch($cache_job_payload->payload());
 
         } catch (Exception $e) {
-            return \App\Response\Responses::failedToSaveModelForCreate();
+            return Responses::failedToSaveModelForCreate();
         }
 
         $model = new \App\ItemType\SimpleExpense\Models\Item();
@@ -242,8 +244,8 @@ class ItemManage extends Controller
 
         $item = new \App\ItemType\SimpleItem\Item();
 
-        $cache_job_payload = (new \App\Cache\JobPayload())
-            ->setGroupKey(\App\Cache\KeyGroup::ITEM_CREATE)
+        $cache_job_payload = (new JobPayload())
+            ->setGroupKey(KeyGroup::ITEM_CREATE)
             ->setRouteParameters([
                 'resource_type_id' => $resource_type_id,
                 'resource_id' => $resource_id
@@ -266,7 +268,7 @@ class ItemManage extends Controller
             ClearCache::dispatch($cache_job_payload->payload());
 
         } catch (Exception $e) {
-            return \App\Response\Responses::failedToSaveModelForCreate();
+            return Responses::failedToSaveModelForCreate();
         }
 
         $model = new \App\ItemType\SimpleItem\Models\Item();
@@ -279,7 +281,7 @@ class ItemManage extends Controller
     public function update(string $resource_type_id, string $resource_id,string $item_id): JsonResponse
     {
         if ($this->writeAccessToResourceType((int) $resource_type_id) === false) {
-            \App\Response\Responses::notFoundOrNotAccessible(trans('entities.item'));
+            Responses::notFoundOrNotAccessible(trans('entities.item'));
         }
 
         $item_type = Entity::itemType((int) $resource_type_id);
@@ -298,7 +300,7 @@ class ItemManage extends Controller
         $config_base_path = 'api.item-type-allocated-expense';
 
         if (count(request()->all()) === 0) {
-            return \App\Response\Responses::nothingToPatch();
+            return Responses::nothingToPatch();
         }
 
         $invalid_fields = \App\Request\BodyValidation::checkForInvalidFields(
@@ -338,8 +340,8 @@ class ItemManage extends Controller
             return \App\Request\BodyValidation::returnValidationErrors($validator);
         }
 
-        $cache_job_payload = (new \App\Cache\JobPayload())
-            ->setGroupKey(\App\Cache\KeyGroup::ITEM_DELETE)
+        $cache_job_payload = (new JobPayload())
+            ->setGroupKey(KeyGroup::ITEM_DELETE)
             ->setRouteParameters([
                 'resource_type_id' => $resource_type_id,
                 'resource_id' => $resource_id
@@ -351,7 +353,7 @@ class ItemManage extends Controller
         $item_type_instance = (new \App\ItemType\AllocatedExpense\Models\Item())->instance($item_id);
 
         if ($item_instance === null || $item_type_instance === null) {
-            return \App\Response\Responses::failedToSelectModelForUpdateOrDelete();
+            return Responses::failedToSelectModelForUpdateOrDelete();
         }
 
         try {
@@ -367,10 +369,10 @@ class ItemManage extends Controller
             ClearCache::dispatch($cache_job_payload->payload());
 
         } catch (Exception $e) {
-            return \App\Response\Responses::failedToSaveModelForUpdate();
+            return Responses::failedToSaveModelForUpdate();
         }
 
-        return \App\Response\Responses::successNoContent();
+        return Responses::successNoContent();
     }
 
     private function updateGame(int $resource_type_id, int $resource_id, int $item_id): JsonResponse
@@ -378,7 +380,7 @@ class ItemManage extends Controller
         $config_base_path = 'api.item-type-game';
 
         if (count(request()->all()) === 0) {
-            return \App\Response\Responses::nothingToPatch();
+            return Responses::nothingToPatch();
         }
 
         $invalid_fields = \App\Request\BodyValidation::checkForInvalidFields(
@@ -404,8 +406,8 @@ class ItemManage extends Controller
             return \App\Request\BodyValidation::returnValidationErrors($validator);
         }
 
-        $cache_job_payload = (new \App\Cache\JobPayload())
-            ->setGroupKey(\App\Cache\KeyGroup::ITEM_DELETE)
+        $cache_job_payload = (new JobPayload())
+            ->setGroupKey(KeyGroup::ITEM_DELETE)
             ->setRouteParameters([
                 'resource_type_id' => $resource_type_id,
                 'resource_id' => $resource_id
@@ -417,7 +419,7 @@ class ItemManage extends Controller
         $item_type_instance = (new \App\ItemType\Game\Models\Item())->instance($item_id);
 
         if ($item_instance === null || $item_type_instance === null) {
-            return \App\Response\Responses::failedToSelectModelForUpdateOrDelete();
+            return Responses::failedToSelectModelForUpdateOrDelete();
         }
 
         try {
@@ -433,10 +435,10 @@ class ItemManage extends Controller
             ClearCache::dispatch($cache_job_payload->payload());
 
         } catch (Exception $e) {
-            return \App\Response\Responses::failedToSaveModelForUpdate();
+            return Responses::failedToSaveModelForUpdate();
         }
 
-        return \App\Response\Responses::successNoContent();
+        return Responses::successNoContent();
     }
 
     private function updateSimpleExpense(int $resource_type_id, int $resource_id, int $item_id): JsonResponse
@@ -444,7 +446,7 @@ class ItemManage extends Controller
         $config_base_path = 'api.item-type-simple-expense';
 
         if (count(request()->all()) === 0) {
-            return \App\Response\Responses::nothingToPatch();
+            return Responses::nothingToPatch();
         }
 
         $invalid_fields = \App\Request\BodyValidation::checkForInvalidFields(
@@ -484,8 +486,8 @@ class ItemManage extends Controller
             return \App\Request\BodyValidation::returnValidationErrors($validator);
         }
 
-        $cache_job_payload = (new \App\Cache\JobPayload())
-            ->setGroupKey(\App\Cache\KeyGroup::ITEM_DELETE)
+        $cache_job_payload = (new JobPayload())
+            ->setGroupKey(KeyGroup::ITEM_DELETE)
             ->setRouteParameters([
                 'resource_type_id' => $resource_type_id,
                 'resource_id' => $resource_id
@@ -497,7 +499,7 @@ class ItemManage extends Controller
         $item_type_instance = (new \App\ItemType\SimpleExpense\Models\Item())->instance($item_id);
 
         if ($item_instance === null || $item_type_instance === null) {
-            return \App\Response\Responses::failedToSelectModelForUpdateOrDelete();
+            return Responses::failedToSelectModelForUpdateOrDelete();
         }
 
         try {
@@ -513,10 +515,10 @@ class ItemManage extends Controller
             ClearCache::dispatch($cache_job_payload->payload());
 
         } catch (Exception $e) {
-            return \App\Response\Responses::failedToSaveModelForUpdate();
+            return Responses::failedToSaveModelForUpdate();
         }
 
-        return \App\Response\Responses::successNoContent();
+        return Responses::successNoContent();
     }
 
     private function updateSimpleItem(int $resource_type_id, int $resource_id, int $item_id): JsonResponse
@@ -524,7 +526,7 @@ class ItemManage extends Controller
         $config_base_path = 'api.item-type-simple-item';
 
         if (count(request()->all()) === 0) {
-            return \App\Response\Responses::nothingToPatch();
+            return Responses::nothingToPatch();
         }
 
         $invalid_fields = \App\Request\BodyValidation::checkForInvalidFields(
@@ -550,8 +552,8 @@ class ItemManage extends Controller
             return \App\Request\BodyValidation::returnValidationErrors($validator);
         }
 
-        $cache_job_payload = (new \App\Cache\JobPayload())
-            ->setGroupKey(\App\Cache\KeyGroup::ITEM_DELETE)
+        $cache_job_payload = (new JobPayload())
+            ->setGroupKey(KeyGroup::ITEM_DELETE)
             ->setRouteParameters([
                 'resource_type_id' => $resource_type_id,
                 'resource_id' => $resource_id
@@ -563,7 +565,7 @@ class ItemManage extends Controller
         $item_type_instance = (new \App\ItemType\SimpleItem\Models\Item())->instance($item_id);
 
         if ($item_instance === null || $item_type_instance === null) {
-            return \App\Response\Responses::failedToSelectModelForUpdateOrDelete();
+            return Responses::failedToSelectModelForUpdateOrDelete();
         }
 
         try {
@@ -579,26 +581,37 @@ class ItemManage extends Controller
             ClearCache::dispatch($cache_job_payload->payload());
 
         } catch (Exception $e) {
-            return \App\Response\Responses::failedToSaveModelForUpdate();
+            return Responses::failedToSaveModelForUpdate();
         }
 
-        return \App\Response\Responses::successNoContent();
+        return Responses::successNoContent();
     }
 
-    public function delete(
+    public function delete(string $resource_type_id, string $resource_id,string $item_id): JsonResponse
+    {
+        if ($this->writeAccessToResourceType((int) $resource_type_id) === false) {
+            Responses::notFoundOrNotAccessible(trans('entities.item'));
+        }
+
+        $item_type = Entity::itemType((int) $resource_type_id);
+
+        return match ($item_type) {
+            'allocated-expense' => $this->deleteAllocatedExpense((int) $resource_type_id, (int) $resource_id, (int) $item_id),
+            'game' => $this->deleteGame((int) $resource_type_id, (int) $resource_id, (int) $item_id),
+            'simple-expense' => $this->deleteSimpleExpense((int) $resource_type_id, (int) $resource_id, (int) $item_id),
+            'simple-item' => $this->deleteSimpleItem((int) $resource_type_id, (int) $resource_id, (int) $item_id),
+            default => throw new \OutOfRangeException('No item type definition for ' . $item_type, 500),
+        };
+    }
+
+    private function deleteAllocatedExpense(
         string $resource_type_id,
         string $resource_id,
         string $item_id
     ): JsonResponse
     {
-        if ($this->writeAccessToResourceType((int) $resource_type_id) === false) {
-            \App\Response\Responses::notFoundOrNotAccessible(trans('entities.item'));
-        }
-
-        $entity = Entity::item($resource_type_id);
-
-        $cache_job_payload = (new \App\Cache\JobPayload())
-            ->setGroupKey(\App\Cache\KeyGroup::ITEM_DELETE)
+        $cache_job_payload = (new JobPayload())
+            ->setGroupKey(KeyGroup::ITEM_DELETE)
             ->setRouteParameters([
                 'resource_type_id' => $resource_type_id,
                 'resource_id' => $resource_id
@@ -606,34 +619,168 @@ class ItemManage extends Controller
             ->setPermittedUser($this->writeAccessToResourceType((int) $resource_type_id))
             ->setUserId($this->user_id);
 
-        $item_model = $entity->model();
+        $item_model = new \App\ItemType\AllocatedExpense\Models\Item();
 
-        $item_type = $item_model->instance($item_id);
-        $item = (new Item())->instance($resource_type_id, $resource_id, $item_id);
+        $item_type_instance = $item_model->instance($item_id);
+        $item_instance = (new Item())->instance($resource_type_id, $resource_id, $item_id);
 
-        if ($item === null || $item_type === null) {
-            return \App\Response\Responses::notFound(trans('entities.item'));
+        if ($item_instance === null || $item_type_instance === null) {
+            return Responses::notFound(trans('entities.item'));
         }
 
-        if (in_array($entity->type(), ['allocated-expense', 'simple-expense']) &&
-            $item_model->hasCategoryAssignments($item_id) === true) {
-                return \App\Response\Responses::foreignKeyConstraintError();
+        if ($item_model->hasCategoryAssignments($item_id) === true) {
+            return Responses::foreignKeyConstraintError();
         }
 
         try {
-            DB::transaction(static function() use ($item_id, $item_type, $item) {
+            DB::transaction(static function() use ($item_id, $item_type_instance, $item_instance) {
                 (new ItemTransfer())->deleteTransfers($item_id);
-                $item_type->delete();
-                $item->delete();
+                $item_type_instance->delete();
+                $item_instance->delete();
             });
 
             ClearCache::dispatch($cache_job_payload->payload());
 
-            return \App\Response\Responses::successNoContent();
+            return Responses::successNoContent();
         } catch (QueryException $e) {
-            return \App\Response\Responses::foreignKeyConstraintError();
+            return Responses::foreignKeyConstraintError();
         } catch (Exception $e) {
-            return \App\Response\Responses::notFound(trans('entities.item'));
+            return Responses::notFound(trans('entities.item'));
+        }
+    }
+
+    private function deleteGame(
+        string $resource_type_id,
+        string $resource_id,
+        string $item_id
+    ): JsonResponse
+    {
+        $cache_job_payload = (new JobPayload())
+            ->setGroupKey(KeyGroup::ITEM_DELETE)
+            ->setRouteParameters([
+                'resource_type_id' => $resource_type_id,
+                'resource_id' => $resource_id
+            ])
+            ->setPermittedUser($this->writeAccessToResourceType((int) $resource_type_id))
+            ->setUserId($this->user_id);
+
+        $item_model = new \App\ItemType\Game\Models\Item();
+
+        $item_type_instance = $item_model->instance($item_id);
+        $item_instance = (new Item())->instance($resource_type_id, $resource_id, $item_id);
+
+        if ($item_instance === null || $item_type_instance === null) {
+            return Responses::notFound(trans('entities.item'));
+        }
+
+        if ($item_model->hasCategoryAssignments($item_id) === true) {
+            return Responses::foreignKeyConstraintError();
+        }
+
+        try {
+            DB::transaction(static function() use ($item_id, $item_type_instance, $item_instance) {
+                (new ItemTransfer())->deleteTransfers($item_id);
+                $item_type_instance->delete();
+                $item_instance->delete();
+            });
+
+            ClearCache::dispatch($cache_job_payload->payload());
+
+            return Responses::successNoContent();
+        } catch (QueryException $e) {
+            return Responses::foreignKeyConstraintError();
+        } catch (Exception $e) {
+            return Responses::notFound(trans('entities.item'));
+        }
+    }
+
+    private function deleteSimpleExpense(
+        string $resource_type_id,
+        string $resource_id,
+        string $item_id
+    ): JsonResponse
+    {
+        $cache_job_payload = (new JobPayload())
+            ->setGroupKey(KeyGroup::ITEM_DELETE)
+            ->setRouteParameters([
+                'resource_type_id' => $resource_type_id,
+                'resource_id' => $resource_id
+            ])
+            ->setPermittedUser($this->writeAccessToResourceType((int) $resource_type_id))
+            ->setUserId($this->user_id);
+
+        $item_model = new \App\ItemType\SimpleExpense\Models\Item();
+
+        $item_type_instance = $item_model->instance($item_id);
+        $item_instance = (new Item())->instance($resource_type_id, $resource_id, $item_id);
+
+        if ($item_instance === null || $item_type_instance === null) {
+            return Responses::notFound(trans('entities.item'));
+        }
+
+        if ($item_model->hasCategoryAssignments($item_id) === true) {
+            return Responses::foreignKeyConstraintError();
+        }
+
+        try {
+            DB::transaction(static function() use ($item_id, $item_type_instance, $item_instance) {
+                (new ItemTransfer())->deleteTransfers($item_id);
+                $item_type_instance->delete();
+                $item_instance->delete();
+            });
+
+            ClearCache::dispatch($cache_job_payload->payload());
+
+            return Responses::successNoContent();
+        } catch (QueryException $e) {
+            return Responses::foreignKeyConstraintError();
+        } catch (Exception $e) {
+            return Responses::notFound(trans('entities.item'));
+        }
+    }
+
+    private function deleteSimpleItem(
+        string $resource_type_id,
+        string $resource_id,
+        string $item_id
+    ): JsonResponse
+    {
+        $cache_job_payload = (new JobPayload())
+            ->setGroupKey(KeyGroup::ITEM_DELETE)
+            ->setRouteParameters([
+                'resource_type_id' => $resource_type_id,
+                'resource_id' => $resource_id
+            ])
+            ->setPermittedUser($this->writeAccessToResourceType((int) $resource_type_id))
+            ->setUserId($this->user_id);
+
+        $item_model = new \App\ItemType\SimpleItem\Models\Item();
+
+        $item_type_instance = $item_model->instance($item_id);
+        $item_instance = (new Item())->instance($resource_type_id, $resource_id, $item_id);
+
+        if ($item_instance === null || $item_type_instance === null) {
+            return Responses::notFound(trans('entities.item'));
+        }
+
+        if ($item_model->hasCategoryAssignments($item_id) === true) {
+            return Responses::foreignKeyConstraintError();
+        }
+
+        try {
+            DB::transaction(static function() use ($item_id, $item_type_instance, $item_instance) {
+                (new ItemTransfer())->deleteTransfers($item_id);
+                $item_type_instance->delete();
+                $item_instance->delete();
+            });
+
+            ClearCache::dispatch($cache_job_payload->payload());
+
+            return Responses::successNoContent();
+        } catch (QueryException $e) {
+            return Responses::foreignKeyConstraintError();
+        } catch (Exception $e) {
+            return Responses::notFound(trans('entities.item'));
         }
     }
 }
