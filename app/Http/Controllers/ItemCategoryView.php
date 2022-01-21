@@ -25,6 +25,19 @@ class ItemCategoryView extends Controller
             \App\Response\Responses::notFoundOrNotAccessible(trans('entities.item'));
         }
 
+        $item_type = Entity::itemType((int) $resource_type_id);
+
+        return match ($item_type) {
+            'allocated-expense' => $this->allocatedExpenseCollection((int) $resource_type_id, (int) $resource_id, (int) $item_id),
+            'game' => $this->gameCollection((int) $resource_type_id, (int) $resource_id, (int) $item_id),
+            'simple-expense' => $this->simpleExpenseCollection((int) $resource_type_id, (int) $resource_id, (int) $item_id),
+            'simple-item' => $this->simpleItemCollection((int) $resource_type_id, (int) $resource_id, (int) $item_id),
+            default => throw new \OutOfRangeException('No item type definition for ' . $item_type, 500),
+        };
+    }
+
+    public function allocatedExpenseCollection(string $resource_type_id, string $resource_id, string $item_id): JsonResponse
+    {
         $cache_control = new \App\Cache\Control(
             $this->writeAccessToResourceType((int) $resource_type_id),
             $this->user_id
@@ -42,7 +55,7 @@ class ItemCategoryView extends Controller
                 $item_id
             );
 
-            if ($item_category === null || (is_array($item_category) === true && count($item_category) === 0)) {
+            if ((count($item_category) === 0)) {
                 $collection = [];
             } else {
                 $collection = array_map(
@@ -54,8 +67,8 @@ class ItemCategoryView extends Controller
             }
 
             $headers = new Header();
-            $headers->add('X-Total-Count', 1);
-            $headers->add('X-Count', 1);
+            $headers->add('X-Total-Count', count($collection));
+            $headers->add('X-Count', count($collection));
             $headers->addCacheControl($cache_control->visibility(), $cache_control->ttl());
 
             $cache_collection->create(count($collection), $collection, [], $headers->headers());
@@ -63,6 +76,95 @@ class ItemCategoryView extends Controller
         }
 
         return response()->json($cache_collection->collection(), 200, $cache_collection->headers());
+    }
+
+    public function gameCollection(string $resource_type_id, string $resource_id, string $item_id): JsonResponse
+    {
+        $cache_control = new \App\Cache\Control(
+            $this->writeAccessToResourceType((int) $resource_type_id),
+            $this->user_id
+        );
+        $cache_control->setTtlOneWeek();
+
+        $cache_collection = new \App\Cache\Collection();
+        $cache_collection->setFromCache($cache_control->getByKey(request()->getRequestUri()));
+
+        if ($cache_control->isRequestCacheable() === false || $cache_collection->valid() === false) {
+
+            $item_category = (new ItemCategory())->paginatedCollection(
+                $resource_type_id,
+                $resource_id,
+                $item_id
+            );
+
+            if ((count($item_category) === 0)) {
+                $collection = [];
+            } else {
+                $collection = array_map(
+                    static function ($category) {
+                        return (new ItemCategoryTransformer($category))->asArray();
+                    },
+                    $item_category
+                );
+            }
+
+            $headers = new Header();
+            $headers->add('X-Total-Count', count($collection));
+            $headers->add('X-Count', count($collection));
+            $headers->addCacheControl($cache_control->visibility(), $cache_control->ttl());
+
+            $cache_collection->create(count($collection), $collection, [], $headers->headers());
+            $cache_control->putByKey(request()->getRequestUri(), $cache_collection->content());
+        }
+
+        return response()->json($cache_collection->collection(), 200, $cache_collection->headers());
+    }
+
+    public function simpleExpenseCollection(string $resource_type_id, string $resource_id, string $item_id): JsonResponse
+    {
+        $cache_control = new \App\Cache\Control(
+            $this->writeAccessToResourceType((int) $resource_type_id),
+            $this->user_id
+        );
+        $cache_control->setTtlOneWeek();
+
+        $cache_collection = new \App\Cache\Collection();
+        $cache_collection->setFromCache($cache_control->getByKey(request()->getRequestUri()));
+
+        if ($cache_control->isRequestCacheable() === false || $cache_collection->valid() === false) {
+
+            $item_category = (new ItemCategory())->paginatedCollection(
+                $resource_type_id,
+                $resource_id,
+                $item_id
+            );
+
+            if ((count($item_category) === 0)) {
+                $collection = [];
+            } else {
+                $collection = array_map(
+                    static function ($category) {
+                        return (new ItemCategoryTransformer($category))->asArray();
+                    },
+                    $item_category
+                );
+            }
+
+            $headers = new Header();
+            $headers->add('X-Total-Count', count($collection));
+            $headers->add('X-Count', count($collection));
+            $headers->addCacheControl($cache_control->visibility(), $cache_control->ttl());
+
+            $cache_collection->create(count($collection), $collection, [], $headers->headers());
+            $cache_control->putByKey(request()->getRequestUri(), $cache_collection->content());
+        }
+
+        return response()->json($cache_collection->collection(), 200, $cache_collection->headers());
+    }
+
+    public function simpleItemCollection(string $resource_type_id, string $resource_id, string $item_id): JsonResponse
+    {
+        return \App\Response\Responses::notSupported();
     }
 
     public function show(
