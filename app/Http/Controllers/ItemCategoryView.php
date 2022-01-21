@@ -214,7 +214,7 @@ class ItemCategoryView extends Controller
             'allocated-expense' => $this->optionsAllocatedExpenseShow((int) $resource_type_id, (int) $resource_id, (int) $item_id, (int) $item_category_id),
             'game' => $this->optionsGameShow((int) $resource_type_id, (int) $resource_id, (int) $item_id, (int) $item_category_id),
             'simple-expense' => $this->optionsSimpleExpenseShow((int) $resource_type_id, (int) $resource_id, (int) $item_id, (int) $item_category_id),
-            'simple-item' => $this->optionsSimpleItemShow((int) $resource_type_id, (int) $resource_id, (int) $item_id, (int) $item_category_id),
+            'simple-item' => \App\Response\Responses::notSupported(),
             default => throw new \OutOfRangeException('No item type definition for ' . $item_type, 500),
         };
     }
