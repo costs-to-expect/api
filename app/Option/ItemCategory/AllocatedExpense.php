@@ -1,11 +1,12 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Option;
+namespace App\Option\ItemCategory;
 
+use App\Option\Response;
 use Illuminate\Support\Facades\Config;
 
-class ItemCategoryItem extends Response
+class AllocatedExpense extends Response
 {
     public function create()
     {

@@ -391,13 +391,27 @@ class ItemManage extends Controller
             return Responses::invalidFieldsInRequest($invalid_fields);
         }
 
+        $merge_array = [];
+        if (array_key_exists('winner_id', request()->all())) {
+            $decode = $this->hash->category()->decode(request()->input('winner_id'));
+            $winner_id = null;
+            if (count($decode) === 1) {
+                $winner_id = $decode[0];
+            }
+
+            $merge_array = ['winner_id' => $winner_id];
+        }
+
         $messages = [];
         foreach (LaravelConfig::get($config_base_path . '.validation.PATCH.messages', []) as $key => $custom_message) {
             $messages[$key] = trans($custom_message);
         }
 
         $validator = ValidatorFacade::make(
-            request()->all(),
+            array_merge(
+                request()->all(),
+                $merge_array
+            ),
             LaravelConfig::get($config_base_path . '.validation.PATCH.fields', []),
             $messages
         );
