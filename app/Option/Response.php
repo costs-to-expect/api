@@ -3,7 +3,6 @@ declare(strict_types=1);
 
 namespace App\Option;
 
-use App\ItemType\ItemType;
 use Illuminate\Http\JsonResponse;
 
 abstract class Response
@@ -15,8 +14,6 @@ abstract class Response
     protected array $allowed_fields;
 
     protected array $allowed_parameters;
-
-    protected ItemType $entity;
 
     public function __construct(array $permissions)
     {
@@ -62,13 +59,6 @@ abstract class Response
     public function setDynamicAllowedParameters(array $allowed_parameters): Response
     {
         $this->allowed_parameters = $allowed_parameters;
-
-        return $this;
-    }
-
-    public function setEntity(ItemType $entity): Response
-    {
-        $this->entity = $entity;
 
         return $this;
     }

@@ -25,11 +25,6 @@ class Item extends ItemType
         return [];
     }
 
-    public function categoryAssignmentLimit(): int
-    {
-        return 0;
-    }
-
     public function create(int $id): Model
     {
         $item = new Models\Item([
@@ -54,11 +49,6 @@ class Item extends ItemType
     public function model()
     {
         return new Models\Item();
-    }
-
-    public function subcategoryAssignmentLimit(): int
-    {
-        return 0;
     }
 
     public function table(): string

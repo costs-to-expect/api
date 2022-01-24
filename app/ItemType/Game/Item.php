@@ -28,11 +28,6 @@ class Item extends ItemType
         return (new Winner())->allowedValues($resource_type_id);
     }
 
-    public function categoryAssignmentLimit(): int
-    {
-        return 5;
-    }
-
     public function create(int $id): Model
     {
         $item = new Models\Item([
@@ -58,11 +53,6 @@ class Item extends ItemType
     public function model()
     {
         return new Models\Item();
-    }
-
-    public function subcategoryAssignmentLimit(): int
-    {
-        return 0;
     }
 
     public function table(): string
