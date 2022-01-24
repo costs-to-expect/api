@@ -6,31 +6,20 @@ use App\ItemType\Entity;
 use App\Jobs\ClearCache;
 use App\Models\ItemCategory;
 use App\Models\ItemSubcategory;
-use App\Request\Validate\ItemSubcategory as ItemSubcategoryValidator;
 use App\Transformers\ItemSubcategory as ItemSubcategoryTransformer;
 use Exception;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\Config;
+use Illuminate\Support\Facades\Validator as ValidatorFacade;
 
 /**
- * Manage the category for an item row
- *
  * @author Dean Blackborough <dean@g3d-development.com>
  * @copyright Dean Blackborough 2018-2022
  * @license https://github.com/costs-to-expect/api/blob/master/LICENSE
  */
 class ItemSubcategoryManage extends Controller
 {
-    /**
-     * Assign the sub category
-     *
-     * @param string $resource_type_id
-     * @param string $resource_id
-     * @param string $item_id
-     * @param string $item_category_id
-     *
-     * @return JsonResponse
-     */
     public function create(
         string $resource_type_id,
         string $resource_id,
@@ -46,7 +35,23 @@ class ItemSubcategoryManage extends Controller
             return \App\Response\Responses::notFound(trans('entities.item-subcategory'));
         }
 
-        $entity = Entity::item($resource_type_id);
+        $item_type = Entity::itemType((int) $resource_type_id);
+
+        return match ($item_type) {
+            'allocated-expense', 'simple-expense' => $this->createItemSubcategory((int) $resource_type_id, (int) $resource_id, (int) $item_id, (int) $item_category_id, 1),
+            'game', 'simple-item' => \App\Response\Responses::subcategoryAssignmentLimit(0),
+            default => throw new \OutOfRangeException('No item type definition for ' . $item_type, 500),
+        };
+    }
+
+    private function createItemSubcategory(
+        int $resource_type_id,
+        int $resource_id,
+        int $item_id,
+        int $item_category_id,
+        int $assignment_limit = 1
+    ): JsonResponse
+    {
         $assigned = (new ItemSubcategory())->numberAssigned(
             $resource_type_id,
             $resource_id,
@@ -54,15 +59,37 @@ class ItemSubcategoryManage extends Controller
             $item_category_id
         );
 
-        if ($assigned >= $entity->subcategoryAssignmentLimit()) {
-            return \App\Response\Responses::subcategoryAssignmentLimit($entity->subcategoryAssignmentLimit());
+        if ($assigned >= $assignment_limit) {
+            return \App\Response\Responses::subcategoryAssignmentLimit($assignment_limit);
         }
 
         $item_category = (new ItemCategory())
             ->where('item_id', '=', $item_id)
             ->find($item_category_id);
 
-        $validator = (new ItemSubcategoryValidator)->create(['category_id' => $item_category->category_id]);
+        $decode = $this->hash->subcategory()->decode(request()->input('subcategory_id'));
+        $subcategory_id = null;
+        if (count($decode) === 1) {
+            $subcategory_id = $decode[0];
+        }
+
+        $messages = [];
+        foreach (Config::get('api.item-subcategory.validation.POST.messages') as $key => $custom_message) {
+            $messages[$key] = trans($custom_message);
+        }
+
+        $validator = ValidatorFacade::make(
+            ['subcategory_id' => $subcategory_id],
+            array_merge(
+                [
+                    'subcategory_id' => [
+                        'required'
+                    ],
+                ],
+                Config::get('api.item-subcategory.validation.POST.fields')
+            ),
+            $messages
+        );
 
         if ($validator->fails()) {
             return \App\Request\BodyValidation::returnValidationErrors(
@@ -105,17 +132,6 @@ class ItemSubcategoryManage extends Controller
         );
     }
 
-    /**
-     * Delete the assigned sub category
-     *
-     * @param string $resource_type_id,
-     * @param string $resource_id,
-     * @param string $item_id,
-     * @param string $item_category_id,
-     * @param string $item_subcategory_id
-     *
-     * @return JsonResponse
-     */
     public function delete(
         string $resource_type_id,
         string $resource_id,
@@ -132,6 +148,23 @@ class ItemSubcategoryManage extends Controller
             return \App\Response\Responses::notFound(trans('entities.item-subcategory'));
         }
 
+        $item_type = Entity::itemType((int) $resource_type_id);
+
+        return match ($item_type) {
+            'allocated-expense', 'simple-expense' => $this->deleteItemSubcategory((int) $resource_type_id, (int) $resource_id, (int) $item_id, (int) $item_category_id, (int) $item_subcategory_id),
+            'game', 'simple-item' => \App\Response\Responses::notSupported(),
+            default => throw new \OutOfRangeException('No item type definition for ' . $item_type, 500),
+        };
+    }
+
+    private function deleteItemSubcategory(
+        int $resource_type_id,
+        int $resource_id,
+        int $item_id,
+        int $item_category_id,
+        int $item_subcategory_id
+    ): JsonResponse
+    {
         $item_sub_category = (new ItemSubcategory())->instance(
             $resource_type_id,
             $resource_id,
