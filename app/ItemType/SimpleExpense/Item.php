@@ -7,7 +7,6 @@ use App\AllowedValue\Currency;
 use App\ItemType\ItemType;
 use App\Transformers\Transformer;
 use App\Request\Hash;
-use App\Request\Validate\Validator;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Date;
 
@@ -96,11 +95,6 @@ class Item extends ItemType
         $instance->updated_at = Date::now();
 
         return $instance->save();
-    }
-
-    public function validator(): Validator
-    {
-        return new \App\ItemType\SimpleExpense\Validator();
     }
 
     public function apiItemResponseClass(): string

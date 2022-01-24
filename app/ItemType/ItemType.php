@@ -5,7 +5,6 @@ namespace App\ItemType;
 
 use App\Transformers\Transformer;
 use App\Request\Parameter\Request;
-use App\Request\Validate\Validator;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Config as LaravelConfig;
 
@@ -214,8 +213,6 @@ abstract class ItemType
     abstract public function type(): string;
 
     abstract public function update(array $patch, Model $instance): bool;
-
-    abstract public function validator(): Validator;
 
     abstract protected function allowedValuesItemCollectionClass(): string;
     abstract protected function allowedValuesResourceTypeItemCollectionClass(): string;
