@@ -16,17 +16,63 @@ class ItemView extends Controller
             Responses::notFoundOrNotAccessible(trans('entities.resource'));
         }
 
-        $entity = Entity::item((int) $resource_type_id);
+        $item_type = Entity::itemType((int) $resource_type_id);
 
-        $summary_class = $entity->apiSummaryResponseClass();
-        $summary = new $summary_class(
-            (int) $resource_type_id,
-            (int) $resource_id,
+        return match ($item_type) {
+            'allocated-expense' => $this->allocatedExpenseSummary((int) $resource_type_id, (int) $resource_id),
+            'simple-expense' => $this->simpleExpenseSummary((int) $resource_type_id, (int) $resource_id),
+            'simple-item' => $this->simpleItemSummary((int) $resource_type_id, (int) $resource_id),
+            'game' => $this->gameSummary((int) $resource_type_id, (int) $resource_id),
+            default => throw new \OutOfRangeException('No item type definition for ' . $item_type, 500),
+        };
+    }
+
+    private function allocatedExpenseSummary(int $resource_type_id, int $resource_id): JsonResponse
+    {
+        $response = new \App\ItemType\AllocatedExpense\ApiResponse\Summary(
+            $resource_type_id,
+            $resource_id,
             $this->writeAccessToResourceType($resource_type_id),
             $this->user_id
         );
 
-        return $summary->response();
+        return $response->response();
+    }
+
+    private function gameSummary(int $resource_type_id, int $resource_id): JsonResponse
+    {
+        $response = new \App\ItemType\Game\ApiResponse\Summary(
+            $resource_type_id,
+            $resource_id,
+            $this->writeAccessToResourceType($resource_type_id),
+            $this->user_id
+        );
+
+        return $response->response();
+    }
+
+    private function simpleExpenseSummary(int $resource_type_id, int $resource_id): JsonResponse
+    {
+        $response = new \App\ItemType\SimpleExpense\ApiResponse\Summary(
+            $resource_type_id,
+            $resource_id,
+            $this->writeAccessToResourceType($resource_type_id),
+            $this->user_id
+        );
+
+        return $response->response();
+    }
+
+    private function simpleItemSummary(int $resource_type_id, int $resource_id): JsonResponse
+    {
+        $response = new \App\ItemType\SimpleItem\ApiResponse\Summary(
+            $resource_type_id,
+            $resource_id,
+            $this->writeAccessToResourceType($resource_type_id),
+            $this->user_id
+        );
+
+        return $response->response();
     }
 
     public function optionsIndex(string $resource_type_id, string $resource_id): JsonResponse
