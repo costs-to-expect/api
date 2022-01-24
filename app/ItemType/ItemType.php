@@ -73,8 +73,7 @@ abstract class ItemType
             $viewable_resource_types
         );
 
-        return $allowed_values
-            ->setParameters(
+        return $allowed_values->setParameters(
                 $available_parameters,
                 $defined_parameters
             )
