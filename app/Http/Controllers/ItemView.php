@@ -150,14 +150,6 @@ class ItemView extends Controller
         return $response->showResponse($item_id);
     }
 
-    /**
-     * Generate the OPTIONS request for the item list
-     *
-     * @param string $resource_type_id
-     * @param string $resource_id
-     *
-     * @return JsonResponse
-     */
     public function optionsIndex(
         string $resource_type_id,
         string $resource_id
