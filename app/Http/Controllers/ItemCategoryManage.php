@@ -123,9 +123,25 @@ class ItemCategoryManage extends Controller
     ): JsonResponse
     {
         if ($this->writeAccessToResourceType((int) $resource_type_id) === false) {
-            \App\Response\Responses::notFoundOrNotAccessible(trans('entities.item-category'));
+            Responses::notFoundOrNotAccessible(trans('entities.resource'));
         }
 
+        $item_type = Entity::itemType((int) $resource_type_id);
+
+        return match ($item_type) {
+            'allocated-expense', 'simple-expense', 'game' => $this->deleteItemCategory((int) $resource_type_id, (int) $resource_id, (int) $item_id, (int) $item_category_id),
+            'simple-item' => \App\Response\Responses::notSupported(),
+            default => throw new \OutOfRangeException('No item type definition for ' . $item_type, 500),
+        };
+    }
+
+    private function deleteItemCategory(
+        int $resource_type_id,
+        int $resource_id,
+        int $item_id,
+        int $item_category_id
+    ): JsonResponse
+    {
         $item_category = (new ItemCategory())->instance(
             $resource_type_id,
             $resource_id,
@@ -143,7 +159,7 @@ class ItemCategoryManage extends Controller
                 'resource_type_id' => $resource_type_id,
                 'resource_id' => $resource_id
             ])
-            ->setPermittedUser($this->writeAccessToResourceType((int) $resource_type_id))
+            ->setPermittedUser($this->writeAccessToResourceType($resource_type_id))
             ->setUserId($this->user_id);
 
         try {
