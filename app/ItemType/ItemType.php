@@ -87,14 +87,7 @@ abstract class ItemType
         return null;
     }
 
-    public function filterParameters(): array
-    {
-        return LaravelConfig::get($this->base_path . '.filterable', []);
-    }
-
     abstract public function instance(int $id): Model;
-
-    abstract public function model();
 
     public function requestParameters(): array
     {

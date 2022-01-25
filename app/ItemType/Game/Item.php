@@ -98,26 +98,6 @@ class Item extends ItemType
         return LaravelConfig::get($this->base_path . '.fields-patch', []);
     }
 
-    public function apiSummaryResponseClass(): string
-    {
-        return ApiResponse\Summary::class;
-    }
-
-    public function apiItemResponseClass(): string
-    {
-        return ApiResponse\Item::class;
-    }
-
-    public function apiSummaryResourceTypeItemResponseClass(): string
-    {
-        return ApiResponse\SummaryResourceTypeItem::class;
-    }
-
-    public function apiResourceTypeItemResponseClass(): string
-    {
-        return ApiResponse\ResourceTypeItem::class;
-    }
-
     protected function allowedValuesItemCollectionClass(): string
     {
         return AllowedValue\Item::class;

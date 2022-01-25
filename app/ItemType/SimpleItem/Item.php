@@ -60,16 +60,6 @@ class Item extends ItemType
         return 'simple-item';
     }
 
-    public function apiSummaryResponseClass(): string
-    {
-        return ApiResponse\Summary::class;
-    }
-
-    public function apiSummaryResourceTypeItemResponseClass(): string
-    {
-        return ApiResponse\SummaryResourceTypeItem::class;
-    }
-
     public function transformer(array $data_to_transform): Transformer
     {
         return new Transformers\Item($data_to_transform);
@@ -84,16 +74,6 @@ class Item extends ItemType
         $instance->updated_at = Date::now();
 
         return $instance->save();
-    }
-
-    public function apiItemResponseClass(): string
-    {
-        return ApiResponse\Item::class;
-    }
-
-    public function apiResourceTypeItemResponseClass(): string
-    {
-        return ApiResponse\ResourceTypeItem::class;
     }
 
     protected function allowedValuesItemCollectionClass(): string
