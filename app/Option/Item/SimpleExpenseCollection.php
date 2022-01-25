@@ -3,20 +3,20 @@ declare(strict_types=1);
 
 namespace App\Option\Item;
 
-use App\ItemType\SimpleExpense\Item;
 use App\Option\Response;
+use Illuminate\Support\Facades\Config as LaravelConfig;
 
 class SimpleExpenseCollection extends Response
 {
     public function create()
     {
-        $item = new Item();
+        $base_path = 'api.item-type-simple-expense';
 
         $get = new \App\Method\GetRequest();
-        $this->verbs['GET'] = $get->setSortableParameters($item->sortParameters())
-            ->setSearchableParameters($item->searchParameters())
-            ->setFilterableParameters($item->filterParameters())
-            ->setParameters($item->requestParameters())
+        $this->verbs['GET'] = $get->setSortableParameters(LaravelConfig::get($base_path . '.sortable', []))
+            ->setSearchableParameters(LaravelConfig::get($base_path . '.searchable', []))
+            ->setFilterableParameters(LaravelConfig::get($base_path . '.filterable', []))
+            ->setParameters(LaravelConfig::get($base_path . '.parameters.collection', []))
             ->setDynamicParameters($this->allowed_parameters)
             ->setPaginationStatus(true)
             ->setAuthenticationStatus($this->permissions['view'])
@@ -24,7 +24,7 @@ class SimpleExpenseCollection extends Response
             ->option();
 
         $post = new \App\Method\PostRequest();
-        $this->verbs['POST'] = $post->setFields($item->postFields())
+        $this->verbs['POST'] = $post->setFields(LaravelConfig::get($base_path . '.fields', []))
             ->setDescription( 'route-descriptions.item_POST')
             ->setAuthenticationRequirement(true)
             ->setAuthenticationStatus($this->permissions['manage'])
