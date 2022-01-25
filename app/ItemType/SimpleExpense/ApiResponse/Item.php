@@ -4,8 +4,13 @@ declare(strict_types=1);
 namespace App\ItemType\SimpleExpense\ApiResponse;
 
 use App\ItemType\ApiItemResponse;
+use App\Request\Parameter\Filter;
+use App\Request\Parameter\Request;
+use App\Request\Parameter\Search;
+use App\Request\Parameter\Sort;
 use App\Response\Responses;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\Config as LaravelConfig;
 use function request;
 use function response;
 use function trans;
@@ -14,6 +19,8 @@ class Item extends ApiItemResponse
 {
     public function collectionResponse(): JsonResponse
     {
+        $this->requestParameters();
+
         $this->cache_control->setTtlOneMonth();
 
         $cache_collection = new \App\Cache\Collection();
@@ -24,10 +31,6 @@ class Item extends ApiItemResponse
             $cache_collection->valid() === false
         ) {
             $model = new \App\ItemType\SimpleExpense\Models\Item();
-
-            $this->fetchAllRequestParameters(
-                new \App\ItemType\SimpleExpense\Item()
-            );
 
             $total = $model->totalCount(
                 $this->resource_type_id,
@@ -82,9 +85,7 @@ class Item extends ApiItemResponse
 
     public function showResponse(int $item_id): JsonResponse
     {
-        $this->fetchAllRequestParameters(
-            new \App\ItemType\SimpleExpense\Item()
-        );
+        $this->requestParameters();
 
         $item = (new \App\ItemType\SimpleExpense\Models\Item())->single(
             $this->resource_type_id,
@@ -101,6 +102,28 @@ class Item extends ApiItemResponse
             (new \App\ItemType\SimpleExpense\Transformers\Item($item))->asArray(),
             200,
             $this->showHeaders()
+        );
+    }
+
+    protected function requestParameters(): void
+    {
+        $base_path = 'api.item-type-simple-expense';
+
+        $this->request_parameters = Request::fetch(
+            array_keys(LaravelConfig::get($base_path . '.parameters.collection', [])),
+            $this->resource_type_id
+        );
+
+        $this->search_parameters = Search::fetch(
+            LaravelConfig::get($base_path . '.searchable', [])
+        );
+
+        $this->filter_parameters = Filter::fetch(
+            LaravelConfig::get($base_path . '.filterable', [])
+        );
+
+        $this->sort_fields = Sort::fetch(
+            LaravelConfig::get($base_path . '.sortable', [])
         );
     }
 }
