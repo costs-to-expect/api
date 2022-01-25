@@ -99,17 +99,7 @@ abstract class ItemType
 
     abstract public function instance(int $id): Model;
 
-    public function itemRequestParameters(): array
-    {
-        return LaravelConfig::get($this->base_path . '.parameters.item', []); // We need to split this
-    }
-
     abstract public function model();
-
-    public function patchFields(): array // We need post fields and patch fields
-    {
-        return $this->postFields();
-    }
 
     public function patchValidation(): array // We need to split validation config files
     {
@@ -119,11 +109,6 @@ abstract class ItemType
     public function patchValidationMessages(): array // We need to split validation config files
     {
         return LaravelConfig::get($this->base_path . '.validation.PATCH.messages', []);
-    }
-
-    public function postFields(): array // We need post fields and patch fields
-    {
-        return LaravelConfig::get($this->base_path . '.fields', []);
     }
 
     public function postValidation(): array // We need to split validation config files
