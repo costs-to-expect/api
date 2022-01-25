@@ -3,9 +3,13 @@ declare(strict_types=1);
 
 namespace App\ItemType\AllocatedExpense\ApiResponse;
 
-use App\ItemType\AllocatedExpense\Item;
 use App\ItemType\ApiResourceTypeItemResponse;
+use App\Request\Parameter\Filter;
+use App\Request\Parameter\Request;
+use App\Request\Parameter\Search;
+use App\Request\Parameter\Sort;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\Config as LaravelConfig;
 use function request;
 use function response;
 
@@ -13,6 +17,8 @@ class ResourceTypeItem extends ApiResourceTypeItemResponse
 {
     public function response(): JsonResponse
     {
+        $this->requestParameters();
+
         if ($this->cache_control->visibility() === 'public') {
             $this->cache_control->setTtlOneWeek();
         } else {
@@ -27,10 +33,6 @@ class ResourceTypeItem extends ApiResourceTypeItemResponse
             $cache_collection->valid() === false
         ) {
             $model = new \App\ItemType\AllocatedExpense\Models\ResourceTypeItem();
-
-            $this->fetchAllRequestParameters(
-                new Item()
-            );
 
             $total = $model->totalCount(
                 $this->resource_type_id,
@@ -79,5 +81,27 @@ class ResourceTypeItem extends ApiResourceTypeItemResponse
         }
 
         return response()->json($cache_collection->collection(), 200, $cache_collection->headers());
+    }
+
+    private function requestParameters(): void
+    {
+        $base_path = 'api.resource-type-item-type-allocated-expense';
+
+        $this->request_parameters = Request::fetch(
+            array_keys(LaravelConfig::get($base_path . '.parameters.collection', [])),
+            $this->resource_type_id
+        );
+
+        $this->search_parameters = Search::fetch(
+            LaravelConfig::get($base_path . '.searchable', [])
+        );
+
+        $this->filter_parameters = Filter::fetch(
+            LaravelConfig::get($base_path . '.filterable', [])
+        );
+
+        $this->sort_fields = Sort::fetch(
+            LaravelConfig::get($base_path . '.sortable', [])
+        );
     }
 }
