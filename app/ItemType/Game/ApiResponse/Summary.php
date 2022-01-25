@@ -3,8 +3,9 @@
 namespace App\ItemType\Game\ApiResponse;
 
 use App\ItemType\ApiSummaryResponse;
-use App\ItemType\Game\Item;
+use App\Request\Parameter;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\Config as LaravelConfig;
 use function response;
 
 class Summary extends ApiSummaryResponse
@@ -27,7 +28,7 @@ class Summary extends ApiSummaryResponse
 
         $this->model = new \App\ItemType\Game\Models\Summary();
 
-        $this->fetchAllRequestParameters(new Item());
+        $this->requestParameters();
 
         $this->removeDecisionParameters();
     }
@@ -101,5 +102,24 @@ class Summary extends ApiSummaryResponse
         }
 
         return response()->json($this->cache_summary->collection(), 200, $this->cache_summary->headers());
+    }
+
+    private function requestParameters(): void
+    {
+        $base_path = 'api.item-type-game';
+
+        $this->parameters = Parameter\Request::fetch(
+            array_keys(LaravelConfig::get($base_path . '.summary-parameters', [])),
+            $this->resource_type_id,
+            $this->resource_id
+        );
+
+        $this->search_parameters = Parameter\Search::fetch(
+            LaravelConfig::get($base_path . '.summary-searchable', [])
+        );
+
+        $this->filter_parameters = Parameter\Filter::fetch(
+            LaravelConfig::get($base_path . '.summary-filterable', [])
+        );
     }
 }
