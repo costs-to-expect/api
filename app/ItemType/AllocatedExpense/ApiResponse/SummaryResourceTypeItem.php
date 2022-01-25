@@ -2,10 +2,11 @@
 
 namespace App\ItemType\AllocatedExpense\ApiResponse;
 
-use App\ItemType\AllocatedExpense\Item;
 use App\ItemType\ApiSummaryResourceTypeItemResponse;
+use App\Request\Parameter;
 use App\Request\Validate\Boolean;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\Config as LaravelConfig;
 use function request;
 use function response;
 
@@ -29,7 +30,7 @@ class SummaryResourceTypeItem extends ApiSummaryResourceTypeItemResponse
 
         $this->shortCircuit(); // Skip working out which for obvious routes
 
-        $this->fetchAllRequestParameters(new Item());
+        $this->requestParameters();
 
         $this->removeDecisionParameters();
     }
@@ -483,5 +484,23 @@ class SummaryResourceTypeItem extends ApiSummaryResourceTypeItemResponse
 
         $this->cache_summary = new \App\Cache\Summary();
         $this->cache_summary->setFromCache($this->cache_control->getByKey(request()->getRequestUri()));
+    }
+
+    private function requestParameters(): void
+    {
+        $base_path = 'api.resource-type-item-type-allocated-expense';
+
+        $this->parameters = Parameter\Request::fetch(
+            array_keys(LaravelConfig::get($base_path . '.summary-parameters', [])),
+            $this->resource_type_id
+        );
+
+        $this->search_parameters = Parameter\Search::fetch(
+            LaravelConfig::get($base_path . '.summary-searchable', [])
+        );
+
+        $this->filter_parameters = Parameter\Filter::fetch(
+            LaravelConfig::get($base_path . '.summary-filterable', [])
+        );
     }
 }
