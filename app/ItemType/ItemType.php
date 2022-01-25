@@ -8,11 +8,6 @@ use App\Request\Parameter\Request;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Config as LaravelConfig;
 
-/**
- @todo We will need a console command to create the config files for a new type
- * Add the ticket to Pivotal when/if happy with this.
- */
-
 abstract class ItemType
 {
     protected string $base_path;
@@ -101,26 +96,6 @@ abstract class ItemType
 
     abstract public function model();
 
-    public function patchValidation(): array // We need to split validation config files
-    {
-        return LaravelConfig::get($this->base_path . '.validation.PATCH.fields', []);
-    }
-
-    public function patchValidationMessages(): array // We need to split validation config files
-    {
-        return LaravelConfig::get($this->base_path . '.validation.PATCH.messages', []);
-    }
-
-    public function postValidation(): array // We need to split validation config files
-    {
-        return LaravelConfig::get($this->base_path . '.validation.POST.fields', []);
-    }
-
-    public function postValidationMessages(): array // We need to split validation config files
-    {
-        return LaravelConfig::get($this->base_path . '.validation.POST.messages', []);
-    }
-
     public function requestParameters(): array
     {
         return LaravelConfig::get($this->base_path . '.parameters.collection', []); // We need to split this
@@ -145,21 +120,6 @@ abstract class ItemType
     {
         return LaravelConfig::get($this->resource_type_base_path . '.sortable', []);
     }
-
-    public function searchParameters(): array
-    {
-        return LaravelConfig::get($this->base_path . '.searchable', []);
-    }
-
-    public function sortParameters(): array
-    {
-        return LaravelConfig::get($this->base_path . '.sortable', []);
-    }
-
-    abstract public function apiSummaryResponseClass(): string;
-    abstract public function apiSummaryResourceTypeItemResponseClass(): string;
-    abstract public function apiItemResponseClass(): string;
-    abstract public function apiResourceTypeItemResponseClass(): string;
 
     public function summaryFilterParameters(): array
     {

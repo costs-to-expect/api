@@ -82,28 +82,6 @@ abstract class ApiItemResponse
         return $headers->headers();
     }
 
-    protected function fetchAllRequestParameters(
-        ItemType $entity
-    ): void
-    {
-        $this->request_parameters = Request::fetch(
-            array_keys($entity->requestParameters()),
-            $this->resource_type_id
-        );
-
-        $this->search_parameters = Search::fetch(
-            $entity->searchParameters()
-        );
-
-        $this->filter_parameters = Filter::fetch(
-            $entity->filterParameters()
-        );
-
-        $this->sort_fields = Sort::fetch(
-            $entity->sortParameters()
-        );
-    }
-
     protected function pagination_parameters(int $total): array
     {
         $pagination = new UtilityPagination(request()->path(), $total);
