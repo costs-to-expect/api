@@ -1,11 +1,12 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Option;
+namespace App\Option\ItemPartialTransfer;
 
+use App\Option\Response;
 use Illuminate\Support\Facades\Config;
 
-class ItemPartialTransferCollection extends Response
+class AllocatedExpenseCollection extends Response
 {
     public function create()
     {

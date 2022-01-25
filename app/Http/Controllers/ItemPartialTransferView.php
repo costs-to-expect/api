@@ -4,48 +4,46 @@ namespace App\Http\Controllers;
 
 use App\ItemType\Entity;
 use App\Models\ItemPartialTransfer;
-use App\Option\ItemPartialTransferCollection;
-use App\Option\ItemPartialTransferItem;
-use App\Option\ItemPartialTransferTransfer;
+use App\Option\ItemPartialTransfer\AllocatedExpense;
+use App\Option\ItemPartialTransfer\AllocatedExpenseCollection;
+use App\Option\ItemPartialTransfer\AllocatedExpenseTransfer;
 use App\Request\Parameter;
 use App\Response\Header;
 use App\Response\Pagination as UtilityPagination;
+use App\Response\Responses;
 use App\Transformers\ItemPartialTransfer as ItemPartialTransferTransformer;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Config;
 
 /**
- * Partial transfer of items
- *
  * @author Dean Blackborough <dean@g3d-development.com>
  * @copyright Dean Blackborough 2018-2022
  * @license https://github.com/costs-to-expect/api/blob/master/LICENSE
  */
 class ItemPartialTransferView extends Controller
 {
-    /**
-     * Return the partial transfer collection
-     *
-     * @param string $resource_type_id
-     *
-     * @return JsonResponse
-     */
     public function index($resource_type_id): JsonResponse
     {
         if ($this->viewAccessToResourceType((int) $resource_type_id) === false) {
             \App\Response\Responses::notFoundOrNotAccessible(trans('entities.resource-type'));
         }
 
+        $item_type = Entity::itemType((int) $resource_type_id);
+
+        return match ($item_type) {
+            'allocated-expense' => $this->allocatedExpenseCollection((int) $resource_type_id),
+            'game', 'simple-expense', 'simple-item' => Responses::notSupported(),
+            default => throw new \OutOfRangeException('No item type definition for ' . $item_type, 500),
+        };
+    }
+
+    private function allocatedExpenseCollection(int $resource_type_id): JsonResponse
+    {
         $cache_control = new \App\Cache\Control(
             $this->writeAccessToResourceType((int) $resource_type_id),
             $this->user_id
         );
         $cache_control->setTtlOneWeek();
-
-        $entity = Entity::item($resource_type_id);
-        if ($entity->allowPartialTransfers() === false) {
-            return \App\Response\Responses::notSupported();
-        }
 
         $cache_collection = new \App\Cache\Collection();
         $cache_collection->setFromCache($cache_control->getByKey(request()->getRequestUri()));
@@ -57,18 +55,18 @@ class ItemPartialTransferView extends Controller
             );
 
             $total = (new ItemPartialTransfer())->total(
-                (int) $resource_type_id,
+                $resource_type_id,
                 $this->viewable_resource_types,
                 $parameters
             );
 
             $pagination = new UtilityPagination(request()->path(), $total);
             $pagination_parameters = $pagination->allowPaginationOverride($this->allow_entire_collection)->
-                setParameters($parameters)->
-                parameters();
+            setParameters($parameters)->
+            parameters();
 
             $transfers = (new ItemPartialTransfer())->paginatedCollection(
-                (int)$resource_type_id,
+                $resource_type_id,
                 $this->viewable_resource_types,
                 $pagination_parameters['offset'],
                 $pagination_parameters['limit'],
@@ -83,9 +81,9 @@ class ItemPartialTransferView extends Controller
             );
 
             $headers = new Header();
-            $headers->collection($pagination_parameters, count($transfers), $total)->
-                addCacheControl($cache_control->visibility(), $cache_control->ttl())->
-                addETag($collection);
+            $headers->collection($pagination_parameters, count($transfers), $total)
+                ->addCacheControl($cache_control->visibility(), $cache_control->ttl())
+                ->addETag($collection);
 
             $cache_collection->create($total, $collection, $pagination_parameters, $headers->headers());
             $cache_control->putByKey(request()->getRequestUri(), $cache_collection->content());
@@ -94,14 +92,6 @@ class ItemPartialTransferView extends Controller
         return response()->json($cache_collection->collection(), 200, $cache_collection->headers());
     }
 
-    /**
-     * Return a single item partial transfer
-     *
-     * @param $resource_type_id
-     * @param $item_partial_transfer_id
-     *
-     * @return JsonResponse
-     */
     public function show(
         $resource_type_id,
         $item_partial_transfer_id
@@ -111,11 +101,17 @@ class ItemPartialTransferView extends Controller
             \App\Response\Responses::notFoundOrNotAccessible(trans('entities.resource-type'));
         }
 
-        $entity = Entity::item($resource_type_id);
-        if ($entity->allowPartialTransfers() === false) {
-            return \App\Response\Responses::notSupported();
-        }
+        $item_type = Entity::itemType((int) $resource_type_id);
 
+        return match ($item_type) {
+            'allocated-expense' => $this->allocatedExpense((int) $resource_type_id, (int) $item_partial_transfer_id),
+            'game', 'simple-expense', 'simple-item' => Responses::notSupported(),
+            default => throw new \OutOfRangeException('No item type definition for ' . $item_type, 500),
+        };
+    }
+
+    private function allocatedExpense($resource_type_id, $item_partial_transfer_id): JsonResponse
+    {
         $item_partial_transfer = (new ItemPartialTransfer())->single(
             (int) $resource_type_id,
             (int) $item_partial_transfer_id
@@ -141,36 +137,40 @@ class ItemPartialTransferView extends Controller
             \App\Response\Responses::notFoundOrNotAccessible(trans('entities.item'));
         }
 
-        $entity = Entity::item($resource_type_id);
-        if ($entity->allowPartialTransfers() === false) {
-            return \App\Response\Responses::notSupported();
-        }
+        $item_type = Entity::itemType((int) $resource_type_id);
 
-        $response = new ItemPartialTransferCollection($this->permissions((int) $resource_type_id));
+        return match ($item_type) {
+            'allocated-expense' => $this->optionsAllocatedExpenseCollection((int) $resource_type_id),
+            'game', 'simple-expense', 'simple-item' => Responses::notSupported(),
+            default => throw new \OutOfRangeException('No item type definition for ' . $item_type, 500),
+        };
+    }
+
+    private function optionsAllocatedExpenseCollection(int $resource_type_id): JsonResponse
+    {
+        $response = new AllocatedExpenseCollection($this->permissions($resource_type_id));
 
         return $response->create()->response();
     }
 
-    /**
-     * Generate the OPTIONS request for a specific item partial transfer
-     *
-     * @param $resource_type_id
-     * @param $item_partial_transfer_id
-     *
-     * @return JsonResponse
-     */
     public function optionsShow($resource_type_id, $item_partial_transfer_id): JsonResponse
     {
         if ($this->viewAccessToResourceType((int) $resource_type_id) === false) {
             \App\Response\Responses::notFoundOrNotAccessible(trans('entities.item-partial-transfer'));
         }
 
-        $entity = Entity::item($resource_type_id);
-        if ($entity->allowPartialTransfers() === false) {
-            return \App\Response\Responses::notSupported();
-        }
+        $item_type = Entity::itemType((int) $resource_type_id);
 
-        $response = new ItemPartialTransferItem($this->permissions((int) $resource_type_id));
+        return match ($item_type) {
+            'allocated-expense' => $this->optionsAllocatedExpenseShow((int) $resource_type_id),
+            'game', 'simple-expense', 'simple-item' => Responses::notSupported(),
+            default => throw new \OutOfRangeException('No item type definition for ' . $item_type, 500),
+        };
+    }
+
+    private function optionsAllocatedExpenseShow(int $resource_type_id): JsonResponse
+    {
+        $response = new AllocatedExpense($this->permissions((int) $resource_type_id));
 
         return $response->create()->response();
     }
@@ -185,12 +185,21 @@ class ItemPartialTransferView extends Controller
             \App\Response\Responses::notFoundOrNotAccessible(trans('entities.item'));
         }
 
-        $entity = Entity::item($resource_type_id);
-        if ($entity->allowPartialTransfers() === false) {
-            return \App\Response\Responses::notSupported();
-        }
+        $item_type = Entity::itemType((int) $resource_type_id);
 
-        $response = new ItemPartialTransferTransfer($this->permissions((int) $resource_type_id));
+        return match ($item_type) {
+            'allocated-expense' => $this->optionsAllocatedExpenseTransfer((int) $resource_type_id, (int) $resource_id),
+            'game', 'simple-expense', 'simple-item' => Responses::notSupported(),
+            default => throw new \OutOfRangeException('No item type definition for ' . $item_type, 500),
+        };
+    }
+
+    private function optionsAllocatedExpenseTransfer(
+        int $resource_type_id,
+        int $resource_id
+    ): JsonResponse
+    {
+        $response = new AllocatedExpenseTransfer($this->permissions($resource_type_id));
 
         return $response->setDynamicAllowedFields(
                 (new \App\AllowedValue\Resource())->allowedValues(

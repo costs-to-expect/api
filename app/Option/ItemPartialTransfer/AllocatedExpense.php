@@ -1,9 +1,11 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Option;
+namespace App\Option\ItemPartialTransfer;
 
-class ItemPartialTransferItem extends Response
+use App\Option\Response;
+
+class AllocatedExpense extends Response
 {
     public function create()
     {
