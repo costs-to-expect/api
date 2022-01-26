@@ -222,12 +222,56 @@
                     <p>The changelog below shows all the fixes and improvements we have made, to view
                         the entire changelog please check <a href="https://github.com/costs-to-expect/api/releases">here</a>.</p>
 
+                    <p class="lead">
+
+                    </p>
+
+                    <h3>Added</h3>
+
+                    <ul>
+                        <li>We have added additional tests for the `ResourceManage` controller</li>
+                        <li>We have added tests for the `ResourceTypeView` controller</li>
+                        <li>We have added a logout route</li>
+                        <li>We have added an OPTIONS request for `/auth/create-new-password`</li>
+                        <li>We have added an OPTIONS request for `/auth/create-password`</li>
+                        <li>We have added an OPTIONS request for `/auth/forgot-password`</li>
+                        <li>We have added an OPTIONS request for `/auth/login`</li>
+                        <li>We have added an OPTIONS request for `/auth/register`</li>
+                        <li>We have added an OPTIONS request for `/auth/update-password`</li>
+                        <li>We have added an OPTIONS request for `/auth/update-profile`</li>
+                        <li>We have added an OPTIONS request for `/auth/user`</li>
+                        <li>We have added an OPTIONS request for `/auth/check`</li>
+                    </ul>
+
                     <h3>Changed</h3>
 
                     <ul>
-                        <li>We have updated our password requirements; the minimum length must now be 12 characters.</li>
-                        <li>We have updated our back-end dependencies.</li>
-                        <li>Cache clear jobs are dispatched immediately; we no longer delay items in the queue.</li>
+                        <li>We have made a couple of minor changes to the Docker setup</li>
+                        <li>We have updated the README because of minor Docker changes and corrected the table layouts in the README file</li>
+                        <li>We have updated all front-end and back-end dependencies</li>
+                        <li>We have updated the copyright, we are now in 2022</li>
+                        <li>We have added additional feature tests and removed some duplication in the tests, the README details the current test status</li>
+                        <li>General refactoring, switched to method injection and logging exception messages</li>
+                        <li>We are switching to named routes and have updated some of the route files, more will be updated as additional tests are created</li>
+                        <li>We have done a quick review of each of the model classes and fixed a few tiny issues</li>
+                        <li>We have reviewed all the `ItemType` classes, improved organisation with additional namespaces, renamed classes and methods, all with the goal being to try and make everything clearer</li>
+                        <li>We have reviewed all item based controllers and switched to methods per item type rather than hiding all the logic in larger item classes. There is slightly more duplication but this will allow us to more easily customise each item type as new ones are added, I'm looking at you forecasting</li>
+                        <li>We have updated the item/categories routes and will return a 405 when a category is not supported for the item type</li>
+                        <li>We have updated the item/subcategories routes and will return a 405 when a subcategory is not supported for the item type</li>
+                        <li>The Authentication controller no longer extends from the base app controller, it was doing some unnecessary work</li>
+                    </ul>
+
+                    <h3>Fixed</h3>
+
+                    <ul>
+                        <li>We have fixed the `delete_resource_type_success` test, wrong route</li>
+                        <li>The `notFoundOrNotAccessible` response will optionally return a 403 if not accessible and not a 404</li>
+                    </ul>
+
+                    <h3>Removed</h3>
+
+                    <ul>
+                        <li>We have removed a few files not used by the API</li>
                     </ul>
                 </div>
             </div>
