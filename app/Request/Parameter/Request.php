@@ -146,34 +146,30 @@ class Request
                         $max_year_limit = (int) Date('Y');
 
                         $entity_model = new EntityLimits();
-                        $entity = Entity::item($resource_type_id);
+                        $item_type = Entity::itemType($resource_type_id);
 
                         if ($resource_type_id !== null && $resource_id === null) {
-                            $min_year_limit = $entity_model->minimumYearByResourceType(
-                                $resource_type_id,
-                                $entity->table(),
-                                $entity->dateRangeField()
-                            );
-                            $max_year_limit = $entity_model->maximumYearByResourceType(
-                                $resource_type_id,
-                                $entity->table(),
-                                $entity->dateRangeField()
-                            );
+                            switch ($item_type) { // Switch because there will be additional types
+                                case 'allocated-expense':
+                                    $min_year_limit = $entity_model->minimumYearByResourceType($resource_type_id, 'item_type_allocated_expense', 'effective_date');
+                                    $max_year_limit = $entity_model->maximumYearByResourceType($resource_type_id, 'item_type_allocated_expense', 'effective_date');
+                                    break;
+                                default:
+                                    // Do nothing
+                                    break;
+                            }
                         }
 
                         if ($resource_type_id !== null && $resource_id !== null) {
-                            $min_year_limit = $entity_model->minimumYearByResourceTypeAndResource(
-                                $resource_type_id,
-                                $resource_id,
-                                $entity->table(),
-                                $entity->dateRangeField()
-                            );
-                            $max_year_limit = $entity_model->maximumYearByResourceTypeAndResource(
-                                $resource_type_id,
-                                $resource_id,
-                                $entity->table(),
-                                $entity->dateRangeField()
-                            );
+                            switch ($item_type) { // Switch because there will be additional types
+                                case 'allocated-expense':
+                                    $min_year_limit = $entity_model->minimumYearByResourceTypeAndResource($resource_type_id, $resource_id, 'item_type_allocated_expense', 'effective_date');
+                                    $max_year_limit = $entity_model->maximumYearByResourceTypeAndResource($resource_type_id, $resource_id, 'item_type_allocated_expense', 'effective_date');
+                                    break;
+                                default:
+                                    // Do nothing
+                                    break;
+                            }
                         }
 
                         if (self::$parameters[$key] < $min_year_limit ||
