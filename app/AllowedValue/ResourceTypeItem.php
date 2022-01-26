@@ -30,25 +30,37 @@ class ResourceTypeItem
     {
         $parameters = ['year' => ['allowed_values' => []]];
 
-        for (
-            $i = $this->model->minimumYearByResourceType(
-                $resource_type_id,
-                $this->entity->table(),
-                $this->entity->dateRangeField()
-            );
-            $i <= $this->model->maximumYearByResourceType(
-                $resource_type_id,
-                $this->entity->table(),
-                $this->entity->dateRangeField()
-            );
-            $i++
-        ) {
-            $parameters['year']['allowed_values'][$i] = [
-                'value' => $i,
-                'name' => $i,
-                'description' => trans('resource-type-item-type-' . $this->entity->type() .
-                        '/allowed-values.description-prefix-year') . $i
-            ];
+        $min_year = null;
+        $max_year = null;
+
+        $item_type = \App\ItemType\Entity::itemType($resource_type_id);
+        switch ($item_type) {
+            case 'allocated-expense':
+                $min_year = $this->model->minimumYearByResourceType(
+                    $resource_type_id,
+                    'item_type_allocated_expense',
+                    'effective_date'
+                );
+                $max_year = $this->model->maximumYearByResourceType(
+                    $resource_type_id,
+                    'item_type_allocated_expense',
+                    'effective_date'
+                );
+                break;
+            default:
+                // No nothing
+                break;
+        }
+
+        if ($min_year !== null && $max_year !== null) {
+            for ($i = $min_year; $i <= $max_year; $i++) {
+                $parameters['year']['allowed_values'][$i] = [
+                    'value' => $i,
+                    'name' => $i,
+                    'description' => trans('resource-type-item-type-' . $this->entity->type() .
+                            '/allowed-values.description-prefix-year') . $i
+                ];
+            }
         }
 
         return $parameters;

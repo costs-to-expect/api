@@ -54,11 +54,6 @@ class Item extends ItemType
         return $item;
     }
 
-    public function dateRangeField(): ?string
-    {
-        return 'effective_date';
-    }
-
     public function instance(int $id): Model
     {
         return (new Models\Item())->instance($id);

@@ -77,11 +77,6 @@ abstract class ItemType
 
     abstract public function create(int $id): Model;
 
-    public function dateRangeField(): ?string
-    {
-        return null;
-    }
-
     abstract public function instance(int $id): Model;
 
     public function requestParameters(): array
