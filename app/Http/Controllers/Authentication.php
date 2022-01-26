@@ -4,26 +4,50 @@ namespace App\Http\Controllers;
 
 use App\Notifications\ForgotPassword;
 use App\Notifications\Registered;
+use App\Option\Auth\Check;
+use App\Option\Auth\CreateNewPassword;
+use App\Option\Auth\CreatePassword;
+use App\Option\Auth\Login;
+use App\Option\Auth\Register;
+use App\Option\Auth\UpdatePassword;
+use App\Option\Auth\UpdateProfile;
 use App\User;
+use Exception;
 use Illuminate\Http;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
 
-class Authentication extends Controller
+class Authentication extends \Illuminate\Routing\Controller
 {
+    protected \App\Request\Hash $hash;
+
+    public function __construct()
+    {
+        $this->hash = new \App\Request\Hash();
+    }
+
     public function check(): Http\JsonResponse
     {
         return response()->json(['auth' => Auth::guard('api')->check()]);
     }
 
-    public function createPassword(): Http\JsonResponse
+    public function optionsCheck(): Http\JsonResponse
     {
-        $email = Str::replaceFirst(' ', '+', urldecode(request()->query('email')));
-        $token = request()->query('token');
+        $response = new Check([]);
+
+        return $response->create()->response();
+    }
+
+    public function createPassword(Request $request): Http\JsonResponse
+    {
+        $email = Str::replaceFirst(' ', '+', urldecode($request->query('email')));
+        $token = $request->query('token');
 
         $tokens = DB::table('password_creates')
             ->where('email', '=', $email)
@@ -39,7 +63,7 @@ class Authentication extends Controller
         }
 
         $validator = Validator::make(
-            request()->only(['password', 'password_confirmation']),
+            $request->only(['password', 'password_confirmation']),
             [
                 'password' => [
                     'required',
@@ -68,26 +92,34 @@ class Authentication extends Controller
                 ->first();
 
             if ($user !== null) {
-                $user->password = Hash::make(request()->input('password'));
+                $user->password = Hash::make($request->input('password'));
                 $user->save();
 
                 DB::table('password_creates')
-                    ->where('email', '=', request()->input(['email']))
+                    ->where('email', '=', $request->input(['email']))
                     ->delete();
 
                 return response()->json([], 204);
             }
 
             return response()->json(['message' => 'Unable to fetch your account to create password, please try again later'], 404);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
+            Log::error($e->getMessage());
             return response()->json(['message' => 'Unable to create password, please try again later'], 500);
         }
     }
 
-    public function createNewPassword(): Http\JsonResponse
+    public function optionsCreatePassword(): Http\JsonResponse
     {
-        $email = Str::replaceFirst(' ', '+', urldecode(request()->query('email')));
-        $token = request()->query('token');
+        $response = new CreatePassword([]);
+
+        return $response->create()->response();
+    }
+
+    public function createNewPassword(Request $request): Http\JsonResponse
+    {
+        $email = Str::replaceFirst(' ', '+', urldecode($request->query('email')));
+        $token = $request->query('token');
 
         $tokens = DB::table('password_resets')
             ->where('email', '=', $email)
@@ -103,7 +135,7 @@ class Authentication extends Controller
         }
 
         $validator = Validator::make(
-            request()->only(['password', 'password_confirmation']),
+            $request->only(['password', 'password_confirmation']),
             [
                 'password' => [
                     'required',
@@ -132,26 +164,34 @@ class Authentication extends Controller
                 ->first();
 
             if ($user !== null) {
-                $user->password = Hash::make(request()->input('password'));
+                $user->password = Hash::make($request->input('password'));
                 $user->save();
 
                 DB::table('password_resets')
-                    ->where('email', '=', request()->input(['email']))
+                    ->where('email', '=', $request->input(['email']))
                     ->delete();
 
                 return response()->json([], 204);
             }
 
             return response()->json(['message' => 'Unable to fetch your account to create password, please try again later'], 500);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
+            Log::error($e->getMessage());
             return response()->json(['message' => 'Unable to create password, please try again later'], 500);
         }
     }
 
-    public function forgotPassword(): Http\JsonResponse
+    public function optionsCreateNewPassword(): Http\JsonResponse
+    {
+        $response = new CreateNewPassword([]);
+
+        return $response->create()->response();
+    }
+
+    public function forgotPassword(Request $request): Http\JsonResponse
     {
         $validator = Validator::make(
-            request()->only(['email']),
+            $request->only(['email']),
             [
                 'email' => 'required|email',
             ]
@@ -167,7 +207,7 @@ class Authentication extends Controller
             );
         }
 
-        $email = request()->input('email');
+        $email = $request->input('email');
 
         $user = User::with([])
             ->where('email', '=', $email)
@@ -187,10 +227,11 @@ class Authentication extends Controller
                     ]
                 );
 
-                if (app()->environment() === 'production' && request()->query('send') === null) {
+                if (app()->environment() === 'production' && $request->query('send') === null) {
                     $user->notify(new ForgotPassword($user, $create_token));
                 }
-            } catch (\Exception $e) {
+            } catch (Exception $e) {
+                Log::error($e->getMessage());
                 return response()->json(['error' => 'Unable to process your forgot password request, please try again later'], 500);
             }
 
@@ -214,7 +255,14 @@ class Authentication extends Controller
         return response()->json(['message' => 'Unable to fetch your user account, please try again later'], 404);
     }
 
-    public function login(): Http\JsonResponse
+    public function optionsForgotPassword(): Http\JsonResponse
+    {
+        $response = new \App\Option\Auth\ForgotPassword([]);
+
+        return $response->create()->response();
+    }
+
+    public function login(Request $request): Http\JsonResponse
     {
         if (
             Auth::attempt(
@@ -227,7 +275,7 @@ class Authentication extends Controller
             $user = Auth::user();
 
             if ($user !== null) {
-                $token = request()->user()->createToken('costs-to-expect-api');
+                $token = $request->user()->createToken('costs-to-expect-api');
                 return response()->json(
                     [
                         'id' => $this->hash->user()->encode($user->id),
@@ -244,10 +292,24 @@ class Authentication extends Controller
         return response()->json(['message' => 'Unauthorised, credentials invalid'], 401);
     }
 
-    public function register(): Http\JsonResponse
+    public function optionsLogin(): Http\JsonResponse
+    {
+        $response = new Login([]);
+
+        return $response->create()->response();
+    }
+
+    public function logout(): Http\JsonResponse
+    {
+        Auth::logout();
+
+        return response()->json(['message' => 'Account signed out'], 200);
+    }
+
+    public function register(Request $request): Http\JsonResponse
     {
         $validator = Validator::make(
-            request()->all(),
+            $request->all(),
             [
                 'name' => 'required',
                 'email' => 'required|email',
@@ -265,11 +327,11 @@ class Authentication extends Controller
         }
 
         try {
-            $email = request()->input('email');
+            $email = $request->input('email');
 
             $user = new User();
-            $user->name = request()->input('name');
-            $user->email = request()->input('email');
+            $user->name = $request->input('name');
+            $user->email = $request->input('email');
             $user->password = Hash::make(Str::random(20));
             $user->save();
 
@@ -285,11 +347,12 @@ class Authentication extends Controller
                 ]
             );
 
-            if (app()->environment() === 'production' && request()->query('send') === null) {
+            if ($request->query('send') === null && app()->environment() === 'production') {
                 $user->notify(new Registered($user, $create_token));
             }
 
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
+            Log::error($e->getMessage());
             return response()->json(['error' => 'Unable to create the account, please try again later'], 500);
         }
 
@@ -310,10 +373,17 @@ class Authentication extends Controller
         );
     }
 
-    public function updatePassword(): Http\JsonResponse
+    public function optionsRegister(): Http\JsonResponse
+    {
+        $response = new Register([]);
+
+        return $response->create()->response();
+    }
+
+    public function updatePassword(Request $request): Http\JsonResponse
     {
         $validator = Validator::make(
-            request()->only(['password', 'password_confirmation']),
+            $request->only(['password', 'password_confirmation']),
             [
                 'password' => [
                     'required',
@@ -339,7 +409,7 @@ class Authentication extends Controller
         $user = auth()->guard('api')->user();
 
         if ($user !== null) {
-            $user->password = Hash::make(request()->input('password'));
+            $user->password = Hash::make($request->input('password'));
             $user->save();
 
             return response()->json([], 204);
@@ -348,10 +418,28 @@ class Authentication extends Controller
         return response()->json(['message' => 'Unauthorised, credentials invalid'], 401);
     }
 
-    public function updateProfile(): Http\JsonResponse
+    public function optionsUpdateProfile(): Http\JsonResponse
+    {
+        $user = auth()->guard('api')->user();
+
+        $response = new UpdateProfile(['view'=> $user !== null && $user->id !== null, 'manage'=> $user !== null && $user->id !== null]);
+
+        return $response->create()->response();
+    }
+
+    public function optionsUpdatePassword(): Http\JsonResponse
+    {
+        $user = auth()->guard('api')->user();
+
+        $response = new UpdatePassword(['view'=> $user !== null && $user->id !== null, 'manage'=> $user !== null && $user->id !== null]);
+
+        return $response->create()->response();
+    }
+
+    public function updateProfile(Request $request): Http\JsonResponse
     {
         $validator = Validator::make(
-            request()->only(['name', 'email']),
+            $request->only(['name', 'email']),
             [
                 'name' => [
                     'sometimes'
@@ -377,11 +465,11 @@ class Authentication extends Controller
 
         if ($user !== null) {
             $fields = [];
-            if (request()->input('name') !== null) {
-                $fields['name'] = request()->input('name');
+            if ($request->input('name') !== null) {
+                $fields['name'] = $request->input('name');
             }
-            if (request()->input('email') !== null) {
-                $fields['email'] = request()->input('email');
+            if ($request->input('email') !== null) {
+                $fields['email'] = $request->input('email');
             }
 
             if (count($fields) === 0) {
@@ -394,7 +482,9 @@ class Authentication extends Controller
                 }
 
                 $user->save();
-            } catch (\Exception $e) {
+
+            } catch (Exception $e) {
+                Log::error($e->getMessage());
                 return response()->json(['message' => 'Unable to update your profile, please try again'], 401);
             }
 
@@ -418,5 +508,14 @@ class Authentication extends Controller
         }
 
         return response()->json(['message' => 'Unauthorised, credentials invalid'], 401);
+    }
+
+    public function optionsUser(): Http\JsonResponse
+    {
+        $user = auth()->guard('api')->user();
+
+        $response = new \App\Option\Auth\User(['view'=> $user !== null && $user->id !== null]);
+
+        return $response->create()->response();
     }
 }

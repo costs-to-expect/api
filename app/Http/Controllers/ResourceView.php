@@ -18,7 +18,7 @@ use Illuminate\Support\Facades\Config;
  * Manage resources
  *
  * @author Dean Blackborough <dean@g3d-development.com>
- * @copyright Dean Blackborough 2018-2021
+ * @copyright Dean Blackborough 2018-2022
  * @license https://github.com/costs-to-expect/api/blob/master/LICENSE
  */
 class ResourceView extends Controller
@@ -154,8 +154,7 @@ class ResourceView extends Controller
 
         $response = new ResourceCollection($this->permissions((int) $resource_type_id));
 
-        return $response
-            ->setAllowedFields((new ItemSubtype())->allowedValues($resource_type['resource_type_item_type_id']))
+        return $response->setDynamicAllowedFields((new ItemSubtype())->allowedValues($resource_type['resource_type_item_type_id']))
             ->create()
             ->response();
     }

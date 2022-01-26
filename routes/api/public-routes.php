@@ -115,23 +115,23 @@ Route::group(
 
         Route::get(
             'resource-types',
-            'ResourceTypeView@index'
-        );
+            [\App\Http\Controllers\ResourceTypeView::class, 'index']
+        )->name('resource-type.list');
 
         Route::options(
             'resource-types',
-            'ResourceTypeView@optionsIndex'
-        )->name('resource-type.list');
+            [\App\Http\Controllers\ResourceTypeView::class, 'optionsIndex']
+        )->name('resource-type.list.options');
 
         Route::get(
             'resource-types/{resource_type_id}',
-            'ResourceTypeView@show'
-        );
+            [\App\Http\Controllers\ResourceTypeView::class, 'show']
+        )->name('resource-type.show');
 
         Route::options(
             'resource-types/{resource_type_id}',
-            'ResourceTypeView@optionsShow'
-        );
+            [\App\Http\Controllers\ResourceTypeView::class, 'optionsShow']
+        )->name('resource-type.show.options');
 
         Route::get(
             'resource-types/{resource_type_id}/categories',
@@ -215,23 +215,23 @@ Route::group(
 
         Route::get(
             'resource-types/{resource_type_id}/resources',
-            'ResourceView@index'
-        );
+            [\App\Http\Controllers\ResourceView::class, 'index']
+        )->name('resource.list');
 
         Route::options(
             'resource-types/{resource_type_id}/resources',
-            'ResourceView@optionsIndex'
-        );
+            [\App\Http\Controllers\ResourceView::class, 'optionsIndex']
+        )->name('resource.list.options');
 
         Route::get(
             'resource-types/{resource_type_id}/resources/{resource_id}',
-            'ResourceView@show'
-        );
+            [\App\Http\Controllers\ResourceView::class, 'show']
+        )->name('resource.show');
 
         Route::options(
             'resource-types/{resource_type_id}/resources/{resource_id}',
-            'ResourceView@optionsShow'
-        );
+            [\App\Http\Controllers\ResourceView::class, 'optionsShow']
+        )->name('resource.show.options');
 
         Route::get(
             'resource-types/{resource_type_id}/resources/{resource_id}/items',

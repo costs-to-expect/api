@@ -7,11 +7,16 @@ use Illuminate\Database\Eloquent\Builder as QueryBuilder;
 use Illuminate\Database\Eloquent\Model;
 
 /**
- * Item type model
- *
  * @mixin QueryBuilder
+ *
+ * @property int $id
+ * @property string $name
+ * @property string $friendly_name
+ * @property string $description
+ * @property string $example
+ *
  * @author Dean Blackborough <dean@g3d-development.com>
- * @copyright Dean Blackborough 2018-2021
+ * @copyright Dean Blackborough 2018-2022
  * @license https://github.com/costs-to-expect/api/blob/master/LICENSE
  */
 class ItemType extends Model
@@ -20,11 +25,6 @@ class ItemType extends Model
 
     protected $guarded = ['id', 'name', 'description', 'example', 'created_at', 'updated_at'];
 
-    /**
-     * Fetch the item types, id, name and description only
-     *
-     * @return array
-     */
     public function minimisedCollection(): array
     {
         return $this->select(
@@ -36,16 +36,6 @@ class ItemType extends Model
             toArray();
     }
 
-    /**
-     * Return the paginated collection
-     *
-     * @param integer $offset Paging offset
-     * @param integer $limit Paging limit
-     * @param array $search_parameters
-     * @param array $sort_parameters
-     *
-     * @return array
-     */
     public function paginatedCollection(
         int $offset = 0,
         int $limit = 10,
@@ -68,11 +58,11 @@ class ItemType extends Model
             foreach ($sort_parameters as $field => $direction) {
                 switch ($field) {
                     case 'created':
-                        $collection->orderBy('item_type.created_at', $direction);
+                        $collection->orderBy($this->table . '.created_at', $direction);
                         break;
 
                     default:
-                        $collection->orderBy('item_type.' . $field, $direction);
+                        $collection->orderBy($this->table . '.' . $field, $direction);
                         break;
                 }
             }
@@ -110,13 +100,6 @@ class ItemType extends Model
         return $result[0];
     }
 
-    /**
-     * Return the total number of item types
-     *
-     * @param array $search_parameters = []
-     *
-     * @return integer
-     */
     public function totalCount(array $search_parameters = []): int
     {
         $collection = $this->select("item_type.id");

@@ -7,7 +7,6 @@ use App\AllowedValue\Winner;
 use App\ItemType\ItemType;
 use App\Transformers\Transformer;
 use App\Request\Hash;
-use App\Request\Validate\Validator;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Config as LaravelConfig;
 use Illuminate\Support\Facades\Date;
@@ -28,14 +27,9 @@ class Item extends ItemType
         return (new Winner())->allowedValues($resource_type_id);
     }
 
-    public function categoryAssignmentLimit(): int
-    {
-        return 5;
-    }
-
     public function create(int $id): Model
     {
-        $item = new \App\ItemType\Game\Model([
+        $item = new Models\Item([
             'item_id' => $id,
             'name' => request()->input('name'),
             'description' => request()->input('description', null),
@@ -52,17 +46,12 @@ class Item extends ItemType
 
     public function instance(int $id): Model
     {
-        return (new \App\ItemType\Game\Model())->instance($id);
+        return (new Models\Item())->instance($id);
     }
 
     public function model()
     {
-        return new \App\ItemType\Game\Model();
-    }
-
-    public function subcategoryAssignmentLimit(): int
-    {
-        return 0;
+        return new Models\Item();
     }
 
     public function table(): string
@@ -77,7 +66,7 @@ class Item extends ItemType
 
     public function transformer(array $data_to_transform): Transformer
     {
-        return new \App\ItemType\Game\Transformer($data_to_transform);
+        return new Transformers\Item($data_to_transform);
     }
 
     public function update(array $patch, Model $instance): bool
@@ -104,43 +93,18 @@ class Item extends ItemType
         return $instance->save();
     }
 
-    public function validator(): Validator
-    {
-        return new \App\ItemType\Game\Validator();
-    }
-
     public function patchFields(): array
     {
         return LaravelConfig::get($this->base_path . '.fields-patch', []);
     }
 
-    public function summaryClass(): string
-    {
-        return SummaryResponse::class;
-    }
-
-    public function viewClass(): string
-    {
-        return Response::class;
-    }
-
-    public function resourceTypeSummaryClass(): string
-    {
-        return SummaryResourceTypeResponse::class;
-    }
-
-    public function resourceTypeItemCollectionClass(): string
-    {
-        return ResourceTypeResponse::class;
-    }
-
     protected function allowedValuesItemCollectionClass(): string
     {
-        return AllowedValue::class;
+        return AllowedValue\Item::class;
     }
 
     protected function allowedValuesResourceTypeItemCollectionClass(): string
     {
-        return ResourceTypeAllowedValue::class;
+        return AllowedValue\ResourceTypeItem::class;
     }
 }

@@ -3,6 +3,16 @@
 declare(strict_types=1);
 
 return [
+    'auth_create_new_password_POST' => 'Create a new password for your account, `token` and `email` are request parameters',
+    'auth_create_password_POST' => 'Create the password for your account, `token` and `email` are request parameters',
+    'auth_forgot_password_POST' => 'Start the reset password process',
+    'auth_login_POST' => 'Login to the API',
+    'auth_register_POST' => 'Register with the API',
+    'auth_update_password_POST' => 'Update your account password',
+    'auth_update_profile_POST' => 'Update your account profile',
+    'auth_user_GET' => 'Return the account details for the signed-in user',
+    'auth_check_GET' => 'Check to see if the user is authenticated',
+
     'api_GET_index' => 'Return all the API routes',
     'api_GET_changelog' => 'Return the complete API changelog',
 
@@ -55,7 +65,6 @@ return [
 
     'item_category_POST_allocated-expense' => 'Assign a maximum of one category to the selected allocated-expense',
     'item_category_POST_simple-expense' => 'Assign a maximum of one category to the selected simple-expense',
-    'item_category_POST_simple-item' => 'Category assignment not support for simple-item',
     'item_category_POST_game' => 'Assign the categories (players) to the selected game',
 
     'item_category_PATCH' => 'Update the category assigned to the selected item',
@@ -66,7 +75,6 @@ return [
 
     'item_sub_category_POST_allocated-expense' => 'Assign a maximum of one subcategory to the selected allocated-expense',
     'item_sub_category_POST_simple-expense' => 'Assign a maximum of one subcategory to the selected simple-expense',
-    'item_sub_category_POST_simple-item' => 'Subcategory assignment not support for simple-item',
 
     'item_sub_category_PATCH' => 'Update the subcategory assigned to the selected item',
     'item_sub_category_DELETE' => 'Delete the subcategory assigned to the selected item',

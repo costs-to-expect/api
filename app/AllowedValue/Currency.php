@@ -14,12 +14,6 @@ class Currency
         $this->hash = new Hash();
     }
 
-    /**
-     * Generate the allowed values item type array, will be passed to the
-     * Option classes and merged with the fields/parameters
-     *
-     * @return array
-     */
     public function allowedValues(): array
     {
         $parameters = ['currency_id' => ['allowed_values' => []]];

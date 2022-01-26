@@ -4,15 +4,22 @@ declare(strict_types=1);
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOneThrough;
 use Illuminate\Database\Query\Builder as QueryBuilder;
 use Illuminate\Support\Facades\Config;
 
 /**
- * Resource type model
- *
  * @mixin QueryBuilder
+ *
+ * @property int $id
+ * @property int $public
+ * @property string $name
+ * @property string $description
+ * @property string $data
+ *
  * @author Dean Blackborough <dean@g3d-development.com>
- * @copyright Dean Blackborough 2018-2021
+ * @copyright Dean Blackborough 2018-2022
  * @license https://github.com/costs-to-expect/api/blob/master/LICENSE
  */
 class ResourceType extends Model
@@ -21,7 +28,7 @@ class ResourceType extends Model
 
     protected $guarded = ['id'];
 
-    public function item_type()
+    public function item_type(): HasOneThrough
     {
         return $this->hasOneThrough(
             ItemType::class,
@@ -33,11 +40,6 @@ class ResourceType extends Model
         );
     }
 
-    /**
-     * Return an array of the fields that can be PATCHed.
-     *
-     * @return array
-     */
     public function patchableFields(): array
     {
         return array_keys(Config::get('api.resource-type.validation.PATCH.fields'));
@@ -47,10 +49,10 @@ class ResourceType extends Model
     {
         $public = [];
 
-        $results = $this->where('public', '=', 1)->
-            select('id')->
-            get()->
-            toArray();
+        $results = $this->where('public', '=', 1)
+            ->select('id')
+            ->get()
+            ->toArray();
 
         foreach ($results as $row) {
             $public[] = (int) $row['id'];
@@ -76,7 +78,7 @@ class ResourceType extends Model
         return $collection->count();
     }
 
-    public function resources()
+    public function resources(): HasMany
     {
         return $this->hasMany(Resource::class, 'resource_type_id', 'id');
     }
@@ -139,16 +141,16 @@ class ResourceType extends Model
             foreach ($sort_parameters as $field => $direction) {
                 switch ($field) {
                     case 'created':
-                        $collection->orderBy('resource_type.created_at', $direction);
+                        $collection->orderBy($this->table . '.created_at', $direction);
                         break;
 
                     default:
-                        $collection->orderBy('resource_type.' . $field, $direction);
+                        $collection->orderBy($this->table . '.' . $field, $direction);
                         break;
                 }
             }
         } else {
-            $collection->orderByDesc('resource_type.created_at');
+            $collection->orderByDesc($this->table . '.created_at');
         }
 
         $collection->offset($offset);
@@ -194,8 +196,7 @@ class ResourceType extends Model
             $viewable_resource_types
         );
 
-        $result = $result
-            ->where($this->table . '.id', '=', $resource_type_id)
+        $result = $result->where($this->table . '.id', '=', $resource_type_id)
             ->get()
             ->toArray();
 
@@ -206,13 +207,6 @@ class ResourceType extends Model
         return $result[0];
     }
 
-    /**
-     * Convert the model instance to an array for use with the transformer
-     *
-     * @param ResourceType
-     *
-     * @return array
-     */
     public function instanceToArray(ResourceType $resource_type): array
     {
         return [
@@ -230,13 +224,6 @@ class ResourceType extends Model
         ];
     }
 
-    /**
-     * Return an instance of a resource type
-     *
-     * @param integer $resource_type_id
-     *
-     * @return ResourceType|null
-     */
     public function instance(int $resource_type_id): ?ResourceType
     {
         return $this->find($resource_type_id);

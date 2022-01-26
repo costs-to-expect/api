@@ -5,30 +5,21 @@ namespace App\Http\Controllers;
 use App\ItemType\Entity;
 use App\Jobs\ClearCache;
 use App\Models\ItemCategory;
-use App\Request\Validate\ItemCategory as ItemCategoryValidator;
+use App\Response\Responses;
 use App\Transformers\ItemCategory as ItemCategoryTransformer;
 use Exception;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\Config;
+use Illuminate\Support\Facades\Validator as ValidatorFacade;
 
 /**
- * Manage the category for an item row
- *
  * @author Dean Blackborough <dean@g3d-development.com>
- * @copyright Dean Blackborough 2018-2021
+ * @copyright Dean Blackborough 2018-2022
  * @license https://github.com/costs-to-expect/api/blob/master/LICENSE
  */
 class ItemCategoryManage extends Controller
 {
-    /**
-     * Assign the category
-     *
-     * @param string $resource_type_id
-     * @param string $resource_id
-     * @param string $item_id
-     *
-     * @return JsonResponse
-     */
     public function create(
         string $resource_type_id,
         string $resource_id,
@@ -36,21 +27,52 @@ class ItemCategoryManage extends Controller
     ): JsonResponse
     {
         if ($this->writeAccessToResourceType((int) $resource_type_id) === false) {
-            \App\Response\Responses::notFoundOrNotAccessible(trans('entities.item'));
+            Responses::notFoundOrNotAccessible(trans('entities.resource'));
         }
 
-        $entity = Entity::item($resource_type_id);
+        $item_type = Entity::itemType((int) $resource_type_id);
+
+        return match ($item_type) {
+            'allocated-expense', 'simple-expense' => $this->createItemCategory((int) $resource_type_id, (int) $resource_id, (int) $item_id, 1),
+            'game' => $this->createItemCategory((int) $resource_type_id, (int) $resource_id, (int) $item_id, 5),
+            'simple-item' => \App\Response\Responses::categoryAssignmentLimit(0),
+            default => throw new \OutOfRangeException('No item type definition for ' . $item_type, 500),
+        };
+    }
+
+    private function createItemCategory(
+        int $resource_type_id,
+        int $resource_id,
+        int $item_id,
+        int $assignment_limit = 1
+    ): JsonResponse
+    {
         $assigned = (new ItemCategory())->numberAssigned(
             $resource_type_id,
             $resource_id,
             $item_id
         );
 
-        if ($assigned >= $entity->categoryAssignmentLimit()) {
-            return \App\Response\Responses::categoryAssignmentLimit($entity->categoryAssignmentLimit());
+        if ($assigned >= $assignment_limit) {
+            return \App\Response\Responses::categoryAssignmentLimit($assignment_limit);
         }
 
-        $validator = (new ItemCategoryValidator)->create();
+        $decode = $this->hash->category()->decode(request()->input('category_id'));
+        $category_id = null;
+        if (count($decode) === 1) {
+            $category_id = $decode[0];
+        }
+
+        $messages = [];
+        foreach (Config::get('api.item-category.validation.POST.messages') as $key => $custom_message) {
+            $messages[$key] = trans($custom_message);
+        }
+
+        $validator = ValidatorFacade::make(
+            ['category_id' => $category_id],
+            Config::get('api.item-category.validation.POST.fields'),
+            $messages
+        );
 
         if ($validator->fails()) {
             return \App\Request\BodyValidation::returnValidationErrors(
@@ -65,7 +87,7 @@ class ItemCategoryManage extends Controller
                 'resource_type_id' => $resource_type_id,
                 'resource_id' => $resource_id
             ])
-            ->setPermittedUser($this->writeAccessToResourceType((int) $resource_type_id))
+            ->setPermittedUser($this->writeAccessToResourceType($resource_type_id))
             ->setUserId($this->user_id);
 
         try {
@@ -93,16 +115,6 @@ class ItemCategoryManage extends Controller
         );
     }
 
-    /**
-     * Delete the assigned category
-     *
-     * @param string $resource_type_id,
-     * @param string $resource_id,
-     * @param string $item_id,
-     * @param string $item_category_id
-     *
-     * @return JsonResponse
-     */
     public function delete(
         string $resource_type_id,
         string $resource_id,
@@ -111,9 +123,25 @@ class ItemCategoryManage extends Controller
     ): JsonResponse
     {
         if ($this->writeAccessToResourceType((int) $resource_type_id) === false) {
-            \App\Response\Responses::notFoundOrNotAccessible(trans('entities.item-category'));
+            Responses::notFoundOrNotAccessible(trans('entities.resource'));
         }
 
+        $item_type = Entity::itemType((int) $resource_type_id);
+
+        return match ($item_type) {
+            'allocated-expense', 'simple-expense', 'game' => $this->deleteItemCategory((int) $resource_type_id, (int) $resource_id, (int) $item_id, (int) $item_category_id),
+            'simple-item' => \App\Response\Responses::notSupported(),
+            default => throw new \OutOfRangeException('No item type definition for ' . $item_type, 500),
+        };
+    }
+
+    private function deleteItemCategory(
+        int $resource_type_id,
+        int $resource_id,
+        int $item_id,
+        int $item_category_id
+    ): JsonResponse
+    {
         $item_category = (new ItemCategory())->instance(
             $resource_type_id,
             $resource_id,
@@ -131,7 +159,7 @@ class ItemCategoryManage extends Controller
                 'resource_type_id' => $resource_type_id,
                 'resource_id' => $resource_id
             ])
-            ->setPermittedUser($this->writeAccessToResourceType((int) $resource_type_id))
+            ->setPermittedUser($this->writeAccessToResourceType($resource_type_id))
             ->setUserId($this->user_id);
 
         try {

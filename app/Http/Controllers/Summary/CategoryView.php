@@ -14,7 +14,7 @@ use Illuminate\Support\Facades\Config;
  * Summary controller for the categories routes
  *
  * @author Dean Blackborough <dean@g3d-development.com>
- * @copyright Dean Blackborough 2018-2021
+ * @copyright Dean Blackborough 2018-2022
  * @license https://github.com/costs-to-expect/api/blob/master/LICENSE
  */
 class CategoryView extends Controller

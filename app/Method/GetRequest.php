@@ -3,9 +3,11 @@ declare(strict_types=1);
 
 namespace App\Method;
 
+use Illuminate\Support\Facades\Config as LaravelConfig;
+
 /**
  * @author Dean Blackborough <dean@g3d-development.com>
- * @copyright Dean Blackborough 2018-2021
+ * @copyright Dean Blackborough 2018-2022
  * @license https://github.com/costs-to-expect/api/blob/master/LICENSE
  */
 class GetRequest extends Method
@@ -68,9 +70,9 @@ class GetRequest extends Method
             $this->pagination = true;
 
             if ($override === false) {
-                $this->pagination_parameters = $this->api_config->paginationParameters();
+                $this->pagination_parameters = $this->paginationParameters();
             } else {
-                $this->pagination_parameters = $this->api_config->paginationParametersAllowingEntireCollection();
+                $this->pagination_parameters = $this->paginationParametersAllowingEntireCollection();
             }
         }
 
@@ -126,9 +128,9 @@ class GetRequest extends Method
         foreach (
             array_merge_recursive(
                 $this->pagination_parameters,
-                ($this->sortable === true ? $this->api_config->sortParameter() : []),
-                ($this->searchable === true ? $this->api_config->searchParameter() : []),
-                ($this->filterable === true ? $this->api_config->filterParameter() : []),
+                ($this->sortable === true ? $this->sortParameter() : []),
+                ($this->searchable === true ? $this->searchParameter() : []),
+                ($this->filterable === true ? $this->filterParameter() : []),
                 $this->parameters,
                 $this->dynamic_parameters
             )
@@ -161,5 +163,30 @@ class GetRequest extends Method
             'filterable' => $this->filterable_parameters,
             'parameters' => $this->parameters_after_localisation
         ];
+    }
+
+    protected function filterParameter(): array
+    {
+        return LaravelConfig::get('api.app.filterable-parameters', []);
+    }
+
+    protected function paginationParameters(): array
+    {
+        return LaravelConfig::get('api.app.pagination-parameters', []);
+    }
+
+    protected function paginationParametersAllowingEntireCollection(): array
+    {
+        return LaravelConfig::get('api.app.pagination-parameters-including-collection', []);
+    }
+
+    protected function searchParameter(): array
+    {
+        return LaravelConfig::get('api.app.searchable-parameters', []);
+    }
+
+    protected function sortParameter(): array
+    {
+        return LaravelConfig::get('api.app.sortable-parameters', []);
     }
 }

@@ -87,7 +87,7 @@ class ResourceTypeManageTest extends TestCase
     {
         $this->actingAs(User::find(1));
 
-        $name = $this->faker->text(10);
+        $name = $this->faker->text(255);
 
         $response = $this->postResourceType(
             [
@@ -246,7 +246,7 @@ class ResourceTypeManageTest extends TestCase
     {
         $this->actingAs(User::find(1));
 
-        $name = $this->faker->text(15);
+        $name = $this->faker->text(255);
 
         // Create the first resource type
         $response = $this->postResourceType(
@@ -264,7 +264,7 @@ class ResourceTypeManageTest extends TestCase
         // Create the second resource type
         $response = $this->postResourceType(
             [
-                'name' => $this->faker->text(15),
+                'name' => $this->faker->text(255),
                 'description' => $this->faker->text(255),
                 'item_type_id' => 'OqZwKX16bW',
                 'public' => false

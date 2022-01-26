@@ -3,17 +3,22 @@ declare(strict_types=1);
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Query\Builder as QueryBuilder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\DB;
 
 /**
- * Category model
- *
  * @mixin QueryBuilder
+ *
+ * @property int $id
+ * @property int $resource_type_id
+ * @property string $name
+ * @property string $description
+ *
  * @author Dean Blackborough <dean@g3d-development.com>
- * @copyright Dean Blackborough 2018-2021
+ * @copyright Dean Blackborough 2018-2022
  * @license https://github.com/costs-to-expect/api/blob/master/LICENSE
  */
 class Category extends Model
@@ -24,16 +29,11 @@ class Category extends Model
 
     protected $fillable = ['name', 'description', 'resource_type_id'];
 
-    public function category()
+    public function category(): BelongsTo
     {
-        return $this->belongsTo(Category::class, 'category_id', 'id');
+        return $this->belongsTo(__CLASS__, 'category_id', 'id');
     }
 
-    /**
-     * Return an array of the fields that can be PATCHed.
-     *
-     * @return array
-     */
     public function patchableFields(): array
     {
         return array_keys(Config::get('api.category.validation.PATCH.fields'));
@@ -120,11 +120,11 @@ class Category extends Model
             foreach ($sort_parameters as $field => $direction) {
                 switch ($field) {
                     case 'created':
-                        $collection->orderBy('category.created_at', $direction);
+                        $collection->orderBy($this->table . '.created_at', $direction);
                         break;
 
                     default:
-                        $collection->orderBy('category.' . $field, $direction);
+                        $collection->orderBy($this->table . '.' . $field, $direction);
                         break;
                 }
             }
@@ -138,14 +138,6 @@ class Category extends Model
         return $collection->get()->toArray();
     }
 
-    /**
-     * Return a single item
-     *
-     * @param integer $resource_type_id
-     * @param integer $category_id
-     *
-     * @return array|null
-     */
     public function single(int $resource_type_id, int $category_id): ?array
     {
         $result = $this->join('resource_type', $this->table . '.resource_type_id', '=', 'resource_type.id')->
@@ -166,34 +158,20 @@ class Category extends Model
 
         if ($result === null) {
             return null;
-        } else {
-            return $result->toArray();
         }
+
+        return $result->toArray();
     }
 
-    /**
-     * Return an instance of a Category
-     *
-     * @param integer $category_id
-     *
-     * @return Category|null
-     */
     public function instance(int $category_id): ?Category
     {
         return $this->find($category_id);
     }
 
-    /**
-     * Fetch all the categories assigned to the resource type
-     *
-     * @param integer $resource_type_id
-     *
-     * @return array
-     */
     public function categoriesByResourceType(int $resource_type_id): array
     {
         return $this->join('resource_type', $this->table . '.resource_type_id', '=', 'resource_type.id')->
-            where('resource_type.id', '=', intval($resource_type_id))->
+            where('resource_type.id', '=', $resource_type_id)->
             orderBy('category.name')->
             select(
                 'category.id AS category_id',
@@ -204,13 +182,6 @@ class Category extends Model
             toArray();
     }
 
-    /**
-     * Convert the model instance to an array for use with the transformer
-     *
-     * @param Category $category
-     *
-     * @return array
-     */
     public function instanceToArray(Category $category): array
     {
         return [

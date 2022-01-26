@@ -8,8 +8,13 @@ use Illuminate\Database\Eloquent\Model;
 
 /**
  * @mixin QueryBuilder
+ *
+ * @property int $id
+ * @property int $resource_id
+ * @property int $item_subtype_id
+ *
  * @author Dean Blackborough <dean@g3d-development.com>
- * @copyright Dean Blackborough 2018-2021
+ * @copyright Dean Blackborough 2018-2022
  * @license https://github.com/costs-to-expect/api/blob/master/LICENSE
  */
 class ResourceItemSubtype extends Model
@@ -20,8 +25,7 @@ class ResourceItemSubtype extends Model
 
     public function instance(int $resource_id): Model
     {
-        return $this
-            ->where('resource_id', '=', $resource_id)
+        return $this->where('resource_id', '=', $resource_id)
             ->first();
     }
 }

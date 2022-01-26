@@ -10,28 +10,30 @@ use App\Option\ResourceTypeItem;
 use App\Request\Parameter;
 use App\Response\Header;
 use App\Response\Pagination as UtilityPagination;
+use App\Response\Responses;
 use App\Transformers\ResourceType as ResourceTypeTransformer;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Config;
 
 /**
  * Manage resource types
  *
  * @author Dean Blackborough <dean@g3d-development.com>
- * @copyright Dean Blackborough 2018-2021
+ * @copyright Dean Blackborough 2018-2022
  * @license https://github.com/costs-to-expect/api/blob/master/LICENSE
  */
 class ResourceTypeView extends Controller
 {
     protected bool $allow_entire_collection = true;
 
-    public function index(): JsonResponse
+    public function index(Request $request): JsonResponse
     {
         $cache_control = new \App\Cache\Control( true, $this->user_id);
         $cache_control->setTtlOneWeek();
 
         $cache_collection = new \App\Cache\Collection();
-        $cache_collection->setFromCache($cache_control->getByKey(request()->getRequestUri()));
+        $cache_collection->setFromCache($cache_control->getByKey($request->getRequestUri()));
 
         if ($cache_control->isRequestCacheable() === false || $cache_collection->valid() === false) {
 
@@ -48,7 +50,7 @@ class ResourceTypeView extends Controller
                 $search_parameters
             );
 
-            $pagination = new UtilityPagination(request()->path(), $total);
+            $pagination = new UtilityPagination($request->path(), $total);
             $pagination_parameters = $pagination
                 ->allowPaginationOverride($this->allow_entire_collection)
                 ->setSearchParameters($search_parameters)
@@ -88,7 +90,7 @@ class ResourceTypeView extends Controller
             }
 
             $cache_collection->create($total, $collection, $pagination_parameters, $headers->headers());
-            $cache_control->putByKey(request()->getRequestUri(), $cache_collection->content());
+            $cache_control->putByKey($request->getRequestUri(), $cache_collection->content());
         }
 
         return response()->json($cache_collection->collection(), 200, $cache_collection->headers());
@@ -104,7 +106,7 @@ class ResourceTypeView extends Controller
         );
 
         if ($resource_type === null) {
-            return \App\Response\Responses::notFound(trans('entities.resource-type'));
+            return Responses::notFound(trans('entities.resource-type'));
         }
 
         $resources = [];
@@ -131,7 +133,7 @@ class ResourceTypeView extends Controller
     {
         $response = new ResourceTypeCollection(['view'=> $this->user_id !== null, 'manage'=> $this->user_id !== null]);
 
-        return $response->setAllowedFields((new ItemType())->allowedValues())
+        return $response->setDynamicAllowedFields((new ItemType())->allowedValues())
             ->create()
             ->response();
     }

@@ -54,10 +54,17 @@ abstract class TestCase extends BaseTestCase
         self::assertTrue($result->isValid());
     }
 
+    protected function deleteResource(string $resource_type_id, $resource_id): TestResponse
+    {
+        return $this->delete(
+            route('resource.delete', ['resource_type_id' => $resource_type_id, 'resource_id' => $resource_id]), []
+        );
+    }
+
     protected function deleteResourceType(string $resource_type_id): TestResponse
     {
         return $this->delete(
-            route('resource-type.update', ['resource_type_id' => $resource_type_id]), []
+            route('resource-type.delete', ['resource_type_id' => $resource_type_id]), []
         );
     }
 
@@ -65,6 +72,20 @@ abstract class TestCase extends BaseTestCase
     {
         return $this->patch(
             route('resource-type.update', ['resource_type_id' => $resource_type_id]),
+            $payload
+        );
+    }
+
+    protected function patchResource(string $resource_type_id, string $resource_id, array $payload): TestResponse
+    {
+        return $this->patch(
+            route(
+                'resource.update',
+                [
+                    'resource_type_id' => $resource_type_id,
+                    'resource_id' => $resource_id
+                ]
+            ),
             $payload
         );
     }
@@ -80,5 +101,52 @@ abstract class TestCase extends BaseTestCase
     protected function postResourceType(array $payload): TestResponse
     {
         return $this->post(route('resource-type.create'), $payload);
+    }
+
+    protected function helperCreateResourceType(): string
+    {
+        $response = $this->postResourceType(
+            [
+                'name' => $this->faker->text(255),
+                'description' => $this->faker->text,
+                'data' => '{"field":true}',
+                'item_type_id' => 'OqZwKX16bW',
+                'public' => false
+            ]
+        );
+
+        if ($response->assertStatus(201)) {
+            return $response->json('id');
+        }
+
+        $this->fail('Unable to create the resource type');
+    }
+
+    protected function fetchResourceType(array $parameters = []): TestResponse
+    {
+        return $this->get(route('resource-type.show', $parameters));
+    }
+
+    protected function fetchResourceTypes(array $parameters = []): TestResponse
+    {
+        return $this->get(route('resource-type.list', $parameters));
+    }
+
+    protected function helperCreateResource(string $resource_type_id): string
+    {
+        $response = $this->postResource(
+            $resource_type_id,
+            [
+                'name' => $this->faker->text(200),
+                'description' => $this->faker->text(200),
+                'item_subtype_id' => 'a56kbWV82n'
+            ]
+        );
+
+        if ($response->assertStatus(201)) {
+            return $response->json('id');
+        }
+
+        $this->fail('Unable to create the resource');
     }
 }

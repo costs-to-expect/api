@@ -4,15 +4,23 @@ declare(strict_types=1);
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOneThrough;
 use Illuminate\Database\Query\Builder as QueryBuilder;
 use Illuminate\Support\Facades\Config;
 
 /**
- * Resource model
- *
  * @mixin QueryBuilder
+ *
+ * @property int $id
+ * @property int $resource_type_id
+ * @property string $name
+ * @property string $description
+ * @property string $data
+ *
  * @author Dean Blackborough <dean@g3d-development.com>
- * @copyright Dean Blackborough 2018-2021
+ * @copyright Dean Blackborough 2018-2022
  * @license https://github.com/costs-to-expect/api/blob/master/LICENSE
  */
 class Resource extends Model
@@ -21,7 +29,7 @@ class Resource extends Model
 
     protected $guarded = ['id', 'created_at', 'updated_at'];
 
-    public function item_subtype()
+    public function item_subtype(): HasOneThrough
     {
         return $this->hasOneThrough(
             ItemSubtype::class,
@@ -33,11 +41,6 @@ class Resource extends Model
         );
     }
 
-    /**
-     * Return an array of the fields that can be PATCHed.
-     *
-     * @return array
-     */
     public function patchableFields(): array
     {
         return array_keys(Config::get('api.resource.validation.PATCH.fields'));
@@ -64,12 +67,12 @@ class Resource extends Model
         return $collection->count();
     }
 
-    public function items()
+    public function items(): HasMany
     {
         return $this->hasMany(Item::class, 'resource_id', 'id');
     }
 
-    public function resource_type()
+    public function resource_type(): BelongsTo
     {
         return $this->belongsTo(ResourceType::class, 'resource_type_id', 'id');
     }
@@ -120,16 +123,16 @@ class Resource extends Model
             foreach ($sort_parameters as $field => $direction) {
                 switch ($field) {
                     case 'created':
-                        $collection->orderBy('resource.created_at', $direction);
+                        $collection->orderBy($this->table . '.created_at', $direction);
                         break;
 
                     default:
-                        $collection->orderBy('resource.' . $field, $direction);
+                        $collection->orderBy($this->table . '.' . $field, $direction);
                         break;
                 }
             }
         } else {
-            $collection->orderBy('resource.created_at', 'desc');
+            $collection->orderBy($this->table . '.created_at', 'desc');
         }
 
         return $collection->offset($offset)->
@@ -167,15 +170,6 @@ class Resource extends Model
         return $result[0];
     }
 
-    /**
-     * Return the list of resources for the requested resource type and
-     * optionally exclude the provided resource id
-     *
-     * @param integer $resource_type_id
-     * @param integer|null $exclude_id
-     *
-     * @return array
-     */
     public function resourcesForResourceType(
         int $resource_type_id,
         int $exclude_id = null

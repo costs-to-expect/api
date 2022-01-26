@@ -7,11 +7,18 @@ use Illuminate\Database\Eloquent\Builder as QueryBuilder;
 use Illuminate\Database\Eloquent\Model;
 
 /**
- * Item type model
- *
  * @mixin QueryBuilder
+ *
+ * @property int $id
+ * @property int $resource_type_id
+ * @property int $from
+ * @property int $to
+ * @property int $item_id
+ * @property int $percentage
+ * @property int $transferred_by
+ *
  * @author Dean Blackborough <dean@g3d-development.com>
- * @copyright Dean Blackborough 2018-2021
+ * @copyright Dean Blackborough 2018-2022
  * @license https://github.com/costs-to-expect/api/blob/master/LICENSE
  */
 class ItemPartialTransfer extends Model
@@ -66,14 +73,6 @@ class ItemPartialTransfer extends Model
         return $collection->get()->toArray();
     }
 
-    /**
-     * Return a single partial transfer
-     *
-     * @param integer $resource_type_id
-     * @param integer $item_partial_transfer_id
-     *
-     * @return array|null
-     */
     public function single(
         int $resource_type_id,
         int $item_partial_transfer_id

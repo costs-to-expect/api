@@ -14,25 +14,22 @@ use App\Transformers\ResourceType as ResourceTypeTransformer;
 use Exception;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 /**
  * Manage resource types
  *
  * @author Dean Blackborough <dean@g3d-development.com>
- * @copyright Dean Blackborough 2018-2021
+ * @copyright Dean Blackborough 2018-2022
  * @license https://github.com/costs-to-expect/api/blob/master/LICENSE
  */
 class ResourceTypeManage extends Controller
 {
     protected bool $allow_entire_collection = true;
 
-    /**
-     * Create a new resource type
-     *
-     * @return JsonResponse
-     */
-    public function create(): JsonResponse
+    public function create(Request $request): JsonResponse
     {
         $validator = (new ResourceTypeValidator)->create([
             'user_id' => $this->user_id
@@ -49,12 +46,12 @@ class ResourceTypeManage extends Controller
             ->setUserId($this->user_id);
 
         try {
-            $resource_type = DB::transaction(function() {
+            $resource_type = DB::transaction(function() use($request) {
                 $resource_type = new ResourceType([
-                    'name' => request()->input('name'),
-                    'description' => request()->input('description'),
-                    'data' => request()->input('data'),
-                    'public' => request()->input('public', 0)
+                    'name' => $request->input('name'),
+                    'description' => $request->input('description'),
+                    'data' => $request->input('data'),
+                    'public' => $request->input('public', 0)
                 ]);
                 $resource_type->save();
 
@@ -65,7 +62,7 @@ class ResourceTypeManage extends Controller
                 ]);
                 $permitted_users->save();
 
-                $item_type_id = $this->hash->decode('item-type', request()->input('item_type_id'));
+                $item_type_id = $this->hash->decode('item-type', $request->input('item_type_id'));
 
                 if ($item_type_id === false) {
                     return \App\Response\Responses::unableToDecode();
@@ -83,6 +80,7 @@ class ResourceTypeManage extends Controller
             ClearCache::dispatch($cache_job_payload->payload());
 
         } catch (Exception $e) {
+            Log::error($e->getMessage());
             return \App\Response\Responses::failedToSaveModelForCreate();
         }
 
@@ -92,14 +90,8 @@ class ResourceTypeManage extends Controller
         );
     }
 
-    /**
-     * Delete the requested resource type
-     *
-     * @param string $resource_type_id
-     *
-     * @return JsonResponse
-     */
     public function delete(
+        Request $request,
         string $resource_type_id
     ): JsonResponse
     {
@@ -147,8 +139,10 @@ class ResourceTypeManage extends Controller
 
                 return \App\Response\Responses::successNoContent();
             } catch (QueryException $e) {
+                Log::error($e->getMessage());
                 return \App\Response\Responses::foreignKeyConstraintError();
             } catch (Exception $e) {
+                Log::error($e->getMessage());
                 return \App\Response\Responses::notFound(trans('entities.resource-type'));
             }
         } else {
@@ -156,14 +150,8 @@ class ResourceTypeManage extends Controller
         }
     }
 
-    /**
-     * Update the selected category
-     *
-     * @param string $resource_type_id
-     *
-     * @return JsonResponse
-     */
     public function update(
+        Request $request,
         string $resource_type_id
     ): JsonResponse
     {
@@ -177,7 +165,7 @@ class ResourceTypeManage extends Controller
             return \App\Response\Responses::failedToSelectModelForUpdateOrDelete();
         }
 
-        if (count(request()->all()) === 0) {
+        if (count($request->all()) === 0) {
             return \App\Response\Responses::nothingToPatch();
         }
 
@@ -186,7 +174,7 @@ class ResourceTypeManage extends Controller
             'user_id' => $this->user_id
         ]);
 
-        if ($validator->fails()) {
+        if ($validator !== null && $validator->fails()) {
             return \App\Request\BodyValidation::returnValidationErrors($validator);
         }
 
@@ -201,7 +189,7 @@ class ResourceTypeManage extends Controller
             return Responses::invalidFieldsInRequest($invalid_fields);
         }
 
-        foreach (request()->all() as $key => $value) {
+        foreach ($request->all() as $key => $value) {
             $resource_type->$key = $value;
         }
 

@@ -193,9 +193,6 @@ class ResourceItem
         return $parameters;
     }
 
-    /**
-     * @return array
-     */
     protected function allowedValuesForYear(
         int $resource_type_id,
         int $resource_id
@@ -203,27 +200,39 @@ class ResourceItem
     {
         $parameters = ['year' => ['allowed_values' => []]];
 
-        for (
-            $i = $this->model->minimumYearByResourceTypeAndResource(
-                $resource_type_id,
-                $resource_id,
-                $this->entity->table(),
-                $this->entity->dateRangeField()
-            );
-            $i <= $this->model->maximumYearByResourceTypeAndResource(
-                $resource_type_id,
-                $resource_id,
-                $this->entity->table(),
-                $this->entity->dateRangeField()
-            );
-            $i++
-        ) {
-            $parameters['year']['allowed_values'][$i] = [
-                'value' => $i,
-                'name' => $i,
-                'description' => trans('item-type-' . $this->entity->type() .
-                        '/allowed-values.description-prefix-year') . $i
-            ];
+        $min_year = null;
+        $max_year = null;
+
+        $item_type = \App\ItemType\Entity::itemType($resource_type_id);
+        switch($item_type) {
+            case 'allocated-expense':
+                $min_year = $this->model->minimumYearByResourceTypeAndResource(
+                    $resource_type_id,
+                    $resource_id,
+                    'item_type_allocated_expense',
+                    'effective_date'
+                );
+                $max_year = $this->model->maximumYearByResourceTypeAndResource(
+                    $resource_type_id,
+                    $resource_id,
+                    'item_type_allocated_expense',
+                    'effective_date'
+                );
+                break;
+            default:
+                // Do nothing
+                break;
+        }
+
+        if ($min_year !== null && $max_year !== null) {
+            for ($i = $min_year; $i <= $max_year; $i++) {
+                $parameters['year']['allowed_values'][$i] = [
+                    'value' => $i,
+                    'name' => $i,
+                    'description' => trans('item-type-' . $this->entity->type() .
+                            '/allowed-values.description-prefix-year') . $i
+                ];
+            }
         }
 
         return $parameters;

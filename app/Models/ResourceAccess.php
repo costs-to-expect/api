@@ -8,8 +8,14 @@ use Illuminate\Database\Query\Builder as QueryBuilder;
 
 /**
  * @mixin QueryBuilder
+ *
+ * @property int $id
+ * @property int $resource_type_id
+ * @property int $user_id
+ * @property int $added_by
+ *
  * @author Dean Blackborough <dean@g3d-development.com>
- * @copyright Dean Blackborough 2018-2021
+ * @copyright Dean Blackborough 2018-2022
  * @license https://github.com/costs-to-expect/api/blob/master/LICENSE
  */
 class ResourceAccess extends Model
@@ -18,14 +24,6 @@ class ResourceAccess extends Model
 
     protected $guarded = ['id'];
 
-    /**
-     * Return an instance of a permitted user
-     *
-     * @param integer $resource_type_id
-     * @param integer $user_id
-     *
-     * @return ResourceAccess|null
-     */
     public function instance(int $resource_type_id, int $user_id): ?ResourceAccess
     {
         return $this->where('resource_type_id', '=', $resource_type_id)->
