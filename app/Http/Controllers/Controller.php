@@ -26,7 +26,7 @@ class Controller extends BaseController
     protected ?int $user_id = null;
 
     /**
-     * @var bool Allow the entire collection to be returned ignoring pagination
+     * @var bool Allow the entire collection to be returned, ignoring pagination parameters
      */
     protected bool $allow_entire_collection = false;
 

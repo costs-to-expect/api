@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Notifications\ForgotPassword;
 use App\Notifications\Registered;
+use App\Option\Auth\Check;
 use App\Option\Auth\CreateNewPassword;
 use App\Option\Auth\CreatePassword;
 use App\Option\Auth\Login;
@@ -22,8 +23,15 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
 
-class Authentication extends Controller
+class Authentication extends \Illuminate\Routing\Controller
 {
+    protected \App\Request\Hash $hash;
+
+    public function __construct()
+    {
+        $this->hash = new \App\Request\Hash();
+    }
+
     public function check(): Http\JsonResponse
     {
         return response()->json(['auth' => Auth::guard('api')->check()]);
@@ -31,7 +39,7 @@ class Authentication extends Controller
 
     public function optionsCheck(): Http\JsonResponse
     {
-        $response = new \App\Option\Auth\Check([]);
+        $response = new Check([]);
 
         return $response->create()->response();
     }
@@ -412,14 +420,18 @@ class Authentication extends Controller
 
     public function optionsUpdateProfile(): Http\JsonResponse
     {
-        $response = new UpdateProfile(['view'=> $this->user_id !== null, 'manage'=> $this->user_id !== null]);
+        $user = auth()->guard('api')->user();
+
+        $response = new UpdateProfile(['view'=> $user !== null && $user->id !== null, 'manage'=> $user !== null && $user->id !== null]);
 
         return $response->create()->response();
     }
 
     public function optionsUpdatePassword(): Http\JsonResponse
     {
-        $response = new UpdatePassword(['view'=> $this->user_id !== null, 'manage'=> $this->user_id !== null]);
+        $user = auth()->guard('api')->user();
+
+        $response = new UpdatePassword(['view'=> $user !== null && $user->id !== null, 'manage'=> $user !== null && $user->id !== null]);
 
         return $response->create()->response();
     }
@@ -500,7 +512,9 @@ class Authentication extends Controller
 
     public function optionsUser(): Http\JsonResponse
     {
-        $response = new \App\Option\Auth\User(['view'=> $this->user_id !== null]);
+        $user = auth()->guard('api')->user();
+
+        $response = new \App\Option\Auth\User(['view'=> $user !== null && $user->id !== null]);
 
         return $response->create()->response();
     }
