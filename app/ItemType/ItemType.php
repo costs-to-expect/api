@@ -75,11 +75,6 @@ abstract class ItemType
             ->allowedValues();
     }
 
-    public function allowPartialTransfers(): bool
-    {
-        return false;
-    }
-
     abstract public function create(int $id): Model;
 
     public function dateRangeField(): ?string

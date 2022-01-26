@@ -26,11 +26,6 @@ class Item extends ItemType
         return (new Currency())->allowedValues();
     }
 
-    public function allowPartialTransfers(): bool
-    {
-        return true;
-    }
-
     public function create($id): Model
     {
         $hash = new Hash();
