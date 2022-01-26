@@ -2,6 +2,45 @@
 
 The complete changelog for the Costs to Expect REST API, our changelog follows the format defined at https://keepachangelog.com/en/1.0.0/
 
+## [v2.22.0] - 2022-01-26
+After being away from the code for a while I've made some changes. I've reduced the complexity around different items types because things had started to get a little complex and I know what is coming next so want to clear out as much unnecessary code as possible. This is just a first pass, I'm sure there will be more but I have many other planned tickets to get on with.
+
+### Added
+- We have added additional tests for the `ResourceManage` controller.
+- We have added tests for the `ResourceTypeView` controller.
+- We have added a logout route.
+- We have added an OPTIONS request for `/auth/create-new-password`.
+- We have added an OPTIONS request for `/auth/create-password`.
+- We have added an OPTIONS request for `/auth/forgot-password`.
+- We have added an OPTIONS request for `/auth/login`.
+- We have added an OPTIONS request for `/auth/register`.
+- We have added an OPTIONS request for `/auth/update-password`.
+- We have added an OPTIONS request for `/auth/update-profile`.
+- We have added an OPTIONS request for `/auth/user`.
+- We have added an OPTIONS request for `/auth/check`.
+
+### Changed
+- We have made a couple of minor changes to the Docker setup.
+- We have updated the README because of minor Docker changes and corrected the table layouts in the README file.
+- We have updated all front-end and back-end dependencies.
+- We have updated the copyright, we are now in 2022.
+- We have added additional feature tests and removed some duplication in the tests, the README details the current test status.
+- General refactoring, switched to method injection and logging exception messages.
+- We are switching to named routes and have updated some route files, more will be updated as additional tests are created.
+- We have done a quick review of each of the model classes and fixed a few tiny issues.
+- We have reviewed all the `ItemType` classes, improved organisation with additional namespaces, renamed classes and methods, all with the goal being to try and make everything clearer.
+- We have reviewed all item based controllers and switched to methods per item type rather than hiding all the logic in larger item classes. There is slightly more duplication but this will allow us to more easily customise each item type as new ones are added, I'm looking at you forecasting.
+- We have updated the item/categories routes and will return a 405 when a category is not supported for the item type.
+- We have updated the item/subcategories routes and will return a 405 when a subcategory is not supported for the item type.
+- The Authentication controller no longer extends from the base app controller, it was doing some unnecessary work.
+
+### Fixed
+- We have fixed the `delete_resource_type_success` test, wrong route.
+- The `notFoundOrNotAccessible` response will optionally return a 403 if not accessible and not a 404.
+
+### Removed
+- We have removed a few files not used by the API.
+
 ## [v2.21.0] - 2021-04-29
 ### Changed
 - We have updated our password requirements; the minimum length must now be 12 characters.
