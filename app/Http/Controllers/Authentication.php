@@ -264,6 +264,34 @@ class Authentication extends \Illuminate\Routing\Controller
 
     public function login(Request $request): Http\JsonResponse
     {
+        $validator = Validator::make(
+            $request->all(),
+            [
+                'email' => [
+                    'required',
+                    'string'
+                ],
+                'password' => [
+                    'required',
+                    'min:12'
+                ],
+                'device_name' => [
+                    'sometimes',
+                    'string'
+                ]
+            ]
+        );
+
+        if ($validator->fails()) {
+            return response()->json(
+                [
+                    'message' => 'Validation error, please review the below',
+                    'fields' => $validator->errors()
+                ],
+                422
+            );
+        }
+
         if (
             Auth::attempt(
                 [
@@ -278,7 +306,12 @@ class Authentication extends \Illuminate\Routing\Controller
 
                 $request->user()->revokeOldTokens();
 
-                $token = $request->user()->createToken('costs-to-expect-api');
+                $token_name = 'costs-to-expect-api';
+                if ($request->input('device_name') !== null) {
+                    $token_name = str::slug($request->input('device_name')) . ':' .  $token_name;
+                }
+
+                $token = $request->user()->createToken($token_name);
                 return response()->json(
                     [
                         'id' => $this->hash->user()->encode($user->id),
