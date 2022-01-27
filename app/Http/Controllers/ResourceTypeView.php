@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\AllowedValue\ItemType;
+use App\Models\PermittedUser;
 use App\Models\Resource;
 use App\Models\ResourceType;
 use App\Option\ResourceTypeCollection;
@@ -17,8 +18,6 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Config;
 
 /**
- * Manage resource types
- *
  * @author Dean Blackborough <dean@g3d-development.com>
  * @copyright Dean Blackborough 2018-2022
  * @license https://github.com/costs-to-expect/api/blob/master/LICENSE
@@ -101,7 +100,7 @@ class ResourceTypeView extends Controller
         $parameters = Parameter\Request::fetch(array_keys(Config::get('api.resource-type.parameters.item')));
 
         $resource_type = (new ResourceType())->single(
-            $resource_type_id,
+            (int) $resource_type_id,
             $this->viewable_resource_types
         );
 
@@ -109,21 +108,27 @@ class ResourceTypeView extends Controller
             return Responses::notFound(trans('entities.resource-type'));
         }
 
-        $resources = [];
+        $transformer_relations = [];
+
         if (
             array_key_exists('include-resources', $parameters) === true &&
             $parameters['include-resources'] === true
         ) {
-            $resources = (new Resource())->paginatedCollection(
-                $resource_type_id
-            );
+            $transformer_relations['resources'] = (new Resource())->paginatedCollection((int) $resource_type_id);
+        }
+
+        if (
+            array_key_exists('include-permitted-users', $parameters) === true &&
+            $parameters['include-permitted-users'] === true
+        ) {
+            $transformer_relations['permitted_users'] = (new PermittedUser())->paginatedCollection((int) $resource_type_id);
         }
 
         $headers = new Header();
         $headers->item()->addParameters(Parameter\Request::xHeader());
 
         return response()->json(
-            (new ResourceTypeTransformer($resource_type, ['resources' => $resources]))->asArray(),
+            (new ResourceTypeTransformer($resource_type, $transformer_relations))->asArray(),
             200,
             $headers->headers()
         );

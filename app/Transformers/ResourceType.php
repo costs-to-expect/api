@@ -59,5 +59,12 @@ class ResourceType extends Transformer
                 $this->transformed['resources']['collection'][] = (new ResourceTransformer($resource))->asArray();
             }
         }
+
+        if (array_key_exists('permitted_users', $this->related) === true) {
+            $this->transformed['permitted_users']['count'] = count($this->related['permitted_users']);
+            foreach ($this->related['permitted_users'] as $permitted_user) {
+                $this->transformed['permitted_users']['collection'][] = (new PermittedUser($permitted_user))->asArray();
+            }
+        }
     }
 }

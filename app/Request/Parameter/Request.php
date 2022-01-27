@@ -41,6 +41,9 @@ class Request
                     case 'include-resources';
                     case 'include-categories':
                     case 'include-subcategories';
+                    case 'include-permitted-users';
+                    case 'include-unpublished':
+                    case 'complete':
                         self::$parameters[$parameter] = Boolean::convertedValue($request_parameters[$parameter]);
                         break;
 
@@ -76,6 +79,7 @@ class Request
                 case 'include-subcategories':
                 case 'include-resources':
                 case 'include-unpublished':
+                case 'include-permitted-users':
                 case 'complete':
                     if (
                         array_key_exists($key, self::$parameters) === true &&
