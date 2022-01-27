@@ -66,7 +66,7 @@ Route::group(
         Route::get(
             'item-types/{item_type_id}',
             'ItemTypeView@show'
-        );
+        )->name('item-type.show');
 
         Route::options(
             'item-types/{item_type_id}',
@@ -205,8 +205,8 @@ Route::group(
 
         Route::get(
             'resource-types/{resource_type_id}/permitted-users',
-            'PermittedUserView@index'
-        );
+            [\App\Http\Controllers\PermittedUserView::class, 'index']
+        )->name('permitted-user.list');
 
         Route::options(
             'resource-types/{resource_type_id}/permitted-users',
