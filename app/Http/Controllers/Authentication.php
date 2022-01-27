@@ -275,6 +275,9 @@ class Authentication extends \Illuminate\Routing\Controller
             $user = Auth::user();
 
             if ($user !== null) {
+
+                $request->user()->revokeOldTokens();
+
                 $token = $request->user()->createToken('costs-to-expect-api');
                 return response()->json(
                     [
@@ -499,11 +502,25 @@ class Authentication extends \Illuminate\Routing\Controller
         $user = auth()->guard('api')->user();
 
         if ($user !== null) {
+
+            $tokens = [];
+            foreach ($user->tokens as $token) {
+                $tokens[] = [
+                    'id' => $token->id,
+                    'name' => $token->name,
+                    'token' => $token->token,
+                    'created' => $token->created_at,
+                    'last_used_at' => $token->last_used_at
+                ];
+            }
+
             $user = [
                 'id' => $this->hash->user()->encode($user->id),
                 'name' => $user->name,
-                'email' => $user->email
+                'email' => $user->email,
+                'tokens' => $tokens
             ];
+
             return response()->json($user);
         }
 
