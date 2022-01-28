@@ -19,8 +19,6 @@ class Item extends AllowedValue
             $viewable_resource_types
         );
 
-        $this->entity = new \App\ItemType\SimpleItem\Item();
-
         $this->setAllowedValueFields();
     }
 

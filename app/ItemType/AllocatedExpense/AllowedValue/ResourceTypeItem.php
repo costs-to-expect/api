@@ -3,7 +3,6 @@ declare(strict_types=1);
 
 namespace App\ItemType\AllocatedExpense\AllowedValue;
 
-use App\ItemType\AllocatedExpense\Item;
 use App\ItemType\ResourceTypeAllowedValue;
 use App\Models\Category;
 use App\Models\Currency;
@@ -21,8 +20,6 @@ class ResourceTypeItem extends ResourceTypeAllowedValue
             $resource_type_id,
             $viewable_resource_types
         );
-
-        $this->entity = new Item();
 
         $this->setAllowedValueFields();
     }
@@ -147,7 +144,7 @@ class ResourceTypeItem extends ResourceTypeAllowedValue
                     'value' => $subcategory_id,
                     'name' => $subcategory['subcategory_name'],
                     'description' => trans('resource-type-item-type-allocated-expense/allowed-values.description-prefix-subcategory') .
-                        $subcategory['subcategory_name'] . trans('resource-type-item-type-' . $this->entity->type() . '/allowed-values.description-suffix-subcategory')
+                        $subcategory['subcategory_name'] . trans('resource-type-item-type-allocated-expense/allowed-values.description-suffix-subcategory')
                 ];
             }
 
@@ -161,36 +158,23 @@ class ResourceTypeItem extends ResourceTypeAllowedValue
 
             $allowed_values = [];
 
-            $min_year = null;
-            $max_year = null;
+            $min_year = $this->range_limits->minimumYearByResourceType(
+                $this->resource_type_id,
+                'item_type_allocated_expense',
+                'effective_date'
+            );
+            $max_year = $this->range_limits->maximumYearByResourceType(
+                $this->resource_type_id,
+                'item_type_allocated_expense',
+                'effective_date'
+            );
 
-            $item_type = \App\ItemType\Entity::itemType($this->resource_type_id);
-            switch ($item_type) {
-                case 'allocated-expense':
-                    $min_year = $this->range_limits->minimumYearByResourceType(
-                        $this->resource_type_id,
-                        'item_type_allocated_expense',
-                        'effective_date'
-                    );
-                    $max_year = $this->range_limits->maximumYearByResourceType(
-                        $this->resource_type_id,
-                        'item_type_allocated_expense',
-                        'effective_date'
-                    );
-                    break;
-                default:
-                    // Do nothing
-                    break;
-            }
-
-            if ($min_year !== null && $max_year !== null) {
-                for ($i = $min_year; $i <= $max_year; $i++) {
-                    $allowed_values[$i] = [
-                        'value' => $i,
-                        'name' => $i,
-                        'description' => trans('resource-type-item-type-allocated-expense/allowed-values.description-prefix-year') . $i
-                    ];
-                }
+            for ($i = $min_year; $i <= $max_year; $i++) {
+                $allowed_values[$i] = [
+                    'value' => $i,
+                    'name' => $i,
+                    'description' => trans('resource-type-item-type-allocated-expense/allowed-values.description-prefix-year') . $i
+                ];
             }
 
             $this->values['year'] = ['allowed_values' => $allowed_values];

@@ -4,7 +4,6 @@ declare(strict_types=1);
 namespace App\ItemType\SimpleExpense\AllowedValue;
 
 use App\ItemType\ResourceTypeAllowedValue;
-use App\ItemType\SimpleExpense\Item;
 use App\Models\Category;
 use App\Models\Currency;
 use App\Models\Subcategory;
@@ -21,8 +20,6 @@ class ResourceTypeItem extends ResourceTypeAllowedValue
             $resource_type_id,
             $viewable_resource_types
         );
-
-        $this->entity = new Item();
 
         $this->setAllowedValueFields();
     }
@@ -122,7 +119,7 @@ class ResourceTypeItem extends ResourceTypeAllowedValue
                     'value' => $subcategory_id,
                     'name' => $subcategory['subcategory_name'],
                     'description' => trans('resource-type-item-type-simple-expense/allowed-values.description-prefix-subcategory') .
-                        $subcategory['subcategory_name'] . trans('resource-type-item-type-' . $this->entity->type() . '/allowed-values.description-suffix-subcategory')
+                        $subcategory['subcategory_name'] . trans('resource-type-item-type-simple-expense/allowed-values.description-suffix-subcategory')
                 ];
             }
 

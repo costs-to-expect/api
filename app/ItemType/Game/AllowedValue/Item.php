@@ -21,8 +21,6 @@ class Item extends AllowedValue
             $viewable_resource_types
         );
 
-        $this->entity = new \App\ItemType\Game\Item();
-
         $this->setAllowedValueFields();
     }
 
@@ -59,11 +57,9 @@ class Item extends AllowedValue
                 $allowed_values[$winner_id] = [
                     'value' => $winner_id,
                     'name' => $winner['category_name'],
-                    'description' => trans('item-type-' . $this->entity->type() .
-                            '/allowed-values.description-prefix-winner_id') .
+                    'description' => trans('item-type-game/allowed-values.description-prefix-winner_id') .
                         $winner['category_name'] .
-                        trans('item-type-' . $this->entity->type() .
-                            '/allowed-values.description-suffix-winner_id')
+                        trans('item-type-game/allowed-values.description-suffix-winner_id')
                 ];
             }
 

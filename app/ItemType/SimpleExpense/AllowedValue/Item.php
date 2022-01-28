@@ -23,8 +23,6 @@ class Item extends AllowedValue
             $viewable_resource_types
         );
 
-        $this->entity = new \App\ItemType\SimpleExpense\Item();
-
         $this->setAllowedValueFields();
     }
 
@@ -67,9 +65,9 @@ class Item extends AllowedValue
                 $allowed_values[$category_id] = [
                     'value' => $category_id,
                     'name' => $category['category_name'],
-                    'description' => trans('item-type-allocated-expense/allowed-values.description-prefix-category') .
+                    'description' => trans('item-type-simple-expense/allowed-values.description-prefix-category') .
                         $category['category_name'] .
-                        trans('item-type-allocated-expense/allowed-values.description-suffix-category')
+                        trans('item-type-simple-expense/allowed-values.description-suffix-category')
                 ];
             }
 
@@ -122,8 +120,8 @@ class Item extends AllowedValue
                 $allowed_values[$subcategory_id] = [
                     'value' => $subcategory_id,
                     'name' => $subcategory['subcategory_name'],
-                    'description' => trans('item-type-allocated-expense/allowed-values.description-prefix-subcategory') .
-                        $subcategory['subcategory_name'] . trans('item-type-' . $this->entity->type() . '/allowed-values.description-suffix-subcategory')
+                    'description' => trans('item-type-simple-expense/allowed-values.description-prefix-subcategory') .
+                        $subcategory['subcategory_name'] . trans('item-type-simple-expense/allowed-values.description-suffix-subcategory')
                 ];
             }
 

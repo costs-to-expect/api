@@ -20,8 +20,6 @@ class ResourceTypeItem extends ResourceTypeAllowedValue
             $viewable_resource_types
         );
 
-        $this->entity = new Item();
-
         $this->setAllowedValueFields();
     }
 
