@@ -11,6 +11,7 @@ use App\Option\Auth\Login;
 use App\Option\Auth\Register;
 use App\Option\Auth\UpdatePassword;
 use App\Option\Auth\UpdateProfile;
+use App\Option\Response;
 use App\Response\Responses;
 use App\User;
 use Exception;
@@ -603,6 +604,34 @@ class Authentication extends \Illuminate\Routing\Controller
 
             if (array_key_exists($token_id, $tokens)) {
                 return response()->json($tokens[$token_id]);
+            }
+
+            return Responses::notFound();
+        }
+
+        return response()->json(['message' => 'Unauthorised, credentials invalid'], 401);
+    }
+
+    public function deleteToken($token_id): Http\JsonResponse
+    {
+        $user = auth()->guard('api')->user();
+
+        if ($user !== null) {
+
+            $tokens = [];
+            foreach ($user->tokens as $token) {
+                $tokens[$token->id] = [
+                    'id' => $token->id,
+                    'name' => $token->name,
+                    'token' => $token->token,
+                    'created' => $token->created_at,
+                    'last_used_at' => $token->last_used_at
+                ];
+            }
+
+            if (array_key_exists($token_id, $tokens)) {
+                $user->tokens()->where('id', $token_id)->delete();
+                return Responses::successNoContent();
             }
 
             return Responses::notFound();

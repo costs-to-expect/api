@@ -135,7 +135,10 @@ Route::group(
             [Authentication::class, 'token']
         )->name('auth.user.token.show');
 
-
+        Route::delete(
+            'auth/user/tokens/{token_id}',
+            [Authentication::class, 'deleteToken']
+        )->name('auth.user.token.delete');
     }
 );
 
