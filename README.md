@@ -135,6 +135,9 @@ additionally, the same is true if you are assigned as a permitted user to a reso
 | OPTIONS      | v2/auth/user                                                                                                                                   |
 | GET/HEAD     | v2/auth/user/tokens                                                                                                                            |
 | OPTIONS      | v2/auth/user/tokens                                                                                                                            |
+| DELETE       | v2/auth/user/tokens/{token_id}                                                                                                                 |
+| GET/HEAD     | v2/auth/user/tokens/{token_id}                                                                                                                 |
+| OPTIONS      | v2/auth/user/tokens/{token_id}                                                                                                                 |
 | GET/HEAD     | v2/changelog                                                                                                                                   |
 | OPTIONS      | v2/changelog                                                                                                                                   |
 | GET/HEAD     | v2/currencies                                                                                                                                  |
