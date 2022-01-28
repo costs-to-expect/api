@@ -64,6 +64,11 @@ Route::group(
         );
 
         Route::options(
+            'auth/user/tokens',
+            [Authentication::class, 'optionsTokens']
+        );
+
+        Route::options(
             'auth/check',
             [Authentication::class, 'optionsCheck']
         );
@@ -114,6 +119,11 @@ Route::group(
             'auth/user',
             [Authentication::class, 'user']
         )->name('auth.user');
+
+        Route::get(
+            'auth/user/tokens',
+            [Authentication::class, 'tokens']
+        )->name('auth.user.tokens');
     }
 );
 

@@ -11,6 +11,7 @@ return [
     'auth_update_password_POST' => 'Update your account password',
     'auth_update_profile_POST' => 'Update your account profile',
     'auth_user_GET' => 'Return the account details for the signed-in user',
+    'auth_user_tokens_GET' => 'Return the tokens for the signed-in user',
     'auth_check_GET' => 'Check to see if the user is authenticated',
 
     'api_GET_index' => 'Return all the API routes',

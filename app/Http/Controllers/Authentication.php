@@ -560,11 +560,44 @@ class Authentication extends \Illuminate\Routing\Controller
         return response()->json(['message' => 'Unauthorised, credentials invalid'], 401);
     }
 
+
+    public function tokens(): Http\JsonResponse
+    {
+        $user = auth()->guard('api')->user();
+
+        if ($user !== null) {
+
+            $tokens = [];
+            foreach ($user->tokens as $token) {
+                $tokens[] = [
+                    'id' => $token->id,
+                    'name' => $token->name,
+                    'token' => $token->token,
+                    'created' => $token->created_at,
+                    'last_used_at' => $token->last_used_at
+                ];
+            }
+
+            return response()->json($tokens);
+        }
+
+        return response()->json(['message' => 'Unauthorised, credentials invalid'], 401);
+    }
+
     public function optionsUser(): Http\JsonResponse
     {
         $user = auth()->guard('api')->user();
 
         $response = new \App\Option\Auth\User(['view'=> $user !== null && $user->id !== null]);
+
+        return $response->create()->response();
+    }
+
+    public function optionsTokens(): Http\JsonResponse
+    {
+        $user = auth()->guard('api')->user();
+
+        $response = new \App\Option\Auth\Tokens(['view'=> $user !== null && $user->id !== null]);
 
         return $response->create()->response();
     }
