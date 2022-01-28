@@ -14,21 +14,26 @@ class Category extends Transformer
 {
     public function format(array $to_transform): void
     {
+        $category_id = $this->hash->category()->encode($to_transform['category_id']);
+        $resource_type_id = $this->hash->resourceType()->encode($to_transform['resource_type_id']);
+
         $this->transformed = [
-            'id' => $this->hash->category()->encode($to_transform['category_id']),
+            'id' => $category_id,
             'name' => $to_transform['category_name'],
             'description' => $to_transform['category_description'],
             'created' => $to_transform['category_created_at'],
             'resource_type' => [
-                'id' => $this->hash->resourceType()->encode($to_transform['resource_type_id'])
+                'uri' => route('resource-type.show', ['resource_type_id' => $resource_type_id], false),
+                'id' => $resource_type_id
             ]
         ];
 
         if (array_key_exists('resource_type_name', $to_transform) === true) {
-           $this->transformed['resource_type']['name'] = $to_transform['resource_type_name'];
+            $this->transformed['resource_type']['name'] = $to_transform['resource_type_name'];
         }
 
         if (array_key_exists('category_subcategories', $to_transform)) {
+            $this->transformed['subcategories']['uri'] = route('subcategory.list', ['resource_type_id' => $resource_type_id, 'category_id' => $category_id], false);
             $this->transformed['subcategories']['count'] = $to_transform['category_subcategories'];
         }
 

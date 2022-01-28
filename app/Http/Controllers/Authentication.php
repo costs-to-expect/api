@@ -553,7 +553,11 @@ class Authentication extends \Illuminate\Routing\Controller
                 'id' => $this->hash->user()->encode($user->id),
                 'name' => $user->name,
                 'email' => $user->email,
-                'tokens' => $tokens
+                'tokens' => [
+                    'uri' => route('auth.user.token.list', [], false),
+                    'count' => count($tokens),
+                    'collection' => $tokens
+                ]
             ];
 
             return response()->json($user);

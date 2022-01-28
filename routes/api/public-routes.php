@@ -155,8 +155,8 @@ Route::group(
 
         Route::get(
             'resource-types/{resource_type_id}/categories/{category_id}/subcategories',
-            'SubcategoryView@index'
-        );
+            [\App\Http\Controllers\SubcategoryView::class, 'index']
+        )->name('subcategory.list');
 
         Route::options(
             'resource-types/{resource_type_id}/categories/{category_id}/subcategories',
