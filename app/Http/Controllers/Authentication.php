@@ -11,6 +11,7 @@ use App\Option\Auth\Login;
 use App\Option\Auth\Register;
 use App\Option\Auth\UpdatePassword;
 use App\Option\Auth\UpdateProfile;
+use App\Response\Responses;
 use App\User;
 use Exception;
 use Illuminate\Http;
@@ -560,7 +561,6 @@ class Authentication extends \Illuminate\Routing\Controller
         return response()->json(['message' => 'Unauthorised, credentials invalid'], 401);
     }
 
-
     public function tokens(): Http\JsonResponse
     {
         $user = auth()->guard('api')->user();
@@ -584,6 +584,33 @@ class Authentication extends \Illuminate\Routing\Controller
         return response()->json(['message' => 'Unauthorised, credentials invalid'], 401);
     }
 
+    public function token($token_id): Http\JsonResponse
+    {
+        $user = auth()->guard('api')->user();
+
+        if ($user !== null) {
+
+            $tokens = [];
+            foreach ($user->tokens as $token) {
+                $tokens[$token->id] = [
+                    'id' => $token->id,
+                    'name' => $token->name,
+                    'token' => $token->token,
+                    'created' => $token->created_at,
+                    'last_used_at' => $token->last_used_at
+                ];
+            }
+
+            if (array_key_exists($token_id, $tokens)) {
+                return response()->json($tokens[$token_id]);
+            }
+
+            return Responses::notFound();
+        }
+
+        return response()->json(['message' => 'Unauthorised, credentials invalid'], 401);
+    }
+
     public function optionsUser(): Http\JsonResponse
     {
         $user = auth()->guard('api')->user();
@@ -598,6 +625,18 @@ class Authentication extends \Illuminate\Routing\Controller
         $user = auth()->guard('api')->user();
 
         $response = new \App\Option\Auth\Tokens(['view'=> $user !== null && $user->id !== null]);
+
+        return $response->create()->response();
+    }
+
+    public function optionsToken(): Http\JsonResponse
+    {
+        $user = auth()->guard('api')->user();
+
+        $response = new \App\Option\Auth\Token([
+            'view'=> $user !== null && $user->id !== null,
+            'manage'=> $user !== null && $user->id !== null,
+        ]);
 
         return $response->create()->response();
     }
