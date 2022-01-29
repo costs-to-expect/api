@@ -3,9 +3,7 @@
 namespace App\Listeners;
 
 use App\Events\RequestError;
-use App\Mail\RequestError as RequestErrorMail;
-use Illuminate\Support\Facades\Config;
-use Illuminate\Support\Facades\Mail;
+use App\User;
 
 class CaptureAndSendRequestError
 {
@@ -28,10 +26,8 @@ class CaptureAndSendRequestError
     public function handle(RequestError $event)
     {
         if (isset($event->request_error) && count($event->request_error) > 0) {
-            Mail::to(Config::get('api.mail.request-error.to'))->
-                send(
-                    new RequestErrorMail($event->request_error)
-                );
+            $user = User::query()->find(1);
+            $user->notify(new \App\Notifications\RequestError($event->request_error));
         }
     }
 }
