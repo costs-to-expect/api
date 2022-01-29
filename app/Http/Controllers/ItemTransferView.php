@@ -22,13 +22,6 @@ use Illuminate\Support\Facades\Config;
  */
 class ItemTransferView extends Controller
 {
-    /**
-     * Return the item transfers collection
-     *
-     * @param string $resource_type_id
-     *
-     * @return JsonResponse
-     */
     public function index($resource_type_id): JsonResponse
     {
         if ($this->viewAccessToResourceType((int) $resource_type_id) === false) {
@@ -88,13 +81,6 @@ class ItemTransferView extends Controller
         return response()->json($cache_collection->collection(), 200, $cache_collection->headers());
     }
 
-    /**
-     * Generate the OPTIONS request for the transfers collection
-     *
-     * @param $resource_type_id
-     *
-     * @return JsonResponse
-     */
     public function optionsIndex($resource_type_id): JsonResponse
     {
         if ($this->viewAccessToResourceType((int) $resource_type_id) === false) {
@@ -139,14 +125,6 @@ class ItemTransferView extends Controller
             response();
     }
 
-    /**
-     * Return a single item transfer
-     *
-     * @param $resource_type_id
-     * @param $item_transfer_id
-     *
-     * @return JsonResponse
-     */
     public function show(
         $resource_type_id,
         $item_transfer_id
