@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace App\ItemType\Game;
 
-use App\AllowedValue\Winner;
+use App\ItemType\Game\AllowedValue\Winner;
 use App\ItemType\ItemType;
 use App\Transformers\Transformer;
 use App\Request\Hash;
