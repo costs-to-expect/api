@@ -8,11 +8,13 @@ use App\Cache\KeyGroup;
 use App\Cache\Trash;
 use App\Models\ResourceAccess;
 use App\Models\ResourceType;
+use App\User;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
+use Throwable;
 
 /**
  * Clear the requested cache keys
@@ -27,11 +29,6 @@ class ClearCache implements ShouldQueue
 
     protected array $payload;
 
-    /**
-     * Create a new job instance.
-     *
-     * @return void
-     */
     public function __construct(array $payload)
     {
         $this->payload = $payload;
@@ -74,5 +71,16 @@ class ClearCache implements ShouldQueue
         } else {
             $cache_control->clearMatchingCacheKeys($cache_keys);
         }
+    }
+
+    public function failed(Throwable $exception)
+    {
+        $user = User::query()->find(1);
+        $user->notify(new \App\Notifications\FailedJob([
+                'message' => $exception->getMessage(),
+                'file' => $exception->getFile(),
+                'line' => $exception->getLine(),
+                'trace' => $exception->getTraceAsString()
+        ]));
     }
 }
