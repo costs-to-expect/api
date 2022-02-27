@@ -3,6 +3,6 @@
 declare(strict_types=1);
 
 return [
-    'title-user_id' => 'User Id',
-    'description-user_id' => 'The user to assign to the resource type'
+    'title-email' => 'Email',
+    'description-email' => 'The email address of the user you want to assign access'
 ];
