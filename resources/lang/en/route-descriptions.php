@@ -92,7 +92,9 @@ return [
     'item_partial_transfer_DELETE' => 'Delete the selected partial transfer',
 
     'permitted_user_GET_index' => 'Return the permitted users',
+    'permitted_user_GET_show' => 'Return the selected permitted user',
     'permitted_user_POST' => 'Assign a permitted user',
+    'permitted_user_DELETE' => 'Delete the selected permitted user',
 
     'request_GET_error-log' => 'Return the error log',
     'request_GET_cache' => 'Return the number of cached keys for the authenticated user',

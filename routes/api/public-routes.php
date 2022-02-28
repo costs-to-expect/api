@@ -219,6 +219,11 @@ Route::group(
             [PermittedUserView::class, 'show']
         )->name('permitted-user.show');
 
+        Route::options(
+            'resource-types/{resource_type_id}/permitted-users/{permitted_user_id}',
+            [PermittedUserView::class, 'optionsShow']
+        )->name('permitted-user.show.options');
+
         Route::get(
             'resource-types/{resource_type_id}/resources',
             [\App\Http\Controllers\ResourceView::class, 'index']

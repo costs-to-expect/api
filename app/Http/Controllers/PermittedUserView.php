@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\PermittedUser;
 use App\Option\PermittedUserCollection;
+use App\Option\PermittedUserItem;
 use App\Request\Parameter;
 use App\Response\Header;
 use App\Response\Pagination as UtilityPagination;
@@ -117,6 +118,26 @@ class PermittedUserView extends Controller
         }
 
         $response = new PermittedUserCollection($this->permissions((int) $resource_type_id));
+
+        return $response->create()->response();
+    }
+
+    public function optionsShow(string $resource_type_id, string $permitted_user_id): JsonResponse
+    {
+        if ($this->viewAccessToResourceType((int) $resource_type_id) === false) {
+            \App\Response\Responses::notFoundOrNotAccessible(trans('entities.resource'));
+        }
+
+        $permitted_user = (new PermittedUser())->single(
+            $resource_type_id,
+            $permitted_user_id
+        );
+
+        if ($permitted_user === null) {
+            return \App\Response\Responses::notFound(trans('entities.permitted-user'));
+        }
+
+        $response = new PermittedUserItem($this->permissions((int) $resource_type_id));
 
         return $response->create()->response();
     }
