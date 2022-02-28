@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace App\Request\Validate;
 
 use App\Request\Validate\Validator as BaseValidator;
+use App\Rules\PermissibleUser;
 use Illuminate\Support\Facades\Validator as ValidatorFacade;
 
 /**
@@ -15,13 +16,17 @@ class PermittedUser extends BaseValidator
 {
     public function create(array $options = []): \Illuminate\Contracts\Validation\Validator
     {
+        $this->requiredIndexes(['resource_type_id'], $options);
+
         return ValidatorFacade::make(
-            request()->only(['user']),
+            request()->only(['email']),
             [
-                'user' => [
+                'email' => [
                     'required',
-                    'email'
-                ]
+                    'email',
+                    new PermissibleUser($options['resource_type_id'])
+                ],
+
             ],
             $this->translateMessages('api.resource.validation.POST.messages')
         );

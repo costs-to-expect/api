@@ -87,13 +87,6 @@ class PermittedUserView extends Controller
         return response()->json($cache_collection->collection(), 200, $cache_collection->headers());
     }
 
-    /**
-     * Generate the OPTIONS request for the permitted users collection
-     *
-     * @param string $resource_type_id
-     *
-     * @return JsonResponse
-     */
     public function optionsIndex(string $resource_type_id): JsonResponse
     {
         if ($this->viewAccessToResourceType((int) $resource_type_id) === false) {

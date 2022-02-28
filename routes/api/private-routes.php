@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\PermittedUserManage;
 use App\Http\Controllers\ResourceManage;
 use App\Http\Controllers\ResourceTypeManage;
 use Illuminate\Support\Facades\Config;
@@ -33,6 +34,11 @@ Route::group(
             'resource-types/{resource_type_id}/categories/{category_id}/subcategories',
             'SubcategoryManage@create'
         );
+
+        Route::post(
+            'resource-types/{resource_type_id}/permitted-users',
+            [PermittedUserManage::class, 'create']
+        )->name('permitted-user.create');
 
         Route::post(
             'resource-types/{resource_type_id}/resources',

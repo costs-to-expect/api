@@ -17,11 +17,6 @@ use Illuminate\Support\Facades\DB;
  */
 class PermittedUserManage extends Controller
 {
-    /**
-     * @param string $resource_type_id
-     *
-     * @return JsonResponse
-     */
     public function create(string $resource_type_id): JsonResponse
     {
         if ($this->writeAccessToResourceType((int) $resource_type_id) === false) {
@@ -33,9 +28,9 @@ class PermittedUserManage extends Controller
             $this->viewable_resource_types
         );
 
-        $validator = (new PermittedUserValidator)->create([]);
-
-        // Custom validator for permitted user
+        $validator = (new PermittedUserValidator)->create([
+            'resource_type_id' => $resource_type['resource_type_id']
+        ]);
 
         if ($validator->fails()) {
             return \App\Request\BodyValidation::returnValidationErrors($validator);

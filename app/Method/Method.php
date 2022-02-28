@@ -10,16 +10,16 @@ namespace App\Method;
  */
 abstract class Method
 {
-    protected bool $authentication;
+    protected string $authentication;
 
-    protected bool $authenticated;
+    protected string $authenticated;
 
     protected string $description;
 
     public function __construct()
     {
-        $this->authentication = false;
-        $this->authenticated = false;
+        $this->authentication = 'false';
+        $this->authenticated = 'false';
         $this->description = '';
     }
 
@@ -27,7 +27,11 @@ abstract class Method
         bool $status = false
     ): Method
     {
-        $this->authentication = $status;
+        if ($status === true) {
+            $this->authentication = 'true';
+        } else {
+            $this->authentication = 'false';
+        }
 
         return $this;
     }
@@ -36,7 +40,11 @@ abstract class Method
         bool $status = false
     ): Method
     {
-        $this->authenticated = $status;
+        if ($status === true) {
+            $this->authenticated = 'true';
+        } else {
+            $this->authenticated = 'false';
+        }
 
         return $this;
     }
