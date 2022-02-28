@@ -6,6 +6,7 @@ use App\Jobs\ClearCache;
 use App\Models\ResourceType;
 use App\Request\Validate\PermittedUser as PermittedUserValidator;
 use App\Response\Responses;
+use App\User;
 use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\DB;
@@ -47,12 +48,30 @@ class PermittedUserManage extends Controller
         try {
             DB::transaction(function() use ($resource_type_id) {
 
+                $user = DB::table('users')
+                    ->where('email', '=', request()->input('email'))
+                    ->first();
+
+                if ($user === null) {
+                    throw new \RuntimeException('User cannot be found');
+                }
+
                 $permitted_user = new \App\Models\PermittedUser();
                 $permitted_user->resource_type_id = $resource_type_id;
-                $permitted_user->user_id = 1; // Id to pass in
+                $permitted_user->user_id = $user->id;
                 $permitted_user->added_by = $this->user_id;
-                $permitted_user->save();
 
+                if ($permitted_user->save() === true) {
+                    $permitted_user_cache_job_payload = (new \App\Cache\JobPayload())
+                        ->setGroupKey(\App\Cache\KeyGroup::RESOURCE_TYPE_CREATE)
+                        ->setRouteParameters([])
+                        ->setPermittedUser($this->writeAccessToResourceType((int)$resource_type_id))
+                        ->setUserId($user->id);
+
+                    ClearCache::dispatch($permitted_user_cache_job_payload->payload());
+                } else {
+                    throw new \RuntimeException('Unable to assign user or create clear cache request');
+                }
             });
 
             ClearCache::dispatch($cache_job_payload->payload());
