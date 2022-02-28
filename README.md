@@ -183,6 +183,9 @@ additionally, the same is true if you are assigned as a permitted user to a reso
 | POST         | v2/resource-types/{resource_type_id}/permitted-users                                                                                           |
 | GET/HEAD     | v2/resource-types/{resource_type_id}/permitted-users                                                                                           |
 | OPTIONS      | v2/resource-types/{resource_type_id}/permitted-users                                                                                           |
+| GET/HEAD     | v2/resource-types/{resource_type_id}/permitted-users/{permitted_user_id}                                                                       |
+| OPTIONS      | v2/resource-types/{resource_type_id}/permitted-users/{permitted_user_id}                                                                       |
+| DELETE       | v2/resource-types/{resource_type_id}/permitted-users/{permitted_user_id}                                                                       |
 | GET/HEAD     | v2/resource-types/{resource_type_id}/resources                                                                                                 |
 | OPTIONS      | v2/resource-types/{resource_type_id}/resources                                                                                                 |
 | POST         | v2/resource-types/{resource_type_id}/resources                                                                                                 |
