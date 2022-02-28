@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\PermittedUserView;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Route;
 
@@ -205,13 +206,18 @@ Route::group(
 
         Route::get(
             'resource-types/{resource_type_id}/permitted-users',
-            [\App\Http\Controllers\PermittedUserView::class, 'index']
+            [PermittedUserView::class, 'index']
         )->name('permitted-user.list');
 
         Route::options(
             'resource-types/{resource_type_id}/permitted-users',
-            'PermittedUserView@optionsIndex'
-        );
+            [PermittedUserView::class, 'optionsIndex']
+        )->name('permitted-user.options');
+
+        Route::get(
+            'resource-types/{resource_type_id}/permitted-users/{permitted_user_id}',
+            [PermittedUserView::class, 'show']
+        )->name('permitted-user.show');
 
         Route::get(
             'resource-types/{resource_type_id}/resources',
