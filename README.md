@@ -50,7 +50,7 @@ Docker services, `api` and `mysql`, we will need to exec into the `api` service 
 set up our app.
 
 Firstly, we need to check we are trying to access the right location, 
-execute `docker compose exec api ls`. You should see a list of the files and 
+execute `docker compose exec costs.api.app ls`. You should see a list of the files and 
 directories at the project root. 
 
 Next, we need to configure the API by setting out local .ENV file our .env, 
@@ -58,9 +58,9 @@ installing all dependencies and running our migrations.
 
 * Copy the `.env.example` file and name the copy `.env`. Set all the empty values, all 
 drivers have been set to our defaults, sessions, cache, and the queue default to the database driver.
-* `docker compose exec api php artisan key:generate`
-* `docker compose exec api php artisan migrate`
-* `docker compose exec api php artisan queue:work`
+* `docker compose exec costs.api.app php artisan key:generate`
+* `docker compose exec costs.api.app php artisan migrate`
+* `docker compose exec costs.api.app php artisan queue:work`
 * Run an OPTIONS request on `http://[your.domail.local:8080]/v2/resource_types`, you will see an OPTIONS response, 
 alternatively a GET request to `http://[your.domail.local:8080]/v1` will show all the defined routes.
 * You can create a user by POSTing to `http://[your.domail.local:8080]/v2/auth/register`. 
@@ -73,7 +73,7 @@ you will also need to set `MAIL_FROM_ADDRESS` and `MAIL_TO_ADDRESS`. You may nee
 
 * Collections will return an array and a 200.
 * Items will return a single object and a 200.
-* Successful POST requests will return a single object and a 201.
+* Successful POST requests will return a single object and a 201, there are minor exceptions where we may return a 204.
 * Successful PATCH requests will return 204.
 * Successful DELETE requests will return a 204.
 * Non 2xx results will return an object with a message field and optionally a fields array. When we 
@@ -180,6 +180,7 @@ additionally, the same is true if you are assigned as a permitted user to a reso
 | GET/HEAD     | v2/resource-types/{resource_type_id}/partial-transfers/{item_partial_transfer_id}                                                              |
 | OPTIONS      | v2/resource-types/{resource_type_id}/partial-transfers/{item_partial_transfer_id}                                                              |
 | DELETE       | v2/resource-types/{resource_type_id}/partial-transfers/{item_partial_transfer_id}                                                              |
+| POST         | v2/resource-types/{resource_type_id}/permitted-users                                                                                           |
 | GET/HEAD     | v2/resource-types/{resource_type_id}/permitted-users                                                                                           |
 | OPTIONS      | v2/resource-types/{resource_type_id}/permitted-users                                                                                           |
 | GET/HEAD     | v2/resource-types/{resource_type_id}/resources                                                                                                 |
@@ -227,7 +228,7 @@ additionally, the same is true if you are assigned as a permitted user to a reso
 
 Eventually, there will be a summary route for every API collection GET endpoint. Until 
 that point, the summary routes that exists are detailed below. Some allow GET 
-parameters to breakdown the data, one example being 
+parameters to break down the data, one example being 
 `v2/summary/resource-types/{resource_type_id}/items`. 
 
 Review the OPTIONS request for each summary route to see the supported parameters, these should 
