@@ -24,11 +24,18 @@ class PermittedUser extends Model
 
     protected $guarded = ['id'];
 
-    public function instance(int $resource_type_id, int $user_id): ?PermittedUser
+    public function instanceByUserId(int $resource_type_id, int $user_id): ?PermittedUser
     {
         return $this->where('resource_type_id', '=', $resource_type_id)->
             where('user_id', '=', $user_id)->
             first();
+    }
+
+    public function instance(int $resource_type_id, int $permitted_user_id): ?PermittedUser
+    {
+        return $this->where('resource_type_id', '=', $resource_type_id)->
+        where('id', '=', $permitted_user_id)->
+        first();
     }
 
     public function totalCount(

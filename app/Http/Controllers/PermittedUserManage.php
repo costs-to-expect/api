@@ -3,11 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\Jobs\ClearCache;
+use App\Models\PermittedUser;
 use App\Models\ResourceType;
 use App\Request\Validate\PermittedUser as PermittedUserValidator;
 use App\Response\Responses;
-use App\User;
 use Exception;
+use Illuminate\Database\QueryException;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\DB;
 
@@ -81,5 +82,41 @@ class PermittedUserManage extends Controller
         }
 
         return Responses::successNoContent();
+    }
+
+    public function delete(
+        string $resource_type_id,
+        string $permitted_user_id
+    ): JsonResponse
+    {
+        if ($this->writeAccessToResourceType((int) $resource_type_id) === false) {
+            \App\Response\Responses::notFoundOrNotAccessible(trans('entities.permitted-user'));
+        }
+
+        $permitted_user = (new PermittedUser())->instance($resource_type_id, $permitted_user_id);
+
+        if ($permitted_user === null) {
+            return Responses::failedToSelectModelForUpdateOrDelete();
+        }
+
+        $cache_job_payload = (new \App\Cache\JobPayload())
+            ->setGroupKey(\App\Cache\KeyGroup::PERMITTED_USER_DELETE)
+            ->setRouteParameters([])
+            ->setPermittedUser($this->writeAccessToResourceType((int) $resource_type_id))
+            ->setUserId($this->user_id);
+
+        try {
+            DB::transaction(function() use ($permitted_user) {
+                $permitted_user->delete();
+            });
+
+            ClearCache::dispatch($cache_job_payload->payload());
+
+            return Responses::successNoContent();
+        } catch (QueryException $e) {
+            return Responses::foreignKeyConstraintError();
+        } catch (Exception $e) {
+            return Responses::notFound(trans('entities.permitted-user'));
+        }
     }
 }

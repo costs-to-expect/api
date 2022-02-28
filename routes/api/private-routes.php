@@ -76,6 +76,11 @@ Route::group(
         )->name('resource-type.delete');
 
         Route::delete(
+            'resource-types/{resource_type_id}/permitted-users/{permitted_user_id}',
+            [PermittedUserManage::class, 'delete']
+        )->name('permitted-user.delete');
+
+        Route::delete(
             'resource-types/{resource_type_id}/categories/{category_id}',
             'CategoryManage@delete'
         );

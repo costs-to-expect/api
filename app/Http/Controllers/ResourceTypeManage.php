@@ -100,7 +100,7 @@ class ResourceTypeManage extends Controller
         }
 
         $resource_type_item_type = (new ResourceTypeItemType())->instance($resource_type_id);
-        $permitted_user = (new PermittedUser())->instance($resource_type_id, $this->user_id);
+        $permitted_user = (new PermittedUser())->instanceByUserId($resource_type_id, $this->user_id);
         $resource_type = (new ResourceType())->find($resource_type_id);
 
         $categories = (new Category())->total(

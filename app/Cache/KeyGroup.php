@@ -10,6 +10,7 @@ class KeyGroup
     private Key $key;
 
     public const PERMITTED_USER_CREATE = 'permitted_user_create';
+    public const PERMITTED_USER_DELETE = 'permitted_user_delete';
 
     public const RESOURCE_CREATE = 'resource_create';
     public const RESOURCE_DELETE = 'resource_delete';
@@ -112,6 +113,7 @@ class KeyGroup
 
             case self::RESOURCE_TYPE_CREATE:
             case self::RESOURCE_TYPE_DELETE:
+            case self::PERMITTED_USER_DELETE:
                 return [
                     $this->key->resourceTypes(),
                     $this->key->permittedResourceTypes(),
