@@ -12,7 +12,7 @@ class PermittedUserManageTest extends TestCase
     {
         $this->actingAs(User::find(1));
 
-        $id = $this->helperCreateResourceType();
+        $id = $this->createAndReturnResourceTypeId();
 
         $response = $this->postPermittedUser(
             $id,
@@ -27,7 +27,7 @@ class PermittedUserManageTest extends TestCase
     {
         $this->actingAs(User::find(1));
 
-        $id = $this->helperCreateResourceType();
+        $id = $this->createAndReturnResourceTypeId();
 
         $response = $this->postPermittedUser(
             $id,
@@ -44,8 +44,8 @@ class PermittedUserManageTest extends TestCase
     {
         $this->actingAs(User::find(1));
 
-        $id = $this->helperCreateResourceType();
-        $user = $this->fetchRandomUser();
+        $id = $this->createAndReturnResourceTypeId();
+        $user = $this->getARandomUser();
 
         $response = $this->postPermittedUser(
             $id,
@@ -62,8 +62,8 @@ class PermittedUserManageTest extends TestCase
     {
         $this->actingAs(User::find(1));
 
-        $resource_type_id = $this->helperCreateResourceType();
-        $user = $this->fetchRandomUser();
+        $resource_type_id = $this->createAndReturnResourceTypeId();
+        $user = $this->getARandomUser();
 
         $response = $this->postPermittedUser(
             $resource_type_id,
@@ -74,7 +74,7 @@ class PermittedUserManageTest extends TestCase
 
         $response->assertStatus(204);
 
-        $response = $this->fetchPermittedUsers(['resource_type_id'=> $resource_type_id]);
+        $response = $this->getPermittedUsers(['resource_type_id'=> $resource_type_id]);
         $response->assertStatus(200);
 
         $permitted_user_id = $response->json()[1]['id'];

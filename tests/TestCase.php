@@ -42,6 +42,43 @@ abstract class TestCase extends BaseTestCase
         self::assertTrue($result->isValid());
     }
 
+    protected function createAndReturnResourceId(string $resource_type_id): string
+    {
+        $response = $this->postResource(
+            $resource_type_id,
+            [
+                'name' => $this->faker->text(200),
+                'description' => $this->faker->text(200),
+                'item_subtype_id' => 'a56kbWV82n'
+            ]
+        );
+
+        if ($response->assertStatus(201)) {
+            return $response->json('id');
+        }
+
+        $this->fail('Unable to create the resource');
+    }
+
+    protected function createAndReturnResourceTypeId(): string
+    {
+        $response = $this->postResourceType(
+            [
+                'name' => $this->faker->text(255),
+                'description' => $this->faker->text,
+                'data' => '{"field":true}',
+                'item_type_id' => 'OqZwKX16bW',
+                'public' => false
+            ]
+        );
+
+        if ($response->assertStatus(201)) {
+            return $response->json('id');
+        }
+
+        $this->fail('Unable to create the resource type');
+    }
+
     protected function deletePermittedUser(string $resource_type_id, string $permitted_user_id): TestResponse
     {
         return $this->delete(
@@ -63,66 +100,34 @@ abstract class TestCase extends BaseTestCase
         );
     }
 
-    protected function fetchPermittedUser(array $parameters = []): TestResponse
-    {
-        return $this->get(route('permitted-user.show', $parameters));
-    }
-
-    protected function fetchPermittedUsers(array $parameters = []): TestResponse
-    {
-        return $this->get(route('permitted-user.list', $parameters));
-    }
-
-    protected function fetchRandomUser()
+    protected function getARandomUser()
     {
         return User::query()->where('id', '!=', 1)->inRandomOrder()->first();
     }
 
-    protected function fetchResourceType(array $parameters = []): TestResponse
+    protected function getRoute(string $route, array $parameters = []): TestResponse
     {
-        return $this->get(route('resource-type.show', $parameters));
+        return $this->get(route($route, $parameters));
     }
 
-    protected function fetchResourceTypes(array $parameters = []): TestResponse
+    protected function getPermittedUser(array $parameters = []): TestResponse
     {
-        return $this->get(route('resource-type.list', $parameters));
+        return $this->getRoute('permitted-user.show', $parameters);
     }
 
-    protected function helperCreateResource(string $resource_type_id): string
+    protected function getPermittedUsers(array $parameters = []): TestResponse
     {
-        $response = $this->postResource(
-            $resource_type_id,
-            [
-                'name' => $this->faker->text(200),
-                'description' => $this->faker->text(200),
-                'item_subtype_id' => 'a56kbWV82n'
-            ]
-        );
-
-        if ($response->assertStatus(201)) {
-            return $response->json('id');
-        }
-
-        $this->fail('Unable to create the resource');
+        return $this->getRoute('permitted-user.list', $parameters);
     }
 
-    protected function helperCreateResourceType(): string
+    protected function getResourceType(array $parameters = []): TestResponse
     {
-        $response = $this->postResourceType(
-            [
-                'name' => $this->faker->text(255),
-                'description' => $this->faker->text,
-                'data' => '{"field":true}',
-                'item_type_id' => 'OqZwKX16bW',
-                'public' => false
-            ]
-        );
+        return $this->getRoute('resource-type.show', $parameters);
+    }
 
-        if ($response->assertStatus(201)) {
-            return $response->json('id');
-        }
-
-        $this->fail('Unable to create the resource type');
+    protected function getResourceTypes(array $parameters = []): TestResponse
+    {
+        return $this->getRoute('resource-type.list', $parameters);
     }
 
     protected function patchResource(string $resource_type_id, string $resource_id, array $payload): TestResponse

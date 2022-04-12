@@ -729,7 +729,7 @@ class AuthenticationTest extends TestCase
     /** @test */
     public function update_password_success(): void
     {
-        $this->actingAs(User::find($this->fetchRandomUser()->id));
+        $this->actingAs(User::find($this->getARandomUser()->id));
 
         $new_password = $this->faker->password(12);
 
@@ -775,7 +775,7 @@ class AuthenticationTest extends TestCase
     /** @test */
     public function update_profile_success(): void
     {
-        $this->actingAs(User::find($this->fetchRandomUser()->id));
+        $this->actingAs(User::find($this->getARandomUser()->id));
 
         $response = $this->post(
             'v2/auth/update-profile',

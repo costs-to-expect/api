@@ -12,12 +12,12 @@ class PermittedUserViewTest extends TestCase
     {
         $this->actingAs(User::find(1));
 
-        $response = $this->fetchResourceTypes();
+        $response = $this->getResourceTypes();
         $response->assertStatus(200);
 
         foreach ($response->json() as $resource_type) {
 
-            $permitted_user_response = $this->fetchPermittedUsers(['resource_type_id'=> $resource_type['id']]);
+            $permitted_user_response = $this->getPermittedUsers(['resource_type_id'=> $resource_type['id']]);
             $permitted_user_response->assertStatus(200);
 
             foreach ($permitted_user_response->json() as $permitted_user) {
@@ -37,17 +37,17 @@ class PermittedUserViewTest extends TestCase
     {
         $this->actingAs(User::find(1));
 
-        $response = $this->fetchResourceTypes(['offset'=>0, 'limit'=> 1]);
+        $response = $this->getResourceTypes(['offset'=>0, 'limit'=> 1]);
         $response->assertStatus(200);
 
         $resource_type_id = $response->json()[0]['id'];
 
-        $response = $this->fetchPermittedUsers(['resource_type_id'=> $resource_type_id]);
+        $response = $this->getPermittedUsers(['resource_type_id'=> $resource_type_id]);
         $response->assertStatus(200);
 
         $permitted_user_id = $response->json()[0]['id'];
 
-        $response = $this->fetchPermittedUser(['resource_type_id'=> $resource_type_id, 'permitted_user_id' => $permitted_user_id]);
+        $response = $this->getPermittedUser(['resource_type_id'=> $resource_type_id, 'permitted_user_id' => $permitted_user_id]);
         $response->assertStatus(200);
 
         $this->assertJsonIsPermittedUser($response->content());
