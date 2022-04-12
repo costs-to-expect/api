@@ -229,49 +229,36 @@
                     <h3>Added</h3>
 
                     <ul>
-                        <li>We have added additional tests for the `ResourceManage` controller</li>
-                        <li>We have added tests for the `ResourceTypeView` controller</li>
-                        <li>We have added a logout route</li>
-                        <li>We have added an OPTIONS request for `/auth/create-new-password`</li>
-                        <li>We have added an OPTIONS request for `/auth/create-password`</li>
-                        <li>We have added an OPTIONS request for `/auth/forgot-password`</li>
-                        <li>We have added an OPTIONS request for `/auth/login`</li>
-                        <li>We have added an OPTIONS request for `/auth/register`</li>
-                        <li>We have added an OPTIONS request for `/auth/update-password`</li>
-                        <li>We have added an OPTIONS request for `/auth/update-profile`</li>
-                        <li>We have added an OPTIONS request for `/auth/user`</li>
-                        <li>We have added an OPTIONS request for `/auth/check`</li>
+                        <li>We have updated the `/auth/user` route, the route will now show any active created tokens</li>
+                        <li>We have added `device_name` as an optional field on sign-in, if set, the generated token will be prefixed with the device name</li>
+                        <li>We have added an `include-permitted-users` parameter when requesting a resource type, you will be able to see all the permitted users without having to go down the tree</li>
+                        <li>If an API response includes a related object, the first field should be the URI to the relevant collection or resource, we have started updating responses</li>
+                        <li>We have added a `auth/user/tokens` route to show the active tokens, you can view an individual token as well as delete a token</li>
+                        <li>We have added a notification for failed jobs, if the `ClearCache` job fails we will get an email, luckily, it doesn't ever fail :)</li>
+                        <li>We have added the ability to assign  permitted users, if you have access to a resource type you can assign a known user to the resource type</li>
+                        <li>We have added a view permitted user endpoint</li>
+                        <li>We have added the ability to delete a permitted user, you can delete any permitted user with access to the resource type, including yourself</li>
+                        <li>We have added initial tests for the permitted user routes</li>
                     </ul>
 
                     <h3>Changed</h3>
 
                     <ul>
-                        <li>We have made a couple of minor changes to the Docker setup</li>
-                        <li>We have updated the README because of minor Docker changes and corrected the table layouts in the README file</li>
-                        <li>We have updated all front-end and back-end dependencies</li>
-                        <li>We have updated the copyright, we are now in 2022</li>
-                        <li>We have added additional feature tests and removed some duplication in the tests, the README details the current test status</li>
-                        <li>General refactoring, switched to method injection and logging exception messages</li>
-                        <li>We are switching to named routes and have updated some of the route files, more will be updated as additional tests are created</li>
-                        <li>We have done a quick review of each of the model classes and fixed a few tiny issues</li>
-                        <li>We have reviewed all the `ItemType` classes, improved organisation with additional namespaces, renamed classes and methods, all with the goal being to try and make everything clearer</li>
-                        <li>We have reviewed all item based controllers and switched to methods per item type rather than hiding all the logic in larger item classes. There is slightly more duplication but this will allow us to more easily customise each item type as new ones are added, I'm looking at you forecasting</li>
-                        <li>We have updated the item/categories routes and will return a 405 when a category is not supported for the item type</li>
-                        <li>We have updated the item/subcategories routes and will return a 405 when a subcategory is not supported for the item type</li>
-                        <li>The Authentication controller no longer extends from the base app controller, it was doing some unnecessary work</li>
+                        <li>We have updated sign-in to clear tokens that have not been used for a year</li>
+                        <li>We have added additional validation to `/auth/login` to match all the create password routes</li>
+                        <li>We have removed additional references to our `item-type` entity class, keep code in the individual item type namespaces</li>
+                        <li>We have converted out `Mailables` to `Notifications` and they get send via the queue</li>
+                        <li>We have updated the `partial-transfers` route to use methods per item types, this way we can correctly return a 405 when an item doesn't support partial transfers</li>
+                        <li>We have updated the `transfers` route to use methods per item types, this was we can correctly return a 405 when an item doesn't support transfers</li>
+                        <li>We have localised all response messages in the Authentication controller to match the rest of the API</li>
                     </ul>
 
                     <h3>Fixed</h3>
 
                     <ul>
-                        <li>We have fixed the `delete_resource_type_success` test, wrong route</li>
-                        <li>The `notFoundOrNotAccessible` response will optionally return a 403 if not accessible and not a 404</li>
-                    </ul>
-
-                    <h3>Removed</h3>
-
-                    <ul>
-                        <li>We have removed a few files not used by the API</li>
+                        <li>We have fixed our Authentication tests, we no longer overwrite the initial user, additionally, we have updated three tests to return success on a 422, not a 401</li>
+                        <li>We have corrected a couple of parameter conversions, two parameters not correctly being converted to Booleans</li>
+                        <li>Unable to delete an `allocated-expense`, need to clear the partial transfers table</li>
                     </ul>
                 </div>
             </div>
