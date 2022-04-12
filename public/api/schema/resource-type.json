@@ -48,6 +48,18 @@
                 "count": {
                     "type": "integer"
                 }
+            },
+            "required": [
+                "count"
+            ]
+
+        },
+        "permitted_users": {
+            "type": "object",
+            "properties": {
+                "count": {
+                    "type": "integer"
+                }
             }
 
         }

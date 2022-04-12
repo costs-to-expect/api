@@ -21,10 +21,6 @@ abstract class Transformer
 
     protected array $transformed;
 
-    /**
-     * @param array $to_transform
-     * @param array $related Pass in optional related data arrays
-     */
     public function __construct(array $to_transform, array $related = [])
     {
         $this->hash = new Hash();
@@ -35,11 +31,6 @@ abstract class Transformer
         $this->format($to_transform);
     }
 
-    /**
-     * Format the data
-     *
-     * @param array $to_transform
-     */
     abstract protected function format(array $to_transform): void;
 
     public function asJson(): ?string

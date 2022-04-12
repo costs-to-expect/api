@@ -18,21 +18,9 @@ abstract class TestCase extends BaseTestCase
     protected string $test_user_email = 'test-account-email@email.com';
     protected string $test_user_password = 'test-account-secret-password';
 
-    protected function setUp(): void
+    protected function assertJsonIsPermittedUser($content): void
     {
-        parent::setUp();
-
-        $result = DB::select(DB::raw("SHOW TABLES LIKE 'users';"));
-
-        if (!count($result)) {
-            $this->artisan('migrate:fresh');
-
-            $user = new User();
-            $user->name = $this->faker->name;
-            $user->email = $this->test_user_email;
-            $user->password = Hash::make($this->test_user_password);
-            $user->save();
-        }
+        $this->assertJsonMatchesSchema($content, 'api/schema/permitted-user.json');
     }
 
     protected function assertJsonIsResource($content): void
@@ -54,56 +42,25 @@ abstract class TestCase extends BaseTestCase
         self::assertTrue($result->isValid());
     }
 
-    protected function deleteResource(string $resource_type_id, $resource_id): TestResponse
+    protected function createAndReturnResourceId(string $resource_type_id): string
     {
-        return $this->delete(
-            route('resource.delete', ['resource_type_id' => $resource_type_id, 'resource_id' => $resource_id]), []
+        $response = $this->postResource(
+            $resource_type_id,
+            [
+                'name' => $this->faker->text(200),
+                'description' => $this->faker->text(200),
+                'item_subtype_id' => 'a56kbWV82n'
+            ]
         );
+
+        if ($response->assertStatus(201)) {
+            return $response->json('id');
+        }
+
+        $this->fail('Unable to create the resource');
     }
 
-    protected function deleteResourceType(string $resource_type_id): TestResponse
-    {
-        return $this->delete(
-            route('resource-type.delete', ['resource_type_id' => $resource_type_id]), []
-        );
-    }
-
-    protected function patchResourceType(string $resource_type_id, array $payload): TestResponse
-    {
-        return $this->patch(
-            route('resource-type.update', ['resource_type_id' => $resource_type_id]),
-            $payload
-        );
-    }
-
-    protected function patchResource(string $resource_type_id, string $resource_id, array $payload): TestResponse
-    {
-        return $this->patch(
-            route(
-                'resource.update',
-                [
-                    'resource_type_id' => $resource_type_id,
-                    'resource_id' => $resource_id
-                ]
-            ),
-            $payload
-        );
-    }
-
-    protected function postResource(string $resource_type_id, array $payload): TestResponse
-    {
-        return $this->post(
-            route('resource.create', ['resource_type_id' => $resource_type_id]),
-            $payload
-        );
-    }
-
-    protected function postResourceType(array $payload): TestResponse
-    {
-        return $this->post(route('resource-type.create'), $payload);
-    }
-
-    protected function helperCreateResourceType(): string
+    protected function createAndReturnResourceTypeId(): string
     {
         $response = $this->postResourceType(
             [
@@ -122,31 +79,114 @@ abstract class TestCase extends BaseTestCase
         $this->fail('Unable to create the resource type');
     }
 
-    protected function fetchResourceType(array $parameters = []): TestResponse
+    protected function deletePermittedUser(string $resource_type_id, string $permitted_user_id): TestResponse
     {
-        return $this->get(route('resource-type.show', $parameters));
-    }
-
-    protected function fetchResourceTypes(array $parameters = []): TestResponse
-    {
-        return $this->get(route('resource-type.list', $parameters));
-    }
-
-    protected function helperCreateResource(string $resource_type_id): string
-    {
-        $response = $this->postResource(
-            $resource_type_id,
-            [
-                'name' => $this->faker->text(200),
-                'description' => $this->faker->text(200),
-                'item_subtype_id' => 'a56kbWV82n'
-            ]
+        return $this->delete(
+            route('permitted-user.delete', ['resource_type_id' => $resource_type_id, 'permitted_user_id' => $permitted_user_id]), []
         );
+    }
 
-        if ($response->assertStatus(201)) {
-            return $response->json('id');
+    protected function deleteResource(string $resource_type_id, $resource_id): TestResponse
+    {
+        return $this->delete(
+            route('resource.delete', ['resource_type_id' => $resource_type_id, 'resource_id' => $resource_id]), []
+        );
+    }
+
+    protected function deleteResourceType(string $resource_type_id): TestResponse
+    {
+        return $this->delete(
+            route('resource-type.delete', ['resource_type_id' => $resource_type_id]), []
+        );
+    }
+
+    protected function getARandomUser()
+    {
+        return User::query()->where('id', '!=', 1)->inRandomOrder()->first();
+    }
+
+    protected function getRoute(string $route, array $parameters = []): TestResponse
+    {
+        return $this->get(route($route, $parameters));
+    }
+
+    protected function getPermittedUser(array $parameters = []): TestResponse
+    {
+        return $this->getRoute('permitted-user.show', $parameters);
+    }
+
+    protected function getPermittedUsers(array $parameters = []): TestResponse
+    {
+        return $this->getRoute('permitted-user.list', $parameters);
+    }
+
+    protected function getResourceType(array $parameters = []): TestResponse
+    {
+        return $this->getRoute('resource-type.show', $parameters);
+    }
+
+    protected function getResourceTypes(array $parameters = []): TestResponse
+    {
+        return $this->getRoute('resource-type.list', $parameters);
+    }
+
+    protected function patchResource(string $resource_type_id, string $resource_id, array $payload): TestResponse
+    {
+        return $this->patch(
+            route(
+                'resource.update',
+                [
+                    'resource_type_id' => $resource_type_id,
+                    'resource_id' => $resource_id
+                ]
+            ),
+            $payload
+        );
+    }
+
+    protected function patchResourceType(string $resource_type_id, array $payload): TestResponse
+    {
+        return $this->patch(
+            route('resource-type.update', ['resource_type_id' => $resource_type_id]),
+            $payload
+        );
+    }
+
+    protected function postPermittedUser(string $resource_type_id, array $payload): TestResponse
+    {
+        return $this->post(
+            route('permitted-user.create', ['resource_type_id' => $resource_type_id]),
+            $payload
+        );
+    }
+
+    protected function postResource(string $resource_type_id, array $payload): TestResponse
+    {
+        return $this->post(
+            route('resource.create', ['resource_type_id' => $resource_type_id]),
+            $payload
+        );
+    }
+
+    protected function postResourceType(array $payload): TestResponse
+    {
+        return $this->post(route('resource-type.create'), $payload);
+    }
+
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        $result = DB::select(DB::raw("SHOW TABLES LIKE 'users';"));
+
+        if (!count($result)) {
+            $this->artisan('migrate:fresh');
+
+            $user = new User();
+            $user->name = $this->faker->name;
+            $user->email = $this->test_user_email;
+            $user->password = Hash::make($this->test_user_password);
+            $user->save();
         }
-
-        $this->fail('Unable to create the resource');
     }
 }

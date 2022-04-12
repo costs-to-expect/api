@@ -2,18 +2,18 @@
 
 namespace App\Http\Controllers;
 
+use App\ItemType\Entity;
 use App\Jobs\ClearCache;
 use App\Models\Item;
 use App\Models\ItemTransfer;
 use App\Request\Validate\ItemTransfer as ItemTransferValidator;
+use App\Response\Responses;
 use Exception;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\DB;
 
 /**
- * Transfer items
- *
  * @author Dean Blackborough <dean@g3d-development.com>
  * @copyright Dean Blackborough 2018-2022
  * @license https://github.com/costs-to-expect/api/blob/master/LICENSE
@@ -30,6 +30,21 @@ class ItemTransferManage extends Controller
             \App\Response\Responses::notFoundOrNotAccessible(trans('entities.item'));
         }
 
+        $item_type = Entity::itemType((int) $resource_type_id);
+
+        return match ($item_type) {
+            'allocated-expense', 'simple-expense' => $this->transferItem((int) $resource_type_id, (int) $resource_id, (int) $item_id),
+            'game', 'simple-item' => Responses::notSupported(),
+            default => throw new \OutOfRangeException('No item type definition for ' . $item_type, 500),
+        };
+    }
+
+    private function transferItem(
+        int $resource_type_id,
+        int $resource_id,
+        int $item_id
+    ): JsonResponse
+    {
         $user_id = $this->user_id;
 
         $validator = (new ItemTransferValidator)->create(
@@ -69,12 +84,12 @@ class ItemTransferManage extends Controller
 
                 $item_transfer = new ItemTransfer([
                     'resource_type_id' => $resource_type_id,
-                    'from' => (int)$resource_id,
+                    'from' => $resource_id,
                     'to' => $new_resource_id,
                     'item_id' => $item_id,
                     'transferred_by' => $user_id
                 ]);
-                $item_transfer->save();
+                return $item_transfer->save();
             });
 
             ClearCache::dispatch($cache_job_payload->payload());

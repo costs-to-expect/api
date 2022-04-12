@@ -12,7 +12,7 @@ class ResourceTypeViewTest extends TestCase
     {
         $this->actingAs(User::find(1));
 
-        $response = $this->fetchResourceTypes();
+        $response = $this->getResourceTypes();
 
         $response->assertStatus(200);
 
@@ -32,7 +32,7 @@ class ResourceTypeViewTest extends TestCase
     {
         $this->actingAs(User::find(1));
 
-        $response = $this->fetchResourceTypes(['offset'=>1, 'limit'=> 1]);
+        $response = $this->getResourceTypes(['offset'=>1, 'limit'=> 1]);
 
         $response->assertStatus(200);
         $response->assertHeader('X-Offset', 1);
@@ -54,12 +54,12 @@ class ResourceTypeViewTest extends TestCase
     {
         $this->actingAs(User::find(1));
 
-        $response = $this->fetchResourceTypes(['offset'=>0, 'limit'=> 1]);
+        $response = $this->getResourceTypes(['offset'=>0, 'limit'=> 1]);
         $response->assertStatus(200);
 
         $resource_type_id = $response->json()[0]['id'];
 
-        $response = $this->fetchResourceType(['resource_type_id'=> $resource_type_id]);
+        $response = $this->getResourceType(['resource_type_id'=> $resource_type_id]);
         $response->assertStatus(200);
 
         $this->assertJsonIsResourceType($response->content());

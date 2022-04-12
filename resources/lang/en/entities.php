@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 return [
     'resource-type' => 'Resource Type',
+    'permitted-user' => 'Permitted User',
     'resource' => 'Resource',
     'category' => 'Category',
     'subcategory' => 'Subcategory',

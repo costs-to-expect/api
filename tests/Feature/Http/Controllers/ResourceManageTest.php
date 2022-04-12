@@ -3,7 +3,6 @@
 namespace Tests\Feature\Http\Controllers;
 
 use App\User;
-use Illuminate\Support\Facades\Auth;
 use Tests\TestCase;
 
 class ResourceManageTest extends TestCase
@@ -13,7 +12,7 @@ class ResourceManageTest extends TestCase
     {
         $this->actingAs(User::find(1));
 
-        $id = $this->helperCreateResourceType();
+        $id = $this->createAndReturnResourceTypeId();
 
         $response = $this->postResource(
             $id,
@@ -33,7 +32,7 @@ class ResourceManageTest extends TestCase
     {
         $this->actingAs(User::find(1));
 
-        $id = $this->helperCreateResourceType();
+        $id = $this->createAndReturnResourceTypeId();
 
         $response = $this->postResource(
             $id,
@@ -53,7 +52,7 @@ class ResourceManageTest extends TestCase
     {
         $this->actingAs(User::find(1));
 
-        $id = $this->helperCreateResourceType();
+        $id = $this->createAndReturnResourceTypeId();
 
         $response = $this->postResource(
             $id,
@@ -72,7 +71,7 @@ class ResourceManageTest extends TestCase
     {
         $this->actingAs(User::find(1));
 
-        $id = $this->helperCreateResourceType();
+        $id = $this->createAndReturnResourceTypeId();
 
         $response = $this->postResource(
             $id,
@@ -91,7 +90,7 @@ class ResourceManageTest extends TestCase
     {
         $this->actingAs(User::find(1));
 
-        $id = $this->helperCreateResourceType();
+        $id = $this->createAndReturnResourceTypeId();
 
         $response = $this->postResource(
             $id,
@@ -106,7 +105,7 @@ class ResourceManageTest extends TestCase
     {
         $this->actingAs(User::find(1));
 
-        $id = $this->helperCreateResourceType();
+        $id = $this->createAndReturnResourceTypeId();
 
         $name = $this->faker->text(200);
 
@@ -139,7 +138,7 @@ class ResourceManageTest extends TestCase
     {
         $this->actingAs(User::find(1));
 
-        $id = $this->helperCreateResourceType();
+        $id = $this->createAndReturnResourceTypeId();
 
         $response = $this->postResource(
             $id,
@@ -159,7 +158,7 @@ class ResourceManageTest extends TestCase
     {
         $this->actingAs(User::find(1));
 
-        $id = $this->helperCreateResourceType();
+        $id = $this->createAndReturnResourceTypeId();
 
         $response = $this->postResource(
             $id,
@@ -180,8 +179,8 @@ class ResourceManageTest extends TestCase
     {
         $this->actingAs(User::find(1));
 
-        $resource_type_id = $this->helperCreateResourceType();
-        $id = $this->helperCreateResource($resource_type_id);
+        $resource_type_id = $this->createAndReturnResourceTypeId();
+        $id = $this->createAndReturnResourceId($resource_type_id);
 
         $response = $this->deleteResource($resource_type_id, $id);
 
@@ -193,8 +192,8 @@ class ResourceManageTest extends TestCase
     {
         $this->actingAs(User::find(1));
 
-        $resource_type_id = $this->helperCreateResourceType();
-        $resource_id = $this->helperCreateResource($resource_type_id);
+        $resource_type_id = $this->createAndReturnResourceTypeId();
+        $resource_id = $this->createAndReturnResourceId($resource_type_id);
 
         $response = $this->patchResource(
             $resource_type_id,
@@ -212,8 +211,8 @@ class ResourceManageTest extends TestCase
     {
         $this->actingAs(User::find(1));
 
-        $resource_type_id = $this->helperCreateResourceType();
-        $resource_id = $this->helperCreateResource($resource_type_id);
+        $resource_type_id = $this->createAndReturnResourceTypeId();
+        $resource_id = $this->createAndReturnResourceId($resource_type_id);
 
         $response = $this->patchResource(
             $resource_type_id,
@@ -229,7 +228,7 @@ class ResourceManageTest extends TestCase
     {
         $this->actingAs(User::find(1));
 
-        $resource_type_id = $this->helperCreateResourceType();
+        $resource_type_id = $this->createAndReturnResourceTypeId();
 
         // Create first resource
         $name = $this->faker->text(200);
@@ -274,8 +273,8 @@ class ResourceManageTest extends TestCase
     {
         $this->actingAs(User::find(1));
 
-        $resource_type_id = $this->helperCreateResourceType();
-        $resource_id = $this->helperCreateResource($resource_type_id);
+        $resource_type_id = $this->createAndReturnResourceTypeId();
+        $resource_id = $this->createAndReturnResourceId($resource_type_id);
 
         $response = $this->patchResource(
             $resource_type_id,

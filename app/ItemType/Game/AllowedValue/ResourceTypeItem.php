@@ -20,8 +20,6 @@ class ResourceTypeItem extends ResourceTypeAllowedValue
             $viewable_resource_types
         );
 
-        $this->entity = new Item();
-
         $this->setAllowedValueFields();
     }
 
@@ -58,11 +56,9 @@ class ResourceTypeItem extends ResourceTypeAllowedValue
                 $allowed_values[$winner_id] = [
                     'value' => $winner_id,
                     'name' => $winner['category_name'],
-                    'description' => trans('resource-type-item-type-' . $this->entity->type() .
-                            '/allowed-values.description-prefix-winner_id') .
+                    'description' => trans('resource-type-item-type-game/allowed-values.description-prefix-winner_id') .
                         $winner['category_name'] .
-                        trans('resource-type-item-type-' . $this->entity->type() .
-                            '/allowed-values.description-suffix-winner_id')
+                        trans('resource-type-item-type-game/allowed-values.description-suffix-winner_id')
                 ];
             }
 

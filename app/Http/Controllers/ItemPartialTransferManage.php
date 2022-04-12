@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\ItemType\Entity;
 use App\Jobs\ClearCache;
 use App\Models\ItemPartialTransfer;
 use App\Request\Validate\ItemPartialTransfer as ItemPartialTransferValidator;
@@ -12,22 +13,12 @@ use Illuminate\Database\QueryException;
 use Illuminate\Http\JsonResponse;
 
 /**
- * Partial transfer of items
- *
  * @author Dean Blackborough <dean@g3d-development.com>
  * @copyright Dean Blackborough 2018-2022
  * @license https://github.com/costs-to-expect/api/blob/master/LICENSE
  */
 class ItemPartialTransferManage extends Controller
 {
-    /**
-     * Delete the requested partial transfer
-     *
-     * @param $resource_type_id
-     * @param $item_partial_transfer_id
-     *
-     * @return JsonResponse
-     */
     public function delete(
         $resource_type_id,
         $item_partial_transfer_id
@@ -37,6 +28,20 @@ class ItemPartialTransferManage extends Controller
             \App\Response\Responses::notFoundOrNotAccessible(trans('entities.item-partial-transfer'));
         }
 
+        $item_type = Entity::itemType((int) $resource_type_id);
+
+        return match ($item_type) {
+            'allocated-expense' => $this->deleteAllocatedExpense((int) $resource_type_id, (int) $item_partial_transfer_id),
+            'game', 'simple-expense', 'simple-item' => Responses::notSupported(),
+            default => throw new \OutOfRangeException('No item type definition for ' . $item_type, 500),
+        };
+    }
+
+    private function deleteAllocatedExpense(
+        int $resource_type_id,
+        int $item_partial_transfer_id
+    ): JsonResponse
+    {
         $cache_job_payload = (new \App\Cache\JobPayload())
             ->setGroupKey(\App\Cache\KeyGroup::ITEM_PARTIAL_TRANSFER_DELETE)
             ->setRouteParameters([
@@ -74,6 +79,21 @@ class ItemPartialTransferManage extends Controller
             \App\Response\Responses::notFoundOrNotAccessible(trans('entities.item'));
         }
 
+        $item_type = Entity::itemType((int) $resource_type_id);
+
+        return match ($item_type) {
+            'allocated-expense' => $this->transferAllocatedExpense((int) $resource_type_id, (int) $resource_id, (int) $item_id),
+            'game', 'simple-expense', 'simple-item' => Responses::notSupported(),
+            default => throw new \OutOfRangeException('No item type definition for ' . $item_type, 500),
+        };
+    }
+
+    private function transferAllocatedExpense(
+        int $resource_type_id,
+        int $resource_id,
+        int $item_id
+    ): JsonResponse
+    {
         $validator = (new ItemPartialTransferValidator)->create(
             [
                 'resource_type_id' => $resource_type_id,
@@ -96,7 +116,7 @@ class ItemPartialTransferManage extends Controller
             ->setRouteParameters([
                 'resource_type_id' => $resource_type_id
             ])
-            ->setPermittedUser($this->writeAccessToResourceType((int) $resource_type_id))
+            ->setPermittedUser($this->writeAccessToResourceType(($resource_type_id)))
             ->setUserId($this->user_id);
 
         try {
@@ -119,8 +139,8 @@ class ItemPartialTransferManage extends Controller
         }
 
         $item_partial_transfer = (new ItemPartialTransfer())->single(
-            (int) $resource_type_id,
-            (int) $partial_transfer->id
+            $resource_type_id,
+            $partial_transfer->id
         );
 
         if ($item_partial_transfer === null) {

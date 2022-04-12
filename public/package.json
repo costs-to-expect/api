@@ -3,7 +3,7 @@
     "version": "2",
     "description": "The Costs to Expect API",
     "dependencies": {
-        "bootstrap": "^4.6",
+        "bootstrap": "^4.6.1",
         "jquery": "^3.5.1",
         "popper.js": "^1.16.1"
     },

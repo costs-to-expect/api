@@ -11,6 +11,9 @@ return [
     'auth_update_password_POST' => 'Update your account password',
     'auth_update_profile_POST' => 'Update your account profile',
     'auth_user_GET' => 'Return the account details for the signed-in user',
+    'auth_user_tokens_GET' => 'Return the tokens for the signed-in user',
+    'auth_user_token_GET' => 'Return the requested token for the signed-in user',
+    'auth_user_token_DELETE' => 'Delete the requested token for the signed-in user',
     'auth_check_GET' => 'Check to see if the user is authenticated',
 
     'api_GET_index' => 'Return all the API routes',
@@ -89,7 +92,9 @@ return [
     'item_partial_transfer_DELETE' => 'Delete the selected partial transfer',
 
     'permitted_user_GET_index' => 'Return the permitted users',
+    'permitted_user_GET_show' => 'Return the selected permitted user',
     'permitted_user_POST' => 'Assign a permitted user',
+    'permitted_user_DELETE' => 'Delete the selected permitted user',
 
     'request_GET_error-log' => 'Return the error log',
     'request_GET_cache' => 'Return the number of cached keys for the authenticated user',

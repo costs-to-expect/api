@@ -24,11 +24,18 @@ class PermittedUser extends Model
 
     protected $guarded = ['id'];
 
-    public function instance(int $resource_type_id, int $user_id): ?PermittedUser
+    public function instanceByUserId(int $resource_type_id, int $user_id): ?PermittedUser
     {
         return $this->where('resource_type_id', '=', $resource_type_id)->
             where('user_id', '=', $user_id)->
             first();
+    }
+
+    public function instance(int $resource_type_id, int $permitted_user_id): ?PermittedUser
+    {
+        return $this->where('resource_type_id', '=', $resource_type_id)->
+        where('id', '=', $permitted_user_id)->
+        first();
     }
 
     public function totalCount(
@@ -84,5 +91,26 @@ class PermittedUser extends Model
             ->limit($limit)
             ->get()
             ->toArray();
+    }
+
+    public function single(int $resource_type_id, int $permitted_user_id): ?array
+    {
+        $result = $this->select(
+                'permitted_user.id AS permitted_user_id',
+                'users.name AS permitted_user_name',
+                'users.email AS permitted_user_email',
+                'permitted_user.created_at AS permitted_user_created_at'
+            )
+            ->join('users', 'permitted_user.user_id', 'users.id')
+            ->where('permitted_user.resource_type_id', '=', $resource_type_id)
+            ->where('permitted_user.id', '=', $permitted_user_id)
+            ->get()
+            ->toArray();
+
+        if (count($result) === 0) {
+            return null;
+        }
+
+        return $result[0];
     }
 }

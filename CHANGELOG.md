@@ -2,6 +2,33 @@
 
 The complete changelog for the Costs to Expect REST API, our changelog follows the format defined at https://keepachangelog.com/en/1.0.0/
 
+## [v2.23.0] - 2022-04-12
+## Added
+- We have updated the `/auth/user` route, the route will now show any active created tokens.
+- We have added `device_name` as an optional field on sign-in, if set, the generated token will be prefixed with the device name.
+- We have added an `include-permitted-users` parameter when requesting a resource type, you will be able to see all the permitted users without having to go down the tree.
+- If an API response includes a related object, the first field should be the URI to the relevant collection or resource, we have started updating responses.
+- We have added a `auth/user/tokens` route to show the active tokens, you can view an individual token as well as delete a token.
+- We have added a notification for failed jobs, if the `ClearCache` job fails we will get an email, luckily, it doesn't ever fail :)
+- We have added the ability to assign  permitted users, if you have access to a resource type you can assign a known user to the resource type.
+- We have added a view permitted user endpoint.
+- We have added the ability to delete a permitted user, you can delete any permitted user with access to the resource type, including yourself.
+- We have added initial tests for the permitted user routes.
+
+## Changed
+- We have updated sign-in to clear tokens that have not been used for a year.
+- We have added additional validation to `/auth/login` to match the create password routes.
+- We have removed additional references to our `item-type` entity class, keep code in the individual item type namespaces.
+- We have converted out `Mailables` to `Notifications` and they get send via the queue.
+- We have updated the `partial-transfers` route to use methods per item types, this way we can correctly return a 405 when an item doesn't support partial transfers.
+- We have updated the `transfers` route to use methods per item types, this was we can correctly return a 405 when an item doesn't support transfers.
+- We have localised all response messages in the Authentication controller to match the rest of the API.
+
+## Fixed
+- We have fixed our Authentication tests, we no longer overwrite the initial user, additionally, we have updated three tests to return success on a 422, not a 401.
+- We have corrected a couple of parameter conversions, two parameters not correctly being converted to Booleans.
+- Unable to delete an `allocated-expense`, need to clear the partial transfers table.
+
 ## [v2.22.0] - 2022-01-26
 After being away from the code for a while I've made some changes. I've reduced the complexity around different items types because things had started to get a little complex and I know what is coming next so want to clear out as much unnecessary code as possible. This is just a first pass, I'm sure there will be more but I have many other planned tickets to get on with.
 

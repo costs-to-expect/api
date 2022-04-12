@@ -11,6 +11,7 @@ use App\Option\Auth\Login;
 use App\Option\Auth\Register;
 use App\Option\Auth\UpdatePassword;
 use App\Option\Auth\UpdateProfile;
+use App\Response\Responses;
 use App\User;
 use Exception;
 use Illuminate\Http;
@@ -56,7 +57,7 @@ class Authentication extends \Illuminate\Routing\Controller
         if ($tokens === null || Hash::check($token, $tokens->token) === false) {
             return response()->json(
                 [
-                    'message'=>'Sorry, the email and or token you supplied are invalid'
+                    'message'=> trans('auth.email-or-token-invalid')
                 ],
                 401
             );
@@ -79,7 +80,7 @@ class Authentication extends \Illuminate\Routing\Controller
         if ($validator->fails()) {
             return response()->json(
                 [
-                    'message' => 'Validation error, please review the below',
+                    'message' => trans('responses.validation'),
                     'fields' => $validator->errors()
                 ],
                 422
@@ -102,10 +103,10 @@ class Authentication extends \Illuminate\Routing\Controller
                 return response()->json([], 204);
             }
 
-            return response()->json(['message' => 'Unable to fetch your account to create password, please try again later'], 404);
+            return response()->json(['message' => trans('auth.unable-to-find-account')], 404);
         } catch (Exception $e) {
             Log::error($e->getMessage());
-            return response()->json(['message' => 'Unable to create password, please try again later'], 500);
+            return response()->json(['message' => trans('auth.unable-to-create-password')], 500);
         }
     }
 
@@ -128,7 +129,7 @@ class Authentication extends \Illuminate\Routing\Controller
         if ($tokens === null || Hash::check($token, $tokens->token) === false) {
             return response()->json(
                 [
-                    'message'=>'Sorry, the email and token you supplied are invalid'
+                    'message'=> trans('auth.email-or-token-invalid')
                 ],
                 404
             );
@@ -151,7 +152,7 @@ class Authentication extends \Illuminate\Routing\Controller
         if ($validator->fails()) {
             return response()->json(
                 [
-                    'message' => 'Validation error, please review the below',
+                    'message' => trans('responses.validation'),
                     'fields' => $validator->errors()
                 ],
                 422
@@ -174,10 +175,10 @@ class Authentication extends \Illuminate\Routing\Controller
                 return response()->json([], 204);
             }
 
-            return response()->json(['message' => 'Unable to fetch your account to create password, please try again later'], 500);
+            return response()->json(['message' => trans('auth.unable-to-find-account')], 500);
         } catch (Exception $e) {
             Log::error($e->getMessage());
-            return response()->json(['message' => 'Unable to create password, please try again later'], 500);
+            return response()->json(['message' => trans('auth.unable-to-create-password')], 500);
         }
     }
 
@@ -200,7 +201,7 @@ class Authentication extends \Illuminate\Routing\Controller
         if ($validator->fails()) {
             return response()->json(
                 [
-                    'message' => 'Validation error, please review the errors below',
+                    'message' => trans('responses.validation'),
                     'fields' => $validator->errors()
                 ],
                 422
@@ -232,12 +233,12 @@ class Authentication extends \Illuminate\Routing\Controller
                 }
             } catch (Exception $e) {
                 Log::error($e->getMessage());
-                return response()->json(['error' => 'Unable to process your forgot password request, please try again later'], 500);
+                return response()->json(['error' => trans('auth.unable-process-forgot-password')], 500);
             }
 
             return response()->json(
                 [
-                    'message' => 'Request received, please check your email for instructions on how to create your new password',
+                    'message' => trans('auth.success-forgot-password-request'),
                     'uris' => [
                         'create-new-password' => [
                             'uri' => Config::get('api.app.version.prefix') . '/auth/create-new-password?token=' . $create_token . '&email=' . $email,
@@ -252,7 +253,7 @@ class Authentication extends \Illuminate\Routing\Controller
             );
         }
 
-        return response()->json(['message' => 'Unable to fetch your user account, please try again later'], 404);
+        return response()->json(['message' => trans('auth.unable-to-find-account')], 404);
     }
 
     public function optionsForgotPassword(): Http\JsonResponse
@@ -264,6 +265,34 @@ class Authentication extends \Illuminate\Routing\Controller
 
     public function login(Request $request): Http\JsonResponse
     {
+        $validator = Validator::make(
+            $request->all(),
+            [
+                'email' => [
+                    'required',
+                    'string'
+                ],
+                'password' => [
+                    'required',
+                    'min:12'
+                ],
+                'device_name' => [
+                    'sometimes',
+                    'string'
+                ]
+            ]
+        );
+
+        if ($validator->fails()) {
+            return response()->json(
+                [
+                    'message' => trans('responses.validation'),
+                    'fields' => $validator->errors()
+                ],
+                422
+            );
+        }
+
         if (
             Auth::attempt(
                 [
@@ -275,7 +304,15 @@ class Authentication extends \Illuminate\Routing\Controller
             $user = Auth::user();
 
             if ($user !== null) {
-                $token = $request->user()->createToken('costs-to-expect-api');
+
+                $request->user()->revokeOldTokens();
+
+                $token_name = 'costs-to-expect-api';
+                if ($request->input('device_name') !== null) {
+                    $token_name = str::slug($request->input('device_name')) . ':' .  $token_name;
+                }
+
+                $token = $request->user()->createToken($token_name);
                 return response()->json(
                     [
                         'id' => $this->hash->user()->encode($user->id),
@@ -286,10 +323,10 @@ class Authentication extends \Illuminate\Routing\Controller
                 );
             }
 
-            return response()->json(['message' => 'Unauthorised, credentials invalid'], 401);
+            return response()->json(['message' => trans('auth.failed')], 401);
         }
 
-        return response()->json(['message' => 'Unauthorised, credentials invalid'], 401);
+        return response()->json(['message' => trans('auth.failed')], 401);
     }
 
     public function optionsLogin(): Http\JsonResponse
@@ -303,7 +340,7 @@ class Authentication extends \Illuminate\Routing\Controller
     {
         Auth::logout();
 
-        return response()->json(['message' => 'Account signed out'], 200);
+        return response()->json(['message' => trans('auth.signed-out')], 200);
     }
 
     public function register(Request $request): Http\JsonResponse
@@ -319,7 +356,7 @@ class Authentication extends \Illuminate\Routing\Controller
         if ($validator->fails()) {
             return response()->json(
                 [
-                    'message' => 'Validation error, please review the below',
+                    'message' => trans('responses.validation'),
                     'fields' => $validator->errors()
                 ],
                 422
@@ -353,12 +390,12 @@ class Authentication extends \Illuminate\Routing\Controller
 
         } catch (Exception $e) {
             Log::error($e->getMessage());
-            return response()->json(['error' => 'Unable to create the account, please try again later'], 500);
+            return response()->json(['error' => trans('auth.unable-to-create-account')], 500);
         }
 
         return response()->json(
             [
-                'message' => 'Account created, please check you email for information on how to create your password',
+                'message' => trans('auth.success-account-created'),
                 'uris' => [
                     'create-password' => [
                         'uri' => Config::get('api.app.version.prefix') . '/auth/create-password?token=' . $create_token . '&email=' . $email,
@@ -399,7 +436,7 @@ class Authentication extends \Illuminate\Routing\Controller
         if ($validator->fails()) {
             return response()->json(
                 [
-                    'message' => 'Validation error, please review the messages',
+                    'message' => trans('responses.validation'),
                     'fields' => $validator->errors()
                 ],
                 422
@@ -415,7 +452,7 @@ class Authentication extends \Illuminate\Routing\Controller
             return response()->json([], 204);
         }
 
-        return response()->json(['message' => 'Unauthorised, credentials invalid'], 401);
+        return response()->json(['message' => trans('auth.failed')], 401);
     }
 
     public function optionsUpdateProfile(): Http\JsonResponse
@@ -454,7 +491,7 @@ class Authentication extends \Illuminate\Routing\Controller
         if ($validator->fails()) {
             return response()->json(
                 [
-                    'message' => 'Validation error, please review the messages',
+                    'message' => trans('responses.validation'),
                     'fields' => $validator->errors()
                 ],
                 422
@@ -473,7 +510,7 @@ class Authentication extends \Illuminate\Routing\Controller
             }
 
             if (count($fields) === 0) {
-                return response()->json(['message' => 'You have provided any fields to change'], 400);
+                return response()->json(['message' => trans('responses.patch-empty')], 400);
             }
 
             try {
@@ -485,13 +522,13 @@ class Authentication extends \Illuminate\Routing\Controller
 
             } catch (Exception $e) {
                 Log::error($e->getMessage());
-                return response()->json(['message' => 'Unable to update your profile, please try again'], 401);
+                return response()->json(['message' => trans('auth.unable-to-update-profile')], 401);
             }
 
             return response()->json([], 204);
         }
 
-        return response()->json(['message' => 'Unauthorised, credentials invalid'], 401);
+        return response()->json(['message' => trans('auth.failed')], 401);
     }
 
     public function user(): Http\JsonResponse
@@ -499,15 +536,111 @@ class Authentication extends \Illuminate\Routing\Controller
         $user = auth()->guard('api')->user();
 
         if ($user !== null) {
+
+            $tokens = [];
+            foreach ($user->tokens as $token) {
+                $tokens[] = [
+                    'id' => $token->id,
+                    'name' => $token->name,
+                    'token' => $token->token,
+                    'created' => $token->created_at,
+                    'last_used_at' => $token->last_used_at
+                ];
+            }
+
             $user = [
                 'id' => $this->hash->user()->encode($user->id),
                 'name' => $user->name,
-                'email' => $user->email
+                'email' => $user->email,
+                'tokens' => [
+                    'uri' => route('auth.user.token.list', [], false),
+                    'count' => count($tokens),
+                    'collection' => $tokens
+                ]
             ];
+
             return response()->json($user);
         }
 
-        return response()->json(['message' => 'Unauthorised, credentials invalid'], 401);
+        return response()->json(['message' => trans('auth.failed')], 401);
+    }
+
+    public function tokens(): Http\JsonResponse
+    {
+        $user = auth()->guard('api')->user();
+
+        if ($user !== null) {
+
+            $tokens = [];
+            foreach ($user->tokens as $token) {
+                $tokens[] = [
+                    'id' => $token->id,
+                    'name' => $token->name,
+                    'token' => $token->token,
+                    'created' => $token->created_at,
+                    'last_used_at' => $token->last_used_at
+                ];
+            }
+
+            return response()->json($tokens);
+        }
+
+        return response()->json(['message' => trans('auth.failed')], 401);
+    }
+
+    public function token($token_id): Http\JsonResponse
+    {
+        $user = auth()->guard('api')->user();
+
+        if ($user !== null) {
+
+            $tokens = [];
+            foreach ($user->tokens as $token) {
+                $tokens[$token->id] = [
+                    'id' => $token->id,
+                    'name' => $token->name,
+                    'token' => $token->token,
+                    'created' => $token->created_at,
+                    'last_used_at' => $token->last_used_at
+                ];
+            }
+
+            if (array_key_exists($token_id, $tokens)) {
+                return response()->json($tokens[$token_id]);
+            }
+
+            return Responses::notFound();
+        }
+
+        return response()->json(['message' => trans('auth.failed')], 401);
+    }
+
+    public function deleteToken($token_id): Http\JsonResponse
+    {
+        $user = auth()->guard('api')->user();
+
+        if ($user !== null) {
+
+            $tokens = [];
+            foreach ($user->tokens as $token) {
+                $tokens[$token->id] = [
+                    'id' => $token->id,
+                    'name' => $token->name,
+                    'token' => $token->token,
+                    'created' => $token->created_at,
+                    'last_used_at' => $token->last_used_at
+                ];
+            }
+
+            if (array_key_exists($token_id, $tokens)) {
+                $user->tokens()->where('id', $token_id)->delete();
+                return Responses::successNoContent();
+            }
+
+            return Responses::notFound();
+        }
+
+        return response()->json(['message' => trans('auth.failed')], 401);
     }
 
     public function optionsUser(): Http\JsonResponse
@@ -515,6 +648,27 @@ class Authentication extends \Illuminate\Routing\Controller
         $user = auth()->guard('api')->user();
 
         $response = new \App\Option\Auth\User(['view'=> $user !== null && $user->id !== null]);
+
+        return $response->create()->response();
+    }
+
+    public function optionsTokens(): Http\JsonResponse
+    {
+        $user = auth()->guard('api')->user();
+
+        $response = new \App\Option\Auth\Tokens(['view'=> $user !== null && $user->id !== null]);
+
+        return $response->create()->response();
+    }
+
+    public function optionsToken(): Http\JsonResponse
+    {
+        $user = auth()->guard('api')->user();
+
+        $response = new \App\Option\Auth\Token([
+            'view'=> $user !== null && $user->id !== null,
+            'manage'=> $user !== null && $user->id !== null,
+        ]);
 
         return $response->create()->response();
     }

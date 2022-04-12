@@ -7,6 +7,7 @@ use App\Cache\KeyGroup;
 use App\ItemType\Entity;
 use App\Jobs\ClearCache;
 use App\Models\Item;
+use App\Models\ItemPartialTransfer;
 use App\Models\ItemTransfer;
 use App\Response\Responses;
 use Exception;
@@ -649,6 +650,7 @@ class ItemManage extends Controller
         try {
             DB::transaction(static function() use ($item_id, $item_type_instance, $item_instance) {
                 (new ItemTransfer())->deleteTransfers($item_id);
+                (new ItemPartialTransfer())->deleteTransfers($item_id);
                 $item_type_instance->delete();
                 $item_instance->delete();
             });

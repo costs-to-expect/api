@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\PermittedUserManage;
 use App\Http\Controllers\ResourceManage;
 use App\Http\Controllers\ResourceTypeManage;
 use Illuminate\Support\Facades\Config;
@@ -35,6 +36,11 @@ Route::group(
         );
 
         Route::post(
+            'resource-types/{resource_type_id}/permitted-users',
+            [PermittedUserManage::class, 'create']
+        )->name('permitted-user.create');
+
+        Route::post(
             'resource-types/{resource_type_id}/resources',
             [ResourceManage::class, 'create']
         )->name('resource.create');
@@ -68,6 +74,11 @@ Route::group(
             'resource-types/{resource_type_id}',
             [ResourceTypeManage::class, 'delete']
         )->name('resource-type.delete');
+
+        Route::delete(
+            'resource-types/{resource_type_id}/permitted-users/{permitted_user_id}',
+            [PermittedUserManage::class, 'delete']
+        )->name('permitted-user.delete');
 
         Route::delete(
             'resource-types/{resource_type_id}/categories/{category_id}',

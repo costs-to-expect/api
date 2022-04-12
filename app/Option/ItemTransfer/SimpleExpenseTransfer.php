@@ -1,11 +1,12 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Option;
+namespace App\Option\ItemTransfer;
 
+use App\Option\Response;
 use Illuminate\Support\Facades\Config;
 
-class ItemTransferTransfer extends Response
+class SimpleExpenseTransfer extends Response
 {
     public function create()
     {

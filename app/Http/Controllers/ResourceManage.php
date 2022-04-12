@@ -23,8 +23,6 @@ use Illuminate\Support\Facades\DB;
  */
 class ResourceManage extends Controller
 {
-    protected bool $allow_entire_collection = true;
-
     /**
      * Create a new resource
      *
