@@ -3,7 +3,6 @@
 namespace Tests\Feature\Http\Controllers;
 
 use App\User;
-use Illuminate\Support\Facades\Auth;
 use Tests\TestCase;
 
 class ResourceManageTest extends TestCase

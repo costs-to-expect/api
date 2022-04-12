@@ -7,11 +7,6 @@ use Tests\TestCase;
 
 class AuthenticationTest extends TestCase
 {
-    private function getRandomUser()
-    {
-        return User::query()->where('id', '!=', 1)->inRandomOrder()->first();
-    }
-
     /** @test */
     public function check_success(): void
     {
@@ -734,7 +729,7 @@ class AuthenticationTest extends TestCase
     /** @test */
     public function update_password_success(): void
     {
-        $this->actingAs(User::find($this->getRandomUser()->id));
+        $this->actingAs(User::find($this->fetchRandomUser()->id));
 
         $new_password = $this->faker->password(12);
 
@@ -780,7 +775,7 @@ class AuthenticationTest extends TestCase
     /** @test */
     public function update_profile_success(): void
     {
-        $this->actingAs(User::find($this->getRandomUser()->id));
+        $this->actingAs(User::find($this->fetchRandomUser()->id));
 
         $response = $this->post(
             'v2/auth/update-profile',

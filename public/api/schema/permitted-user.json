@@ -12,12 +12,12 @@
         },
         "created": {
             "type": "string"
-        },
-        "required": [
-            "id",
-            "name",
-            "email",
-            "created"
-        ]
-    }
+        }
+    },
+    "required": [
+        "id",
+        "name",
+        "email",
+        "created"
+    ]
 }

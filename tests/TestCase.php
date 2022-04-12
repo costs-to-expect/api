@@ -18,21 +18,9 @@ abstract class TestCase extends BaseTestCase
     protected string $test_user_email = 'test-account-email@email.com';
     protected string $test_user_password = 'test-account-secret-password';
 
-    protected function setUp(): void
+    protected function assertJsonIsPermittedUser($content): void
     {
-        parent::setUp();
-
-        $result = DB::select(DB::raw("SHOW TABLES LIKE 'users';"));
-
-        if (!count($result)) {
-            $this->artisan('migrate:fresh');
-
-            $user = new User();
-            $user->name = $this->faker->name;
-            $user->email = $this->test_user_email;
-            $user->password = Hash::make($this->test_user_password);
-            $user->save();
-        }
+        $this->assertJsonMatchesSchema($content, 'api/schema/permitted-user.json');
     }
 
     protected function assertJsonIsResource($content): void
@@ -54,6 +42,13 @@ abstract class TestCase extends BaseTestCase
         self::assertTrue($result->isValid());
     }
 
+    protected function deletePermittedUser(string $resource_type_id, string $permitted_user_id): TestResponse
+    {
+        return $this->delete(
+            route('permitted-user.delete', ['resource_type_id' => $resource_type_id, 'permitted_user_id' => $permitted_user_id]), []
+        );
+    }
+
     protected function deleteResource(string $resource_type_id, $resource_id): TestResponse
     {
         return $this->delete(
@@ -68,58 +63,19 @@ abstract class TestCase extends BaseTestCase
         );
     }
 
-    protected function patchResourceType(string $resource_type_id, array $payload): TestResponse
+    protected function fetchPermittedUser(array $parameters = []): TestResponse
     {
-        return $this->patch(
-            route('resource-type.update', ['resource_type_id' => $resource_type_id]),
-            $payload
-        );
+        return $this->get(route('permitted-user.show', $parameters));
     }
 
-    protected function patchResource(string $resource_type_id, string $resource_id, array $payload): TestResponse
+    protected function fetchPermittedUsers(array $parameters = []): TestResponse
     {
-        return $this->patch(
-            route(
-                'resource.update',
-                [
-                    'resource_type_id' => $resource_type_id,
-                    'resource_id' => $resource_id
-                ]
-            ),
-            $payload
-        );
+        return $this->get(route('permitted-user.list', $parameters));
     }
 
-    protected function postResource(string $resource_type_id, array $payload): TestResponse
+    protected function fetchRandomUser()
     {
-        return $this->post(
-            route('resource.create', ['resource_type_id' => $resource_type_id]),
-            $payload
-        );
-    }
-
-    protected function postResourceType(array $payload): TestResponse
-    {
-        return $this->post(route('resource-type.create'), $payload);
-    }
-
-    protected function helperCreateResourceType(): string
-    {
-        $response = $this->postResourceType(
-            [
-                'name' => $this->faker->text(255),
-                'description' => $this->faker->text,
-                'data' => '{"field":true}',
-                'item_type_id' => 'OqZwKX16bW',
-                'public' => false
-            ]
-        );
-
-        if ($response->assertStatus(201)) {
-            return $response->json('id');
-        }
-
-        $this->fail('Unable to create the resource type');
+        return User::query()->where('id', '!=', 1)->inRandomOrder()->first();
     }
 
     protected function fetchResourceType(array $parameters = []): TestResponse
@@ -148,5 +104,84 @@ abstract class TestCase extends BaseTestCase
         }
 
         $this->fail('Unable to create the resource');
+    }
+
+    protected function helperCreateResourceType(): string
+    {
+        $response = $this->postResourceType(
+            [
+                'name' => $this->faker->text(255),
+                'description' => $this->faker->text,
+                'data' => '{"field":true}',
+                'item_type_id' => 'OqZwKX16bW',
+                'public' => false
+            ]
+        );
+
+        if ($response->assertStatus(201)) {
+            return $response->json('id');
+        }
+
+        $this->fail('Unable to create the resource type');
+    }
+
+    protected function patchResource(string $resource_type_id, string $resource_id, array $payload): TestResponse
+    {
+        return $this->patch(
+            route(
+                'resource.update',
+                [
+                    'resource_type_id' => $resource_type_id,
+                    'resource_id' => $resource_id
+                ]
+            ),
+            $payload
+        );
+    }
+
+    protected function patchResourceType(string $resource_type_id, array $payload): TestResponse
+    {
+        return $this->patch(
+            route('resource-type.update', ['resource_type_id' => $resource_type_id]),
+            $payload
+        );
+    }
+
+    protected function postPermittedUser(string $resource_type_id, array $payload): TestResponse
+    {
+        return $this->post(
+            route('permitted-user.create', ['resource_type_id' => $resource_type_id]),
+            $payload
+        );
+    }
+
+    protected function postResource(string $resource_type_id, array $payload): TestResponse
+    {
+        return $this->post(
+            route('resource.create', ['resource_type_id' => $resource_type_id]),
+            $payload
+        );
+    }
+
+    protected function postResourceType(array $payload): TestResponse
+    {
+        return $this->post(route('resource-type.create'), $payload);
+    }
+
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        $result = DB::select(DB::raw("SHOW TABLES LIKE 'users';"));
+
+        if (!count($result)) {
+            $this->artisan('migrate:fresh');
+
+            $user = new User();
+            $user->name = $this->faker->name;
+            $user->email = $this->test_user_email;
+            $user->password = Hash::make($this->test_user_password);
+            $user->save();
+        }
     }
 }
