@@ -7,28 +7,47 @@
         "from": {
             "type": "object",
             "properties": {
+                "uri": {
+                    "type": "string"
+                },
                 "id": {
                     "type": "string"
                 },
                 "name": {
                     "type": "string"
                 }
-            }
+            },
+            "required": [
+                "uri",
+                "id",
+                "name"
+            ]
         },
         "to": {
             "type": "object",
             "properties": {
+                "uri": {
+                    "type": "string"
+                },
                 "id": {
                     "type": "string"
                 },
                 "name": {
                     "type": "string"
                 }
-            }
+            },
+            "required": [
+                "uri",
+                "id",
+                "name"
+            ]
         },
         "item": {
             "type": "object",
             "properties": {
+                "uri": {
+                    "type": "string"
+                },
                 "id": {
                     "type": "string"
                 },
@@ -40,6 +59,7 @@
                 }
             },
             "required": [
+                "uri",
                 "id",
                 "name",
                 "description"
@@ -57,6 +77,9 @@
                 "user": {
                     "type": "object",
                     "properties": {
+                        "uri": {
+                            "type": "string"
+                        },
                         "id": {
                             "type": "string"
                         },
@@ -66,15 +89,20 @@
                     }
                 }
 
-            }
-        },
-        "required": [
-            "id",
-            "from",
-            "to",
-            "item",
-            "percentage",
-            "tramsferred"
-        ]
-    }
+            },
+            "required": [
+                "uri",
+                "id",
+                "name"
+            ]
+        }
+    },
+    "required": [
+        "id",
+        "from",
+        "to",
+        "item",
+        "percentage",
+        "transferred"
+    ]
 }
