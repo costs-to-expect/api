@@ -251,6 +251,9 @@
                         <li>We have updated the `partial-transfers` route to use methods per item types, this way we can correctly return a 405 when an item doesn't support partial transfers</li>
                         <li>We have updated the `transfers` route to use methods per item types, this was we can correctly return a 405 when an item doesn't support transfers</li>
                         <li>We have localised all response messages in the Authentication controller to match the rest of the API</li>
+                        <li>We have updated the partial transfers collection and show route, the partial transfer object includes the URI to the relevant entity (v2.23.1)</li>
+                        <li>We have switched additional routes in our routes files to named routes (v2.23.1)</li>
+                        <li>We have updated the json schema file for partial transfers (v2.23.1)</li>
                     </ul>
 
                     <h3>Fixed</h3>

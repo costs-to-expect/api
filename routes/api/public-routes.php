@@ -1,6 +1,9 @@
 <?php
 
+use App\Http\Controllers\ItemPartialTransferView;
+use App\Http\Controllers\ItemView;
 use App\Http\Controllers\PermittedUserView;
+use App\Http\Controllers\ResourceView;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Route;
 
@@ -186,23 +189,23 @@ Route::group(
 
         Route::get(
             'resource-types/{resource_type_id}/partial-transfers',
-            'ItemPartialTransferView@index'
-        );
+            [ItemPartialTransferView::class, 'index']
+        )->name('partial-transfers.list');
 
         Route::options(
             'resource-types/{resource_type_id}/partial-transfers',
-            'ItemPartialTransferView@optionsIndex'
-        );
+            [ItemPartialTransferView::class, 'optionsIndex']
+        )->name('partial-transfers.list.options');
 
         Route::get(
             'resource-types/{resource_type_id}/partial-transfers/{item_partial_transfer_id}',
-            'ItemPartialTransferView@show'
-        );
+            [ItemPartialTransferView::class, 'show']
+        )->name('partial-transfers.show');
 
         Route::options(
             'resource-types/{resource_type_id}/partial-transfers/{item_partial_transfer_id}',
-            'ItemPartialTransferView@optionsShow'
-        );
+            [ItemPartialTransferView::class, 'optionsShow']
+        )->name('partial-transfers.show.options');
 
         Route::get(
             'resource-types/{resource_type_id}/permitted-users',
@@ -212,7 +215,7 @@ Route::group(
         Route::options(
             'resource-types/{resource_type_id}/permitted-users',
             [PermittedUserView::class, 'optionsIndex']
-        )->name('permitted-user.options');
+        )->name('permitted-user.list.options');
 
         Route::get(
             'resource-types/{resource_type_id}/permitted-users/{permitted_user_id}',
@@ -226,43 +229,43 @@ Route::group(
 
         Route::get(
             'resource-types/{resource_type_id}/resources',
-            [\App\Http\Controllers\ResourceView::class, 'index']
+            [ResourceView::class, 'index']
         )->name('resource.list');
 
         Route::options(
             'resource-types/{resource_type_id}/resources',
-            [\App\Http\Controllers\ResourceView::class, 'optionsIndex']
+            [ResourceView::class, 'optionsIndex']
         )->name('resource.list.options');
 
         Route::get(
             'resource-types/{resource_type_id}/resources/{resource_id}',
-            [\App\Http\Controllers\ResourceView::class, 'show']
+            [ResourceView::class, 'show']
         )->name('resource.show');
 
         Route::options(
             'resource-types/{resource_type_id}/resources/{resource_id}',
-            [\App\Http\Controllers\ResourceView::class, 'optionsShow']
+            [ResourceView::class, 'optionsShow']
         )->name('resource.show.options');
 
         Route::get(
             'resource-types/{resource_type_id}/resources/{resource_id}/items',
-            'ItemView@index'
-        );
+            [ItemView::class, 'index']
+        )->name('item.list');
 
         Route::options(
             'resource-types/{resource_type_id}/resources/{resource_id}/items',
-            'ItemView@optionsIndex'
-        );
+            [ItemView::class, 'optionsIndex']
+        )->name('item.list.options');
 
         Route::get(
             'resource-types/{resource_type_id}/resources/{resource_id}/items/{item_id}',
-            [\App\Http\Controllers\ItemView::class, 'show']
-        );
+            [ItemView::class, 'show']
+        )->name('item.show');
 
         Route::options(
             'resource-types/{resource_type_id}/resources/{resource_id}/items/{item_id}',
-            'ItemView@optionsShow'
-        );
+            [ItemView::class, 'optionsShow']
+        )->name('item.show.options');
 
         Route::options(
             'resource-types/{resource_type_id}/resources/{resource_id}/items/{item_id}/partial-transfer',
