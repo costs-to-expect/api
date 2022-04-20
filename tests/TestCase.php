@@ -152,6 +152,11 @@ abstract class TestCase extends BaseTestCase
         );
     }
 
+    protected function optionsCreatePassword(array $parameters = []): TestResponse
+    {
+        return $this->optionsRoute('auth.create-password.options', $parameters);
+    }
+
     protected function optionsRegister(array $parameters = []): TestResponse
     {
         return $this->optionsRoute('auth.register.options', $parameters);

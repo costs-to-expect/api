@@ -97,7 +97,7 @@ Route::group(
             Route::options(
                 'auth/create-password',
                 [Authentication::class, 'optionsCreatePassword']
-            );
+            )->name('auth.create-password.options');
         }
     }
 );
