@@ -41,12 +41,11 @@ abstract class Response
             ]
         ];
 
-        response()->json(
+        return response()->json(
             $options['verbs'],
             $options['http_status_code'],
             $options['headers']
-        )->send();
-        exit;
+        );
     }
 
     public function setDynamicAllowedFields(array $allowed_fields): Response

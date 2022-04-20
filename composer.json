@@ -1,6 +1,6 @@
 {
     "name": "costs-to-expect/api",
-    "description": "The API for https://api.costs-to-expect.com",
+    "description": "The API for Costs to Expect",
     "keywords": [
         "API",
         "REST API",

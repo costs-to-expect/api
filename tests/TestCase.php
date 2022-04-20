@@ -152,6 +152,16 @@ abstract class TestCase extends BaseTestCase
         );
     }
 
+    protected function optionsRegister(array $parameters = []): TestResponse
+    {
+        return $this->optionsRoute('auth.register.options', $parameters);
+    }
+
+    protected function optionsRoute(string $route, array $parameters = []): TestResponse
+    {
+        return $this->options(route($route, $parameters));
+    }
+
     protected function postPermittedUser(string $resource_type_id, array $payload): TestResponse
     {
         return $this->post(
