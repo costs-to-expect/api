@@ -13,6 +13,8 @@ class PostRequest extends Method
     protected array $dynamic_fields;
     protected array $fields;
     protected array $fields_after_localisation;
+    protected array $parameters;
+    protected array $parameters_after_localisation;
 
     public function __construct()
     {
@@ -21,6 +23,9 @@ class PostRequest extends Method
         $this->dynamic_fields = [];
         $this->fields = [];
         $this->fields_after_localisation = [];
+
+        $this->parameters = [];
+        $this->parameters_after_localisation = [];
     }
 
     public function setDynamicFields(
@@ -38,6 +43,17 @@ class PostRequest extends Method
     {
         if (count($fields) > 0) {
             $this->fields = $fields;
+        }
+
+        return $this;
+    }
+
+    public function setParameters(
+        array $parameters
+    ): PostRequest
+    {
+        if (count($parameters) > 0) {
+            $this->parameters = $parameters;
         }
 
         return $this;
@@ -62,6 +78,19 @@ class PostRequest extends Method
                 $this->fields_after_localisation[$field] = $field_data;
             }
         }
+
+        foreach ($this->parameters as $parameter => $parameter_data)
+        {
+            if (
+                array_key_exists('title', $parameter_data) === true &&
+                array_key_exists('description', $parameter_data) === true
+            ) {
+                $parameter_data['title'] = trans($parameter_data['title']);
+                $parameter_data['description'] = trans($parameter_data['description']);
+
+                $this->parameters_after_localisation[$parameter] = $parameter_data;
+            }
+        }
     }
 
     public function option(): array
@@ -74,7 +103,8 @@ class PostRequest extends Method
                 'required' => $this->authentication,
                 'authenticated' => $this->authenticated
             ],
-            'fields' => $this->fields_after_localisation
+            'fields' => $this->fields_after_localisation,
+            'parameters' => $this->parameters_after_localisation
         ];
     }
 }

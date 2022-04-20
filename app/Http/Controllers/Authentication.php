@@ -50,11 +50,11 @@ class Authentication extends \Illuminate\Routing\Controller
         $email = Str::replaceFirst(' ', '+', urldecode($request->query('email')));
         $token = $request->query('token');
 
-        $tokens = DB::table('password_creates')
+        $token_validation = DB::table('password_creates')
             ->where('email', '=', $email)
             ->first();
 
-        if ($tokens === null || Hash::check($token, $tokens->token) === false) {
+        if ($token_validation === null || Hash::check($token, $token_validation->token) === false) {
             return response()->json(
                 [
                     'message'=> trans('auth.email-or-token-invalid')

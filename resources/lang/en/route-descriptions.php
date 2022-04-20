@@ -3,8 +3,8 @@
 declare(strict_types=1);
 
 return [
-    'auth_create_new_password_POST' => 'Create a new password for your account, `token` and `email` are request parameters',
-    'auth_create_password_POST' => 'Create the password for your account, `token` and `email` are request parameters',
+    'auth_create_new_password_POST' => 'Create a new password for your account, `token` and `email` are required parameters and validate the request',
+    'auth_create_password_POST' => 'Create the password for your account, `token` and `email` are required parameters and validate the request',
     'auth_forgot_password_POST' => 'Start the reset password process',
     'auth_login_POST' => 'Login to the API',
     'auth_register_POST' => 'Register with the API',

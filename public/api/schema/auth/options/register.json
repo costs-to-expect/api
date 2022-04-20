@@ -63,7 +63,12 @@
                         }
                     }
                 }
-            }
+            },
+            "required": [
+                "description",
+                "authentication",
+                "fields"
+            ]
         }
     },
     "required": [
