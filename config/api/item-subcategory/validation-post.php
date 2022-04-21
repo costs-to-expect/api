@@ -3,7 +3,6 @@
 declare(strict_types=1);
 
 return [
-    'POST' => [
         'fields' => [
             'subcategory_id' => [
                 'required',
@@ -14,5 +13,4 @@ return [
             'subcategory_id.required' => 'item-subcategory/validation.subcategory_id-required',
             'subcategory_id.exists' => 'item-subcategory/validation.subcategory_id-required'
         ]
-    ]
 ];

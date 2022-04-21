@@ -41,8 +41,7 @@ abstract class ItemType
             $viewable_resource_types
         );
 
-        return $allowed_values
-            ->setParameters(
+        return $allowed_values->setParameters(
                 $available_parameters,
                 $defined_parameters
             )
@@ -81,7 +80,7 @@ abstract class ItemType
 
     public function requestParameters(): array
     {
-        return LaravelConfig::get($this->base_path . '.parameters.collection', []); // We need to split this
+        return LaravelConfig::get($this->base_path . '.parameters', []); // We need to split this
     }
 
     public function resourceTypeFilterParameters(): array
@@ -91,7 +90,7 @@ abstract class ItemType
 
     public function resourceTypeRequestParameters(): array
     {
-        return LaravelConfig::get($this->resource_type_base_path . '.parameters.collection', []);
+        return LaravelConfig::get($this->resource_type_base_path . '.parameters', []);
     }
 
     public function resourceTypeSearchParameters(): array

@@ -10,7 +10,7 @@ class PermittedUserItem extends Response
     public function create()
     {
         $get = new \App\Method\GetRequest();
-        $this->verbs['GET'] = $get->setParameters(Config::get('api.permitted-user.parameters.item'))->
+        $this->verbs['GET'] = $get->setParameters(Config::get('api.permitted-user.parameters-show'))->
             setAuthenticationStatus($this->permissions['view'])->
             setDescription('route-descriptions.permitted_user_GET_show')->
             option();

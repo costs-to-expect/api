@@ -33,6 +33,6 @@ class PermissibleUser implements Rule
 
     public function message(): string
     {
-        return trans(Config::get('api.permitted-user.validation.POST.messages')['email.permissible']);
+        return trans(Config::get('api.permitted-user.validation-post.messages')['email.permissible']);
     }
 }

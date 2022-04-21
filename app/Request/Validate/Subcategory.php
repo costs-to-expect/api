@@ -35,7 +35,7 @@ class Subcategory extends BaseValidator
                     'unique:sub_category,name,null,id,category_id,' . $category_id
                 ],
             ],
-            Config::get('api.subcategory.validation.POST.fields')
+            Config::get('api.subcategory.validation-post.fields')
         );
     }
 
@@ -58,7 +58,7 @@ class Subcategory extends BaseValidator
                     'unique:sub_category,name,'. $subcategory_id . ',id,category_id,' . $category_id
                 ],
             ],
-            Config::get('api.subcategory.validation.PATCH.fields')
+            Config::get('api.subcategory.validation-patch.fields')
         );
     }
 
@@ -87,7 +87,7 @@ class Subcategory extends BaseValidator
         return ValidatorFacade::make(
             request()->all(),
             $this->createRules((int) $options['category_id']),
-            $this->translateMessages('api.subcategory.validation.POST.messages')
+            $this->translateMessages('api.subcategory.validation-post.messages')
         );
     }
 
@@ -103,7 +103,7 @@ class Subcategory extends BaseValidator
         return ValidatorFacade::make(
             request()->all(),
             $this->updateRules((int) $options['category_id'], (int) $options['subcategory_id']),
-            $this->translateMessages('api.subcategory.validation.PATCH.messages')
+            $this->translateMessages('api.subcategory.validation-patch.messages')
         );
     }
 }

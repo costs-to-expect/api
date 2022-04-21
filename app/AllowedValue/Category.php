@@ -22,7 +22,7 @@ class Category
      *
      * @return array
      */
-    public function allowedValues(int $resource_type_id): array
+    public function allowedValues(int $resource_type_id, string $field_name = 'category_id'): array
     {
         $categories = (new \App\Models\Category())->categoriesByResourceType($resource_type_id);
 
@@ -35,7 +35,7 @@ class Category
                 \App\Response\Responses::unableToDecode();
             }
 
-            $parameters['category_id']['allowed_values'][$id] = [
+            $parameters[$field_name]['allowed_values'][$id] = [
                 'value' => $id,
                 'name' => $category['category_name'],
                 'description' => $category['category_description']

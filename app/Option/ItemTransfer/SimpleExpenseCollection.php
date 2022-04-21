@@ -11,7 +11,7 @@ class SimpleExpenseCollection extends Response
     public function create()
     {
         $get = new \App\Method\GetRequest();
-        $this->verbs['GET'] = $get->setParameters(Config::get('api.item-transfer.parameters.collection'))->
+        $this->verbs['GET'] = $get->setParameters(Config::get('api.item-transfer.parameters'))->
             setPaginationStatus(true)->
             setAuthenticationStatus($this->permissions['view'])->
             setDescription('route-descriptions.item_transfer_GET_index')->

@@ -13,7 +13,7 @@ class SimpleExpense extends Response
         $base_path = 'api.item-type-simple-expense';
 
         $get = new \App\Method\GetRequest();
-        $this->verbs['GET'] = $get->setParameters(LaravelConfig::get($base_path . '.parameters.item', []))
+        $this->verbs['GET'] = $get->setParameters(LaravelConfig::get($base_path . '.parameters-show', []))
             ->setAuthenticationStatus($this->permissions['view'])
             ->setDescription('route-descriptions.item_GET_show')
             ->option();

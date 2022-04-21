@@ -33,7 +33,7 @@ class Subcategory extends Model
 
     public function patchableFields(): array
     {
-        return array_keys(Config::get('api.subcategory.validation.PATCH.fields'));
+        return array_keys(Config::get('api.subcategory.validation-patch.fields'));
     }
 
     public function totalCount(

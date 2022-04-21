@@ -46,7 +46,7 @@ class ItemManage extends Controller
         $config_base_path = 'api.item-type-allocated-expense';
 
         $messages = [];
-        foreach (LaravelConfig::get($config_base_path . '.validation.POST.messages', []) as $key => $custom_message) {
+        foreach (LaravelConfig::get($config_base_path . '.validation-post.messages', []) as $key => $custom_message) {
             $messages[$key] = trans($custom_message);
         }
 
@@ -61,7 +61,7 @@ class ItemManage extends Controller
                 request()->all(),
                 ['currency_id' => $currency_id]
             ),
-            LaravelConfig::get($config_base_path . '.validation.POST.fields', []),
+            LaravelConfig::get($config_base_path . '.validation-post.fields', []),
             $messages
         );
 
@@ -110,13 +110,13 @@ class ItemManage extends Controller
         $config_base_path = 'api.item-type-game';
 
         $messages = [];
-        foreach (LaravelConfig::get($config_base_path . '.validation.POST.messages', []) as $key => $custom_message) {
+        foreach (LaravelConfig::get($config_base_path . '.validation-post.messages', []) as $key => $custom_message) {
             $messages[$key] = trans($custom_message);
         }
 
         $validator = ValidatorFacade::make(
             request()->all(),
-            LaravelConfig::get($config_base_path . '.validation.POST.fields', []),
+            LaravelConfig::get($config_base_path . '.validation-post.fields', []),
             $messages
         );
 
@@ -165,7 +165,7 @@ class ItemManage extends Controller
         $config_base_path = 'api.item-type-simple-expense';
 
         $messages = [];
-        foreach (LaravelConfig::get($config_base_path . '.validation.POST.messages', []) as $key => $custom_message) {
+        foreach (LaravelConfig::get($config_base_path . '.validation-post.messages', []) as $key => $custom_message) {
             $messages[$key] = trans($custom_message);
         }
 
@@ -180,7 +180,7 @@ class ItemManage extends Controller
                 request()->all(),
                 ['currency_id' => $currency_id]
             ),
-            LaravelConfig::get($config_base_path . '.validation.POST.fields', []),
+            LaravelConfig::get($config_base_path . '.validation-post.fields', []),
             $messages
         );
 
@@ -229,13 +229,13 @@ class ItemManage extends Controller
         $config_base_path = 'api.item-type-simple-item';
 
         $messages = [];
-        foreach (LaravelConfig::get($config_base_path . '.validation.POST.messages', []) as $key => $custom_message) {
+        foreach (LaravelConfig::get($config_base_path . '.validation-post.messages', []) as $key => $custom_message) {
             $messages[$key] = trans($custom_message);
         }
 
         $validator = ValidatorFacade::make(
             request()->all(),
-            LaravelConfig::get($config_base_path . '.validation.POST.fields', []),
+            LaravelConfig::get($config_base_path . '.validation-post.fields', []),
             $messages
         );
 
@@ -305,7 +305,7 @@ class ItemManage extends Controller
         }
 
         $invalid_fields = \App\Request\BodyValidation::checkForInvalidFields(
-            array_keys(LaravelConfig::get($config_base_path . '.validation.PATCH.fields', []))
+            array_keys(LaravelConfig::get($config_base_path . '.validation-patch.fields', []))
         );
 
         if (count($invalid_fields) > 0) {
@@ -324,7 +324,7 @@ class ItemManage extends Controller
         }
 
         $messages = [];
-        foreach (LaravelConfig::get($config_base_path . '.validation.PATCH.messages', []) as $key => $custom_message) {
+        foreach (LaravelConfig::get($config_base_path . '.validation-patch.messages', []) as $key => $custom_message) {
             $messages[$key] = trans($custom_message);
         }
 
@@ -333,7 +333,7 @@ class ItemManage extends Controller
                 request()->all(),
                 $merge_array
             ),
-            LaravelConfig::get($config_base_path . '.validation.PATCH.fields', []),
+            LaravelConfig::get($config_base_path . '.validation-patch.fields', []),
             $messages
         );
 
@@ -385,7 +385,7 @@ class ItemManage extends Controller
         }
 
         $invalid_fields = \App\Request\BodyValidation::checkForInvalidFields(
-            array_keys(LaravelConfig::get($config_base_path . '.validation.PATCH.fields', []))
+            array_keys(LaravelConfig::get($config_base_path . '.validation-patch.fields', []))
         );
 
         if (count($invalid_fields) > 0) {
@@ -404,7 +404,7 @@ class ItemManage extends Controller
         }
 
         $messages = [];
-        foreach (LaravelConfig::get($config_base_path . '.validation.PATCH.messages', []) as $key => $custom_message) {
+        foreach (LaravelConfig::get($config_base_path . '.validation-patch.messages', []) as $key => $custom_message) {
             $messages[$key] = trans($custom_message);
         }
 
@@ -413,7 +413,7 @@ class ItemManage extends Controller
                 request()->all(),
                 $merge_array
             ),
-            LaravelConfig::get($config_base_path . '.validation.PATCH.fields', []),
+            LaravelConfig::get($config_base_path . '.validation-patch.fields', []),
             $messages
         );
 
@@ -465,7 +465,7 @@ class ItemManage extends Controller
         }
 
         $invalid_fields = \App\Request\BodyValidation::checkForInvalidFields(
-            array_keys(LaravelConfig::get($config_base_path . '.validation.PATCH.fields', []))
+            array_keys(LaravelConfig::get($config_base_path . '.validation-patch.fields', []))
         );
 
         if (count($invalid_fields) > 0) {
@@ -484,7 +484,7 @@ class ItemManage extends Controller
         }
 
         $messages = [];
-        foreach (LaravelConfig::get($config_base_path . '.validation.PATCH.messages', []) as $key => $custom_message) {
+        foreach (LaravelConfig::get($config_base_path . '.validation-patch.messages', []) as $key => $custom_message) {
             $messages[$key] = trans($custom_message);
         }
 
@@ -493,7 +493,7 @@ class ItemManage extends Controller
                 request()->all(),
                 $merge_array
             ),
-            LaravelConfig::get($config_base_path . '.validation.PATCH.fields', []),
+            LaravelConfig::get($config_base_path . '.validation-patch.fields', []),
             $messages
         );
 
@@ -545,7 +545,7 @@ class ItemManage extends Controller
         }
 
         $invalid_fields = \App\Request\BodyValidation::checkForInvalidFields(
-            array_keys(LaravelConfig::get($config_base_path . '.validation.PATCH.fields', []))
+            array_keys(LaravelConfig::get($config_base_path . '.validation-patch.fields', []))
         );
 
         if (count($invalid_fields) > 0) {
@@ -553,13 +553,13 @@ class ItemManage extends Controller
         }
 
         $messages = [];
-        foreach (LaravelConfig::get($config_base_path . '.validation.PATCH.messages', []) as $key => $custom_message) {
+        foreach (LaravelConfig::get($config_base_path . '.validation-patch.messages', []) as $key => $custom_message) {
             $messages[$key] = trans($custom_message);
         }
 
         $validator = ValidatorFacade::make(
             request()->all(),
-            LaravelConfig::get($config_base_path . '.validation.PATCH.fields', []),
+            LaravelConfig::get($config_base_path . '.validation-patch.fields', []),
             $messages
         );
 

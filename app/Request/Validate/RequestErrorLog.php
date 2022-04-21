@@ -28,8 +28,8 @@ class RequestErrorLog extends BaseValidator
     {
         return ValidatorFacade::make(
             request()->all(),
-            Config::get('api.request-error-log.validation.POST.fields'),
-            $this->translateMessages('api.request-error-log.validation.POST.messages')
+            Config::get('api.request-error-log.validation-post.fields'),
+            $this->translateMessages('api.request-error-log.validation-post.messages')
         );
     }
 

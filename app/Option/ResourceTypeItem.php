@@ -10,7 +10,7 @@ class ResourceTypeItem extends Response
     public function create()
     {
         $get = new \App\Method\GetRequest();
-        $this->verbs['GET'] = $get->setParameters(Config::get('api.resource-type.parameters.item'))->
+        $this->verbs['GET'] = $get->setParameters(Config::get('api.resource-type.parameters-show'))->
             setDescription('route-descriptions.resource_type_GET_show')->
             setAuthenticationStatus($this->permissions['view'])->
             option();

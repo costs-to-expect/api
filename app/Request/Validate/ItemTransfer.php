@@ -51,7 +51,7 @@ class ItemTransfer extends BaseValidator
                     }),
                 ],
             ],
-            $this->translateMessages('api.item-transfer.validation.POST.messages')
+            $this->translateMessages('api.item-transfer.validation-post.messages')
         );
     }
 

@@ -16,7 +16,7 @@ class SimpleExpenseCollection extends Response
         $this->verbs['GET'] = $get->setSortableParameters(LaravelConfig::get($base_path . '.sortable', []))
             ->setSearchableParameters(LaravelConfig::get($base_path . '.searchable', []))
             ->setFilterableParameters(LaravelConfig::get($base_path . '.filterable', []))
-            ->setParameters(LaravelConfig::get($base_path . '.parameters.collection', []))
+            ->setParameters(LaravelConfig::get($base_path . '.parameters', []))
             ->setDynamicParameters($this->allowed_parameters)
             ->setPaginationStatus(true)
             ->setAuthenticationStatus($this->permissions['view'])

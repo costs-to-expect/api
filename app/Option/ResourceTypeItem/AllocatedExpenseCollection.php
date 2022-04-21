@@ -17,7 +17,7 @@ class AllocatedExpenseCollection extends Response
             setSearchableParameters(LaravelConfig::get($base_path . '.searchable', []))->
             setFilterableParameters(LaravelConfig::get($base_path . '.filterable', []))->
             setPaginationStatus(true)->
-            setParameters(LaravelConfig::get($base_path . '.parameters.collection', []))->
+            setParameters(LaravelConfig::get($base_path . '.parameters', []))->
             setDynamicParameters($this->allowed_parameters)->
             setDescription('route-descriptions.resource_type_item_GET_index')->
             setAuthenticationStatus($this->permissions['view'])->

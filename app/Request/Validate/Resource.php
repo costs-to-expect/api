@@ -43,7 +43,7 @@ class Resource extends BaseValidator
                     )
                 ]
             ],
-            Config::get('api.resource.validation.POST.fields')
+            Config::get('api.resource.validation-post.fields')
         );
     }
 
@@ -66,7 +66,7 @@ class Resource extends BaseValidator
                     'unique:resource,name,'. $resource_id . ',id,resource_type_id,' . $resource_type_id
                 ],
             ],
-            Config::get('api.resource.validation.PATCH.fields')
+            Config::get('api.resource.validation-patch.fields')
         );
     }
 
@@ -105,7 +105,7 @@ class Resource extends BaseValidator
                 ['item_subtype_id' => $item_subtype_id]
             ),
             $this->createRules((int) $options['resource_type_id'], (int) $options['item_type_id']),
-            $this->translateMessages('api.resource.validation.POST.messages')
+            $this->translateMessages('api.resource.validation-post.messages')
         );
     }
 
@@ -121,7 +121,7 @@ class Resource extends BaseValidator
         return ValidatorFacade::make(
             request()->all(),
             $this->updateRules($options['resource_type_id'], $options['resource_id']),
-            $this->translateMessages('api.resource.validation.PATCH.messages')
+            $this->translateMessages('api.resource.validation-patch.messages')
         );
     }
 }

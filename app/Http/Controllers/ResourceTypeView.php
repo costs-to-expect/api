@@ -97,7 +97,7 @@ class ResourceTypeView extends Controller
 
     public function show($resource_type_id): JsonResponse
     {
-        $parameters = Parameter\Request::fetch(array_keys(Config::get('api.resource-type.parameters.item')));
+        $parameters = Parameter\Request::fetch(array_keys(Config::get('api.resource-type.parameters-show')));
 
         $resource_type = (new ResourceType())->single(
             (int) $resource_type_id,

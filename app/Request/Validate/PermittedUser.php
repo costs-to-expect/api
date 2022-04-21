@@ -28,7 +28,7 @@ class PermittedUser extends BaseValidator
                 ],
 
             ],
-            $this->translateMessages('api.resource.validation.POST.messages')
+            $this->translateMessages('api.resource.validation-post.messages')
         );
     }
 

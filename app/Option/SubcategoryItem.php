@@ -10,7 +10,7 @@ class SubcategoryItem extends Response
     public function create()
     {
         $get = new \App\Method\GetRequest();
-        $this->verbs['GET'] = $get->setParameters(Config::get('api.subcategory.parameters.item'))->
+        $this->verbs['GET'] = $get->setParameters(Config::get('api.subcategory.parameters-show'))->
             setDescription('route-descriptions.sub_category_GET_show')->
             setAuthenticationStatus($this->permissions['view'])->
             option();

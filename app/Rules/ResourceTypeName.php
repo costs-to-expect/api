@@ -61,6 +61,6 @@ class ResourceTypeName implements Rule
      */
     public function message(): string
     {
-        return trans(Config::get('api.resource-type.validation.POST.messages')['name.unique']);
+        return trans(Config::get('api.resource-type.validation-post.messages')['name.unique']);
     }
 }

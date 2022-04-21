@@ -43,7 +43,7 @@ class Resource extends Model
 
     public function patchableFields(): array
     {
-        return array_keys(Config::get('api.resource.validation.PATCH.fields'));
+        return array_keys(Config::get('api.resource.validation-patch.fields'));
     }
 
     public function totalCount(

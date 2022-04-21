@@ -74,7 +74,7 @@ class ItemSubcategoryManage extends Controller
         }
 
         $messages = [];
-        foreach (Config::get('api.item-subcategory.validation.POST.messages') as $key => $custom_message) {
+        foreach (Config::get('api.item-subcategory.validation-post.messages') as $key => $custom_message) {
             $messages[$key] = trans($custom_message);
         }
 
@@ -86,7 +86,7 @@ class ItemSubcategoryManage extends Controller
                         'required'
                     ],
                 ],
-                Config::get('api.item-subcategory.validation.POST.fields')
+                Config::get('api.item-subcategory.validation-post.fields')
             ),
             $messages
         );

@@ -42,7 +42,7 @@ class ResourceType extends Model
 
     public function patchableFields(): array
     {
-        return array_keys(Config::get('api.resource-type.validation.PATCH.fields'));
+        return array_keys(Config::get('api.resource-type.validation-patch.fields'));
     }
 
     public function publicResourceTypes(): array

@@ -109,7 +109,7 @@ class Item extends ApiItemResponse
         $base_path = 'api.item-type-simple-item';
 
         $this->request_parameters = Request::fetch(
-            array_keys(LaravelConfig::get($base_path . '.parameters.collection', [])),
+            array_keys(LaravelConfig::get($base_path . '.parameters', [])),
             $this->resource_type_id
         );
 

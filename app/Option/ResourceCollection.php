@@ -14,7 +14,7 @@ class ResourceCollection extends Response
             ->setSortableParameters(Config::get('api.resource.sortable'))
             ->setSearchableParameters(Config::get('api.resource.searchable'))
             ->setPaginationStatus(true, true)
-            ->setParameters(Config::get('api.resource.parameters.collection'))
+            ->setParameters(Config::get('api.resource.parameters'))
             ->setAuthenticationStatus($this->permissions['view'])
             ->setDescription('route-descriptions.resource_GET_index')
             ->option();

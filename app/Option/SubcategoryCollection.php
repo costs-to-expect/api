@@ -13,7 +13,7 @@ class SubcategoryCollection extends Response
         $this->verbs['GET'] = $get->setSortableParameters(Config::get('api.subcategory.sortable'))->
             setSearchableParameters(Config::get('api.subcategory.searchable'))->
             setPaginationStatus(true, true)->
-            setParameters(Config::get('api.subcategory.parameters.collection'))->
+            setParameters(Config::get('api.subcategory.parameters'))->
             setDescription('route-descriptions.sub_category_GET_index')->
             setAuthenticationStatus($this->permissions['view'])->
             option();
