@@ -86,14 +86,18 @@
                         "name": {
                             "type": "string"
                         }
-                    }
+                    },
+                    "required": [
+                        "uri",
+                        "id",
+                        "name"
+                    ]
                 }
 
             },
             "required": [
-                "uri",
-                "id",
-                "name"
+                "at",
+                "user"
             ]
         }
     },

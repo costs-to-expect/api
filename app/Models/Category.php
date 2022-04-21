@@ -36,7 +36,7 @@ class Category extends Model
 
     public function patchableFields(): array
     {
-        return array_keys(Config::get('api.category.validation.PATCH.fields'));
+        return array_keys(Config::get('api.category.validation-patch.fields'));
     }
 
     public function total(

@@ -120,7 +120,7 @@ class CategoryView extends Controller
             \App\Response\Responses::notFoundOrNotAccessible(trans('entities.category'));
         }
 
-        $parameters = Parameter\Request::fetch(array_keys(Config::get('api.category.parameters.item')));
+        $parameters = Parameter\Request::fetch(array_keys(Config::get('api.category.parameters-show')));
 
         $category = (new Category)->single(
             (int) $resource_type_id,

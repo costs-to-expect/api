@@ -34,7 +34,7 @@ class Category extends BaseValidator
                     'unique:category,name,null,id,resource_type_id,' . $resource_type_id
                 ],
             ],
-            Config::get('api.category.validation.POST.fields')
+            Config::get('api.category.validation-post.fields')
         );
     }
 
@@ -57,7 +57,7 @@ class Category extends BaseValidator
                     'unique:category,name,'. $category_id . ',id,resource_type_id,' . $resource_type_id
                 ],
             ],
-            Config::get('api.category.validation.PATCH.fields')
+            Config::get('api.category.validation-patch.fields')
         );
     }
 
@@ -86,7 +86,7 @@ class Category extends BaseValidator
         return ValidatorFacade::make(
             request()->all(),
             $this->createRules((int) $options['resource_type_id']),
-            $this->translateMessages('api.category.validation.POST.messages')
+            $this->translateMessages('api.category.validation-post.messages')
         );
     }
 
@@ -102,7 +102,7 @@ class Category extends BaseValidator
         return ValidatorFacade::make(
             request()->all(),
             $this->updateRules($options['resource_type_id'], $options['category_id']),
-            $this->translateMessages('api.category.validation.PATCH.messages')
+            $this->translateMessages('api.category.validation-patch.messages')
         );
     }
 }

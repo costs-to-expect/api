@@ -11,7 +11,7 @@ class CategoryCollection extends Response
     {
         $get = new \App\Method\GetRequest();
         $this->verbs['GET'] = $get->setPaginationStatus(true, true)->
-            setParameters(Config::get('api.category.parameters.collection'))->
+            setParameters(Config::get('api.category.parameters'))->
             setSearchableParameters(Config::get('api.category.searchable'))->
             setSortableParameters(Config::get('api.category.sortable'))->
             setAuthenticationStatus($this->permissions['view'])->

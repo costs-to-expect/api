@@ -10,7 +10,7 @@ class CategoryItem extends Response
     public function create()
     {
         $get = new \App\Method\GetRequest();
-        $this->verbs['GET'] = $get->setParameters(Config::get('api.category.parameters.item'))->
+        $this->verbs['GET'] = $get->setParameters(Config::get('api.category.parameters-show'))->
             setAuthenticationStatus($this->permissions['view'])->
             setDescription('route-descriptions.category_GET_show')->
             option();
