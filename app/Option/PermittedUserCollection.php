@@ -18,7 +18,7 @@ class PermittedUserCollection extends Response
             option();
 
         $post = new \App\Method\PostRequest();
-        $this->verbs['POST'] = $post->setFields(Config::get('api.permitted-user.fields'))->
+        $this->verbs['POST'] = $post->setFields(Config::get('api.permitted-user.fields-post'))->
             setDescription('route-descriptions.permitted_user_POST')->
             setAuthenticationStatus($this->permissions['manage'])->
             setAuthenticationRequirement(true)->

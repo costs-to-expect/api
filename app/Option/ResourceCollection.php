@@ -21,7 +21,7 @@ class ResourceCollection extends Response
 
         $post = new \App\Method\PostRequest();
         $this->verbs['POST'] = $post
-            ->setFields(Config::get('api.resource.fields'))
+            ->setFields(Config::get('api.resource.fields-post'))
             ->setDynamicFields($this->allowed_fields)
             ->setDescription('route-descriptions.resource_POST')
             ->setAuthenticationStatus($this->permissions['manage'])

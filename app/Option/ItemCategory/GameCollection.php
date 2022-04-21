@@ -17,7 +17,7 @@ class GameCollection extends Response
             option();
 
         $post = new \App\Method\PostRequest();
-        $this->verbs['POST'] = $post->setFields(Config::get('api.item-category.fields'))->
+        $this->verbs['POST'] = $post->setFields(Config::get('api.item-category.fields-post'))->
             setDynamicFields($this->allowed_fields)->
             setAuthenticationRequirement(true)->
             setAuthenticationStatus($this->permissions['manage'])->

@@ -19,7 +19,7 @@ class SubcategoryCollection extends Response
             option();
 
         $post = new \App\Method\PostRequest();
-        $this->verbs['POST'] = $post->setFields(Config::get('api.subcategory.fields'))->
+        $this->verbs['POST'] = $post->setFields(Config::get('api.subcategory.fields-post'))->
             setDescription('route-descriptions.sub_category_POST')->
             setAuthenticationRequirement(true)->
             setAuthenticationStatus($this->permissions['manage'])->

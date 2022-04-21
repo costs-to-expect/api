@@ -19,7 +19,7 @@ class CategoryCollection extends Response
             option();
 
         $post = new \App\Method\PostRequest();
-        $this->verbs['POST'] = $post->setFields(Config::get('api.category.fields'))->
+        $this->verbs['POST'] = $post->setFields(Config::get('api.category.fields-post'))->
             setAuthenticationRequirement(true)->
             setAuthenticationStatus($this->permissions['manage'])->
             setDescription('route-descriptions.category_POST')->

@@ -24,7 +24,7 @@ class SimpleExpenseCollection extends Response
             ->option();
 
         $post = new \App\Method\PostRequest();
-        $this->verbs['POST'] = $post->setFields(LaravelConfig::get($base_path . '.fields', []))
+        $this->verbs['POST'] = $post->setFields(LaravelConfig::get($base_path . '.fields-post', []))
             ->setDescription( 'route-descriptions.item_POST')
             ->setAuthenticationRequirement(true)
             ->setAuthenticationStatus($this->permissions['manage'])

@@ -22,7 +22,7 @@ class SubcategoryItem extends Response
             option();
 
         $patch = new \App\Method\PatchRequest();
-        $this->verbs['PATCH'] = $patch->setFields(Config::get('api.subcategory.fields'))->
+        $this->verbs['PATCH'] = $patch->setFields(Config::get('api.subcategory.fields-post'))->
             setDescription('route-descriptions.sub_category_PATCH')->
             setAuthenticationRequirement(true)->
             setAuthenticationStatus($this->permissions['manage'])->

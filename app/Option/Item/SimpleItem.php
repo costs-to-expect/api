@@ -25,7 +25,7 @@ class SimpleItem extends Response
             ->option();
 
         $patch = new \App\Method\PatchRequest();
-        $this->verbs['PATCH'] = $patch->setFields(LaravelConfig::get($base_path . '.fields', []))
+        $this->verbs['PATCH'] = $patch->setFields(LaravelConfig::get($base_path . '.fields-post', []))
             ->setDescription('route-descriptions.item_PATCH')
             ->setAuthenticationStatus($this->permissions['manage'])
             ->setAuthenticationRequirement(true)

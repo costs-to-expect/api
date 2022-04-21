@@ -11,7 +11,7 @@ class CreateNewPassword extends Response
     public function create()
     {
         $post = new \App\Method\PostRequest();
-        $this->verbs['POST'] = $post->setFields(Config::get('api.auth.create-password.fields'))
+        $this->verbs['POST'] = $post->setFields(Config::get('api.auth.create-password.fields-post'))
             ->setAuthenticationRequirement()
             ->setDescription('route-descriptions.auth_create_new_password_POST')
             ->option();

@@ -11,7 +11,7 @@ class UpdatePassword extends Response
     public function create()
     {
         $post = new \App\Method\PostRequest();
-        $this->verbs['POST'] = $post->setFields(Config::get('api.auth.update-password.fields'))
+        $this->verbs['POST'] = $post->setFields(Config::get('api.auth.update-password.fields-post'))
             ->setAuthenticationRequirement(true)
             ->setAuthenticationStatus($this->permissions['manage'])
             ->setDescription('route-descriptions.auth_update_password_POST')

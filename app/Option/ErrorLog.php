@@ -15,7 +15,7 @@ class ErrorLog extends Response
             option();
 
         $post = new \App\Method\PostRequest();
-        $this->verbs['POST'] = $post->setFields(Config::get('api.request-error-log.fields'))->
+        $this->verbs['POST'] = $post->setFields(Config::get('api.request-error-log.fields-post'))->
             setDescription('route-descriptions.request_POST')->
             setAuthenticationStatus($this->permissions['view'])->
             option();
