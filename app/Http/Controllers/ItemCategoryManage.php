@@ -64,13 +64,13 @@ class ItemCategoryManage extends Controller
         }
 
         $messages = [];
-        foreach (Config::get('api.item-category.validation.POST.messages') as $key => $custom_message) {
+        foreach (Config::get('api.item-category.validation-post.messages') as $key => $custom_message) {
             $messages[$key] = trans($custom_message);
         }
 
         $validator = ValidatorFacade::make(
             ['category_id' => $category_id],
-            Config::get('api.item-category.validation.POST.fields'),
+            Config::get('api.item-category.validation-post.fields'),
             $messages
         );
 

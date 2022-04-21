@@ -12,7 +12,7 @@ class GameCollection extends Response
     {
         $get = new \App\Method\GetRequest();
         $this->verbs['GET'] = $get->setAuthenticationStatus($this->permissions['view'])->
-            setParameters(Config::get('api.item-category.parameters.collection'))->
+            setParameters(Config::get('api.item-category.parameters'))->
             setDescription('route-descriptions.item_category_GET_index')->
             option();
 

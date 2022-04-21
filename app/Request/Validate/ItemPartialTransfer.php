@@ -59,9 +59,9 @@ class ItemPartialTransfer extends BaseValidator
                         }),
                     ],
                 ],
-                Config::get('api.item-partial-transfer.validation.POST.fields')
+                Config::get('api.item-partial-transfer.validation-post.fields')
             ),
-            $this->translateMessages('api.item-partial-transfer.validation.POST.messages')
+            $this->translateMessages('api.item-partial-transfer.validation-post.messages')
         );
     }
 

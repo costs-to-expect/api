@@ -11,7 +11,7 @@ class SimpleExpense extends Response
     public function create()
     {
         $get = new \App\Method\GetRequest();
-        $this->verbs['GET'] = $get->setParameters(Config::get('api.item-category.parameters.item'))->
+        $this->verbs['GET'] = $get->setParameters(Config::get('api.item-category.parameters-show'))->
             setAuthenticationStatus($this->permissions['view'])->
             setDescription('route-descriptions.item_category_GET_show')->
             option();
