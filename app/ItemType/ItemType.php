@@ -3,7 +3,6 @@ declare(strict_types=1);
 
 namespace App\ItemType;
 
-use App\Transformer\Transformer;
 use App\HttpRequest\Parameter\Request;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Config as LaravelConfig;
@@ -135,7 +134,7 @@ abstract class ItemType
 
     abstract public function table(): string;
 
-    abstract public function transformer(array $data_to_transform): Transformer;
+    abstract public function transformer(array $data_to_transform);
 
     abstract public function type(): string;
 

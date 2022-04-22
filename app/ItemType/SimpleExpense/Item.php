@@ -6,7 +6,6 @@ namespace App\ItemType\SimpleExpense;
 use App\HttpRequest\Hash;
 use App\ItemType\ItemType;
 use App\Models\AllowedValue\Currency;
-use App\Transformer\Transformer;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Date;
 
@@ -66,7 +65,7 @@ class Item extends ItemType
         return 'simple-expense';
     }
 
-    public function transformer(array $data_to_transform): Transformer
+    public function transformer(array $data_to_transform)
     {
         return new Transformer\Item($data_to_transform);
     }

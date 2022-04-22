@@ -4,7 +4,6 @@ declare(strict_types=1);
 namespace App\ItemType\SimpleItem;
 
 use App\ItemType\ItemType;
-use App\Transformer\Transformer;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Date;
 
@@ -60,9 +59,9 @@ class Item extends ItemType
         return 'simple-item';
     }
 
-    public function transformer(array $data_to_transform): Transformer
+    public function transformer(array $data_to_transform)
     {
-        return new Transformer\Item($data_to_transform);
+        return (new Transformer\Item($data_to_transform));
     }
 
     public function update(array $patch, Model $instance): bool
