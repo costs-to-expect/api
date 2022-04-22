@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\HttpResponse\Header;
+use App\HttpResponse\Responses;
 use App\ItemType\Entity;
 use App\Models\ItemTransfer;
 use App\Option\ItemTransfer\AllocatedExpense;
@@ -11,9 +13,6 @@ use App\Option\ItemTransfer\SimpleExpense;
 use App\Option\ItemTransfer\SimpleExpenseCollection;
 use App\Option\ItemTransfer\SimpleExpenseTransfer;
 use App\Request\Parameter;
-use App\Response\Header;
-use App\Response\Pagination as UtilityPagination;
-use App\Response\Responses;
 use App\Transformers\ItemTransfer as ItemTransferTransformer;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Config;
@@ -28,7 +27,7 @@ class ItemTransferView extends Controller
     public function index($resource_type_id): JsonResponse
     {
         if ($this->viewAccessToResourceType((int) $resource_type_id) === false) {
-            \App\Response\Responses::notFoundOrNotAccessible(trans('entities.item-transfer'));
+            \App\HttpResponse\Responses::notFoundOrNotAccessible(trans('entities.item-transfer'));
         }
 
         $item_type = Entity::itemType((int) $resource_type_id);
@@ -63,7 +62,7 @@ class ItemTransferView extends Controller
                 $parameters
             );
 
-            $pagination = new UtilityPagination(request()->path(), $total);
+            $pagination = new \App\HttpResponse\Pagination(request()->path(), $total);
             $pagination_parameters = $pagination->allowPaginationOverride($this->allow_entire_collection)->
                 setParameters($parameters)->
                 parameters();
@@ -98,7 +97,7 @@ class ItemTransferView extends Controller
     public function optionsIndex($resource_type_id): JsonResponse
     {
         if ($this->viewAccessToResourceType((int) $resource_type_id) === false) {
-            \App\Response\Responses::notFoundOrNotAccessible(trans('entities.item'));
+            \App\HttpResponse\Responses::notFoundOrNotAccessible(trans('entities.item'));
         }
 
         $item_type = Entity::itemType((int) $resource_type_id);
@@ -128,7 +127,7 @@ class ItemTransferView extends Controller
     public function optionsShow($resource_type_id, $item_transfer_id): JsonResponse
     {
         if ($this->viewAccessToResourceType((int) $resource_type_id) === false) {
-            \App\Response\Responses::notFoundOrNotAccessible(trans('entities.resource-type'));
+            \App\HttpResponse\Responses::notFoundOrNotAccessible(trans('entities.resource-type'));
         }
 
         $item_type = Entity::itemType((int) $resource_type_id);
@@ -162,7 +161,7 @@ class ItemTransferView extends Controller
     ): JsonResponse
     {
         if ($this->viewAccessToResourceType((int) $resource_type_id) === false) {
-            \App\Response\Responses::notFoundOrNotAccessible(trans('entities.item'));
+            \App\HttpResponse\Responses::notFoundOrNotAccessible(trans('entities.item'));
         }
 
         $item_type = Entity::itemType((int) $resource_type_id);
@@ -215,7 +214,7 @@ class ItemTransferView extends Controller
     ): JsonResponse
     {
         if ($this->viewAccessToResourceType((int) $resource_type_id) === false) {
-            \App\Response\Responses::notFoundOrNotAccessible(trans('entities.item-transfer'));
+            \App\HttpResponse\Responses::notFoundOrNotAccessible(trans('entities.item-transfer'));
         }
 
         $item_type = Entity::itemType((int) $resource_type_id);
@@ -239,7 +238,7 @@ class ItemTransferView extends Controller
         );
 
         if ($item_transfer === null) {
-            return \App\Response\Responses::notFound(trans('entities.item_transfer'));
+            return \App\HttpResponse\Responses::notFound(trans('entities.item_transfer'));
         }
 
         $headers = new Header();
@@ -263,7 +262,7 @@ class ItemTransferView extends Controller
         );
 
         if ($item_transfer === null) {
-            return \App\Response\Responses::notFound(trans('entities.item_transfer'));
+            return \App\HttpResponse\Responses::notFound(trans('entities.item_transfer'));
         }
 
         $headers = new Header();

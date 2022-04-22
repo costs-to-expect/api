@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\AllowedValue\Category;
 use App\AllowedValue\Currency;
 use App\ItemType\Entity;
 use Illuminate\Http\JsonResponse;
@@ -20,7 +19,7 @@ class ItemView extends Controller
     ): JsonResponse
     {
         if ($this->viewAccessToResourceType((int) $resource_type_id) === false) {
-            \App\Response\Responses::notFoundOrNotAccessible(trans('entities.resource'));
+            \App\HttpResponse\Responses::notFoundOrNotAccessible(trans('entities.resource'));
         }
 
         $item_type = Entity::itemType((int) $resource_type_id);
@@ -89,7 +88,7 @@ class ItemView extends Controller
     ): JsonResponse
     {
         if ($this->viewAccessToResourceType((int) $resource_type_id) === false) {
-            \App\Response\Responses::notFoundOrNotAccessible(trans('entities.resource'));
+            \App\HttpResponse\Responses::notFoundOrNotAccessible(trans('entities.resource'));
         }
 
         $item_type = Entity::itemType((int) $resource_type_id);
@@ -157,7 +156,7 @@ class ItemView extends Controller
     ): JsonResponse
     {
         if ($this->viewAccessToResourceType((int) $resource_type_id) === false) {
-            \App\Response\Responses::notFoundOrNotAccessible(trans('entities.resource'));
+            \App\HttpResponse\Responses::notFoundOrNotAccessible(trans('entities.resource'));
         }
 
         $item_type = Entity::itemType((int) $resource_type_id);
@@ -244,7 +243,7 @@ class ItemView extends Controller
     ): JsonResponse
     {
         if ($this->viewAccessToResourceType((int) $resource_type_id) === false) {
-            \App\Response\Responses::notFoundOrNotAccessible(trans('entities.resource'));
+            \App\HttpResponse\Responses::notFoundOrNotAccessible(trans('entities.resource'));
         }
 
         $item_type = Entity::itemType((int) $resource_type_id);
@@ -265,7 +264,7 @@ class ItemView extends Controller
     ): JsonResponse
     {
         if ($this->viewAccessToResourceType((int) $resource_type_id) === false) {
-            \App\Response\Responses::notFoundOrNotAccessible(trans('entities.item'));
+            \App\HttpResponse\Responses::notFoundOrNotAccessible(trans('entities.item'));
         }
 
         $item = new \App\ItemType\AllocatedExpense\Item();
@@ -273,7 +272,7 @@ class ItemView extends Controller
         $item_data = $model->single($resource_type_id, $resource_id, $item_id);
 
         if ($item_data === null) {
-            return \App\Response\Responses::notFound(trans('entities.item'));
+            return \App\HttpResponse\Responses::notFound(trans('entities.item'));
         }
 
         $response = new \App\Option\Item\AllocatedExpense($this->permissions((int) $resource_type_id));
@@ -292,7 +291,7 @@ class ItemView extends Controller
     ): JsonResponse
     {
         if ($this->viewAccessToResourceType((int) $resource_type_id) === false) {
-            \App\Response\Responses::notFoundOrNotAccessible(trans('entities.item'));
+            \App\HttpResponse\Responses::notFoundOrNotAccessible(trans('entities.item'));
         }
 
         $item = new \App\ItemType\Game\Item();
@@ -300,7 +299,7 @@ class ItemView extends Controller
         $item_data = $model->single($resource_type_id, $resource_id, $item_id);
 
         if ($item_data === null) {
-            return \App\Response\Responses::notFound(trans('entities.item'));
+            return \App\HttpResponse\Responses::notFound(trans('entities.item'));
         }
 
         $response = new \App\Option\Item\Game($this->permissions((int) $resource_type_id));
@@ -319,7 +318,7 @@ class ItemView extends Controller
     ): JsonResponse
     {
         if ($this->viewAccessToResourceType((int) $resource_type_id) === false) {
-            \App\Response\Responses::notFoundOrNotAccessible(trans('entities.item'));
+            \App\HttpResponse\Responses::notFoundOrNotAccessible(trans('entities.item'));
         }
 
         $item = new \App\ItemType\SimpleExpense\Item();
@@ -327,7 +326,7 @@ class ItemView extends Controller
         $item_data = $model->single($resource_type_id, $resource_id, $item_id);
 
         if ($item_data === null) {
-            return \App\Response\Responses::notFound(trans('entities.item'));
+            return \App\HttpResponse\Responses::notFound(trans('entities.item'));
         }
 
         $response = new \App\Option\Item\SimpleExpense($this->permissions((int) $resource_type_id));
@@ -346,7 +345,7 @@ class ItemView extends Controller
     ): JsonResponse
     {
         if ($this->viewAccessToResourceType((int) $resource_type_id) === false) {
-            \App\Response\Responses::notFoundOrNotAccessible(trans('entities.item'));
+            \App\HttpResponse\Responses::notFoundOrNotAccessible(trans('entities.item'));
         }
 
         $item = new \App\ItemType\SimpleItem\Item();
@@ -354,7 +353,7 @@ class ItemView extends Controller
         $item_data = $model->single($resource_type_id, $resource_id, $item_id);
 
         if ($item_data === null) {
-            return \App\Response\Responses::notFound(trans('entities.item'));
+            return \App\HttpResponse\Responses::notFound(trans('entities.item'));
         }
 
         $response = new \App\Option\Item\SimpleItem($this->permissions((int) $resource_type_id));

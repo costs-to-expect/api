@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\HttpResponse\Responses;
 use App\ItemType\Entity;
 use App\Jobs\ClearCache;
 use App\Models\ItemCategory;
-use App\Response\Responses;
 use App\Transformers\ItemCategory as ItemCategoryTransformer;
 use Exception;
 use Illuminate\Database\QueryException;
@@ -35,7 +35,7 @@ class ItemCategoryManage extends Controller
         return match ($item_type) {
             'allocated-expense', 'simple-expense' => $this->createItemCategory((int) $resource_type_id, (int) $resource_id, (int) $item_id, 1),
             'game' => $this->createItemCategory((int) $resource_type_id, (int) $resource_id, (int) $item_id, 5),
-            'simple-item' => \App\Response\Responses::categoryAssignmentLimit(0),
+            'simple-item' => \App\HttpResponse\Responses::categoryAssignmentLimit(0),
             default => throw new \OutOfRangeException('No item type definition for ' . $item_type, 500),
         };
     }
@@ -54,7 +54,7 @@ class ItemCategoryManage extends Controller
         );
 
         if ($assigned >= $assignment_limit) {
-            return \App\Response\Responses::categoryAssignmentLimit($assignment_limit);
+            return \App\HttpResponse\Responses::categoryAssignmentLimit($assignment_limit);
         }
 
         $decode = $this->hash->category()->decode(request()->input('category_id'));
@@ -94,7 +94,7 @@ class ItemCategoryManage extends Controller
             $category_id = $this->hash->decode('category', request()->input('category_id'));
 
             if ($category_id === false) {
-                return \App\Response\Responses::unableToDecode();
+                return \App\HttpResponse\Responses::unableToDecode();
             }
 
             $item_category = new ItemCategory([
@@ -106,7 +106,7 @@ class ItemCategoryManage extends Controller
             ClearCache::dispatch($cache_job_payload->payload());
 
         } catch (Exception $e) {
-            return \App\Response\Responses::failedToSaveModelForCreate();
+            return \App\HttpResponse\Responses::failedToSaveModelForCreate();
         }
 
         return response()->json(
@@ -130,7 +130,7 @@ class ItemCategoryManage extends Controller
 
         return match ($item_type) {
             'allocated-expense', 'simple-expense', 'game' => $this->deleteItemCategory((int) $resource_type_id, (int) $resource_id, (int) $item_id, (int) $item_category_id),
-            'simple-item' => \App\Response\Responses::notSupported(),
+            'simple-item' => \App\HttpResponse\Responses::notSupported(),
             default => throw new \OutOfRangeException('No item type definition for ' . $item_type, 500),
         };
     }
@@ -150,7 +150,7 @@ class ItemCategoryManage extends Controller
         );
 
         if ($item_category === null) {
-            return \App\Response\Responses::notFound(trans('entities.item-category'));
+            return \App\HttpResponse\Responses::notFound(trans('entities.item-category'));
         }
 
         $cache_job_payload = (new \App\Cache\JobPayload())
@@ -167,11 +167,11 @@ class ItemCategoryManage extends Controller
 
             ClearCache::dispatch($cache_job_payload->payload());
 
-            return \App\Response\Responses::successNoContent();
+            return \App\HttpResponse\Responses::successNoContent();
         } catch (QueryException $e) {
-            return \App\Response\Responses::foreignKeyConstraintError();
+            return \App\HttpResponse\Responses::foreignKeyConstraintError();
         } catch (Exception $e) {
-            return \App\Response\Responses::notFound(trans('entities.item-category'));
+            return \App\HttpResponse\Responses::notFound(trans('entities.item-category'));
         }
     }
 }

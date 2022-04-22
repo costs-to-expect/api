@@ -3,12 +3,12 @@ declare(strict_types=1);
 
 namespace App\ItemType\AllocatedExpense\ApiResponse;
 
+use App\HttpResponse\Responses;
 use App\ItemType\ApiItemResponse;
 use App\Request\Parameter\Filter;
 use App\Request\Parameter\Request;
 use App\Request\Parameter\Search;
 use App\Request\Parameter\Sort;
-use App\Response\Responses;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Config as LaravelConfig;
 use function request;

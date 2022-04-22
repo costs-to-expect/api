@@ -35,7 +35,7 @@ class Subcategory
             $id = $this->hash->encode('subcategory', $subcategory->id);
 
             if ($id === false) {
-                \App\Response\Responses::unableToDecode();
+                \App\HttpResponse\Responses::unableToDecode();
             }
 
             $parameters['subcategory_id']['allowed_values'][$id] = [

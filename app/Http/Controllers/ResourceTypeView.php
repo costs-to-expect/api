@@ -3,15 +3,14 @@
 namespace App\Http\Controllers;
 
 use App\AllowedValue\ItemType;
+use App\HttpResponse\Header;
+use App\HttpResponse\Responses;
 use App\Models\PermittedUser;
 use App\Models\Resource;
 use App\Models\ResourceType;
 use App\Option\ResourceTypeCollection;
 use App\Option\ResourceTypeItem;
 use App\Request\Parameter;
-use App\Response\Header;
-use App\Response\Pagination as UtilityPagination;
-use App\Response\Responses;
 use App\Transformers\ResourceType as ResourceTypeTransformer;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -49,7 +48,7 @@ class ResourceTypeView extends Controller
                 $search_parameters
             );
 
-            $pagination = new UtilityPagination($request->path(), $total);
+            $pagination = new \App\HttpResponse\Pagination($request->path(), $total);
             $pagination_parameters = $pagination
                 ->allowPaginationOverride($this->allow_entire_collection)
                 ->setSearchParameters($search_parameters)

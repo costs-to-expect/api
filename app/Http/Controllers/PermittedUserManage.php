@@ -2,11 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\HttpResponse\Responses;
 use App\Jobs\ClearCache;
 use App\Models\PermittedUser;
 use App\Models\ResourceType;
 use App\Request\Validate\PermittedUser as PermittedUserValidator;
-use App\Response\Responses;
 use Exception;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\JsonResponse;
@@ -22,7 +22,7 @@ class PermittedUserManage extends Controller
     public function create(string $resource_type_id): JsonResponse
     {
         if ($this->writeAccessToResourceType((int) $resource_type_id) === false) {
-            \App\Response\Responses::notFoundOrNotAccessible(trans('entities.resource-type'));
+            \App\HttpResponse\Responses::notFoundOrNotAccessible(trans('entities.resource-type'));
         }
 
         $resource_type = (new ResourceType())->single(
@@ -90,7 +90,7 @@ class PermittedUserManage extends Controller
     ): JsonResponse
     {
         if ($this->writeAccessToResourceType((int) $resource_type_id) === false) {
-            \App\Response\Responses::notFoundOrNotAccessible(trans('entities.permitted-user'));
+            \App\HttpResponse\Responses::notFoundOrNotAccessible(trans('entities.permitted-user'));
         }
 
         $permitted_user = (new PermittedUser())->instance($resource_type_id, $permitted_user_id);

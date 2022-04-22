@@ -2,11 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\HttpResponse\Responses;
 use App\ItemType\Entity;
 use App\Jobs\ClearCache;
 use App\Models\ItemPartialTransfer;
 use App\Request\Validate\ItemPartialTransfer as ItemPartialTransferValidator;
-use App\Response\Responses;
 use App\Transformers\ItemPartialTransfer as ItemPartialTransferTransformer;
 use Exception;
 use Illuminate\Database\QueryException;
@@ -25,7 +25,7 @@ class ItemPartialTransferManage extends Controller
     ): JsonResponse
     {
         if ($this->writeAccessToResourceType((int) $resource_type_id) === false) {
-            \App\Response\Responses::notFoundOrNotAccessible(trans('entities.item-partial-transfer'));
+            \App\HttpResponse\Responses::notFoundOrNotAccessible(trans('entities.item-partial-transfer'));
         }
 
         $item_type = Entity::itemType((int) $resource_type_id);
@@ -76,7 +76,7 @@ class ItemPartialTransferManage extends Controller
     ): JsonResponse
     {
         if ($this->writeAccessToResourceType((int) $resource_type_id) === false) {
-            \App\Response\Responses::notFoundOrNotAccessible(trans('entities.item'));
+            \App\HttpResponse\Responses::notFoundOrNotAccessible(trans('entities.item'));
         }
 
         $item_type = Entity::itemType((int) $resource_type_id);

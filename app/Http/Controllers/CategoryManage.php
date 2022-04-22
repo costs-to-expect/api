@@ -2,11 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\HttpResponse\Responses;
 use App\Jobs\ClearCache;
 use App\Models\Category;
 use App\Request\BodyValidation;
 use App\Request\Validate\Category as CategoryValidator;
-use App\Response\Responses;
 use App\Transformers\Category as CategoryTransformer;
 use Exception;
 use Illuminate\Database\QueryException;
@@ -29,7 +29,7 @@ class CategoryManage extends Controller
     public function create($resource_type_id): JsonResponse
     {
         if ($this->writeAccessToResourceType((int) $resource_type_id) === false) {
-            \App\Response\Responses::notFoundOrNotAccessible(trans('entities.resource-type'));
+            \App\HttpResponse\Responses::notFoundOrNotAccessible(trans('entities.resource-type'));
         }
 
         $validator = (new CategoryValidator)->create([
@@ -81,7 +81,7 @@ class CategoryManage extends Controller
     ): JsonResponse
     {
         if ($this->writeAccessToResourceType((int) $resource_type_id) === false) {
-            \App\Response\Responses::notFoundOrNotAccessible(trans('entities.item-category'));
+            \App\HttpResponse\Responses::notFoundOrNotAccessible(trans('entities.item-category'));
         }
 
         $cache_job_payload = (new \App\Cache\JobPayload())
@@ -121,7 +121,7 @@ class CategoryManage extends Controller
     public function update($resource_type_id, $category_id): JsonResponse
     {
         if ($this->writeAccessToResourceType((int) $resource_type_id) === false) {
-            \App\Response\Responses::notFoundOrNotAccessible(trans('entities.item-category'));
+            \App\HttpResponse\Responses::notFoundOrNotAccessible(trans('entities.item-category'));
         }
 
         $category = (new Category())->instance($category_id);
@@ -131,7 +131,7 @@ class CategoryManage extends Controller
         }
 
         if (count(request()->all()) === 0) {
-            return \App\Response\Responses::nothingToPatch();
+            return \App\HttpResponse\Responses::nothingToPatch();
         }
 
         $validator = (new CategoryValidator)->update([

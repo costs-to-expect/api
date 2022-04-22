@@ -42,7 +42,7 @@ class BodyValidation
 
     public static function returnInvalidFieldsInRequest(array $invalid_fields)
     {
-        return \App\Response\Responses::invalidFieldsInRequest($invalid_fields);
+        return \App\HttpResponse\Responses::invalidFieldsInRequest($invalid_fields);
     }
 
     public static function returnValidationErrors( // Rename this
@@ -61,6 +61,6 @@ class BodyValidation
             $validation_errors = array_merge_recursive($validation_errors, $allowed_values);
         }
 
-        return \App\Response\Responses::validationErrors($validation_errors);
+        return \App\HttpResponse\Responses::validationErrors($validation_errors);
     }
 }

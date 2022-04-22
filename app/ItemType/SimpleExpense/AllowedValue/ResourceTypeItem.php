@@ -3,11 +3,11 @@ declare(strict_types=1);
 
 namespace App\ItemType\SimpleExpense\AllowedValue;
 
+use App\HttpResponse\Responses;
 use App\ItemType\ResourceTypeAllowedValue;
 use App\Models\Category;
 use App\Models\Currency;
 use App\Models\Subcategory;
-use App\Response\Responses;
 
 class ResourceTypeItem extends ResourceTypeAllowedValue
 {

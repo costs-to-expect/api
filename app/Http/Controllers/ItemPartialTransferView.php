@@ -2,15 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use App\HttpResponse\Header;
+use App\HttpResponse\Responses;
 use App\ItemType\Entity;
 use App\Models\ItemPartialTransfer;
 use App\Option\ItemPartialTransfer\AllocatedExpense;
 use App\Option\ItemPartialTransfer\AllocatedExpenseCollection;
 use App\Option\ItemPartialTransfer\AllocatedExpenseTransfer;
 use App\Request\Parameter;
-use App\Response\Header;
-use App\Response\Pagination as UtilityPagination;
-use App\Response\Responses;
 use App\Transformers\ItemPartialTransfer as ItemPartialTransferTransformer;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Config;
@@ -25,7 +24,7 @@ class ItemPartialTransferView extends Controller
     public function index($resource_type_id): JsonResponse
     {
         if ($this->viewAccessToResourceType((int) $resource_type_id) === false) {
-            \App\Response\Responses::notFoundOrNotAccessible(trans('entities.resource-type'));
+            \App\HttpResponse\Responses::notFoundOrNotAccessible(trans('entities.resource-type'));
         }
 
         $item_type = Entity::itemType((int) $resource_type_id);
@@ -60,7 +59,7 @@ class ItemPartialTransferView extends Controller
                 $parameters
             );
 
-            $pagination = new UtilityPagination(request()->path(), $total);
+            $pagination = new \App\HttpResponse\Pagination(request()->path(), $total);
             $pagination_parameters = $pagination->allowPaginationOverride($this->allow_entire_collection)->
             setParameters($parameters)->
             parameters();
@@ -98,7 +97,7 @@ class ItemPartialTransferView extends Controller
     ): JsonResponse
     {
         if ($this->viewAccessToResourceType((int) $resource_type_id) === false) {
-            \App\Response\Responses::notFoundOrNotAccessible(trans('entities.resource-type'));
+            \App\HttpResponse\Responses::notFoundOrNotAccessible(trans('entities.resource-type'));
         }
 
         $item_type = Entity::itemType((int) $resource_type_id);
@@ -118,7 +117,7 @@ class ItemPartialTransferView extends Controller
         );
 
         if ($item_partial_transfer === null) {
-            return \App\Response\Responses::notFound(trans('entities.item_partial_transfer'));
+            return \App\HttpResponse\Responses::notFound(trans('entities.item_partial_transfer'));
         }
 
         $headers = new Header();
@@ -134,7 +133,7 @@ class ItemPartialTransferView extends Controller
     public function optionsIndex($resource_type_id): JsonResponse
     {
         if ($this->viewAccessToResourceType((int) $resource_type_id) === false) {
-            \App\Response\Responses::notFoundOrNotAccessible(trans('entities.item'));
+            \App\HttpResponse\Responses::notFoundOrNotAccessible(trans('entities.item'));
         }
 
         $item_type = Entity::itemType((int) $resource_type_id);
@@ -156,7 +155,7 @@ class ItemPartialTransferView extends Controller
     public function optionsShow($resource_type_id, $item_partial_transfer_id): JsonResponse
     {
         if ($this->viewAccessToResourceType((int) $resource_type_id) === false) {
-            \App\Response\Responses::notFoundOrNotAccessible(trans('entities.item-partial-transfer'));
+            \App\HttpResponse\Responses::notFoundOrNotAccessible(trans('entities.item-partial-transfer'));
         }
 
         $item_type = Entity::itemType((int) $resource_type_id);
@@ -182,7 +181,7 @@ class ItemPartialTransferView extends Controller
     ): JsonResponse
     {
         if ($this->viewAccessToResourceType((int) $resource_type_id) === false) {
-            \App\Response\Responses::notFoundOrNotAccessible(trans('entities.item'));
+            \App\HttpResponse\Responses::notFoundOrNotAccessible(trans('entities.item'));
         }
 
         $item_type = Entity::itemType((int) $resource_type_id);

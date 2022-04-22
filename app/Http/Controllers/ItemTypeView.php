@@ -2,14 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\HttpResponse\Header;
+use App\HttpResponse\Responses;
 use App\Models\ItemType;
 use App\Option\ItemTypeCollection;
 use App\Option\ItemTypeItem;
 use App\Request\Parameter;
 use App\Request\Route;
-use App\Response\Header;
-use App\Response\Pagination as UtilityPagination;
-use App\Response\Responses;
 use App\Transformers\ItemType as ItemTypeTransformer;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Config;
@@ -50,7 +49,7 @@ class ItemTypeView extends Controller
 
             $total = (new ItemType())->totalCount($search_parameters);
 
-            $pagination = new UtilityPagination(request()->path(), $total);
+            $pagination = new \App\HttpResponse\Pagination(request()->path(), $total);
             $pagination_parameters = $pagination->allowPaginationOverride($this->allow_entire_collection)->
                 setSearchParameters($search_parameters)->
                 setSortParameters($sort_parameters)->
@@ -100,7 +99,7 @@ class ItemTypeView extends Controller
         $item_type = (new ItemType())->single($item_type_id);
 
         if ($item_type === null) {
-            return \App\Response\Responses::notFound(trans('entities.item-type'));
+            return \App\HttpResponse\Responses::notFound(trans('entities.item-type'));
         }
 
         $headers = new Header();

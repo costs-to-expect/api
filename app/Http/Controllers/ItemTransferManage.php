@@ -2,12 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\HttpResponse\Responses;
 use App\ItemType\Entity;
 use App\Jobs\ClearCache;
 use App\Models\Item;
 use App\Models\ItemTransfer;
 use App\Request\Validate\ItemTransfer as ItemTransferValidator;
-use App\Response\Responses;
 use Exception;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\JsonResponse;
@@ -27,7 +27,7 @@ class ItemTransferManage extends Controller
     ): JsonResponse
     {
         if ($this->writeAccessToResourceType((int) $resource_type_id) === false) {
-            \App\Response\Responses::notFoundOrNotAccessible(trans('entities.item'));
+            \App\HttpResponse\Responses::notFoundOrNotAccessible(trans('entities.item'));
         }
 
         $item_type = Entity::itemType((int) $resource_type_id);
@@ -70,7 +70,7 @@ class ItemTransferManage extends Controller
             $new_resource_id = $this->hash->decode('resource', request()->input('resource_id'));
 
             if ($new_resource_id === false) {
-                return \App\Response\Responses::unableToDecode();
+                return \App\HttpResponse\Responses::unableToDecode();
             }
 
             DB::transaction(static function() use ($resource_type_id, $resource_id, $item_id, $new_resource_id, $user_id) {
@@ -79,7 +79,7 @@ class ItemTransferManage extends Controller
                     $item->resource_id = $new_resource_id;
                     $item->save();
                 } else {
-                    return \App\Response\Responses::failedToSelectModelForUpdateOrDelete();
+                    return \App\HttpResponse\Responses::failedToSelectModelForUpdateOrDelete();
                 }
 
                 $item_transfer = new ItemTransfer([
@@ -95,11 +95,11 @@ class ItemTransferManage extends Controller
             ClearCache::dispatch($cache_job_payload->payload());
 
         } catch (QueryException $e) {
-            return \App\Response\Responses::foreignKeyConstraintError();
+            return \App\HttpResponse\Responses::foreignKeyConstraintError();
         } catch (Exception $e) {
-            return \App\Response\Responses::failedToSaveModelForUpdate();
+            return \App\HttpResponse\Responses::failedToSaveModelForUpdate();
         }
 
-        return \App\Response\Responses::successNoContent();
+        return \App\HttpResponse\Responses::successNoContent();
     }
 }

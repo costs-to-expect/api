@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\HttpResponse\Responses;
 use App\Notifications\ForgotPassword;
 use App\Notifications\Registered;
 use App\Option\Auth\Check;
@@ -11,7 +12,6 @@ use App\Option\Auth\Login;
 use App\Option\Auth\Register;
 use App\Option\Auth\UpdatePassword;
 use App\Option\Auth\UpdateProfile;
-use App\Response\Responses;
 use App\User;
 use Exception;
 use Illuminate\Http;

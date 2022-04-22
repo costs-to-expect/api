@@ -3,12 +3,12 @@
 namespace App\Http\Controllers\Summary;
 
 use App\Http\Controllers\Controller;
+use App\HttpResponse\Responses;
 use App\ItemType\Entity;
 use App\Option\Item\Summary\AllocatedExpense;
 use App\Option\Item\Summary\Game;
 use App\Option\Item\Summary\SimpleExpense;
 use App\Option\Item\Summary\SimpleItem;
-use App\Response\Responses;
 use Illuminate\Http\JsonResponse;
 
 class ItemView extends Controller

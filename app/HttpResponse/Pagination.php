@@ -1,11 +1,10 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Response;
-
-use App\Request\Validate\Boolean;
+namespace App\HttpResponse;
 
 use App\Request\Hash;
+use App\Request\Validate\Boolean;
 use Illuminate\Support\Facades\Config;
 
 /**

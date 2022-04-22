@@ -2,12 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\HttpResponse\Responses;
 use App\Jobs\ClearCache;
 use App\Models\Resource;
 use App\Models\ResourceItemSubtype;
 use App\Models\ResourceType;
 use App\Request\Validate\Resource as ResourceValidator;
-use App\Response\Responses;
 use App\Transformers\Resource as ResourceTransformer;
 use Exception;
 use Illuminate\Database\QueryException;
@@ -33,7 +33,7 @@ class ResourceManage extends Controller
     public function create(string $resource_type_id): JsonResponse
     {
         if ($this->writeAccessToResourceType((int) $resource_type_id) === false) {
-            \App\Response\Responses::notFoundOrNotAccessible(trans('entities.resource-type'));
+            \App\HttpResponse\Responses::notFoundOrNotAccessible(trans('entities.resource-type'));
         }
 
         $resource_type = (new ResourceType())->single(
@@ -71,7 +71,7 @@ class ResourceManage extends Controller
                 $item_subtype_id = $this->hash->decode('item-subtype', request()->input('item_subtype_id'));
 
                 if ($item_subtype_id === false) {
-                    return \App\Response\Responses::unableToDecode();
+                    return \App\HttpResponse\Responses::unableToDecode();
                 }
 
                 $resource_item_subtype = new ResourceItemSubtype([
@@ -109,7 +109,7 @@ class ResourceManage extends Controller
     ): JsonResponse
     {
         if ($this->writeAccessToResourceType((int) $resource_type_id) === false) {
-            \App\Response\Responses::notFoundOrNotAccessible(trans('entities.resource'));
+            \App\HttpResponse\Responses::notFoundOrNotAccessible(trans('entities.resource'));
         }
 
         $resource = (new Resource())->instance($resource_type_id, $resource_id);
@@ -158,7 +158,7 @@ class ResourceManage extends Controller
     ): JsonResponse
     {
         if ($this->writeAccessToResourceType((int) $resource_type_id) === false) {
-            \App\Response\Responses::notFoundOrNotAccessible(trans('entities.resource'));
+            \App\HttpResponse\Responses::notFoundOrNotAccessible(trans('entities.resource'));
         }
 
         $resource = (new Resource())->instance($resource_type_id, $resource_id);
@@ -168,7 +168,7 @@ class ResourceManage extends Controller
         }
 
         if (count(request()->all()) === 0) {
-            return \App\Response\Responses::nothingToPatch();
+            return \App\HttpResponse\Responses::nothingToPatch();
         }
 
         $validator = (new ResourceValidator())->update([

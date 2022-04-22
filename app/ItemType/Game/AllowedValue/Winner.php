@@ -24,7 +24,7 @@ class Winner
             $id = $this->hash->encode('category', $category['category_id']);
 
             if ($id === false) {
-                \App\Response\Responses::unableToDecode();
+                \App\HttpResponse\Responses::unableToDecode();
             }
 
             $parameters['winner_id']['allowed_values'][$id] = [

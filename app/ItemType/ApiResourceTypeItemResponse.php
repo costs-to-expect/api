@@ -3,12 +3,12 @@ declare(strict_types=1);
 
 namespace App\ItemType;
 
+use App\HttpResponse\Header;
+use App\HttpResponse\Pagination as UtilityPagination;
 use App\Request\Parameter\Filter;
 use App\Request\Parameter\Request;
 use App\Request\Parameter\Search;
 use App\Request\Parameter\Sort;
-use App\Response\Header;
-use App\Response\Pagination as UtilityPagination;
 use Illuminate\Http\JsonResponse;
 
 abstract class ApiResourceTypeItemResponse

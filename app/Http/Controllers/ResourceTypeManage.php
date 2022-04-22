@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\HttpResponse\Responses;
 use App\Jobs\ClearCache;
 use App\Models\Category;
 use App\Models\PermittedUser;
@@ -9,7 +10,6 @@ use App\Models\Resource;
 use App\Models\ResourceType;
 use App\Models\ResourceTypeItemType;
 use App\Request\Validate\ResourceType as ResourceTypeValidator;
-use App\Response\Responses;
 use App\Transformers\ResourceType as ResourceTypeTransformer;
 use Exception;
 use Illuminate\Database\QueryException;
@@ -65,7 +65,7 @@ class ResourceTypeManage extends Controller
                 $item_type_id = $this->hash->decode('item-type', $request->input('item_type_id'));
 
                 if ($item_type_id === false) {
-                    return \App\Response\Responses::unableToDecode();
+                    return \App\HttpResponse\Responses::unableToDecode();
                 }
 
                 $resource_type_item_type = new ResourceTypeItemType([
@@ -81,7 +81,7 @@ class ResourceTypeManage extends Controller
 
         } catch (Exception $e) {
             Log::error($e->getMessage());
-            return \App\Response\Responses::failedToSaveModelForCreate();
+            return \App\HttpResponse\Responses::failedToSaveModelForCreate();
         }
 
         return response()->json(
@@ -96,7 +96,7 @@ class ResourceTypeManage extends Controller
     ): JsonResponse
     {
         if ($this->writeAccessToResourceType((int) $resource_type_id) === false) {
-            \App\Response\Responses::notFoundOrNotAccessible(trans('entities.resource-type'));
+            \App\HttpResponse\Responses::notFoundOrNotAccessible(trans('entities.resource-type'));
         }
 
         $resource_type_item_type = (new ResourceTypeItemType())->instance($resource_type_id);
@@ -137,16 +137,16 @@ class ResourceTypeManage extends Controller
 
                 ClearCache::dispatch($cache_job_payload->payload());
 
-                return \App\Response\Responses::successNoContent();
+                return \App\HttpResponse\Responses::successNoContent();
             } catch (QueryException $e) {
                 Log::error($e->getMessage());
-                return \App\Response\Responses::foreignKeyConstraintError();
+                return \App\HttpResponse\Responses::foreignKeyConstraintError();
             } catch (Exception $e) {
                 Log::error($e->getMessage());
-                return \App\Response\Responses::notFound(trans('entities.resource-type'));
+                return \App\HttpResponse\Responses::notFound(trans('entities.resource-type'));
             }
         } else {
-            return \App\Response\Responses::foreignKeyConstraintError();
+            return \App\HttpResponse\Responses::foreignKeyConstraintError();
         }
     }
 
@@ -156,17 +156,17 @@ class ResourceTypeManage extends Controller
     ): JsonResponse
     {
         if ($this->writeAccessToResourceType((int) $resource_type_id) === false) {
-            \App\Response\Responses::notFoundOrNotAccessible(trans('entities.resource-type'));
+            \App\HttpResponse\Responses::notFoundOrNotAccessible(trans('entities.resource-type'));
         }
 
         $resource_type = (new ResourceType())->instance($resource_type_id);
 
         if ($resource_type === null) {
-            return \App\Response\Responses::failedToSelectModelForUpdateOrDelete();
+            return \App\HttpResponse\Responses::failedToSelectModelForUpdateOrDelete();
         }
 
         if (count($request->all()) === 0) {
-            return \App\Response\Responses::nothingToPatch();
+            return \App\HttpResponse\Responses::nothingToPatch();
         }
 
         $validator = (new ResourceTypeValidator())->update([
@@ -207,9 +207,9 @@ class ResourceTypeManage extends Controller
             ClearCache::dispatch($cache_job_payload->payload());
 
         } catch (Exception $e) {
-            return \App\Response\Responses::failedToSaveModelForUpdate();
+            return \App\HttpResponse\Responses::failedToSaveModelForUpdate();
         }
 
-        return \App\Response\Responses::successNoContent();
+        return \App\HttpResponse\Responses::successNoContent();
     }
 }

@@ -3,10 +3,10 @@
 namespace App\Http\Controllers\Summary;
 
 use App\Http\Controllers\Controller;
+use App\HttpResponse\Header;
 use App\Models\Summary\Subcategory;
 use App\Option\SummarySubcategoryCollection;
 use App\Request\Parameter;
-use App\Response\Header;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Config;
 
@@ -30,7 +30,7 @@ class SubcategoryView extends Controller
     public function index($resource_type_id, $category_id): JsonResponse
     {
         if ($this->viewAccessToResourceType((int) $resource_type_id) === false) {
-            \App\Response\Responses::notFoundOrNotAccessible(trans('entities.category'));
+            \App\HttpResponse\Responses::notFoundOrNotAccessible(trans('entities.category'));
         }
 
         $cache_control = new \App\Cache\Control(
@@ -97,7 +97,7 @@ class SubcategoryView extends Controller
     public function optionsIndex($resource_type_id, $category_id): JsonResponse
     {
         if ($this->viewAccessToResourceType((int) $resource_type_id) === false) {
-            \App\Response\Responses::notFoundOrNotAccessible(trans('entities.category'));
+            \App\HttpResponse\Responses::notFoundOrNotAccessible(trans('entities.category'));
         }
 
         $response = new SummarySubcategoryCollection($this->permissions((int) $resource_type_id));

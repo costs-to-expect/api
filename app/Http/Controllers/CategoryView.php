@@ -2,13 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\HttpResponse\Header;
 use App\Models\Category;
 use App\Models\Subcategory;
 use App\Option\CategoryCollection;
 use App\Option\CategoryItem;
 use App\Request\Parameter;
-use App\Response\Header;
-use App\Response\Pagination as UtilityPagination;
 use App\Transformers\Category as CategoryTransformer;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Config;
@@ -32,7 +31,7 @@ class CategoryView extends Controller
     public function index($resource_type_id): JsonResponse
     {
         if ($this->viewAccessToResourceType((int) $resource_type_id) === false) {
-            \App\Response\Responses::notFoundOrNotAccessible(trans('entities.resource-type'));
+            \App\HttpResponse\Responses::notFoundOrNotAccessible(trans('entities.resource-type'));
         }
 
         $cache_control = new \App\Cache\Control(
@@ -60,7 +59,7 @@ class CategoryView extends Controller
                 $search_parameters
             );
 
-            $pagination = new UtilityPagination(request()->path(), $total);
+            $pagination = new \App\HttpResponse\Pagination(request()->path(), $total);
             $pagination_parameters = $pagination->allowPaginationOverride($this->allow_entire_collection)->
                 setSearchParameters($search_parameters)->
                 setSortParameters($sort_parameters)->
@@ -117,7 +116,7 @@ class CategoryView extends Controller
     public function show($resource_type_id, $category_id): JsonResponse
     {
         if ($this->viewAccessToResourceType((int) $resource_type_id) === false) {
-            \App\Response\Responses::notFoundOrNotAccessible(trans('entities.category'));
+            \App\HttpResponse\Responses::notFoundOrNotAccessible(trans('entities.category'));
         }
 
         $parameters = Parameter\Request::fetch(array_keys(Config::get('api.category.parameters-show')));
@@ -128,7 +127,7 @@ class CategoryView extends Controller
         );
 
         if ($category === null) {
-            return \App\Response\Responses::notFound(trans('entities.category'));
+            return \App\HttpResponse\Responses::notFound(trans('entities.category'));
         }
 
         $subcategories = [];
@@ -169,7 +168,7 @@ class CategoryView extends Controller
     public function optionsIndex($resource_type_id): JsonResponse
     {
         if ($this->viewAccessToResourceType((int) $resource_type_id) === false) {
-            \App\Response\Responses::notFoundOrNotAccessible(trans('entities.resource-type'));
+            \App\HttpResponse\Responses::notFoundOrNotAccessible(trans('entities.resource-type'));
         }
 
         $response = new CategoryCollection($this->permissions((int) $resource_type_id));
@@ -188,7 +187,7 @@ class CategoryView extends Controller
     public function optionsShow($resource_type_id, $category_id): JsonResponse
     {
         if ($this->viewAccessToResourceType((int) $resource_type_id) === false) {
-            \App\Response\Responses::notFoundOrNotAccessible(trans('entities.category'));
+            \App\HttpResponse\Responses::notFoundOrNotAccessible(trans('entities.category'));
         }
 
         $response = new CategoryItem($this->permissions((int) $resource_type_id));

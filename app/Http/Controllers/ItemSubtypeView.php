@@ -2,14 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\HttpResponse\Header;
+use App\HttpResponse\Responses;
 use App\Models\ItemSubtype;
 use App\Option\ItemSubtypeCollection;
 use App\Option\ItemSubtypeItem;
 use App\Request\Parameter;
 use App\Request\Route;
-use App\Response\Header;
-use App\Response\Pagination as UtilityPagination;
-use App\Response\Responses;
 use App\Transformers\ItemSubtype as ItemSubtypeTransformer;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Config;
@@ -50,7 +49,7 @@ class ItemSubtypeView extends Controller
                 $search_parameters
             );
 
-            $pagination = new UtilityPagination(request()->path(), $total);
+            $pagination = new \App\HttpResponse\Pagination(request()->path(), $total);
             $pagination_parameters = $pagination->allowPaginationOverride($this->allow_entire_collection)->
                 setSearchParameters($search_parameters)->
                 setSortParameters($sort_parameters)->

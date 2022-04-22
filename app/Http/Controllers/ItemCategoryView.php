@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\HttpResponse\Header;
+use App\HttpResponse\Responses;
 use App\ItemType\Entity;
 use App\Models\ItemCategory;
 use App\Option\ItemCategory\AllocatedExpense;
@@ -10,8 +12,6 @@ use App\Option\ItemCategory\Game;
 use App\Option\ItemCategory\GameCollection;
 use App\Option\ItemCategory\SimpleExpense;
 use App\Option\ItemCategory\SimpleExpenseCollection;
-use App\Response\Header;
-use App\Response\Responses;
 use App\Transformers\ItemCategory as ItemCategoryTransformer;
 use Illuminate\Http\JsonResponse;
 
@@ -25,14 +25,14 @@ class ItemCategoryView extends Controller
     public function index(string $resource_type_id, string $resource_id, string $item_id): JsonResponse
     {
         if ($this->viewAccessToResourceType((int) $resource_type_id) === false) {
-            \App\Response\Responses::notFoundOrNotAccessible(trans('entities.item'));
+            \App\HttpResponse\Responses::notFoundOrNotAccessible(trans('entities.item'));
         }
 
         $item_type = Entity::itemType((int) $resource_type_id);
 
         return match ($item_type) {
             'allocated-expense', 'game', 'simple-expense' => $this->itemCategoryCollection((int) $resource_type_id, (int) $resource_id, (int) $item_id),
-            'simple-item' => \App\Response\Responses::notSupported(),
+            'simple-item' => \App\HttpResponse\Responses::notSupported(),
             default => throw new \OutOfRangeException('No item type definition for ' . $item_type, 500),
         };
     }
@@ -87,11 +87,11 @@ class ItemCategoryView extends Controller
     ): JsonResponse
     {
         if ($this->viewAccessToResourceType((int) $resource_type_id) === false) {
-            \App\Response\Responses::notFoundOrNotAccessible(trans('entities.item'));
+            \App\HttpResponse\Responses::notFoundOrNotAccessible(trans('entities.item'));
         }
 
         if ($item_category_id === null) {
-            return \App\Response\Responses::notFound(trans('entities.item-category'));
+            return \App\HttpResponse\Responses::notFound(trans('entities.item-category'));
         }
 
         $item_type = Entity::itemType((int) $resource_type_id);
@@ -118,7 +118,7 @@ class ItemCategoryView extends Controller
         );
 
         if ($item_category === null) {
-            return \App\Response\Responses::notFound(trans('entities.item-category'));
+            return \App\HttpResponse\Responses::notFound(trans('entities.item-category'));
         }
 
         $headers = new Header();
@@ -134,7 +134,7 @@ class ItemCategoryView extends Controller
     public function optionsIndex(string $resource_type_id, string $resource_id, string $item_id): JsonResponse
     {
         if ($this->viewAccessToResourceType((int) $resource_type_id) === false) {
-            \App\Response\Responses::notFoundOrNotAccessible(trans('entities.item'));
+            \App\HttpResponse\Responses::notFoundOrNotAccessible(trans('entities.item'));
         }
 
         $item_type = Entity::itemType((int) $resource_type_id);
@@ -151,7 +151,7 @@ class ItemCategoryView extends Controller
     private function optionsAllocatedExpenseCollection(int $resource_type_id): JsonResponse
     {
         if ($this->viewAccessToResourceType((int) $resource_type_id) === false) {
-            \App\Response\Responses::notFoundOrNotAccessible(trans('entities.item'));
+            \App\HttpResponse\Responses::notFoundOrNotAccessible(trans('entities.item'));
         }
 
         $response = new AllocatedExpenseCollection($this->permissions((int) $resource_type_id));
@@ -166,7 +166,7 @@ class ItemCategoryView extends Controller
     private function optionsGameCollection(int $resource_type_id): JsonResponse
     {
         if ($this->viewAccessToResourceType($resource_type_id) === false) {
-            \App\Response\Responses::notFoundOrNotAccessible(trans('entities.item'));
+            \App\HttpResponse\Responses::notFoundOrNotAccessible(trans('entities.item'));
         }
 
         $response = new GameCollection($this->permissions($resource_type_id));
@@ -181,7 +181,7 @@ class ItemCategoryView extends Controller
     private function optionsSimpleExpenseCollection(int $resource_type_id): JsonResponse
     {
         if ($this->viewAccessToResourceType($resource_type_id) === false) {
-            \App\Response\Responses::notFoundOrNotAccessible(trans('entities.item'));
+            \App\HttpResponse\Responses::notFoundOrNotAccessible(trans('entities.item'));
         }
 
         $response = new SimpleExpenseCollection($this->permissions($resource_type_id));
@@ -201,11 +201,11 @@ class ItemCategoryView extends Controller
     ): JsonResponse
     {
         if ($this->viewAccessToResourceType((int) $resource_type_id) === false) {
-            \App\Response\Responses::notFoundOrNotAccessible(trans('entities.item'));
+            \App\HttpResponse\Responses::notFoundOrNotAccessible(trans('entities.item'));
         }
 
         if ($item_category_id === null) {
-            return \App\Response\Responses::notFound(trans('entities.item-category'));
+            return \App\HttpResponse\Responses::notFound(trans('entities.item-category'));
         }
 
         $item_type = Entity::itemType((int) $resource_type_id);
@@ -214,7 +214,7 @@ class ItemCategoryView extends Controller
             'allocated-expense' => $this->optionsAllocatedExpenseShow((int) $resource_type_id, (int) $resource_id, (int) $item_id, (int) $item_category_id),
             'game' => $this->optionsGameShow((int) $resource_type_id, (int) $resource_id, (int) $item_id, (int) $item_category_id),
             'simple-expense' => $this->optionsSimpleExpenseShow((int) $resource_type_id, (int) $resource_id, (int) $item_id, (int) $item_category_id),
-            'simple-item' => \App\Response\Responses::notSupported(),
+            'simple-item' => \App\HttpResponse\Responses::notSupported(),
             default => throw new \OutOfRangeException('No item type definition for ' . $item_type, 500),
         };
     }
@@ -234,7 +234,7 @@ class ItemCategoryView extends Controller
         );
 
         if ($item_category === null) {
-            return \App\Response\Responses::notFound(trans('entities.item-category'));
+            return \App\HttpResponse\Responses::notFound(trans('entities.item-category'));
         }
 
         $response = new AllocatedExpense($this->permissions((int) $resource_type_id));
@@ -257,7 +257,7 @@ class ItemCategoryView extends Controller
         );
 
         if ($item_category === null) {
-            return \App\Response\Responses::notFound(trans('entities.item-category'));
+            return \App\HttpResponse\Responses::notFound(trans('entities.item-category'));
         }
 
         $response = new Game($this->permissions((int) $resource_type_id));
@@ -280,7 +280,7 @@ class ItemCategoryView extends Controller
         );
 
         if ($item_category === null) {
-            return \App\Response\Responses::notFound(trans('entities.item-category'));
+            return \App\HttpResponse\Responses::notFound(trans('entities.item-category'));
         }
 
         $response = new SimpleExpense($this->permissions((int) $resource_type_id));

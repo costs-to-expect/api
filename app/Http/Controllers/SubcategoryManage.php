@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\HttpResponse\Responses;
 use App\Jobs\ClearCache;
 use App\Models\Subcategory;
 use App\Request\Validate\Subcategory as SubcategoryValidator;
-use App\Response\Responses;
 use App\Transformers\Subcategory as SubcategoryTransformer;
 use Exception;
 use Illuminate\Database\QueryException;
@@ -33,7 +33,7 @@ class SubcategoryManage extends Controller
     public function create($resource_type_id, $category_id): JsonResponse
     {
         if ($this->writeAccessToResourceType((int) $resource_type_id) === false) {
-            \App\Response\Responses::notFoundOrNotAccessible(trans('entities.category'));
+            \App\HttpResponse\Responses::notFoundOrNotAccessible(trans('entities.category'));
         }
 
         $validator = (new SubcategoryValidator)->create(['category_id' => $category_id]);
@@ -87,7 +87,7 @@ class SubcategoryManage extends Controller
     ): JsonResponse
     {
         if ($this->writeAccessToResourceType((int) $resource_type_id) === false) {
-            \App\Response\Responses::notFoundOrNotAccessible(trans('entities.subcategory'));
+            \App\HttpResponse\Responses::notFoundOrNotAccessible(trans('entities.subcategory'));
         }
 
         $sub_category = (new Subcategory())->instance(
@@ -137,7 +137,7 @@ class SubcategoryManage extends Controller
     ): JsonResponse
     {
         if ($this->writeAccessToResourceType((int) $resource_type_id) === false) {
-            \App\Response\Responses::notFoundOrNotAccessible(trans('entities.subcategory'));
+            \App\HttpResponse\Responses::notFoundOrNotAccessible(trans('entities.subcategory'));
         }
 
         $subcategory = (new Subcategory())->instance($category_id, $subcategory_id);
@@ -147,7 +147,7 @@ class SubcategoryManage extends Controller
         }
 
         if (count(request()->all()) === 0) {
-            return \App\Response\Responses::nothingToPatch();
+            return \App\HttpResponse\Responses::nothingToPatch();
         }
 
         $validator = (new SubcategoryValidator())->update([
