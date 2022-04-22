@@ -2,16 +2,16 @@
 
 namespace App\Http\Controllers;
 
-use App\HttpResponse\Header;
-use App\HttpResponse\Responses;
-use App\ItemType\Entity;
-use App\Models\ItemCategory;
 use App\HttpOptionResponse\ItemCategory\AllocatedExpense;
 use App\HttpOptionResponse\ItemCategory\AllocatedExpenseCollection;
 use App\HttpOptionResponse\ItemCategory\Game;
 use App\HttpOptionResponse\ItemCategory\GameCollection;
 use App\HttpOptionResponse\ItemCategory\SimpleExpense;
 use App\HttpOptionResponse\ItemCategory\SimpleExpenseCollection;
+use App\HttpResponse\Header;
+use App\HttpResponse\Responses;
+use App\ItemType\Entity;
+use App\Models\ItemCategory;
 use App\Transformers\ItemCategory as ItemCategoryTransformer;
 use Illuminate\Http\JsonResponse;
 
@@ -158,7 +158,7 @@ class ItemCategoryView extends Controller
 
         return $response
             ->setDynamicAllowedFields(
-                (new \App\AllowedValue\Category())->allowedValues($resource_type_id))
+                (new \App\Models\AllowedValue\Category())->allowedValues($resource_type_id))
             ->create()
             ->response();
     }
@@ -173,7 +173,7 @@ class ItemCategoryView extends Controller
 
         return $response
             ->setDynamicAllowedFields(
-                (new \App\AllowedValue\Category())->allowedValues($resource_type_id))
+                (new \App\Models\AllowedValue\Category())->allowedValues($resource_type_id))
             ->create()
             ->response();
     }
@@ -188,7 +188,7 @@ class ItemCategoryView extends Controller
 
         return $response
             ->setDynamicAllowedFields(
-                (new \App\AllowedValue\Category())->allowedValues($resource_type_id))
+                (new \App\Models\AllowedValue\Category())->allowedValues($resource_type_id))
             ->create()
             ->response();
     }

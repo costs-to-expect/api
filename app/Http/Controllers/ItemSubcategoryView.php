@@ -2,13 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\HttpOptionResponse\ItemSubcategory\AllocatedExpenseCollection;
+use App\HttpOptionResponse\ItemSubcategory\SimpleExpenseCollection;
+use App\HttpOptionResponse\ItemSubcategoryItem;
 use App\HttpResponse\Header;
 use App\ItemType\Entity;
 use App\Models\ItemCategory;
 use App\Models\ItemSubcategory;
-use App\HttpOptionResponse\ItemSubcategory\AllocatedExpenseCollection;
-use App\HttpOptionResponse\ItemSubcategory\SimpleExpenseCollection;
-use App\HttpOptionResponse\ItemSubcategoryItem;
 use App\Transformers\ItemSubcategory as ItemSubcategoryTransformer;
 use Illuminate\Http\JsonResponse;
 
@@ -183,7 +183,7 @@ class ItemSubcategoryView extends Controller
 
         $response = new AllocatedExpenseCollection($this->permissions((int) $resource_type_id));
 
-        return $response->setDynamicAllowedFields((new \App\AllowedValue\Subcategory())->allowedValues($item_category->category_id))
+        return $response->setDynamicAllowedFields((new \App\Models\AllowedValue\Subcategory())->allowedValues($item_category->category_id))
             ->create()
             ->response();
     }
@@ -204,7 +204,7 @@ class ItemSubcategoryView extends Controller
 
         $response = new SimpleExpenseCollection($this->permissions((int) $resource_type_id));
 
-        return $response->setDynamicAllowedFields((new \App\AllowedValue\Subcategory())->allowedValues($item_category->category_id))
+        return $response->setDynamicAllowedFields((new \App\Models\AllowedValue\Subcategory())->allowedValues($item_category->category_id))
             ->create()
             ->response();
     }

@@ -2,15 +2,15 @@
 
 namespace App\Http\Controllers;
 
-use App\AllowedValue\ItemType;
-use App\HttpResponse\Header;
-use App\HttpResponse\Responses;
-use App\Models\PermittedUser;
-use App\Models\Resource;
-use App\Models\ResourceType;
 use App\HttpOptionResponse\ResourceTypeCollection;
 use App\HttpOptionResponse\ResourceTypeItem;
 use App\HttpRequest\Parameter;
+use App\HttpResponse\Header;
+use App\HttpResponse\Responses;
+use App\Models\AllowedValue\ItemType;
+use App\Models\PermittedUser;
+use App\Models\Resource;
+use App\Models\ResourceType;
 use App\Transformers\ResourceType as ResourceTypeTransformer;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;

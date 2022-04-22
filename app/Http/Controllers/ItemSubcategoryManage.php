@@ -94,7 +94,7 @@ class ItemSubcategoryManage extends Controller
         if ($validator->fails()) {
             return \App\HttpRequest\BodyValidation::returnValidationErrors(
                 $validator,
-                (new \App\AllowedValue\Subcategory())->allowedValues($item_category->category_id)
+                (new \App\Models\AllowedValue\Subcategory())->allowedValues($item_category->category_id)
             );
         }
 

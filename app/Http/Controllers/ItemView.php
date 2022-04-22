@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\AllowedValue\Currency;
 use App\ItemType\Entity;
+use App\Models\AllowedValue\Currency;
 use Illuminate\Http\JsonResponse;
 
 /**

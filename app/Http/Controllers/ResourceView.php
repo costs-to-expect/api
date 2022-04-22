@@ -2,14 +2,13 @@
 
 namespace App\Http\Controllers;
 
-use App\AllowedValue\ItemSubtype;
-use App\HttpResponse\Header;
-use App\HttpResponse\Pagination as UtilityPagination;
-use App\Models\Resource;
-use App\Models\ResourceType;
 use App\HttpOptionResponse\ResourceCollection;
 use App\HttpOptionResponse\ResourceItem;
 use App\HttpRequest\Parameter;
+use App\HttpResponse\Header;
+use App\Models\AllowedValue\ItemSubtype;
+use App\Models\Resource;
+use App\Models\ResourceType;
 use App\Transformers\Resource as ResourceTransformer;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Config;

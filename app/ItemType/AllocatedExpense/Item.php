@@ -3,10 +3,10 @@ declare(strict_types=1);
 
 namespace App\ItemType\AllocatedExpense;
 
-use App\AllowedValue\Currency;
-use App\ItemType\ItemType;
-use App\Transformers\Transformer;
 use App\HttpRequest\Hash;
+use App\ItemType\ItemType;
+use App\Models\AllowedValue\Currency;
+use App\Transformers\Transformer;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Date;
 

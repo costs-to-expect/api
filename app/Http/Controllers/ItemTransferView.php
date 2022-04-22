@@ -2,10 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\HttpResponse\Header;
-use App\HttpResponse\Responses;
-use App\ItemType\Entity;
-use App\Models\ItemTransfer;
 use App\HttpOptionResponse\ItemTransfer\AllocatedExpense;
 use App\HttpOptionResponse\ItemTransfer\AllocatedExpenseCollection;
 use App\HttpOptionResponse\ItemTransfer\AllocatedExpenseTransfer;
@@ -13,6 +9,10 @@ use App\HttpOptionResponse\ItemTransfer\SimpleExpense;
 use App\HttpOptionResponse\ItemTransfer\SimpleExpenseCollection;
 use App\HttpOptionResponse\ItemTransfer\SimpleExpenseTransfer;
 use App\HttpRequest\Parameter;
+use App\HttpResponse\Header;
+use App\HttpResponse\Responses;
+use App\ItemType\Entity;
+use App\Models\ItemTransfer;
 use App\Transformers\ItemTransfer as ItemTransferTransformer;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Config;
@@ -182,7 +182,7 @@ class ItemTransferView extends Controller
         $response = new AllocatedExpenseTransfer($this->permissions($resource_type_id));
 
         return $response->setDynamicAllowedFields(
-            (new \App\AllowedValue\Resource())->allowedValues(
+            (new \App\Models\AllowedValue\Resource())->allowedValues(
                 $resource_type_id,
                 $resource_id
             )
@@ -199,7 +199,7 @@ class ItemTransferView extends Controller
         $response = new SimpleExpenseTransfer($this->permissions($resource_type_id));
 
         return $response->setDynamicAllowedFields(
-            (new \App\AllowedValue\Resource())->allowedValues(
+            (new \App\Models\AllowedValue\Resource())->allowedValues(
                 $resource_type_id,
                 $resource_id
             )

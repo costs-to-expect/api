@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace App\AllowedValue;
+namespace App\Models\AllowedValue;
 
 use App\HttpRequest\Hash;
 

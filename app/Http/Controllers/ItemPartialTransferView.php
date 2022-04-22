@@ -2,14 +2,14 @@
 
 namespace App\Http\Controllers;
 
-use App\HttpResponse\Header;
-use App\HttpResponse\Responses;
-use App\ItemType\Entity;
-use App\Models\ItemPartialTransfer;
 use App\HttpOptionResponse\ItemPartialTransfer\AllocatedExpense;
 use App\HttpOptionResponse\ItemPartialTransfer\AllocatedExpenseCollection;
 use App\HttpOptionResponse\ItemPartialTransfer\AllocatedExpenseTransfer;
 use App\HttpRequest\Parameter;
+use App\HttpResponse\Header;
+use App\HttpResponse\Responses;
+use App\ItemType\Entity;
+use App\Models\ItemPartialTransfer;
 use App\Transformers\ItemPartialTransfer as ItemPartialTransferTransformer;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Config;
@@ -201,7 +201,7 @@ class ItemPartialTransferView extends Controller
         $response = new AllocatedExpenseTransfer($this->permissions($resource_type_id));
 
         return $response->setDynamicAllowedFields(
-                (new \App\AllowedValue\Resource())->allowedValues(
+                (new \App\Models\AllowedValue\Resource())->allowedValues(
                     $resource_type_id,
                     $resource_id
                 )
