@@ -3,10 +3,10 @@ declare(strict_types=1);
 
 namespace App\ItemType\Game;
 
-use App\ItemType\Game\AllowedValue\Winner;
+use App\HttpRequest\Hash;
+use App\ItemType\Game\Models\AllowedValue\Winner;
 use App\ItemType\ItemType;
 use App\Transformers\Transformer;
-use App\HttpRequest\Hash;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Config as LaravelConfig;
 use Illuminate\Support\Facades\Date;
@@ -100,11 +100,11 @@ class Item extends ItemType
 
     protected function allowedValuesItemCollectionClass(): string
     {
-        return AllowedValue\Item::class;
+        return Models\AllowedValue\Item::class;
     }
 
     protected function allowedValuesResourceTypeItemCollectionClass(): string
     {
-        return AllowedValue\ResourceTypeItem::class;
+        return Models\AllowedValue\ResourceTypeItem::class;
     }
 }

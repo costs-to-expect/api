@@ -106,11 +106,11 @@ class Item extends ItemType
 
     protected function allowedValuesItemCollectionClass(): string
     {
-        return AllowedValue\Item::class;
+        return Models\AllowedValue\Item::class;
     }
 
     protected function allowedValuesResourceTypeItemCollectionClass(): string
     {
-        return AllowedValue\ResourceTypeItem::class;
+        return Models\AllowedValue\ResourceTypeItem::class;
     }
 }

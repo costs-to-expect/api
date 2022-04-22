@@ -1,32 +1,30 @@
 <?php
 declare(strict_types=1);
 
-namespace App\ItemType\AllocatedExpense\AllowedValue;
+namespace App\ItemType\AllocatedExpense\Models\AllowedValue;
 
 use App\HttpResponse\Responses;
-use App\ItemType\AllowedValue;
+use App\ItemType\ResourceTypeAllowedValue;
 use App\Models\Category;
 use App\Models\Currency;
 use App\Models\Subcategory;
 
-class Item extends AllowedValue
+class ResourceTypeItem extends ResourceTypeAllowedValue
 {
     public function __construct(
         int $resource_type_id,
-        int $resource_id,
         array $viewable_resource_types
     )
     {
         parent::__construct(
             $resource_type_id,
-            $resource_id,
             $viewable_resource_types
         );
 
         $this->setAllowedValueFields();
     }
 
-    public function fetch(): AllowedValue
+    public function fetch(): ResourceTypeAllowedValue
     {
         $this->fetchValuesForYear();
 
@@ -39,6 +37,17 @@ class Item extends AllowedValue
         $this->fetchValuesForCurrency();
 
         return $this;
+    }
+
+    protected function setAllowedValueFields(): void
+    {
+        $this->values = [
+            'year' => null,
+            'month' => null,
+            'category' => null,
+            'subcategory' => null,
+            'currency_id' => null
+        ];
     }
 
     protected function fetchValuesForCategory(): void
@@ -60,9 +69,9 @@ class Item extends AllowedValue
                 $allowed_values[$category_id] = [
                     'value' => $category_id,
                     'name' => $category['category_name'],
-                    'description' => trans('item-type-allocated-expense/allowed-values.description-prefix-category') .
+                    'description' => trans('resource-type-item-type-allocated-expense/allowed-values.description-prefix-category') .
                         $category['category_name'] .
-                        trans('item-type-allocated-expense/allowed-values.description-suffix-category')
+                        trans('resource-type-item-type-allocated-expense/allowed-values.description-suffix-category')
                 ];
             }
 
@@ -103,7 +112,7 @@ class Item extends AllowedValue
                 $allowed_values[$i] = [
                     'value' => $i,
                     'name' => date("F", mktime(0, 0, 0, $i, 10)),
-                    'description' => trans('item-type-allocated-expense/allowed-values.description-prefix-month') .
+                    'description' => trans('resource-type-item-type-allocated-expense/allowed-values.description-prefix-month') .
                         date("F", mktime(0, 0, 0, $i, 1))
                 ];
             }
@@ -134,8 +143,8 @@ class Item extends AllowedValue
                 $allowed_values[$subcategory_id] = [
                     'value' => $subcategory_id,
                     'name' => $subcategory['subcategory_name'],
-                    'description' => trans('item-type-allocated-expense/allowed-values.description-prefix-subcategory') .
-                        $subcategory['subcategory_name'] . trans('item-type-allocated-expense/allowed-values.description-suffix-subcategory')
+                    'description' => trans('resource-type-item-type-allocated-expense/allowed-values.description-prefix-subcategory') .
+                        $subcategory['subcategory_name'] . trans('resource-type-item-type-allocated-expense/allowed-values.description-suffix-subcategory')
                 ];
             }
 
@@ -147,42 +156,28 @@ class Item extends AllowedValue
     {
         if (array_key_exists('year', $this->available_parameters) === true) {
 
-            $min_year = $this->range_limits->minimumYearByResourceTypeAndResource(
-                $this->resource_type_id,
-                $this->resource_id,
-                'item_type_allocated_expense',
-                'effective_date'
-            );
-            $max_year = $this->range_limits->maximumYearByResourceTypeAndResource(
-                $this->resource_type_id,
-                $this->resource_id,
-                'item_type_allocated_expense',
-                'effective_date'
-            );
-
             $allowed_values = [];
+
+            $min_year = $this->range_limits->minimumYearByResourceType(
+                $this->resource_type_id,
+                'item_type_allocated_expense',
+                'effective_date'
+            );
+            $max_year = $this->range_limits->maximumYearByResourceType(
+                $this->resource_type_id,
+                'item_type_allocated_expense',
+                'effective_date'
+            );
 
             for ($i = $min_year; $i <= $max_year; $i++) {
                 $allowed_values[$i] = [
                     'value' => $i,
                     'name' => $i,
-                    'description' => trans('item-type-allocated-expense/allowed-values.description-prefix-year') . $i
+                    'description' => trans('resource-type-item-type-allocated-expense/allowed-values.description-prefix-year') . $i
                 ];
             }
 
             $this->values['year'] = ['allowed_values' => $allowed_values];
-
         }
-    }
-
-    protected function setAllowedValueFields(): void
-    {
-        $this->values = [
-            'year' => null,
-            'month' => null,
-            'category' => null,
-            'subcategory' => null,
-            'currency_id' => null
-        ];
     }
 }

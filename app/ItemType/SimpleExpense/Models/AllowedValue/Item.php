@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace App\ItemType\SimpleExpense\AllowedValue;
+namespace App\ItemType\SimpleExpense\Models\AllowedValue;
 
 use App\HttpResponse\Responses;
 use App\ItemType\AllowedValue;

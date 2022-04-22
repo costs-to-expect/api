@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace App\ItemType\Game\AllowedValue;
+namespace App\ItemType\Game\Models\AllowedValue;
 
 use App\HttpRequest\Hash;
 

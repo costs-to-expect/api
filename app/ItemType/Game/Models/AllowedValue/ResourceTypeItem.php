@@ -1,9 +1,8 @@
 <?php
 declare(strict_types=1);
 
-namespace App\ItemType\Game\AllowedValue;
+namespace App\ItemType\Game\Models\AllowedValue;
 
-use App\ItemType\Game\Item;
 use App\ItemType\ResourceTypeAllowedValue;
 use App\Models\Category;
 use function trans;
