@@ -59,7 +59,7 @@ class Summary extends ApiSummaryResponse
 
             $collection = [];
             foreach ($summary as $subtotal) {
-                $collection[] = (new \App\ItemType\Game\Transformers\Summary($subtotal))->asArray();
+                $collection[] = (new \App\ItemType\Game\Transformer\Summary($subtotal))->asArray();
             }
 
             $this->assignToCache(
@@ -90,7 +90,7 @@ class Summary extends ApiSummaryResponse
 
             $collection = [];
             foreach ($summary as $subtotal) {
-                $collection[] = (new \App\ItemType\Game\Transformers\Summary($subtotal))->asArray();
+                $collection[] = (new \App\ItemType\Game\Transformer\Summary($subtotal))->asArray();
             }
 
             $this->assignToCache(

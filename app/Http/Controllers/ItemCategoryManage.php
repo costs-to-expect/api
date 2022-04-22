@@ -6,7 +6,7 @@ use App\HttpResponse\Responses;
 use App\ItemType\Entity;
 use App\Jobs\ClearCache;
 use App\Models\ItemCategory;
-use App\Transformers\ItemCategory as ItemCategoryTransformer;
+use App\Transformer\ItemCategory as ItemCategoryTransformer;
 use Exception;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\JsonResponse;

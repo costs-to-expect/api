@@ -9,7 +9,7 @@ use App\HttpResponse\Header;
 use App\ItemType\Entity;
 use App\Models\ItemCategory;
 use App\Models\ItemSubcategory;
-use App\Transformers\ItemSubcategory as ItemSubcategoryTransformer;
+use App\Transformer\ItemSubcategory as ItemSubcategoryTransformer;
 use Illuminate\Http\JsonResponse;
 
 /**

@@ -4,7 +4,7 @@ declare(strict_types=1);
 namespace App\HttpRequest\Validate;
 
 use App\HttpRequest\Validate\Validator as BaseValidator;
-use App\Rules\PermissibleUser;
+use App\Rule\PermissibleUser;
 use Illuminate\Support\Facades\Validator as ValidatorFacade;
 
 /**

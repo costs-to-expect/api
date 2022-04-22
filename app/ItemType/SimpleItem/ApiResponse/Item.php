@@ -59,7 +59,7 @@ class Item extends ApiItemResponse
 
             $collection = array_map(
                 static function ($item) {
-                    return (new \App\ItemType\SimpleItem\Transformers\Item($item))->asArray();
+                    return (new \App\ItemType\SimpleItem\Transformer\Item($item))->asArray();
                 },
                 $items
             );
@@ -98,7 +98,7 @@ class Item extends ApiItemResponse
         }
 
         return response()->json(
-            (new \App\ItemType\SimpleItem\Transformers\Item($item))->asArray(),
+            (new \App\ItemType\SimpleItem\Transformer\Item($item))->asArray(),
             200,
             $this->showHeaders()
         );

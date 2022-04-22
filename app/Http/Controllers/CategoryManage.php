@@ -7,7 +7,7 @@ use App\Jobs\ClearCache;
 use App\Models\Category;
 use App\HttpRequest\BodyValidation;
 use App\HttpRequest\Validate\Category as CategoryValidator;
-use App\Transformers\Category as CategoryTransformer;
+use App\Transformer\Category as CategoryTransformer;
 use Exception;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\JsonResponse;

@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace App\ItemType;
 
-use App\Transformers\Transformer;
+use App\Transformer\Transformer;
 use App\HttpRequest\Parameter\Request;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Config as LaravelConfig;

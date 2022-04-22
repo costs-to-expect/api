@@ -7,7 +7,7 @@ use App\ItemType\Entity;
 use App\Jobs\ClearCache;
 use App\Models\ItemPartialTransfer;
 use App\HttpRequest\Validate\ItemPartialTransfer as ItemPartialTransferValidator;
-use App\Transformers\ItemPartialTransfer as ItemPartialTransferTransformer;
+use App\Transformer\ItemPartialTransfer as ItemPartialTransferTransformer;
 use Exception;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\JsonResponse;

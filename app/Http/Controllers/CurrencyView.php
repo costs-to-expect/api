@@ -7,7 +7,7 @@ use App\Models\Currency;
 use App\HttpOptionResponse\CurrencyCollection;
 use App\HttpOptionResponse\CurrencyItem;
 use App\HttpRequest\Parameter;
-use App\Transformers\Currency as CurrencyTransformer;
+use App\Transformer\Currency as CurrencyTransformer;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Config;
 

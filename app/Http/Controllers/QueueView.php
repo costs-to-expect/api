@@ -8,7 +8,7 @@ use App\HttpOptionResponse\QueueCollection;
 use App\HttpOptionResponse\QueueItem;
 use App\HttpRequest\Parameter;
 use App\HttpRequest\Route;
-use App\Transformers\Queue as QueueTransformer;
+use App\Transformer\Queue as QueueTransformer;
 use Illuminate\Http\JsonResponse;
 
 /**

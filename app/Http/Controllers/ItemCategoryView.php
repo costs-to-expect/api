@@ -12,7 +12,7 @@ use App\HttpResponse\Header;
 use App\HttpResponse\Responses;
 use App\ItemType\Entity;
 use App\Models\ItemCategory;
-use App\Transformers\ItemCategory as ItemCategoryTransformer;
+use App\Transformer\ItemCategory as ItemCategoryTransformer;
 use Illuminate\Http\JsonResponse;
 
 /**

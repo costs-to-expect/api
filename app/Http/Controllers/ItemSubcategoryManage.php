@@ -6,7 +6,7 @@ use App\ItemType\Entity;
 use App\Jobs\ClearCache;
 use App\Models\ItemCategory;
 use App\Models\ItemSubcategory;
-use App\Transformers\ItemSubcategory as ItemSubcategoryTransformer;
+use App\Transformer\ItemSubcategory as ItemSubcategoryTransformer;
 use Exception;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\JsonResponse;

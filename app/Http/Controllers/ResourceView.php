@@ -9,7 +9,7 @@ use App\HttpResponse\Header;
 use App\Models\AllowedValue\ItemSubtype;
 use App\Models\Resource;
 use App\Models\ResourceType;
-use App\Transformers\Resource as ResourceTransformer;
+use App\Transformer\Resource as ResourceTransformer;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Config;
 

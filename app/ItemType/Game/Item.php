@@ -6,7 +6,7 @@ namespace App\ItemType\Game;
 use App\HttpRequest\Hash;
 use App\ItemType\Game\Models\AllowedValue\Winner;
 use App\ItemType\ItemType;
-use App\Transformers\Transformer;
+use App\Transformer\Transformer;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Config as LaravelConfig;
 use Illuminate\Support\Facades\Date;
@@ -66,7 +66,7 @@ class Item extends ItemType
 
     public function transformer(array $data_to_transform): Transformer
     {
-        return new Transformers\Item($data_to_transform);
+        return new Transformer\Item($data_to_transform);
     }
 
     public function update(array $patch, Model $instance): bool

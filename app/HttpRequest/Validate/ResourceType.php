@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace App\HttpRequest\Validate;
 
-use App\Rules\ResourceTypeName;
+use App\Rule\ResourceTypeName;
 use App\HttpRequest\Validate\Validator as BaseValidator;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Validator as ValidatorFacade;

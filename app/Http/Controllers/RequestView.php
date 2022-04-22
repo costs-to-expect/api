@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\RequestErrorLog;
 use App\HttpOptionResponse\ErrorLog;
-use App\Transformers\RequestErrorLog as RequestErrorLogTransformer;
+use App\Transformer\RequestErrorLog as RequestErrorLogTransformer;
 use Illuminate\Http\JsonResponse;
 
 /**

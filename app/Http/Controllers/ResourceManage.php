@@ -8,7 +8,7 @@ use App\Models\Resource;
 use App\Models\ResourceItemSubtype;
 use App\Models\ResourceType;
 use App\HttpRequest\Validate\Resource as ResourceValidator;
-use App\Transformers\Resource as ResourceTransformer;
+use App\Transformer\Resource as ResourceTransformer;
 use Exception;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\JsonResponse;

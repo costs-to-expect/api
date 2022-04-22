@@ -11,7 +11,7 @@ use App\Models\AllowedValue\ItemType;
 use App\Models\PermittedUser;
 use App\Models\Resource;
 use App\Models\ResourceType;
-use App\Transformers\ResourceType as ResourceTypeTransformer;
+use App\Transformer\ResourceType as ResourceTypeTransformer;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Config;

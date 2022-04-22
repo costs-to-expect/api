@@ -60,7 +60,7 @@ class SummaryResourceTypeItem extends ApiSummaryResourceTypeItemResponse
 
             $collection = [];
             foreach ($summary as $subtotal) {
-                $collection[] = (new \App\ItemType\SimpleItem\Transformers\Summary($subtotal))->asArray();
+                $collection[] = (new \App\ItemType\SimpleItem\Transformer\Summary($subtotal))->asArray();
             }
 
             $this->assignToCache(
@@ -97,7 +97,7 @@ class SummaryResourceTypeItem extends ApiSummaryResourceTypeItemResponse
                 $this->parameters
             );
 
-            $collection = (new \App\ItemType\SimpleItem\Transformers\SummaryByResource($summary))->asArray();
+            $collection = (new \App\ItemType\SimpleItem\Transformer\SummaryByResource($summary))->asArray();
 
             $this->assignToCache(
                 $summary,
@@ -121,7 +121,7 @@ class SummaryResourceTypeItem extends ApiSummaryResourceTypeItemResponse
 
             $collection = [];
             foreach ($summary as $subtotal) {
-                $collection[] = (new \App\ItemType\SimpleItem\Transformers\Summary($subtotal))->asArray();
+                $collection[] = (new \App\ItemType\SimpleItem\Transformer\Summary($subtotal))->asArray();
             }
 
             $this->assignToCache(

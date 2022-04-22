@@ -6,7 +6,7 @@ use App\HttpResponse\Responses;
 use App\Jobs\ClearCache;
 use App\Models\Subcategory;
 use App\HttpRequest\Validate\Subcategory as SubcategoryValidator;
-use App\Transformers\Subcategory as SubcategoryTransformer;
+use App\Transformer\Subcategory as SubcategoryTransformer;
 use Exception;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\JsonResponse;

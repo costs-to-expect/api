@@ -9,7 +9,7 @@ use App\HttpOptionResponse\ItemSubtypeCollection;
 use App\HttpOptionResponse\ItemSubtypeItem;
 use App\HttpRequest\Parameter;
 use App\HttpRequest\Route;
-use App\Transformers\ItemSubtype as ItemSubtypeTransformer;
+use App\Transformer\ItemSubtype as ItemSubtypeTransformer;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Config;
 

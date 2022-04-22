@@ -10,7 +10,7 @@ use App\Models\Resource;
 use App\Models\ResourceType;
 use App\Models\ResourceTypeItemType;
 use App\HttpRequest\Validate\ResourceType as ResourceTypeValidator;
-use App\Transformers\ResourceType as ResourceTypeTransformer;
+use App\Transformer\ResourceType as ResourceTypeTransformer;
 use Exception;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\JsonResponse;

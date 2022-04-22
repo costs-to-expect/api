@@ -13,7 +13,7 @@ use App\HttpResponse\Header;
 use App\HttpResponse\Responses;
 use App\ItemType\Entity;
 use App\Models\ItemTransfer;
-use App\Transformers\ItemTransfer as ItemTransferTransformer;
+use App\Transformer\ItemTransfer as ItemTransferTransformer;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Config;
 

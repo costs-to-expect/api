@@ -9,7 +9,7 @@ use App\HttpOptionResponse\ItemTypeCollection;
 use App\HttpOptionResponse\ItemTypeItem;
 use App\HttpRequest\Parameter;
 use App\HttpRequest\Route;
-use App\Transformers\ItemType as ItemTypeTransformer;
+use App\Transformer\ItemType as ItemTypeTransformer;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Config;
 

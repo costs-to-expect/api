@@ -10,7 +10,7 @@ use App\HttpResponse\Header;
 use App\HttpResponse\Responses;
 use App\ItemType\Entity;
 use App\Models\ItemPartialTransfer;
-use App\Transformers\ItemPartialTransfer as ItemPartialTransferTransformer;
+use App\Transformer\ItemPartialTransfer as ItemPartialTransferTransformer;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Config;
 

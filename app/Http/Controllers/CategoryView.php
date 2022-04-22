@@ -8,7 +8,7 @@ use App\Models\Subcategory;
 use App\HttpOptionResponse\CategoryCollection;
 use App\HttpOptionResponse\CategoryItem;
 use App\HttpRequest\Parameter;
-use App\Transformers\Category as CategoryTransformer;
+use App\Transformer\Category as CategoryTransformer;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Config;
 
