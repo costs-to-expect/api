@@ -1,34 +1,36 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Method;
+namespace App\HttpVerb;
 
 /**
- * Helper class to generate the data required to build the OPTIONS required for
- * a single HTTP Verb, in this case PATCH
- *
  * @author Dean Blackborough <dean@g3d-development.com>
  * @copyright Dean Blackborough 2018-2022
  * @license https://github.com/costs-to-expect/api/blob/master/LICENSE
  */
-class PatchRequest extends Method
+class PostResponse extends Response
 {
     protected array $dynamic_fields;
-    protected array $fields_after_localisation;
     protected array $fields;
+    protected array $fields_after_localisation;
+    protected array $parameters;
+    protected array $parameters_after_localisation;
 
     public function __construct()
     {
         parent::__construct();
 
         $this->dynamic_fields = [];
-        $this->fields_after_localisation = [];
         $this->fields = [];
+        $this->fields_after_localisation = [];
+
+        $this->parameters = [];
+        $this->parameters_after_localisation = [];
     }
 
     public function setDynamicFields(
         array $fields = []
-    ): PatchRequest
+    ): PostResponse
     {
         $this->dynamic_fields = $fields;
 
@@ -37,10 +39,21 @@ class PatchRequest extends Method
 
     public function setFields(
         array $fields
-    ): PatchRequest
+    ): PostResponse
     {
         if (count($fields) > 0) {
             $this->fields = $fields;
+        }
+
+        return $this;
+    }
+
+    public function setParameters(
+        array $parameters
+    ): PostResponse
+    {
+        if (count($parameters) > 0) {
+            $this->parameters = $parameters;
         }
 
         return $this;
@@ -61,9 +74,21 @@ class PatchRequest extends Method
             ) {
                 $field_data['title'] = trans($field_data['title']);
                 $field_data['description'] = trans($field_data['description']);
-                $field_data['required'] = false;
 
                 $this->fields_after_localisation[$field] = $field_data;
+            }
+        }
+
+        foreach ($this->parameters as $parameter => $parameter_data)
+        {
+            if (
+                array_key_exists('title', $parameter_data) === true &&
+                array_key_exists('description', $parameter_data) === true
+            ) {
+                $parameter_data['title'] = trans($parameter_data['title']);
+                $parameter_data['description'] = trans($parameter_data['description']);
+
+                $this->parameters_after_localisation[$parameter] = $parameter_data;
             }
         }
     }
@@ -78,7 +103,8 @@ class PatchRequest extends Method
                 'required' => $this->authentication,
                 'authenticated' => $this->authenticated
             ],
-            'fields' => $this->fields_after_localisation
+            'fields' => $this->fields_after_localisation,
+            'parameters' => $this->parameters_after_localisation
         ];
     }
 }

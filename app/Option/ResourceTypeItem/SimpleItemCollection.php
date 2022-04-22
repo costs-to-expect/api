@@ -12,7 +12,7 @@ class SimpleItemCollection extends Response
     {
         $base_path = 'api.resource-type-item-type-simple-item';
 
-        $get = new \App\Method\GetRequest();
+        $get = new \App\HttpVerb\GetReponse();
         $this->verbs['GET'] = $get->setSortableParameters(LaravelConfig::get($base_path . '.sortable', []))->
             setSearchableParameters(LaravelConfig::get($base_path . '.searchable', []))->
             setFilterableParameters(LaravelConfig::get($base_path . '.filterable', []))->

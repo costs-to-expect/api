@@ -9,12 +9,12 @@ class ErrorLog extends Response
 {
     public function create()
     {
-        $get = new \App\Method\GetRequest();
+        $get = new \App\HttpVerb\GetReponse();
         $this->verbs['GET'] = $get->setDescription('route-descriptions.request_GET_error-log')->
             setAuthenticationStatus($this->permissions['view'])->
             option();
 
-        $post = new \App\Method\PostRequest();
+        $post = new \App\HttpVerb\PostResponse();
         $this->verbs['POST'] = $post->setFields(Config::get('api.request-error-log.fields-post'))->
             setDescription('route-descriptions.request_POST')->
             setAuthenticationStatus($this->permissions['view'])->

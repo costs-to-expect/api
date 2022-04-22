@@ -9,7 +9,7 @@ class SummarySubcategoryCollection extends Response
 {
     public function create()
     {
-        $get = new \App\Method\GetRequest();
+        $get = new \App\HttpVerb\GetReponse();
         $this->verbs['GET'] = $get->setDescription('route-descriptions.summary_subcategory_GET_index')->
             setAuthenticationStatus($this->permissions['view'])->
             setSearchableParameters(Config::get('api.subcategory.summary-searchable'))->

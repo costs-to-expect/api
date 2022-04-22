@@ -10,7 +10,7 @@ class Login extends Response
 {
     public function create()
     {
-        $post = new \App\Method\PostRequest();
+        $post = new \App\HttpVerb\PostResponse();
         $this->verbs['POST'] = $post->setFields(Config::get('api.auth.login.fields-post'))
             ->setAuthenticationRequirement()
             ->setDescription('route-descriptions.auth_login_POST')

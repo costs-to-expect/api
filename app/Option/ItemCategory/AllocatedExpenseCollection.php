@@ -10,13 +10,13 @@ class AllocatedExpenseCollection extends Response
 {
     public function create()
     {
-        $get = new \App\Method\GetRequest();
+        $get = new \App\HttpVerb\GetReponse();
         $this->verbs['GET'] = $get->setAuthenticationStatus($this->permissions['view'])->
             setParameters(Config::get('api.item-category.parameters'))->
             setDescription('route-descriptions.item_category_GET_index')->
             option();
 
-        $post = new \App\Method\PostRequest();
+        $post = new \App\HttpVerb\PostResponse();
         $this->verbs['POST'] = $post->setFields(Config::get('api.item-category.fields-post'))->
             setDynamicFields($this->allowed_fields)->
             setAuthenticationRequirement(true)->

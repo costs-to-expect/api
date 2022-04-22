@@ -9,7 +9,7 @@ class User extends Response
 {
     public function create()
     {
-        $get = new \App\Method\GetRequest();
+        $get = new \App\HttpVerb\GetReponse();
         $this->verbs['GET'] = $get->setSortableParameters([])->
             setSearchableParameters([])->
             setDescription('route-descriptions.auth_user_GET')->

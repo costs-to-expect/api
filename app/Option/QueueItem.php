@@ -7,7 +7,7 @@ class QueueItem extends Response
 {
     public function create()
     {
-        $get = new \App\Method\GetRequest();
+        $get = new \App\HttpVerb\GetReponse();
         $this->verbs['GET'] = $get->setDescription('route-descriptions.queue_GET_show')->
             setAuthenticationStatus($this->permissions['view'])->
             option();

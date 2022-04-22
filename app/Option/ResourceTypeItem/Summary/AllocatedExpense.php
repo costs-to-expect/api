@@ -12,7 +12,7 @@ class AllocatedExpense extends Response
     {
         $base_path = 'api.resource-type-item-type-allocated-expense';
 
-        $get = new \App\Method\GetRequest();
+        $get = new \App\HttpVerb\GetReponse();
         $this->verbs['GET'] = $get->setSearchableParameters(LaravelConfig::get($base_path . '.summary-searchable', []))
             ->setParameters(LaravelConfig::get($base_path . '.summary-parameters', []))
             ->setFilterableParameters(LaravelConfig::get($base_path . '.summary-filterable', []))

@@ -9,19 +9,19 @@ class ResourceTypeItem extends Response
 {
     public function create()
     {
-        $get = new \App\Method\GetRequest();
+        $get = new \App\HttpVerb\GetReponse();
         $this->verbs['GET'] = $get->setParameters(Config::get('api.resource-type.parameters-show'))->
             setDescription('route-descriptions.resource_type_GET_show')->
             setAuthenticationStatus($this->permissions['view'])->
             option();
 
-        $delete = new \App\Method\DeleteRequest();
+        $delete = new \App\HttpVerb\DeleteResponse();
         $this->verbs['DELETE'] = $delete->setDescription('route-descriptions.resource_type_DELETE')->
             setAuthenticationRequirement(true)->
             setAuthenticationStatus($this->permissions['manage'])->
             option();
 
-        $patch = new \App\Method\PatchRequest();
+        $patch = new \App\HttpVerb\PatchResponse();
         $this->verbs['PATCH'] = $patch->setFields(Config::get('api.resource-type.fields-patch'))->
             setDescription('route-descriptions.resource_type_PATCH')->
             setAuthenticationRequirement(true)->

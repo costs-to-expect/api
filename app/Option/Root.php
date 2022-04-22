@@ -7,7 +7,7 @@ class Root extends Response
 {
     public function create()
     {
-        $get = new \App\Method\GetRequest();
+        $get = new \App\HttpVerb\GetReponse();
         $this->verbs['GET'] = $get->setAuthenticationStatus($this->permissions['view'])->
             setDescription('route-descriptions.api_GET_changelog')->
             option();

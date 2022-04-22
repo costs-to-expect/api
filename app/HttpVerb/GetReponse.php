@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Method;
+namespace App\HttpVerb;
 
 use Illuminate\Support\Facades\Config as LaravelConfig;
 
@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\Config as LaravelConfig;
  * @copyright Dean Blackborough 2018-2022
  * @license https://github.com/costs-to-expect/api/blob/master/LICENSE
  */
-class GetRequest extends Method
+class GetReponse extends Response
 {
     protected bool $pagination;
     protected array $pagination_parameters;
@@ -51,7 +51,7 @@ class GetRequest extends Method
 
     public function setFilterableParameters(
         array $parameters
-    ): GetRequest
+    ): GetReponse
     {
         if (count($parameters) > 0) {
             $this->filterable = true;
@@ -64,7 +64,7 @@ class GetRequest extends Method
     public function setPaginationStatus(
         bool $status = false,
         bool $override = false
-    ): GetRequest
+    ): GetReponse
     {
         if ($status === true) {
             $this->pagination = true;
@@ -81,7 +81,7 @@ class GetRequest extends Method
 
     public function setParameters(
         array $parameters
-    ): GetRequest
+    ): GetReponse
     {
         if (count($parameters) > 0) {
             $this->parameters = $parameters;
@@ -92,7 +92,7 @@ class GetRequest extends Method
 
     public function setDynamicParameters(
         array $parameters = []
-    ): GetRequest
+    ): GetReponse
     {
         $this->dynamic_parameters = $parameters;
 
@@ -101,7 +101,7 @@ class GetRequest extends Method
 
     public function setSearchableParameters(
         array $parameters
-    ): GetRequest
+    ): GetReponse
     {
         if (count($parameters) > 0) {
             $this->searchable = true;
@@ -113,7 +113,7 @@ class GetRequest extends Method
 
     public function setSortableParameters(
         array $parameters
-    ): GetRequest
+    ): GetReponse
     {
         if (count($parameters) > 0) {
             $this->sortable = true;

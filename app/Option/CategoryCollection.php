@@ -9,7 +9,7 @@ class CategoryCollection extends Response
 {
     public function create()
     {
-        $get = new \App\Method\GetRequest();
+        $get = new \App\HttpVerb\GetReponse();
         $this->verbs['GET'] = $get->setPaginationStatus(true, true)->
             setParameters(Config::get('api.category.parameters'))->
             setSearchableParameters(Config::get('api.category.searchable'))->
@@ -18,7 +18,7 @@ class CategoryCollection extends Response
             setDescription('route-descriptions.category_GET_index')->
             option();
 
-        $post = new \App\Method\PostRequest();
+        $post = new \App\HttpVerb\PostResponse();
         $this->verbs['POST'] = $post->setFields(Config::get('api.category.fields-post'))->
             setAuthenticationRequirement(true)->
             setAuthenticationStatus($this->permissions['manage'])->

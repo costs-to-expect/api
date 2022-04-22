@@ -10,13 +10,13 @@ class AllocatedExpense extends Response
 {
     public function create()
     {
-        $get = new \App\Method\GetRequest();
+        $get = new \App\HttpVerb\GetReponse();
         $this->verbs['GET'] = $get->setParameters(Config::get('api.item-category.parameters-show'))->
             setAuthenticationStatus($this->permissions['view'])->
             setDescription('route-descriptions.item_category_GET_show')->
             option();
 
-        $delete = new \App\Method\DeleteRequest();
+        $delete = new \App\HttpVerb\DeleteResponse();
         $this->verbs['DELETE'] = $delete->setDescription('route-descriptions.item_category_DELETE')->
             setAuthenticationStatus($this->permissions['manage'])->
             setAuthenticationRequirement(true)->

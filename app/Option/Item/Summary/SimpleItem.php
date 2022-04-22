@@ -12,7 +12,7 @@ class SimpleItem extends Response
     {
         $base_path = 'api.item-type-simple-item';
 
-        $get = new \App\Method\GetRequest();
+        $get = new \App\HttpVerb\GetReponse();
         $this->verbs['GET'] = $get
             ->setParameters(LaravelConfig::get($base_path . '.summary-parameters', []))
             ->setSearchableParameters(LaravelConfig::get($base_path . '.summary-searchable', []))

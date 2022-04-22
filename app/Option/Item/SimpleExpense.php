@@ -12,19 +12,19 @@ class SimpleExpense extends Response
     {
         $base_path = 'api.item-type-simple-expense';
 
-        $get = new \App\Method\GetRequest();
+        $get = new \App\HttpVerb\GetReponse();
         $this->verbs['GET'] = $get->setParameters(LaravelConfig::get($base_path . '.parameters-show', []))
             ->setAuthenticationStatus($this->permissions['view'])
             ->setDescription('route-descriptions.item_GET_show')
             ->option();
 
-        $delete = new \App\Method\DeleteRequest();
+        $delete = new \App\HttpVerb\DeleteResponse();
         $this->verbs['DELETE'] = $delete->setDescription('route-descriptions.item_DELETE')
             ->setAuthenticationStatus($this->permissions['manage'])
             ->setAuthenticationRequirement(true)
             ->option();
 
-        $patch = new \App\Method\PatchRequest();
+        $patch = new \App\HttpVerb\PatchResponse();
         $this->verbs['PATCH'] = $patch->setFields(LaravelConfig::get($base_path . '.fields-post', []))
             ->setDescription('route-descriptions.item_PATCH')
             ->setAuthenticationStatus($this->permissions['manage'])

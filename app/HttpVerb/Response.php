@@ -1,14 +1,14 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Method;
+namespace App\HttpVerb;
 
 /**
  * @author Dean Blackborough <dean@g3d-development.com>
  * @copyright Dean Blackborough 2018-2022
  * @license https://github.com/costs-to-expect/api/blob/master/LICENSE
  */
-abstract class Method
+abstract class Response
 {
     protected bool $authentication;
 
@@ -25,7 +25,7 @@ abstract class Method
 
     public function setAuthenticationRequirement(
         bool $status = false
-    ): Method
+    ): Response
     {
         if ($status === true) {
             $this->authentication = true;
@@ -38,7 +38,7 @@ abstract class Method
 
     public function setAuthenticationStatus(
         bool $status = false
-    ): Method
+    ): Response
     {
         if ($status === true) {
             $this->authenticated = true;
@@ -51,7 +51,7 @@ abstract class Method
 
     public function setDescription(
         string $localisation_path
-    ): Method
+    ): Response
     {
         $this->description = trans($localisation_path);
 

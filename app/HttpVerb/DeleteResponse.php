@@ -1,14 +1,14 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Method;
+namespace App\HttpVerb;
 
 /**
  * @author Dean Blackborough <dean@g3d-development.com>
  * @copyright Dean Blackborough 2018-2022
  * @license https://github.com/costs-to-expect/api/blob/master/LICENSE
  */
-class DeleteRequest extends Method
+class DeleteResponse extends Response
 {
     protected function mergeAndLocalise(): void
     {

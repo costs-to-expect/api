@@ -9,13 +9,13 @@ class Token extends Response
 {
     public function create()
     {
-        $get = new \App\Method\GetRequest();
+        $get = new \App\HttpVerb\GetReponse();
         $this->verbs['GET'] = $get->setDescription('route-descriptions.auth_user_token_GET')->
             setAuthenticationRequirement(true)->
             setAuthenticationStatus($this->permissions['view'])->
             option();
 
-        $delete = new \App\Method\DeleteRequest();
+        $delete = new \App\HttpVerb\DeleteResponse();
         $this->verbs['DELETE'] = $delete->setDescription('route-descriptions.auth_user_token_DELETE')->
             setAuthenticationRequirement(true)->
             setAuthenticationStatus($this->permissions['manage'])->

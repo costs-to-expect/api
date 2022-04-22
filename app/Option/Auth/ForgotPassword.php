@@ -10,7 +10,7 @@ class ForgotPassword extends Response
 {
     public function create()
     {
-        $post = new \App\Method\PostRequest();
+        $post = new \App\HttpVerb\PostResponse();
         $this->verbs['POST'] = $post->setFields(Config::get('api.auth.forgot-password.fields-post'))
             ->setAuthenticationRequirement()
             ->setDescription('route-descriptions.auth_forgot_password_POST')

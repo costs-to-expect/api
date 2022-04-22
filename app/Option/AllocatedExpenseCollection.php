@@ -9,7 +9,7 @@ class AllocatedExpenseCollection extends Response
 {
     public function create()
     {
-        $get = new \App\Method\GetRequest();
+        $get = new \App\HttpVerb\GetReponse();
         $this->verbs['GET'] = $get->setParameters(Config::get('api.item-transfer.parameters'))->
             setPaginationStatus(true)->
             setAuthenticationStatus($this->permissions['view'])->

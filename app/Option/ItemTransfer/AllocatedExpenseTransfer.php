@@ -10,7 +10,7 @@ class AllocatedExpenseTransfer extends Response
 {
     public function create()
     {
-        $post = new \App\Method\PostRequest();
+        $post = new \App\HttpVerb\PostResponse();
         $this->verbs['POST'] = $post->setFields(Config::get('api.item-transfer.fields-post'))->
             setDynamicFields($this->allowed_fields)->
             setDescription('route-descriptions.item_transfer_POST')->

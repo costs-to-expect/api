@@ -9,7 +9,7 @@ class AllocatedExpense extends Response
 {
     public function create()
     {
-        $get = new \App\Method\GetRequest();
+        $get = new \App\HttpVerb\GetReponse();
         $this->verbs['GET'] = $get->setDescription('route-descriptions.item_transfer_GET_show')->
             setAuthenticationStatus($this->permissions['view'])->
             option();
