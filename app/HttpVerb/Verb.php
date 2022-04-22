@@ -8,7 +8,7 @@ namespace App\HttpVerb;
  * @copyright Dean Blackborough 2018-2022
  * @license https://github.com/costs-to-expect/api/blob/master/LICENSE
  */
-abstract class Response
+abstract class Verb
 {
     protected bool $authentication;
 
@@ -25,7 +25,7 @@ abstract class Response
 
     public function setAuthenticationRequirement(
         bool $status = false
-    ): Response
+    ): Verb
     {
         if ($status === true) {
             $this->authentication = true;
@@ -38,7 +38,7 @@ abstract class Response
 
     public function setAuthenticationStatus(
         bool $status = false
-    ): Response
+    ): Verb
     {
         if ($status === true) {
             $this->authenticated = true;
@@ -51,7 +51,7 @@ abstract class Response
 
     public function setDescription(
         string $localisation_path
-    ): Response
+    ): Verb
     {
         $this->description = trans($localisation_path);
 

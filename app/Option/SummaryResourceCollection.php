@@ -9,7 +9,7 @@ class SummaryResourceCollection extends Response
 {
     public function create()
     {
-        $get = new \App\HttpVerb\GetReponse();
+        $get = new \App\HttpVerb\Get();
         $this->verbs['GET'] = $get->setParameters(Config::get('api.resource.summary-parameters'))->
             setDescription('route-descriptions.summary-resource-GET-index')->
             setAuthenticationStatus($this->permissions['view'])->

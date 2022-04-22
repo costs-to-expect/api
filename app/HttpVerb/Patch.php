@@ -11,7 +11,7 @@ namespace App\HttpVerb;
  * @copyright Dean Blackborough 2018-2022
  * @license https://github.com/costs-to-expect/api/blob/master/LICENSE
  */
-class PatchResponse extends Response
+class Patch extends Verb
 {
     protected array $dynamic_fields;
     protected array $fields_after_localisation;
@@ -28,7 +28,7 @@ class PatchResponse extends Response
 
     public function setDynamicFields(
         array $fields = []
-    ): PatchResponse
+    ): Patch
     {
         $this->dynamic_fields = $fields;
 
@@ -37,7 +37,7 @@ class PatchResponse extends Response
 
     public function setFields(
         array $fields
-    ): PatchResponse
+    ): Patch
     {
         if (count($fields) > 0) {
             $this->fields = $fields;

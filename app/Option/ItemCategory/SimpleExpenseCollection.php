@@ -10,13 +10,13 @@ class SimpleExpenseCollection extends Response
 {
     public function create()
     {
-        $get = new \App\HttpVerb\GetReponse();
+        $get = new \App\HttpVerb\Get();
         $this->verbs['GET'] = $get->setAuthenticationStatus($this->permissions['view'])->
             setParameters(Config::get('api.item-category.parameters'))->
             setDescription('route-descriptions.item_category_GET_index')->
             option();
 
-        $post = new \App\HttpVerb\PostResponse();
+        $post = new \App\HttpVerb\Post();
         $this->verbs['POST'] = $post->setFields(Config::get('api.item-category.fields-post'))->
             setDynamicFields($this->allowed_fields)->
             setAuthenticationRequirement(true)->

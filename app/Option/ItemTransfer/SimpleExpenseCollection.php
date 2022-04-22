@@ -10,7 +10,7 @@ class SimpleExpenseCollection extends Response
 {
     public function create()
     {
-        $get = new \App\HttpVerb\GetReponse();
+        $get = new \App\HttpVerb\Get();
         $this->verbs['GET'] = $get->setParameters(Config::get('api.item-transfer.parameters'))->
             setPaginationStatus(true)->
             setAuthenticationStatus($this->permissions['view'])->

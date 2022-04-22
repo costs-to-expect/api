@@ -10,7 +10,7 @@ class UpdatePassword extends Response
 {
     public function create()
     {
-        $post = new \App\HttpVerb\PostResponse();
+        $post = new \App\HttpVerb\Post();
         $this->verbs['POST'] = $post->setFields(Config::get('api.auth.update-password.fields-post'))
             ->setAuthenticationRequirement(true)
             ->setAuthenticationStatus($this->permissions['manage'])

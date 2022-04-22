@@ -12,7 +12,7 @@ class GameCollection extends Response
     {
         $base_path = 'api.resource-type-item-type-game';
 
-        $get = new \App\HttpVerb\GetReponse();
+        $get = new \App\HttpVerb\Get();
         $this->verbs['GET'] = $get->setSortableParameters(LaravelConfig::get($base_path . '.sortable', []))->
             setSearchableParameters(LaravelConfig::get($base_path . '.searchable', []))->
             setFilterableParameters(LaravelConfig::get($base_path . '.filterable', []))->

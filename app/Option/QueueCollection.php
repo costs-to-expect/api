@@ -7,7 +7,7 @@ class QueueCollection extends Response
 {
     public function create()
     {
-        $get = new \App\HttpVerb\GetReponse();
+        $get = new \App\HttpVerb\Get();
         $this->verbs['GET'] = $get->setPaginationStatus(true, true)->
             setDescription('route-descriptions.queue_GET_index')->
             setAuthenticationStatus($this->permissions['view'])->

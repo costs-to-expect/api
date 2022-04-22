@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\Config as LaravelConfig;
  * @copyright Dean Blackborough 2018-2022
  * @license https://github.com/costs-to-expect/api/blob/master/LICENSE
  */
-class GetReponse extends Response
+class Get extends Verb
 {
     protected bool $pagination;
     protected array $pagination_parameters;
@@ -51,7 +51,7 @@ class GetReponse extends Response
 
     public function setFilterableParameters(
         array $parameters
-    ): GetReponse
+    ): Get
     {
         if (count($parameters) > 0) {
             $this->filterable = true;
@@ -64,7 +64,7 @@ class GetReponse extends Response
     public function setPaginationStatus(
         bool $status = false,
         bool $override = false
-    ): GetReponse
+    ): Get
     {
         if ($status === true) {
             $this->pagination = true;
@@ -81,7 +81,7 @@ class GetReponse extends Response
 
     public function setParameters(
         array $parameters
-    ): GetReponse
+    ): Get
     {
         if (count($parameters) > 0) {
             $this->parameters = $parameters;
@@ -92,7 +92,7 @@ class GetReponse extends Response
 
     public function setDynamicParameters(
         array $parameters = []
-    ): GetReponse
+    ): Get
     {
         $this->dynamic_parameters = $parameters;
 
@@ -101,7 +101,7 @@ class GetReponse extends Response
 
     public function setSearchableParameters(
         array $parameters
-    ): GetReponse
+    ): Get
     {
         if (count($parameters) > 0) {
             $this->searchable = true;
@@ -113,7 +113,7 @@ class GetReponse extends Response
 
     public function setSortableParameters(
         array $parameters
-    ): GetReponse
+    ): Get
     {
         if (count($parameters) > 0) {
             $this->sortable = true;

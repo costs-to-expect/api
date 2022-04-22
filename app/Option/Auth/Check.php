@@ -9,7 +9,7 @@ class Check extends Response
 {
     public function create()
     {
-        $get = new \App\HttpVerb\GetReponse();
+        $get = new \App\HttpVerb\Get();
         $this->verbs['GET'] = $get->setSortableParameters([])->
             setSearchableParameters([])->
             setDescription('route-descriptions.auth_check_GET')->

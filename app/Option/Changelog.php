@@ -7,7 +7,7 @@ class Changelog extends Response
 {
     public function create()
     {
-        $get = new \App\HttpVerb\GetReponse();
+        $get = new \App\HttpVerb\Get();
         $this->verbs['GET'] = $get->setAuthenticationStatus($this->permissions['view'])->
             setDescription('route-descriptions.api_GET_index')->
             option();

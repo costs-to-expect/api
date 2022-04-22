@@ -10,7 +10,7 @@ class SimpleExpenseTransfer extends Response
 {
     public function create()
     {
-        $post = new \App\HttpVerb\PostResponse();
+        $post = new \App\HttpVerb\Post();
         $this->verbs['POST'] = $post->setFields(Config::get('api.item-transfer.fields-post'))->
             setDynamicFields($this->allowed_fields)->
             setDescription('route-descriptions.item_transfer_POST')->

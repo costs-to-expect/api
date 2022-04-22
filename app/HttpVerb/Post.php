@@ -8,7 +8,7 @@ namespace App\HttpVerb;
  * @copyright Dean Blackborough 2018-2022
  * @license https://github.com/costs-to-expect/api/blob/master/LICENSE
  */
-class PostResponse extends Response
+class Post extends Verb
 {
     protected array $dynamic_fields;
     protected array $fields;
@@ -30,7 +30,7 @@ class PostResponse extends Response
 
     public function setDynamicFields(
         array $fields = []
-    ): PostResponse
+    ): Post
     {
         $this->dynamic_fields = $fields;
 
@@ -39,7 +39,7 @@ class PostResponse extends Response
 
     public function setFields(
         array $fields
-    ): PostResponse
+    ): Post
     {
         if (count($fields) > 0) {
             $this->fields = $fields;
@@ -50,7 +50,7 @@ class PostResponse extends Response
 
     public function setParameters(
         array $parameters
-    ): PostResponse
+    ): Post
     {
         if (count($parameters) > 0) {
             $this->parameters = $parameters;

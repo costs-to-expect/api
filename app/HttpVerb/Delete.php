@@ -8,7 +8,7 @@ namespace App\HttpVerb;
  * @copyright Dean Blackborough 2018-2022
  * @license https://github.com/costs-to-expect/api/blob/master/LICENSE
  */
-class DeleteResponse extends Response
+class Delete extends Verb
 {
     protected function mergeAndLocalise(): void
     {

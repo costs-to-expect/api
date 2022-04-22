@@ -9,7 +9,7 @@ class ItemSubtypeCollection extends Response
 {
     public function create()
     {
-        $get = new \App\HttpVerb\GetReponse();
+        $get = new \App\HttpVerb\Get();
         $this->verbs['GET'] = $get
             ->setSortableParameters(Config::get('api.item-subtype.sortable'))
             ->setSearchableParameters(Config::get('api.item-subtype.searchable'))

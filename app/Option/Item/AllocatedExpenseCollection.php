@@ -12,7 +12,7 @@ class AllocatedExpenseCollection extends Response
     {
         $base_path = 'api.item-type-allocated-expense';
 
-        $get = new \App\HttpVerb\GetReponse();
+        $get = new \App\HttpVerb\Get();
         $this->verbs['GET'] = $get->setSortableParameters(LaravelConfig::get($base_path . '.sortable', []))
             ->setSearchableParameters(LaravelConfig::get($base_path . '.searchable', []))
             ->setFilterableParameters(LaravelConfig::get($base_path . '.filterable', []))
@@ -23,7 +23,7 @@ class AllocatedExpenseCollection extends Response
             ->setDescription('route-descriptions.item_GET_index')
             ->option();
 
-        $post = new \App\HttpVerb\PostResponse();
+        $post = new \App\HttpVerb\Post();
         $this->verbs['POST'] = $post->setFields(LaravelConfig::get($base_path . '.fields-post', []))
             ->setDescription( 'route-descriptions.item_POST')
             ->setAuthenticationRequirement(true)
