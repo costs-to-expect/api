@@ -49,19 +49,9 @@ class Item extends ItemType
         return new Models\Item();
     }
 
-    public function table(): string
-    {
-        return 'item_type_simple_item';
-    }
-
     public function type(): string
     {
         return 'simple-item';
-    }
-
-    public function transformer(array $data_to_transform)
-    {
-        return (new Transformer\Item($data_to_transform));
     }
 
     public function update(array $patch, Model $instance): bool

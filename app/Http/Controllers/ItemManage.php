@@ -100,7 +100,7 @@ class ItemManage extends Controller
 
         $model = new \App\ItemType\AllocatedExpense\Models\Item();
         return response()->json(
-            $item->transformer($model->instanceToArray($item_instance, $item_type_instance))->asArray(),
+            (new \App\ItemType\AllocatedExpense\Transformer\Item($model->instanceToArray($item_instance, $item_type_instance)))->asArray(),
             201
         );
     }
@@ -155,7 +155,7 @@ class ItemManage extends Controller
 
         $model = new \App\ItemType\Game\Models\Item();
         return response()->json(
-            $item->transformer($model->instanceToArray($item_instance, $item_type_instance))->asArray(),
+            (new \App\ItemType\Game\Transformer\Item($model->instanceToArray($item_instance, $item_type_instance)))->asArray(),
             201
         );
     }
@@ -219,7 +219,7 @@ class ItemManage extends Controller
 
         $model = new \App\ItemType\SimpleExpense\Models\Item();
         return response()->json(
-            $item->transformer($model->instanceToArray($item_instance, $item_type_instance))->asArray(),
+            (new \App\ItemType\SimpleExpense\Transformer\Item($model->instanceToArray($item_instance, $item_type_instance)))->asArray(),
             201
         );
     }
@@ -274,7 +274,7 @@ class ItemManage extends Controller
 
         $model = new \App\ItemType\SimpleItem\Models\Item();
         return response()->json(
-            $item->transformer($model->instanceToArray($item_instance, $item_type_instance))->asArray(),
+            (new \App\ItemType\SimpleItem\Transformer\Item($model->instanceToArray($item_instance, $item_type_instance)))->asArray(),
             201
         );
     }

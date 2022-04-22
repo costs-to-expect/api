@@ -58,11 +58,6 @@ class Item extends ItemType
         return (new Models\Item())->instance($id);
     }
 
-    public function table(): string
-    {
-        return 'item_type_allocated_expense';
-    }
-
     public function type(): string
     {
         return 'allocated-expense';
@@ -71,11 +66,6 @@ class Item extends ItemType
     public function model()
     {
         return new Models\Item();
-    }
-
-    public function transformer(array $data_to_transform)
-    {
-        return new Transformer\Item($data_to_transform);
     }
 
     public function update(array $patch, Model $instance): bool

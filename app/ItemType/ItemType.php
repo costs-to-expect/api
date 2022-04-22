@@ -132,10 +132,6 @@ abstract class ItemType
         return LaravelConfig::get($this->base_path . '.summary-searchable', []);
     }
 
-    abstract public function table(): string;
-
-    abstract public function transformer(array $data_to_transform);
-
     abstract public function type(): string;
 
     abstract public function update(array $patch, Model $instance): bool;
