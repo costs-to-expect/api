@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Request\Validate;
+namespace App\HttpRequest\Validate;
 
 /**
  * Small boolean validation utility

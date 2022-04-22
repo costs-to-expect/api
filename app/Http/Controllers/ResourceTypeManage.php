@@ -9,7 +9,7 @@ use App\Models\PermittedUser;
 use App\Models\Resource;
 use App\Models\ResourceType;
 use App\Models\ResourceTypeItemType;
-use App\Request\Validate\ResourceType as ResourceTypeValidator;
+use App\HttpRequest\Validate\ResourceType as ResourceTypeValidator;
 use App\Transformers\ResourceType as ResourceTypeTransformer;
 use Exception;
 use Illuminate\Database\QueryException;
@@ -36,7 +36,7 @@ class ResourceTypeManage extends Controller
         ]);
 
         if ($validator->fails()) {
-            return \App\Request\BodyValidation::returnValidationErrors($validator);
+            return \App\HttpRequest\BodyValidation::returnValidationErrors($validator);
         }
 
         $cache_job_payload = (new \App\Cache\JobPayload())
@@ -175,10 +175,10 @@ class ResourceTypeManage extends Controller
         ]);
 
         if ($validator !== null && $validator->fails()) {
-            return \App\Request\BodyValidation::returnValidationErrors($validator);
+            return \App\HttpRequest\BodyValidation::returnValidationErrors($validator);
         }
 
-        $invalid_fields = \App\Request\BodyValidation::checkForInvalidFields(
+        $invalid_fields = \App\HttpRequest\BodyValidation::checkForInvalidFields(
             array_merge(
                 (new ResourceType())->patchableFields(),
                 (new ResourceTypeValidator())->dynamicDefinedFields()

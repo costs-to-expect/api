@@ -12,7 +12,7 @@ use App\Option\ItemTransfer\AllocatedExpenseTransfer;
 use App\Option\ItemTransfer\SimpleExpense;
 use App\Option\ItemTransfer\SimpleExpenseCollection;
 use App\Option\ItemTransfer\SimpleExpenseTransfer;
-use App\Request\Parameter;
+use App\HttpRequest\Parameter;
 use App\Transformers\ItemTransfer as ItemTransferTransformer;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Config;

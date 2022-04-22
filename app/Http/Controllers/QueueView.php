@@ -6,8 +6,8 @@ use App\HttpResponse\Header;
 use App\Models\Queue;
 use App\Option\QueueCollection;
 use App\Option\QueueItem;
-use App\Request\Parameter;
-use App\Request\Route;
+use App\HttpRequest\Parameter;
+use App\HttpRequest\Route;
 use App\Transformers\Queue as QueueTransformer;
 use Illuminate\Http\JsonResponse;
 
@@ -70,7 +70,7 @@ class QueueView extends Controller
      */
     public function show(string $queue_id): JsonResponse
     {
-        if (\App\Request\Route\Validate\Queue::existsToUserForViewing($queue_id) === false) {
+        if (\App\HttpRequest\Route\Validate\Queue::existsToUserForViewing($queue_id) === false) {
             \App\HttpResponse\Responses::notFound(trans('entities.queue'));
         }
 
@@ -107,7 +107,7 @@ class QueueView extends Controller
      */
     public function optionsShow(string $queue_id): JsonResponse
     {
-        if (\App\Request\Route\Validate\Queue::existsToUserForViewing($queue_id) === false) {
+        if (\App\HttpRequest\Route\Validate\Queue::existsToUserForViewing($queue_id) === false) {
             \App\HttpResponse\Responses::notFound(trans('entities.queue'));
         }
 

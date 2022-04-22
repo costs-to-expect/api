@@ -3,8 +3,8 @@
 namespace App\ItemType\Game\ApiResponse;
 
 use App\ItemType\ApiSummaryResourceTypeItemResponse;
-use App\Request\Parameter;
-use App\Request\Validate\Boolean;
+use App\HttpRequest\Parameter;
+use App\HttpRequest\Validate\Boolean;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Config as LaravelConfig;
 use function response;

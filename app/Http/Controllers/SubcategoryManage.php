@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use App\HttpResponse\Responses;
 use App\Jobs\ClearCache;
 use App\Models\Subcategory;
-use App\Request\Validate\Subcategory as SubcategoryValidator;
+use App\HttpRequest\Validate\Subcategory as SubcategoryValidator;
 use App\Transformers\Subcategory as SubcategoryTransformer;
 use Exception;
 use Illuminate\Database\QueryException;
@@ -39,7 +39,7 @@ class SubcategoryManage extends Controller
         $validator = (new SubcategoryValidator)->create(['category_id' => $category_id]);
 
         if ($validator->fails()) {
-            return \App\Request\BodyValidation::returnValidationErrors($validator);
+            return \App\HttpRequest\BodyValidation::returnValidationErrors($validator);
         }
 
         $cache_job_payload = (new \App\Cache\JobPayload())
@@ -156,10 +156,10 @@ class SubcategoryManage extends Controller
         ]);
 
         if ($validator->fails()) {
-            return \App\Request\BodyValidation::returnValidationErrors($validator);
+            return \App\HttpRequest\BodyValidation::returnValidationErrors($validator);
         }
 
-        $invalid_fields = \App\Request\BodyValidation::checkForInvalidFields(
+        $invalid_fields = \App\HttpRequest\BodyValidation::checkForInvalidFields(
             array_merge(
                 (new Subcategory())->patchableFields(),
                 (new SubcategoryValidator)->dynamicDefinedFields()

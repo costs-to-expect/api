@@ -1,14 +1,14 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Request\Parameter;
+namespace App\HttpRequest\Parameter;
 
 use App\ItemType\Entity;
 use App\Models\Category;
 use App\Models\EntityLimits;
 use App\Models\ResourceType;
 use App\Models\Subcategory;
-use App\Request\Validate\Boolean;
+use App\HttpRequest\Validate\Boolean;
 
 /**
  * Fetch any GET parameters attached to the URI and validate them, silently

@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace App\Transformers;
 
-use App\Request\Hash;
+use App\HttpRequest\Hash;
 
 /**
  * Our base transformer class, used to convert the results of our queries into

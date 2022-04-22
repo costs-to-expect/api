@@ -6,7 +6,7 @@ namespace App\ItemType\SimpleExpense;
 use App\AllowedValue\Currency;
 use App\ItemType\ItemType;
 use App\Transformers\Transformer;
-use App\Request\Hash;
+use App\HttpRequest\Hash;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Date;
 

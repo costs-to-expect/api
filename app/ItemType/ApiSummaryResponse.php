@@ -3,7 +3,7 @@
 namespace App\ItemType;
 
 use App\HttpResponse\Header;
-use App\Request\Parameter;
+use App\HttpRequest\Parameter;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\JsonResponse;
 

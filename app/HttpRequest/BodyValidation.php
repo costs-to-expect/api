@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Request;
+namespace App\HttpRequest;
 
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Http\JsonResponse;

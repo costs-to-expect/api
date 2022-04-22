@@ -3,8 +3,8 @@ declare(strict_types=1);
 
 namespace App\HttpResponse;
 
-use App\Request\Hash;
-use App\Request\Validate\Boolean;
+use App\HttpRequest\Hash;
+use App\HttpRequest\Validate\Boolean;
 use Illuminate\Support\Facades\Config;
 
 /**

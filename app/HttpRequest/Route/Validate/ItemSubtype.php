@@ -1,30 +1,29 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Request\Route\Validate;
+namespace App\HttpRequest\Route\Validate;
 
 use App\Models\ResourceAccess;
 
 /**
- * Validate the route params to an item type
+ * Validate the route params to an item subtype
  *
  * @author Dean Blackborough <dean@g3d-development.com>
  * @copyright Dean Blackborough 2018-2022
  * @license https://github.com/costs-to-expect/api/blob/master/LICENSE
  */
-class ItemType
+class ItemSubtype
 {
     /**
-     * Validate that the user is able to view the requested item type
-     *
      * @param string|int $item_type_id
+     * @param string|int $item_subtype_id
      *
      * @return boolean
      */
-    public static function existsToUserForViewing($item_type_id): bool
+    public static function existsToUserForViewing($item_type_id, $item_subtype_id): bool
     {
         return !(
-            (new ResourceAccess())->itemTypeExistsToUser((int) $item_type_id) === false
+            (new ResourceAccess())->itemSubTypeExistsToUser((int) $item_type_id, (int) $item_subtype_id) === false
         );
     }
 }

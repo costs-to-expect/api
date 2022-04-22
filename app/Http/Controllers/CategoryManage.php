@@ -5,8 +5,8 @@ namespace App\Http\Controllers;
 use App\HttpResponse\Responses;
 use App\Jobs\ClearCache;
 use App\Models\Category;
-use App\Request\BodyValidation;
-use App\Request\Validate\Category as CategoryValidator;
+use App\HttpRequest\BodyValidation;
+use App\HttpRequest\Validate\Category as CategoryValidator;
 use App\Transformers\Category as CategoryTransformer;
 use Exception;
 use Illuminate\Database\QueryException;
@@ -36,7 +36,7 @@ class CategoryManage extends Controller
             'resource_type_id' => $resource_type_id
         ]);
         if ($validator->fails()) {
-            return \App\Request\BodyValidation::returnValidationErrors($validator);
+            return \App\HttpRequest\BodyValidation::returnValidationErrors($validator);
         }
 
         $cache_job_payload = (new \App\Cache\JobPayload())
@@ -144,7 +144,7 @@ class CategoryManage extends Controller
         }
 
         if ($validator->fails()) {
-            return \App\Request\BodyValidation::returnValidationErrors($validator);
+            return \App\HttpRequest\BodyValidation::returnValidationErrors($validator);
         }
 
         $invalid_fields = BodyValidation::checkForInvalidFields(

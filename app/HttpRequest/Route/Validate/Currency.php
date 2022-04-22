@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Request\Route\Validate;
+namespace App\HttpRequest\Route\Validate;
 
 use App\Models\ResourceAccess;
 

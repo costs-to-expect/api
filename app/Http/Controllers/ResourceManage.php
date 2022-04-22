@@ -7,7 +7,7 @@ use App\Jobs\ClearCache;
 use App\Models\Resource;
 use App\Models\ResourceItemSubtype;
 use App\Models\ResourceType;
-use App\Request\Validate\Resource as ResourceValidator;
+use App\HttpRequest\Validate\Resource as ResourceValidator;
 use App\Transformers\Resource as ResourceTransformer;
 use Exception;
 use Illuminate\Database\QueryException;
@@ -47,7 +47,7 @@ class ResourceManage extends Controller
         ]);
 
         if ($validator->fails()) {
-            return \App\Request\BodyValidation::returnValidationErrors($validator);
+            return \App\HttpRequest\BodyValidation::returnValidationErrors($validator);
         }
 
         $cache_job_payload = (new \App\Cache\JobPayload())
@@ -177,10 +177,10 @@ class ResourceManage extends Controller
         ]);
 
         if ($validator->fails()) {
-            return \App\Request\BodyValidation::returnValidationErrors($validator);
+            return \App\HttpRequest\BodyValidation::returnValidationErrors($validator);
         }
 
-        $invalid_fields = \App\Request\BodyValidation::checkForInvalidFields(
+        $invalid_fields = \App\HttpRequest\BodyValidation::checkForInvalidFields(
             array_merge(
                 (new Resource())->patchableFields(),
                 (new ResourceValidator())->dynamicDefinedFields()

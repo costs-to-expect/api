@@ -66,7 +66,7 @@ class ItemManage extends Controller
         );
 
         if ($validator->fails()) {
-            return \App\Request\BodyValidation::returnValidationErrors($validator);
+            return \App\HttpRequest\BodyValidation::returnValidationErrors($validator);
         }
 
         $item = new \App\ItemType\AllocatedExpense\Item();
@@ -121,7 +121,7 @@ class ItemManage extends Controller
         );
 
         if ($validator->fails()) {
-            return \App\Request\BodyValidation::returnValidationErrors($validator);
+            return \App\HttpRequest\BodyValidation::returnValidationErrors($validator);
         }
 
         $item = new \App\ItemType\Game\Item();
@@ -185,7 +185,7 @@ class ItemManage extends Controller
         );
 
         if ($validator->fails()) {
-            return \App\Request\BodyValidation::returnValidationErrors($validator);
+            return \App\HttpRequest\BodyValidation::returnValidationErrors($validator);
         }
 
         $item = new \App\ItemType\SimpleExpense\Item();
@@ -240,7 +240,7 @@ class ItemManage extends Controller
         );
 
         if ($validator->fails()) {
-            return \App\Request\BodyValidation::returnValidationErrors($validator);
+            return \App\HttpRequest\BodyValidation::returnValidationErrors($validator);
         }
 
         $item = new \App\ItemType\SimpleItem\Item();
@@ -304,7 +304,7 @@ class ItemManage extends Controller
             return Responses::nothingToPatch();
         }
 
-        $invalid_fields = \App\Request\BodyValidation::checkForInvalidFields(
+        $invalid_fields = \App\HttpRequest\BodyValidation::checkForInvalidFields(
             array_keys(LaravelConfig::get($config_base_path . '.validation-patch.fields', []))
         );
 
@@ -338,7 +338,7 @@ class ItemManage extends Controller
         );
 
         if ($validator->fails()) {
-            return \App\Request\BodyValidation::returnValidationErrors($validator);
+            return \App\HttpRequest\BodyValidation::returnValidationErrors($validator);
         }
 
         $cache_job_payload = (new JobPayload())
@@ -384,7 +384,7 @@ class ItemManage extends Controller
             return Responses::nothingToPatch();
         }
 
-        $invalid_fields = \App\Request\BodyValidation::checkForInvalidFields(
+        $invalid_fields = \App\HttpRequest\BodyValidation::checkForInvalidFields(
             array_keys(LaravelConfig::get($config_base_path . '.validation-patch.fields', []))
         );
 
@@ -418,7 +418,7 @@ class ItemManage extends Controller
         );
 
         if ($validator->fails()) {
-            return \App\Request\BodyValidation::returnValidationErrors($validator);
+            return \App\HttpRequest\BodyValidation::returnValidationErrors($validator);
         }
 
         $cache_job_payload = (new JobPayload())
@@ -464,7 +464,7 @@ class ItemManage extends Controller
             return Responses::nothingToPatch();
         }
 
-        $invalid_fields = \App\Request\BodyValidation::checkForInvalidFields(
+        $invalid_fields = \App\HttpRequest\BodyValidation::checkForInvalidFields(
             array_keys(LaravelConfig::get($config_base_path . '.validation-patch.fields', []))
         );
 
@@ -498,7 +498,7 @@ class ItemManage extends Controller
         );
 
         if ($validator->fails()) {
-            return \App\Request\BodyValidation::returnValidationErrors($validator);
+            return \App\HttpRequest\BodyValidation::returnValidationErrors($validator);
         }
 
         $cache_job_payload = (new JobPayload())
@@ -544,7 +544,7 @@ class ItemManage extends Controller
             return Responses::nothingToPatch();
         }
 
-        $invalid_fields = \App\Request\BodyValidation::checkForInvalidFields(
+        $invalid_fields = \App\HttpRequest\BodyValidation::checkForInvalidFields(
             array_keys(LaravelConfig::get($config_base_path . '.validation-patch.fields', []))
         );
 
@@ -564,7 +564,7 @@ class ItemManage extends Controller
         );
 
         if ($validator->fails()) {
-            return \App\Request\BodyValidation::returnValidationErrors($validator);
+            return \App\HttpRequest\BodyValidation::returnValidationErrors($validator);
         }
 
         $cache_job_payload = (new JobPayload())

@@ -7,7 +7,7 @@ use App\ItemType\Entity;
 use App\Jobs\ClearCache;
 use App\Models\Item;
 use App\Models\ItemTransfer;
-use App\Request\Validate\ItemTransfer as ItemTransferValidator;
+use App\HttpRequest\Validate\ItemTransfer as ItemTransferValidator;
 use Exception;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\JsonResponse;
@@ -55,7 +55,7 @@ class ItemTransferManage extends Controller
         );
 
         if ($validator->fails()) {
-            return \App\Request\BodyValidation::returnValidationErrors($validator);
+            return \App\HttpRequest\BodyValidation::returnValidationErrors($validator);
         }
 
         $cache_job_payload = (new \App\Cache\JobPayload())

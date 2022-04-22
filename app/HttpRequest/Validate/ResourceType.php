@@ -1,30 +1,30 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Request\Validate;
+namespace App\HttpRequest\Validate;
 
-use App\Request\Validate\Validator as BaseValidator;
+use App\Rules\ResourceTypeName;
+use App\HttpRequest\Validate\Validator as BaseValidator;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Validator as ValidatorFacade;
-use Illuminate\Validation\Rule;
 
 /**
- * Validation helper class for resources, returns the generated validator objects
+ * Validation helper class for resource types, returns the generated validator objects
  *
  * @author Dean Blackborough <dean@g3d-development.com>
  * @copyright Dean Blackborough 2018-2022
  * @license https://github.com/costs-to-expect/api/blob/master/LICENSE
  */
-class Resource extends BaseValidator
+class ResourceType extends BaseValidator
 {
     /**
      * Create the validation rules for the create (POST) request
      *
-     * @param integer $resource_type_id
+     * @param integer $user_id
      *
      * @return array
      */
-    private function createRules(int $resource_type_id, int $item_type_id): array
+    private function createRules(int $user_id): array
     {
         return array_merge(
             [
@@ -32,18 +32,14 @@ class Resource extends BaseValidator
                     'required',
                     'string',
                     'max:255',
-                    'unique:resource,name,null,id,resource_type_id,' . $resource_type_id
+                    new ResourceTypeName($user_id)
                 ],
-                'item_subtype_id' => [
+                'item_type_id' => [
                     'required',
-                    Rule::exists('item_subtype', 'id')->where(
-                        function ($query) use ($item_type_id) {
-                            $query->where('item_type_id', '=', $item_type_id);
-                        }
-                    )
+                    'exists:item_type,id'
                 ]
             ],
-            Config::get('api.resource.validation-post.fields')
+            Config::get('api.resource-type.validation-post.fields')
         );
     }
 
@@ -51,11 +47,11 @@ class Resource extends BaseValidator
      * Create the validation rules for the update (PATCH) request
      *
      * @param integer $resource_type_id
-     * @param integer $resource_id
+     * @param integer $user_id
      *
      * @return array
      */
-    private function updateRules(int $resource_type_id, int $resource_id): array
+    private function updateRules(int $resource_type_id, int $user_id): array
     {
         return array_merge(
             [
@@ -63,10 +59,10 @@ class Resource extends BaseValidator
                     'sometimes',
                     'string',
                     'max:255',
-                    'unique:resource,name,'. $resource_id . ',id,resource_type_id,' . $resource_type_id
-                ],
+                    new ResourceTypeName($user_id, $resource_type_id)
+                ]
             ],
-            Config::get('api.resource.validation-patch.fields')
+            Config::get('api.resource-type.validation-patch.fields')
         );
     }
 
@@ -90,22 +86,20 @@ class Resource extends BaseValidator
      */
     public function create(array $options = []): \Illuminate\Contracts\Validation\Validator
     {
-        $this->requiredIndexes(['resource_type_id', 'item_type_id'], $options);
+        $decode = $this->hash->itemType()->decode(request()->input('item_type_id'));
 
-        $decode = $this->hash->itemSubtype()->decode(request()->input('item_subtype_id'));
-
-        $item_subtype_id = null;
+        $item_type_id = null;
         if (count($decode) === 1) {
-            $item_subtype_id = $decode[0];
+            $item_type_id = $decode[0];
         }
 
         return ValidatorFacade::make(
             array_merge(
                 request()->all(),
-                ['item_subtype_id' => $item_subtype_id]
+                ['item_type_id' => $item_type_id]
             ),
-            $this->createRules((int) $options['resource_type_id'], (int) $options['item_type_id']),
-            $this->translateMessages('api.resource.validation-post.messages')
+            $this->createRules($options['user_id']),
+            $this->translateMessages('api.resource-type.validation-post.messages')
         );
     }
 
@@ -120,8 +114,8 @@ class Resource extends BaseValidator
     {
         return ValidatorFacade::make(
             request()->all(),
-            $this->updateRules($options['resource_type_id'], $options['resource_id']),
-            $this->translateMessages('api.resource.validation-patch.messages')
+            $this->updateRules($options['resource_type_id'], $options['user_id']),
+            $this->translateMessages('api.resource-type.validation-patch.messages')
         );
     }
 }

@@ -6,7 +6,7 @@ namespace App\ItemType\Game;
 use App\ItemType\Game\AllowedValue\Winner;
 use App\ItemType\ItemType;
 use App\Transformers\Transformer;
-use App\Request\Hash;
+use App\HttpRequest\Hash;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Config as LaravelConfig;
 use Illuminate\Support\Facades\Date;

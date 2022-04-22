@@ -5,7 +5,7 @@ namespace App\ItemType\SimpleExpense\Models;
 
 use App\Models\Clause;
 use App\Models\Currency;
-use App\Request\Validate\Boolean;
+use App\HttpRequest\Validate\Boolean;
 use Illuminate\Database\Eloquent\Model as LaravelModel;
 use Illuminate\Database\Query\Builder as QueryBuilder;
 

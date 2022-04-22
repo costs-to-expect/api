@@ -6,7 +6,7 @@ use App\HttpResponse\Responses;
 use App\Jobs\ClearCache;
 use App\Models\PermittedUser;
 use App\Models\ResourceType;
-use App\Request\Validate\PermittedUser as PermittedUserValidator;
+use App\HttpRequest\Validate\PermittedUser as PermittedUserValidator;
 use Exception;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\JsonResponse;
@@ -35,7 +35,7 @@ class PermittedUserManage extends Controller
         ]);
 
         if ($validator->fails()) {
-            return \App\Request\BodyValidation::returnValidationErrors($validator);
+            return \App\HttpRequest\BodyValidation::returnValidationErrors($validator);
         }
 
         $cache_job_payload = (new \App\Cache\JobPayload())

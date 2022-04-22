@@ -26,11 +26,11 @@ use Illuminate\Support\Str;
 
 class Authentication extends \Illuminate\Routing\Controller
 {
-    protected \App\Request\Hash $hash;
+    protected \App\HttpRequest\Hash $hash;
 
     public function __construct()
     {
-        $this->hash = new \App\Request\Hash();
+        $this->hash = new \App\HttpRequest\Hash();
     }
 
     public function check(): Http\JsonResponse

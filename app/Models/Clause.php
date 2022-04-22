@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace App\Models;
 
-use App\Request\Validate\Boolean;
+use App\HttpRequest\Validate\Boolean;
 use Illuminate\Database\Query\Builder as QueryBuilder;
 
 /**

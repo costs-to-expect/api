@@ -6,7 +6,7 @@ use App\HttpResponse\Header;
 use App\Models\PermittedUser;
 use App\Option\PermittedUserCollection;
 use App\Option\PermittedUserItem;
-use App\Request\Parameter;
+use App\HttpRequest\Parameter;
 use App\Transformers\PermittedUser as PermittedUserTransformer;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Config;

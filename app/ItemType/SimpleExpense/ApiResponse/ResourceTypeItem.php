@@ -4,10 +4,10 @@ declare(strict_types=1);
 namespace App\ItemType\SimpleExpense\ApiResponse;
 
 use App\ItemType\ApiResourceTypeItemResponse;
-use App\Request\Parameter\Filter;
-use App\Request\Parameter\Request;
-use App\Request\Parameter\Search;
-use App\Request\Parameter\Sort;
+use App\HttpRequest\Parameter\Filter;
+use App\HttpRequest\Parameter\Request;
+use App\HttpRequest\Parameter\Search;
+use App\HttpRequest\Parameter\Sort;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Config as LaravelConfig;
 use function request;

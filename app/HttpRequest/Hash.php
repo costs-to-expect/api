@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Request;
+namespace App\HttpRequest;
 
 use Hashids\Hashids;
 use Illuminate\Support\Facades\Config;

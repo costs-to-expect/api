@@ -1,10 +1,10 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Request\Validate;
+namespace App\HttpRequest\Validate;
 
 use App\ItemType\ItemType;
-use App\Request\Hash;
+use App\HttpRequest\Hash;
 use Illuminate\Support\Facades\Config;
 
 /**

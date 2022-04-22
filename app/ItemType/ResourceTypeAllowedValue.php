@@ -4,7 +4,7 @@ declare(strict_types=1);
 namespace App\ItemType;
 
 use App\Models\EntityLimits;
-use App\Request\Hash;
+use App\HttpRequest\Hash;
 
 abstract class ResourceTypeAllowedValue
 {

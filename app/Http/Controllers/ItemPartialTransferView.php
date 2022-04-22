@@ -9,7 +9,7 @@ use App\Models\ItemPartialTransfer;
 use App\Option\ItemPartialTransfer\AllocatedExpense;
 use App\Option\ItemPartialTransfer\AllocatedExpenseCollection;
 use App\Option\ItemPartialTransfer\AllocatedExpenseTransfer;
-use App\Request\Parameter;
+use App\HttpRequest\Parameter;
 use App\Transformers\ItemPartialTransfer as ItemPartialTransferTransformer;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Config;

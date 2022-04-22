@@ -10,7 +10,7 @@ use App\Models\Resource;
 use App\Models\ResourceType;
 use App\Option\ResourceTypeCollection;
 use App\Option\ResourceTypeItem;
-use App\Request\Parameter;
+use App\HttpRequest\Parameter;
 use App\Transformers\ResourceType as ResourceTypeTransformer;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;

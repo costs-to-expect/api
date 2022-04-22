@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Request\Parameter;
+namespace App\HttpRequest\Parameter;
 
 use Illuminate\Support\Facades\Validator as ValidatorFacade;
 use DateTime;

@@ -6,7 +6,7 @@ use App\HttpResponse\Responses;
 use App\ItemType\Entity;
 use App\Jobs\ClearCache;
 use App\Models\ItemPartialTransfer;
-use App\Request\Validate\ItemPartialTransfer as ItemPartialTransferValidator;
+use App\HttpRequest\Validate\ItemPartialTransfer as ItemPartialTransferValidator;
 use App\Transformers\ItemPartialTransfer as ItemPartialTransferTransformer;
 use Exception;
 use Illuminate\Database\QueryException;
@@ -102,7 +102,7 @@ class ItemPartialTransferManage extends Controller
         );
 
         if ($validator->fails()) {
-            return \App\Request\BodyValidation::returnValidationErrors($validator);
+            return \App\HttpRequest\BodyValidation::returnValidationErrors($validator);
         }
 
         $new_resource_id = $this->hash->decode('resource', request()->input('resource_id'));

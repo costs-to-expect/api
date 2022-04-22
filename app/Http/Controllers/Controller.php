@@ -6,8 +6,8 @@ use App\Cache\Collection;
 use App\Cache\Control;
 use App\Models\ResourceAccess;
 use App\Models\ResourceType;
-use App\Request\Hash;
-use App\Request\Validate\Boolean;
+use App\HttpRequest\Hash;
+use App\HttpRequest\Validate\Boolean;
 use Illuminate\Routing\Controller as BaseController;
 
 class Controller extends BaseController

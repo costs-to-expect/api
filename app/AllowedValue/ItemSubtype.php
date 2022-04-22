@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace App\AllowedValue;
 
-use App\Request\Hash;
+use App\HttpRequest\Hash;
 
 class ItemSubtype
 {

@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace App\Cache;
 
-use App\Request\Hash;
+use App\HttpRequest\Hash;
 
 class Key
 {

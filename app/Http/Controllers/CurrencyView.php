@@ -6,7 +6,7 @@ use App\HttpResponse\Header;
 use App\Models\Currency;
 use App\Option\CurrencyCollection;
 use App\Option\CurrencyItem;
-use App\Request\Parameter;
+use App\HttpRequest\Parameter;
 use App\Transformers\Currency as CurrencyTransformer;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Config;
@@ -88,7 +88,7 @@ class CurrencyView extends Controller
      */
     public function show(string $currency_id): JsonResponse
     {
-        if (\App\Request\Route\Validate\Currency::existsToUserForViewing($currency_id) === false) {
+        if (\App\HttpRequest\Route\Validate\Currency::existsToUserForViewing($currency_id) === false) {
             \App\HttpResponse\Responses::notFound(trans('entities.currency'));
         }
 
@@ -129,7 +129,7 @@ class CurrencyView extends Controller
      */
     public function optionsShow(string $currency_id): JsonResponse
     {
-        if (\App\Request\Route\Validate\Currency::existsToUserForViewing($currency_id) === false) {
+        if (\App\HttpRequest\Route\Validate\Currency::existsToUserForViewing($currency_id) === false) {
             \App\HttpResponse\Responses::notFound(trans('entities.currency'));
         }
 
