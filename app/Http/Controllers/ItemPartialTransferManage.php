@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\HttpResponse\Responses;
-use App\ItemType\Entity;
+use App\ItemType\Select;
 use App\Jobs\ClearCache;
 use App\Models\ItemPartialTransfer;
 use App\HttpRequest\Validate\ItemPartialTransfer as ItemPartialTransferValidator;
@@ -28,7 +28,7 @@ class ItemPartialTransferManage extends Controller
             \App\HttpResponse\Responses::notFoundOrNotAccessible(trans('entities.item-partial-transfer'));
         }
 
-        $item_type = Entity::itemType((int) $resource_type_id);
+        $item_type = Select::itemType((int) $resource_type_id);
 
         return match ($item_type) {
             'allocated-expense' => $this->deleteAllocatedExpense((int) $resource_type_id, (int) $item_partial_transfer_id),
@@ -79,7 +79,7 @@ class ItemPartialTransferManage extends Controller
             \App\HttpResponse\Responses::notFoundOrNotAccessible(trans('entities.item'));
         }
 
-        $item_type = Entity::itemType((int) $resource_type_id);
+        $item_type = Select::itemType((int) $resource_type_id);
 
         return match ($item_type) {
             'allocated-expense' => $this->transferAllocatedExpense((int) $resource_type_id, (int) $resource_id, (int) $item_id),

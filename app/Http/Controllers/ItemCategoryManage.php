@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\HttpResponse\Responses;
-use App\ItemType\Entity;
+use App\ItemType\Select;
 use App\Jobs\ClearCache;
 use App\Models\ItemCategory;
 use App\Transformer\ItemCategory as ItemCategoryTransformer;
@@ -30,7 +30,7 @@ class ItemCategoryManage extends Controller
             Responses::notFoundOrNotAccessible(trans('entities.resource'));
         }
 
-        $item_type = Entity::itemType((int) $resource_type_id);
+        $item_type = Select::itemType((int) $resource_type_id);
 
         return match ($item_type) {
             'allocated-expense', 'simple-expense' => $this->createItemCategory((int) $resource_type_id, (int) $resource_id, (int) $item_id, 1),
@@ -126,7 +126,7 @@ class ItemCategoryManage extends Controller
             Responses::notFoundOrNotAccessible(trans('entities.resource'));
         }
 
-        $item_type = Entity::itemType((int) $resource_type_id);
+        $item_type = Select::itemType((int) $resource_type_id);
 
         return match ($item_type) {
             'allocated-expense', 'simple-expense', 'game' => $this->deleteItemCategory((int) $resource_type_id, (int) $resource_id, (int) $item_id, (int) $item_category_id),

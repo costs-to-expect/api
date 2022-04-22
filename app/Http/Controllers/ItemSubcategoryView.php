@@ -6,7 +6,7 @@ use App\HttpOptionResponse\ItemSubcategory\AllocatedExpenseCollection;
 use App\HttpOptionResponse\ItemSubcategory\SimpleExpenseCollection;
 use App\HttpOptionResponse\ItemSubcategoryItem;
 use App\HttpResponse\Header;
-use App\ItemType\Entity;
+use App\ItemType\Select;
 use App\Models\ItemCategory;
 use App\Models\ItemSubcategory;
 use App\Transformer\ItemSubcategory as ItemSubcategoryTransformer;
@@ -30,7 +30,7 @@ class ItemSubcategoryView extends Controller
             \App\HttpResponse\Responses::notFoundOrNotAccessible(trans('entities.item-category'));
         }
 
-        $item_type = Entity::itemType((int) $resource_type_id);
+        $item_type = Select::itemType((int) $resource_type_id);
 
         return match ($item_type) {
             'allocated-expense', 'simple-expense' => $this->itemSubcategoryCollection((int) $resource_type_id, (int) $resource_id, (int) $item_id, (int) $item_category_id),
@@ -103,7 +103,7 @@ class ItemSubcategoryView extends Controller
             return \App\HttpResponse\Responses::notFound(trans('entities.item-subcategory'));
         }
 
-        $item_type = Entity::itemType((int) $resource_type_id);
+        $item_type = Select::itemType((int) $resource_type_id);
 
         return match ($item_type) {
             'allocated-expense', 'simple-expense' => $this->itemSubcategory((int) $resource_type_id, (int) $resource_id, (int) $item_id, (int) $item_category_id, (int) $item_subcategory_id),
@@ -157,7 +157,7 @@ class ItemSubcategoryView extends Controller
             return \App\HttpResponse\Responses::notFound(trans('entities.item-subcategory'));
         }
 
-        $item_type = Entity::itemType((int) $resource_type_id);
+        $item_type = Select::itemType((int) $resource_type_id);
 
         return match ($item_type) {
             'allocated-expense' => $this->optionsAllocatedExpenseCollection((int) $resource_type_id, (int) $item_category_id),
@@ -225,7 +225,7 @@ class ItemSubcategoryView extends Controller
             return \App\HttpResponse\Responses::notFound(trans('entities.item-subcategory'));
         }
 
-        $item_type = Entity::itemType((int) $resource_type_id);
+        $item_type = Select::itemType((int) $resource_type_id);
 
         return match ($item_type) {
             'allocated-expense', 'simple-expense' => $this->optionsItemSubcategoryShow((int) $resource_type_id, (int) $resource_id, (int) $item_id, (int) $item_category_id, (int) $item_subcategory_id),

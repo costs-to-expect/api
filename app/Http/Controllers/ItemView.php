@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\ItemType\Entity;
+use App\ItemType\Select;
 use App\Models\AllowedValue\Currency;
 use Illuminate\Http\JsonResponse;
 
@@ -22,7 +22,7 @@ class ItemView extends Controller
             \App\HttpResponse\Responses::notFoundOrNotAccessible(trans('entities.resource'));
         }
 
-        $item_type = Entity::itemType((int) $resource_type_id);
+        $item_type = Select::itemType((int) $resource_type_id);
 
         return match ($item_type) {
             'allocated-expense' => $this->allocatedExpenseCollection((int) $resource_type_id, (int) $resource_id),
@@ -91,7 +91,7 @@ class ItemView extends Controller
             \App\HttpResponse\Responses::notFoundOrNotAccessible(trans('entities.resource'));
         }
 
-        $item_type = Entity::itemType((int) $resource_type_id);
+        $item_type = Select::itemType((int) $resource_type_id);
 
         return match ($item_type) {
             'allocated-expense' => $this->allocatedExpense((int) $resource_type_id, (int) $resource_id, (int) $item_id),
@@ -159,7 +159,7 @@ class ItemView extends Controller
             \App\HttpResponse\Responses::notFoundOrNotAccessible(trans('entities.resource'));
         }
 
-        $item_type = Entity::itemType((int) $resource_type_id);
+        $item_type = Select::itemType((int) $resource_type_id);
 
         return match ($item_type) {
             'allocated-expense' => $this->optionsAllocatedExpenseCollection((int) $resource_type_id, (int) $resource_id),
@@ -246,7 +246,7 @@ class ItemView extends Controller
             \App\HttpResponse\Responses::notFoundOrNotAccessible(trans('entities.resource'));
         }
 
-        $item_type = Entity::itemType((int) $resource_type_id);
+        $item_type = Select::itemType((int) $resource_type_id);
 
         return match ($item_type) {
             'allocated-expense' => $this->optionsAllocatedExpenseShow((int) $resource_type_id, (int) $resource_id, (int) $item_id),

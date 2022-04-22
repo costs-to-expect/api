@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\HttpResponse\Responses;
-use App\ItemType\Entity;
+use App\ItemType\Select;
 use App\Jobs\ClearCache;
 use App\Models\Item;
 use App\Models\ItemTransfer;
@@ -30,7 +30,7 @@ class ItemTransferManage extends Controller
             \App\HttpResponse\Responses::notFoundOrNotAccessible(trans('entities.item'));
         }
 
-        $item_type = Entity::itemType((int) $resource_type_id);
+        $item_type = Select::itemType((int) $resource_type_id);
 
         return match ($item_type) {
             'allocated-expense', 'simple-expense' => $this->transferItem((int) $resource_type_id, (int) $resource_id, (int) $item_id),

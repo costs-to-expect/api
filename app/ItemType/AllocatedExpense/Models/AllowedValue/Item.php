@@ -4,12 +4,12 @@ declare(strict_types=1);
 namespace App\ItemType\AllocatedExpense\Models\AllowedValue;
 
 use App\HttpResponse\Responses;
-use App\ItemType\AllowedValue;
+use App\ItemType\AllowedValue\ItemRequest;
 use App\Models\Category;
 use App\Models\Currency;
 use App\Models\Subcategory;
 
-class Item extends AllowedValue
+class Item extends ItemRequest
 {
     public function __construct(
         int $resource_type_id,
@@ -26,7 +26,7 @@ class Item extends AllowedValue
         $this->setAllowedValueFields();
     }
 
-    public function fetch(): AllowedValue
+    public function fetch(): ItemRequest
     {
         $this->fetchValuesForYear();
 

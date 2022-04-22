@@ -4,7 +4,7 @@ namespace App\ItemType;
 
 use App\Models\ResourceTypeItemType;
 
-class Entity
+class Select
 {
     public static function itemType(int $resource_type_id): string
     {

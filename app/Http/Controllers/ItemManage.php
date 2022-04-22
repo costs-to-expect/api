@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use App\Cache\JobPayload;
 use App\Cache\KeyGroup;
 use App\HttpResponse\Responses;
-use App\ItemType\Entity;
+use App\ItemType\Select;
 use App\Jobs\ClearCache;
 use App\Models\Item;
 use App\Models\ItemPartialTransfer;
@@ -30,7 +30,7 @@ class ItemManage extends Controller
             Responses::notFoundOrNotAccessible(trans('entities.resource'));
         }
 
-        $item_type = Entity::itemType((int) $resource_type_id);
+        $item_type = Select::itemType((int) $resource_type_id);
 
         return match ($item_type) {
             'allocated-expense' => $this->createAllocatedExpense((int) $resource_type_id, (int) $resource_id),
@@ -285,7 +285,7 @@ class ItemManage extends Controller
             Responses::notFoundOrNotAccessible(trans('entities.item'));
         }
 
-        $item_type = Entity::itemType((int) $resource_type_id);
+        $item_type = Select::itemType((int) $resource_type_id);
 
         return match ($item_type) {
             'allocated-expense' => $this->updateAllocatedExpense((int) $resource_type_id, (int) $resource_id, (int) $item_id),
@@ -608,7 +608,7 @@ class ItemManage extends Controller
             Responses::notFoundOrNotAccessible(trans('entities.item'));
         }
 
-        $item_type = Entity::itemType((int) $resource_type_id);
+        $item_type = Select::itemType((int) $resource_type_id);
 
         return match ($item_type) {
             'allocated-expense' => $this->deleteAllocatedExpense((int) $resource_type_id, (int) $resource_id, (int) $item_id),

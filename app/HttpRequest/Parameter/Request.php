@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace App\HttpRequest\Parameter;
 
-use App\ItemType\Entity;
+use App\ItemType\Select;
 use App\Models\Category;
 use App\Models\EntityLimits;
 use App\Models\ResourceType;
@@ -150,7 +150,7 @@ class Request
                         $max_year_limit = (int) Date('Y');
 
                         $entity_model = new EntityLimits();
-                        $item_type = Entity::itemType($resource_type_id);
+                        $item_type = Select::itemType($resource_type_id);
 
                         if ($resource_type_id !== null && $resource_id === null) {
                             switch ($item_type) { // Switch because there will be additional types

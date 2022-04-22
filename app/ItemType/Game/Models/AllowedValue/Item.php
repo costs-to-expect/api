@@ -3,11 +3,11 @@ declare(strict_types=1);
 
 namespace App\ItemType\Game\Models\AllowedValue;
 
-use App\ItemType\AllowedValue;
+use App\ItemType\AllowedValue\ItemRequest;
 use App\Models\Category;
 use function trans;
 
-class Item extends AllowedValue
+class Item extends ItemRequest
 {
     public function __construct(
         int $resource_type_id,
@@ -24,7 +24,7 @@ class Item extends AllowedValue
         $this->setAllowedValueFields();
     }
 
-    public function fetch(): AllowedValue
+    public function fetch(): ItemRequest
     {
         $this->fetchValuesForWinner();
 

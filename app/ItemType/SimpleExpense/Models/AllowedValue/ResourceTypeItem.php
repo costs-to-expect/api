@@ -4,12 +4,12 @@ declare(strict_types=1);
 namespace App\ItemType\SimpleExpense\Models\AllowedValue;
 
 use App\HttpResponse\Responses;
-use App\ItemType\ResourceTypeAllowedValue;
+use App\ItemType\AllowedValue\ResourceTypeItemRequest;
 use App\Models\Category;
 use App\Models\Currency;
 use App\Models\Subcategory;
 
-class ResourceTypeItem extends ResourceTypeAllowedValue
+class ResourceTypeItem extends ResourceTypeItemRequest
 {
     public function __construct(
         int $resource_type_id,
@@ -24,7 +24,7 @@ class ResourceTypeItem extends ResourceTypeAllowedValue
         $this->setAllowedValueFields();
     }
 
-    public function fetch(): ResourceTypeAllowedValue
+    public function fetch(): ResourceTypeItemRequest
     {
         $this->fetchValuesForCategory();
 

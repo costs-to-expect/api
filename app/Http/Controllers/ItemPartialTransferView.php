@@ -8,7 +8,7 @@ use App\HttpOptionResponse\ItemPartialTransfer\AllocatedExpenseTransfer;
 use App\HttpRequest\Parameter;
 use App\HttpResponse\Header;
 use App\HttpResponse\Responses;
-use App\ItemType\Entity;
+use App\ItemType\Select;
 use App\Models\ItemPartialTransfer;
 use App\Transformer\ItemPartialTransfer as ItemPartialTransferTransformer;
 use Illuminate\Http\JsonResponse;
@@ -27,7 +27,7 @@ class ItemPartialTransferView extends Controller
             \App\HttpResponse\Responses::notFoundOrNotAccessible(trans('entities.resource-type'));
         }
 
-        $item_type = Entity::itemType((int) $resource_type_id);
+        $item_type = Select::itemType((int) $resource_type_id);
 
         return match ($item_type) {
             'allocated-expense' => $this->allocatedExpenseCollection((int) $resource_type_id),
@@ -100,7 +100,7 @@ class ItemPartialTransferView extends Controller
             \App\HttpResponse\Responses::notFoundOrNotAccessible(trans('entities.resource-type'));
         }
 
-        $item_type = Entity::itemType((int) $resource_type_id);
+        $item_type = Select::itemType((int) $resource_type_id);
 
         return match ($item_type) {
             'allocated-expense' => $this->allocatedExpense((int) $resource_type_id, (int) $item_partial_transfer_id),
@@ -136,7 +136,7 @@ class ItemPartialTransferView extends Controller
             \App\HttpResponse\Responses::notFoundOrNotAccessible(trans('entities.item'));
         }
 
-        $item_type = Entity::itemType((int) $resource_type_id);
+        $item_type = Select::itemType((int) $resource_type_id);
 
         return match ($item_type) {
             'allocated-expense' => $this->optionsAllocatedExpenseCollection((int) $resource_type_id),
@@ -158,7 +158,7 @@ class ItemPartialTransferView extends Controller
             \App\HttpResponse\Responses::notFoundOrNotAccessible(trans('entities.item-partial-transfer'));
         }
 
-        $item_type = Entity::itemType((int) $resource_type_id);
+        $item_type = Select::itemType((int) $resource_type_id);
 
         return match ($item_type) {
             'allocated-expense' => $this->optionsAllocatedExpenseShow((int) $resource_type_id),
@@ -184,7 +184,7 @@ class ItemPartialTransferView extends Controller
             \App\HttpResponse\Responses::notFoundOrNotAccessible(trans('entities.item'));
         }
 
-        $item_type = Entity::itemType((int) $resource_type_id);
+        $item_type = Select::itemType((int) $resource_type_id);
 
         return match ($item_type) {
             'allocated-expense' => $this->optionsAllocatedExpenseTransfer((int) $resource_type_id, (int) $resource_id),

@@ -10,7 +10,7 @@ use App\HttpOptionResponse\ItemCategory\SimpleExpense;
 use App\HttpOptionResponse\ItemCategory\SimpleExpenseCollection;
 use App\HttpResponse\Header;
 use App\HttpResponse\Responses;
-use App\ItemType\Entity;
+use App\ItemType\Select;
 use App\Models\ItemCategory;
 use App\Transformer\ItemCategory as ItemCategoryTransformer;
 use Illuminate\Http\JsonResponse;
@@ -28,7 +28,7 @@ class ItemCategoryView extends Controller
             \App\HttpResponse\Responses::notFoundOrNotAccessible(trans('entities.item'));
         }
 
-        $item_type = Entity::itemType((int) $resource_type_id);
+        $item_type = Select::itemType((int) $resource_type_id);
 
         return match ($item_type) {
             'allocated-expense', 'game', 'simple-expense' => $this->itemCategoryCollection((int) $resource_type_id, (int) $resource_id, (int) $item_id),
@@ -94,7 +94,7 @@ class ItemCategoryView extends Controller
             return \App\HttpResponse\Responses::notFound(trans('entities.item-category'));
         }
 
-        $item_type = Entity::itemType((int) $resource_type_id);
+        $item_type = Select::itemType((int) $resource_type_id);
 
         return match ($item_type) {
             'allocated-expense', 'game', 'simple-expense' => $this->itemCategory((int) $resource_type_id, (int) $resource_id, (int) $item_id, (int) $item_category_id),
@@ -137,7 +137,7 @@ class ItemCategoryView extends Controller
             \App\HttpResponse\Responses::notFoundOrNotAccessible(trans('entities.item'));
         }
 
-        $item_type = Entity::itemType((int) $resource_type_id);
+        $item_type = Select::itemType((int) $resource_type_id);
 
         return match ($item_type) {
             'allocated-expense' => $this->optionsAllocatedExpenseCollection((int) $resource_type_id),
@@ -208,7 +208,7 @@ class ItemCategoryView extends Controller
             return \App\HttpResponse\Responses::notFound(trans('entities.item-category'));
         }
 
-        $item_type = Entity::itemType((int) $resource_type_id);
+        $item_type = Select::itemType((int) $resource_type_id);
 
         return match ($item_type) {
             'allocated-expense' => $this->optionsAllocatedExpenseShow((int) $resource_type_id, (int) $resource_id, (int) $item_id, (int) $item_category_id),

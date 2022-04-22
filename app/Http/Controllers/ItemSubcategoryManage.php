@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\ItemType\Entity;
+use App\ItemType\Select;
 use App\Jobs\ClearCache;
 use App\Models\ItemCategory;
 use App\Models\ItemSubcategory;
@@ -35,7 +35,7 @@ class ItemSubcategoryManage extends Controller
             return \App\HttpResponse\Responses::notFound(trans('entities.item-subcategory'));
         }
 
-        $item_type = Entity::itemType((int) $resource_type_id);
+        $item_type = Select::itemType((int) $resource_type_id);
 
         return match ($item_type) {
             'allocated-expense', 'simple-expense' => $this->createItemSubcategory((int) $resource_type_id, (int) $resource_id, (int) $item_id, (int) $item_category_id, 1),
@@ -148,7 +148,7 @@ class ItemSubcategoryManage extends Controller
             return \App\HttpResponse\Responses::notFound(trans('entities.item-subcategory'));
         }
 
-        $item_type = Entity::itemType((int) $resource_type_id);
+        $item_type = Select::itemType((int) $resource_type_id);
 
         return match ($item_type) {
             'allocated-expense', 'simple-expense' => $this->deleteItemSubcategory((int) $resource_type_id, (int) $resource_id, (int) $item_id, (int) $item_category_id, (int) $item_subcategory_id),

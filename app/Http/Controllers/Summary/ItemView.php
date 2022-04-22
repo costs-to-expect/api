@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Summary;
 
 use App\Http\Controllers\Controller;
 use App\HttpResponse\Responses;
-use App\ItemType\Entity;
+use App\ItemType\Select;
 use App\HttpOptionResponse\Item\Summary\AllocatedExpense;
 use App\HttpOptionResponse\Item\Summary\Game;
 use App\HttpOptionResponse\Item\Summary\SimpleExpense;
@@ -19,7 +19,7 @@ class ItemView extends Controller
             Responses::notFoundOrNotAccessible(trans('entities.resource'));
         }
 
-        $item_type = Entity::itemType((int) $resource_type_id);
+        $item_type = Select::itemType((int) $resource_type_id);
 
         return match ($item_type) {
             'allocated-expense' => $this->allocatedExpenseSummary((int) $resource_type_id, (int) $resource_id),
@@ -84,7 +84,7 @@ class ItemView extends Controller
             Responses::notFoundOrNotAccessible(trans('entities.resource'));
         }
 
-        $item_type = Entity::itemType((int) $resource_type_id);
+        $item_type = Select::itemType((int) $resource_type_id);
 
         return match ($item_type) {
             'allocated-expense' => $this->optionsAllocatedExpense((int) $resource_type_id, (int) $resource_id),

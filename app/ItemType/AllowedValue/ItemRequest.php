@@ -1,12 +1,12 @@
 <?php
 declare(strict_types=1);
 
-namespace App\ItemType;
+namespace App\ItemType\AllowedValue;
 
-use App\Models\EntityLimits;
 use App\HttpRequest\Hash;
+use App\Models\EntityLimits;
 
-abstract class AllowedValue
+abstract class ItemRequest
 {
     protected Hash $hash;
 
@@ -41,7 +41,7 @@ abstract class AllowedValue
     public function setParameters(
         array $available_parameters,
         array $defined_parameters
-    ): AllowedValue
+    ): ItemRequest
     {
         $this->available_parameters = $available_parameters;
         $this->defined_parameters = $defined_parameters;
@@ -49,7 +49,7 @@ abstract class AllowedValue
         return $this;
     }
 
-    abstract public function fetch(): AllowedValue;
+    abstract public function fetch(): ItemRequest;
 
     abstract protected function setAllowedValueFields(): void;
 

@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\ItemType\Entity;
+use App\ItemType\Select;
 use Illuminate\Http\JsonResponse;
 
 /**
@@ -20,7 +20,7 @@ class ResourceTypeItemView extends Controller
             \App\HttpResponse\Responses::notFoundOrNotAccessible(trans('entities.resource-type'));
         }
 
-        $item_type = Entity::itemType((int) $resource_type_id);
+        $item_type = Select::itemType((int) $resource_type_id);
 
         return match ($item_type) {
             'allocated-expense' => $this->allocatedExpenseCollection((int) $resource_type_id),
@@ -81,7 +81,7 @@ class ResourceTypeItemView extends Controller
             \App\HttpResponse\Responses::notFoundOrNotAccessible(trans('entities.resource-type'));
         }
 
-        $item_type = Entity::itemType((int) $resource_type_id);
+        $item_type = Select::itemType((int) $resource_type_id);
 
         return match ($item_type) {
             'allocated-expense' => $this->optionsAllocatedExpenseCollection((int) $resource_type_id),
