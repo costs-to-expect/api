@@ -35,7 +35,7 @@ class ItemView extends Controller
 
     private function allocatedExpenseCollection(int $resource_type_id, int $resource_id): JsonResponse
     {
-        $response = new \App\ItemType\AllocatedExpense\ApiResponse\Item(
+        $response = new \App\ItemType\AllocatedExpense\HttpResponse\Item(
             $resource_type_id,
             $resource_id,
             $this->writeAccessToResourceType($resource_type_id),
@@ -47,7 +47,7 @@ class ItemView extends Controller
 
     private function gameCollection(int $resource_type_id, int $resource_id): JsonResponse
     {
-        $response = new \App\ItemType\Game\ApiResponse\Item(
+        $response = new \App\ItemType\Game\HttpResponse\Item(
             $resource_type_id,
             $resource_id,
             $this->writeAccessToResourceType($resource_type_id),
@@ -59,7 +59,7 @@ class ItemView extends Controller
 
     private function simpleExpenseCollection(int $resource_type_id, int $resource_id): JsonResponse
     {
-        $response = new \App\ItemType\SimpleExpense\ApiResponse\Item(
+        $response = new \App\ItemType\SimpleExpense\HttpResponse\Item(
             $resource_type_id,
             $resource_id,
             $this->writeAccessToResourceType($resource_type_id),
@@ -71,7 +71,7 @@ class ItemView extends Controller
 
     private function simpleItemCollection(int $resource_type_id, int $resource_id): JsonResponse
     {
-        $response = new \App\ItemType\SimpleItem\ApiResponse\Item(
+        $response = new \App\ItemType\SimpleItem\HttpResponse\Item(
             $resource_type_id,
             $resource_id,
             $this->writeAccessToResourceType($resource_type_id),
@@ -104,7 +104,7 @@ class ItemView extends Controller
 
     private function allocatedExpense(int $resource_type_id, int $resource_id, int $item_id): JsonResponse
     {
-        $response = new \App\ItemType\AllocatedExpense\ApiResponse\Item(
+        $response = new \App\ItemType\AllocatedExpense\HttpResponse\Item(
             $resource_type_id,
             $resource_id,
             $this->writeAccessToResourceType($resource_type_id),
@@ -116,7 +116,7 @@ class ItemView extends Controller
 
     private function game(int $resource_type_id, int $resource_id, int $item_id): JsonResponse
     {
-        $response = new \App\ItemType\Game\ApiResponse\Item(
+        $response = new \App\ItemType\Game\HttpResponse\Item(
             $resource_type_id,
             $resource_id,
             $this->writeAccessToResourceType($resource_type_id),
@@ -128,7 +128,7 @@ class ItemView extends Controller
 
     private function simpleExpense(int $resource_type_id, int $resource_id, int $item_id): JsonResponse
     {
-        $response = new \App\ItemType\SimpleExpense\ApiResponse\Item(
+        $response = new \App\ItemType\SimpleExpense\HttpResponse\Item(
             $resource_type_id,
             $resource_id,
             $this->writeAccessToResourceType($resource_type_id),
@@ -140,7 +140,7 @@ class ItemView extends Controller
 
     private function simpleItem(int $resource_type_id, int $resource_id, int $item_id): JsonResponse
     {
-        $response = new \App\ItemType\SimpleItem\ApiResponse\Item(
+        $response = new \App\ItemType\SimpleItem\HttpResponse\Item(
             $resource_type_id,
             $resource_id,
             $this->writeAccessToResourceType($resource_type_id),

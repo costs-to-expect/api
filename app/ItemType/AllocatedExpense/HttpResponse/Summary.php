@@ -1,32 +1,34 @@
 <?php
 
-namespace App\ItemType\AllocatedExpense\ApiResponse;
+namespace App\ItemType\AllocatedExpense\HttpResponse;
 
-use App\ItemType\ApiSummaryResourceTypeItemResponse;
 use App\HttpRequest\Parameter;
 use App\HttpRequest\Validate\Boolean;
+use App\ItemType\HttpResponse\ApiSummaryResponse;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Config as LaravelConfig;
 use function request;
 use function response;
 
-class SummaryResourceTypeItem extends ApiSummaryResourceTypeItemResponse
+class Summary extends ApiSummaryResponse
 {
     public function __construct(
         int $resource_type_id,
+        int $resource_id,
         bool $permitted_user = false,
         int $user_id = null
     )
     {
         parent::__construct(
             $resource_type_id,
+            $resource_id,
             $permitted_user,
             $user_id
         );
 
         $this->setUpCache();
 
-        $this->model = new \App\ItemType\AllocatedExpense\Models\SummaryResourceTypeItem();
+        $this->model = new \App\ItemType\AllocatedExpense\Models\Summary();
 
         $this->shortCircuit(); // Skip working out which for obvious routes
 
@@ -98,10 +100,6 @@ class SummaryResourceTypeItem extends ApiSummaryResourceTypeItemResponse
             return $this->categorySummary();
         }
 
-        if ($this->decision_parameters['resources'] === true) {
-            return $this->resourcesSummary();
-        }
-
         if (
             $this->decision_parameters['category'] !== null ||
             $this->decision_parameters['subcategory'] !== null ||
@@ -122,6 +120,7 @@ class SummaryResourceTypeItem extends ApiSummaryResourceTypeItemResponse
 
             $summary = $this->model->categoriesSummary(
                 $this->resource_type_id,
+                $this->resource_id,
                 $this->parameters
             );
 
@@ -144,6 +143,7 @@ class SummaryResourceTypeItem extends ApiSummaryResourceTypeItemResponse
 
             $summary = $this->model->categorySummary(
                 $this->resource_type_id,
+                $this->resource_id,
                 $this->decision_parameters['category'],
                 $this->parameters
             );
@@ -173,6 +173,7 @@ class SummaryResourceTypeItem extends ApiSummaryResourceTypeItemResponse
 
             $summary = $this->model->filteredSummary(
                 $this->resource_type_id,
+                $this->resource_id,
                 $this->decision_parameters['category'],
                 $this->decision_parameters['subcategory'],
                 $this->decision_parameters['year'],
@@ -204,6 +205,7 @@ class SummaryResourceTypeItem extends ApiSummaryResourceTypeItemResponse
 
             $summary = $this->model->monthsSummary(
                 $this->resource_type_id,
+                $this->resource_id,
                 $this->decision_parameters['year'],
                 $this->parameters
             );
@@ -227,6 +229,7 @@ class SummaryResourceTypeItem extends ApiSummaryResourceTypeItemResponse
 
             $summary = $this->model->monthSummary(
                 $this->resource_type_id,
+                $this->resource_id,
                 $this->decision_parameters['year'],
                 $this->decision_parameters['month'],
                 $this->parameters
@@ -253,7 +256,6 @@ class SummaryResourceTypeItem extends ApiSummaryResourceTypeItemResponse
 
     protected function removeDecisionParameters(): void
     {
-        $this->decision_parameters['resources'] = false;
         $this->decision_parameters['years'] = false;
         $this->decision_parameters['months'] = false;
         $this->decision_parameters['categories'] = false;
@@ -262,11 +264,6 @@ class SummaryResourceTypeItem extends ApiSummaryResourceTypeItemResponse
         $this->decision_parameters['month'] = null;
         $this->decision_parameters['category'] = null;
         $this->decision_parameters['subcategory'] = null;
-
-        if (array_key_exists('resources', $this->parameters) === true &&
-            Boolean::convertedValue($this->parameters['resources']) === true) {
-            $this->decision_parameters['resources'] = true;
-        }
 
         if (array_key_exists('years', $this->parameters) === true &&
             Boolean::convertedValue($this->parameters['years']) === true) {
@@ -305,7 +302,6 @@ class SummaryResourceTypeItem extends ApiSummaryResourceTypeItemResponse
         }
 
         unset(
-            $this->parameters['resources'],
             $this->parameters['years'],
             $this->parameters['year'],
             $this->parameters['months'],
@@ -317,34 +313,13 @@ class SummaryResourceTypeItem extends ApiSummaryResourceTypeItemResponse
         );
     }
 
-    protected function resourcesSummary(): JsonResponse
-    {
-        if ($this->cache_control->isRequestCacheable() === false || $this->cache_summary->valid() === false) {
-
-            $summary = $this->model->resourcesSummary(
-                $this->resource_type_id,
-                $this->parameters
-            );
-
-            $collection = (new \App\ItemType\AllocatedExpense\Transformer\SummaryByResource($summary))->asArray();
-
-            $this->assignToCache(
-                $summary,
-                $collection,
-                $this->cache_control,
-                $this->cache_summary
-            );
-        }
-
-        return response()->json($this->cache_summary->collection(), 200, $this->cache_summary->headers());
-    }
-
     protected function subcategoriesSummary(): JsonResponse
     {
         if ($this->cache_control->isRequestCacheable() === false || $this->cache_summary->valid() === false) {
 
             $summary = $this->model->subCategoriesSummary(
                 $this->resource_type_id,
+                $this->resource_id,
                 $this->decision_parameters['category'],
                 $this->parameters
             );
@@ -368,6 +343,7 @@ class SummaryResourceTypeItem extends ApiSummaryResourceTypeItemResponse
 
             $summary = $this->model->subCategorySummary(
                 $this->resource_type_id,
+                $this->resource_id,
                 $this->decision_parameters['category'],
                 $this->decision_parameters['subcategory'],
                 $this->parameters
@@ -398,6 +374,7 @@ class SummaryResourceTypeItem extends ApiSummaryResourceTypeItemResponse
 
             $summary = $this->model->summary(
                 $this->resource_type_id,
+                $this->resource_id,
                 $this->parameters
             );
 
@@ -423,6 +400,7 @@ class SummaryResourceTypeItem extends ApiSummaryResourceTypeItemResponse
 
             $summary = $this->model->yearsSummary(
                 $this->resource_type_id,
+                $this->resource_id,
                 $this->parameters
             );
 
@@ -445,6 +423,7 @@ class SummaryResourceTypeItem extends ApiSummaryResourceTypeItemResponse
 
             $summary = $this->model->yearSummary(
                 $this->resource_type_id,
+                $this->resource_id,
                 $this->decision_parameters['year'],
                 $this->parameters
             );
@@ -488,11 +467,12 @@ class SummaryResourceTypeItem extends ApiSummaryResourceTypeItemResponse
 
     private function requestParameters(): void
     {
-        $base_path = 'api.resource-type-item-type-allocated-expense';
+        $base_path = 'api.item-type-allocated-expense';
 
         $this->parameters = Parameter\Request::fetch(
             array_keys(LaravelConfig::get($base_path . '.summary-parameters', [])),
-            $this->resource_type_id
+            $this->resource_type_id,
+            $this->resource_id
         );
 
         $this->search_parameters = Parameter\Search::fetch(

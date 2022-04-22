@@ -1,13 +1,13 @@
 <?php
 declare(strict_types=1);
 
-namespace App\ItemType\Game\ApiResponse;
+namespace App\ItemType\SimpleExpense\HttpResponse;
 
-use App\ItemType\ApiResourceTypeItemResponse;
 use App\HttpRequest\Parameter\Filter;
 use App\HttpRequest\Parameter\Request;
 use App\HttpRequest\Parameter\Search;
 use App\HttpRequest\Parameter\Sort;
+use App\ItemType\HttpResponse\ApiResourceTypeItemResponse;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Config as LaravelConfig;
 use function request;
@@ -19,7 +19,7 @@ class ResourceTypeItem extends ApiResourceTypeItemResponse
     {
         $this->requestParameters();
 
-        $this->cache_control->setTtlOneWeek();
+        $this->cache_control->setTtlOneMonth();
 
         $cache_collection = new \App\Cache\Collection();
         $cache_collection->setFromCache($this->cache_control->getByKey(request()->getRequestUri()));
@@ -28,7 +28,7 @@ class ResourceTypeItem extends ApiResourceTypeItemResponse
             $this->cache_control->isRequestCacheable() === false ||
             $cache_collection->valid() === false
         ) {
-            $model = new \App\ItemType\Game\Models\ResourceTypeItem();
+            $model = new \App\ItemType\SimpleExpense\Models\ResourceTypeItem();
 
             $total = $model->totalCount(
                 $this->resource_type_id,
@@ -56,7 +56,7 @@ class ResourceTypeItem extends ApiResourceTypeItemResponse
 
             $collection = array_map(
                 static function ($item) {
-                    return (new \App\ItemType\Game\Transformer\ResourceTypeItem($item))->asArray();
+                    return (new \App\ItemType\SimpleExpense\Transformer\ResourceTypeItem($item))->asArray();
                 },
                 $items
             );
@@ -81,7 +81,7 @@ class ResourceTypeItem extends ApiResourceTypeItemResponse
 
     private function requestParameters(): void
     {
-        $base_path = 'api.resource-type-item-type-game';
+        $base_path = 'api.resource-type-item-type-simple-expense';
 
         $this->request_parameters = Request::fetch(
             array_keys(LaravelConfig::get($base_path . '.parameters', [])),

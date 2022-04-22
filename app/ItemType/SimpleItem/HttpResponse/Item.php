@@ -1,14 +1,14 @@
 <?php
 declare(strict_types=1);
 
-namespace App\ItemType\SimpleItem\ApiResponse;
+namespace App\ItemType\SimpleItem\HttpResponse;
 
-use App\HttpResponse\Responses;
-use App\ItemType\ApiItemResponse;
 use App\HttpRequest\Parameter\Filter;
 use App\HttpRequest\Parameter\Request;
 use App\HttpRequest\Parameter\Search;
 use App\HttpRequest\Parameter\Sort;
+use App\HttpResponse\Responses;
+use App\ItemType\HttpResponse\ApiItemResponse;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Config as LaravelConfig;
 use function request;

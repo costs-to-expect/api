@@ -1,21 +1,19 @@
 <?php
 declare(strict_types=1);
 
-namespace App\ItemType;
+namespace App\ItemType\HttpResponse;
 
-use App\HttpResponse\Header;
-use App\HttpResponse\Pagination as UtilityPagination;
 use App\HttpRequest\Parameter\Filter;
 use App\HttpRequest\Parameter\Request;
 use App\HttpRequest\Parameter\Search;
 use App\HttpRequest\Parameter\Sort;
+use App\HttpResponse\Header;
+use App\HttpResponse\Pagination as UtilityPagination;
 use Illuminate\Http\JsonResponse;
 
-abstract class ApiItemResponse
+abstract class ApiResourceTypeItemResponse
 {
     protected int $resource_type_id;
-
-    protected int $resource_id;
 
     protected bool $permitted_user;
 
@@ -30,13 +28,11 @@ abstract class ApiItemResponse
 
     public function __construct(
         int $resource_type_id,
-        int $resource_id,
         bool $permitted_user,
         ?int $user_id
     )
     {
         $this->resource_type_id = $resource_type_id;
-        $this->resource_id = $resource_id;
         $this->permitted_user = $permitted_user;
         $this->user_id = $user_id;
 
@@ -46,10 +42,9 @@ abstract class ApiItemResponse
         );
     }
 
-    abstract public function collectionResponse(): JsonResponse;
-    abstract public function showResponse(int $item_id): JsonResponse;
+    abstract public function response(): JsonResponse;
 
-    protected function collectionHeaders(
+    protected function headers(
         array $pagination_parameters,
         int $count,
         int $total,
@@ -74,18 +69,33 @@ abstract class ApiItemResponse
         return $headers->headers();
     }
 
-    protected function showHeaders(): array
+    protected function fetchAllRequestParameters(
+        \App\ItemType\ItemType $entity
+    ): void
     {
-        $headers = new Header();
-        $headers->item();
+        $this->request_parameters = Request::fetch(
+            array_keys($entity->resourceTypeRequestParameters()),
+            $this->resource_type_id
+        );
 
-        return $headers->headers();
+        $this->search_parameters = Search::fetch(
+            $entity->resourceTypeSearchParameters()
+        );
+
+        $this->filter_parameters = Filter::fetch(
+            $entity->resourceTypeFilterParameters()
+        );
+
+        $this->sort_fields = Sort::fetch(
+            $entity->resourceTypeSortParameters()
+        );
     }
 
     protected function pagination_parameters(int $total): array
     {
         $pagination = new UtilityPagination(request()->path(), $total);
-        return $pagination->allowPaginationOverride(false)
+        return $pagination
+            ->allowPaginationOverride(false)
             ->setSearchParameters($this->search_parameters)
             ->setSortParameters($this->sort_fields)
             ->setParameters($this->request_parameters)

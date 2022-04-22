@@ -1,9 +1,9 @@
 <?php
 
-namespace App\ItemType\Game\ApiResponse;
+namespace App\ItemType\Game\HttpResponse;
 
-use App\ItemType\ApiSummaryResponse;
 use App\HttpRequest\Parameter;
+use App\ItemType\HttpResponse\ApiSummaryResponse;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Config as LaravelConfig;
 use function response;

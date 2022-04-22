@@ -1,10 +1,10 @@
 <?php
 
-namespace App\ItemType\SimpleItem\ApiResponse;
+namespace App\ItemType\SimpleItem\HttpResponse;
 
-use App\ItemType\ApiSummaryResourceTypeItemResponse;
 use App\HttpRequest\Parameter;
 use App\HttpRequest\Validate\Boolean;
+use App\ItemType\HttpResponse\ApiSummaryResourceTypeItemResponse;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Config as LaravelConfig;
 use function response;

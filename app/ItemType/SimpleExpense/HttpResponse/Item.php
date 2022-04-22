@@ -1,21 +1,23 @@
 <?php
 declare(strict_types=1);
 
-namespace App\ItemType\SimpleExpense\ApiResponse;
+namespace App\ItemType\SimpleExpense\HttpResponse;
 
-use App\ItemType\ApiResourceTypeItemResponse;
 use App\HttpRequest\Parameter\Filter;
 use App\HttpRequest\Parameter\Request;
 use App\HttpRequest\Parameter\Search;
 use App\HttpRequest\Parameter\Sort;
+use App\HttpResponse\Responses;
+use App\ItemType\HttpResponse\ApiItemResponse;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Config as LaravelConfig;
 use function request;
 use function response;
+use function trans;
 
-class ResourceTypeItem extends ApiResourceTypeItemResponse
+class Item extends ApiItemResponse
 {
-    public function response(): JsonResponse
+    public function collectionResponse(): JsonResponse
     {
         $this->requestParameters();
 
@@ -28,10 +30,11 @@ class ResourceTypeItem extends ApiResourceTypeItemResponse
             $this->cache_control->isRequestCacheable() === false ||
             $cache_collection->valid() === false
         ) {
-            $model = new \App\ItemType\SimpleExpense\Models\ResourceTypeItem();
+            $model = new \App\ItemType\SimpleExpense\Models\Item();
 
             $total = $model->totalCount(
                 $this->resource_type_id,
+                $this->resource_id,
                 $this->request_parameters,
                 $this->search_parameters,
                 $this->filter_parameters
@@ -41,6 +44,7 @@ class ResourceTypeItem extends ApiResourceTypeItemResponse
 
             $items = $model->paginatedCollection(
                 $this->resource_type_id,
+                $this->resource_id,
                 $pagination_parameters['offset'],
                 $pagination_parameters['limit'],
                 $this->request_parameters,
@@ -56,7 +60,7 @@ class ResourceTypeItem extends ApiResourceTypeItemResponse
 
             $collection = array_map(
                 static function ($item) {
-                    return (new \App\ItemType\SimpleExpense\Transformer\ResourceTypeItem($item))->asArray();
+                    return (new \App\ItemType\SimpleExpense\Transformer\Item($item))->asArray();
                 },
                 $items
             );
@@ -65,7 +69,7 @@ class ResourceTypeItem extends ApiResourceTypeItemResponse
                 $total,
                 $collection,
                 $pagination_parameters,
-                $this->headers(
+                $this->collectionHeaders(
                     $pagination_parameters,
                     count($items),
                     $total,
@@ -79,9 +83,31 @@ class ResourceTypeItem extends ApiResourceTypeItemResponse
         return response()->json($cache_collection->collection(), 200, $cache_collection->headers());
     }
 
-    private function requestParameters(): void
+    public function showResponse(int $item_id): JsonResponse
     {
-        $base_path = 'api.resource-type-item-type-simple-expense';
+        $this->requestParameters();
+
+        $item = (new \App\ItemType\SimpleExpense\Models\Item())->single(
+            $this->resource_type_id,
+            $this->resource_id,
+            $item_id,
+            $this->request_parameters
+        );
+
+        if ($item === null) {
+            return Responses::notFound(trans('entities.item'));
+        }
+
+        return response()->json(
+            (new \App\ItemType\SimpleExpense\Transformer\Item($item))->asArray(),
+            200,
+            $this->showHeaders()
+        );
+    }
+
+    protected function requestParameters(): void
+    {
+        $base_path = 'api.item-type-simple-expense';
 
         $this->request_parameters = Request::fetch(
             array_keys(LaravelConfig::get($base_path . '.parameters', [])),

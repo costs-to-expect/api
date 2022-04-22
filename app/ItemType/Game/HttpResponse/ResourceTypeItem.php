@@ -1,31 +1,25 @@
 <?php
 declare(strict_types=1);
 
-namespace App\ItemType\AllocatedExpense\ApiResponse;
+namespace App\ItemType\Game\HttpResponse;
 
-use App\HttpResponse\Responses;
-use App\ItemType\ApiItemResponse;
 use App\HttpRequest\Parameter\Filter;
 use App\HttpRequest\Parameter\Request;
 use App\HttpRequest\Parameter\Search;
 use App\HttpRequest\Parameter\Sort;
+use App\ItemType\HttpResponse\ApiResourceTypeItemResponse;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Config as LaravelConfig;
 use function request;
 use function response;
-use function trans;
 
-class Item extends ApiItemResponse
+class ResourceTypeItem extends ApiResourceTypeItemResponse
 {
-    public function collectionResponse(): JsonResponse
+    public function response(): JsonResponse
     {
         $this->requestParameters();
 
-        if ($this->cache_control->visibility() === 'public') {
-            $this->cache_control->setTtlOneWeek();
-        } else {
-            $this->cache_control->setTtlOneDay();
-        }
+        $this->cache_control->setTtlOneWeek();
 
         $cache_collection = new \App\Cache\Collection();
         $cache_collection->setFromCache($this->cache_control->getByKey(request()->getRequestUri()));
@@ -34,11 +28,10 @@ class Item extends ApiItemResponse
             $this->cache_control->isRequestCacheable() === false ||
             $cache_collection->valid() === false
         ) {
-            $model = new \App\ItemType\AllocatedExpense\Models\Item();
+            $model = new \App\ItemType\Game\Models\ResourceTypeItem();
 
             $total = $model->totalCount(
                 $this->resource_type_id,
-                $this->resource_id,
                 $this->request_parameters,
                 $this->search_parameters,
                 $this->filter_parameters
@@ -48,7 +41,6 @@ class Item extends ApiItemResponse
 
             $items = $model->paginatedCollection(
                 $this->resource_type_id,
-                $this->resource_id,
                 $pagination_parameters['offset'],
                 $pagination_parameters['limit'],
                 $this->request_parameters,
@@ -64,7 +56,7 @@ class Item extends ApiItemResponse
 
             $collection = array_map(
                 static function ($item) {
-                    return (new \App\ItemType\AllocatedExpense\Transformer\Item($item))->asArray();
+                    return (new \App\ItemType\Game\Transformer\ResourceTypeItem($item))->asArray();
                 },
                 $items
             );
@@ -73,7 +65,7 @@ class Item extends ApiItemResponse
                 $total,
                 $collection,
                 $pagination_parameters,
-                $this->collectionHeaders(
+                $this->headers(
                     $pagination_parameters,
                     count($items),
                     $total,
@@ -87,31 +79,9 @@ class Item extends ApiItemResponse
         return response()->json($cache_collection->collection(), 200, $cache_collection->headers());
     }
 
-    public function showResponse(int $item_id): JsonResponse
+    private function requestParameters(): void
     {
-        $this->requestParameters();
-
-        $item = (new \App\ItemType\AllocatedExpense\Models\Item())->single(
-            $this->resource_type_id,
-            $this->resource_id,
-            $item_id,
-            $this->request_parameters
-        );
-
-        if ($item === null) {
-            return Responses::notFound(trans('entities.item'));
-        }
-
-        return response()->json(
-            (new \App\ItemType\AllocatedExpense\Transformer\Item($item))->asArray(),
-            200,
-            $this->showHeaders()
-        );
-    }
-
-    protected function requestParameters(): void
-    {
-        $base_path = 'api.item-type-allocated-expense';
+        $base_path = 'api.resource-type-item-type-game';
 
         $this->request_parameters = Request::fetch(
             array_keys(LaravelConfig::get($base_path . '.parameters', [])),

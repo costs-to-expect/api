@@ -37,7 +37,7 @@ class ResourceTypeItemView extends Controller
 
     private function allocatedExpenseSummary(int $resource_type_id): JsonResponse
     {
-        $response = new \App\ItemType\AllocatedExpense\ApiResponse\SummaryResourceTypeItem(
+        $response = new \App\ItemType\AllocatedExpense\HttpResponse\SummaryResourceTypeItem(
             $resource_type_id,
             $this->writeAccessToResourceType($resource_type_id),
             $this->user_id
@@ -48,7 +48,7 @@ class ResourceTypeItemView extends Controller
 
     private function gameSummary(int $resource_type_id): JsonResponse
     {
-        $response = new \App\ItemType\Game\ApiResponse\SummaryResourceTypeItem(
+        $response = new \App\ItemType\Game\HttpResponse\SummaryResourceTypeItem(
             $resource_type_id,
             $this->writeAccessToResourceType($resource_type_id),
             $this->user_id
@@ -59,7 +59,7 @@ class ResourceTypeItemView extends Controller
 
     private function simpleExpenseSummary(int $resource_type_id): JsonResponse
     {
-        $response = new \App\ItemType\SimpleExpense\ApiResponse\SummaryResourceTypeItem(
+        $response = new \App\ItemType\SimpleExpense\HttpResponse\SummaryResourceTypeItem(
             $resource_type_id,
             $this->writeAccessToResourceType($resource_type_id),
             $this->user_id
@@ -70,7 +70,7 @@ class ResourceTypeItemView extends Controller
 
     private function simpleItemSummary(int $resource_type_id): JsonResponse
     {
-        $response = new \App\ItemType\SimpleItem\ApiResponse\SummaryResourceTypeItem(
+        $response = new \App\ItemType\SimpleItem\HttpResponse\SummaryResourceTypeItem(
             $resource_type_id,
             $this->writeAccessToResourceType($resource_type_id),
             $this->user_id
