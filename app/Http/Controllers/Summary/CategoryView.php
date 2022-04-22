@@ -5,7 +5,7 @@ namespace App\Http\Controllers\Summary;
 use App\Http\Controllers\Controller;
 use App\HttpResponse\Header;
 use App\Models\Summary\Category;
-use App\Option\SummaryCategoryCollection;
+use App\HttpOptionResponse\SummaryCategoryCollection;
 use App\HttpRequest\Parameter;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Config;

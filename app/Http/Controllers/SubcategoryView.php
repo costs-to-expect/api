@@ -4,8 +4,8 @@ namespace App\Http\Controllers;
 
 use App\HttpResponse\Header;
 use App\Models\Subcategory;
-use App\Option\SubcategoryCollection;
-use App\Option\SubcategoryItem;
+use App\HttpOptionResponse\SubcategoryCollection;
+use App\HttpOptionResponse\SubcategoryItem;
 use App\HttpRequest\Parameter;
 use App\Transformers\Subcategory as SubcategoryTransformer;
 use Illuminate\Http\JsonResponse;

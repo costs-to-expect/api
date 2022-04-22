@@ -5,13 +5,13 @@ namespace App\Http\Controllers;
 use App\HttpResponse\Responses;
 use App\Notifications\ForgotPassword;
 use App\Notifications\Registered;
-use App\Option\Auth\Check;
-use App\Option\Auth\CreateNewPassword;
-use App\Option\Auth\CreatePassword;
-use App\Option\Auth\Login;
-use App\Option\Auth\Register;
-use App\Option\Auth\UpdatePassword;
-use App\Option\Auth\UpdateProfile;
+use App\HttpOptionResponse\Auth\Check;
+use App\HttpOptionResponse\Auth\CreateNewPassword;
+use App\HttpOptionResponse\Auth\CreatePassword;
+use App\HttpOptionResponse\Auth\Login;
+use App\HttpOptionResponse\Auth\Register;
+use App\HttpOptionResponse\Auth\UpdatePassword;
+use App\HttpOptionResponse\Auth\UpdateProfile;
 use App\User;
 use Exception;
 use Illuminate\Http;
@@ -258,7 +258,7 @@ class Authentication extends \Illuminate\Routing\Controller
 
     public function optionsForgotPassword(): Http\JsonResponse
     {
-        $response = new \App\Option\Auth\ForgotPassword([]);
+        $response = new \App\HttpOptionResponse\Auth\ForgotPassword([]);
 
         return $response->create()->response();
     }
@@ -647,7 +647,7 @@ class Authentication extends \Illuminate\Routing\Controller
     {
         $user = auth()->guard('api')->user();
 
-        $response = new \App\Option\Auth\User(['view'=> $user !== null && $user->id !== null]);
+        $response = new \App\HttpOptionResponse\Auth\User(['view'=> $user !== null && $user->id !== null]);
 
         return $response->create()->response();
     }
@@ -656,7 +656,7 @@ class Authentication extends \Illuminate\Routing\Controller
     {
         $user = auth()->guard('api')->user();
 
-        $response = new \App\Option\Auth\Tokens(['view'=> $user !== null && $user->id !== null]);
+        $response = new \App\HttpOptionResponse\Auth\Tokens(['view'=> $user !== null && $user->id !== null]);
 
         return $response->create()->response();
     }
@@ -665,7 +665,7 @@ class Authentication extends \Illuminate\Routing\Controller
     {
         $user = auth()->guard('api')->user();
 
-        $response = new \App\Option\Auth\Token([
+        $response = new \App\HttpOptionResponse\Auth\Token([
             'view'=> $user !== null && $user->id !== null,
             'manage'=> $user !== null && $user->id !== null,
         ]);

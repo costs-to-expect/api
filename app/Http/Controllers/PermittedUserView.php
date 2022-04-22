@@ -4,8 +4,8 @@ namespace App\Http\Controllers;
 
 use App\HttpResponse\Header;
 use App\Models\PermittedUser;
-use App\Option\PermittedUserCollection;
-use App\Option\PermittedUserItem;
+use App\HttpOptionResponse\PermittedUserCollection;
+use App\HttpOptionResponse\PermittedUserItem;
 use App\HttpRequest\Parameter;
 use App\Transformers\PermittedUser as PermittedUserTransformer;
 use Illuminate\Http\JsonResponse;

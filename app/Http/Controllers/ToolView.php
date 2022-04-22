@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Option\Cache;
+use App\HttpOptionResponse\Cache;
 use Illuminate\Http\JsonResponse;
 
 /**

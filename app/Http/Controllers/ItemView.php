@@ -173,7 +173,7 @@ class ItemView extends Controller
     private function optionsAllocatedExpenseCollection(int $resource_type_id, int $resource_id): JsonResponse
     {
         $item = new \App\ItemType\AllocatedExpense\Item();
-        $response = new \App\Option\Item\AllocatedExpenseCollection($this->permissions($resource_type_id));
+        $response = new \App\HttpOptionResponse\Item\AllocatedExpenseCollection($this->permissions($resource_type_id));
 
         return $response->setDynamicAllowedParameters(
             $item->allowedValuesForItemCollection(
@@ -190,7 +190,7 @@ class ItemView extends Controller
     private function optionsGameCollection(int $resource_type_id, int $resource_id): JsonResponse
     {
         $item = new \App\ItemType\Game\Item();
-        $response = new \App\Option\Item\GameCollection($this->permissions($resource_type_id));
+        $response = new \App\HttpOptionResponse\Item\GameCollection($this->permissions($resource_type_id));
 
         return $response->setDynamicAllowedParameters(
             $item->allowedValuesForItemCollection(
@@ -206,7 +206,7 @@ class ItemView extends Controller
     private function optionsSimpleExpenseCollection(int $resource_type_id, int $resource_id): JsonResponse
     {
         $item = new \App\ItemType\SimpleExpense\Item();
-        $response = new \App\Option\Item\SimpleExpenseCollection($this->permissions($resource_type_id));
+        $response = new \App\HttpOptionResponse\Item\SimpleExpenseCollection($this->permissions($resource_type_id));
 
         return $response->setDynamicAllowedParameters(
             $item->allowedValuesForItemCollection(
@@ -223,7 +223,7 @@ class ItemView extends Controller
     private function optionsSimpleItemCollection(int $resource_type_id, int $resource_id): JsonResponse
     {
         $item = new \App\ItemType\SimpleItem\Item();
-        $response = new \App\Option\Item\SimpleItemCollection($this->permissions($resource_type_id));
+        $response = new \App\HttpOptionResponse\Item\SimpleItemCollection($this->permissions($resource_type_id));
 
         return $response->setDynamicAllowedParameters(
             $item->allowedValuesForItemCollection(
@@ -275,7 +275,7 @@ class ItemView extends Controller
             return \App\HttpResponse\Responses::notFound(trans('entities.item'));
         }
 
-        $response = new \App\Option\Item\AllocatedExpense($this->permissions((int) $resource_type_id));
+        $response = new \App\HttpOptionResponse\Item\AllocatedExpense($this->permissions((int) $resource_type_id));
 
         return $response->setDynamicAllowedFields(
                 $item->allowedValuesForItem((int) $resource_type_id)
@@ -302,7 +302,7 @@ class ItemView extends Controller
             return \App\HttpResponse\Responses::notFound(trans('entities.item'));
         }
 
-        $response = new \App\Option\Item\Game($this->permissions((int) $resource_type_id));
+        $response = new \App\HttpOptionResponse\Item\Game($this->permissions((int) $resource_type_id));
 
         return $response->setDynamicAllowedFields(
                 $item->allowedValuesForItem((int) $resource_type_id)
@@ -329,7 +329,7 @@ class ItemView extends Controller
             return \App\HttpResponse\Responses::notFound(trans('entities.item'));
         }
 
-        $response = new \App\Option\Item\SimpleExpense($this->permissions((int) $resource_type_id));
+        $response = new \App\HttpOptionResponse\Item\SimpleExpense($this->permissions((int) $resource_type_id));
 
         return $response->setDynamicAllowedFields(
                 $item->allowedValuesForItem((int) $resource_type_id)
@@ -356,7 +356,7 @@ class ItemView extends Controller
             return \App\HttpResponse\Responses::notFound(trans('entities.item'));
         }
 
-        $response = new \App\Option\Item\SimpleItem($this->permissions((int) $resource_type_id));
+        $response = new \App\HttpOptionResponse\Item\SimpleItem($this->permissions((int) $resource_type_id));
 
         return $response->setDynamicAllowedFields(
                 $item->allowedValuesForItem((int) $resource_type_id)

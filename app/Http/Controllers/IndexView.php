@@ -3,8 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\HttpResponse\Header;
-use App\Option\Changelog;
-use App\Option\Root;
+use App\HttpOptionResponse\Changelog;
+use App\HttpOptionResponse\Root;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Str;

@@ -4,8 +4,8 @@ namespace App\Http\Controllers;
 
 use App\HttpResponse\Header;
 use App\Models\Queue;
-use App\Option\QueueCollection;
-use App\Option\QueueItem;
+use App\HttpOptionResponse\QueueCollection;
+use App\HttpOptionResponse\QueueItem;
 use App\HttpRequest\Parameter;
 use App\HttpRequest\Route;
 use App\Transformers\Queue as QueueTransformer;

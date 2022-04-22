@@ -6,12 +6,12 @@ use App\HttpResponse\Header;
 use App\HttpResponse\Responses;
 use App\ItemType\Entity;
 use App\Models\ItemCategory;
-use App\Option\ItemCategory\AllocatedExpense;
-use App\Option\ItemCategory\AllocatedExpenseCollection;
-use App\Option\ItemCategory\Game;
-use App\Option\ItemCategory\GameCollection;
-use App\Option\ItemCategory\SimpleExpense;
-use App\Option\ItemCategory\SimpleExpenseCollection;
+use App\HttpOptionResponse\ItemCategory\AllocatedExpense;
+use App\HttpOptionResponse\ItemCategory\AllocatedExpenseCollection;
+use App\HttpOptionResponse\ItemCategory\Game;
+use App\HttpOptionResponse\ItemCategory\GameCollection;
+use App\HttpOptionResponse\ItemCategory\SimpleExpense;
+use App\HttpOptionResponse\ItemCategory\SimpleExpenseCollection;
 use App\Transformers\ItemCategory as ItemCategoryTransformer;
 use Illuminate\Http\JsonResponse;
 

@@ -5,10 +5,10 @@ namespace App\Http\Controllers\Summary;
 use App\Http\Controllers\Controller;
 use App\HttpResponse\Responses;
 use App\ItemType\Entity;
-use App\Option\ResourceTypeItem\Summary\AllocatedExpense;
-use App\Option\ResourceTypeItem\Summary\Game;
-use App\Option\ResourceTypeItem\Summary\SimpleExpense;
-use App\Option\ResourceTypeItem\Summary\SimpleItem;
+use App\HttpOptionResponse\ResourceTypeItem\Summary\AllocatedExpense;
+use App\HttpOptionResponse\ResourceTypeItem\Summary\Game;
+use App\HttpOptionResponse\ResourceTypeItem\Summary\SimpleExpense;
+use App\HttpOptionResponse\ResourceTypeItem\Summary\SimpleItem;
 use Illuminate\Http\JsonResponse;
 
 /**

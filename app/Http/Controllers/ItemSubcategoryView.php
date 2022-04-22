@@ -6,9 +6,9 @@ use App\HttpResponse\Header;
 use App\ItemType\Entity;
 use App\Models\ItemCategory;
 use App\Models\ItemSubcategory;
-use App\Option\ItemSubcategory\AllocatedExpenseCollection;
-use App\Option\ItemSubcategory\SimpleExpenseCollection;
-use App\Option\ItemSubcategoryItem;
+use App\HttpOptionResponse\ItemSubcategory\AllocatedExpenseCollection;
+use App\HttpOptionResponse\ItemSubcategory\SimpleExpenseCollection;
+use App\HttpOptionResponse\ItemSubcategoryItem;
 use App\Transformers\ItemSubcategory as ItemSubcategoryTransformer;
 use Illuminate\Http\JsonResponse;
 

@@ -4,8 +4,8 @@ namespace App\Http\Controllers;
 
 use App\HttpResponse\Header;
 use App\Models\Currency;
-use App\Option\CurrencyCollection;
-use App\Option\CurrencyItem;
+use App\HttpOptionResponse\CurrencyCollection;
+use App\HttpOptionResponse\CurrencyItem;
 use App\HttpRequest\Parameter;
 use App\Transformers\Currency as CurrencyTransformer;
 use Illuminate\Http\JsonResponse;
