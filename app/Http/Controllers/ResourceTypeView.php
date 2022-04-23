@@ -137,7 +137,7 @@ class ResourceTypeView extends Controller
     {
         $response = new ResourceTypeCollection(['view'=> $this->user_id !== null, 'manage'=> $this->user_id !== null]);
 
-        return $response->setDynamicAllowedFields((new ItemType())->allowedValues())
+        return $response->setAllowedValuesForFields((new ItemType())->allowedValues())
             ->create()
             ->response();
     }

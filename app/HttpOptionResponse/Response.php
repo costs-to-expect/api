@@ -48,14 +48,14 @@ abstract class Response
         );
     }
 
-    public function setDynamicAllowedFields(array $allowed_fields): Response
+    public function setAllowedValuesForFields(array $allowed_fields): Response
     {
         $this->allowed_fields = $allowed_fields;
 
         return $this;
     }
 
-    public function setDynamicAllowedParameters(array $allowed_parameters): Response
+    public function setAllowedValuesForParameters(array $allowed_parameters): Response
     {
         $this->allowed_parameters = $allowed_parameters;
 

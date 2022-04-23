@@ -157,7 +157,7 @@ class ItemCategoryView extends Controller
         $response = new AllocatedExpenseCollection($this->permissions((int) $resource_type_id));
 
         return $response
-            ->setDynamicAllowedFields(
+            ->setAllowedValuesForFields(
                 (new \App\Models\AllowedValue\Category())->allowedValues($resource_type_id))
             ->create()
             ->response();
@@ -172,7 +172,7 @@ class ItemCategoryView extends Controller
         $response = new GameCollection($this->permissions($resource_type_id));
 
         return $response
-            ->setDynamicAllowedFields(
+            ->setAllowedValuesForFields(
                 (new \App\Models\AllowedValue\Category())->allowedValues($resource_type_id))
             ->create()
             ->response();
@@ -187,7 +187,7 @@ class ItemCategoryView extends Controller
         $response = new SimpleExpenseCollection($this->permissions($resource_type_id));
 
         return $response
-            ->setDynamicAllowedFields(
+            ->setAllowedValuesForFields(
                 (new \App\Models\AllowedValue\Category())->allowedValues($resource_type_id))
             ->create()
             ->response();

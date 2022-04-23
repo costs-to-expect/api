@@ -183,7 +183,7 @@ class ItemSubcategoryView extends Controller
 
         $response = new AllocatedExpenseCollection($this->permissions((int) $resource_type_id));
 
-        return $response->setDynamicAllowedFields((new \App\Models\AllowedValue\Subcategory())->allowedValues($item_category->category_id))
+        return $response->setAllowedValuesForFields((new \App\Models\AllowedValue\Subcategory())->allowedValues($item_category->category_id))
             ->create()
             ->response();
     }
@@ -204,7 +204,7 @@ class ItemSubcategoryView extends Controller
 
         $response = new SimpleExpenseCollection($this->permissions((int) $resource_type_id));
 
-        return $response->setDynamicAllowedFields((new \App\Models\AllowedValue\Subcategory())->allowedValues($item_category->category_id))
+        return $response->setAllowedValuesForFields((new \App\Models\AllowedValue\Subcategory())->allowedValues($item_category->category_id))
             ->create()
             ->response();
     }

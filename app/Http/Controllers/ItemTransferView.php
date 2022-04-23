@@ -181,7 +181,7 @@ class ItemTransferView extends Controller
     {
         $response = new AllocatedExpenseTransfer($this->permissions($resource_type_id));
 
-        return $response->setDynamicAllowedFields(
+        return $response->setAllowedValuesForFields(
             (new \App\Models\AllowedValue\Resource())->allowedValues(
                 $resource_type_id,
                 $resource_id
@@ -198,7 +198,7 @@ class ItemTransferView extends Controller
     {
         $response = new SimpleExpenseTransfer($this->permissions($resource_type_id));
 
-        return $response->setDynamicAllowedFields(
+        return $response->setAllowedValuesForFields(
             (new \App\Models\AllowedValue\Resource())->allowedValues(
                 $resource_type_id,
                 $resource_id

@@ -106,7 +106,7 @@ class ResourceTypeItemView extends Controller
 
         $response = new AllocatedExpense($this->permissions($resource_type_id));
 
-        return $response->setDynamicAllowedParameters($allowed_values)
+        return $response->setAllowedValuesForParameters($allowed_values)
             ->create()
             ->response();
     }
@@ -121,7 +121,7 @@ class ResourceTypeItemView extends Controller
 
         $response = new Game($this->permissions($resource_type_id));
 
-        return $response->setDynamicAllowedParameters($allowed_values)
+        return $response->setAllowedValuesForParameters($allowed_values)
             ->create()
             ->response();
     }
@@ -136,7 +136,7 @@ class ResourceTypeItemView extends Controller
 
         $response = new SimpleExpense($this->permissions($resource_type_id));
 
-        return $response->setDynamicAllowedParameters($allowed_values)
+        return $response->setAllowedValuesForParameters($allowed_values)
             ->create()
             ->response();
     }
@@ -151,7 +151,7 @@ class ResourceTypeItemView extends Controller
 
         $response = new SimpleItem($this->permissions($resource_type_id));
 
-        return $response->setDynamicAllowedParameters($allowed_values)
+        return $response->setAllowedValuesForParameters($allowed_values)
             ->create()
             ->response();
     }

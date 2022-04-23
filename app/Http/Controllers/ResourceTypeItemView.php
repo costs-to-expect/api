@@ -97,7 +97,7 @@ class ResourceTypeItemView extends Controller
         $item = new \App\ItemType\AllocatedExpense\Item();
         $response = new \App\HttpOptionResponse\ResourceTypeItem\AllocatedExpenseCollection($this->permissions($resource_type_id));
 
-        return $response->setDynamicAllowedParameters(
+        return $response->setAllowedValuesForParameters(
             $item->allowedValuesForResourceTypeItemCollection(
                 $resource_type_id,
                 $this->viewable_resource_types
@@ -112,7 +112,7 @@ class ResourceTypeItemView extends Controller
         $item = new \App\ItemType\Game\Item();
         $response = new \App\HttpOptionResponse\ResourceTypeItem\GameCollection($this->permissions($resource_type_id));
 
-        return $response->setDynamicAllowedParameters(
+        return $response->setAllowedValuesForParameters(
             $item->allowedValuesForResourceTypeItemCollection(
                 $resource_type_id,
                 $this->viewable_resource_types
@@ -127,7 +127,7 @@ class ResourceTypeItemView extends Controller
         $item = new \App\ItemType\SimpleExpense\Item();
         $response = new \App\HttpOptionResponse\ResourceTypeItem\SimpleExpenseCollection($this->permissions($resource_type_id));
 
-        return $response->setDynamicAllowedParameters(
+        return $response->setAllowedValuesForParameters(
             $item->allowedValuesForResourceTypeItemCollection(
                 $resource_type_id,
                 $this->viewable_resource_types
@@ -142,7 +142,7 @@ class ResourceTypeItemView extends Controller
         $item = new \App\ItemType\SimpleItem\Item();
         $response = new \App\HttpOptionResponse\ResourceTypeItem\SimpleItemCollection($this->permissions($resource_type_id));
 
-        return $response->setDynamicAllowedParameters(
+        return $response->setAllowedValuesForParameters(
             $item->allowedValuesForResourceTypeItemCollection(
                 $resource_type_id,
                 $this->viewable_resource_types
