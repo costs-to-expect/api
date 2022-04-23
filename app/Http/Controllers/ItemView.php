@@ -218,16 +218,15 @@ class ItemView extends Controller
         );
 
         return [
-            'category' => $this->assignAllowedValuesForCategory($resource_type_id, $this->viewable_resource_types),
-            'subcategory' => $this->assignAllowedValuesForSubcategory($resource_type_id, $parameters_set_in_request),
-            'currency_id' => $this->assignAllowedValuesForCurrency()
+            'category' => ['allowed_values' => $this->assignAllowedValuesForCategory($resource_type_id, $this->viewable_resource_types)],
+            'subcategory' => ['allowed_values' => $this->assignAllowedValuesForSubcategory($resource_type_id, $parameters_set_in_request)]
         ];
     }
 
     private function allowedValuesForSimpleExpenseCollectionFields(): array
     {
         return [
-            'currency_id' => $this->assignAllowedValuesForCurrency()
+            'currency_id' => ['allowed_values' => $this->assignAllowedValuesForCurrency()]
         ];
     }
 
