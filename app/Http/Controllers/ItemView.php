@@ -5,11 +5,13 @@ namespace App\Http\Controllers;
 use App\HttpRequest\Parameter\Request;
 use App\HttpResponse\Responses;
 use App\ItemType\Select;
+use App\ItemType\SimpleExpense\AllowedValue;
 use App\Models\AllowedValue\Currency;
 use App\Models\Category;
 use App\Models\Subcategory;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Config;
+use JetBrains\PhpStorm\ArrayShape;
 
 /**
  * @author Dean Blackborough <dean@g3d-development.com>
@@ -208,130 +210,17 @@ class ItemView extends Controller
             ->response();
     }
 
-    private function allowedValuesForSimpleExpenseCollectionParameters(int $resource_type_id, int $resource_id): array
-    {
-        $parameters = Config::get('api.item-type-simple-expense.parameters', []);
-        $parameters_set_in_request = Request::fetch(
-            array_keys($parameters),
-            $resource_type_id,
-            $resource_id
-        );
-
-        return [
-            'category' => ['allowed_values' => $this->assignAllowedValuesForCategory($resource_type_id, $this->viewable_resource_types)],
-            'subcategory' => ['allowed_values' => $this->assignAllowedValuesForSubcategory($resource_type_id, $parameters_set_in_request)]
-        ];
-    }
-
-    private function allowedValuesForSimpleExpenseCollectionFields(): array
-    {
-        return [
-            'currency_id' => ['allowed_values' => $this->assignAllowedValuesForCurrency()]
-        ];
-    }
-
-    private function assignAllowedValuesForCategory(int $resource_type_id, array $viewable_resource_types): array
-    {
-        $allowed_values = [];
-
-        $categories = (new Category())->paginatedCollection(
-            $resource_type_id,
-            $viewable_resource_types,
-            0,
-            100
-        );
-
-        foreach ($categories as $category) {
-            $category_id = $this->hash->encode('category', $category['category_id']);
-
-            if ($category_id === false) {
-                Responses::unableToDecode();
-            }
-
-            $allowed_values[$category_id] = [
-                'uri' => route('category.show', ['resource_type_id' => $resource_type_id, 'category_id' => $category_id], false),
-                'value' => $category_id,
-                'name' => $category['category_name'],
-                'description' => trans('item-type-simple-expense/allowed-values.description-prefix-category') .
-                    $category['category_name'] .
-                    trans('item-type-simple-expense/allowed-values.description-suffix-category')
-            ];
-        }
-
-        return $allowed_values;
-    }
-
-    private function assignAllowedValuesForCurrency(): array
-    {
-        $allowed_values = [];
-
-        $currencies = (new \App\Models\Currency())->minimisedCollection();
-
-        foreach ($currencies as $currency) {
-            $id = $this->hash->encode('currency', $currency['currency_id']);
-
-            if ($id === false) {
-                Responses::unableToDecode();
-            }
-
-            $allowed_values[$id] = [
-                'uri' => route('currency.show', ['currency_id' => $id], false),
-                'value' => $id,
-                'name' => $currency['currency_name'],
-                'description' => $currency['currency_name']
-            ];
-        }
-
-        return $allowed_values;
-    }
-
-    private function assignAllowedValuesForSubcategory(
-        int $resource_type_id,
-        array $parameters_set_in_request
-    ): array
-    {
-        $allowed_values = [];
-
-        if (
-            array_key_exists('category', $parameters_set_in_request) === true &&
-            $parameters_set_in_request['category'] !== null
-        ) {
-
-            $subcategories = (new Subcategory())->paginatedCollection(
-                $resource_type_id,
-                (int) $parameters_set_in_request['category']
-            );
-
-            $category_id = $this->hash->encode('category', $parameters_set_in_request['category']);
-
-            foreach ($subcategories as $subcategory) {
-                $subcategory_id = $this->hash->encode('subcategory', $subcategory['subcategory_id']);
-
-                $allowed_values[$subcategory_id] = [
-                    'uri' => route('subcategory.show', ['resource_type_id' => $resource_type_id, 'category_id' => $category_id, 'subcategory_id' => $subcategory_id], false),
-                    'value' => $subcategory_id,
-                    'name' => $subcategory['subcategory_name'],
-                    'description' => trans('item-type-simple-expense/allowed-values.description-prefix-subcategory') .
-                        $subcategory['subcategory_name'] . trans('item-type-simple-expense/allowed-values.description-suffix-subcategory')
-                ];
-            }
-        }
-
-        return $allowed_values;
-    }
-
     private function optionsSimpleExpenseCollection(int $resource_type_id, int $resource_id): JsonResponse
     {
+        $allowed_values = new AllowedValue(
+            $resource_type_id,
+            $resource_id,
+            $this->viewable_resource_types
+        );
+
         return (new \App\HttpOptionResponse\Item\SimpleExpenseCollection($this->permissions($resource_type_id)))
-            ->setAllowedValuesForParameters(
-                $this->allowedValuesForSimpleExpenseCollectionParameters(
-                    $resource_type_id,
-                    $resource_id
-                )
-            )
-            ->setAllowedValuesForFields(
-                $this->allowedValuesForSimpleExpenseCollectionFields()
-            )
+            ->setAllowedValuesForParameters($allowed_values->parameterAllowedValuesForCollection())
+            ->setAllowedValuesForFields($allowed_values->fieldAllowedValuesForCollection())
             ->create()
             ->response();
     }
@@ -437,19 +326,21 @@ class ItemView extends Controller
             \App\HttpResponse\Responses::notFoundOrNotAccessible(trans('entities.item'));
         }
 
-        $item = new \App\ItemType\SimpleExpense\Item();
-        $model = new \App\ItemType\SimpleExpense\Models\Item();
-        $item_data = $model->single($resource_type_id, $resource_id, $item_id);
+        $item = (new \App\ItemType\SimpleExpense\Models\Item())->single($resource_type_id, $resource_id, $item_id);
 
-        if ($item_data === null) {
+        if ($item === null) {
             return \App\HttpResponse\Responses::notFound(trans('entities.item'));
         }
 
         $response = new \App\HttpOptionResponse\Item\SimpleExpense($this->permissions((int) $resource_type_id));
 
-        return $response->setAllowedValuesForFields(
-                $item->allowedValuesForItem((int) $resource_type_id)
-            )
+        $allowed_values = new AllowedValue(
+            $resource_type_id,
+            $resource_id,
+            $this->viewable_resource_types
+        );
+
+        return $response->setAllowedValuesForFields($allowed_values->fieldAllowedValuesForShow())
             ->create()
             ->response();
     }
