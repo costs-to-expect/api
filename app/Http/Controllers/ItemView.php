@@ -2,16 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\HttpRequest\Parameter\Request;
-use App\HttpResponse\Responses;
 use App\ItemType\Select;
 use App\ItemType\SimpleExpense\AllowedValue;
 use App\Models\AllowedValue\Currency;
-use App\Models\Category;
-use App\Models\Subcategory;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Support\Facades\Config;
-use JetBrains\PhpStorm\ArrayShape;
 
 /**
  * @author Dean Blackborough <dean@g3d-development.com>
@@ -184,14 +178,14 @@ class ItemView extends Controller
 
         return $response->setAllowedValuesForParameters(
             $item->allowedValuesForItemCollection(
-                $resource_type_id,
-                $resource_id,
-                $this->viewable_resource_types
+                    $resource_type_id,
+                    $resource_id,
+                    $this->viewable_resource_types
+                )
             )
-        )
-        ->setAllowedValuesForFields((new Currency())->allowedValues())
-        ->create()
-        ->response();
+            ->setAllowedValuesForFields((new Currency())->allowedValues())
+            ->create()
+            ->response();
     }
 
     private function optionsGameCollection(int $resource_type_id, int $resource_id): JsonResponse
@@ -200,7 +194,7 @@ class ItemView extends Controller
         $response = new \App\HttpOptionResponse\Item\GameCollection($this->permissions($resource_type_id));
 
         return $response->setAllowedValuesForParameters(
-                $item->allowedValuesForItemCollection(
+            $item->allowedValuesForItemCollection(
                     $resource_type_id,
                     $resource_id,
                     $this->viewable_resource_types
@@ -232,13 +226,13 @@ class ItemView extends Controller
 
         return $response->setAllowedValuesForParameters(
             $item->allowedValuesForItemCollection(
-                $resource_type_id,
-                $resource_id,
-                $this->viewable_resource_types
+                    $resource_type_id,
+                    $resource_id,
+                    $this->viewable_resource_types
+                )
             )
-        )
-        ->create()
-        ->response();
+            ->create()
+            ->response();
     }
 
     public function optionsShow(
