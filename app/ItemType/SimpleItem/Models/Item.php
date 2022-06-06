@@ -41,7 +41,7 @@ class Item extends LaravelModel
     public function instanceToArray(LaravelModel $item, Item $item_type): array
     {
         return [
-            'item_id' => $item->id,
+            'item_id' => $item->id, // This can come from item_type, no need to pass item into method
             'item_name' => $item_type->name,
             'item_description' => $item_type->description,
             'item_quantity' => $item_type->total,

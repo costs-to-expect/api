@@ -13,7 +13,9 @@ use App\Models\ItemTransfer;
 use Exception;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Config as LaravelConfig;
+use Illuminate\Support\Facades\Date;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator as ValidatorFacade;
 
@@ -224,8 +226,13 @@ class ItemManage extends Controller
         );
     }
 
-    private function createSimpleItem(int $resource_type_id, int $resource_id): JsonResponse
+    private function createSimpleItem(
+        int $resource_type_id,
+        int $resource_id
+    ): JsonResponse
     {
+        $request = request();
+
         $config_base_path = 'api.item-type-simple-item';
 
         $messages = [];
@@ -234,7 +241,7 @@ class ItemManage extends Controller
         }
 
         $validator = ValidatorFacade::make(
-            request()->all(),
+            $request->all(),
             LaravelConfig::get($config_base_path . '.validation-post.fields', []),
             $messages
         );
@@ -242,8 +249,6 @@ class ItemManage extends Controller
         if ($validator->fails()) {
             return \App\HttpRequest\BodyValidation::returnValidationErrors($validator);
         }
-
-        $item = new \App\ItemType\SimpleItem\Item();
 
         $cache_job_payload = (new JobPayload())
             ->setGroupKey(KeyGroup::ITEM_CREATE)
@@ -255,13 +260,23 @@ class ItemManage extends Controller
             ->setUserId($this->user_id);
 
         try {
-            [$item_instance, $item_type_instance] = DB::transaction(function() use ($resource_id, $item) {
+            [$item_instance, $item_type_instance] = DB::transaction(function() use ($request, $resource_id) {
                 $item_instance = new Item([
                     'resource_id' => $resource_id,
                     'created_by' => $this->user_id
                 ]);
                 $item_instance->save();
-                $item_type_instance = $item->create($item_instance->id);
+
+                $item_type_instance = new \App\ItemType\SimpleItem\Models\Item([
+                    'item_id' => $item_instance->id,
+                    'name' => $request->input('name'),
+                    'description' => $request->input('description', null),
+                    'quantity' => $request->input('quantity', 1),
+                    'created_at' => Date::now(),
+                    'updated_at' => null
+                ]);
+
+                $item_type_instance->save();
 
                 return [$item_instance, $item_type_instance];
             });
@@ -536,11 +551,17 @@ class ItemManage extends Controller
         return Responses::successNoContent();
     }
 
-    private function updateSimpleItem(int $resource_type_id, int $resource_id, int $item_id): JsonResponse
+    private function updateSimpleItem(
+        int $resource_type_id,
+        int $resource_id,
+        int $item_id
+    ): JsonResponse
     {
+        $request = request();
+
         $config_base_path = 'api.item-type-simple-item';
 
-        if (count(request()->all()) === 0) {
+        if (count($request->all()) === 0) {
             return Responses::nothingToPatch();
         }
 
@@ -558,7 +579,7 @@ class ItemManage extends Controller
         }
 
         $validator = ValidatorFacade::make(
-            request()->all(),
+            $request->all(),
             LaravelConfig::get($config_base_path . '.validation-patch.fields', []),
             $messages
         );
@@ -586,11 +607,15 @@ class ItemManage extends Controller
         try {
             $item_instance->updated_by = $this->user_id;
 
-            DB::transaction(static function() use ($item_instance, $item_type_instance) {
-                if ($item_instance->save() === true) {
-                    $allocated_expense = new \App\ItemType\SimpleItem\Item();
-                    $allocated_expense->update(request()->all(), $item_type_instance);
+            DB::transaction(static function() use ($request, $item_instance, $item_type_instance) {
+
+                foreach ($request->all() as $key => $value) {
+                    $item_type_instance->$key = $value;
                 }
+
+                $item_type_instance->updated_at = Date::now();
+
+                return $item_instance->save() && $item_type_instance->save();
             });
 
             ClearCache::dispatch($cache_job_payload->payload());

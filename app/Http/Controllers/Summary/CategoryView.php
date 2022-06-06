@@ -25,6 +25,7 @@ class CategoryView extends Controller
      * @param $resource_type_id
      *
      * @return JsonResponse
+     * @throws \JsonException
      */
     public function index($resource_type_id): JsonResponse
     {
@@ -67,8 +68,7 @@ class CategoryView extends Controller
                 'categories' => $total
             ];
 
-            $headers = new Header();
-            $headers
+            $headers = (new Header())
                 ->addCacheControl($cache_control->visibility(), $cache_control->ttl())
                 ->addETag($collection)
                 ->addSearch(Parameter\Search::xHeader());
