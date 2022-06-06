@@ -5,7 +5,6 @@ namespace App\ItemType\AllocatedExpense;
 
 use App\HttpRequest\Hash;
 use App\ItemType\ItemType;
-use App\Models\AllowedValue\Currency;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Date;
 
@@ -18,11 +17,6 @@ class Item extends ItemType
         $this->resource_type_base_path = 'api.resource-type-item-type-allocated-expense';
 
         parent::__construct();
-    }
-
-    public function allowedValuesForItem(int $resource_type_id): array
-    {
-        return (new Currency())->allowedValues();
     }
 
     public function create($id): Model
@@ -91,15 +85,5 @@ class Item extends ItemType
         $instance->updated_at = Date::now();
 
         return $instance->save();
-    }
-
-    protected function allowedValuesItemCollectionClass(): string
-    {
-        return Models\AllowedValue\Item::class;
-    }
-
-    protected function allowedValuesResourceTypeItemCollectionClass(): string
-    {
-        return Models\AllowedValue\ResourceTypeItem::class;
     }
 }

@@ -4,10 +4,8 @@ declare(strict_types=1);
 namespace App\ItemType\Game;
 
 use App\HttpRequest\Hash;
-use App\ItemType\Game\Models\AllowedValue\Winner;
 use App\ItemType\ItemType;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Facades\Config as LaravelConfig;
 use Illuminate\Support\Facades\Date;
 
 class Item extends ItemType
@@ -19,11 +17,6 @@ class Item extends ItemType
         $this->resource_type_base_path = 'api.resource-type-item-type-game';
 
         parent::__construct();
-    }
-
-    public function allowedValuesForItem(int $resource_type_id): array
-    {
-        return (new Winner())->allowedValues($resource_type_id);
     }
 
     public function create(int $id): Model
@@ -80,20 +73,5 @@ class Item extends ItemType
         $instance->updated_at = Date::now();
 
         return $instance->save();
-    }
-
-    public function patchFields(): array
-    {
-        return LaravelConfig::get($this->base_path . '.fields-patch', []);
-    }
-
-    protected function allowedValuesItemCollectionClass(): string
-    {
-        return Models\AllowedValue\Item::class;
-    }
-
-    protected function allowedValuesResourceTypeItemCollectionClass(): string
-    {
-        return Models\AllowedValue\ResourceTypeItem::class;
     }
 }

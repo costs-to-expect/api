@@ -69,28 +69,6 @@ abstract class ApiResourceTypeItemResponse
         return $headers->headers();
     }
 
-    protected function fetchAllRequestParameters(
-        \App\ItemType\ItemType $entity
-    ): void
-    {
-        $this->request_parameters = Request::fetch(
-            array_keys($entity->resourceTypeRequestParameters()),
-            $this->resource_type_id
-        );
-
-        $this->search_parameters = Search::fetch(
-            $entity->resourceTypeSearchParameters()
-        );
-
-        $this->filter_parameters = Filter::fetch(
-            $entity->resourceTypeFilterParameters()
-        );
-
-        $this->sort_fields = Sort::fetch(
-            $entity->resourceTypeSortParameters()
-        );
-    }
-
     protected function pagination_parameters(int $total): array
     {
         $pagination = new UtilityPagination(request()->path(), $total);

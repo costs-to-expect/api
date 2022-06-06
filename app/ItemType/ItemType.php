@@ -3,7 +3,6 @@ declare(strict_types=1);
 
 namespace App\ItemType;
 
-use App\HttpRequest\Parameter\Request;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Config as LaravelConfig;
 
@@ -16,61 +15,6 @@ abstract class ItemType
     public function __construct()
     {
         //
-    }
-
-    abstract public function allowedValuesForItem(int $resource_type_id): array;
-
-    public function allowedValuesForItemCollection(
-        int $resource_type_id,
-        int $resource_id,
-        array $viewable_resource_types = []
-    ): array
-    {
-        $available_parameters = $this->requestParameters();
-        $defined_parameters = Request::fetch(
-            array_keys($available_parameters),
-            $resource_type_id,
-            $resource_id
-        );
-
-        $allowed_value_class = $this->allowedValuesItemCollectionClass();
-        $allowed_values = new $allowed_value_class(
-            $resource_type_id,
-            $resource_id,
-            $viewable_resource_types
-        );
-
-        return $allowed_values->setParameters(
-                $available_parameters,
-                $defined_parameters
-            )
-            ->fetch()
-            ->allowedValues();
-    }
-
-    public function allowedValuesForResourceTypeItemCollection(
-        int $resource_type_id,
-        array $viewable_resource_types = []
-    ): array
-    {
-        $available_parameters = $this->resourceTypeRequestParameters();
-        $defined_parameters = Request::fetch(
-            array_keys($available_parameters),
-            $resource_type_id
-        );
-
-        $allowed_value_class = $this->allowedValuesResourceTypeItemCollectionClass();
-        $allowed_values = new $allowed_value_class(
-            $resource_type_id,
-            $viewable_resource_types
-        );
-
-        return $allowed_values->setParameters(
-                $available_parameters,
-                $defined_parameters
-            )
-            ->fetch()
-            ->allowedValues();
     }
 
     abstract public function create(int $id): Model;
@@ -135,7 +79,4 @@ abstract class ItemType
     abstract public function type(): string;
 
     abstract public function update(array $patch, Model $instance): bool;
-
-    abstract protected function allowedValuesItemCollectionClass(): string;
-    abstract protected function allowedValuesResourceTypeItemCollectionClass(): string;
 }

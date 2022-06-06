@@ -18,11 +18,6 @@ class Item extends ItemType
         parent::__construct();
     }
 
-    public function allowedValuesForItem(int $resource_type_id): array
-    {
-        return [];
-    }
-
     public function create(int $id): Model
     {
         $item = new Models\Item([
@@ -63,15 +58,5 @@ class Item extends ItemType
         $instance->updated_at = Date::now();
 
         return $instance->save();
-    }
-
-    protected function allowedValuesItemCollectionClass(): string
-    {
-        return Models\AllowedValue\Item::class;
-    }
-
-    protected function allowedValuesResourceTypeItemCollectionClass(): string
-    {
-        return Models\AllowedValue\ResourceTypeItem::class;
     }
 }
