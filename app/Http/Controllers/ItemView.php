@@ -3,8 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\ItemType\Select;
-use App\ItemType\SimpleExpense\AllowedValue;
-use App\Models\AllowedValue\Currency;
+use App\ItemType\AllocatedExpense\AllowedValue as AllocatedExpenseAllowedValue;
+use App\ItemType\SimpleExpense\AllowedValue as SimpleExpenseAllowedValue;
 use Illuminate\Http\JsonResponse;
 
 /**
@@ -173,17 +173,15 @@ class ItemView extends Controller
 
     private function optionsAllocatedExpenseCollection(int $resource_type_id, int $resource_id): JsonResponse
     {
-        $item = new \App\ItemType\AllocatedExpense\Item();
-        $response = new \App\HttpOptionResponse\Item\AllocatedExpenseCollection($this->permissions($resource_type_id));
+        $allowed_values = new AllocatedExpenseAllowedValue(
+            $resource_type_id,
+            $resource_id,
+            $this->viewable_resource_types
+        );
 
-        return $response->setAllowedValuesForParameters(
-            $item->allowedValuesForItemCollection(
-                    $resource_type_id,
-                    $resource_id,
-                    $this->viewable_resource_types
-                )
-            )
-            ->setAllowedValuesForFields((new Currency())->allowedValues())
+        return (new \App\HttpOptionResponse\Item\AllocatedExpenseCollection($this->permissions($resource_type_id)))
+            ->setAllowedValuesForParameters($allowed_values->parameterAllowedValuesForCollection())
+            ->setAllowedValuesForFields($allowed_values->fieldAllowedValuesForCollection())
             ->create()
             ->response();
     }
@@ -206,10 +204,10 @@ class ItemView extends Controller
 
     private function optionsSimpleExpenseCollection(int $resource_type_id, int $resource_id): JsonResponse
     {
-        $allowed_values = new AllowedValue(
+        $allowed_values = new SimpleExpenseAllowedValue(
+            $this->viewable_resource_types,
             $resource_type_id,
-            $resource_id,
-            $this->viewable_resource_types
+            $resource_id
         );
 
         return (new \App\HttpOptionResponse\Item\SimpleExpenseCollection($this->permissions($resource_type_id)))
@@ -266,19 +264,20 @@ class ItemView extends Controller
             \App\HttpResponse\Responses::notFoundOrNotAccessible(trans('entities.item'));
         }
 
-        $item = new \App\ItemType\AllocatedExpense\Item();
-        $model = new \App\ItemType\AllocatedExpense\Models\Item();
-        $item_data = $model->single($resource_type_id, $resource_id, $item_id);
+        $item = (new \App\ItemType\AllocatedExpense\Models\Item())->single($resource_type_id, $resource_id, $item_id);
 
-        if ($item_data === null) {
+        if ($item === null) {
             return \App\HttpResponse\Responses::notFound(trans('entities.item'));
         }
 
-        $response = new \App\HttpOptionResponse\Item\AllocatedExpense($this->permissions((int) $resource_type_id));
+        $allowed_values = new AllocatedExpenseAllowedValue(
+            $resource_type_id,
+            $resource_id,
+            $this->viewable_resource_types
+        );
 
-        return $response->setAllowedValuesForFields(
-                $item->allowedValuesForItem((int) $resource_type_id)
-            )
+        return (new \App\HttpOptionResponse\Item\AllocatedExpense($this->permissions((int) $resource_type_id)))
+            ->setAllowedValuesForFields($allowed_values->fieldAllowedValuesForShow())
             ->create()
             ->response();
     }
@@ -326,15 +325,14 @@ class ItemView extends Controller
             return \App\HttpResponse\Responses::notFound(trans('entities.item'));
         }
 
-        $response = new \App\HttpOptionResponse\Item\SimpleExpense($this->permissions((int) $resource_type_id));
-
-        $allowed_values = new AllowedValue(
+        $allowed_values = new SimpleExpenseAllowedValue(
+            $this->viewable_resource_types,
             $resource_type_id,
-            $resource_id,
-            $this->viewable_resource_types
+            $resource_id
         );
 
-        return $response->setAllowedValuesForFields($allowed_values->fieldAllowedValuesForShow())
+        return (new \App\HttpOptionResponse\Item\SimpleExpense($this->permissions((int) $resource_type_id)))
+            ->setAllowedValuesForFields($allowed_values->fieldAllowedValuesForShow())
             ->create()
             ->response();
     }

@@ -1,12 +1,13 @@
 <?php
 declare(strict_types=1);
 
-namespace App\ItemType\SimpleExpense;
+namespace App\ItemType\AllocatedExpense;
 
 use App\HttpRequest\Hash;
 use App\HttpRequest\Parameter\Request;
 use App\HttpResponse\Responses;
 use App\Models\Category;
+use App\Models\EntityLimits;
 use App\Models\Subcategory;
 use Illuminate\Support\Facades\Config;
 use JetBrains\PhpStorm\ArrayShape;
@@ -31,17 +32,19 @@ class AllowedValue
         $this->viewable_resource_types = $viewable_resource_types;
     }
 
-    /**
-     * @throws \Exception
-     */
-    #[ArrayShape(['category' => "array[]", 'subcategory' => "array[]"])]
+    #[ArrayShape([
+        'category' => "array[]",
+        'subcategory' => "array[]",
+        'year' => "array[]",
+        'month' => "array[]",
+    ])]
     public function parameterAllowedValuesForCollection(): array
     {
         if ($this->resource_id === null) {
             throw new \InvalidArgumentException("Resource id needs to be defined in the constructor for a collection");
         }
 
-        $parameters = Config::get('api.item-type-simple-expense.parameters', []);
+        $parameters = Config::get('api.item-type-allocated-expense.parameters', []);
         $parameters_set_in_request = Request::fetch(
             array_keys($parameters),
             $this->resource_type_id,
@@ -50,26 +53,9 @@ class AllowedValue
 
         return [
             'category' => ['allowed_values' => $this->assignAllowedValuesForCategory()],
-            'subcategory' => ['allowed_values' => $this->assignAllowedValuesForSubcategory($parameters_set_in_request)]
-        ];
-    }
-
-    #[ArrayShape(['category' => "array[]", 'subcategory' => "array[]"])]
-    public function parameterAllowedValuesForResourceTypeCollection(): array
-    {
-        if ($this->resource_id !== null) {
-            throw new \InvalidArgumentException("Resource id does not need to be defined in the constructor for a resource type collection");
-        }
-
-        $parameters = Config::get('api.resource-type-item-type-simple-expense.parameters', []);
-        $parameters_set_in_request = Request::fetch(
-            array_keys($parameters),
-            $this->resource_type_id
-        );
-
-        return [
-            'category' => ['allowed_values' => $this->assignAllowedValuesForCategory()],
-            'subcategory' => ['allowed_values' => $this->assignAllowedValuesForSubcategory($parameters_set_in_request)]
+            'subcategory' => ['allowed_values' => $this->assignAllowedValuesForSubcategory($parameters_set_in_request)],
+            'year' => ['allowed_values' => $this->assignAllowedValuesForYear()],
+            'month' => ['allowed_values' => $this->assignAllowedValuesForMonth($parameters_set_in_request)],
         ];
     }
 
@@ -111,9 +97,9 @@ class AllowedValue
                 'uri' => route('category.show', ['resource_type_id' => $this->resource_type_id, 'category_id' => $category_id], false),
                 'value' => $category_id,
                 'name' => $category['category_name'],
-                'description' => trans('item-type-simple-expense/allowed-values.description-prefix-category') .
+                'description' => trans('item-type-allocated-expense/allowed-values.description-prefix-category') .
                     $category['category_name'] .
-                    trans('item-type-simple-expense/allowed-values.description-suffix-category')
+                    trans('item-type-allocated-expense/allowed-values.description-suffix-category')
             ];
         }
 
@@ -138,6 +124,59 @@ class AllowedValue
                 'value' => $id,
                 'name' => $currency['currency_name'],
                 'description' => $currency['currency_name']
+            ];
+        }
+
+        return $allowed_values;
+    }
+
+    private function assignAllowedValuesForMonth(
+        array $parameters_set_in_request
+    ): array
+    {
+        $allowed_values = [];
+
+        if (
+            array_key_exists('year', $parameters_set_in_request) === true &&
+            $parameters_set_in_request['year'] !== null
+        ) {
+            for ($i = 1; $i < 13; $i++) {
+                $allowed_values[$i] = [
+                    'value' => $i,
+                    'name' => date("F", mktime(0, 0, 0, $i, 10)),
+                    'description' => trans('item-type-allocated-expense/allowed-values.description-prefix-month') .
+                        date("F", mktime(0, 0, 0, $i, 1))
+                ];
+            }
+        }
+
+        return $allowed_values;
+    }
+
+    private function assignAllowedValuesForYear(): array
+    {
+        $allowed_values = [];
+
+        $entity_limits = (new EntityLimits());
+
+        $min_year = $entity_limits->minimumYearByResourceTypeAndResource(
+            $this->resource_type_id,
+            $this->resource_id,
+            'item_type_allocated_expense',
+            'effective_date'
+        );
+        $max_year = $entity_limits->maximumYearByResourceTypeAndResource(
+            $this->resource_type_id,
+            $this->resource_id,
+            'item_type_allocated_expense',
+            'effective_date'
+        );
+
+        for ($i = $min_year; $i <= $max_year; $i++) {
+            $allowed_values[$i] = [
+                'value' => $i,
+                'name' => $i,
+                'description' => trans('item-type-allocated-expense/allowed-values.description-prefix-year') . $i
             ];
         }
 
@@ -169,8 +208,8 @@ class AllowedValue
                     'uri' => route('subcategory.show', ['resource_type_id' => $this->resource_type_id, 'category_id' => $category_id, 'subcategory_id' => $subcategory_id], false),
                     'value' => $subcategory_id,
                     'name' => $subcategory['subcategory_name'],
-                    'description' => trans('item-type-simple-expense/allowed-values.description-prefix-subcategory') .
-                        $subcategory['subcategory_name'] . trans('item-type-simple-expense/allowed-values.description-suffix-subcategory')
+                    'description' => trans('item-type-allocated-expense/allowed-values.description-prefix-subcategory') .
+                        $subcategory['subcategory_name'] . trans('item-type-allocated-expense/allowed-values.description-suffix-subcategory')
                 ];
             }
         }

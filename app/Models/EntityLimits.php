@@ -115,7 +115,6 @@ class EntityLimits extends Model
 
         if ($result !== null) {
             return (int) $result->date_limit;
-
         }
 
         return (int) date('Y');
