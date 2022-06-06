@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\ItemType\Select;
+use App\ItemType\AllocatedExpense\AllowedValue as AllocatedExpenseAllowedValue;
 use App\ItemType\SimpleExpense\AllowedValue as SimpleExpenseAllowedValue;
 use Illuminate\Http\JsonResponse;
 
@@ -95,17 +96,15 @@ class ResourceTypeItemView extends Controller
 
     private function optionsAllocatedExpenseCollection(int $resource_type_id): JsonResponse
     {
-        $item = new \App\ItemType\AllocatedExpense\Item();
-        $response = new \App\HttpOptionResponse\ResourceTypeItem\AllocatedExpenseCollection($this->permissions($resource_type_id));
+        $allowed_values = new AllocatedExpenseAllowedValue(
+            $this->viewable_resource_types,
+            $resource_type_id
+        );
 
-        return $response->setAllowedValuesForParameters(
-            $item->allowedValuesForResourceTypeItemCollection(
-                $resource_type_id,
-                $this->viewable_resource_types
-            )
-        )
-        ->create()
-        ->response();
+        return (new \App\HttpOptionResponse\ResourceTypeItem\AllocatedExpenseCollection($this->permissions($resource_type_id)))
+            ->setAllowedValuesForParameters($allowed_values->parameterAllowedValuesForResourceTypeCollection())
+            ->create()
+            ->response();
     }
 
     private function optionsGameCollection(int $resource_type_id): JsonResponse

@@ -59,6 +59,32 @@ class AllowedValue
         ];
     }
 
+    #[ArrayShape([
+        'category' => "array[]",
+        'subcategory' => "array[]",
+        'year' => "array[]",
+        'month' => "array[]",
+    ])]
+    public function parameterAllowedValuesForResourceTypeCollection(): array
+    {
+        if ($this->resource_id !== null) {
+            throw new \InvalidArgumentException("Resource id does not need to be defined in the constructor for a resoure type collection");
+        }
+
+        $parameters = Config::get('api.resource-type-item-type-allocated-expense.parameters', []);
+        $parameters_set_in_request = Request::fetch(
+            array_keys($parameters),
+            $this->resource_type_id
+        );
+
+        return [
+            'category' => ['allowed_values' => $this->assignAllowedValuesForCategory()],
+            'subcategory' => ['allowed_values' => $this->assignAllowedValuesForSubcategory($parameters_set_in_request)],
+            'year' => ['allowed_values' => $this->assignAllowedValuesForYearAndResourceType()],
+            'month' => ['allowed_values' => $this->assignAllowedValuesForMonth($parameters_set_in_request)],
+        ];
+    }
+
     #[ArrayShape(['currency_id' => "array[]"])]
     public function fieldAllowedValuesForCollection(): array
     {
@@ -136,18 +162,13 @@ class AllowedValue
     {
         $allowed_values = [];
 
-        if (
-            array_key_exists('year', $parameters_set_in_request) === true &&
-            $parameters_set_in_request['year'] !== null
-        ) {
-            for ($i = 1; $i < 13; $i++) {
-                $allowed_values[$i] = [
-                    'value' => $i,
-                    'name' => date("F", mktime(0, 0, 0, $i, 10)),
-                    'description' => trans('item-type-allocated-expense/allowed-values.description-prefix-month') .
-                        date("F", mktime(0, 0, 0, $i, 1))
-                ];
-            }
+        for ($i = 1; $i < 13; $i++) {
+            $allowed_values[$i] = [
+                'value' => $i,
+                'name' => date("F", mktime(0, 0, 0, $i, 10)),
+                'description' => trans('item-type-allocated-expense/allowed-values.description-prefix-month') .
+                    date("F", mktime(0, 0, 0, $i, 1))
+            ];
         }
 
         return $allowed_values;
@@ -177,6 +198,34 @@ class AllowedValue
                 'value' => $i,
                 'name' => $i,
                 'description' => trans('item-type-allocated-expense/allowed-values.description-prefix-year') . $i
+            ];
+        }
+
+        return $allowed_values;
+    }
+
+    private function assignAllowedValuesForYearAndResourceType(): array
+    {
+        $allowed_values = [];
+
+        $entity_limits = (new EntityLimits());
+
+        $min_year = $entity_limits->minimumYearByResourceType(
+            $this->resource_type_id,
+            'item_type_allocated_expense',
+            'effective_date'
+        );
+        $max_year = $entity_limits->maximumYearByResourceType(
+            $this->resource_type_id,
+            'item_type_allocated_expense',
+            'effective_date'
+        );
+
+        for ($i = $min_year; $i <= $max_year; $i++) {
+            $allowed_values[$i] = [
+                'value' => $i,
+                'name' => $i,
+                'description' => trans('resource-type-item-type-allocated-expense/allowed-values.description-prefix-year') . $i
             ];
         }
 
