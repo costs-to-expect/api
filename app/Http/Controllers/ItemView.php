@@ -174,9 +174,9 @@ class ItemView extends Controller
     private function optionsAllocatedExpenseCollection(int $resource_type_id, int $resource_id): JsonResponse
     {
         $allowed_values = new AllocatedExpenseAllowedValue(
+            $this->viewable_resource_types,
             $resource_type_id,
-            $resource_id,
-            $this->viewable_resource_types
+            $resource_id
         );
 
         return (new \App\HttpOptionResponse\Item\AllocatedExpenseCollection($this->permissions($resource_type_id)))
@@ -271,9 +271,9 @@ class ItemView extends Controller
         }
 
         $allowed_values = new AllocatedExpenseAllowedValue(
+            $this->viewable_resource_types,
             $resource_type_id,
-            $resource_id,
-            $this->viewable_resource_types
+            $resource_id
         );
 
         return (new \App\HttpOptionResponse\Item\AllocatedExpense($this->permissions((int) $resource_type_id)))
