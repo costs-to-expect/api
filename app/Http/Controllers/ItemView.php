@@ -4,7 +4,9 @@ namespace App\Http\Controllers;
 
 use App\ItemType\Select;
 use App\ItemType\AllocatedExpense\AllowedValue as AllocatedExpenseAllowedValue;
+use App\ItemType\Game\AllowedValue as GameAllowedValue;
 use App\ItemType\SimpleExpense\AllowedValue as SimpleExpenseAllowedValue;
+use App\ItemType\SimpleItem\AllowedValue as SimpleItemAllowedValue;
 use Illuminate\Http\JsonResponse;
 
 /**
@@ -188,16 +190,14 @@ class ItemView extends Controller
 
     private function optionsGameCollection(int $resource_type_id, int $resource_id): JsonResponse
     {
-        $item = new \App\ItemType\Game\Item();
-        $response = new \App\HttpOptionResponse\Item\GameCollection($this->permissions($resource_type_id));
+        $allowed_values = new GameAllowedValue(
+            $this->viewable_resource_types,
+            $resource_type_id,
+            $resource_id
+        );
 
-        return $response->setAllowedValuesForParameters(
-            $item->allowedValuesForItemCollection(
-                    $resource_type_id,
-                    $resource_id,
-                    $this->viewable_resource_types
-                )
-            )
+        return (new \App\HttpOptionResponse\Item\GameCollection($this->permissions($resource_type_id)))
+            ->setAllowedValuesForParameters($allowed_values->parameterAllowedValuesForCollection())
             ->create()
             ->response();
     }
@@ -219,16 +219,14 @@ class ItemView extends Controller
 
     private function optionsSimpleItemCollection(int $resource_type_id, int $resource_id): JsonResponse
     {
-        $item = new \App\ItemType\SimpleItem\Item();
-        $response = new \App\HttpOptionResponse\Item\SimpleItemCollection($this->permissions($resource_type_id));
+        $allowed_values = new SimpleItemAllowedValue(
+            $this->viewable_resource_types,
+            $resource_type_id,
+            $resource_id
+        );
 
-        return $response->setAllowedValuesForParameters(
-            $item->allowedValuesForItemCollection(
-                    $resource_type_id,
-                    $resource_id,
-                    $this->viewable_resource_types
-                )
-            )
+        return (new \App\HttpOptionResponse\Item\SimpleItemCollection($this->permissions($resource_type_id)))
+            ->setAllowedValuesForParameters($allowed_values->parameterAllowedValuesForCollection())
             ->create()
             ->response();
     }
@@ -292,19 +290,20 @@ class ItemView extends Controller
             \App\HttpResponse\Responses::notFoundOrNotAccessible(trans('entities.item'));
         }
 
-        $item = new \App\ItemType\Game\Item();
-        $model = new \App\ItemType\Game\Models\Item();
-        $item_data = $model->single($resource_type_id, $resource_id, $item_id);
+        $item = (new \App\ItemType\Game\Models\Item())->single($resource_type_id, $resource_id, $item_id);
 
-        if ($item_data === null) {
+        if ($item === null) {
             return \App\HttpResponse\Responses::notFound(trans('entities.item'));
         }
 
-        $response = new \App\HttpOptionResponse\Item\Game($this->permissions((int) $resource_type_id));
+        $allowed_values = new GameAllowedValue(
+            $this->viewable_resource_types,
+            $resource_type_id,
+            $resource_id
+        );
 
-        return $response->setAllowedValuesForFields(
-                $item->allowedValuesForItem((int) $resource_type_id)
-            )
+        return (new \App\HttpOptionResponse\Item\Game($this->permissions((int) $resource_type_id)))
+            ->setAllowedValuesForFields($allowed_values->fieldAllowedValuesForShow())
             ->create()
             ->response();
     }
@@ -347,19 +346,20 @@ class ItemView extends Controller
             \App\HttpResponse\Responses::notFoundOrNotAccessible(trans('entities.item'));
         }
 
-        $item = new \App\ItemType\SimpleItem\Item();
-        $model = new \App\ItemType\SimpleItem\Models\Item();
-        $item_data = $model->single($resource_type_id, $resource_id, $item_id);
+        $allowed_values = new SimpleItemAllowedValue(
+            $this->viewable_resource_types,
+            $resource_type_id,
+            $resource_id
+        );
 
-        if ($item_data === null) {
+        $item = (new \App\ItemType\SimpleItem\Models\Item())->single($resource_type_id, $resource_id, $item_id);
+
+        if ($item === null) {
             return \App\HttpResponse\Responses::notFound(trans('entities.item'));
         }
 
-        $response = new \App\HttpOptionResponse\Item\SimpleItem($this->permissions((int) $resource_type_id));
-
-        return $response->setAllowedValuesForFields(
-                $item->allowedValuesForItem((int) $resource_type_id)
-            )
+        return (new \App\HttpOptionResponse\Item\SimpleItem($this->permissions((int) $resource_type_id)))
+            ->setAllowedValuesForFields($allowed_values->fieldAllowedValuesForShow())
             ->create()
             ->response();
     }

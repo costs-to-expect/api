@@ -4,7 +4,9 @@ namespace App\Http\Controllers;
 
 use App\ItemType\Select;
 use App\ItemType\AllocatedExpense\AllowedValue as AllocatedExpenseAllowedValue;
+use App\ItemType\Game\AllowedValue as GameAllowedValue;
 use App\ItemType\SimpleExpense\AllowedValue as SimpleExpenseAllowedValue;
+use App\ItemType\SimpleItem\AllowedValue as SimpleItemAllowedValue;
 use Illuminate\Http\JsonResponse;
 
 /**
@@ -109,17 +111,15 @@ class ResourceTypeItemView extends Controller
 
     private function optionsGameCollection(int $resource_type_id): JsonResponse
     {
-        $item = new \App\ItemType\Game\Item();
-        $response = new \App\HttpOptionResponse\ResourceTypeItem\GameCollection($this->permissions($resource_type_id));
+        $allowed_values = new GameAllowedValue(
+            $this->viewable_resource_types,
+            $resource_type_id
+        );
 
-        return $response->setAllowedValuesForParameters(
-            $item->allowedValuesForResourceTypeItemCollection(
-                $resource_type_id,
-                $this->viewable_resource_types
-            )
-        )
-        ->create()
-        ->response();
+        return (new \App\HttpOptionResponse\ResourceTypeItem\GameCollection($this->permissions($resource_type_id)))
+            ->setAllowedValuesForParameters($allowed_values->parameterAllowedValuesForResourceTypeCollection())
+            ->create()
+            ->response();
     }
 
     private function optionsSimpleExpenseCollection(int $resource_type_id): JsonResponse
@@ -137,16 +137,14 @@ class ResourceTypeItemView extends Controller
 
     private function optionsSimpleItemCollection(int $resource_type_id): JsonResponse
     {
-        $item = new \App\ItemType\SimpleItem\Item();
-        $response = new \App\HttpOptionResponse\ResourceTypeItem\SimpleItemCollection($this->permissions($resource_type_id));
+        $allowed_values = new SimpleItemAllowedValue(
+            $this->viewable_resource_types,
+            $resource_type_id
+        );
 
-        return $response->setAllowedValuesForParameters(
-            $item->allowedValuesForResourceTypeItemCollection(
-                $resource_type_id,
-                $this->viewable_resource_types
-            )
-        )
-        ->create()
-        ->response();
+        return (new \App\HttpOptionResponse\ResourceTypeItem\SimpleItemCollection($this->permissions($resource_type_id)))
+            ->setAllowedValuesForParameters($allowed_values->parameterAllowedValuesForResourceTypeCollection())
+            ->create()
+            ->response();
     }
 }

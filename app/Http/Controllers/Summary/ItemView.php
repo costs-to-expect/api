@@ -4,6 +4,10 @@ namespace App\Http\Controllers\Summary;
 
 use App\Http\Controllers\Controller;
 use App\HttpResponse\Responses;
+use App\ItemType\AllocatedExpense\AllowedValue as AllocatedExpenseAllowedValue;
+use App\ItemType\Game\AllowedValue as GameAllowedValue;
+use App\ItemType\SimpleExpense\AllowedValue as SimpleExpenseAllowedValue;
+use App\ItemType\SimpleItem\AllowedValue as SimpleItemAllowedValue;
 use App\ItemType\Select;
 use App\HttpOptionResponse\Item\Summary\AllocatedExpense;
 use App\HttpOptionResponse\Item\Summary\Game;
@@ -97,64 +101,56 @@ class ItemView extends Controller
 
     private function optionsAllocatedExpense(int $resource_type_id, int $resource_id): JsonResponse
     {
-        $item = new \App\ItemType\AllocatedExpense\Item();
-        $allowed_values = $item->allowedValuesForItemCollection(
+        $allowed_values = new AllocatedExpenseAllowedValue(
+            $this->viewable_resource_types,
             $resource_type_id,
-            $resource_id,
-            $this->viewable_resource_types
+            $resource_id
         );
 
-        $response = new AllocatedExpense($this->permissions($resource_type_id));
-
-        return $response->setAllowedValuesForParameters($allowed_values)
+        return (new AllocatedExpense($this->permissions($resource_type_id)))
+            ->setAllowedValuesForParameters($allowed_values->parameterAllowedValuesForCollection())
             ->create()
             ->response();
     }
 
     private function optionsGame(int $resource_type_id, int $resource_id): JsonResponse
     {
-        $item = new \App\ItemType\Game\Item();
-        $allowed_values = $item->allowedValuesForItemCollection(
+        $allowed_values = new GameAllowedValue(
+            $this->viewable_resource_types,
             $resource_type_id,
-            $resource_id,
-            $this->viewable_resource_types
+            $resource_id
         );
 
-        $response = new Game($this->permissions($resource_type_id));
-
-        return $response->setAllowedValuesForParameters($allowed_values)
+        return (new Game($this->permissions($resource_type_id)))
+            ->setAllowedValuesForParameters($allowed_values->parameterAllowedValuesForCollection())
             ->create()
             ->response();
     }
 
     private function optionsSimpleExpense(int $resource_type_id, int $resource_id): JsonResponse
     {
-        $item = new \App\ItemType\SimpleExpense\Item();
-        $allowed_values = $item->allowedValuesForItemCollection(
+        $allowed_values = new SimpleExpenseAllowedValue(
+            $this->viewable_resource_types,
             $resource_type_id,
-            $resource_id,
-            $this->viewable_resource_types
+            $resource_id
         );
 
-        $response = new SimpleExpense($this->permissions($resource_type_id));
-
-        return $response->setAllowedValuesForParameters($allowed_values)
+        return (new SimpleExpense($this->permissions($resource_type_id)))
+            ->setAllowedValuesForParameters($allowed_values->parameterAllowedValuesForCollection())
             ->create()
             ->response();
     }
 
     private function optionsSimpleItem(int $resource_type_id, int $resource_id): JsonResponse
     {
-        $item = new \App\ItemType\SimpleItem\Item();
-        $allowed_values = $item->allowedValuesForItemCollection(
+        $allowed_values = new SimpleItemAllowedValue(
+            $this->viewable_resource_types,
             $resource_type_id,
-            $resource_id,
-            $this->viewable_resource_types
+            $resource_id
         );
 
-        $response = new SimpleItem($this->permissions($resource_type_id));
-
-        return $response->setAllowedValuesForParameters($allowed_values)
+        return (new SimpleItem($this->permissions($resource_type_id)))
+            ->setAllowedValuesForParameters($allowed_values->parameterAllowedValuesForCollection())
             ->create()
             ->response();
     }
