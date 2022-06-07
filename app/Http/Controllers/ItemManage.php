@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Cache\JobPayload;
 use App\Cache\KeyGroup;
+use App\HttpRequest\Hash;
 use App\HttpResponse\Responses;
 use App\ItemType\Select;
 use App\Jobs\ClearCache;
@@ -13,7 +14,6 @@ use App\Models\ItemTransfer;
 use Exception;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Config as LaravelConfig;
 use Illuminate\Support\Facades\Date;
 use Illuminate\Support\Facades\DB;
@@ -45,6 +45,8 @@ class ItemManage extends Controller
 
     private function createAllocatedExpense(int $resource_type_id, int $resource_id): JsonResponse
     {
+        $request = request();
+
         $config_base_path = 'api.item-type-allocated-expense';
 
         $messages = [];
@@ -52,7 +54,7 @@ class ItemManage extends Controller
             $messages[$key] = trans($custom_message);
         }
 
-        $decode = $this->hash->currency()->decode(request()->input('currency_id'));
+        $decode = $this->hash->currency()->decode($request->input('currency_id'));
         $currency_id = null;
         if (count($decode) === 1) {
             $currency_id = $decode[0];
@@ -60,7 +62,7 @@ class ItemManage extends Controller
 
         $validator = ValidatorFacade::make(
             array_merge(
-                request()->all(),
+                $request->all(),
                 ['currency_id' => $currency_id]
             ),
             LaravelConfig::get($config_base_path . '.validation-post.fields', []),
@@ -70,8 +72,6 @@ class ItemManage extends Controller
         if ($validator->fails()) {
             return \App\HttpRequest\BodyValidation::returnValidationErrors($validator);
         }
-
-        $item = new \App\ItemType\AllocatedExpense\Item();
 
         $cache_job_payload = (new JobPayload())
             ->setGroupKey(KeyGroup::ITEM_CREATE)
@@ -83,13 +83,35 @@ class ItemManage extends Controller
             ->setUserId($this->user_id);
 
         try {
-            [$item_instance, $item_type_instance] = DB::transaction(function() use ($resource_id, $item) {
+            [$item_instance, $item_type_instance] = DB::transaction(function() use ($request, $resource_id) {
                 $item_instance = new Item([
                     'resource_id' => $resource_id,
                     'created_by' => $this->user_id
                 ]);
                 $item_instance->save();
-                $item_type_instance = $item->create($item_instance->id);
+
+                $hash = new Hash();
+                $currency_id = $hash->decode('currency', $request->input('currency_id'));
+
+                $item_type_instance = new \App\ItemType\AllocatedExpense\Models\Item([
+                    'item_id' => $item_instance->id,
+                    'name' => $request->input('name'),
+                    'description' => $request->input('description', null),
+                    'effective_date' => $request->input('effective_date'),
+                    'publish_after' => $request->input('publish_after', null),
+                    'currency_id' => $currency_id,
+                    'total' => $request->input('total'),
+                    'percentage' => $request->input('percentage', 100),
+                    'created_at' => Date::now(),
+                    'updated_at' => null
+                ]);
+
+                $item_type_instance->setActualisedTotal(
+                    $request->input('total'),
+                    $request->input('percentage', 100)
+                );
+
+                $item_type_instance->save();
 
                 return [$item_instance, $item_type_instance];
             });
@@ -109,6 +131,8 @@ class ItemManage extends Controller
 
     private function createGame(int $resource_type_id, int $resource_id): JsonResponse
     {
+        $request = request();
+
         $config_base_path = 'api.item-type-game';
 
         $messages = [];
@@ -117,7 +141,7 @@ class ItemManage extends Controller
         }
 
         $validator = ValidatorFacade::make(
-            request()->all(),
+            $request->all(),
             LaravelConfig::get($config_base_path . '.validation-post.fields', []),
             $messages
         );
@@ -125,8 +149,6 @@ class ItemManage extends Controller
         if ($validator->fails()) {
             return \App\HttpRequest\BodyValidation::returnValidationErrors($validator);
         }
-
-        $item = new \App\ItemType\Game\Item();
 
         $cache_job_payload = (new JobPayload())
             ->setGroupKey(KeyGroup::ITEM_CREATE)
@@ -138,13 +160,25 @@ class ItemManage extends Controller
             ->setUserId($this->user_id);
 
         try {
-            [$item_instance, $item_type_instance] = DB::transaction(function() use ($resource_id, $item) {
+            [$item_instance, $item_type_instance] = DB::transaction(function() use ($request, $resource_id) {
+
                 $item_instance = new Item([
                     'resource_id' => $resource_id,
                     'created_by' => $this->user_id
                 ]);
                 $item_instance->save();
-                $item_type_instance = $item->create($item_instance->id);
+
+                $item_type_instance = new \App\ItemType\Game\Models\Item([
+                    'item_id' => $item_instance->id,
+                    'name' => $request->input('name'),
+                    'description' => $request->input('description', null),
+                    'game' => "{\"turns\": []}",
+                    'statistics' => "{\"turns\": 0, \"scores\": []}",
+                    'created_at' => Date::now(),
+                    'updated_at' => null
+                ]);
+
+                $item_type_instance->save();
 
                 return [$item_instance, $item_type_instance];
             });
@@ -164,6 +198,8 @@ class ItemManage extends Controller
 
     private function createSimpleExpense(int $resource_type_id, int $resource_id): JsonResponse
     {
+        $request = request();
+
         $config_base_path = 'api.item-type-simple-expense';
 
         $messages = [];
@@ -171,7 +207,7 @@ class ItemManage extends Controller
             $messages[$key] = trans($custom_message);
         }
 
-        $decode = $this->hash->currency()->decode(request()->input('currency_id'));
+        $decode = $this->hash->currency()->decode($request->input('currency_id'));
         $currency_id = null;
         if (count($decode) === 1) {
             $currency_id = $decode[0];
@@ -179,7 +215,7 @@ class ItemManage extends Controller
 
         $validator = ValidatorFacade::make(
             array_merge(
-                request()->all(),
+                $request->all(),
                 ['currency_id' => $currency_id]
             ),
             LaravelConfig::get($config_base_path . '.validation-post.fields', []),
@@ -189,8 +225,6 @@ class ItemManage extends Controller
         if ($validator->fails()) {
             return \App\HttpRequest\BodyValidation::returnValidationErrors($validator);
         }
-
-        $item = new \App\ItemType\SimpleExpense\Item();
 
         $cache_job_payload = (new JobPayload())
             ->setGroupKey(KeyGroup::ITEM_CREATE)
@@ -202,13 +236,27 @@ class ItemManage extends Controller
             ->setUserId($this->user_id);
 
         try {
-            [$item_instance, $item_type_instance] = DB::transaction(function() use ($resource_id, $item) {
+            [$item_instance, $item_type_instance] = DB::transaction(function() use ($request, $resource_id) {
                 $item_instance = new Item([
                     'resource_id' => $resource_id,
                     'created_by' => $this->user_id
                 ]);
                 $item_instance->save();
-                $item_type_instance = $item->create($item_instance->id);
+
+                $hash = new Hash();
+                $currency_id = $hash->decode('currency', $request->input('currency_id'));
+
+                $item_type_instance = new \App\ItemType\SimpleExpense\Models\Item([
+                    'item_id' => $item_instance->id,
+                    'name' => $request->input('name'),
+                    'description' => $request->input('description', null),
+                    'currency_id' => $currency_id,
+                    'total' => $request->input('total'),
+                    'created_at' => Date::now(),
+                    'updated_at' => null
+                ]);
+
+                $item_type_instance->save();
 
                 return [$item_instance, $item_type_instance];
             });
@@ -313,9 +361,11 @@ class ItemManage extends Controller
 
     private function updateAllocatedExpense(int $resource_type_id, int $resource_id, int $item_id): JsonResponse
     {
+        $request = request();
+
         $config_base_path = 'api.item-type-allocated-expense';
 
-        if (count(request()->all()) === 0) {
+        if (count($request->all()) === 0) {
             return Responses::nothingToPatch();
         }
 
@@ -328,8 +378,8 @@ class ItemManage extends Controller
         }
 
         $merge_array = [];
-        if (array_key_exists('currency_id', request()->all())) {
-            $decode = $this->hash->currency()->decode(request()->input('currency_id'));
+        if (array_key_exists('currency_id', $request->all())) {
+            $decode = $this->hash->currency()->decode($request->input('currency_id'));
             $currency_id = null;
             if (count($decode) === 1) {
                 $currency_id = $decode[0];
@@ -345,7 +395,7 @@ class ItemManage extends Controller
 
         $validator = ValidatorFacade::make(
             array_merge(
-                request()->all(),
+                $request->all(),
                 $merge_array
             ),
             LaravelConfig::get($config_base_path . '.validation-patch.fields', []),
@@ -374,12 +424,31 @@ class ItemManage extends Controller
 
         try {
             $item_instance->updated_by = $this->user_id;
+            $item_instance->updated_at = Date::now();
 
-            DB::transaction(static function() use ($item_instance, $item_type_instance) {
-                if ($item_instance->save() === true) {
-                    $allocated_expense = new \App\ItemType\AllocatedExpense\Item();
-                    $allocated_expense->update(request()->all(), $item_type_instance);
+            DB::transaction(static function() use ($request, $item_instance, $item_type_instance) {
+
+                $set_actualised = false;
+                foreach ($request->all() as $key => $value) {
+                    $item_type_instance->$key = $value;
+
+                    if (in_array($key, ['total', 'percentage']) === true) {
+                        $set_actualised = true;
+                    }
+
+                    if ($key === 'currency_id') {
+                        $hash = new Hash();
+                        $item_type_instance->$key = $hash->decode('currency', $request->input('currency_id'));
+                    }
                 }
+
+                if ($set_actualised === true) {
+                    $item_type_instance->setActualisedTotal($item_type_instance->total, $item_type_instance->percentage);
+                }
+
+                $item_type_instance->updated_at = Date::now();
+
+                return $item_instance->save() && $item_type_instance->save();
             });
 
             ClearCache::dispatch($cache_job_payload->payload());
@@ -393,9 +462,11 @@ class ItemManage extends Controller
 
     private function updateGame(int $resource_type_id, int $resource_id, int $item_id): JsonResponse
     {
+        $request = request();
+
         $config_base_path = 'api.item-type-game';
 
-        if (count(request()->all()) === 0) {
+        if (count($request->all()) === 0) {
             return Responses::nothingToPatch();
         }
 
@@ -408,8 +479,8 @@ class ItemManage extends Controller
         }
 
         $merge_array = [];
-        if (array_key_exists('winner_id', request()->all())) {
-            $decode = $this->hash->category()->decode(request()->input('winner_id'));
+        if (array_key_exists('winner_id', $request->all())) {
+            $decode = $this->hash->category()->decode($request->input('winner_id'));
             $winner_id = null;
             if (count($decode) === 1) {
                 $winner_id = $decode[0];
@@ -425,7 +496,7 @@ class ItemManage extends Controller
 
         $validator = ValidatorFacade::make(
             array_merge(
-                request()->all(),
+                $request->all(),
                 $merge_array
             ),
             LaravelConfig::get($config_base_path . '.validation-patch.fields', []),
@@ -454,12 +525,30 @@ class ItemManage extends Controller
 
         try {
             $item_instance->updated_by = $this->user_id;
+            $item_instance->updated_at = Date::now();
 
-            DB::transaction(static function() use ($item_instance, $item_type_instance) {
-                if ($item_instance->save() === true) {
-                    $allocated_expense = new \App\ItemType\Game\Item();
-                    $allocated_expense->update(request()->all(), $item_type_instance);
+            DB::transaction(static function() use ($request, $item_instance, $item_type_instance) {
+
+                foreach ($request->all() as $key => $value) {
+                    if ($key === 'winner_id') {
+                        $key = 'winner';
+
+                        if ($value !== null) {
+                            $winner = (new Hash())->decode('category', $request->input('winner_id'));
+
+                            $value = null;
+                            if ($winner !== false) {
+                                $value = $winner;
+                            }
+                        }
+                    }
+
+                    $item_type_instance->$key = $value;
                 }
+
+                $item_type_instance->updated_at = Date::now();
+
+                return $item_instance->save() && $item_type_instance->save();
             });
 
             ClearCache::dispatch($cache_job_payload->payload());
@@ -473,9 +562,11 @@ class ItemManage extends Controller
 
     private function updateSimpleExpense(int $resource_type_id, int $resource_id, int $item_id): JsonResponse
     {
+        $request = request();
+
         $config_base_path = 'api.item-type-simple-expense';
 
-        if (count(request()->all()) === 0) {
+        if (count($request->all()) === 0) {
             return Responses::nothingToPatch();
         }
 
@@ -488,8 +579,8 @@ class ItemManage extends Controller
         }
 
         $merge_array = [];
-        if (array_key_exists('currency_id', request()->all())) {
-            $decode = $this->hash->currency()->decode(request()->input('currency_id'));
+        if (array_key_exists('currency_id', $request->all())) {
+            $decode = $this->hash->currency()->decode($request->input('currency_id'));
             $currency_id = null;
             if (count($decode) === 1) {
                 $currency_id = $decode[0];
@@ -505,7 +596,7 @@ class ItemManage extends Controller
 
         $validator = ValidatorFacade::make(
             array_merge(
-                request()->all(),
+                $request->all(),
                 $merge_array
             ),
             LaravelConfig::get($config_base_path . '.validation-patch.fields', []),
@@ -534,12 +625,22 @@ class ItemManage extends Controller
 
         try {
             $item_instance->updated_by = $this->user_id;
+            $item_instance->updated_at = Date::now();
 
-            DB::transaction(static function() use ($item_instance, $item_type_instance) {
-                if ($item_instance->save() === true) {
-                    $allocated_expense = new \App\ItemType\SimpleExpense\Item();
-                    $allocated_expense->update(request()->all(), $item_type_instance);
+            DB::transaction(static function() use ($request, $item_instance, $item_type_instance) {
+
+                foreach ($request->all() as $key => $value) {
+                    $item_type_instance->$key = $value;
+
+                    if ($key === 'currency_id') {
+                        $hash = new Hash();
+                        $item_type_instance->$key = $hash->decode('currency', $request->input('currency_id'));
+                    }
                 }
+
+                $item_type_instance->updated_at = Date::now();
+
+                return $item_instance->save() && $item_type_instance->save();
             });
 
             ClearCache::dispatch($cache_job_payload->payload());
@@ -606,6 +707,7 @@ class ItemManage extends Controller
 
         try {
             $item_instance->updated_by = $this->user_id;
+            $item_instance->updated_at = Date::now();
 
             DB::transaction(static function() use ($request, $item_instance, $item_type_instance) {
 
