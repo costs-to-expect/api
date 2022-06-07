@@ -27,7 +27,7 @@ class ItemTransferManage extends Controller
     ): JsonResponse
     {
         if ($this->writeAccessToResourceType((int) $resource_type_id) === false) {
-            \App\HttpResponse\Responses::notFoundOrNotAccessible(trans('entities.item'));
+            return \App\HttpResponse\Responses::notFoundOrNotAccessible(trans('entities.item'));
         }
 
         $item_type = Select::itemType((int) $resource_type_id);

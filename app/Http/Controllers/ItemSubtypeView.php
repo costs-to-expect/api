@@ -25,7 +25,7 @@ class ItemSubtypeView extends Controller
     public function index($item_type_id): JsonResponse
     {
         if (Route\Validate\ItemType::existsToUserForViewing($item_type_id) === false) {
-            Responses::notFound(trans('entities.item-subtype'));
+            return Responses::notFound(trans('entities.item-subtype'));
         }
 
         $cache_control = new \App\Cache\Control();
@@ -87,7 +87,7 @@ class ItemSubtypeView extends Controller
     public function show($item_type_id, $item_subtype_id): JsonResponse
     {
         if (Route\Validate\ItemSubtype::existsToUserForViewing($item_type_id, $item_subtype_id) === false) {
-            Responses::notFound(trans('entities.item-subtype'));
+            return Responses::notFound(trans('entities.item-subtype'));
         }
 
         $subtype = (new ItemSubtype())->single(
@@ -112,7 +112,7 @@ class ItemSubtypeView extends Controller
     public function optionsIndex($item_type_id): JsonResponse
     {
         if (Route\Validate\ItemType::existsToUserForViewing($item_type_id) === false) {
-            Responses::notFound(trans('entities.item-subtype'));
+            return Responses::notFound(trans('entities.item-subtype'));
         }
 
         $response = new ItemSubtypeCollection(['view'=> $this->user_id !== null]);
@@ -123,7 +123,7 @@ class ItemSubtypeView extends Controller
     public function optionsShow($item_type_id, $item_subtype_id): JsonResponse
     {
         if (Route\Validate\ItemSubtype::existsToUserForViewing($item_type_id, $item_subtype_id) === false) {
-            Responses::notFound(trans('entities.item-subtype'));
+            return Responses::notFound(trans('entities.item-subtype'));
         }
 
         $response = new ItemSubtypeItem(['view'=> $this->user_id !== null]);

@@ -22,7 +22,7 @@ class PermittedUserManage extends Controller
     public function create(string $resource_type_id): JsonResponse
     {
         if ($this->writeAccessToResourceType((int) $resource_type_id) === false) {
-            \App\HttpResponse\Responses::notFoundOrNotAccessible(trans('entities.resource-type'));
+            return \App\HttpResponse\Responses::notFoundOrNotAccessible(trans('entities.resource-type'));
         }
 
         $resource_type = (new ResourceType())->single(
@@ -35,7 +35,7 @@ class PermittedUserManage extends Controller
         ]);
 
         if ($validator->fails()) {
-            \App\HttpRequest\BodyValidation::returnValidationErrors($validator);
+            return \App\HttpRequest\BodyValidation::returnValidationErrors($validator);
         }
 
         $cache_job_payload = (new \App\Cache\JobPayload())
@@ -90,7 +90,7 @@ class PermittedUserManage extends Controller
     ): JsonResponse
     {
         if ($this->writeAccessToResourceType((int) $resource_type_id) === false) {
-            \App\HttpResponse\Responses::notFoundOrNotAccessible(trans('entities.permitted-user'));
+            return \App\HttpResponse\Responses::notFoundOrNotAccessible(trans('entities.permitted-user'));
         }
 
         $permitted_user = (new PermittedUser())->instance($resource_type_id, $permitted_user_id);

@@ -29,7 +29,7 @@ class CategoryManage extends Controller
     public function create($resource_type_id): JsonResponse
     {
         if ($this->writeAccessToResourceType((int) $resource_type_id) === false) {
-            \App\HttpResponse\Responses::notFoundOrNotAccessible(trans('entities.resource-type'));
+            return \App\HttpResponse\Responses::notFoundOrNotAccessible(trans('entities.resource-type'));
         }
 
         $validator = (new CategoryValidator)->create([
@@ -81,7 +81,7 @@ class CategoryManage extends Controller
     ): JsonResponse
     {
         if ($this->writeAccessToResourceType((int) $resource_type_id) === false) {
-            \App\HttpResponse\Responses::notFoundOrNotAccessible(trans('entities.item-category'));
+            return \App\HttpResponse\Responses::notFoundOrNotAccessible(trans('entities.item-category'));
         }
 
         $cache_job_payload = (new \App\Cache\JobPayload())
@@ -121,7 +121,7 @@ class CategoryManage extends Controller
     public function update($resource_type_id, $category_id): JsonResponse
     {
         if ($this->writeAccessToResourceType((int) $resource_type_id) === false) {
-            \App\HttpResponse\Responses::notFoundOrNotAccessible(trans('entities.item-category'));
+            return \App\HttpResponse\Responses::notFoundOrNotAccessible(trans('entities.item-category'));
         }
 
         $category = (new Category())->instance($category_id);

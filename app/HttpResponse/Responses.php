@@ -55,11 +55,10 @@ class Responses
             $response = self::addException($response, $e);
         }
 
-        response()->json(
+        return response()->json(
             $response,
             404
-        )->send();
-        exit;
+        );
     }
 
     /**
@@ -81,11 +80,10 @@ class Responses
             $response = self::addException($response, $e);
         }
 
-        response()->json(
+        return response()->json(
             $response,
             ($type !== null ? 404 : 403)
-        )->send();
-        exit;
+        );
     }
 
     /**
@@ -106,11 +104,10 @@ class Responses
             $response = self::addException($response, $e);
         }
 
-        response()->json(
+        return response()->json(
             $response,
             409
-        )->send();
-        exit;
+        );
     }
 
     /**
@@ -133,11 +130,10 @@ class Responses
             $response = self::addException($response, $e);
         }
 
-        response()->json(
+        return response()->json(
             $response,
             500
-        )->send();
-        exit();
+        );
     }
 
     /**
@@ -160,11 +156,10 @@ class Responses
             $response = self::addException($response, $e);
         }
 
-        response()->json(
+        return response()->json(
             $response,
             500
-        )->send();
-        exit();
+        );
     }
 
     /**
@@ -201,10 +196,8 @@ class Responses
             $response = self::addException($response, $e);
         }
 
-        response()
-            ->json($response,400)
-            ->send();
-        exit();
+        return response()
+            ->json($response,400);
     }
 
     public static function notSupported(?Exception $e = null): JsonResponse
@@ -217,10 +210,8 @@ class Responses
             $response = self::addException($response, $e);
         }
 
-        response()
-            ->json($response,405)
-            ->send();
-        exit();
+        return response()
+            ->json($response,405);
     }
 
     /**
@@ -243,11 +234,10 @@ class Responses
             $response = self::addException($response, $e);
         }
 
-        response()->json(
+        return response()->json(
             $response,
             500
-        )->send();
-        exit();
+        );
     }
 
     /**
@@ -268,11 +258,10 @@ class Responses
             $response = self::addException($response, $e);
         }
 
-        response()->json(
+        return response()->json(
             $response,
             500
-        )->send();
-        exit;
+        );
     }
 
     /**
@@ -304,10 +293,8 @@ class Responses
             $response = self::addException($response, $e);
         }
 
-        response()
-            ->json($response,400)
-            ->send();
-        exit();
+        return response()
+            ->json($response,400);
     }
 
     /**
@@ -326,8 +313,7 @@ class Responses
             $response = self::addException($response, $e);
         }
 
-        response()->json($response,200)->send();
-        exit;
+        return response()->json($response,200);
     }
 
     /**
@@ -372,11 +358,10 @@ class Responses
             $response = self::addException($response, $e);
         }
 
-        response()->json(
+        return response()->json(
             $response,
             400
-        )->send();
-        exit();
+        );
     }
 
     /**
@@ -396,11 +381,10 @@ class Responses
             $response = self::addException($response, $e);
         }
 
-        response()->json(
+        return response()->json(
             $response,
             503
-        )->send();
-        exit();
+        );
     }
 
     /**
@@ -422,10 +406,9 @@ class Responses
             $response = self::addException($response, $e);
         }
 
-        response()->json(
+        return response()->json(
             $response,
             422
-        )->send();
-        exit();
+        );
     }
 }

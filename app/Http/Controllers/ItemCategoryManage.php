@@ -27,7 +27,7 @@ class ItemCategoryManage extends Controller
     ): JsonResponse
     {
         if ($this->writeAccessToResourceType((int) $resource_type_id) === false) {
-            Responses::notFoundOrNotAccessible(trans('entities.resource'));
+            return Responses::notFoundOrNotAccessible(trans('entities.resource'));
         }
 
         $item_type = Select::itemType((int) $resource_type_id);
@@ -123,7 +123,7 @@ class ItemCategoryManage extends Controller
     ): JsonResponse
     {
         if ($this->writeAccessToResourceType((int) $resource_type_id) === false) {
-            Responses::notFoundOrNotAccessible(trans('entities.resource'));
+            return Responses::notFoundOrNotAccessible(trans('entities.resource'));
         }
 
         $item_type = Select::itemType((int) $resource_type_id);

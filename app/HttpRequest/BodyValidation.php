@@ -40,11 +40,6 @@ class BodyValidation
         return $invalid_fields;
     }
 
-    public static function returnInvalidFieldsInRequest(array $invalid_fields)
-    {
-        return \App\HttpResponse\Responses::invalidFieldsInRequest($invalid_fields);
-    }
-
     public static function returnValidationErrors( // Rename this
         Validator $validator,
         array $allowed_values = []
@@ -61,6 +56,6 @@ class BodyValidation
             $validation_errors = array_merge_recursive($validation_errors, $allowed_values);
         }
 
-        return \App\HttpResponse\Responses::validationErrors($validation_errors)->send();
+        return \App\HttpResponse\Responses::validationErrors($validation_errors);
     }
 }

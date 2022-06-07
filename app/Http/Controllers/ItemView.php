@@ -22,7 +22,7 @@ class ItemView extends Controller
     ): JsonResponse
     {
         if ($this->viewAccessToResourceType((int) $resource_type_id) === false) {
-            \App\HttpResponse\Responses::notFoundOrNotAccessible(trans('entities.resource'));
+            return \App\HttpResponse\Responses::notFoundOrNotAccessible(trans('entities.resource'));
         }
 
         $item_type = Select::itemType((int) $resource_type_id);
@@ -91,7 +91,7 @@ class ItemView extends Controller
     ): JsonResponse
     {
         if ($this->viewAccessToResourceType((int) $resource_type_id) === false) {
-            \App\HttpResponse\Responses::notFoundOrNotAccessible(trans('entities.resource'));
+            return \App\HttpResponse\Responses::notFoundOrNotAccessible(trans('entities.resource'));
         }
 
         $item_type = Select::itemType((int) $resource_type_id);
@@ -159,7 +159,7 @@ class ItemView extends Controller
     ): JsonResponse
     {
         if ($this->viewAccessToResourceType((int) $resource_type_id) === false) {
-            \App\HttpResponse\Responses::notFoundOrNotAccessible(trans('entities.resource'));
+            return \App\HttpResponse\Responses::notFoundOrNotAccessible(trans('entities.resource'));
         }
 
         $item_type = Select::itemType((int) $resource_type_id);

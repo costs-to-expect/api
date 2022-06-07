@@ -24,7 +24,7 @@ class ItemPartialTransferView extends Controller
     public function index($resource_type_id): JsonResponse
     {
         if ($this->viewAccessToResourceType((int) $resource_type_id) === false) {
-            \App\HttpResponse\Responses::notFoundOrNotAccessible(trans('entities.resource-type'));
+            return \App\HttpResponse\Responses::notFoundOrNotAccessible(trans('entities.resource-type'));
         }
 
         $item_type = Select::itemType((int) $resource_type_id);

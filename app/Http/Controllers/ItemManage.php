@@ -29,7 +29,7 @@ class ItemManage extends Controller
     public function create(string $resource_type_id, string $resource_id): JsonResponse
     {
         if ($this->writeAccessToResourceType((int) $resource_type_id) === false) {
-            Responses::notFoundOrNotAccessible(trans('entities.resource'));
+            return Responses::notFoundOrNotAccessible(trans('entities.resource'));
         }
 
         $item_type = Select::itemType((int) $resource_type_id);

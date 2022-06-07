@@ -34,7 +34,7 @@ class ResourceView extends Controller
     public function index(string $resource_type_id): JsonResponse
     {
         if ($this->viewAccessToResourceType((int) $resource_type_id) === false) {
-            \App\HttpResponse\Responses::notFoundOrNotAccessible(trans('entities.resource-type'));
+            return \App\HttpResponse\Responses::notFoundOrNotAccessible(trans('entities.resource-type'));
         }
 
         $cache_control = new \App\Cache\Control(
@@ -121,7 +121,7 @@ class ResourceView extends Controller
     ): JsonResponse
     {
         if ($this->viewAccessToResourceType((int) $resource_type_id) === false) {
-            \App\HttpResponse\Responses::notFoundOrNotAccessible(trans('entities.resource'));
+            return \App\HttpResponse\Responses::notFoundOrNotAccessible(trans('entities.resource'));
         }
 
         $resource = (new Resource)->single($resource_type_id, $resource_id);
@@ -143,7 +143,7 @@ class ResourceView extends Controller
     public function optionsIndex(string $resource_type_id): JsonResponse
     {
         if ($this->viewAccessToResourceType((int) $resource_type_id) === false) {
-            \App\HttpResponse\Responses::notFoundOrNotAccessible(trans('entities.resource-type'));
+            return \App\HttpResponse\Responses::notFoundOrNotAccessible(trans('entities.resource-type'));
         }
 
         $resource_type = (new ResourceType())->single(
@@ -161,7 +161,7 @@ class ResourceView extends Controller
     public function optionsShow(string $resource_type_id, string $resource_id): JsonResponse
     {
         if ($this->viewAccessToResourceType((int) $resource_type_id) === false) {
-            \App\HttpResponse\Responses::notFoundOrNotAccessible(trans('entities.resource'));
+            return \App\HttpResponse\Responses::notFoundOrNotAccessible(trans('entities.resource'));
         }
 
         $resource = (new Resource)->single(

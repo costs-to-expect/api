@@ -96,7 +96,7 @@ class ResourceTypeManage extends Controller
     ): JsonResponse
     {
         if ($this->writeAccessToResourceType((int) $resource_type_id) === false) {
-            \App\HttpResponse\Responses::notFoundOrNotAccessible(trans('entities.resource-type'));
+            return \App\HttpResponse\Responses::notFoundOrNotAccessible(trans('entities.resource-type'));
         }
 
         $resource_type_item_type = (new ResourceTypeItemType())->instance($resource_type_id);
@@ -156,7 +156,7 @@ class ResourceTypeManage extends Controller
     ): JsonResponse
     {
         if ($this->writeAccessToResourceType((int) $resource_type_id) === false) {
-            \App\HttpResponse\Responses::notFoundOrNotAccessible(trans('entities.resource-type'));
+            return \App\HttpResponse\Responses::notFoundOrNotAccessible(trans('entities.resource-type'));
         }
 
         $resource_type = (new ResourceType())->instance($resource_type_id);

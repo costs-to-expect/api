@@ -33,7 +33,7 @@ class SubcategoryManage extends Controller
     public function create($resource_type_id, $category_id): JsonResponse
     {
         if ($this->writeAccessToResourceType((int) $resource_type_id) === false) {
-            \App\HttpResponse\Responses::notFoundOrNotAccessible(trans('entities.category'));
+            return \App\HttpResponse\Responses::notFoundOrNotAccessible(trans('entities.category'));
         }
 
         $validator = (new SubcategoryValidator)->create(['category_id' => $category_id]);
@@ -87,7 +87,7 @@ class SubcategoryManage extends Controller
     ): JsonResponse
     {
         if ($this->writeAccessToResourceType((int) $resource_type_id) === false) {
-            \App\HttpResponse\Responses::notFoundOrNotAccessible(trans('entities.subcategory'));
+            return \App\HttpResponse\Responses::notFoundOrNotAccessible(trans('entities.subcategory'));
         }
 
         $sub_category = (new Subcategory())->instance(
@@ -137,7 +137,7 @@ class SubcategoryManage extends Controller
     ): JsonResponse
     {
         if ($this->writeAccessToResourceType((int) $resource_type_id) === false) {
-            \App\HttpResponse\Responses::notFoundOrNotAccessible(trans('entities.subcategory'));
+            return \App\HttpResponse\Responses::notFoundOrNotAccessible(trans('entities.subcategory'));
         }
 
         $subcategory = (new Subcategory())->instance($category_id, $subcategory_id);

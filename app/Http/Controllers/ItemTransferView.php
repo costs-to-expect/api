@@ -27,7 +27,7 @@ class ItemTransferView extends Controller
     public function index($resource_type_id): JsonResponse
     {
         if ($this->viewAccessToResourceType((int) $resource_type_id) === false) {
-            \App\HttpResponse\Responses::notFoundOrNotAccessible(trans('entities.item-transfer'));
+            return \App\HttpResponse\Responses::notFoundOrNotAccessible(trans('entities.item-transfer'));
         }
 
         $item_type = Select::itemType((int) $resource_type_id);
@@ -97,7 +97,7 @@ class ItemTransferView extends Controller
     public function optionsIndex($resource_type_id): JsonResponse
     {
         if ($this->viewAccessToResourceType((int) $resource_type_id) === false) {
-            \App\HttpResponse\Responses::notFoundOrNotAccessible(trans('entities.item'));
+            return \App\HttpResponse\Responses::notFoundOrNotAccessible(trans('entities.item'));
         }
 
         $item_type = Select::itemType((int) $resource_type_id);
@@ -127,7 +127,7 @@ class ItemTransferView extends Controller
     public function optionsShow($resource_type_id, $item_transfer_id): JsonResponse
     {
         if ($this->viewAccessToResourceType((int) $resource_type_id) === false) {
-            \App\HttpResponse\Responses::notFoundOrNotAccessible(trans('entities.resource-type'));
+            return \App\HttpResponse\Responses::notFoundOrNotAccessible(trans('entities.resource-type'));
         }
 
         $item_type = Select::itemType((int) $resource_type_id);
@@ -161,7 +161,7 @@ class ItemTransferView extends Controller
     ): JsonResponse
     {
         if ($this->viewAccessToResourceType((int) $resource_type_id) === false) {
-            \App\HttpResponse\Responses::notFoundOrNotAccessible(trans('entities.item'));
+            return \App\HttpResponse\Responses::notFoundOrNotAccessible(trans('entities.item'));
         }
 
         $item_type = Select::itemType((int) $resource_type_id);
@@ -214,7 +214,7 @@ class ItemTransferView extends Controller
     ): JsonResponse
     {
         if ($this->viewAccessToResourceType((int) $resource_type_id) === false) {
-            \App\HttpResponse\Responses::notFoundOrNotAccessible(trans('entities.item-transfer'));
+            return \App\HttpResponse\Responses::notFoundOrNotAccessible(trans('entities.item-transfer'));
         }
 
         $item_type = Select::itemType((int) $resource_type_id);

@@ -33,7 +33,7 @@ class ResourceManage extends Controller
     public function create(string $resource_type_id): JsonResponse
     {
         if ($this->writeAccessToResourceType((int) $resource_type_id) === false) {
-            \App\HttpResponse\Responses::notFoundOrNotAccessible(trans('entities.resource-type'));
+            return \App\HttpResponse\Responses::notFoundOrNotAccessible(trans('entities.resource-type'));
         }
 
         $resource_type = (new ResourceType())->single(
@@ -109,7 +109,7 @@ class ResourceManage extends Controller
     ): JsonResponse
     {
         if ($this->writeAccessToResourceType((int) $resource_type_id) === false) {
-            \App\HttpResponse\Responses::notFoundOrNotAccessible(trans('entities.resource'));
+            return \App\HttpResponse\Responses::notFoundOrNotAccessible(trans('entities.resource'));
         }
 
         $resource = (new Resource())->instance($resource_type_id, $resource_id);
@@ -158,7 +158,7 @@ class ResourceManage extends Controller
     ): JsonResponse
     {
         if ($this->writeAccessToResourceType((int) $resource_type_id) === false) {
-            \App\HttpResponse\Responses::notFoundOrNotAccessible(trans('entities.resource'));
+            return \App\HttpResponse\Responses::notFoundOrNotAccessible(trans('entities.resource'));
         }
 
         $resource = (new Resource())->instance($resource_type_id, $resource_id);

@@ -25,7 +25,7 @@ class SubcategoryView extends Controller
     public function index($resource_type_id, $category_id): JsonResponse
     {
         if ($this->viewAccessToResourceType((int) $resource_type_id) === false) {
-            \App\HttpResponse\Responses::notFoundOrNotAccessible(trans('entities.category'));
+            return \App\HttpResponse\Responses::notFoundOrNotAccessible(trans('entities.category'));
         }
 
         $cache_control = new \App\Cache\Control(
@@ -115,7 +115,7 @@ class SubcategoryView extends Controller
     ): JsonResponse
     {
         if ($this->viewAccessToResourceType((int) $resource_type_id) === false) {
-            \App\HttpResponse\Responses::notFoundOrNotAccessible(trans('entities.subcategory'));
+            return \App\HttpResponse\Responses::notFoundOrNotAccessible(trans('entities.subcategory'));
         }
 
         $subcategory = (new Subcategory())->single(
@@ -148,7 +148,7 @@ class SubcategoryView extends Controller
     public function optionsIndex($resource_type_id, $category_id): JsonResponse
     {
         if ($this->viewAccessToResourceType((int) $resource_type_id) === false) {
-            \App\HttpResponse\Responses::notFoundOrNotAccessible(trans('entities.category'));
+            return \App\HttpResponse\Responses::notFoundOrNotAccessible(trans('entities.category'));
         }
 
         $response = new SubcategoryCollection($this->permissions((int) $resource_type_id));
@@ -172,7 +172,7 @@ class SubcategoryView extends Controller
     ): JsonResponse
     {
         if ($this->viewAccessToResourceType((int) $resource_type_id) === false) {
-            \App\HttpResponse\Responses::notFoundOrNotAccessible(trans('entities.subcategory'));
+            return \App\HttpResponse\Responses::notFoundOrNotAccessible(trans('entities.subcategory'));
         }
 
         $response = new SubcategoryItem($this->permissions((int) $resource_type_id));

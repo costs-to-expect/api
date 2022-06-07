@@ -28,7 +28,7 @@ class Boolean
 
     /**
      * Check to see if the provided value can be turned into a boolean,
-     * we use filter_var s0 true, 1, "true" and "on" are all valid positive
+     * we use filter_var so true, 1, "true" and "on" are all valid positive
      * boolean values, valid false values are false, 0, "false" and "off"
      *
      * @param mixed $value Value to check to see if it is a possible boolean

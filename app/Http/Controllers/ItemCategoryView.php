@@ -25,7 +25,7 @@ class ItemCategoryView extends Controller
     public function index(string $resource_type_id, string $resource_id, string $item_id): JsonResponse
     {
         if ($this->viewAccessToResourceType((int) $resource_type_id) === false) {
-            \App\HttpResponse\Responses::notFoundOrNotAccessible(trans('entities.item'));
+            return \App\HttpResponse\Responses::notFoundOrNotAccessible(trans('entities.item'));
         }
 
         $item_type = Select::itemType((int) $resource_type_id);
@@ -87,7 +87,7 @@ class ItemCategoryView extends Controller
     ): JsonResponse
     {
         if ($this->viewAccessToResourceType((int) $resource_type_id) === false) {
-            \App\HttpResponse\Responses::notFoundOrNotAccessible(trans('entities.item'));
+            return \App\HttpResponse\Responses::notFoundOrNotAccessible(trans('entities.item'));
         }
 
         if ($item_category_id === null) {
@@ -134,7 +134,7 @@ class ItemCategoryView extends Controller
     public function optionsIndex(string $resource_type_id, string $resource_id, string $item_id): JsonResponse
     {
         if ($this->viewAccessToResourceType((int) $resource_type_id) === false) {
-            \App\HttpResponse\Responses::notFoundOrNotAccessible(trans('entities.item'));
+            return \App\HttpResponse\Responses::notFoundOrNotAccessible(trans('entities.item'));
         }
 
         $item_type = Select::itemType((int) $resource_type_id);
@@ -151,7 +151,7 @@ class ItemCategoryView extends Controller
     private function optionsAllocatedExpenseCollection(int $resource_type_id): JsonResponse
     {
         if ($this->viewAccessToResourceType((int) $resource_type_id) === false) {
-            \App\HttpResponse\Responses::notFoundOrNotAccessible(trans('entities.item'));
+            return \App\HttpResponse\Responses::notFoundOrNotAccessible(trans('entities.item'));
         }
 
         $response = new AllocatedExpenseCollection($this->permissions((int) $resource_type_id));
@@ -166,7 +166,7 @@ class ItemCategoryView extends Controller
     private function optionsGameCollection(int $resource_type_id): JsonResponse
     {
         if ($this->viewAccessToResourceType($resource_type_id) === false) {
-            \App\HttpResponse\Responses::notFoundOrNotAccessible(trans('entities.item'));
+            return \App\HttpResponse\Responses::notFoundOrNotAccessible(trans('entities.item'));
         }
 
         $response = new GameCollection($this->permissions($resource_type_id));
@@ -181,7 +181,7 @@ class ItemCategoryView extends Controller
     private function optionsSimpleExpenseCollection(int $resource_type_id): JsonResponse
     {
         if ($this->viewAccessToResourceType($resource_type_id) === false) {
-            \App\HttpResponse\Responses::notFoundOrNotAccessible(trans('entities.item'));
+            return \App\HttpResponse\Responses::notFoundOrNotAccessible(trans('entities.item'));
         }
 
         $response = new SimpleExpenseCollection($this->permissions($resource_type_id));
@@ -201,7 +201,7 @@ class ItemCategoryView extends Controller
     ): JsonResponse
     {
         if ($this->viewAccessToResourceType((int) $resource_type_id) === false) {
-            \App\HttpResponse\Responses::notFoundOrNotAccessible(trans('entities.item'));
+            return \App\HttpResponse\Responses::notFoundOrNotAccessible(trans('entities.item'));
         }
 
         if ($item_category_id === null) {
