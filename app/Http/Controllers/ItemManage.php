@@ -83,7 +83,7 @@ class ItemManage extends Controller
             ->setUserId($this->user_id);
 
         try {
-            [$item_instance, $item_type_instance] = DB::transaction(function() use ($request, $resource_id) {
+            $item_type_instance = DB::transaction(function() use ($request, $resource_id) {
                 $item_instance = new Item([
                     'resource_id' => $resource_id,
                     'created_by' => $this->user_id
@@ -113,7 +113,7 @@ class ItemManage extends Controller
 
                 $item_type_instance->save();
 
-                return [$item_instance, $item_type_instance];
+                return $item_type_instance;
             });
 
             ClearCache::dispatch($cache_job_payload->payload());
@@ -122,9 +122,10 @@ class ItemManage extends Controller
             return Responses::failedToSaveModelForCreate();
         }
 
-        $model = new \App\ItemType\AllocatedExpense\Models\Item();
         return response()->json(
-            (new \App\ItemType\AllocatedExpense\Transformer\Item($model->instanceToArray($item_instance, $item_type_instance)))->asArray(),
+            (new \App\ItemType\AllocatedExpense\Transformer\Item(
+                (new \App\ItemType\AllocatedExpense\Models\Item())->instanceToArray($item_type_instance))
+            )->asArray(),
             201
         );
     }
@@ -160,7 +161,7 @@ class ItemManage extends Controller
             ->setUserId($this->user_id);
 
         try {
-            [$item_instance, $item_type_instance] = DB::transaction(function() use ($request, $resource_id) {
+            $item_type_instance = DB::transaction(function() use ($request, $resource_id) {
 
                 $item_instance = new Item([
                     'resource_id' => $resource_id,
@@ -180,7 +181,7 @@ class ItemManage extends Controller
 
                 $item_type_instance->save();
 
-                return [$item_instance, $item_type_instance];
+                return $item_type_instance;
             });
 
             ClearCache::dispatch($cache_job_payload->payload());
@@ -189,9 +190,10 @@ class ItemManage extends Controller
             return Responses::failedToSaveModelForCreate();
         }
 
-        $model = new \App\ItemType\Game\Models\Item();
         return response()->json(
-            (new \App\ItemType\Game\Transformer\Item($model->instanceToArray($item_instance, $item_type_instance)))->asArray(),
+            (new \App\ItemType\Game\Transformer\Item(
+                (new \App\ItemType\Game\Models\Item())->instanceToArray($item_type_instance))
+            )->asArray(),
             201
         );
     }
@@ -236,7 +238,7 @@ class ItemManage extends Controller
             ->setUserId($this->user_id);
 
         try {
-            [$item_instance, $item_type_instance] = DB::transaction(function() use ($request, $resource_id) {
+            $item_type_instance = DB::transaction(function() use ($request, $resource_id) {
                 $item_instance = new Item([
                     'resource_id' => $resource_id,
                     'created_by' => $this->user_id
@@ -258,7 +260,7 @@ class ItemManage extends Controller
 
                 $item_type_instance->save();
 
-                return [$item_instance, $item_type_instance];
+                return $item_type_instance;
             });
 
             ClearCache::dispatch($cache_job_payload->payload());
@@ -267,9 +269,10 @@ class ItemManage extends Controller
             return Responses::failedToSaveModelForCreate();
         }
 
-        $model = new \App\ItemType\SimpleExpense\Models\Item();
         return response()->json(
-            (new \App\ItemType\SimpleExpense\Transformer\Item($model->instanceToArray($item_instance, $item_type_instance)))->asArray(),
+            (new \App\ItemType\SimpleExpense\Transformer\Item(
+                (new \App\ItemType\SimpleExpense\Models\Item())->instanceToArray($item_type_instance))
+            )->asArray(),
             201
         );
     }
@@ -308,7 +311,7 @@ class ItemManage extends Controller
             ->setUserId($this->user_id);
 
         try {
-            [$item_instance, $item_type_instance] = DB::transaction(function() use ($request, $resource_id) {
+            $item_type_instance = DB::transaction(function() use ($request, $resource_id) {
                 $item_instance = new Item([
                     'resource_id' => $resource_id,
                     'created_by' => $this->user_id
@@ -326,7 +329,7 @@ class ItemManage extends Controller
 
                 $item_type_instance->save();
 
-                return [$item_instance, $item_type_instance];
+                return $item_type_instance;
             });
 
             ClearCache::dispatch($cache_job_payload->payload());
@@ -335,9 +338,10 @@ class ItemManage extends Controller
             return Responses::failedToSaveModelForCreate();
         }
 
-        $model = new \App\ItemType\SimpleItem\Models\Item();
         return response()->json(
-            (new \App\ItemType\SimpleItem\Transformer\Item($model->instanceToArray($item_instance, $item_type_instance)))->asArray(),
+            (new \App\ItemType\SimpleItem\Transformer\Item(
+                (new \App\ItemType\SimpleItem\Models\Item())->instanceToArray($item_type_instance)
+            ))->asArray(),
             201
         );
     }
@@ -346,6 +350,10 @@ class ItemManage extends Controller
     {
         if ($this->writeAccessToResourceType((int) $resource_type_id) === false) {
             Responses::notFoundOrNotAccessible(trans('entities.item'));
+        }
+
+        if (count(request()->all()) === 0) {
+            return Responses::nothingToPatch();
         }
 
         $item_type = Select::itemType((int) $resource_type_id);
@@ -359,52 +367,15 @@ class ItemManage extends Controller
         };
     }
 
-    private function updateAllocatedExpense(int $resource_type_id, int $resource_id, int $item_id): JsonResponse
+    private function updateAllocatedExpense(
+        int $resource_type_id,
+        int $resource_id,
+        int $item_id
+    ): JsonResponse
     {
+        $this->validateAllocatedExpenseForUpdate();
+
         $request = request();
-
-        $config_base_path = 'api.item-type-allocated-expense';
-
-        if (count($request->all()) === 0) {
-            return Responses::nothingToPatch();
-        }
-
-        $invalid_fields = \App\HttpRequest\BodyValidation::checkForInvalidFields(
-            array_keys(LaravelConfig::get($config_base_path . '.validation-patch.fields', []))
-        );
-
-        if (count($invalid_fields) > 0) {
-            return Responses::invalidFieldsInRequest($invalid_fields);
-        }
-
-        $merge_array = [];
-        if (array_key_exists('currency_id', $request->all())) {
-            $decode = $this->hash->currency()->decode($request->input('currency_id'));
-            $currency_id = null;
-            if (count($decode) === 1) {
-                $currency_id = $decode[0];
-            }
-
-            $merge_array = ['currency_id' => $currency_id];
-        }
-
-        $messages = [];
-        foreach (LaravelConfig::get($config_base_path . '.validation-patch.messages', []) as $key => $custom_message) {
-            $messages[$key] = trans($custom_message);
-        }
-
-        $validator = ValidatorFacade::make(
-            array_merge(
-                $request->all(),
-                $merge_array
-            ),
-            LaravelConfig::get($config_base_path . '.validation-patch.fields', []),
-            $messages
-        );
-
-        if ($validator->fails()) {
-            return \App\HttpRequest\BodyValidation::returnValidationErrors($validator);
-        }
 
         $cache_job_payload = (new JobPayload())
             ->setGroupKey(KeyGroup::ITEM_DELETE)
@@ -460,52 +431,15 @@ class ItemManage extends Controller
         return Responses::successNoContent();
     }
 
-    private function updateGame(int $resource_type_id, int $resource_id, int $item_id): JsonResponse
+    private function updateGame(
+        int $resource_type_id,
+        int $resource_id,
+        int $item_id
+    ): JsonResponse
     {
+        $this->validateGameForUpdate();
+
         $request = request();
-
-        $config_base_path = 'api.item-type-game';
-
-        if (count($request->all()) === 0) {
-            return Responses::nothingToPatch();
-        }
-
-        $invalid_fields = \App\HttpRequest\BodyValidation::checkForInvalidFields(
-            array_keys(LaravelConfig::get($config_base_path . '.validation-patch.fields', []))
-        );
-
-        if (count($invalid_fields) > 0) {
-            return Responses::invalidFieldsInRequest($invalid_fields);
-        }
-
-        $merge_array = [];
-        if (array_key_exists('winner_id', $request->all())) {
-            $decode = $this->hash->category()->decode($request->input('winner_id'));
-            $winner_id = null;
-            if (count($decode) === 1) {
-                $winner_id = $decode[0];
-            }
-
-            $merge_array = ['winner_id' => $winner_id];
-        }
-
-        $messages = [];
-        foreach (LaravelConfig::get($config_base_path . '.validation-patch.messages', []) as $key => $custom_message) {
-            $messages[$key] = trans($custom_message);
-        }
-
-        $validator = ValidatorFacade::make(
-            array_merge(
-                $request->all(),
-                $merge_array
-            ),
-            LaravelConfig::get($config_base_path . '.validation-patch.fields', []),
-            $messages
-        );
-
-        if ($validator->fails()) {
-            return \App\HttpRequest\BodyValidation::returnValidationErrors($validator);
-        }
 
         $cache_job_payload = (new JobPayload())
             ->setGroupKey(KeyGroup::ITEM_DELETE)
@@ -560,52 +494,15 @@ class ItemManage extends Controller
         return Responses::successNoContent();
     }
 
-    private function updateSimpleExpense(int $resource_type_id, int $resource_id, int $item_id): JsonResponse
+    private function updateSimpleExpense(
+        int $resource_type_id,
+        int $resource_id,
+        int $item_id
+    ): JsonResponse
     {
+        $this->validateSimpleExpenseForUpdate();
+
         $request = request();
-
-        $config_base_path = 'api.item-type-simple-expense';
-
-        if (count($request->all()) === 0) {
-            return Responses::nothingToPatch();
-        }
-
-        $invalid_fields = \App\HttpRequest\BodyValidation::checkForInvalidFields(
-            array_keys(LaravelConfig::get($config_base_path . '.validation-patch.fields', []))
-        );
-
-        if (count($invalid_fields) > 0) {
-            return Responses::invalidFieldsInRequest($invalid_fields);
-        }
-
-        $merge_array = [];
-        if (array_key_exists('currency_id', $request->all())) {
-            $decode = $this->hash->currency()->decode($request->input('currency_id'));
-            $currency_id = null;
-            if (count($decode) === 1) {
-                $currency_id = $decode[0];
-            }
-
-            $merge_array = ['currency_id' => $currency_id];
-        }
-
-        $messages = [];
-        foreach (LaravelConfig::get($config_base_path . '.validation-patch.messages', []) as $key => $custom_message) {
-            $messages[$key] = trans($custom_message);
-        }
-
-        $validator = ValidatorFacade::make(
-            array_merge(
-                $request->all(),
-                $merge_array
-            ),
-            LaravelConfig::get($config_base_path . '.validation-patch.fields', []),
-            $messages
-        );
-
-        if ($validator->fails()) {
-            return \App\HttpRequest\BodyValidation::returnValidationErrors($validator);
-        }
 
         $cache_job_payload = (new JobPayload())
             ->setGroupKey(KeyGroup::ITEM_DELETE)
@@ -658,36 +555,9 @@ class ItemManage extends Controller
         int $item_id
     ): JsonResponse
     {
+        $this->validateSimpleItemForUpdate();
+
         $request = request();
-
-        $config_base_path = 'api.item-type-simple-item';
-
-        if (count($request->all()) === 0) {
-            return Responses::nothingToPatch();
-        }
-
-        $invalid_fields = \App\HttpRequest\BodyValidation::checkForInvalidFields(
-            array_keys(LaravelConfig::get($config_base_path . '.validation-patch.fields', []))
-        );
-
-        if (count($invalid_fields) > 0) {
-            return Responses::invalidFieldsInRequest($invalid_fields);
-        }
-
-        $messages = [];
-        foreach (LaravelConfig::get($config_base_path . '.validation-patch.messages', []) as $key => $custom_message) {
-            $messages[$key] = trans($custom_message);
-        }
-
-        $validator = ValidatorFacade::make(
-            $request->all(),
-            LaravelConfig::get($config_base_path . '.validation-patch.fields', []),
-            $messages
-        );
-
-        if ($validator->fails()) {
-            return \App\HttpRequest\BodyValidation::returnValidationErrors($validator);
-        }
 
         $cache_job_payload = (new JobPayload())
             ->setGroupKey(KeyGroup::ITEM_DELETE)
@@ -723,7 +593,7 @@ class ItemManage extends Controller
             ClearCache::dispatch($cache_job_payload->payload());
 
         } catch (Exception $e) {
-            return Responses::failedToSaveModelForUpdate();
+            return Responses::failedToSaveModelForUpdate($e);
         }
 
         return Responses::successNoContent();
@@ -925,5 +795,175 @@ class ItemManage extends Controller
         } catch (Exception $e) {
             return Responses::notFound(trans('entities.item'));
         }
+    }
+
+    private function validateAllocatedExpenseForUpdate(): ?JsonResponse
+    {
+        $request = request();
+
+        $config_base_path = 'api.item-type-allocated-expense';
+
+        $invalid_fields = \App\HttpRequest\BodyValidation::checkForInvalidFields(
+            array_keys(LaravelConfig::get($config_base_path . '.validation-patch.fields', []))
+        );
+
+        if (count($invalid_fields) > 0) {
+            return Responses::invalidFieldsInRequest($invalid_fields);
+        }
+
+        $merge_array = [];
+        if (array_key_exists('currency_id', $request->all())) {
+            $decode = $this->hash->currency()->decode($request->input('currency_id'));
+            $currency_id = null;
+            if (count($decode) === 1) {
+                $currency_id = $decode[0];
+            }
+
+            $merge_array = ['currency_id' => $currency_id];
+        }
+
+        $messages = [];
+        foreach (LaravelConfig::get($config_base_path . '.validation-patch.messages', []) as $key => $custom_message) {
+            $messages[$key] = trans($custom_message);
+        }
+
+        $validator = ValidatorFacade::make(
+            array_merge(
+                $request->all(),
+                $merge_array
+            ),
+            LaravelConfig::get($config_base_path . '.validation-patch.fields', []),
+            $messages
+        );
+
+        if ($validator->fails()) {
+            return \App\HttpRequest\BodyValidation::returnValidationErrors($validator);
+        }
+
+        return null;
+    }
+
+    private function validateGameForUpdate(): ?JsonResponse
+    {
+        $request = request();
+
+        $config_base_path = 'api.item-type-game';
+
+        $invalid_fields = \App\HttpRequest\BodyValidation::checkForInvalidFields(
+            array_keys(LaravelConfig::get($config_base_path . '.validation-patch.fields', []))
+        );
+
+        if (count($invalid_fields) > 0) {
+            return Responses::invalidFieldsInRequest($invalid_fields);
+        }
+
+        $merge_array = [];
+        if (array_key_exists('winner_id', $request->all())) {
+            $decode = $this->hash->category()->decode($request->input('winner_id'));
+            $winner_id = null;
+            if (count($decode) === 1) {
+                $winner_id = $decode[0];
+            }
+
+            $merge_array = ['winner_id' => $winner_id];
+        }
+
+        $messages = [];
+        foreach (LaravelConfig::get($config_base_path . '.validation-patch.messages', []) as $key => $custom_message) {
+            $messages[$key] = trans($custom_message);
+        }
+
+        $validator = ValidatorFacade::make(
+            array_merge(
+                $request->all(),
+                $merge_array
+            ),
+            LaravelConfig::get($config_base_path . '.validation-patch.fields', []),
+            $messages
+        );
+
+        if ($validator->fails()) {
+            return \App\HttpRequest\BodyValidation::returnValidationErrors($validator);
+        }
+
+        return null;
+    }
+
+    private function validateSimpleExpenseForUpdate(): ?JsonResponse
+    {
+        $request = request();
+
+        $config_base_path = 'api.item-type-simple-expense';
+
+        $invalid_fields = \App\HttpRequest\BodyValidation::checkForInvalidFields(
+            array_keys(LaravelConfig::get($config_base_path . '.validation-patch.fields', []))
+        );
+
+        if (count($invalid_fields) > 0) {
+            return Responses::invalidFieldsInRequest($invalid_fields);
+        }
+
+        $merge_array = [];
+        if (array_key_exists('currency_id', $request->all())) {
+            $decode = $this->hash->currency()->decode($request->input('currency_id'));
+            $currency_id = null;
+            if (count($decode) === 1) {
+                $currency_id = $decode[0];
+            }
+
+            $merge_array = ['currency_id' => $currency_id];
+        }
+
+        $messages = [];
+        foreach (LaravelConfig::get($config_base_path . '.validation-patch.messages', []) as $key => $custom_message) {
+            $messages[$key] = trans($custom_message);
+        }
+
+        $validator = ValidatorFacade::make(
+            array_merge(
+                $request->all(),
+                $merge_array
+            ),
+            LaravelConfig::get($config_base_path . '.validation-patch.fields', []),
+            $messages
+        );
+
+        if ($validator->fails()) {
+            return \App\HttpRequest\BodyValidation::returnValidationErrors($validator);
+        }
+
+        return null;
+    }
+
+    private function validateSimpleItemForUpdate(): ?JsonResponse
+    {
+        $request = request();
+
+        $config_base_path = 'api.item-type-simple-item';
+
+        $invalid_fields = \App\HttpRequest\BodyValidation::checkForInvalidFields(
+            array_keys(LaravelConfig::get($config_base_path . '.validation-patch.fields', []))
+        );
+
+        if (count($invalid_fields) > 0) {
+            return Responses::invalidFieldsInRequest($invalid_fields);
+        }
+
+        $messages = [];
+        foreach (LaravelConfig::get($config_base_path . '.validation-patch.messages', []) as $key => $custom_message) {
+            $messages[$key] = trans($custom_message);
+        }
+
+        $validator = ValidatorFacade::make(
+            $request->all(),
+            LaravelConfig::get($config_base_path . '.validation-patch.fields', []),
+            $messages
+        );
+
+        if ($validator->fails()) {
+            return \App\HttpRequest\BodyValidation::returnValidationErrors($validator);
+        }
+
+        return null;
     }
 }

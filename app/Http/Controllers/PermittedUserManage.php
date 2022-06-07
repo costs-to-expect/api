@@ -35,7 +35,7 @@ class PermittedUserManage extends Controller
         ]);
 
         if ($validator->fails()) {
-            return \App\HttpRequest\BodyValidation::returnValidationErrors($validator);
+            \App\HttpRequest\BodyValidation::returnValidationErrors($validator);
         }
 
         $cache_job_payload = (new \App\Cache\JobPayload())

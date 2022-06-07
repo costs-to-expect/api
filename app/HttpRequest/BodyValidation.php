@@ -61,6 +61,6 @@ class BodyValidation
             $validation_errors = array_merge_recursive($validation_errors, $allowed_values);
         }
 
-        return \App\HttpResponse\Responses::validationErrors($validation_errors);
+        return \App\HttpResponse\Responses::validationErrors($validation_errors)->send();
     }
 }

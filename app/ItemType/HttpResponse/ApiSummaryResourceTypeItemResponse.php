@@ -4,7 +4,6 @@ namespace App\ItemType\HttpResponse;
 
 use App\HttpRequest\Parameter;
 use App\HttpResponse\Header;
-use App\ItemType\ItemType;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\JsonResponse;
 
@@ -76,22 +75,6 @@ abstract class ApiSummaryResourceTypeItemResponse
     }
 
     abstract protected function removeDecisionParameters(): void;
-
-    protected function fetchAllRequestParameters(ItemType $entity): void
-    {
-        $this->parameters = Parameter\Request::fetch(
-            array_keys($entity->summaryResourceTypeRequestParameters()),
-            $this->resource_type_id
-        );
-
-        $this->search_parameters = Parameter\Search::fetch(
-            $entity->summaryResourceTypeSearchParameters()
-        );
-
-        $this->filter_parameters = Parameter\Filter::fetch(
-            $entity->summaryResourceTypeFilterParameters()
-        );
-    }
 
     protected function setUpCache(): void
     {

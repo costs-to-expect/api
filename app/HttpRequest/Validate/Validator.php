@@ -3,7 +3,6 @@ declare(strict_types=1);
 
 namespace App\HttpRequest\Validate;
 
-use App\ItemType\ItemType;
 use App\HttpRequest\Hash;
 use Illuminate\Support\Facades\Config;
 
@@ -15,8 +14,6 @@ use Illuminate\Support\Facades\Config;
 abstract class Validator
 {
     protected Hash $hash;
-
-    protected ItemType $entity;
 
     public function __construct()
     {

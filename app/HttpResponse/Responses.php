@@ -372,10 +372,11 @@ class Responses
             $response = self::addException($response, $e);
         }
 
-        return response()->json(
+        response()->json(
             $response,
             400
-        );
+        )->send();
+        exit();
     }
 
     /**
@@ -421,9 +422,10 @@ class Responses
             $response = self::addException($response, $e);
         }
 
-        return response()->json(
+        response()->json(
             $response,
             422
-        );
+        )->send();
+        exit();
     }
 }

@@ -8,6 +8,7 @@ use App\Models\Currency;
 use App\HttpRequest\Validate\Boolean;
 use Illuminate\Database\Eloquent\Model as LaravelModel;
 use Illuminate\Database\Query\Builder as QueryBuilder;
+use JetBrains\PhpStorm\ArrayShape;
 
 /**
  * @mixin QueryBuilder
@@ -37,26 +38,29 @@ class Item extends LaravelModel
             first();
     }
 
-    /**
-     * Convert the model instance to an array for use with the transformer
-     *
-     * @param Item $item
-     * @param Item $item_type
-     *
-     * @return array
-     */
-    public function instanceToArray(LaravelModel $item, Item $item_type): array
+    #[ArrayShape([
+        'item_id' => "int",
+        'item_name' => "string",
+        'item_description' => "string",
+        'item_currency_id' => "int",
+        'item_currency_code' => "string",
+        'item_currency_name' => "string",
+        'item_total' => "float",
+        'item_created_at' => "string",
+        'item_updated_at' => "string"
+    ])]
+    public function instanceToArray(Item $item): array
     {
         return [
-            'item_id' => $item->id,
-            'item_name' => $item_type->name,
-            'item_description' => $item_type->description,
-            'item_currency_id' => $item_type->currency->id,
-            'item_currency_code' => $item_type->currency->code,
-            'item_currency_name' => $item_type->currency->name,
-            'item_total' => $item_type->total,
-            'item_created_at' => ($item_type->created_at !== null) ? $item_type->created_at->toDateTimeString() : null,
-            'item_updated_at' => ($item_type->updated_at !== null) ? $item_type->updated_at->toDateTimeString() : null,
+            'item_id' => $item->item_id,
+            'item_name' => $item->name,
+            'item_description' => $item->description,
+            'item_currency_id' => $item->currency->id,
+            'item_currency_code' => $item->currency->code,
+            'item_currency_name' => $item->currency->name,
+            'item_total' => $item->total,
+            'item_created_at' => ($item->created_at !== null) ? $item->created_at->toDateTimeString() : null,
+            'item_updated_at' => ($item->updated_at !== null) ? $item->updated_at->toDateTimeString() : null,
         ];
     }
 
