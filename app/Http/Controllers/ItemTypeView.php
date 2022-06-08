@@ -9,6 +9,7 @@ use App\HttpOptionResponse\ItemTypeCollection;
 use App\HttpOptionResponse\ItemTypeItem;
 use App\HttpRequest\Parameter;
 use App\HttpRequest\Route;
+use App\Models\ResourceAccess;
 use App\Transformer\ItemType as ItemTypeTransformer;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Config;
@@ -92,7 +93,7 @@ class ItemTypeView extends Controller
      */
     public function show(string $item_type_id): JsonResponse
     {
-        if (Route\Validate\ItemType::existsToUserForViewing($item_type_id) === false) {
+        if ((new ResourceAccess())->itemTypeExistsToUser((int) $item_type_id) === false) {
             Responses::notFound(trans('entities.item-type'));
         }
 
@@ -133,7 +134,7 @@ class ItemTypeView extends Controller
      */
     public function optionsShow(string $item_type_id): JsonResponse
     {
-        if (Route\Validate\ItemType::existsToUserForViewing($item_type_id) === false) {
+        if ((new ResourceAccess())->itemTypeExistsToUser((int) $item_type_id) === false) {
             Responses::notFound(trans('entities.item-type'));
         }
 
