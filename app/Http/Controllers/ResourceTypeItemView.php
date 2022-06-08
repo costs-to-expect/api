@@ -20,7 +20,7 @@ class ResourceTypeItemView extends Controller
 {
     public function index(string $resource_type_id): JsonResponse
     {
-        if ($this->viewAccessToResourceType((int) $resource_type_id) === false) {
+        if ($this->hasViewAccessToResourceType((int) $resource_type_id) === false) {
             return \App\HttpResponse\Responses::notFoundOrNotAccessible(trans('entities.resource-type'));
         }
 
@@ -39,7 +39,7 @@ class ResourceTypeItemView extends Controller
     {
         $response = new \App\ItemType\AllocatedExpense\HttpResponse\ResourceTypeItem(
             $resource_type_id,
-            $this->writeAccessToResourceType($resource_type_id),
+            $this->hasWriteAccessToResourceType($resource_type_id),
             $this->user_id
         );
 
@@ -50,7 +50,7 @@ class ResourceTypeItemView extends Controller
     {
         $response = new \App\ItemType\Game\HttpResponse\ResourceTypeItem(
             $resource_type_id,
-            $this->writeAccessToResourceType($resource_type_id),
+            $this->hasWriteAccessToResourceType($resource_type_id),
             $this->user_id
         );
 
@@ -61,7 +61,7 @@ class ResourceTypeItemView extends Controller
     {
         $response = new \App\ItemType\SimpleExpense\HttpResponse\ResourceTypeItem(
             $resource_type_id,
-            $this->writeAccessToResourceType($resource_type_id),
+            $this->hasWriteAccessToResourceType($resource_type_id),
             $this->user_id
         );
 
@@ -72,7 +72,7 @@ class ResourceTypeItemView extends Controller
     {
         $response = new \App\ItemType\SimpleItem\HttpResponse\ResourceTypeItem(
             $resource_type_id,
-            $this->writeAccessToResourceType($resource_type_id),
+            $this->hasWriteAccessToResourceType($resource_type_id),
             $this->user_id
         );
 
@@ -81,7 +81,7 @@ class ResourceTypeItemView extends Controller
 
     public function optionsIndex(string $resource_type_id): JsonResponse
     {
-        if ($this->viewAccessToResourceType((int) $resource_type_id) === false) {
+        if ($this->hasViewAccessToResourceType((int) $resource_type_id) === false) {
             return \App\HttpResponse\Responses::notFoundOrNotAccessible(trans('entities.resource-type'));
         }
 

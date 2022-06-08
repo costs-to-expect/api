@@ -117,12 +117,12 @@ class Controller extends BaseController
         $this->viewable_resource_types = $cache_collection->collection();
     }
 
-    protected function writeAccessToResourceType(int $resource_type_id): bool
+    protected function hasWriteAccessToResourceType(int $resource_type_id): bool
     {
         return in_array($resource_type_id, $this->permitted_resource_types, true) === true;
     }
 
-    protected function viewAccessToResourceType(int $resource_type_id): bool
+    protected function hasViewAccessToResourceType(int $resource_type_id): bool
     {
         return in_array($resource_type_id, $this->viewable_resource_types, true) === true;
     }
@@ -130,8 +130,8 @@ class Controller extends BaseController
     protected function permissions(int $resource_type_id): array
     {
         return [
-            'view' => $this->viewAccessToResourceType($resource_type_id),
-            'manage' => $this->writeAccessToResourceType($resource_type_id)
+            'view' => $this->hasViewAccessToResourceType($resource_type_id),
+            'manage' => $this->hasWriteAccessToResourceType($resource_type_id)
         ];
     }
 

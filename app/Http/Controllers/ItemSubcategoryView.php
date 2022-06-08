@@ -26,7 +26,7 @@ class ItemSubcategoryView extends Controller
         string $item_category_id
     ): JsonResponse
     {
-        if ($this->viewAccessToResourceType((int) $resource_type_id) === false) {
+        if ($this->hasViewAccessToResourceType((int) $resource_type_id) === false) {
             return \App\HttpResponse\Responses::notFoundOrNotAccessible(trans('entities.item-category'));
         }
 
@@ -47,7 +47,7 @@ class ItemSubcategoryView extends Controller
     ): JsonResponse
     {
         $cache_control = new \App\Cache\Control(
-            $this->writeAccessToResourceType((int) $resource_type_id),
+            $this->hasWriteAccessToResourceType((int) $resource_type_id),
             $this->user_id
         );
         $cache_control->setTtlOneWeek();
@@ -95,7 +95,7 @@ class ItemSubcategoryView extends Controller
         string $item_subcategory_id = null
     ): JsonResponse
     {
-        if ($this->viewAccessToResourceType((int) $resource_type_id) === false) {
+        if ($this->hasViewAccessToResourceType((int) $resource_type_id) === false) {
             return \App\HttpResponse\Responses::notFoundOrNotAccessible(trans('entities.item-subcategory'));
         }
 
@@ -149,7 +149,7 @@ class ItemSubcategoryView extends Controller
         string $item_category_id = null
     ): JsonResponse
     {
-        if ($this->viewAccessToResourceType((int) $resource_type_id) === false) {
+        if ($this->hasViewAccessToResourceType((int) $resource_type_id) === false) {
             return \App\HttpResponse\Responses::notFoundOrNotAccessible(trans('entities.item-category'));
         }
 
@@ -172,7 +172,7 @@ class ItemSubcategoryView extends Controller
         int $item_category_id
     ): JsonResponse
     {
-        if ($this->viewAccessToResourceType((int) $resource_type_id) === false) {
+        if ($this->hasViewAccessToResourceType((int) $resource_type_id) === false) {
             return \App\HttpResponse\Responses::notFoundOrNotAccessible(trans('entities.item-category'));
         }
 
@@ -193,7 +193,7 @@ class ItemSubcategoryView extends Controller
         int $item_category_id
     ): JsonResponse
     {
-        if ($this->viewAccessToResourceType((int) $resource_type_id) === false) {
+        if ($this->hasViewAccessToResourceType((int) $resource_type_id) === false) {
             return \App\HttpResponse\Responses::notFoundOrNotAccessible(trans('entities.item-category'));
         }
 
@@ -217,7 +217,7 @@ class ItemSubcategoryView extends Controller
         string $item_subcategory_id = null
     ): JsonResponse
     {
-        if ($this->viewAccessToResourceType((int) $resource_type_id) === false) {
+        if ($this->hasViewAccessToResourceType((int) $resource_type_id) === false) {
             return \App\HttpResponse\Responses::notFoundOrNotAccessible(trans('entities.item-subcategory'));
         }
 

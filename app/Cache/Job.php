@@ -24,9 +24,9 @@ class Job
         return $this->payload['user_id'];
     }
 
-    public function permittedUser(): bool
+    public function isPermittedUser(): bool
     {
-        return $this->payload['permitted_user'];
+        return $this->payload['is_permitted_user'];
     }
 
     public function groupKey(): string

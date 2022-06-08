@@ -29,12 +29,12 @@ class SubcategoryView extends Controller
      */
     public function index($resource_type_id, $category_id): JsonResponse
     {
-        if ($this->viewAccessToResourceType((int) $resource_type_id) === false) {
+        if ($this->hasViewAccessToResourceType((int) $resource_type_id) === false) {
             return \App\HttpResponse\Responses::notFoundOrNotAccessible(trans('entities.category'));
         }
 
         $cache_control = new \App\Cache\Control(
-            $this->writeAccessToResourceType((int) $resource_type_id),
+            $this->hasWriteAccessToResourceType((int) $resource_type_id),
             $this->user_id
         );
         $cache_control->setTtlOneMonth();
@@ -96,7 +96,7 @@ class SubcategoryView extends Controller
      */
     public function optionsIndex($resource_type_id, $category_id): JsonResponse
     {
-        if ($this->viewAccessToResourceType((int) $resource_type_id) === false) {
+        if ($this->hasViewAccessToResourceType((int) $resource_type_id) === false) {
             return \App\HttpResponse\Responses::notFoundOrNotAccessible(trans('entities.category'));
         }
 

@@ -44,7 +44,7 @@ class ClearCache implements ShouldQueue
         $payload = new Job($this->payload);
 
         $cache_control = new Control(
-            $payload->permittedUser(),
+            $payload->isPermittedUser(),
             $payload->userId()
         );
 

@@ -24,7 +24,7 @@ class ItemCategoryView extends Controller
 {
     public function index(string $resource_type_id, string $resource_id, string $item_id): JsonResponse
     {
-        if ($this->viewAccessToResourceType((int) $resource_type_id) === false) {
+        if ($this->hasViewAccessToResourceType((int) $resource_type_id) === false) {
             return \App\HttpResponse\Responses::notFoundOrNotAccessible(trans('entities.item'));
         }
 
@@ -40,7 +40,7 @@ class ItemCategoryView extends Controller
     private function itemCategoryCollection(int $resource_type_id, int $resource_id, int $item_id): JsonResponse
     {
         $cache_control = new \App\Cache\Control(
-            $this->writeAccessToResourceType((int) $resource_type_id),
+            $this->hasWriteAccessToResourceType((int) $resource_type_id),
             $this->user_id
         );
         $cache_control->setTtlOneWeek();
@@ -86,7 +86,7 @@ class ItemCategoryView extends Controller
         string $item_category_id = null
     ): JsonResponse
     {
-        if ($this->viewAccessToResourceType((int) $resource_type_id) === false) {
+        if ($this->hasViewAccessToResourceType((int) $resource_type_id) === false) {
             return \App\HttpResponse\Responses::notFoundOrNotAccessible(trans('entities.item'));
         }
 
@@ -133,7 +133,7 @@ class ItemCategoryView extends Controller
 
     public function optionsIndex(string $resource_type_id, string $resource_id, string $item_id): JsonResponse
     {
-        if ($this->viewAccessToResourceType((int) $resource_type_id) === false) {
+        if ($this->hasViewAccessToResourceType((int) $resource_type_id) === false) {
             return \App\HttpResponse\Responses::notFoundOrNotAccessible(trans('entities.item'));
         }
 
@@ -150,7 +150,7 @@ class ItemCategoryView extends Controller
 
     private function optionsAllocatedExpenseCollection(int $resource_type_id): JsonResponse
     {
-        if ($this->viewAccessToResourceType((int) $resource_type_id) === false) {
+        if ($this->hasViewAccessToResourceType((int) $resource_type_id) === false) {
             return \App\HttpResponse\Responses::notFoundOrNotAccessible(trans('entities.item'));
         }
 
@@ -165,7 +165,7 @@ class ItemCategoryView extends Controller
 
     private function optionsGameCollection(int $resource_type_id): JsonResponse
     {
-        if ($this->viewAccessToResourceType($resource_type_id) === false) {
+        if ($this->hasViewAccessToResourceType($resource_type_id) === false) {
             return \App\HttpResponse\Responses::notFoundOrNotAccessible(trans('entities.item'));
         }
 
@@ -180,7 +180,7 @@ class ItemCategoryView extends Controller
 
     private function optionsSimpleExpenseCollection(int $resource_type_id): JsonResponse
     {
-        if ($this->viewAccessToResourceType($resource_type_id) === false) {
+        if ($this->hasViewAccessToResourceType($resource_type_id) === false) {
             return \App\HttpResponse\Responses::notFoundOrNotAccessible(trans('entities.item'));
         }
 
@@ -200,7 +200,7 @@ class ItemCategoryView extends Controller
         string $item_category_id = null
     ): JsonResponse
     {
-        if ($this->viewAccessToResourceType((int) $resource_type_id) === false) {
+        if ($this->hasViewAccessToResourceType((int) $resource_type_id) === false) {
             return \App\HttpResponse\Responses::notFoundOrNotAccessible(trans('entities.item'));
         }
 

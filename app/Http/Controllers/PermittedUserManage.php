@@ -21,7 +21,7 @@ class PermittedUserManage extends Controller
 {
     public function create(string $resource_type_id): JsonResponse
     {
-        if ($this->writeAccessToResourceType((int) $resource_type_id) === false) {
+        if ($this->hasWriteAccessToResourceType((int) $resource_type_id) === false) {
             return \App\HttpResponse\Responses::notFoundOrNotAccessible(trans('entities.resource-type'));
         }
 
@@ -43,7 +43,7 @@ class PermittedUserManage extends Controller
             ->setRouteParameters([
                 'resource_type_id' => $resource_type_id
             ])
-            ->setPermittedUser($this->writeAccessToResourceType((int) $resource_type_id))
+            ->isPermittedUser($this->hasWriteAccessToResourceType((int) $resource_type_id))
             ->setUserId($this->user_id);
 
         try {
@@ -66,7 +66,7 @@ class PermittedUserManage extends Controller
                     $permitted_user_cache_job_payload = (new \App\Cache\JobPayload())
                         ->setGroupKey(\App\Cache\KeyGroup::RESOURCE_TYPE_CREATE)
                         ->setRouteParameters([])
-                        ->setPermittedUser($this->writeAccessToResourceType((int)$resource_type_id))
+                        ->isPermittedUser($this->hasWriteAccessToResourceType((int)$resource_type_id))
                         ->setUserId($user->id);
 
                     ClearCache::dispatch($permitted_user_cache_job_payload->payload());
@@ -89,7 +89,7 @@ class PermittedUserManage extends Controller
         string $permitted_user_id
     ): JsonResponse
     {
-        if ($this->writeAccessToResourceType((int) $resource_type_id) === false) {
+        if ($this->hasWriteAccessToResourceType((int) $resource_type_id) === false) {
             return \App\HttpResponse\Responses::notFoundOrNotAccessible(trans('entities.permitted-user'));
         }
 
@@ -102,7 +102,7 @@ class PermittedUserManage extends Controller
         $cache_job_payload = (new \App\Cache\JobPayload())
             ->setGroupKey(\App\Cache\KeyGroup::PERMITTED_USER_DELETE)
             ->setRouteParameters([])
-            ->setPermittedUser($this->writeAccessToResourceType((int) $resource_type_id))
+            ->isPermittedUser($this->hasWriteAccessToResourceType((int) $resource_type_id))
             ->setUserId($this->user_id);
 
         try {

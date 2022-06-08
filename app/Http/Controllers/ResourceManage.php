@@ -32,7 +32,7 @@ class ResourceManage extends Controller
      */
     public function create(string $resource_type_id): JsonResponse
     {
-        if ($this->writeAccessToResourceType((int) $resource_type_id) === false) {
+        if ($this->hasWriteAccessToResourceType((int) $resource_type_id) === false) {
             return \App\HttpResponse\Responses::notFoundOrNotAccessible(trans('entities.resource-type'));
         }
 
@@ -55,7 +55,7 @@ class ResourceManage extends Controller
             ->setRouteParameters([
                 'resource_type_id' => $resource_type_id
             ])
-            ->setPermittedUser($this->writeAccessToResourceType((int) $resource_type_id))
+            ->isPermittedUser($this->hasWriteAccessToResourceType((int) $resource_type_id))
             ->setUserId($this->user_id);
 
         try {
@@ -108,7 +108,7 @@ class ResourceManage extends Controller
         string $resource_id
     ): JsonResponse
     {
-        if ($this->writeAccessToResourceType((int) $resource_type_id) === false) {
+        if ($this->hasWriteAccessToResourceType((int) $resource_type_id) === false) {
             return \App\HttpResponse\Responses::notFoundOrNotAccessible(trans('entities.resource'));
         }
 
@@ -125,7 +125,7 @@ class ResourceManage extends Controller
                 'resource_type_id' => $resource_type_id,
                 'resource_id' => $resource_id
             ])
-            ->setPermittedUser($this->writeAccessToResourceType((int) $resource_type_id))
+            ->isPermittedUser($this->hasWriteAccessToResourceType((int) $resource_type_id))
             ->setUserId($this->user_id);
 
         try {
@@ -157,7 +157,7 @@ class ResourceManage extends Controller
         string $resource_id
     ): JsonResponse
     {
-        if ($this->writeAccessToResourceType((int) $resource_type_id) === false) {
+        if ($this->hasWriteAccessToResourceType((int) $resource_type_id) === false) {
             return \App\HttpResponse\Responses::notFoundOrNotAccessible(trans('entities.resource'));
         }
 
@@ -200,7 +200,7 @@ class ResourceManage extends Controller
             ->setRouteParameters([
                 'resource_type_id' => $resource_type_id
             ])
-            ->setPermittedUser($this->writeAccessToResourceType((int) $resource_type_id))
+            ->isPermittedUser($this->hasWriteAccessToResourceType((int) $resource_type_id))
             ->setUserId($this->user_id);
 
         try {

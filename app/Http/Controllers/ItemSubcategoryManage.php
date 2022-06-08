@@ -27,7 +27,7 @@ class ItemSubcategoryManage extends Controller
         string $item_category_id = null
     ): JsonResponse
     {
-        if ($this->writeAccessToResourceType((int) $resource_type_id) === false) {
+        if ($this->hasWriteAccessToResourceType((int) $resource_type_id) === false) {
             return \App\HttpResponse\Responses::notFoundOrNotAccessible(trans('entities.item-category'));
         }
 
@@ -104,7 +104,7 @@ class ItemSubcategoryManage extends Controller
                 'resource_type_id' => $resource_type_id,
                 'resource_id' => $resource_id
             ])
-            ->setPermittedUser($this->writeAccessToResourceType((int) $resource_type_id))
+            ->isPermittedUser($this->hasWriteAccessToResourceType((int) $resource_type_id))
             ->setUserId($this->user_id);
 
         try {
@@ -140,7 +140,7 @@ class ItemSubcategoryManage extends Controller
         string $item_subcategory_id = null
     ): JsonResponse
     {
-        if ($this->writeAccessToResourceType((int) $resource_type_id) === false) {
+        if ($this->hasWriteAccessToResourceType((int) $resource_type_id) === false) {
             return \App\HttpResponse\Responses::notFoundOrNotAccessible(trans('entities.item-subcategory'));
         }
 
@@ -183,7 +183,7 @@ class ItemSubcategoryManage extends Controller
                 'resource_type_id' => $resource_type_id,
                 'resource_id' => $resource_id
             ])
-            ->setPermittedUser($this->writeAccessToResourceType((int) $resource_type_id))
+            ->isPermittedUser($this->hasWriteAccessToResourceType((int) $resource_type_id))
             ->setUserId($this->user_id);
 
         try {

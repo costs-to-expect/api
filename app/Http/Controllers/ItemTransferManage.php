@@ -26,7 +26,7 @@ class ItemTransferManage extends Controller
         string $item_id
     ): JsonResponse
     {
-        if ($this->writeAccessToResourceType((int) $resource_type_id) === false) {
+        if ($this->hasWriteAccessToResourceType((int) $resource_type_id) === false) {
             return \App\HttpResponse\Responses::notFoundOrNotAccessible(trans('entities.item'));
         }
 
@@ -63,7 +63,7 @@ class ItemTransferManage extends Controller
             ->setRouteParameters([
                 'resource_type_id' => $resource_type_id
             ])
-            ->setPermittedUser($this->writeAccessToResourceType((int) $resource_type_id))
+            ->isPermittedUser($this->hasWriteAccessToResourceType((int) $resource_type_id))
             ->setUserId($this->user_id);
 
         try {

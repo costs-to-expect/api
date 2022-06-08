@@ -42,7 +42,7 @@ class ResourceTypeManage extends Controller
         $cache_job_payload = (new \App\Cache\JobPayload())
             ->setGroupKey(\App\Cache\KeyGroup::RESOURCE_TYPE_CREATE)
             ->setRouteParameters([])
-            ->setPermittedUser(true)
+            ->isPermittedUser(true)
             ->setUserId($this->user_id);
 
         try {
@@ -95,7 +95,7 @@ class ResourceTypeManage extends Controller
         string $resource_type_id
     ): JsonResponse
     {
-        if ($this->writeAccessToResourceType((int) $resource_type_id) === false) {
+        if ($this->hasWriteAccessToResourceType((int) $resource_type_id) === false) {
             return \App\HttpResponse\Responses::notFoundOrNotAccessible(trans('entities.resource-type'));
         }
 
@@ -118,7 +118,7 @@ class ResourceTypeManage extends Controller
             ->setRouteParameters([
                 'resource_type_id' => $resource_type_id
             ])
-            ->setPermittedUser($this->writeAccessToResourceType((int) $resource_type_id))
+            ->isPermittedUser($this->hasWriteAccessToResourceType((int) $resource_type_id))
             ->setUserId($this->user_id);
 
         if (
@@ -155,7 +155,7 @@ class ResourceTypeManage extends Controller
         string $resource_type_id
     ): JsonResponse
     {
-        if ($this->writeAccessToResourceType((int) $resource_type_id) === false) {
+        if ($this->hasWriteAccessToResourceType((int) $resource_type_id) === false) {
             return \App\HttpResponse\Responses::notFoundOrNotAccessible(trans('entities.resource-type'));
         }
 
@@ -198,7 +198,7 @@ class ResourceTypeManage extends Controller
             ->setRouteParameters([
                 'resource_type_id' => $resource_type_id
             ])
-            ->setPermittedUser($this->writeAccessToResourceType((int) $resource_type_id))
+            ->isPermittedUser($this->hasWriteAccessToResourceType((int) $resource_type_id))
             ->setUserId($this->user_id);
 
         try {

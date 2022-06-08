@@ -28,7 +28,7 @@ class CategoryManage extends Controller
      */
     public function create($resource_type_id): JsonResponse
     {
-        if ($this->writeAccessToResourceType((int) $resource_type_id) === false) {
+        if ($this->hasWriteAccessToResourceType((int) $resource_type_id) === false) {
             return \App\HttpResponse\Responses::notFoundOrNotAccessible(trans('entities.resource-type'));
         }
 
@@ -44,7 +44,7 @@ class CategoryManage extends Controller
             ->setRouteParameters([
                 'resource_type_id' => $resource_type_id
             ])
-            ->setPermittedUser($this->writeAccessToResourceType((int) $resource_type_id))
+            ->isPermittedUser($this->hasWriteAccessToResourceType((int) $resource_type_id))
             ->setUserId($this->user_id);
 
         try {
@@ -80,7 +80,7 @@ class CategoryManage extends Controller
         $category_id
     ): JsonResponse
     {
-        if ($this->writeAccessToResourceType((int) $resource_type_id) === false) {
+        if ($this->hasWriteAccessToResourceType((int) $resource_type_id) === false) {
             return \App\HttpResponse\Responses::notFoundOrNotAccessible(trans('entities.item-category'));
         }
 
@@ -89,7 +89,7 @@ class CategoryManage extends Controller
             ->setRouteParameters([
                 'resource_type_id' => $resource_type_id
             ])
-            ->setPermittedUser($this->writeAccessToResourceType((int) $resource_type_id))
+            ->isPermittedUser($this->hasWriteAccessToResourceType((int) $resource_type_id))
             ->setUserId($this->user_id);
 
         $category = (new Category())->find($category_id);
@@ -120,7 +120,7 @@ class CategoryManage extends Controller
      */
     public function update($resource_type_id, $category_id): JsonResponse
     {
-        if ($this->writeAccessToResourceType((int) $resource_type_id) === false) {
+        if ($this->hasWriteAccessToResourceType((int) $resource_type_id) === false) {
             return \App\HttpResponse\Responses::notFoundOrNotAccessible(trans('entities.item-category'));
         }
 
@@ -167,7 +167,7 @@ class CategoryManage extends Controller
             ->setRouteParameters([
                 'resource_type_id' => $resource_type_id
             ])
-            ->setPermittedUser($this->writeAccessToResourceType((int) $resource_type_id))
+            ->isPermittedUser($this->hasWriteAccessToResourceType((int) $resource_type_id))
             ->setUserId($this->user_id);
 
         try {

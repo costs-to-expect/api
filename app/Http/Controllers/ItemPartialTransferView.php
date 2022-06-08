@@ -23,7 +23,7 @@ class ItemPartialTransferView extends Controller
 {
     public function index($resource_type_id): JsonResponse
     {
-        if ($this->viewAccessToResourceType((int) $resource_type_id) === false) {
+        if ($this->hasViewAccessToResourceType((int) $resource_type_id) === false) {
             return \App\HttpResponse\Responses::notFoundOrNotAccessible(trans('entities.resource-type'));
         }
 
@@ -39,7 +39,7 @@ class ItemPartialTransferView extends Controller
     private function allocatedExpenseCollection(int $resource_type_id): JsonResponse
     {
         $cache_control = new \App\Cache\Control(
-            $this->writeAccessToResourceType((int) $resource_type_id),
+            $this->hasWriteAccessToResourceType((int) $resource_type_id),
             $this->user_id
         );
         $cache_control->setTtlOneWeek();
@@ -96,7 +96,7 @@ class ItemPartialTransferView extends Controller
         $item_partial_transfer_id
     ): JsonResponse
     {
-        if ($this->viewAccessToResourceType((int) $resource_type_id) === false) {
+        if ($this->hasViewAccessToResourceType((int) $resource_type_id) === false) {
             return \App\HttpResponse\Responses::notFoundOrNotAccessible(trans('entities.resource-type'));
         }
 
@@ -132,7 +132,7 @@ class ItemPartialTransferView extends Controller
 
     public function optionsIndex($resource_type_id): JsonResponse
     {
-        if ($this->viewAccessToResourceType((int) $resource_type_id) === false) {
+        if ($this->hasViewAccessToResourceType((int) $resource_type_id) === false) {
             return \App\HttpResponse\Responses::notFoundOrNotAccessible(trans('entities.item'));
         }
 
@@ -154,7 +154,7 @@ class ItemPartialTransferView extends Controller
 
     public function optionsShow($resource_type_id, $item_partial_transfer_id): JsonResponse
     {
-        if ($this->viewAccessToResourceType((int) $resource_type_id) === false) {
+        if ($this->hasViewAccessToResourceType((int) $resource_type_id) === false) {
             return \App\HttpResponse\Responses::notFoundOrNotAccessible(trans('entities.item-partial-transfer'));
         }
 
@@ -180,7 +180,7 @@ class ItemPartialTransferView extends Controller
         string $item_id
     ): JsonResponse
     {
-        if ($this->viewAccessToResourceType((int) $resource_type_id) === false) {
+        if ($this->hasViewAccessToResourceType((int) $resource_type_id) === false) {
             return \App\HttpResponse\Responses::notFoundOrNotAccessible(trans('entities.item'));
         }
 

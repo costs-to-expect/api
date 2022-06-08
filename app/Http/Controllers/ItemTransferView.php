@@ -26,7 +26,7 @@ class ItemTransferView extends Controller
 {
     public function index($resource_type_id): JsonResponse
     {
-        if ($this->viewAccessToResourceType((int) $resource_type_id) === false) {
+        if ($this->hasViewAccessToResourceType((int) $resource_type_id) === false) {
             return \App\HttpResponse\Responses::notFoundOrNotAccessible(trans('entities.item-transfer'));
         }
 
@@ -42,7 +42,7 @@ class ItemTransferView extends Controller
     private function collection(int $resource_type_id): JsonResponse
     {
         $cache_control = new \App\Cache\Control(
-            $this->writeAccessToResourceType($resource_type_id),
+            $this->hasWriteAccessToResourceType($resource_type_id),
             $this->user_id
         );
         $cache_control->setTtlOneWeek();
@@ -96,7 +96,7 @@ class ItemTransferView extends Controller
 
     public function optionsIndex($resource_type_id): JsonResponse
     {
-        if ($this->viewAccessToResourceType((int) $resource_type_id) === false) {
+        if ($this->hasViewAccessToResourceType((int) $resource_type_id) === false) {
             return \App\HttpResponse\Responses::notFoundOrNotAccessible(trans('entities.item'));
         }
 
@@ -126,7 +126,7 @@ class ItemTransferView extends Controller
 
     public function optionsShow($resource_type_id, $item_transfer_id): JsonResponse
     {
-        if ($this->viewAccessToResourceType((int) $resource_type_id) === false) {
+        if ($this->hasViewAccessToResourceType((int) $resource_type_id) === false) {
             return \App\HttpResponse\Responses::notFoundOrNotAccessible(trans('entities.resource-type'));
         }
 
@@ -160,7 +160,7 @@ class ItemTransferView extends Controller
         string $item_id
     ): JsonResponse
     {
-        if ($this->viewAccessToResourceType((int) $resource_type_id) === false) {
+        if ($this->hasViewAccessToResourceType((int) $resource_type_id) === false) {
             return \App\HttpResponse\Responses::notFoundOrNotAccessible(trans('entities.item'));
         }
 
@@ -213,7 +213,7 @@ class ItemTransferView extends Controller
         $item_transfer_id
     ): JsonResponse
     {
-        if ($this->viewAccessToResourceType((int) $resource_type_id) === false) {
+        if ($this->hasViewAccessToResourceType((int) $resource_type_id) === false) {
             return \App\HttpResponse\Responses::notFoundOrNotAccessible(trans('entities.item-transfer'));
         }
 

@@ -32,7 +32,7 @@ class SubcategoryManage extends Controller
      */
     public function create($resource_type_id, $category_id): JsonResponse
     {
-        if ($this->writeAccessToResourceType((int) $resource_type_id) === false) {
+        if ($this->hasWriteAccessToResourceType((int) $resource_type_id) === false) {
             return \App\HttpResponse\Responses::notFoundOrNotAccessible(trans('entities.category'));
         }
 
@@ -48,7 +48,7 @@ class SubcategoryManage extends Controller
                 'resource_type_id' => $resource_type_id,
                 'category_id' => $category_id
             ])
-            ->setPermittedUser($this->writeAccessToResourceType((int) $resource_type_id))
+            ->isPermittedUser($this->hasWriteAccessToResourceType((int) $resource_type_id))
             ->setUserId($this->user_id);
 
         try {
@@ -86,7 +86,7 @@ class SubcategoryManage extends Controller
         $subcategory_id
     ): JsonResponse
     {
-        if ($this->writeAccessToResourceType((int) $resource_type_id) === false) {
+        if ($this->hasWriteAccessToResourceType((int) $resource_type_id) === false) {
             return \App\HttpResponse\Responses::notFoundOrNotAccessible(trans('entities.subcategory'));
         }
 
@@ -105,7 +105,7 @@ class SubcategoryManage extends Controller
                 'resource_type_id' => $resource_type_id,
                 'category_id' => $category_id
             ])
-            ->setPermittedUser($this->writeAccessToResourceType((int) $resource_type_id))
+            ->isPermittedUser($this->hasWriteAccessToResourceType((int) $resource_type_id))
             ->setUserId($this->user_id);
 
         try {
@@ -136,7 +136,7 @@ class SubcategoryManage extends Controller
         $subcategory_id
     ): JsonResponse
     {
-        if ($this->writeAccessToResourceType((int) $resource_type_id) === false) {
+        if ($this->hasWriteAccessToResourceType((int) $resource_type_id) === false) {
             return \App\HttpResponse\Responses::notFoundOrNotAccessible(trans('entities.subcategory'));
         }
 
@@ -180,7 +180,7 @@ class SubcategoryManage extends Controller
                 'resource_type_id' => $resource_type_id,
                 'category_id' => $category_id
             ])
-            ->setPermittedUser($this->writeAccessToResourceType((int) $resource_type_id))
+            ->isPermittedUser($this->hasWriteAccessToResourceType((int) $resource_type_id))
             ->setUserId($this->user_id);
 
         try {

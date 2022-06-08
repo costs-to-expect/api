@@ -26,7 +26,7 @@ class ItemCategoryManage extends Controller
         string $item_id
     ): JsonResponse
     {
-        if ($this->writeAccessToResourceType((int) $resource_type_id) === false) {
+        if ($this->hasWriteAccessToResourceType((int) $resource_type_id) === false) {
             return Responses::notFoundOrNotAccessible(trans('entities.resource'));
         }
 
@@ -87,7 +87,7 @@ class ItemCategoryManage extends Controller
                 'resource_type_id' => $resource_type_id,
                 'resource_id' => $resource_id
             ])
-            ->setPermittedUser($this->writeAccessToResourceType($resource_type_id))
+            ->isPermittedUser($this->hasWriteAccessToResourceType($resource_type_id))
             ->setUserId($this->user_id);
 
         try {
@@ -122,7 +122,7 @@ class ItemCategoryManage extends Controller
         string $item_category_id
     ): JsonResponse
     {
-        if ($this->writeAccessToResourceType((int) $resource_type_id) === false) {
+        if ($this->hasWriteAccessToResourceType((int) $resource_type_id) === false) {
             return Responses::notFoundOrNotAccessible(trans('entities.resource'));
         }
 
@@ -159,7 +159,7 @@ class ItemCategoryManage extends Controller
                 'resource_type_id' => $resource_type_id,
                 'resource_id' => $resource_id
             ])
-            ->setPermittedUser($this->writeAccessToResourceType($resource_type_id))
+            ->isPermittedUser($this->hasWriteAccessToResourceType($resource_type_id))
             ->setUserId($this->user_id);
 
         try {

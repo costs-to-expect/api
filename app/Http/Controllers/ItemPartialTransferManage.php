@@ -24,7 +24,7 @@ class ItemPartialTransferManage extends Controller
         $item_partial_transfer_id
     ): JsonResponse
     {
-        if ($this->writeAccessToResourceType((int) $resource_type_id) === false) {
+        if ($this->hasWriteAccessToResourceType((int) $resource_type_id) === false) {
             return \App\HttpResponse\Responses::notFoundOrNotAccessible(trans('entities.item-partial-transfer'));
         }
 
@@ -47,7 +47,7 @@ class ItemPartialTransferManage extends Controller
             ->setRouteParameters([
                 'resource_type_id' => $resource_type_id
             ])
-            ->setPermittedUser($this->writeAccessToResourceType((int) $resource_type_id))
+            ->isPermittedUser($this->hasWriteAccessToResourceType((int) $resource_type_id))
             ->setUserId($this->user_id);
 
         try {
@@ -75,7 +75,7 @@ class ItemPartialTransferManage extends Controller
         string $item_id
     ): JsonResponse
     {
-        if ($this->writeAccessToResourceType((int) $resource_type_id) === false) {
+        if ($this->hasWriteAccessToResourceType((int) $resource_type_id) === false) {
             return \App\HttpResponse\Responses::notFoundOrNotAccessible(trans('entities.item'));
         }
 
@@ -116,7 +116,7 @@ class ItemPartialTransferManage extends Controller
             ->setRouteParameters([
                 'resource_type_id' => $resource_type_id
             ])
-            ->setPermittedUser($this->writeAccessToResourceType(($resource_type_id)))
+            ->isPermittedUser($this->hasWriteAccessToResourceType(($resource_type_id)))
             ->setUserId($this->user_id);
 
         try {

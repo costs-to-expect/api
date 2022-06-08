@@ -28,7 +28,7 @@ class ItemManage extends Controller
 {
     public function create(string $resource_type_id, string $resource_id): JsonResponse
     {
-        if ($this->writeAccessToResourceType((int) $resource_type_id) === false) {
+        if ($this->hasWriteAccessToResourceType((int) $resource_type_id) === false) {
             return Responses::notFoundOrNotAccessible(trans('entities.resource'));
         }
 
@@ -55,7 +55,7 @@ class ItemManage extends Controller
                 'resource_type_id' => $resource_type_id,
                 'resource_id' => $resource_id
             ])
-            ->setPermittedUser($this->writeAccessToResourceType($resource_type_id))
+            ->isPermittedUser($this->hasWriteAccessToResourceType($resource_type_id))
             ->setUserId($this->user_id);
 
         try {
@@ -118,7 +118,7 @@ class ItemManage extends Controller
                 'resource_type_id' => $resource_type_id,
                 'resource_id' => $resource_id
             ])
-            ->setPermittedUser($this->writeAccessToResourceType($resource_type_id))
+            ->isPermittedUser($this->hasWriteAccessToResourceType($resource_type_id))
             ->setUserId($this->user_id);
 
         try {
@@ -171,7 +171,7 @@ class ItemManage extends Controller
                 'resource_type_id' => $resource_type_id,
                 'resource_id' => $resource_id
             ])
-            ->setPermittedUser($this->writeAccessToResourceType($resource_type_id))
+            ->isPermittedUser($this->hasWriteAccessToResourceType($resource_type_id))
             ->setUserId($this->user_id);
 
         try {
@@ -229,7 +229,7 @@ class ItemManage extends Controller
                 'resource_type_id' => $resource_type_id,
                 'resource_id' => $resource_id
             ])
-            ->setPermittedUser($this->writeAccessToResourceType($resource_type_id))
+            ->isPermittedUser($this->hasWriteAccessToResourceType($resource_type_id))
             ->setUserId($this->user_id);
 
         try {
@@ -270,7 +270,7 @@ class ItemManage extends Controller
 
     public function update(string $resource_type_id, string $resource_id,string $item_id): JsonResponse
     {
-        if ($this->writeAccessToResourceType((int) $resource_type_id) === false) {
+        if ($this->hasWriteAccessToResourceType((int) $resource_type_id) === false) {
             return Responses::notFoundOrNotAccessible(trans('entities.item'));
         }
 
@@ -305,7 +305,7 @@ class ItemManage extends Controller
                 'resource_type_id' => $resource_type_id,
                 'resource_id' => $resource_id
             ])
-            ->setPermittedUser($this->writeAccessToResourceType($resource_type_id))
+            ->isPermittedUser($this->hasWriteAccessToResourceType($resource_type_id))
             ->setUserId($this->user_id);
 
         $item_instance = (new Item())->instance($resource_type_id, $resource_id, $item_id);
@@ -369,7 +369,7 @@ class ItemManage extends Controller
                 'resource_type_id' => $resource_type_id,
                 'resource_id' => $resource_id
             ])
-            ->setPermittedUser($this->writeAccessToResourceType($resource_type_id))
+            ->isPermittedUser($this->hasWriteAccessToResourceType($resource_type_id))
             ->setUserId($this->user_id);
 
         $item_instance = (new Item())->instance($resource_type_id, $resource_id, $item_id);
@@ -432,7 +432,7 @@ class ItemManage extends Controller
                 'resource_type_id' => $resource_type_id,
                 'resource_id' => $resource_id
             ])
-            ->setPermittedUser($this->writeAccessToResourceType($resource_type_id))
+            ->isPermittedUser($this->hasWriteAccessToResourceType($resource_type_id))
             ->setUserId($this->user_id);
 
         $item_instance = (new Item())->instance($resource_type_id, $resource_id, $item_id);
@@ -487,7 +487,7 @@ class ItemManage extends Controller
                 'resource_type_id' => $resource_type_id,
                 'resource_id' => $resource_id
             ])
-            ->setPermittedUser($this->writeAccessToResourceType($resource_type_id))
+            ->isPermittedUser($this->hasWriteAccessToResourceType($resource_type_id))
             ->setUserId($this->user_id);
 
         $item_instance = (new Item())->instance($resource_type_id, $resource_id, $item_id);
@@ -523,7 +523,7 @@ class ItemManage extends Controller
 
     public function delete(string $resource_type_id, string $resource_id,string $item_id): JsonResponse
     {
-        if ($this->writeAccessToResourceType((int) $resource_type_id) === false) {
+        if ($this->hasWriteAccessToResourceType((int) $resource_type_id) === false) {
             return Responses::notFoundOrNotAccessible(trans('entities.item'));
         }
 
@@ -550,7 +550,7 @@ class ItemManage extends Controller
                 'resource_type_id' => $resource_type_id,
                 'resource_id' => $resource_id
             ])
-            ->setPermittedUser($this->writeAccessToResourceType((int) $resource_type_id))
+            ->isPermittedUser($this->hasWriteAccessToResourceType((int) $resource_type_id))
             ->setUserId($this->user_id);
 
         $item_model = new \App\ItemType\AllocatedExpense\Models\Item();
@@ -596,7 +596,7 @@ class ItemManage extends Controller
                 'resource_type_id' => $resource_type_id,
                 'resource_id' => $resource_id
             ])
-            ->setPermittedUser($this->writeAccessToResourceType((int) $resource_type_id))
+            ->isPermittedUser($this->hasWriteAccessToResourceType((int) $resource_type_id))
             ->setUserId($this->user_id);
 
         $item_model = new \App\ItemType\Game\Models\Item();
@@ -641,7 +641,7 @@ class ItemManage extends Controller
                 'resource_type_id' => $resource_type_id,
                 'resource_id' => $resource_id
             ])
-            ->setPermittedUser($this->writeAccessToResourceType((int) $resource_type_id))
+            ->isPermittedUser($this->hasWriteAccessToResourceType((int) $resource_type_id))
             ->setUserId($this->user_id);
 
         $item_model = new \App\ItemType\SimpleExpense\Models\Item();
@@ -686,7 +686,7 @@ class ItemManage extends Controller
                 'resource_type_id' => $resource_type_id,
                 'resource_id' => $resource_id
             ])
-            ->setPermittedUser($this->writeAccessToResourceType((int) $resource_type_id))
+            ->isPermittedUser($this->hasWriteAccessToResourceType((int) $resource_type_id))
             ->setUserId($this->user_id);
 
         $item_model = new \App\ItemType\SimpleItem\Models\Item();
