@@ -47,31 +47,7 @@ class ItemManage extends Controller
     {
         $request = request();
 
-        $config_base_path = 'api.item-type-allocated-expense';
-
-        $messages = [];
-        foreach (LaravelConfig::get($config_base_path . '.validation-post.messages', []) as $key => $custom_message) {
-            $messages[$key] = trans($custom_message);
-        }
-
-        $decode = $this->hash->currency()->decode($request->input('currency_id'));
-        $currency_id = null;
-        if (count($decode) === 1) {
-            $currency_id = $decode[0];
-        }
-
-        $validator = ValidatorFacade::make(
-            array_merge(
-                $request->all(),
-                ['currency_id' => $currency_id]
-            ),
-            LaravelConfig::get($config_base_path . '.validation-post.fields', []),
-            $messages
-        );
-
-        if ($validator->fails()) {
-            return \App\HttpRequest\BodyValidation::returnValidationErrors($validator);
-        }
+        $this->validateAllocatedExpenseForCreate();
 
         $cache_job_payload = (new JobPayload())
             ->setGroupKey(KeyGroup::ITEM_CREATE)
@@ -134,22 +110,7 @@ class ItemManage extends Controller
     {
         $request = request();
 
-        $config_base_path = 'api.item-type-game';
-
-        $messages = [];
-        foreach (LaravelConfig::get($config_base_path . '.validation-post.messages', []) as $key => $custom_message) {
-            $messages[$key] = trans($custom_message);
-        }
-
-        $validator = ValidatorFacade::make(
-            $request->all(),
-            LaravelConfig::get($config_base_path . '.validation-post.fields', []),
-            $messages
-        );
-
-        if ($validator->fails()) {
-            return \App\HttpRequest\BodyValidation::returnValidationErrors($validator);
-        }
+        $this->validateGameForCreate();
 
         $cache_job_payload = (new JobPayload())
             ->setGroupKey(KeyGroup::ITEM_CREATE)
@@ -202,31 +163,7 @@ class ItemManage extends Controller
     {
         $request = request();
 
-        $config_base_path = 'api.item-type-simple-expense';
-
-        $messages = [];
-        foreach (LaravelConfig::get($config_base_path . '.validation-post.messages', []) as $key => $custom_message) {
-            $messages[$key] = trans($custom_message);
-        }
-
-        $decode = $this->hash->currency()->decode($request->input('currency_id'));
-        $currency_id = null;
-        if (count($decode) === 1) {
-            $currency_id = $decode[0];
-        }
-
-        $validator = ValidatorFacade::make(
-            array_merge(
-                $request->all(),
-                ['currency_id' => $currency_id]
-            ),
-            LaravelConfig::get($config_base_path . '.validation-post.fields', []),
-            $messages
-        );
-
-        if ($validator->fails()) {
-            return \App\HttpRequest\BodyValidation::returnValidationErrors($validator);
-        }
+        $this->validateSimpleExpenseForCreate();
 
         $cache_job_payload = (new JobPayload())
             ->setGroupKey(KeyGroup::ITEM_CREATE)
@@ -284,22 +221,7 @@ class ItemManage extends Controller
     {
         $request = request();
 
-        $config_base_path = 'api.item-type-simple-item';
-
-        $messages = [];
-        foreach (LaravelConfig::get($config_base_path . '.validation-post.messages', []) as $key => $custom_message) {
-            $messages[$key] = trans($custom_message);
-        }
-
-        $validator = ValidatorFacade::make(
-            $request->all(),
-            LaravelConfig::get($config_base_path . '.validation-post.fields', []),
-            $messages
-        );
-
-        if ($validator->fails()) {
-            return \App\HttpRequest\BodyValidation::returnValidationErrors($validator);
-        }
+        $this->validateSimpleItemForCreate();
 
         $cache_job_payload = (new JobPayload())
             ->setGroupKey(KeyGroup::ITEM_CREATE)
@@ -797,7 +719,40 @@ class ItemManage extends Controller
         }
     }
 
-    private function validateAllocatedExpenseForUpdate(): ?JsonResponse
+    private function validateAllocatedExpenseForCreate()
+    {
+        $request = request();
+
+        $config_base_path = 'api.item-type-allocated-expense';
+
+        $messages = [];
+        foreach (LaravelConfig::get($config_base_path . '.validation-post.messages', []) as $key => $custom_message) {
+            $messages[$key] = trans($custom_message);
+        }
+
+        $decode = $this->hash->currency()->decode($request->input('currency_id'));
+        $currency_id = null;
+        if (count($decode) === 1) {
+            $currency_id = $decode[0];
+        }
+
+        $validator = ValidatorFacade::make(
+            array_merge(
+                $request->all(),
+                ['currency_id' => $currency_id]
+            ),
+            LaravelConfig::get($config_base_path . '.validation-post.fields', []),
+            $messages
+        );
+
+        if ($validator->fails()) {
+            return \App\HttpRequest\BodyValidation::returnValidationErrors($validator);
+        }
+
+        return null;
+    }
+
+    private function validateAllocatedExpenseForUpdate()
     {
         $request = request();
 
@@ -843,7 +798,31 @@ class ItemManage extends Controller
         return null;
     }
 
-    private function validateGameForUpdate(): ?JsonResponse
+    private function validateGameForCreate()
+    {
+        $request = request();
+
+        $config_base_path = 'api.item-type-game';
+
+        $messages = [];
+        foreach (LaravelConfig::get($config_base_path . '.validation-post.messages', []) as $key => $custom_message) {
+            $messages[$key] = trans($custom_message);
+        }
+
+        $validator = ValidatorFacade::make(
+            $request->all(),
+            LaravelConfig::get($config_base_path . '.validation-post.fields', []),
+            $messages
+        );
+
+        if ($validator->fails()) {
+            return \App\HttpRequest\BodyValidation::returnValidationErrors($validator);
+        }
+
+        return null;
+    }
+
+    private function validateGameForUpdate()
     {
         $request = request();
 
@@ -889,7 +868,40 @@ class ItemManage extends Controller
         return null;
     }
 
-    private function validateSimpleExpenseForUpdate(): ?JsonResponse
+    private function validateSimpleExpenseForCreate()
+    {
+        $request = request();
+
+        $config_base_path = 'api.item-type-simple-expense';
+
+        $messages = [];
+        foreach (LaravelConfig::get($config_base_path . '.validation-post.messages', []) as $key => $custom_message) {
+            $messages[$key] = trans($custom_message);
+        }
+
+        $decode = $this->hash->currency()->decode($request->input('currency_id'));
+        $currency_id = null;
+        if (count($decode) === 1) {
+            $currency_id = $decode[0];
+        }
+
+        $validator = ValidatorFacade::make(
+            array_merge(
+                $request->all(),
+                ['currency_id' => $currency_id]
+            ),
+            LaravelConfig::get($config_base_path . '.validation-post.fields', []),
+            $messages
+        );
+
+        if ($validator->fails()) {
+            return \App\HttpRequest\BodyValidation::returnValidationErrors($validator);
+        }
+
+        return null;
+    }
+
+    private function validateSimpleExpenseForUpdate()
     {
         $request = request();
 
@@ -935,7 +947,31 @@ class ItemManage extends Controller
         return null;
     }
 
-    private function validateSimpleItemForUpdate(): ?JsonResponse
+    private function validateSimpleItemForCreate()
+    {
+        $request = request();
+
+        $config_base_path = 'api.item-type-simple-item';
+
+        $messages = [];
+        foreach (LaravelConfig::get($config_base_path . '.validation-post.messages', []) as $key => $custom_message) {
+            $messages[$key] = trans($custom_message);
+        }
+
+        $validator = ValidatorFacade::make(
+            $request->all(),
+            LaravelConfig::get($config_base_path . '.validation-post.fields', []),
+            $messages
+        );
+
+        if ($validator->fails()) {
+            return \App\HttpRequest\BodyValidation::returnValidationErrors($validator);
+        }
+
+        return null;
+    }
+
+    private function validateSimpleItemForUpdate()
     {
         $request = request();
 
