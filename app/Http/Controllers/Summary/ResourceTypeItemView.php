@@ -25,7 +25,7 @@ class ResourceTypeItemView extends Controller
     public function index(string $resource_type_id): JsonResponse
     {
         if ($this->viewAccessToResourceType((int)$resource_type_id) === false) {
-            Responses::notFoundOrNotAccessible(trans('entities.resource'));
+            return Responses::notFoundOrNotAccessible(trans('entities.resource'));
         }
 
         $item_type = Select::itemType((int) $resource_type_id);
@@ -86,7 +86,7 @@ class ResourceTypeItemView extends Controller
     public function optionsIndex(string $resource_type_id): JsonResponse
     {
         if ($this->viewAccessToResourceType((int) $resource_type_id) === false) {
-            Responses::notFoundOrNotAccessible(trans('entities.resource'));
+            return Responses::notFoundOrNotAccessible(trans('entities.resource'));
         }
 
         $item_type = Select::itemType((int) $resource_type_id);

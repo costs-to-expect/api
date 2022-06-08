@@ -28,7 +28,7 @@ class ItemSubcategoryManage extends Controller
     ): JsonResponse
     {
         if ($this->writeAccessToResourceType((int) $resource_type_id) === false) {
-            \App\HttpResponse\Responses::notFoundOrNotAccessible(trans('entities.item-category'));
+            return \App\HttpResponse\Responses::notFoundOrNotAccessible(trans('entities.item-category'));
         }
 
         if ($item_category_id === null) {
@@ -141,7 +141,7 @@ class ItemSubcategoryManage extends Controller
     ): JsonResponse
     {
         if ($this->writeAccessToResourceType((int) $resource_type_id) === false) {
-            \App\HttpResponse\Responses::notFoundOrNotAccessible(trans('entities.item-subcategory'));
+            return \App\HttpResponse\Responses::notFoundOrNotAccessible(trans('entities.item-subcategory'));
         }
 
         if ($item_category_id === null || $item_subcategory_id === null) {

@@ -8,8 +8,7 @@ use App\Models\ItemSubtype;
 use App\HttpOptionResponse\ItemSubtypeCollection;
 use App\HttpOptionResponse\ItemSubtypeItem;
 use App\HttpRequest\Parameter;
-use App\HttpRequest\Route;
-use App\Models\ResourceAccess;
+use App\Models\Permission;
 use App\Transformer\ItemSubtype as ItemSubtypeTransformer;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Config;
@@ -25,7 +24,7 @@ class ItemSubtypeView extends Controller
 
     public function index($item_type_id): JsonResponse
     {
-        if ((new ResourceAccess())->itemTypeExistsToUser((int) $item_type_id) === false) {
+        if ((new Permission())->itemTypeExists((int) $item_type_id) === false) {
             return Responses::notFound(trans('entities.item-subtype'));
         }
 
@@ -87,7 +86,7 @@ class ItemSubtypeView extends Controller
 
     public function show($item_type_id, $item_subtype_id): JsonResponse
     {
-        if ((new ResourceAccess())->itemSubTypeExistsToUser((int) $item_type_id, (int) $item_subtype_id) === false) {
+        if ((new Permission())->itemSubTypeExists((int) $item_type_id, (int) $item_subtype_id) === false) {
             return Responses::notFound(trans('entities.item-subtype'));
         }
 
@@ -112,7 +111,7 @@ class ItemSubtypeView extends Controller
 
     public function optionsIndex($item_type_id): JsonResponse
     {
-        if ((new ResourceAccess())->itemTypeExistsToUser((int) $item_type_id) === false) {
+        if ((new Permission())->itemTypeExists((int) $item_type_id) === false) {
             return Responses::notFound(trans('entities.item-subtype'));
         }
 
@@ -123,7 +122,7 @@ class ItemSubtypeView extends Controller
 
     public function optionsShow($item_type_id, $item_subtype_id): JsonResponse
     {
-        if ((new ResourceAccess())->itemSubTypeExistsToUser((int) $item_type_id, (int) $item_subtype_id) === false) {
+        if ((new Permission())->itemSubTypeExists((int) $item_type_id, (int) $item_subtype_id) === false) {
             return Responses::notFound(trans('entities.item-subtype'));
         }
 

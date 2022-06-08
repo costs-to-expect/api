@@ -25,7 +25,7 @@ class ItemPartialTransferManage extends Controller
     ): JsonResponse
     {
         if ($this->writeAccessToResourceType((int) $resource_type_id) === false) {
-            \App\HttpResponse\Responses::notFoundOrNotAccessible(trans('entities.item-partial-transfer'));
+            return \App\HttpResponse\Responses::notFoundOrNotAccessible(trans('entities.item-partial-transfer'));
         }
 
         $item_type = Select::itemType((int) $resource_type_id);
@@ -76,7 +76,7 @@ class ItemPartialTransferManage extends Controller
     ): JsonResponse
     {
         if ($this->writeAccessToResourceType((int) $resource_type_id) === false) {
-            \App\HttpResponse\Responses::notFoundOrNotAccessible(trans('entities.item'));
+            return \App\HttpResponse\Responses::notFoundOrNotAccessible(trans('entities.item'));
         }
 
         $item_type = Select::itemType((int) $resource_type_id);

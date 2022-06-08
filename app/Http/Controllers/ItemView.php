@@ -238,7 +238,7 @@ class ItemView extends Controller
     ): JsonResponse
     {
         if ($this->viewAccessToResourceType((int) $resource_type_id) === false) {
-            \App\HttpResponse\Responses::notFoundOrNotAccessible(trans('entities.resource'));
+            return \App\HttpResponse\Responses::notFoundOrNotAccessible(trans('entities.resource'));
         }
 
         $item_type = Select::itemType((int) $resource_type_id);
@@ -259,7 +259,7 @@ class ItemView extends Controller
     ): JsonResponse
     {
         if ($this->viewAccessToResourceType((int) $resource_type_id) === false) {
-            \App\HttpResponse\Responses::notFoundOrNotAccessible(trans('entities.item'));
+            return \App\HttpResponse\Responses::notFoundOrNotAccessible(trans('entities.item'));
         }
 
         $item = (new \App\ItemType\AllocatedExpense\Models\Item())->single($resource_type_id, $resource_id, $item_id);
@@ -287,7 +287,7 @@ class ItemView extends Controller
     ): JsonResponse
     {
         if ($this->viewAccessToResourceType((int) $resource_type_id) === false) {
-            \App\HttpResponse\Responses::notFoundOrNotAccessible(trans('entities.item'));
+            return \App\HttpResponse\Responses::notFoundOrNotAccessible(trans('entities.item'));
         }
 
         $item = (new \App\ItemType\Game\Models\Item())->single($resource_type_id, $resource_id, $item_id);
@@ -315,7 +315,7 @@ class ItemView extends Controller
     ): JsonResponse
     {
         if ($this->viewAccessToResourceType((int) $resource_type_id) === false) {
-            \App\HttpResponse\Responses::notFoundOrNotAccessible(trans('entities.item'));
+            return \App\HttpResponse\Responses::notFoundOrNotAccessible(trans('entities.item'));
         }
 
         $item = (new \App\ItemType\SimpleExpense\Models\Item())->single($resource_type_id, $resource_id, $item_id);
@@ -343,7 +343,7 @@ class ItemView extends Controller
     ): JsonResponse
     {
         if ($this->viewAccessToResourceType((int) $resource_type_id) === false) {
-            \App\HttpResponse\Responses::notFoundOrNotAccessible(trans('entities.item'));
+            return \App\HttpResponse\Responses::notFoundOrNotAccessible(trans('entities.item'));
         }
 
         $allowed_values = new SimpleItemAllowedValue(

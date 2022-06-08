@@ -18,31 +18,24 @@ use Illuminate\Database\Query\Builder as QueryBuilder;
  * @copyright Dean Blackborough 2018-2022
  * @license https://github.com/costs-to-expect/api/blob/master/LICENSE
  */
-class ResourceAccess extends Model
+class Permission extends Model
 {
     protected $table = 'permitted_user';
 
     protected $guarded = ['id'];
 
-    public function instance(int $resource_type_id, int $user_id): ?ResourceAccess
+    public function itemTypeExists(int $id): bool
     {
-        return $this->where('resource_type_id', '=', $resource_type_id)->
-            where('user_id', '=', $user_id)->
-            first();
-    }
-
-    public function itemTypeExistsToUser(int $id): bool
-    {
-        $collection = $this
+        $collection = $this->query()
             ->from('item_type')
             ->where('item_type.id', '=', $id);
 
         return count($collection->get()) === 1;
     }
 
-    public function itemSubTypeExistsToUser(int $item_type_id, int $id): bool
+    public function itemSubTypeExists(int $item_type_id, int $id): bool
     {
-        $collection = $this
+        $collection = $this->query()
             ->from('item_subtype')
             ->join('item_type', 'item_subtype.item_type_id', 'item_type.id')
             ->where('item_type.id', '=', $item_type_id)
@@ -51,29 +44,29 @@ class ResourceAccess extends Model
         return count($collection->get()) === 1;
     }
 
-    public function currencyExistsToUser(int $id): bool
+    public function currencyItemExists(int $id): bool
     {
-        $collection = $this
+        $collection = $this->query()
             ->from('currency')
             ->where('currency.id', '=', $id);
 
         return count($collection->get()) === 1;
     }
 
-    public function queueExistsToUser(int $id): bool
+    public function queueItemExists(int $id): bool
     {
-        $collection = $this
+        $collection = $this->query()
             ->from('jobs')
             ->where('jobs.id', '=', $id);
 
         return count($collection->get()) === 1;
     }
 
-    public function permittedResourceTypes(int $user_id): array
+    public function permittedResourceTypesForUser(int $user_id): array
     {
         $permitted = [];
 
-        $results = $this
+        $results = $this->query()
             ->where('user_id', '=', $user_id)
             ->select('resource_type_id')
             ->get()
@@ -86,15 +79,16 @@ class ResourceAccess extends Model
         return $permitted;
     }
 
-    public function permittedResourceTypeUsers(int $resource_type_id, int $ignore_user_id): array
+    public function permittedUsersForResourceType(int $resource_type_id, int $ignore_user_id): array
     {
         $users = [];
 
-        $results = $this->where('resource_type_id', '=', $resource_type_id)->
-            where('user_id', '!=', $ignore_user_id)->
-            select('user_id')->
-            get()->
-            toArray();
+        $results = $this->query()
+            ->where('resource_type_id', '=', $resource_type_id)
+            ->where('user_id', '!=', $ignore_user_id)
+            ->select('user_id')
+            ->get()
+            ->toArray();
 
         foreach ($results as $row) {
             $users[] = (int) $row['user_id'];

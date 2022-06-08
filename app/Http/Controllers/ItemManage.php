@@ -271,7 +271,7 @@ class ItemManage extends Controller
     public function update(string $resource_type_id, string $resource_id,string $item_id): JsonResponse
     {
         if ($this->writeAccessToResourceType((int) $resource_type_id) === false) {
-            Responses::notFoundOrNotAccessible(trans('entities.item'));
+            return Responses::notFoundOrNotAccessible(trans('entities.item'));
         }
 
         if (count(request()->all()) === 0) {
@@ -524,7 +524,7 @@ class ItemManage extends Controller
     public function delete(string $resource_type_id, string $resource_id,string $item_id): JsonResponse
     {
         if ($this->writeAccessToResourceType((int) $resource_type_id) === false) {
-            Responses::notFoundOrNotAccessible(trans('entities.item'));
+            return Responses::notFoundOrNotAccessible(trans('entities.item'));
         }
 
         $item_type = Select::itemType((int) $resource_type_id);
