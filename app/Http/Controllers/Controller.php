@@ -134,4 +134,16 @@ class Controller extends BaseController
             'manage' => $this->writeAccessToResourceType($resource_type_id)
         ];
     }
+
+    protected function checkForInvalidFields(array $patchable_fields): array
+    {
+        $invalid_fields = [];
+        foreach (request()->all() as $key => $value) {
+            if (in_array($key, $patchable_fields, true) === false) {
+                $invalid_fields[] = $key;
+            }
+        }
+
+        return $invalid_fields;
+    }
 }

@@ -39,7 +39,7 @@ class SubcategoryManage extends Controller
         $validator = (new SubcategoryValidator)->create(['category_id' => $category_id]);
 
         if ($validator->fails()) {
-            return \App\HttpRequest\BodyValidation::returnValidationErrors($validator);
+            return \App\HttpResponse\Responses::validationErrors($validator);
         }
 
         $cache_job_payload = (new \App\Cache\JobPayload())
@@ -156,10 +156,10 @@ class SubcategoryManage extends Controller
         ]);
 
         if ($validator->fails()) {
-            return \App\HttpRequest\BodyValidation::returnValidationErrors($validator);
+            return \App\HttpResponse\Responses::validationErrors($validator);
         }
 
-        $invalid_fields = \App\HttpRequest\BodyValidation::checkForInvalidFields(
+        $invalid_fields = $this->checkForInvalidFields(
             array_merge(
                 (new Subcategory())->patchableFields(),
                 (new SubcategoryValidator)->dynamicDefinedFields()

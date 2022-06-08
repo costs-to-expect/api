@@ -36,7 +36,7 @@ class CategoryManage extends Controller
             'resource_type_id' => $resource_type_id
         ]);
         if ($validator->fails()) {
-            return \App\HttpRequest\BodyValidation::returnValidationErrors($validator);
+            return \App\HttpResponse\Responses::validationErrors($validator);
         }
 
         $cache_job_payload = (new \App\Cache\JobPayload())
@@ -144,10 +144,10 @@ class CategoryManage extends Controller
         }
 
         if ($validator->fails()) {
-            return \App\HttpRequest\BodyValidation::returnValidationErrors($validator);
+            return \App\HttpResponse\Responses::validationErrors($validator);
         }
 
-        $invalid_fields = BodyValidation::checkForInvalidFields(
+        $invalid_fields = $this->checkForInvalidFields(
             array_merge(
                 (new Category())->patchableFields(),
                 (new CategoryValidator)->dynamicDefinedFields()

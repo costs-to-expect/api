@@ -28,7 +28,7 @@ class RequestManage extends Controller
         $validator = (new RequestErrorLogValidator())->create();
 
         if ($validator->fails()) {
-            return \App\HttpRequest\BodyValidation::returnValidationErrors($validator);
+            return \App\HttpResponse\Responses::validationErrors($validator);
         }
 
         try {

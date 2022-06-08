@@ -109,14 +109,7 @@ class Resource extends BaseValidator
         );
     }
 
-    /**
-     * Return a valid validator object for a update (PATCH) request
-     *
-     * @param array $options
-     *
-     * @return \Illuminate\Contracts\Validation\Validator|null
-     */
-    public function update(array $options = []): ?\Illuminate\Contracts\Validation\Validator
+    public function update(array $options = []): \Illuminate\Contracts\Validation\Validator
     {
         return ValidatorFacade::make(
             request()->all(),

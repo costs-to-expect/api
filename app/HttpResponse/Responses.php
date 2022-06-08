@@ -4,25 +4,18 @@ declare(strict_types=1);
 namespace App\HttpResponse;
 
 use Exception;
+use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\App;
 
 /**
- * Utility class to return default responses, we want some consistency
- * through out the API so all non expected responses should be returned via this
- * class
- *
- * As with all utility classes, eventually they may be moved into libraries if
- * they gain more than a few functions and the creation of a library makes
- * sense.
- *
  * @author Dean Blackborough <dean@g3d-development.com>
  * @copyright Dean Blackborough 2018-2022
  * @license https://github.com/costs-to-expect/api/blob/master/LICENSE
  */
 class Responses
 {
-    protected static function addException(array $response, ?Exception $e = null): array
+    private static function addException(array $response, ?Exception $e = null): array
     {
         if ($e !== null && App::environment() !== 'production') {
             $response['exception'] = [
@@ -36,14 +29,6 @@ class Responses
         return $response;
     }
 
-    /**
-     * Return not found, 404
-     *
-     * @param string|null $type Entity type that cannot be found
-     * @param Exception|null $e
-     *
-     * @return JsonResponse
-     */
     public static function notFound(?string $type = null, ?Exception $e = null): JsonResponse
     {
         $response = [
@@ -61,14 +46,6 @@ class Responses
         );
     }
 
-    /**
-     * Return not found, 404
-     *
-     * @param string|null $type Entity type that cannot be found
-     * @param Exception|null $e
-     *
-     * @return JsonResponse
-     */
     public static function notFoundOrNotAccessible(?string $type = null, ?Exception $e = null): JsonResponse
     {
         $response = [
@@ -86,14 +63,6 @@ class Responses
         );
     }
 
-    /**
-     * Return a foreign key constraint error, 500
-     *
-     * @param string $message Custom message for error
-     * @param Exception|null $e
-     *
-     * @return JsonResponse
-     */
     public static function foreignKeyConstraintError($message = '', ?Exception $e = null): JsonResponse
     {
         $response = [
@@ -110,16 +79,6 @@ class Responses
         );
     }
 
-    /**
-     * 500 error, unable to select the data ready to enable us to update or delete
-     *
-     * Until we add logging this is an unknown server error, later we will
-     * add MySQL error logging
-     *
-     * @param Exception|null $e
-     *
-     * @return JsonResponse
-     */
     public static function failedToSelectModelForUpdateOrDelete(?Exception $e = null): JsonResponse
     {
         $response = [
@@ -136,16 +95,6 @@ class Responses
         );
     }
 
-    /**
-     * 500 error, failed to save the model.
-     *
-     * Until we add logging this is an unknown server error, later we will
-     * add MySQL error logging
-     *
-     * @param Exception|null $e
-     *
-     * @return JsonResponse
-     */
     public static function failedToSaveModelForUpdate(?Exception $e = null): JsonResponse
     {
         $response = [
@@ -162,13 +111,6 @@ class Responses
         );
     }
 
-    /**
-     * 403 error, authentication required
-     *
-     * @param Exception|null $e
-     *
-     * @return JsonResponse
-     */
     public static function authenticationRequired(?Exception $e = null): JsonResponse
     {
         $response = [
@@ -214,16 +156,6 @@ class Responses
             ->json($response,405);
     }
 
-    /**
-     * 500 error, failed to save the model.
-     *
-     * Until we add logging this is an unknown server error, later we will
-     * add MySQL error logging
-     *
-     * @param Exception|null $e
-     *
-     * @return JsonResponse
-     */
     public static function failedToSaveModelForCreate(?Exception $e = null): JsonResponse
     {
         $response = [
@@ -240,14 +172,6 @@ class Responses
         );
     }
 
-    /**
-     * 404 error, unable to decode the selected value, hasher missing or value
-     * invalid
-     *
-     * @param Exception|null $e
-     *
-     * @return JsonResponse
-     */
     public static function unableToDecode(?Exception $e = null): JsonResponse
     {
         $response = [
@@ -264,13 +188,6 @@ class Responses
         );
     }
 
-    /**
-     * 204, successful request, no content to return, typically a PATCH
-     *
-     * @param Exception|null $e
-     *
-     * @return JsonResponse
-     */
     public static function successNoContent(?Exception $e = null): JsonResponse
     {
         $response = [];
@@ -297,32 +214,6 @@ class Responses
             ->json($response,400);
     }
 
-    /**
-     * 200, successful request, no content to return
-     *
-     * @param boolean $array Return empty array, if false empty object
-     * @param Exception|null $e
-     *
-     * @return JsonResponse
-     */
-    public static function successEmptyContent(bool $array = false, ?Exception $e = null): JsonResponse
-    {
-        $response = ($array === true ? [] : null);
-
-        if ($e instanceOf Exception) {
-            $response = self::addException($response, $e);
-        }
-
-        return response()->json($response,200);
-    }
-
-    /**
-     * 400 error, nothing to PATCH, bad request
-     *
-     * @param Exception|null $e
-     *
-     * @return JsonResponse
-     */
     public static function nothingToPatch(?Exception $e = null): JsonResponse
     {
         $response = [
@@ -339,14 +230,6 @@ class Responses
         );
     }
 
-    /**
-     * 400 error, invalid fields in the request, therefore bad request
-     *
-     * @param array $invalid_fields An array of invalid fields
-     * @param Exception|null $e
-     *
-     * @return JsonResponse
-     */
     public static function invalidFieldsInRequest(array $invalid_fields, ?Exception $e = null): JsonResponse
     {
         $response = [
@@ -364,13 +247,6 @@ class Responses
         );
     }
 
-    /**
-     * 503, maintenance
-     *
-     * @param Exception|null $e
-     *
-     * @return JsonResponse
-     */
     public static function maintenance(?Exception $e = null): JsonResponse
     {
         $response = [
@@ -387,16 +263,23 @@ class Responses
         );
     }
 
-    /**
-     * 422 error, validation error
-     *
-     * @param array $validation_errors
-     * @param Exception|null $e
-     *
-     * @return JsonResponse
-     */
-    public static function validationErrors(array $validation_errors, ?Exception $e = null): JsonResponse
-    {
+    public static function validationErrors(
+        Validator $validator,
+        array $allowed_values = [],
+        ?Exception $e = null
+    ): ?JsonResponse {
+        $validation_errors = [];
+
+        foreach ($validator->errors()->toArray() as $field => $errors) {
+            foreach ($errors as $error) {
+                $validation_errors[$field]['errors'][] = $error;
+            }
+        }
+
+        if (count($allowed_values) > 0) {
+            $validation_errors = array_merge_recursive($validation_errors, $allowed_values);
+        }
+
         $response = [
             'message' => trans('responses.validation'),
             'fields' => $validation_errors

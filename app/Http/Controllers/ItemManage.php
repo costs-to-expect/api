@@ -746,7 +746,7 @@ class ItemManage extends Controller
         );
 
         if ($validator->fails()) {
-            return \App\HttpRequest\BodyValidation::returnValidationErrors($validator);
+            return \App\HttpResponse\Responses::validationErrors($validator);
         }
 
         return null;
@@ -758,7 +758,7 @@ class ItemManage extends Controller
 
         $config_base_path = 'api.item-type-allocated-expense';
 
-        $invalid_fields = \App\HttpRequest\BodyValidation::checkForInvalidFields(
+        $invalid_fields = $this->checkForInvalidFields(
             array_keys(LaravelConfig::get($config_base_path . '.validation-patch.fields', []))
         );
 
@@ -792,7 +792,7 @@ class ItemManage extends Controller
         );
 
         if ($validator->fails()) {
-            return \App\HttpRequest\BodyValidation::returnValidationErrors($validator);
+            return \App\HttpResponse\Responses::validationErrors($validator);
         }
 
         return null;
@@ -816,7 +816,7 @@ class ItemManage extends Controller
         );
 
         if ($validator->fails()) {
-            return \App\HttpRequest\BodyValidation::returnValidationErrors($validator);
+            return \App\HttpResponse\Responses::validationErrors($validator);
         }
 
         return null;
@@ -828,7 +828,7 @@ class ItemManage extends Controller
 
         $config_base_path = 'api.item-type-game';
 
-        $invalid_fields = \App\HttpRequest\BodyValidation::checkForInvalidFields(
+        $invalid_fields = $this->checkForInvalidFields(
             array_keys(LaravelConfig::get($config_base_path . '.validation-patch.fields', []))
         );
 
@@ -862,7 +862,7 @@ class ItemManage extends Controller
         );
 
         if ($validator->fails()) {
-            return \App\HttpRequest\BodyValidation::returnValidationErrors($validator);
+            return \App\HttpResponse\Responses::validationErrors($validator);
         }
 
         return null;
@@ -895,7 +895,7 @@ class ItemManage extends Controller
         );
 
         if ($validator->fails()) {
-            return \App\HttpRequest\BodyValidation::returnValidationErrors($validator);
+            return \App\HttpResponse\Responses::validationErrors($validator);
         }
 
         return null;
@@ -907,7 +907,7 @@ class ItemManage extends Controller
 
         $config_base_path = 'api.item-type-simple-expense';
 
-        $invalid_fields = \App\HttpRequest\BodyValidation::checkForInvalidFields(
+        $invalid_fields = $this->checkForInvalidFields(
             array_keys(LaravelConfig::get($config_base_path . '.validation-patch.fields', []))
         );
 
@@ -941,7 +941,7 @@ class ItemManage extends Controller
         );
 
         if ($validator->fails()) {
-            return \App\HttpRequest\BodyValidation::returnValidationErrors($validator);
+            return \App\HttpResponse\Responses::validationErrors($validator);
         }
 
         return null;
@@ -965,7 +965,7 @@ class ItemManage extends Controller
         );
 
         if ($validator->fails()) {
-            return \App\HttpRequest\BodyValidation::returnValidationErrors($validator);
+            return \App\HttpResponse\Responses::validationErrors($validator);
         }
 
         return null;
@@ -977,7 +977,7 @@ class ItemManage extends Controller
 
         $config_base_path = 'api.item-type-simple-item';
 
-        $invalid_fields = \App\HttpRequest\BodyValidation::checkForInvalidFields(
+        $invalid_fields = $this->checkForInvalidFields(
             array_keys(LaravelConfig::get($config_base_path . '.validation-patch.fields', []))
         );
 
@@ -997,7 +997,7 @@ class ItemManage extends Controller
         );
 
         if ($validator->fails()) {
-            return \App\HttpRequest\BodyValidation::returnValidationErrors($validator);
+            return \App\HttpResponse\Responses::validationErrors($validator);
         }
 
         return null;

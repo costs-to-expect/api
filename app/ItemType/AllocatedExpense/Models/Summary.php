@@ -18,7 +18,7 @@ class Summary extends LaravelModel
 {
     protected $guarded = ['id', 'actualised_total', 'created_at', 'updated_at'];
     protected $table = 'item';
-    protected $sub_table = 'item_type_allocated_expense';
+    protected string $sub_table = 'item_type_allocated_expense';
 
     /**
      * Return the summary of items, grouped by category

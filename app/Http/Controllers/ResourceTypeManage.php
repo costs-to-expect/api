@@ -36,7 +36,7 @@ class ResourceTypeManage extends Controller
         ]);
 
         if ($validator->fails()) {
-            return \App\HttpRequest\BodyValidation::returnValidationErrors($validator);
+            return \App\HttpResponse\Responses::validationErrors($validator);
         }
 
         $cache_job_payload = (new \App\Cache\JobPayload())
@@ -175,10 +175,10 @@ class ResourceTypeManage extends Controller
         ]);
 
         if ($validator !== null && $validator->fails()) {
-            return \App\HttpRequest\BodyValidation::returnValidationErrors($validator);
+            return \App\HttpResponse\Responses::validationErrors($validator);
         }
 
-        $invalid_fields = \App\HttpRequest\BodyValidation::checkForInvalidFields(
+        $invalid_fields = $this->checkForInvalidFields(
             array_merge(
                 (new ResourceType())->patchableFields(),
                 (new ResourceTypeValidator())->dynamicDefinedFields()
