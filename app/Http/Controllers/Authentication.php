@@ -301,7 +301,7 @@ class Authentication extends \Illuminate\Routing\Controller
                 ]
             ) === true
         ) {
-            $user = Auth::user();
+            $user = Auth::guard('api')->user();
 
             if ($user !== null) {
 
@@ -338,7 +338,7 @@ class Authentication extends \Illuminate\Routing\Controller
 
     public function logout(): Http\JsonResponse
     {
-        Auth::logout();
+        Auth::guard('api')->logout();
 
         return response()->json(['message' => trans('auth.signed-out')], 200);
     }

@@ -2,7 +2,10 @@
 
 namespace Tests\Feature\Http\Controllers;
 
+use App\HttpRequest\Hash;
+use App\Models\ResourceType;
 use App\User;
+use Illuminate\Support\Facades\Auth;
 use Tests\TestCase;
 
 class ResourceManageTest extends TestCase
@@ -98,6 +101,36 @@ class ResourceManageTest extends TestCase
         );
 
         $response->assertStatus(422);
+    }
+
+    /** @test */
+    public function create_resource_fails_no_permission_to_resource_type(): void
+    {
+        $this->actingAs(User::find($this->getARandomUser()->id)); // Random user
+
+        $resource_type = ResourceType::query()
+            ->join('permitted_user', 'resource_type.id', '=', 'permitted_user.resource_type_id')
+            ->where('permitted_user.user_id', '=', 1)
+            ->first();
+
+        if ($resource_type !== null) {
+
+            $resource_type_id = (new Hash())->encode('resource-type', $resource_type->id);
+
+            $response = $this->postResource(
+                $resource_type_id,
+                [
+                    'name' => $this->faker->text(200),
+                    'description' => $this->faker->text(200),
+                    'item_subtype_id' => 'a56kbWV82n'
+                ]
+            );
+
+            $response->assertStatus(403);
+
+        } else {
+            $this->fail('Unable to fetch a resource type for testing in');
+        }
     }
 
     /** @test */

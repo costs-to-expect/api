@@ -59,7 +59,7 @@ class Responses
 
         return response()->json(
             $response,
-            ($type !== null ? 404 : 403)
+            ($type !== null ? 403 : 404)
         );
     }
 

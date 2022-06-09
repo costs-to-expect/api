@@ -51,7 +51,7 @@ class Controller extends BaseController
     protected function setPermittedResourceTypes(): void
     {
         if (
-            auth('api')->user() !== null &&
+            auth()->guard('api')->user() !== null &&
             auth()->guard('api')->check() === true
         ) {
             $this->user_id = auth('api')->user()->id; // Safe as check above ensures not null
@@ -85,7 +85,7 @@ class Controller extends BaseController
         $cache_control->setTtlOneMonth();
 
         if (
-            auth('api')->user() !== null &&
+            auth()->guard('api')->user() !== null &&
             auth()->guard('api')->check() === true
         ) {
             $cache_control = new Control(true, $this->user_id);

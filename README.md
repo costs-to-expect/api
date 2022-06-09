@@ -260,23 +260,23 @@ You can see our progress in the table below. We are hoping to add tests in each 
 not too concerned about missing anything as we still have all our tests in Postman, we won't disable our test monitor until 
 our local test suite is as complete as the Postman request tests.
 
-| Controller                 | Progress               |
-|:---------------------------|:-----------------------|
-| Authentication (Actions)   | Complete (34 Tests)    |
-| Authentication (Responses) | In Progress (2 Tests)  |
-| CategoryManage             | Not started            |
-| ItemCategoryManage         | Not started            |
-| ItemManage                 | Not started            |
-| ItemPartialTransferManage  | Not started            |
-| ItemSubcategoryManage      | Not started            |
-| ItemTransferManage         | Not started            |
-| PermittedUserManage        | In Progress (4 Tests)  |
-| PermittedUserView          | In Progress (2 Tests)  |
-| RequestManage              | Not started            |
-| ResourceManage             | Complete (13 Tests)    |
-| ResourceTypeManage         | Complete (14 Tests)    |
-| ResourceTypeView           | In Progress (3 Tests)  |
-| SubcategoryManage          | Not started            |
-| ToolManage                 | Not started            |
-| Summaries                  | Not started            |
-| Total                      | In Progress (72 Tests) |
+| Controller                          | Progress               |
+|:------------------------------------|:-----------------------|
+| Authentication (Actions)            | Complete (34 Tests)    |
+| Authentication (Responses)          | In Progress (2 Tests)  |
+| CategoryManage (Actions)            | Not started            |
+| ItemCategoryManage (Actions)        | Not started            |
+| ItemManage (Actions)                | Not started            |
+| ItemPartialTransferManage (Actions) | Not started            |
+| ItemSubcategoryManage (Actions)     | Not started            |
+| ItemTransferManage (Actions)        | Not started            |
+| PermittedUserManage (Actions)       | In Progress (4 Tests)  |
+| PermittedUserView (Responses)       | In Progress (2 Tests)  |
+| RequestManage (Actions)             | Not started            |
+| ResourceManage (Actions)            | Complete (14 Tests)    |
+| ResourceTypeManage (Actions)        | Complete (14 Tests)    |
+| ResourceTypeView (Responses)        | In Progress (3 Tests)  |
+| SubcategoryManage (Actions)         | Not started            |
+| ToolManage (Actions)                | Not started            |
+| Summaries (Responses)               | Not started            |
+| Total                               | In Progress (73 Tests) |

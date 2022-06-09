@@ -2,8 +2,6 @@
 
 namespace App\Providers;
 
-use DateInterval;
-use DateTime;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
 
 class AuthServiceProvider extends ServiceProvider
