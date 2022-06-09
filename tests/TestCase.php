@@ -23,6 +23,11 @@ abstract class TestCase extends BaseTestCase
         $this->assertJsonMatchesSchema($content, 'api/schema/permitted-user.json');
     }
 
+    protected function assertJsonIsCategory($content): void
+    {
+        $this->assertJsonMatchesSchema($content, 'api/schema/category.json');
+    }
+
     protected function assertJsonIsResource($content): void
     {
         $this->assertJsonMatchesSchema($content, 'api/schema/resource.json');
@@ -40,6 +45,23 @@ abstract class TestCase extends BaseTestCase
 
         $result = $validator->schemaValidation(json_decode($content), $schema);
         self::assertTrue($result->isValid());
+    }
+
+    protected function createAndReturnCategoryId(string $resource_type_id): string
+    {
+        $response = $this->postCategory(
+            $resource_type_id,
+            [
+                'name' => $this->faker->text(200),
+                'description' => $this->faker->text(200),
+            ]
+        );
+
+        if ($response->assertStatus(201)) {
+            return $response->json('id');
+        }
+
+        $this->fail('Unable to create the category');
     }
 
     protected function createAndReturnResourceId(string $resource_type_id): string
@@ -77,6 +99,13 @@ abstract class TestCase extends BaseTestCase
         }
 
         $this->fail('Unable to create the resource type');
+    }
+
+    protected function deleteCategory(string $resource_type_id, $category_id): TestResponse
+    {
+        return $this->delete(
+            route('category.delete', ['resource_type_id' => $resource_type_id, 'category_id' => $category_id]), []
+        );
     }
 
     protected function deletePermittedUser(string $resource_type_id, string $permitted_user_id): TestResponse
@@ -130,6 +159,20 @@ abstract class TestCase extends BaseTestCase
         return $this->getRoute('resource-type.list', $parameters);
     }
 
+    protected function patchCategory(string $resource_type_id, string $category_id, array $payload): TestResponse
+    {
+        return $this->patch(
+            route(
+                'category.update',
+                [
+                    'resource_type_id' => $resource_type_id,
+                    'category_id' => $category_id
+                ]
+            ),
+            $payload
+        );
+    }
+
     protected function patchResource(string $resource_type_id, string $resource_id, array $payload): TestResponse
     {
         return $this->patch(
@@ -165,6 +208,14 @@ abstract class TestCase extends BaseTestCase
     protected function optionsRoute(string $route, array $parameters = []): TestResponse
     {
         return $this->options(route($route, $parameters));
+    }
+
+    protected function postCategory(string $resource_type_id, array $payload): TestResponse
+    {
+        return $this->post(
+            route('category.create', ['resource_type_id' => $resource_type_id]),
+            $payload
+        );
     }
 
     protected function postPermittedUser(string $resource_type_id, array $payload): TestResponse

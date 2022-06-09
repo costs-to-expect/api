@@ -135,8 +135,8 @@ class CategoryManage extends Controller
         }
 
         $validator = (new CategoryValidator)->update([
-            'resource_type_id' => (int) $category->resource_type_id,
-            'category_id' => (int) $category_id
+            'resource_type_id' => $category->resource_type_id,
+            'category_id' => $category->id
         ]);
 
         if ($validator === null) {
@@ -176,7 +176,7 @@ class CategoryManage extends Controller
             ClearCache::dispatch($cache_job_payload->payload());
 
         } catch (Exception $e) {
-            return Responses::failedToSaveModelForUpdate();
+            return Responses::failedToSaveModelForUpdate($e);
         }
 
         return Responses::successNoContent();

@@ -101,7 +101,7 @@ class Category extends BaseValidator
     {
         return ValidatorFacade::make(
             request()->all(),
-            $this->updateRules($options['resource_type_id'], $options['category_id']),
+            $this->updateRules($options['category_id'], $options['resource_type_id']),
             $this->translateMessages('api.category.validation-patch.messages')
         );
     }

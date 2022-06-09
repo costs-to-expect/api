@@ -34,6 +34,11 @@ class Category extends Model
         return $this->belongsTo(__CLASS__, 'category_id', 'id');
     }
 
+    public function resourceType(): BelongsTo
+    {
+        return $this->belongsTo(ResourceType::class, 'resource_type_id', 'id');
+    }
+
     public function patchableFields(): array
     {
         return array_keys(Config::get('api.category.validation-patch.fields'));
@@ -189,7 +194,8 @@ class Category extends Model
             'category_name' => $category->name,
             'category_description' => $category->description,
             'category_created_at' => $category->created_at->toDateTimeString(),
-            'resource_type_id' => $category->resource_type_id
+            'resource_type_id' => $category->resource_type_id,
+            'resource_type_name' => $category->resourceType->name
         ];
     }
 }

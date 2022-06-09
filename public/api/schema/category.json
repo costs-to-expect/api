@@ -16,13 +16,21 @@
         "resource_type": {
             "type": "object",
             "properties": {
+                "uri": {
+                    "type": "string"
+                },
                 "id": {
                     "type": "string"
                 },
                 "name": {
                     "type": "string"
                 }
-            }
+            },
+            "required": [
+                "uri",
+                "id",
+                "name"
+            ]
         },
         "subcategories": {
             "type": "object",
@@ -38,7 +46,6 @@
         "name",
         "description",
         "created",
-        "resource_type",
-        "subcategories"
+        "resource_type"
     ]
 }

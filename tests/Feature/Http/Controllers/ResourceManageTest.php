@@ -5,7 +5,6 @@ namespace Tests\Feature\Http\Controllers;
 use App\HttpRequest\Hash;
 use App\Models\ResourceType;
 use App\User;
-use Illuminate\Support\Facades\Auth;
 use Tests\TestCase;
 
 class ResourceManageTest extends TestCase

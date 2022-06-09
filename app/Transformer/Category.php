@@ -22,13 +22,10 @@ class Category extends Transformer
             'created' => $to_transform['category_created_at'],
             'resource_type' => [
                 'uri' => route('resource-type.show', ['resource_type_id' => $resource_type_id], false),
-                'id' => $resource_type_id
+                'id' => $resource_type_id,
+                'name' => $to_transform['resource_type_name'],
             ]
         ];
-
-        if (array_key_exists('resource_type_name', $to_transform) === true) {
-            $this->transformed['resource_type']['name'] = $to_transform['resource_type_name'];
-        }
 
         if (array_key_exists('category_subcategories', $to_transform)) {
             $this->transformed['subcategories']['uri'] = route('subcategory.list', ['resource_type_id' => $resource_type_id, 'category_id' => $category_id], false);
