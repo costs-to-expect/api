@@ -63,7 +63,7 @@ class ItemPartialTransferManage extends Controller
 
             return Responses::failedToSelectModelForUpdateOrDelete();
         } catch (QueryException $e) {
-            return Responses::foreignKeyConstraintError();
+            return Responses::foreignKeyConstraintError('', $e);
         } catch (Exception $e) {
             return Responses::notFound(trans('entities.item-partial-transfer'), $e);
         }
@@ -133,7 +133,7 @@ class ItemPartialTransferManage extends Controller
             ClearCache::dispatch($cache_job_payload->payload());
 
         } catch (QueryException $e) {
-            return Responses::foreignKeyConstraintError();
+            return Responses::foreignKeyConstraintError('', $e);
         } catch (Exception $e) {
             return Responses::failedToSaveModelForCreate();
         }

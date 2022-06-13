@@ -95,7 +95,7 @@ class ItemTransferManage extends Controller
             ClearCache::dispatch($cache_job_payload->payload());
 
         } catch (QueryException $e) {
-            return \App\HttpResponse\Responses::foreignKeyConstraintError();
+            return \App\HttpResponse\Responses::foreignKeyConstraintError('', $e);
         } catch (Exception $e) {
             return \App\HttpResponse\Responses::failedToSaveModelForUpdate();
         }

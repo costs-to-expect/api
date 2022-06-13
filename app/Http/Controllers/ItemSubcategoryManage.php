@@ -193,7 +193,7 @@ class ItemSubcategoryManage extends Controller
 
             return \App\HttpResponse\Responses::successNoContent();
         } catch (QueryException $e) {
-            return \App\HttpResponse\Responses::foreignKeyConstraintError();
+            return \App\HttpResponse\Responses::foreignKeyConstraintError('', $e);
         } catch (Exception $e) {
             return \App\HttpResponse\Responses::notFound(trans('entities.item-subcategory'), $e);
         }

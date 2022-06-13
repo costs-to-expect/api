@@ -114,7 +114,7 @@ class PermittedUserManage extends Controller
 
             return Responses::successNoContent();
         } catch (QueryException $e) {
-            return Responses::foreignKeyConstraintError();
+            return Responses::foreignKeyConstraintError('', $e);
         } catch (Exception $e) {
             return Responses::notFound(trans('entities.permitted-user'), $e);
         }

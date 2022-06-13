@@ -66,7 +66,7 @@ class Responses
     public static function foreignKeyConstraintError($message = '', ?Throwable $e = null): JsonResponse
     {
         $response = [
-            'message' => (strlen($message) > 0) ? $message : trans('responses.constraint')
+            'message' => ($message !== '') ? $message : trans('responses.constraint')
         ];
 
         if ($e instanceOf Throwable && app()->environment() !== 'production') {
