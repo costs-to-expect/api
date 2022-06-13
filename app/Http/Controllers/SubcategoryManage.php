@@ -62,7 +62,7 @@ class SubcategoryManage extends Controller
             ClearCache::dispatch($cache_job_payload->payload());
 
         } catch (Exception $e) {
-            return Responses::failedToSaveModelForCreate();
+            return Responses::failedToSaveModelForCreate($e);
         }
 
         return response()->json(
@@ -115,7 +115,7 @@ class SubcategoryManage extends Controller
 
             return Responses::successNoContent();
         } catch (QueryException $e) {
-            return Responses::foreignKeyConstraintError('', $e);
+            return Responses::foreignKeyConstraintError($e);
         } catch (Exception $e) {
             return Responses::notFound(trans('entities.subcategory'), $e);
         }
@@ -189,7 +189,7 @@ class SubcategoryManage extends Controller
             ClearCache::dispatch($cache_job_payload->payload());
 
         } catch (Exception $e) {
-            return Responses::failedToSaveModelForUpdate();
+            return Responses::failedToSaveModelForUpdate($e);
         }
 
         return Responses::successNoContent();

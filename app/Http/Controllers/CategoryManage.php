@@ -58,7 +58,7 @@ class CategoryManage extends Controller
             ClearCache::dispatch($cache_job_payload->payload());
 
         } catch (Exception $e) {
-           return Responses::failedToSaveModelForCreate();
+           return Responses::failedToSaveModelForCreate($e);
         }
 
         return response()->json(
@@ -104,7 +104,7 @@ class CategoryManage extends Controller
 
             return Responses::successNoContent();
         } catch (QueryException $e) {
-            return Responses::foreignKeyConstraintError('', $e);
+            return Responses::foreignKeyConstraintError($e);
         } catch (Exception $e) {
             return Responses::notFound(trans('entities.category'), $e);
         }

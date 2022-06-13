@@ -81,7 +81,7 @@ class ResourceTypeManage extends Controller
 
         } catch (Exception $e) {
             Log::error($e->getMessage());
-            return \App\HttpResponse\Responses::failedToSaveModelForCreate();
+            return \App\HttpResponse\Responses::failedToSaveModelForCreate($e);
         }
 
         return response()->json(
@@ -139,7 +139,7 @@ class ResourceTypeManage extends Controller
 
                 return \App\HttpResponse\Responses::successNoContent();
             } catch (QueryException $e) {
-                return \App\HttpResponse\Responses::foreignKeyConstraintError('', $e);
+                return \App\HttpResponse\Responses::foreignKeyConstraintError($e);
             } catch (Exception $e) {
                 return \App\HttpResponse\Responses::notFound(trans('entities.resource-type'), $e);
             }
@@ -205,7 +205,7 @@ class ResourceTypeManage extends Controller
             ClearCache::dispatch($cache_job_payload->payload());
 
         } catch (Exception $e) {
-            return \App\HttpResponse\Responses::failedToSaveModelForUpdate();
+            return \App\HttpResponse\Responses::failedToSaveModelForUpdate($e);
         }
 
         return \App\HttpResponse\Responses::successNoContent();
