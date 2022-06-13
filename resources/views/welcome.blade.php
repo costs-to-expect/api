@@ -222,46 +222,44 @@
                     <p>The changelog below shows all the fixes and improvements we have made, to view
                         the entire changelog please check <a href="https://github.com/costs-to-expect/api/releases">here</a>.</p>
 
-                    <p class="lead">
-
-                    </p>
-
                     <h3>Added</h3>
 
                     <ul>
-                        <li>We have updated the `/auth/user` route, the route will now show any active created tokens</li>
-                        <li>We have added `device_name` as an optional field on sign-in, if set, the generated token will be prefixed with the device name</li>
-                        <li>We have added an `include-permitted-users` parameter when requesting a resource type, you will be able to see all the permitted users without having to go down the tree</li>
-                        <li>If an API response includes a related object, the first field should be the URI to the relevant collection or resource, we have started updating responses</li>
-                        <li>We have added a `auth/user/tokens` route to show the active tokens, you can view an individual token as well as delete a token</li>
-                        <li>We have added a notification for failed jobs, if the `ClearCache` job fails we will get an email, luckily, it doesn't ever fail :)</li>
-                        <li>We have added the ability to assign  permitted users, if you have access to a resource type you can assign a known user to the resource type</li>
-                        <li>We have added a view permitted user endpoint</li>
-                        <li>We have added the ability to delete a permitted user, you can delete any permitted user with access to the resource type, including yourself</li>
-                        <li>We have added initial tests for the permitted user routes</li>
+                        <li>We have added our first schema files for OPTIONS responses and started working on the tests.</li>
+                        <li>We have added tests for category management, found one bug when creating the tests.</li>
                     </ul>
 
                     <h3>Changed</h3>
 
                     <ul>
-                        <li>We have updated sign-in to clear tokens that have not been used for a year</li>
-                        <li>We have added additional validation to `/auth/login` to match all the create password routes</li>
-                        <li>We have removed additional references to our `item-type` entity class, keep code in the individual item type namespaces</li>
-                        <li>We have converted out `Mailables` to `Notifications` and they get send via the queue</li>
-                        <li>We have updated the `partial-transfers` route to use methods per item types, this way we can correctly return a 405 when an item doesn't support partial transfers</li>
-                        <li>We have updated the `transfers` route to use methods per item types, this was we can correctly return a 405 when an item doesn't support transfers</li>
-                        <li>We have localised all response messages in the Authentication controller to match the rest of the API</li>
-                        <li>We have updated the partial transfers collection and show route, the partial transfer object includes the URI to the relevant entity (v2.23.1)</li>
-                        <li>We have switched additional routes in our routes files to named routes (v2.23.1)</li>
-                        <li>We have updated the json schema file for partial transfers (v2.23.1)</li>
+                        <li>We have updated our response class for OPTIONS responses, we now allow parameters to be defined for POST requests. One example of where we need this is the create password POST request, `password` and `password_confirmation` are required fields, however, `token` and `email` are required parameters. Before this update, you had to parse the returned error of read the OPTIONS request description.</li>
+                        <li>We have started splitting config files, a config file should be for one purpose.</li>
+                        <li>We have spent quite a bit of time reviewing the API structure and refactoring. We have removed unnecessary complexity, renamed classes and methods to describe intent more clearly and removed pointless base classes.</li>
+                        <li>We have reworked how allowed values are generated for the different item types, allowed values for fields and parameters have been split, and we have removed all abstraction.</li>
+                        <li>We have removed some route validation files which didn't do anything useful after all the item type work.</li>
+                        <li>We have reworked the responses class, removed exception parameters when not necessary, pass in an exception if thrown and now delegated responsibility to the responses class to decide if the exception should be returned in the response.</li>
+                        <li>We have upgraded the API to Laravel 9 and PHP 8.1.</li>
                     </ul>
 
                     <h3>Fixed</h3>
 
                     <ul>
-                        <li>We have fixed our Authentication tests, we no longer overwrite the initial user, additionally, we have updated three tests to return success on a 422, not a 401</li>
-                        <li>We have corrected a couple of parameter conversions, two parameters not correctly being converted to Booleans</li>
-                        <li>Unable to delete an `allocated-expense`, need to clear the partial transfers table</li>
+                        <li>Options request incorrect for the `auth.register` endpoint (Test added).</li>
+                        <li>Options requests returning response twice.</li>
+                        <li>Type corrected in OPTIONS response, authentication status/requirements now a boolean, not a string.</li>
+                        <li>Minor correction to the description of two POST endpoints.</li>
+                        <li>Corrected a type in the OPTIONS response for the month parameter.</li>
+                        <li>Corrected the `partial-transfer` JSON schema file.</li>
+                        <li>Allowed values not showing for `category` on GET endpoints.</li>
+                        <li>Inconsistent usage of the responses helper.</li>
+                        <li>Category validator allowed duplicate names due to incorrect params, caught by model.</li>
+                    </ul>
+
+                    <h3>Removed</h3>
+
+                    <ul>
+                        <li>We have removed the `ItemType` base class and all the child classes.</li>
+                        <li>We have removed a redundant validation class and moved the response method into the main response class.</li>
                     </ul>
                 </div>
             </div>
