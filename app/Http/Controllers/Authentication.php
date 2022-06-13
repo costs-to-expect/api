@@ -2,16 +2,16 @@
 
 namespace App\Http\Controllers;
 
+use App\HttpResponse\Responses;
 use App\Notifications\ForgotPassword;
 use App\Notifications\Registered;
-use App\Option\Auth\Check;
-use App\Option\Auth\CreateNewPassword;
-use App\Option\Auth\CreatePassword;
-use App\Option\Auth\Login;
-use App\Option\Auth\Register;
-use App\Option\Auth\UpdatePassword;
-use App\Option\Auth\UpdateProfile;
-use App\Response\Responses;
+use App\HttpOptionResponse\Auth\Check;
+use App\HttpOptionResponse\Auth\CreateNewPassword;
+use App\HttpOptionResponse\Auth\CreatePassword;
+use App\HttpOptionResponse\Auth\Login;
+use App\HttpOptionResponse\Auth\Register;
+use App\HttpOptionResponse\Auth\UpdatePassword;
+use App\HttpOptionResponse\Auth\UpdateProfile;
 use App\User;
 use Exception;
 use Illuminate\Http;
@@ -26,11 +26,11 @@ use Illuminate\Support\Str;
 
 class Authentication extends \Illuminate\Routing\Controller
 {
-    protected \App\Request\Hash $hash;
+    protected \App\HttpRequest\Hash $hash;
 
     public function __construct()
     {
-        $this->hash = new \App\Request\Hash();
+        $this->hash = new \App\HttpRequest\Hash();
     }
 
     public function check(): Http\JsonResponse
@@ -50,11 +50,11 @@ class Authentication extends \Illuminate\Routing\Controller
         $email = Str::replaceFirst(' ', '+', urldecode($request->query('email')));
         $token = $request->query('token');
 
-        $tokens = DB::table('password_creates')
+        $token_validation = DB::table('password_creates')
             ->where('email', '=', $email)
             ->first();
 
-        if ($tokens === null || Hash::check($token, $tokens->token) === false) {
+        if ($token_validation === null || Hash::check($token, $token_validation->token) === false) {
             return response()->json(
                 [
                     'message'=> trans('auth.email-or-token-invalid')
@@ -258,7 +258,7 @@ class Authentication extends \Illuminate\Routing\Controller
 
     public function optionsForgotPassword(): Http\JsonResponse
     {
-        $response = new \App\Option\Auth\ForgotPassword([]);
+        $response = new \App\HttpOptionResponse\Auth\ForgotPassword([]);
 
         return $response->create()->response();
     }
@@ -301,7 +301,7 @@ class Authentication extends \Illuminate\Routing\Controller
                 ]
             ) === true
         ) {
-            $user = Auth::user();
+            $user = Auth::guard('api')->user();
 
             if ($user !== null) {
 
@@ -338,7 +338,7 @@ class Authentication extends \Illuminate\Routing\Controller
 
     public function logout(): Http\JsonResponse
     {
-        Auth::logout();
+        Auth::guard('api')->logout();
 
         return response()->json(['message' => trans('auth.signed-out')], 200);
     }
@@ -647,7 +647,7 @@ class Authentication extends \Illuminate\Routing\Controller
     {
         $user = auth()->guard('api')->user();
 
-        $response = new \App\Option\Auth\User(['view'=> $user !== null && $user->id !== null]);
+        $response = new \App\HttpOptionResponse\Auth\User(['view'=> $user !== null && $user->id !== null]);
 
         return $response->create()->response();
     }
@@ -656,7 +656,7 @@ class Authentication extends \Illuminate\Routing\Controller
     {
         $user = auth()->guard('api')->user();
 
-        $response = new \App\Option\Auth\Tokens(['view'=> $user !== null && $user->id !== null]);
+        $response = new \App\HttpOptionResponse\Auth\Tokens(['view'=> $user !== null && $user->id !== null]);
 
         return $response->create()->response();
     }
@@ -665,7 +665,7 @@ class Authentication extends \Illuminate\Routing\Controller
     {
         $user = auth()->guard('api')->user();
 
-        $response = new \App\Option\Auth\Token([
+        $response = new \App\HttpOptionResponse\Auth\Token([
             'view'=> $user !== null && $user->id !== null,
             'manage'=> $user !== null && $user->id !== null,
         ]);

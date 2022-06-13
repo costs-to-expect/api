@@ -2,15 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use App\HttpResponse\Header;
+use App\HttpResponse\Responses;
 use App\Models\ItemSubtype;
-use App\Option\ItemSubtypeCollection;
-use App\Option\ItemSubtypeItem;
-use App\Request\Parameter;
-use App\Request\Route;
-use App\Response\Header;
-use App\Response\Pagination as UtilityPagination;
-use App\Response\Responses;
-use App\Transformers\ItemSubtype as ItemSubtypeTransformer;
+use App\HttpOptionResponse\ItemSubtypeCollection;
+use App\HttpOptionResponse\ItemSubtypeItem;
+use App\HttpRequest\Parameter;
+use App\Models\Permission;
+use App\Transformer\ItemSubtype as ItemSubtypeTransformer;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Config;
 
@@ -25,8 +24,8 @@ class ItemSubtypeView extends Controller
 
     public function index($item_type_id): JsonResponse
     {
-        if (Route\Validate\ItemType::existsToUserForViewing($item_type_id) === false) {
-            Responses::notFound(trans('entities.item-subtype'));
+        if ((new Permission())->itemTypeExists((int) $item_type_id) === false) {
+            return Responses::notFound(trans('entities.item-subtype'));
         }
 
         $cache_control = new \App\Cache\Control();
@@ -50,7 +49,7 @@ class ItemSubtypeView extends Controller
                 $search_parameters
             );
 
-            $pagination = new UtilityPagination(request()->path(), $total);
+            $pagination = new \App\HttpResponse\Pagination(request()->path(), $total);
             $pagination_parameters = $pagination->allowPaginationOverride($this->allow_entire_collection)->
                 setSearchParameters($search_parameters)->
                 setSortParameters($sort_parameters)->
@@ -87,8 +86,8 @@ class ItemSubtypeView extends Controller
 
     public function show($item_type_id, $item_subtype_id): JsonResponse
     {
-        if (Route\Validate\ItemSubtype::existsToUserForViewing($item_type_id, $item_subtype_id) === false) {
-            Responses::notFound(trans('entities.item-subtype'));
+        if ((new Permission())->itemSubTypeExists((int) $item_type_id, (int) $item_subtype_id) === false) {
+            return Responses::notFound(trans('entities.item-subtype'));
         }
 
         $subtype = (new ItemSubtype())->single(
@@ -112,8 +111,8 @@ class ItemSubtypeView extends Controller
 
     public function optionsIndex($item_type_id): JsonResponse
     {
-        if (Route\Validate\ItemType::existsToUserForViewing($item_type_id) === false) {
-            Responses::notFound(trans('entities.item-subtype'));
+        if ((new Permission())->itemTypeExists((int) $item_type_id) === false) {
+            return Responses::notFound(trans('entities.item-subtype'));
         }
 
         $response = new ItemSubtypeCollection(['view'=> $this->user_id !== null]);
@@ -123,8 +122,8 @@ class ItemSubtypeView extends Controller
 
     public function optionsShow($item_type_id, $item_subtype_id): JsonResponse
     {
-        if (Route\Validate\ItemSubtype::existsToUserForViewing($item_type_id, $item_subtype_id) === false) {
-            Responses::notFound(trans('entities.item-subtype'));
+        if ((new Permission())->itemSubTypeExists((int) $item_type_id, (int) $item_subtype_id) === false) {
+            return Responses::notFound(trans('entities.item-subtype'));
         }
 
         $response = new ItemSubtypeItem(['view'=> $this->user_id !== null]);

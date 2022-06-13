@@ -2,12 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\HttpResponse\Responses;
 use App\Jobs\ClearCache;
 use App\Models\Category;
-use App\Request\BodyValidation;
-use App\Request\Validate\Category as CategoryValidator;
-use App\Response\Responses;
-use App\Transformers\Category as CategoryTransformer;
+use App\HttpRequest\BodyValidation;
+use App\HttpRequest\Validate\Category as CategoryValidator;
+use App\Transformer\Category as CategoryTransformer;
 use Exception;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\JsonResponse;
@@ -28,15 +28,15 @@ class CategoryManage extends Controller
      */
     public function create($resource_type_id): JsonResponse
     {
-        if ($this->writeAccessToResourceType((int) $resource_type_id) === false) {
-            \App\Response\Responses::notFoundOrNotAccessible(trans('entities.resource-type'));
+        if ($this->hasWriteAccessToResourceType((int) $resource_type_id) === false) {
+            return \App\HttpResponse\Responses::notFoundOrNotAccessible(trans('entities.resource-type'));
         }
 
         $validator = (new CategoryValidator)->create([
             'resource_type_id' => $resource_type_id
         ]);
         if ($validator->fails()) {
-            return \App\Request\BodyValidation::returnValidationErrors($validator);
+            return \App\HttpResponse\Responses::validationErrors($validator);
         }
 
         $cache_job_payload = (new \App\Cache\JobPayload())
@@ -44,7 +44,7 @@ class CategoryManage extends Controller
             ->setRouteParameters([
                 'resource_type_id' => $resource_type_id
             ])
-            ->setPermittedUser($this->writeAccessToResourceType((int) $resource_type_id))
+            ->isPermittedUser($this->hasWriteAccessToResourceType((int) $resource_type_id))
             ->setUserId($this->user_id);
 
         try {
@@ -58,7 +58,7 @@ class CategoryManage extends Controller
             ClearCache::dispatch($cache_job_payload->payload());
 
         } catch (Exception $e) {
-           return Responses::failedToSaveModelForCreate();
+           return Responses::failedToSaveModelForCreate($e);
         }
 
         return response()->json(
@@ -80,8 +80,8 @@ class CategoryManage extends Controller
         $category_id
     ): JsonResponse
     {
-        if ($this->writeAccessToResourceType((int) $resource_type_id) === false) {
-            \App\Response\Responses::notFoundOrNotAccessible(trans('entities.item-category'));
+        if ($this->hasWriteAccessToResourceType((int) $resource_type_id) === false) {
+            return \App\HttpResponse\Responses::notFoundOrNotAccessible(trans('entities.item-category'));
         }
 
         $cache_job_payload = (new \App\Cache\JobPayload())
@@ -89,7 +89,7 @@ class CategoryManage extends Controller
             ->setRouteParameters([
                 'resource_type_id' => $resource_type_id
             ])
-            ->setPermittedUser($this->writeAccessToResourceType((int) $resource_type_id))
+            ->isPermittedUser($this->hasWriteAccessToResourceType((int) $resource_type_id))
             ->setUserId($this->user_id);
 
         $category = (new Category())->find($category_id);
@@ -104,9 +104,9 @@ class CategoryManage extends Controller
 
             return Responses::successNoContent();
         } catch (QueryException $e) {
-            return Responses::foreignKeyConstraintError();
+            return Responses::foreignKeyConstraintError($e);
         } catch (Exception $e) {
-            return Responses::notFound(trans('entities.category'));
+            return Responses::notFound(trans('entities.category'), $e);
         }
     }
 
@@ -120,8 +120,8 @@ class CategoryManage extends Controller
      */
     public function update($resource_type_id, $category_id): JsonResponse
     {
-        if ($this->writeAccessToResourceType((int) $resource_type_id) === false) {
-            \App\Response\Responses::notFoundOrNotAccessible(trans('entities.item-category'));
+        if ($this->hasWriteAccessToResourceType((int) $resource_type_id) === false) {
+            return \App\HttpResponse\Responses::notFoundOrNotAccessible(trans('entities.item-category'));
         }
 
         $category = (new Category())->instance($category_id);
@@ -131,12 +131,12 @@ class CategoryManage extends Controller
         }
 
         if (count(request()->all()) === 0) {
-            return \App\Response\Responses::nothingToPatch();
+            return \App\HttpResponse\Responses::nothingToPatch();
         }
 
         $validator = (new CategoryValidator)->update([
-            'resource_type_id' => (int) $category->resource_type_id,
-            'category_id' => (int) $category_id
+            'resource_type_id' => $category->resource_type_id,
+            'category_id' => $category->id
         ]);
 
         if ($validator === null) {
@@ -144,10 +144,10 @@ class CategoryManage extends Controller
         }
 
         if ($validator->fails()) {
-            return \App\Request\BodyValidation::returnValidationErrors($validator);
+            return \App\HttpResponse\Responses::validationErrors($validator);
         }
 
-        $invalid_fields = BodyValidation::checkForInvalidFields(
+        $invalid_fields = $this->checkForInvalidFields(
             array_merge(
                 (new Category())->patchableFields(),
                 (new CategoryValidator)->dynamicDefinedFields()
@@ -167,7 +167,7 @@ class CategoryManage extends Controller
             ->setRouteParameters([
                 'resource_type_id' => $resource_type_id
             ])
-            ->setPermittedUser($this->writeAccessToResourceType((int) $resource_type_id))
+            ->isPermittedUser($this->hasWriteAccessToResourceType((int) $resource_type_id))
             ->setUserId($this->user_id);
 
         try {
@@ -176,7 +176,7 @@ class CategoryManage extends Controller
             ClearCache::dispatch($cache_job_payload->payload());
 
         } catch (Exception $e) {
-            return Responses::failedToSaveModelForUpdate();
+            return Responses::failedToSaveModelForUpdate($e);
         }
 
         return Responses::successNoContent();

@@ -2,13 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\HttpResponse\Header;
 use App\Models\Currency;
-use App\Option\CurrencyCollection;
-use App\Option\CurrencyItem;
-use App\Request\Parameter;
-use App\Response\Header;
-use App\Response\Pagination as UtilityPagination;
-use App\Transformers\Currency as CurrencyTransformer;
+use App\HttpOptionResponse\CurrencyCollection;
+use App\HttpOptionResponse\CurrencyItem;
+use App\HttpRequest\Parameter;
+use App\Models\Permission;
+use App\Transformer\Currency as CurrencyTransformer;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Config;
 
@@ -46,7 +46,7 @@ class CurrencyView extends Controller
 
             $total = (new Currency())->totalCount($search_parameters);
 
-            $pagination = new UtilityPagination(request()->path(), $total);
+            $pagination = new \App\HttpResponse\Pagination(request()->path(), $total);
             $pagination_parameters = $pagination->allowPaginationOverride($this->allow_entire_collection)->
                 setSearchParameters($search_parameters)->
                 setSortParameters($sort_parameters)->
@@ -89,14 +89,14 @@ class CurrencyView extends Controller
      */
     public function show(string $currency_id): JsonResponse
     {
-        if (\App\Request\Route\Validate\Currency::existsToUserForViewing($currency_id) === false) {
-            \App\Response\Responses::notFound(trans('entities.currency'));
+        if ((new Permission())->currencyItemExists((int) $currency_id) === false) {
+            \App\HttpResponse\Responses::notFound(trans('entities.currency'));
         }
 
         $currency = (new Currency())->single($currency_id);
 
         if ($currency === null) {
-            return \App\Response\Responses::notFound(trans('entities.currency'));
+            return \App\HttpResponse\Responses::notFound(trans('entities.currency'));
         }
 
         $headers = new Header();
@@ -130,8 +130,8 @@ class CurrencyView extends Controller
      */
     public function optionsShow(string $currency_id): JsonResponse
     {
-        if (\App\Request\Route\Validate\Currency::existsToUserForViewing($currency_id) === false) {
-            \App\Response\Responses::notFound(trans('entities.currency'));
+        if ((new Permission())->currencyItemExists((int) $currency_id) === false) {
+            return \App\HttpResponse\Responses::notFound(trans('entities.currency'));
         }
 
         $response = new CurrencyItem(['view'=> $this->user_id !== null]);

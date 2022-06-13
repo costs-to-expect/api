@@ -3,10 +3,10 @@
 namespace App\Http\Controllers\Summary;
 
 use App\Http\Controllers\Controller;
+use App\HttpResponse\Header;
 use App\Models\Summary\Resource;
-use App\Option\SummaryResourceCollection;
-use App\Request\Parameter;
-use App\Response\Header;
+use App\HttpOptionResponse\SummaryResourceCollection;
+use App\HttpRequest\Parameter;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Config;
 
@@ -28,12 +28,12 @@ class ResourceView extends Controller
      */
     public function index(string $resource_type_id): JsonResponse
     {
-        if ($this->viewAccessToResourceType((int) $resource_type_id) === false) {
-            \App\Response\Responses::notFoundOrNotAccessible(trans('entities.resource-type'));
+        if ($this->hasViewAccessToResourceType((int) $resource_type_id) === false) {
+            return \App\HttpResponse\Responses::notFoundOrNotAccessible(trans('entities.resource-type'));
         }
 
         $cache_control = new \App\Cache\Control(
-            $this->writeAccessToResourceType((int) $resource_type_id),
+            $this->hasWriteAccessToResourceType((int) $resource_type_id),
             $this->user_id
         );
         $cache_control->setTtlOneWeek();
@@ -94,8 +94,8 @@ class ResourceView extends Controller
      */
     public function optionsIndex(string $resource_type_id): JsonResponse
     {
-        if ($this->viewAccessToResourceType((int) $resource_type_id) === false) {
-            \App\Response\Responses::notFoundOrNotAccessible(trans('entities.resource-type'));
+        if ($this->hasViewAccessToResourceType((int) $resource_type_id) === false) {
+            return \App\HttpResponse\Responses::notFoundOrNotAccessible(trans('entities.resource-type'));
         }
 
         $response = new SummaryResourceCollection($this->permissions((int) $resource_type_id));

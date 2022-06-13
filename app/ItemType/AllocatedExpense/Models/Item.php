@@ -5,10 +5,11 @@ namespace App\ItemType\AllocatedExpense\Models;
 
 use App\Models\Clause;
 use App\Models\Currency;
-use App\Request\Validate\Boolean;
+use App\HttpRequest\Validate\Boolean;
 use Illuminate\Database\Eloquent\Model as LaravelModel;
 use Illuminate\Database\Query\Builder as QueryBuilder;
 use Illuminate\Support\Facades\DB;
+use JetBrains\PhpStorm\ArrayShape;
 
 /**
  * @mixin QueryBuilder
@@ -166,30 +167,37 @@ class Item extends LaravelModel
         return (int) ($result->year_limit);
     }
 
-    /**
-     * Convert the model instance to an array for use with the transformer
-     *
-     * @param Item $item
-     * @param Item $item_type
-     *
-     * @return array
-     */
-    public function instanceToArray(LaravelModel $item, Item $item_type): array
+    #[ArrayShape([
+        'item_id' => "int",
+        'item_name' => "string",
+        'item_description' => "string",
+        'item_effective_date' => "string",
+        'item_publish_after' => "string",
+        'item_currency_id' => "int",
+        'item_currency_code' => "string",
+        'item_currency_name' => "string",
+        'item_total' => "float",
+        'item_percentage' => "float",
+        'item_actualised_total' => "float",
+        'item_created_at' => "string",
+        'item_updated_at' => "string"
+    ])]
+    public function instanceToArray(Item $item): array
     {
         return [
-            'item_id' => $item->id,
-            'item_name' => $item_type->name,
-            'item_description' => $item_type->description,
-            'item_effective_date' => $item_type->effective_date,
-            'item_publish_after' => $item_type->publish_after,
-            'item_currency_id' => $item_type->currency->id,
-            'item_currency_code' => $item_type->currency->code,
-            'item_currency_name' => $item_type->currency->name,
-            'item_total' => $item_type->total,
-            'item_percentage' => $item_type->percentage,
-            'item_actualised_total' => $item_type->actualised_total,
-            'item_created_at' => ($item_type->created_at !== null) ? $item_type->created_at->toDateTimeString() : null,
-            'item_updated_at' => ($item_type->updated_at !== null) ? $item_type->updated_at->toDateTimeString() : null,
+            'item_id' => $item->item_id,
+            'item_name' => $item->name,
+            'item_description' => $item->description,
+            'item_effective_date' => $item->effective_date,
+            'item_publish_after' => $item->publish_after,
+            'item_currency_id' => $item->currency->id,
+            'item_currency_code' => $item->currency->code,
+            'item_currency_name' => $item->currency->name,
+            'item_total' => $item->total,
+            'item_percentage' => $item->percentage,
+            'item_actualised_total' => $item->actualised_total,
+            'item_created_at' => ($item->created_at !== null) ? $item->created_at->toDateTimeString() : null,
+            'item_updated_at' => ($item->updated_at !== null) ? $item->updated_at->toDateTimeString() : null,
         ];
     }
 

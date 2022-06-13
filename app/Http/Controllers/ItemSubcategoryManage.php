@@ -2,11 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use App\ItemType\Entity;
+use App\ItemType\Select;
 use App\Jobs\ClearCache;
 use App\Models\ItemCategory;
 use App\Models\ItemSubcategory;
-use App\Transformers\ItemSubcategory as ItemSubcategoryTransformer;
+use App\Transformer\ItemSubcategory as ItemSubcategoryTransformer;
 use Exception;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\JsonResponse;
@@ -27,19 +27,19 @@ class ItemSubcategoryManage extends Controller
         string $item_category_id = null
     ): JsonResponse
     {
-        if ($this->writeAccessToResourceType((int) $resource_type_id) === false) {
-            \App\Response\Responses::notFoundOrNotAccessible(trans('entities.item-category'));
+        if ($this->hasWriteAccessToResourceType((int) $resource_type_id) === false) {
+            return \App\HttpResponse\Responses::notFoundOrNotAccessible(trans('entities.item-category'));
         }
 
         if ($item_category_id === null) {
-            return \App\Response\Responses::notFound(trans('entities.item-subcategory'));
+            return \App\HttpResponse\Responses::notFound(trans('entities.item-subcategory'));
         }
 
-        $item_type = Entity::itemType((int) $resource_type_id);
+        $item_type = Select::itemType((int) $resource_type_id);
 
         return match ($item_type) {
             'allocated-expense', 'simple-expense' => $this->createItemSubcategory((int) $resource_type_id, (int) $resource_id, (int) $item_id, (int) $item_category_id, 1),
-            'game', 'simple-item' => \App\Response\Responses::subcategoryAssignmentLimit(0),
+            'game', 'simple-item' => \App\HttpResponse\Responses::subcategoryAssignmentLimit(0),
             default => throw new \OutOfRangeException('No item type definition for ' . $item_type, 500),
         };
     }
@@ -60,7 +60,7 @@ class ItemSubcategoryManage extends Controller
         );
 
         if ($assigned >= $assignment_limit) {
-            return \App\Response\Responses::subcategoryAssignmentLimit($assignment_limit);
+            return \App\HttpResponse\Responses::subcategoryAssignmentLimit($assignment_limit);
         }
 
         $item_category = (new ItemCategory())
@@ -74,7 +74,7 @@ class ItemSubcategoryManage extends Controller
         }
 
         $messages = [];
-        foreach (Config::get('api.item-subcategory.validation.POST.messages') as $key => $custom_message) {
+        foreach (Config::get('api.item-subcategory.validation-post.messages') as $key => $custom_message) {
             $messages[$key] = trans($custom_message);
         }
 
@@ -86,15 +86,15 @@ class ItemSubcategoryManage extends Controller
                         'required'
                     ],
                 ],
-                Config::get('api.item-subcategory.validation.POST.fields')
+                Config::get('api.item-subcategory.validation-post.fields')
             ),
             $messages
         );
 
         if ($validator->fails()) {
-            return \App\Request\BodyValidation::returnValidationErrors(
+            return \App\HttpResponse\Responses::validationErrors(
                 $validator,
-                (new \App\AllowedValue\Subcategory())->allowedValues($item_category->category_id)
+                (new \App\Models\AllowedValue\Subcategory())->allowedValues($item_category->category_id)
             );
         }
 
@@ -104,14 +104,14 @@ class ItemSubcategoryManage extends Controller
                 'resource_type_id' => $resource_type_id,
                 'resource_id' => $resource_id
             ])
-            ->setPermittedUser($this->writeAccessToResourceType((int) $resource_type_id))
+            ->isPermittedUser($this->hasWriteAccessToResourceType((int) $resource_type_id))
             ->setUserId($this->user_id);
 
         try {
             $subcategory_id = $this->hash->decode('subcategory', request()->input('subcategory_id'));
 
             if ($subcategory_id === false) {
-                return \App\Response\Responses::unableToDecode();
+                return \App\HttpResponse\Responses::unableToDecode();
             }
 
             $item_sub_category = new ItemSubcategory([
@@ -123,7 +123,7 @@ class ItemSubcategoryManage extends Controller
             ClearCache::dispatch($cache_job_payload->payload());
 
         } catch (Exception $e) {
-            return \App\Response\Responses::failedToSaveModelForCreate();
+            return \App\HttpResponse\Responses::failedToSaveModelForCreate($e);
         }
 
         return response()->json(
@@ -140,19 +140,19 @@ class ItemSubcategoryManage extends Controller
         string $item_subcategory_id = null
     ): JsonResponse
     {
-        if ($this->writeAccessToResourceType((int) $resource_type_id) === false) {
-            \App\Response\Responses::notFoundOrNotAccessible(trans('entities.item-subcategory'));
+        if ($this->hasWriteAccessToResourceType((int) $resource_type_id) === false) {
+            return \App\HttpResponse\Responses::notFoundOrNotAccessible(trans('entities.item-subcategory'));
         }
 
         if ($item_category_id === null || $item_subcategory_id === null) {
-            return \App\Response\Responses::notFound(trans('entities.item-subcategory'));
+            return \App\HttpResponse\Responses::notFound(trans('entities.item-subcategory'));
         }
 
-        $item_type = Entity::itemType((int) $resource_type_id);
+        $item_type = Select::itemType((int) $resource_type_id);
 
         return match ($item_type) {
             'allocated-expense', 'simple-expense' => $this->deleteItemSubcategory((int) $resource_type_id, (int) $resource_id, (int) $item_id, (int) $item_category_id, (int) $item_subcategory_id),
-            'game', 'simple-item' => \App\Response\Responses::notSupported(),
+            'game', 'simple-item' => \App\HttpResponse\Responses::notSupported(),
             default => throw new \OutOfRangeException('No item type definition for ' . $item_type, 500),
         };
     }
@@ -174,7 +174,7 @@ class ItemSubcategoryManage extends Controller
         );
 
         if ($item_sub_category === null) {
-            return \App\Response\Responses::notFound(trans('entities.item-subcategory'));
+            return \App\HttpResponse\Responses::notFound(trans('entities.item-subcategory'));
         }
 
         $cache_job_payload = (new \App\Cache\JobPayload())
@@ -183,7 +183,7 @@ class ItemSubcategoryManage extends Controller
                 'resource_type_id' => $resource_type_id,
                 'resource_id' => $resource_id
             ])
-            ->setPermittedUser($this->writeAccessToResourceType((int) $resource_type_id))
+            ->isPermittedUser($this->hasWriteAccessToResourceType((int) $resource_type_id))
             ->setUserId($this->user_id);
 
         try {
@@ -191,11 +191,11 @@ class ItemSubcategoryManage extends Controller
 
             ClearCache::dispatch($cache_job_payload->payload());
 
-            return \App\Response\Responses::successNoContent();
+            return \App\HttpResponse\Responses::successNoContent();
         } catch (QueryException $e) {
-            return \App\Response\Responses::foreignKeyConstraintError();
+            return \App\HttpResponse\Responses::foreignKeyConstraintError($e);
         } catch (Exception $e) {
-            return \App\Response\Responses::notFound(trans('entities.item-subcategory'));
+            return \App\HttpResponse\Responses::notFound(trans('entities.item-subcategory'), $e);
         }
     }
 }

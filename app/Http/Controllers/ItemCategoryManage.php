@@ -2,11 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use App\ItemType\Entity;
+use App\HttpResponse\Responses;
+use App\ItemType\Select;
 use App\Jobs\ClearCache;
 use App\Models\ItemCategory;
-use App\Response\Responses;
-use App\Transformers\ItemCategory as ItemCategoryTransformer;
+use App\Transformer\ItemCategory as ItemCategoryTransformer;
 use Exception;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\JsonResponse;
@@ -26,16 +26,16 @@ class ItemCategoryManage extends Controller
         string $item_id
     ): JsonResponse
     {
-        if ($this->writeAccessToResourceType((int) $resource_type_id) === false) {
-            Responses::notFoundOrNotAccessible(trans('entities.resource'));
+        if ($this->hasWriteAccessToResourceType((int) $resource_type_id) === false) {
+            return Responses::notFoundOrNotAccessible(trans('entities.resource'));
         }
 
-        $item_type = Entity::itemType((int) $resource_type_id);
+        $item_type = Select::itemType((int) $resource_type_id);
 
         return match ($item_type) {
             'allocated-expense', 'simple-expense' => $this->createItemCategory((int) $resource_type_id, (int) $resource_id, (int) $item_id, 1),
             'game' => $this->createItemCategory((int) $resource_type_id, (int) $resource_id, (int) $item_id, 5),
-            'simple-item' => \App\Response\Responses::categoryAssignmentLimit(0),
+            'simple-item' => \App\HttpResponse\Responses::categoryAssignmentLimit(0),
             default => throw new \OutOfRangeException('No item type definition for ' . $item_type, 500),
         };
     }
@@ -54,7 +54,7 @@ class ItemCategoryManage extends Controller
         );
 
         if ($assigned >= $assignment_limit) {
-            return \App\Response\Responses::categoryAssignmentLimit($assignment_limit);
+            return \App\HttpResponse\Responses::categoryAssignmentLimit($assignment_limit);
         }
 
         $decode = $this->hash->category()->decode(request()->input('category_id'));
@@ -64,20 +64,20 @@ class ItemCategoryManage extends Controller
         }
 
         $messages = [];
-        foreach (Config::get('api.item-category.validation.POST.messages') as $key => $custom_message) {
+        foreach (Config::get('api.item-category.validation-post.messages') as $key => $custom_message) {
             $messages[$key] = trans($custom_message);
         }
 
         $validator = ValidatorFacade::make(
             ['category_id' => $category_id],
-            Config::get('api.item-category.validation.POST.fields'),
+            Config::get('api.item-category.validation-post.fields'),
             $messages
         );
 
         if ($validator->fails()) {
-            return \App\Request\BodyValidation::returnValidationErrors(
+            return \App\HttpResponse\Responses::validationErrors(
                 $validator,
-                (new \App\AllowedValue\Category())->allowedValues($resource_type_id)
+                (new \App\Models\AllowedValue\Category())->allowedValues($resource_type_id)
             );
         }
 
@@ -87,14 +87,14 @@ class ItemCategoryManage extends Controller
                 'resource_type_id' => $resource_type_id,
                 'resource_id' => $resource_id
             ])
-            ->setPermittedUser($this->writeAccessToResourceType($resource_type_id))
+            ->isPermittedUser($this->hasWriteAccessToResourceType($resource_type_id))
             ->setUserId($this->user_id);
 
         try {
             $category_id = $this->hash->decode('category', request()->input('category_id'));
 
             if ($category_id === false) {
-                return \App\Response\Responses::unableToDecode();
+                return \App\HttpResponse\Responses::unableToDecode();
             }
 
             $item_category = new ItemCategory([
@@ -106,7 +106,7 @@ class ItemCategoryManage extends Controller
             ClearCache::dispatch($cache_job_payload->payload());
 
         } catch (Exception $e) {
-            return \App\Response\Responses::failedToSaveModelForCreate();
+            return \App\HttpResponse\Responses::failedToSaveModelForCreate($e);
         }
 
         return response()->json(
@@ -122,15 +122,15 @@ class ItemCategoryManage extends Controller
         string $item_category_id
     ): JsonResponse
     {
-        if ($this->writeAccessToResourceType((int) $resource_type_id) === false) {
-            Responses::notFoundOrNotAccessible(trans('entities.resource'));
+        if ($this->hasWriteAccessToResourceType((int) $resource_type_id) === false) {
+            return Responses::notFoundOrNotAccessible(trans('entities.resource'));
         }
 
-        $item_type = Entity::itemType((int) $resource_type_id);
+        $item_type = Select::itemType((int) $resource_type_id);
 
         return match ($item_type) {
             'allocated-expense', 'simple-expense', 'game' => $this->deleteItemCategory((int) $resource_type_id, (int) $resource_id, (int) $item_id, (int) $item_category_id),
-            'simple-item' => \App\Response\Responses::notSupported(),
+            'simple-item' => \App\HttpResponse\Responses::notSupported(),
             default => throw new \OutOfRangeException('No item type definition for ' . $item_type, 500),
         };
     }
@@ -150,7 +150,7 @@ class ItemCategoryManage extends Controller
         );
 
         if ($item_category === null) {
-            return \App\Response\Responses::notFound(trans('entities.item-category'));
+            return \App\HttpResponse\Responses::notFound(trans('entities.item-category'));
         }
 
         $cache_job_payload = (new \App\Cache\JobPayload())
@@ -159,7 +159,7 @@ class ItemCategoryManage extends Controller
                 'resource_type_id' => $resource_type_id,
                 'resource_id' => $resource_id
             ])
-            ->setPermittedUser($this->writeAccessToResourceType($resource_type_id))
+            ->isPermittedUser($this->hasWriteAccessToResourceType($resource_type_id))
             ->setUserId($this->user_id);
 
         try {
@@ -167,11 +167,11 @@ class ItemCategoryManage extends Controller
 
             ClearCache::dispatch($cache_job_payload->payload());
 
-            return \App\Response\Responses::successNoContent();
+            return \App\HttpResponse\Responses::successNoContent();
         } catch (QueryException $e) {
-            return \App\Response\Responses::foreignKeyConstraintError();
+            return \App\HttpResponse\Responses::foreignKeyConstraintError($e);
         } catch (Exception $e) {
-            return \App\Response\Responses::notFound(trans('entities.item-category'));
+            return \App\HttpResponse\Responses::notFound(trans('entities.item-category'), $e);
         }
     }
 }

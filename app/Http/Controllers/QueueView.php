@@ -2,14 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\HttpResponse\Header;
 use App\Models\Queue;
-use App\Option\QueueCollection;
-use App\Option\QueueItem;
-use App\Request\Parameter;
-use App\Request\Route;
-use App\Response\Header;
-use App\Response\Pagination as UtilityPagination;
-use App\Transformers\Queue as QueueTransformer;
+use App\HttpOptionResponse\QueueCollection;
+use App\HttpOptionResponse\QueueItem;
+use App\HttpRequest\Parameter;
+use App\Models\Permission;
+use App\Transformer\Queue as QueueTransformer;
 use Illuminate\Http\JsonResponse;
 
 /**
@@ -36,7 +35,7 @@ class QueueView extends Controller
 
             $total = (new Queue())->totalCount();
 
-            $pagination = new UtilityPagination(request()->path(), $total);
+            $pagination = new \App\HttpResponse\Pagination(request()->path(), $total);
             $pagination_parameters = $pagination->allowPaginationOverride($this->allow_entire_collection)->
                 parameters();
 
@@ -71,14 +70,14 @@ class QueueView extends Controller
      */
     public function show(string $queue_id): JsonResponse
     {
-        if (\App\Request\Route\Validate\Queue::existsToUserForViewing($queue_id) === false) {
-            \App\Response\Responses::notFound(trans('entities.queue'));
+        if ((new Permission())->queueItemExists((int) $queue_id) === false) {
+            return \App\HttpResponse\Responses::notFound(trans('entities.queue'));
         }
 
         $job = (new Queue())->single($queue_id);
 
         if ($job === null) {
-            return \App\Response\Responses::notFound(trans('entities.queue'));
+            return \App\HttpResponse\Responses::notFound(trans('entities.queue'));
         }
 
         $headers = new Header();
@@ -108,8 +107,8 @@ class QueueView extends Controller
      */
     public function optionsShow(string $queue_id): JsonResponse
     {
-        if (\App\Request\Route\Validate\Queue::existsToUserForViewing($queue_id) === false) {
-            \App\Response\Responses::notFound(trans('entities.queue'));
+        if ((new Permission())->queueItemExists((int) $queue_id) === false) {
+            return \App\HttpResponse\Responses::notFound(trans('entities.queue'));
         }
 
         $response = new QueueItem(['view'=> $this->user_id !== null]);

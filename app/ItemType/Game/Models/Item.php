@@ -7,6 +7,7 @@ use App\Models\Category;
 use App\Models\Clause;
 use Illuminate\Database\Eloquent\Model as LaravelModel;
 use Illuminate\Database\Query\Builder as QueryBuilder;
+use JetBrains\PhpStorm\ArrayShape;
 
 /**
  * @mixin QueryBuilder
@@ -36,19 +37,31 @@ class Item extends LaravelModel
             first();
     }
 
-    public function instanceToArray(LaravelModel $item, Item $item_type): array
+    #[ArrayShape([
+        'item_id' => "int",
+        'item_name' => "string",
+        'item_description' => "string",
+        'item_game' => "string",
+        'item_statistics' => "string",
+        'item_winner_id' => "int",
+        'item_score' => "int",
+        'item_complete' => "int",
+        'item_created_at' => "string",
+        'item_updated_at' => "string"
+    ])]
+    public function instanceToArray(Item $item): array
     {
         return [
-            'item_id' => $item->id,
-            'item_name' => $item_type->name,
-            'item_description' => $item_type->description,
-            'item_game' => $item_type->game,
-            'item_statistics' => $item_type->statistics,
+            'item_id' => $item->item_id,
+            'item_name' => $item->name,
+            'item_description' => $item->description,
+            'item_game' => $item->game,
+            'item_statistics' => $item->statistics,
             'item_winner_id' => null,
-            'item_score' => $item_type->score,
-            'item_complete' => $item_type->complete,
-            'item_created_at' => ($item_type->created_at !== null) ? $item_type->created_at->toDateTimeString() : null,
-            'item_updated_at' => ($item_type->updated_at !== null) ? $item_type->updated_at->toDateTimeString() : null,
+            'item_score' => $item->score,
+            'item_complete' => $item->complete,
+            'item_created_at' => ($item->created_at !== null) ? $item->created_at->toDateTimeString() : null,
+            'item_updated_at' => ($item->updated_at !== null) ? $item->updated_at->toDateTimeString() : null,
         ];
     }
 

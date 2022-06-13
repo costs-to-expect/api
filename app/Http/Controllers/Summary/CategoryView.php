@@ -3,10 +3,10 @@
 namespace App\Http\Controllers\Summary;
 
 use App\Http\Controllers\Controller;
+use App\HttpResponse\Header;
 use App\Models\Summary\Category;
-use App\Option\SummaryCategoryCollection;
-use App\Request\Parameter;
-use App\Response\Header;
+use App\HttpOptionResponse\SummaryCategoryCollection;
+use App\HttpRequest\Parameter;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Config;
 
@@ -25,15 +25,16 @@ class CategoryView extends Controller
      * @param $resource_type_id
      *
      * @return JsonResponse
+     * @throws \JsonException
      */
     public function index($resource_type_id): JsonResponse
     {
-        if ($this->viewAccessToResourceType((int) $resource_type_id) === false) {
-            \App\Response\Responses::notFoundOrNotAccessible(trans('entities.resource-type'));
+        if ($this->hasViewAccessToResourceType((int) $resource_type_id) === false) {
+            return \App\HttpResponse\Responses::notFoundOrNotAccessible(trans('entities.resource-type'));
         }
 
         $cache_control = new \App\Cache\Control(
-            $this->writeAccessToResourceType((int) $resource_type_id),
+            $this->hasWriteAccessToResourceType((int) $resource_type_id),
             $this->user_id
         );
         $cache_control->setTtlOneMonth();
@@ -67,8 +68,7 @@ class CategoryView extends Controller
                 'categories' => $total
             ];
 
-            $headers = new Header();
-            $headers
+            $headers = (new Header())
                 ->addCacheControl($cache_control->visibility(), $cache_control->ttl())
                 ->addETag($collection)
                 ->addSearch(Parameter\Search::xHeader());
@@ -94,8 +94,8 @@ class CategoryView extends Controller
      */
     public function optionsIndex($resource_type_id): JsonResponse
     {
-        if ($this->viewAccessToResourceType((int) $resource_type_id) === false) {
-            \App\Response\Responses::notFoundOrNotAccessible(trans('entities.resource-type'));
+        if ($this->hasViewAccessToResourceType((int) $resource_type_id) === false) {
+            return \App\HttpResponse\Responses::notFoundOrNotAccessible(trans('entities.resource-type'));
         }
 
         $response = new SummaryCategoryCollection($this->permissions((int) $resource_type_id));

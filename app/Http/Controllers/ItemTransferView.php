@@ -2,19 +2,18 @@
 
 namespace App\Http\Controllers;
 
-use App\ItemType\Entity;
+use App\HttpOptionResponse\ItemTransfer\AllocatedExpense;
+use App\HttpOptionResponse\ItemTransfer\AllocatedExpenseCollection;
+use App\HttpOptionResponse\ItemTransfer\AllocatedExpenseTransfer;
+use App\HttpOptionResponse\ItemTransfer\SimpleExpense;
+use App\HttpOptionResponse\ItemTransfer\SimpleExpenseCollection;
+use App\HttpOptionResponse\ItemTransfer\SimpleExpenseTransfer;
+use App\HttpRequest\Parameter;
+use App\HttpResponse\Header;
+use App\HttpResponse\Responses;
+use App\ItemType\Select;
 use App\Models\ItemTransfer;
-use App\Option\ItemTransfer\AllocatedExpense;
-use App\Option\ItemTransfer\AllocatedExpenseCollection;
-use App\Option\ItemTransfer\AllocatedExpenseTransfer;
-use App\Option\ItemTransfer\SimpleExpense;
-use App\Option\ItemTransfer\SimpleExpenseCollection;
-use App\Option\ItemTransfer\SimpleExpenseTransfer;
-use App\Request\Parameter;
-use App\Response\Header;
-use App\Response\Pagination as UtilityPagination;
-use App\Response\Responses;
-use App\Transformers\ItemTransfer as ItemTransferTransformer;
+use App\Transformer\ItemTransfer as ItemTransferTransformer;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Config;
 
@@ -27,11 +26,11 @@ class ItemTransferView extends Controller
 {
     public function index($resource_type_id): JsonResponse
     {
-        if ($this->viewAccessToResourceType((int) $resource_type_id) === false) {
-            \App\Response\Responses::notFoundOrNotAccessible(trans('entities.item-transfer'));
+        if ($this->hasViewAccessToResourceType((int) $resource_type_id) === false) {
+            return \App\HttpResponse\Responses::notFoundOrNotAccessible(trans('entities.item-transfer'));
         }
 
-        $item_type = Entity::itemType((int) $resource_type_id);
+        $item_type = Select::itemType((int) $resource_type_id);
 
         return match ($item_type) {
             'allocated-expense', 'simple-expense' => $this->collection((int) $resource_type_id),
@@ -43,7 +42,7 @@ class ItemTransferView extends Controller
     private function collection(int $resource_type_id): JsonResponse
     {
         $cache_control = new \App\Cache\Control(
-            $this->writeAccessToResourceType($resource_type_id),
+            $this->hasWriteAccessToResourceType($resource_type_id),
             $this->user_id
         );
         $cache_control->setTtlOneWeek();
@@ -54,7 +53,7 @@ class ItemTransferView extends Controller
         if ($cache_control->isRequestCacheable() === false || $cache_collection->valid() === false) {
 
             $parameters = Parameter\Request::fetch(
-                array_keys(Config::get('api.item-transfer.parameters.collection'))
+                array_keys(Config::get('api.item-transfer.parameters'))
             );
 
             $total = (new ItemTransfer())->total(
@@ -63,7 +62,7 @@ class ItemTransferView extends Controller
                 $parameters
             );
 
-            $pagination = new UtilityPagination(request()->path(), $total);
+            $pagination = new \App\HttpResponse\Pagination(request()->path(), $total);
             $pagination_parameters = $pagination->allowPaginationOverride($this->allow_entire_collection)->
                 setParameters($parameters)->
                 parameters();
@@ -97,11 +96,11 @@ class ItemTransferView extends Controller
 
     public function optionsIndex($resource_type_id): JsonResponse
     {
-        if ($this->viewAccessToResourceType((int) $resource_type_id) === false) {
-            \App\Response\Responses::notFoundOrNotAccessible(trans('entities.item'));
+        if ($this->hasViewAccessToResourceType((int) $resource_type_id) === false) {
+            return \App\HttpResponse\Responses::notFoundOrNotAccessible(trans('entities.item'));
         }
 
-        $item_type = Entity::itemType((int) $resource_type_id);
+        $item_type = Select::itemType((int) $resource_type_id);
 
         return match ($item_type) {
             'allocated-expense' => $this->optionsAllocatedExpenseCollection((int) $resource_type_id),
@@ -127,11 +126,11 @@ class ItemTransferView extends Controller
 
     public function optionsShow($resource_type_id, $item_transfer_id): JsonResponse
     {
-        if ($this->viewAccessToResourceType((int) $resource_type_id) === false) {
-            \App\Response\Responses::notFoundOrNotAccessible(trans('entities.resource-type'));
+        if ($this->hasViewAccessToResourceType((int) $resource_type_id) === false) {
+            return \App\HttpResponse\Responses::notFoundOrNotAccessible(trans('entities.resource-type'));
         }
 
-        $item_type = Entity::itemType((int) $resource_type_id);
+        $item_type = Select::itemType((int) $resource_type_id);
 
         return match ($item_type) {
             'allocated-expense' => $this->optionsAllocatedExpenseShow((int) $resource_type_id),
@@ -161,11 +160,11 @@ class ItemTransferView extends Controller
         string $item_id
     ): JsonResponse
     {
-        if ($this->viewAccessToResourceType((int) $resource_type_id) === false) {
-            \App\Response\Responses::notFoundOrNotAccessible(trans('entities.item'));
+        if ($this->hasViewAccessToResourceType((int) $resource_type_id) === false) {
+            return \App\HttpResponse\Responses::notFoundOrNotAccessible(trans('entities.item'));
         }
 
-        $item_type = Entity::itemType((int) $resource_type_id);
+        $item_type = Select::itemType((int) $resource_type_id);
 
         return match ($item_type) {
             'allocated-expense' => $this->optionsAllocatedExpenseTransfer((int) $resource_type_id, (int) $resource_id),
@@ -182,8 +181,8 @@ class ItemTransferView extends Controller
     {
         $response = new AllocatedExpenseTransfer($this->permissions($resource_type_id));
 
-        return $response->setDynamicAllowedFields(
-            (new \App\AllowedValue\Resource())->allowedValues(
+        return $response->setAllowedValuesForFields(
+            (new \App\Models\AllowedValue\Resource())->allowedValues(
                 $resource_type_id,
                 $resource_id
             )
@@ -199,8 +198,8 @@ class ItemTransferView extends Controller
     {
         $response = new SimpleExpenseTransfer($this->permissions($resource_type_id));
 
-        return $response->setDynamicAllowedFields(
-            (new \App\AllowedValue\Resource())->allowedValues(
+        return $response->setAllowedValuesForFields(
+            (new \App\Models\AllowedValue\Resource())->allowedValues(
                 $resource_type_id,
                 $resource_id
             )
@@ -214,11 +213,11 @@ class ItemTransferView extends Controller
         $item_transfer_id
     ): JsonResponse
     {
-        if ($this->viewAccessToResourceType((int) $resource_type_id) === false) {
-            \App\Response\Responses::notFoundOrNotAccessible(trans('entities.item-transfer'));
+        if ($this->hasViewAccessToResourceType((int) $resource_type_id) === false) {
+            return \App\HttpResponse\Responses::notFoundOrNotAccessible(trans('entities.item-transfer'));
         }
 
-        $item_type = Entity::itemType((int) $resource_type_id);
+        $item_type = Select::itemType((int) $resource_type_id);
 
         return match ($item_type) {
             'allocated-expense' => $this->allocatedExpense((int) $resource_type_id, (int) $item_transfer_id),
@@ -239,7 +238,7 @@ class ItemTransferView extends Controller
         );
 
         if ($item_transfer === null) {
-            return \App\Response\Responses::notFound(trans('entities.item_transfer'));
+            return \App\HttpResponse\Responses::notFound(trans('entities.item_transfer'));
         }
 
         $headers = new Header();
@@ -263,7 +262,7 @@ class ItemTransferView extends Controller
         );
 
         if ($item_transfer === null) {
-            return \App\Response\Responses::notFound(trans('entities.item_transfer'));
+            return \App\HttpResponse\Responses::notFound(trans('entities.item_transfer'));
         }
 
         $headers = new Header();

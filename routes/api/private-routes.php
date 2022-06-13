@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\CategoryManage;
 use App\Http\Controllers\PermittedUserManage;
 use App\Http\Controllers\ResourceManage;
 use App\Http\Controllers\ResourceTypeManage;
@@ -27,8 +28,8 @@ Route::group(
 
         Route::post(
             'resource-types/{resource_type_id}/categories',
-            'CategoryManage@create'
-        );
+            [CategoryManage::class, 'create']
+        )->name('category.create');
 
         Route::post(
             'resource-types/{resource_type_id}/categories/{category_id}/subcategories',
@@ -82,8 +83,8 @@ Route::group(
 
         Route::delete(
             'resource-types/{resource_type_id}/categories/{category_id}',
-            'CategoryManage@delete'
-        );
+            [CategoryManage::class, 'delete']
+        )->name('category.delete');
 
         Route::delete(
             'resource-types/{resource_type_id}/categories/{category_id}/subcategories/{subcategory_id}',
@@ -122,8 +123,8 @@ Route::group(
 
         Route::patch(
             'resource-types/{resource_type_id}/categories/{category_id}',
-            'CategoryManage@update'
-        );
+            [CategoryManage::class, 'update']
+        )->name('category.update');
 
         Route::patch(
             'resource-types/{resource_type_id}/categories/{category_id}/subcategories/{subcategory_id}',

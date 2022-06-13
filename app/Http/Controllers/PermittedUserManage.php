@@ -2,11 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\HttpResponse\Responses;
 use App\Jobs\ClearCache;
 use App\Models\PermittedUser;
 use App\Models\ResourceType;
-use App\Request\Validate\PermittedUser as PermittedUserValidator;
-use App\Response\Responses;
+use App\HttpRequest\Validate\PermittedUser as PermittedUserValidator;
 use Exception;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\JsonResponse;
@@ -21,8 +21,8 @@ class PermittedUserManage extends Controller
 {
     public function create(string $resource_type_id): JsonResponse
     {
-        if ($this->writeAccessToResourceType((int) $resource_type_id) === false) {
-            \App\Response\Responses::notFoundOrNotAccessible(trans('entities.resource-type'));
+        if ($this->hasWriteAccessToResourceType((int) $resource_type_id) === false) {
+            return \App\HttpResponse\Responses::notFoundOrNotAccessible(trans('entities.resource-type'));
         }
 
         $resource_type = (new ResourceType())->single(
@@ -35,7 +35,7 @@ class PermittedUserManage extends Controller
         ]);
 
         if ($validator->fails()) {
-            return \App\Request\BodyValidation::returnValidationErrors($validator);
+            return \App\HttpResponse\Responses::validationErrors($validator);
         }
 
         $cache_job_payload = (new \App\Cache\JobPayload())
@@ -43,7 +43,7 @@ class PermittedUserManage extends Controller
             ->setRouteParameters([
                 'resource_type_id' => $resource_type_id
             ])
-            ->setPermittedUser($this->writeAccessToResourceType((int) $resource_type_id))
+            ->isPermittedUser($this->hasWriteAccessToResourceType((int) $resource_type_id))
             ->setUserId($this->user_id);
 
         try {
@@ -66,7 +66,7 @@ class PermittedUserManage extends Controller
                     $permitted_user_cache_job_payload = (new \App\Cache\JobPayload())
                         ->setGroupKey(\App\Cache\KeyGroup::RESOURCE_TYPE_CREATE)
                         ->setRouteParameters([])
-                        ->setPermittedUser($this->writeAccessToResourceType((int)$resource_type_id))
+                        ->isPermittedUser($this->hasWriteAccessToResourceType((int)$resource_type_id))
                         ->setUserId($user->id);
 
                     ClearCache::dispatch($permitted_user_cache_job_payload->payload());
@@ -78,7 +78,7 @@ class PermittedUserManage extends Controller
             ClearCache::dispatch($cache_job_payload->payload());
 
         } catch (Exception $e) {
-            return Responses::failedToSaveModelForCreate();
+            return Responses::failedToSaveModelForCreate($e);
         }
 
         return Responses::successNoContent();
@@ -89,8 +89,8 @@ class PermittedUserManage extends Controller
         string $permitted_user_id
     ): JsonResponse
     {
-        if ($this->writeAccessToResourceType((int) $resource_type_id) === false) {
-            \App\Response\Responses::notFoundOrNotAccessible(trans('entities.permitted-user'));
+        if ($this->hasWriteAccessToResourceType((int) $resource_type_id) === false) {
+            return \App\HttpResponse\Responses::notFoundOrNotAccessible(trans('entities.permitted-user'));
         }
 
         $permitted_user = (new PermittedUser())->instance($resource_type_id, $permitted_user_id);
@@ -102,7 +102,7 @@ class PermittedUserManage extends Controller
         $cache_job_payload = (new \App\Cache\JobPayload())
             ->setGroupKey(\App\Cache\KeyGroup::PERMITTED_USER_DELETE)
             ->setRouteParameters([])
-            ->setPermittedUser($this->writeAccessToResourceType((int) $resource_type_id))
+            ->isPermittedUser($this->hasWriteAccessToResourceType((int) $resource_type_id))
             ->setUserId($this->user_id);
 
         try {
@@ -114,9 +114,9 @@ class PermittedUserManage extends Controller
 
             return Responses::successNoContent();
         } catch (QueryException $e) {
-            return Responses::foreignKeyConstraintError();
+            return Responses::foreignKeyConstraintError($e);
         } catch (Exception $e) {
-            return Responses::notFound(trans('entities.permitted-user'));
+            return Responses::notFound(trans('entities.permitted-user'), $e);
         }
     }
 }

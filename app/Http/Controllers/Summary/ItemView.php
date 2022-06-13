@@ -3,23 +3,27 @@
 namespace App\Http\Controllers\Summary;
 
 use App\Http\Controllers\Controller;
-use App\ItemType\Entity;
-use App\Option\Item\Summary\AllocatedExpense;
-use App\Option\Item\Summary\Game;
-use App\Option\Item\Summary\SimpleExpense;
-use App\Option\Item\Summary\SimpleItem;
-use App\Response\Responses;
+use App\HttpResponse\Responses;
+use App\ItemType\AllocatedExpense\AllowedValue as AllocatedExpenseAllowedValue;
+use App\ItemType\Game\AllowedValue as GameAllowedValue;
+use App\ItemType\SimpleExpense\AllowedValue as SimpleExpenseAllowedValue;
+use App\ItemType\SimpleItem\AllowedValue as SimpleItemAllowedValue;
+use App\ItemType\Select;
+use App\HttpOptionResponse\Item\Summary\AllocatedExpense;
+use App\HttpOptionResponse\Item\Summary\Game;
+use App\HttpOptionResponse\Item\Summary\SimpleExpense;
+use App\HttpOptionResponse\Item\Summary\SimpleItem;
 use Illuminate\Http\JsonResponse;
 
 class ItemView extends Controller
 {
     public function index(string $resource_type_id, string $resource_id): JsonResponse
     {
-        if ($this->viewAccessToResourceType((int)$resource_type_id) === false) {
-            Responses::notFoundOrNotAccessible(trans('entities.resource'));
+        if ($this->hasViewAccessToResourceType((int) $resource_type_id) === false) {
+            return Responses::notFoundOrNotAccessible(trans('entities.resource'));
         }
 
-        $item_type = Entity::itemType((int) $resource_type_id);
+        $item_type = Select::itemType((int) $resource_type_id);
 
         return match ($item_type) {
             'allocated-expense' => $this->allocatedExpenseSummary((int) $resource_type_id, (int) $resource_id),
@@ -32,10 +36,10 @@ class ItemView extends Controller
 
     private function allocatedExpenseSummary(int $resource_type_id, int $resource_id): JsonResponse
     {
-        $response = new \App\ItemType\AllocatedExpense\ApiResponse\Summary(
+        $response = new \App\ItemType\AllocatedExpense\HttpResponse\Summary(
             $resource_type_id,
             $resource_id,
-            $this->writeAccessToResourceType($resource_type_id),
+            $this->hasWriteAccessToResourceType($resource_type_id),
             $this->user_id
         );
 
@@ -44,10 +48,10 @@ class ItemView extends Controller
 
     private function gameSummary(int $resource_type_id, int $resource_id): JsonResponse
     {
-        $response = new \App\ItemType\Game\ApiResponse\Summary(
+        $response = new \App\ItemType\Game\HttpResponse\Summary(
             $resource_type_id,
             $resource_id,
-            $this->writeAccessToResourceType($resource_type_id),
+            $this->hasWriteAccessToResourceType($resource_type_id),
             $this->user_id
         );
 
@@ -56,10 +60,10 @@ class ItemView extends Controller
 
     private function simpleExpenseSummary(int $resource_type_id, int $resource_id): JsonResponse
     {
-        $response = new \App\ItemType\SimpleExpense\ApiResponse\Summary(
+        $response = new \App\ItemType\SimpleExpense\HttpResponse\Summary(
             $resource_type_id,
             $resource_id,
-            $this->writeAccessToResourceType($resource_type_id),
+            $this->hasWriteAccessToResourceType($resource_type_id),
             $this->user_id
         );
 
@@ -68,10 +72,10 @@ class ItemView extends Controller
 
     private function simpleItemSummary(int $resource_type_id, int $resource_id): JsonResponse
     {
-        $response = new \App\ItemType\SimpleItem\ApiResponse\Summary(
+        $response = new \App\ItemType\SimpleItem\HttpResponse\Summary(
             $resource_type_id,
             $resource_id,
-            $this->writeAccessToResourceType($resource_type_id),
+            $this->hasWriteAccessToResourceType($resource_type_id),
             $this->user_id
         );
 
@@ -80,11 +84,11 @@ class ItemView extends Controller
 
     public function optionsIndex(string $resource_type_id, string $resource_id): JsonResponse
     {
-        if ($this->viewAccessToResourceType((int) $resource_type_id) === false) {
-            Responses::notFoundOrNotAccessible(trans('entities.resource'));
+        if ($this->hasViewAccessToResourceType((int) $resource_type_id) === false) {
+            return Responses::notFoundOrNotAccessible(trans('entities.resource'));
         }
 
-        $item_type = Entity::itemType((int) $resource_type_id);
+        $item_type = Select::itemType((int) $resource_type_id);
 
         return match ($item_type) {
             'allocated-expense' => $this->optionsAllocatedExpense((int) $resource_type_id, (int) $resource_id),
@@ -97,64 +101,56 @@ class ItemView extends Controller
 
     private function optionsAllocatedExpense(int $resource_type_id, int $resource_id): JsonResponse
     {
-        $item = new \App\ItemType\AllocatedExpense\Item();
-        $allowed_values = $item->allowedValuesForItemCollection(
+        $allowed_values = new AllocatedExpenseAllowedValue(
+            $this->viewable_resource_types,
             $resource_type_id,
-            $resource_id,
-            $this->viewable_resource_types
+            $resource_id
         );
 
-        $response = new AllocatedExpense($this->permissions($resource_type_id));
-
-        return $response->setDynamicAllowedParameters($allowed_values)
+        return (new AllocatedExpense($this->permissions($resource_type_id)))
+            ->setAllowedValuesForParameters($allowed_values->parameterAllowedValuesForCollection())
             ->create()
             ->response();
     }
 
     private function optionsGame(int $resource_type_id, int $resource_id): JsonResponse
     {
-        $item = new \App\ItemType\Game\Item();
-        $allowed_values = $item->allowedValuesForItemCollection(
+        $allowed_values = new GameAllowedValue(
+            $this->viewable_resource_types,
             $resource_type_id,
-            $resource_id,
-            $this->viewable_resource_types
+            $resource_id
         );
 
-        $response = new Game($this->permissions($resource_type_id));
-
-        return $response->setDynamicAllowedParameters($allowed_values)
+        return (new Game($this->permissions($resource_type_id)))
+            ->setAllowedValuesForParameters($allowed_values->parameterAllowedValuesForCollection())
             ->create()
             ->response();
     }
 
     private function optionsSimpleExpense(int $resource_type_id, int $resource_id): JsonResponse
     {
-        $item = new \App\ItemType\SimpleExpense\Item();
-        $allowed_values = $item->allowedValuesForItemCollection(
+        $allowed_values = new SimpleExpenseAllowedValue(
+            $this->viewable_resource_types,
             $resource_type_id,
-            $resource_id,
-            $this->viewable_resource_types
+            $resource_id
         );
 
-        $response = new SimpleExpense($this->permissions($resource_type_id));
-
-        return $response->setDynamicAllowedParameters($allowed_values)
+        return (new SimpleExpense($this->permissions($resource_type_id)))
+            ->setAllowedValuesForParameters($allowed_values->parameterAllowedValuesForCollection())
             ->create()
             ->response();
     }
 
     private function optionsSimpleItem(int $resource_type_id, int $resource_id): JsonResponse
     {
-        $item = new \App\ItemType\SimpleItem\Item();
-        $allowed_values = $item->allowedValuesForItemCollection(
+        $allowed_values = new SimpleItemAllowedValue(
+            $this->viewable_resource_types,
             $resource_type_id,
-            $resource_id,
-            $this->viewable_resource_types
+            $resource_id
         );
 
-        $response = new SimpleItem($this->permissions($resource_type_id));
-
-        return $response->setDynamicAllowedParameters($allowed_values)
+        return (new SimpleItem($this->permissions($resource_type_id)))
+            ->setAllowedValuesForParameters($allowed_values->parameterAllowedValuesForCollection())
             ->create()
             ->response();
     }

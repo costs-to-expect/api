@@ -2,8 +2,8 @@
 
 namespace App\Http\Middleware;
 
-use App\Request\Hash;
-use App\Response\Responses;
+use App\HttpResponse\Responses;
+use App\HttpRequest\Hash;
 use Closure;
 
 /**

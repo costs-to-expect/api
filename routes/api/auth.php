@@ -87,7 +87,7 @@ Route::group(
             Route::options(
                 'auth/register',
                 [Authentication::class, 'optionsRegister']
-            );
+            )->name('auth.register.options');
 
             Route::post(
                 'auth/create-password',
@@ -97,7 +97,7 @@ Route::group(
             Route::options(
                 'auth/create-password',
                 [Authentication::class, 'optionsCreatePassword']
-            );
+            )->name('auth.create-password.options');
         }
     }
 );

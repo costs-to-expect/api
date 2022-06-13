@@ -2,12 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use App\ItemType\Entity;
+use App\HttpResponse\Responses;
+use App\ItemType\Select;
 use App\Jobs\ClearCache;
 use App\Models\ItemPartialTransfer;
-use App\Request\Validate\ItemPartialTransfer as ItemPartialTransferValidator;
-use App\Response\Responses;
-use App\Transformers\ItemPartialTransfer as ItemPartialTransferTransformer;
+use App\HttpRequest\Validate\ItemPartialTransfer as ItemPartialTransferValidator;
+use App\Transformer\ItemPartialTransfer as ItemPartialTransferTransformer;
 use Exception;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\JsonResponse;
@@ -24,11 +24,11 @@ class ItemPartialTransferManage extends Controller
         $item_partial_transfer_id
     ): JsonResponse
     {
-        if ($this->writeAccessToResourceType((int) $resource_type_id) === false) {
-            \App\Response\Responses::notFoundOrNotAccessible(trans('entities.item-partial-transfer'));
+        if ($this->hasWriteAccessToResourceType((int) $resource_type_id) === false) {
+            return \App\HttpResponse\Responses::notFoundOrNotAccessible(trans('entities.item-partial-transfer'));
         }
 
-        $item_type = Entity::itemType((int) $resource_type_id);
+        $item_type = Select::itemType((int) $resource_type_id);
 
         return match ($item_type) {
             'allocated-expense' => $this->deleteAllocatedExpense((int) $resource_type_id, (int) $item_partial_transfer_id),
@@ -47,7 +47,7 @@ class ItemPartialTransferManage extends Controller
             ->setRouteParameters([
                 'resource_type_id' => $resource_type_id
             ])
-            ->setPermittedUser($this->writeAccessToResourceType((int) $resource_type_id))
+            ->isPermittedUser($this->hasWriteAccessToResourceType((int) $resource_type_id))
             ->setUserId($this->user_id);
 
         try {
@@ -63,9 +63,9 @@ class ItemPartialTransferManage extends Controller
 
             return Responses::failedToSelectModelForUpdateOrDelete();
         } catch (QueryException $e) {
-            return Responses::foreignKeyConstraintError();
+            return Responses::foreignKeyConstraintError($e);
         } catch (Exception $e) {
-            return Responses::notFound(trans('entities.item-partial-transfer'));
+            return Responses::notFound(trans('entities.item-partial-transfer'), $e);
         }
     }
 
@@ -75,11 +75,11 @@ class ItemPartialTransferManage extends Controller
         string $item_id
     ): JsonResponse
     {
-        if ($this->writeAccessToResourceType((int) $resource_type_id) === false) {
-            \App\Response\Responses::notFoundOrNotAccessible(trans('entities.item'));
+        if ($this->hasWriteAccessToResourceType((int) $resource_type_id) === false) {
+            return \App\HttpResponse\Responses::notFoundOrNotAccessible(trans('entities.item'));
         }
 
-        $item_type = Entity::itemType((int) $resource_type_id);
+        $item_type = Select::itemType((int) $resource_type_id);
 
         return match ($item_type) {
             'allocated-expense' => $this->transferAllocatedExpense((int) $resource_type_id, (int) $resource_id, (int) $item_id),
@@ -102,7 +102,7 @@ class ItemPartialTransferManage extends Controller
         );
 
         if ($validator->fails()) {
-            return \App\Request\BodyValidation::returnValidationErrors($validator);
+            return \App\HttpResponse\Responses::validationErrors($validator);
         }
 
         $new_resource_id = $this->hash->decode('resource', request()->input('resource_id'));
@@ -116,7 +116,7 @@ class ItemPartialTransferManage extends Controller
             ->setRouteParameters([
                 'resource_type_id' => $resource_type_id
             ])
-            ->setPermittedUser($this->writeAccessToResourceType(($resource_type_id)))
+            ->isPermittedUser($this->hasWriteAccessToResourceType(($resource_type_id)))
             ->setUserId($this->user_id);
 
         try {
@@ -133,9 +133,9 @@ class ItemPartialTransferManage extends Controller
             ClearCache::dispatch($cache_job_payload->payload());
 
         } catch (QueryException $e) {
-            return Responses::foreignKeyConstraintError();
+            return Responses::foreignKeyConstraintError($e);
         } catch (Exception $e) {
-            return Responses::failedToSaveModelForCreate();
+            return Responses::failedToSaveModelForCreate($e);
         }
 
         $item_partial_transfer = (new ItemPartialTransfer())->single(

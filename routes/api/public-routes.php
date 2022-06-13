@@ -49,8 +49,8 @@ Route::group(
 
         Route::get(
             'currencies/{currency_id}',
-            'CurrencyView@show'
-        );
+            [\App\Http\Controllers\CurrencyView::class, 'show']
+        )->name('currency.show');
 
         Route::options(
             'currencies/{currency_id}',
@@ -149,8 +149,8 @@ Route::group(
 
         Route::get(
             'resource-types/{resource_type_id}/categories/{category_id}',
-            'CategoryView@show'
-        );
+            [\App\Http\Controllers\CategoryView::class, 'show']
+        )->name('category.show');
 
         Route::options(
             'resource-types/{resource_type_id}/categories/{category_id}',
@@ -169,8 +169,8 @@ Route::group(
 
         Route::get(
             'resource-types/{resource_type_id}/categories/{category_id}/subcategories/{subcategory_id}',
-            'SubcategoryView@show'
-        );
+            [\App\Http\Controllers\SubcategoryView::class, 'show']
+        )->name('subcategory.show');
 
         Route::options(
             'resource-types/{resource_type_id}/categories/{category_id}/subcategories/{subcategory_id}',

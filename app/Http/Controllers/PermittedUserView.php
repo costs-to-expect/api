@@ -2,13 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\HttpResponse\Header;
 use App\Models\PermittedUser;
-use App\Option\PermittedUserCollection;
-use App\Option\PermittedUserItem;
-use App\Request\Parameter;
-use App\Response\Header;
-use App\Response\Pagination as UtilityPagination;
-use App\Transformers\PermittedUser as PermittedUserTransformer;
+use App\HttpOptionResponse\PermittedUserCollection;
+use App\HttpOptionResponse\PermittedUserItem;
+use App\HttpRequest\Parameter;
+use App\Transformer\PermittedUser as PermittedUserTransformer;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Config;
 
@@ -23,12 +22,12 @@ class PermittedUserView extends Controller
 
     public function index(string $resource_type_id): JsonResponse
     {
-        if ($this->viewAccessToResourceType((int) $resource_type_id) === false) {
-            \App\Response\Responses::notFoundOrNotAccessible(trans('entities.resource-type'));
+        if ($this->hasViewAccessToResourceType((int) $resource_type_id) === false) {
+            return \App\HttpResponse\Responses::notFoundOrNotAccessible(trans('entities.resource-type'));
         }
 
         $cache_control = new \App\Cache\Control(
-            $this->writeAccessToResourceType((int) $resource_type_id),
+            $this->hasWriteAccessToResourceType((int) $resource_type_id),
             $this->user_id
         );
         $cache_control->setTtlOneMonth();
@@ -51,7 +50,7 @@ class PermittedUserView extends Controller
                 $search_parameters
             );
 
-            $pagination = new UtilityPagination(request()->path(), $total);
+            $pagination = new \App\HttpResponse\Pagination(request()->path(), $total);
             $pagination_parameters = $pagination->allowPaginationOverride($this->allow_entire_collection)->
                 setSearchParameters($search_parameters)->
                 setSortParameters($sort_parameters)->
@@ -91,14 +90,14 @@ class PermittedUserView extends Controller
         string $permitted_user_id
     ): JsonResponse
     {
-        if ($this->viewAccessToResourceType((int) $resource_type_id) === false) {
-            \App\Response\Responses::notFoundOrNotAccessible(trans('entities.resource'));
+        if ($this->hasViewAccessToResourceType((int) $resource_type_id) === false) {
+            return \App\HttpResponse\Responses::notFoundOrNotAccessible(trans('entities.resource'));
         }
 
         $permitted_user = (new PermittedUser())->single($resource_type_id, $permitted_user_id);
 
         if ($permitted_user === null) {
-            return \App\Response\Responses::notFound(trans('entities.permitted-user'));
+            return \App\HttpResponse\Responses::notFound(trans('entities.permitted-user'));
         }
 
         $headers = new Header();
@@ -113,8 +112,8 @@ class PermittedUserView extends Controller
 
     public function optionsIndex(string $resource_type_id): JsonResponse
     {
-        if ($this->viewAccessToResourceType((int) $resource_type_id) === false) {
-            \App\Response\Responses::notFoundOrNotAccessible(trans('entities.resource-type'));
+        if ($this->hasViewAccessToResourceType((int) $resource_type_id) === false) {
+            return \App\HttpResponse\Responses::notFoundOrNotAccessible(trans('entities.resource-type'));
         }
 
         $response = new PermittedUserCollection($this->permissions((int) $resource_type_id));
@@ -124,8 +123,8 @@ class PermittedUserView extends Controller
 
     public function optionsShow(string $resource_type_id, string $permitted_user_id): JsonResponse
     {
-        if ($this->viewAccessToResourceType((int) $resource_type_id) === false) {
-            \App\Response\Responses::notFoundOrNotAccessible(trans('entities.resource'));
+        if ($this->hasViewAccessToResourceType((int) $resource_type_id) === false) {
+            return \App\HttpResponse\Responses::notFoundOrNotAccessible(trans('entities.resource'));
         }
 
         $permitted_user = (new PermittedUser())->single(
@@ -134,7 +133,7 @@ class PermittedUserView extends Controller
         );
 
         if ($permitted_user === null) {
-            return \App\Response\Responses::notFound(trans('entities.permitted-user'));
+            return \App\HttpResponse\Responses::notFound(trans('entities.permitted-user'));
         }
 
         $response = new PermittedUserItem($this->permissions((int) $resource_type_id));

@@ -2,15 +2,14 @@
 
 namespace App\Http\Controllers;
 
-use App\AllowedValue\ItemSubtype;
+use App\HttpOptionResponse\ResourceCollection;
+use App\HttpOptionResponse\ResourceItem;
+use App\HttpRequest\Parameter;
+use App\HttpResponse\Header;
+use App\Models\AllowedValue\ItemSubtype;
 use App\Models\Resource;
 use App\Models\ResourceType;
-use App\Option\ResourceCollection;
-use App\Option\ResourceItem;
-use App\Request\Parameter;
-use App\Response\Header;
-use App\Response\Pagination as UtilityPagination;
-use App\Transformers\Resource as ResourceTransformer;
+use App\Transformer\Resource as ResourceTransformer;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Config;
 
@@ -34,12 +33,12 @@ class ResourceView extends Controller
      */
     public function index(string $resource_type_id): JsonResponse
     {
-        if ($this->viewAccessToResourceType((int) $resource_type_id) === false) {
-            \App\Response\Responses::notFoundOrNotAccessible(trans('entities.resource-type'));
+        if ($this->hasViewAccessToResourceType((int) $resource_type_id) === false) {
+            return \App\HttpResponse\Responses::notFoundOrNotAccessible(trans('entities.resource-type'));
         }
 
         $cache_control = new \App\Cache\Control(
-            $this->writeAccessToResourceType((int) $resource_type_id),
+            $this->hasWriteAccessToResourceType((int) $resource_type_id),
             $this->user_id
         );
         $cache_control->setTtlOneWeek();
@@ -63,7 +62,7 @@ class ResourceView extends Controller
                 $search_parameters
             );
 
-            $pagination = new UtilityPagination(request()->path(), $total);
+            $pagination = new \App\HttpResponse\Pagination(request()->path(), $total);
             $pagination_parameters = $pagination->allowPaginationOverride($this->allow_entire_collection)->
                 setSearchParameters($search_parameters)->
                 setSortParameters($sort_parameters)->
@@ -121,14 +120,14 @@ class ResourceView extends Controller
         string $resource_id
     ): JsonResponse
     {
-        if ($this->viewAccessToResourceType((int) $resource_type_id) === false) {
-            \App\Response\Responses::notFoundOrNotAccessible(trans('entities.resource'));
+        if ($this->hasViewAccessToResourceType((int) $resource_type_id) === false) {
+            return \App\HttpResponse\Responses::notFoundOrNotAccessible(trans('entities.resource'));
         }
 
         $resource = (new Resource)->single($resource_type_id, $resource_id);
 
         if ($resource === null) {
-            return \App\Response\Responses::notFound(trans('entities.resource'));
+            return \App\HttpResponse\Responses::notFound(trans('entities.resource'));
         }
 
         $headers = new Header();
@@ -143,8 +142,8 @@ class ResourceView extends Controller
 
     public function optionsIndex(string $resource_type_id): JsonResponse
     {
-        if ($this->viewAccessToResourceType((int) $resource_type_id) === false) {
-            \App\Response\Responses::notFoundOrNotAccessible(trans('entities.resource-type'));
+        if ($this->hasViewAccessToResourceType((int) $resource_type_id) === false) {
+            return \App\HttpResponse\Responses::notFoundOrNotAccessible(trans('entities.resource-type'));
         }
 
         $resource_type = (new ResourceType())->single(
@@ -154,15 +153,15 @@ class ResourceView extends Controller
 
         $response = new ResourceCollection($this->permissions((int) $resource_type_id));
 
-        return $response->setDynamicAllowedFields((new ItemSubtype())->allowedValues($resource_type['resource_type_item_type_id']))
+        return $response->setAllowedValuesForFields((new ItemSubtype())->allowedValues($resource_type['resource_type_item_type_id']))
             ->create()
             ->response();
     }
 
     public function optionsShow(string $resource_type_id, string $resource_id): JsonResponse
     {
-        if ($this->viewAccessToResourceType((int) $resource_type_id) === false) {
-            \App\Response\Responses::notFoundOrNotAccessible(trans('entities.resource'));
+        if ($this->hasViewAccessToResourceType((int) $resource_type_id) === false) {
+            return \App\HttpResponse\Responses::notFoundOrNotAccessible(trans('entities.resource'));
         }
 
         $resource = (new Resource)->single(
@@ -171,7 +170,7 @@ class ResourceView extends Controller
         );
 
         if ($resource === null) {
-            return \App\Response\Responses::notFound(trans('entities.resource'));
+            return \App\HttpResponse\Responses::notFound(trans('entities.resource'));
         }
 
         $response = new ResourceItem($this->permissions((int) $resource_type_id));

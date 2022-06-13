@@ -4,10 +4,10 @@ namespace App\Http\Controllers;
 
 use App\Cache\Collection;
 use App\Cache\Control;
-use App\Models\ResourceAccess;
+use App\Models\Permission;
 use App\Models\ResourceType;
-use App\Request\Hash;
-use App\Request\Validate\Boolean;
+use App\HttpRequest\Hash;
+use App\HttpRequest\Validate\Boolean;
 use Illuminate\Routing\Controller as BaseController;
 
 class Controller extends BaseController
@@ -51,7 +51,7 @@ class Controller extends BaseController
     protected function setPermittedResourceTypes(): void
     {
         if (
-            auth('api')->user() !== null &&
+            auth()->guard('api')->user() !== null &&
             auth()->guard('api')->check() === true
         ) {
             $this->user_id = auth('api')->user()->id; // Safe as check above ensures not null
@@ -64,7 +64,7 @@ class Controller extends BaseController
 
             if ($cache_control->isRequestCacheable() === false || $cache_collection->valid() === false) {
 
-                $permitted_resource_types = (new ResourceAccess())->permittedResourceTypes($this->user_id);
+                $permitted_resource_types = (new Permission())->permittedResourceTypesForUser($this->user_id);
 
                 $cache_collection->create(
                     count($permitted_resource_types),
@@ -85,7 +85,7 @@ class Controller extends BaseController
         $cache_control->setTtlOneMonth();
 
         if (
-            auth('api')->user() !== null &&
+            auth()->guard('api')->user() !== null &&
             auth()->guard('api')->check() === true
         ) {
             $cache_control = new Control(true, $this->user_id);
@@ -117,12 +117,12 @@ class Controller extends BaseController
         $this->viewable_resource_types = $cache_collection->collection();
     }
 
-    protected function writeAccessToResourceType(int $resource_type_id): bool
+    protected function hasWriteAccessToResourceType(int $resource_type_id): bool
     {
         return in_array($resource_type_id, $this->permitted_resource_types, true) === true;
     }
 
-    protected function viewAccessToResourceType(int $resource_type_id): bool
+    protected function hasViewAccessToResourceType(int $resource_type_id): bool
     {
         return in_array($resource_type_id, $this->viewable_resource_types, true) === true;
     }
@@ -130,8 +130,20 @@ class Controller extends BaseController
     protected function permissions(int $resource_type_id): array
     {
         return [
-            'view' => $this->viewAccessToResourceType($resource_type_id),
-            'manage' => $this->writeAccessToResourceType($resource_type_id)
+            'view' => $this->hasViewAccessToResourceType($resource_type_id),
+            'manage' => $this->hasWriteAccessToResourceType($resource_type_id)
         ];
+    }
+
+    protected function checkForInvalidFields(array $patchable_fields): array
+    {
+        $invalid_fields = [];
+        foreach (request()->all() as $key => $value) {
+            if (in_array($key, $patchable_fields, true) === false) {
+                $invalid_fields[] = $key;
+            }
+        }
+
+        return $invalid_fields;
     }
 }

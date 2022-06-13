@@ -2,17 +2,16 @@
 
 namespace App\Http\Controllers;
 
-use App\AllowedValue\ItemType;
+use App\HttpOptionResponse\ResourceTypeCollection;
+use App\HttpOptionResponse\ResourceTypeItem;
+use App\HttpRequest\Parameter;
+use App\HttpResponse\Header;
+use App\HttpResponse\Responses;
+use App\Models\AllowedValue\ItemType;
 use App\Models\PermittedUser;
 use App\Models\Resource;
 use App\Models\ResourceType;
-use App\Option\ResourceTypeCollection;
-use App\Option\ResourceTypeItem;
-use App\Request\Parameter;
-use App\Response\Header;
-use App\Response\Pagination as UtilityPagination;
-use App\Response\Responses;
-use App\Transformers\ResourceType as ResourceTypeTransformer;
+use App\Transformer\ResourceType as ResourceTypeTransformer;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Config;
@@ -49,7 +48,7 @@ class ResourceTypeView extends Controller
                 $search_parameters
             );
 
-            $pagination = new UtilityPagination($request->path(), $total);
+            $pagination = new \App\HttpResponse\Pagination($request->path(), $total);
             $pagination_parameters = $pagination
                 ->allowPaginationOverride($this->allow_entire_collection)
                 ->setSearchParameters($search_parameters)
@@ -97,7 +96,7 @@ class ResourceTypeView extends Controller
 
     public function show($resource_type_id): JsonResponse
     {
-        $parameters = Parameter\Request::fetch(array_keys(Config::get('api.resource-type.parameters.item')));
+        $parameters = Parameter\Request::fetch(array_keys(Config::get('api.resource-type.parameters-show')));
 
         $resource_type = (new ResourceType())->single(
             (int) $resource_type_id,
@@ -138,7 +137,7 @@ class ResourceTypeView extends Controller
     {
         $response = new ResourceTypeCollection(['view'=> $this->user_id !== null, 'manage'=> $this->user_id !== null]);
 
-        return $response->setDynamicAllowedFields((new ItemType())->allowedValues())
+        return $response->setAllowedValuesForFields((new ItemType())->allowedValues())
             ->create()
             ->response();
     }

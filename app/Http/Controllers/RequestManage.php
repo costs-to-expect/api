@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Events\RequestError;
 use App\Models\RequestErrorLog;
-use App\Request\Validate\RequestErrorLog as RequestErrorLogValidator;
+use App\HttpRequest\Validate\RequestErrorLog as RequestErrorLogValidator;
 use Exception;
 use Illuminate\Http\JsonResponse;
 
@@ -28,7 +28,7 @@ class RequestManage extends Controller
         $validator = (new RequestErrorLogValidator())->create();
 
         if ($validator->fails()) {
-            return \App\Request\BodyValidation::returnValidationErrors($validator);
+            return \App\HttpResponse\Responses::validationErrors($validator);
         }
 
         try {
@@ -55,9 +55,9 @@ class RequestManage extends Controller
             }
 
         } catch (Exception $e) {
-            return \App\Response\Responses::failedToSaveModelForCreate();
+            return \App\HttpResponse\Responses::failedToSaveModelForCreate($e);
         }
 
-        return \App\Response\Responses::successNoContent();
+        return \App\HttpResponse\Responses::successNoContent();
     }
 }

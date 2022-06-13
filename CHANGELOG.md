@@ -2,6 +2,41 @@
 
 The complete changelog for the Costs to Expect REST API, our changelog follows the format defined at https://keepachangelog.com/en/1.0.0/
 
+## [v2.24.0] - 2022-06-13
+## Added
+- We have added our first schema files for OPTIONS responses and started working on the tests.
+- We have added tests for category management, found one bug when creating the tests.
+
+## Changed
+- We have updated our response class for OPTIONS responses, we now allow parameters to be defined for POST requests. One example of where we need this is the create password POST request, `password` and `password_confirmation` are required fields, however, `token` and `email` are required parameters. Before this update, you had to parse the returned error of read the OPTIONS request description.
+- We have started splitting config files, a config file should be for one purpose.
+- We have spent quite a bit of time reviewing the API structure and refactoring. We have removed unnecessary complexity, renamed classes and methods to describe intent more clearly and removed pointless base classes.
+- We have reworked how allowed values are generated for the different item types, allowed values for fields and parameters have been split, and we have removed all abstraction.
+- We have removed some route validation files which didn't do anything useful after all the item type work.
+- We have reworked the responses class, removed exception parameters when not necessary, pass in an exception if thrown and now delegated responsibility to the responses class to decide if the exception should be returned in the response.
+- We have upgraded the API to Laravel 9 and PHP 8.1.
+
+## Fixed
+- Options request incorrect for the `auth.register` endpoint (Test added).
+- Options requests returning response twice.
+- Type corrected in OPTIONS response, authentication status/requirements now a boolean, not a string.
+- Minor correction to the description of two POST endpoints.
+- Corrected a type in the OPTIONS response for the month parameter.
+- Corrected the `partial-transfer` JSON schema file.
+- Allowed values not showing for `category` on GET endpoints.
+- Inconsistent usage of the responses helper.
+- Category validator allowed duplicate names due to incorrect params, caught by model.
+
+## Removed
+- We have removed the `ItemType` base class and all the child classes.
+- We have removed a redundant validation class and moved the response method into the main response class.
+
+## [v2.23.1] - 2022-04-18
+## Changed
+- We have updated the partial transfers collection and show route, the partial transfer object includes the URI to the relevant entity.
+- We have switched additional routes in our routes files to named routes.
+- We have updated the json schema file for partial transfers.
+
 ## [v2.23.0] - 2022-04-12
 ## Added
 - We have updated the `/auth/user` route, the route will now show any active created tokens.

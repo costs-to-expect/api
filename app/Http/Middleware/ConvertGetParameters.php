@@ -2,7 +2,7 @@
 
 namespace App\Http\Middleware;
 
-use App\Request\Hash;
+use App\HttpRequest\Hash;
 use Closure;
 use Illuminate\Http\Request;
 

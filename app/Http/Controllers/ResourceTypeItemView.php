@@ -2,7 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use App\ItemType\Entity;
+use App\ItemType\Select;
+use App\ItemType\AllocatedExpense\AllowedValue as AllocatedExpenseAllowedValue;
+use App\ItemType\Game\AllowedValue as GameAllowedValue;
+use App\ItemType\SimpleExpense\AllowedValue as SimpleExpenseAllowedValue;
+use App\ItemType\SimpleItem\AllowedValue as SimpleItemAllowedValue;
 use Illuminate\Http\JsonResponse;
 
 /**
@@ -16,11 +20,11 @@ class ResourceTypeItemView extends Controller
 {
     public function index(string $resource_type_id): JsonResponse
     {
-        if ($this->viewAccessToResourceType((int) $resource_type_id) === false) {
-            \App\Response\Responses::notFoundOrNotAccessible(trans('entities.resource-type'));
+        if ($this->hasViewAccessToResourceType((int) $resource_type_id) === false) {
+            return \App\HttpResponse\Responses::notFoundOrNotAccessible(trans('entities.resource-type'));
         }
 
-        $item_type = Entity::itemType((int) $resource_type_id);
+        $item_type = Select::itemType((int) $resource_type_id);
 
         return match ($item_type) {
             'allocated-expense' => $this->allocatedExpenseCollection((int) $resource_type_id),
@@ -33,9 +37,9 @@ class ResourceTypeItemView extends Controller
 
     private function allocatedExpenseCollection(int $resource_type_id): JsonResponse
     {
-        $response = new \App\ItemType\AllocatedExpense\ApiResponse\ResourceTypeItem(
+        $response = new \App\ItemType\AllocatedExpense\HttpResponse\ResourceTypeItem(
             $resource_type_id,
-            $this->writeAccessToResourceType($resource_type_id),
+            $this->hasWriteAccessToResourceType($resource_type_id),
             $this->user_id
         );
 
@@ -44,9 +48,9 @@ class ResourceTypeItemView extends Controller
 
     private function gameCollection(int $resource_type_id): JsonResponse
     {
-        $response = new \App\ItemType\Game\ApiResponse\ResourceTypeItem(
+        $response = new \App\ItemType\Game\HttpResponse\ResourceTypeItem(
             $resource_type_id,
-            $this->writeAccessToResourceType($resource_type_id),
+            $this->hasWriteAccessToResourceType($resource_type_id),
             $this->user_id
         );
 
@@ -55,9 +59,9 @@ class ResourceTypeItemView extends Controller
 
     private function simpleExpenseCollection(int $resource_type_id): JsonResponse
     {
-        $response = new \App\ItemType\SimpleExpense\ApiResponse\ResourceTypeItem(
+        $response = new \App\ItemType\SimpleExpense\HttpResponse\ResourceTypeItem(
             $resource_type_id,
-            $this->writeAccessToResourceType($resource_type_id),
+            $this->hasWriteAccessToResourceType($resource_type_id),
             $this->user_id
         );
 
@@ -66,9 +70,9 @@ class ResourceTypeItemView extends Controller
 
     private function simpleItemCollection(int $resource_type_id): JsonResponse
     {
-        $response = new \App\ItemType\SimpleItem\ApiResponse\ResourceTypeItem(
+        $response = new \App\ItemType\SimpleItem\HttpResponse\ResourceTypeItem(
             $resource_type_id,
-            $this->writeAccessToResourceType($resource_type_id),
+            $this->hasWriteAccessToResourceType($resource_type_id),
             $this->user_id
         );
 
@@ -77,11 +81,11 @@ class ResourceTypeItemView extends Controller
 
     public function optionsIndex(string $resource_type_id): JsonResponse
     {
-        if ($this->viewAccessToResourceType((int) $resource_type_id) === false) {
-            \App\Response\Responses::notFoundOrNotAccessible(trans('entities.resource-type'));
+        if ($this->hasViewAccessToResourceType((int) $resource_type_id) === false) {
+            return \App\HttpResponse\Responses::notFoundOrNotAccessible(trans('entities.resource-type'));
         }
 
-        $item_type = Entity::itemType((int) $resource_type_id);
+        $item_type = Select::itemType((int) $resource_type_id);
 
         return match ($item_type) {
             'allocated-expense' => $this->optionsAllocatedExpenseCollection((int) $resource_type_id),
@@ -94,61 +98,53 @@ class ResourceTypeItemView extends Controller
 
     private function optionsAllocatedExpenseCollection(int $resource_type_id): JsonResponse
     {
-        $item = new \App\ItemType\AllocatedExpense\Item();
-        $response = new \App\Option\ResourceTypeItem\AllocatedExpenseCollection($this->permissions($resource_type_id));
+        $allowed_values = new AllocatedExpenseAllowedValue(
+            $this->viewable_resource_types,
+            $resource_type_id
+        );
 
-        return $response->setDynamicAllowedParameters(
-            $item->allowedValuesForResourceTypeItemCollection(
-                $resource_type_id,
-                $this->viewable_resource_types
-            )
-        )
-        ->create()
-        ->response();
+        return (new \App\HttpOptionResponse\ResourceTypeItem\AllocatedExpenseCollection($this->permissions($resource_type_id)))
+            ->setAllowedValuesForParameters($allowed_values->parameterAllowedValuesForResourceTypeCollection())
+            ->create()
+            ->response();
     }
 
     private function optionsGameCollection(int $resource_type_id): JsonResponse
     {
-        $item = new \App\ItemType\Game\Item();
-        $response = new \App\Option\ResourceTypeItem\GameCollection($this->permissions($resource_type_id));
+        $allowed_values = new GameAllowedValue(
+            $this->viewable_resource_types,
+            $resource_type_id
+        );
 
-        return $response->setDynamicAllowedParameters(
-            $item->allowedValuesForResourceTypeItemCollection(
-                $resource_type_id,
-                $this->viewable_resource_types
-            )
-        )
-        ->create()
-        ->response();
+        return (new \App\HttpOptionResponse\ResourceTypeItem\GameCollection($this->permissions($resource_type_id)))
+            ->setAllowedValuesForParameters($allowed_values->parameterAllowedValuesForResourceTypeCollection())
+            ->create()
+            ->response();
     }
 
     private function optionsSimpleExpenseCollection(int $resource_type_id): JsonResponse
     {
-        $item = new \App\ItemType\SimpleExpense\Item();
-        $response = new \App\Option\ResourceTypeItem\SimpleExpenseCollection($this->permissions($resource_type_id));
+        $allowed_values = new SimpleExpenseAllowedValue(
+            $this->viewable_resource_types,
+            $resource_type_id
+        );
 
-        return $response->setDynamicAllowedParameters(
-            $item->allowedValuesForResourceTypeItemCollection(
-                $resource_type_id,
-                $this->viewable_resource_types
-            )
-        )
-        ->create()
-        ->response();
+        return (new \App\HttpOptionResponse\ResourceTypeItem\SimpleExpenseCollection($this->permissions($resource_type_id)))
+            ->setAllowedValuesForParameters($allowed_values->parameterAllowedValuesForResourceTypeCollection())
+            ->create()
+            ->response();
     }
 
     private function optionsSimpleItemCollection(int $resource_type_id): JsonResponse
     {
-        $item = new \App\ItemType\SimpleItem\Item();
-        $response = new \App\Option\ResourceTypeItem\SimpleItemCollection($this->permissions($resource_type_id));
+        $allowed_values = new SimpleItemAllowedValue(
+            $this->viewable_resource_types,
+            $resource_type_id
+        );
 
-        return $response->setDynamicAllowedParameters(
-            $item->allowedValuesForResourceTypeItemCollection(
-                $resource_type_id,
-                $this->viewable_resource_types
-            )
-        )
-        ->create()
-        ->response();
+        return (new \App\HttpOptionResponse\ResourceTypeItem\SimpleItemCollection($this->permissions($resource_type_id)))
+            ->setAllowedValuesForParameters($allowed_values->parameterAllowedValuesForResourceTypeCollection())
+            ->create()
+            ->response();
     }
 }
