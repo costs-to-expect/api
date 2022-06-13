@@ -29,7 +29,7 @@ class Responses
         return $response;
     }
 
-    public static function notFound(?string $type = null, ?Exception $e = null): JsonResponse
+    public static function notFound(?string $type = null, ?\Throwable $e = null): JsonResponse
     {
         $response = [
             'message' => ($type !== null) ? trans('responses.not-found-entity', ['type'=>$type]) :

@@ -139,11 +139,9 @@ class ResourceTypeManage extends Controller
 
                 return \App\HttpResponse\Responses::successNoContent();
             } catch (QueryException $e) {
-                Log::error($e->getMessage());
                 return \App\HttpResponse\Responses::foreignKeyConstraintError();
             } catch (Exception $e) {
-                Log::error($e->getMessage());
-                return \App\HttpResponse\Responses::notFound(trans('entities.resource-type'));
+                return \App\HttpResponse\Responses::notFound(trans('entities.resource-type'), $e);
             }
         } else {
             return \App\HttpResponse\Responses::foreignKeyConstraintError();

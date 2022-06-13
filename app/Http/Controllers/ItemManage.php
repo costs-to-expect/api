@@ -580,7 +580,7 @@ class ItemManage extends Controller
         } catch (QueryException $e) {
             return Responses::foreignKeyConstraintError();
         } catch (Exception $e) {
-            return Responses::notFound(trans('entities.item'));
+            return Responses::notFound(trans('entities.item'), $e);
         }
     }
 
@@ -625,7 +625,7 @@ class ItemManage extends Controller
         } catch (QueryException $e) {
             return Responses::foreignKeyConstraintError();
         } catch (Exception $e) {
-            return Responses::notFound(trans('entities.item'));
+            return Responses::notFound(trans('entities.item'), $e);
         }
     }
 
@@ -670,7 +670,7 @@ class ItemManage extends Controller
         } catch (QueryException $e) {
             return Responses::foreignKeyConstraintError();
         } catch (Exception $e) {
-            return Responses::notFound(trans('entities.item'));
+            return Responses::notFound(trans('entities.item'), $e);
         }
     }
 
@@ -715,7 +715,7 @@ class ItemManage extends Controller
         } catch (QueryException $e) {
             return Responses::foreignKeyConstraintError();
         } catch (Exception $e) {
-            return Responses::notFound(trans('entities.item'));
+            return Responses::notFound(trans('entities.item'), $e);
         }
     }
 

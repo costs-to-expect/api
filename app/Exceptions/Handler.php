@@ -63,11 +63,7 @@ class Handler extends ExceptionHandler
 
         switch ($status_code) {
             case 404:
-                if (App::environment() === 'local') {
-                    \App\HttpResponse\Responses::notFound(null, $exception);
-                } else {
-                    \App\HttpResponse\Responses::notFound(null);
-                }
+                \App\HttpResponse\Responses::notFound(null, $exception);
                 break;
             case 503:
                 \App\HttpResponse\Responses::maintenance();
