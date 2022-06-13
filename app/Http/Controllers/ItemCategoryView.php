@@ -150,7 +150,7 @@ class ItemCategoryView extends Controller
 
     private function optionsAllocatedExpenseCollection(int $resource_type_id): JsonResponse
     {
-        if ($this->hasViewAccessToResourceType((int) $resource_type_id) === false) {
+        if ($this->hasViewAccessToResourceType($resource_type_id) === false) {
             return \App\HttpResponse\Responses::notFoundOrNotAccessible(trans('entities.item'));
         }
 

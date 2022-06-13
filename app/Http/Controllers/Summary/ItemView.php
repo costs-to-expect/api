@@ -19,7 +19,7 @@ class ItemView extends Controller
 {
     public function index(string $resource_type_id, string $resource_id): JsonResponse
     {
-        if ($this->hasViewAccessToResourceType((int)$resource_type_id) === false) {
+        if ($this->hasViewAccessToResourceType((int) $resource_type_id) === false) {
             return Responses::notFoundOrNotAccessible(trans('entities.resource'));
         }
 
