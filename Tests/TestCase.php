@@ -101,6 +101,24 @@ abstract class TestCase extends BaseTestCase
         $this->fail('Unable to create the resource type');
     }
 
+    protected function createAndReturnSubcategoryId(string $resource_type_id, string $category_id): string
+    {
+        $response = $this->postSubcategory(
+            $resource_type_id,
+            $category_id,
+            [
+                'name' => $this->faker->text(200),
+                'description' => $this->faker->text(200),
+            ]
+        );
+
+        if ($response->assertStatus(201)) {
+            return $response->json('id');
+        }
+
+        $this->fail('Unable to create the subcategory');
+    }
+
     protected function deleteCategory(string $resource_type_id, $category_id): TestResponse
     {
         return $this->delete(
@@ -126,6 +144,21 @@ abstract class TestCase extends BaseTestCase
     {
         return $this->delete(
             route('resource-type.delete', ['resource_type_id' => $resource_type_id]), []
+        );
+    }
+
+    protected function deleteSubcategory(string $resource_type_id, $category_id, $subcategory_id): TestResponse
+    {
+        return $this->delete(
+            route(
+                'subcategory.delete',
+                [
+                    'resource_type_id' => $resource_type_id,
+                    'category_id' => $category_id,
+                    'subcategory_id' => $subcategory_id
+                ]
+            ),
+            []
         );
     }
 
@@ -191,6 +224,26 @@ abstract class TestCase extends BaseTestCase
     {
         return $this->patch(
             route('resource-type.update', ['resource_type_id' => $resource_type_id]),
+            $payload
+        );
+    }
+
+    protected function patchSubcategory(
+        string $resource_type_id,
+        string $category_id,
+        string $subcategory_id,
+        array $payload
+    ): TestResponse
+    {
+        return $this->patch(
+            route(
+                'subcategory.update',
+                [
+                    'resource_type_id' => $resource_type_id,
+                    'category_id' => $category_id,
+                    'subcategory_id' => $subcategory_id
+                ]
+            ),
             $payload
         );
     }

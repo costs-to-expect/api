@@ -276,7 +276,7 @@ our local test suite is as complete as the Postman request tests.
 | ResourceManage (Actions)            | Complete (14 Tests)    |
 | ResourceTypeManage (Actions)        | Complete (14 Tests)    |
 | ResourceTypeView (Responses)        | In Progress (3 Tests)  |
-| SubcategoryManage (Actions)         | Not started            |
+| SubcategoryManage (Actions)         | Complete (12 Tests)    |
 | ToolManage (Actions)                | Not started            |
 | Summaries (Responses)               | Not started            |
-| Total                               | In Progress (84 Tests) |
+| Total                               | In Progress (96 Tests) |

@@ -156,11 +156,11 @@ class CategoryManageTest extends TestCase
         $this->actingAs(User::find(1));
 
         $resource_type_id = $this->createAndReturnResourceTypeId();
-        $resource_id = $this->createAndReturnCategoryId($resource_type_id);
+        $category_id = $this->createAndReturnCategoryId($resource_type_id);
 
         $response = $this->patchCategory(
             $resource_type_id,
-            $resource_id,
+            $category_id,
             [
                 'extra' => $this->faker->text(100)
             ]
@@ -170,16 +170,16 @@ class CategoryManageTest extends TestCase
     }
 
     /** @test */
-    public function update_category_fails_non_payload(): void
+    public function update_category_fails_no_payload(): void
     {
         $this->actingAs(User::find(1));
 
         $resource_type_id = $this->createAndReturnResourceTypeId();
-        $resource_id = $this->createAndReturnCategoryId($resource_type_id);
+        $category_id = $this->createAndReturnCategoryId($resource_type_id);
 
         $response = $this->patchCategory(
             $resource_type_id,
-            $resource_id,
+            $category_id,
             []
         );
 
@@ -235,11 +235,11 @@ class CategoryManageTest extends TestCase
         $this->actingAs(User::find(1));
 
         $resource_type_id = $this->createAndReturnResourceTypeId();
-        $resource_id = $this->createAndReturnCategoryId($resource_type_id);
+        $category_id = $this->createAndReturnCategoryId($resource_type_id);
 
         $response = $this->patchCategory(
             $resource_type_id,
-            $resource_id,
+            $category_id,
             [
                 'name' => $this->faker->text(25)
             ]
