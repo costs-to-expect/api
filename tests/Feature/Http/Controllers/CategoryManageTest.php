@@ -226,8 +226,6 @@ class CategoryManageTest extends TestCase
             ]
         );
 
-        echo $response->content();
-
         $response->assertStatus(422);
     }
 
