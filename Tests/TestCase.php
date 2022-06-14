@@ -239,6 +239,20 @@ abstract class TestCase extends BaseTestCase
         return $this->post(route('resource-type.create'), $payload);
     }
 
+    protected function postSubcategory(string $resource_type_id, string $category_id, array $payload): TestResponse
+    {
+        return $this->post(
+            route(
+                'subcategory.create',
+                [
+                    'resource_type_id' => $resource_type_id,
+                    'category_id' => $category_id
+                ]
+            ),
+            $payload
+        );
+    }
+
     protected function setUp(): void
     {
         parent::setUp();

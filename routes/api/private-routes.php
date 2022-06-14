@@ -4,6 +4,7 @@ use App\Http\Controllers\CategoryManage;
 use App\Http\Controllers\PermittedUserManage;
 use App\Http\Controllers\ResourceManage;
 use App\Http\Controllers\ResourceTypeManage;
+use App\Http\Controllers\SubcategoryManage;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Route;
 
@@ -33,8 +34,8 @@ Route::group(
 
         Route::post(
             'resource-types/{resource_type_id}/categories/{category_id}/subcategories',
-            'SubcategoryManage@create'
-        );
+            [SubcategoryManage::class, 'create']
+        )->name('subcategory.create');
 
         Route::post(
             'resource-types/{resource_type_id}/permitted-users',
@@ -88,8 +89,8 @@ Route::group(
 
         Route::delete(
             'resource-types/{resource_type_id}/categories/{category_id}/subcategories/{subcategory_id}',
-            'SubcategoryManage@delete'
-        );
+            [SubcategoryManage::class, 'delete']
+        )->name('subcategory.delete');
 
         Route::delete(
             'resource-types/{resource_type_id}/partial-transfers/{item_partial_transfer_id}',
@@ -128,8 +129,8 @@ Route::group(
 
         Route::patch(
             'resource-types/{resource_type_id}/categories/{category_id}/subcategories/{subcategory_id}',
-            'SubcategoryManage@update'
-        );
+            [SubcategoryManage::class, 'update']
+        )->name('subcategory.update');
 
         Route::patch(
             'resource-types/{resource_type_id}/resources/{resource_id}',

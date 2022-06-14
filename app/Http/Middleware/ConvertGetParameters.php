@@ -3,6 +3,7 @@
 namespace App\Http\Middleware;
 
 use App\HttpRequest\Hash;
+use App\HttpResponse\Responses;
 use Closure;
 use Illuminate\Http\Request;
 
@@ -37,7 +38,7 @@ class ConvertGetParameters
             $param_value = $request->query($param);
             if ($param_value !== null) {
                 $id = $hash->decode($param, $param_value);
-                is_int($id) ? $value = $id : $value = null;
+                ($id !== false && is_int($id)) ? $value = $id : $value = null;
                 $request->request->add([$param => $value]);
             }
         }

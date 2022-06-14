@@ -49,8 +49,16 @@ class ConvertRouteParameters
             $param_value = $request->route($param);
             if ($param_value !== null) {
                 $id = $hash->decode($route_params[$param], $param_value);
-                is_int($id) ? $value = $id : Responses::notFoundOrNotAccessible($route_params[$param]);
-                $request->route()->setParameter($param, $value);
+
+                if ($id === false) {
+                    return Responses::notFoundOrNotAccessible($route_params[$param]);
+                }
+
+                if (is_int($id) === false) {
+                    return Responses::notFoundOrNotAccessible($route_params[$param]);
+                }
+
+                $request->route()->setParameter($param, $id);
             }
         }
 
