@@ -156,8 +156,6 @@ final class AuthenticationTest extends TestCase
 
         $response->assertStatus(201);
 
-        $token = $response->json('uris.create-new-password.parameters.token');
-
         $response = $this->post(
             route('auth.create-new-password', ['email' => $this->faker->colorName, 'token' => $this->faker->colorName]),
             [
