@@ -18,14 +18,19 @@ abstract class TestCase extends BaseTestCase
     protected string $test_user_email = 'test-account-email@email.com';
     protected string $test_user_password = 'test-account-secret-password';
 
-    protected function assertJsonIsPermittedUser($content): void
-    {
-        $this->assertJsonMatchesSchema($content, 'api/schema/permitted-user.json');
-    }
-
     protected function assertJsonIsCategory($content): void
     {
         $this->assertJsonMatchesSchema($content, 'api/schema/category.json');
+    }
+
+    protected function assertJsonIsItemType($content): void
+    {
+        $this->assertJsonMatchesSchema($content, 'api/schema/item-type.json');
+    }
+
+    protected function assertJsonIsPermittedUser($content): void
+    {
+        $this->assertJsonMatchesSchema($content, 'api/schema/permitted-user.json');
     }
 
     protected function assertJsonIsResource($content): void
@@ -167,9 +172,14 @@ abstract class TestCase extends BaseTestCase
         return User::query()->where('id', '!=', 1)->inRandomOrder()->first();
     }
 
-    protected function getRoute(string $route, array $parameters = []): TestResponse
+    protected function getItemType(array $parameters = []): TestResponse
     {
-        return $this->get(route($route, $parameters));
+        return $this->getRoute('item-type.show', $parameters);
+    }
+
+    protected function getItemTypes(array $parameters = []): TestResponse
+    {
+        return $this->getRoute('item-type.list', $parameters);
     }
 
     protected function getPermittedUser(array $parameters = []): TestResponse
@@ -190,6 +200,11 @@ abstract class TestCase extends BaseTestCase
     protected function getResourceTypes(array $parameters = []): TestResponse
     {
         return $this->getRoute('resource-type.list', $parameters);
+    }
+
+    protected function getRoute(string $route, array $parameters = []): TestResponse
+    {
+        return $this->get(route($route, $parameters));
     }
 
     protected function patchCategory(string $resource_type_id, string $category_id, array $payload): TestResponse

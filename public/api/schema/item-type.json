@@ -18,14 +18,14 @@
         },
         "created": {
             "type": "string"
-        },
-        "required": [
-            "id",
-            "name",
-            "friendly_name",
-            "description",
-            "example",
-            "created"
-        ]
-    }
+        }
+    },
+    "required": [
+        "id",
+        "name",
+        "friendly_name",
+        "description",
+        "example",
+        "created"
+    ]
 }

@@ -50,7 +50,7 @@ class ResourceTypeViewTest extends TestCase
     }
 
     /** @test */
-    public function item(): void
+    public function show(): void
     {
         $this->actingAs(User::find(1));
 

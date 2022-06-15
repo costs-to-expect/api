@@ -1,0 +1,158 @@
+<?php
+
+namespace Tests\View\Http\Controllers;
+
+use App\User;
+use Tests\TestCase;
+
+class ItemTypeViewTest extends TestCase
+{
+    /** @test */
+    // Rename test methods, unique
+    public function collection(): void
+    {
+        $this->actingAs(User::find($this->getARandomUser()->id));
+
+        $response = $this->getItemTypes();
+        $response->assertStatus(200);
+
+        foreach ($response->json() as $item) {
+            try {
+                $json = json_encode($item, JSON_THROW_ON_ERROR);
+            } catch (\JsonException $e) {
+                $this->fail('Unable to encode the JSON string');
+            }
+
+            $this->assertJsonIsItemType($json);
+        }
+    }
+
+    /** @test */
+    public function collection_pagination(): void
+    {
+        $this->actingAs(User::find($this->getARandomUser()->id));
+
+        $response = $this->getItemTypes(['offset'=>1, 'limit'=> 2]);
+
+        $response->assertStatus(200);
+        $response->assertHeader('X-Offset', 1);
+        $response->assertHeader('X-Limit', 2);
+
+        foreach ($response->json() as $item) {
+            try {
+                $json = json_encode($item, JSON_THROW_ON_ERROR);
+            } catch (\JsonException $e) {
+                $this->fail('Unable to encode the JSON string');
+            }
+
+            $this->assertJsonIsItemType($json);
+        }
+    }
+
+    /** @test */
+    /*public function collection_search_description(): void
+    {
+        $this->actingAs(User::find($this->getARandomUser()->id));
+
+        $response = $this->getItemTypes(['search'=>'description:track']);
+
+        $response->assertStatus(200);
+        $response->assertHeader('X-Search', 'description:track');
+        $response->assertHeader('X-Count', 3);
+
+        foreach ($response->json() as $item) {
+            try {
+                $json = json_encode($item, JSON_THROW_ON_ERROR);
+            } catch (\JsonException $e) {
+                $this->fail('Unable to encode the JSON string');
+            }
+
+            $this->assertJsonIsItemType($json);
+        }
+    }*/
+
+    /** @test */
+    public function collection_search_name(): void
+    {
+        $this->actingAs(User::find($this->getARandomUser()->id));
+
+        $response = $this->getItemTypes(['search'=>'name:simple']);
+
+        $response->assertStatus(200);
+        $response->assertHeader('X-Search', 'name:simple');
+        $response->assertHeader('X-Count', 2);
+
+        foreach ($response->json() as $item) {
+            try {
+                $json = json_encode($item, JSON_THROW_ON_ERROR);
+            } catch (\JsonException $e) {
+                $this->fail('Unable to encode the JSON string');
+            }
+
+            $this->assertJsonIsItemType($json);
+        }
+    }
+
+    /** @test */
+    public function collection_search_name_no_results(): void
+    {
+        $this->actingAs(User::find($this->getARandomUser()->id));
+
+        $response = $this->getItemTypes(['search'=>'name:xxxxxxxxx']);
+
+        $response->assertStatus(200);
+        $response->assertHeader('X-Search', 'name:xxxxxxxxx');
+        $response->assertHeader('X-Count', 0);
+
+        foreach ($response->json() as $item) {
+            try {
+                $json = json_encode($item, JSON_THROW_ON_ERROR);
+            } catch (\JsonException $e) {
+                $this->fail('Unable to encode the JSON string');
+            }
+
+            $this->assertJsonIsItemType($json);
+        }
+    }
+
+    /** @test */
+    /*public function collection_sort_name(): void
+    {
+        $this->actingAs(User::find($this->getARandomUser()->id));
+
+        $response = $this->getItemTypes(['sort'=>'name:asc', 'limit' => 1]);
+
+        $response->assertStatus(200);
+        $response->assertHeader('X-Sort', 'name:asc');
+        $response->assertHeader('X-Count', 1);
+
+        foreach ($response->json() as $item) {
+            try {
+                $json = json_encode($item, JSON_THROW_ON_ERROR);
+            } catch (\JsonException $e) {
+                $this->fail('Unable to encode the JSON string');
+            }
+
+            $this->assertJsonIsItemType($json);
+        }
+
+        $this->assertEquals('allocated-expense', $response->json()[0]['name']);
+
+    }*/
+
+    /** @test */
+    /*public function show(): void
+    {
+        $this->actingAs(User::find($this->getARandomUser()->id));
+
+        $response = $this->getItemTypes(['offset'=>0, 'limit'=> 1]);
+        $response->assertStatus(200);
+
+        $item_type_id = $response->json()[0]['id'];
+
+        $response = $this->getItemType(['item_type_id'=> $item_type_id]);
+        $response->assertStatus(200);
+
+        $this->assertJsonIsItemType($response->content());
+    }*/
+}

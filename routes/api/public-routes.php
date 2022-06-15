@@ -59,8 +59,8 @@ Route::group(
 
         Route::get(
             'item-types',
-            'ItemTypeView@index'
-        );
+            [\App\Http\Controllers\ItemTypeView::class, 'index']
+        )->name('item-type.list');
 
         Route::options(
             'item-types',
