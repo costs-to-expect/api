@@ -5,13 +5,19 @@ namespace Tests\View\Http\Controllers;
 use App\User;
 use Tests\TestCase;
 
-class ItemTypeViewTest extends TestCase
+/**
+ * @runTestsInSeparateProcesses
+ */
+final class ItemTypeViewTest extends TestCase
 {
-    /** @test */
-    // Rename test methods, unique
+    /**
+     * @test
+     * @runInSeparateProcess
+     * @preserveGlobalState disabled
+     */
     public function itemTypeCollection(): void
     {
-        $this->actingAs(User::find($this->getARandomUser()->id));
+        $this->actingAs(User::find(1));
 
         $response = $this->getItemTypes();
         $response->assertStatus(200);
@@ -27,10 +33,14 @@ class ItemTypeViewTest extends TestCase
         }
     }
 
-    /** @test */
+    /**
+     * @test
+     * @runInSeparateProcess
+     * @preserveGlobalState disabled
+     */
     public function itemTypeCollectionPagination(): void
     {
-        $this->actingAs(User::find($this->getARandomUser()->id));
+        $this->actingAs(User::find(1));
 
         $response = $this->getItemTypes(['offset'=>1, 'limit'=> 2]);
 
@@ -49,10 +59,14 @@ class ItemTypeViewTest extends TestCase
         }
     }
 
-    /** @test */
+    /**
+     * @test
+     * @runInSeparateProcess
+     * @preserveGlobalState disabled
+     */
     public function itemTypeCollectionSearchDescription(): void
     {
-        $this->actingAs(User::find($this->getARandomUser()->id));
+        $this->actingAs(User::find(1));
 
         $response = $this->getItemTypes(['search'=>'description:track']);
 
@@ -71,10 +85,14 @@ class ItemTypeViewTest extends TestCase
         }
     }
 
-    /** @test */
+    /**
+     * @test
+     * @runInSeparateProcess
+     * @preserveGlobalState disabled
+     */
     public function itemTypeCollectionSearchName(): void
     {
-        $this->actingAs(User::find($this->getARandomUser()->id));
+        $this->actingAs(User::find(1));
 
         $response = $this->getItemTypes(['search'=>'name:simple']);
 
@@ -93,10 +111,14 @@ class ItemTypeViewTest extends TestCase
         }
     }
 
-    /** @test */
+    /**
+     * @test
+     * @runInSeparateProcess
+     * @preserveGlobalState disabled
+     */
     public function itemTypeCollectionSearchNameNoResults(): void
     {
-        $this->actingAs(User::find($this->getARandomUser()->id));
+        $this->actingAs(User::find(1));
 
         $response = $this->getItemTypes(['search'=>'name:xxxxxxxxx']);
 
@@ -115,10 +137,14 @@ class ItemTypeViewTest extends TestCase
         }
     }
 
-    /** @test */
+    /**
+     * @test
+     * @runInSeparateProcess
+     * @preserveGlobalState disabled
+     */
     public function itemTypeCollectionSortName(): void
     {
-        $this->actingAs(User::find($this->getARandomUser()->id));
+        $this->actingAs(User::find(1));
 
         $response = $this->getItemTypes(['sort'=>'name:asc', 'limit' => 1]);
 
@@ -140,10 +166,14 @@ class ItemTypeViewTest extends TestCase
 
     }
 
-    /** @test */
+    /**
+     * @test
+     * @runInSeparateProcess
+     * @preserveGlobalState disabled
+     */
     public function itemTypeShow(): void
     {
-        $this->actingAs(User::find($this->getARandomUser()->id));
+        $this->actingAs(User::find(1));
 
         $response = $this->getItemTypes(['offset'=>0, 'limit'=> 1]);
         $response->assertStatus(200);

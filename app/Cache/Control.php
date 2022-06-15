@@ -38,7 +38,7 @@ class Control
             $this->visibility = 'private';
         }
 
-        $this->cacheable = Config::get('api.app.cache.enable');
+        $this->cacheable = (bool) Config::get('api.app.cache.enable');
 
         $this->laravel_cache_prefix = Config::get('cache.prefix');
     }

@@ -5,11 +5,11 @@
          colors="true"
 >
     <testsuites>
-        <testsuite name="Unit">
-            <directory suffix="Test.php">./tests/Unit</directory>
-        </testsuite>
         <testsuite name="Feature">
-            <directory suffix="Test.php">./tests/Feature</directory>
+            <directory suffix="Test.php">./Tests/Feature</directory>
+        </testsuite>
+        <testsuite name="View">
+            <directory suffix="Test.php">./Tests/View</directory>
         </testsuite>
     </testsuites>
     <coverage processUncoveredFiles="true">
@@ -22,7 +22,7 @@
         <server name="APP_CACHE" value="false"/>
         <server name="APP_DEBUG" value="true"/>
         <server name="BCRYPT_ROUNDS" value="4"/>
-        <server name="CACHE_DRIVER" value="array"/>
+        <server name="CACHE_DRIVER" value="database"/>
         <server name="DB_CONNECTION" value="mysql"/>
         <server name="DB_HOST" value="127.0.0.1"/>
         <server name="DB_DATABASE" value="api"/>
