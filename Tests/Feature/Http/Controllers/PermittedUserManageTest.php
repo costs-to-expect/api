@@ -8,7 +8,7 @@ use Tests\TestCase;
 class PermittedUserManageTest extends TestCase
 {
     /** @test */
-    public function create_permitted_user_fails_no_payload(): void
+    public function createPermittedUserFailsNoPayload(): void
     {
         $this->actingAs(User::find(1));
 
@@ -23,7 +23,7 @@ class PermittedUserManageTest extends TestCase
     }
 
     /** @test */
-    public function create_permitted_user_fails_user_does_not_exist(): void
+    public function createPermittedUserFailsUserDoesNotExist(): void
     {
         $this->actingAs(User::find(1));
 
@@ -40,7 +40,7 @@ class PermittedUserManageTest extends TestCase
     }
 
     /** @test */
-    public function create_permitted_user_success(): void
+    public function createPermittedUserSuccess(): void
     {
         $this->actingAs(User::find(1));
 
@@ -58,7 +58,7 @@ class PermittedUserManageTest extends TestCase
     }
 
     /** @test */
-    public function delete_permitted_user_success(): void
+    public function deletePermittedUserSuccess(): void
     {
         $this->actingAs(User::find(1));
 

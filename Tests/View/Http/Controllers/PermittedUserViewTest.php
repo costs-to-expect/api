@@ -8,7 +8,7 @@ use Tests\TestCase;
 class PermittedUserViewTest extends TestCase
 {
     /** @test */
-    public function collection(): void
+    public function permittedUserCollection(): void
     {
         $this->actingAs(User::find(1));
 
@@ -33,7 +33,7 @@ class PermittedUserViewTest extends TestCase
     }
 
     /** @test */
-    public function item(): void
+    public function permittedUserShow(): void
     {
         $this->actingAs(User::find(1));
 

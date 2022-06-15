@@ -9,7 +9,7 @@ class ItemTypeViewTest extends TestCase
 {
     /** @test */
     // Rename test methods, unique
-    public function collection(): void
+    public function itemTypeCollection(): void
     {
         $this->actingAs(User::find($this->getARandomUser()->id));
 
@@ -28,7 +28,7 @@ class ItemTypeViewTest extends TestCase
     }
 
     /** @test */
-    public function collection_pagination(): void
+    public function itemTypeCollectionPagination(): void
     {
         $this->actingAs(User::find($this->getARandomUser()->id));
 
@@ -50,7 +50,7 @@ class ItemTypeViewTest extends TestCase
     }
 
     /** @test */
-    /*public function collection_search_description(): void
+    public function itemTypeCollectionSearchDescription(): void
     {
         $this->actingAs(User::find($this->getARandomUser()->id));
 
@@ -69,10 +69,10 @@ class ItemTypeViewTest extends TestCase
 
             $this->assertJsonIsItemType($json);
         }
-    }*/
+    }
 
     /** @test */
-    public function collection_search_name(): void
+    public function itemTypeCollectionSearchName(): void
     {
         $this->actingAs(User::find($this->getARandomUser()->id));
 
@@ -94,7 +94,7 @@ class ItemTypeViewTest extends TestCase
     }
 
     /** @test */
-    public function collection_search_name_no_results(): void
+    public function itemTypeCollectionSearchNameNoResults(): void
     {
         $this->actingAs(User::find($this->getARandomUser()->id));
 
@@ -116,7 +116,7 @@ class ItemTypeViewTest extends TestCase
     }
 
     /** @test */
-    /*public function collection_sort_name(): void
+    public function itemTypeCollectionSortName(): void
     {
         $this->actingAs(User::find($this->getARandomUser()->id));
 
@@ -138,10 +138,10 @@ class ItemTypeViewTest extends TestCase
 
         $this->assertEquals('allocated-expense', $response->json()[0]['name']);
 
-    }*/
+    }
 
     /** @test */
-    /*public function show(): void
+    public function itemTypeShow(): void
     {
         $this->actingAs(User::find($this->getARandomUser()->id));
 
@@ -154,5 +154,5 @@ class ItemTypeViewTest extends TestCase
         $response->assertStatus(200);
 
         $this->assertJsonIsItemType($response->content());
-    }*/
+    }
 }

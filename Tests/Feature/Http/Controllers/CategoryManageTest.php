@@ -10,7 +10,7 @@ use Tests\TestCase;
 class CategoryManageTest extends TestCase
 {
     /** @test */
-    public function create_category_fails_no_description_in_payload(): void
+    public function createCategoryFailsNoDescriptionInPayload(): void
     {
         $this->actingAs(User::find(1));
 
@@ -27,7 +27,7 @@ class CategoryManageTest extends TestCase
     }
 
     /** @test */
-    public function create_category_fails_no_name_in_payload(): void
+    public function createCategoryFailsNoNameInPayload(): void
     {
         $this->actingAs(User::find(1));
 
@@ -44,7 +44,7 @@ class CategoryManageTest extends TestCase
     }
 
     /** @test */
-    public function create_category_fails_no_permission_to_resource_type(): void
+    public function createCategoryFailsNoPermissionToResourceType(): void
     {
         $this->actingAs(User::find($this->getARandomUser()->id)); // Random user
 
@@ -73,7 +73,7 @@ class CategoryManageTest extends TestCase
     }
 
     /** @test */
-    public function create_category_fails_no_payload(): void
+    public function createCategoryFailsNoPayload(): void
     {
         $this->actingAs(User::find(1));
 
@@ -88,7 +88,7 @@ class CategoryManageTest extends TestCase
     }
 
     /** @test */
-    public function create_category_fails_non_unique_name(): void
+    public function createCategoryFailsNonUniqueName(): void
     {
         $this->actingAs(User::find(1));
 
@@ -119,7 +119,7 @@ class CategoryManageTest extends TestCase
     }
 
     /** @test */
-    public function create_category_success(): void
+    public function createCategorySuccess(): void
     {
         $this->actingAs(User::find(1));
 
@@ -138,7 +138,7 @@ class CategoryManageTest extends TestCase
     }
 
     /** @test */
-    public function delete_category_success(): void
+    public function deleteCategorySuccess(): void
     {
         $this->actingAs(User::find(1));
 
@@ -151,7 +151,7 @@ class CategoryManageTest extends TestCase
     }
 
     /** @test */
-    public function update_category_fails_extra_fields_in_payload(): void
+    public function updateCategoryFailsExtraFieldsInPayload(): void
     {
         $this->actingAs(User::find(1));
 
@@ -170,7 +170,7 @@ class CategoryManageTest extends TestCase
     }
 
     /** @test */
-    public function update_category_fails_no_payload(): void
+    public function updateCategoryFailsNoPayload(): void
     {
         $this->actingAs(User::find(1));
 
@@ -187,7 +187,7 @@ class CategoryManageTest extends TestCase
     }
 
     /** @test */
-    public function update_category_fails_non_unique_name(): void
+    public function updateCategoryFailsNonUniqueName(): void
     {
         $this->actingAs(User::find(1));
 
@@ -230,7 +230,7 @@ class CategoryManageTest extends TestCase
     }
 
     /** @test */
-    public function update_category_success(): void
+    public function updateCategorySuccess(): void
     {
         $this->actingAs(User::find(1));
 

@@ -8,7 +8,7 @@ use Tests\TestCase;
 class ResourceTypeViewTest extends TestCase
 {
     /** @test */
-    public function collection(): void
+    public function resourceTypeCollection(): void
     {
         $this->actingAs(User::find(1));
 
@@ -28,7 +28,7 @@ class ResourceTypeViewTest extends TestCase
     }
 
     /** @test */
-    public function collection_pagination(): void
+    public function resourceTypeCollectionPagination(): void
     {
         $this->actingAs(User::find(1));
 
@@ -50,7 +50,7 @@ class ResourceTypeViewTest extends TestCase
     }
 
     /** @test */
-    public function show(): void
+    public function resourceTypeShow(): void
     {
         $this->actingAs(User::find(1));
 

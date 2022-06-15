@@ -8,7 +8,7 @@ use Tests\TestCase;
 class SubcategoryManagerTest extends TestCase
 {
     /** @test */
-    public function create_subcategory_fails_no_description_in_payload(): void
+    public function createSubcategoryFailsNoDescriptionInPayload(): void
     {
         $this->actingAs(User::find(1));
 
@@ -27,7 +27,7 @@ class SubcategoryManagerTest extends TestCase
     }
 
     /** @test */
-    public function create_subcategory_fails_no_payload(): void
+    public function createSubcategoryFailsNoPayload(): void
     {
         $this->actingAs(User::find(1));
 
@@ -44,7 +44,7 @@ class SubcategoryManagerTest extends TestCase
     }
 
     /** @test */
-    public function create_subcategory_fails_non_unique_name(): void
+    public function createSubcategoryFailsNonUniqueName(): void
     {
         $this->actingAs(User::find(1));
 
@@ -77,7 +77,7 @@ class SubcategoryManagerTest extends TestCase
     }
 
        /** @test */
-    public function create_subcategory_forbidden_when_category_id_invalid(): void
+    public function createSubcategoryForbiddenWhenCategoryIdInvalid(): void
     {
         $this->actingAs(User::find(1));
 
@@ -95,7 +95,7 @@ class SubcategoryManagerTest extends TestCase
     }
 
     /** @test */
-    public function create_subcategory_success(): void
+    public function createSubcategorySuccess(): void
     {
         $this->actingAs(User::find(1));
 
@@ -115,7 +115,7 @@ class SubcategoryManagerTest extends TestCase
     }
 
     /** @test */
-    public function delete_subcategory_success(): void
+    public function deleteSubcategorySuccess(): void
     {
         $this->actingAs(User::find(1));
 
@@ -133,7 +133,7 @@ class SubcategoryManagerTest extends TestCase
     }
 
     /** @test */
-    public function update_subcategory_fails_extra_fields_in_payload(): void
+    public function updateSubcategoryFailsExtraFieldsInPayload(): void
     {
         $this->actingAs(User::find(1));
 
@@ -154,7 +154,7 @@ class SubcategoryManagerTest extends TestCase
     }
 
     /** @test */
-    public function update_subcategory_fails_no_payload(): void
+    public function updateSubcategoryFailsNoPayload(): void
     {
         $this->actingAs(User::find(1));
 
@@ -173,7 +173,7 @@ class SubcategoryManagerTest extends TestCase
     }
 
     /** @test */
-    public function update_subcategory_fails_non_unique_name(): void
+    public function updateSubcategoryFailsNonUniqueName(): void
     {
         $this->actingAs(User::find(1));
 
@@ -222,7 +222,7 @@ class SubcategoryManagerTest extends TestCase
     }
 
     /** @test */
-    public function update_subcategory_description_success(): void
+    public function updateSubcategoryDescriptionSuccess(): void
     {
         $this->actingAs(User::find(1));
 
@@ -243,7 +243,7 @@ class SubcategoryManagerTest extends TestCase
     }
 
     /** @test */
-    public function update_subcategory_name_success(): void
+    public function updateSubcategoryNameSuccess(): void
     {
         $this->actingAs(User::find(1));
 
@@ -264,7 +264,7 @@ class SubcategoryManagerTest extends TestCase
     }
 
     /** @test */
-    public function update_subcategory_success(): void
+    public function updateSubcategorySuccess(): void
     {
         $this->actingAs(User::find(1));
 
