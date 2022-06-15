@@ -7,7 +7,7 @@ use App\Models\ResourceType;
 use App\User;
 use Tests\TestCase;
 
-class ResourceManageTest extends TestCase
+final class ResourceManageTest extends TestCase
 {
     /** @test */
     public function createResourceFailsDataFieldNotValidJson(): void

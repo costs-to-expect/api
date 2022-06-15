@@ -5,7 +5,7 @@ namespace Tests\Feature\Http\Controllers;
 use App\User;
 use Tests\TestCase;
 
-class ResourceTypeManageTest extends TestCase
+final class ResourceTypeManageTest extends TestCase
 {
     /** @test */
     public function createResourceTypeFailsDataFieldNotValidJson(): void

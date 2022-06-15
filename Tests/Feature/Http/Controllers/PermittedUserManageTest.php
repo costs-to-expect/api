@@ -5,7 +5,7 @@ namespace Tests\Feature\Http\Controllers;
 use App\User;
 use Tests\TestCase;
 
-class PermittedUserManageTest extends TestCase
+final class PermittedUserManageTest extends TestCase
 {
     /** @test */
     public function createPermittedUserFailsNoPayload(): void

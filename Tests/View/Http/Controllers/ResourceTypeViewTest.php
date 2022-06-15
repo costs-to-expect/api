@@ -5,7 +5,7 @@ namespace Tests\View\Http\Controllers;
 use App\User;
 use Tests\TestCase;
 
-class ResourceTypeViewTest extends TestCase
+final class ResourceTypeViewTest extends TestCase
 {
     /** @test */
     public function resourceTypeCollection(): void

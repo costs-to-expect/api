@@ -4,7 +4,7 @@ namespace Tests\View\Http\Controllers;
 
 use Tests\TestCase;
 
-class AuthenticationTest extends TestCase
+final class AuthenticationTest extends TestCase
 {
     /** @test */
     public function optionsRequestForCreatePassword(): void

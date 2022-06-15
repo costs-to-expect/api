@@ -5,7 +5,7 @@ namespace Tests\Feature\Http\Controllers;
 use App\User;
 use Tests\TestCase;
 
-class AuthenticationTest extends TestCase
+final class AuthenticationTest extends TestCase
 {
     /** @test */
     public function checkSuccess(): void
