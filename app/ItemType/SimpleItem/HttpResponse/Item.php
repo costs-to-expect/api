@@ -40,7 +40,7 @@ class Item extends ApiItemResponse
                 $this->filter_parameters
             );
 
-            $pagination_parameters = $this->pagination_parameters($total);
+            $pagination_parameters = $this->pagination_parameters($total, true);
 
             $items = $model->paginatedCollection(
                 $this->resource_type_id,

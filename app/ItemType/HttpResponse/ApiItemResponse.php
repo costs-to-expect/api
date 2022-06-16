@@ -82,10 +82,10 @@ abstract class ApiItemResponse
         return $headers->headers();
     }
 
-    protected function pagination_parameters(int $total): array
+    protected function pagination_parameters(int $total, bool $allow_override = false): array
     {
         $pagination = new UtilityPagination(request()->path(), $total);
-        return $pagination->allowPaginationOverride(false)
+        return $pagination->allowPaginationOverride($allow_override)
             ->setSearchParameters($this->search_parameters)
             ->setSortParameters($this->sort_fields)
             ->setParameters($this->request_parameters)
