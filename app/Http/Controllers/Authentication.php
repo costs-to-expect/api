@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\HttpResponse\Responses;
+use App\HttpResponse\Response;
 use App\Notifications\ForgotPassword;
 use App\Notifications\Registered;
 use App\HttpOptionResponse\Auth\Check;
@@ -609,7 +609,7 @@ class Authentication extends \Illuminate\Routing\Controller
                 return response()->json($tokens[$token_id]);
             }
 
-            return Responses::notFound();
+            return Response::notFound();
         }
 
         return response()->json(['message' => trans('auth.failed')], 401);
@@ -634,10 +634,10 @@ class Authentication extends \Illuminate\Routing\Controller
 
             if (array_key_exists($token_id, $tokens)) {
                 $user->tokens()->where('id', $token_id)->delete();
-                return Responses::successNoContent();
+                return Response::successNoContent();
             }
 
-            return Responses::notFound();
+            return Response::notFound();
         }
 
         return response()->json(['message' => trans('auth.failed')], 401);

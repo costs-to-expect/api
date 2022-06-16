@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\HttpResponse\Responses;
+use App\HttpResponse\Response;
 use Illuminate\Http\JsonResponse;
 
 /**
@@ -37,6 +37,6 @@ class ToolManage extends Controller
         }
 
         // This will leave two cache keys set in the base controller
-        return Responses::successNoContent();
+        return Response::successNoContent();
     }
 }

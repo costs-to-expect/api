@@ -28,7 +28,7 @@ class RequestManage extends Controller
         $validator = (new RequestErrorLogValidator())->create();
 
         if ($validator->fails()) {
-            return \App\HttpResponse\Responses::validationErrors($validator);
+            return \App\HttpResponse\Response::validationErrors($validator);
         }
 
         try {
@@ -55,9 +55,9 @@ class RequestManage extends Controller
             }
 
         } catch (Exception $e) {
-            return \App\HttpResponse\Responses::failedToSaveModelForCreate($e);
+            return \App\HttpResponse\Response::failedToSaveModelForCreate($e);
         }
 
-        return \App\HttpResponse\Responses::successNoContent();
+        return \App\HttpResponse\Response::successNoContent();
     }
 }

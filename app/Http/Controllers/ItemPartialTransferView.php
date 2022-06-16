@@ -7,7 +7,7 @@ use App\HttpOptionResponse\ItemPartialTransfer\AllocatedExpenseCollection;
 use App\HttpOptionResponse\ItemPartialTransfer\AllocatedExpenseTransfer;
 use App\HttpRequest\Parameter;
 use App\HttpResponse\Header;
-use App\HttpResponse\Responses;
+use App\HttpResponse\Response;
 use App\ItemType\Select;
 use App\Models\ItemPartialTransfer;
 use App\Transformer\ItemPartialTransfer as ItemPartialTransferTransformer;
@@ -24,14 +24,14 @@ class ItemPartialTransferView extends Controller
     public function index($resource_type_id): JsonResponse
     {
         if ($this->hasViewAccessToResourceType((int) $resource_type_id) === false) {
-            return \App\HttpResponse\Responses::notFoundOrNotAccessible(trans('entities.resource-type'));
+            return \App\HttpResponse\Response::notFoundOrNotAccessible(trans('entities.resource-type'));
         }
 
         $item_type = Select::itemType((int) $resource_type_id);
 
         return match ($item_type) {
             'allocated-expense' => $this->allocatedExpenseCollection((int) $resource_type_id),
-            'game', 'simple-expense', 'simple-item' => Responses::notSupported(),
+            'game', 'simple-expense', 'simple-item' => Response::notSupported(),
             default => throw new \OutOfRangeException('No item type definition for ' . $item_type, 500),
         };
     }
@@ -97,14 +97,14 @@ class ItemPartialTransferView extends Controller
     ): JsonResponse
     {
         if ($this->hasViewAccessToResourceType((int) $resource_type_id) === false) {
-            return \App\HttpResponse\Responses::notFoundOrNotAccessible(trans('entities.resource-type'));
+            return \App\HttpResponse\Response::notFoundOrNotAccessible(trans('entities.resource-type'));
         }
 
         $item_type = Select::itemType((int) $resource_type_id);
 
         return match ($item_type) {
             'allocated-expense' => $this->allocatedExpense((int) $resource_type_id, (int) $item_partial_transfer_id),
-            'game', 'simple-expense', 'simple-item' => Responses::notSupported(),
+            'game', 'simple-expense', 'simple-item' => Response::notSupported(),
             default => throw new \OutOfRangeException('No item type definition for ' . $item_type, 500),
         };
     }
@@ -117,7 +117,7 @@ class ItemPartialTransferView extends Controller
         );
 
         if ($item_partial_transfer === null) {
-            return \App\HttpResponse\Responses::notFound(trans('entities.item_partial_transfer'));
+            return \App\HttpResponse\Response::notFound(trans('entities.item_partial_transfer'));
         }
 
         $headers = new Header();
@@ -133,14 +133,14 @@ class ItemPartialTransferView extends Controller
     public function optionsIndex($resource_type_id): JsonResponse
     {
         if ($this->hasViewAccessToResourceType((int) $resource_type_id) === false) {
-            return \App\HttpResponse\Responses::notFoundOrNotAccessible(trans('entities.item'));
+            return \App\HttpResponse\Response::notFoundOrNotAccessible(trans('entities.item'));
         }
 
         $item_type = Select::itemType((int) $resource_type_id);
 
         return match ($item_type) {
             'allocated-expense' => $this->optionsAllocatedExpenseCollection((int) $resource_type_id),
-            'game', 'simple-expense', 'simple-item' => Responses::notSupported(),
+            'game', 'simple-expense', 'simple-item' => Response::notSupported(),
             default => throw new \OutOfRangeException('No item type definition for ' . $item_type, 500),
         };
     }
@@ -155,14 +155,14 @@ class ItemPartialTransferView extends Controller
     public function optionsShow($resource_type_id, $item_partial_transfer_id): JsonResponse
     {
         if ($this->hasViewAccessToResourceType((int) $resource_type_id) === false) {
-            return \App\HttpResponse\Responses::notFoundOrNotAccessible(trans('entities.item-partial-transfer'));
+            return \App\HttpResponse\Response::notFoundOrNotAccessible(trans('entities.item-partial-transfer'));
         }
 
         $item_type = Select::itemType((int) $resource_type_id);
 
         return match ($item_type) {
             'allocated-expense' => $this->optionsAllocatedExpenseShow((int) $resource_type_id),
-            'game', 'simple-expense', 'simple-item' => Responses::notSupported(),
+            'game', 'simple-expense', 'simple-item' => Response::notSupported(),
             default => throw new \OutOfRangeException('No item type definition for ' . $item_type, 500),
         };
     }
@@ -181,14 +181,14 @@ class ItemPartialTransferView extends Controller
     ): JsonResponse
     {
         if ($this->hasViewAccessToResourceType((int) $resource_type_id) === false) {
-            return \App\HttpResponse\Responses::notFoundOrNotAccessible(trans('entities.item'));
+            return \App\HttpResponse\Response::notFoundOrNotAccessible(trans('entities.item'));
         }
 
         $item_type = Select::itemType((int) $resource_type_id);
 
         return match ($item_type) {
             'allocated-expense' => $this->optionsAllocatedExpenseTransfer((int) $resource_type_id, (int) $resource_id),
-            'game', 'simple-expense', 'simple-item' => Responses::notSupported(),
+            'game', 'simple-expense', 'simple-item' => Response::notSupported(),
             default => throw new \OutOfRangeException('No item type definition for ' . $item_type, 500),
         };
     }

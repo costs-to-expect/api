@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\HttpResponse\Responses;
+use App\HttpResponse\Response;
 use App\Jobs\ClearCache;
 use App\Models\Category;
 use App\HttpRequest\BodyValidation;
@@ -29,14 +29,14 @@ class CategoryManage extends Controller
     public function create($resource_type_id): JsonResponse
     {
         if ($this->hasWriteAccessToResourceType((int) $resource_type_id) === false) {
-            return \App\HttpResponse\Responses::notFoundOrNotAccessible(trans('entities.resource-type'));
+            return \App\HttpResponse\Response::notFoundOrNotAccessible(trans('entities.resource-type'));
         }
 
         $validator = (new CategoryValidator)->create([
             'resource_type_id' => $resource_type_id
         ]);
         if ($validator->fails()) {
-            return \App\HttpResponse\Responses::validationErrors($validator);
+            return \App\HttpResponse\Response::validationErrors($validator);
         }
 
         $cache_job_payload = (new \App\Cache\JobPayload())
@@ -58,7 +58,7 @@ class CategoryManage extends Controller
             ClearCache::dispatch($cache_job_payload->payload());
 
         } catch (Exception $e) {
-           return Responses::failedToSaveModelForCreate($e);
+           return Response::failedToSaveModelForCreate($e);
         }
 
         return response()->json(
@@ -81,7 +81,7 @@ class CategoryManage extends Controller
     ): JsonResponse
     {
         if ($this->hasWriteAccessToResourceType((int) $resource_type_id) === false) {
-            return \App\HttpResponse\Responses::notFoundOrNotAccessible(trans('entities.item-category'));
+            return \App\HttpResponse\Response::notFoundOrNotAccessible(trans('entities.item-category'));
         }
 
         $cache_job_payload = (new \App\Cache\JobPayload())
@@ -94,7 +94,7 @@ class CategoryManage extends Controller
 
         $category = (new Category())->find($category_id);
         if ($category === null) {
-            return Responses::notFound(trans('entities.category'));
+            return Response::notFound(trans('entities.category'));
         }
 
         try {
@@ -102,11 +102,11 @@ class CategoryManage extends Controller
 
             ClearCache::dispatch($cache_job_payload->payload());
 
-            return Responses::successNoContent();
+            return Response::successNoContent();
         } catch (QueryException $e) {
-            return Responses::foreignKeyConstraintError($e);
+            return Response::foreignKeyConstraintError($e);
         } catch (Exception $e) {
-            return Responses::notFound(trans('entities.category'), $e);
+            return Response::notFound(trans('entities.category'), $e);
         }
     }
 
@@ -121,17 +121,17 @@ class CategoryManage extends Controller
     public function update($resource_type_id, $category_id): JsonResponse
     {
         if ($this->hasWriteAccessToResourceType((int) $resource_type_id) === false) {
-            return \App\HttpResponse\Responses::notFoundOrNotAccessible(trans('entities.item-category'));
+            return \App\HttpResponse\Response::notFoundOrNotAccessible(trans('entities.item-category'));
         }
 
         $category = (new Category())->instance($category_id);
 
         if ($category === null) {
-            return Responses::failedToSelectModelForUpdateOrDelete();
+            return Response::failedToSelectModelForUpdateOrDelete();
         }
 
         if (count(request()->all()) === 0) {
-            return \App\HttpResponse\Responses::nothingToPatch();
+            return \App\HttpResponse\Response::nothingToPatch();
         }
 
         $validator = (new CategoryValidator)->update([
@@ -140,11 +140,11 @@ class CategoryManage extends Controller
         ]);
 
         if ($validator === null) {
-            return Responses::failedToSelectModelForUpdateOrDelete();
+            return Response::failedToSelectModelForUpdateOrDelete();
         }
 
         if ($validator->fails()) {
-            return \App\HttpResponse\Responses::validationErrors($validator);
+            return \App\HttpResponse\Response::validationErrors($validator);
         }
 
         $invalid_fields = $this->checkForInvalidFields(
@@ -155,7 +155,7 @@ class CategoryManage extends Controller
         );
 
         if (count($invalid_fields) > 0) {
-            return Responses::invalidFieldsInRequest($invalid_fields);
+            return Response::invalidFieldsInRequest($invalid_fields);
         }
 
         foreach (request()->all() as $key => $value) {
@@ -176,9 +176,9 @@ class CategoryManage extends Controller
             ClearCache::dispatch($cache_job_payload->payload());
 
         } catch (Exception $e) {
-            return Responses::failedToSaveModelForUpdate($e);
+            return Response::failedToSaveModelForUpdate($e);
         }
 
-        return Responses::successNoContent();
+        return Response::successNoContent();
     }
 }

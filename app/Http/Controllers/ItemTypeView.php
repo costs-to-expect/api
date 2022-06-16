@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\HttpResponse\Header;
-use App\HttpResponse\Responses;
+use App\HttpResponse\Response;
 use App\Models\ItemType;
 use App\HttpOptionResponse\ItemTypeCollection;
 use App\HttpOptionResponse\ItemTypeItem;
@@ -93,13 +93,13 @@ class ItemTypeView extends Controller
     public function show(string $item_type_id): JsonResponse
     {
         if ((new Permission())->itemTypeExists((int) $item_type_id) === false) {
-            Responses::notFound(trans('entities.item-type'));
+            Response::notFound(trans('entities.item-type'));
         }
 
         $item_type = (new ItemType())->single($item_type_id);
 
         if ($item_type === null) {
-            return \App\HttpResponse\Responses::notFound(trans('entities.item-type'));
+            return \App\HttpResponse\Response::notFound(trans('entities.item-type'));
         }
 
         $headers = new Header();
@@ -134,7 +134,7 @@ class ItemTypeView extends Controller
     public function optionsShow(string $item_type_id): JsonResponse
     {
         if ((new Permission())->itemTypeExists((int) $item_type_id) === false) {
-            Responses::notFound(trans('entities.item-type'));
+            Response::notFound(trans('entities.item-type'));
         }
 
         $response = new ItemTypeItem(['view'=> $this->user_id !== null]);

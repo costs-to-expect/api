@@ -10,7 +10,7 @@ use App\HttpOptionResponse\ItemTransfer\SimpleExpenseCollection;
 use App\HttpOptionResponse\ItemTransfer\SimpleExpenseTransfer;
 use App\HttpRequest\Parameter;
 use App\HttpResponse\Header;
-use App\HttpResponse\Responses;
+use App\HttpResponse\Response;
 use App\ItemType\Select;
 use App\Models\ItemTransfer;
 use App\Transformer\ItemTransfer as ItemTransferTransformer;
@@ -27,14 +27,14 @@ class ItemTransferView extends Controller
     public function index($resource_type_id): JsonResponse
     {
         if ($this->hasViewAccessToResourceType((int) $resource_type_id) === false) {
-            return \App\HttpResponse\Responses::notFoundOrNotAccessible(trans('entities.item-transfer'));
+            return \App\HttpResponse\Response::notFoundOrNotAccessible(trans('entities.item-transfer'));
         }
 
         $item_type = Select::itemType((int) $resource_type_id);
 
         return match ($item_type) {
             'allocated-expense', 'simple-expense' => $this->collection((int) $resource_type_id),
-            'game', 'simple-item' => Responses::notSupported(),
+            'game', 'simple-item' => Response::notSupported(),
             default => throw new \OutOfRangeException('No item type definition for ' . $item_type, 500),
         };
     }
@@ -97,7 +97,7 @@ class ItemTransferView extends Controller
     public function optionsIndex($resource_type_id): JsonResponse
     {
         if ($this->hasViewAccessToResourceType((int) $resource_type_id) === false) {
-            return \App\HttpResponse\Responses::notFoundOrNotAccessible(trans('entities.item'));
+            return \App\HttpResponse\Response::notFoundOrNotAccessible(trans('entities.item'));
         }
 
         $item_type = Select::itemType((int) $resource_type_id);
@@ -105,7 +105,7 @@ class ItemTransferView extends Controller
         return match ($item_type) {
             'allocated-expense' => $this->optionsAllocatedExpenseCollection((int) $resource_type_id),
             'simple-expense' => $this->optionsSimpleExpenseCollection((int) $resource_type_id),
-            'game', 'simple-item' => Responses::notSupported(),
+            'game', 'simple-item' => Response::notSupported(),
             default => throw new \OutOfRangeException('No item type definition for ' . $item_type, 500),
         };
     }
@@ -127,7 +127,7 @@ class ItemTransferView extends Controller
     public function optionsShow($resource_type_id, $item_transfer_id): JsonResponse
     {
         if ($this->hasViewAccessToResourceType((int) $resource_type_id) === false) {
-            return \App\HttpResponse\Responses::notFoundOrNotAccessible(trans('entities.resource-type'));
+            return \App\HttpResponse\Response::notFoundOrNotAccessible(trans('entities.resource-type'));
         }
 
         $item_type = Select::itemType((int) $resource_type_id);
@@ -135,7 +135,7 @@ class ItemTransferView extends Controller
         return match ($item_type) {
             'allocated-expense' => $this->optionsAllocatedExpenseShow((int) $resource_type_id),
             'simple-expense' => $this->optionsSimpleExpenseShow((int) $resource_type_id),
-            'game', 'simple-item' => Responses::notSupported(),
+            'game', 'simple-item' => Response::notSupported(),
             default => throw new \OutOfRangeException('No item type definition for ' . $item_type, 500),
         };
     }
@@ -161,7 +161,7 @@ class ItemTransferView extends Controller
     ): JsonResponse
     {
         if ($this->hasViewAccessToResourceType((int) $resource_type_id) === false) {
-            return \App\HttpResponse\Responses::notFoundOrNotAccessible(trans('entities.item'));
+            return \App\HttpResponse\Response::notFoundOrNotAccessible(trans('entities.item'));
         }
 
         $item_type = Select::itemType((int) $resource_type_id);
@@ -169,7 +169,7 @@ class ItemTransferView extends Controller
         return match ($item_type) {
             'allocated-expense' => $this->optionsAllocatedExpenseTransfer((int) $resource_type_id, (int) $resource_id),
             'simple-expense' => $this->optionsSimpleExpenseTransfer((int) $resource_type_id, (int) $resource_id),
-            'game', 'simple-item' => Responses::notSupported(),
+            'game', 'simple-item' => Response::notSupported(),
             default => throw new \OutOfRangeException('No item type definition for ' . $item_type, 500),
         };
     }
@@ -214,7 +214,7 @@ class ItemTransferView extends Controller
     ): JsonResponse
     {
         if ($this->hasViewAccessToResourceType((int) $resource_type_id) === false) {
-            return \App\HttpResponse\Responses::notFoundOrNotAccessible(trans('entities.item-transfer'));
+            return \App\HttpResponse\Response::notFoundOrNotAccessible(trans('entities.item-transfer'));
         }
 
         $item_type = Select::itemType((int) $resource_type_id);
@@ -222,7 +222,7 @@ class ItemTransferView extends Controller
         return match ($item_type) {
             'allocated-expense' => $this->allocatedExpense((int) $resource_type_id, (int) $item_transfer_id),
             'simple-expense' => $this->simpleExpense((int) $resource_type_id, (int) $item_transfer_id),
-            'game', 'simple-item' => Responses::notSupported(),
+            'game', 'simple-item' => Response::notSupported(),
             default => throw new \OutOfRangeException('No item type definition for ' . $item_type, 500),
         };
     }
@@ -238,7 +238,7 @@ class ItemTransferView extends Controller
         );
 
         if ($item_transfer === null) {
-            return \App\HttpResponse\Responses::notFound(trans('entities.item_transfer'));
+            return \App\HttpResponse\Response::notFound(trans('entities.item_transfer'));
         }
 
         $headers = new Header();
@@ -262,7 +262,7 @@ class ItemTransferView extends Controller
         );
 
         if ($item_transfer === null) {
-            return \App\HttpResponse\Responses::notFound(trans('entities.item_transfer'));
+            return \App\HttpResponse\Response::notFound(trans('entities.item_transfer'));
         }
 
         $headers = new Header();

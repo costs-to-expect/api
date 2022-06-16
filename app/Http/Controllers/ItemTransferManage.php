@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\HttpResponse\Responses;
+use App\HttpResponse\Response;
 use App\ItemType\Select;
 use App\Jobs\ClearCache;
 use App\Models\Item;
@@ -27,14 +27,14 @@ class ItemTransferManage extends Controller
     ): JsonResponse
     {
         if ($this->hasWriteAccessToResourceType((int) $resource_type_id) === false) {
-            return \App\HttpResponse\Responses::notFoundOrNotAccessible(trans('entities.item'));
+            return \App\HttpResponse\Response::notFoundOrNotAccessible(trans('entities.item'));
         }
 
         $item_type = Select::itemType((int) $resource_type_id);
 
         return match ($item_type) {
             'allocated-expense', 'simple-expense' => $this->transferItem((int) $resource_type_id, (int) $resource_id, (int) $item_id),
-            'game', 'simple-item' => Responses::notSupported(),
+            'game', 'simple-item' => Response::notSupported(),
             default => throw new \OutOfRangeException('No item type definition for ' . $item_type, 500),
         };
     }
@@ -55,7 +55,7 @@ class ItemTransferManage extends Controller
         );
 
         if ($validator->fails()) {
-            return \App\HttpResponse\Responses::validationErrors($validator);
+            return \App\HttpResponse\Response::validationErrors($validator);
         }
 
         $cache_job_payload = (new \App\Cache\JobPayload())
@@ -70,7 +70,7 @@ class ItemTransferManage extends Controller
             $new_resource_id = $this->hash->decode('resource', request()->input('resource_id'));
 
             if ($new_resource_id === false) {
-                return \App\HttpResponse\Responses::unableToDecode();
+                return \App\HttpResponse\Response::unableToDecode();
             }
 
             DB::transaction(static function() use ($resource_type_id, $resource_id, $item_id, $new_resource_id, $user_id) {
@@ -79,7 +79,7 @@ class ItemTransferManage extends Controller
                     $item->resource_id = $new_resource_id;
                     $item->save();
                 } else {
-                    return \App\HttpResponse\Responses::failedToSelectModelForUpdateOrDelete();
+                    return \App\HttpResponse\Response::failedToSelectModelForUpdateOrDelete();
                 }
 
                 $item_transfer = new ItemTransfer([
@@ -95,11 +95,11 @@ class ItemTransferManage extends Controller
             ClearCache::dispatch($cache_job_payload->payload());
 
         } catch (QueryException $e) {
-            return \App\HttpResponse\Responses::foreignKeyConstraintError($e);
+            return \App\HttpResponse\Response::foreignKeyConstraintError($e);
         } catch (Exception $e) {
-            return \App\HttpResponse\Responses::failedToSaveModelForUpdate($e);
+            return \App\HttpResponse\Response::failedToSaveModelForUpdate($e);
         }
 
-        return \App\HttpResponse\Responses::successNoContent();
+        return \App\HttpResponse\Response::successNoContent();
     }
 }

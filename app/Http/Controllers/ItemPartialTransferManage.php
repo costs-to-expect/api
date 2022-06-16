@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\HttpResponse\Responses;
+use App\HttpResponse\Response;
 use App\ItemType\Select;
 use App\Jobs\ClearCache;
 use App\Models\ItemPartialTransfer;
@@ -25,14 +25,14 @@ class ItemPartialTransferManage extends Controller
     ): JsonResponse
     {
         if ($this->hasWriteAccessToResourceType((int) $resource_type_id) === false) {
-            return \App\HttpResponse\Responses::notFoundOrNotAccessible(trans('entities.item-partial-transfer'));
+            return \App\HttpResponse\Response::notFoundOrNotAccessible(trans('entities.item-partial-transfer'));
         }
 
         $item_type = Select::itemType((int) $resource_type_id);
 
         return match ($item_type) {
             'allocated-expense' => $this->deleteAllocatedExpense((int) $resource_type_id, (int) $item_partial_transfer_id),
-            'game', 'simple-expense', 'simple-item' => Responses::notSupported(),
+            'game', 'simple-expense', 'simple-item' => Response::notSupported(),
             default => throw new \OutOfRangeException('No item type definition for ' . $item_type, 500),
         };
     }
@@ -58,14 +58,14 @@ class ItemPartialTransferManage extends Controller
 
                 ClearCache::dispatch($cache_job_payload->payload());
 
-                return Responses::successNoContent();
+                return Response::successNoContent();
             }
 
-            return Responses::failedToSelectModelForUpdateOrDelete();
+            return Response::failedToSelectModelForUpdateOrDelete();
         } catch (QueryException $e) {
-            return Responses::foreignKeyConstraintError($e);
+            return Response::foreignKeyConstraintError($e);
         } catch (Exception $e) {
-            return Responses::notFound(trans('entities.item-partial-transfer'), $e);
+            return Response::notFound(trans('entities.item-partial-transfer'), $e);
         }
     }
 
@@ -76,14 +76,14 @@ class ItemPartialTransferManage extends Controller
     ): JsonResponse
     {
         if ($this->hasWriteAccessToResourceType((int) $resource_type_id) === false) {
-            return \App\HttpResponse\Responses::notFoundOrNotAccessible(trans('entities.item'));
+            return \App\HttpResponse\Response::notFoundOrNotAccessible(trans('entities.item'));
         }
 
         $item_type = Select::itemType((int) $resource_type_id);
 
         return match ($item_type) {
             'allocated-expense' => $this->transferAllocatedExpense((int) $resource_type_id, (int) $resource_id, (int) $item_id),
-            'game', 'simple-expense', 'simple-item' => Responses::notSupported(),
+            'game', 'simple-expense', 'simple-item' => Response::notSupported(),
             default => throw new \OutOfRangeException('No item type definition for ' . $item_type, 500),
         };
     }
@@ -102,13 +102,13 @@ class ItemPartialTransferManage extends Controller
         );
 
         if ($validator->fails()) {
-            return \App\HttpResponse\Responses::validationErrors($validator);
+            return \App\HttpResponse\Response::validationErrors($validator);
         }
 
         $new_resource_id = $this->hash->decode('resource', request()->input('resource_id'));
 
         if ($new_resource_id === false) {
-            return Responses::unableToDecode();
+            return Response::unableToDecode();
         }
 
         $cache_job_payload = (new \App\Cache\JobPayload())
@@ -133,9 +133,9 @@ class ItemPartialTransferManage extends Controller
             ClearCache::dispatch($cache_job_payload->payload());
 
         } catch (QueryException $e) {
-            return Responses::foreignKeyConstraintError($e);
+            return Response::foreignKeyConstraintError($e);
         } catch (Exception $e) {
-            return Responses::failedToSaveModelForCreate($e);
+            return Response::failedToSaveModelForCreate($e);
         }
 
         $item_partial_transfer = (new ItemPartialTransfer())->single(
@@ -144,7 +144,7 @@ class ItemPartialTransferManage extends Controller
         );
 
         if ($item_partial_transfer === null) {
-            return Responses::notFound(trans('entities.item_partial_transfer'));
+            return Response::notFound(trans('entities.item_partial_transfer'));
         }
 
         return response()->json(

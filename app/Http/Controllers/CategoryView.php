@@ -31,7 +31,7 @@ class CategoryView extends Controller
     public function index($resource_type_id): JsonResponse
     {
         if ($this->hasViewAccessToResourceType((int) $resource_type_id) === false) {
-            return \App\HttpResponse\Responses::notFoundOrNotAccessible(trans('entities.resource-type'));
+            return \App\HttpResponse\Response::notFoundOrNotAccessible(trans('entities.resource-type'));
         }
 
         $cache_control = new \App\Cache\Control(
@@ -116,7 +116,7 @@ class CategoryView extends Controller
     public function show($resource_type_id, $category_id): JsonResponse
     {
         if ($this->hasViewAccessToResourceType((int) $resource_type_id) === false) {
-            return \App\HttpResponse\Responses::notFoundOrNotAccessible(trans('entities.category'));
+            return \App\HttpResponse\Response::notFoundOrNotAccessible(trans('entities.category'));
         }
 
         $parameters = Parameter\Request::fetch(array_keys(Config::get('api.category.parameters-show')));
@@ -127,7 +127,7 @@ class CategoryView extends Controller
         );
 
         if ($category === null) {
-            return \App\HttpResponse\Responses::notFound(trans('entities.category'));
+            return \App\HttpResponse\Response::notFound(trans('entities.category'));
         }
 
         $subcategories = [];
@@ -168,7 +168,7 @@ class CategoryView extends Controller
     public function optionsIndex($resource_type_id): JsonResponse
     {
         if ($this->hasViewAccessToResourceType((int) $resource_type_id) === false) {
-            return \App\HttpResponse\Responses::notFoundOrNotAccessible(trans('entities.resource-type'));
+            return \App\HttpResponse\Response::notFoundOrNotAccessible(trans('entities.resource-type'));
         }
 
         $response = new CategoryCollection($this->permissions((int) $resource_type_id));
@@ -187,7 +187,7 @@ class CategoryView extends Controller
     public function optionsShow($resource_type_id, $category_id): JsonResponse
     {
         if ($this->hasViewAccessToResourceType((int) $resource_type_id) === false) {
-            return \App\HttpResponse\Responses::notFoundOrNotAccessible(trans('entities.category'));
+            return \App\HttpResponse\Response::notFoundOrNotAccessible(trans('entities.category'));
         }
 
         $response = new CategoryItem($this->permissions((int) $resource_type_id));

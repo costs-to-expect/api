@@ -2,7 +2,7 @@
 
 namespace App\Http\Middleware;
 
-use App\HttpResponse\Responses;
+use App\HttpResponse\Response;
 use App\HttpRequest\Hash;
 use Closure;
 
@@ -51,11 +51,11 @@ class ConvertRouteParameters
                 $id = $hash->decode($route_params[$param], $param_value);
 
                 if ($id === false) {
-                    return Responses::notFoundOrNotAccessible($route_params[$param]);
+                    return Response::notFoundOrNotAccessible($route_params[$param]);
                 }
 
                 if (is_int($id) === false) {
-                    return Responses::notFoundOrNotAccessible($route_params[$param]);
+                    return Response::notFoundOrNotAccessible($route_params[$param]);
                 }
 
                 $request->route()->setParameter($param, $id);

@@ -7,7 +7,7 @@ use App\HttpRequest\Parameter\Filter;
 use App\HttpRequest\Parameter\Request;
 use App\HttpRequest\Parameter\Search;
 use App\HttpRequest\Parameter\Sort;
-use App\HttpResponse\Responses;
+use App\HttpResponse\Response;
 use App\ItemType\HttpResponse\ApiItemResponse;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Config as LaravelConfig;
@@ -99,7 +99,7 @@ class Item extends ApiItemResponse
         );
 
         if ($item === null) {
-            return Responses::notFound(trans('entities.item'));
+            return Response::notFound(trans('entities.item'));
         }
 
         return response()->json(

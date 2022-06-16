@@ -51,7 +51,7 @@ class Handler extends ExceptionHandler
     public function render($request, \Throwable $exception)
     {
         if ($exception instanceof AuthenticationException) {
-            return \App\HttpResponse\Responses::authenticationRequired($exception);
+            return \App\HttpResponse\Response::authenticationRequired($exception);
         }
 
         $status_code = 500;
@@ -63,10 +63,10 @@ class Handler extends ExceptionHandler
 
         switch ($status_code) {
             case 404:
-                \App\HttpResponse\Responses::notFound(null, $exception);
+                \App\HttpResponse\Response::notFound(null, $exception);
                 break;
             case 503:
-                \App\HttpResponse\Responses::maintenance();
+                \App\HttpResponse\Response::maintenance();
                 break;
             case 500:
                 if (App::environment() === 'local') {

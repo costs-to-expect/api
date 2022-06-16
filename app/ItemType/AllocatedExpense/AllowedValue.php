@@ -5,7 +5,7 @@ namespace App\ItemType\AllocatedExpense;
 
 use App\HttpRequest\Hash;
 use App\HttpRequest\Parameter\Request;
-use App\HttpResponse\Responses;
+use App\HttpResponse\Response;
 use App\Models\Category;
 use App\Models\EntityLimits;
 use App\Models\Subcategory;
@@ -116,7 +116,7 @@ class AllowedValue
             $category_id = $this->hash->encode('category', $category['category_id']);
 
             if ($category_id === false) {
-                Responses::unableToDecode();
+                Response::unableToDecode();
             }
 
             $allowed_values[$category_id] = [
@@ -142,7 +142,7 @@ class AllowedValue
             $id = $this->hash->encode('currency', $currency['currency_id']);
 
             if ($id === false) {
-                Responses::unableToDecode();
+                Response::unableToDecode();
             }
 
             $allowed_values[$id] = [

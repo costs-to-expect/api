@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\HttpResponse\Responses;
+use App\HttpResponse\Response;
 use App\Jobs\ClearCache;
 use App\Models\Subcategory;
 use App\HttpRequest\Validate\Subcategory as SubcategoryValidator;
@@ -33,13 +33,13 @@ class SubcategoryManage extends Controller
     public function create($resource_type_id, $category_id): JsonResponse
     {
         if ($this->hasWriteAccessToResourceType((int) $resource_type_id) === false) {
-            return \App\HttpResponse\Responses::notFoundOrNotAccessible(trans('entities.category'));
+            return \App\HttpResponse\Response::notFoundOrNotAccessible(trans('entities.category'));
         }
 
         $validator = (new SubcategoryValidator)->create(['category_id' => $category_id]);
 
         if ($validator->fails()) {
-            return \App\HttpResponse\Responses::validationErrors($validator);
+            return \App\HttpResponse\Response::validationErrors($validator);
         }
 
         $cache_job_payload = (new \App\Cache\JobPayload())
@@ -62,7 +62,7 @@ class SubcategoryManage extends Controller
             ClearCache::dispatch($cache_job_payload->payload());
 
         } catch (Exception $e) {
-            return Responses::failedToSaveModelForCreate($e);
+            return Response::failedToSaveModelForCreate($e);
         }
 
         return response()->json(
@@ -87,7 +87,7 @@ class SubcategoryManage extends Controller
     ): JsonResponse
     {
         if ($this->hasWriteAccessToResourceType((int) $resource_type_id) === false) {
-            return \App\HttpResponse\Responses::notFoundOrNotAccessible(trans('entities.subcategory'));
+            return \App\HttpResponse\Response::notFoundOrNotAccessible(trans('entities.subcategory'));
         }
 
         $sub_category = (new Subcategory())->instance(
@@ -96,7 +96,7 @@ class SubcategoryManage extends Controller
         );
 
         if ($sub_category === null) {
-            return Responses::notFound(trans('entities.subcategory'));
+            return Response::notFound(trans('entities.subcategory'));
         }
 
         $cache_job_payload = (new \App\Cache\JobPayload())
@@ -113,11 +113,11 @@ class SubcategoryManage extends Controller
 
             ClearCache::dispatch($cache_job_payload->payload());
 
-            return Responses::successNoContent();
+            return Response::successNoContent();
         } catch (QueryException $e) {
-            return Responses::foreignKeyConstraintError($e);
+            return Response::foreignKeyConstraintError($e);
         } catch (Exception $e) {
-            return Responses::notFound(trans('entities.subcategory'), $e);
+            return Response::notFound(trans('entities.subcategory'), $e);
         }
     }
 
@@ -137,17 +137,17 @@ class SubcategoryManage extends Controller
     ): JsonResponse
     {
         if ($this->hasWriteAccessToResourceType((int) $resource_type_id) === false) {
-            return \App\HttpResponse\Responses::notFoundOrNotAccessible(trans('entities.subcategory'));
+            return \App\HttpResponse\Response::notFoundOrNotAccessible(trans('entities.subcategory'));
         }
 
         $subcategory = (new Subcategory())->instance($category_id, $subcategory_id);
 
         if ($subcategory === null) {
-            return Responses::failedToSelectModelForUpdateOrDelete();
+            return Response::failedToSelectModelForUpdateOrDelete();
         }
 
         if (count(request()->all()) === 0) {
-            return \App\HttpResponse\Responses::nothingToPatch();
+            return \App\HttpResponse\Response::nothingToPatch();
         }
 
         $validator = (new SubcategoryValidator())->update([
@@ -156,7 +156,7 @@ class SubcategoryManage extends Controller
         ]);
 
         if ($validator->fails()) {
-            return \App\HttpResponse\Responses::validationErrors($validator);
+            return \App\HttpResponse\Response::validationErrors($validator);
         }
 
         $invalid_fields = $this->checkForInvalidFields(
@@ -167,7 +167,7 @@ class SubcategoryManage extends Controller
         );
 
         if (count($invalid_fields) > 0) {
-            return Responses::invalidFieldsInRequest($invalid_fields);
+            return Response::invalidFieldsInRequest($invalid_fields);
         }
 
         foreach (request()->all() as $key => $value) {
@@ -189,9 +189,9 @@ class SubcategoryManage extends Controller
             ClearCache::dispatch($cache_job_payload->payload());
 
         } catch (Exception $e) {
-            return Responses::failedToSaveModelForUpdate($e);
+            return Response::failedToSaveModelForUpdate($e);
         }
 
-        return Responses::successNoContent();
+        return Response::successNoContent();
     }
 }

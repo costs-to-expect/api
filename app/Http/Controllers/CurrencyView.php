@@ -90,13 +90,13 @@ class CurrencyView extends Controller
     public function show(string $currency_id): JsonResponse
     {
         if ((new Permission())->currencyItemExists((int) $currency_id) === false) {
-            \App\HttpResponse\Responses::notFound(trans('entities.currency'));
+            \App\HttpResponse\Response::notFound(trans('entities.currency'));
         }
 
         $currency = (new Currency())->single($currency_id);
 
         if ($currency === null) {
-            return \App\HttpResponse\Responses::notFound(trans('entities.currency'));
+            return \App\HttpResponse\Response::notFound(trans('entities.currency'));
         }
 
         $headers = new Header();
@@ -131,7 +131,7 @@ class CurrencyView extends Controller
     public function optionsShow(string $currency_id): JsonResponse
     {
         if ((new Permission())->currencyItemExists((int) $currency_id) === false) {
-            return \App\HttpResponse\Responses::notFound(trans('entities.currency'));
+            return \App\HttpResponse\Response::notFound(trans('entities.currency'));
         }
 
         $response = new CurrencyItem(['view'=> $this->user_id !== null]);

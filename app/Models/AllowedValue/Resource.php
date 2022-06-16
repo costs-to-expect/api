@@ -35,7 +35,7 @@ class Resource
             $id = $this->hash->encode('resource', $resource['resource_id']);
 
             if ($id === false) {
-                \App\HttpResponse\Responses::unableToDecode();
+                \App\HttpResponse\Response::unableToDecode();
             }
 
             $parameters['resource_id']['allowed_values'][$id] = [

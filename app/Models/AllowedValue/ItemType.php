@@ -30,7 +30,7 @@ class ItemType
             $id = $this->hash->encode('item-type', $item_type['item_type_id']);
 
             if ($id === false) {
-                \App\HttpResponse\Responses::unableToDecode();
+                \App\HttpResponse\Response::unableToDecode();
             }
 
             $parameters['item_type_id']['allowed_values'][$id] = [

@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\HttpResponse\Responses;
+use App\HttpResponse\Response;
 use App\Jobs\ClearCache;
 use App\Models\Resource;
 use App\Models\ResourceItemSubtype;
@@ -33,7 +33,7 @@ class ResourceManage extends Controller
     public function create(string $resource_type_id): JsonResponse
     {
         if ($this->hasWriteAccessToResourceType((int) $resource_type_id) === false) {
-            return \App\HttpResponse\Responses::notFoundOrNotAccessible(trans('entities.resource-type'));
+            return \App\HttpResponse\Response::notFoundOrNotAccessible(trans('entities.resource-type'));
         }
 
         $resource_type = (new ResourceType())->single(
@@ -47,7 +47,7 @@ class ResourceManage extends Controller
         ]);
 
         if ($validator->fails()) {
-            return \App\HttpResponse\Responses::validationErrors($validator);
+            return \App\HttpResponse\Response::validationErrors($validator);
         }
 
         $cache_job_payload = (new \App\Cache\JobPayload())
@@ -71,7 +71,7 @@ class ResourceManage extends Controller
                 $item_subtype_id = $this->hash->decode('item-subtype', request()->input('item_subtype_id'));
 
                 if ($item_subtype_id === false) {
-                    return \App\HttpResponse\Responses::unableToDecode();
+                    return \App\HttpResponse\Response::unableToDecode();
                 }
 
                 $resource_item_subtype = new ResourceItemSubtype([
@@ -86,7 +86,7 @@ class ResourceManage extends Controller
             ClearCache::dispatch($cache_job_payload->payload());
 
         } catch (Exception $e) {
-            return Responses::failedToSaveModelForCreate($e);
+            return Response::failedToSaveModelForCreate($e);
         }
 
         return response()->json(
@@ -109,14 +109,14 @@ class ResourceManage extends Controller
     ): JsonResponse
     {
         if ($this->hasWriteAccessToResourceType((int) $resource_type_id) === false) {
-            return \App\HttpResponse\Responses::notFoundOrNotAccessible(trans('entities.resource'));
+            return \App\HttpResponse\Response::notFoundOrNotAccessible(trans('entities.resource'));
         }
 
         $resource = (new Resource())->instance($resource_type_id, $resource_id);
         $resource_item_subtype = (new ResourceItemSubtype())->instance($resource_id);
 
         if ($resource === null || $resource_item_subtype === null) {
-            return Responses::failedToSelectModelForUpdateOrDelete();
+            return Response::failedToSelectModelForUpdateOrDelete();
         }
 
         $cache_job_payload = (new \App\Cache\JobPayload())
@@ -136,11 +136,11 @@ class ResourceManage extends Controller
 
             ClearCache::dispatch($cache_job_payload->payload());
 
-            return Responses::successNoContent();
+            return Response::successNoContent();
         } catch (QueryException $e) {
-            return Responses::foreignKeyConstraintError($e);
+            return Response::foreignKeyConstraintError($e);
         } catch (Exception $e) {
-            return Responses::notFound(trans('entities.resource'), $e);
+            return Response::notFound(trans('entities.resource'), $e);
         }
     }
 
@@ -158,17 +158,17 @@ class ResourceManage extends Controller
     ): JsonResponse
     {
         if ($this->hasWriteAccessToResourceType((int) $resource_type_id) === false) {
-            return \App\HttpResponse\Responses::notFoundOrNotAccessible(trans('entities.resource'));
+            return \App\HttpResponse\Response::notFoundOrNotAccessible(trans('entities.resource'));
         }
 
         $resource = (new Resource())->instance($resource_type_id, $resource_id);
 
         if ($resource === null) {
-            return Responses::failedToSelectModelForUpdateOrDelete();
+            return Response::failedToSelectModelForUpdateOrDelete();
         }
 
         if (count(request()->all()) === 0) {
-            return \App\HttpResponse\Responses::nothingToPatch();
+            return \App\HttpResponse\Response::nothingToPatch();
         }
 
         $validator = (new ResourceValidator())->update([
@@ -177,7 +177,7 @@ class ResourceManage extends Controller
         ]);
 
         if ($validator->fails()) {
-            return \App\HttpResponse\Responses::validationErrors($validator);
+            return \App\HttpResponse\Response::validationErrors($validator);
         }
 
         $invalid_fields = $this->checkForInvalidFields(
@@ -188,7 +188,7 @@ class ResourceManage extends Controller
         );
 
         if (count($invalid_fields) > 0) {
-            return Responses::invalidFieldsInRequest($invalid_fields);
+            return Response::invalidFieldsInRequest($invalid_fields);
         }
 
         foreach (request()->all() as $key => $value) {
@@ -209,9 +209,9 @@ class ResourceManage extends Controller
             ClearCache::dispatch($cache_job_payload->payload());
             
         } catch (Exception $e) {
-            return Responses::failedToSaveModelForUpdate($e);
+            return Response::failedToSaveModelForUpdate($e);
         }
 
-        return Responses::successNoContent();
+        return Response::successNoContent();
     }
 }

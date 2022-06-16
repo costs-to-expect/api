@@ -13,7 +13,7 @@ use Throwable;
  * @copyright Dean Blackborough 2018-2022
  * @license https://github.com/costs-to-expect/api/blob/master/LICENSE
  */
-class Responses
+class Response
 {
     private static function addException(array $response, Throwable $e = null): array
     {

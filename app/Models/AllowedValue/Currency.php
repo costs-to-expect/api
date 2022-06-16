@@ -24,7 +24,7 @@ class Currency
             $id = $this->hash->encode('currency', $currency['currency_id']);
 
             if ($id === false) {
-                \App\HttpResponse\Responses::unableToDecode();
+                \App\HttpResponse\Response::unableToDecode();
             }
 
             $parameters['currency_id']['allowed_values'][$id] = [

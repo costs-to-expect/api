@@ -32,7 +32,7 @@ class Category
             $id = $this->hash->encode('category', $category['category_id']);
 
             if ($id === false) {
-                \App\HttpResponse\Responses::unableToDecode();
+                \App\HttpResponse\Response::unableToDecode();
             }
 
             $parameters[$field_name]['allowed_values'][$id] = [
