@@ -23,6 +23,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
+use Illuminate\Validation\Rule;
 
 class Authentication extends \Illuminate\Routing\Controller
 {
@@ -105,7 +106,6 @@ class Authentication extends \Illuminate\Routing\Controller
 
             return response()->json(['message' => trans('auth.unable-to-find-account')], 404);
         } catch (Exception $e) {
-            Log::error($e->getMessage());
             return response()->json(['message' => trans('auth.unable-to-create-password')], 500);
         }
     }
@@ -177,7 +177,6 @@ class Authentication extends \Illuminate\Routing\Controller
 
             return response()->json(['message' => trans('auth.unable-to-find-account')], 500);
         } catch (Exception $e) {
-            Log::error($e->getMessage());
             return response()->json(['message' => trans('auth.unable-to-create-password')], 500);
         }
     }
@@ -232,7 +231,6 @@ class Authentication extends \Illuminate\Routing\Controller
                     $user->notify(new ForgotPassword($user, $create_token));
                 }
             } catch (Exception $e) {
-                Log::error($e->getMessage());
                 return response()->json(['error' => trans('auth.unable-process-forgot-password')], 500);
             }
 
@@ -349,7 +347,11 @@ class Authentication extends \Illuminate\Routing\Controller
             $request->all(),
             [
                 'name' => 'required',
-                'email' => 'required|email',
+                'email' => [
+                    'required',
+                    'email',
+                    Rule::unique(User::class, 'email')
+                ]
             ]
         );
 
@@ -389,7 +391,6 @@ class Authentication extends \Illuminate\Routing\Controller
             }
 
         } catch (Exception $e) {
-            Log::error($e->getMessage());
             return response()->json(['error' => trans('auth.unable-to-create-account')], 500);
         }
 
@@ -521,7 +522,6 @@ class Authentication extends \Illuminate\Routing\Controller
                 $user->save();
 
             } catch (Exception $e) {
-                Log::error($e->getMessage());
                 return response()->json(['message' => trans('auth.unable-to-update-profile')], 401);
             }
 

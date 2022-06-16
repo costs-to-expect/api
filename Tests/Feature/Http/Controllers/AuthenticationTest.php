@@ -668,6 +668,32 @@ final class AuthenticationTest extends TestCase
     }
 
     /** @test */
+    public function registrationErrorsWithNonUniqueEmail(): void
+    {
+        $email = $this->faker->email;
+
+        $response = $this->post(
+            route('auth.register'),
+            [
+                'email' => $email,
+                'name' => $this->faker->name
+            ]
+        );
+
+        $response->assertStatus(201);
+
+        $response = $this->post(
+            route('auth.register'),
+            [
+                'email' => $email,
+                'name' => $this->faker->name
+            ]
+        );
+
+        $response->assertStatus(422);
+    }
+
+    /** @test */
     public function registrationErrorsWithNoPayload(): void
     {
         $response = $this->post(

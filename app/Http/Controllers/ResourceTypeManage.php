@@ -80,7 +80,6 @@ class ResourceTypeManage extends Controller
             ClearCache::dispatch($cache_job_payload->payload());
 
         } catch (Exception $e) {
-            Log::error($e->getMessage());
             return \App\HttpResponse\Responses::failedToSaveModelForCreate($e);
         }
 
