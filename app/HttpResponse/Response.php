@@ -127,6 +127,22 @@ class Response
         );
     }
 
+    public static function authenticationFailed(?Throwable $e = null): JsonResponse
+    {
+        $response = [
+            'message' => trans('auth.failed')
+        ];
+
+        if ($e instanceOf Throwable && app()->environment() !== 'production') {
+            $response = self::addException($response, $e);
+        }
+
+        return response()->json(
+            $response,
+            401
+        );
+    }
+
     public static function categoryAssignmentLimit(int $limit): JsonResponse
     {
         $response = [
@@ -152,6 +168,22 @@ class Response
     {
         $response = [
             'message' => trans('responses.model-save-failure-create'),
+        ];
+
+        if ($e instanceOf Throwable && app()->environment() !== 'production') {
+            $response = self::addException($response, $e);
+        }
+
+        return response()->json(
+            $response,
+            500
+        );
+    }
+
+    public static function unableToCreateAccount(?Throwable $e = null): JsonResponse
+    {
+        $response = [
+            'message' => trans('auth.unable-to-create-account')
         ];
 
         if ($e instanceOf Throwable && app()->environment() !== 'production') {

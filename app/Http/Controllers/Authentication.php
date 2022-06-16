@@ -20,7 +20,6 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;
@@ -321,10 +320,10 @@ class Authentication extends \Illuminate\Routing\Controller
                 );
             }
 
-            return response()->json(['message' => trans('auth.failed')], 401);
+            return Response::authenticationFailed();
         }
 
-        return response()->json(['message' => trans('auth.failed')], 401);
+        return Response::authenticationFailed();
     }
 
     public function optionsLogin(): Http\JsonResponse
@@ -391,7 +390,7 @@ class Authentication extends \Illuminate\Routing\Controller
             }
 
         } catch (Exception $e) {
-            return response()->json(['error' => trans('auth.unable-to-create-account')], 500);
+            return Response::unableToCreateAccount($e);
         }
 
         return response()->json(
@@ -453,7 +452,7 @@ class Authentication extends \Illuminate\Routing\Controller
             return response()->json([], 204);
         }
 
-        return response()->json(['message' => trans('auth.failed')], 401);
+        return Response::authenticationFailed();
     }
 
     public function optionsUpdateProfile(): Http\JsonResponse
@@ -511,7 +510,7 @@ class Authentication extends \Illuminate\Routing\Controller
             }
 
             if (count($fields) === 0) {
-                return response()->json(['message' => trans('responses.patch-empty')], 400);
+                return Response::nothingToPatch();
             }
 
             try {
@@ -528,7 +527,7 @@ class Authentication extends \Illuminate\Routing\Controller
             return response()->json([], 204);
         }
 
-        return response()->json(['message' => trans('auth.failed')], 401);
+        return Response::authenticationFailed();
     }
 
     public function user(): Http\JsonResponse
@@ -562,7 +561,7 @@ class Authentication extends \Illuminate\Routing\Controller
             return response()->json($user);
         }
 
-        return response()->json(['message' => trans('auth.failed')], 401);
+        return Response::authenticationFailed();
     }
 
     public function tokens(): Http\JsonResponse
@@ -585,7 +584,7 @@ class Authentication extends \Illuminate\Routing\Controller
             return response()->json($tokens);
         }
 
-        return response()->json(['message' => trans('auth.failed')], 401);
+        return Response::authenticationFailed();
     }
 
     public function token($token_id): Http\JsonResponse
@@ -612,7 +611,7 @@ class Authentication extends \Illuminate\Routing\Controller
             return Response::notFound();
         }
 
-        return response()->json(['message' => trans('auth.failed')], 401);
+        return Response::authenticationFailed();
     }
 
     public function deleteToken($token_id): Http\JsonResponse
@@ -640,7 +639,7 @@ class Authentication extends \Illuminate\Routing\Controller
             return Response::notFound();
         }
 
-        return response()->json(['message' => trans('auth.failed')], 401);
+        return Response::authenticationFailed();
     }
 
     public function optionsUser(): Http\JsonResponse
