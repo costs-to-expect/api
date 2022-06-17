@@ -273,6 +273,11 @@ abstract class TestCase extends BaseTestCase
         return $this->optionsRoute('auth.register.options', $parameters);
     }
 
+    protected function optionsResourceType(array $parameters = []): TestResponse
+    {
+        return $this->optionsRoute('resource-type.show.options', $parameters);
+    }
+
     protected function optionsResourceTypeCollection(array $parameters = []): TestResponse
     {
         return $this->optionsRoute('resource-type.list.options', $parameters);

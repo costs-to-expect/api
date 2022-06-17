@@ -8,6 +8,18 @@ use Tests\TestCase;
 final class ResourceTypeViewTest extends TestCase
 {
     /** @test */
+    public function optionsRequestForResourceType(): void
+    {
+        $this->actingAs(User::find(1));
+        $resource_type_id = $this->createAndReturnResourceTypeId();
+
+        $response = $this->optionsResourceType(['resource_type_id' => $resource_type_id]);
+        $response->assertStatus(200);
+
+        $this->assertJsonMatchesSchema($response->content(), 'api/schema/options/resource-type.json');
+    }
+
+    /** @test */
     public function optionsRequestForResourceTypeCollection(): void
     {
         $response = $this->optionsResourceTypeCollection();
