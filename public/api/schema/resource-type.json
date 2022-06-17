@@ -1,4 +1,5 @@
 {
+    "$id": "https://api.costs-to-expect.com/v2/api/schema/resource-type.json",
     "type": "object",
     "properties": {
         "id": {
@@ -22,6 +23,9 @@
         "item_type": {
             "type": "object",
             "properties": {
+                "uri": {
+                    "type": "string"
+                },
                 "id": {
                     "type": "string"
                 },
@@ -36,6 +40,7 @@
                 }
             },
             "required": [
+                "uri",
                 "id",
                 "name",
                 "friendly_name",
@@ -45,23 +50,17 @@
         "resources": {
             "type": "object",
             "properties": {
+                "uri": {
+                    "type": "string"
+                },
                 "count": {
                     "type": "integer"
                 }
             },
             "required": [
+                "uri",
                 "count"
             ]
-
-        },
-        "permitted_users": {
-            "type": "object",
-            "properties": {
-                "count": {
-                    "type": "integer"
-                }
-            }
-
         }
     },
     "required": [
