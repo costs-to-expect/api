@@ -3,10 +3,133 @@
     "type": "object",
     "properties": {
         "DELETE": {
-            "type": "object"
+            "type": "object",
+            "properties": {
+                "description": {
+                    "type": "string"
+                },
+                "authentication": {
+                    "type": "object",
+                    "properties": {
+                        "required": {
+                            "type": "boolean"
+                        },
+                        "authenticated": {
+                            "type": "boolean"
+                        }
+                    },
+                    "required": [
+                        "required",
+                        "authenticated"
+                    ]
+                }
+            },
+            "required": [
+                "description",
+                "authentication"
+            ]
         },
         "GET" : {
-            "type": "object"
+            "type": "object",
+            "properties": {
+                "description": {
+                    "type": "string"
+                },
+                "authentication": {
+                    "type": "object",
+                    "properties": {
+                        "required": {
+                            "type": "boolean"
+                        },
+                        "authenticated": {
+                            "type": "boolean"
+                        }
+                    },
+                    "required": [
+                        "required",
+                        "authenticated"
+                    ]
+                },
+                "sortable": {
+                    "type": "array"
+                },
+                "searchable": {
+                    "type": "array"
+                },
+                "filterable": {
+                    "type": "array"
+                },
+                "parameters": {
+                    "type": "object",
+                    "properties": {
+                        "include-resources": {
+                            "type": "object",
+                            "properties": {
+                                "field": {
+                                    "type": "string"
+                                },
+                                "title": {
+                                    "type": "string"
+                                },
+                                "description": {
+                                    "type": "string"
+                                },
+                                "type": {
+                                    "type": "string"
+                                },
+                                "required": {
+                                    "type": "boolean"
+                                }
+                            },
+                            "required": [
+                                "field",
+                                "title",
+                                "description",
+                                "type",
+                                "required"
+                            ]
+                        },
+                        "include-permitted-users": {
+                            "type": "object",
+                            "properties": {
+                                "field": {
+                                    "type": "string"
+                                },
+                                "title": {
+                                    "type": "string"
+                                },
+                                "description": {
+                                    "type": "string"
+                                },
+                                "type": {
+                                    "type": "string"
+                                },
+                                "required": {
+                                    "type": "boolean"
+                                }
+                            },
+                            "required": [
+                                "field",
+                                "title",
+                                "description",
+                                "type",
+                                "required"
+                            ]
+                        }
+                    },
+                    "required": [
+                        "include-resources",
+                        "include-permitted-users"
+                    ]
+                }
+            },
+            "required": [
+                "description",
+                "authentication",
+                "sortable",
+                "searchable",
+                "filterable"
+            ]
         },
         "PATCH": {
             "type": "object",
