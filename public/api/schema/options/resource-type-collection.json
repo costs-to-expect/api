@@ -1,0 +1,261 @@
+{
+    "type": "object",
+    "properties": {
+        "GET": {
+            "type": "object",
+            "properties": {
+                "description": {
+                    "type": "string"
+                },
+                "authentication": {
+                    "type": "object",
+                    "properties": {
+                        "required": {
+                            "type": "boolean"
+                        },
+                        "authenticated": {
+                            "type": "boolean"
+                        }
+                    },
+                    "required": [
+                        "required",
+                        "authenticated"
+                    ]
+                },
+                "sortable": {
+                    "type": "array"
+                },
+                "searchable": {
+                    "type": "object"
+                },
+                "filterable": {
+                    "type": [
+                        "object",
+                        "array"
+                    ]
+                },
+                "parameters": {
+                    "type":"object"
+                }
+            },
+            "required": [
+                "description",
+                "authentication",
+                "sortable",
+                "searchable",
+                "filterable",
+                "parameters"
+            ]
+        },
+        "POST": {
+            "type": "object",
+            "properties": {
+                "description": {
+                    "type": "string"
+                },
+                "authentication": {
+                    "type": "object",
+                    "properties": {
+                        "required": {
+                            "type": "boolean"
+                        },
+                        "authenticated": {
+                            "type": "boolean"
+                        }
+                    },
+                    "required": [
+                        "required",
+                        "authenticated"
+                    ]
+                },
+                "fields": {
+                    "type": "object",
+                    "properties": {
+                        "name": {
+                            "type": "object",
+                            "properties": {
+                                "field": {
+                                    "type": "string"
+                                },
+                                "title": {
+                                    "type": "string"
+                                },
+                                "description": {
+                                    "type": "string"
+                                },
+                                "type": {
+                                    "type": "string"
+                                },
+                                "validation": {
+                                    "type": "object",
+                                    "properties": {
+                                        "max-length": {
+                                            "type": "integer"
+                                        }
+                                    },
+                                    "required": [
+                                        "max-length"
+                                    ]
+                                },
+                                "required": {
+                                    "type": "boolean"
+                                }
+                            },
+                            "required": [
+                                "field",
+                                "title",
+                                "description",
+                                "type",
+                                "validation",
+                                "required"
+                            ]
+                        },
+                        "description": {
+                            "type": "object",
+                            "properties": {
+                                "field": {
+                                    "type": "string"
+                                },
+                                "title": {
+                                    "type": "string"
+                                },
+                                "description": {
+                                    "type": "string"
+                                },
+                                "type": {
+                                    "type": "string"
+                                },
+                                "required": {
+                                    "type": "boolean"
+                                }
+                            },
+                            "required": [
+                                "field",
+                                "title",
+                                "description",
+                                "type",
+                                "required"
+                            ]
+                        },
+                        "data": {
+                            "type": "object",
+                            "properties": {
+                                "field": {
+                                    "type": "string"
+                                },
+                                "title": {
+                                    "type": "string"
+                                },
+                                "description": {
+                                    "type": "string"
+                                },
+                                "type": {
+                                    "type": "string"
+                                },
+                                "required": {
+                                    "type": "boolean"
+                                }
+                            },
+                            "required": [
+                                "field",
+                                "title",
+                                "description",
+                                "type",
+                                "required"
+                            ]
+                        },
+                        "item_type_id": {
+                            "type": "object",
+                            "properties": {
+                                "field": {
+                                    "type": "string"
+                                },
+                                "title": {
+                                    "type": "string"
+                                },
+                                "description": {
+                                    "type": "string"
+                                },
+                                "type": {
+                                    "type": "string"
+                                },
+                                "validation": {
+                                    "type": "object",
+                                    "properties": {
+                                        "length": {
+                                            "type": "integer"
+                                        }
+                                    },
+                                    "required": [
+                                        "length"
+                                    ]
+                                },
+                                "required": {
+                                    "type": "boolean"
+                                }
+                            },
+                            "required": [
+                                "field",
+                                "title",
+                                "description",
+                                "type",
+                                "validation",
+                                "required"
+                            ]
+                        },
+                        "public": {
+                            "type": "object",
+                            "properties": {
+                                "field": {
+                                    "type": "string"
+                                },
+                                "title": {
+                                    "type": "string"
+                                },
+                                "description": {
+                                    "type": "string"
+                                },
+                                "type": {
+                                    "type": "string"
+                                },
+                                "required": {
+                                    "type": "boolean"
+                                }
+                            },
+                            "required": [
+                                "field",
+                                "title",
+                                "description",
+                                "type",
+                                "required"
+                            ]
+                        }
+                    },
+                    "required": [
+                        "name",
+                        "description",
+                        "data",
+                        "item_type_id",
+                        "public"
+                    ]
+                },
+                "parameters": {
+                    "type": [
+                        "object",
+                        "array"
+                    ]
+                }
+            },
+            "required": [
+                "description",
+                "authentication",
+                "fields",
+                "parameters"
+            ]
+        }
+    },
+    "required": [
+        "GET",
+        "POST"
+    ]
+}
