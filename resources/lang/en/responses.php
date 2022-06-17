@@ -8,6 +8,7 @@ return [
     'not-found-or-not-accessible-entity' => 'The requested `:type` does not exist or is not accessible with your permissions.',
     'not-supported' => 'The requested route is not supported for the item type',
     'constraint' => 'Unable to handle your request, dependent data exists or foreign key error.',
+    'constraint-category' => 'Unable to handle your request, category data exists for the item, delete the category first.',
     'model-select-failure' => 'Unable to handle your request, an error occurred when selecting the data to complete your request.',
     'model-save-failure-update' => 'Unable to handle your request, an error occurred when processing your update request.',
     'model-save-failure-create' => 'Unable to handle your request, an error occurred when processing your create request.',

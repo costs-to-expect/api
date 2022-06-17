@@ -563,7 +563,7 @@ class ItemManage extends Controller
         }
 
         if ($item_model->hasCategoryAssignments($item_id) === true) {
-            return Response::foreignKeyConstraintError();
+            return Response::foreignKeyConstraintCategory();
         }
 
         try {
@@ -609,7 +609,7 @@ class ItemManage extends Controller
         }
 
         if ($item_model->hasCategoryAssignments($item_id) === true) {
-            return Response::foreignKeyConstraintError();
+            return Response::foreignKeyConstraintCategory();
         }
 
         try {
@@ -654,7 +654,7 @@ class ItemManage extends Controller
         }
 
         if ($item_model->hasCategoryAssignments($item_id) === true) {
-            return Response::foreignKeyConstraintError();
+            return Response::foreignKeyConstraintCategory();
         }
 
         try {
@@ -699,7 +699,7 @@ class ItemManage extends Controller
         }
 
         if ($item_model->hasCategoryAssignments($item_id) === true) {
-            return Response::foreignKeyConstraintError();
+            return Response::foreignKeyConstraintCategory();
         }
 
         try {

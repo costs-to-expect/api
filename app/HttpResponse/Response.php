@@ -79,6 +79,22 @@ class Response
         );
     }
 
+    public static function foreignKeyConstraintCategory(?Throwable $e = null): JsonResponse
+    {
+        $response = [
+            'message' => trans('constraint-category')
+        ];
+
+        if ($e instanceOf Throwable && app()->environment() !== 'production') {
+            $response = self::addException($response, $e);
+        }
+
+        return response()->json(
+            $response,
+            409
+        );
+    }
+
     public static function failedToSelectModelForUpdateOrDelete(?Throwable $e = null): JsonResponse
     {
         $response = [
