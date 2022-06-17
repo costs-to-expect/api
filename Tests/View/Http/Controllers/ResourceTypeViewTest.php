@@ -70,6 +70,106 @@ final class ResourceTypeViewTest extends TestCase
         }
     }
 
+    /**
+     * @test
+     * @runInSeparateProcess
+     * @preserveGlobalState disabled
+     */
+    public function resourceTypeCollectionSearchDescription(): void
+    {
+        $this->actingAs(User::find(1));
+
+        $response = $this->getResourceTypes(['search'=>'description:resource-search']);
+
+        $response->assertStatus(200);
+        $response->assertHeader('X-Search', 'description:resource-search');
+
+        foreach ($response->json() as $item) {
+            try {
+                $json = json_encode($item, JSON_THROW_ON_ERROR);
+            } catch (\JsonException $e) {
+                $this->fail('Unable to encode the JSON string');
+            }
+
+            $this->assertJsonIsResourceType($json);
+        }
+    }
+
+    /**
+     * @test
+     * @runInSeparateProcess
+     * @preserveGlobalState disabled
+     */
+    public function resourceTypeCollectionSearchName(): void
+    {
+        $this->actingAs(User::find(1));
+
+        $response = $this->getResourceTypes(['search'=>'name:resource-search']);
+
+        $response->assertStatus(200);
+        $response->assertHeader('X-Search', 'name:resource-search');
+
+        foreach ($response->json() as $item) {
+            try {
+                $json = json_encode($item, JSON_THROW_ON_ERROR);
+            } catch (\JsonException $e) {
+                $this->fail('Unable to encode the JSON string');
+            }
+
+            $this->assertJsonIsResourceType($json);
+        }
+    }
+
+    /**
+     * @test
+     * @runInSeparateProcess
+     * @preserveGlobalState disabled
+     */
+    public function resourceTypeCollectionSortCreated(): void
+    {
+        $this->actingAs(User::find(1));
+
+        $response = $this->getResourceTypes(['sort'=>'created:asc']);
+
+        $response->assertStatus(200);
+        $response->assertHeader('X-Sort', 'created:asc');
+
+        foreach ($response->json() as $item) {
+            try {
+                $json = json_encode($item, JSON_THROW_ON_ERROR);
+            } catch (\JsonException $e) {
+                $this->fail('Unable to encode the JSON string');
+            }
+
+            $this->assertJsonIsResourceType($json);
+        }
+    }
+
+    /**
+     * @test
+     * @runInSeparateProcess
+     * @preserveGlobalState disabled
+     */
+    public function resourceTypeCollectionSortName(): void
+    {
+        $this->actingAs(User::find(1));
+
+        $response = $this->getResourceTypes(['sort'=>'name:asc']);
+
+        $response->assertStatus(200);
+        $response->assertHeader('X-Sort', 'name:asc');
+
+        foreach ($response->json() as $item) {
+            try {
+                $json = json_encode($item, JSON_THROW_ON_ERROR);
+            } catch (\JsonException $e) {
+                $this->fail('Unable to encode the JSON string');
+            }
+
+            $this->assertJsonIsResourceType($json);
+        }
+    }
+
     /** @test */
     public function resourceTypeShow(): void
     {
