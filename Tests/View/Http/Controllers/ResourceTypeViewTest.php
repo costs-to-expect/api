@@ -85,4 +85,25 @@ final class ResourceTypeViewTest extends TestCase
 
         $this->assertJsonIsResourceType($response->content());
     }
+
+    /** @test */
+    public function resourceTypeShowWithParameterIncludeResource(): void
+    {
+        $this->actingAs(User::find(1));
+
+        $response = $this->getResourceTypes(['offset'=>0, 'limit'=> 1]);
+        $response->assertStatus(200);
+
+        $resource_type_id = $response->json()[0]['id'];
+
+        $resource_id = $this->createAndReturnResourceId($resource_type_id);
+
+        $response = $this->getResourceType([
+            'resource_type_id'=> $resource_type_id,
+            'include-resources' => true
+        ]);
+        $response->assertStatus(200);
+
+        $this->assertJsonIsResourceTypeAndIncludesResources($response->content());
+    }
 }

@@ -43,6 +43,11 @@ abstract class TestCase extends BaseTestCase
         $this->assertJsonMatchesSchema($content, 'api/schema/resource-type.json');
     }
 
+    protected function assertJsonIsResourceTypeAndIncludesResources($content): void
+    {
+        $this->assertJsonMatchesSchema($content, 'api/schema/resource-type-include-resources.json');
+    }
+
     protected function assertJsonMatchesSchema($content, $schema_file): void
     {
         $schema = Schema::fromJsonString(file_get_contents(public_path($schema_file)));
