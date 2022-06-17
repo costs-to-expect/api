@@ -276,12 +276,12 @@ our local test suite is as complete as the Postman request tests.
 | RequestManage (Actions)             | Non yet* |
 | ResourceManage (Actions)            | 14 Tests |
 | ResourceTypeManage (Actions)        | 14 Tests |
-| ResourceTypeView (Responses)        | 6 Tests  |
+| ResourceTypeView (Responses)        | 7 Tests  |
 | SubcategoryManage (Actions)         | 12 Tests |
 | ToolManage (Actions)                | Non yet* |
 | Summaries (Responses)               | Non yet* |
-| **Total tests**                     | **107**  |
-| **Total assertions**                | **313**  |
+| **Total tests**                     | **108**  |
+| **Total assertions**                | **316**  |
 
 *Non yet does not mean there are no tests, it just means there are no PHPUnit tests. There are over 2000 tests in 
 a private Postman collection, I'm slowing transferring them locally.
