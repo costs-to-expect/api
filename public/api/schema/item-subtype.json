@@ -1,4 +1,5 @@
 {
+    "$id": "https://api.costs-to-expect.com/v2/api/schema/item-subtype.json",
     "type": "object",
     "properties": {
         "id": {

@@ -1,4 +1,5 @@
 {
+    "$id": "https://api.costs-to-expect.com/v2/api/schema/permitted-user.json",
     "type": "object",
     "properties": {
         "id": {
