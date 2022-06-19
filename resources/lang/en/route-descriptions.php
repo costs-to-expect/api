@@ -107,7 +107,6 @@ return [
     'summary-resource-type-GET-index' => 'Return a summary of the resource types',
     'summary-resource-GET-index' => 'Return a summary of the resources',
 
-    'summary_GET_resource-type_resource_items' => 'Return the TCO (Total cost of ownership, sum of items) for the selected resource',
-
-    'summary-resource-type-item-GET-index' => 'Return a summary of the items for all the resources matching this resource type',
+    'summary_items_GET_index'=> 'Return the "item" summary for the selected resource, review summary filters for all summary options',
+    'summary_resource_type_items_GET_index'=> 'Return the "item" summary for the selected resource type, items for all resources are summarised, review summary filters for all summary options',
 ];
