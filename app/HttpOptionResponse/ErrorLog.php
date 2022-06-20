@@ -10,7 +10,7 @@ class ErrorLog extends Response
     public function create()
     {
         $get = new \App\HttpVerb\Get();
-        $this->verbs['GET'] = $get->setDescription('route-descriptions.request_GET_error-log')->
+        $this->verbs['GET'] = $get->setDescription('route-descriptions.request_GET_error_log')->
             setAuthenticationStatus($this->permissions['view'])->
             option();
 
