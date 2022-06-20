@@ -4,7 +4,7 @@ declare(strict_types=1);
 namespace App\ItemType\Game;
 
 use App\HttpRequest\Hash;
-use App\Models\Category;
+use App\Models\ItemCategory;
 use JetBrains\PhpStorm\ArrayShape;
 
 class AllowedValue
@@ -12,18 +12,21 @@ class AllowedValue
     protected Hash $hash;
     protected int $resource_type_id;
     protected ?int $resource_id;
+    protected ?int $item_id;
     protected array $viewable_resource_types;
 
     public function __construct(
         array $viewable_resource_types,
         int $resource_type_id,
-        ?int $resource_id = null
+        ?int $resource_id = null,
+        ?int $item_id = null
     )
     {
         $this->hash = new Hash();
 
         $this->resource_type_id = $resource_type_id;
         $this->resource_id = $resource_id;
+        $this->item_id = $item_id;
         $this->viewable_resource_types = $viewable_resource_types;
     }
 
@@ -72,22 +75,23 @@ class AllowedValue
     {
         $allowed_values = [];
 
-        $winners = (new Category())->paginatedCollection(
+        $winners = (new ItemCategory())->paginatedCollection(
             $this->resource_type_id,
-            $this->viewable_resource_types,
+            $this->resource_id,
+            $this->item_id,
             0,
             100
         );
 
         foreach ($winners as $winner) {
-            $winner_id = $this->hash->encode('category', $winner['category_id']);
+            $winner_id = $this->hash->encode('category', $winner['item_category_category_id']);
 
             $allowed_values[$winner_id] = [
                 'uri' => route('category.show', ['resource_type_id' => $this->resource_type_id, 'category_id' => $winner_id], false),
                 'value' => $winner_id,
-                'name' => $winner['category_name'],
+                'name' => $winner['item_category_category_name'],
                 'description' => trans('item-type-game/allowed-values.description-prefix-winner_id') .
-                    $winner['category_name'] .
+                    $winner['item_category_category_name'] .
                     trans('item-type-game/allowed-values.description-suffix-winner_id')
             ];
         }

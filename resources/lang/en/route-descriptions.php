@@ -66,8 +66,8 @@ return [
     'item_category_GET_index' => 'Return the category assigned to the selected item',
     'item_category_GET_show' => 'Return the category assigned to the selected item',
 
-    'item_category_POST_allocated-expense' => 'Assign a maximum of one category to the selected allocated-expense',
-    'item_category_POST_simple-expense' => 'Assign a maximum of one category to the selected simple-expense',
+    'item_category_POST_allocated_expense' => 'Assign a maximum of one category to the selected allocated-expense',
+    'item_category_POST_simple_expense' => 'Assign a maximum of one category to the selected simple-expense',
     'item_category_POST_game' => 'Assign the categories (players) to the selected game',
 
     'item_category_PATCH' => 'Update the category assigned to the selected item',
@@ -76,8 +76,8 @@ return [
     'item_sub_category_GET_index' => 'Return the subcategory assigned to the selected item',
     'item_sub_category_GET_show' => 'Return the subcategory assigned to the selected item',
 
-    'item_sub_category_POST_allocated-expense' => 'Assign a maximum of one subcategory to the selected allocated-expense',
-    'item_sub_category_POST_simple-expense' => 'Assign a maximum of one subcategory to the selected simple-expense',
+    'item_sub_category_POST_allocated_expense' => 'Assign a maximum of one subcategory to the selected allocated-expense',
+    'item_sub_category_POST_simple_expense' => 'Assign a maximum of one subcategory to the selected simple-expense',
 
     'item_sub_category_PATCH' => 'Update the subcategory assigned to the selected item',
     'item_sub_category_DELETE' => 'Delete the subcategory assigned to the selected item',
@@ -96,7 +96,7 @@ return [
     'permitted_user_POST' => 'Assign a permitted user',
     'permitted_user_DELETE' => 'Delete the selected permitted user',
 
-    'request_GET_error-log' => 'Return the error log',
+    'request_GET_error_log' => 'Return the error log',
     'request_GET_cache' => 'Return the number of cached keys for the authenticated user',
     'request_DELETE_cache' => 'Attempt to delete the cached keys for the authenticated user',
     'request_POST' => 'Create an error log report',
@@ -104,10 +104,9 @@ return [
     'summary_category_GET_index' => 'Return a summary of the categories',
     'summary_subcategory_GET_index' => 'Return a summary of the subcategories',
 
-    'summary-resource-type-GET-index' => 'Return a summary of the resource types',
-    'summary-resource-GET-index' => 'Return a summary of the resources',
+    'summary_resource_type_GET_index' => 'Return a summary of the resource types',
+    'summary_resource_GET_index' => 'Return a summary of the resources',
 
-    'summary_GET_resource-type_resource_items' => 'Return the TCO (Total cost of ownership, sum of items) for the selected resource',
-
-    'summary-resource-type-item-GET-index' => 'Return a summary of the items for all the resources matching this resource type',
+    'summary_items_GET_index'=> 'Return the "item" summary for the selected resource, review summary filters for all summary options',
+    'summary_resource_type_items_GET_index'=> 'Return the "item" summary for the selected resource type, items for all resources are summarised, review summary filters for all summary options',
 ];

@@ -18,7 +18,7 @@ class SimpleItemCollection extends Response
             ->setFilterableParameters(LaravelConfig::get($base_path . '.filterable', []))
             ->setParameters(LaravelConfig::get($base_path . '.parameters', []))
             ->setDynamicParameters($this->allowed_parameters)
-            ->setPaginationStatus(true)
+            ->setPaginationStatus(true, true)
             ->setAuthenticationStatus($this->permissions['view'])
             ->setDescription('route-descriptions.item_GET_index')
             ->option();

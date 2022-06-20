@@ -33,12 +33,17 @@ class Resource extends Transformer
         ];
 
         if (
+            array_key_exists('resource_type_item_type_id', $to_transform) === true &&
             array_key_exists('resource_item_subtype_id', $to_transform) === true &&
             array_key_exists('resource_item_subtype_name', $to_transform) === true &&
             array_key_exists('resource_item_subtype_description', $to_transform) === true
         ) {
+            $item_type_id = $this->hash->itemType()->encode($to_transform['resource_type_item_type_id']);
+            $item_sub_type_id = $this->hash->itemSubtype()->encode($to_transform['resource_item_subtype_id']);
+
             $this->transformed['item_subtype'] = [
-                'id' => $this->hash->itemSubtype()->encode($to_transform['resource_item_subtype_id']),
+                'uri' => route('item-subtype.show', ['item_type_id' => $item_type_id, 'item_subtype_id' => $item_sub_type_id], false),
+                'id' => $item_sub_type_id,
                 'name' => $to_transform['resource_item_subtype_name'],
                 'description' => $to_transform['resource_item_subtype_description']
             ];

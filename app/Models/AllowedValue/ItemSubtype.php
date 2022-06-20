@@ -24,7 +24,7 @@ class ItemSubtype
             $id = $this->hash->encode('item-subtype', $item_subtype['item_subtype_id']);
 
             if ($id === false) {
-                \App\HttpResponse\Responses::unableToDecode();
+                \App\HttpResponse\Response::unableToDecode();
             }
 
             $parameters['item_subtype_id']['allowed_values'][$id] = [

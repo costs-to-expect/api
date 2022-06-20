@@ -7,10 +7,10 @@ use App\Models\ResourceType;
 use App\User;
 use Tests\TestCase;
 
-class ResourceManageTest extends TestCase
+final class ResourceManageTest extends TestCase
 {
     /** @test */
-    public function create_resource_fails_data_field_not_valid_json(): void
+    public function createResourceFailsDataFieldNotValidJson(): void
     {
         $this->actingAs(User::find(1));
 
@@ -30,7 +30,7 @@ class ResourceManageTest extends TestCase
     }
 
     /** @test */
-    public function create_resource_fails_item_subtype_invalid(): void
+    public function createResourceFailsItemSubtypeInvalid(): void
     {
         $this->actingAs(User::find(1));
 
@@ -50,7 +50,7 @@ class ResourceManageTest extends TestCase
     }
 
     /** @test */
-    public function create_resource_fails_no_description_in_payload(): void
+    public function createResourceFailsNoDescriptionInPayload(): void
     {
         $this->actingAs(User::find(1));
 
@@ -69,7 +69,7 @@ class ResourceManageTest extends TestCase
     }
 
     /** @test */
-    public function create_resource_fails_no_name_in_payload(): void
+    public function createResourceFailsNoNameInPayload(): void
     {
         $this->actingAs(User::find(1));
 
@@ -88,7 +88,7 @@ class ResourceManageTest extends TestCase
     }
 
     /** @test */
-    public function create_resource_fails_no_payload(): void
+    public function createResourceFailsNoPayload(): void
     {
         $this->actingAs(User::find(1));
 
@@ -103,7 +103,7 @@ class ResourceManageTest extends TestCase
     }
 
     /** @test */
-    public function create_resource_fails_no_permission_to_resource_type(): void
+    public function createResourceFailsNoPermissionToResourceType(): void
     {
         $this->actingAs(User::find($this->getARandomUser()->id)); // Random user
 
@@ -133,7 +133,7 @@ class ResourceManageTest extends TestCase
     }
 
     /** @test */
-    public function create_resource_fails_non_unique_name(): void
+    public function createResourceFailsNonUniqueName(): void
     {
         $this->actingAs(User::find(1));
 
@@ -166,7 +166,7 @@ class ResourceManageTest extends TestCase
     }
 
     /** @test */
-    public function create_resource_success(): void
+    public function createResourceSuccess(): void
     {
         $this->actingAs(User::find(1));
 
@@ -186,7 +186,7 @@ class ResourceManageTest extends TestCase
     }
 
     /** @test */
-    public function create_resource_success_include_data_field(): void
+    public function createResourceSuccessIncludeDataField(): void
     {
         $this->actingAs(User::find(1));
 
@@ -207,7 +207,7 @@ class ResourceManageTest extends TestCase
     }
 
     /** @test */
-    public function delete_resource_success(): void
+    public function deleteResourceSuccess(): void
     {
         $this->actingAs(User::find(1));
 
@@ -220,7 +220,7 @@ class ResourceManageTest extends TestCase
     }
 
     /** @test */
-    public function update_resource_fails_extra_fields_in_payload(): void
+    public function updateResourceFailsExtraFieldsInPayload(): void
     {
         $this->actingAs(User::find(1));
 
@@ -239,7 +239,7 @@ class ResourceManageTest extends TestCase
     }
 
     /** @test */
-    public function update_resource_fails_non_payload(): void
+    public function updateResourceFailsNonPayload(): void
     {
         $this->actingAs(User::find(1));
 
@@ -256,7 +256,7 @@ class ResourceManageTest extends TestCase
     }
 
     /** @test */
-    public function update_resource_fails_non_unique_name(): void
+    public function updateResourceFailsNonUniqueName(): void
     {
         $this->actingAs(User::find(1));
 
@@ -301,7 +301,7 @@ class ResourceManageTest extends TestCase
     }
 
     /** @test */
-    public function update_resource_success(): void
+    public function updateResourceSuccess(): void
     {
         $this->actingAs(User::find(1));
 

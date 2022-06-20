@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\HttpResponse\Responses;
+use App\HttpResponse\Response;
 use App\ItemType\Select;
 use App\Jobs\ClearCache;
 use App\Models\ItemCategory;
@@ -27,7 +27,7 @@ class ItemCategoryManage extends Controller
     ): JsonResponse
     {
         if ($this->hasWriteAccessToResourceType((int) $resource_type_id) === false) {
-            return Responses::notFoundOrNotAccessible(trans('entities.resource'));
+            return Response::notFoundOrNotAccessible(trans('entities.resource'));
         }
 
         $item_type = Select::itemType((int) $resource_type_id);
@@ -35,7 +35,7 @@ class ItemCategoryManage extends Controller
         return match ($item_type) {
             'allocated-expense', 'simple-expense' => $this->createItemCategory((int) $resource_type_id, (int) $resource_id, (int) $item_id, 1),
             'game' => $this->createItemCategory((int) $resource_type_id, (int) $resource_id, (int) $item_id, 5),
-            'simple-item' => \App\HttpResponse\Responses::categoryAssignmentLimit(0),
+            'simple-item' => \App\HttpResponse\Response::categoryAssignmentLimit(0),
             default => throw new \OutOfRangeException('No item type definition for ' . $item_type, 500),
         };
     }
@@ -54,7 +54,7 @@ class ItemCategoryManage extends Controller
         );
 
         if ($assigned >= $assignment_limit) {
-            return \App\HttpResponse\Responses::categoryAssignmentLimit($assignment_limit);
+            return \App\HttpResponse\Response::categoryAssignmentLimit($assignment_limit);
         }
 
         $decode = $this->hash->category()->decode(request()->input('category_id'));
@@ -75,7 +75,7 @@ class ItemCategoryManage extends Controller
         );
 
         if ($validator->fails()) {
-            return \App\HttpResponse\Responses::validationErrors(
+            return \App\HttpResponse\Response::validationErrors(
                 $validator,
                 (new \App\Models\AllowedValue\Category())->allowedValues($resource_type_id)
             );
@@ -94,7 +94,7 @@ class ItemCategoryManage extends Controller
             $category_id = $this->hash->decode('category', request()->input('category_id'));
 
             if ($category_id === false) {
-                return \App\HttpResponse\Responses::unableToDecode();
+                return \App\HttpResponse\Response::unableToDecode();
             }
 
             $item_category = new ItemCategory([
@@ -106,7 +106,7 @@ class ItemCategoryManage extends Controller
             ClearCache::dispatch($cache_job_payload->payload());
 
         } catch (Exception $e) {
-            return \App\HttpResponse\Responses::failedToSaveModelForCreate($e);
+            return \App\HttpResponse\Response::failedToSaveModelForCreate($e);
         }
 
         return response()->json(
@@ -123,14 +123,14 @@ class ItemCategoryManage extends Controller
     ): JsonResponse
     {
         if ($this->hasWriteAccessToResourceType((int) $resource_type_id) === false) {
-            return Responses::notFoundOrNotAccessible(trans('entities.resource'));
+            return Response::notFoundOrNotAccessible(trans('entities.resource'));
         }
 
         $item_type = Select::itemType((int) $resource_type_id);
 
         return match ($item_type) {
             'allocated-expense', 'simple-expense', 'game' => $this->deleteItemCategory((int) $resource_type_id, (int) $resource_id, (int) $item_id, (int) $item_category_id),
-            'simple-item' => \App\HttpResponse\Responses::notSupported(),
+            'simple-item' => \App\HttpResponse\Response::notSupported(),
             default => throw new \OutOfRangeException('No item type definition for ' . $item_type, 500),
         };
     }
@@ -150,7 +150,7 @@ class ItemCategoryManage extends Controller
         );
 
         if ($item_category === null) {
-            return \App\HttpResponse\Responses::notFound(trans('entities.item-category'));
+            return \App\HttpResponse\Response::notFound(trans('entities.item-category'));
         }
 
         $cache_job_payload = (new \App\Cache\JobPayload())
@@ -167,11 +167,11 @@ class ItemCategoryManage extends Controller
 
             ClearCache::dispatch($cache_job_payload->payload());
 
-            return \App\HttpResponse\Responses::successNoContent();
+            return \App\HttpResponse\Response::successNoContent();
         } catch (QueryException $e) {
-            return \App\HttpResponse\Responses::foreignKeyConstraintError($e);
+            return \App\HttpResponse\Response::foreignKeyConstraintError($e);
         } catch (Exception $e) {
-            return \App\HttpResponse\Responses::notFound(trans('entities.item-category'), $e);
+            return \App\HttpResponse\Response::notFound(trans('entities.item-category'), $e);
         }
     }
 }

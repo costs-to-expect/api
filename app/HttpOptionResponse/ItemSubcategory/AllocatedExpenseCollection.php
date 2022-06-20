@@ -19,7 +19,7 @@ class AllocatedExpenseCollection extends Response
         $post = new \App\HttpVerb\Post();
         $this->verbs['POST'] = $post->setFields(Config::get('api.item-subcategory.fields-post'))->
             setDynamicFields($this->allowed_fields)->
-            setDescription('route-descriptions.item_sub_category_POST_allocated-expense')->
+            setDescription('route-descriptions.item_sub_category_POST_allocated_expense')->
             setAuthenticationStatus($this->permissions['manage'])->
             setAuthenticationRequirement(true)->
             option();

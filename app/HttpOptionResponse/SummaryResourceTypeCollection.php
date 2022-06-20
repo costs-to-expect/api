@@ -11,7 +11,7 @@ class SummaryResourceTypeCollection extends Response
     {
         $get = new \App\HttpVerb\Get();
         $this->verbs['GET'] = $get->setParameters(Config::get('api.resource-type.summary-parameters'))->
-            setDescription('route-descriptions.summary-resource-type-GET-index')->
+            setDescription('route-descriptions.summary_resource_type_GET_index')->
             setAuthenticationStatus($this->permissions['view'])->
             setSearchableParameters(Config::get('api.resource-type.summary-searchable'))->
             option();

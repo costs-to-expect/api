@@ -6,7 +6,7 @@ use App\HttpOptionResponse\ResourceTypeCollection;
 use App\HttpOptionResponse\ResourceTypeItem;
 use App\HttpRequest\Parameter;
 use App\HttpResponse\Header;
-use App\HttpResponse\Responses;
+use App\HttpResponse\Response;
 use App\Models\AllowedValue\ItemType;
 use App\Models\PermittedUser;
 use App\Models\Resource;
@@ -104,7 +104,7 @@ class ResourceTypeView extends Controller
         );
 
         if ($resource_type === null) {
-            return Responses::notFound(trans('entities.resource-type'));
+            return Response::notFound(trans('entities.resource-type'));
         }
 
         $transformer_relations = [];

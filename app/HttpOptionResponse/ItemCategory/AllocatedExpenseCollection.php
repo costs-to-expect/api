@@ -21,7 +21,7 @@ class AllocatedExpenseCollection extends Response
             setDynamicFields($this->allowed_fields)->
             setAuthenticationRequirement(true)->
             setAuthenticationStatus($this->permissions['manage'])->
-            setDescription('route-descriptions.item_category_POST_allocated-expense')->
+            setDescription('route-descriptions.item_category_POST_allocated_expense')->
             option();
 
         return $this;

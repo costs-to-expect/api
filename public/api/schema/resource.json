@@ -1,4 +1,5 @@
 {
+    "$id": "https://api.costs-to-expect.com/v2/api/schema/resource.json",
     "type": "object",
     "properties": {
         "id": {
@@ -13,25 +14,6 @@
         "data": {
             "type": ["object", "null"]
         },
-        "item_subtype": {
-            "type": "object",
-            "properties": {
-                "id": {
-                    "type": "string"
-                },
-                "name": {
-                    "type": "string"
-                },
-                "description": {
-                    "type": "string"
-                }
-            },
-            "required": [
-                "id",
-                "name",
-                "description"
-            ]
-        },
         "created": {
             "type": "string"
         }
@@ -41,7 +23,6 @@
         "name",
         "description",
         "data",
-        "item_subtype",
         "created"
     ]
 }

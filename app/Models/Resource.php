@@ -87,11 +87,13 @@ class Resource extends Model
     {
         $collection = $this
             ->select(
+                'resource_type_item_type.item_type_id AS resource_type_item_type_id',
                 'resource.id AS resource_id',
                 'resource.name AS resource_name',
                 'resource.description AS resource_description',
                 'resource.data AS resource_data',
                 'resource.created_at AS resource_created_at',
+                'item_subtype.id AS resource_item_subtype_id',
                 'item_subtype.id AS resource_item_subtype_id',
                 'item_subtype.name AS resource_item_subtype_name',
                 'item_subtype.description AS resource_item_subtype_description'
@@ -113,9 +115,11 @@ class Resource extends Model
                     $resource_type_id
                 ]
             )
+            ->join('resource_type', 'resource.resource_type_id', 'resource_type.id')
+            ->join('resource_type_item_type', 'resource_type_item_type.resource_type_id', 'resource_type.id')
             ->join('resource_item_subtype', 'resource_item_subtype.resource_id', 'resource.id')
             ->join('item_subtype', 'resource_item_subtype.item_subtype_id', 'item_subtype.id')
-            ->where('resource_type_id', '=', $resource_type_id);
+            ->where('resource.resource_type_id', '=', $resource_type_id);
 
         $collection = Clause::applySearch($collection, $this->table, $search_parameters);
 

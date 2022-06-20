@@ -59,8 +59,8 @@ Route::group(
 
         Route::get(
             'item-types',
-            'ItemTypeView@index'
-        );
+            [\App\Http\Controllers\ItemTypeView::class, 'index']
+        )->name('item-type.list');
 
         Route::options(
             'item-types',
@@ -89,8 +89,8 @@ Route::group(
 
         Route::get(
             'item-types/{item_type_id}/item-subtypes/{item_subtype_id}',
-            'ItemSubtypeView@show'
-        );
+            [\App\Http\Controllers\ItemSubtypeView::class, 'show']
+        )->name('item-subtype.show');
 
         Route::options(
             'item-types/{item_type_id}/item-subtypes/{item_subtype_id}',

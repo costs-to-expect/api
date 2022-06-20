@@ -214,7 +214,7 @@
 
                     <hr />
 
-                    <h2>Latest release {{ $version }}</h2>
+                    <h2>{{ $version }}</h2>
 
                     <p>The latest release of the Costs to Expect API is
                         {{ $version }}; we released it on the {{ date('jS M Y', strtotime($date)) }}.</p>
@@ -225,34 +225,34 @@
                     <h3>Added</h3>
 
                     <ul>
-                        <li>We have added our first schema files for OPTIONS responses and started working on the tests.</li>
-                        <li>We have added tests for category management, found one bug when creating the tests.</li>
+                        <li>We allow the `collection` parameter for `simple-item` item-type collections.</li>
+                        <li>We have added tests for subcategory management, found another bug, whoopee!</li>
+                        <li>We have added tests for item type responses.</li>
+                        <li>We have added an option response tests for the resource types collection and a resource type.</li>
+                        <li>We have added additional resource type tests and created/updated the json-schema files as necessary.</li>
+                        <li>We have added a catch-all route for non-matching routes.</li>
                     </ul>
 
                     <h3>Changed</h3>
 
                     <ul>
-                        <li>We have updated our response class for OPTIONS responses, we now allow parameters to be defined for POST requests. One example of where we need this is the create password POST request, `password` and `password_confirmation` are required fields, however, `token` and `email` are required parameters. Before this update, you had to parse the returned error of read the OPTIONS request description.</li>
-                        <li>We have started splitting config files, a config file should be for one purpose.</li>
-                        <li>We have spent quite a bit of time reviewing the API structure and refactoring. We have removed unnecessary complexity, renamed classes and methods to describe intent more clearly and removed pointless base classes.</li>
-                        <li>We have reworked how allowed values are generated for the different item types, allowed values for fields and parameters have been split, and we have removed all abstraction.</li>
-                        <li>We have removed some route validation files which didn't do anything useful after all the item type work.</li>
-                        <li>We have reworked the responses class, removed exception parameters when not necessary, pass in an exception if thrown and now delegated responsibility to the responses class to decide if the exception should be returned in the response.</li>
-                        <li>We have upgraded the API to Laravel 9 and PHP 8.1.</li>
+                        <li>We have renamed the tests directory and corrected the namespaces.</li>
+                        <li>We are continuing to update out routes to named routes.</li>
+                        <li>We have moved additional responses to the response class.</li>
+                        <li>We have updated more response, if a collection is included in a response a `uri` field will contain the relative URI to the relevant collection.</li>
+                        <li>We have adjusted the layout of the test section in the README and added a note explaining the meaning of 'Non yet'.</li>
+                        <li>We have updated the response when attempting to delete an item with category assignments, rather than return a generic foreign key error, we specifically mention that there are category assignments that need to be removed first.</li>
+                        <li>We have cleaned up the response description lang file.</li>
                     </ul>
 
                     <h3>Fixed</h3>
 
                     <ul>
-                        <li>Options request incorrect for the `auth.register` endpoint (Test added).</li>
-                        <li>Options requests returning response twice.</li>
-                        <li>Type corrected in OPTIONS response, authentication status/requirements now a boolean, not a string.</li>
-                        <li>Minor correction to the description of two POST endpoints.</li>
-                        <li>Corrected a type in the OPTIONS response for the month parameter.</li>
-                        <li>Corrected the `partial-transfer` JSON schema file.</li>
-                        <li>Allowed values not showing for `category` on GET endpoints.</li>
-                        <li>Inconsistent usage of the responses helper.</li>
-                        <li>Category validator allowed duplicate names due to incorrect params, caught by model.</li>
+                        <li>Removed an output in a test.</li>
+                        <li>Updated the route middleware, invalid decodes should return a 403 for the route.</li>
+                        <li>Added a unique validation rule for emails, don't leave the check to the database.</li>
+                        <li>Corrected the descriptions in the OPTIONS requests for `item` summaries.</li>
+                        <li>The allowed values for `winner_id` should be a category assigned to the item, not all the categories assigned to the resource type.</li>
                     </ul>
 
                     <h3>Removed</h3>

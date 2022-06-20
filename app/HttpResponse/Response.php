@@ -13,7 +13,7 @@ use Throwable;
  * @copyright Dean Blackborough 2018-2022
  * @license https://github.com/costs-to-expect/api/blob/master/LICENSE
  */
-class Responses
+class Response
 {
     private static function addException(array $response, Throwable $e = null): array
     {
@@ -79,6 +79,22 @@ class Responses
         );
     }
 
+    public static function foreignKeyConstraintCategory(?Throwable $e = null): JsonResponse
+    {
+        $response = [
+            'message' => trans('constraint-category')
+        ];
+
+        if ($e instanceOf Throwable && app()->environment() !== 'production') {
+            $response = self::addException($response, $e);
+        }
+
+        return response()->json(
+            $response,
+            409
+        );
+    }
+
     public static function failedToSelectModelForUpdateOrDelete(?Throwable $e = null): JsonResponse
     {
         $response = [
@@ -127,6 +143,22 @@ class Responses
         );
     }
 
+    public static function authenticationFailed(?Throwable $e = null): JsonResponse
+    {
+        $response = [
+            'message' => trans('auth.failed')
+        ];
+
+        if ($e instanceOf Throwable && app()->environment() !== 'production') {
+            $response = self::addException($response, $e);
+        }
+
+        return response()->json(
+            $response,
+            401
+        );
+    }
+
     public static function categoryAssignmentLimit(int $limit): JsonResponse
     {
         $response = [
@@ -152,6 +184,22 @@ class Responses
     {
         $response = [
             'message' => trans('responses.model-save-failure-create'),
+        ];
+
+        if ($e instanceOf Throwable && app()->environment() !== 'production') {
+            $response = self::addException($response, $e);
+        }
+
+        return response()->json(
+            $response,
+            500
+        );
+    }
+
+    public static function unableToCreateAccount(?Throwable $e = null): JsonResponse
+    {
+        $response = [
+            'message' => trans('auth.unable-to-create-account')
         ];
 
         if ($e instanceOf Throwable && app()->environment() !== 'production') {

@@ -1,4 +1,5 @@
 {
+    "$id": "https://api.costs-to-expect.com/v2/api/schema/assigned-subcategory.json",
     "type": "object",
     "properties": {
         "id": {

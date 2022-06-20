@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Summary;
 
 use App\Http\Controllers\Controller;
-use App\HttpResponse\Responses;
+use App\HttpResponse\Response;
 use App\ItemType\AllocatedExpense\AllowedValue as AllocatedExpenseAllowedValue;
 use App\ItemType\Game\AllowedValue as GameAllowedValue;
 use App\ItemType\SimpleExpense\AllowedValue as SimpleExpenseAllowedValue;
@@ -25,7 +25,7 @@ class ResourceTypeItemView extends Controller
     public function index(string $resource_type_id): JsonResponse
     {
         if ($this->hasViewAccessToResourceType((int) $resource_type_id) === false) {
-            return Responses::notFoundOrNotAccessible(trans('entities.resource'));
+            return Response::notFoundOrNotAccessible(trans('entities.resource'));
         }
 
         $item_type = Select::itemType((int) $resource_type_id);
@@ -86,7 +86,7 @@ class ResourceTypeItemView extends Controller
     public function optionsIndex(string $resource_type_id): JsonResponse
     {
         if ($this->hasViewAccessToResourceType((int) $resource_type_id) === false) {
-            return Responses::notFoundOrNotAccessible(trans('entities.resource'));
+            return Response::notFoundOrNotAccessible(trans('entities.resource'));
         }
 
         $item_type = Select::itemType((int) $resource_type_id);

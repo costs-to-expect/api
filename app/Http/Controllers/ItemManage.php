@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use App\Cache\JobPayload;
 use App\Cache\KeyGroup;
 use App\HttpRequest\Hash;
-use App\HttpResponse\Responses;
+use App\HttpResponse\Response;
 use App\ItemType\Select;
 use App\Jobs\ClearCache;
 use App\Models\Item;
@@ -29,7 +29,7 @@ class ItemManage extends Controller
     public function create(string $resource_type_id, string $resource_id): JsonResponse
     {
         if ($this->hasWriteAccessToResourceType((int) $resource_type_id) === false) {
-            return Responses::notFoundOrNotAccessible(trans('entities.resource'));
+            return Response::notFoundOrNotAccessible(trans('entities.resource'));
         }
 
         $item_type = Select::itemType((int) $resource_type_id);
@@ -95,7 +95,7 @@ class ItemManage extends Controller
             ClearCache::dispatch($cache_job_payload->payload());
 
         } catch (Exception $e) {
-            return Responses::failedToSaveModelForCreate($e);
+            return Response::failedToSaveModelForCreate($e);
         }
 
         return response()->json(
@@ -148,7 +148,7 @@ class ItemManage extends Controller
             ClearCache::dispatch($cache_job_payload->payload());
 
         } catch (Exception $e) {
-            return Responses::failedToSaveModelForCreate($e);
+            return Response::failedToSaveModelForCreate($e);
         }
 
         return response()->json(
@@ -203,7 +203,7 @@ class ItemManage extends Controller
             ClearCache::dispatch($cache_job_payload->payload());
 
         } catch (Exception $e) {
-            return Responses::failedToSaveModelForCreate($e);
+            return Response::failedToSaveModelForCreate($e);
         }
 
         return response()->json(
@@ -257,7 +257,7 @@ class ItemManage extends Controller
             ClearCache::dispatch($cache_job_payload->payload());
 
         } catch (Exception $e) {
-            return Responses::failedToSaveModelForCreate($e);
+            return Response::failedToSaveModelForCreate($e);
         }
 
         return response()->json(
@@ -271,11 +271,11 @@ class ItemManage extends Controller
     public function update(string $resource_type_id, string $resource_id,string $item_id): JsonResponse
     {
         if ($this->hasWriteAccessToResourceType((int) $resource_type_id) === false) {
-            return Responses::notFoundOrNotAccessible(trans('entities.item'));
+            return Response::notFoundOrNotAccessible(trans('entities.item'));
         }
 
         if (count(request()->all()) === 0) {
-            return Responses::nothingToPatch();
+            return Response::nothingToPatch();
         }
 
         $item_type = Select::itemType((int) $resource_type_id);
@@ -312,7 +312,7 @@ class ItemManage extends Controller
         $item_type_instance = (new \App\ItemType\AllocatedExpense\Models\Item())->instance($item_id);
 
         if ($item_instance === null || $item_type_instance === null) {
-            return Responses::failedToSelectModelForUpdateOrDelete();
+            return Response::failedToSelectModelForUpdateOrDelete();
         }
 
         try {
@@ -347,10 +347,10 @@ class ItemManage extends Controller
             ClearCache::dispatch($cache_job_payload->payload());
 
         } catch (Exception $e) {
-            return Responses::failedToSaveModelForUpdate($e);
+            return Response::failedToSaveModelForUpdate($e);
         }
 
-        return Responses::successNoContent();
+        return Response::successNoContent();
     }
 
     private function updateGame(
@@ -376,7 +376,7 @@ class ItemManage extends Controller
         $item_type_instance = (new \App\ItemType\Game\Models\Item())->instance($item_id);
 
         if ($item_instance === null || $item_type_instance === null) {
-            return Responses::failedToSelectModelForUpdateOrDelete();
+            return Response::failedToSelectModelForUpdateOrDelete();
         }
 
         try {
@@ -410,10 +410,10 @@ class ItemManage extends Controller
             ClearCache::dispatch($cache_job_payload->payload());
 
         } catch (Exception $e) {
-            return Responses::failedToSaveModelForUpdate($e);
+            return Response::failedToSaveModelForUpdate($e);
         }
 
-        return Responses::successNoContent();
+        return Response::successNoContent();
     }
 
     private function updateSimpleExpense(
@@ -439,7 +439,7 @@ class ItemManage extends Controller
         $item_type_instance = (new \App\ItemType\SimpleExpense\Models\Item())->instance($item_id);
 
         if ($item_instance === null || $item_type_instance === null) {
-            return Responses::failedToSelectModelForUpdateOrDelete();
+            return Response::failedToSelectModelForUpdateOrDelete();
         }
 
         try {
@@ -465,10 +465,10 @@ class ItemManage extends Controller
             ClearCache::dispatch($cache_job_payload->payload());
 
         } catch (Exception $e) {
-            return Responses::failedToSaveModelForUpdate($e);
+            return Response::failedToSaveModelForUpdate($e);
         }
 
-        return Responses::successNoContent();
+        return Response::successNoContent();
     }
 
     private function updateSimpleItem(
@@ -494,7 +494,7 @@ class ItemManage extends Controller
         $item_type_instance = (new \App\ItemType\SimpleItem\Models\Item())->instance($item_id);
 
         if ($item_instance === null || $item_type_instance === null) {
-            return Responses::failedToSelectModelForUpdateOrDelete();
+            return Response::failedToSelectModelForUpdateOrDelete();
         }
 
         try {
@@ -515,16 +515,16 @@ class ItemManage extends Controller
             ClearCache::dispatch($cache_job_payload->payload());
 
         } catch (Exception $e) {
-            return Responses::failedToSaveModelForUpdate($e);
+            return Response::failedToSaveModelForUpdate($e);
         }
 
-        return Responses::successNoContent();
+        return Response::successNoContent();
     }
 
     public function delete(string $resource_type_id, string $resource_id,string $item_id): JsonResponse
     {
         if ($this->hasWriteAccessToResourceType((int) $resource_type_id) === false) {
-            return Responses::notFoundOrNotAccessible(trans('entities.item'));
+            return Response::notFoundOrNotAccessible(trans('entities.item'));
         }
 
         $item_type = Select::itemType((int) $resource_type_id);
@@ -559,11 +559,11 @@ class ItemManage extends Controller
         $item_instance = (new Item())->instance($resource_type_id, $resource_id, $item_id);
 
         if ($item_instance === null || $item_type_instance === null) {
-            return Responses::notFound(trans('entities.item'));
+            return Response::notFound(trans('entities.item'));
         }
 
         if ($item_model->hasCategoryAssignments($item_id) === true) {
-            return Responses::foreignKeyConstraintError();
+            return Response::foreignKeyConstraintCategory();
         }
 
         try {
@@ -576,11 +576,11 @@ class ItemManage extends Controller
 
             ClearCache::dispatch($cache_job_payload->payload());
 
-            return Responses::successNoContent();
+            return Response::successNoContent();
         } catch (QueryException $e) {
-            return Responses::foreignKeyConstraintError($e);
+            return Response::foreignKeyConstraintError($e);
         } catch (Exception $e) {
-            return Responses::notFound(trans('entities.item'), $e);
+            return Response::notFound(trans('entities.item'), $e);
         }
     }
 
@@ -605,11 +605,11 @@ class ItemManage extends Controller
         $item_instance = (new Item())->instance($resource_type_id, $resource_id, $item_id);
 
         if ($item_instance === null || $item_type_instance === null) {
-            return Responses::notFound(trans('entities.item'));
+            return Response::notFound(trans('entities.item'));
         }
 
         if ($item_model->hasCategoryAssignments($item_id) === true) {
-            return Responses::foreignKeyConstraintError();
+            return Response::foreignKeyConstraintCategory();
         }
 
         try {
@@ -621,11 +621,11 @@ class ItemManage extends Controller
 
             ClearCache::dispatch($cache_job_payload->payload());
 
-            return Responses::successNoContent();
+            return Response::successNoContent();
         } catch (QueryException $e) {
-            return Responses::foreignKeyConstraintError($e);
+            return Response::foreignKeyConstraintError($e);
         } catch (Exception $e) {
-            return Responses::notFound(trans('entities.item'), $e);
+            return Response::notFound(trans('entities.item'), $e);
         }
     }
 
@@ -650,11 +650,11 @@ class ItemManage extends Controller
         $item_instance = (new Item())->instance($resource_type_id, $resource_id, $item_id);
 
         if ($item_instance === null || $item_type_instance === null) {
-            return Responses::notFound(trans('entities.item'));
+            return Response::notFound(trans('entities.item'));
         }
 
         if ($item_model->hasCategoryAssignments($item_id) === true) {
-            return Responses::foreignKeyConstraintError();
+            return Response::foreignKeyConstraintCategory();
         }
 
         try {
@@ -666,11 +666,11 @@ class ItemManage extends Controller
 
             ClearCache::dispatch($cache_job_payload->payload());
 
-            return Responses::successNoContent();
+            return Response::successNoContent();
         } catch (QueryException $e) {
-            return Responses::foreignKeyConstraintError($e);
+            return Response::foreignKeyConstraintError($e);
         } catch (Exception $e) {
-            return Responses::notFound(trans('entities.item'), $e);
+            return Response::notFound(trans('entities.item'), $e);
         }
     }
 
@@ -695,11 +695,11 @@ class ItemManage extends Controller
         $item_instance = (new Item())->instance($resource_type_id, $resource_id, $item_id);
 
         if ($item_instance === null || $item_type_instance === null) {
-            return Responses::notFound(trans('entities.item'));
+            return Response::notFound(trans('entities.item'));
         }
 
         if ($item_model->hasCategoryAssignments($item_id) === true) {
-            return Responses::foreignKeyConstraintError();
+            return Response::foreignKeyConstraintCategory();
         }
 
         try {
@@ -711,11 +711,11 @@ class ItemManage extends Controller
 
             ClearCache::dispatch($cache_job_payload->payload());
 
-            return Responses::successNoContent();
+            return Response::successNoContent();
         } catch (QueryException $e) {
-            return Responses::foreignKeyConstraintError($e);
+            return Response::foreignKeyConstraintError($e);
         } catch (Exception $e) {
-            return Responses::notFound(trans('entities.item'), $e);
+            return Response::notFound(trans('entities.item'), $e);
         }
     }
 
@@ -746,7 +746,7 @@ class ItemManage extends Controller
         );
 
         if ($validator->fails()) {
-            return \App\HttpResponse\Responses::validationErrors($validator);
+            return \App\HttpResponse\Response::validationErrors($validator);
         }
 
         return null;
@@ -763,7 +763,7 @@ class ItemManage extends Controller
         );
 
         if (count($invalid_fields) > 0) {
-            return Responses::invalidFieldsInRequest($invalid_fields);
+            return Response::invalidFieldsInRequest($invalid_fields);
         }
 
         $merge_array = [];
@@ -792,7 +792,7 @@ class ItemManage extends Controller
         );
 
         if ($validator->fails()) {
-            return \App\HttpResponse\Responses::validationErrors($validator);
+            return \App\HttpResponse\Response::validationErrors($validator);
         }
 
         return null;
@@ -816,7 +816,7 @@ class ItemManage extends Controller
         );
 
         if ($validator->fails()) {
-            return \App\HttpResponse\Responses::validationErrors($validator);
+            return \App\HttpResponse\Response::validationErrors($validator);
         }
 
         return null;
@@ -833,7 +833,7 @@ class ItemManage extends Controller
         );
 
         if (count($invalid_fields) > 0) {
-            return Responses::invalidFieldsInRequest($invalid_fields);
+            return Response::invalidFieldsInRequest($invalid_fields);
         }
 
         $merge_array = [];
@@ -862,7 +862,7 @@ class ItemManage extends Controller
         );
 
         if ($validator->fails()) {
-            return \App\HttpResponse\Responses::validationErrors($validator);
+            return \App\HttpResponse\Response::validationErrors($validator);
         }
 
         return null;
@@ -895,7 +895,7 @@ class ItemManage extends Controller
         );
 
         if ($validator->fails()) {
-            return \App\HttpResponse\Responses::validationErrors($validator);
+            return \App\HttpResponse\Response::validationErrors($validator);
         }
 
         return null;
@@ -912,7 +912,7 @@ class ItemManage extends Controller
         );
 
         if (count($invalid_fields) > 0) {
-            return Responses::invalidFieldsInRequest($invalid_fields);
+            return Response::invalidFieldsInRequest($invalid_fields);
         }
 
         $merge_array = [];
@@ -941,7 +941,7 @@ class ItemManage extends Controller
         );
 
         if ($validator->fails()) {
-            return \App\HttpResponse\Responses::validationErrors($validator);
+            return \App\HttpResponse\Response::validationErrors($validator);
         }
 
         return null;
@@ -965,7 +965,7 @@ class ItemManage extends Controller
         );
 
         if ($validator->fails()) {
-            return \App\HttpResponse\Responses::validationErrors($validator);
+            return \App\HttpResponse\Response::validationErrors($validator);
         }
 
         return null;
@@ -982,7 +982,7 @@ class ItemManage extends Controller
         );
 
         if (count($invalid_fields) > 0) {
-            return Responses::invalidFieldsInRequest($invalid_fields);
+            return Response::invalidFieldsInRequest($invalid_fields);
         }
 
         $messages = [];
@@ -997,7 +997,7 @@ class ItemManage extends Controller
         );
 
         if ($validator->fails()) {
-            return \App\HttpResponse\Responses::validationErrors($validator);
+            return \App\HttpResponse\Response::validationErrors($validator);
         }
 
         return null;

@@ -21,7 +21,7 @@ class SimpleExpenseCollection extends Response
             setDynamicFields($this->allowed_fields)->
             setAuthenticationRequirement(true)->
             setAuthenticationStatus($this->permissions['manage'])->
-            setDescription('route-descriptions.item_category_POST_simple-expense')->
+            setDescription('route-descriptions.item_category_POST_simple_expense')->
             option();
 
         return $this;

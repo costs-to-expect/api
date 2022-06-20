@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\HttpResponse\Header;
-use App\HttpResponse\Responses;
+use App\HttpResponse\Response;
 use App\Models\ItemSubtype;
 use App\HttpOptionResponse\ItemSubtypeCollection;
 use App\HttpOptionResponse\ItemSubtypeItem;
@@ -25,7 +25,7 @@ class ItemSubtypeView extends Controller
     public function index($item_type_id): JsonResponse
     {
         if ((new Permission())->itemTypeExists((int) $item_type_id) === false) {
-            return Responses::notFound(trans('entities.item-subtype'));
+            return Response::notFound(trans('entities.item-subtype'));
         }
 
         $cache_control = new \App\Cache\Control();
@@ -87,7 +87,7 @@ class ItemSubtypeView extends Controller
     public function show($item_type_id, $item_subtype_id): JsonResponse
     {
         if ((new Permission())->itemSubTypeExists((int) $item_type_id, (int) $item_subtype_id) === false) {
-            return Responses::notFound(trans('entities.item-subtype'));
+            return Response::notFound(trans('entities.item-subtype'));
         }
 
         $subtype = (new ItemSubtype())->single(
@@ -96,7 +96,7 @@ class ItemSubtypeView extends Controller
         );
 
         if ($subtype === null) {
-            return Responses::notFound(trans('entities.item-subtype'));
+            return Response::notFound(trans('entities.item-subtype'));
         }
 
         $headers = new Header();
@@ -112,7 +112,7 @@ class ItemSubtypeView extends Controller
     public function optionsIndex($item_type_id): JsonResponse
     {
         if ((new Permission())->itemTypeExists((int) $item_type_id) === false) {
-            return Responses::notFound(trans('entities.item-subtype'));
+            return Response::notFound(trans('entities.item-subtype'));
         }
 
         $response = new ItemSubtypeCollection(['view'=> $this->user_id !== null]);
@@ -123,7 +123,7 @@ class ItemSubtypeView extends Controller
     public function optionsShow($item_type_id, $item_subtype_id): JsonResponse
     {
         if ((new Permission())->itemSubTypeExists((int) $item_type_id, (int) $item_subtype_id) === false) {
-            return Responses::notFound(trans('entities.item-subtype'));
+            return Response::notFound(trans('entities.item-subtype'));
         }
 
         $response = new ItemSubtypeItem(['view'=> $this->user_id !== null]);

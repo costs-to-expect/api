@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\HttpResponse\Responses;
+use App\HttpResponse\Response;
 use App\Jobs\ClearCache;
 use App\Models\PermittedUser;
 use App\Models\ResourceType;
@@ -22,7 +22,7 @@ class PermittedUserManage extends Controller
     public function create(string $resource_type_id): JsonResponse
     {
         if ($this->hasWriteAccessToResourceType((int) $resource_type_id) === false) {
-            return \App\HttpResponse\Responses::notFoundOrNotAccessible(trans('entities.resource-type'));
+            return \App\HttpResponse\Response::notFoundOrNotAccessible(trans('entities.resource-type'));
         }
 
         $resource_type = (new ResourceType())->single(
@@ -35,7 +35,7 @@ class PermittedUserManage extends Controller
         ]);
 
         if ($validator->fails()) {
-            return \App\HttpResponse\Responses::validationErrors($validator);
+            return \App\HttpResponse\Response::validationErrors($validator);
         }
 
         $cache_job_payload = (new \App\Cache\JobPayload())
@@ -78,10 +78,10 @@ class PermittedUserManage extends Controller
             ClearCache::dispatch($cache_job_payload->payload());
 
         } catch (Exception $e) {
-            return Responses::failedToSaveModelForCreate($e);
+            return Response::failedToSaveModelForCreate($e);
         }
 
-        return Responses::successNoContent();
+        return Response::successNoContent();
     }
 
     public function delete(
@@ -90,13 +90,13 @@ class PermittedUserManage extends Controller
     ): JsonResponse
     {
         if ($this->hasWriteAccessToResourceType((int) $resource_type_id) === false) {
-            return \App\HttpResponse\Responses::notFoundOrNotAccessible(trans('entities.permitted-user'));
+            return \App\HttpResponse\Response::notFoundOrNotAccessible(trans('entities.permitted-user'));
         }
 
         $permitted_user = (new PermittedUser())->instance($resource_type_id, $permitted_user_id);
 
         if ($permitted_user === null) {
-            return Responses::failedToSelectModelForUpdateOrDelete();
+            return Response::failedToSelectModelForUpdateOrDelete();
         }
 
         $cache_job_payload = (new \App\Cache\JobPayload())
@@ -112,11 +112,11 @@ class PermittedUserManage extends Controller
 
             ClearCache::dispatch($cache_job_payload->payload());
 
-            return Responses::successNoContent();
+            return Response::successNoContent();
         } catch (QueryException $e) {
-            return Responses::foreignKeyConstraintError($e);
+            return Response::foreignKeyConstraintError($e);
         } catch (Exception $e) {
-            return Responses::notFound(trans('entities.permitted-user'), $e);
+            return Response::notFound(trans('entities.permitted-user'), $e);
         }
     }
 }

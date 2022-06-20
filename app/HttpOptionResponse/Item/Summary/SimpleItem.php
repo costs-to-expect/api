@@ -18,7 +18,7 @@ class SimpleItem extends Response
             ->setSearchableParameters(LaravelConfig::get($base_path . '.summary-searchable', []))
             ->setFilterableParameters(LaravelConfig::get($base_path . '.summary-filterable', []))
             ->setDynamicParameters($this->allowed_parameters)
-            ->setDescription('route-descriptions.summary_GET_resource-type_resource_items')
+            ->setDescription('route-descriptions.summary_items_GET_index')
             ->setAuthenticationStatus($this->permissions['view'])
             ->option();
 

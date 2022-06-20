@@ -71,13 +71,13 @@ class QueueView extends Controller
     public function show(string $queue_id): JsonResponse
     {
         if ((new Permission())->queueItemExists((int) $queue_id) === false) {
-            return \App\HttpResponse\Responses::notFound(trans('entities.queue'));
+            return \App\HttpResponse\Response::notFound(trans('entities.queue'));
         }
 
         $job = (new Queue())->single($queue_id);
 
         if ($job === null) {
-            return \App\HttpResponse\Responses::notFound(trans('entities.queue'));
+            return \App\HttpResponse\Response::notFound(trans('entities.queue'));
         }
 
         $headers = new Header();
@@ -108,7 +108,7 @@ class QueueView extends Controller
     public function optionsShow(string $queue_id): JsonResponse
     {
         if ((new Permission())->queueItemExists((int) $queue_id) === false) {
-            return \App\HttpResponse\Responses::notFound(trans('entities.queue'));
+            return \App\HttpResponse\Response::notFound(trans('entities.queue'));
         }
 
         $response = new QueueItem(['view'=> $this->user_id !== null]);

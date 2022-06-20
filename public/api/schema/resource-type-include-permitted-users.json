@@ -1,0 +1,114 @@
+{
+    "$id": "https://api.costs-to-expect.com/v2/api/schema/resource-type-include-permitted-users.json",
+    "type": "object",
+    "properties": {
+        "id": {
+            "type": "string"
+        },
+        "name": {
+            "type": "string"
+        },
+        "description": {
+            "type": "string"
+        },
+        "data": {
+            "type": ["object", "null"]
+        },
+        "created": {
+            "type": "string"
+        },
+        "public": {
+            "type": "boolean"
+        },
+        "item_type": {
+            "type": "object",
+            "properties": {
+                "uri": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "friendly_name": {
+                    "type": "string"
+                },
+                "description": {
+                    "type": "string"
+                }
+            },
+            "required": [
+                "uri",
+                "id",
+                "name",
+                "friendly_name",
+                "description"
+            ]
+        },
+        "resources": {
+            "type": "object",
+            "properties": {
+                "uri": {
+                    "type": "string"
+                },
+                "count": {
+                    "type": "integer"
+                }
+            },
+            "required": [
+                "uri",
+                "count"
+            ]
+        },
+        "permitted_users": {
+            "type": "object",
+            "properties": {
+                "uri": {
+                    "type": "string"
+                },
+                "count": {
+                    "type": "integer"
+                },
+                "collection": {
+                    "type": "array",
+                    "items": {
+                        "type": "object",
+                        "properties": {
+                            "id": {
+                                "type": "string"
+                            },
+                            "name": {
+                                "type": "string"
+                            },
+                            "email": {
+                                "type": "string"
+                            },
+                            "created": {
+                                "type": "string"
+                            }
+                        },
+                        "required": []
+                    }
+                }
+            },
+            "required": [
+                "uri",
+                "count",
+                "collection"
+            ]
+        }
+    },
+    "required": [
+        "id",
+        "name",
+        "description",
+        "data",
+        "created",
+        "public",
+        "item_type",
+        "resources",
+        "permitted_users"
+    ]
+}

@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\HttpResponse\Responses;
+use App\HttpResponse\Response;
 use App\Notifications\ForgotPassword;
 use App\Notifications\Registered;
 use App\HttpOptionResponse\Auth\Check;
@@ -20,9 +20,9 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
+use Illuminate\Validation\Rule;
 
 class Authentication extends \Illuminate\Routing\Controller
 {
@@ -105,7 +105,6 @@ class Authentication extends \Illuminate\Routing\Controller
 
             return response()->json(['message' => trans('auth.unable-to-find-account')], 404);
         } catch (Exception $e) {
-            Log::error($e->getMessage());
             return response()->json(['message' => trans('auth.unable-to-create-password')], 500);
         }
     }
@@ -177,7 +176,6 @@ class Authentication extends \Illuminate\Routing\Controller
 
             return response()->json(['message' => trans('auth.unable-to-find-account')], 500);
         } catch (Exception $e) {
-            Log::error($e->getMessage());
             return response()->json(['message' => trans('auth.unable-to-create-password')], 500);
         }
     }
@@ -232,7 +230,6 @@ class Authentication extends \Illuminate\Routing\Controller
                     $user->notify(new ForgotPassword($user, $create_token));
                 }
             } catch (Exception $e) {
-                Log::error($e->getMessage());
                 return response()->json(['error' => trans('auth.unable-process-forgot-password')], 500);
             }
 
@@ -323,10 +320,10 @@ class Authentication extends \Illuminate\Routing\Controller
                 );
             }
 
-            return response()->json(['message' => trans('auth.failed')], 401);
+            return Response::authenticationFailed();
         }
 
-        return response()->json(['message' => trans('auth.failed')], 401);
+        return Response::authenticationFailed();
     }
 
     public function optionsLogin(): Http\JsonResponse
@@ -349,7 +346,11 @@ class Authentication extends \Illuminate\Routing\Controller
             $request->all(),
             [
                 'name' => 'required',
-                'email' => 'required|email',
+                'email' => [
+                    'required',
+                    'email',
+                    Rule::unique(User::class, 'email')
+                ]
             ]
         );
 
@@ -389,8 +390,7 @@ class Authentication extends \Illuminate\Routing\Controller
             }
 
         } catch (Exception $e) {
-            Log::error($e->getMessage());
-            return response()->json(['error' => trans('auth.unable-to-create-account')], 500);
+            return Response::unableToCreateAccount($e);
         }
 
         return response()->json(
@@ -452,7 +452,7 @@ class Authentication extends \Illuminate\Routing\Controller
             return response()->json([], 204);
         }
 
-        return response()->json(['message' => trans('auth.failed')], 401);
+        return Response::authenticationFailed();
     }
 
     public function optionsUpdateProfile(): Http\JsonResponse
@@ -510,7 +510,7 @@ class Authentication extends \Illuminate\Routing\Controller
             }
 
             if (count($fields) === 0) {
-                return response()->json(['message' => trans('responses.patch-empty')], 400);
+                return Response::nothingToPatch();
             }
 
             try {
@@ -521,14 +521,13 @@ class Authentication extends \Illuminate\Routing\Controller
                 $user->save();
 
             } catch (Exception $e) {
-                Log::error($e->getMessage());
                 return response()->json(['message' => trans('auth.unable-to-update-profile')], 401);
             }
 
             return response()->json([], 204);
         }
 
-        return response()->json(['message' => trans('auth.failed')], 401);
+        return Response::authenticationFailed();
     }
 
     public function user(): Http\JsonResponse
@@ -562,7 +561,7 @@ class Authentication extends \Illuminate\Routing\Controller
             return response()->json($user);
         }
 
-        return response()->json(['message' => trans('auth.failed')], 401);
+        return Response::authenticationFailed();
     }
 
     public function tokens(): Http\JsonResponse
@@ -585,7 +584,7 @@ class Authentication extends \Illuminate\Routing\Controller
             return response()->json($tokens);
         }
 
-        return response()->json(['message' => trans('auth.failed')], 401);
+        return Response::authenticationFailed();
     }
 
     public function token($token_id): Http\JsonResponse
@@ -609,10 +608,10 @@ class Authentication extends \Illuminate\Routing\Controller
                 return response()->json($tokens[$token_id]);
             }
 
-            return Responses::notFound();
+            return Response::notFound();
         }
 
-        return response()->json(['message' => trans('auth.failed')], 401);
+        return Response::authenticationFailed();
     }
 
     public function deleteToken($token_id): Http\JsonResponse
@@ -634,13 +633,13 @@ class Authentication extends \Illuminate\Routing\Controller
 
             if (array_key_exists($token_id, $tokens)) {
                 $user->tokens()->where('id', $token_id)->delete();
-                return Responses::successNoContent();
+                return Response::successNoContent();
             }
 
-            return Responses::notFound();
+            return Response::notFound();
         }
 
-        return response()->json(['message' => trans('auth.failed')], 401);
+        return Response::authenticationFailed();
     }
 
     public function optionsUser(): Http\JsonResponse
