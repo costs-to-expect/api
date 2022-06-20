@@ -299,7 +299,8 @@ class ItemView extends Controller
         $allowed_values = new GameAllowedValue(
             $this->viewable_resource_types,
             $resource_type_id,
-            $resource_id
+            $resource_id,
+            $item_id
         );
 
         return (new \App\HttpOptionResponse\Item\Game($this->permissions((int) $resource_type_id)))
