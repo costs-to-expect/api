@@ -2,6 +2,31 @@
 
 The complete changelog for the Costs to Expect REST API, our changelog follows the format defined at https://keepachangelog.com/en/1.0.0/
 
+## [v2.25.0] - 2022-06-20
+## Added
+- We allow the `collection` parameter for `simple-item` item-type collections.
+- We have added tests for subcategory management, found another bug, whoopee!
+- We have added tests for item type responses.
+- We have added an option response tests for the resource types collection and a resource type.
+- We have added additional resource type tests and created/updated the json-schema files as necessary.
+- We have added a catch-all route for non-matching routes.
+
+## Changed
+- We have renamed the tests directory and corrected the namespaces.
+- We are continuing to update out routes to named routes.
+- We have moved additional responses to the response class.
+- We have updated more response, if a collection is included in a response a `uri` field will contain the relative URI to the relevant collection.
+- We have adjusted the layout of the test section in the README and added a note explaining the meaning of 'Non yet'.
+- We have updated the response when attempting to delete an item with category assignments, rather than return a generic foreign key error, we specifically mention that there are category assignments that need to be removed first.
+- We have cleaned up the response description lang file.
+
+## Fixed
+- Removed an output in a test.
+- Updated the route middleware, invalid decodes should return a 403 for the route.
+- Added a unique validation rule for emails, don't leave the check to the database.
+- Corrected the descriptions in the OPTIONS requests for `item` summaries.
+- The allowed values for `winner_id` should be a category assigned to the item, not all the categories assigned to the resource type.
+
 ## [v2.24.0] - 2022-06-13
 ## Added
 - We have added our first schema files for OPTIONS responses and started working on the tests.

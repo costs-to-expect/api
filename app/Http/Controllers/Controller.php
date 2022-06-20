@@ -9,6 +9,7 @@ use App\Models\ResourceType;
 use App\HttpRequest\Hash;
 use App\HttpRequest\Validate\Boolean;
 use Illuminate\Routing\Controller as BaseController;
+use JetBrains\PhpStorm\ArrayShape;
 
 class Controller extends BaseController
 {
@@ -127,6 +128,7 @@ class Controller extends BaseController
         return in_array($resource_type_id, $this->viewable_resource_types, true) === true;
     }
 
+    #[ArrayShape(['view' => "bool", 'manage' => "bool"])]
     protected function permissions(int $resource_type_id): array
     {
         return [
