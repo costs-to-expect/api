@@ -44,14 +44,14 @@ class ItemPartialTransfer extends BaseValidator
 
         // We need to merge the decoded resource_id with the POSTed data
         return ValidatorFacade::make(
-            array_merge(
-                request()->all(),
-                [
+            [
+                ...request()->all(),
+                ...[
                     'resource_id' => $resource_id,
                 ]
-            ),
-            array_merge(
-                [
+            ],
+            [
+                ...[
                     'resource_id' => [
                         'required',
                         Rule::exists('resource', 'id')->where(static function ($query) use ($options) {
@@ -60,8 +60,8 @@ class ItemPartialTransfer extends BaseValidator
                         }),
                     ],
                 ],
-                Config::get('api.item-partial-transfer.validation-post.fields')
-            ),
+                ...Config::get('api.item-partial-transfer.validation-post.fields')
+            ],
             $this->translateMessages('api.item-partial-transfer.validation-post.messages')
         );
     }

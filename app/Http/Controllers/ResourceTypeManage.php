@@ -173,10 +173,10 @@ class ResourceTypeManage extends Controller
         }
 
         $invalid_fields = $this->checkForInvalidFields(
-            array_merge(
-                (new ResourceType())->patchableFields(),
-                (new ResourceTypeValidator())->dynamicDefinedFields()
-            )
+            [
+                ...(new ResourceType())->patchableFields(),
+                ...(new ResourceTypeValidator())->dynamicDefinedFields()
+            ]
         );
 
         if (count($invalid_fields) > 0) {

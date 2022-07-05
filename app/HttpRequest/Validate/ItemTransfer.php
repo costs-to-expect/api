@@ -36,12 +36,12 @@ class ItemTransfer extends BaseValidator
         }
 
         return ValidatorFacade::make(
-            array_merge(
-                request()->all(),
-                [
+            [
+                ...request()->all(),
+                ...[
                     'resource_id' => $resource_id
                 ]
-            ),
+            ],
             [
                 'resource_id' => [
                     'required',

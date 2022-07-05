@@ -27,8 +27,8 @@ class Subcategory extends BaseValidator
      */
     private function createRules(int $category_id): array
     {
-        return array_merge(
-            [
+        return [
+            ...[
                 'name' => [
                     'required',
                     'string',
@@ -36,8 +36,8 @@ class Subcategory extends BaseValidator
                     'unique:sub_category,name,null,id,category_id,' . $category_id
                 ],
             ],
-            Config::get('api.subcategory.validation-post.fields')
-        );
+            ...Config::get('api.subcategory.validation-post.fields')
+        ];
     }
 
     /**
@@ -50,8 +50,8 @@ class Subcategory extends BaseValidator
      */
     private function updateRules(int $category_id, int $subcategory_id): array
     {
-        return array_merge(
-            [
+        return [
+            ...[
                 'name' => [
                     'sometimes',
                     'string',
@@ -59,8 +59,8 @@ class Subcategory extends BaseValidator
                     'unique:sub_category,name,' . $subcategory_id . ',id,category_id,' . $category_id
                 ],
             ],
-            Config::get('api.subcategory.validation-patch.fields')
-        );
+            ...Config::get('api.subcategory.validation-patch.fields')
+        ];
     }
 
     /**
