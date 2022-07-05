@@ -28,7 +28,7 @@ class Post extends Verb
         $this->parameters_after_localisation = [];
     }
 
-    public function setDynamicFields(
+    public function setAllowedValuesForFields(
         array $fields = []
     ): Post
     {

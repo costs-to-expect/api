@@ -12,7 +12,7 @@ class AllocatedExpenseTransfer extends Response
     {
         $post = new \App\HttpVerb\Post();
         $this->verbs['POST'] = $post->setFields(Config::get('api.item-partial-transfer.fields-post'))->
-            setDynamicFields($this->allowed_fields)->
+            setAllowedValuesForFields($this->allowed_fields)->
             setDescription('route-descriptions.item_partial_transfer_POST')->
             setAuthenticationStatus($this->permissions['manage'])->
             setAuthenticationRequirement(true)->

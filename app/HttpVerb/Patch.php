@@ -26,7 +26,7 @@ class Patch extends Verb
         $this->fields = [];
     }
 
-    public function setDynamicFields(
+    public function setAllowedValuesForFields(
         array $fields = []
     ): Patch
     {

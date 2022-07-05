@@ -216,6 +216,41 @@
                                 "type",
                                 "required"
                             ]
+                        },
+                        "item-type": {
+                            "type": "object",
+                            "properties": {
+                                "parameter": {
+                                    "type": "string"
+                                },
+                                "title": {
+                                    "type": "string"
+                                },
+                                "description": {
+                                    "type": "string"
+                                },
+                                "default": {
+                                    "type": "null"
+                                },
+                                "type": {
+                                    "type": "string"
+                                },
+                                "required": {
+                                    "type": "boolean"
+                                },
+                                "allowed_values": {
+                                    "type": "object"
+                                }
+                            },
+                            "required": [
+                                "parameter",
+                                "title",
+                                "description",
+                                "default",
+                                "type",
+                                "required",
+                                "allowed_values"
+                            ]
                         }
                     },
                     "required": [
@@ -223,7 +258,8 @@
                         "limit",
                         "collection",
                         "sort",
-                        "search"
+                        "search",
+                        "item-type"
                     ]
                 }
             },

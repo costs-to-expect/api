@@ -20,7 +20,6 @@
         "laravel/helpers": "^1.2",
         "laravel/sanctum": "^2.8",
         "laravel/tinker": "^2.0",
-        "opis/json-schema": "^1.0",
         "symfony/http-client": "^6.0",
         "symfony/mailgun-mailer": "^6.0",
         "symfony/postmark-mailer": "^6.0"
@@ -31,7 +30,8 @@
         "filp/whoops": "^2.0",
         "mockery/mockery": "^1.0",
         "nunomaduro/collision": "^6.1",
-        "phpunit/phpunit": "^9.0"
+        "phpunit/phpunit": "^9.0",
+        "opis/json-schema": "^1.0"
     },
     "autoload": {
         "classmap": [

@@ -17,7 +17,7 @@ class SimpleItemCollection extends Response
             ->setSearchableParameters(LaravelConfig::get($base_path . '.searchable', []))
             ->setFilterableParameters(LaravelConfig::get($base_path . '.filterable', []))
             ->setParameters(LaravelConfig::get($base_path . '.parameters', []))
-            ->setDynamicParameters($this->allowed_parameters)
+            ->setAllowedValuesForParameters($this->allowed_parameters)
             ->setPaginationStatus(true, true)
             ->setAuthenticationStatus($this->permissions['view'])
             ->setDescription('route-descriptions.item_GET_index')
@@ -28,7 +28,7 @@ class SimpleItemCollection extends Response
             ->setDescription( 'route-descriptions.item_POST')
             ->setAuthenticationRequirement(true)
             ->setAuthenticationStatus($this->permissions['manage'])
-            ->setDynamicFields($this->allowed_fields)
+            ->setAllowedValuesForFields($this->allowed_fields)
             ->option();
 
         return $this;

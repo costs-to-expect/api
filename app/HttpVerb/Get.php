@@ -90,7 +90,7 @@ class Get extends Verb
         return $this;
     }
 
-    public function setDynamicParameters(
+    public function setAllowedValuesForParameters(
         array $parameters = []
     ): Get
     {

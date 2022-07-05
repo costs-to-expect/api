@@ -6,6 +6,7 @@ namespace App\HttpRequest\Parameter;
 use App\ItemType\Select;
 use App\Models\Category;
 use App\Models\EntityLimits;
+use App\Models\ItemType;
 use App\Models\ResourceType;
 use App\Models\Subcategory;
 use App\HttpRequest\Validate\Boolean;
@@ -87,6 +88,15 @@ class Request
                             Boolean::isConvertible(self::$parameters[$key]) === false ||
                             Boolean::convertedValue(self::$parameters[$key]) === false
                         )
+                    ) {
+                        unset(self::$parameters[$key]);
+                    }
+                    break;
+
+                case 'item-type':
+                    if (
+                        array_key_exists($key, self::$parameters) === true &&
+                        (new ItemType())->where('id', '=', self::$parameters[$key])->exists() === false
                     ) {
                         unset(self::$parameters[$key]);
                     }

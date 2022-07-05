@@ -88,7 +88,8 @@ class ResourceType extends Model
         int $offset = 0,
         int $limit = 10,
         array $search_parameters = [],
-        array $sort_parameters = []
+        array $sort_parameters = [],
+        array $request_parameters = []
     ): array
     {
         $collection = $this
@@ -136,6 +137,13 @@ class ResourceType extends Model
         );
 
         $collection = Clause::applySearch($collection, $this->table, $search_parameters);
+
+        if (
+            array_key_exists('item-type', $request_parameters) === true &&
+            $request_parameters['item-type'] !== null
+        ) {
+            $collection->where('resource_type_item_type.item_type_id', '=', $request_parameters['item-type']);
+        }
 
         if (count($sort_parameters) > 0) {
             foreach ($sort_parameters as $field => $direction) {
