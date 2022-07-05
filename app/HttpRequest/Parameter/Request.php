@@ -38,20 +38,10 @@ class Request
         foreach ($parameter_names as $parameter) {
             if (array_key_exists($parameter, $request_parameters) === true &&
                 $request_parameters[$parameter] !== null) {
-                switch ($parameter) {
-                    case 'include-resources':
-                    case 'include-categories':
-                    case 'include-subcategories':
-                    case 'include-permitted-users':
-                    case 'include-unpublished':
-                    case 'complete':
-                        self::$parameters[$parameter] = Boolean::convertedValue($request_parameters[$parameter]);
-                        break;
-
-                    default:
-                        self::$parameters[$parameter] = $request_parameters[$parameter];
-                        break;
-                }
+                self::$parameters[$parameter] = match ($parameter) {
+                    'include-resources', 'include-categories', 'include-subcategories', 'include-permitted-users', 'include-unpublished', 'complete' => Boolean::convertedValue($request_parameters[$parameter]),
+                    default => $request_parameters[$parameter],
+                };
             }
         }
     }
