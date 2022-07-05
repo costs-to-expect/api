@@ -42,7 +42,6 @@ class ResourceView extends Controller
         $cache_summary->setFromCache($cache_control->getByKey(request()->getRequestUri()));
 
         if ($cache_control->isRequestCacheable() === false || $cache_summary->valid() === false) {
-
             $search_parameters = Parameter\Search::fetch(
                 Config::get('api.resource.summary-searchable')
             );

@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Models\Summary;
@@ -27,11 +28,11 @@ class Subcategory extends Model
         int $resource_type_id,
         int $category_id,
         array $search_parameters = []
-    ): array
-    {
+    ): array {
         $collection = $this
             ->selectRaw("COUNT(`{$this->table}`.`id`) AS total")
-            ->selectRaw("
+            ->selectRaw(
+                "
                 (
                     SELECT 
                         GREATEST(

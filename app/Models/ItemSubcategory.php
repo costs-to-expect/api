@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Models;
@@ -45,8 +46,7 @@ class ItemSubcategory extends Model
         int $resource_id,
         int $item_id,
         int $item_category_id
-    ): int
-    {
+    ): int {
         return $this
             ->join('item_category', 'item_sub_category.item_category_id', 'item_category.id')
             ->join('item', 'item_category.item_id', 'item.id')
@@ -65,8 +65,7 @@ class ItemSubcategory extends Model
         int $item_category_id,
         int $offset = 0,
         int $limit = 10
-    )
-    {
+    ) {
         return $this->join('sub_category', 'item_sub_category.sub_category_id', 'sub_category.id')->
             join('item_category', 'item_sub_category.item_category_id', 'item_category.id')->
             join('item', 'item_category.item_id', 'item.id')->
@@ -92,8 +91,7 @@ class ItemSubcategory extends Model
         int $item_id,
         int $item_category_id,
         int $item_subcategory_id
-    ): ?array
-    {
+    ): ?array {
         $result = $this
             ->join('sub_category', 'item_sub_category.sub_category_id', 'sub_category.id')
             ->join('item_category', 'item_sub_category.item_category_id', 'item_category.id')
@@ -129,8 +127,7 @@ class ItemSubcategory extends Model
         int $item_id,
         int $item_category_id,
         int $item_subcategory_id
-    ): ?ItemSubcategory
-    {
+    ): ?ItemSubcategory {
         return $this->join('sub_category', 'item_sub_category.sub_category_id', 'sub_category.id')->
             join('item_category', 'item_sub_category.item_category_id', 'item_category.id')->
             join('item', 'item_category.item_id', 'item.id')->
@@ -140,7 +137,7 @@ class ItemSubcategory extends Model
             where('resource.id', '=', $resource_id)->
             where('resource.resource_type_id', '=', $resource_type_id)->
             select(
-            'item_sub_category.id AS id',
+                'item_sub_category.id AS id',
                 'item_sub_category.id AS item_sub_category_id',
                 'item_sub_category.created_at AS item_sub_category_created_at',
                 'sub_category.id AS item_sub_category_sub_category_id',

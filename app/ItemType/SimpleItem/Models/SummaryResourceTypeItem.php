@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\ItemType\SimpleItem\Models;
@@ -30,14 +31,14 @@ class SummaryResourceTypeItem extends LaravelModel
     public function summary(
         int $resource_type_id,
         array $parameters
-    ): array
-    {
+    ): array {
         $collection = $this
             ->selectRaw("
                 SUM({$this->sub_table}.quantity) AS total, 
                 COUNT({$this->sub_table}.item_id) AS total_count
             ")
-            ->selectRaw("
+            ->selectRaw(
+                "
                 (
                     SELECT 
                         GREATEST(
@@ -82,10 +83,10 @@ class SummaryResourceTypeItem extends LaravelModel
     public function resourcesSummary(
         int $resource_type_id,
         array $parameters
-    ): array
-    {
+    ): array {
         $collection = $this
-            ->selectRaw("
+            ->selectRaw(
+                "
                 resource.id AS id, 
                 resource.name AS `name`, 
                 SUM({$this->sub_table}.quantity) AS total, 
@@ -118,8 +119,7 @@ class SummaryResourceTypeItem extends LaravelModel
         int $resource_type_id,
         array $parameters = [],
         array $search_parameters = []
-    ): array
-    {
+    ): array {
         $collection = $this
             ->selectRaw("
                 SUM({$this->sub_table}.quantity) AS total, 

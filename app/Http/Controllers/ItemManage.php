@@ -59,7 +59,7 @@ class ItemManage extends Controller
             ->setUserId($this->user_id);
 
         try {
-            $item_type_instance = DB::transaction(function() use ($request, $resource_id) {
+            $item_type_instance = DB::transaction(function () use ($request, $resource_id) {
                 $item_instance = new Item([
                     'resource_id' => $resource_id,
                     'created_by' => $this->user_id
@@ -93,14 +93,14 @@ class ItemManage extends Controller
             });
 
             ClearCache::dispatch($cache_job_payload->payload());
-
         } catch (Exception $e) {
             return Response::failedToSaveModelForCreate($e);
         }
 
         return response()->json(
             (new \App\ItemType\AllocatedExpense\Transformer\Item(
-                (new \App\ItemType\AllocatedExpense\Models\Item())->instanceToArray($item_type_instance))
+                (new \App\ItemType\AllocatedExpense\Models\Item())->instanceToArray($item_type_instance)
+            )
             )->asArray(),
             201
         );
@@ -122,8 +122,7 @@ class ItemManage extends Controller
             ->setUserId($this->user_id);
 
         try {
-            $item_type_instance = DB::transaction(function() use ($request, $resource_id) {
-
+            $item_type_instance = DB::transaction(function () use ($request, $resource_id) {
                 $item_instance = new Item([
                     'resource_id' => $resource_id,
                     'created_by' => $this->user_id
@@ -146,14 +145,14 @@ class ItemManage extends Controller
             });
 
             ClearCache::dispatch($cache_job_payload->payload());
-
         } catch (Exception $e) {
             return Response::failedToSaveModelForCreate($e);
         }
 
         return response()->json(
             (new \App\ItemType\Game\Transformer\Item(
-                (new \App\ItemType\Game\Models\Item())->instanceToArray($item_type_instance))
+                (new \App\ItemType\Game\Models\Item())->instanceToArray($item_type_instance)
+            )
             )->asArray(),
             201
         );
@@ -175,7 +174,7 @@ class ItemManage extends Controller
             ->setUserId($this->user_id);
 
         try {
-            $item_type_instance = DB::transaction(function() use ($request, $resource_id) {
+            $item_type_instance = DB::transaction(function () use ($request, $resource_id) {
                 $item_instance = new Item([
                     'resource_id' => $resource_id,
                     'created_by' => $this->user_id
@@ -201,14 +200,14 @@ class ItemManage extends Controller
             });
 
             ClearCache::dispatch($cache_job_payload->payload());
-
         } catch (Exception $e) {
             return Response::failedToSaveModelForCreate($e);
         }
 
         return response()->json(
             (new \App\ItemType\SimpleExpense\Transformer\Item(
-                (new \App\ItemType\SimpleExpense\Models\Item())->instanceToArray($item_type_instance))
+                (new \App\ItemType\SimpleExpense\Models\Item())->instanceToArray($item_type_instance)
+            )
             )->asArray(),
             201
         );
@@ -217,8 +216,7 @@ class ItemManage extends Controller
     private function createSimpleItem(
         int $resource_type_id,
         int $resource_id
-    ): JsonResponse
-    {
+    ): JsonResponse {
         $request = request();
 
         $this->validateSimpleItemForCreate();
@@ -233,7 +231,7 @@ class ItemManage extends Controller
             ->setUserId($this->user_id);
 
         try {
-            $item_type_instance = DB::transaction(function() use ($request, $resource_id) {
+            $item_type_instance = DB::transaction(function () use ($request, $resource_id) {
                 $item_instance = new Item([
                     'resource_id' => $resource_id,
                     'created_by' => $this->user_id
@@ -255,7 +253,6 @@ class ItemManage extends Controller
             });
 
             ClearCache::dispatch($cache_job_payload->payload());
-
         } catch (Exception $e) {
             return Response::failedToSaveModelForCreate($e);
         }
@@ -268,7 +265,7 @@ class ItemManage extends Controller
         );
     }
 
-    public function update(string $resource_type_id, string $resource_id,string $item_id): JsonResponse
+    public function update(string $resource_type_id, string $resource_id, string $item_id): JsonResponse
     {
         if ($this->hasWriteAccessToResourceType((int) $resource_type_id) === false) {
             return Response::notFoundOrNotAccessible(trans('entities.item'));
@@ -293,8 +290,7 @@ class ItemManage extends Controller
         int $resource_type_id,
         int $resource_id,
         int $item_id
-    ): JsonResponse
-    {
+    ): JsonResponse {
         $this->validateAllocatedExpenseForUpdate();
 
         $request = request();
@@ -319,8 +315,7 @@ class ItemManage extends Controller
             $item_instance->updated_by = $this->user_id;
             $item_instance->updated_at = Date::now();
 
-            DB::transaction(static function() use ($request, $item_instance, $item_type_instance) {
-
+            DB::transaction(static function () use ($request, $item_instance, $item_type_instance) {
                 $set_actualised = false;
                 foreach ($request->all() as $key => $value) {
                     $item_type_instance->$key = $value;
@@ -345,7 +340,6 @@ class ItemManage extends Controller
             });
 
             ClearCache::dispatch($cache_job_payload->payload());
-
         } catch (Exception $e) {
             return Response::failedToSaveModelForUpdate($e);
         }
@@ -357,8 +351,7 @@ class ItemManage extends Controller
         int $resource_type_id,
         int $resource_id,
         int $item_id
-    ): JsonResponse
-    {
+    ): JsonResponse {
         $this->validateGameForUpdate();
 
         $request = request();
@@ -383,8 +376,7 @@ class ItemManage extends Controller
             $item_instance->updated_by = $this->user_id;
             $item_instance->updated_at = Date::now();
 
-            DB::transaction(static function() use ($request, $item_instance, $item_type_instance) {
-
+            DB::transaction(static function () use ($request, $item_instance, $item_type_instance) {
                 foreach ($request->all() as $key => $value) {
                     if ($key === 'winner_id') {
                         $key = 'winner';
@@ -408,7 +400,6 @@ class ItemManage extends Controller
             });
 
             ClearCache::dispatch($cache_job_payload->payload());
-
         } catch (Exception $e) {
             return Response::failedToSaveModelForUpdate($e);
         }
@@ -420,8 +411,7 @@ class ItemManage extends Controller
         int $resource_type_id,
         int $resource_id,
         int $item_id
-    ): JsonResponse
-    {
+    ): JsonResponse {
         $this->validateSimpleExpenseForUpdate();
 
         $request = request();
@@ -446,8 +436,7 @@ class ItemManage extends Controller
             $item_instance->updated_by = $this->user_id;
             $item_instance->updated_at = Date::now();
 
-            DB::transaction(static function() use ($request, $item_instance, $item_type_instance) {
-
+            DB::transaction(static function () use ($request, $item_instance, $item_type_instance) {
                 foreach ($request->all() as $key => $value) {
                     $item_type_instance->$key = $value;
 
@@ -463,7 +452,6 @@ class ItemManage extends Controller
             });
 
             ClearCache::dispatch($cache_job_payload->payload());
-
         } catch (Exception $e) {
             return Response::failedToSaveModelForUpdate($e);
         }
@@ -475,8 +463,7 @@ class ItemManage extends Controller
         int $resource_type_id,
         int $resource_id,
         int $item_id
-    ): JsonResponse
-    {
+    ): JsonResponse {
         $this->validateSimpleItemForUpdate();
 
         $request = request();
@@ -501,8 +488,7 @@ class ItemManage extends Controller
             $item_instance->updated_by = $this->user_id;
             $item_instance->updated_at = Date::now();
 
-            DB::transaction(static function() use ($request, $item_instance, $item_type_instance) {
-
+            DB::transaction(static function () use ($request, $item_instance, $item_type_instance) {
                 foreach ($request->all() as $key => $value) {
                     $item_type_instance->$key = $value;
                 }
@@ -513,7 +499,6 @@ class ItemManage extends Controller
             });
 
             ClearCache::dispatch($cache_job_payload->payload());
-
         } catch (Exception $e) {
             return Response::failedToSaveModelForUpdate($e);
         }
@@ -521,7 +506,7 @@ class ItemManage extends Controller
         return Response::successNoContent();
     }
 
-    public function delete(string $resource_type_id, string $resource_id,string $item_id): JsonResponse
+    public function delete(string $resource_type_id, string $resource_id, string $item_id): JsonResponse
     {
         if ($this->hasWriteAccessToResourceType((int) $resource_type_id) === false) {
             return Response::notFoundOrNotAccessible(trans('entities.item'));
@@ -542,8 +527,7 @@ class ItemManage extends Controller
         string $resource_type_id,
         string $resource_id,
         string $item_id
-    ): JsonResponse
-    {
+    ): JsonResponse {
         $cache_job_payload = (new JobPayload())
             ->setGroupKey(KeyGroup::ITEM_DELETE)
             ->setRouteParameters([
@@ -567,7 +551,7 @@ class ItemManage extends Controller
         }
 
         try {
-            DB::transaction(static function() use ($item_id, $item_type_instance, $item_instance) {
+            DB::transaction(static function () use ($item_id, $item_type_instance, $item_instance) {
                 (new ItemTransfer())->deleteTransfers($item_id);
                 (new ItemPartialTransfer())->deleteTransfers($item_id);
                 $item_type_instance->delete();
@@ -588,8 +572,7 @@ class ItemManage extends Controller
         string $resource_type_id,
         string $resource_id,
         string $item_id
-    ): JsonResponse
-    {
+    ): JsonResponse {
         $cache_job_payload = (new JobPayload())
             ->setGroupKey(KeyGroup::ITEM_DELETE)
             ->setRouteParameters([
@@ -613,7 +596,7 @@ class ItemManage extends Controller
         }
 
         try {
-            DB::transaction(static function() use ($item_id, $item_type_instance, $item_instance) {
+            DB::transaction(static function () use ($item_id, $item_type_instance, $item_instance) {
                 (new ItemTransfer())->deleteTransfers($item_id);
                 $item_type_instance->delete();
                 $item_instance->delete();
@@ -633,8 +616,7 @@ class ItemManage extends Controller
         string $resource_type_id,
         string $resource_id,
         string $item_id
-    ): JsonResponse
-    {
+    ): JsonResponse {
         $cache_job_payload = (new JobPayload())
             ->setGroupKey(KeyGroup::ITEM_DELETE)
             ->setRouteParameters([
@@ -658,7 +640,7 @@ class ItemManage extends Controller
         }
 
         try {
-            DB::transaction(static function() use ($item_id, $item_type_instance, $item_instance) {
+            DB::transaction(static function () use ($item_id, $item_type_instance, $item_instance) {
                 (new ItemTransfer())->deleteTransfers($item_id);
                 $item_type_instance->delete();
                 $item_instance->delete();
@@ -678,8 +660,7 @@ class ItemManage extends Controller
         string $resource_type_id,
         string $resource_id,
         string $item_id
-    ): JsonResponse
-    {
+    ): JsonResponse {
         $cache_job_payload = (new JobPayload())
             ->setGroupKey(KeyGroup::ITEM_DELETE)
             ->setRouteParameters([
@@ -703,7 +684,7 @@ class ItemManage extends Controller
         }
 
         try {
-            DB::transaction(static function() use ($item_id, $item_type_instance, $item_instance) {
+            DB::transaction(static function () use ($item_id, $item_type_instance, $item_instance) {
                 (new ItemTransfer())->deleteTransfers($item_id);
                 $item_type_instance->delete();
                 $item_instance->delete();

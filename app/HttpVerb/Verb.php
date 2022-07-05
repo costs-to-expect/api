@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\HttpVerb;
@@ -25,8 +26,7 @@ abstract class Verb
 
     public function setAuthenticationRequirement(
         bool $status = false
-    ): Verb
-    {
+    ): Verb {
         if ($status === true) {
             $this->authentication = true;
         } else {
@@ -38,8 +38,7 @@ abstract class Verb
 
     public function setAuthenticationStatus(
         bool $status = false
-    ): Verb
-    {
+    ): Verb {
         if ($status === true) {
             $this->authenticated = true;
         } else {
@@ -51,8 +50,7 @@ abstract class Verb
 
     public function setDescription(
         string $localisation_path
-    ): Verb
-    {
+    ): Verb {
         $this->description = trans($localisation_path);
 
         return $this;

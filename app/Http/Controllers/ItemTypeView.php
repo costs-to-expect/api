@@ -38,7 +38,6 @@ class ItemTypeView extends Controller
         $cache_collection->setFromCache($cache_control->getByKey(request()->getRequestUri()));
 
         if ($cache_control->isRequestCacheable() === false || $cache_collection->valid() === false) {
-
             $search_parameters = Parameter\Search::fetch(
                 Config::get('api.item-type.searchable')
             );
@@ -63,7 +62,7 @@ class ItemTypeView extends Controller
             );
 
             $collection = array_map(
-                static function($item_type) {
+                static function ($item_type) {
                     return (new ItemTypeTransformer($item_type))->asArray();
                 },
                 $item_types

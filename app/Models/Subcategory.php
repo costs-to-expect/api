@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Models;
@@ -40,8 +41,7 @@ class Subcategory extends Model
         int $resource_type_id,
         int $category_id,
         array $search_parameters = []
-    ): int
-    {
+    ): int {
         $collection = $this->join('category', 'sub_category.category_id', 'category.id')
             ->where('sub_category.category_id', '=', $category_id)
             ->where('category.resource_type_id', '=', $resource_type_id);
@@ -58,8 +58,7 @@ class Subcategory extends Model
         int $limit = 10,
         array $search_parameters = [],
         array $sort_parameters = []
-    ): array
-    {
+    ): array {
         $collection = $this
             ->select(
                 'sub_category.id AS subcategory_id',
@@ -67,7 +66,8 @@ class Subcategory extends Model
                 'sub_category.description AS subcategory_description',
                 'sub_category.created_at AS subcategory_created_at'
             )
-            ->selectRaw('
+            ->selectRaw(
+                '
                 (
                     SELECT 
                         GREATEST(
@@ -116,8 +116,7 @@ class Subcategory extends Model
     public function single(
         int $category_id,
         int $subcategory_id
-    ): ?array
-    {
+    ): ?array {
         $result = $this
             ->select(
                 'sub_category.id AS subcategory_id',
@@ -142,13 +141,12 @@ class Subcategory extends Model
     public function instance(
         int $category_id,
         int $subcategory_id
-    ): ?Subcategory
-    {
+    ): ?Subcategory {
         return $this->select(
-                'sub_category.id',
-                'sub_category.name',
-                'sub_category.description'
-            )->
+            'sub_category.id',
+            'sub_category.name',
+            'sub_category.description'
+        )->
             where('category_id', '=', $category_id)->
             find($subcategory_id);
     }

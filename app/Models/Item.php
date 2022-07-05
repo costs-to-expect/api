@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Models;
@@ -34,8 +35,7 @@ class Item extends Model
         int $resource_type_id,
         int $resource_id,
         int $item_id
-    ): ?Item
-    {
+    ): ?Item {
         return $this->where('resource_id', '=', $resource_id)->
             join('resource', 'item.resource_id', 'resource.id')->
             where('resource.resource_type_id', '=', $resource_type_id)->

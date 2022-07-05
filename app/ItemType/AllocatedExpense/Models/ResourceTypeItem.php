@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\ItemType\AllocatedExpense\Models;
@@ -38,8 +39,7 @@ class ResourceTypeItem extends LaravelModel
         array $parameters_collection = [],
         array $search_parameters = [],
         array $filter_parameters = []
-    ): int
-    {
+    ): int {
         $collection = $this->join('item_type_allocated_expense', 'item.id', 'item_type_allocated_expense.item_id')->
             join('resource', 'item.resource_id', 'resource.id')->
             join('resource_type', 'resource.resource_type_id', 'resource_type.id')->
@@ -109,8 +109,7 @@ class ResourceTypeItem extends LaravelModel
         array $search_parameters = [],
         array $filter_parameters = [],
         array $sort_parameters = []
-    ): array
-    {
+    ): array {
         $select_fields = [
             'resource.id AS resource_id',
             'resource.name AS resource_name',
@@ -191,7 +190,6 @@ class ResourceTypeItem extends LaravelModel
         if (array_key_exists('category', $parameters_collection) === true &&
             $parameters_collection['category'] !== null &&
             $category_join === false) {
-
             $collection->join('item_category', 'item.id', 'item_category.item_id')->
                 join('category', 'item_category.category_id', 'category.id')->
                 where('item_category.category_id', '=', $parameters_collection['category']);
@@ -199,7 +197,6 @@ class ResourceTypeItem extends LaravelModel
             if (array_key_exists('subcategory', $parameters_collection) === true &&
                 $parameters_collection['subcategory'] !== null &&
                 $subcategory_join === false) {
-
                 $collection->join('item_sub_category', 'item_category.id', 'item_sub_category.item_category_id')->
                     join('sub_category', 'item_sub_category.sub_category_id', 'sub_category.id')->
                     where('item_sub_category.sub_category_id', '=', $parameters_collection['subcategory']);
@@ -249,7 +246,8 @@ class ResourceTypeItem extends LaravelModel
             ->offset($offset)
             ->limit($limit)
             ->select($select_fields)
-            ->selectRaw("
+            ->selectRaw(
+                "
                 (
                     SELECT 
                         GREATEST(

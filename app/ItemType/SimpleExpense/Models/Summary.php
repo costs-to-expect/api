@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\ItemType\SimpleExpense\Models;
@@ -32,10 +33,10 @@ class Summary extends LaravelModel
         int $resource_type_id,
         int $resource_id,
         array $parameters = []
-    ): array
-    {
+    ): array {
         $collection = $this
-            ->selectRaw("
+            ->selectRaw(
+                "
                 category.id, 
                 category.name AS name, 
                 category.description AS description,
@@ -43,7 +44,8 @@ class Summary extends LaravelModel
                 SUM({$this->sub_table}.total) AS total, 
                 COUNT({$this->sub_table}.item_id) AS total_count"
             )
-            ->selectRaw("
+            ->selectRaw(
+                "
                 (
                     SELECT 
                         GREATEST(
@@ -95,8 +97,7 @@ class Summary extends LaravelModel
         int $resource_id,
         int $category_id,
         array $parameters = []
-    ): array
-    {
+    ): array {
         $collection = $this
             ->selectRaw("
                 category.id, 
@@ -106,7 +107,8 @@ class Summary extends LaravelModel
                 SUM({$this->sub_table}.total) AS total, 
                 COUNT({$this->sub_table}.item_id) AS total_count
             ")
-            ->selectRaw("
+            ->selectRaw(
+                "
                 (
                     SELECT 
                         GREATEST(
@@ -152,15 +154,15 @@ class Summary extends LaravelModel
         array $parameters = [],
         array $search_parameters = [],
         array $filter_parameters = []
-    ): array
-    {
+    ): array {
         $collection = $this
             ->selectRaw("
                 currency.code AS currency_code,
                 SUM({$this->sub_table}.total) AS total, 
                 COUNT({$this->sub_table}.item_id) AS total_count
             ")
-            ->selectRaw("
+            ->selectRaw(
+                "
                 (
                     SELECT 
                         GREATEST(
@@ -230,8 +232,7 @@ class Summary extends LaravelModel
         int $resource_id,
         int $category_id,
         array $parameters = []
-    ): array
-    {
+    ): array {
         $collection = $this
             ->selectRaw("
                 sub_category.id, 
@@ -241,7 +242,8 @@ class Summary extends LaravelModel
                 SUM({$this->sub_table}.total) AS total, 
                 COUNT({$this->sub_table}.item_id) AS total_count
             ")
-            ->selectRaw("
+            ->selectRaw(
+                "
                 (
                     SELECT 
                         GREATEST(
@@ -297,8 +299,7 @@ class Summary extends LaravelModel
         int $category_id,
         int $subcategory_id,
         array $parameters = []
-    ): array
-    {
+    ): array {
         $collection = $this
             ->selectRaw("
                 sub_category.id, 
@@ -308,7 +309,8 @@ class Summary extends LaravelModel
                 SUM({$this->sub_table}.total) AS total, 
                 COUNT({$this->sub_table}.item_id) AS total_count
             ")
-            ->selectRaw("
+            ->selectRaw(
+                "
                 (
                     SELECT 
                         GREATEST(
@@ -361,14 +363,14 @@ class Summary extends LaravelModel
         int $resource_type_id,
         int $resource_id,
         array $parameters = []
-    ): array
-    {
+    ): array {
         $collection = $this->selectRaw("
                 currency.code AS currency_code,
                 SUM({$this->sub_table}.total) AS total, 
                 COUNT({$this->sub_table}.item_id) AS total_count
             ")
-            ->selectRaw("
+            ->selectRaw(
+                "
                 (
                     SELECT 
                         GREATEST(

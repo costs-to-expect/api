@@ -35,7 +35,6 @@ class CurrencyView extends Controller
         $cache_collection->setFromCache($cache_control->getByKey(request()->getRequestUri()));
 
         if ($cache_control->isRequestCacheable() === false || $cache_collection->valid() === false) {
-
             $search_parameters = Parameter\Search::fetch(
                 Config::get('api.currency.searchable')
             );
@@ -60,7 +59,7 @@ class CurrencyView extends Controller
             );
 
             $collection = array_map(
-                static function($currency) {
+                static function ($currency) {
                     return (new CurrencyTransformer($currency))->asArray();
                 },
                 $currencies

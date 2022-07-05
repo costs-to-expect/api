@@ -17,12 +17,12 @@ use Illuminate\Http\JsonResponse;
  */
 class RequestManage extends Controller
 {
-     /**
-     * Log a request error, these are logged when the web app receives an unexpected
-     * http status code response
-     *
-     * @return JsonResponse
-     */
+    /**
+    * Log a request error, these are logged when the web app receives an unexpected
+    * http status code response
+    *
+    * @return JsonResponse
+    */
     public function createErrorLog(): JsonResponse
     {
         $validator = (new RequestErrorLogValidator())->create();
@@ -53,7 +53,6 @@ class RequestManage extends Controller
                     'debug' => request()->input('debug')
                 ]));
             }
-
         } catch (Exception $e) {
             return \App\HttpResponse\Response::failedToSaveModelForCreate($e);
         }

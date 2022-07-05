@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Models;
@@ -45,8 +46,7 @@ class ItemSubtype extends Model
         int $limit = 10,
         array $search_parameters = [],
         array $sort_parameters = []
-    ): array
-    {
+    ): array {
         $collection = $this->select(
             "{$this->table}.id AS {$this->table}_id",
             "{$this->table}.name AS {$this->table}_name",

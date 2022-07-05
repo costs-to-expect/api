@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\HttpRequest\Validate;
@@ -37,7 +38,7 @@ class Boolean
      */
     public static function isConvertible($value): bool
     {
-        $filtered = filter_var($value, FILTER_VALIDATE_BOOLEAN,FILTER_NULL_ON_FAILURE);
+        $filtered = filter_var($value, FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE);
 
         return $filtered === true || $filtered === false;
     }

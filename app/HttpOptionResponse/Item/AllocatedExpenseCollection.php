@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\HttpOptionResponse\Item;
@@ -25,7 +26,7 @@ class AllocatedExpenseCollection extends Response
 
         $post = new \App\HttpVerb\Post();
         $this->verbs['POST'] = $post->setFields(LaravelConfig::get($base_path . '.fields-post', []))
-            ->setDescription( 'route-descriptions.item_POST')
+            ->setDescription('route-descriptions.item_POST')
             ->setAuthenticationRequirement(true)
             ->setAuthenticationStatus($this->permissions['manage'])
             ->setAllowedValuesForFields($this->allowed_values_for_fields)

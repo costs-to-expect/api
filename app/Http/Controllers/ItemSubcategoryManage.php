@@ -25,8 +25,7 @@ class ItemSubcategoryManage extends Controller
         string $resource_id,
         string $item_id,
         string $item_category_id = null
-    ): JsonResponse
-    {
+    ): JsonResponse {
         if ($this->hasWriteAccessToResourceType((int) $resource_type_id) === false) {
             return \App\HttpResponse\Response::notFoundOrNotAccessible(trans('entities.item-category'));
         }
@@ -50,8 +49,7 @@ class ItemSubcategoryManage extends Controller
         int $item_id,
         int $item_category_id,
         int $assignment_limit = 1
-    ): JsonResponse
-    {
+    ): JsonResponse {
         $assigned = (new ItemSubcategory())->numberAssigned(
             $resource_type_id,
             $resource_id,
@@ -121,7 +119,6 @@ class ItemSubcategoryManage extends Controller
             $item_sub_category->save();
 
             ClearCache::dispatch($cache_job_payload->payload());
-
         } catch (Exception $e) {
             return \App\HttpResponse\Response::failedToSaveModelForCreate($e);
         }
@@ -138,8 +135,7 @@ class ItemSubcategoryManage extends Controller
         string $item_id,
         string $item_category_id = null,
         string $item_subcategory_id = null
-    ): JsonResponse
-    {
+    ): JsonResponse {
         if ($this->hasWriteAccessToResourceType((int) $resource_type_id) === false) {
             return \App\HttpResponse\Response::notFoundOrNotAccessible(trans('entities.item-subcategory'));
         }
@@ -163,8 +159,7 @@ class ItemSubcategoryManage extends Controller
         int $item_id,
         int $item_category_id,
         int $item_subcategory_id
-    ): JsonResponse
-    {
+    ): JsonResponse {
         $item_sub_category = (new ItemSubcategory())->instance(
             $resource_type_id,
             $resource_id,

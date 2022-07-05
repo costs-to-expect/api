@@ -46,7 +46,7 @@ class RequestView extends Controller
 
         return response()->json(
             array_map(
-                static function($log) {
+                static function ($log) {
                     return (new RequestErrorLogTransformer($log))->asArray();
                 },
                 $logs

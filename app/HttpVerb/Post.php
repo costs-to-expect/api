@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\HttpVerb;
@@ -30,8 +31,7 @@ class Post extends Verb
 
     public function setAllowedValuesForFields(
         array $fields = []
-    ): Post
-    {
+    ): Post {
         $this->dynamic_fields = $fields;
 
         return $this;
@@ -39,8 +39,7 @@ class Post extends Verb
 
     public function setFields(
         array $fields
-    ): Post
-    {
+    ): Post {
         if (count($fields) > 0) {
             $this->fields = $fields;
         }
@@ -50,8 +49,7 @@ class Post extends Verb
 
     public function setParameters(
         array $parameters
-    ): Post
-    {
+    ): Post {
         if (count($parameters) > 0) {
             $this->parameters = $parameters;
         }
@@ -79,8 +77,7 @@ class Post extends Verb
             }
         }
 
-        foreach ($this->parameters as $parameter => $parameter_data)
-        {
+        foreach ($this->parameters as $parameter => $parameter_data) {
             if (
                 array_key_exists('title', $parameter_data) === true &&
                 array_key_exists('description', $parameter_data) === true

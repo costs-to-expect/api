@@ -38,7 +38,6 @@ class SubcategoryView extends Controller
         $cache_collection->setFromCache($cache_control->getByKey(request()->getRequestUri()));
 
         if ($cache_control->isRequestCacheable() === false || $cache_collection->valid() === false) {
-
             $search_parameters = Parameter\Search::fetch(
                 Config::get('api.subcategory.searchable')
             );
@@ -112,8 +111,7 @@ class SubcategoryView extends Controller
         $resource_type_id,
         $category_id,
         $subcategory_id
-    ): JsonResponse
-    {
+    ): JsonResponse {
         if ($this->hasViewAccessToResourceType((int) $resource_type_id) === false) {
             return \App\HttpResponse\Response::notFoundOrNotAccessible(trans('entities.subcategory'));
         }
@@ -169,8 +167,7 @@ class SubcategoryView extends Controller
         $resource_type_id,
         $category_id,
         $subcategory_id
-    ): JsonResponse
-    {
+    ): JsonResponse {
         if ($this->hasViewAccessToResourceType((int) $resource_type_id) === false) {
             return \App\HttpResponse\Response::notFoundOrNotAccessible(trans('entities.subcategory'));
         }

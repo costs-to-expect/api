@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\HttpVerb;
@@ -51,8 +52,7 @@ class Get extends Verb
 
     public function setFilterableParameters(
         array $parameters
-    ): Get
-    {
+    ): Get {
         if (count($parameters) > 0) {
             $this->filterable = true;
             $this->filterable_parameters = $parameters;
@@ -64,8 +64,7 @@ class Get extends Verb
     public function setPaginationStatus(
         bool $status = false,
         bool $override = false
-    ): Get
-    {
+    ): Get {
         if ($status === true) {
             $this->pagination = true;
 
@@ -81,8 +80,7 @@ class Get extends Verb
 
     public function setParameters(
         array $parameters
-    ): Get
-    {
+    ): Get {
         if (count($parameters) > 0) {
             $this->parameters = $parameters;
         }
@@ -92,8 +90,7 @@ class Get extends Verb
 
     public function setAllowedValuesForParameters(
         array $parameters = []
-    ): Get
-    {
+    ): Get {
         $this->dynamic_parameters = $parameters;
 
         return $this;
@@ -101,8 +98,7 @@ class Get extends Verb
 
     public function setSearchableParameters(
         array $parameters
-    ): Get
-    {
+    ): Get {
         if (count($parameters) > 0) {
             $this->searchable = true;
             $this->searchable_parameters = $parameters;
@@ -113,8 +109,7 @@ class Get extends Verb
 
     public function setSortableParameters(
         array $parameters
-    ): Get
-    {
+    ): Get {
         if (count($parameters) > 0) {
             $this->sortable = true;
             $this->sortable_parameters = $parameters;

@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Models\Summary;
@@ -28,11 +29,11 @@ class Resource extends Model
         int $resource_type_id,
         array $viewable_resource_types,
         array $search_parameters = []
-    ): array
-    {
+    ): array {
         $collection = $this
             ->selectRaw("COUNT({$this->table}.id) AS total")
-            ->selectRaw("
+            ->selectRaw(
+                "
                 (
                     SELECT 
                         GREATEST(

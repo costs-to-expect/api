@@ -48,7 +48,6 @@ class ItemPartialTransferView extends Controller
         $cache_collection->setFromCache($cache_control->getByKey(request()->getRequestUri()));
 
         if ($cache_control->isRequestCacheable() === false || $cache_collection->valid() === false) {
-
             $parameters = Parameter\Request::fetch(
                 array_keys(Config::get('api.item-partial-transfer.parameters'))
             );
@@ -94,8 +93,7 @@ class ItemPartialTransferView extends Controller
     public function show(
         $resource_type_id,
         $item_partial_transfer_id
-    ): JsonResponse
-    {
+    ): JsonResponse {
         if ($this->hasViewAccessToResourceType((int) $resource_type_id) === false) {
             return \App\HttpResponse\Response::notFoundOrNotAccessible(trans('entities.resource-type'));
         }
@@ -178,8 +176,7 @@ class ItemPartialTransferView extends Controller
         string $resource_type_id,
         string $resource_id,
         string $item_id
-    ): JsonResponse
-    {
+    ): JsonResponse {
         if ($this->hasViewAccessToResourceType((int) $resource_type_id) === false) {
             return \App\HttpResponse\Response::notFoundOrNotAccessible(trans('entities.item'));
         }
@@ -196,16 +193,15 @@ class ItemPartialTransferView extends Controller
     private function optionsAllocatedExpenseTransfer(
         int $resource_type_id,
         int $resource_id
-    ): JsonResponse
-    {
+    ): JsonResponse {
         $response = new AllocatedExpenseTransfer($this->permissions($resource_type_id));
 
         return $response->setAllowedValuesForFields(
-                (new \App\Models\AllowedValue\Resource())->allowedValues(
+            (new \App\Models\AllowedValue\Resource())->allowedValues(
                     $resource_type_id,
                     $resource_id
                 )
-            )->
+        )->
             create()->
             response();
     }

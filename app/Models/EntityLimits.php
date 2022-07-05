@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Models;
@@ -19,8 +20,7 @@ class EntityLimits extends Model
         int $resource_type_id,
         string $table,
         string $field
-    ): int
-    {
+    ): int {
         return $this->yearByResourceType(
             $resource_type_id,
             $table,
@@ -33,8 +33,7 @@ class EntityLimits extends Model
         int $resource_type_id,
         string $table,
         string $field
-    ): int
-    {
+    ): int {
         return $this->yearByResourceType(
             $resource_type_id,
             $table,
@@ -48,8 +47,7 @@ class EntityLimits extends Model
         int $resource_id,
         string $table,
         string $field
-    ): int
-    {
+    ): int {
         return $this->yearByResourceTypeAndResource(
             $resource_type_id,
             $resource_id,
@@ -64,8 +62,7 @@ class EntityLimits extends Model
         int $resource_id,
         string $table,
         string $field
-    ): int
-    {
+    ): int {
         return $this->yearByResourceTypeAndResource(
             $resource_type_id,
             $resource_id,
@@ -80,8 +77,7 @@ class EntityLimits extends Model
         string $table,
         string $field,
         string $aggregate
-    ): int
-    {
+    ): int {
         $result = $this->from($table)
             ->join('item', $table . '.item_id', 'item.id')
             ->join('resource', 'item.resource_id', 'resource.id')
@@ -91,7 +87,6 @@ class EntityLimits extends Model
 
         if ($result !== null) {
             return (int) $result->date_limit;
-
         }
 
         return (int) date('Y');
@@ -103,8 +98,7 @@ class EntityLimits extends Model
         string $table,
         string $field,
         string $aggregate
-    ): int
-    {
+    ): int {
         $result = $this->from($table)
             ->join('item', $table . '.item_id', 'item.id')
             ->join('resource', 'item.resource_id', 'resource.id')

@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\HttpVerb;
@@ -28,8 +29,7 @@ class Patch extends Verb
 
     public function setAllowedValuesForFields(
         array $fields = []
-    ): Patch
-    {
+    ): Patch {
         $this->dynamic_fields = $fields;
 
         return $this;
@@ -37,8 +37,7 @@ class Patch extends Verb
 
     public function setFields(
         array $fields
-    ): Patch
-    {
+    ): Patch {
         if (count($fields) > 0) {
             $this->fields = $fields;
         }

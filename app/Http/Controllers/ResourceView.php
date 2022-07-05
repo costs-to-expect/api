@@ -47,7 +47,6 @@ class ResourceView extends Controller
         $cache_collection->setFromCache($cache_control->getByKey(request()->getRequestUri()));
 
         if ($cache_control->isRequestCacheable() === false || $cache_collection->valid() === false) {
-
             $request_parameters = Parameter\Request::fetch(
                 array_keys(Config::get('api.resource.parameters'))
             );
@@ -73,7 +72,7 @@ class ResourceView extends Controller
                 ->setParameters($request_parameters)
                 ->parameters();
 
-            $resources = (new Resource)->paginatedCollection(
+            $resources = (new Resource())->paginatedCollection(
                 $resource_type_id,
                 $pagination_parameters['offset'],
                 $pagination_parameters['limit'],
@@ -124,13 +123,12 @@ class ResourceView extends Controller
     public function show(
         string $resource_type_id,
         string $resource_id
-    ): JsonResponse
-    {
+    ): JsonResponse {
         if ($this->hasViewAccessToResourceType((int) $resource_type_id) === false) {
             return \App\HttpResponse\Response::notFoundOrNotAccessible(trans('entities.resource'));
         }
 
-        $resource = (new Resource)->single($resource_type_id, $resource_id);
+        $resource = (new Resource())->single($resource_type_id, $resource_id);
 
         if ($resource === null) {
             return \App\HttpResponse\Response::notFound(trans('entities.resource'));
@@ -160,10 +158,10 @@ class ResourceView extends Controller
         $response = new ResourceCollection($this->permissions((int) $resource_type_id));
 
         return $response->setAllowedValuesForFields(
-                (new ItemSubtype())->allowedValues(
+            (new ItemSubtype())->allowedValues(
                     $resource_type['resource_type_item_type_id']
                 )
-            )
+        )
             ->setAllowedValuesForParameters(
                 (new ItemSubtype())->allowedValues(
                     $resource_type['resource_type_item_type_id'],
@@ -180,7 +178,7 @@ class ResourceView extends Controller
             return \App\HttpResponse\Response::notFoundOrNotAccessible(trans('entities.resource'));
         }
 
-        $resource = (new Resource)->single(
+        $resource = (new Resource())->single(
             $resource_type_id,
             $resource_id
         );

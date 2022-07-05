@@ -41,7 +41,8 @@ Route::group(
 
         Route::options(
             'auth/login',
-            [Authentication::class, 'optionsLogin']);
+            [Authentication::class, 'optionsLogin']
+        );
 
         Route::get(
             'auth/logout',
@@ -141,4 +142,3 @@ Route::group(
         )->name('auth.user.token.delete');
     }
 );
-

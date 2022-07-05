@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\ItemType\SimpleExpense\Transformer;
@@ -23,7 +24,7 @@ class Item extends Transformer
                 'code' => $to_transform['item_currency_code'],
                 'name' => $to_transform['item_currency_name'],
             ],
-            'total' => number_format((float) $to_transform['item_total'],2, '.', ''),
+            'total' => number_format((float) $to_transform['item_total'], 2, '.', ''),
             'categories' => [],
             'created' => $to_transform['item_created_at'],
             'updated' => $to_transform['item_updated_at']

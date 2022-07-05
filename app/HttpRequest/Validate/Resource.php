@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\HttpRequest\Validate;
@@ -63,7 +64,7 @@ class Resource extends BaseValidator
                     'sometimes',
                     'string',
                     'max:255',
-                    'unique:resource,name,'. $resource_id . ',id,resource_type_id,' . $resource_type_id
+                    'unique:resource,name,' . $resource_id . ',id,resource_type_id,' . $resource_type_id
                 ],
             ],
             Config::get('api.resource.validation-patch.fields')

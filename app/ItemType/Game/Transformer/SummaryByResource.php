@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\ItemType\Game\Transformer;
@@ -15,7 +16,6 @@ class SummaryByResource extends Transformer
     public function format(array $to_transform): void
     {
         foreach ($to_transform as $summary) {
-
             $transformed['resource'] = [
                 'id' => $this->hash->resource()->encode($summary['resource_id']),
                 'name' => $summary['resource_name'],

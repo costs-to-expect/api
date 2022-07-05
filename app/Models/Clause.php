@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Models;
@@ -18,8 +19,7 @@ class Clause
         $collection,
         string $table,
         array $search_parameters = []
-    )
-    {
+    ) {
         if (count($search_parameters) > 0) {
             foreach ($search_parameters as $field => $search_term) {
                 $collection->where($table . '.' . $field, 'LIKE', '%' . $search_term . '%');
@@ -33,8 +33,7 @@ class Clause
         $collection,
         string $table,
         array $filter_parameters = []
-    )
-    {
+    ) {
         if (count($filter_parameters) > 0) {
             foreach ($filter_parameters as $field => $range) {
                 $collection->where($table . '.' . $field, '>=', $range['from']);
@@ -48,8 +47,7 @@ class Clause
     public static function applyExcludeFutureUnpublished(
         $collection,
         array $parameters
-    )
-    {
+    ) {
         if (
             array_key_exists('include-unpublished', $parameters) === false ||
             Boolean::convertedValue($parameters['include-unpublished']) === false
@@ -67,8 +65,7 @@ class Clause
     public static function applyViewableResourceTypes(
         $collection,
         array $viewable_resource_types
-    )
-    {
+    ) {
         return $collection->whereIn('resource_type.id', $viewable_resource_types);
     }
 }

@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\ItemType\Game\Models;
@@ -26,8 +27,7 @@ class Summary extends LaravelModel
         array $parameters = [],
         array $search_parameters = [],
         array $filter_parameters = []
-    ): array
-    {
+    ): array {
         $collection = $this
             ->selectRaw("
                 `resource`.`id` AS resource_id, 
@@ -38,7 +38,8 @@ class Summary extends LaravelModel
                 `item_subtype`.`description` AS resource_item_subtype_description,
                 COUNT({$this->sub_table}.item_id) AS count
             ")
-            ->selectRaw("
+            ->selectRaw(
+                "
                 (
                     SELECT 
                         GREATEST(
@@ -100,8 +101,7 @@ class Summary extends LaravelModel
         int $resource_type_id,
         int $resource_id,
         array $parameters = []
-    ): array
-    {
+    ): array {
         $collection = $this
             ->selectRaw("
                 `resource`.`id` AS resource_id, 
@@ -112,7 +112,8 @@ class Summary extends LaravelModel
                 `item_subtype`.`description` AS resource_item_subtype_description,
                 COUNT({$this->sub_table}.item_id) AS count
             ")
-            ->selectRaw("
+            ->selectRaw(
+                "
                 (
                     SELECT 
                         GREATEST(

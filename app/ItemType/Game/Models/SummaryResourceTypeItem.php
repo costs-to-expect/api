@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\ItemType\Game\Models;
@@ -22,8 +23,7 @@ class SummaryResourceTypeItem extends LaravelModel
     public function summary(
         int $resource_type_id,
         array $parameters
-    ): array
-    {
+    ): array {
         $collection = $this
             ->selectRaw("
                 `resource_type`.`id` AS resource_type_id, 
@@ -31,7 +31,8 @@ class SummaryResourceTypeItem extends LaravelModel
                 `resource_type`.`description` AS resource_type_description, 
                 COUNT({$this->sub_table}.item_id) AS count
             ")
-            ->selectRaw("
+            ->selectRaw(
+                "
                 (
                     SELECT 
                         GREATEST(
@@ -68,10 +69,10 @@ class SummaryResourceTypeItem extends LaravelModel
     public function resourcesSummary(
         int $resource_type_id,
         array $parameters
-    ): array
-    {
+    ): array {
         $collection = $this
-            ->selectRaw("
+            ->selectRaw(
+                "
                 `resource`.`id` AS resource_id, 
                 `resource`.`name` AS resource_name, 
                 `resource`.`description` AS resource_description, 
@@ -80,7 +81,8 @@ class SummaryResourceTypeItem extends LaravelModel
                 `item_subtype`.`description` AS resource_item_subtype_description,
                 COUNT(`{$this->sub_table}`.`item_id`) AS count"
             )
-            ->selectRaw("
+            ->selectRaw(
+                "
                 (
                     SELECT 
                         GREATEST(
@@ -125,13 +127,13 @@ class SummaryResourceTypeItem extends LaravelModel
         int $resource_type_id,
         array $parameters = [],
         array $search_parameters = []
-    ): array
-    {
+    ): array {
         $collection = $this
             ->selectRaw("
                 COUNT({$this->sub_table}.item_id) AS count
             ")
-            ->selectRaw("
+            ->selectRaw(
+                "
                 (
                     SELECT 
                         GREATEST(

@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\HttpResponse;
@@ -36,7 +37,7 @@ class Response
                 trans('responses.not-found')
         ];
 
-        if ($e instanceOf Throwable && app()->environment() !== 'production') {
+        if ($e instanceof Throwable && app()->environment() !== 'production') {
             $response = self::addException($response, $e);
         }
 
@@ -53,7 +54,7 @@ class Response
                 trans('responses.not-found')
         ];
 
-        if ($e instanceOf Throwable && app()->environment() !== 'production') {
+        if ($e instanceof Throwable && app()->environment() !== 'production') {
             $response = self::addException($response, $e);
         }
 
@@ -69,7 +70,7 @@ class Response
             'message' => trans('responses.constraint')
         ];
 
-        if ($e instanceOf Throwable && app()->environment() !== 'production') {
+        if ($e instanceof Throwable && app()->environment() !== 'production') {
             $response = self::addException($response, $e);
         }
 
@@ -85,7 +86,7 @@ class Response
             'message' => trans('constraint-category')
         ];
 
-        if ($e instanceOf Throwable && app()->environment() !== 'production') {
+        if ($e instanceof Throwable && app()->environment() !== 'production') {
             $response = self::addException($response, $e);
         }
 
@@ -101,7 +102,7 @@ class Response
             'message' => trans('responses.model-select-failure'),
         ];
 
-        if ($e instanceOf Throwable && app()->environment() !== 'production') {
+        if ($e instanceof Throwable && app()->environment() !== 'production') {
             $response = self::addException($response, $e);
         }
 
@@ -117,7 +118,7 @@ class Response
             'message' => trans('responses.model-save-failure-update'),
         ];
 
-        if ($e instanceOf Throwable && app()->environment() !== 'production') {
+        if ($e instanceof Throwable && app()->environment() !== 'production') {
             $response = self::addException($response, $e);
         }
 
@@ -133,7 +134,7 @@ class Response
             'message' => trans('responses.authentication-required')
         ];
 
-        if ($e instanceOf Throwable && app()->environment() !== 'production') {
+        if ($e instanceof Throwable && app()->environment() !== 'production') {
             $response = self::addException($response, $e);
         }
 
@@ -149,7 +150,7 @@ class Response
             'message' => trans('auth.failed')
         ];
 
-        if ($e instanceOf Throwable && app()->environment() !== 'production') {
+        if ($e instanceof Throwable && app()->environment() !== 'production') {
             $response = self::addException($response, $e);
         }
 
@@ -166,7 +167,7 @@ class Response
             'limit' => $limit
         ];
 
-        return response()->json($response,400);
+        return response()->json($response, 400);
     }
 
     public static function notSupported(): JsonResponse
@@ -186,7 +187,7 @@ class Response
             'message' => trans('responses.model-save-failure-create'),
         ];
 
-        if ($e instanceOf Throwable && app()->environment() !== 'production') {
+        if ($e instanceof Throwable && app()->environment() !== 'production') {
             $response = self::addException($response, $e);
         }
 
@@ -202,7 +203,7 @@ class Response
             'message' => trans('auth.unable-to-create-account')
         ];
 
-        if ($e instanceOf Throwable && app()->environment() !== 'production') {
+        if ($e instanceof Throwable && app()->environment() !== 'production') {
             $response = self::addException($response, $e);
         }
 
@@ -224,7 +225,7 @@ class Response
 
     public static function successNoContent(): JsonResponse
     {
-        return response()->json([],204);
+        return response()->json([], 204);
     }
 
     public static function subcategoryAssignmentLimit(int $limit): JsonResponse
@@ -235,7 +236,7 @@ class Response
         ];
 
         return response()
-            ->json($response,400);
+            ->json($response, 400);
     }
 
     public static function nothingToPatch(): JsonResponse
@@ -269,7 +270,8 @@ class Response
         );
     }
 
-    public static function validationErrors(Validator $validator, array $allowed_values = []): ?JsonResponse {
+    public static function validationErrors(Validator $validator, array $allowed_values = []): ?JsonResponse
+    {
         $validation_errors = [];
 
         foreach ($validator->errors()->toArray() as $field => $errors) {

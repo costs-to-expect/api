@@ -41,7 +41,7 @@ class ResourceManage extends Controller
             $this->viewable_resource_types
         );
 
-        $validator = (new ResourceValidator)->create([
+        $validator = (new ResourceValidator())->create([
             'resource_type_id' => $resource_type_id,
             'item_type_id' => $resource_type['resource_type_item_type_id']
         ]);
@@ -59,7 +59,7 @@ class ResourceManage extends Controller
             ->setUserId($this->user_id);
 
         try {
-            $resource = DB::transaction(function() use ($resource_type_id) {
+            $resource = DB::transaction(function () use ($resource_type_id) {
                 $resource = new Resource([
                     'resource_type_id' => $resource_type_id,
                     'name' => request()->input('name'),
@@ -84,13 +84,12 @@ class ResourceManage extends Controller
             });
 
             ClearCache::dispatch($cache_job_payload->payload());
-
         } catch (Exception $e) {
             return Response::failedToSaveModelForCreate($e);
         }
 
         return response()->json(
-            (new ResourceTransformer((New Resource())->instanceToArray($resource)))->asArray(),
+            (new ResourceTransformer((new Resource())->instanceToArray($resource)))->asArray(),
             201
         );
     }
@@ -106,8 +105,7 @@ class ResourceManage extends Controller
     public function delete(
         string $resource_type_id,
         string $resource_id
-    ): JsonResponse
-    {
+    ): JsonResponse {
         if ($this->hasWriteAccessToResourceType((int) $resource_type_id) === false) {
             return \App\HttpResponse\Response::notFoundOrNotAccessible(trans('entities.resource'));
         }
@@ -129,7 +127,7 @@ class ResourceManage extends Controller
             ->setUserId($this->user_id);
 
         try {
-            DB::transaction(function() use ($resource, $resource_item_subtype) {
+            DB::transaction(function () use ($resource, $resource_item_subtype) {
                 $resource_item_subtype->delete();
                 $resource->delete();
             });
@@ -155,8 +153,7 @@ class ResourceManage extends Controller
     public function update(
         string $resource_type_id,
         string $resource_id
-    ): JsonResponse
-    {
+    ): JsonResponse {
         if ($this->hasWriteAccessToResourceType((int) $resource_type_id) === false) {
             return \App\HttpResponse\Response::notFoundOrNotAccessible(trans('entities.resource'));
         }
@@ -207,7 +204,6 @@ class ResourceManage extends Controller
             $resource->save();
 
             ClearCache::dispatch($cache_job_payload->payload());
-            
         } catch (Exception $e) {
             return Response::failedToSaveModelForUpdate($e);
         }

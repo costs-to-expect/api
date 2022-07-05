@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\ItemType\SimpleItem\Models;
@@ -25,8 +26,7 @@ class ResourceTypeItem extends LaravelModel
         int $resource_type_id,
         array $search_parameters = [],
         array $filter_parameters = []
-    ): int
-    {
+    ): int {
         $collection = $this->join($this->item_table, 'item.id', "{$this->item_table}.item_id")->
             join('resource', 'item.resource_id', 'resource.id')->
             join('resource_type', 'resource.resource_type_id', 'resource_type.id')->
@@ -68,8 +68,7 @@ class ResourceTypeItem extends LaravelModel
         array $search_parameters = [],
         array $filter_parameters = [],
         array $sort_parameters = []
-    ): array
-    {
+    ): array {
         $select_fields = [
             'resource.id AS resource_id',
             'resource.name AS resource_name',
@@ -124,7 +123,8 @@ class ResourceTypeItem extends LaravelModel
             ->offset($offset)
             ->limit($limit)
             ->select($select_fields)
-            ->selectRaw("
+            ->selectRaw(
+                "
                 (
                     SELECT 
                         GREATEST(

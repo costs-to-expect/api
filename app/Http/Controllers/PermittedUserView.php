@@ -36,7 +36,6 @@ class PermittedUserView extends Controller
         $cache_collection->setFromCache($cache_control->getByKey(request()->getRequestUri()));
 
         if ($cache_control->isRequestCacheable() === false || $cache_collection->valid() === false) {
-
             $search_parameters = Parameter\Search::fetch(
                 Config::get('api.permitted-user.searchable')
             );
@@ -88,8 +87,7 @@ class PermittedUserView extends Controller
     public function show(
         string $resource_type_id,
         string $permitted_user_id
-    ): JsonResponse
-    {
+    ): JsonResponse {
         if ($this->hasViewAccessToResourceType((int) $resource_type_id) === false) {
             return \App\HttpResponse\Response::notFoundOrNotAccessible(trans('entities.resource'));
         }
