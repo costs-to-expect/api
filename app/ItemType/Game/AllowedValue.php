@@ -4,7 +4,6 @@ declare(strict_types=1);
 namespace App\ItemType\Game;
 
 use App\HttpRequest\Hash;
-use App\HttpRequest\Validate\Category;
 use App\Models\ItemCategory;
 use JetBrains\PhpStorm\ArrayShape;
 
