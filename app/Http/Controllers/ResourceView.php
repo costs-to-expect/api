@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Http\Request;
 use App\HttpOptionResponse\ResourceCollection;
 use App\HttpOptionResponse\ResourceItem;
 use App\HttpRequest\Parameter;
@@ -31,7 +32,7 @@ class ResourceView extends Controller
      *
      * @return JsonResponse
      */
-    public function index(string $resource_type_id): JsonResponse
+    public function index(Request $request, string $resource_type_id): JsonResponse
     {
         if ($this->hasViewAccessToResourceType((int) $resource_type_id) === false) {
             return \App\HttpResponse\Response::notFoundOrNotAccessible(trans('entities.resource-type'));
@@ -44,10 +45,10 @@ class ResourceView extends Controller
         $cache_control->setTtlOneWeek();
 
         $cache_collection = new \App\Cache\Collection();
-        $cache_collection->setFromCache($cache_control->getByKey(request()->getRequestUri()));
+        $cache_collection->setFromCache($cache_control->getByKey($request->getRequestUri()));
 
         if ($cache_control->isRequestCacheable() === false || $cache_collection->valid() === false) {
-            $request_parameters = Parameter\Request::fetch(
+            $request_parameters = Parameter$request->fetch(
                 array_keys(Config::get('api.resource.parameters'))
             );
 
@@ -65,7 +66,7 @@ class ResourceView extends Controller
                 $search_parameters
             );
 
-            $pagination = new \App\HttpResponse\Pagination(request()->path(), $total);
+            $pagination = new \App\HttpResponse\Pagination($request->path(), $total);
             $pagination_parameters = $pagination->allowPaginationOverride($this->allow_entire_collection)
                 ->setSearchParameters($search_parameters)
                 ->setSortParameters($sort_parameters)
@@ -106,7 +107,7 @@ class ResourceView extends Controller
             }
 
             $cache_collection->create($total, $collection, $pagination_parameters, $headers->headers());
-            $cache_control->putByKey(request()->getRequestUri(), $cache_collection->content());
+            $cache_control->putByKey($request->getRequestUri(), $cache_collection->content());
         }
 
         return response()->json($cache_collection->collection(), 200, $cache_collection->headers());

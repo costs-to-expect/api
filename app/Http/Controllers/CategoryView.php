@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Http\Request;
 use App\HttpResponse\Header;
 use App\Models\Category;
 use App\Models\Subcategory;
@@ -28,7 +29,7 @@ class CategoryView extends Controller
      *
      * @return JsonResponse
      */
-    public function index($resource_type_id): JsonResponse
+    public function index(Request $request, $resource_type_id): JsonResponse
     {
         if ($this->hasViewAccessToResourceType((int) $resource_type_id) === false) {
             return \App\HttpResponse\Response::notFoundOrNotAccessible(trans('entities.resource-type'));
@@ -41,7 +42,7 @@ class CategoryView extends Controller
         $cache_control->setTtlOneMonth();
 
         $cache_collection = new \App\Cache\Collection();
-        $cache_collection->setFromCache($cache_control->getByKey(request()->getRequestUri()));
+        $cache_collection->setFromCache($cache_control->getByKey($request->getRequestUri()));
 
         if ($cache_control->isRequestCacheable() === false || $cache_collection->valid() === false) {
             $search_parameters = Parameter\Search::fetch(
@@ -58,7 +59,7 @@ class CategoryView extends Controller
                 $search_parameters
             );
 
-            $pagination = new \App\HttpResponse\Pagination(request()->path(), $total);
+            $pagination = new \App\HttpResponse\Pagination($request->path(), $total);
             $pagination_parameters = $pagination->allowPaginationOverride($this->allow_entire_collection)->
                 setSearchParameters($search_parameters)->
                 setSortParameters($sort_parameters)->
@@ -98,7 +99,7 @@ class CategoryView extends Controller
             }
 
             $cache_collection->create($total, $collection, $pagination_parameters, $headers->headers());
-            $cache_control->putByKey(request()->getRequestUri(), $cache_collection->content());
+            $cache_control->putByKey($request->getRequestUri(), $cache_collection->content());
         }
 
         return response()->json($cache_collection->collection(), 200, $cache_collection->headers());
@@ -112,13 +113,13 @@ class CategoryView extends Controller
      *
      * @return JsonResponse
      */
-    public function show($resource_type_id, $category_id): JsonResponse
+    public function show(Request $request, $resource_type_id, $category_id): JsonResponse
     {
         if ($this->hasViewAccessToResourceType((int) $resource_type_id) === false) {
             return \App\HttpResponse\Response::notFoundOrNotAccessible(trans('entities.category'));
         }
 
-        $parameters = Parameter\Request::fetch(array_keys(Config::get('api.category.parameters-show')));
+        $parameters = Parameter$request->fetch(array_keys(Config::get('api.category.parameters-show')));
 
         $category = (new Category())->single(
             (int) $resource_type_id,
@@ -145,7 +146,7 @@ class CategoryView extends Controller
         $headers = new Header();
         $headers->item();
 
-        $parameters_header = Parameter\Request::xHeader();
+        $parameters_header = Parameter$request->xHeader();
         if ($parameters_header !== null) {
             $headers->addParameters($parameters_header);
         }

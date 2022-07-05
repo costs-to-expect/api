@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Http\Request;
 use App\Models\RequestErrorLog;
 use App\HttpOptionResponse\ErrorLog;
 use App\Transformer\RequestErrorLog as RequestErrorLogTransformer;
@@ -23,11 +24,11 @@ class RequestView extends Controller
      *
      * @return JsonResponse
      */
-    public function errorLog(): JsonResponse
+    public function errorLog(Request $request): JsonResponse
     {
         $total = (new RequestErrorLog())->totalCount();
 
-        $pagination = new \App\HttpResponse\Pagination(request()->path(), $total, 50);
+        $pagination = new \App\HttpResponse\Pagination($request->path(), $total, 50);
         $pagination_parameters = $pagination->parameters();
 
         $logs = (new RequestErrorLog())->paginatedCollection(

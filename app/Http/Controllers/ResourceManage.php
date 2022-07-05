@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Http\Request;
 use App\HttpResponse\Response;
 use App\Jobs\ClearCache;
 use App\Models\Resource;
@@ -30,7 +31,7 @@ class ResourceManage extends Controller
      *
      * @return JsonResponse
      */
-    public function create(string $resource_type_id): JsonResponse
+    public function create(Request $request, string $resource_type_id): JsonResponse
     {
         if ($this->hasWriteAccessToResourceType((int) $resource_type_id) === false) {
             return \App\HttpResponse\Response::notFoundOrNotAccessible(trans('entities.resource-type'));
@@ -62,13 +63,13 @@ class ResourceManage extends Controller
             $resource = DB::transaction(function () use ($resource_type_id) {
                 $resource = new Resource([
                     'resource_type_id' => $resource_type_id,
-                    'name' => request()->input('name'),
-                    'description' => request()->input('description'),
-                    'data' => request()->input('data')
+                    'name' => $request->input('name'),
+                    'description' => $request->input('description'),
+                    'data' => $request->input('data')
                 ]);
                 $resource->save();
 
-                $item_subtype_id = $this->hash->decode('item-subtype', request()->input('item_subtype_id'));
+                $item_subtype_id = $this->hash->decode('item-subtype', $request->input('item_subtype_id'));
 
                 if ($item_subtype_id === false) {
                     return \App\HttpResponse\Response::unableToDecode();
@@ -150,7 +151,7 @@ class ResourceManage extends Controller
      *
      * @return JsonResponse
      */
-    public function update(
+    public function update(Request $request, 
         string $resource_type_id,
         string $resource_id
     ): JsonResponse {
@@ -164,7 +165,7 @@ class ResourceManage extends Controller
             return Response::failedToSelectModelForUpdateOrDelete();
         }
 
-        if (count(request()->all()) === 0) {
+        if (count($request->all()) === 0) {
             return \App\HttpResponse\Response::nothingToPatch();
         }
 
@@ -188,7 +189,7 @@ class ResourceManage extends Controller
             return Response::invalidFieldsInRequest($invalid_fields);
         }
 
-        foreach (request()->all() as $key => $value) {
+        foreach ($request->all() as $key => $value) {
             $resource->$key = $value;
         }
 

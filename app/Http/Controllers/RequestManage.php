@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Http\Request;
 use App\Events\RequestError;
 use App\Models\RequestErrorLog;
 use App\HttpRequest\Validate\RequestErrorLog as RequestErrorLogValidator;
@@ -23,7 +24,7 @@ class RequestManage extends Controller
     *
     * @return JsonResponse
     */
-    public function createErrorLog(): JsonResponse
+    public function createErrorLog(Request $request): JsonResponse
     {
         $validator = (new RequestErrorLogValidator())->create();
 
@@ -33,24 +34,24 @@ class RequestManage extends Controller
 
         try {
             $request_error_log = new RequestErrorLog([
-                'method' => request()->input('method'),
-                'source' => request()->input('source'),
-                'expected_status_code' => request()->input('expected_status_code'),
-                'returned_status_code' => request()->input('returned_status_code'),
-                'request_uri' => request()->input('request_uri'),
-                'debug' => request()->input('debug')
+                'method' => $request->input('method'),
+                'source' => $request->input('source'),
+                'expected_status_code' => $request->input('expected_status_code'),
+                'returned_status_code' => $request->input('returned_status_code'),
+                'request_uri' => $request->input('request_uri'),
+                'debug' => $request->input('debug')
             ]);
             $request_error_log->save();
 
-            if (request()->input('returned_status_code') !== '404') {
+            if ($request->input('returned_status_code') !== '404') {
                 event(new RequestError([
-                    'method' => request()->input('method'),
-                    'source' => request()->input('source'),
-                    'expected_status_code' => request()->input('expected_status_code'),
-                    'returned_status_code' => request()->input('returned_status_code'),
-                    'request_uri' => request()->input('request_uri'),
-                    'referer' => request()->server('HTTP_REFERER', 'NOT SET!'),
-                    'debug' => request()->input('debug')
+                    'method' => $request->input('method'),
+                    'source' => $request->input('source'),
+                    'expected_status_code' => $request->input('expected_status_code'),
+                    'returned_status_code' => $request->input('returned_status_code'),
+                    'request_uri' => $request->input('request_uri'),
+                    'referer' => $request->server('HTTP_REFERER', 'NOT SET!'),
+                    'debug' => $request->input('debug')
                 ]));
             }
         } catch (Exception $e) {
