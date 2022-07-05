@@ -32,7 +32,7 @@ class CategoryManage extends Controller
             return \App\HttpResponse\Response::notFoundOrNotAccessible(trans('entities.resource-type'));
         }
 
-        $validator = (new CategoryValidator)->create([
+        $validator = (new CategoryValidator())->create([
             'resource_type_id' => $resource_type_id
         ]);
         if ($validator->fails()) {
@@ -56,13 +56,12 @@ class CategoryManage extends Controller
             $category->save();
 
             ClearCache::dispatch($cache_job_payload->payload());
-
         } catch (Exception $e) {
-           return Response::failedToSaveModelForCreate($e);
+            return Response::failedToSaveModelForCreate($e);
         }
 
         return response()->json(
-            (new CategoryTransformer((new Category)->instanceToArray($category)))->asArray(),
+            (new CategoryTransformer((new Category())->instanceToArray($category)))->asArray(),
             201
         );
     }
@@ -78,8 +77,7 @@ class CategoryManage extends Controller
     public function delete(
         $resource_type_id,
         $category_id
-    ): JsonResponse
-    {
+    ): JsonResponse {
         if ($this->hasWriteAccessToResourceType((int) $resource_type_id) === false) {
             return \App\HttpResponse\Response::notFoundOrNotAccessible(trans('entities.item-category'));
         }
@@ -134,7 +132,7 @@ class CategoryManage extends Controller
             return \App\HttpResponse\Response::nothingToPatch();
         }
 
-        $validator = (new CategoryValidator)->update([
+        $validator = (new CategoryValidator())->update([
             'resource_type_id' => $category->resource_type_id,
             'category_id' => $category->id
         ]);
@@ -150,7 +148,7 @@ class CategoryManage extends Controller
         $invalid_fields = $this->checkForInvalidFields(
             array_merge(
                 (new Category())->patchableFields(),
-                (new CategoryValidator)->dynamicDefinedFields()
+                (new CategoryValidator())->dynamicDefinedFields()
             )
         );
 
@@ -174,7 +172,6 @@ class CategoryManage extends Controller
             $category->save();
 
             ClearCache::dispatch($cache_job_payload->payload());
-
         } catch (Exception $e) {
             return Response::failedToSaveModelForUpdate($e);
         }

@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Models;
@@ -26,10 +27,10 @@ class Currency extends Model
     public function minimisedCollection(): array
     {
         return $this->select(
-                "{$this->table}.id AS {$this->table}_id",
-                "{$this->table}.code AS {$this->table}_code",
-                "{$this->table}.name AS {$this->table}_name"
-            )->
+            "{$this->table}.id AS {$this->table}_id",
+            "{$this->table}.code AS {$this->table}_code",
+            "{$this->table}.name AS {$this->table}_name"
+        )->
             get()->
             toArray();
     }
@@ -39,8 +40,7 @@ class Currency extends Model
         int $limit = 10,
         array $search_parameters = [],
         array $sort_parameters = []
-    ): array
-    {
+    ): array {
         $collection = $this->select(
             "{$this->table}.id AS {$this->table}_id",
             "{$this->table}.code AS {$this->table}_code",

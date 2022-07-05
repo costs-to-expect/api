@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\HttpResponse;
@@ -34,8 +35,7 @@ class Header
         array $pagination,
         int $count,
         int $total_count
-    ): Header
-    {
+    ): Header {
         $this->headers = array_merge(
             $this->headers,
             [
@@ -67,8 +67,7 @@ class Header
     public function add(
         string $name,
         $value
-    ): Header
-    {
+    ): Header {
         $this->headers[$name] = $value;
 
         return $this;

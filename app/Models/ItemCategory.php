@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Models;
@@ -38,8 +39,7 @@ class ItemCategory extends Model
         int $resource_type_id,
         int $resource_id,
         int $item_id
-    ): int
-    {
+    ): int {
         return $this
             ->join('item', 'item_category.item_id', 'item.id')
             ->join('resource', 'item.resource_id', 'resource.id')
@@ -55,8 +55,7 @@ class ItemCategory extends Model
         int $item_id,
         int $offset = 0,
         int $limit = 10
-    ): array
-    {
+    ): array {
         return $this->join('category', 'item_category.category_id', 'category.id')->
             join('item', 'item_category.item_id', 'item.id')->
             join('resource', 'item.resource_id', 'resource.id')->
@@ -79,8 +78,7 @@ class ItemCategory extends Model
         int $resource_id,
         int $item_id,
         int $item_category_id
-    ): ?array
-    {
+    ): ?array {
         $result = $this
             ->join('category', 'item_category.category_id', 'category.id')
             ->join('item', 'item_category.item_id', 'item.id')
@@ -113,8 +111,7 @@ class ItemCategory extends Model
         int $resource_id,
         int $item_id,
         int $item_category_id
-    ): ?ItemCategory
-    {
+    ): ?ItemCategory {
         return $this->join('category', 'item_category.category_id', 'category.id')->
             join('item', 'item_category.item_id', 'item.id')->
             join('resource', 'item.resource_id', 'resource.id')->

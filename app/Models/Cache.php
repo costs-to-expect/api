@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Models;
@@ -32,13 +33,12 @@ class Cache extends Model
     public function matchingKeys(
         string $prefix,
         string $key
-    ): array
-    {
+    ): array {
         $summary_key = rtrim(str_replace('v2/', 'v2/summary/', $prefix . $key), '/');
 
         $result = $this
             ->where('expiration', '>', DB::raw('UNIX_TIMESTAMP()'))
-            ->where(static function($query) use ($prefix, $key, $summary_key) {
+            ->where(static function ($query) use ($prefix, $key, $summary_key) {
                 $query->where('key', 'LIKE', $prefix . rtrim($key, '/') . '%')
                     ->orWhere('key', 'LIKE', $summary_key . '%');
             });

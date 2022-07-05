@@ -24,8 +24,7 @@ class ItemTransferManage extends Controller
         string $resource_type_id,
         string $resource_id,
         string $item_id
-    ): JsonResponse
-    {
+    ): JsonResponse {
         if ($this->hasWriteAccessToResourceType((int) $resource_type_id) === false) {
             return \App\HttpResponse\Response::notFoundOrNotAccessible(trans('entities.item'));
         }
@@ -43,11 +42,10 @@ class ItemTransferManage extends Controller
         int $resource_type_id,
         int $resource_id,
         int $item_id
-    ): JsonResponse
-    {
+    ): JsonResponse {
         $user_id = $this->user_id;
 
-        $validator = (new ItemTransferValidator)->create(
+        $validator = (new ItemTransferValidator())->create(
             [
                 'resource_type_id' => $resource_type_id,
                 'existing_resource_id' => $resource_id
@@ -73,7 +71,7 @@ class ItemTransferManage extends Controller
                 return \App\HttpResponse\Response::unableToDecode();
             }
 
-            DB::transaction(static function() use ($resource_type_id, $resource_id, $item_id, $new_resource_id, $user_id) {
+            DB::transaction(static function () use ($resource_type_id, $resource_id, $item_id, $new_resource_id, $user_id) {
                 $item = (new Item())->instance($resource_type_id, $resource_id, $item_id);
                 if ($item !== null) {
                     $item->resource_id = $new_resource_id;
@@ -93,7 +91,6 @@ class ItemTransferManage extends Controller
             });
 
             ClearCache::dispatch($cache_job_payload->payload());
-
         } catch (QueryException $e) {
             return \App\HttpResponse\Response::foreignKeyConstraintError($e);
         } catch (Exception $e) {

@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Models;
@@ -48,8 +49,7 @@ class Category extends Model
         int $resource_type_id,
         array $viewable_resource_types,
         array $search_parameters = []
-    ): int
-    {
+    ): int {
         $collection = $this
             ->select('category.id')
             ->join("resource_type", "category.resource_type_id", "resource_type.id")
@@ -84,7 +84,8 @@ class Category extends Model
                 'resource_type.name AS resource_type_name',
                 'resource_type.name AS resource_type_name'
             )
-            ->selectRaw('
+            ->selectRaw(
+                '
                 (
                     SELECT 
                         COUNT(`sub_category`.`id`) 
@@ -94,7 +95,8 @@ class Category extends Model
                         `sub_category`.`category_id` = `category`.`id`
                 ) AS `category_subcategories`'
             )
-            ->selectRaw('
+            ->selectRaw(
+                '
                 (
                     SELECT 
                         GREATEST(

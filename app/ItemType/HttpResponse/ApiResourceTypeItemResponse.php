@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\ItemType\HttpResponse;
@@ -30,8 +31,7 @@ abstract class ApiResourceTypeItemResponse
         int $resource_type_id,
         bool $permitted_user,
         ?int $user_id
-    )
-    {
+    ) {
         $this->resource_type_id = $resource_type_id;
         $this->permitted_user = $permitted_user;
         $this->user_id = $user_id;
@@ -50,8 +50,7 @@ abstract class ApiResourceTypeItemResponse
         int $total,
         array $collection,
         string $last_updated = null
-    ): array
-    {
+    ): array {
         $headers = new Header();
         $headers
             ->collection($pagination_parameters, $count, $total)

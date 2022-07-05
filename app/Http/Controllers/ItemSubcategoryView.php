@@ -24,8 +24,7 @@ class ItemSubcategoryView extends Controller
         string $resource_id,
         string $item_id,
         string $item_category_id
-    ): JsonResponse
-    {
+    ): JsonResponse {
         if ($this->hasViewAccessToResourceType((int) $resource_type_id) === false) {
             return \App\HttpResponse\Response::notFoundOrNotAccessible(trans('entities.item-category'));
         }
@@ -44,8 +43,7 @@ class ItemSubcategoryView extends Controller
         int $resource_id,
         int $item_id,
         int $item_category_id
-    ): JsonResponse
-    {
+    ): JsonResponse {
         $cache_control = new \App\Cache\Control(
             $this->hasWriteAccessToResourceType((int) $resource_type_id),
             $this->user_id
@@ -56,7 +54,6 @@ class ItemSubcategoryView extends Controller
         $cache_collection->setFromCache($cache_control->getByKey(request()->getRequestUri()));
 
         if ($cache_control->isRequestCacheable() === false || $cache_collection->valid() === false) {
-
             $item_sub_category = (new ItemSubcategory())->paginatedCollection(
                 $resource_type_id,
                 $resource_id,
@@ -93,8 +90,7 @@ class ItemSubcategoryView extends Controller
         string $item_id,
         string $item_category_id = null,
         string $item_subcategory_id = null
-    ): JsonResponse
-    {
+    ): JsonResponse {
         if ($this->hasViewAccessToResourceType((int) $resource_type_id) === false) {
             return \App\HttpResponse\Response::notFoundOrNotAccessible(trans('entities.item-subcategory'));
         }
@@ -118,8 +114,7 @@ class ItemSubcategoryView extends Controller
         int $item_id,
         int $item_category_id,
         int $item_subcategory_id
-    ): JsonResponse
-    {
+    ): JsonResponse {
         $item_sub_category = (new ItemSubcategory())->single(
             $resource_type_id,
             $resource_id,
@@ -147,8 +142,7 @@ class ItemSubcategoryView extends Controller
         string $resource_id,
         string $item_id,
         string $item_category_id = null
-    ): JsonResponse
-    {
+    ): JsonResponse {
         if ($this->hasViewAccessToResourceType((int) $resource_type_id) === false) {
             return \App\HttpResponse\Response::notFoundOrNotAccessible(trans('entities.item-category'));
         }
@@ -170,8 +164,7 @@ class ItemSubcategoryView extends Controller
     private function optionsAllocatedExpenseCollection(
         int $resource_type_id,
         int $item_category_id
-    ): JsonResponse
-    {
+    ): JsonResponse {
         if ($this->hasViewAccessToResourceType($resource_type_id) === false) {
             return \App\HttpResponse\Response::notFoundOrNotAccessible(trans('entities.item-category'));
         }
@@ -191,8 +184,7 @@ class ItemSubcategoryView extends Controller
     private function optionsSimpleExpenseCollection(
         int $resource_type_id,
         int $item_category_id
-    ): JsonResponse
-    {
+    ): JsonResponse {
         if ($this->hasViewAccessToResourceType($resource_type_id) === false) {
             return \App\HttpResponse\Response::notFoundOrNotAccessible(trans('entities.item-category'));
         }
@@ -215,8 +207,7 @@ class ItemSubcategoryView extends Controller
         string $item_id,
         string $item_category_id = null,
         string $item_subcategory_id = null
-    ): JsonResponse
-    {
+    ): JsonResponse {
         if ($this->hasViewAccessToResourceType((int) $resource_type_id) === false) {
             return \App\HttpResponse\Response::notFoundOrNotAccessible(trans('entities.item-subcategory'));
         }
@@ -240,8 +231,7 @@ class ItemSubcategoryView extends Controller
         int $item_id,
         int $item_category_id,
         int $item_subcategory_id
-    ): JsonResponse
-    {
+    ): JsonResponse {
         $item_sub_category = (new ItemSubcategory())->single(
             $resource_type_id,
             $resource_id,

@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\HttpRequest\Validate;
@@ -27,7 +28,8 @@ class ItemPartialTransfer extends BaseValidator
      */
     public function create(array $options = []): \Illuminate\Contracts\Validation\Validator
     {
-        $this->requiredIndexes([
+        $this->requiredIndexes(
+            [
                 'resource_type_id',
                 'existing_resource_id'
             ],
@@ -52,8 +54,7 @@ class ItemPartialTransfer extends BaseValidator
                 [
                     'resource_id' => [
                         'required',
-                        Rule::exists('resource', 'id')->where(static function ($query) use ($options)
-                        {
+                        Rule::exists('resource', 'id')->where(static function ($query) use ($options) {
                             $query->where('resource_type_id', '=', $options['resource_type_id'])->
                                 where('id', '!=', $options['existing_resource_id']);
                         }),

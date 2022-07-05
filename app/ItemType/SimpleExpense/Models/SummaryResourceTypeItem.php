@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\ItemType\SimpleExpense\Models;
@@ -30,15 +31,15 @@ class SummaryResourceTypeItem extends LaravelModel
     public function summary(
         int $resource_type_id,
         array $parameters
-    ): array
-    {
+    ): array {
         $collection = $this
             ->selectRaw("
                 sum({$this->sub_table}.total) AS total, 
                 currency.code AS currency_code,
                 COUNT({$this->sub_table}.item_id) AS total_count
             ")
-            ->selectRaw("
+            ->selectRaw(
+                "
                 (
                     SELECT 
                         GREATEST(
@@ -85,10 +86,10 @@ class SummaryResourceTypeItem extends LaravelModel
     public function resourcesSummary(
         int $resource_type_id,
         array $parameters
-    ): array
-    {
+    ): array {
         $collection = $this
-            ->selectRaw("
+            ->selectRaw(
+                "
                 resource.id AS id, 
                 resource.name AS `name`, 
                 currency.code AS currency_code,
@@ -121,8 +122,7 @@ class SummaryResourceTypeItem extends LaravelModel
     public function categoriesSummary(
         int $resource_type_id,
         array $parameters
-    ): array
-    {
+    ): array {
         $collection = $this
             ->selectRaw("
                 category.id, 
@@ -162,8 +162,7 @@ class SummaryResourceTypeItem extends LaravelModel
         int $resource_type_id,
         int $category_id,
         array $parameters
-    ): array
-    {
+    ): array {
         $collection = $this
             ->selectRaw("
                 category.id, 
@@ -196,8 +195,7 @@ class SummaryResourceTypeItem extends LaravelModel
         int $subcategory_id = null,
         array $parameters = [],
         array $search_parameters = []
-    ): array
-    {
+    ): array {
         $collection = $this
             ->selectRaw("
                 SUM({$this->sub_table}.total) AS total,
@@ -247,8 +245,7 @@ class SummaryResourceTypeItem extends LaravelModel
         int $resource_type_id,
         int $category_id,
         array $parameters
-    ): array
-    {
+    ): array {
         $collection = $this
             ->selectRaw("
                 sub_category.id, 
@@ -294,8 +291,7 @@ class SummaryResourceTypeItem extends LaravelModel
         int $category_id,
         int $subcategory_id,
         array $parameters
-    ): array
-    {
+    ): array {
         $collection = $this
             ->selectRaw("
                 sub_category.id, 

@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Models;
@@ -41,8 +42,7 @@ class PermittedUser extends Model
     public function totalCount(
         int $resource_type_id,
         array $search_parameters = []
-    ): int
-    {
+    ): int {
         $collection = $this->select("permitted_user.id")->
             join('users', 'permitted_user.user_id', 'users.id')->
             where('permitted_user.resource_type_id', '=', $resource_type_id);
@@ -58,14 +58,13 @@ class PermittedUser extends Model
         int $limit = 10,
         array $search_parameters = [],
         array $sort_parameters = []
-    ): array
-    {
+    ): array {
         $collection = $this->select(
-                'permitted_user.id AS permitted_user_id',
-                'users.name AS permitted_user_name',
-                'users.email AS permitted_user_email',
-                'permitted_user.created_at AS permitted_user_created_at'
-            )->
+            'permitted_user.id AS permitted_user_id',
+            'users.name AS permitted_user_name',
+            'users.email AS permitted_user_email',
+            'permitted_user.created_at AS permitted_user_created_at'
+        )->
             join('users', 'permitted_user.user_id', 'users.id')->
             where('permitted_user.resource_type_id', '=', $resource_type_id);
 
@@ -96,11 +95,11 @@ class PermittedUser extends Model
     public function single(int $resource_type_id, int $permitted_user_id): ?array
     {
         $result = $this->select(
-                'permitted_user.id AS permitted_user_id',
-                'users.name AS permitted_user_name',
-                'users.email AS permitted_user_email',
-                'permitted_user.created_at AS permitted_user_created_at'
-            )
+            'permitted_user.id AS permitted_user_id',
+            'users.name AS permitted_user_name',
+            'users.email AS permitted_user_email',
+            'permitted_user.created_at AS permitted_user_created_at'
+        )
             ->join('users', 'permitted_user.user_id', 'users.id')
             ->where('permitted_user.resource_type_id', '=', $resource_type_id)
             ->where('permitted_user.id', '=', $permitted_user_id)

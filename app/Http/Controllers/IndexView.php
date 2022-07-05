@@ -24,7 +24,7 @@ class IndexView extends Controller
      */
     public function index()
     {
-        $routes_to_display = array();
+        $routes_to_display = [];
 
         $config = Config::get('api.app.version');
 
@@ -88,13 +88,10 @@ class IndexView extends Controller
         $section = null;
 
         while (!$changelog->eof()) {
-
             $line = trim($changelog->fgets());
 
             if ($line !== '') {
-
                 if (strpos($line, '## [v') !== false) {
-
                     ++$i;
                     $changes[$i]['release'] = trim(str_replace('##', '', $line));
                     $section = null;

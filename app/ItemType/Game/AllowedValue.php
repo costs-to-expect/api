@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\ItemType\Game;
@@ -20,8 +21,7 @@ class AllowedValue
         int $resource_type_id,
         ?int $resource_id = null,
         ?int $item_id = null
-    )
-    {
+    ) {
         $this->hash = new Hash();
 
         $this->resource_type_id = $resource_type_id;

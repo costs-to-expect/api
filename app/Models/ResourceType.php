@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Models;
@@ -64,8 +65,7 @@ class ResourceType extends Model
     public function totalCount(
         array $viewable_resource_types = [],
         array $search_parameters = []
-    ): int
-    {
+    ): int {
         $collection = $this->select("resource_type.id");
 
         $collection = Clause::applyViewableResourceTypes(
@@ -90,8 +90,7 @@ class ResourceType extends Model
         array $search_parameters = [],
         array $sort_parameters = [],
         array $request_parameters = []
-    ): array
-    {
+    ): array {
         $collection = $this
             ->select(
                 'resource_type.id AS resource_type_id',
@@ -105,7 +104,8 @@ class ResourceType extends Model
                 'item_type.friendly_name AS resource_type_item_type_friendly_name',
                 'item_type.description AS resource_type_item_type_description'
             )
-            ->selectRaw('
+            ->selectRaw(
+                '
                 (
                     SELECT 
                         COUNT(resource.id) 
@@ -115,7 +115,8 @@ class ResourceType extends Model
                         resource.resource_type_id = resource_type.id
                 ) AS resource_type_resources'
             )
-            ->selectRaw('
+            ->selectRaw(
+                '
                 (
                     SELECT 
                         GREATEST(
@@ -170,8 +171,7 @@ class ResourceType extends Model
     public function single(
         int $resource_type_id,
         array $viewable_resource_types = []
-    ): ?array
-    {
+    ): ?array {
         $result = $this
             ->select(
                 'resource_type.id AS resource_type_id',
@@ -185,7 +185,8 @@ class ResourceType extends Model
                 'item_type.friendly_name AS resource_type_item_type_friendly_name',
                 'item_type.description AS resource_type_item_type_description'
             )
-            ->selectRaw('
+            ->selectRaw(
+                '
                 (
                     SELECT 
                         COUNT(resource.id) 

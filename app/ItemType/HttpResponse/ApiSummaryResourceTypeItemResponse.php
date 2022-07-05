@@ -33,8 +33,7 @@ abstract class ApiSummaryResourceTypeItemResponse
         int $resource_type_id,
         bool $permitted_user = false,
         int $user_id = null
-    )
-    {
+    ) {
         $this->resource_type_id = $resource_type_id;
 
         $this->permitted_user = $permitted_user;
@@ -48,8 +47,7 @@ abstract class ApiSummaryResourceTypeItemResponse
         array $collection,
         \App\Cache\Control $cache_control,
         \App\Cache\Summary $cache_summary
-    ): \App\Cache\Summary
-    {
+    ): \App\Cache\Summary {
         $headers = new Header();
 
         $headers

@@ -22,8 +22,7 @@ class ItemPartialTransferManage extends Controller
     public function delete(
         $resource_type_id,
         $item_partial_transfer_id
-    ): JsonResponse
-    {
+    ): JsonResponse {
         if ($this->hasWriteAccessToResourceType((int) $resource_type_id) === false) {
             return \App\HttpResponse\Response::notFoundOrNotAccessible(trans('entities.item-partial-transfer'));
         }
@@ -40,8 +39,7 @@ class ItemPartialTransferManage extends Controller
     private function deleteAllocatedExpense(
         int $resource_type_id,
         int $item_partial_transfer_id
-    ): JsonResponse
-    {
+    ): JsonResponse {
         $cache_job_payload = (new \App\Cache\JobPayload())
             ->setGroupKey(\App\Cache\KeyGroup::ITEM_PARTIAL_TRANSFER_DELETE)
             ->setRouteParameters([
@@ -73,8 +71,7 @@ class ItemPartialTransferManage extends Controller
         string $resource_type_id,
         string $resource_id,
         string $item_id
-    ): JsonResponse
-    {
+    ): JsonResponse {
         if ($this->hasWriteAccessToResourceType((int) $resource_type_id) === false) {
             return \App\HttpResponse\Response::notFoundOrNotAccessible(trans('entities.item'));
         }
@@ -92,9 +89,8 @@ class ItemPartialTransferManage extends Controller
         int $resource_type_id,
         int $resource_id,
         int $item_id
-    ): JsonResponse
-    {
-        $validator = (new ItemPartialTransferValidator)->create(
+    ): JsonResponse {
+        $validator = (new ItemPartialTransferValidator())->create(
             [
                 'resource_type_id' => $resource_type_id,
                 'existing_resource_id' => $resource_id
@@ -131,7 +127,6 @@ class ItemPartialTransferManage extends Controller
             $partial_transfer->save();
 
             ClearCache::dispatch($cache_job_payload->payload());
-
         } catch (QueryException $e) {
             return Response::foreignKeyConstraintError($e);
         } catch (Exception $e) {

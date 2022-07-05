@@ -32,7 +32,6 @@ class QueueView extends Controller
         $cache_collection->setFromCache($cache_control->getByKey(request()->getRequestUri()));
 
         if ($cache_control->isRequestCacheable() === false || $cache_collection->valid() === false) {
-
             $total = (new Queue())->totalCount();
 
             $pagination = new \App\HttpResponse\Pagination(request()->path(), $total);
@@ -45,7 +44,7 @@ class QueueView extends Controller
             );
 
             $collection = array_map(
-                static function($jon) {
+                static function ($jon) {
                     return (new QueueTransformer($jon))->asArray();
                 },
                 $jobs

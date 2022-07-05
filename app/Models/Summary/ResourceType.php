@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Models\Summary;
@@ -27,8 +28,7 @@ class ResourceType extends Model
     public function totalCount(
         array $viewable_resource_types = [],
         array $search_parameters = []
-    ): array
-    {
+    ): array {
         $collection = $this
             ->selectRaw('COUNT(resource_type.id) AS total')
             ->selectRaw(

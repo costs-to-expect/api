@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\HttpRequest\Validate;
@@ -55,7 +56,7 @@ class Subcategory extends BaseValidator
                     'sometimes',
                     'string',
                     'max:255',
-                    'unique:sub_category,name,'. $subcategory_id . ',id,category_id,' . $category_id
+                    'unique:sub_category,name,' . $subcategory_id . ',id,category_id,' . $category_id
                 ],
             ],
             Config::get('api.subcategory.validation-patch.fields')

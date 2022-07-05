@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\HttpRequest\Validate;
@@ -34,8 +35,7 @@ abstract class Validator
     protected function requiredIndexes(
         array $required = [],
         array $provided = []
-    ): void
-    {
+    ): void {
         foreach ($provided as $key => $value) {
             if (in_array($key, $required, true) === false) {
                 abort(500, 'Indexes missing in options array for validator');

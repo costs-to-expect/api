@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Models;
@@ -28,10 +29,10 @@ class ItemType extends Model
     public function minimisedCollection(): array
     {
         return $this->select(
-                'item_type.id AS item_type_id',
-                'item_type.name AS item_type_name',
-                'item_type.description AS item_type_description'
-            )->
+            'item_type.id AS item_type_id',
+            'item_type.name AS item_type_name',
+            'item_type.description AS item_type_description'
+        )->
             get()->
             toArray();
     }
@@ -41,8 +42,7 @@ class ItemType extends Model
         int $limit = 10,
         array $search_parameters = [],
         array $sort_parameters = []
-    ): array
-    {
+    ): array {
         $collection = $this->select(
             'item_type.id AS item_type_id',
             'item_type.name AS item_type_name',

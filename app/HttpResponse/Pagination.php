@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\HttpResponse;
@@ -234,7 +235,6 @@ class Pagination
         ];
 
         if ($this->collection === false) {
-
             $previous_offset = null;
             $next_offset = null;
 

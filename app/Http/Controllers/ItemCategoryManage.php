@@ -24,8 +24,7 @@ class ItemCategoryManage extends Controller
         string $resource_type_id,
         string $resource_id,
         string $item_id
-    ): JsonResponse
-    {
+    ): JsonResponse {
         if ($this->hasWriteAccessToResourceType((int) $resource_type_id) === false) {
             return Response::notFoundOrNotAccessible(trans('entities.resource'));
         }
@@ -45,8 +44,7 @@ class ItemCategoryManage extends Controller
         int $resource_id,
         int $item_id,
         int $assignment_limit = 1
-    ): JsonResponse
-    {
+    ): JsonResponse {
         $assigned = (new ItemCategory())->numberAssigned(
             $resource_type_id,
             $resource_id,
@@ -104,7 +102,6 @@ class ItemCategoryManage extends Controller
             $item_category->save();
 
             ClearCache::dispatch($cache_job_payload->payload());
-
         } catch (Exception $e) {
             return \App\HttpResponse\Response::failedToSaveModelForCreate($e);
         }
@@ -120,8 +117,7 @@ class ItemCategoryManage extends Controller
         string $resource_id,
         string $item_id,
         string $item_category_id
-    ): JsonResponse
-    {
+    ): JsonResponse {
         if ($this->hasWriteAccessToResourceType((int) $resource_type_id) === false) {
             return Response::notFoundOrNotAccessible(trans('entities.resource'));
         }
@@ -140,8 +136,7 @@ class ItemCategoryManage extends Controller
         int $resource_id,
         int $item_id,
         int $item_category_id
-    ): JsonResponse
-    {
+    ): JsonResponse {
         $item_category = (new ItemCategory())->instance(
             $resource_type_id,
             $resource_id,

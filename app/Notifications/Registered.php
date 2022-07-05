@@ -29,7 +29,7 @@ class Registered extends Notification implements ShouldQueue
     public function toMail($notifiable)
     {
         return
-            (new MailMessage)
+            (new MailMessage())
                 ->subject('Costs to Expect API: Account registration')
                 ->greeting('Hi,')
                 ->line('Thank you for registering with the Costs to Expect API.')

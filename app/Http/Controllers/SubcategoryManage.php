@@ -36,7 +36,7 @@ class SubcategoryManage extends Controller
             return \App\HttpResponse\Response::notFoundOrNotAccessible(trans('entities.category'));
         }
 
-        $validator = (new SubcategoryValidator)->create(['category_id' => $category_id]);
+        $validator = (new SubcategoryValidator())->create(['category_id' => $category_id]);
 
         if ($validator->fails()) {
             return \App\HttpResponse\Response::validationErrors($validator);
@@ -60,7 +60,6 @@ class SubcategoryManage extends Controller
             $sub_category->save();
 
             ClearCache::dispatch($cache_job_payload->payload());
-
         } catch (Exception $e) {
             return Response::failedToSaveModelForCreate($e);
         }
@@ -84,8 +83,7 @@ class SubcategoryManage extends Controller
         $resource_type_id,
         $category_id,
         $subcategory_id
-    ): JsonResponse
-    {
+    ): JsonResponse {
         if ($this->hasWriteAccessToResourceType((int) $resource_type_id) === false) {
             return \App\HttpResponse\Response::notFoundOrNotAccessible(trans('entities.subcategory'));
         }
@@ -134,8 +132,7 @@ class SubcategoryManage extends Controller
         $resource_type_id,
         $category_id,
         $subcategory_id
-    ): JsonResponse
-    {
+    ): JsonResponse {
         if ($this->hasWriteAccessToResourceType((int) $resource_type_id) === false) {
             return \App\HttpResponse\Response::notFoundOrNotAccessible(trans('entities.subcategory'));
         }
@@ -162,7 +159,7 @@ class SubcategoryManage extends Controller
         $invalid_fields = $this->checkForInvalidFields(
             array_merge(
                 (new Subcategory())->patchableFields(),
-                (new SubcategoryValidator)->dynamicDefinedFields()
+                (new SubcategoryValidator())->dynamicDefinedFields()
             )
         );
 
@@ -187,7 +184,6 @@ class SubcategoryManage extends Controller
             $subcategory->save();
 
             ClearCache::dispatch($cache_job_payload->payload());
-
         } catch (Exception $e) {
             return Response::failedToSaveModelForUpdate($e);
         }

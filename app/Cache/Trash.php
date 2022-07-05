@@ -22,8 +22,7 @@ class Trash
         int $resource_type_id,
         array $public_resource_type_ids,
         array $permitted_users
-    )
-    {
+    ) {
         $this->cache_control = $cache_control;
         $this->keys = $keys;
         $this->resource_type_id = $resource_type_id;

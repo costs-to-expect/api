@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\ItemType\SimpleExpense\Models;
@@ -77,8 +78,7 @@ class Item extends LaravelModel
         int $resource_id,
         int $item_id,
         array $parameters = []
-    ): ?array
-    {
+    ): ?array {
         $fields = [
             'item.id AS item_id',
             "{$this->table}.name AS item_name",
@@ -154,8 +154,7 @@ class Item extends LaravelModel
         array $parameters = [],
         array $search_parameters = [],
         array $filter_parameters = []
-    ): int
-    {
+    ): int {
         $collection = $this->from('item')->
             join($this->table, 'item.id', $this->table . '.item_id')->
             join('resource', 'item.resource_id', 'resource.id')->
@@ -217,8 +216,7 @@ class Item extends LaravelModel
         array $search_parameters = [],
         array $filter_parameters = [],
         array $sort_parameters = []
-    ): array
-    {
+    ): array {
         $select_fields = [
             'item.id AS item_id',
             "{$this->table}.name AS item_name",
@@ -340,7 +338,8 @@ class Item extends LaravelModel
 
         return $collection
             ->select($select_fields)
-            ->selectRaw("
+            ->selectRaw(
+                "
                 (
                     SELECT 
                         GREATEST(

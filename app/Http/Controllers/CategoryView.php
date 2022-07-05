@@ -44,7 +44,6 @@ class CategoryView extends Controller
         $cache_collection->setFromCache($cache_control->getByKey(request()->getRequestUri()));
 
         if ($cache_control->isRequestCacheable() === false || $cache_collection->valid() === false) {
-
             $search_parameters = Parameter\Search::fetch(
                 Config::get('api.category.searchable')
             );
@@ -121,7 +120,7 @@ class CategoryView extends Controller
 
         $parameters = Parameter\Request::fetch(array_keys(Config::get('api.category.parameters-show')));
 
-        $category = (new Category)->single(
+        $category = (new Category())->single(
             (int) $resource_type_id,
             (int) $category_id
         );

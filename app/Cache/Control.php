@@ -34,7 +34,7 @@ class Control
         $this->cache_prefix = $this->public_cache_prefix;
 
         if ($permitted_user === true && $user_id !== null) {
-            $this->cache_prefix = '-'  . $user_id . '-';
+            $this->cache_prefix = '-' . $user_id . '-';
             $this->visibility = 'private';
         }
 
@@ -158,8 +158,7 @@ class Control
 
     public function fetchMatchingCacheKeys(
         string $key_wildcard
-    ): array
-    {
+    ): array {
         return (new Cache())->matchingKeys(
             $this->laravel_cache_prefix . $this->cache_prefix,
             $key_wildcard
@@ -168,8 +167,7 @@ class Control
 
     public function fetchMatchingPublicCacheKeys(
         string $key_wildcard
-    ): array
-    {
+    ): array {
         return (new Cache())->matchingKeys(
             $this->laravel_cache_prefix . $this->public_cache_prefix,
             $key_wildcard

@@ -27,14 +27,13 @@ class ResourceTypeView extends Controller
 
     public function index(Request $request): JsonResponse
     {
-        $cache_control = new \App\Cache\Control( true, $this->user_id);
+        $cache_control = new \App\Cache\Control(true, $this->user_id);
         $cache_control->setTtlOneWeek();
 
         $cache_collection = new \App\Cache\Collection();
         $cache_collection->setFromCache($cache_control->getByKey($request->getRequestUri()));
 
         if ($cache_control->isRequestCacheable() === false || $cache_collection->valid() === false) {
-
             $request_parameters = Parameter\Request::fetch(
                 array_keys(Config::get('api.resource-type.parameters'))
             );

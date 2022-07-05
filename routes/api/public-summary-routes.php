@@ -12,7 +12,6 @@ Route::group(
         ]
     ],
     static function () {
-
         Route::get(
             'summary/resource-types',
             'Summary\ResourceTypeView@index'

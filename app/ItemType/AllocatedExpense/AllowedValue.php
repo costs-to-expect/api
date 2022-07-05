@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\ItemType\AllocatedExpense;
@@ -23,8 +24,7 @@ class AllowedValue
         array $viewable_resource_types,
         int $resource_type_id,
         ?int $resource_id = null
-    )
-    {
+    ) {
         $this->hash = new Hash();
 
         $this->resource_type_id = $resource_type_id;
@@ -158,8 +158,7 @@ class AllowedValue
 
     private function assignAllowedValuesForMonth(
         array $parameters_set_in_request
-    ): array
-    {
+    ): array {
         $allowed_values = [];
 
         for ($i = 1; $i < 13; $i++) {
@@ -234,15 +233,13 @@ class AllowedValue
 
     private function assignAllowedValuesForSubcategory(
         array $parameters_set_in_request
-    ): array
-    {
+    ): array {
         $allowed_values = [];
 
         if (
             array_key_exists('category', $parameters_set_in_request) === true &&
             $parameters_set_in_request['category'] !== null
         ) {
-
             $subcategories = (new Subcategory())->paginatedCollection(
                 $this->resource_type_id,
                 (int) $parameters_set_in_request['category']

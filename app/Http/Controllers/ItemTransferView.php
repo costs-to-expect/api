@@ -51,7 +51,6 @@ class ItemTransferView extends Controller
         $cache_collection->setFromCache($cache_control->getByKey(request()->getRequestUri()));
 
         if ($cache_control->isRequestCacheable() === false || $cache_collection->valid() === false) {
-
             $parameters = Parameter\Request::fetch(
                 array_keys(Config::get('api.item-transfer.parameters'))
             );
@@ -158,8 +157,7 @@ class ItemTransferView extends Controller
         string $resource_type_id,
         string $resource_id,
         string $item_id
-    ): JsonResponse
-    {
+    ): JsonResponse {
         if ($this->hasViewAccessToResourceType((int) $resource_type_id) === false) {
             return \App\HttpResponse\Response::notFoundOrNotAccessible(trans('entities.item'));
         }
@@ -177,8 +175,7 @@ class ItemTransferView extends Controller
     private function optionsAllocatedExpenseTransfer(
         int $resource_type_id,
         int $resource_id
-    ): JsonResponse
-    {
+    ): JsonResponse {
         $response = new AllocatedExpenseTransfer($this->permissions($resource_type_id));
 
         return $response->setAllowedValuesForFields(
@@ -194,8 +191,7 @@ class ItemTransferView extends Controller
     private function optionsSimpleExpenseTransfer(
         int $resource_type_id,
         int $resource_id
-    ): JsonResponse
-    {
+    ): JsonResponse {
         $response = new SimpleExpenseTransfer($this->permissions($resource_type_id));
 
         return $response->setAllowedValuesForFields(
@@ -211,8 +207,7 @@ class ItemTransferView extends Controller
     public function show(
         $resource_type_id,
         $item_transfer_id
-    ): JsonResponse
-    {
+    ): JsonResponse {
         if ($this->hasViewAccessToResourceType((int) $resource_type_id) === false) {
             return \App\HttpResponse\Response::notFoundOrNotAccessible(trans('entities.item-transfer'));
         }
@@ -230,8 +225,7 @@ class ItemTransferView extends Controller
     private function allocatedExpense(
         int $resource_type_id,
         int $item_transfer_id
-    ): JsonResponse
-    {
+    ): JsonResponse {
         $item_transfer = (new ItemTransfer())->single(
             $resource_type_id,
             $item_transfer_id
@@ -254,8 +248,7 @@ class ItemTransferView extends Controller
     private function simpleExpense(
         int $resource_type_id,
         int $item_transfer_id
-    ): JsonResponse
-    {
+    ): JsonResponse {
         $item_transfer = (new ItemTransfer())->single(
             $resource_type_id,
             $item_transfer_id

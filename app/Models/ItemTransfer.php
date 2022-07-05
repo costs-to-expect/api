@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Models;
@@ -45,16 +46,16 @@ class ItemTransfer extends Model
                 'users.id AS user_id',
                 'users.name AS user_name'
             )
-            ->join("resource_type",$this->table . ".resource_type_id","resource_type.id")
-            ->join("resource AS from_resource",$this->table . ".from","from_resource.id")
-            ->join("resource AS to_resource",$this->table . ".to","to_resource.id")
-            ->join("item",$this->table . ".item_id","item.id")
-            ->join("users",$this->table . ".transferred_by","users.id")
-            ->where($this->table .'.resource_type_id', '=', $resource_type_id);
+            ->join("resource_type", $this->table . ".resource_type_id", "resource_type.id")
+            ->join("resource AS from_resource", $this->table . ".from", "from_resource.id")
+            ->join("resource AS to_resource", $this->table . ".to", "to_resource.id")
+            ->join("item", $this->table . ".item_id", "item.id")
+            ->join("users", $this->table . ".transferred_by", "users.id")
+            ->where($this->table . '.resource_type_id', '=', $resource_type_id);
 
         if (array_key_exists('item', $parameters) === true &&
             $parameters['item'] !== null) {
-            $collection->where($this->table .'.item_id', '=', $parameters['item']);
+            $collection->where($this->table . '.item_id', '=', $parameters['item']);
         }
 
         $collection = Clause::applyViewableResourceTypes(
@@ -71,15 +72,14 @@ class ItemTransfer extends Model
     public function single(
         int $resource_type_id,
         int $item_partial_transfer_id
-    ): ?array
-    {
-        $result = $this->join("resource_type",$this->table . ".resource_type_id","resource_type.id")->
-            join("resource AS from_resource",$this->table . ".from","from_resource.id")->
-            join("resource AS to_resource",$this->table . ".to","to_resource.id")->
-            join("item",$this->table . ".item_id","item.id")->
-            join("users",$this->table . ".transferred_by","users.id")->
-            where($this->table .'.resource_type_id', '=', $resource_type_id)->
-            where($this->table .'.id', '=', $item_partial_transfer_id)->
+    ): ?array {
+        $result = $this->join("resource_type", $this->table . ".resource_type_id", "resource_type.id")->
+            join("resource AS from_resource", $this->table . ".from", "from_resource.id")->
+            join("resource AS to_resource", $this->table . ".to", "to_resource.id")->
+            join("item", $this->table . ".item_id", "item.id")->
+            join("users", $this->table . ".transferred_by", "users.id")->
+            where($this->table . '.resource_type_id', '=', $resource_type_id)->
+            where($this->table . '.id', '=', $item_partial_transfer_id)->
             select(
                 $this->table . '.id',
                 $this->table . '.item_id',
@@ -104,20 +104,19 @@ class ItemTransfer extends Model
         int $resource_type_id,
         array $viewable_resource_types,
         array $parameters = []
-    ): int
-    {
+    ): int {
         $collection = $this
             ->select($this->table . '.id')
-            ->join("resource_type",$this->table . ".resource_type_id","resource_type.id")
-            ->join("resource AS from_resource",$this->table . ".from","from_resource.id")
-            ->join("resource AS to_resource",$this->table . ".to","to_resource.id")
-            ->join("item",$this->table . ".item_id","item.id")
-            ->join("users",$this->table . ".transferred_by","users.id")
-            ->where($this->table .'.resource_type_id', '=', $resource_type_id);
+            ->join("resource_type", $this->table . ".resource_type_id", "resource_type.id")
+            ->join("resource AS from_resource", $this->table . ".from", "from_resource.id")
+            ->join("resource AS to_resource", $this->table . ".to", "to_resource.id")
+            ->join("item", $this->table . ".item_id", "item.id")
+            ->join("users", $this->table . ".transferred_by", "users.id")
+            ->where($this->table . '.resource_type_id', '=', $resource_type_id);
 
         if (array_key_exists('item', $parameters) === true &&
             $parameters['item'] !== null) {
-            $collection->where($this->table .'.item_id', '=', $parameters['item']);
+            $collection->where($this->table . '.item_id', '=', $parameters['item']);
         }
 
         $collection = Clause::applyViewableResourceTypes(
