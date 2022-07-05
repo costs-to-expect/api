@@ -78,14 +78,14 @@ class ItemSubcategoryManage extends Controller
 
         $validator = ValidatorFacade::make(
             ['subcategory_id' => $subcategory_id],
-            array_merge(
-                [
+            [
+                ...[
                     'subcategory_id' => [
                         'required'
                     ],
                 ],
-                Config::get('api.item-subcategory.validation-post.fields')
-            ),
+                ...Config::get('api.item-subcategory.validation-post.fields')
+            ],
             $messages
         );
 

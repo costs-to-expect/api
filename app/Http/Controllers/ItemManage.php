@@ -718,10 +718,10 @@ class ItemManage extends Controller
         }
 
         $validator = ValidatorFacade::make(
-            array_merge(
-                $request->all(),
-                ['currency_id' => $currency_id]
-            ),
+            [
+                ...$request->all(),
+                ...['currency_id' => $currency_id]
+            ],
             LaravelConfig::get($config_base_path . '.validation-post.fields', []),
             $messages
         );
@@ -764,10 +764,10 @@ class ItemManage extends Controller
         }
 
         $validator = ValidatorFacade::make(
-            array_merge(
-                $request->all(),
-                $merge_array
-            ),
+            [
+                ...$request->all(),
+                ...$merge_array
+            ],
             LaravelConfig::get($config_base_path . '.validation-patch.fields', []),
             $messages
         );
@@ -834,10 +834,10 @@ class ItemManage extends Controller
         }
 
         $validator = ValidatorFacade::make(
-            array_merge(
-                $request->all(),
-                $merge_array
-            ),
+            [
+                ...$request->all(),
+                ...$merge_array
+            ],
             LaravelConfig::get($config_base_path . '.validation-patch.fields', []),
             $messages
         );
@@ -867,10 +867,10 @@ class ItemManage extends Controller
         }
 
         $validator = ValidatorFacade::make(
-            array_merge(
-                $request->all(),
-                ['currency_id' => $currency_id]
-            ),
+            [
+                ...$request->all(),
+                ...['currency_id' => $currency_id]
+            ],
             LaravelConfig::get($config_base_path . '.validation-post.fields', []),
             $messages
         );
@@ -913,10 +913,10 @@ class ItemManage extends Controller
         }
 
         $validator = ValidatorFacade::make(
-            array_merge(
-                $request->all(),
-                $merge_array
-            ),
+            [
+                ...$request->all(),
+                ...$merge_array
+            ],
             LaravelConfig::get($config_base_path . '.validation-patch.fields', []),
             $messages
         );

@@ -27,8 +27,8 @@ class Resource extends BaseValidator
      */
     private function createRules(int $resource_type_id, int $item_type_id): array
     {
-        return array_merge(
-            [
+        return [
+            ...[
                 'name' => [
                     'required',
                     'string',
@@ -44,8 +44,8 @@ class Resource extends BaseValidator
                     )
                 ]
             ],
-            Config::get('api.resource.validation-post.fields')
-        );
+            ...Config::get('api.resource.validation-post.fields')
+        ];
     }
 
     /**
@@ -58,8 +58,8 @@ class Resource extends BaseValidator
      */
     private function updateRules(int $resource_type_id, int $resource_id): array
     {
-        return array_merge(
-            [
+        return [
+            ...[
                 'name' => [
                     'sometimes',
                     'string',
@@ -67,8 +67,8 @@ class Resource extends BaseValidator
                     'unique:resource,name,' . $resource_id . ',id,resource_type_id,' . $resource_type_id
                 ],
             ],
-            Config::get('api.resource.validation-patch.fields')
-        );
+            ...Config::get('api.resource.validation-patch.fields')
+        ];
     }
 
     /**
@@ -101,10 +101,10 @@ class Resource extends BaseValidator
         }
 
         return ValidatorFacade::make(
-            array_merge(
-                request()->all(),
-                ['item_subtype_id' => $item_subtype_id]
-            ),
+            [
+                ...request()->all(),
+                ...['item_subtype_id' => $item_subtype_id]
+            ],
             $this->createRules((int) $options['resource_type_id'], (int) $options['item_type_id']),
             $this->translateMessages('api.resource.validation-post.messages')
         );

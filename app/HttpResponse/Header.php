@@ -36,9 +36,9 @@ class Header
         int $count,
         int $total_count
     ): Header {
-        $this->headers = array_merge(
-            $this->headers,
-            [
+        $this->headers = [
+            ...$this->headers,
+            ...[
                 'X-Count' => $count,
                 'X-Total-Count' => $total_count,
                 'X-Offset' => $pagination['offset'],
@@ -46,20 +46,20 @@ class Header
                 'X-Link-Previous' => $pagination['links']['previous'],
                 'X-Link-Next' => $pagination['links']['next']
             ]
-        );
+        ];
 
         return $this;
     }
 
     public function item(): Header
     {
-        $this->headers = array_merge(
-            $this->headers,
-            [
+        $this->headers = [
+            ...$this->headers,
+            ...[
                 'X-Total-Count' => 1,
                 'X-Count' => 1
             ]
-        );
+        ];
 
         return $this;
     }

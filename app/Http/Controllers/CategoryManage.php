@@ -146,10 +146,10 @@ class CategoryManage extends Controller
         }
 
         $invalid_fields = $this->checkForInvalidFields(
-            array_merge(
-                (new Category())->patchableFields(),
-                (new CategoryValidator())->dynamicDefinedFields()
-            )
+            [
+                ...(new Category())->patchableFields(),
+                ...(new CategoryValidator())->dynamicDefinedFields()
+            ]
         );
 
         if (count($invalid_fields) > 0) {

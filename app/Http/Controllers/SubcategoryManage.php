@@ -157,10 +157,10 @@ class SubcategoryManage extends Controller
         }
 
         $invalid_fields = $this->checkForInvalidFields(
-            array_merge(
-                (new Subcategory())->patchableFields(),
-                (new SubcategoryValidator())->dynamicDefinedFields()
-            )
+            [
+                ...(new Subcategory())->patchableFields(),
+                ...(new SubcategoryValidator())->dynamicDefinedFields()
+            ]
         );
 
         if (count($invalid_fields) > 0) {
