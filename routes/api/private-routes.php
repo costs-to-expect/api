@@ -1,5 +1,12 @@
 <?php
 
+use App\Http\Controllers\Authentication;
+use App\Http\Controllers\ItemCategoryManage;
+use App\Http\Controllers\ItemManage;
+use App\Http\Controllers\ItemPartialTransferManage;
+use App\Http\Controllers\ItemSubcategoryManage;
+use App\Http\Controllers\ItemTransferManage;
+use App\Http\Controllers\ToolManage;
 use App\Http\Controllers\CategoryManage;
 use App\Http\Controllers\PermittedUserManage;
 use App\Http\Controllers\ResourceManage;
@@ -19,7 +26,7 @@ Route::group(
     static function () {
         Route::get(
             'auth/user',
-            'Authentication@user'
+            [Authentication::class, 'user']
         );
 
         Route::post(
@@ -49,27 +56,27 @@ Route::group(
 
         Route::post(
             'resource-types/{resource_type_id}/resources/{resource_id}/items',
-            'ItemManage@create'
+            [ItemManage::class, 'create']
         );
 
         Route::post(
             'resource-types/{resource_type_id}/resources/{resource_id}/items/{item_id}/categories',
-            'ItemCategoryManage@create'
+            [ItemCategoryManage::class, 'create']
         );
 
         Route::post(
             'resource-types/{resource_type_id}/resources/{resource_id}/items/{item_id}/categories/{item_category_id}/subcategories',
-            'ItemSubcategoryManage@create'
+            [ItemSubcategoryManage::class, 'create']
         );
 
         Route::post(
             'resource-types/{resource_type_id}/resources/{resource_id}/items/{item_id}/partial-transfer',
-            'ItemPartialTransferManage@transfer'
+            [ItemPartialTransferManage::class, 'transfer']
         );
 
         Route::post(
             'resource-types/{resource_type_id}/resources/{resource_id}/items/{item_id}/transfer',
-            'ItemTransferManage@transfer'
+            [ItemTransferManage::class, 'transfer']
         );
 
         Route::delete(
@@ -94,7 +101,7 @@ Route::group(
 
         Route::delete(
             'resource-types/{resource_type_id}/partial-transfers/{item_partial_transfer_id}',
-            'ItemPartialTransferManage@delete'
+            [ItemPartialTransferManage::class, 'delete']
         );
 
         Route::delete(
@@ -104,17 +111,17 @@ Route::group(
 
         Route::delete(
             'resource-types/{resource_type_id}/resources/{resource_id}/items/{item_id}',
-            'ItemManage@delete'
+            [ItemManage::class, 'delete']
         );
 
         Route::delete(
             'resource-types/{resource_type_id}/resources/{resource_id}/items/{item_id}/categories/{item_category_id}',
-            'ItemCategoryManage@delete'
+            [ItemCategoryManage::class, 'delete']
         );
 
         Route::delete(
             'resource-types/{resource_type_id}/resources/{resource_id}/items/{item_id}/categories/{item_category_id}/subcategories/{item_subcategory_id}',
-            'ItemSubcategoryManage@delete'
+            [ItemSubcategoryManage::class, 'delete']
         );
 
         Route::patch(
@@ -139,17 +146,17 @@ Route::group(
 
         Route::patch(
             'resource-types/{resource_type_id}/resources/{resource_id}/items/{item_id}',
-            'ItemManage@update'
+            [ItemManage::class, 'update']
         );
 
         Route::get(
             'tools/cache',
-            'ToolManage@cache'
+            [ToolManage::class, 'cache']
         );
 
         Route::delete(
             'tools/cache',
-            'ToolManage@deleteCache'
+            [ToolManage::class, 'deleteCache']
         );
     }
 );

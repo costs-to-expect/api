@@ -1,5 +1,19 @@
 <?php
 
+use App\Http\Controllers\CategoryView;
+use App\Http\Controllers\CurrencyView;
+use App\Http\Controllers\IndexView;
+use App\Http\Controllers\ItemCategoryView;
+use App\Http\Controllers\ItemSubcategoryView;
+use App\Http\Controllers\ItemSubtypeView;
+use App\Http\Controllers\ItemTransferView;
+use App\Http\Controllers\ItemTypeView;
+use App\Http\Controllers\QueueView;
+use App\Http\Controllers\RequestManage;
+use App\Http\Controllers\RequestView;
+use App\Http\Controllers\ResourceTypeItemView;
+use App\Http\Controllers\SubcategoryView;
+use App\Http\Controllers\ToolView;
 use App\Http\Controllers\ItemPartialTransferView;
 use App\Http\Controllers\ItemView;
 use App\Http\Controllers\PermittedUserView;
@@ -19,12 +33,12 @@ Route::group(
         // Root of the API and CHANGELOG
         Route::get(
             '',
-            'IndexView@index'
+            [IndexView::class, 'index']
         );
 
         Route::options(
             '',
-            'IndexView@optionsIndex'
+            [IndexView::class, 'optionsIndex']
         );
 
         Route::get(
@@ -34,17 +48,17 @@ Route::group(
 
         Route::options(
             'changelog',
-            'IndexView@optionsChangeLog'
+            [IndexView::class, 'optionsChangeLog']
         );
 
         Route::get(
             'currencies',
-            'CurrencyView@index'
+            [CurrencyView::class, 'index']
         );
 
         Route::options(
             'currencies',
-            'CurrencyView@optionsIndex'
+            [CurrencyView::class, 'optionsIndex']
         );
 
         Route::get(
@@ -54,7 +68,7 @@ Route::group(
 
         Route::options(
             'currencies/{currency_id}',
-            'CurrencyView@optionsShow'
+            [CurrencyView::class, 'optionsShow']
         );
 
         Route::get(
@@ -64,27 +78,27 @@ Route::group(
 
         Route::options(
             'item-types',
-            'ItemTypeView@optionsIndex'
+            [ItemTypeView::class, 'optionsIndex']
         );
 
         Route::get(
             'item-types/{item_type_id}',
-            'ItemTypeView@show'
+            [ItemTypeView::class, 'show']
         )->name('item-type.show');
 
         Route::options(
             'item-types/{item_type_id}',
-            'ItemTypeView@optionsShow'
+            [ItemTypeView::class, 'optionsShow']
         );
 
         Route::get(
             'item-types/{item_type_id}/item-subtypes',
-            'ItemSubtypeView@index'
+            [ItemSubtypeView::class, 'index']
         );
 
         Route::options(
             'item-types/{item_type_id}/item-subtypes',
-            'ItemSubtypeView@optionsIndex'
+            [ItemSubtypeView::class, 'optionsIndex']
         );
 
         Route::get(
@@ -94,27 +108,27 @@ Route::group(
 
         Route::options(
             'item-types/{item_type_id}/item-subtypes/{item_subtype_id}',
-            'ItemSubtypeView@optionsShow'
+            [ItemSubtypeView::class, 'optionsShow']
         );
 
         Route::get(
             'queue',
-            'QueueView@index'
+            [QueueView::class, 'index']
         );
 
         Route::options(
             'queue',
-            'QueueView@optionsIndex'
+            [QueueView::class, 'optionsIndex']
         );
 
         Route::get(
             'queue/{queue_id}',
-            'QueueView@show'
+            [QueueView::class, 'show']
         );
 
         Route::options(
             'queue/{queue_id}',
-            'QueueView@optionsShow'
+            [QueueView::class, 'optionsShow']
         );
 
         Route::get(
@@ -139,12 +153,12 @@ Route::group(
 
         Route::get(
             'resource-types/{resource_type_id}/categories',
-            'CategoryView@index'
+            [CategoryView::class, 'index']
         );
 
         Route::options(
             'resource-types/{resource_type_id}/categories',
-            'CategoryView@optionsIndex'
+            [CategoryView::class, 'optionsIndex']
         );
 
         Route::get(
@@ -154,7 +168,7 @@ Route::group(
 
         Route::options(
             'resource-types/{resource_type_id}/categories/{category_id}',
-            'CategoryView@optionsShow'
+            [CategoryView::class, 'optionsShow']
         );
 
         Route::get(
@@ -164,7 +178,7 @@ Route::group(
 
         Route::options(
             'resource-types/{resource_type_id}/categories/{category_id}/subcategories',
-            'SubcategoryView@optionsIndex'
+            [SubcategoryView::class, 'optionsIndex']
         );
 
         Route::get(
@@ -174,17 +188,17 @@ Route::group(
 
         Route::options(
             'resource-types/{resource_type_id}/categories/{category_id}/subcategories/{subcategory_id}',
-            'SubcategoryView@optionsShow'
+            [SubcategoryView::class, 'optionsShow']
         );
 
         Route::get(
             'resource-types/{resource_type_id}/items',
-            'ResourceTypeItemView@index'
+            [ResourceTypeItemView::class, 'index']
         );
 
         Route::options(
             'resource-types/{resource_type_id}/items',
-            'ResourceTypeItemView@optionsIndex'
+            [ResourceTypeItemView::class, 'optionsIndex']
         );
 
         Route::get(
@@ -269,93 +283,93 @@ Route::group(
 
         Route::options(
             'resource-types/{resource_type_id}/resources/{resource_id}/items/{item_id}/partial-transfer',
-            'ItemPartialTransferView@optionsTransfer'
+            [ItemPartialTransferView::class, 'optionsTransfer']
         );
 
         Route::options(
             'resource-types/{resource_type_id}/resources/{resource_id}/items/{item_id}/transfer',
-            'ItemTransferView@optionsTransfer'
+            [ItemTransferView::class, 'optionsTransfer']
         );
 
         Route::get(
             'resource-types/{resource_type_id}/resources/{resource_id}/items/{item_id}/categories',
-            'ItemCategoryView@index'
+            [ItemCategoryView::class, 'index']
         );
 
         Route::options(
             'resource-types/{resource_type_id}/resources/{resource_id}/items/{item_id}/categories',
-            'ItemCategoryView@optionsIndex'
+            [ItemCategoryView::class, 'optionsIndex']
         );
 
         Route::get(
             'resource-types/{resource_type_id}/resources/{resource_id}/items/{item_id}/categories/{item_category_id}',
-            'ItemCategoryView@show'
+            [ItemCategoryView::class, 'show']
         );
 
         Route::options(
             'resource-types/{resource_type_id}/resources/{resource_id}/items/{item_id}/categories/{item_category_id}',
-            'ItemCategoryView@optionsShow'
+            [ItemCategoryView::class, 'optionsShow']
         );
 
         Route::get(
             'resource-types/{resource_type_id}/resources/{resource_id}/items/{item_id}/categories/{item_category_id}/subcategories',
-            'ItemSubcategoryView@index'
+            [ItemSubcategoryView::class, 'index']
         );
 
         Route::options(
             'resource-types/{resource_type_id}/resources/{resource_id}/items/{item_id}/categories/{item_category_id}/subcategories',
-            'ItemSubcategoryView@optionsIndex'
+            [ItemSubcategoryView::class, 'optionsIndex']
         );
 
         Route::get(
             'resource-types/{resource_type_id}/resources/{resource_id}/items/{item_id}/categories/{item_category_id}/subcategories/{item_subcategory_id}',
-            'ItemSubcategoryView@show'
+            [ItemSubcategoryView::class, 'show']
         );
 
         Route::options(
             'resource-types/{resource_type_id}/resources/{resource_id}/items/{item_id}/categories/{item_category_id}/subcategories/{item_subcategory_id}',
-            'ItemSubcategoryView@optionsShow'
+            [ItemSubcategoryView::class, 'optionsShow']
         );
 
         Route::options(
             'resource-types/{resource_type_id}/transfers',
-            'ItemTransferView@optionsIndex'
+            [ItemTransferView::class, 'optionsIndex']
         );
 
         Route::get(
             'resource-types/{resource_type_id}/transfers',
-            'ItemTransferView@index'
+            [ItemTransferView::class, 'index']
         );
 
         Route::options(
             'resource-types/{resource_type_id}/transfers/{item_transfer_id}',
-            'ItemTransferView@optionsShow'
+            [ItemTransferView::class, 'optionsShow']
         );
 
         Route::get(
             'resource-types/{resource_type_id}/transfers/{item_transfer_id}',
-            'ItemTransferView@show'
+            [ItemTransferView::class, 'show']
         );
 
         // Request access and error logs
         Route::options(
             'request/error-log',
-            'RequestView@optionsErrorLog'
+            [RequestView::class, 'optionsErrorLog']
         );
 
         Route::get(
             'request/error-log',
-            'RequestView@errorLog'
+            [RequestView::class, 'errorLog']
         );
 
         Route::post(
             'request/error-log',
-            'RequestManage@createErrorLog'
+            [RequestManage::class, 'createErrorLog']
         );
 
         Route::options(
             'tools/cache',
-            'ToolView@optionsCache'
+            [ToolView::class, 'optionsCache']
         );
     }
 );
