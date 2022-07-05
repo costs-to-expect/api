@@ -156,6 +156,7 @@ class Pagination
                     switch ($parameter) {
                         case 'category':
                         case 'item-type':
+                        case 'item-subtype':
                         case 'subcategory':
                             $parameters .= $parameter . '=' .
                                 $this->hash->encode($parameter, $parameter_value);

@@ -29,7 +29,7 @@ class AllocatedExpense extends Response
             ->setDescription('route-descriptions.item_PATCH')
             ->setAuthenticationStatus($this->permissions['manage'])
             ->setAuthenticationRequirement(true)
-            ->setAllowedValuesForFields($this->allowed_fields)
+            ->setAllowedValuesForFields($this->allowed_values_for_fields)
             ->option();
 
         return $this;

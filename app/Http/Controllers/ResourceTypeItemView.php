@@ -117,7 +117,9 @@ class ResourceTypeItemView extends Controller
         );
 
         return (new \App\HttpOptionResponse\ResourceTypeItem\GameCollection($this->permissions($resource_type_id)))
-            ->setAllowedValuesForParameters($allowed_values->parameterAllowedValuesForResourceTypeCollection())
+            ->setAllowedValuesForParameters(
+                $allowed_values->parameterAllowedValuesForResourceTypeCollection()
+            )
             ->create()
             ->response();
     }

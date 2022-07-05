@@ -13,7 +13,7 @@ class ResourceTypeCollection extends Response
         $this->verbs['GET'] = $get->setSortableParameters(Config::get('api.resource-type.sortable'))
             ->setSearchableParameters(Config::get('api.resource-type.searchable'))
             ->setParameters(Config::get('api.resource-type.parameters'))
-            ->setAllowedValuesForParameters($this->allowed_parameters)
+            ->setAllowedValuesForParameters($this->allowed_values_for_parameters)
             ->setPaginationStatus(true, true)
             ->setDescription('route-descriptions.resource_type_GET_index')
             ->setAuthenticationStatus($this->permissions['view'])
@@ -21,7 +21,7 @@ class ResourceTypeCollection extends Response
 
         $post = new \App\HttpVerb\Post();
         $this->verbs['POST'] = $post->setFields(Config::get('api.resource-type.fields-post'))
-            ->setAllowedValuesForFields($this->allowed_fields)
+            ->setAllowedValuesForFields($this->allowed_values_for_fields)
             ->setDescription('route-descriptions.resource_type_POST')
             ->setAuthenticationStatus($this->permissions['manage'])
             ->setAuthenticationRequirement(true)

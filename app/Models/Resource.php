@@ -82,7 +82,8 @@ class Resource extends Model
         int $offset = 0,
         int $limit = 10,
         array $search_parameters = [],
-        array $sort_parameters = []
+        array $sort_parameters = [],
+        array $request_parameters = []
     ): array
     {
         $collection = $this
@@ -122,6 +123,13 @@ class Resource extends Model
             ->where('resource.resource_type_id', '=', $resource_type_id);
 
         $collection = Clause::applySearch($collection, $this->table, $search_parameters);
+
+        if (
+            array_key_exists('item-subtype', $request_parameters) === true &&
+            $request_parameters['item-subtype'] !== null
+        ) {
+            $collection->where('resource_item_subtype.item_subtype_id', '=', $request_parameters['item-subtype']);
+        }
 
         if (count($sort_parameters) > 0) {
             foreach ($sort_parameters as $field => $direction) {

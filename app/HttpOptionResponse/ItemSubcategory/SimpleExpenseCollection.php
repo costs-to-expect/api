@@ -18,7 +18,7 @@ class SimpleExpenseCollection extends Response
 
         $post = new \App\HttpVerb\Post();
         $this->verbs['POST'] = $post->setFields(Config::get('api.item-subcategory.fields-post'))->
-            setAllowedValuesForFields($this->allowed_fields)->
+            setAllowedValuesForFields($this->allowed_values_for_fields)->
             setDescription('route-descriptions.item_sub_category_POST_simple_expense')->
             setAuthenticationStatus($this->permissions['manage'])->
             setAuthenticationRequirement(true)->

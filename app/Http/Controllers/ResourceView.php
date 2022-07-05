@@ -48,6 +48,10 @@ class ResourceView extends Controller
 
         if ($cache_control->isRequestCacheable() === false || $cache_collection->valid() === false) {
 
+            $request_parameters = Parameter\Request::fetch(
+                array_keys(Config::get('api.resource.parameters'))
+            );
+
             $search_parameters = Parameter\Search::fetch(
                 Config::get('api.resource.searchable')
             );
@@ -63,17 +67,19 @@ class ResourceView extends Controller
             );
 
             $pagination = new \App\HttpResponse\Pagination(request()->path(), $total);
-            $pagination_parameters = $pagination->allowPaginationOverride($this->allow_entire_collection)->
-                setSearchParameters($search_parameters)->
-                setSortParameters($sort_parameters)->
-                parameters();
+            $pagination_parameters = $pagination->allowPaginationOverride($this->allow_entire_collection)
+                ->setSearchParameters($search_parameters)
+                ->setSortParameters($sort_parameters)
+                ->setParameters($request_parameters)
+                ->parameters();
 
             $resources = (new Resource)->paginatedCollection(
                 $resource_type_id,
                 $pagination_parameters['offset'],
                 $pagination_parameters['limit'],
                 $search_parameters,
-                $sort_parameters
+                $sort_parameters,
+                $request_parameters
             );
 
             $last_updated = null;
@@ -153,7 +159,17 @@ class ResourceView extends Controller
 
         $response = new ResourceCollection($this->permissions((int) $resource_type_id));
 
-        return $response->setAllowedValuesForFields((new ItemSubtype())->allowedValues($resource_type['resource_type_item_type_id']))
+        return $response->setAllowedValuesForFields(
+                (new ItemSubtype())->allowedValues(
+                    $resource_type['resource_type_item_type_id']
+                )
+            )
+            ->setAllowedValuesForParameters(
+                (new ItemSubtype())->allowedValues(
+                    $resource_type['resource_type_item_type_id'],
+                    'item-subtype'
+                )
+            )
             ->create()
             ->response();
     }
