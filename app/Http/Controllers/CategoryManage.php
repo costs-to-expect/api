@@ -6,7 +6,6 @@ use Illuminate\Http\Request;
 use App\HttpResponse\Response;
 use App\Jobs\ClearCache;
 use App\Models\Category;
-use App\HttpRequest\BodyValidation;
 use App\HttpRequest\Validate\Category as CategoryValidator;
 use App\Transformer\Category as CategoryTransformer;
 use Exception;

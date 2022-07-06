@@ -48,7 +48,7 @@ class PermittedUserManage extends Controller
             ->setUserId($this->user_id);
 
         try {
-            DB::transaction(function () use ($resource_type_id) {
+            DB::transaction(function () use ($request, $resource_type_id) {
                 $user = DB::table('users')
                     ->where('email', '=', $request->input('email'))
                     ->first();

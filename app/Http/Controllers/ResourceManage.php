@@ -60,7 +60,7 @@ class ResourceManage extends Controller
             ->setUserId($this->user_id);
 
         try {
-            $resource = DB::transaction(function () use ($resource_type_id) {
+            $resource = DB::transaction(function () use ($request, $resource_type_id) {
                 $resource = new Resource([
                     'resource_type_id' => $resource_type_id,
                     'name' => $request->input('name'),
