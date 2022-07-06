@@ -99,7 +99,7 @@ class ResourceTypeView extends Controller
         return response()->json($cache_collection->collection(), 200, $cache_collection->headers());
     }
 
-    public function show($resource_type_id): JsonResponse
+    public function show(Request $request, $resource_type_id): JsonResponse
     {
         $parameters = Parameter\Request::fetch(array_keys(Config::get('api.resource-type.parameters-show')));
 

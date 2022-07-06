@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Http\Request;
 use App\HttpResponse\Header;
 use App\Models\PermittedUser;
 use App\HttpOptionResponse\PermittedUserCollection;
@@ -20,7 +21,7 @@ class PermittedUserView extends Controller
 {
     protected bool $allow_entire_collection = true;
 
-    public function index(string $resource_type_id): JsonResponse
+    public function index(Request $request, string $resource_type_id): JsonResponse
     {
         if ($this->hasViewAccessToResourceType((int) $resource_type_id) === false) {
             return \App\HttpResponse\Response::notFoundOrNotAccessible(trans('entities.resource-type'));
@@ -33,7 +34,7 @@ class PermittedUserView extends Controller
         $cache_control->setTtlOneMonth();
 
         $cache_collection = new \App\Cache\Collection();
-        $cache_collection->setFromCache($cache_control->getByKey(request()->getRequestUri()));
+        $cache_collection->setFromCache($cache_control->getByKey($request->getRequestUri()));
 
         if ($cache_control->isRequestCacheable() === false || $cache_collection->valid() === false) {
             $search_parameters = Parameter\Search::fetch(
@@ -49,7 +50,7 @@ class PermittedUserView extends Controller
                 $search_parameters
             );
 
-            $pagination = new \App\HttpResponse\Pagination(request()->path(), $total);
+            $pagination = new \App\HttpResponse\Pagination($request->path(), $total);
             $pagination_parameters = $pagination->allowPaginationOverride($this->allow_entire_collection)->
                 setSearchParameters($search_parameters)->
                 setSortParameters($sort_parameters)->
@@ -78,7 +79,7 @@ class PermittedUserView extends Controller
                 addSort(Parameter\Sort::xHeader());
 
             $cache_collection->create($total, $collection, $pagination_parameters, $headers->headers());
-            $cache_control->putByKey(request()->getRequestUri(), $cache_collection->content());
+            $cache_control->putByKey($request->getRequestUri(), $cache_collection->content());
         }
 
         return response()->json($cache_collection->collection(), 200, $cache_collection->headers());

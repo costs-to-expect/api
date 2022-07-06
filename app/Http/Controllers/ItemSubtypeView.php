@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Http\Request;
 use App\HttpResponse\Header;
 use App\HttpResponse\Response;
 use App\Models\ItemSubtype;
@@ -22,7 +23,7 @@ class ItemSubtypeView extends Controller
 {
     protected bool $allow_entire_collection = true;
 
-    public function index($item_type_id): JsonResponse
+    public function index(Request $request, $item_type_id): JsonResponse
     {
         if ((new Permission())->itemTypeExists((int) $item_type_id) === false) {
             return Response::notFound(trans('entities.item-subtype'));
@@ -32,7 +33,7 @@ class ItemSubtypeView extends Controller
         $cache_control->setTtlOneYear();
 
         $cache_collection = new \App\Cache\Collection();
-        $cache_collection->setFromCache($cache_control->getByKey(request()->getRequestUri()));
+        $cache_collection->setFromCache($cache_control->getByKey($request->getRequestUri()));
 
         if ($cache_control->isRequestCacheable() === false || $cache_collection->valid() === false) {
             $search_parameters = Parameter\Search::fetch(
@@ -48,7 +49,7 @@ class ItemSubtypeView extends Controller
                 $search_parameters
             );
 
-            $pagination = new \App\HttpResponse\Pagination(request()->path(), $total);
+            $pagination = new \App\HttpResponse\Pagination($request->path(), $total);
             $pagination_parameters = $pagination->allowPaginationOverride($this->allow_entire_collection)->
                 setSearchParameters($search_parameters)->
                 setSortParameters($sort_parameters)->
@@ -77,7 +78,7 @@ class ItemSubtypeView extends Controller
                 addSort(Parameter\Sort::xHeader());
 
             $cache_collection->create($total, $collection, $pagination_parameters, $headers->headers());
-            $cache_control->putByKey(request()->getRequestUri(), $cache_collection->content());
+            $cache_control->putByKey($request->getRequestUri(), $cache_collection->content());
         }
 
         return response()->json($cache_collection->collection(), 200, $cache_collection->headers());

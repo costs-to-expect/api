@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Http\Request;
 use App\HttpResponse\Response;
 use App\Jobs\ClearCache;
 use App\Models\Category;
-use App\HttpRequest\BodyValidation;
 use App\HttpRequest\Validate\Category as CategoryValidator;
 use App\Transformer\Category as CategoryTransformer;
 use Exception;
@@ -26,7 +26,7 @@ class CategoryManage extends Controller
      *
      * @return JsonResponse
      */
-    public function create($resource_type_id): JsonResponse
+    public function create(Request $request, $resource_type_id): JsonResponse
     {
         if ($this->hasWriteAccessToResourceType((int) $resource_type_id) === false) {
             return \App\HttpResponse\Response::notFoundOrNotAccessible(trans('entities.resource-type'));
@@ -49,8 +49,8 @@ class CategoryManage extends Controller
 
         try {
             $category = new Category([
-                'name' => request()->input('name'),
-                'description' => request()->input('description'),
+                'name' => $request->input('name'),
+                'description' => $request->input('description'),
                 'resource_type_id' => $resource_type_id
             ]);
             $category->save();
@@ -116,7 +116,7 @@ class CategoryManage extends Controller
      *
      * @return JsonResponse
      */
-    public function update($resource_type_id, $category_id): JsonResponse
+    public function update(Request $request, $resource_type_id, $category_id): JsonResponse
     {
         if ($this->hasWriteAccessToResourceType((int) $resource_type_id) === false) {
             return \App\HttpResponse\Response::notFoundOrNotAccessible(trans('entities.item-category'));
@@ -128,7 +128,7 @@ class CategoryManage extends Controller
             return Response::failedToSelectModelForUpdateOrDelete();
         }
 
-        if (count(request()->all()) === 0) {
+        if (count($request->all()) === 0) {
             return \App\HttpResponse\Response::nothingToPatch();
         }
 
@@ -156,7 +156,7 @@ class CategoryManage extends Controller
             return Response::invalidFieldsInRequest($invalid_fields);
         }
 
-        foreach (request()->all() as $key => $value) {
+        foreach ($request->all() as $key => $value) {
             $category->$key = $value;
         }
 

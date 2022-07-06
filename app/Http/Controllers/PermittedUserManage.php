@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Http\Request;
 use App\HttpResponse\Response;
 use App\Jobs\ClearCache;
 use App\Models\PermittedUser;
@@ -19,7 +20,7 @@ use Illuminate\Support\Facades\DB;
  */
 class PermittedUserManage extends Controller
 {
-    public function create(string $resource_type_id): JsonResponse
+    public function create(Request $request, string $resource_type_id): JsonResponse
     {
         if ($this->hasWriteAccessToResourceType((int) $resource_type_id) === false) {
             return \App\HttpResponse\Response::notFoundOrNotAccessible(trans('entities.resource-type'));
@@ -47,9 +48,9 @@ class PermittedUserManage extends Controller
             ->setUserId($this->user_id);
 
         try {
-            DB::transaction(function () use ($resource_type_id) {
+            DB::transaction(function () use ($request, $resource_type_id) {
                 $user = DB::table('users')
-                    ->where('email', '=', request()->input('email'))
+                    ->where('email', '=', $request->input('email'))
                     ->first();
 
                 if ($user === null) {

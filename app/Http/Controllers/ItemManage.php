@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Http\Request;
 use App\Cache\JobPayload;
 use App\Cache\KeyGroup;
 use App\HttpRequest\Hash;
@@ -265,13 +266,13 @@ class ItemManage extends Controller
         );
     }
 
-    public function update(string $resource_type_id, string $resource_id, string $item_id): JsonResponse
+    public function update(Request $request, string $resource_type_id, string $resource_id, string $item_id): JsonResponse
     {
         if ($this->hasWriteAccessToResourceType((int) $resource_type_id) === false) {
             return Response::notFoundOrNotAccessible(trans('entities.item'));
         }
 
-        if (count(request()->all()) === 0) {
+        if (count($request->all()) === 0) {
             return Response::nothingToPatch();
         }
 
