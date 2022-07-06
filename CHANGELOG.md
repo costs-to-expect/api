@@ -2,8 +2,21 @@
 
 The complete changelog for the Costs to Expect REST API, our changelog follows the format defined at https://keepachangelog.com/en/1.0.0/
 
+## [v2.26.0] - 2022-07-06
+### Added
+- We have added an `item-type` filter to the resource type collection, you can limit what resource types to return.
+- We have added an `item-subtype` filter to the resource collection, you can limit what resources to return.
+- We have added the 'Yahtzee' item subtype.
+
+### Changed
+- Lots of refactoring.
+- We have updated our backend dependencies.
+
+### Fixed
+- Renamed a lang file, the parameters-show config file should be using the parameters-show lang file.
+
 ## [v2.25.0] - 2022-06-20
-## Added
+### Added
 - We allow the `collection` parameter for `simple-item` item-type collections.
 - We have added tests for subcategory management, found another bug, whoopee!
 - We have added tests for item type responses.
@@ -11,7 +24,7 @@ The complete changelog for the Costs to Expect REST API, our changelog follows t
 - We have added additional resource type tests and created/updated the json-schema files as necessary.
 - We have added a catch-all route for non-matching routes.
 
-## Changed
+### Changed
 - We have renamed the tests directory and corrected the namespaces.
 - We are continuing to update out routes to named routes.
 - We have moved additional responses to the response class.
@@ -20,7 +33,7 @@ The complete changelog for the Costs to Expect REST API, our changelog follows t
 - We have updated the response when attempting to delete an item with category assignments, rather than return a generic foreign key error, we specifically mention that there are category assignments that need to be removed first.
 - We have cleaned up the response description lang file.
 
-## Fixed
+### Fixed
 - Removed an output in a test.
 - Updated the route middleware, invalid decodes should return a 403 for the route.
 - Added a unique validation rule for emails, don't leave the check to the database.
@@ -28,11 +41,11 @@ The complete changelog for the Costs to Expect REST API, our changelog follows t
 - The allowed values for `winner_id` should be a category assigned to the item, not all the categories assigned to the resource type.
 
 ## [v2.24.0] - 2022-06-13
-## Added
+### Added
 - We have added our first schema files for OPTIONS responses and started working on the tests.
 - We have added tests for category management, found one bug when creating the tests.
 
-## Changed
+### Changed
 - We have updated our response class for OPTIONS responses, we now allow parameters to be defined for POST requests. One example of where we need this is the create password POST request, `password` and `password_confirmation` are required fields, however, `token` and `email` are required parameters. Before this update, you had to parse the returned error of read the OPTIONS request description.
 - We have started splitting config files, a config file should be for one purpose.
 - We have spent quite a bit of time reviewing the API structure and refactoring. We have removed unnecessary complexity, renamed classes and methods to describe intent more clearly and removed pointless base classes.
@@ -41,7 +54,7 @@ The complete changelog for the Costs to Expect REST API, our changelog follows t
 - We have reworked the responses class, removed exception parameters when not necessary, pass in an exception if thrown and now delegated responsibility to the responses class to decide if the exception should be returned in the response.
 - We have upgraded the API to Laravel 9 and PHP 8.1.
 
-## Fixed
+###Fixed
 - Options request incorrect for the `auth.register` endpoint (Test added).
 - Options requests returning response twice.
 - Type corrected in OPTIONS response, authentication status/requirements now a boolean, not a string.
@@ -52,18 +65,18 @@ The complete changelog for the Costs to Expect REST API, our changelog follows t
 - Inconsistent usage of the responses helper.
 - Category validator allowed duplicate names due to incorrect params, caught by model.
 
-## Removed
+### Removed
 - We have removed the `ItemType` base class and all the child classes.
 - We have removed a redundant validation class and moved the response method into the main response class.
 
 ## [v2.23.1] - 2022-04-18
-## Changed
+### Changed
 - We have updated the partial transfers collection and show route, the partial transfer object includes the URI to the relevant entity.
 - We have switched additional routes in our routes files to named routes.
 - We have updated the json schema file for partial transfers.
 
 ## [v2.23.0] - 2022-04-12
-## Added
+### Added
 - We have updated the `/auth/user` route, the route will now show any active created tokens.
 - We have added `device_name` as an optional field on sign-in, if set, the generated token will be prefixed with the device name.
 - We have added an `include-permitted-users` parameter when requesting a resource type, you will be able to see all the permitted users without having to go down the tree.
@@ -75,7 +88,7 @@ The complete changelog for the Costs to Expect REST API, our changelog follows t
 - We have added the ability to delete a permitted user, you can delete any permitted user with access to the resource type, including yourself.
 - We have added initial tests for the permitted user routes.
 
-## Changed
+### Changed
 - We have updated sign-in to clear tokens that have not been used for a year.
 - We have added additional validation to `/auth/login` to match the create password routes.
 - We have removed additional references to our `item-type` entity class, keep code in the individual item type namespaces.
@@ -84,7 +97,7 @@ The complete changelog for the Costs to Expect REST API, our changelog follows t
 - We have updated the `transfers` route to use methods per item types, this was we can correctly return a 405 when an item doesn't support transfers.
 - We have localised all response messages in the Authentication controller to match the rest of the API.
 
-## Fixed
+### Fixed
 - We have fixed our Authentication tests, we no longer overwrite the initial user, additionally, we have updated three tests to return success on a 422, not a 401.
 - We have corrected a couple of parameter conversions, two parameters not correctly being converted to Booleans.
 - Unable to delete an `allocated-expense`, need to clear the partial transfers table.
