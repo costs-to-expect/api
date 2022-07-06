@@ -7,7 +7,7 @@ services:
         image: costs.api.app
         container_name: costs.api.app
         ports:
-            - 8080:80
+            - "8080:80"
         volumes:
             - .:/var/www/html
         env_file: .env

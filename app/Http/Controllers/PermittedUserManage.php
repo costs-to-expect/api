@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Http\Request;
 use App\HttpResponse\Response;
 use App\Jobs\ClearCache;
 use App\Models\PermittedUser;
@@ -19,7 +20,7 @@ use Illuminate\Support\Facades\DB;
  */
 class PermittedUserManage extends Controller
 {
-    public function create(string $resource_type_id): JsonResponse
+    public function create(Request $request, string $resource_type_id): JsonResponse
     {
         if ($this->hasWriteAccessToResourceType((int) $resource_type_id) === false) {
             return \App\HttpResponse\Response::notFoundOrNotAccessible(trans('entities.resource-type'));
@@ -30,7 +31,7 @@ class PermittedUserManage extends Controller
             $this->viewable_resource_types
         );
 
-        $validator = (new PermittedUserValidator)->create([
+        $validator = (new PermittedUserValidator())->create([
             'resource_type_id' => $resource_type['resource_type_id']
         ]);
 
@@ -47,10 +48,9 @@ class PermittedUserManage extends Controller
             ->setUserId($this->user_id);
 
         try {
-            DB::transaction(function() use ($resource_type_id) {
-
+            DB::transaction(function () use ($request, $resource_type_id) {
                 $user = DB::table('users')
-                    ->where('email', '=', request()->input('email'))
+                    ->where('email', '=', $request->input('email'))
                     ->first();
 
                 if ($user === null) {
@@ -76,7 +76,6 @@ class PermittedUserManage extends Controller
             });
 
             ClearCache::dispatch($cache_job_payload->payload());
-
         } catch (Exception $e) {
             return Response::failedToSaveModelForCreate($e);
         }
@@ -87,8 +86,7 @@ class PermittedUserManage extends Controller
     public function delete(
         string $resource_type_id,
         string $permitted_user_id
-    ): JsonResponse
-    {
+    ): JsonResponse {
         if ($this->hasWriteAccessToResourceType((int) $resource_type_id) === false) {
             return \App\HttpResponse\Response::notFoundOrNotAccessible(trans('entities.permitted-user'));
         }
@@ -106,7 +104,7 @@ class PermittedUserManage extends Controller
             ->setUserId($this->user_id);
 
         try {
-            DB::transaction(function() use ($permitted_user) {
+            DB::transaction(function () use ($permitted_user) {
                 $permitted_user->delete();
             });
 

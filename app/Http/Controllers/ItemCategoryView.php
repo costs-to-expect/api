@@ -49,7 +49,6 @@ class ItemCategoryView extends Controller
         $cache_collection->setFromCache($cache_control->getByKey(request()->getRequestUri()));
 
         if ($cache_control->isRequestCacheable() === false || $cache_collection->valid() === false) {
-
             $item_category = (new ItemCategory())->paginatedCollection(
                 $resource_type_id,
                 $resource_id,
@@ -84,8 +83,7 @@ class ItemCategoryView extends Controller
         string $resource_id,
         string $item_id,
         string $item_category_id = null
-    ): JsonResponse
-    {
+    ): JsonResponse {
         if ($this->hasViewAccessToResourceType((int) $resource_type_id) === false) {
             return \App\HttpResponse\Response::notFoundOrNotAccessible(trans('entities.item'));
         }
@@ -108,8 +106,7 @@ class ItemCategoryView extends Controller
         int $resource_id,
         int $item_id,
         int $item_category_id = null
-    ): JsonResponse
-    {
+    ): JsonResponse {
         $item_category = (new ItemCategory())->single(
             $resource_type_id,
             $resource_id,
@@ -158,7 +155,8 @@ class ItemCategoryView extends Controller
 
         return $response
             ->setAllowedValuesForFields(
-                (new \App\Models\AllowedValue\Category())->allowedValues($resource_type_id))
+                (new \App\Models\AllowedValue\Category())->allowedValues($resource_type_id)
+            )
             ->create()
             ->response();
     }
@@ -173,7 +171,8 @@ class ItemCategoryView extends Controller
 
         return $response
             ->setAllowedValuesForFields(
-                (new \App\Models\AllowedValue\Category())->allowedValues($resource_type_id))
+                (new \App\Models\AllowedValue\Category())->allowedValues($resource_type_id)
+            )
             ->create()
             ->response();
     }
@@ -188,7 +187,8 @@ class ItemCategoryView extends Controller
 
         return $response
             ->setAllowedValuesForFields(
-                (new \App\Models\AllowedValue\Category())->allowedValues($resource_type_id))
+                (new \App\Models\AllowedValue\Category())->allowedValues($resource_type_id)
+            )
             ->create()
             ->response();
     }
@@ -198,8 +198,7 @@ class ItemCategoryView extends Controller
         string $resource_id,
         string $item_id,
         string $item_category_id = null
-    ): JsonResponse
-    {
+    ): JsonResponse {
         if ($this->hasViewAccessToResourceType((int) $resource_type_id) === false) {
             return \App\HttpResponse\Response::notFoundOrNotAccessible(trans('entities.item'));
         }
@@ -224,8 +223,7 @@ class ItemCategoryView extends Controller
         int $resource_id,
         int $item_id,
         int $item_category_id
-    ): JsonResponse
-    {
+    ): JsonResponse {
         $item_category = (new ItemCategory())->single(
             $resource_type_id,
             $resource_id,
@@ -247,8 +245,7 @@ class ItemCategoryView extends Controller
         int $resource_id,
         int $item_id,
         int $item_category_id
-    ): JsonResponse
-    {
+    ): JsonResponse {
         $item_category = (new ItemCategory())->single(
             $resource_type_id,
             $resource_id,
@@ -270,8 +267,7 @@ class ItemCategoryView extends Controller
         int $resource_id,
         int $item_id,
         int $item_category_id
-    ): JsonResponse
-    {
+    ): JsonResponse {
         $item_category = (new ItemCategory())->single(
             $resource_type_id,
             $resource_id,

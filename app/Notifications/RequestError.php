@@ -31,7 +31,7 @@ class RequestError extends Notification implements ShouldQueue
      */
     public function toMail($notifiable)
     {
-        return (new MailMessage)
+        return (new MailMessage())
             ->subject('Costs to Expect API: Request Error')
             ->greeting('Hi,')
             ->line('There was a request error, details below')

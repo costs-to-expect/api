@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Http\Request;
 use App\HttpResponse\Header;
 use App\Models\Subcategory;
 use App\HttpOptionResponse\SubcategoryCollection;
@@ -22,7 +23,7 @@ class SubcategoryView extends Controller
 {
     protected bool $allow_entire_collection = true;
 
-    public function index($resource_type_id, $category_id): JsonResponse
+    public function index(Request $request, $resource_type_id, $category_id): JsonResponse
     {
         if ($this->hasViewAccessToResourceType((int) $resource_type_id) === false) {
             return \App\HttpResponse\Response::notFoundOrNotAccessible(trans('entities.category'));
@@ -35,10 +36,9 @@ class SubcategoryView extends Controller
         $cache_control->setTtlOneMonth();
 
         $cache_collection = new \App\Cache\Collection();
-        $cache_collection->setFromCache($cache_control->getByKey(request()->getRequestUri()));
+        $cache_collection->setFromCache($cache_control->getByKey($request->getRequestUri()));
 
         if ($cache_control->isRequestCacheable() === false || $cache_collection->valid() === false) {
-
             $search_parameters = Parameter\Search::fetch(
                 Config::get('api.subcategory.searchable')
             );
@@ -53,7 +53,7 @@ class SubcategoryView extends Controller
                 $search_parameters
             );
 
-            $pagination = new \App\HttpResponse\Pagination(request()->path(), $total);
+            $pagination = new \App\HttpResponse\Pagination($request->path(), $total);
             $pagination_parameters = $pagination->allowPaginationOverride($this->allow_entire_collection)->
                 setSearchParameters($search_parameters)->
                 setSortParameters($sort_parameters)->
@@ -93,7 +93,7 @@ class SubcategoryView extends Controller
             }
 
             $cache_collection->create($total, $collection, $pagination_parameters, $headers->headers());
-            $cache_control->putByKey(request()->getRequestUri(), $cache_collection->content());
+            $cache_control->putByKey($request->getRequestUri(), $cache_collection->content());
         }
 
         return response()->json($cache_collection->collection(), 200, $cache_collection->headers());
@@ -112,8 +112,7 @@ class SubcategoryView extends Controller
         $resource_type_id,
         $category_id,
         $subcategory_id
-    ): JsonResponse
-    {
+    ): JsonResponse {
         if ($this->hasViewAccessToResourceType((int) $resource_type_id) === false) {
             return \App\HttpResponse\Response::notFoundOrNotAccessible(trans('entities.subcategory'));
         }
@@ -169,8 +168,7 @@ class SubcategoryView extends Controller
         $resource_type_id,
         $category_id,
         $subcategory_id
-    ): JsonResponse
-    {
+    ): JsonResponse {
         if ($this->hasViewAccessToResourceType((int) $resource_type_id) === false) {
             return \App\HttpResponse\Response::notFoundOrNotAccessible(trans('entities.subcategory'));
         }

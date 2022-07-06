@@ -225,41 +225,22 @@
                     <h3>Added</h3>
 
                     <ul>
-                        <li>We allow the `collection` parameter for `simple-item` item-type collections.</li>
-                        <li>We have added tests for subcategory management, found another bug, whoopee!</li>
-                        <li>We have added tests for item type responses.</li>
-                        <li>We have added an option response tests for the resource types collection and a resource type.</li>
-                        <li>We have added additional resource type tests and created/updated the json-schema files as necessary.</li>
-                        <li>We have added a catch-all route for non-matching routes.</li>
+                        <li>We have added an `item-type` filter to the resource type collection, you can limit what resource types to return.</li>
+                        <li>We have added an `item-subtype` filter to the resource collection, you can limit what resources to return.</li>
+                        <li>We have added the 'Yahtzee' item subtype.</li>
                     </ul>
 
                     <h3>Changed</h3>
 
                     <ul>
-                        <li>We have renamed the tests directory and corrected the namespaces.</li>
-                        <li>We are continuing to update out routes to named routes.</li>
-                        <li>We have moved additional responses to the response class.</li>
-                        <li>We have updated more response, if a collection is included in a response a `uri` field will contain the relative URI to the relevant collection.</li>
-                        <li>We have adjusted the layout of the test section in the README and added a note explaining the meaning of 'Non yet'.</li>
-                        <li>We have updated the response when attempting to delete an item with category assignments, rather than return a generic foreign key error, we specifically mention that there are category assignments that need to be removed first.</li>
-                        <li>We have cleaned up the response description lang file.</li>
+                        <li>Lots of refactoring.</li>
+                        <li>We have updated our backend dependencies.</li>
                     </ul>
 
                     <h3>Fixed</h3>
 
                     <ul>
-                        <li>Removed an output in a test.</li>
-                        <li>Updated the route middleware, invalid decodes should return a 403 for the route.</li>
-                        <li>Added a unique validation rule for emails, don't leave the check to the database.</li>
-                        <li>Corrected the descriptions in the OPTIONS requests for `item` summaries.</li>
-                        <li>The allowed values for `winner_id` should be a category assigned to the item, not all the categories assigned to the resource type.</li>
-                    </ul>
-
-                    <h3>Removed</h3>
-
-                    <ul>
-                        <li>We have removed the `ItemType` base class and all the child classes.</li>
-                        <li>We have removed a redundant validation class and moved the response method into the main response class.</li>
+                        <li>Renamed a lang file, the parameters-show config file should be using the parameters-show lang file.</li>
                     </ul>
                 </div>
             </div>

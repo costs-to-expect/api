@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\HttpOptionResponse\ItemCategory;
@@ -18,7 +19,7 @@ class GameCollection extends Response
 
         $post = new \App\HttpVerb\Post();
         $this->verbs['POST'] = $post->setFields(Config::get('api.item-category.fields-post'))->
-            setDynamicFields($this->allowed_fields)->
+            setAllowedValuesForFields($this->allowed_values_for_fields)->
             setAuthenticationRequirement(true)->
             setAuthenticationStatus($this->permissions['manage'])->
             setDescription('route-descriptions.item_category_POST_game')->

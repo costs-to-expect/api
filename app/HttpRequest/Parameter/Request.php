@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\HttpRequest\Parameter;
@@ -6,6 +7,7 @@ namespace App\HttpRequest\Parameter;
 use App\ItemType\Select;
 use App\Models\Category;
 use App\Models\EntityLimits;
+use App\Models\ItemType;
 use App\Models\ResourceType;
 use App\Models\Subcategory;
 use App\HttpRequest\Validate\Boolean;
@@ -36,21 +38,10 @@ class Request
         foreach ($parameter_names as $parameter) {
             if (array_key_exists($parameter, $request_parameters) === true &&
                 $request_parameters[$parameter] !== null) {
-
-                switch ($parameter) {
-                    case 'include-resources';
-                    case 'include-categories':
-                    case 'include-subcategories';
-                    case 'include-permitted-users';
-                    case 'include-unpublished':
-                    case 'complete':
-                        self::$parameters[$parameter] = Boolean::convertedValue($request_parameters[$parameter]);
-                        break;
-
-                    default:
-                        self::$parameters[$parameter] = $request_parameters[$parameter];
-                        break;
-                }
+                self::$parameters[$parameter] = match ($parameter) {
+                    'include-resources', 'include-categories', 'include-subcategories', 'include-permitted-users', 'include-unpublished', 'complete' => Boolean::convertedValue($request_parameters[$parameter]),
+                    default => $request_parameters[$parameter],
+                };
             }
         }
     }
@@ -71,7 +62,7 @@ class Request
                         array_key_exists($key, self::$parameters) === true &&
                         (new Category())->where('id', '=', self::$parameters[$key])->exists() === false
                     ) {
-                            unset(self::$parameters[$key]);
+                        unset(self::$parameters[$key]);
                     }
                     break;
 
@@ -92,10 +83,18 @@ class Request
                     }
                     break;
 
+                case 'item-type':
+                    if (
+                        array_key_exists($key, self::$parameters) === true &&
+                        (new ItemType())->where('id', '=', self::$parameters[$key])->exists() === false
+                    ) {
+                        unset(self::$parameters[$key]);
+                    }
+                    break;
+
                 case 'month':
                     if (array_key_exists($key, self::$parameters) === true &&
                         (int)(self::$parameters[$key] > 0)) {
-
                         self::$parameters[$key] = (int)self::$parameters[$key];
 
                         if (self::$parameters[$key] < 1 ||
@@ -110,7 +109,7 @@ class Request
                         array_key_exists($key, self::$parameters) === true &&
                         (new ResourceType())->where('id', '=', self::$parameters[$key])->exists() === false
                     ) {
-                            unset(self::$parameters[$key]);
+                        unset(self::$parameters[$key]);
                     }
                     break;
 
@@ -136,14 +135,13 @@ class Request
                         array_key_exists($key, self::$parameters) === true &&
                         Boolean::isConvertible(self::$parameters[$key]) === false
                     ) {
-                            unset(self::$parameters[$key]);
+                        unset(self::$parameters[$key]);
                     }
                     break;
 
                 case 'year':
                     if (array_key_exists($key, self::$parameters) === true &&
                         (int)(self::$parameters[$key] > 0)) {
-
                         self::$parameters[$key] = (int) self::$parameters[$key];
 
                         $min_year_limit = (int) Date('Y');
@@ -219,8 +217,7 @@ class Request
         array $parameter_names = [],
         ?int $resource_type_id = null,
         ?int $resource_id = null
-    ): array
-    {
+    ): array {
         self::find($parameter_names);
         self::validate($resource_type_id, $resource_id);
 

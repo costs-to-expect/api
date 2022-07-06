@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\ItemType\Game\Transformer;
@@ -28,7 +29,7 @@ class ResourceTypeItem extends Transformer
             $game = [
                 'error' => 'Unable to decode scores'
             ];
-       }
+        }
 
         $winner = null;
         if (

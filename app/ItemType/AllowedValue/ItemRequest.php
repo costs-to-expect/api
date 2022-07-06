@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\ItemType\AllowedValue;
@@ -26,8 +27,7 @@ abstract class ItemRequest
         int $resource_type_id,
         int $resource_id,
         array $viewable_resource_types
-    )
-    {
+    ) {
         $this->resource_type_id = $resource_type_id;
         $this->resource_id = $resource_id;
 
@@ -41,8 +41,7 @@ abstract class ItemRequest
     public function setParameters(
         array $available_parameters,
         array $defined_parameters
-    ): ItemRequest
-    {
+    ): ItemRequest {
         $this->available_parameters = $available_parameters;
         $this->defined_parameters = $defined_parameters;
 

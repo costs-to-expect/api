@@ -64,7 +64,6 @@ class Controller extends BaseController
             $cache_collection->setFromCache($cache_control->getByKey('/v2/permitted-resource-types'));
 
             if ($cache_control->isRequestCacheable() === false || $cache_collection->valid() === false) {
-
                 $permitted_resource_types = (new Permission())->permittedResourceTypesForUser($this->user_id);
 
                 $cache_collection->create(
@@ -99,11 +98,10 @@ class Controller extends BaseController
         $cache_collection->setFromCache($cache_control->getByKey($uri));
 
         if ($cache_control->isRequestCacheable() === false || $cache_collection->valid() === false) {
-
-            $viewable_resource_types = array_merge(
-                ($this->include_public === true ? (new ResourceType())->publicResourceTypes() : []),
-                $this->permitted_resource_types
-            );
+            $viewable_resource_types = [
+                ...($this->include_public === true ? (new ResourceType())->publicResourceTypes() : []),
+                ...$this->permitted_resource_types
+            ];
 
             $cache_collection->create(
                 count($viewable_resource_types),

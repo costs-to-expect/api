@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\HttpRequest\Validate;
@@ -26,8 +27,8 @@ class ResourceType extends BaseValidator
      */
     private function createRules(int $user_id): array
     {
-        return array_merge(
-            [
+        return [
+            ...[
                 'name' => [
                     'required',
                     'string',
@@ -39,8 +40,8 @@ class ResourceType extends BaseValidator
                     'exists:item_type,id'
                 ]
             ],
-            Config::get('api.resource-type.validation-post.fields')
-        );
+            ...Config::get('api.resource-type.validation-post.fields')
+        ];
     }
 
     /**
@@ -53,8 +54,8 @@ class ResourceType extends BaseValidator
      */
     private function updateRules(int $resource_type_id, int $user_id): array
     {
-        return array_merge(
-            [
+        return [
+            ...[
                 'name' => [
                     'sometimes',
                     'string',
@@ -62,8 +63,8 @@ class ResourceType extends BaseValidator
                     new ResourceTypeName($user_id, $resource_type_id)
                 ]
             ],
-            Config::get('api.resource-type.validation-patch.fields')
-        );
+            ...Config::get('api.resource-type.validation-patch.fields')
+        ];
     }
 
     /**
@@ -94,10 +95,10 @@ class ResourceType extends BaseValidator
         }
 
         return ValidatorFacade::make(
-            array_merge(
-                request()->all(),
-                ['item_type_id' => $item_type_id]
-            ),
+            [
+                ...request()->all(),
+                ...['item_type_id' => $item_type_id]
+            ],
             $this->createRules($options['user_id']),
             $this->translateMessages('api.resource-type.validation-post.messages')
         );

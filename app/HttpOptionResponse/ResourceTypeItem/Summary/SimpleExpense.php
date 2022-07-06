@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\HttpOptionResponse\ResourceTypeItem\Summary;
@@ -16,7 +17,7 @@ class SimpleExpense extends Response
         $this->verbs['GET'] = $get->setSearchableParameters(LaravelConfig::get($base_path . '.summary-searchable', []))
             ->setParameters(LaravelConfig::get($base_path . '.summary-parameters', []))
             ->setFilterableParameters(LaravelConfig::get($base_path . '.summary-filterable', []))
-            ->setDynamicParameters($this->allowed_parameters)
+            ->setAllowedValuesForParameters($this->allowed_values_for_parameters)
             ->setDescription('route-descriptions.summary_resource_type_items_GET_index')
             ->setAuthenticationStatus($this->permissions['view'])
             ->option();

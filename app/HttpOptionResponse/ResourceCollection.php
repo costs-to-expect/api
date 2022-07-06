@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\HttpOptionResponse;
@@ -15,6 +16,7 @@ class ResourceCollection extends Response
             ->setSearchableParameters(Config::get('api.resource.searchable'))
             ->setPaginationStatus(true, true)
             ->setParameters(Config::get('api.resource.parameters'))
+            ->setAllowedValuesForParameters($this->allowed_values_for_parameters)
             ->setAuthenticationStatus($this->permissions['view'])
             ->setDescription('route-descriptions.resource_GET_index')
             ->option();
@@ -22,7 +24,7 @@ class ResourceCollection extends Response
         $post = new \App\HttpVerb\Post();
         $this->verbs['POST'] = $post
             ->setFields(Config::get('api.resource.fields-post'))
-            ->setDynamicFields($this->allowed_fields)
+            ->setAllowedValuesForFields($this->allowed_values_for_fields)
             ->setDescription('route-descriptions.resource_POST')
             ->setAuthenticationStatus($this->permissions['manage'])
             ->setAuthenticationRequirement(true)

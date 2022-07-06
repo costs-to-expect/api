@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Summary;
 
+use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\HttpResponse\Header;
 use App\Models\Summary\ResourceType;
@@ -24,16 +25,15 @@ class ResourceTypeView extends Controller
      *
      * @return JsonResponse
      */
-    public function index(): JsonResponse
+    public function index(Request $request): JsonResponse
     {
         $cache_control = new \App\Cache\Control(true, $this->user_id);
         $cache_control->setTtlOneWeek();
 
         $cache_summary = new \App\Cache\Summary();
-        $cache_summary->setFromCache($cache_control->getByKey(request()->getRequestUri()));
+        $cache_summary->setFromCache($cache_control->getByKey($request->getRequestUri()));
 
         if ($cache_control->isRequestCacheable() === false || $cache_summary->valid() === false) {
-
             $search_parameters = Parameter\Search::fetch(
                 Config::get('api.resource-type.summary-searchable')
             );
@@ -68,7 +68,7 @@ class ResourceTypeView extends Controller
             }
 
             $cache_summary->create($collection, $headers->headers());
-            $cache_control->putByKey(request()->getRequestUri(), $cache_summary->content());
+            $cache_control->putByKey($request->getRequestUri(), $cache_summary->content());
         }
 
         return response()->json($cache_summary->collection(), 200, $cache_summary->headers());

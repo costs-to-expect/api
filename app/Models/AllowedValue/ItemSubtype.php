@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Models\AllowedValue;
@@ -14,9 +15,9 @@ class ItemSubtype
         $this->hash = new Hash();
     }
 
-    public function allowedValues(int $item_type_id): array
+    public function allowedValues(int $item_type_id, string $field = 'item_subtype_id'): array
     {
-        $parameters = ['item_subtype_id' => ['allowed_values' => []]];
+        $parameters = [$field => ['allowed_values' => []]];
 
         $item_subtypes = (new \App\Models\ItemSubtype())->minimisedCollection($item_type_id);
 
@@ -27,7 +28,7 @@ class ItemSubtype
                 \App\HttpResponse\Response::unableToDecode();
             }
 
-            $parameters['item_subtype_id']['allowed_values'][$id] = [
+            $parameters[$field]['allowed_values'][$id] = [
                 'value' => $id,
                 'name' => $item_subtype['item_subtype_name'],
                 'description' => $item_subtype['item_subtype_description']

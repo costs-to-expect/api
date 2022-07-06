@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\ItemType\AllocatedExpense\Models;
@@ -33,8 +34,7 @@ class Summary extends LaravelModel
         int $resource_type_id,
         int $resource_id,
         array $parameters = []
-    ): array
-    {
+    ): array {
         $collection = $this->
             selectRaw("
                 category.id, 
@@ -44,7 +44,8 @@ class Summary extends LaravelModel
                 SUM({$this->sub_table}.actualised_total) AS total, 
                 COUNT({$this->sub_table}.item_id) AS total_count
             ")
-            ->selectRaw("
+            ->selectRaw(
+                "
                 (
                     SELECT 
                         GREATEST(
@@ -98,8 +99,7 @@ class Summary extends LaravelModel
         int $resource_id,
         int $category_id,
         array $parameters = []
-    ): array
-    {
+    ): array {
         $collection = $this
             ->selectRaw("
                 category.id, 
@@ -109,7 +109,8 @@ class Summary extends LaravelModel
                 SUM({$this->sub_table}.actualised_total) AS total, 
                 COUNT({$this->sub_table}.item_id) AS total_count
             ")
-            ->selectRaw("
+            ->selectRaw(
+                "
                 (
                     SELECT 
                         GREATEST(
@@ -159,15 +160,15 @@ class Summary extends LaravelModel
         array $parameters = [],
         array $search_parameters = [],
         array $filter_parameters = []
-    ): array
-    {
+    ): array {
         $collection = $this
             ->selectRaw("
                 currency.code AS currency_code,
                 SUM({$this->sub_table}.actualised_total) AS total, 
                 COUNT({$this->sub_table}.item_id) AS total_count
             ")
-            ->selectRaw("
+            ->selectRaw(
+                "
                 (
                     SELECT 
                         GREATEST(
@@ -246,8 +247,7 @@ class Summary extends LaravelModel
         int $resource_id,
         int $year,
         array $parameters = []
-    ): array
-    {
+    ): array {
         $collection = $this
             ->selectRaw("
                 MONTH({$this->sub_table}.effective_date) as month,
@@ -255,7 +255,8 @@ class Summary extends LaravelModel
                 SUM({$this->sub_table}.actualised_total) AS total,            
                 COUNT({$this->sub_table}.item_id) AS total_count
             ")
-            ->selectRaw("
+            ->selectRaw(
+                "
                 (
                     SELECT 
                         GREATEST(
@@ -309,8 +310,7 @@ class Summary extends LaravelModel
         int $year,
         int $month,
         array $parameters = []
-    ): array
-    {
+    ): array {
         $collection = $this
             ->selectRaw("
                 MONTH({$this->sub_table}.effective_date) as month, 
@@ -318,7 +318,8 @@ class Summary extends LaravelModel
                 SUM({$this->sub_table}.actualised_total) AS total, 
                 COUNT({$this->sub_table}.item_id) AS total_count
             ")
-            ->selectRaw("
+            ->selectRaw(
+                "
                 (
                     SELECT 
                         GREATEST(
@@ -371,8 +372,7 @@ class Summary extends LaravelModel
         int $resource_id,
         int $category_id,
         array $parameters = []
-    ): array
-    {
+    ): array {
         $collection = $this
             ->selectRaw("
                 sub_category.id, 
@@ -382,7 +382,8 @@ class Summary extends LaravelModel
                 SUM({$this->sub_table}.actualised_total) AS total, 
                 COUNT({$this->sub_table}.item_id) AS total_count
             ")
-            ->selectRaw("
+            ->selectRaw(
+                "
                 (
                     SELECT 
                         GREATEST(
@@ -440,8 +441,7 @@ class Summary extends LaravelModel
         int $category_id,
         int $subcategory_id,
         array $parameters = []
-    ): array
-    {
+    ): array {
         $collection = $this
             ->selectRaw("
                 sub_category.id, 
@@ -451,7 +451,8 @@ class Summary extends LaravelModel
                 SUM({$this->sub_table}.actualised_total) AS total,
                 COUNT({$this->sub_table}.item_id) AS total_count
             ")
-            ->selectRaw("
+            ->selectRaw(
+                "
                 (
                     SELECT 
                         GREATEST(
@@ -506,14 +507,14 @@ class Summary extends LaravelModel
         int $resource_type_id,
         int $resource_id,
         array $parameters = []
-    ): array
-    {
+    ): array {
         $collection = $this->selectRaw("
                 currency.code AS currency_code,
                 SUM({$this->sub_table}.actualised_total) AS total,
                 COUNT({$this->sub_table}.item_id) AS total_count
             ")
-            ->selectRaw("
+            ->selectRaw(
+                "
                 (
                     SELECT 
                         GREATEST(
@@ -560,8 +561,7 @@ class Summary extends LaravelModel
         int $resource_type_id,
         int $resource_id,
         array $parameters = []
-    ): array
-    {
+    ): array {
         $collection = $this
             ->selectRaw("
                 YEAR({$this->sub_table}.effective_date) as year, 
@@ -569,7 +569,8 @@ class Summary extends LaravelModel
                 SUM({$this->sub_table}.actualised_total) AS total, 
                 COUNT({$this->sub_table}.item_id) AS total_count
             ")
-            ->selectRaw("
+            ->selectRaw(
+                "
                 (
                     SELECT 
                         GREATEST(
@@ -620,8 +621,7 @@ class Summary extends LaravelModel
         int $resource_id,
         int $year,
         array $parameters = []
-    ): array
-    {
+    ): array {
         $collection = $this
             ->selectRaw("
                 YEAR({$this->sub_table}.effective_date) as year, 
@@ -629,7 +629,8 @@ class Summary extends LaravelModel
                 SUM({$this->sub_table}.actualised_total) AS total, 
                 COUNT({$this->sub_table}.item_id) AS total_count
             ")
-            ->selectRaw("
+            ->selectRaw(
+                "
                 (
                     SELECT 
                         GREATEST(

@@ -34,7 +34,7 @@ class ForgotPassword extends Notification implements ShouldQueue
      */
     public function toMail($notifiable)
     {
-        return (new MailMessage)
+        return (new MailMessage())
             ->subject('Costs to Expect API: Reset password')
             ->greeting('Hi,')
             ->line('We have received a request to reset your password, if this we you please follow the steps below, if this was not you, please ignore this email and let us know.')

@@ -9,7 +9,9 @@ use Illuminate\Broadcasting\InteractsWithSockets;
 
 class RequestError
 {
-    use Dispatchable, InteractsWithSockets, SerializesModels;
+    use Dispatchable;
+    use InteractsWithSockets;
+    use SerializesModels;
 
     public $request_error = [];
 

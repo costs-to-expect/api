@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\ItemType\Game;
@@ -20,8 +21,7 @@ class AllowedValue
         int $resource_type_id,
         ?int $resource_id = null,
         ?int $item_id = null
-    )
-    {
+    ) {
         $this->hash = new Hash();
 
         $this->resource_type_id = $resource_type_id;
@@ -67,11 +67,38 @@ class AllowedValue
     public function fieldAllowedValuesForShow(): array
     {
         return [
-            'winner_id' => ['allowed_values' => $this->assignAllowedValuesForWinner()]
+            'winner_id' => ['allowed_values' => $this->assignAllowedValuesForGameWinner()]
         ];
     }
 
     private function assignAllowedValuesForWinner(): array
+    {
+        $allowed_values = [];
+
+        $winners = (new \App\Models\Category())->paginatedCollection(
+            $this->resource_type_id,
+            $this->viewable_resource_types,
+            0,
+            100
+        );
+
+        foreach ($winners as $winner) {
+            $winner_id = $this->hash->encode('category', $winner['category_id']);
+
+            $allowed_values[$winner_id] = [
+                'uri' => route('category.show', ['resource_type_id' => $this->resource_type_id, 'category_id' => $winner_id], false),
+                'value' => $winner_id,
+                'name' => $winner['category_name'],
+                'description' => trans('item-type-game/allowed-values.description-prefix-winner_id') .
+                    $winner['category_name'] .
+                    trans('item-type-game/allowed-values.description-suffix-winner_id')
+            ];
+        }
+
+        return $allowed_values;
+    }
+
+    private function assignAllowedValuesForGameWinner(): array
     {
         $allowed_values = [];
 

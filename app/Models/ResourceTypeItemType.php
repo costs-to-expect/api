@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Models;
@@ -25,7 +26,7 @@ class ResourceTypeItemType extends Model
 
     public function itemType(int $resource_type_id): ?string
     {
-        $collection = $this->join('item_type', 'resource_type_item_type.item_type_id','item_type.id')
+        $collection = $this->join('item_type', 'resource_type_item_type.item_type_id', 'item_type.id')
             ->where('resource_type_item_type.resource_type_id', '=', $resource_type_id)
             ->first(['item_type.name']);
 

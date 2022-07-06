@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\HttpRequest\Validate;
@@ -25,8 +26,8 @@ class Category extends BaseValidator
      */
     private function createRules(int $resource_type_id = null): array
     {
-        return array_merge(
-            [
+        return [
+            ...[
                 'name' => [
                     'required',
                     'string',
@@ -34,8 +35,8 @@ class Category extends BaseValidator
                     'unique:category,name,null,id,resource_type_id,' . $resource_type_id
                 ],
             ],
-            Config::get('api.category.validation-post.fields')
-        );
+            ...Config::get('api.category.validation-post.fields')
+        ];
     }
 
     /**
@@ -48,17 +49,17 @@ class Category extends BaseValidator
      */
     private function updateRules(int $category_id, int $resource_type_id): array
     {
-        return array_merge(
-            [
+        return [
+            ...[
                 'name' => [
                     'sometimes',
                     'string',
                     'max:255',
-                    'unique:category,name,'. $category_id . ',id,resource_type_id,' . $resource_type_id
+                    'unique:category,name,' . $category_id . ',id,resource_type_id,' . $resource_type_id
                 ],
             ],
-            Config::get('api.category.validation-patch.fields')
-        );
+            ...Config::get('api.category.validation-patch.fields')
+        ];
     }
 
     /**

@@ -1,38 +1,4 @@
 {
-    "name": "costs-to-expect/api",
-    "description": "The API for Costs to Expect",
-    "keywords": [
-        "API",
-        "REST API",
-        "Laravel",
-        "Child cost",
-        "Expense API"
-    ],
-    "license": "MIT",
-    "type": "project",
-    "require": {
-        "php": "^8.1",
-        "ext-json": "*",
-        "doctrine/dbal": "^2.9",
-        "guzzlehttp/guzzle": "^7.0.1",
-        "hashids/hashids": "^4.1.0",
-        "laravel/framework": "^9.0",
-        "laravel/helpers": "^1.2",
-        "laravel/sanctum": "^2.8",
-        "laravel/tinker": "^2.0",
-        "opis/json-schema": "^1.0",
-        "symfony/http-client": "^6.0",
-        "symfony/mailgun-mailer": "^6.0",
-        "symfony/postmark-mailer": "^6.0"
-    },
-    "require-dev": {
-        "roave/security-advisories": "dev-latest",
-        "fakerphp/faker": "^1.9.1",
-        "filp/whoops": "^2.0",
-        "mockery/mockery": "^1.0",
-        "nunomaduro/collision": "^6.1",
-        "phpunit/phpunit": "^9.0"
-    },
     "autoload": {
         "classmap": [
             "database/seeds",
@@ -47,10 +13,50 @@
             "Tests\\": "Tests/"
         }
     },
+    "config": {
+        "optimize-autoloader": true,
+        "preferred-install": "dist",
+        "sort-packages": true
+    },
+    "description": "The API for Costs to Expect",
     "extra": {
         "laravel": {
             "dont-discover": []
         }
+    },
+    "keywords": [
+        "API",
+        "REST API",
+        "Laravel",
+        "Child cost",
+        "Expense API"
+    ],
+    "license": "MIT",
+    "minimum-stability": "dev",
+    "name": "costs-to-expect/api",
+    "prefer-stable": true,
+    "require": {
+        "php": "^8.1",
+        "ext-json": "*",
+        "doctrine/dbal": "^2.9",
+        "guzzlehttp/guzzle": "^7.0.1",
+        "hashids/hashids": "^4.1.0",
+        "laravel/framework": "^9.0",
+        "laravel/helpers": "^1.2",
+        "laravel/sanctum": "^2.8",
+        "laravel/tinker": "^2.0",
+        "symfony/http-client": "^6.0",
+        "symfony/mailgun-mailer": "^6.0",
+        "symfony/postmark-mailer": "^6.0"
+    },
+    "require-dev": {
+        "fakerphp/faker": "^1.9.1",
+        "filp/whoops": "^2.0",
+        "mockery/mockery": "^1.0",
+        "nunomaduro/collision": "^6.1",
+        "opis/json-schema": "^1.0",
+        "phpunit/phpunit": "^9.0",
+        "roave/security-advisories": "dev-latest"
     },
     "scripts": {
         "post-root-package-install": [
@@ -64,11 +70,5 @@
             "@php artisan package:discover"
         ]
     },
-    "config": {
-        "optimize-autoloader": true,
-        "preferred-install": "dist",
-        "sort-packages": true
-    },
-    "minimum-stability": "dev",
-    "prefer-stable": true
+    "type": "project"
 }

@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Models\AllowedValue;
@@ -14,15 +15,9 @@ class ItemType
         $this->hash = new Hash();
     }
 
-    /**
-     * Generate the allowed values item type array, will be passed to the
-     * Option classes and merged with the fields/parameters
-     *
-     * @return array
-     */
-    public function allowedValues(): array
+    public function allowedValues(string $field = 'item_type_id'): array
     {
-        $parameters = ['item_type_id' => ['allowed_values' => []]];
+        $parameters = [$field => ['allowed_values' => []]];
 
         $item_types = (new \App\Models\ItemType())->minimisedCollection();
 
@@ -33,7 +28,7 @@ class ItemType
                 \App\HttpResponse\Response::unableToDecode();
             }
 
-            $parameters['item_type_id']['allowed_values'][$id] = [
+            $parameters[$field]['allowed_values'][$id] = [
                 'value' => $id,
                 'name' => $item_type['item_type_name'],
                 'description' => $item_type['item_type_description']

@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\HttpResponse;
@@ -155,6 +156,8 @@ class Pagination
 
                     switch ($parameter) {
                         case 'category':
+                        case 'item-type':
+                        case 'item-subtype':
                         case 'subcategory':
                             $parameters .= $parameter . '=' .
                                 $this->hash->encode($parameter, $parameter_value);
@@ -232,7 +235,6 @@ class Pagination
         ];
 
         if ($this->collection === false) {
-
             $previous_offset = null;
             $next_offset = null;
 

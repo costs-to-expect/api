@@ -16,7 +16,6 @@ use Illuminate\Database\QueryException;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Log;
 
 /**
  * Manage resource types
@@ -31,7 +30,7 @@ class ResourceTypeManage extends Controller
 
     public function create(Request $request): JsonResponse
     {
-        $validator = (new ResourceTypeValidator)->create([
+        $validator = (new ResourceTypeValidator())->create([
             'user_id' => $this->user_id
         ]);
 
@@ -46,7 +45,7 @@ class ResourceTypeManage extends Controller
             ->setUserId($this->user_id);
 
         try {
-            $resource_type = DB::transaction(function() use($request) {
+            $resource_type = DB::transaction(function () use ($request) {
                 $resource_type = new ResourceType([
                     'name' => $request->input('name'),
                     'description' => $request->input('description'),
@@ -78,13 +77,12 @@ class ResourceTypeManage extends Controller
             });
 
             ClearCache::dispatch($cache_job_payload->payload());
-
         } catch (Exception $e) {
             return \App\HttpResponse\Response::failedToSaveModelForCreate($e);
         }
 
         return response()->json(
-            (new ResourceTypeTransformer((New ResourceType())->instanceToArray($resource_type)))->asArray(),
+            (new ResourceTypeTransformer((new ResourceType())->instanceToArray($resource_type)))->asArray(),
             201
         );
     }
@@ -92,8 +90,7 @@ class ResourceTypeManage extends Controller
     public function delete(
         Request $request,
         string $resource_type_id
-    ): JsonResponse
-    {
+    ): JsonResponse {
         if ($this->hasWriteAccessToResourceType((int) $resource_type_id) === false) {
             return \App\HttpResponse\Response::notFoundOrNotAccessible(trans('entities.resource-type'));
         }
@@ -128,7 +125,7 @@ class ResourceTypeManage extends Controller
             $resource_type !== null
         ) {
             try {
-                DB::transaction(static function() use ($resource_type_item_type, $permitted_user, $resource_type) {
+                DB::transaction(static function () use ($resource_type_item_type, $permitted_user, $resource_type) {
                     $resource_type_item_type->delete();
                     $permitted_user->delete();
                     $resource_type->delete();
@@ -150,8 +147,7 @@ class ResourceTypeManage extends Controller
     public function update(
         Request $request,
         string $resource_type_id
-    ): JsonResponse
-    {
+    ): JsonResponse {
         if ($this->hasWriteAccessToResourceType((int) $resource_type_id) === false) {
             return \App\HttpResponse\Response::notFoundOrNotAccessible(trans('entities.resource-type'));
         }
@@ -176,10 +172,10 @@ class ResourceTypeManage extends Controller
         }
 
         $invalid_fields = $this->checkForInvalidFields(
-            array_merge(
-                (new ResourceType())->patchableFields(),
-                (new ResourceTypeValidator())->dynamicDefinedFields()
-            )
+            [
+                ...(new ResourceType())->patchableFields(),
+                ...(new ResourceTypeValidator())->dynamicDefinedFields()
+            ]
         );
 
         if (count($invalid_fields) > 0) {
@@ -202,7 +198,6 @@ class ResourceTypeManage extends Controller
             $resource_type->save();
 
             ClearCache::dispatch($cache_job_payload->payload());
-
         } catch (Exception $e) {
             return \App\HttpResponse\Response::failedToSaveModelForUpdate($e);
         }

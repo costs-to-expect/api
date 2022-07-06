@@ -12,11 +12,11 @@ use Illuminate\Http\JsonResponse;
  */
 class ToolView extends Controller
 {
-     /**
-     * Options request for the tools/cache route
-     *
-     * @return JsonResponse
-     */
+    /**
+    * Options request for the tools/cache route
+    *
+    * @return JsonResponse
+    */
     public function optionsCache(): JsonResponse
     {
         $response = new Cache(['view'=> $this->user_id !== null, 'manage'=> $this->user_id !== null]);

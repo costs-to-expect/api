@@ -24,17 +24,17 @@ class IndexView extends Controller
      */
     public function index()
     {
-        $routes_to_display = array();
+        $routes_to_display = [];
 
         $config = Config::get('api.app.version');
 
         foreach (Route::getRoutes() as $route) {
             if (Str::startsWith($route->uri, $config['prefix']) === true) {
                 if (isset($routes_to_display[$route->uri]['methods'])) {
-                    $routes_to_display[$route->uri]['methods'] = array_merge(
-                        $route->methods,
-                        $routes_to_display[$route->uri]['methods']
-                    );
+                    $routes_to_display[$route->uri]['methods'] = [
+                        ...$route->methods,
+                        ...$routes_to_display[$route->uri]['methods']
+                    ];
                 } else {
                     $routes_to_display[$route->uri]['methods'] = $route->methods;
                 }
@@ -88,23 +88,20 @@ class IndexView extends Controller
         $section = null;
 
         while (!$changelog->eof()) {
-
             $line = trim($changelog->fgets());
 
             if ($line !== '') {
-
-                if (strpos($line, '## [v') !== false) {
-
+                if (str_contains($line, '## [v')) {
                     ++$i;
                     $changes[$i]['release'] = trim(str_replace('##', '', $line));
                     $section = null;
                 }
 
-                if (strpos($line, '###') !== false) {
+                if (str_contains($line, '###')) {
                     $section = strtolower(trim(str_replace('###', '', $line)));
                 }
 
-                if ($section !== null && strpos($line, '-') !== false) {
+                if ($section !== null && str_contains($line, '-')) {
                     $changes[$i][$section][] = trim(str_replace('- ', '', $line));
                 }
             }
@@ -117,12 +114,12 @@ class IndexView extends Controller
                 'releases' => array_values($changes)
             ],
             200,
-            array_merge(
-                [
+            [
+                ...[
                     'X-Total-Count' => ($i + 1)
                 ],
-                $headers->headers()
-            )
+                ...$headers->headers()
+            ]
         );
     }
 

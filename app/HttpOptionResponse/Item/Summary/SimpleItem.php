@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\HttpOptionResponse\Item\Summary;
@@ -17,7 +18,7 @@ class SimpleItem extends Response
             ->setParameters(LaravelConfig::get($base_path . '.summary-parameters', []))
             ->setSearchableParameters(LaravelConfig::get($base_path . '.summary-searchable', []))
             ->setFilterableParameters(LaravelConfig::get($base_path . '.summary-filterable', []))
-            ->setDynamicParameters($this->allowed_parameters)
+            ->setAllowedValuesForParameters($this->allowed_values_for_parameters)
             ->setDescription('route-descriptions.summary_items_GET_index')
             ->setAuthenticationStatus($this->permissions['view'])
             ->option();

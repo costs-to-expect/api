@@ -31,7 +31,9 @@ class ConvertGetParameters
             'category',
             'subcategory',
             'resource-type',
-            'item'
+            'item',
+            'item-subtype',
+            'item-type',
         ];
 
         foreach ($params_to_convert as $param) {

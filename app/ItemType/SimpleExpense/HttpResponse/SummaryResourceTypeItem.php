@@ -15,8 +15,7 @@ class SummaryResourceTypeItem extends ApiSummaryResourceTypeItemResponse
         int $resource_type_id,
         bool $permitted_user = false,
         int $user_id = null
-    )
-    {
+    ) {
         parent::__construct(
             $resource_type_id,
             $permitted_user,
@@ -72,7 +71,6 @@ class SummaryResourceTypeItem extends ApiSummaryResourceTypeItemResponse
     protected function categoriesSummary(): JsonResponse
     {
         if ($this->cache_control->isRequestCacheable() === false || $this->cache_summary->valid() === false) {
-
             $summary = $this->model->categoriesSummary(
                 $this->resource_type_id,
                 $this->parameters
@@ -94,7 +92,6 @@ class SummaryResourceTypeItem extends ApiSummaryResourceTypeItemResponse
     protected function categorySummary(): JsonResponse
     {
         if ($this->cache_control->isRequestCacheable() === false || $this->cache_summary->valid() === false) {
-
             $summary = $this->model->categorySummary(
                 $this->resource_type_id,
                 $this->decision_parameters['category'],
@@ -123,7 +120,6 @@ class SummaryResourceTypeItem extends ApiSummaryResourceTypeItemResponse
     protected function filteredSummary(): JsonResponse
     {
         if ($this->cache_control->isRequestCacheable() === false || $this->cache_summary->valid() === false) {
-
             $summary = $this->model->filteredSummary(
                 $this->resource_type_id,
                 $this->decision_parameters['category'],
@@ -191,7 +187,6 @@ class SummaryResourceTypeItem extends ApiSummaryResourceTypeItemResponse
     protected function resourcesSummary(): JsonResponse
     {
         if ($this->cache_control->isRequestCacheable() === false || $this->cache_summary->valid() === false) {
-
             $summary = $this->model->resourcesSummary(
                 $this->resource_type_id,
                 $this->parameters
@@ -213,7 +208,6 @@ class SummaryResourceTypeItem extends ApiSummaryResourceTypeItemResponse
     protected function subcategoriesSummary(): JsonResponse
     {
         if ($this->cache_control->isRequestCacheable() === false || $this->cache_summary->valid() === false) {
-
             $summary = $this->model->subCategoriesSummary(
                 $this->resource_type_id,
                 $this->decision_parameters['category'],
@@ -236,7 +230,6 @@ class SummaryResourceTypeItem extends ApiSummaryResourceTypeItemResponse
     protected function subcategorySummary(): JsonResponse
     {
         if ($this->cache_control->isRequestCacheable() === false || $this->cache_summary->valid() === false) {
-
             $summary = $this->model->subCategorySummary(
                 $this->resource_type_id,
                 $this->decision_parameters['category'],
@@ -266,7 +259,6 @@ class SummaryResourceTypeItem extends ApiSummaryResourceTypeItemResponse
     protected function summary(): JsonResponse
     {
         if ($this->cache_control->isRequestCacheable() === false || $this->cache_summary->valid() === false) {
-
             $summary = $this->model->summary(
                 $this->resource_type_id,
                 $this->parameters

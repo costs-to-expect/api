@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\HttpOptionResponse\ItemTransfer;
@@ -12,7 +13,7 @@ class AllocatedExpenseTransfer extends Response
     {
         $post = new \App\HttpVerb\Post();
         $this->verbs['POST'] = $post->setFields(Config::get('api.item-transfer.fields-post'))->
-            setDynamicFields($this->allowed_fields)->
+            setAllowedValuesForFields($this->allowed_values_for_fields)->
             setDescription('route-descriptions.item_transfer_POST')->
             setAuthenticationStatus($this->permissions['manage'])->
             setAuthenticationRequirement(true)->

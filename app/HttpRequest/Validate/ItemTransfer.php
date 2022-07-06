@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\HttpRequest\Validate;
@@ -35,17 +36,16 @@ class ItemTransfer extends BaseValidator
         }
 
         return ValidatorFacade::make(
-            array_merge(
-                request()->all(),
-                [
+            [
+                ...request()->all(),
+                ...[
                     'resource_id' => $resource_id
                 ]
-            ),
+            ],
             [
                 'resource_id' => [
                     'required',
-                    Rule::exists('resource', 'id')->where(static function ($query) use ($options)
-                    {
+                    Rule::exists('resource', 'id')->where(static function ($query) use ($options) {
                         $query->where('resource_type_id', '=', $options['resource_type_id'])->
                             where('id', '!=', $options['existing_resource_id']);
                     }),

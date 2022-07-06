@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Http\Request;
 use App\HttpResponse\Response;
 use App\Jobs\ClearCache;
 use App\Models\Resource;
@@ -30,7 +31,7 @@ class ResourceManage extends Controller
      *
      * @return JsonResponse
      */
-    public function create(string $resource_type_id): JsonResponse
+    public function create(Request $request, string $resource_type_id): JsonResponse
     {
         if ($this->hasWriteAccessToResourceType((int) $resource_type_id) === false) {
             return \App\HttpResponse\Response::notFoundOrNotAccessible(trans('entities.resource-type'));
@@ -41,7 +42,7 @@ class ResourceManage extends Controller
             $this->viewable_resource_types
         );
 
-        $validator = (new ResourceValidator)->create([
+        $validator = (new ResourceValidator())->create([
             'resource_type_id' => $resource_type_id,
             'item_type_id' => $resource_type['resource_type_item_type_id']
         ]);
@@ -59,16 +60,16 @@ class ResourceManage extends Controller
             ->setUserId($this->user_id);
 
         try {
-            $resource = DB::transaction(function() use ($resource_type_id) {
+            $resource = DB::transaction(function () use ($request, $resource_type_id) {
                 $resource = new Resource([
                     'resource_type_id' => $resource_type_id,
-                    'name' => request()->input('name'),
-                    'description' => request()->input('description'),
-                    'data' => request()->input('data')
+                    'name' => $request->input('name'),
+                    'description' => $request->input('description'),
+                    'data' => $request->input('data')
                 ]);
                 $resource->save();
 
-                $item_subtype_id = $this->hash->decode('item-subtype', request()->input('item_subtype_id'));
+                $item_subtype_id = $this->hash->decode('item-subtype', $request->input('item_subtype_id'));
 
                 if ($item_subtype_id === false) {
                     return \App\HttpResponse\Response::unableToDecode();
@@ -84,13 +85,12 @@ class ResourceManage extends Controller
             });
 
             ClearCache::dispatch($cache_job_payload->payload());
-
         } catch (Exception $e) {
             return Response::failedToSaveModelForCreate($e);
         }
 
         return response()->json(
-            (new ResourceTransformer((New Resource())->instanceToArray($resource)))->asArray(),
+            (new ResourceTransformer((new Resource())->instanceToArray($resource)))->asArray(),
             201
         );
     }
@@ -106,8 +106,7 @@ class ResourceManage extends Controller
     public function delete(
         string $resource_type_id,
         string $resource_id
-    ): JsonResponse
-    {
+    ): JsonResponse {
         if ($this->hasWriteAccessToResourceType((int) $resource_type_id) === false) {
             return \App\HttpResponse\Response::notFoundOrNotAccessible(trans('entities.resource'));
         }
@@ -129,7 +128,7 @@ class ResourceManage extends Controller
             ->setUserId($this->user_id);
 
         try {
-            DB::transaction(function() use ($resource, $resource_item_subtype) {
+            DB::transaction(function () use ($resource, $resource_item_subtype) {
                 $resource_item_subtype->delete();
                 $resource->delete();
             });
@@ -152,11 +151,10 @@ class ResourceManage extends Controller
      *
      * @return JsonResponse
      */
-    public function update(
+    public function update(Request $request, 
         string $resource_type_id,
         string $resource_id
-    ): JsonResponse
-    {
+    ): JsonResponse {
         if ($this->hasWriteAccessToResourceType((int) $resource_type_id) === false) {
             return \App\HttpResponse\Response::notFoundOrNotAccessible(trans('entities.resource'));
         }
@@ -167,7 +165,7 @@ class ResourceManage extends Controller
             return Response::failedToSelectModelForUpdateOrDelete();
         }
 
-        if (count(request()->all()) === 0) {
+        if (count($request->all()) === 0) {
             return \App\HttpResponse\Response::nothingToPatch();
         }
 
@@ -181,17 +179,17 @@ class ResourceManage extends Controller
         }
 
         $invalid_fields = $this->checkForInvalidFields(
-            array_merge(
-                (new Resource())->patchableFields(),
-                (new ResourceValidator())->dynamicDefinedFields()
-            )
+            [
+                ...(new Resource())->patchableFields(),
+                ...(new ResourceValidator())->dynamicDefinedFields()
+            ]
         );
 
         if (count($invalid_fields) > 0) {
             return Response::invalidFieldsInRequest($invalid_fields);
         }
 
-        foreach (request()->all() as $key => $value) {
+        foreach ($request->all() as $key => $value) {
             $resource->$key = $value;
         }
 
@@ -207,7 +205,6 @@ class ResourceManage extends Controller
             $resource->save();
 
             ClearCache::dispatch($cache_job_payload->payload());
-            
         } catch (Exception $e) {
             return Response::failedToSaveModelForUpdate($e);
         }

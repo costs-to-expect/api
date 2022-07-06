@@ -24,5 +24,3 @@ Route::view(
         'date' => $version['release_date']
     ]
 );
-
-

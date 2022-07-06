@@ -27,13 +27,16 @@ class ResourceTypeView extends Controller
 
     public function index(Request $request): JsonResponse
     {
-        $cache_control = new \App\Cache\Control( true, $this->user_id);
+        $cache_control = new \App\Cache\Control(true, $this->user_id);
         $cache_control->setTtlOneWeek();
 
         $cache_collection = new \App\Cache\Collection();
         $cache_collection->setFromCache($cache_control->getByKey($request->getRequestUri()));
 
         if ($cache_control->isRequestCacheable() === false || $cache_collection->valid() === false) {
+            $request_parameters = Parameter\Request::fetch(
+                array_keys(Config::get('api.resource-type.parameters'))
+            );
 
             $search_parameters = Parameter\Search::fetch(
                 Config::get('api.resource-type.searchable')
@@ -53,6 +56,7 @@ class ResourceTypeView extends Controller
                 ->allowPaginationOverride($this->allow_entire_collection)
                 ->setSearchParameters($search_parameters)
                 ->setSortParameters($sort_parameters)
+                ->setParameters($request_parameters)
                 ->parameters();
 
             $resource_types = (new ResourceType())->paginatedCollection(
@@ -60,7 +64,8 @@ class ResourceTypeView extends Controller
                 $pagination_parameters['offset'],
                 $pagination_parameters['limit'],
                 $search_parameters,
-                $sort_parameters
+                $sort_parameters,
+                $request_parameters
             );
 
             $last_updated = null;
@@ -94,7 +99,7 @@ class ResourceTypeView extends Controller
         return response()->json($cache_collection->collection(), 200, $cache_collection->headers());
     }
 
-    public function show($resource_type_id): JsonResponse
+    public function show(Request $request, $resource_type_id): JsonResponse
     {
         $parameters = Parameter\Request::fetch(array_keys(Config::get('api.resource-type.parameters-show')));
 
@@ -138,8 +143,9 @@ class ResourceTypeView extends Controller
         $response = new ResourceTypeCollection(['view'=> $this->user_id !== null, 'manage'=> $this->user_id !== null]);
 
         return $response->setAllowedValuesForFields((new ItemType())->allowedValues())
-            ->create()
-            ->response();
+                ->setAllowedValuesForParameters((new ItemType())->allowedValues('item-type'))
+                ->create()
+                ->response();
     }
 
     public function optionsShow($resource_type_id): JsonResponse

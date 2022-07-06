@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\HttpOptionResponse;
@@ -11,9 +12,9 @@ abstract class Response
 
     protected array $permissions;
 
-    protected array $allowed_fields;
+    protected array $allowed_values_for_fields;
 
-    protected array $allowed_parameters;
+    protected array $allowed_values_for_parameters;
 
     public function __construct(array $permissions)
     {
@@ -21,7 +22,7 @@ abstract class Response
 
         $this->permissions = $permissions;
 
-        $this->allowed_fields = [];
+        $this->allowed_values_for_fields = [];
     }
 
     abstract public function create();
@@ -50,14 +51,14 @@ abstract class Response
 
     public function setAllowedValuesForFields(array $allowed_fields): Response
     {
-        $this->allowed_fields = $allowed_fields;
+        $this->allowed_values_for_fields = $allowed_fields;
 
         return $this;
     }
 
     public function setAllowedValuesForParameters(array $allowed_parameters): Response
     {
-        $this->allowed_parameters = $allowed_parameters;
+        $this->allowed_values_for_parameters = $allowed_parameters;
 
         return $this;
     }

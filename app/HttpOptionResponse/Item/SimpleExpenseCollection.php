@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\HttpOptionResponse\Item;
@@ -17,7 +18,7 @@ class SimpleExpenseCollection extends Response
             ->setSearchableParameters(LaravelConfig::get($base_path . '.searchable', []))
             ->setFilterableParameters(LaravelConfig::get($base_path . '.filterable', []))
             ->setParameters(LaravelConfig::get($base_path . '.parameters', []))
-            ->setDynamicParameters($this->allowed_parameters)
+            ->setAllowedValuesForParameters($this->allowed_values_for_parameters)
             ->setPaginationStatus(true)
             ->setAuthenticationStatus($this->permissions['view'])
             ->setDescription('route-descriptions.item_GET_index')
@@ -25,10 +26,10 @@ class SimpleExpenseCollection extends Response
 
         $post = new \App\HttpVerb\Post();
         $this->verbs['POST'] = $post->setFields(LaravelConfig::get($base_path . '.fields-post', []))
-            ->setDescription( 'route-descriptions.item_POST')
+            ->setDescription('route-descriptions.item_POST')
             ->setAuthenticationRequirement(true)
             ->setAuthenticationStatus($this->permissions['manage'])
-            ->setDynamicFields($this->allowed_fields)
+            ->setAllowedValuesForFields($this->allowed_values_for_fields)
             ->option();
 
         return $this;

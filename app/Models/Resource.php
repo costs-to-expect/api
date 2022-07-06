@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Models;
@@ -50,8 +51,7 @@ class Resource extends Model
         int $resource_type_id,
         array $viewable_resource_types,
         array $search_parameters = []
-    ): int
-    {
+    ): int {
         $collection = $this
             ->select("resource.id")
             ->join('resource_type', 'resource.resource_type_id', 'resource_type.id')
@@ -82,9 +82,9 @@ class Resource extends Model
         int $offset = 0,
         int $limit = 10,
         array $search_parameters = [],
-        array $sort_parameters = []
-    ): array
-    {
+        array $sort_parameters = [],
+        array $request_parameters = []
+    ): array {
         $collection = $this
             ->select(
                 'resource_type_item_type.item_type_id AS resource_type_item_type_id',
@@ -98,7 +98,8 @@ class Resource extends Model
                 'item_subtype.name AS resource_item_subtype_name',
                 'item_subtype.description AS resource_item_subtype_description'
             )
-            ->selectRaw('
+            ->selectRaw(
+                '
                 (
                     SELECT 
                         GREATEST(
@@ -122,6 +123,13 @@ class Resource extends Model
             ->where('resource.resource_type_id', '=', $resource_type_id);
 
         $collection = Clause::applySearch($collection, $this->table, $search_parameters);
+
+        if (
+            array_key_exists('item-subtype', $request_parameters) === true &&
+            $request_parameters['item-subtype'] !== null
+        ) {
+            $collection->where('resource_item_subtype.item_subtype_id', '=', $request_parameters['item-subtype']);
+        }
 
         if (count($sort_parameters) > 0) {
             foreach ($sort_parameters as $field => $direction) {
@@ -177,8 +185,7 @@ class Resource extends Model
     public function resourcesForResourceType(
         int $resource_type_id,
         int $exclude_id = null
-    ): array
-    {
+    ): array {
         $collection = $this->where('resource_type_id', '=', $resource_type_id);
 
         if ($exclude_id !== null) {
@@ -186,11 +193,11 @@ class Resource extends Model
         }
 
         return $collection->select(
-                'resource.id AS resource_id',
-                'resource.name AS resource_name',
-                'resource.description AS resource_description',
-                'resource.data AS resource_data'
-            )->
+            'resource.id AS resource_id',
+            'resource.name AS resource_name',
+            'resource.description AS resource_description',
+            'resource.data AS resource_data'
+        )->
             get()->
             toArray();
     }
@@ -212,8 +219,7 @@ class Resource extends Model
     public function instance(
         int $resource_type_id,
         int $resource_id
-    ): ?Model
-    {
+    ): ?Model {
         return $this
             ->select(
                 'resource.id',

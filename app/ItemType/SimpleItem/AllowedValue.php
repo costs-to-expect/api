@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\ItemType\SimpleItem;
@@ -17,8 +18,7 @@ class AllowedValue
         array $viewable_resource_types,
         int $resource_type_id,
         ?int $resource_id = null
-    )
-    {
+    ) {
         $this->hash = new Hash();
 
         $this->resource_type_id = $resource_type_id;

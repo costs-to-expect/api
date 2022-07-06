@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\ItemType\Game\Models;
@@ -26,8 +27,7 @@ class ResourceTypeItem extends LaravelModel
         array $parameters_collection = [],
         array $search_parameters = [],
         array $filter_parameters = []
-    ): int
-    {
+    ): int {
         $collection = $this
             ->from($this->table)
             ->join($this->item_table, 'item.id', $this->item_table . '.item_id')
@@ -61,8 +61,7 @@ class ResourceTypeItem extends LaravelModel
         array $search_parameters = [],
         array $filter_parameters = [],
         array $sort_parameters = []
-    ): array
-    {
+    ): array {
         $select_fields = [
             'resource.id AS resource_id',
             'resource.name AS resource_name',
@@ -82,7 +81,7 @@ class ResourceTypeItem extends LaravelModel
 
         $collection = $this
             ->from('item')
-            ->join($this->item_table,  'item.id', "{$this->item_table}.item_id")
+            ->join($this->item_table, 'item.id', "{$this->item_table}.item_id")
             ->join('resource', 'item.resource_id', 'resource.id')
             ->join('resource_type', 'resource.resource_type_id', 'resource_type.id')
             ->leftJoin('category', $this->item_table . '.winner', 'category.id')
@@ -123,7 +122,8 @@ class ResourceTypeItem extends LaravelModel
             ->offset($offset)
             ->limit($limit)
             ->select($select_fields)
-            ->selectRaw("
+            ->selectRaw(
+                "
                 (
                     SELECT 
                         GREATEST(

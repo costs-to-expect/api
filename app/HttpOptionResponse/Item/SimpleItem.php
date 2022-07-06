@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\HttpOptionResponse\Item;
@@ -29,7 +30,7 @@ class SimpleItem extends Response
             ->setDescription('route-descriptions.item_PATCH')
             ->setAuthenticationStatus($this->permissions['manage'])
             ->setAuthenticationRequirement(true)
-            ->setDynamicFields($this->allowed_fields)
+            ->setAllowedValuesForFields($this->allowed_values_for_fields)
             ->option();
 
         return $this;

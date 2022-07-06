@@ -301,12 +301,11 @@ class Authentication extends \Illuminate\Routing\Controller
             $user = Auth::guard('api')->user();
 
             if ($user !== null) {
-
                 $request->user()->revokeOldTokens();
 
                 $token_name = 'costs-to-expect-api';
                 if ($request->input('device_name') !== null) {
-                    $token_name = str::slug($request->input('device_name')) . ':' .  $token_name;
+                    $token_name = str::slug($request->input('device_name')) . ':' . $token_name;
                 }
 
                 $token = $request->user()->createToken($token_name);
@@ -388,7 +387,6 @@ class Authentication extends \Illuminate\Routing\Controller
             if ($request->query('send') === null && app()->environment() === 'production') {
                 $user->notify(new Registered($user, $create_token));
             }
-
         } catch (Exception $e) {
             return Response::unableToCreateAccount($e);
         }
@@ -519,7 +517,6 @@ class Authentication extends \Illuminate\Routing\Controller
                 }
 
                 $user->save();
-
             } catch (Exception $e) {
                 return response()->json(['message' => trans('auth.unable-to-update-profile')], 401);
             }
@@ -535,7 +532,6 @@ class Authentication extends \Illuminate\Routing\Controller
         $user = auth()->guard('api')->user();
 
         if ($user !== null) {
-
             $tokens = [];
             foreach ($user->tokens as $token) {
                 $tokens[] = [
@@ -569,7 +565,6 @@ class Authentication extends \Illuminate\Routing\Controller
         $user = auth()->guard('api')->user();
 
         if ($user !== null) {
-
             $tokens = [];
             foreach ($user->tokens as $token) {
                 $tokens[] = [
@@ -592,7 +587,6 @@ class Authentication extends \Illuminate\Routing\Controller
         $user = auth()->guard('api')->user();
 
         if ($user !== null) {
-
             $tokens = [];
             foreach ($user->tokens as $token) {
                 $tokens[$token->id] = [
@@ -619,7 +613,6 @@ class Authentication extends \Illuminate\Routing\Controller
         $user = auth()->guard('api')->user();
 
         if ($user !== null) {
-
             $tokens = [];
             foreach ($user->tokens as $token) {
                 $tokens[$token->id] = [
