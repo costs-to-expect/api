@@ -48,7 +48,7 @@ class ResourceView extends Controller
         $cache_collection->setFromCache($cache_control->getByKey($request->getRequestUri()));
 
         if ($cache_control->isRequestCacheable() === false || $cache_collection->valid() === false) {
-            $request_parameters = Parameter$request->fetch(
+            $request_parameters = Parameter\Request::fetch(
                 array_keys(Config::get('api.resource.parameters'))
             );
 

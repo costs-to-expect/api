@@ -34,7 +34,7 @@ class ResourceTypeView extends Controller
         $cache_collection->setFromCache($cache_control->getByKey($request->getRequestUri()));
 
         if ($cache_control->isRequestCacheable() === false || $cache_collection->valid() === false) {
-            $request_parameters = Parameter$request->fetch(
+            $request_parameters = Parameter\Request::fetch(
                 array_keys(Config::get('api.resource-type.parameters'))
             );
 
@@ -101,7 +101,7 @@ class ResourceTypeView extends Controller
 
     public function show(Request $request, $resource_type_id): JsonResponse
     {
-        $parameters = Parameter$request->fetch(array_keys(Config::get('api.resource-type.parameters-show')));
+        $parameters = Parameter\Request::fetch(array_keys(Config::get('api.resource-type.parameters-show')));
 
         $resource_type = (new ResourceType())->single(
             (int) $resource_type_id,
@@ -129,7 +129,7 @@ class ResourceTypeView extends Controller
         }
 
         $headers = new Header();
-        $headers->item()->addParameters(Parameter$request->xHeader());
+        $headers->item()->addParameters(Parameter\Request::xHeader());
 
         return response()->json(
             (new ResourceTypeTransformer($resource_type, $transformer_relations))->asArray(),

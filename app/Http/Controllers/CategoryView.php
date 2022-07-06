@@ -119,7 +119,7 @@ class CategoryView extends Controller
             return \App\HttpResponse\Response::notFoundOrNotAccessible(trans('entities.category'));
         }
 
-        $parameters = Parameter$request->fetch(array_keys(Config::get('api.category.parameters-show')));
+        $parameters = Parameter\Request::fetch(array_keys(Config::get('api.category.parameters-show')));
 
         $category = (new Category())->single(
             (int) $resource_type_id,
@@ -146,7 +146,7 @@ class CategoryView extends Controller
         $headers = new Header();
         $headers->item();
 
-        $parameters_header = Parameter$request->xHeader();
+        $parameters_header = Parameter\Request::xHeader();
         if ($parameters_header !== null) {
             $headers->addParameters($parameters_header);
         }
