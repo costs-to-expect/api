@@ -32,9 +32,8 @@ class ItemCategoryManage extends Controller
         $item_type = Select::itemType((int) $resource_type_id);
 
         return match ($item_type) {
-            'allocated-expense', 'simple-expense' => $this->createItemCategory((int) $resource_type_id, (int) $resource_id, (int) $item_id, 1),
+            'allocated-expense' => $this->createItemCategory((int) $resource_type_id, (int) $resource_id, (int) $item_id, 1),
             'game' => $this->createItemCategory((int) $resource_type_id, (int) $resource_id, (int) $item_id, 5),
-            'simple-item' => \App\HttpResponse\Response::categoryAssignmentLimit(0),
             default => throw new \OutOfRangeException('No item type definition for ' . $item_type, 500),
         };
     }
@@ -125,8 +124,7 @@ class ItemCategoryManage extends Controller
         $item_type = Select::itemType((int) $resource_type_id);
 
         return match ($item_type) {
-            'allocated-expense', 'simple-expense', 'game' => $this->deleteItemCategory((int) $resource_type_id, (int) $resource_id, (int) $item_id, (int) $item_category_id),
-            'simple-item' => \App\HttpResponse\Response::notSupported(),
+            'allocated-expense', 'game' => $this->deleteItemCategory((int) $resource_type_id, (int) $resource_id, (int) $item_id, (int) $item_category_id),
             default => throw new \OutOfRangeException('No item type definition for ' . $item_type, 500),
         };
     }
