@@ -56,12 +56,14 @@ class Category extends BaseValidator
     {
         $this->requiredIndexes(['resource_type_id','item_type'], $options);
 
-        // We need to optionally load the validation messages by item type
-
         return ValidatorFacade::make(
             request()->all(),
             $this->createRules((int) $options['resource_type_id']),
-            $this->translateMessages('api.category.validation-post.messages')
+            $this->translateMessages(
+                ($options['item_type'] === 'game') ?
+                    'api.category.validation-post.messages-game' :
+                    'api.category.validation-post.messages'
+            )
         );
     }
 
