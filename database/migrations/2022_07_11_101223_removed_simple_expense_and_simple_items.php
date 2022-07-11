@@ -14,21 +14,26 @@ return new class extends Migration
      */
     public function up()
     {
+        // Resource types to keep 1, 7
+        // Item types to keep 1, 4
+        // Categories to keep 1, 2, 3, 8, 9, 10
+        // Resources to keep 1, 3, 168, 184, 573
+
         Schema::dropIfExists('item_type_simple_item');
-        Schema::dropIfExists('item_type_simple_item');
+        Schema::dropIfExists('item_type_simple_expense');
         DB::delete(
         "DELETE FROM `item_sub_category` WHERE `sub_category_id` IN 
-            (SELECT `id` FROM `sub_category` WHERE `category_id` NOT IN (1, 2, 3 ))
+            (SELECT `id` FROM `sub_category` WHERE `category_id` NOT IN (1, 2, 3, 8, 9, 10))
         ");
         DB::delete(
             "DELETE FROM `item_category` WHERE `category_id` IN 
             (SELECT `id` FROM `category` WHERE `resource_type_id` NOT IN (1, 7))
         ");
         DB::delete(
-        "DELETE FROM `sub_category` WHERE `category_id` NOT IN (1, 2, 3 ))"
+        "DELETE FROM `sub_category` WHERE `category_id` NOT IN (1, 2, 3, 8, 9, 10)"
         );
         DB::delete(
-        "DELETE FROM `category` WHERE `resource_type_id` NOT IN (1, 7))"
+        "DELETE FROM `category` WHERE `resource_type_id` NOT IN (1, 7)"
         );
         DB::delete(
         "DELETE FROM `item` WHERE `resource_id` NOT IN (1, 3, 168, 184, 573)"
