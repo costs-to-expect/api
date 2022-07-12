@@ -203,9 +203,7 @@ class Item extends LaravelModel
             ->offset($offset)
             ->limit($limit)
             ->select($select_fields)
-            ->selectRaw(
-                "
-                (
+            ->selectRaw("(
                     SELECT 
                         GREATEST(
                             MAX(`{$this->table}`.`created_at`), 

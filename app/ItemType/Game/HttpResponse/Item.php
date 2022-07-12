@@ -10,6 +10,7 @@ use App\HttpRequest\Parameter\Search;
 use App\HttpRequest\Parameter\Sort;
 use App\HttpResponse\Response;
 use App\ItemType\HttpResponse\ApiItemResponse;
+use App\Models\ItemCategory;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Config as LaravelConfig;
 use function request;
@@ -59,9 +60,36 @@ class Item extends ApiItemResponse
                 $last_updated = $items[0]['last_updated'];
             }
 
+            $players = [];
+            if (array_key_exists('include-players', $this->request_parameters) === true) {
+                $item_ids = [];
+                foreach ($items as $item) {
+                    $item_ids[] = (int)$item['item_id'];
+                }
+                if (count($item_ids) > 0) {
+                    $assigned_players = (new ItemCategory())->collectionByItemIds(
+                        $this->resource_type_id,
+                        $this->resource_id,
+                        $item_ids
+                    );
+
+                    foreach ($assigned_players as $player) {
+                        $players[$player['item_category_item_id']][] = $player;
+                    }
+                }
+            }
+
             $collection = array_map(
-                static function ($item) {
-                    return (new \App\ItemType\Game\Transformer\Item($item))->asArray();
+                function ($item) use ($players) {
+                    return (new \App\ItemType\Game\Transformer\Item(
+                            $item,
+                            [
+                                'resource_type_id' => $this->resource_type_id,
+                                'resource_id' => $this->resource_id,
+                                'players' => $players
+                            ]
+                        )
+                    )->asArray();
                 },
                 $items
             );
