@@ -13,6 +13,7 @@ use App\ItemType\HttpResponse\ApiItemResponse;
 use App\Models\ItemCategory;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Config as LaravelConfig;
+
 use function request;
 use function response;
 use function trans;
@@ -82,14 +83,13 @@ class Item extends ApiItemResponse
             $collection = array_map(
                 function ($item) use ($players) {
                     return (new \App\ItemType\Game\Transformer\Item(
-                            $item,
-                            [
-                                'resource_type_id' => $this->resource_type_id,
-                                'resource_id' => $this->resource_id,
-                                'players' => $players
-                            ]
-                        )
-                    )->asArray();
+                        $item,
+                        [
+                            'resource_type_id' => $this->resource_type_id,
+                            'resource_id' => $this->resource_id,
+                            'players' => $players
+                        ]
+                    ))->asArray();
                 },
                 $items
             );
@@ -123,12 +123,28 @@ class Item extends ApiItemResponse
             $this->request_parameters
         );
 
+        $players = [];
+        if (array_key_exists('include-players', $this->request_parameters) === true) {
+            $players[$item_id] = (new ItemCategory())->paginatedCollection(
+                $this->resource_type_id,
+                $this->resource_id,
+                $item_id
+            );
+        }
+
         if ($item === null) {
             return Response::notFound(trans('entities.item'));
         }
 
         return response()->json(
-            (new \App\ItemType\Game\Transformer\Item($item))->asArray(),
+            (new \App\ItemType\Game\Transformer\Item(
+                $item,
+                [
+                    'resource_type_id' => $this->resource_type_id,
+                    'resource_id' => $this->resource_id,
+                    'players' => $players
+                ]
+            ))->asArray(),
             200,
             $this->showHeaders()
         );
