@@ -5,12 +5,9 @@ declare(strict_types=1);
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Query\Builder as QueryBuilder;
 use Illuminate\Database\Eloquent\Model;
 
 /**
- * @mixin QueryBuilder
- *
  * @property int $id
  * @property int $item_id
  * @property string $key
@@ -38,7 +35,7 @@ class ItemData extends Model
         array $viewable_resource_types
     ): int
     {
-        $collection = $this
+        $collection = self::query()
             ->select("item_data.id")
             ->join('item', 'item_data.item_id', 'item.id')
             ->join('resource', 'item.resource_id', 'resource.id')
@@ -62,7 +59,7 @@ class ItemData extends Model
         array $viewable_resource_types
     ): array
     {
-        $collection = $this
+        $collection = self::query()
             ->select(
                 'item_data.key AS item_data_key',
                 'item_data.value AS item_data_json',
@@ -97,6 +94,43 @@ class ItemData extends Model
             $viewable_resource_types
         );
 
-        return $collection->count();
+        return $collection->get()->toArray();
+    }
+
+    public function single(
+        int $resource_type_id,
+        int $resource_id,
+        int $item_id,
+        string $key,
+        array $viewable_resource_types
+    ): ?array
+    {
+        $result = self::query()
+            ->select(
+                'item_data.key AS item_data_key',
+                'item_data.value AS item_data_json',
+                'item_data.created_at AS item_data_created_at',
+                'item_data.updated_at AS item_data_updated_at',
+            )
+            ->join('item', 'item_data.item_id', 'item.id')
+            ->join('resource', 'item.resource_id', 'resource.id')
+            ->join('resource_type', 'resource.resource_type_id', 'resource_type.id')
+            ->where('item.id', '=', $item_id)
+            ->where('resource.id', '=', $resource_id)
+            ->where('resource_type.id', '=', $resource_type_id)
+            ->where('item_data.key', '=', $key);
+
+        $result = Clause::applyViewableResourceTypes(
+            $result,
+            $viewable_resource_types
+        );
+
+        $result = $result->get()->toArray();
+
+        if (count($result) === 0) {
+            return null;
+        }
+
+        return $result[0];
     }
 }
