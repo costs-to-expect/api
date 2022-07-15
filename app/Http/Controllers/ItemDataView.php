@@ -26,7 +26,7 @@ class ItemDataView extends Controller
     ): JsonResponse
     {
         if ($this->hasViewAccessToResourceType((int) $resource_type_id) === false) {
-            return \App\HttpResponse\Response::notFoundOrNotAccessible(trans('entities.resource'));
+            return Response::notFoundOrNotAccessible(trans('entities.item'));
         }
 
         $item_type = Select::itemType((int) $resource_type_id);
@@ -38,7 +38,7 @@ class ItemDataView extends Controller
         };
     }
 
-    public function gameCollection(
+    private function gameCollection(
         int $resource_type_id,
         int $resource_id,
         int $item_id
@@ -77,5 +77,50 @@ class ItemDataView extends Controller
         );
 
         return response()->json($collection, 200, $headers->headers());
+    }
+
+    public function show(
+        $resource_type_id,
+        $resource_id,
+        $item_id,
+        string $key
+    ): JsonResponse {
+        if ($this->hasViewAccessToResourceType((int) $resource_type_id) === false) {
+            return Response::notFoundOrNotAccessible(trans('entities.resource'));
+        }
+
+        $item_type = Select::itemType((int) $resource_type_id);
+
+        return match ($item_type) {
+            'allocated-expense' => Response::notSupported(),
+            'game' => $this->gameShow((int) $resource_type_id, (int) $resource_id, (int) $item_id, $key),
+            default => throw new \OutOfRangeException('No item type definition for ' . $item_type, 500),
+        };
+    }
+
+    private function gameShow(
+        int $resource_type_id,
+        int $resource_id,
+        int $item_id,
+        string $key
+    ): JsonResponse
+    {
+        $data = (new ItemData())->single(
+            $resource_type_id,
+            $resource_id,
+            $item_id,
+            $key,
+            $this->viewable_resource_types
+        );
+
+        if ($data === null) {
+            return Response::notFound(trans('entities.item-data'));
+        }
+
+        return response()->json(
+            (new ItemDataTransformer($data))->asArray(),
+            200,
+            (new Header())->item()->headers()
+        );
     }
 }
