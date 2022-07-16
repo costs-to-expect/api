@@ -9,6 +9,8 @@ return [
     'category' => 'Category',
     'subcategory' => 'Subcategory',
     'item' => 'Item',
+    'item-allocated-expense' => 'Expense',
+    'item-game' => 'Game',
     'item-data' => 'Keyed Data',
     'item-category' => 'Assigned Category',
     'item-partial-transfer' => 'Item Partial Transfer',

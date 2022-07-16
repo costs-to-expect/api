@@ -2,13 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\ItemData;
 use Illuminate\Http\Request;
 use App\HttpResponse\Response;
-use App\Jobs\ClearCache;
-use App\Models\Resource;
-use App\Models\ResourceItemSubtype;
-use App\HttpRequest\Validate\Resource as ResourceValidator;
-use App\Transformer\Resource as ResourceTransformer;
+use App\HttpRequest\Validate\ItemData as ItemDataValidator;
+use App\Transformer\ItemData as ItemDataTransformer;
 use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\DB;
@@ -28,58 +26,44 @@ class ItemDataManage extends Controller
     ): JsonResponse
     {
         if ($this->hasWriteAccessToResourceType((int) $resource_type_id) === false) {
-            return \App\HttpResponse\Response::notFoundOrNotAccessible(trans('entities.resource-type'));
+            return Response::notFoundOrNotAccessible(trans('entities.resource-type'));
         }
 
-        $validator = (new ResourceValidator())->create([
-            'resource_type_id' => $resource_type_id,
-            'item_type_id' => $resource_type['resource_type_item_type_id']
+        $game = (new \App\ItemType\Game\Models\Item())->single(
+            $resource_type_id,
+            $resource_id,
+            $item_id
+        );
+
+        if ($game === null) {
+            return Response::notFoundOrNotAccessible(trans('entities.item-game'));
+        }
+
+        $validator = (new ItemDataValidator())->create([
+            'item_id' => $item_id
         ]);
 
         if ($validator->fails()) {
-            return \App\HttpResponse\Response::validationErrors($validator);
+            return Response::validationErrors($validator);
         }
 
-        $cache_job_payload = (new \App\Cache\JobPayload())
-            ->setGroupKey(\App\Cache\KeyGroup::RESOURCE_CREATE)
-            ->setRouteParameters([
-                'resource_type_id' => $resource_type_id
-            ])
-            ->isPermittedUser($this->hasWriteAccessToResourceType((int) $resource_type_id))
-            ->setUserId($this->user_id);
-
         try {
-            $resource = DB::transaction(function () use ($request, $resource_type_id) {
-                $resource = new Resource([
-                    'resource_type_id' => $resource_type_id,
-                    'name' => $request->input('name'),
-                    'description' => $request->input('description'),
-                    'data' => $request->input('data')
+            $item_data = DB::transaction(function () use ($request, $game) {
+                $item_data = new ItemData([
+                    'item_id' => $game['item_id'],
+                    'key' => $request->input('key'),
+                    'value' => $request->input('value')
                 ]);
-                $resource->save();
+                $item_data->save();
 
-                $item_subtype_id = $this->hash->decode('item-subtype', $request->input('item_subtype_id'));
-
-                if ($item_subtype_id === false) {
-                    return \App\HttpResponse\Response::unableToDecode();
-                }
-
-                $resource_item_subtype = new ResourceItemSubtype([
-                    'resource_id' => $resource->id,
-                    'item_subtype_id' => $item_subtype_id
-                ]);
-                $resource_item_subtype->save();
-
-                return $resource;
+                return $item_data;
             });
-
-            ClearCache::dispatch($cache_job_payload->payload());
         } catch (Exception $e) {
             return Response::failedToSaveModelForCreate($e);
         }
 
         return response()->json(
-            (new ResourceTransformer((new Resource())->instanceToArray($resource)))->asArray(),
+            (new ItemDataTransformer((new ItemData())->instanceToArray($item_data)))->asArray(),
             201
         );
     }

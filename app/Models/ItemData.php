@@ -6,12 +6,15 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Model;
+use JetBrains\PhpStorm\ArrayShape;
 
 /**
  * @property int $id
  * @property int $item_id
  * @property string $key
  * @property string $value
+ * @property string $created_at
+ * @property string $updated_at
  *
  * @author Dean Blackborough <dean@g3d-development.com>
  * @copyright Dean Blackborough 2018-2022
@@ -26,6 +29,22 @@ class ItemData extends Model
     public function item(): BelongsTo
     {
         return $this->belongsTo(Item::class, 'item_id', 'id');
+    }
+
+    #[ArrayShape([
+        'item_data_key' => "string",
+        'item_data_json' => "json",
+        'item_data_created_at' => "string",
+        'item_data_updated_at' => "string"
+    ])]
+    public function instanceToArray(Model $item_data): array
+    {
+        return [
+            'item_data_key' => $item_data->key,
+            'item_data_json' => $item_data->value,
+            'item_data_created_at' => $item_data->created_at->toDateTimeString(),
+            'item_data_updated_at' => $item_data->updated_at->toDateTimeString()
+        ];
     }
 
     public function totalCount(

@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 return [
     'fields' => [
-        'data' => [
+        'value' => [
             'required',
             'json'
         ]
