@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\ItemData;
+use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
 use App\HttpResponse\Response;
 use App\HttpRequest\Validate\ItemData as ItemDataValidator;
@@ -26,6 +27,10 @@ class ItemDataManage extends Controller
         $item_id
     ): JsonResponse
     {
+        if ($this->hasWriteAccessToResourceType((int) $resource_type_id) === false) {
+            return Response::notFoundOrNotAccessible(trans('entities.item-game'));
+        }
+
         $game = (new \App\ItemType\Game\Models\Item())->single(
             $resource_type_id,
             $resource_id,
@@ -65,6 +70,39 @@ class ItemDataManage extends Controller
         );
     }
 
+    public function delete(
+        Request $request,
+        $resource_type_id,
+        $resource_id,
+        $item_id,
+        string $key
+    ): JsonResponse {
+
+        $game_data = (new ItemData())->instance(
+            $resource_type_id,
+            $resource_id,
+            $item_id,
+            $key,
+            $this->permitted_resource_types
+        );
+
+        if ($game_data === null) {
+            return Response::notFoundOrNotAccessible(trans('entities.item-data'));
+        }
+
+        try {
+            DB::transaction(static function () use ($game_data) {
+                $game_data->delete();
+            });
+
+            return Response::successNoContent();
+        } catch (QueryException $e) {
+            return Response::foreignKeyConstraintError($e);
+        } catch (Exception $e) {
+            return Response::notFound(trans('entities.item-data'), $e);
+        }
+    }
+
     public function update(
         Request $request,
         $resource_type_id,
@@ -78,11 +116,11 @@ class ItemDataManage extends Controller
             (int) $resource_id,
             (int) $item_id,
             $key,
-            $this->viewable_resource_types
+            $this->permitted_resource_types
         );
 
         if ($data === null) {
-            return Response::notFoundOrNotAccessible(trans('entities.item-game'));
+            return Response::notFoundOrNotAccessible(trans('entities.item-data'));
         }
 
         if (count($request->all()) === 0) {

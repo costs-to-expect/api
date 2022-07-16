@@ -130,6 +130,11 @@ Route::group(
             [ItemSubcategoryManage::class, 'delete']
         );
 
+        Route::delete(
+            'resource-types/{resource_type_id}/resources/{resource_id}/items/{item_id}/data/{key}',
+            [ItemDataManage::class, 'delete']
+        )->name('item-data.delete');
+
         Route::patch(
             'resource-types/{resource_type_id}',
             [ResourceTypeManage::class, 'update']
