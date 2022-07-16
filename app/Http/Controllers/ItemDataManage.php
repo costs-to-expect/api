@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\ItemType\Select;
 use App\Models\ItemData;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
@@ -27,6 +28,11 @@ class ItemDataManage extends Controller
         $item_id
     ): JsonResponse
     {
+        $item_type = Select::itemType((int) $resource_type_id);
+        if ($item_type === 'allocated-expense') {
+            return Response::notSupported();
+        }
+
         if ($this->hasWriteAccessToResourceType((int) $resource_type_id) === false) {
             return Response::notFoundOrNotAccessible(trans('entities.item-game'));
         }
@@ -76,7 +82,12 @@ class ItemDataManage extends Controller
         $resource_id,
         $item_id,
         string $key
-    ): JsonResponse {
+    ): JsonResponse
+    {
+        $item_type = Select::itemType((int) $resource_type_id);
+        if ($item_type === 'allocated-expense') {
+            return Response::notSupported();
+        }
 
         $game_data = (new ItemData())->instance(
             $resource_type_id,
@@ -111,6 +122,11 @@ class ItemDataManage extends Controller
         string $key
     ): JsonResponse
     {
+        $item_type = Select::itemType((int) $resource_type_id);
+        if ($item_type === 'allocated-expense') {
+            return Response::notSupported();
+        }
+
         $data = (new ItemData())->instance(
             (int) $resource_type_id,
             (int) $resource_id,
