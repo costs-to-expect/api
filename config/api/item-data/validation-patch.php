@@ -8,8 +8,5 @@ return [
             'required',
             'json'
         ]
-    ],
-    'messages' => [
-        'key.unique' => 'item-data/validation-post.key-unique',
     ]
 ];

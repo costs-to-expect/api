@@ -9,6 +9,7 @@ use App\HttpRequest\Validate\ItemData as ItemDataValidator;
 use App\Transformer\ItemData as ItemDataTransformer;
 use Exception;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\DB;
 
 /**
@@ -25,10 +26,6 @@ class ItemDataManage extends Controller
         $item_id
     ): JsonResponse
     {
-        if ($this->hasWriteAccessToResourceType((int) $resource_type_id) === false) {
-            return Response::notFoundOrNotAccessible(trans('entities.resource-type'));
-        }
-
         $game = (new \App\ItemType\Game\Models\Item())->single(
             $resource_type_id,
             $resource_id,
@@ -66,5 +63,56 @@ class ItemDataManage extends Controller
             (new ItemDataTransformer((new ItemData())->instanceToArray($item_data)))->asArray(),
             201
         );
+    }
+
+    public function update(
+        Request $request,
+        $resource_type_id,
+        $resource_id,
+        $item_id,
+        string $key
+    ): JsonResponse
+    {
+        $data = (new ItemData())->instance(
+            (int) $resource_type_id,
+            (int) $resource_id,
+            (int) $item_id,
+            $key,
+            $this->viewable_resource_types
+        );
+
+        if ($data === null) {
+            return Response::notFoundOrNotAccessible(trans('entities.item-game'));
+        }
+
+        if (count($request->all()) === 0) {
+            return Response::nothingToPatch();
+        }
+
+        $validator = (new ItemDataValidator())->update();
+
+        if ($validator->fails()) {
+            return Response::validationErrors($validator);
+        }
+
+        $invalid_fields = $this->checkForInvalidFields(
+            array_keys(Config::get('api.item-data.validation-patch.fields'))
+        );
+
+        if (count($invalid_fields) > 0) {
+            return Response::invalidFieldsInRequest($invalid_fields);
+        }
+
+        foreach ($request->only(['value']) as $model_key => $value) {
+            $data->$model_key = $value;
+        }
+
+        try {
+            $data->save();
+        } catch (Exception $e) {
+            return Response::failedToSaveModelForUpdate($e);
+        }
+
+        return Response::successNoContent();
     }
 }

@@ -152,4 +152,34 @@ class ItemData extends Model
 
         return $result[0];
     }
+
+    public function instance(
+        int $resource_type_id,
+        int $resource_id,
+        int $item_id,
+        string $key,
+        array $viewable_resource_types
+    ): ?ItemData
+    {
+        $result = self::query()
+            ->select(
+                'item_data.id',
+                'item_data.key',
+                'item_data.value'
+            )
+            ->join('item', 'item_data.item_id', 'item.id')
+            ->join('resource', 'item.resource_id', 'resource.id')
+            ->join('resource_type', 'resource.resource_type_id', 'resource_type.id')
+            ->where('item.id', '=', $item_id)
+            ->where('resource.id', '=', $resource_id)
+            ->where('resource_type.id', '=', $resource_type_id)
+            ->where('item_data.key', '=', $key);
+
+        $result = Clause::applyViewableResourceTypes(
+            $result,
+            $viewable_resource_types
+        );
+
+        return $result->first();
+    }
 }

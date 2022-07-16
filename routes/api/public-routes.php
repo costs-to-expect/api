@@ -4,6 +4,7 @@ use App\Http\Controllers\CategoryView;
 use App\Http\Controllers\CurrencyView;
 use App\Http\Controllers\IndexView;
 use App\Http\Controllers\ItemCategoryView;
+use App\Http\Controllers\ItemDataView;
 use App\Http\Controllers\ItemSubcategoryView;
 use App\Http\Controllers\ItemSubtypeView;
 use App\Http\Controllers\ItemTransferView;
@@ -330,6 +331,16 @@ Route::group(
             'resource-types/{resource_type_id}/resources/{resource_id}/items/{item_id}/categories/{item_category_id}/subcategories/{item_subcategory_id}',
             [ItemSubcategoryView::class, 'optionsShow']
         );
+
+        Route::get(
+            'resource-types/{resource_type_id}/resources/{resource_id}/items/{item_id}/data',
+            [ItemDataView::class, 'index']
+        )->name('item-data.list');
+
+        Route::get(
+            'resource-types/{resource_type_id}/resources/{resource_id}/items/{item_id}/data/{key}',
+            [ItemDataView::class, 'show']
+        )->name('item-data.show');
 
         Route::options(
             'resource-types/{resource_type_id}/transfers',

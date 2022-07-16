@@ -155,6 +155,11 @@ Route::group(
             [ItemManage::class, 'update']
         );
 
+        Route::patch(
+            'resource-types/{resource_type_id}/resources/{resource_id}/items/{item_id}/data/{key}',
+            [ItemDataManage::class, 'update']
+        )->name('item-data.update');
+
         Route::get(
             'tools/cache',
             [ToolManage::class, 'cache']
