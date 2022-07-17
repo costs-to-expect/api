@@ -26,7 +26,7 @@ class CategoryManage extends Controller
             return \App\HttpResponse\Response::notFoundOrNotAccessible(trans('entities.resource-type'));
         }
 
-        $resource_type = (new ResourceType())->single($resource_type_id, $this->viewable_resource_types);
+        $resource_type = (new ResourceType())->single($resource_type_id, $this->permitted_resource_types);
 
         $validator = (new CategoryValidator())->create([
             'resource_type_id' => $resource_type_id,

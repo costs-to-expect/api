@@ -39,7 +39,7 @@ class ResourceManage extends Controller
 
         $resource_type = (new ResourceType())->single(
             $resource_type_id,
-            $this->viewable_resource_types
+            $this->permitted_resource_types
         );
 
         $validator = (new ResourceValidator())->create([

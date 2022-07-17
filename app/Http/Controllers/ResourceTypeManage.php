@@ -101,12 +101,12 @@ class ResourceTypeManage extends Controller
 
         $categories = (new Category())->total(
             $resource_type_id,
-            $this->viewable_resource_types
+            $this->permitted_resource_types
         );
 
         $resources = (new Resource())->totalCount(
             $resource_type_id,
-            $this->viewable_resource_types
+            $this->permitted_resource_types
         );
 
         $cache_job_payload = (new \App\Cache\JobPayload())
