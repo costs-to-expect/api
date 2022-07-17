@@ -332,6 +332,7 @@ Route::group(
             [ItemSubcategoryView::class, 'optionsShow']
         );
 
+
         Route::get(
             'resource-types/{resource_type_id}/resources/{resource_id}/items/{item_id}/data',
             [ItemDataView::class, 'index']
@@ -346,6 +347,12 @@ Route::group(
             'resource-types/{resource_type_id}/resources/{resource_id}/items/{item_id}/data/{key}',
             [ItemDataView::class, 'show']
         )->name('item-data.show');
+
+        Route::options(
+            'resource-types/{resource_type_id}/resources/{resource_id}/items/{item_id}/data/{key}',
+            [ItemDataView::class, 'optionsShow']
+        )->name('item-data.show.options');
+
 
         Route::options(
             'resource-types/{resource_type_id}/transfers',

@@ -90,6 +90,9 @@ return [
     'item_partial_transfer_DELETE' => 'Delete the selected partial transfer',
 
     'item_data_GET_index' => 'Return the keyed data collection',
+    'item_data_GET_show' => 'Return the data for the key',
+    'item_data_DELETE' => 'Delete the data and key',
+    'item_data_PATCH' => 'Update the data for the key',
     'item_data_POST' => 'Send keyed data',
 
     'permitted_user_GET_index' => 'Return the permitted users',

@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace App\Http\Controllers;
 
 use App\HttpOptionResponse\ItemDataCollection;
+use App\HttpOptionResponse\ItemDataItem;
 use App\HttpResponse\Header;
 use App\HttpResponse\Response;
 use App\ItemType\Select;
@@ -55,6 +56,27 @@ class ItemDataView extends Controller
         return match ($item_type) {
             'allocated-expense' => Response::notSupported(),
             'game' => $this->gameOptionsIndex((int) $resource_type_id, (int) $resource_id, (int) $item_id),
+            default => throw new \OutOfRangeException('No item type definition for ' . $item_type, 500),
+        };
+    }
+
+    public function optionsShow(
+        Request $request,
+        $resource_type_id,
+        $resource_id,
+        $item_id,
+        string $key
+    ): JsonResponse
+    {
+        if ($this->hasViewAccessToResourceType((int) $resource_type_id) === false) {
+            return Response::notFoundOrNotAccessible(trans('entities.item'));
+        }
+
+        $item_type = Select::itemType((int) $resource_type_id);
+
+        return match ($item_type) {
+            'allocated-expense' => Response::notSupported(),
+            'game' => $this->gameOptionsShow((int) $resource_type_id, (int) $resource_id, (int) $item_id, $key),
             default => throw new \OutOfRangeException('No item type definition for ' . $item_type, 500),
         };
     }
@@ -137,6 +159,30 @@ class ItemDataView extends Controller
         }
 
         return (new ItemDataCollection($this->permissions($resource_type_id)))
+            ->create()
+            ->response();
+    }
+
+    private function gameOptionsShow(
+        int $resource_type_id,
+        int $resource_id,
+        int $item_id,
+        string $key
+    ): JsonResponse
+    {
+        $data = (new ItemData())->single(
+            $resource_type_id,
+            $resource_id,
+            $item_id,
+            $key,
+            $this->viewable_resource_types
+        );
+
+        if ($data === null) {
+            return \App\HttpResponse\Response::notFound(trans('entities.item-data'));
+        }
+
+        return (new ItemDataItem($this->permissions($resource_type_id)))
             ->create()
             ->response();
     }

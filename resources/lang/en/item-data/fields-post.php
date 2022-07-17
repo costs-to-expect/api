@@ -6,6 +6,6 @@ return [
     'title-key' => 'Key',
     'description-key' => 'Set the key for the data',
 
-    'title-value' => 'Keyed data',
+    'title-value' => 'Data',
     'description-value' => 'Set the json data to for key',
 ];
