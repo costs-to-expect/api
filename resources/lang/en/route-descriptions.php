@@ -67,7 +67,6 @@ return [
     'item_category_GET_show' => 'Return the category assigned to the selected item',
 
     'item_category_POST_allocated_expense' => 'Assign a maximum of one category to the selected allocated-expense',
-    'item_category_POST_simple_expense' => 'Assign a maximum of one category to the selected simple-expense',
     'item_category_POST_game' => 'Assign the categories (players) to the selected game',
 
     'item_category_PATCH' => 'Update the category assigned to the selected item',
@@ -77,7 +76,6 @@ return [
     'item_sub_category_GET_show' => 'Return the subcategory assigned to the selected item',
 
     'item_sub_category_POST_allocated_expense' => 'Assign a maximum of one subcategory to the selected allocated-expense',
-    'item_sub_category_POST_simple_expense' => 'Assign a maximum of one subcategory to the selected simple-expense',
 
     'item_sub_category_PATCH' => 'Update the subcategory assigned to the selected item',
     'item_sub_category_DELETE' => 'Delete the subcategory assigned to the selected item',
@@ -90,6 +88,12 @@ return [
     'item_partial_transfer_GET_show' => 'Return the selected partial transfer',
     'item_partial_transfer_POST' => 'Reassign a percentage of the total for an item to another resource',
     'item_partial_transfer_DELETE' => 'Delete the selected partial transfer',
+
+    'item_data_GET_index' => 'Return the keyed data collection',
+    'item_data_GET_show' => 'Return the data for the key',
+    'item_data_DELETE' => 'Delete the data and key',
+    'item_data_PATCH' => 'Update the data for the key',
+    'item_data_POST' => 'Send keyed data',
 
     'permitted_user_GET_index' => 'Return the permitted users',
     'permitted_user_GET_show' => 'Return the selected permitted user',

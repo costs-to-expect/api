@@ -31,7 +31,7 @@ class ItemPartialTransferView extends Controller
 
         return match ($item_type) {
             'allocated-expense' => $this->allocatedExpenseCollection((int) $resource_type_id),
-            'game', 'simple-expense', 'simple-item' => Response::notSupported(),
+            'game' => Response::notSupported(),
             default => throw new \OutOfRangeException('No item type definition for ' . $item_type, 500),
         };
     }
@@ -102,7 +102,7 @@ class ItemPartialTransferView extends Controller
 
         return match ($item_type) {
             'allocated-expense' => $this->allocatedExpense((int) $resource_type_id, (int) $item_partial_transfer_id),
-            'game', 'simple-expense', 'simple-item' => Response::notSupported(),
+            'game' => Response::notSupported(),
             default => throw new \OutOfRangeException('No item type definition for ' . $item_type, 500),
         };
     }
@@ -138,7 +138,7 @@ class ItemPartialTransferView extends Controller
 
         return match ($item_type) {
             'allocated-expense' => $this->optionsAllocatedExpenseCollection((int) $resource_type_id),
-            'game', 'simple-expense', 'simple-item' => Response::notSupported(),
+            'game' => Response::notSupported(),
             default => throw new \OutOfRangeException('No item type definition for ' . $item_type, 500),
         };
     }
@@ -160,7 +160,7 @@ class ItemPartialTransferView extends Controller
 
         return match ($item_type) {
             'allocated-expense' => $this->optionsAllocatedExpenseShow((int) $resource_type_id),
-            'game', 'simple-expense', 'simple-item' => Response::notSupported(),
+            'game' => Response::notSupported(),
             default => throw new \OutOfRangeException('No item type definition for ' . $item_type, 500),
         };
     }
@@ -185,7 +185,7 @@ class ItemPartialTransferView extends Controller
 
         return match ($item_type) {
             'allocated-expense' => $this->optionsAllocatedExpenseTransfer((int) $resource_type_id, (int) $resource_id),
-            'game', 'simple-expense', 'simple-item' => Response::notSupported(),
+            'game' => Response::notSupported(),
             default => throw new \OutOfRangeException('No item type definition for ' . $item_type, 500),
         };
     }

@@ -212,6 +212,12 @@ additionally, the same is true if you are assigned as a permitted user to a reso
 | GET/HEAD     | v2/resource-types/{resource_type_id}/resources/{resource_id}/items/{item_id}/categories/{item_category_id}/subcategories/{item_subcategory_id} |
 | OPTIONS      | v2/resource-types/{resource_type_id}/resources/{resource_id}/items/{item_id}/categories/{item_category_id}/subcategories/{item_subcategory_id} |
 | DELETE       | v2/resource-types/{resource_type_id}/resources/{resource_id}/items/{item_id}/categories/{item_category_id}/subcategories/{item_subcategory_id} |
+| GET/HEAD     | v2/resource-types/{resource_type_id}/resources/{resource_id}/items/{item_id}/data                                                              |
+| OPTIONS      | v2/resource-types/{resource_type_id}/resources/{resource_id}/items/{item_id}/data                                                              |
+| POST         | v2/resource-types/{resource_type_id}/resources/{resource_id}/items/{item_id}/data                                                              |
+| GET/HEAD     | v2/resource-types/{resource_type_id}/resources/{resource_id}/items/{item_id}/data/{key}                                                        |
+| OPTIONS      | v2/resource-types/{resource_type_id}/resources/{resource_id}/items/{item_id}/data/{key}                                                        |
+| DELETE       | v2/resource-types/{resource_type_id}/resources/{resource_id}/items/{item_id}/data/{key}                                                        |
 | OPTIONS      | v2/resource-types/{resource_type_id}/resources/{resource_id}/items/{item_id}/partial-transfer                                                  |
 | POST         | v2/resource-types/{resource_type_id}/resources/{resource_id}/items/{item_id}/partial-transfer                                                  |
 | OPTIONS      | v2/resource-types/{resource_type_id}/resources/{resource_id}/items/{item_id}/transfer                                                          |

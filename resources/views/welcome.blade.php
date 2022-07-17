@@ -56,9 +56,9 @@
                     <ul class="menu list-unstyled">
                         <li><strong>Costs to Expect</strong>
                             <ul class="submenu">
-                                <li><a class="nav-link  active" href="/v2">The API</a></li>
+                                <li><a class="nav-link  active" href="/v3">The API</a></li>
                                 <li><a class="nav-link" href="https://github.com/costs-to-expect/api/blob/master/CHANGELOG.md">Changelog (Github)</a></li>
-                                <li><a class="nav-link" href="/v2/changelog">Changelog (API)</a></li>
+                                <li><a class="nav-link" href="/v3/changelog">Changelog (API)</a></li>
                                 <li><a class="nav-link" href="https://postman.costs-to-expect.com">Postman Collection</a></li>
                                 <li><a class="nav-link" href="/documentation">Documentation examples</a></li>
                                 <li><a class="nav-link" href="https://www.costs-to-expect.com" title="The Costs to Expect Website">The Website</a></li>
@@ -87,9 +87,9 @@
                             <ul class="menu list-unstyled">
                                 <li><strong>Costs to Expect</strong>
                                     <ul class="submenu">
-                                        <li><a class="nav-link active " href="/v2">The API</a></li>
+                                        <li><a class="nav-link active " href="/v3">The API</a></li>
                                         <li><a class="nav-link" href="https://github.com/costs-to-expect/api/blob/master/CHANGELOG.md">Changelog (Github)</a></li>
-                                        <li><a class="nav-link" href="/v2/changelog">Changelog (API)</a></li>
+                                        <li><a class="nav-link" href="/v3/changelog">Changelog (API)</a></li>
                                         <li><a class="nav-link" href="https://postman.costs-to-expect.com">Postman Collection</a></li>
                                         <li><a class="nav-link" href="/documentation">Documentation examples</a></li>
                                         <li><a class="nav-link" href="https://www.costs-to-expect.com" title="The Costs to Expect Website">The Website</a></li>
@@ -149,7 +149,7 @@
                         product matures.</p>
 
                     <p>
-                        <a href="/v2" class="btn btn-primary btn-lg" role="button" aria-pressed="true">Access API</a>
+                        <a href="/v3" class="btn btn-primary btn-lg" role="button" aria-pressed="true">Access API</a>
                         <a href="https://github.com/costs-to-expect/api" class="btn btn-primary alter btn-lg" role="button" aria-pressed="true">View our API on Github</a>
                     </p>
 
@@ -170,14 +170,14 @@
 
                     <dl class="row">
                         <dt class="col-sm-4 col-md-4 col-lg-3 col-xl-2">
-                            <a href="/v2">
+                            <a href="/v3">
                             <span class="oi oi-key" title="Costs to Expect API" aria-hidden="true"></span>
                             Our API
                             </a>
                         </dt>
                         <dd class="col-sm-8 col-md-8 col-lg-9 col-xl-10">
                             <p>Our <a href="https://github.com/costs-to-expect/api/blob/master/LICENSE">Open Source</a>
-                            REST <a href="https://api.costs-to-expect.com/v2">API</a>, available under
+                            REST <a href="https://api.costs-to-expect.com/v3">API</a>, available under
                                 the MIT license, the API drives the entire service.</p></dd>
 
                         <dt class="col-sm-4 col-md-4 col-lg-3 col-xl-2">
@@ -225,22 +225,29 @@
                     <h3>Added</h3>
 
                     <ul>
-                        <li>We have added an `item-type` filter to the resource type collection, you can limit what resource types to return.</li>
-                        <li>We have added an `item-subtype` filter to the resource collection, you can limit what resources to return.</li>
-                        <li>We have added the 'Yahtzee' item subtype.</li>
+                        <li>We have added a keyed data endpoint, allows us to store arbitrary data for games, later, we will add support for keyed data below the `allocated-expense` item-type.</li>
+                        <li>We have added an `include-players` parameter for the items collection and show requests when fetching games.</li>
                     </ul>
 
                     <h3>Changed</h3>
 
                     <ul>
-                        <li>Lots of refactoring.</li>
-                        <li>We have updated our backend dependencies.</li>
+                        <li>The validation error for a non-distinct category is not based on the resource type/item type combination. For expenses the message refers to categories, for the game item type the message refers to players.</li>
                     </ul>
 
                     <h3>Fixed</h3>
 
                     <ul>
-                        <li>Renamed a lang file, the parameters-show config file should be using the parameters-show lang file.</li>
+                        <li>The fallback route returns a 404 status code along with the existing message.</li>
+                        <li>Added a lang file for `parameters-show` for allocated expenses.</li>
+                        <li>We have updated model calls in the manage controllers, using `$viewable_resource_types` when they should be using `$permitted_resource_types`.</li>
+                        <li>Minor refactoring and clean-up.</li>
+                    </ul>
+
+                    <h3>Removed</h3>
+
+                    <ul>
+                        <li>We have removed the `simple-expense` and `simple-item` item types. Simple expense are covered by Allocated expenses and Simple items don't have a place inside the service at the present time.</li>
                     </ul>
                 </div>
             </div>

@@ -4,23 +4,23 @@ declare(strict_types=1);
 
 return [
     'title-include-categories' => 'Include assigned category?',
-    'description-include-categories' => 'Optionally include the category assigned to each item',
+    'description-include-categories' => 'Optionally include the assigned categories for each expense',
 
     'title-include-subcategories' => 'Include assigned subcategory?',
-    'description-include-subcategories' => 'Optionally include the subcategory assigned to each item, include-categories must be set',
+    'description-include-subcategories' => 'Optionally include the assigned subcategories for each expense, include-categories must be set first',
 
     'title-category' => 'Category',
-    'description-category' => 'Show results for the requested category',
+    'description-category' => 'Show expenses assigned to the set category',
 
     'title-subcategory' => 'Subcategory',
-    'description-subcategory' => 'Show results for the requested subcategory, only applicable if category provided',
+    'description-subcategory' => 'Show results assigned to the set subcategory, category must be set first',
 
     'title-include-unpublished' => 'Include unpublished expenses?',
     'description-include-unpublished' => 'Optionally include any unpublished expenses',
 
     'title-year' => 'Year',
-    'description-year' => 'Show results for the requested year',
+    'description-year' => 'Show expenses for the requested year',
 
     'title-month' => 'Month',
-    'description-month' => 'Show results for the requested month'
+    'description-month' => 'Show expenses for the request month, year must be set first',
 ];

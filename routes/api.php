@@ -7,6 +7,7 @@ require('api/public-summary-routes.php');
 
 Route::fallback(function () {
     return response()->json(
-        ['message' => trans('responses.invalid-route')]
+        ['message' => trans('responses.invalid-route')],
+        404
     );
 });

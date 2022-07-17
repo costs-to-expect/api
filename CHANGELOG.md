@@ -2,6 +2,23 @@
 
 The complete changelog for the Costs to Expect REST API, our changelog follows the format defined at https://keepachangelog.com/en/1.0.0/
 
+## [v3.00.0] - 2022-07-17
+### Added
+- We have added a keyed data endpoint, allows us to store arbitrary data for games, later, we will add support for keyed data below the `allocated-expense` item-type.
+- We have added an `include-players` parameter for the items collection and show requests when fetching games.
+
+### Changed
+- The validation error for a non distinct category is not based on the resource type/item type combination. For expenses the message refers to categories, for the game item type the message refers to players.
+
+### Fixed
+- The fallback route returns a 404 status code along with the existing message.
+- Added a lang file for `parameters-show` for allocated expenses.
+- We have updated model calls in the manage controllers, using `$viewable_resource_types` when they should be using `$permitted_resource_types`.
+- Minor refactoring and clean-up.
+
+### Removed
+- We have removed the `simple-expense` and `simple-item` item types. Simple expense are covered by Allocated expenses and Simple items don't have a place inside the service at the present time.
+
 ## [v2.26.0] - 2022-07-06
 ### Added
 - We have added an `item-type` filter to the resource type collection, you can limit what resource types to return.

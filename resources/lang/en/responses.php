@@ -14,7 +14,7 @@ return [
     'model-save-failure-create' => 'Unable to handle your request, an error occurred when processing your create request.',
     'decode-error' => 'Unable to decode a parameter, a suitable hash class not found or the value is invalid.',
     'patch-empty' => 'Unable to handle your request, please include a request body.',
-    'patch-invalid' => 'Unable to handle your request, there are non-existent fields in your request body.',
+    'patch-invalid' => 'Unable to handle your request, there are non-patchable or non-existent fields in the request body, please only include the fields you want to patch.',
     'validation' => 'Validation error.',
     'authentication-required' => 'Authentication required, please try again with a Bearer.',
     'maintenance' => 'Down for maintenance, we should be back very soon, please check https://status.costs-to-expect.com for more information',

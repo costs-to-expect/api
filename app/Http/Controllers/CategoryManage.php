@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\ResourceType;
 use Illuminate\Http\Request;
 use App\HttpResponse\Response;
 use App\Jobs\ClearCache;
@@ -19,21 +20,17 @@ use Illuminate\Http\JsonResponse;
  */
 class CategoryManage extends Controller
 {
-    /**
-     * Create a new category
-     *
-     * @param $resource_type_id
-     *
-     * @return JsonResponse
-     */
     public function create(Request $request, $resource_type_id): JsonResponse
     {
         if ($this->hasWriteAccessToResourceType((int) $resource_type_id) === false) {
             return \App\HttpResponse\Response::notFoundOrNotAccessible(trans('entities.resource-type'));
         }
 
+        $resource_type = (new ResourceType())->single($resource_type_id, $this->permitted_resource_types);
+
         $validator = (new CategoryValidator())->create([
-            'resource_type_id' => $resource_type_id
+            'resource_type_id' => $resource_type_id,
+            'item_type' => $resource_type['resource_type_item_type_name']
         ]);
         if ($validator->fails()) {
             return \App\HttpResponse\Response::validationErrors($validator);

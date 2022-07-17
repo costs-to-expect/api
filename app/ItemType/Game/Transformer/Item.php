@@ -18,6 +18,8 @@ class Item extends Transformer
         $game = [];
         $statistics = [];
 
+        $game_id = $this->hash->item()->encode($to_transform['item_id']);
+
         try {
             if (array_key_exists('item_game', $to_transform)) {
                 $game = json_decode($to_transform['item_game'], true, 512, JSON_THROW_ON_ERROR);
@@ -43,13 +45,40 @@ class Item extends Transformer
             ];
         }
 
+        $players = [];
+        if (
+            array_key_exists('players', $this->related) &&
+            array_key_exists($to_transform['item_id'], $this->related['players']) &&
+            array_key_exists('resource_type_id', $this->related) &&
+            array_key_exists('resource_id', $this->related)
+        ) {
+            $players['uri'] = route(
+                'item.categories.list',
+                [
+                    'resource_type_id' => $this->hash->resourceType()->encode($this->related['resource_type_id']),
+                    'resource_id' => $this->hash->resource()->encode($this->related['resource_id']),
+                    'item_id' => $game_id
+                ],
+                false
+            );
+            $players['count'] = count($this->related['players'][$to_transform['item_id']]);
+            $players['collection'] = [];
+            foreach ($this->related['players'][$to_transform['item_id']] as $player) {
+                $players['collection'][] = [
+                    'id' => $this->hash->itemCategory()->encode($player['item_category_id']),
+                    'name' => $player['item_category_category_name']
+                ];
+            }
+        }
+
         $this->transformed = [
-            'id' => $this->hash->item()->encode($to_transform['item_id']),
+            'id' => $game_id,
             'name' => $to_transform['item_name'],
             'description' => $to_transform['item_description'],
             'game' => $game,
             'statistics' => $statistics,
             'winner' => $winner,
+            'players' => $players,
             'score' => $to_transform['item_score'],
             'complete' => $to_transform['item_complete'],
             'created' => $to_transform['item_created_at'],

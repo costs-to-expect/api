@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Authentication;
 use App\Http\Controllers\ItemCategoryManage;
+use App\Http\Controllers\ItemDataManage;
 use App\Http\Controllers\ItemManage;
 use App\Http\Controllers\ItemPartialTransferManage;
 use App\Http\Controllers\ItemSubcategoryManage;
@@ -70,6 +71,11 @@ Route::group(
         );
 
         Route::post(
+            'resource-types/{resource_type_id}/resources/{resource_id}/items/{item_id}/data',
+            [ItemDataManage::class, 'create']
+        )->name('item-data.create');
+
+        Route::post(
             'resource-types/{resource_type_id}/resources/{resource_id}/items/{item_id}/partial-transfer',
             [ItemPartialTransferManage::class, 'transfer']
         );
@@ -124,6 +130,11 @@ Route::group(
             [ItemSubcategoryManage::class, 'delete']
         );
 
+        Route::delete(
+            'resource-types/{resource_type_id}/resources/{resource_id}/items/{item_id}/data/{key}',
+            [ItemDataManage::class, 'delete']
+        )->name('item-data.delete');
+
         Route::patch(
             'resource-types/{resource_type_id}',
             [ResourceTypeManage::class, 'update']
@@ -148,6 +159,11 @@ Route::group(
             'resource-types/{resource_type_id}/resources/{resource_id}/items/{item_id}',
             [ItemManage::class, 'update']
         );
+
+        Route::patch(
+            'resource-types/{resource_type_id}/resources/{resource_id}/items/{item_id}/data/{key}',
+            [ItemDataManage::class, 'update']
+        )->name('item-data.update');
 
         Route::get(
             'tools/cache',

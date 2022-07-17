@@ -5,9 +5,6 @@ namespace App\Http\Controllers;
 use App\HttpOptionResponse\ItemTransfer\AllocatedExpense;
 use App\HttpOptionResponse\ItemTransfer\AllocatedExpenseCollection;
 use App\HttpOptionResponse\ItemTransfer\AllocatedExpenseTransfer;
-use App\HttpOptionResponse\ItemTransfer\SimpleExpense;
-use App\HttpOptionResponse\ItemTransfer\SimpleExpenseCollection;
-use App\HttpOptionResponse\ItemTransfer\SimpleExpenseTransfer;
 use App\HttpRequest\Parameter;
 use App\HttpResponse\Header;
 use App\HttpResponse\Response;
@@ -33,8 +30,8 @@ class ItemTransferView extends Controller
         $item_type = Select::itemType((int) $resource_type_id);
 
         return match ($item_type) {
-            'allocated-expense', 'simple-expense' => $this->collection((int) $resource_type_id),
-            'game', 'simple-item' => Response::notSupported(),
+            'allocated-expense' => $this->collection((int) $resource_type_id),
+            'game' => Response::notSupported(),
             default => throw new \OutOfRangeException('No item type definition for ' . $item_type, 500),
         };
     }
@@ -103,8 +100,7 @@ class ItemTransferView extends Controller
 
         return match ($item_type) {
             'allocated-expense' => $this->optionsAllocatedExpenseCollection((int) $resource_type_id),
-            'simple-expense' => $this->optionsSimpleExpenseCollection((int) $resource_type_id),
-            'game', 'simple-item' => Response::notSupported(),
+            'game' => Response::notSupported(),
             default => throw new \OutOfRangeException('No item type definition for ' . $item_type, 500),
         };
     }
@@ -112,13 +108,6 @@ class ItemTransferView extends Controller
     private function optionsAllocatedExpenseCollection(int $resource_type_id): JsonResponse
     {
         $response = new AllocatedExpenseCollection($this->permissions($resource_type_id));
-
-        return $response->create()->response();
-    }
-
-    private function optionsSimpleExpenseCollection(int $resource_type_id): JsonResponse
-    {
-        $response = new SimpleExpenseCollection($this->permissions($resource_type_id));
 
         return $response->create()->response();
     }
@@ -133,8 +122,7 @@ class ItemTransferView extends Controller
 
         return match ($item_type) {
             'allocated-expense' => $this->optionsAllocatedExpenseShow((int) $resource_type_id),
-            'simple-expense' => $this->optionsSimpleExpenseShow((int) $resource_type_id),
-            'game', 'simple-item' => Response::notSupported(),
+            'game' => Response::notSupported(),
             default => throw new \OutOfRangeException('No item type definition for ' . $item_type, 500),
         };
     }
@@ -142,13 +130,6 @@ class ItemTransferView extends Controller
     private function optionsAllocatedExpenseShow(int $resource_type_id): JsonResponse
     {
         $response = new AllocatedExpense($this->permissions($resource_type_id));
-
-        return $response->create()->response();
-    }
-
-    private function optionsSimpleExpenseShow(int $resource_type_id): JsonResponse
-    {
-        $response = new SimpleExpense($this->permissions($resource_type_id));
 
         return $response->create()->response();
     }
@@ -166,8 +147,7 @@ class ItemTransferView extends Controller
 
         return match ($item_type) {
             'allocated-expense' => $this->optionsAllocatedExpenseTransfer((int) $resource_type_id, (int) $resource_id),
-            'simple-expense' => $this->optionsSimpleExpenseTransfer((int) $resource_type_id, (int) $resource_id),
-            'game', 'simple-item' => Response::notSupported(),
+            'game' => Response::notSupported(),
             default => throw new \OutOfRangeException('No item type definition for ' . $item_type, 500),
         };
     }
@@ -177,22 +157,6 @@ class ItemTransferView extends Controller
         int $resource_id
     ): JsonResponse {
         $response = new AllocatedExpenseTransfer($this->permissions($resource_type_id));
-
-        return $response->setAllowedValuesForFields(
-            (new \App\Models\AllowedValue\Resource())->allowedValues(
-                $resource_type_id,
-                $resource_id
-            )
-        )->
-        create()->
-        response();
-    }
-
-    private function optionsSimpleExpenseTransfer(
-        int $resource_type_id,
-        int $resource_id
-    ): JsonResponse {
-        $response = new SimpleExpenseTransfer($this->permissions($resource_type_id));
 
         return $response->setAllowedValuesForFields(
             (new \App\Models\AllowedValue\Resource())->allowedValues(
@@ -216,36 +180,12 @@ class ItemTransferView extends Controller
 
         return match ($item_type) {
             'allocated-expense' => $this->allocatedExpense((int) $resource_type_id, (int) $item_transfer_id),
-            'simple-expense' => $this->simpleExpense((int) $resource_type_id, (int) $item_transfer_id),
-            'game', 'simple-item' => Response::notSupported(),
+            'game' => Response::notSupported(),
             default => throw new \OutOfRangeException('No item type definition for ' . $item_type, 500),
         };
     }
 
     private function allocatedExpense(
-        int $resource_type_id,
-        int $item_transfer_id
-    ): JsonResponse {
-        $item_transfer = (new ItemTransfer())->single(
-            $resource_type_id,
-            $item_transfer_id
-        );
-
-        if ($item_transfer === null) {
-            return \App\HttpResponse\Response::notFound(trans('entities.item_transfer'));
-        }
-
-        $headers = new Header();
-        $headers->item();
-
-        return response()->json(
-            (new ItemTransferTransformer($item_transfer))->asArray(),
-            200,
-            $headers->headers()
-        );
-    }
-
-    private function simpleExpense(
         int $resource_type_id,
         int $item_transfer_id
     ): JsonResponse {

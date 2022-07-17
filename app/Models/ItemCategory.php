@@ -139,4 +139,29 @@ class ItemCategory extends Model
             'item_category_category_description' => $item_category->category->description
         ];
     }
+
+    public function collectionByItemIds(
+        int $resource_type_id,
+        int $resource_id,
+        array $item_ids
+    ): array
+    {
+        return $this->query()
+            ->join('category', 'item_category.category_id', 'category.id')
+            ->join('item', 'item_category.item_id', 'item.id')
+            ->join('resource', 'item.resource_id', 'resource.id')
+            ->whereIn('item_category.item_id', $item_ids)
+            ->where('resource.id', '=', $resource_id)
+            ->where('resource.resource_type_id', '=', $resource_type_id)
+            ->select(
+                'item_category.item_id AS item_category_item_id',
+                'item_category.id AS item_category_id',
+                'item_category.created_at AS item_category_created_at',
+                'category.id AS item_category_category_id',
+                'category.name AS item_category_category_name',
+                'category.description AS item_category_category_description'
+            )
+            ->get()
+            ->toArray();
+    }
 }

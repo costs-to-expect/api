@@ -39,7 +39,12 @@ class Request
             if (array_key_exists($parameter, $request_parameters) === true &&
                 $request_parameters[$parameter] !== null) {
                 self::$parameters[$parameter] = match ($parameter) {
-                    'include-resources', 'include-categories', 'include-subcategories', 'include-permitted-users', 'include-unpublished', 'complete' => Boolean::convertedValue($request_parameters[$parameter]),
+                    'include-resources',
+                    'include-categories',
+                    'include-subcategories',
+                    'include-permitted-users',
+                    'include-unpublished',
+                    'complete' => Boolean::convertedValue($request_parameters[$parameter]),
                     default => $request_parameters[$parameter],
                 };
             }

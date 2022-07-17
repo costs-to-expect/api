@@ -56,9 +56,9 @@
                     <ul class="menu list-unstyled">
                         <li><strong>Costs to Expect</strong>
                             <ul class="submenu">
-                                <li><a class="nav-link" href="/v2">The API</a></li>
+                                <li><a class="nav-link" href="/v3">The API</a></li>
                                 <li><a class="nav-link" href="https://github.com/costs-to-expect/api/blob/master/CHANGELOG.md">Changelog (Github)</a></li>
-                                <li><a class="nav-link" href="/v2/changelog">Changelog (API)</a></li>
+                                <li><a class="nav-link" href="/v3/changelog">Changelog (API)</a></li>
                                 <li><a class="nav-link" href="https://postman.costs-to-expect.com">Postman Collection</a></li>
                                 <li><a class="nav-link active" href="/documentation">Documentation examples</a></li>
                                 <li><a class="nav-link" href="https://www.costs-to-expect.com" title="The Costs to Expect Website">The Website</a></li>
@@ -87,9 +87,9 @@
                             <ul class="menu list-unstyled">
                                 <li><strong>Costs to Expect</strong>
                                     <ul class="submenu">
-                                        <li><a class="nav-link" href="/v2">The API</a></li>
+                                        <li><a class="nav-link" href="/v3">The API</a></li>
                                         <li><a class="nav-link" href="https://github.com/costs-to-expect/api/blob/master/CHANGELOG.md">Changelog (Github)</a></li>
-                                        <li><a class="nav-link" href="/v2/changelog">Changelog (API)</a></li>
+                                        <li><a class="nav-link" href="/v3/changelog">Changelog (API)</a></li>
                                         <li><a class="nav-link" href="https://postman.costs-to-expect.com">Postman Collection</a></li>
                                         <li><a class="nav-link active" href="/documentation">Documentation examples</a></li>
                                         <li><a class="nav-link" href="https://www.costs-to-expect.com" title="The Costs to Expect Website">The Website</a></li>
@@ -177,11 +177,11 @@
                     <p>We have included a couple of examples below to give
                         you an idea of the typical responses the API will return.</p>
 
-                    <h4><a href="https://api.costs-to-expect.com/v2/resource-types?limit=25&offset=0">Resource types</a></h4>
+                    <h4><a href="https://api.costs-to-expect.com/v3/resource-types?limit=25&offset=0">Resource types</a></h4>
 
                     <h5>Request</h5>
 
-                    <pre class="bg-white p-3"><code>curl --location --request GET 'https://api.costs-to-expect.com/v2/resource-types?limit=25&offset=0'</code></pre>
+                    <pre class="bg-white p-3"><code>curl --location --request GET 'https://api.costs-to-expect.com/v3/resource-types?limit=25&offset=0'</code></pre>
 
                     <h5>Response</h5>
 
@@ -227,11 +227,11 @@ X-RateLimit-Limit: 300
 X-RateLimit-Remaining: 299
 Date: Mon, 22 Jun 2020 14:40:57 GMT</code></pre>
 
-                        <h4><a href="https://api.costs-to-expect.com/v2/resource-types/d185Q15grY/resources/kw8gLq31VB/items?limit=25&offset=0">Items for a resource</a></h4>
+                        <h4><a href="https://api.costs-to-expect.com/v3/resource-types/d185Q15grY/resources/kw8gLq31VB/items?limit=25&offset=0">Items for a resource</a></h4>
 
                         <h5>Request</h5>
 
-                        <pre class="bg-white p-3"><code>curl --location --request GET 'https://api.costs-to-expect.com/v2/resource-types/d185Q15grY/resources/kw8gLq31VB/items?limit=25&offset=0'</code></pre>
+                        <pre class="bg-white p-3"><code>curl --location --request GET 'https://api.costs-to-expect.com/v3/resource-types/d185Q15grY/resources/kw8gLq31VB/items?limit=25&offset=0'</code></pre>
 
                         <h5>Response</h5>
 
@@ -279,7 +279,7 @@ X-Total-Count: 1694
 X-Offset: 0
 X-Limit: 10
 X-Link-Previous:
-X-Link-Next: /v2/resource-types/d185Q15grY/resources/kw8gLq31VB/items?offset=10&limit=10
+X-Link-Next: /v3/resource-types/d185Q15grY/resources/kw8gLq31VB/items?offset=10&limit=10
 X-RateLimit-Limit: 300
 X-RateLimit-Remaining: 299
 Date: Sun, Mon, 22 Jun 2020 14:46:03 GMT</code></pre>

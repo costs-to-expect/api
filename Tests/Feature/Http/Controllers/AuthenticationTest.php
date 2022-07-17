@@ -12,13 +12,13 @@ final class AuthenticationTest extends TestCase
     {
         $this->actingAs(User::find(1));
 
-        $this->get('v2/auth/check')->assertExactJson(['auth'=>true]);
+        $this->get('v3/auth/check')->assertExactJson(['auth'=>true]);
     }
 
     /** @test */
     public function checkFalse(): void
     {
-        $this->get('v2/auth/check')->assertExactJson(['auth'=>false]);
+        $this->get('v3/auth/check')->assertExactJson(['auth'=>false]);
     }
 
     /** @test */
@@ -724,7 +724,7 @@ final class AuthenticationTest extends TestCase
         $this->actingAs(User::find(1));
 
         $response = $this->post(
-            'v2/auth/update-password',
+            'v3/auth/update-password',
             [
                 'password' => $this->faker->password(12),
                 'password_confirmation' => $this->faker->password(12)
@@ -740,7 +740,7 @@ final class AuthenticationTest extends TestCase
         $this->actingAs(User::find(1));
 
         $response = $this->post(
-            'v2/auth/update-password',
+            'v3/auth/update-password',
             [
             ]
         );
@@ -756,7 +756,7 @@ final class AuthenticationTest extends TestCase
         $new_password = $this->faker->password(12);
 
         $response = $this->post(
-            'v2/auth/update-password',
+            'v3/auth/update-password',
             [
                 'password' => $new_password,
                 'password_confirmation' => $new_password
@@ -772,7 +772,7 @@ final class AuthenticationTest extends TestCase
         $this->actingAs(User::find(1));
 
         $response = $this->post(
-            'v2/auth/update-profile',
+            'v3/auth/update-profile',
             [
                 'email' => 'email.email.com'
             ]
@@ -787,7 +787,7 @@ final class AuthenticationTest extends TestCase
         $this->actingAs(User::find(1));
 
         $response = $this->post(
-            'v2/auth/update-profile',
+            'v3/auth/update-profile',
             []
         );
 
@@ -800,7 +800,7 @@ final class AuthenticationTest extends TestCase
         $this->actingAs(User::find($this->getARandomUser()->id));
 
         $response = $this->post(
-            'v2/auth/update-profile',
+            'v3/auth/update-profile',
             [
                 'name' => $this->faker->name
             ]
@@ -814,7 +814,7 @@ final class AuthenticationTest extends TestCase
     {
         $this->actingAs(User::find(1));
 
-        $response = $this->get('v2/auth/user');
+        $response = $this->get('v3/auth/user');
 
         $response->assertStatus(200);
     }

@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\HttpOptionResponse\ItemSubcategory\AllocatedExpenseCollection;
-use App\HttpOptionResponse\ItemSubcategory\SimpleExpenseCollection;
 use App\HttpOptionResponse\ItemSubcategoryItem;
 use App\HttpResponse\Header;
 use App\ItemType\Select;
@@ -32,8 +31,8 @@ class ItemSubcategoryView extends Controller
         $item_type = Select::itemType((int) $resource_type_id);
 
         return match ($item_type) {
-            'allocated-expense', 'simple-expense' => $this->itemSubcategoryCollection((int) $resource_type_id, (int) $resource_id, (int) $item_id, (int) $item_category_id),
-            'game', 'simple-item' => \App\HttpResponse\Response::notSupported(),
+            'allocated-expense' => $this->itemSubcategoryCollection((int) $resource_type_id, (int) $resource_id, (int) $item_id, (int) $item_category_id),
+            'game' => \App\HttpResponse\Response::notSupported(),
             default => throw new \OutOfRangeException('No item type definition for ' . $item_type, 500),
         };
     }
@@ -102,8 +101,8 @@ class ItemSubcategoryView extends Controller
         $item_type = Select::itemType((int) $resource_type_id);
 
         return match ($item_type) {
-            'allocated-expense', 'simple-expense' => $this->itemSubcategory((int) $resource_type_id, (int) $resource_id, (int) $item_id, (int) $item_category_id, (int) $item_subcategory_id),
-            'game', 'simple-item' => \App\HttpResponse\Response::notSupported(),
+            'allocated-expense' => $this->itemSubcategory((int) $resource_type_id, (int) $resource_id, (int) $item_id, (int) $item_category_id, (int) $item_subcategory_id),
+            'game' => \App\HttpResponse\Response::notSupported(),
             default => throw new \OutOfRangeException('No item type definition for ' . $item_type, 500),
         };
     }
@@ -155,8 +154,7 @@ class ItemSubcategoryView extends Controller
 
         return match ($item_type) {
             'allocated-expense' => $this->optionsAllocatedExpenseCollection((int) $resource_type_id, (int) $item_category_id),
-            'simple-expense' => $this->optionsSimpleExpenseCollection((int) $resource_type_id, (int) $item_category_id),
-            'game', 'simple-item' => \App\HttpResponse\Response::notSupported(),
+            'game' => \App\HttpResponse\Response::notSupported(),
             default => throw new \OutOfRangeException('No item type definition for ' . $item_type, 500),
         };
     }
@@ -181,26 +179,6 @@ class ItemSubcategoryView extends Controller
             ->response();
     }
 
-    private function optionsSimpleExpenseCollection(
-        int $resource_type_id,
-        int $item_category_id
-    ): JsonResponse {
-        if ($this->hasViewAccessToResourceType($resource_type_id) === false) {
-            return \App\HttpResponse\Response::notFoundOrNotAccessible(trans('entities.item-category'));
-        }
-
-        $item_category = (new ItemCategory())->find($item_category_id);
-        if ($item_category === null) {
-            return \App\HttpResponse\Response::notFound(trans('entities.item-category'));
-        }
-
-        $response = new SimpleExpenseCollection($this->permissions((int) $resource_type_id));
-
-        return $response->setAllowedValuesForFields((new \App\Models\AllowedValue\Subcategory())->allowedValues($item_category->category_id))
-            ->create()
-            ->response();
-    }
-
     public function optionsShow(
         string $resource_type_id,
         string $resource_id,
@@ -219,8 +197,8 @@ class ItemSubcategoryView extends Controller
         $item_type = Select::itemType((int) $resource_type_id);
 
         return match ($item_type) {
-            'allocated-expense', 'simple-expense' => $this->optionsItemSubcategoryShow((int) $resource_type_id, (int) $resource_id, (int) $item_id, (int) $item_category_id, (int) $item_subcategory_id),
-            'game', 'simple-item' => \App\HttpResponse\Response::notSupported(),
+            'allocated-expense' => $this->optionsItemSubcategoryShow((int) $resource_type_id, (int) $resource_id, (int) $item_id, (int) $item_category_id, (int) $item_subcategory_id),
+            'game' => \App\HttpResponse\Response::notSupported(),
             default => throw new \OutOfRangeException('No item type definition for ' . $item_type, 500),
         };
     }

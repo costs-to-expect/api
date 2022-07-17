@@ -17,14 +17,7 @@ use Illuminate\Support\Facades\Validator as ValidatorFacade;
  */
 class Category extends BaseValidator
 {
-    /**
-     * Create the validation rules for the create (POST) request
-     *
-     * @param integer $resource_type_id
-     *
-     * @return array
-     */
-    private function createRules(int $resource_type_id = null): array
+    private function createRules(int $resource_type_id): array
     {
         return [
             ...[
@@ -39,14 +32,6 @@ class Category extends BaseValidator
         ];
     }
 
-    /**
-     * Create the validation rules for the update (PATCH) request
-     *
-     * @param integer $category_id
-     * @param integer $resource_type_id
-     *
-     * @return array
-     */
     private function updateRules(int $category_id, int $resource_type_id): array
     {
         return [
@@ -62,42 +47,26 @@ class Category extends BaseValidator
         ];
     }
 
-    /**
-     * Any fields which can't be defined via the configuration files because
-     * the validation rules are dynamic
-     *
-     * @return array|string[]
-     */
     public function dynamicDefinedFields(): array
     {
         return ['name'];
     }
 
-    /**
-     * Return a valid validator object for a create (POST) request
-     *
-     * @param array $options
-     *
-     * @return \Illuminate\Contracts\Validation\Validator
-     */
     public function create(array $options = []): \Illuminate\Contracts\Validation\Validator
     {
-        $this->requiredIndexes(['resource_type_id'], $options);
+        $this->requiredIndexes(['resource_type_id','item_type'], $options);
 
         return ValidatorFacade::make(
             request()->all(),
             $this->createRules((int) $options['resource_type_id']),
-            $this->translateMessages('api.category.validation-post.messages')
+            $this->translateMessages(
+                ($options['item_type'] === 'game') ?
+                    'api.category.validation-post.messages-game' :
+                    'api.category.validation-post.messages'
+            )
         );
     }
 
-    /**
-     * Return a valid validator object for a update (PATCH) request
-     *
-     * @param array $options
-     *
-     * @return \Illuminate\Contracts\Validation\Validator|null
-     */
     public function update(array $options = []): ?\Illuminate\Contracts\Validation\Validator
     {
         return ValidatorFacade::make(

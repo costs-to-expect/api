@@ -72,7 +72,7 @@ final class ItemTypeViewTest extends TestCase
 
         $response->assertStatus(200);
         $response->assertHeader('X-Search', 'description:track');
-        $response->assertHeader('X-Count', 3);
+        $response->assertHeader('X-Count', 2);
 
         foreach ($response->json() as $item) {
             try {
@@ -94,11 +94,11 @@ final class ItemTypeViewTest extends TestCase
     {
         $this->actingAs(User::find(1));
 
-        $response = $this->getItemTypes(['search'=>'name:simple']);
+        $response = $this->getItemTypes(['search'=>'name:game']);
 
         $response->assertStatus(200);
-        $response->assertHeader('X-Search', 'name:simple');
-        $response->assertHeader('X-Count', 2);
+        $response->assertHeader('X-Search', 'name:game');
+        $response->assertHeader('X-Count', 1);
 
         foreach ($response->json() as $item) {
             try {
