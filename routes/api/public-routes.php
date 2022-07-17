@@ -337,6 +337,11 @@ Route::group(
             [ItemDataView::class, 'index']
         )->name('item-data.list');
 
+        Route::options(
+            'resource-types/{resource_type_id}/resources/{resource_id}/items/{item_id}/data',
+            [ItemDataView::class, 'optionsIndex']
+        )->name('item-data.list.options');
+
         Route::get(
             'resource-types/{resource_type_id}/resources/{resource_id}/items/{item_id}/data/{key}',
             [ItemDataView::class, 'show']

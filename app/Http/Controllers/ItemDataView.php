@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers;
 
+use App\HttpOptionResponse\ItemDataCollection;
 use App\HttpResponse\Header;
 use App\HttpResponse\Response;
 use App\ItemType\Select;
@@ -34,6 +35,45 @@ class ItemDataView extends Controller
         return match ($item_type) {
             'allocated-expense' => Response::notSupported(),
             'game' => $this->gameCollection((int) $resource_type_id, (int) $resource_id, (int) $item_id),
+            default => throw new \OutOfRangeException('No item type definition for ' . $item_type, 500),
+        };
+    }
+
+    public function optionsIndex(
+        Request $request,
+        $resource_type_id,
+        $resource_id,
+        $item_id
+    ): JsonResponse
+    {
+        if ($this->hasViewAccessToResourceType((int) $resource_type_id) === false) {
+            return Response::notFoundOrNotAccessible(trans('entities.item'));
+        }
+
+        $item_type = Select::itemType((int) $resource_type_id);
+
+        return match ($item_type) {
+            'allocated-expense' => Response::notSupported(),
+            'game' => $this->gameOptionsIndex((int) $resource_type_id, (int) $resource_id, (int) $item_id),
+            default => throw new \OutOfRangeException('No item type definition for ' . $item_type, 500),
+        };
+    }
+
+    public function show(
+        $resource_type_id,
+        $resource_id,
+        $item_id,
+        string $key
+    ): JsonResponse {
+        if ($this->hasViewAccessToResourceType((int) $resource_type_id) === false) {
+            return Response::notFoundOrNotAccessible(trans('entities.resource'));
+        }
+
+        $item_type = Select::itemType((int) $resource_type_id);
+
+        return match ($item_type) {
+            'allocated-expense' => Response::notSupported(),
+            'game' => $this->gameShow((int) $resource_type_id, (int) $resource_id, (int) $item_id, $key),
             default => throw new \OutOfRangeException('No item type definition for ' . $item_type, 500),
         };
     }
@@ -79,23 +119,26 @@ class ItemDataView extends Controller
         return response()->json($collection, 200, $headers->headers());
     }
 
-    public function show(
-        $resource_type_id,
-        $resource_id,
-        $item_id,
-        string $key
-    ): JsonResponse {
-        if ($this->hasViewAccessToResourceType((int) $resource_type_id) === false) {
-            return Response::notFoundOrNotAccessible(trans('entities.resource'));
+    private function gameOptionsIndex(
+        int $resource_type_id,
+        int $resource_id,
+        int $item_id,
+    ): JsonResponse
+    {
+        $game = (new \App\ItemType\Game\Models\Item())->single(
+            $resource_type_id,
+            $resource_id,
+            $item_id,
+            $this->viewable_resource_types
+        );
+
+        if ($game === null) {
+            return Response::notFoundOrNotAccessible(trans('entities.item-game'));
         }
 
-        $item_type = Select::itemType((int) $resource_type_id);
-
-        return match ($item_type) {
-            'allocated-expense' => Response::notSupported(),
-            'game' => $this->gameShow((int) $resource_type_id, (int) $resource_id, (int) $item_id, $key),
-            default => throw new \OutOfRangeException('No item type definition for ' . $item_type, 500),
-        };
+        return (new ItemDataCollection($this->permissions($resource_type_id)))
+            ->create()
+            ->response();
     }
 
     private function gameShow(
