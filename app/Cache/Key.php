@@ -22,7 +22,7 @@ class Key
      */
     public function categories(int $resource_type_id): string
     {
-        return '/v2/resource-types/' .
+        return '/v3/resource-types/' .
             $this->hash->encode('resource-type', $resource_type_id) .
             '/categories';
     }
@@ -35,7 +35,7 @@ class Key
      */
     public function items(int $resource_type_id, int $resource_id): string
     {
-        return '/v2/resource-types/' .
+        return '/v3/resource-types/' .
             $this->hash->encode('resource-type', $resource_type_id) .
             '/resources/' . $this->hash->encode('resource', $resource_id) .
             '/items';
@@ -48,19 +48,19 @@ class Key
      */
     public function partialTransfers(int $resource_type_id): string
     {
-        return '/v2/resource-types/' .
+        return '/v3/resource-types/' .
             $this->hash->encode('resource_type', $resource_type_id) .
             '/partial-transfers';
     }
 
     public function permittedResourceTypes(): string
     {
-        return '/v2/permitted-resource-types';
+        return '/v3/permitted-resource-types';
     }
 
     public function viewableResourceTypes(): string
     {
-        return '/v2/viewable-resource-types';
+        return '/v3/viewable-resource-types';
     }
 
     /**
@@ -70,7 +70,7 @@ class Key
      */
     public function permittedUsers(int $resource_type_id): string
     {
-        return '/v2/resource-types/' .
+        return '/v3/resource-types/' .
             $this->hash->encode('resource-type', $resource_type_id) .
             '/permitted-users';
     }
@@ -82,7 +82,7 @@ class Key
      */
     public function resources(int $resource_type_id): string
     {
-        return '/v2/resource-types/' .
+        return '/v3/resource-types/' .
             $this->hash->encode('resource-type', $resource_type_id) .
             '/resources';
     }
@@ -94,7 +94,7 @@ class Key
      */
     public function resourceTypeItems(int $resource_type_id): string
     {
-        return '/v2/resource-types/' .
+        return '/v3/resource-types/' .
             $this->hash->encode('resource-type', $resource_type_id) .
             '/items';
     }
@@ -106,7 +106,7 @@ class Key
      */
     public function resourceType(int $resource_type_id): string
     {
-        return '/v2/resource-types/' .
+        return '/v3/resource-types/' .
             $this->hash->encode('resource-type', $resource_type_id);
     }
 
@@ -115,7 +115,7 @@ class Key
      */
     public function resourceTypes(): string
     {
-        return '/v2/resource-types';
+        return '/v3/resource-types';
     }
 
     /**
@@ -126,7 +126,7 @@ class Key
      */
     public function subcategories(int $resource_type_id, int $category_id): string
     {
-        return '/v2/resource-types/' .
+        return '/v3/resource-types/' .
             $this->hash->encode('resource-type', $resource_type_id) .
             '/categories/' . $this->hash->encode('category', $category_id) .
             '/subcategories';
@@ -139,7 +139,7 @@ class Key
      */
     public function transfers(int $resource_type_id): string
     {
-        return '/v2/resource-types/' .
+        return '/v3/resource-types/' .
             $this->hash->encode('resource-type', $resource_type_id) .
             '/transfers';
     }
