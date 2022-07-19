@@ -2,6 +2,10 @@
 
 The complete changelog for the Costs to Expect REST API, our changelog follows the format defined at https://keepachangelog.com/en/1.0.0/
 
+## [v3.00.1] - 2022-07-19
+### Fixed
+- Corrected the route prefix for cache invalidation, JSON schema files and the README.
+
 ## [v3.00.0] - 2022-07-17
 ### Added
 - We have added a keyed data endpoint, allows us to store arbitrary data for games, later, we will add support for keyed data below the `allocated-expense` item-type.
