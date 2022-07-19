@@ -1,5 +1,5 @@
 {
-    "$id": "https://api.costs-to-expect.com/v2/api/schema/partial-transfer.json",
+    "$id": "https://api.costs-to-expect.com/v3/api/schema/partial-transfer.json",
     "type": "object",
     "properties": {
         "id": {

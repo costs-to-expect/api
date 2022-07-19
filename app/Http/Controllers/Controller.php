@@ -61,7 +61,7 @@ class Controller extends BaseController
             $cache_control->setTtlOneWeek();
 
             $cache_collection = new Collection();
-            $cache_collection->setFromCache($cache_control->getByKey('/v2/permitted-resource-types'));
+            $cache_collection->setFromCache($cache_control->getByKey('/v3/permitted-resource-types'));
 
             if ($cache_control->isRequestCacheable() === false || $cache_collection->valid() === false) {
                 $permitted_resource_types = (new Permission())->permittedResourceTypesForUser($this->user_id);
@@ -72,7 +72,7 @@ class Controller extends BaseController
                     [],
                     []
                 );
-                $cache_control->putByKey('/v2/permitted-resource-types', $cache_collection->content());
+                $cache_control->putByKey('/v3/permitted-resource-types', $cache_collection->content());
             }
 
             $this->permitted_resource_types = $cache_collection->collection();
@@ -92,7 +92,7 @@ class Controller extends BaseController
             $cache_control->setTtlOneWeek();
         }
 
-        $uri = '/v2/viewable-resource-types?exclude-public=' . ($this->include_public === true ? 'false' : 'true');
+        $uri = '/v3/viewable-resource-types?exclude-public=' . ($this->include_public === true ? 'false' : 'true');
 
         $cache_collection = new Collection();
         $cache_collection->setFromCache($cache_control->getByKey($uri));

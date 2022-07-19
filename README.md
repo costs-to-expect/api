@@ -61,11 +61,11 @@ drivers have been set to our defaults, sessions, cache, and the queue default to
 * `docker compose exec costs.api.app php artisan key:generate`
 * `docker compose exec costs.api.app php artisan migrate`
 * `docker compose exec costs.api.app php artisan queue:work`
-* Run an OPTIONS request on `http://[your.domail.local:8080]/v2/resource_types`, you will see an OPTIONS response, 
+* Run an OPTIONS request on `http://[your.domail.local:8080]/v3/resource_types`, you will see an OPTIONS response, 
 alternatively a GET request to `http://[your.domail.local:8080]/v1` will show all the defined routes.
-* You can create a user by POSTing to `http://[your.domail.local:8080]/v2/auth/register`. 
+* You can create a user by POSTing to `http://[your.domail.local:8080]/v3/auth/register`. 
 * You create a password by POSTing a password and password_confirmation to the URI register response. 
-* You can sign-in by posting to `http://[your.domail.local:8080]/v2/auth/login` - you will need a bearer for all the routes that require authentication.
+* You can sign-in by posting to `http://[your.domail.local:8080]/v3/auth/login` - you will need a bearer for all the routes that require authentication.
 * Our API defaults to Mailgun, populate `MAILGUN_DOMAIN` and `MAILGUN_SECRET` with the relevant values from your account, 
 you will also need to set `MAIL_FROM_ADDRESS` and `MAIL_TO_ADDRESS`. You may need to set `Authorized Recipients` in Mailgun. 
 
@@ -112,151 +112,151 @@ additionally, the same is true if you are assigned as a permitted user to a reso
 
 | HTTP Verb(s) | Route                                                                                                                                          |
 |:-------------|:-----------------------------------------------------------------------------------------------------------------------------------------------|
-| GET/HEAD     | v2/                                                                                                                                            |
-| OPTIONS      | v2/                                                                                                                                            | 
-| GET/HEAD     | v2/auth/check                                                                                                                                  |
-| OPTIONS      | v2/auth/check                                                                                                                                  |
-| OPTIONS      | v2/auth/create-password                                                                                                                        |
-| POST         | v2/auth/create-password                                                                                                                        |
-| OPTIONS      | v2/auth/create-new-password                                                                                                                    |
-| POST         | v2/auth/create-new-password                                                                                                                    |
-| OPTIONS      | v2/auth/forgot-password                                                                                                                        |
-| POST         | v2/auth/forgot-password                                                                                                                        |
-| OPTIONS      | v2/auth/login                                                                                                                                  |
-| POST         | v2/auth/login                                                                                                                                  |
-| GET          | v2/auth/logout                                                                                                                                 |
-| OPTIONS      | v2/auth/register                                                                                                                               |
-| POST         | v2/auth/register                                                                                                                               |
-| OPTIONS      | v2/auth/update-password                                                                                                                        |
-| POST         | v2/auth/update-password                                                                                                                        |
-| OPTIONS      | v2/auth/update-profile                                                                                                                         |
-| POST         | v2/auth/update-profile                                                                                                                         |
-| GET/HEAD     | v2/auth/user                                                                                                                                   |
-| OPTIONS      | v2/auth/user                                                                                                                                   |
-| GET/HEAD     | v2/auth/user/tokens                                                                                                                            |
-| OPTIONS      | v2/auth/user/tokens                                                                                                                            |
-| DELETE       | v2/auth/user/tokens/{token_id}                                                                                                                 |
-| GET/HEAD     | v2/auth/user/tokens/{token_id}                                                                                                                 |
-| OPTIONS      | v2/auth/user/tokens/{token_id}                                                                                                                 |
-| GET/HEAD     | v2/changelog                                                                                                                                   |
-| OPTIONS      | v2/changelog                                                                                                                                   |
-| GET/HEAD     | v2/currencies                                                                                                                                  |
-| OPTIONS      | v2/currencies                                                                                                                                  |
-| GET/HEAD     | v2/currencies/{currency_id}                                                                                                                    |
-| OPTIONS      | v2/currencies/{currency_id}                                                                                                                    |
-| GET/HEAD     | v2/item-types                                                                                                                                  |
-| OPTIONS      | v2/item-types                                                                                                                                  |
-| GET/HEAD     | v2/item-types/{item_type_id}                                                                                                                   |
-| OPTIONS      | v2/item-types/{item_type_id}                                                                                                                   |
-| GET/HEAD     | v2/item-types/{item_type_id}/item-subtypes                                                                                                     |
-| OPTIONS      | v2/item-types/{item_type_id}/item-subtypes                                                                                                     |
-| GET/HEAD     | v2/item-types/{item_type_id}/item-subtypes/{item_subtype_id}                                                                                   |
-| OPTIONS      | v2/item-types/{item_type_id}/item-subtypes/{item_subtype_id}                                                                                   |
-| GET/HEAD     | v2/resource-types                                                                                                                              |
-| OPTIONS      | v2/resource-types                                                                                                                              |
-| POST         | v2/resource-types                                                                                                                              |
-| GET/HEAD     | v2/resource-types/{resource_type_id}                                                                                                           |
-| OPTIONS      | v2/resource-types/{resource_type_id}                                                                                                           |
-| PATCH        | v2/resource-types/{resource_type_id}                                                                                                           |
-| DELETE       | v2/resource-types/{resource_type_id}                                                                                                           |
-| GET/HEAD     | v2/resource-types/{resource_type_id}/categories                                                                                                |
-| OPTIONS      | v2/resource-types/{resource_type_id}/categories                                                                                                |
-| POST         | v2/resource-types/{resource_type_id}/categories                                                                                                |
-| PATCH        | v2/resource-types/{resource_type_id}/categories/{category_id}                                                                                  |
-| DELETE       | v2/resource-types/{resource_type_id}/categories/{category_id}                                                                                  |
-| GET/HEAD     | v2/resource-types/{resource_type_id}/categories/{category_id}                                                                                  |
-| OPTIONS      | v2/resource-types/{resource_type_id}/categories/{category_id}                                                                                  |
-| GET/HEAD     | v2/resource-types/{resource_type_id}/categories/{category_id}/subcategories                                                                    |
-| OPTIONS      | v2/resource-types/{resource_type_id}/categories/{category_id}/subcategories                                                                    |
-| POST         | v2/resource-types/{resource_type_id}/categories/{category_id}/subcategories                                                                    |
-| GET/HEAD     | v2/resource-types/{resource_type_id}/categories/{category_id}/subcategories/{subcategory_id}                                                   |
-| OPTIONS      | v2/resource-types/{resource_type_id}/categories/{category_id}/subcategories/{subcategory_id}                                                   |
-| PATCH        | v2/resource-types/{resource_type_id}/categories/{category_id}/subcategories/{subcategory_id}                                                   |
-| DELETE       | v2/resource-types/{resource_type_id}/categories/{category_id}/subcategories/{subcategory_id}                                                   |
-| GET/HEAD     | v2/resource-types/{resource_type_id}/items                                                                                                     |
-| OPTIONS      | v2/resource-types/{resource_type_id}/items                                                                                                     |
-| GET/HEAD     | v2/resource-types/{resource_type_id}/partial-transfers                                                                                         |
-| OPTIONS      | v2/resource-types/{resource_type_id}/partial-transfers                                                                                         |
-| GET/HEAD     | v2/resource-types/{resource_type_id}/partial-transfers/{item_partial_transfer_id}                                                              |
-| OPTIONS      | v2/resource-types/{resource_type_id}/partial-transfers/{item_partial_transfer_id}                                                              |
-| DELETE       | v2/resource-types/{resource_type_id}/partial-transfers/{item_partial_transfer_id}                                                              |
-| POST         | v2/resource-types/{resource_type_id}/permitted-users                                                                                           |
-| GET/HEAD     | v2/resource-types/{resource_type_id}/permitted-users                                                                                           |
-| OPTIONS      | v2/resource-types/{resource_type_id}/permitted-users                                                                                           |
-| GET/HEAD     | v2/resource-types/{resource_type_id}/permitted-users/{permitted_user_id}                                                                       |
-| OPTIONS      | v2/resource-types/{resource_type_id}/permitted-users/{permitted_user_id}                                                                       |
-| DELETE       | v2/resource-types/{resource_type_id}/permitted-users/{permitted_user_id}                                                                       |
-| GET/HEAD     | v2/resource-types/{resource_type_id}/resources                                                                                                 |
-| OPTIONS      | v2/resource-types/{resource_type_id}/resources                                                                                                 |
-| POST         | v2/resource-types/{resource_type_id}/resources                                                                                                 |
-| GET/HEAD     | v2/resource-types/{resource_type_id}/resources/{resource_id}                                                                                   |
-| OPTIONS      | v2/resource-types/{resource_type_id}/resources/{resource_id}                                                                                   |
-| PATCH        | v2/resource-types/{resource_type_id}/resources/{resource_id}                                                                                   |
-| DELETE       | v2/resource-types/{resource_type_id}/resources/{resource_id}                                                                                   |
-| GET/HEAD     | v2/resource-types/{resource_type_id}/resources/{resource_id}/items                                                                             |
-| OPTIONS      | v2/resource-types/{resource_type_id}/resources/{resource_id}/items                                                                             |
-| POST         | v2/resource-types/{resource_type_id}/resources/{resource_id}/items                                                                             |
-| GET/HEAD     | v2/resource-types/{resource_type_id}/resources/{resource_id}/items/{item_id}                                                                   |
-| OPTIONS      | v2/resource-types/{resource_type_id}/resources/{resource_id}/items/{item_id}                                                                   |
-| PATCH        | v2/resource-types/{resource_type_id}/resources/{resource_id}/items/{item_id}                                                                   |
-| DELETE       | v2/resource-types/{resource_type_id}/resources/{resource_id}/items/{item_id}                                                                   |
-| GET/HEAD     | v2/resource-types/{resource_type_id}/resources/{resource_id}/items/{item_id}/categories                                                        |
-| OPTIONS      | v2/resource-types/{resource_type_id}/resources/{resource_id}/items/{item_id}/categories                                                        |
-| POST         | v2/resource-types/{resource_type_id}/resources/{resource_id}/items/{item_id}/categories                                                        |
-| GET/HEAD     | v2/resource-types/{resource_type_id}/resources/{resource_id}/items/{item_id}/categories/{item_category_id}                                     |
-| OPTIONS      | v2/resource-types/{resource_type_id}/resources/{resource_id}/items/{item_id}/categories/{item_category_id}                                     |
-| DELETE       | v2/resource-types/{resource_type_id}/resources/{resource_id}/items/{item_id}/categories/{item_category_id}                                     |
-| GET/HEAD     | v2/resource-types/{resource_type_id}/resources/{resource_id}/items/{item_id}/categories/{item_category_id}/subcategories                       |
-| OPTIONS      | v2/resource-types/{resource_type_id}/resources/{resource_id}/items/{item_id}/categories/{item_category_id}/subcategories                       |
-| POST         | v2/resource-types/{resource_type_id}/resources/{resource_id}/items/{item_id}/categories/{item_category_id}/subcategories                       |
-| GET/HEAD     | v2/resource-types/{resource_type_id}/resources/{resource_id}/items/{item_id}/categories/{item_category_id}/subcategories/{item_subcategory_id} |
-| OPTIONS      | v2/resource-types/{resource_type_id}/resources/{resource_id}/items/{item_id}/categories/{item_category_id}/subcategories/{item_subcategory_id} |
-| DELETE       | v2/resource-types/{resource_type_id}/resources/{resource_id}/items/{item_id}/categories/{item_category_id}/subcategories/{item_subcategory_id} |
-| GET/HEAD     | v2/resource-types/{resource_type_id}/resources/{resource_id}/items/{item_id}/data                                                              |
-| OPTIONS      | v2/resource-types/{resource_type_id}/resources/{resource_id}/items/{item_id}/data                                                              |
-| POST         | v2/resource-types/{resource_type_id}/resources/{resource_id}/items/{item_id}/data                                                              |
-| GET/HEAD     | v2/resource-types/{resource_type_id}/resources/{resource_id}/items/{item_id}/data/{key}                                                        |
-| OPTIONS      | v2/resource-types/{resource_type_id}/resources/{resource_id}/items/{item_id}/data/{key}                                                        |
-| DELETE       | v2/resource-types/{resource_type_id}/resources/{resource_id}/items/{item_id}/data/{key}                                                        |
-| OPTIONS      | v2/resource-types/{resource_type_id}/resources/{resource_id}/items/{item_id}/partial-transfer                                                  |
-| POST         | v2/resource-types/{resource_type_id}/resources/{resource_id}/items/{item_id}/partial-transfer                                                  |
-| OPTIONS      | v2/resource-types/{resource_type_id}/resources/{resource_id}/items/{item_id}/transfer                                                          |
-| POST         | v2/resource-types/{resource_type_id}/resources/{resource_id}/items/{item_id}/transfer                                                          |
-| GET/HEAD     | v2/resource-types/{resource_type_id}/transfers                                                                                                 |
-| OPTIONS      | v2/resource-types/{resource_type_id}/transfers                                                                                                 |
-| GET/HEAD     | v2/resource-types/{resource_type_id}/transfers/{item_transfer_id}                                                                              |
-| OPTIONS      | v2/resource-types/{resource_type_id}/transfers/{item_transfer_id}                                                                              |
-| GET/HEAD     | v2/request/error-log                                                                                                                           |
-| OPTIONS      | v2/request/error-log                                                                                                                           |
-| POST         | v2/request/error-log                                                                                                                           |
-| GET/HEAD     | v2/tools/cache                                                                                                                                 |
-| OPTIONS      | v2/tools/cache                                                                                                                                 |
-| DELETE       | v2/tools/cache                                                                                                                                 |
+| GET/HEAD     | v3/                                                                                                                                            |
+| OPTIONS      | v3/                                                                                                                                            | 
+| GET/HEAD     | v3/auth/check                                                                                                                                  |
+| OPTIONS      | v3/auth/check                                                                                                                                  |
+| OPTIONS      | v3/auth/create-password                                                                                                                        |
+| POST         | v3/auth/create-password                                                                                                                        |
+| OPTIONS      | v3/auth/create-new-password                                                                                                                    |
+| POST         | v3/auth/create-new-password                                                                                                                    |
+| OPTIONS      | v3/auth/forgot-password                                                                                                                        |
+| POST         | v3/auth/forgot-password                                                                                                                        |
+| OPTIONS      | v3/auth/login                                                                                                                                  |
+| POST         | v3/auth/login                                                                                                                                  |
+| GET          | v3/auth/logout                                                                                                                                 |
+| OPTIONS      | v3/auth/register                                                                                                                               |
+| POST         | v3/auth/register                                                                                                                               |
+| OPTIONS      | v3/auth/update-password                                                                                                                        |
+| POST         | v3/auth/update-password                                                                                                                        |
+| OPTIONS      | v3/auth/update-profile                                                                                                                         |
+| POST         | v3/auth/update-profile                                                                                                                         |
+| GET/HEAD     | v3/auth/user                                                                                                                                   |
+| OPTIONS      | v3/auth/user                                                                                                                                   |
+| GET/HEAD     | v3/auth/user/tokens                                                                                                                            |
+| OPTIONS      | v3/auth/user/tokens                                                                                                                            |
+| DELETE       | v3/auth/user/tokens/{token_id}                                                                                                                 |
+| GET/HEAD     | v3/auth/user/tokens/{token_id}                                                                                                                 |
+| OPTIONS      | v3/auth/user/tokens/{token_id}                                                                                                                 |
+| GET/HEAD     | v3/changelog                                                                                                                                   |
+| OPTIONS      | v3/changelog                                                                                                                                   |
+| GET/HEAD     | v3/currencies                                                                                                                                  |
+| OPTIONS      | v3/currencies                                                                                                                                  |
+| GET/HEAD     | v3/currencies/{currency_id}                                                                                                                    |
+| OPTIONS      | v3/currencies/{currency_id}                                                                                                                    |
+| GET/HEAD     | v3/item-types                                                                                                                                  |
+| OPTIONS      | v3/item-types                                                                                                                                  |
+| GET/HEAD     | v3/item-types/{item_type_id}                                                                                                                   |
+| OPTIONS      | v3/item-types/{item_type_id}                                                                                                                   |
+| GET/HEAD     | v3/item-types/{item_type_id}/item-subtypes                                                                                                     |
+| OPTIONS      | v3/item-types/{item_type_id}/item-subtypes                                                                                                     |
+| GET/HEAD     | v3/item-types/{item_type_id}/item-subtypes/{item_subtype_id}                                                                                   |
+| OPTIONS      | v3/item-types/{item_type_id}/item-subtypes/{item_subtype_id}                                                                                   |
+| GET/HEAD     | v3/resource-types                                                                                                                              |
+| OPTIONS      | v3/resource-types                                                                                                                              |
+| POST         | v3/resource-types                                                                                                                              |
+| GET/HEAD     | v3/resource-types/{resource_type_id}                                                                                                           |
+| OPTIONS      | v3/resource-types/{resource_type_id}                                                                                                           |
+| PATCH        | v3/resource-types/{resource_type_id}                                                                                                           |
+| DELETE       | v3/resource-types/{resource_type_id}                                                                                                           |
+| GET/HEAD     | v3/resource-types/{resource_type_id}/categories                                                                                                |
+| OPTIONS      | v3/resource-types/{resource_type_id}/categories                                                                                                |
+| POST         | v3/resource-types/{resource_type_id}/categories                                                                                                |
+| PATCH        | v3/resource-types/{resource_type_id}/categories/{category_id}                                                                                  |
+| DELETE       | v3/resource-types/{resource_type_id}/categories/{category_id}                                                                                  |
+| GET/HEAD     | v3/resource-types/{resource_type_id}/categories/{category_id}                                                                                  |
+| OPTIONS      | v3/resource-types/{resource_type_id}/categories/{category_id}                                                                                  |
+| GET/HEAD     | v3/resource-types/{resource_type_id}/categories/{category_id}/subcategories                                                                    |
+| OPTIONS      | v3/resource-types/{resource_type_id}/categories/{category_id}/subcategories                                                                    |
+| POST         | v3/resource-types/{resource_type_id}/categories/{category_id}/subcategories                                                                    |
+| GET/HEAD     | v3/resource-types/{resource_type_id}/categories/{category_id}/subcategories/{subcategory_id}                                                   |
+| OPTIONS      | v3/resource-types/{resource_type_id}/categories/{category_id}/subcategories/{subcategory_id}                                                   |
+| PATCH        | v3/resource-types/{resource_type_id}/categories/{category_id}/subcategories/{subcategory_id}                                                   |
+| DELETE       | v3/resource-types/{resource_type_id}/categories/{category_id}/subcategories/{subcategory_id}                                                   |
+| GET/HEAD     | v3/resource-types/{resource_type_id}/items                                                                                                     |
+| OPTIONS      | v3/resource-types/{resource_type_id}/items                                                                                                     |
+| GET/HEAD     | v3/resource-types/{resource_type_id}/partial-transfers                                                                                         |
+| OPTIONS      | v3/resource-types/{resource_type_id}/partial-transfers                                                                                         |
+| GET/HEAD     | v3/resource-types/{resource_type_id}/partial-transfers/{item_partial_transfer_id}                                                              |
+| OPTIONS      | v3/resource-types/{resource_type_id}/partial-transfers/{item_partial_transfer_id}                                                              |
+| DELETE       | v3/resource-types/{resource_type_id}/partial-transfers/{item_partial_transfer_id}                                                              |
+| POST         | v3/resource-types/{resource_type_id}/permitted-users                                                                                           |
+| GET/HEAD     | v3/resource-types/{resource_type_id}/permitted-users                                                                                           |
+| OPTIONS      | v3/resource-types/{resource_type_id}/permitted-users                                                                                           |
+| GET/HEAD     | v3/resource-types/{resource_type_id}/permitted-users/{permitted_user_id}                                                                       |
+| OPTIONS      | v3/resource-types/{resource_type_id}/permitted-users/{permitted_user_id}                                                                       |
+| DELETE       | v3/resource-types/{resource_type_id}/permitted-users/{permitted_user_id}                                                                       |
+| GET/HEAD     | v3/resource-types/{resource_type_id}/resources                                                                                                 |
+| OPTIONS      | v3/resource-types/{resource_type_id}/resources                                                                                                 |
+| POST         | v3/resource-types/{resource_type_id}/resources                                                                                                 |
+| GET/HEAD     | v3/resource-types/{resource_type_id}/resources/{resource_id}                                                                                   |
+| OPTIONS      | v3/resource-types/{resource_type_id}/resources/{resource_id}                                                                                   |
+| PATCH        | v3/resource-types/{resource_type_id}/resources/{resource_id}                                                                                   |
+| DELETE       | v3/resource-types/{resource_type_id}/resources/{resource_id}                                                                                   |
+| GET/HEAD     | v3/resource-types/{resource_type_id}/resources/{resource_id}/items                                                                             |
+| OPTIONS      | v3/resource-types/{resource_type_id}/resources/{resource_id}/items                                                                             |
+| POST         | v3/resource-types/{resource_type_id}/resources/{resource_id}/items                                                                             |
+| GET/HEAD     | v3/resource-types/{resource_type_id}/resources/{resource_id}/items/{item_id}                                                                   |
+| OPTIONS      | v3/resource-types/{resource_type_id}/resources/{resource_id}/items/{item_id}                                                                   |
+| PATCH        | v3/resource-types/{resource_type_id}/resources/{resource_id}/items/{item_id}                                                                   |
+| DELETE       | v3/resource-types/{resource_type_id}/resources/{resource_id}/items/{item_id}                                                                   |
+| GET/HEAD     | v3/resource-types/{resource_type_id}/resources/{resource_id}/items/{item_id}/categories                                                        |
+| OPTIONS      | v3/resource-types/{resource_type_id}/resources/{resource_id}/items/{item_id}/categories                                                        |
+| POST         | v3/resource-types/{resource_type_id}/resources/{resource_id}/items/{item_id}/categories                                                        |
+| GET/HEAD     | v3/resource-types/{resource_type_id}/resources/{resource_id}/items/{item_id}/categories/{item_category_id}                                     |
+| OPTIONS      | v3/resource-types/{resource_type_id}/resources/{resource_id}/items/{item_id}/categories/{item_category_id}                                     |
+| DELETE       | v3/resource-types/{resource_type_id}/resources/{resource_id}/items/{item_id}/categories/{item_category_id}                                     |
+| GET/HEAD     | v3/resource-types/{resource_type_id}/resources/{resource_id}/items/{item_id}/categories/{item_category_id}/subcategories                       |
+| OPTIONS      | v3/resource-types/{resource_type_id}/resources/{resource_id}/items/{item_id}/categories/{item_category_id}/subcategories                       |
+| POST         | v3/resource-types/{resource_type_id}/resources/{resource_id}/items/{item_id}/categories/{item_category_id}/subcategories                       |
+| GET/HEAD     | v3/resource-types/{resource_type_id}/resources/{resource_id}/items/{item_id}/categories/{item_category_id}/subcategories/{item_subcategory_id} |
+| OPTIONS      | v3/resource-types/{resource_type_id}/resources/{resource_id}/items/{item_id}/categories/{item_category_id}/subcategories/{item_subcategory_id} |
+| DELETE       | v3/resource-types/{resource_type_id}/resources/{resource_id}/items/{item_id}/categories/{item_category_id}/subcategories/{item_subcategory_id} |
+| GET/HEAD     | v3/resource-types/{resource_type_id}/resources/{resource_id}/items/{item_id}/data                                                              |
+| OPTIONS      | v3/resource-types/{resource_type_id}/resources/{resource_id}/items/{item_id}/data                                                              |
+| POST         | v3/resource-types/{resource_type_id}/resources/{resource_id}/items/{item_id}/data                                                              |
+| GET/HEAD     | v3/resource-types/{resource_type_id}/resources/{resource_id}/items/{item_id}/data/{key}                                                        |
+| OPTIONS      | v3/resource-types/{resource_type_id}/resources/{resource_id}/items/{item_id}/data/{key}                                                        |
+| DELETE       | v3/resource-types/{resource_type_id}/resources/{resource_id}/items/{item_id}/data/{key}                                                        |
+| OPTIONS      | v3/resource-types/{resource_type_id}/resources/{resource_id}/items/{item_id}/partial-transfer                                                  |
+| POST         | v3/resource-types/{resource_type_id}/resources/{resource_id}/items/{item_id}/partial-transfer                                                  |
+| OPTIONS      | v3/resource-types/{resource_type_id}/resources/{resource_id}/items/{item_id}/transfer                                                          |
+| POST         | v3/resource-types/{resource_type_id}/resources/{resource_id}/items/{item_id}/transfer                                                          |
+| GET/HEAD     | v3/resource-types/{resource_type_id}/transfers                                                                                                 |
+| OPTIONS      | v3/resource-types/{resource_type_id}/transfers                                                                                                 |
+| GET/HEAD     | v3/resource-types/{resource_type_id}/transfers/{item_transfer_id}                                                                              |
+| OPTIONS      | v3/resource-types/{resource_type_id}/transfers/{item_transfer_id}                                                                              |
+| GET/HEAD     | v3/request/error-log                                                                                                                           |
+| OPTIONS      | v3/request/error-log                                                                                                                           |
+| POST         | v3/request/error-log                                                                                                                           |
+| GET/HEAD     | v3/tools/cache                                                                                                                                 |
+| OPTIONS      | v3/tools/cache                                                                                                                                 |
+| DELETE       | v3/tools/cache                                                                                                                                 |
 
 ## Summary routes
 
 Eventually, there will be a summary route for every API collection GET endpoint. Until 
 that point, the summary routes that exists are detailed below. Some allow GET 
 parameters to break down the data, one example being 
-`v2/summary/resource-types/{resource_type_id}/items`. 
+`v3/summary/resource-types/{resource_type_id}/items`. 
 
 Review the OPTIONS request for each summary route to see the supported parameters, these should 
 largely match the matching non-summary route.
 
 | HTTP Verb(s) | Route                                                                               |
 |:-------------|:------------------------------------------------------------------------------------|
-| GET/HEAD     | v2/summary/resource-types                                                           |
-| OPTIONS      | v2/summary/resource-types                                                           |
-| GET/HEAD     | v2/summary/resource-types/{resource_type_id}/categories                             |
-| OPTIONS      | v2/summary/resource-types/{resource_type_id}/categories                             |
-| GET/HEAD     | v2/summary/resource-types/{resource_type_id}/categories/{category_id}/subcategories |
-| OPTIONS      | v2/summary/resource-types/{resource_type_id}/categories/{category_id}/subcategories |
-| GET/HEAD     | v2/summary/resource-types/{resource_type_id}/items                                  |
-| OPTIONS      | v2/summary/resource-types/{resource_type_id}/items                                  |
-| GET/HEAD     | v2/summary/resource-types/{resource_type_id}/resources                              |
-| OPTIONS      | v2/summary/resource-types/{resource_type_id}/resources                              |
-| GET/HEAD     | v2/summary/resource-types/{resource_type_id}/resources/{resource_id}/items          |
-| OPTIONS      | v2/summary/resource-types/{resource_type_id}/resources/{resource_id}/items          |
+| GET/HEAD     | v3/summary/resource-types                                                           |
+| OPTIONS      | v3/summary/resource-types                                                           |
+| GET/HEAD     | v3/summary/resource-types/{resource_type_id}/categories                             |
+| OPTIONS      | v3/summary/resource-types/{resource_type_id}/categories                             |
+| GET/HEAD     | v3/summary/resource-types/{resource_type_id}/categories/{category_id}/subcategories |
+| OPTIONS      | v3/summary/resource-types/{resource_type_id}/categories/{category_id}/subcategories |
+| GET/HEAD     | v3/summary/resource-types/{resource_type_id}/items                                  |
+| OPTIONS      | v3/summary/resource-types/{resource_type_id}/items                                  |
+| GET/HEAD     | v3/summary/resource-types/{resource_type_id}/resources                              |
+| OPTIONS      | v3/summary/resource-types/{resource_type_id}/resources                              |
+| GET/HEAD     | v3/summary/resource-types/{resource_type_id}/resources/{resource_id}/items          |
+| OPTIONS      | v3/summary/resource-types/{resource_type_id}/resources/{resource_id}/items          |
 
 ## Tests
 

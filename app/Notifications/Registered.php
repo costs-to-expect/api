@@ -34,7 +34,7 @@ class Registered extends Notification implements ShouldQueue
                 ->greeting('Hi,')
                 ->line('Thank you for registering with the Costs to Expect API.')
                 ->line('To use the Costs to Expect API you need to complete your account. To complete your account you need to create a password.')
-                ->line("To create a password please POST `password` and `password_confirmation` to " . url('/v2/auth/create-password?email=' . urlencode($this->user->email) . '&token=' . urlencode($this->token)))
+                ->line("To create a password please POST `password` and `password_confirmation` to " . url('/v3/auth/create-password?email=' . urlencode($this->user->email) . '&token=' . urlencode($this->token)))
                 ->line('Whilst we have you, the documentation for the API is available online.')
                 ->action('Read our documentation', url('https://postman.costs-to-expect.com/'))
                 ->line('Thank you for using the Costs to Expect API.');

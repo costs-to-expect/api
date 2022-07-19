@@ -34,7 +34,7 @@ class Cache extends Model
         string $prefix,
         string $key
     ): array {
-        $summary_key = rtrim(str_replace('v2/', 'v2/summary/', $prefix . $key), '/');
+        $summary_key = rtrim(str_replace('v3/', 'v3/summary/', $prefix . $key), '/');
 
         $result = $this
             ->where('expiration', '>', DB::raw('UNIX_TIMESTAMP()'))

@@ -1,5 +1,5 @@
 {
-    "$id": "https://api.costs-to-expect.com/v2/api/schema/resource-type-item-game.json",
+    "$id": "https://api.costs-to-expect.com/v3/api/schema/resource-type-item-game.json",
     "type": "object",
     "properties": {
         "id": {
