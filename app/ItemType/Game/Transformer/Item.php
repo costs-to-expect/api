@@ -65,7 +65,7 @@ class Item extends Transformer
             $players['collection'] = [];
             foreach ($this->related['players'][$to_transform['item_id']] as $player) {
                 $players['collection'][] = [
-                    'id' => $this->hash->itemCategory()->encode($player['item_category_id']),
+                    'id' => $this->hash->category()->encode($player['item_category_category_id']),
                     'name' => $player['item_category_category_name']
                 ];
             }

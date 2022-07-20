@@ -2,6 +2,10 @@
 
 The complete changelog for the Costs to Expect REST API, our changelog follows the format defined at https://keepachangelog.com/en/1.0.0/
 
+## [v3.00.2] - 2022-07-20
+### Fixed
+- The `player_id` should be the `category_id`, not the `item_category_id`
+
 ## [v3.00.1] - 2022-07-19
 ### Fixed
 - Corrected the route prefix for cache invalidation, JSON schema files and the README.
