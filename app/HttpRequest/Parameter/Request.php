@@ -76,12 +76,22 @@ class Request
                 case 'include-resources':
                 case 'include-unpublished':
                 case 'include-permitted-users':
-                case 'complete':
                     if (
                         array_key_exists($key, self::$parameters) === true &&
                         (
                             Boolean::isConvertible(self::$parameters[$key]) === false ||
                             Boolean::convertedValue(self::$parameters[$key]) === false
+                        )
+                    ) {
+                        unset(self::$parameters[$key]);
+                    }
+                    break;
+
+                case 'complete':
+                    if (
+                        array_key_exists($key, self::$parameters) === true &&
+                        (
+                            Boolean::isConvertible(self::$parameters[$key]) === false
                         )
                     ) {
                         unset(self::$parameters[$key]);
