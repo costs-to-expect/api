@@ -169,7 +169,7 @@ class Item extends LaravelModel
             ->where('resource.resource_type_id', '=', $resource_type_id);
 
         if (array_key_exists('complete', $parameters) === true) {
-            $collection->where($this->table . '.complete', '=', 1);
+            $collection->where($this->table . '.complete', '=', $parameters['complete']);
         }
 
         $collection = Clause::applySearch(

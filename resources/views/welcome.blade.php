@@ -243,7 +243,8 @@
                         <li>We have updated model calls in the manage controllers, using `$viewable_resource_types` when they should be using `$permitted_resource_types`.</li>
                         <li>Minor refactoring and clean-up.</li>
                         <li>v3.00.1 - Corrected the route prefix for cache invalidation, JSON schema files and the README.</li>
-                        <li>v3.00.2 - The `player_id` should be the `category_id`, not the `item_category_id`</li>
+                        <li>v3.00.2 - The `player_id` should be the `category_id`, not the `item_category_id`.</li>
+                        <li>v3.00.3 - The `complete` filter parameter for games can return in progress games, was limited to be a positive option only.</li>
                     </ul>
 
                     <h3>Removed</h3>
