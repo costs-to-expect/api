@@ -2,6 +2,10 @@
 
 The complete changelog for the Costs to Expect REST API, our changelog follows the format defined at https://keepachangelog.com/en/1.0.0/
 
+## [v3.00.3] - 2022-07-21
+### Fixed
+- The `complete` filter parameter for games can return in progress games, was limited to be a positive option only.
+
 ## [v3.00.2] - 2022-07-20
 ### Fixed
 - The `player_id` should be the `category_id`, not the `item_category_id`
