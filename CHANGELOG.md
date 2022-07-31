@@ -2,6 +2,10 @@
 
 The complete changelog for the Costs to Expect REST API, our changelog follows the format defined at https://keepachangelog.com/en/1.0.0/
 
+## [v3.01.0] - 2022-07-31
+### Changed
+- Updated the limit for category assignments. 
+
 ## [v3.00.3] - 2022-07-21
 ### Fixed
 - The `complete` filter parameter for games can return in progress games, was limited to be a positive option only.
