@@ -33,7 +33,7 @@ class ItemCategoryManage extends Controller
 
         return match ($item_type) {
             'allocated-expense' => $this->createItemCategory((int) $resource_type_id, (int) $resource_id, (int) $item_id, 1),
-            'game' => $this->createItemCategory((int) $resource_type_id, (int) $resource_id, (int) $item_id, 5),
+            'game' => $this->createItemCategory((int) $resource_type_id, (int) $resource_id, (int) $item_id, 10),
             default => throw new \OutOfRangeException('No item type definition for ' . $item_type, 500),
         };
     }
