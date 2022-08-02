@@ -45,7 +45,7 @@ class Control
 
     public function isRequestCacheable(): bool
     {
-        $skip_cache = request()->header('x-skip-cache');
+        $skip_cache = request()->header('X-Skip-Cache');
 
         if ($skip_cache !== null) {
             return false;
