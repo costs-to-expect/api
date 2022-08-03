@@ -233,6 +233,8 @@
 
                     <ul>
                         <li>The validation error for a non-distinct category is not based on the resource type/item type combination. For expenses the message refers to categories, for the game item type the message refers to players.</li>
+                        <li>v3.01.0 - Updated the limit for category assignments.</li>
+                        <li>v3.01.1 - Updated the README to document the `X-Skip-Cache` header.</li>
                     </ul>
 
                     <h3>Fixed</h3>
@@ -245,6 +247,7 @@
                         <li>v3.00.1 - Corrected the route prefix for cache invalidation, JSON schema files and the README.</li>
                         <li>v3.00.2 - The `player_id` should be the `category_id`, not the `item_category_id`.</li>
                         <li>v3.00.3 - The `complete` filter parameter for games can return in progress games, was limited to be a positive option only.</li>
+                        <li>v3.01.1 - Corrected the case for the `X-Skip-Cache` header.</li>
                     </ul>
 
                     <h3>Removed</h3>

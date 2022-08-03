@@ -84,6 +84,8 @@ return a validation error, the response will be 422 and include a fields array w
 We include local level caching in the API, as time goes on we will move towards
 conditional caching, specifically including an Etag header and returning a 304 response.
 
+You can skip cache for a specific request by adding the `X-Skip-Cache` header, any value will do.
+
 ## Headers
 
 Responses will include multiple headers, the table below details the intention 
@@ -95,13 +97,12 @@ behind each of our custom headers.
 | X-Count         | Pagination: Number of results returned                       |
 | X-Limit         | Pagination: Limit value applied to request after validation  |
 | X-Offset        | Pagination: Offset value applied to request after validation |
-| X-Offset        | Pagination: Offset value applied to request after validation |
 | X-Link-Previous | Pagination: URI for previous result set if relevant          |
-| X-Link-Next     | Pagination: URI for next result set if relevant              |
 | X-Link-Next     | Pagination: URI for next result set if relevant              |
 | X-Last-Updated  | The last time the collection was updated                     |
 | X-Sort          | Sort options applied to request after validation             |
 | X-Search        | Search options applied to request after validation           |
+| X-Skip-Cache    | Retura collection, bypassing the cache                       |
 | X-Parameters    | Request parameters applied to request after validation       |
 
 ## Routes

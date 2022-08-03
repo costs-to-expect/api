@@ -2,6 +2,12 @@
 
 The complete changelog for the Costs to Expect REST API, our changelog follows the format defined at https://keepachangelog.com/en/1.0.0/
 
+## [v3.01.1] - 2022-08-03
+### Changed
+- Updated the README to document the `X-Skip-Cache` header.
+### Fixed
+- Corrected the case for the `X-Skip-Cache` header.
+
 ## [v3.01.0] - 2022-07-31
 ### Changed
 - Updated the limit for category assignments. 
