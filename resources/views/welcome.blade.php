@@ -227,6 +227,7 @@
                     <ul>
                         <li>We have added a keyed data endpoint, allows us to store arbitrary data for games, later, we will add support for keyed data below the `allocated-expense` item-type.</li>
                         <li>We have added an `include-players` parameter for the items collection and show requests when fetching games.</li>
+                        <li>v3.02.0 - We have added the "budget" `item-type`, required for the Budging app.</li>
                     </ul>
 
                     <h3>Changed</h3>

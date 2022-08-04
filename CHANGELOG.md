@@ -2,6 +2,13 @@
 
 The complete changelog for the Costs to Expect REST API, our changelog follows the format defined at https://keepachangelog.com/en/1.0.0/
 
+## [v3.02.0] - 2022-08-04
+### Added
+- We have added the "budget" `item-type`, required for the Budging app.
+### Changed
+- Updated out tests to be aware of the new `item-type`.
+- Updated all out back-end dependencies.
+
 ## [v3.01.1] - 2022-08-03
 ### Changed
 - Updated the README to document the `X-Skip-Cache` header.
