@@ -219,6 +219,7 @@ additionally, the same is true if you are assigned as a permitted user to a reso
 | GET/HEAD     | v3/resource-types/{resource_type_id}/resources/{resource_id}/items/{item_id}/data/{key}                                                        |
 | OPTIONS      | v3/resource-types/{resource_type_id}/resources/{resource_id}/items/{item_id}/data/{key}                                                        |
 | DELETE       | v3/resource-types/{resource_type_id}/resources/{resource_id}/items/{item_id}/data/{key}                                                        |
+| POST         | v3/resource-types/{resource_type_id}/resources/{resource_id}/items/{item_id}/log                                                               |
 | OPTIONS      | v3/resource-types/{resource_type_id}/resources/{resource_id}/items/{item_id}/partial-transfer                                                  |
 | POST         | v3/resource-types/{resource_type_id}/resources/{resource_id}/items/{item_id}/partial-transfer                                                  |
 | OPTIONS      | v3/resource-types/{resource_type_id}/resources/{resource_id}/items/{item_id}/transfer                                                          |
