@@ -13,14 +13,4 @@ Route::view(
         'version' => $version['version'],
         'date' => $version['release_date']
     ]
-);
-
-Route::view(
-    'documentation',
-    'documentation',
-    [
-        'maintenance' => app()->isDownForMaintenance(),
-        'version' => $version['version'],
-        'date' => $version['release_date']
-    ]
-);
+)->name('landing');

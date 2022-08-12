@@ -1,308 +1,37 @@
-$cte-pink:  #A8369B; // Non action buttons
-$cte-darker-pink: #913584; // Non action buttons
-$cte-magenta: #392C70; // Action buttons
-$cte-darker-magenta: #2d2d5c; // Action buttons
-$cte-purple: #732877; // Links
-$cte-grey: #858585;
-$cte-light-grey: #F5F5F8;
-$cte-lighter-grey: #d0d0d0;
-$text: #212529;
+$theme-colors: (
+        "primary": rgba(137, 43, 124, 1),
+        "danger": rgb(182, 36, 36),
 
-$font-family-sans-serif: 'Source Sans Pro', sans-serif;
-$font-size-base: 0.85rem;
-$navbar-light-color: #ffffff;
+        "light": rgba(239, 242, 245, 1),
+        "dark": rgb(15, 27, 47),
+);
 
-$default-border-radius: 0.6rem;
+$link-color: rgba(137, 43, 124, 1);
+$input-focus-border-color: rgba(137, 43, 124, 1);
+$form-check-input-checked-bg-color: rgba(137, 43, 124, 1);
+$pagination-border-radius: 0;
+$pagination-border-radius-sm: 0;
 
 @import "../../public/node_modules/bootstrap/scss/bootstrap";
 
-/*// Required for Bootstrap
-@import "../../public/node_modules/bootstrap/scss/functions";
-@import "../../public/node_modules/bootstrap/scss/variables";
-@import "../../public/node_modules/bootstrap/scss/mixins";
-
-// Optional Bootstrap files
-@import "../../public/node_modules/bootstrap/scss/reboot";
-@import "../../public/node_modules/bootstrap/scss/type";
-@import "../../public/node_modules/bootstrap/scss/images";
-@import "../../public/node_modules/bootstrap/scss/code";
-@import "../../public/node_modules/bootstrap/scss/grid";*/
-
-html, body {
+html,
+body {
     height: 100%;
-    font-size: 1rem;
-    font-family: 'Quicksand', sans-serif;
-    background-color: $cte-light-grey;
+    accent-color: #892b7c;
 }
 
-dt {
-    font-weight: normal;
-    font-size: 1.2rem;
-    line-height: 1rem;
-
-    a {
-        color: $text;
-
-        &:hover {
-            color: $cte-pink;
-            text-decoration: none;
-        }
-
-        & span {
-            padding-right: 0.5rem;
-        }
-    }
+body {
+    padding-bottom: 40px;
 }
 
-a {
-    color: $cte-pink;
-
-    &:hover {
-        color: $cte-purple;
-    }
+body.align-items {
+    align-items: center;
 }
 
-.green {
-    color: green;
-}
+a.navbar-brand {
+    font-weight: 300;
 
-.preview {
-    background-color: $cte-magenta;
-    border-bottom: 1px solid #000000;
-
-    & p {
-        font-size: 0.8rem;
-        margin: 0.2rem 0 0.2rem 0;
-        color: $cte-light-grey;
-    }
-
-    & a {
-        color: #F250E2;
-    }
-}
-
-.container-left {
-    background-image: url("../images/theme/container-left.png");
-    background-repeat: no-repeat;
-    background-size: 100% auto;
-    background-color: #ffffff;
-
-    .logo {
-        margin-top: 5rem;
-        margin-bottom: 2rem;
-
-        a {
-            text-decoration: none;
-            color: $text;
-            font-weight: bold;
-            font-size: 0.85rem;
-
-            img {
-                margin-right: -1rem;
-            }
-        }
-    }
-
-    ul.menu {
-        font-size: 1.0rem;
-
-        & > li {
-            padding-top: 0.3rem;
-            padding-bottom: 0.3rem;
-
-            & a {
-                text-decoration: none;
-
-                strong {
-
-                    color: $cte-purple;
-
-                    span {
-                        padding-right: 0.3rem;
-                    }
-                }
-            }
-
-            a.nav-link {
-                color: $text;
-                padding: 0 0 0.3rem 0;
-
-                &.active {
-                    color: $cte-pink;
-                }
-
-                &:hover {
-                    color: $cte-pink;
-                }
-
-                span {
-                    padding-right: 0.6rem;
-                }
-            }
-
-            & ul.submenu {
-                padding-top: 0.3rem;
-                font-size: 0.85rem;
-                list-style-type: none;
-                padding-left: 1rem;
-            }
-        }
-    }
-}
-
-.container-right {
-    padding-top: 1rem;
-
-    h2 {
-        color: $cte-purple;
-    }
-
-    .form-control, .form-control-sm {
-        border-radius: 1rem;
-        padding: 0.3rem 1rem;
-    }
-
-    .btn-primary {
-        background-color: $cte-magenta;
-        border-color: $cte-magenta;
-        color: #ffffff;
-        border-radius: 1rem;
-        padding: 0.3rem 1rem;
-
-        &:hover {
-            background-color: $cte-darker-magenta;
-        }
-    }
-
-    .alter {
-        background-color: $cte-pink;
-        border-color: $cte-pink;
-        color: #ffffff;
-
-        &:hover {
-            background-color: $cte-darker-pink;
-        }
-    }
-
-    & > nav.navbar {
-        padding: 0 0.3rem 0.3rem 0.3rem;
-
-        ul.menu {
-            font-size: 0.9rem;
-            margin-bottom: 0.6rem;
-
-            ul.close-menu {
-                display: none;
-            }
-
-            ul.open-menu {
-                display: block;
-            }
-
-            li.close-menu {
-                display: none;
-            }
-
-            li.open-menu {
-                display: list-item;
-            }
-
-            & > li {
-                padding-top: 0.3rem;
-                padding-bottom: 0.3rem;
-
-                & a {
-                    text-decoration: none;
-
-                    strong {
-
-                        color: $cte-purple;
-
-                        span {
-                            padding-right: 0.3rem;
-                        }
-                    }
-                }
-
-                a.nav-link {
-                    color: $text;
-                    padding: 0 0 0.4rem 0;
-
-                    &.active {
-                        color: $cte-pink;
-                    }
-
-                    &:hover {
-                        color: $cte-pink;
-                    }
-
-                    span {
-                        padding-right: 0.6rem;
-                    }
-                }
-
-                & ul.submenu {
-                    padding-top: 0.3rem;
-                    font-size: 0.8rem;
-                    list-style-type: none;
-                    padding-left: 1rem;
-                }
-            }
-        }
-    }
-
-    .logo {
-        margin-top: 5rem;
-        margin-bottom: 2rem;
-
-        & > a {
-            text-decoration: none;
-            color: $text;
-            font-weight: bold;
-            font-size: 0.85rem;
-
-            img {
-                margin-right: -1rem;
-            }
-        }
-    }
-
-    .intro {
-        margin-bottom: 1rem;
-
-        .icon {
-            width: 50px;
-            height: 50px;
-            margin: 0.6rem 0.6rem 0.6rem 0;
-            float: left;
-        }
-        .welcome {
-            padding-top: 0.5rem;
-            font-size: 0.8rem;
-            color: $cte-grey;
-        }
-        .title {
-            h1 {
-                color: $text;
-                font-size: 2rem;
-            }
-        }
-    }
-}
-
-@media (max-width: 768px) {
-    .container-right {
-        background-image: url("../images/theme/right-sidebar.png");
-        background-repeat: no-repeat;
-        background-position: top right;
-        padding-top: 0.5rem !important;
-
-        .navbar {
-            padding: 0.5rem;
-
-            .navbar-toggler {
-                border: none;
-            }
-        }
+    img {
+        margin-right: -0.35rem;
     }
 }
