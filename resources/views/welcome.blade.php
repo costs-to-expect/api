@@ -102,6 +102,29 @@
             </div>
         </div>
     </div>
+
+    <div class="d-md-flex flex-md-equal w-100 my-md-3 ps-md-3">
+        <div class="text-bg-dark me-md-3 pt-3 px-3 pt-md-5 px-md-5 text-center overflow-hidden">
+            <div class="my-3 py-3">
+                <h2 class="display-5">Budget</h2>
+                <p class="lead">A free powerful budgeting tool powered by the API.</p>
+            </div>
+            <div class="bg-light shadow-sm mx-auto"
+                 style="width: 80%; height: 500px; border-radius: 21px 21px 0 0;">
+                <img src="{{ asset('images/budget.png') }}" width="275" height="" alt="A screen shot of our in development Budget app" />
+            </div>
+        </div>
+        <div class="bg-light me-md-3 pt-3 px-3 pt-md-5 px-md-5 text-center overflow-hidden">
+            <div class="my-3 p-3">
+                <h2 class="display-5">Yahtzee</h2>
+                <p class="lead">A fun little project powered by the API, no more designated scorer.</p>
+            </div>
+            <div class="bg-light shadow-sm mx-auto"
+                 style="width: 80%; height: 500px; border-radius: 21px 21px 0 0;">
+                <img src="{{ asset('images/yahtzee.png') }}" width="275" height="" alt="A screen shot of the score sheet for Yahtzee" />
+            </div>
+        </div>
+    </div>
 </main>
 
 <footer class="container py-5">
