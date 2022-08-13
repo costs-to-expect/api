@@ -2,6 +2,26 @@
 
 The complete changelog for the Costs to Expect REST API, our changelog follows the format defined at https://keepachangelog.com/en/1.0.0/
 
+## [v3.03.0] - 2022-08-13
+### Added
+- Added a new landing page, mirrors the new "Budget" and "Yahtzee" landing pages.
+- Added "Logging" for items - new route `v3/resource-types/{resource_type_id}/resources/{resource_id}/items/{item_id}/log`. Log entries can only be added and will be deleted along with the relevant item.
+
+### Changed
+- Switched to Bootstrap 5.
+- We have updated the README to detail other Apps which use the API.
+
+### Fixed
+- Added a missing PATCH route to the README.
+- Corrected the description in an OPTIONS request.
+
+### Removed
+- JQuery removed from dependencies.
+
+v3.00.1 --------------------------------
+## Fixed
+- Corrected the route prefix for cache invalidation, JSON schema files and the README.
+
 ## [v3.02.0] - 2022-08-04
 ### Added
 - We have added the "budget" `item-type`, required for the Budging app.
