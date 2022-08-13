@@ -36,6 +36,7 @@ class ItemLog extends Transformer
         }
 
         $this->transformed = [
+            'id' => $this->hash->itemLog()->encode($to_transform['item_log_id']),
             'message' => $to_transform['item_log_message'],
             'parameters' => $parameters,
             'created' => $to_transform['item_log_created_at'],

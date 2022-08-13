@@ -53,7 +53,7 @@ class ItemLogManage extends Controller
         }
 
         try {
-            $item_log = DB::transaction(function () use ($request, $game) {
+            $item_log = DB::transaction(static function () use ($request, $game) {
                 $item_log = new ItemLog([
                     'item_id' => $game['item_id'],
                     'message' => $request->input('message'),

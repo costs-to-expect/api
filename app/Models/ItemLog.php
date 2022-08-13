@@ -32,6 +32,7 @@ class ItemLog extends Model
     }
 
     #[ArrayShape([
+        'item_log_id' => "string",
         'item_log_message' => "string",
         'item_log_parameters' => "json",
         'item_log_created_at' => "string",
@@ -40,6 +41,7 @@ class ItemLog extends Model
     public function instanceToArray(Model $item_log): array
     {
         return [
+            'item_log_id' => $item_log->id,
             'item_log_message' => $item_log->message,
             'item_log_parameters' => $item_log->parameters,
             'item_log_created_at' => $item_log->created_at->toDateTimeString(),
@@ -80,6 +82,7 @@ class ItemLog extends Model
     {
         $collection = self::query()
             ->select(
+                'item_log.id AS item_log_id',
                 'item_log.message AS item_log_message',
                 'item_log.parameters AS item_log_parameters',
                 'item_log.created_at AS item_log_created_at',
@@ -113,7 +116,7 @@ class ItemLog extends Model
             $viewable_resource_types
         );
 
-        return $collection->get()->toArray();
+        return $collection->orderBy('item_log_id', 'DESC')->get()->toArray();
     }
 
     public function single(
@@ -126,6 +129,7 @@ class ItemLog extends Model
     {
         $result = self::query()
             ->select(
+                'item_log.id AS item_log_id',
                 'item_log.message AS item_log_message',
                 'item_log.parameters AS item_log_parameters',
                 'item_log.created_at AS item_log_created_at',
