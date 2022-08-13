@@ -95,6 +95,10 @@ return [
     'item_data_PATCH' => 'Update the data for the key',
     'item_data_POST' => 'Send keyed data',
 
+    'item_log_GET_index' => 'Return the log items for the requested item (Game)',
+    'item_log_GET_show' => 'Return the specific log item',
+    'item_log_POST' => 'Send a log message and parameters',
+
     'permitted_user_GET_index' => 'Return the permitted users',
     'permitted_user_GET_show' => 'Return the selected permitted user',
     'permitted_user_POST' => 'Assign a permitted user',

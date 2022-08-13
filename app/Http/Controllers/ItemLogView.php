@@ -5,12 +5,12 @@ declare(strict_types=1);
 namespace App\Http\Controllers;
 
 use App\HttpOptionResponse\ItemDataCollection;
-use App\HttpOptionResponse\ItemDataItem;
+use App\HttpOptionResponse\ItemLogCollection;
+use App\HttpOptionResponse\ItemLogItem;
 use App\HttpResponse\Header;
 use App\HttpResponse\Response;
 use App\ItemType\Game\Models\Item;
 use App\ItemType\Select;
-use App\Models\ItemData;
 use App\Models\ItemLog;
 use App\Transformer\ItemLog as ItemLogTransformer;
 use Illuminate\Http\JsonResponse;
@@ -98,7 +98,7 @@ class ItemLogView extends Controller
 
         return match ($item_type) {
             'allocated-expense' => Response::notSupported(),
-            'game' => $this->gameOptionsIndex((int)$resource_type_id, (int)$resource_id, (int)$item_id),
+            'game' => $this->gameOptionsIndex((int) $resource_type_id, (int) $resource_id, (int) $item_id),
             default => throw new OutOfRangeException('No item type definition for ' . $item_type, 500),
         };
     }
@@ -119,7 +119,7 @@ class ItemLogView extends Controller
             return Response::notFoundOrNotAccessible(trans('entities.item-game'));
         }
 
-        return (new ItemDataCollection($this->permissions($resource_type_id)))
+        return (new ItemLogCollection($this->permissions($resource_type_id)))
             ->create()
             ->response();
     }
@@ -129,7 +129,7 @@ class ItemLogView extends Controller
         $resource_type_id,
         $resource_id,
         $item_id,
-        string $key
+        $item_log_id
     ): JsonResponse {
         if ($this->hasViewAccessToResourceType((int)$resource_type_id) === false) {
             return Response::notFoundOrNotAccessible(trans('entities.item'));
@@ -139,7 +139,7 @@ class ItemLogView extends Controller
 
         return match ($item_type) {
             'allocated-expense' => Response::notSupported(),
-            'game' => $this->gameOptionsShow((int)$resource_type_id, (int)$resource_id, (int)$item_id, $key),
+            'game' => $this->gameOptionsShow((int) $resource_type_id, (int) $resource_id, (int) $item_id, (int) $item_log_id),
             default => throw new OutOfRangeException('No item type definition for ' . $item_type, 500),
         };
     }
@@ -148,13 +148,13 @@ class ItemLogView extends Controller
         int $resource_type_id,
         int $resource_id,
         int $item_id,
-        string $key
+        int $item_log_id
     ): JsonResponse {
-        $data = (new ItemData())->single(
+        $data = (new ItemLog())->single(
             $resource_type_id,
             $resource_id,
             $item_id,
-            $key,
+            $item_log_id,
             $this->viewable_resource_types
         );
 
@@ -162,7 +162,7 @@ class ItemLogView extends Controller
             return Response::notFound(trans('entities.item-data'));
         }
 
-        return (new ItemDataItem($this->permissions($resource_type_id)))
+        return (new ItemLogItem($this->permissions($resource_type_id)))
             ->create()
             ->response();
     }

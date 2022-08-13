@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\ItemLog;
 use Illuminate\Http\Request;
 use App\Cache\JobPayload;
 use App\Cache\KeyGroup;
@@ -341,6 +342,7 @@ class ItemManage extends Controller
 
         try {
             DB::transaction(static function () use ($item_id, $item_type_instance, $item_instance) {
+                (new ItemLog())->deleteLogEntries($item_id);
                 (new ItemTransfer())->deleteTransfers($item_id);
                 (new ItemPartialTransfer())->deleteTransfers($item_id);
                 $item_type_instance->delete();
@@ -386,7 +388,7 @@ class ItemManage extends Controller
 
         try {
             DB::transaction(static function () use ($item_id, $item_type_instance, $item_instance) {
-                (new ItemTransfer())->deleteTransfers($item_id);
+                (new ItemLog())->deleteLogEntries($item_id);
                 $item_type_instance->delete();
                 $item_instance->delete();
             });

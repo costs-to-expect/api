@@ -186,4 +186,9 @@ class ItemLog extends Model
 
         return $result->first();
     }
+
+    public function deleteLogEntries(int $item_id): ?int
+    {
+        return self::query()->where($this->table . '.item_id', '=', $item_id)->delete();
+    }
 }

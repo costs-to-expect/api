@@ -2,32 +2,30 @@
 
 ## Overview
 
-Costs to Expect is a service which focuses on tracking and forecasting expenses. 
-The Costs to Expect API is the backbone of the service and is not going to be 
-limited to tracking expenses; however, we figured that it was an excellent place to start. 
+Costs to Expect is a service original intended to track and forecast expenses. 
+This API is the backbone of the service and is not limited to tracking expenses, over the years we have 
+made it flexible enough to record almost anything. 
 
 ## Documentation
 
 The documentation for the Costs to Expect API can be found at 
 [postman.costs-to-expect.com](https://postman.costs-to-expect.com?version=latest). 
 
-### The App
+The documentation is slowly being moved to a repository on [GitHub](https://github.com/costs-to-expect/api-docs).
 
-The [alpha](https://app.costs-to-expect.com) for the service is online, we are 
- hoping to release the public beta soon(tm). Please check 
- our [app.costs-to-expect.com/roadmap](https://app.costs-to-expect.com/roadmap) 
- and [app.costs-to-expect.com/changelog](https://app.costs-to-expect.com/changelog) 
- to see how we are progressing. 
+## Apps
 
-### The Website
+There are several Apps that use the Costs to Expect API, including;
 
-A small part of the service is tracking our costs to raise our children in the UK, 
-more detail can be found at [Costs to Expect](https://www.costs-to-expect.com).
+- [Budget](https://budget.costs-to-expect.com) Our free and Open Source budget tool
+- [Expense](https://app.costs-to-expect.com) Our free and Open Source expense tool
+- [Social Experiment](https://www.costs-to-expect.com) How much does it cost to raise a child to adulthood in the UK?
+- [Yahtzee Game Scorer](https://yahtzee.game-score.com) Our Yahtzee Game Scorer, free for all to use
 
 ## Set up
 
 I'm going to assume you are using Docker, if not, you should be able to work out 
-what you need to run for your development setup. 
+what you need to run for your development setup.
 
 Go to the project root 
 directory and run the below.
@@ -218,8 +216,13 @@ additionally, the same is true if you are assigned as a permitted user to a reso
 | POST         | v3/resource-types/{resource_type_id}/resources/{resource_id}/items/{item_id}/data                                                              |
 | GET/HEAD     | v3/resource-types/{resource_type_id}/resources/{resource_id}/items/{item_id}/data/{key}                                                        |
 | OPTIONS      | v3/resource-types/{resource_type_id}/resources/{resource_id}/items/{item_id}/data/{key}                                                        |
+| PATCH        | v3/resource-types/{resource_type_id}/resources/{resource_id}/items/{item_id}/data/{key}                                                        |
 | DELETE       | v3/resource-types/{resource_type_id}/resources/{resource_id}/items/{item_id}/data/{key}                                                        |
+| GET/HEAD     | v3/resource-types/{resource_type_id}/resources/{resource_id}/items/{item_id}/log                                                               |
+| OPTIONS      | v3/resource-types/{resource_type_id}/resources/{resource_id}/items/{item_id}/log                                                               |
 | POST         | v3/resource-types/{resource_type_id}/resources/{resource_id}/items/{item_id}/log                                                               |
+| GET/HEAD     | v3/resource-types/{resource_type_id}/resources/{resource_id}/items/{item_id}/log/{item_data_id}                                                |
+| OPTIONS      | v3/resource-types/{resource_type_id}/resources/{resource_id}/items/{item_id}/log/{item_data_id}                                                |
 | OPTIONS      | v3/resource-types/{resource_type_id}/resources/{resource_id}/items/{item_id}/partial-transfer                                                  |
 | POST         | v3/resource-types/{resource_type_id}/resources/{resource_id}/items/{item_id}/partial-transfer                                                  |
 | OPTIONS      | v3/resource-types/{resource_type_id}/resources/{resource_id}/items/{item_id}/transfer                                                          |

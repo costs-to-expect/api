@@ -6,18 +6,18 @@ namespace App\HttpOptionResponse;
 
 use Illuminate\Support\Facades\Config;
 
-class ItemDataCollection extends Response
+class ItemLogCollection extends Response
 {
     public function create()
     {
         $this->verbs['GET'] = (new \App\HttpVerb\Get())
             ->setAuthenticationStatus($this->permissions['view'])
-            ->setDescription('route-descriptions.item_data_GET_index')
+            ->setDescription('route-descriptions.item_log_GET_index')
             ->option();
 
         $this->verbs['POST'] = (new \App\HttpVerb\Post())
-            ->setFields(Config::get('api.item-data.fields-post'))
-            ->setDescription('route-descriptions.item_data_POST')
+            ->setFields(Config::get('api.item-log.fields-post'))
+            ->setDescription('route-descriptions.item_log_POST')
             ->setAuthenticationStatus($this->permissions['manage'])
             ->setAuthenticationRequirement(true)
             ->option();
