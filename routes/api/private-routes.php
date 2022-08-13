@@ -3,6 +3,7 @@
 use App\Http\Controllers\Authentication;
 use App\Http\Controllers\ItemCategoryManage;
 use App\Http\Controllers\ItemDataManage;
+use App\Http\Controllers\ItemLogManage;
 use App\Http\Controllers\ItemManage;
 use App\Http\Controllers\ItemPartialTransferManage;
 use App\Http\Controllers\ItemSubcategoryManage;
@@ -74,6 +75,11 @@ Route::group(
             'resource-types/{resource_type_id}/resources/{resource_id}/items/{item_id}/data',
             [ItemDataManage::class, 'create']
         )->name('item-data.create');
+
+        Route::post(
+            'resource-types/{resource_type_id}/resources/{resource_id}/items/{item_id}/log',
+            [ItemLogManage::class, 'create']
+        )->name('item-log.create');
 
         Route::post(
             'resource-types/{resource_type_id}/resources/{resource_id}/items/{item_id}/partial-transfer',

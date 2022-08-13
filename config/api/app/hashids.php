@@ -10,6 +10,7 @@ return [
     'resource' => env('APP_HASH_SALT_RESOURCE'),
     'item' => env('APP_HASH_SALT_ITEM'),
     'item-category' => env('APP_HASH_SALT_ITEM_CATEGORY'),
+    'item-log' => env('APP_HASH_SALT_ITEM_LOG'),
     'item-partial-transfer' => env('APP_HASH_SALT_ITEM_PARTIAL_TRANSFER'),
     'item-subcategory' => env('APP_HASH_SALT_ITEM_SUBCATEGORY'),
     'item-transfer' => env('APP_HASH_SALT_ITEM_TRANSFER'),

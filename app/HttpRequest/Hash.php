@@ -44,6 +44,7 @@ class Hash
         $this->hashers['resource'] = new Hashids($config['resource'], $min_length);
         $this->hashers['item'] = new Hashids($config['item'], $min_length);
         $this->hashers['item-category'] = new Hashids($config['item-category'], $min_length);
+        $this->hashers['item-log'] = new Hashids($config['item-log'], $min_length);
         $this->hashers['item-partial-transfer'] = new Hashids($config['item-partial-transfer'], $min_length);
         $this->hashers['item-subcategory'] = new Hashids($config['item-subcategory'], $min_length);
         $this->hashers['item-transfer'] = new Hashids($config['item-transfer'], $min_length);
@@ -118,6 +119,11 @@ class Hash
     public function itemCategory(): Hashids
     {
         return $this->hashers['item-category'];
+    }
+
+    public function itemLog(): Hashids
+    {
+        return $this->hashers['item-log'];
     }
 
     public function itemPartialTransfer(): Hashids

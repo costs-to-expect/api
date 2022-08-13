@@ -34,6 +34,7 @@ class ConvertRouteParameters
             'resource_id' => 'resource',
             'item_id' => 'item',
             'item_category_id' => 'item-category',
+            'item_log_id' => 'item-log',
             'item_partial_transfer_id' => 'item-partial-transfer',
             'item_subcategory_id' => 'item-subcategory',
             'item_transfer_id' => 'item-transfer',

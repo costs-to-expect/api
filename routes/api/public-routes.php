@@ -5,6 +5,7 @@ use App\Http\Controllers\CurrencyView;
 use App\Http\Controllers\IndexView;
 use App\Http\Controllers\ItemCategoryView;
 use App\Http\Controllers\ItemDataView;
+use App\Http\Controllers\ItemLogView;
 use App\Http\Controllers\ItemSubcategoryView;
 use App\Http\Controllers\ItemSubtypeView;
 use App\Http\Controllers\ItemTransferView;
@@ -352,6 +353,27 @@ Route::group(
             'resource-types/{resource_type_id}/resources/{resource_id}/items/{item_id}/data/{key}',
             [ItemDataView::class, 'optionsShow']
         )->name('item-data.show.options');
+
+
+        Route::get(
+            'resource-types/{resource_type_id}/resources/{resource_id}/items/{item_id}/log',
+            [ItemLogView::class, 'index']
+        )->name('item-log.list');
+
+        Route::options(
+            'resource-types/{resource_type_id}/resources/{resource_id}/items/{item_id}/log',
+            [ItemLogView::class, 'optionsIndex']
+        )->name('item-log.list.options');
+
+        Route::get(
+            'resource-types/{resource_type_id}/resources/{resource_id}/items/{item_id}/log/{item_log_id}',
+            [ItemLogView::class, 'show']
+        )->name('item-log.show');
+
+        Route::options(
+            'resource-types/{resource_type_id}/resources/{resource_id}/items/{item_id}/log/{item_log_id}',
+            [ItemLogView::class, 'optionsShow']
+        )->name('item-log.show.options');
 
 
         Route::options(
