@@ -185,7 +185,7 @@
             </div>
             <div class="bg-dark shadow-sm mx-auto"
                  style="width: 80%; height: 400px; border-radius: 21px 21px 0 0;">
-                <img src="{{ asset('images/yahtzee.png') }}" width="275" height="" alt="A screen shot of the score sheet for Yatzy" />
+                <img src="{{ asset('images/yatzy.png') }}" width="275" height="" alt="A screen shot of the score sheet for Yatzy" />
             </div>
         </div>
     </div>
