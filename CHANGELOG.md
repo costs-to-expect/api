@@ -2,6 +2,15 @@
 
 The complete changelog for the Costs to Expect REST API, our changelog follows the format defined at https://keepachangelog.com/en/1.0.0/
 
+## [v3.04.0] - 2022-08-27
+### Added
+- Added the "Yatzy" item subtype to support the new Yatzy game scorer.
+### Changed
+- Updated the landing page, added "Expense" and "Yatzy".
+### Fixed
+- Corrected a return type in a model, possible to be NULL.
+- Corrections to the landing page
+
 ## [v3.03.0] - 2022-08-13
 ### Added
 - Added a new landing page, mirrors the new "Budget" and "Yahtzee" landing pages.

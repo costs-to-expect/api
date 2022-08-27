@@ -13,6 +13,46 @@
     <meta name="theme-color" content="#892b7c">
     <style>
 
+        .bd-placeholder-img {
+            font-size: 1.125rem;
+            text-anchor: middle;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            user-select: none;
+        }
+
+        @media (min-width: 768px) {
+            .bd-placeholder-img-lg {
+                font-size: 3.5rem;
+            }
+        }
+
+        .b-example-divider {
+            height: 3rem;
+            background-color: rgba(0, 0, 0, .1);
+            border: solid rgba(0, 0, 0, .15);
+            border-width: 1px 0;
+            box-shadow: inset 0 .5em 1.5em rgba(0, 0, 0, .1), inset 0 .125em .5em rgba(0, 0, 0, .15);
+        }
+
+        .b-example-vr {
+            flex-shrink: 0;
+            width: 1.5rem;
+            height: 100vh;
+        }
+
+        .bi {
+            vertical-align: -.125em;
+            fill: currentColor;
+        }
+
+        .nav-scroller {
+            position: relative;
+            z-index: 2;
+            height: 2.75rem;
+            overflow-y: hidden;
+        }
+
         .nav-scroller .nav {
             display: flex;
             flex-wrap: nowrap;
@@ -106,21 +146,46 @@
         <div class="text-bg-dark me-md-3 pt-3 px-3 pt-md-5 px-md-5 text-center overflow-hidden">
             <div class="my-3 py-3">
                 <h2 class="display-5">Budget</h2>
-                <p class="lead">A free powerful budgeting tool powered by the API.</p>
+                <p class="lead">A free powerful budgeting tool powered by the Costs to Expect API.</p>
             </div>
             <div class="bg-light shadow-sm mx-auto"
-                 style="width: 80%; height: 500px; border-radius: 21px 21px 0 0;">
+                 style="width: 80%; height: 400px; border-radius: 21px 21px 0 0;">
                 <img src="{{ asset('images/budget.png') }}" width="275" height="" alt="A screen shot of our in development Budget app" />
             </div>
         </div>
         <div class="bg-light me-md-3 pt-3 px-3 pt-md-5 px-md-5 text-center overflow-hidden">
             <div class="my-3 p-3">
-                <h2 class="display-5">Yahtzee</h2>
-                <p class="lead">A fun little project powered by the API, no more designated scorer.</p>
+                <h2 class="display-5">Yahtzee Game Scorer</h2>
+                <p class="lead">A fun little project powered by the API, no more designated scorer, everyone gets a score sheet</p>
+            </div>
+            <div class="bg-dark shadow-sm mx-auto"
+                 style="width: 80%; height: 400px; border-radius: 21px 21px 0 0;">
+                <img src="{{ asset('images/yahtzee.png') }}" width="275" height="" alt="A screen shot of the score sheet for Yahtzee" />
+            </div>
+        </div>
+    </div>
+
+    <div class="d-md-flex flex-md-equal w-100 my-md-3 ps-md-3">
+        <div class="text-bg-dark me-md-3 pt-3 px-3 pt-md-5 px-md-5 text-center overflow-hidden">
+            <div class="my-3 py-3">
+                <h2 class="display-5">Expense *</h2>
+                <p class="lead">A free powerful expense tracking tool powered by the Costs to Expect API.</p>
+                <p class="small mb-0">* App is being redeveloped, this is a screen shot of the old version.</p>
             </div>
             <div class="bg-light shadow-sm mx-auto"
-                 style="width: 80%; height: 500px; border-radius: 21px 21px 0 0;">
-                <img src="{{ asset('images/yahtzee.png') }}" width="275" height="" alt="A screen shot of the score sheet for Yahtzee" />
+                 style="width: 80%; height: 400px; border-radius: 21px 21px 0 0;">
+                <img src="{{ asset('images/expense.png') }}" width="275" height="" alt="A screen shot of the old Expense app" />
+            </div>
+        </div>
+        <div class="bg-light me-md-3 pt-3 px-3 pt-md-5 px-md-5 text-center overflow-hidden">
+            <div class="my-3 p-3">
+                <h2 class="display-5">Yatzy Game Scorer</h2>
+                <p class="lead">A fun little project powered by the API, no more designated scorer, everyone gets a score sheet</p>
+                <p class="small mb-0">We built Yahtzee so figured why not build Yatzy as well..</p>
+            </div>
+            <div class="bg-dark shadow-sm mx-auto"
+                 style="width: 80%; height: 400px; border-radius: 21px 21px 0 0;">
+                <img src="{{ asset('images/yatzy.png') }}" width="275" height="" alt="A screen shot of the score sheet for Yatzy" />
             </div>
         </div>
     </div>
@@ -143,7 +208,7 @@
             <ul class="list-unstyled text-small">
                 <li><a class="link-secondary" href="https://www.costs-to-expect.com">Social Experiment</a></li>
                 <li><a class="link-secondary" href="https://yahtzee.game-scorer.com">Yahtzee Game Scorer</a></li>
-                <li><a class="link-secondary" href="#">Yatzy Game Scorer (Coming soon)</a></li>
+                <li><a class="link-secondary" href="https://yatzy.game-scorer.com">Yatzy Game Scorer</a></li>
             </ul>
         </div>
         <div class="col-6 col-md">
