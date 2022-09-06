@@ -27,8 +27,8 @@ The complete changelog for the Costs to Expect REST API, our changelog follows t
 ### Removed
 - JQuery removed from dependencies.
 
-v3.00.1 --------------------------------
-## Fixed
+## [v3.02.1] - 2022-08-04
+### Fixed
 - Corrected the route prefix for cache invalidation, JSON schema files and the README.
 
 ## [v3.02.0] - 2022-08-04
