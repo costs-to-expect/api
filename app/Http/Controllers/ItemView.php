@@ -26,6 +26,7 @@ class ItemView extends Controller
 
         return match ($item_type) {
             'allocated-expense' => $this->allocatedExpenseCollection((int) $resource_type_id, (int) $resource_id),
+            'budget' => $this->budgetCollection((int) $resource_type_id, (int) $resource_id),
             'game' => $this->gameCollection((int) $resource_type_id, (int) $resource_id),
             default => throw new \OutOfRangeException('No item type definition for ' . $item_type, 500),
         };
@@ -34,6 +35,18 @@ class ItemView extends Controller
     private function allocatedExpenseCollection(int $resource_type_id, int $resource_id): JsonResponse
     {
         $response = new \App\ItemType\AllocatedExpense\HttpResponse\Item(
+            $resource_type_id,
+            $resource_id,
+            $this->hasWriteAccessToResourceType($resource_type_id),
+            $this->user_id
+        );
+
+        return $response->collectionResponse();
+    }
+
+    private function budgetCollection(int $resource_type_id, int $resource_id): JsonResponse
+    {
+        $response = new \App\ItemType\Budget\HttpResponse\Item(
             $resource_type_id,
             $resource_id,
             $this->hasWriteAccessToResourceType($resource_type_id),

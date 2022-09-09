@@ -36,15 +36,18 @@ class Item extends Transformer
            array_key_exists('item_currency_name', $to_transform) &&
            $to_transform['item_currency_id'] !== null
        ) {
+            $currency_id = $this->hash->currency()->encode($to_transform['item_currency_id']);
+
             $currency = [
-                'id' => $this->hash->currency()->encode($to_transform['item_currency_id']),
+                'id' => $currency_id,
                 'name' => $to_transform['item_currency_name'],
-                'code' => $to_transform['item_currency_code']
+                'code' => $to_transform['item_currency_code'],
+                'uri' => route('currency.show', ['currency_id' => $currency_id], false)
             ];
         }
 
         $this->transformed = [
-            'id' => $game_id,
+            'id' => $budget_item_id,
             'name' => $to_transform['item_name'],
             'account' => $to_transform['item_account'],
             'target_account' => $to_transform['item_target_account'],
