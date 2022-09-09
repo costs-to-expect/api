@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\ItemType\Select;
 use App\ItemType\AllocatedExpense\AllowedValue as AllocatedExpenseAllowedValue;
+use App\ItemType\Budget\AllowedValue as BudgetAllowedValue;
 use App\ItemType\Game\AllowedValue as GameAllowedValue;
 use Illuminate\Http\JsonResponse;
 
@@ -81,6 +82,7 @@ class ItemView extends Controller
 
         return match ($item_type) {
             'allocated-expense' => $this->allocatedExpense((int) $resource_type_id, (int) $resource_id, (int) $item_id),
+            'budget' => $this->budget((int) $resource_type_id, (int) $resource_id, (int) $item_id),
             'game' => $this->game((int) $resource_type_id, (int) $resource_id, (int) $item_id),
             default => throw new \OutOfRangeException('No item type definition for ' . $item_type, 500),
         };
@@ -89,6 +91,18 @@ class ItemView extends Controller
     private function allocatedExpense(int $resource_type_id, int $resource_id, int $item_id): JsonResponse
     {
         $response = new \App\ItemType\AllocatedExpense\HttpResponse\Item(
+            $resource_type_id,
+            $resource_id,
+            $this->hasWriteAccessToResourceType($resource_type_id),
+            $this->user_id
+        );
+
+        return $response->showResponse($item_id);
+    }
+
+    private function budget(int $resource_type_id, int $resource_id, int $item_id): JsonResponse
+    {
+        $response = new \App\ItemType\Budget\HttpResponse\Item(
             $resource_type_id,
             $resource_id,
             $this->hasWriteAccessToResourceType($resource_type_id),
@@ -122,6 +136,7 @@ class ItemView extends Controller
 
         return match ($item_type) {
             'allocated-expense' => $this->optionsAllocatedExpenseCollection((int) $resource_type_id, (int) $resource_id),
+            'budget' => $this->optionsBudgetCollection((int) $resource_type_id, (int) $resource_id),
             'game' => $this->optionsGameCollection((int) $resource_type_id, (int) $resource_id),
             default => throw new \OutOfRangeException('No options item type definition for ' . $item_type, 500),
         };
@@ -136,6 +151,21 @@ class ItemView extends Controller
         );
 
         return (new \App\HttpOptionResponse\Item\AllocatedExpenseCollection($this->permissions($resource_type_id)))
+            ->setAllowedValuesForParameters($allowed_values->parameterAllowedValuesForCollection())
+            ->setAllowedValuesForFields($allowed_values->fieldAllowedValuesForCollection())
+            ->create()
+            ->response();
+    }
+
+    private function optionsBudgetCollection(int $resource_type_id, int $resource_id): JsonResponse
+    {
+        $allowed_values = new BudgetAllowedValue(
+            $this->viewable_resource_types,
+            $resource_type_id,
+            $resource_id
+        );
+
+        return (new \App\HttpOptionResponse\Item\BudgetCollection($this->permissions($resource_type_id)))
             ->setAllowedValuesForParameters($allowed_values->parameterAllowedValuesForCollection())
             ->setAllowedValuesForFields($allowed_values->fieldAllowedValuesForCollection())
             ->create()
