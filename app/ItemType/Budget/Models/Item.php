@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\ItemType\Budget\Models;
 
 use App\Models\Clause;
+use App\Models\Currency;
 use Illuminate\Database\Eloquent\Model as LaravelModel;
 use Illuminate\Database\Query\Builder as QueryBuilder;
 use JetBrains\PhpStorm\ArrayShape;
@@ -22,6 +23,11 @@ class Item extends LaravelModel
     protected $guarded = ['id'];
 
     public $timestamps = false;
+
+    public function currency()
+    {
+        return $this->hasOne(Currency::class, 'id', 'currency_id');
+    }
 
     public function instance(int $item_id): ?Item
     {
@@ -59,7 +65,9 @@ class Item extends LaravelModel
             'item_target_account' => $item->target_account,
             'item_description' => $item->description,
             'item_amount' => $item->amount,
-            'item_currency_id' => $item->currency_id,
+            'item_currency_id' => $item->currency->id,
+            'item_currency_code' => $item->currency->code,
+            'item_currency_name' => $item->currency->name,
             'item_category' => $item->category,
             'item_start_date' => $item->start_date,
             'item_end_date' => $item->end_date,

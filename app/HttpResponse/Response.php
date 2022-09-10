@@ -270,7 +270,7 @@ class Response
         );
     }
 
-    public static function validationErrors(Validator $validator, array $allowed_values = []): ?JsonResponse
+    public static function validationErrors(Validator $validator, array $allowed_values = []): JsonResponse
     {
         $validation_errors = [];
 
