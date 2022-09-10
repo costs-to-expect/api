@@ -199,6 +199,7 @@ class ItemView extends Controller
 
         return match ($item_type) {
             'allocated-expense' => $this->optionsAllocatedExpenseShow((int) $resource_type_id, (int) $resource_id, (int) $item_id),
+            'budget' => $this->optionsBudgetShow((int) $resource_type_id, (int) $resource_id, (int) $item_id),
             'game' => $this->optionsGameShow((int) $resource_type_id, (int) $resource_id, (int) $item_id),
             default => throw new \OutOfRangeException('No entity definition for ' . $item_type, 500),
         };
@@ -227,6 +228,26 @@ class ItemView extends Controller
 
         return (new \App\HttpOptionResponse\Item\AllocatedExpense($this->permissions((int) $resource_type_id)))
             ->setAllowedValuesForFields($allowed_values->fieldAllowedValuesForShow())
+            ->create()
+            ->response();
+    }
+
+    private function optionsBudgetShow(
+        string $resource_type_id,
+        string $resource_id,
+        string $item_id
+    ): JsonResponse {
+        if ($this->hasViewAccessToResourceType((int) $resource_type_id) === false) {
+            return \App\HttpResponse\Response::notFoundOrNotAccessible(trans('entities.item'));
+        }
+
+        $item = (new \App\ItemType\Budget\Models\Item())->single($resource_type_id, $resource_id, $item_id);
+
+        if ($item === null) {
+            return \App\HttpResponse\Response::notFound(trans('entities.item'));
+        }
+
+        return (new \App\HttpOptionResponse\Item\Budget($this->permissions((int) $resource_type_id)))
             ->create()
             ->response();
     }
