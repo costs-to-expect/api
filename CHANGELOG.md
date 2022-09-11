@@ -2,6 +2,19 @@
 
 The complete changelog for the Costs to Expect REST API, our changelog follows the format defined at https://keepachangelog.com/en/1.0.0/
 
+## [v3.05.0] - 2022-09-11
+### Added
+- Added full support for the `budget` item type, all endpoints.
+
+### Changed
+- Updated the landing page image for the 'Budget' App.
+- Updated the descriptions for all `item` OPTIONS endpoint responses, the descriptions are now specific to the item type`.
+- Updated the README, added additional Apps and improved the content in general.
+
+### Fixed
+- Corrected PATCH and POST validation for `items`, execution will stop and return immediately.
+- Corrected an indentation issue in the CHANGELOG.
+
 ## [v3.04.0] - 2022-08-27
 ### Added
 - Added the "Yatzy" item subtype to support the new Yatzy game scorer.
@@ -27,8 +40,8 @@ The complete changelog for the Costs to Expect REST API, our changelog follows t
 ### Removed
 - JQuery removed from dependencies.
 
-v3.00.1 --------------------------------
-## Fixed
+## [v3.02.1] - 2022-08-04
+### Fixed
 - Corrected the route prefix for cache invalidation, JSON schema files and the README.
 
 ## [v3.02.0] - 2022-08-04

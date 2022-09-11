@@ -18,7 +18,7 @@ class AllocatedExpense extends Response
             ->setParameters(LaravelConfig::get($base_path . '.summary-parameters', []))
             ->setFilterableParameters(LaravelConfig::get($base_path . '.summary-filterable', []))
             ->setAllowedValuesForParameters($this->allowed_values_for_parameters)
-            ->setDescription('route-descriptions.summary_resource_type_items_GET_index')
+            ->setDescription('route-descriptions.summary_resource_type_items_allocated_expense_GET_index')
             ->setAuthenticationStatus($this->permissions['view'])
             ->option();
 

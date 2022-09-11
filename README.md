@@ -4,46 +4,45 @@
 
 Costs to Expect is a service original intended to track and forecast expenses. 
 This API is the backbone of the service and is not limited to tracking expenses, over the years we have 
-made it flexible enough to record almost anything. 
+made it flexible enough to record almost anything, including dice games.
 
 ## Documentation
 
 The documentation for the Costs to Expect API can be found at 
 [postman.costs-to-expect.com](https://postman.costs-to-expect.com?version=latest). 
 
-The documentation is slowly being moved to a repository on [GitHub](https://github.com/costs-to-expect/api-docs).
+The documentation is slowly being moved to a repository on 
+[GitHub](https://github.com/costs-to-expect/api-docs). It is taking a while to rewrite and update the documentation, 
+it will however be complete before the official of 'Budget'.
 
 ## Apps
 
-There are several Apps that use the Costs to Expect API, including;
+The API is used by the following Apps;
 
-- [Budget](https://budget.costs-to-expect.com) Our free and Open Source budget tool
-- [Expense](https://app.costs-to-expect.com) Our free and Open Source expense tool
+- [Budget](https://budget.costs-to-expect.com) Our free and Open Source Budget tool
+- Budget Pro (Coming soon) Our commercial version of Budget
+- [Expense](https://app.costs-to-expect.com) Our free and Open Source expense tracker
+- Expense Pro (Coming soon) Our commercial version of Expense
 - [Social Experiment](https://www.costs-to-expect.com) How much does it cost to raise a child to adulthood in the UK?
 - [Yahtzee Game Scorer](https://yahtzee.game-score.com) Our Yahtzee Game Scorer, free for all to use
+- [Yatzy Game Scorer](https://yatzu.game-score.com) Our Yatzy Game Scorer, free for all to use
 
 ## Set up
 
-I'm going to assume you are using Docker, if not, you should be able to work out 
-what you need to run for your development setup.
+I'm going to assume you are using Docker, if not, sorry. You should be able to work out what you need to 
+do for your development setup from the steps below.
 
-Go to the project root 
-directory and run the below.
-
-### Environment
+Go to the project root directory and run the below.
 
 * $ `docker network create costs.network` *
 * $ `docker compose build`
-* $ `docker compose up`
+* $ `docker compose up -d`
 
-*We include a network for local development purposes, I need the Costs to Expect 
-Website and App to communicate with a local API. You probably don't need this 
-so remove the network section from the docker compose file and don't create the 
-network.*
+*We include a network for local development purposes, I need a local copy of the API to communicate with 
+my local App. You probably don't need this so remove the network section from the docker compose file and 
+don't create the network.*
 
-### API
-
-We now have a working environment, we need to set up the API. There are two 
+You now have a working environment, so need to set up the API. There are two 
 Docker services, `api` and `mysql`, we will need to exec into the `api` service to 
 set up our app.
 
@@ -57,7 +56,7 @@ installing all dependencies and running our migrations.
 * Copy the `.env.example` file and name the copy `.env`. Set all the empty values, all 
 drivers have been set to our defaults, sessions, cache, and the queue default to the database driver.
 * `docker compose exec costs.api.app php artisan key:generate`
-* `docker compose exec costs.api.app php artisan migrate`
+* `docker compose exec costs.api.app php artisan migrate`)
 * `docker compose exec costs.api.app php artisan queue:work`
 * Run an OPTIONS request on `http://[your.domail.local:8080]/v3/resource_types`, you will see an OPTIONS response, 
 alternatively a GET request to `http://[your.domail.local:8080]/v1` will show all the defined routes.
@@ -69,45 +68,50 @@ you will also need to set `MAIL_FROM_ADDRESS` and `MAIL_TO_ADDRESS`. You may nee
 
 ## Responses
 
-* Collections will return an array and a 200.
-* Items will return a single object and a 200.
-* Successful POST requests will return a single object and a 201, there are minor exceptions where we may return a 204.
+* On success, collections will return an array and a 200.
+* On success, show requests will return a single object and a 200, no response envelope.
+* Successful POST requests will return a single object and a 201, there are minor exceptions where we return a 204.
 * Successful PATCH requests will return 204.
 * Successful DELETE requests will return a 204.
 * Non 2xx results will return an object with a message field and optionally a fields array. When we 
-return a validation error, the response will be 422 and include a fields array which will contain any validation errors.
+return a validation error, the response will be 422 and include a fields array which will contain all validation errors.
 
-### Caching
+## Caching
 
-We include local level caching in the API, as time goes on we will move towards
-conditional caching, specifically including an Etag header and returning a 304 response.
+The API caches responses per authenticated user and also a public cache.
 
-You can skip cache for a specific request by adding the `X-Skip-Cache` header, any value will do.
+You can skip reading from the cache for a specific request by adding the `X-Skip-Cache` header, any value will do, 
+the existence of the header is all that matters.
+
+Cache is cleared when we detect a change to relevant data, currently, there is a minor delay before cache is cleared, 
+we are planning to clear cache immediately, we want to review the performance impact before making the change.
 
 ## Headers
 
-Responses will include multiple headers, the table below details the intention 
-behind each of our custom headers.
+Responses will include multiple headers, the table below details the intention behind each of our custom headers.
 
-| Header          | Purpose                                                      |
-|:----------------|:-------------------------------------------------------------|
-| X-Total-Count   | Pagination: Total number of result                           |
-| X-Count         | Pagination: Number of results returned                       |
-| X-Limit         | Pagination: Limit value applied to request after validation  |
-| X-Offset        | Pagination: Offset value applied to request after validation |
-| X-Link-Previous | Pagination: URI for previous result set if relevant          |
-| X-Link-Next     | Pagination: URI for next result set if relevant              |
-| X-Last-Updated  | The last time the collection was updated                     |
-| X-Sort          | Sort options applied to request after validation             |
-| X-Search        | Search options applied to request after validation           |
-| X-Skip-Cache    | Retura collection, bypassing the cache                       |
-| X-Parameters    | Request parameters applied to request after validation       |
+| Header          | Purpose                                             |
+|:----------------|:----------------------------------------------------|
+| X-Total-Count   | Pagination: Total number of results for the request |
+| X-Count         | Pagination: Number of results returned              |
+| X-Limit         | Pagination: Limit value applied to request          |
+| X-Offset        | Pagination: Offset value applied to request         |
+| X-Link-Previous | Pagination: URI for previous result set if relevant |
+| X-Link-Next     | Pagination: URI for next result set if relevant     |
+| X-Last-Updated  | The last time the collection was updated            |
+| X-Sort          | Sort options applied to the request                 |
+| X-Search        | Search options applied to the request               |
+| X-Skip-Cache    | Return collection, bypassing the cache              |
+| X-Parameters    | Request parameters applied to request               |
+| X-Filter        | Filter options applied to the request               |
 
 ## Routes
 
-Access to a route will be limited based upon a users permitted resource types. 
-When you create a resource type you have full access to everything below it, 
-additionally, the same is true if you are assigned as a permitted user to a resource type.
+Access to a route is limited based upon a users permitted resource types. When a user creates a resource type they 
+have full access to everything below it, additionally, the same is true if you are assigned as a permitted user to a 
+resource type.
+
+Public resources types provide READ access to everyone, WRITE access is limited to the permitted users.
 
 | HTTP Verb(s) | Route                                                                                                                                          |
 |:-------------|:-----------------------------------------------------------------------------------------------------------------------------------------------|

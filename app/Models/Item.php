@@ -14,7 +14,9 @@ use Illuminate\Database\Eloquent\Model;
  * @property int $id
  * @property int $resource_id
  * @property int $created_by
+ * @property string $created_at
  * @property int $updated_by
+ * @property string $updated_at
  *
  * @author Dean Blackborough <dean@g3d-development.com>
  * @copyright Dean Blackborough 2018-2022

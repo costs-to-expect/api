@@ -19,6 +19,7 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Config as LaravelConfig;
 use Illuminate\Support\Facades\Date;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Validator as ValidatorFacade;
 
 /**
@@ -38,6 +39,7 @@ class ItemManage extends Controller
 
         return match ($item_type) {
             'allocated-expense' => $this->createAllocatedExpense((int) $resource_type_id, (int) $resource_id),
+            'budget' => $this->createBudget((int) $resource_type_id, (int) $resource_id),
             'game' => $this->createGame((int) $resource_type_id, (int) $resource_id),
             default => throw new \OutOfRangeException('No item type definition for ' . $item_type, 500),
         };
@@ -47,7 +49,10 @@ class ItemManage extends Controller
     {
         $request = request();
 
-        $this->validateAllocatedExpenseForCreate();
+        $validator = $this->validateAllocatedExpenseForCreate();
+        if ($validator !== null) {
+            return \App\HttpResponse\Response::validationErrors($validator);
+        }
 
         $cache_job_payload = (new JobPayload())
             ->setGroupKey(KeyGroup::ITEM_CREATE)
@@ -106,11 +111,79 @@ class ItemManage extends Controller
         );
     }
 
+    private function createBudget(int $resource_type_id, int $resource_id): JsonResponse
+    {
+        $request = request();
+
+        $validator = $this->validateBudgetForCreate();
+        if ($validator !== null) {
+            return \App\HttpResponse\Response::validationErrors($validator);
+        }
+
+        $cache_job_payload = (new JobPayload())
+            ->setGroupKey(KeyGroup::ITEM_CREATE)
+            ->setRouteParameters([
+                'resource_type_id' => $resource_type_id,
+                'resource_id' => $resource_id
+            ])
+            ->isPermittedUser($this->hasWriteAccessToResourceType($resource_type_id))
+            ->setUserId($this->user_id);
+
+        try {
+            $item_type_instance = DB::transaction(function () use ($request, $resource_id) {
+                $item_instance = new Item([
+                    'resource_id' => $resource_id,
+                    'created_by' => $this->user_id
+                ]);
+                $item_instance->save();
+
+                $hash = new Hash();
+                $currency_id = $hash->decode('currency', $request->input('currency_id'));
+
+                $item_type_instance = new \App\ItemType\Budget\Models\Item([
+                    'item_id' => $item_instance->id,
+                    'name' => $request->input('name'),
+                    'account' => $request->input('account'),
+                    'target_account' => $request->input('target_account'),
+                    'description' => $request->input('description', null),
+                    'amount' => $request->input('amount', null),
+                    'currency_id' => $currency_id,
+                    'category' => $request->input('category', null),
+                    'start_date' => $request->input('start_date'),
+                    'end_date' => $request->input('end_date'),
+                    'disabled' => (bool) $request->input('disabled'),
+                    'frequency' => $request->input('frequency'),
+                    'created_at' => Date::now(),
+                    'updated_at' => null
+                ]);
+
+                $item_type_instance->save();
+
+                return $item_type_instance;
+            });
+
+            ClearCache::dispatch($cache_job_payload->payload());
+        } catch (Exception $e) {
+            return Response::failedToSaveModelForCreate($e);
+        }
+
+        return response()->json(
+            (new \App\ItemType\Budget\Transformer\Item(
+                (new \App\ItemType\Budget\Models\Item())->instanceToArray($item_type_instance)
+            )
+            )->asArray(),
+            201
+        );
+    }
+
     private function createGame(int $resource_type_id, int $resource_id): JsonResponse
     {
         $request = request();
 
-        $this->validateGameForCreate();
+        $validator = $this->validateGameForCreate();
+        if ($validator !== null) {
+            return \App\HttpResponse\Response::validationErrors($validator);
+        }
 
         $cache_job_payload = (new JobPayload())
             ->setGroupKey(KeyGroup::ITEM_CREATE)
@@ -172,6 +245,7 @@ class ItemManage extends Controller
 
         return match ($item_type) {
             'allocated-expense' => $this->updateAllocatedExpense((int) $resource_type_id, (int) $resource_id, (int) $item_id),
+            'budget' => $this->updateBudget((int) $resource_type_id, (int) $resource_id, (int) $item_id),
             'game' => $this->updateGame((int) $resource_type_id, (int) $resource_id, (int) $item_id),
             default => throw new \OutOfRangeException('No item type definition for ' . $item_type, 500),
         };
@@ -182,7 +256,16 @@ class ItemManage extends Controller
         int $resource_id,
         int $item_id
     ): JsonResponse {
-        $this->validateAllocatedExpenseForUpdate();
+
+        $invalid_fields = $this->checkForInvalidFieldsForAllocatedExpense();
+        if ($invalid_fields !== null) {
+            return $invalid_fields;
+        }
+
+        $validator = $this->validateAllocatedExpenseForUpdate();
+        if ($validator !== null) {
+            return \App\HttpResponse\Response::validationErrors($validator);
+        }
 
         $request = request();
 
@@ -236,6 +319,77 @@ class ItemManage extends Controller
         }
 
         return Response::successNoContent();
+    }
+
+    private function updateBudget(
+        int $resource_type_id,
+        int $resource_id,
+        int $item_id
+    ): JsonResponse {
+
+        $invalid_fields = $this->checkForInvalidFieldsForBudget();
+        if ($invalid_fields !== null) {
+            return $invalid_fields;
+        }
+
+        $validator = $this->validateBudgetForUpdate();
+        if ($validator !== null) {
+            return \App\HttpResponse\Response::validationErrors($validator);
+        }
+
+        $request = request();
+
+        $cache_job_payload = (new JobPayload())
+            ->setGroupKey(KeyGroup::ITEM_DELETE)
+            ->setRouteParameters([
+                'resource_type_id' => $resource_type_id,
+                'resource_id' => $resource_id
+            ])
+            ->isPermittedUser($this->hasWriteAccessToResourceType($resource_type_id))
+            ->setUserId($this->user_id);
+
+        $item_instance = (new Item())->instance($resource_type_id, $resource_id, $item_id);
+        $item_type_instance = (new \App\ItemType\Budget\Models\Item())->instance($item_id);
+
+        if ($item_instance === null || $item_type_instance === null) {
+            return Response::failedToSelectModelForUpdateOrDelete();
+        }
+
+        try {
+            $item_instance->updated_by = $this->user_id;
+            $item_instance->updated_at = Date::now();
+
+            DB::transaction(static function () use ($request, $item_instance, $item_type_instance) {
+                foreach ($request->all() as $key => $value) {
+                    $item_type_instance->$key = $value;
+                }
+
+                $item_type_instance->updated_at = Date::now();
+
+                return $item_instance->save() && $item_type_instance->save();
+            });
+
+            ClearCache::dispatch($cache_job_payload->payload());
+        } catch (Exception $e) {
+            return Response::failedToSaveModelForUpdate($e);
+        }
+
+        return Response::successNoContent();
+    }
+
+    private function checkForInvalidFieldsForGame(): ?JsonResponse
+    {
+        $config_base_path = 'api.item-type-game';
+
+        $invalid_fields = $this->checkForInvalidFields(
+            array_keys(LaravelConfig::get($config_base_path . '.validation-patch.fields', []))
+        );
+
+        if (count($invalid_fields) > 0) {
+            return Response::invalidFieldsInRequest($invalid_fields);
+        }
+
+        return null;
     }
 
     private function updateGame(
@@ -308,6 +462,7 @@ class ItemManage extends Controller
 
         return match ($item_type) {
             'allocated-expense' => $this->deleteAllocatedExpense((int) $resource_type_id, (int) $resource_id, (int) $item_id),
+            'budget' => $this->deleteBudget((int) $resource_type_id, (int) $resource_id, (int) $item_id),
             'game' => $this->deleteGame((int) $resource_type_id, (int) $resource_id, (int) $item_id),
             default => throw new \OutOfRangeException('No item type definition for ' . $item_type, 500),
         };
@@ -345,6 +500,49 @@ class ItemManage extends Controller
                 (new ItemLog())->deleteLogEntries($item_id);
                 (new ItemTransfer())->deleteTransfers($item_id);
                 (new ItemPartialTransfer())->deleteTransfers($item_id);
+                $item_type_instance->delete();
+                $item_instance->delete();
+            });
+
+            ClearCache::dispatch($cache_job_payload->payload());
+
+            return Response::successNoContent();
+        } catch (QueryException $e) {
+            return Response::foreignKeyConstraintError($e);
+        } catch (Exception $e) {
+            return Response::notFound(trans('entities.item'), $e);
+        }
+    }
+
+    private function deleteBudget(
+        string $resource_type_id,
+        string $resource_id,
+        string $item_id
+    ): JsonResponse {
+        $cache_job_payload = (new JobPayload())
+            ->setGroupKey(KeyGroup::ITEM_DELETE)
+            ->setRouteParameters([
+                'resource_type_id' => $resource_type_id,
+                'resource_id' => $resource_id
+            ])
+            ->isPermittedUser($this->hasWriteAccessToResourceType((int) $resource_type_id))
+            ->setUserId($this->user_id);
+
+        $item_model = new \App\ItemType\Budget\Models\Item();
+
+        $item_type_instance = $item_model->instance($item_id);
+        $item_instance = (new Item())->instance($resource_type_id, $resource_id, $item_id);
+
+        if ($item_instance === null || $item_type_instance === null) {
+            return Response::notFound(trans('entities.item'));
+        }
+
+        if ($item_model->hasCategoryAssignments($item_id) === true) {
+            return Response::foreignKeyConstraintCategory();
+        }
+
+        try {
+            DB::transaction(static function () use ($item_id, $item_type_instance, $item_instance) {
                 $item_type_instance->delete();
                 $item_instance->delete();
             });
@@ -403,7 +601,7 @@ class ItemManage extends Controller
         }
     }
 
-    private function validateAllocatedExpenseForCreate()
+    private function validateAllocatedExpenseForCreate(): ?\Illuminate\Validation\Validator
     {
         $request = request();
 
@@ -430,16 +628,14 @@ class ItemManage extends Controller
         );
 
         if ($validator->fails()) {
-            return \App\HttpResponse\Response::validationErrors($validator);
+            return $validator;
         }
 
         return null;
     }
 
-    private function validateAllocatedExpenseForUpdate()
+    private function checkForInvalidFieldsForAllocatedExpense(): ?JsonResponse
     {
-        $request = request();
-
         $config_base_path = 'api.item-type-allocated-expense';
 
         $invalid_fields = $this->checkForInvalidFields(
@@ -449,6 +645,15 @@ class ItemManage extends Controller
         if (count($invalid_fields) > 0) {
             return Response::invalidFieldsInRequest($invalid_fields);
         }
+
+        return null;
+    }
+
+    private function validateAllocatedExpenseForUpdate(): ?\Illuminate\Validation\Validator
+    {
+        $request = request();
+
+        $config_base_path = 'api.item-type-allocated-expense';
 
         $merge_array = [];
         if (array_key_exists('currency_id', $request->all())) {
@@ -476,13 +681,85 @@ class ItemManage extends Controller
         );
 
         if ($validator->fails()) {
-            return \App\HttpResponse\Response::validationErrors($validator);
+            return $validator;
         }
 
         return null;
     }
 
-    private function validateGameForCreate()
+    private function checkForInvalidFieldsForBudget(): ?JsonResponse
+    {
+        $config_base_path = 'api.item-type-budget';
+
+        $invalid_fields = $this->checkForInvalidFields(
+            array_keys(LaravelConfig::get($config_base_path . '.validation-patch.fields', []))
+        );
+
+        if (count($invalid_fields) > 0) {
+            return Response::invalidFieldsInRequest($invalid_fields);
+        }
+
+        return null;
+    }
+
+    private function validateBudgetForUpdate(): ?\Illuminate\Validation\Validator
+    {
+        $request = request();
+
+        $config_base_path = 'api.item-type-budget';
+
+        $messages = [];
+        foreach (LaravelConfig::get($config_base_path . '.validation-patch.messages', []) as $key => $custom_message) {
+            $messages[$key] = trans($custom_message);
+        }
+
+        $validator = ValidatorFacade::make(
+            $request->all(),
+            LaravelConfig::get($config_base_path . '.validation-patch.fields', []),
+            $messages
+        );
+
+        if ($validator->fails()) {
+            return $validator;
+        }
+
+        return null;
+    }
+
+    private function validateBudgetForCreate(): ?\Illuminate\Validation\Validator
+    {
+        $request = request();
+
+        $config_base_path = 'api.item-type-budget';
+
+        $messages = [];
+        foreach (LaravelConfig::get($config_base_path . '.validation-post.messages', []) as $key => $custom_message) {
+            $messages[$key] = trans($custom_message);
+        }
+
+        $decode = $this->hash->currency()->decode($request->input('currency_id'));
+        $currency_id = null;
+        if (count($decode) === 1) {
+            $currency_id = $decode[0];
+        }
+
+        $validator = ValidatorFacade::make(
+            [
+                ...$request->all(),
+                ...['currency_id' => $currency_id]
+            ],
+            LaravelConfig::get($config_base_path . '.validation-post.fields', []),
+            $messages
+        );
+
+        if ($validator->fails()) {
+            return $validator;
+        }
+
+        return null;
+    }
+
+    private function validateGameForCreate(): ?\Illuminate\Validation\Validator
     {
         $request = request();
 
@@ -500,25 +777,17 @@ class ItemManage extends Controller
         );
 
         if ($validator->fails()) {
-            return \App\HttpResponse\Response::validationErrors($validator);
+            return $validator;
         }
 
         return null;
     }
 
-    private function validateGameForUpdate()
+    private function validateGameForUpdate(): ?\Illuminate\Validation\Validator
     {
         $request = request();
 
         $config_base_path = 'api.item-type-game';
-
-        $invalid_fields = $this->checkForInvalidFields(
-            array_keys(LaravelConfig::get($config_base_path . '.validation-patch.fields', []))
-        );
-
-        if (count($invalid_fields) > 0) {
-            return Response::invalidFieldsInRequest($invalid_fields);
-        }
 
         $merge_array = [];
         if (array_key_exists('winner_id', $request->all())) {
@@ -546,7 +815,7 @@ class ItemManage extends Controller
         );
 
         if ($validator->fails()) {
-            return \App\HttpResponse\Response::validationErrors($validator);
+            return $validator;
         }
 
         return null;
