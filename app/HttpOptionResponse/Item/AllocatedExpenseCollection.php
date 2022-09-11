@@ -21,12 +21,12 @@ class AllocatedExpenseCollection extends Response
             ->setAllowedValuesForParameters($this->allowed_values_for_parameters)
             ->setPaginationStatus(true)
             ->setAuthenticationStatus($this->permissions['view'])
-            ->setDescription('route-descriptions.item_GET_index')
+            ->setDescription('route-descriptions.item_allocated_expense_GET_index')
             ->option();
 
         $post = new \App\HttpVerb\Post();
         $this->verbs['POST'] = $post->setFields(LaravelConfig::get($base_path . '.fields-post', []))
-            ->setDescription('route-descriptions.item_POST')
+            ->setDescription('route-descriptions.item_allocated_expense_POST')
             ->setAuthenticationRequirement(true)
             ->setAuthenticationStatus($this->permissions['manage'])
             ->setAllowedValuesForFields($this->allowed_values_for_fields)

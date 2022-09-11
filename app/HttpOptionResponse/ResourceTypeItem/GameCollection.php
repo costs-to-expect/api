@@ -20,7 +20,7 @@ class GameCollection extends Response
             setPaginationStatus(true)->
             setParameters(LaravelConfig::get($base_path . '.parameters', []))->
             setAllowedValuesForParameters($this->allowed_values_for_parameters)->
-            setDescription('route-descriptions.resource_type_item_GET_index')->
+            setDescription('route-descriptions.resource_type_item_game_GET_index')->
             setAuthenticationStatus($this->permissions['view'])->
             option();
 

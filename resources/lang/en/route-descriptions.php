@@ -51,17 +51,34 @@ return [
 
     'resource_type_item_GET_index' => 'Return all the items assigned to the resources for this resource type',
 
+    'resource_type_item_allocated_expense_GET_index' => 'Return all the expenses assigned to all the resources for the selected resource type',
+    'resource_type_item_game_GET_index' => 'Return all the played games selected game owner',
+
     'resource_GET_index' => 'Return all the resources that are children of the selected resource type',
     'resource_GET_show' => 'Return the selected resource',
     'resource_POST' => 'Create a new resource',
     'resource_PATCH' => 'Update the selected resource',
     'resource_DELETE' => 'Delete the selected resource',
 
-    'item_GET_index' => 'Return all the items that are children of the selected resource',
-    'item_GET_show' => 'Return the selected item',
-    'item_POST' => 'Create a new item',
-    'item_PATCH' => 'Update the selected item',
-    'item_DELETE' => 'Delete the selected item',
+    'item_allocated_expense_GET_index' => 'Return all the assigned expense for the selected resource',
+    'item_budget_GET_index' => 'Return all the Budget entries for the selected Budget',
+    'item_game_GET_index' => 'Return all the played games for the selected game',
+
+    'item_allocated_expense_GET_show' => 'Return the selected expense',
+    'item_budget_GET_show' => 'Return the selected Budget item',
+    'item_game_GET_show' => 'Return the selected game',
+
+    'item_allocated_expense_POST' => 'Create a new expense',
+    'item_budget_POST' => 'Create a new Budget item',
+    'item_game_POST' => 'Create a new game',
+
+    'item_allocated_expense_PATCH' => 'Update the selected expense',
+    'item_budget_PATCH' => 'Update the selected Budget item',
+    'item_game_PATCH' => 'Update the selected game',
+
+    'item_allocated_expense_DELETE' => 'Delete the selected expense',
+    'item_budget_DELETE' => 'Delete the selected Budget item',
+    'item_game_DELETE' => 'Delete the selected game',
 
     'item_category_GET_index' => 'Return the category assigned to the selected item',
     'item_category_GET_show' => 'Return the category assigned to the selected item',
@@ -115,6 +132,9 @@ return [
     'summary_resource_type_GET_index' => 'Return a summary of the resource types',
     'summary_resource_GET_index' => 'Return a summary of the resources',
 
-    'summary_items_GET_index'=> 'Return the "item" summary for the selected resource, review summary filters for all summary options',
-    'summary_resource_type_items_GET_index'=> 'Return the "item" summary for the selected resource type, items for all resources are summarised, review summary filters for all summary options',
+    'summary_items_allocated_expense_GET_index'=> 'Return the summary of expense for the selected resource, review summary filters for all summary options',
+    'summary_items_game_GET_index'=> 'Return the summary of games, review summary filters for all summary options',
+
+    'summary_resource_type_items_allocated_expense_GET_index' => 'Return the summary of expense for the selected resource type, review summary filters for all summary options',
+    'summary_resource_type_items_games_GET_index' => 'Return the summary of games for the selected game owner, review summary filters for all summary options',
 ];
