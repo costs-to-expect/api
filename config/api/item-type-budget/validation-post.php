@@ -19,11 +19,13 @@ return [
         'target_account' => [
             'sometimes',
             'string',
-            'max:255'
+            'max:255',
+            'nullable'
         ],
         'description' => [
             'sometimes',
-            'string'
+            'string',
+            'nullable'
         ],
         'amount' => [
             'required',
@@ -46,7 +48,8 @@ return [
         ],
         'end_date' => [
             'sometimes',
-            'date_format:Y-m-d'
+            'date_format:Y-m-d',
+            'nullable'
         ],
         'disabled' => [
             'sometimes',
