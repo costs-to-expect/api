@@ -206,11 +206,11 @@ class Item extends LaravelModel
             foreach ($sort_parameters as $field => $direction) {
                 switch ($field) {
                     case 'created':
-                        $collection->orderBy('item.created_at', $direction);
+                        $collection->orderBy($this->table . '.created_at', $direction);
                         break;
 
                     default:
-                        $collection->orderBy('item.' . $field, $direction);
+                        $collection->orderBy($this->table . '.' . $field, $direction);
                         break;
                 }
             }
