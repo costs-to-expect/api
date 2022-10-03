@@ -31,7 +31,7 @@ return [
         'validation' => [
             'max-length' => 255
         ],
-        'required' => true
+        'required' => false
     ],
     'description' => [
         'field' => 'description',
