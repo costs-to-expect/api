@@ -3,5 +3,7 @@
 declare(strict_types=1);
 
 return [
-    'created'
+    'created',
+    'amount',
+    'name'
 ];
