@@ -2,6 +2,14 @@
 
 The complete changelog for the Costs to Expect REST API, our changelog follows the format defined at https://keepachangelog.com/en/1.0.0/
 
+## [v3.05.1] - 2022-10-06
+### Fixed
+- Config file referencing the incorrect language file.
+- `target_account` is not a required field for the "budget" item type.
+- `amount` and `name` should be sorting options for the "budget" item type collection.
+- `description` and `end_date` are nullable fields for the "budget" item type.
+- `name` should be a sortable field for the "budget" item type.
+
 ## [v3.05.0] - 2022-09-11
 ### Added
 - Added full support for the `budget` item type, all endpoints.
