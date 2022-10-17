@@ -137,10 +137,20 @@ Route::group(
             [Authentication::class, 'optionsPermittedResourceType']
         )->name('auth.user.permitted-resource-types.show.options');
 
+        Route::get(
+            'auth/user/permitted-resource-types/{permitted_resource_type_id}/resources',
+            [Authentication::class, 'permittedResourceTypesResources']
+        )->name('auth.user.permitted-resource-types-resources.list');
+
         Route::options(
             'auth/user/permitted-resource-types/{permitted_resource_type_id}/resources',
             [Authentication::class, 'optionsPermittedResourceTypeResources']
         )->name('auth.user.permitted-resource-types-resources.list.options');
+
+        Route::get(
+            'auth/user/permitted-resource-types/{permitted_resource_type_id}/resources/{resource_id}',
+            [Authentication::class, 'permittedResourceTypesResources']
+        )->name('auth.user.permitted-resource-types-resources.show');
 
         Route::options(
             'auth/user/permitted-resource-types/{permitted_resource_type_id}/resources/{resource_id}',

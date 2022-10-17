@@ -8,6 +8,7 @@ use App\HttpOptionResponse\Auth\PermittedResourceTypeResources;
 use App\HttpOptionResponse\Auth\PermittedResourceTypes;
 use App\HttpResponse\Response;
 use App\Models\Permission;
+use App\Models\Resource;
 use App\Models\ResourceType;
 use App\Notifications\ForgotPassword;
 use App\Notifications\Registered;
@@ -19,6 +20,7 @@ use App\HttpOptionResponse\Auth\Register;
 use App\HttpOptionResponse\Auth\UpdatePassword;
 use App\HttpOptionResponse\Auth\UpdateProfile;
 use App\Transformer\PermittedResourceType as PermittedResourceTypeTransformer;
+use App\Transformer\Resource as ResourceTransformer;
 use App\User;
 use Exception;
 use Illuminate\Http;
@@ -367,6 +369,62 @@ class Authentication extends \Illuminate\Routing\Controller
         return response()->json(
             (new PermittedResourceTypeTransformer($permitted_resource_type))->asArray(),
         );
+    }
+
+    public function permittedResourceTypesResource($permitted_resource_type_id, $resource_id): Http\JsonResponse
+    {
+        $permitted_resource_types = [];
+        $user = auth()->guard('api')->user();
+
+        if ($user !== null) {
+            $permitted_resource_types = (new Permission())->permittedResourceTypesForUser($user->id);
+        }
+
+        if (in_array($permitted_resource_type_id, $permitted_resource_types, true) === false) {
+            return Response::notFound(trans('entities.resource-type'));
+        }
+
+        $resource = (new Resource())->single(
+            $permitted_resource_type_id,
+            $resource_id
+        );
+
+        if ($resource === null) {
+            return Response::notFound(trans('entities.resource'));
+        }
+
+        return response()->json(
+            (new PermittedResourceTypeTransformer($resource))->asArray(),
+        );
+    }
+
+    public function permittedResourceTypesResources($permitted_resource_type_id): Http\JsonResponse
+    {
+        $permitted_resource_types = [];
+        $user = auth()->guard('api')->user();
+
+        if ($user !== null) {
+            $permitted_resource_types = (new Permission())->permittedResourceTypesForUser($user->id);
+        }
+
+        if (in_array($permitted_resource_type_id, $permitted_resource_types, true) === false) {
+            return Response::notFound(trans('entities.resource-type'));
+        }
+
+        $resources = (new Resource())->paginatedCollection(
+            $permitted_resource_type_id,
+            0,
+            100
+        );
+
+        $collection = array_map(
+            static function ($resource) {
+                return (new ResourceTransformer($resource))->asArray();
+            },
+            $resources
+        );
+
+        return response()->json($collection);
     }
 
     public function permittedResourceTypes(): Http\JsonResponse
