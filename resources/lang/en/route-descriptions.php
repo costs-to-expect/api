@@ -60,7 +60,7 @@ return [
     'resource_PATCH' => 'Update the selected resource',
     'resource_DELETE' => 'Delete the selected resource',
 
-    'item_allocated_expense_GET_index' => 'Return all the assigned expense for the selected resource',
+    'item_allocated_expense_GET_index' => 'Return all the assigned expenses for the selected resource',
     'item_budget_GET_index' => 'Return all the Budget entries for the selected Budget',
     'item_game_GET_index' => 'Return all the played games for the selected game',
 
@@ -132,9 +132,9 @@ return [
     'summary_resource_type_GET_index' => 'Return a summary of the resource types',
     'summary_resource_GET_index' => 'Return a summary of the resources',
 
-    'summary_items_allocated_expense_GET_index'=> 'Return the summary of expense for the selected resource, review summary filters for all summary options',
+    'summary_items_allocated_expense_GET_index'=> 'Return the summary of expenses for the selected resource, review summary filters for all summary options',
     'summary_items_game_GET_index'=> 'Return the summary of games, review summary filters for all summary options',
 
-    'summary_resource_type_items_allocated_expense_GET_index' => 'Return the summary of expense for the selected resource type, review summary filters for all summary options',
+    'summary_resource_type_items_allocated_expense_GET_index' => 'Return the summary of expenses for the selected resource type, review summary filters for all summary options',
     'summary_resource_type_items_games_GET_index' => 'Return the summary of games for the selected game owner, review summary filters for all summary options',
 ];
