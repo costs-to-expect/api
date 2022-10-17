@@ -17,6 +17,8 @@ return [
     'auth_check_GET' => 'Check to see if the user is authenticated',
     'auth_permitted_resource_type_GET' => 'Return the selected permitted resource type for the signed-in user',
     'auth_permitted_resource_types_GET' => 'Return the permitted resource types for the signed-in user',
+    'auth_resource_GET' => 'Return the selected resource for the signed-in user',
+    'auth_resources_GET' => 'Return the resources for the selected permitted resource type for the signed-in user',
 
     'api_GET_index' => 'Return all the API routes',
     'api_GET_changelog' => 'Return the complete API changelog',

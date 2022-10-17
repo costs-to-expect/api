@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\HttpOptionResponse\Auth\PermittedResourceType;
+use App\HttpOptionResponse\Auth\PermittedResourceTypeResource;
+use App\HttpOptionResponse\Auth\PermittedResourceTypeResources;
 use App\HttpOptionResponse\Auth\PermittedResourceTypes;
 use App\HttpResponse\Response;
 use App\Models\Permission;
@@ -466,6 +468,24 @@ class Authentication extends \Illuminate\Routing\Controller
         $user = auth()->guard('api')->user();
 
         $response = new PermittedResourceType(['view'=> $user !== null && $user->id !== null, 'manage'=> $user !== null && $user->id !== null]);
+
+        return $response->create()->response();
+    }
+
+    public function optionsPermittedResourceTypeResource(): Http\JsonResponse
+    {
+        $user = auth()->guard('api')->user();
+
+        $response = new PermittedResourceTypeResource(['view'=> $user !== null && $user->id !== null, 'manage'=> $user !== null && $user->id !== null]);
+
+        return $response->create()->response();
+    }
+
+    public function optionsPermittedResourceTypeResources(): Http\JsonResponse
+    {
+        $user = auth()->guard('api')->user();
+
+        $response = new PermittedResourceTypeResources(['view'=> $user !== null && $user->id !== null, 'manage'=> $user !== null && $user->id !== null]);
 
         return $response->create()->response();
     }

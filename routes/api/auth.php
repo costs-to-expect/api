@@ -136,5 +136,15 @@ Route::group(
             'auth/user/permitted-resource-types/{permitted_resource_type_id}',
             [Authentication::class, 'optionsPermittedResourceType']
         )->name('auth.user.permitted-resource-types.show.options');
+
+        Route::options(
+            'auth/user/permitted-resource-types/{permitted_resource_type_id}/resources',
+            [Authentication::class, 'optionsPermittedResourceTypeResources']
+        )->name('auth.user.permitted-resource-types-resources.list.options');
+
+        Route::options(
+            'auth/user/permitted-resource-types/{permitted_resource_type_id}/resources/{resource_id}',
+            [Authentication::class, 'optionsPermittedResourceTypeResource']
+        )->name('auth.user.permitted-resource-types-resources.show.options');
     }
 );
