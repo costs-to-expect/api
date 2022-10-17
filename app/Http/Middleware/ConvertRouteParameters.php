@@ -30,6 +30,7 @@ class ConvertRouteParameters
             'category_id' => 'category',
             'subcategory_id' => 'subcategory',
             'resource_type_id' => 'resource-type',
+            'permitted_resource_type_id' => 'permitted-resource-type',
             'permitted_user_id' => 'permitted-user',
             'resource_id' => 'resource',
             'item_id' => 'item',

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\HttpOptionResponse\Auth\PermittedResourceType;
 use App\HttpOptionResponse\Auth\PermittedResourceTypes;
 use App\HttpResponse\Response;
 use App\Models\Permission;
@@ -343,6 +344,29 @@ class Authentication extends \Illuminate\Routing\Controller
         return response()->json(['message' => trans('auth.signed-out')], 200);
     }
 
+    public function permittedResourceType($permitted_resource_type_id): Http\JsonResponse
+    {
+        $user = auth()->guard('api')->user();
+        $permitted_resource_types = [];
+
+        if ($user !== null) {
+            $permitted_resource_types = (new Permission())->permittedResourceTypesForUser($user->id);
+        }
+
+        $permitted_resource_type = (new ResourceType())->single(
+            $permitted_resource_type_id,
+            $permitted_resource_types
+        );
+
+        if ($permitted_resource_type === null) {
+            return Response::notFound(trans('entities.resource-type'));
+        }
+
+        return response()->json(
+            (new PermittedResourceTypeTransformer($permitted_resource_type))->asArray(),
+        );
+    }
+
     public function permittedResourceTypes(): Http\JsonResponse
     {
         $permitted_resource_types = [];
@@ -435,6 +459,15 @@ class Authentication extends \Illuminate\Routing\Controller
             ],
             201
         );
+    }
+
+    public function optionsPermittedResourceType(): Http\JsonResponse
+    {
+        $user = auth()->guard('api')->user();
+
+        $response = new PermittedResourceType(['view'=> $user !== null && $user->id !== null, 'manage'=> $user !== null && $user->id !== null]);
+
+        return $response->create()->response();
     }
 
     public function optionsPermittedResourceTypes(): Http\JsonResponse

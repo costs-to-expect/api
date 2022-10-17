@@ -82,7 +82,8 @@ Route::group(
     [
         'prefix' => Config::get('api.app.version.prefix'),
         'middleware' => [
-            'auth:sanctum'
+            'auth:sanctum',
+            'convert.route.parameters'
         ]
     ],
     static function () {
@@ -125,5 +126,15 @@ Route::group(
             'auth/user/permitted-resource-types',
             [Authentication::class, 'optionsPermittedResourceTypes']
         )->name('auth.user.permitted-resource-types.list.options');
+
+        Route::get(
+            'auth/user/permitted-resource-types/{permitted_resource_type_id}',
+            [Authentication::class, 'permittedResourceType']
+        )->name('auth.user.permitted-resource-types.show');
+
+        Route::options(
+            'auth/user/permitted-resource-types/{permitted_resource_type_id}',
+            [Authentication::class, 'optionsPermittedResourceType']
+        )->name('auth.user.permitted-resource-types.show.options');
     }
 );
