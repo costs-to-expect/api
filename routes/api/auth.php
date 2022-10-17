@@ -42,37 +42,12 @@ Route::group(
         Route::options(
             'auth/login',
             [Authentication::class, 'optionsLogin']
-        );
+        )->name('auth.login.options');
 
         Route::get(
             'auth/logout',
             [Authentication::class, 'logout']
         )->name('auth.logout');
-
-        Route::options(
-            'auth/update-password',
-            [Authentication::class, 'optionsUpdatePassword']
-        );
-
-        Route::options(
-            'auth/update-profile',
-            [Authentication::class, 'optionsUpdateProfile']
-        );
-
-        Route::options(
-            'auth/user',
-            [Authentication::class, 'optionsUser']
-        );
-
-        Route::options(
-            'auth/user/tokens',
-            [Authentication::class, 'optionsTokens']
-        );
-
-        Route::options(
-            'auth/user/tokens/{token_id}',
-            [Authentication::class, 'optionsToken']
-        );
 
         Route::options(
             'auth/check',
@@ -140,5 +115,15 @@ Route::group(
             'auth/user/tokens/{token_id}',
             [Authentication::class, 'deleteToken']
         )->name('auth.user.token.delete');
+
+        Route::get(
+            'auth/user/permitted-resource-types',
+            [Authentication::class, 'permittedResourceTypes']
+        )->name('auth.user.permitted-resource-types.list');
+
+        Route::options(
+            'auth/user/permitted-resource-types',
+            [Authentication::class, 'optionsPermittedResourceTypes']
+        )->name('auth.user.permitted-resource-types.list.options');
     }
 );

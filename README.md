@@ -12,8 +12,8 @@ The documentation for the Costs to Expect API can be found at
 [postman.costs-to-expect.com](https://postman.costs-to-expect.com?version=latest). 
 
 The documentation is slowly being moved to a repository on 
-[GitHub](https://github.com/costs-to-expect/api-docs). It is taking a while to rewrite and update the documentation, 
-it will however be complete before the official of 'Budget'.
+[GitHub](https://github.com/costs-to-expect/api-docs). It is taking a while to rewrite and update the 
+documentation, it will however be complete before the official of 'Budget'.
 
 ## Apps
 
@@ -136,6 +136,8 @@ Public resources types provide READ access to everyone, WRITE access is limited 
 | POST         | v3/auth/update-profile                                                                                                                         |
 | GET/HEAD     | v3/auth/user                                                                                                                                   |
 | OPTIONS      | v3/auth/user                                                                                                                                   |
+| GET/HEAD     | v3/auth/permitted-resource-types                                                                                                               |
+| OPTIONS      | v3/auth/permitted-resource-types                                                                                                               |
 | GET/HEAD     | v3/auth/user/tokens                                                                                                                            |
 | OPTIONS      | v3/auth/user/tokens                                                                                                                            |
 | DELETE       | v3/auth/user/tokens/{token_id}                                                                                                                 |

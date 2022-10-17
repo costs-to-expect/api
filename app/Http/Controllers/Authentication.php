@@ -2,7 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\HttpOptionResponse\Auth\PermittedResourceTypes;
 use App\HttpResponse\Response;
+use App\Models\Permission;
+use App\Models\ResourceType;
 use App\Notifications\ForgotPassword;
 use App\Notifications\Registered;
 use App\HttpOptionResponse\Auth\Check;
@@ -12,6 +15,7 @@ use App\HttpOptionResponse\Auth\Login;
 use App\HttpOptionResponse\Auth\Register;
 use App\HttpOptionResponse\Auth\UpdatePassword;
 use App\HttpOptionResponse\Auth\UpdateProfile;
+use App\Transformer\PermittedResourceType as PermittedResourceTypeTransformer;
 use App\User;
 use Exception;
 use Illuminate\Http;
@@ -339,6 +343,31 @@ class Authentication extends \Illuminate\Routing\Controller
         return response()->json(['message' => trans('auth.signed-out')], 200);
     }
 
+    public function permittedResourceTypes(): Http\JsonResponse
+    {
+        $permitted_resource_types = [];
+        $user = auth()->guard('api')->user();
+
+        if ($user !== null) {
+            $permitted_resource_types = (new Permission())->permittedResourceTypesForUser($user->id);
+        }
+
+        $resource_types = (new ResourceType())->paginatedCollection(
+            $permitted_resource_types,
+            0,
+            100
+        );
+
+        $collection = array_map(
+            static function ($resource_type) {
+                return (new PermittedResourceTypeTransformer($resource_type))->asArray();
+            },
+            $resource_types
+        );
+
+        return response()->json($collection);
+    }
+
     public function register(Request $request): Http\JsonResponse
     {
         $validator = Validator::make(
@@ -406,6 +435,15 @@ class Authentication extends \Illuminate\Routing\Controller
             ],
             201
         );
+    }
+
+    public function optionsPermittedResourceTypes(): Http\JsonResponse
+    {
+        $user = auth()->guard('api')->user();
+
+        $response = new PermittedResourceTypes(['view'=> $user !== null && $user->id !== null, 'manage'=> $user !== null && $user->id !== null]);
+
+        return $response->create()->response();
     }
 
     public function optionsRegister(): Http\JsonResponse
