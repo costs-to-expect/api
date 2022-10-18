@@ -58,16 +58,6 @@ class DeleteResource implements ShouldQueue
 
     }
 
-    protected function getResourceType()
-    {
-
-    }
-
-    protected function getResource()
-    {
-
-    }
-
     protected function deleteItemData()
     {
 
@@ -95,12 +85,12 @@ class DeleteResource implements ShouldQueue
 
     protected function deleteTransfers()
     {
-        
+
     }
 
     protected function deleteItems()
     {
-
+        // Switch based on the resource type item type
     }
 
     protected function deleteResource()
@@ -119,3 +109,84 @@ class DeleteResource implements ShouldQueue
         ]));
     }
 }
+
+/* SELECT
+	`item`.`id`
+FROM
+	`item`
+WHERE
+	`item`.`resource_id` = 1
+
+
+-- Delete items
+SELECT
+	*
+FROM
+	`item_type_allocated_expense`
+WHERE
+	`item_type_allocated_expense`.`item_id` IN (
+	SELECT `item`.`id` FROM `item` WHERE `item`.`resource_id` = 1
+)
+
+-- Delete item data
+SELECT
+	*
+FROM
+	`item_data`
+WHERE
+	`item_data`.`item_id` IN (
+	SELECT `item`.`id` FROM `item` WHERE `item`.`resource_id` = 1
+)
+
+-- Delete item log
+SELECT
+	*
+FROM
+	`item_log`
+WHERE
+	`item_log`.`item_id` IN (
+	SELECT `item`.`id` FROM `item` WHERE `item`.`resource_id` = 1
+)
+
+-- Delete item transfer
+SELECT
+	*
+FROM
+	`item_transfer`
+WHERE `item_transfer`.`item_id` IN (
+	SELECT `item`.`id` FROM `item` WHERE `item`.`resource_id` = 1
+)
+
+-- Delete item partial transfer
+SELECT
+	*
+FROM
+	`item_partial_transfer`
+WHERE `item_partial_transfer`.`item_id` IN (
+	SELECT `item`.`id` FROM `item` WHERE `item`.`resource_id` = 1
+)
+
+-- Delete item categories
+SELECT
+	*
+FROM
+	`item_category`
+WHERE `item_category`.`item_id` IN (
+	SELECT `item`.`id` FROM `item` WHERE `item`.`resource_id` = 1
+)
+
+-- Delete item categories
+SELECT
+	*
+FROM
+	`item_sub_category`
+WHERE
+	`item_sub_category`.`item_category_id` IN (
+	SELECT
+		`item_category`.`id`
+	FROM
+		`item_category`
+	WHERE `item_category`.`item_id` IN (
+		SELECT `item`.`id` FROM `item` WHERE `item`.`resource_id` = 1
+	)
+) */
