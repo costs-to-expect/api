@@ -144,6 +144,8 @@ Public resources types provide READ access to everyone, WRITE access is limited 
 | OPTIONS      | v3/auth/permitted-resource-types/{permitted_resource_type_id}/resources                                                                        |
 | GET/HEAD     | v3/auth/permitted-resource-types/{permitted_resource_type_id}/resources/{resource_id}                                                          |
 | OPTIONS      | v3/auth/permitted-resource-types/{permitted_resource_type_id}/resources/{resource_id}                                                          |
+| OPTIONS      | v3/auth/permitted-resource-types/{permitted_resource_type_id}/resources/{resource_id}/request-delete                                           |
+| POST         | v3/auth/permitted-resource-types/{permitted_resource_type_id}/resources/{resource_id}/request-delete                                           |
 | GET/HEAD     | v3/auth/user/tokens                                                                                                                            |
 | OPTIONS      | v3/auth/user/tokens                                                                                                                            |
 | DELETE       | v3/auth/user/tokens/{token_id}                                                                                                                 |

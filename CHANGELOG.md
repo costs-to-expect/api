@@ -2,6 +2,17 @@
 
 The complete changelog for the Costs to Expect REST API, our changelog follows the format defined at https://keepachangelog.com/en/1.0.0/
 
+## [v3.06.0] -
+### Added
+- I have added multiple routes unto `/auth/` to list permitted resource types and the corresponding permitted resources, these are to enable delete requests.
+- I have added a `DeleteResource` job, this job attempts to delete the requested resource and all associated data.
+### Changed
+- Adjusted cache invalidation for create resource type and switch to synchronous cache clear, permitted resource types need to be cleared immediately.
+### Fixed
+- Updated the route descriptions for multiple routes, spelling issues.
+- Removed duplicated routes in the `auth` routes file.
+- Corrected OPTIONS response for multiple auth routes, not returning authentication status.
+
 ## [v3.05.1] - 2022-10-06
 ### Fixed
 - Config file referencing the incorrect language file.
