@@ -8,12 +8,14 @@ use App\Cache\KeyGroup;
 use App\Cache\Trash;
 use App\Models\Permission;
 use App\Models\ResourceType;
-use App\User;
+use App\Notifications\FailedJob;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
+use Illuminate\Support\Facades\Config;
+use Illuminate\Support\Facades\Notification;
 use Throwable;
 
 /**
@@ -78,12 +80,13 @@ class ClearCache implements ShouldQueue
 
     public function failed(Throwable $exception)
     {
-        $user = User::query()->find(1);
-        $user->notify(new \App\Notifications\FailedJob([
-                'message' => $exception->getMessage(),
-                'file' => $exception->getFile(),
-                'line' => $exception->getLine(),
-                'trace' => $exception->getTraceAsString()
-        ]));
+        Notification::route('mail', Config::get('api.app.config.admin_email'))
+            ->notify(new FailedJob([
+                    'message' => $exception->getMessage(),
+                    'file' => $exception->getFile(),
+                    'line' => $exception->getLine(),
+                    'trace' => $exception->getTraceAsString()
+                ])
+            );
     }
 }
