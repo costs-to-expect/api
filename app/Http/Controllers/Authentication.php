@@ -8,6 +8,7 @@ use App\HttpOptionResponse\Auth\PermittedResourceTypeResources;
 use App\HttpOptionResponse\Auth\PermittedResourceTypes;
 use App\HttpOptionResponse\Auth\RequestResourceDelete;
 use App\HttpResponse\Response;
+use App\Jobs\DeleteResource;
 use App\Models\Permission;
 use App\Models\Resource;
 use App\Models\ResourceType;
@@ -520,6 +521,64 @@ class Authentication extends \Illuminate\Routing\Controller
             ],
             201
         );
+    }
+
+    public function requestResourceDelete(Request $request, $permitted_resource_type_id, $resource_id): Http\JsonResponse
+    {
+        $permitted_resource_types = [];
+        $user = auth()->guard('api')->user();
+
+        if ($user !== null) {
+            $permitted_resource_types = (new Permission())->permittedResourceTypesForUser($user->id);
+        }
+
+        if (in_array($permitted_resource_type_id, $permitted_resource_types, true) === false) {
+            return Response::notFound(trans('entities.resource-type'));
+        }
+
+        $resource = (new Resource())->single(
+            $permitted_resource_type_id,
+            $resource_id
+        );
+
+        if ($resource === null) {
+            return Response::notFound(trans('entities.resource'));
+        }
+
+        $validator = Validator::make(
+            $request->only(['force']),
+            [
+                'force' => [
+                    'required',
+                    'boolean'
+                ]
+            ]
+        );
+
+        if ($validator->fails()) {
+            return response()->json(
+                [
+                    'message' => trans('responses.validation'),
+                    'fields' => $validator->errors()
+                ],
+                422
+            );
+        }
+
+        DeleteResource::dispatch(
+            $user->id,
+            $permitted_resource_type_id,
+            $resource_id,
+            $request->boolean('force')
+        );
+
+        return response()
+            ->json(
+                [
+                    'message' => trans('responses.delete-requested')
+                ],
+                201
+            );
     }
 
     public function optionsPermittedResourceType(): Http\JsonResponse
