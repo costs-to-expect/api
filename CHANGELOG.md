@@ -6,6 +6,8 @@ The complete changelog for the Costs to Expect REST API, our changelog follows t
 ### Added
 - I have added multiple routes unto `/auth/` to list permitted resource types and the corresponding permitted resources, these are to enable delete requests.
 - I have added a `DeleteResource` job, this job attempts to delete the requested resource and all associated data.
+- I have added a `DeleteResourceType` job, this job attempts to delete the requested resource type and all associated data.
+- I have added a `v3/auth/permitted-resource-types/{permitted_resource_type_id}/request-delete` POST endpoint, you can request the full deletion of a resource type.
 - I have added a `v3/auth/permitted-resource-types/{permitted_resource_type_id}/resources/{resource_id}/request-delete` POST endpoint, you can request the full deletion of a resource.
 ### Changed
 - Adjusted cache invalidation for create resource type and switch to synchronous cache clear, permitted resource types need to be cleared immediately.

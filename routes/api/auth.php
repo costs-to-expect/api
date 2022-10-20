@@ -137,6 +137,16 @@ Route::group(
             [Authentication::class, 'optionsPermittedResourceType']
         )->name('auth.user.permitted-resource-types.show.options');
 
+        Route::options(
+            'auth/user/permitted-resource-types/{permitted_resource_type_id}/request-delete',
+            [Authentication::class, 'optionsRequestResourceTypeDelete']
+        )->name('auth.user.request-resource-type-delete.options');
+
+        Route::post(
+            'auth/user/permitted-resource-types/{permitted_resource_type_id}/request-delete',
+            [Authentication::class, 'requestResourceTypeDelete']
+        )->name('auth.user.request-resource-type-delete');
+
         Route::get(
             'auth/user/permitted-resource-types/{permitted_resource_type_id}/resources',
             [Authentication::class, 'permittedResourceTypesResources']

@@ -7,8 +7,10 @@ use App\HttpOptionResponse\Auth\PermittedResourceTypeResource;
 use App\HttpOptionResponse\Auth\PermittedResourceTypeResources;
 use App\HttpOptionResponse\Auth\PermittedResourceTypes;
 use App\HttpOptionResponse\Auth\RequestResourceDelete;
+use App\HttpOptionResponse\Auth\RequestResourceTypeDelete;
 use App\HttpResponse\Response;
 use App\Jobs\DeleteResource;
+use App\Jobs\DeleteResourceType;
 use App\Models\Permission;
 use App\Models\Resource;
 use App\Models\ResourceType;
@@ -581,6 +583,54 @@ class Authentication extends \Illuminate\Routing\Controller
             );
     }
 
+    public function requestResourceTypeDelete(Request $request, $permitted_resource_type_id): Http\JsonResponse
+    {
+        $permitted_resource_types = [];
+        $user = auth()->guard('api')->user();
+
+        if ($user !== null) {
+            $permitted_resource_types = (new Permission())->permittedResourceTypesForUser($user->id);
+        }
+
+        if (in_array($permitted_resource_type_id, $permitted_resource_types, true) === false) {
+            return Response::notFound(trans('entities.resource-type'));
+        }
+
+        $validator = Validator::make(
+            $request->only(['force']),
+            [
+                'force' => [
+                    'required',
+                    'boolean'
+                ]
+            ]
+        );
+
+        if ($validator->fails()) {
+            return response()->json(
+                [
+                    'message' => trans('responses.validation'),
+                    'fields' => $validator->errors()
+                ],
+                422
+            );
+        }
+
+        DeleteResourceType::dispatch(
+            $user->id,
+            $permitted_resource_type_id,
+            $request->boolean('force')
+        );
+
+        return response()
+            ->json(
+                [
+                    'message' => trans('responses.delete-requested')
+                ],
+                201
+            );
+    }
+
     public function optionsPermittedResourceType(): Http\JsonResponse
     {
         $user = auth()->guard('api')->user();
@@ -647,6 +697,24 @@ class Authentication extends \Illuminate\Routing\Controller
         }
 
         $response = new RequestResourceDelete(['view'=> $user !== null && $user->id !== null, 'manage'=> $user !== null && $user->id !== null]);
+
+        return $response->create()->response();
+    }
+
+    public function optionsRequestResourceTypeDelete($permitted_resource_type_id): Http\JsonResponse
+    {
+        $permitted_resource_types = [];
+        $user = auth()->guard('api')->user();
+
+        if ($user !== null) {
+            $permitted_resource_types = (new Permission())->permittedResourceTypesForUser($user->id);
+        }
+
+        if (in_array($permitted_resource_type_id, $permitted_resource_types, true) === false) {
+            return Response::notFound(trans('entities.resource-type'));
+        }
+
+        $response = new RequestResourceTypeDelete(['view'=> $user !== null && $user->id !== null, 'manage'=> $user !== null && $user->id !== null]);
 
         return $response->create()->response();
     }
