@@ -20,7 +20,6 @@ class JobPayload
     public function __construct()
     {
         $this->payload = [
-            'is_permitted_user' => false,
             'route_parameters' => [],
             'key' => null,
             'user_id' => null
@@ -30,13 +29,6 @@ class JobPayload
     public function setUserId(int $id): JobPayload
     {
         $this->payload['user_id'] = $id;
-
-        return $this;
-    }
-
-    public function isPermittedUser(bool $permitted = false): JobPayload
-    {
-        $this->payload['is_permitted_user'] = $permitted;
 
         return $this;
     }

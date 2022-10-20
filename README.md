@@ -250,9 +250,6 @@ Public resources types provide READ access to everyone, WRITE access is limited 
 | GET/HEAD     | v3/request/error-log                                                                                                                           |
 | OPTIONS      | v3/request/error-log                                                                                                                           |
 | POST         | v3/request/error-log                                                                                                                           |
-| GET/HEAD     | v3/tools/cache                                                                                                                                 |
-| OPTIONS      | v3/tools/cache                                                                                                                                 |
-| DELETE       | v3/tools/cache                                                                                                                                 |
 
 ## Summary routes
 

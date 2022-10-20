@@ -26,7 +26,7 @@ class Item extends ApiItemResponse
 
         $this->cache_control->setTtlOneWeek();
 
-        $cache_collection = new \App\Cache\Collection();
+        $cache_collection = new \App\Cache\Response\Collection();
         $cache_collection->setFromCache($this->cache_control->getByKey(request()->getRequestUri()));
 
         if (

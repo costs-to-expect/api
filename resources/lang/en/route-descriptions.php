@@ -128,8 +128,6 @@ return [
     'permitted_user_DELETE' => 'Delete the selected permitted user',
 
     'request_GET_error_log' => 'Return the error log',
-    'request_GET_cache' => 'Return the number of cached keys for the authenticated user',
-    'request_DELETE_cache' => 'Attempt to delete the cached keys for the authenticated user',
     'request_POST' => 'Create an error log report',
 
     'summary_category_GET_index' => 'Return a summary of the categories',

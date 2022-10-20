@@ -38,13 +38,10 @@ class ResourceView extends Controller
             return \App\HttpResponse\Response::notFoundOrNotAccessible(trans('entities.resource-type'));
         }
 
-        $cache_control = new \App\Cache\Control(
-            $this->hasWriteAccessToResourceType((int) $resource_type_id),
-            $this->user_id
-        );
+        $cache_control = new \App\Cache\Control($this->user_id);
         $cache_control->setTtlOneWeek();
 
-        $cache_collection = new \App\Cache\Collection();
+        $cache_collection = new \App\Cache\Response\Collection();
         $cache_collection->setFromCache($cache_control->getByKey($request->getRequestUri()));
 
         if ($cache_control->isRequestCacheable() === false || $cache_collection->valid() === false) {

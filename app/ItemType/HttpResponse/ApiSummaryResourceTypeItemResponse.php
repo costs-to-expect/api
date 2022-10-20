@@ -11,8 +11,6 @@ abstract class ApiSummaryResourceTypeItemResponse
 {
     protected int $resource_type_id;
 
-    protected bool $permitted_user;
-
     protected ?int $user_id;
 
     protected array $parameters;
@@ -27,16 +25,14 @@ abstract class ApiSummaryResourceTypeItemResponse
 
     protected \App\Cache\Control $cache_control;
 
-    protected \App\Cache\Summary $cache_summary;
+    protected \App\Cache\Response\Summary $cache_summary;
 
     public function __construct(
         int $resource_type_id,
-        bool $permitted_user = false,
         int $user_id = null
     ) {
         $this->resource_type_id = $resource_type_id;
 
-        $this->permitted_user = $permitted_user;
         $this->user_id = $user_id;
     }
 
@@ -46,8 +42,8 @@ abstract class ApiSummaryResourceTypeItemResponse
         array $summary,
         array $collection,
         \App\Cache\Control $cache_control,
-        \App\Cache\Summary $cache_summary
-    ): \App\Cache\Summary {
+        \App\Cache\Response\Summary $cache_summary
+    ): \App\Cache\Response\Summary {
         $headers = new Header();
 
         $headers
@@ -76,13 +72,10 @@ abstract class ApiSummaryResourceTypeItemResponse
 
     protected function setUpCache(): void
     {
-        $this->cache_control = new \App\Cache\Control(
-            $this->permitted_user,
-            $this->user_id
-        );
+        $this->cache_control = new \App\Cache\Control($this->user_id);
         $this->cache_control->setTtlOneWeek();
 
-        $this->cache_summary = new \App\Cache\Summary();
+        $this->cache_summary = new \App\Cache\Response\Summary();
         $this->cache_summary->setFromCache($this->cache_control->getByKey(request()->getRequestUri()));
     }
 }

@@ -14,12 +14,10 @@ class SummaryResourceTypeItem extends ApiSummaryResourceTypeItemResponse
 {
     public function __construct(
         int $resource_type_id,
-        bool $permitted_user = false,
         int $user_id = null
     ) {
         parent::__construct(
             $resource_type_id,
-            $permitted_user,
             $user_id
         );
 
@@ -459,10 +457,7 @@ class SummaryResourceTypeItem extends ApiSummaryResourceTypeItemResponse
     // Overridden here, because we want a different TTL
     protected function setUpCache(): void
     {
-        $this->cache_control = new \App\Cache\Control(
-            $this->permitted_user,
-            $this->user_id
-        );
+        $this->cache_control = new \App\Cache\Control($this->user_id);
 
         if ($this->cache_control->visibility() === 'public') {
             $this->cache_control->setTtlOneWeek();
@@ -470,7 +465,7 @@ class SummaryResourceTypeItem extends ApiSummaryResourceTypeItemResponse
             $this->cache_control->setTtlOneDay();
         }
 
-        $this->cache_summary = new \App\Cache\Summary();
+        $this->cache_summary = new \App\Cache\Response\Summary();
         $this->cache_summary->setFromCache($this->cache_control->getByKey(request()->getRequestUri()));
     }
 

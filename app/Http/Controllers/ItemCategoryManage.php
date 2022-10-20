@@ -84,7 +84,6 @@ class ItemCategoryManage extends Controller
                 'resource_type_id' => $resource_type_id,
                 'resource_id' => $resource_id
             ])
-            ->isPermittedUser($this->hasWriteAccessToResourceType($resource_type_id))
             ->setUserId($this->user_id);
 
         try {
@@ -152,7 +151,6 @@ class ItemCategoryManage extends Controller
                 'resource_type_id' => $resource_type_id,
                 'resource_id' => $resource_id
             ])
-            ->isPermittedUser($this->hasWriteAccessToResourceType($resource_type_id))
             ->setUserId($this->user_id);
 
         try {

@@ -28,7 +28,7 @@ class Item extends ApiItemResponse
             $this->cache_control->setTtlOneDay();
         }
 
-        $cache_collection = new \App\Cache\Collection();
+        $cache_collection = new \App\Cache\Response\Collection();
         $cache_collection->setFromCache($this->cache_control->getByKey(request()->getRequestUri()));
 
         if (

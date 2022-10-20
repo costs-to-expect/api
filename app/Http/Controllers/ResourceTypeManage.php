@@ -41,7 +41,6 @@ class ResourceTypeManage extends Controller
         $cache_job_payload = (new \App\Cache\JobPayload())
             ->setGroupKey(\App\Cache\KeyGroup::RESOURCE_TYPE_CREATE)
             ->setRouteParameters([])
-            ->isPermittedUser(true)
             ->setUserId($this->user_id);
 
         try {
@@ -114,7 +113,6 @@ class ResourceTypeManage extends Controller
             ->setRouteParameters([
                 'resource_type_id' => $resource_type_id
             ])
-            ->isPermittedUser($this->hasWriteAccessToResourceType((int) $resource_type_id))
             ->setUserId($this->user_id);
 
         if (
@@ -191,7 +189,6 @@ class ResourceTypeManage extends Controller
             ->setRouteParameters([
                 'resource_type_id' => $resource_type_id
             ])
-            ->isPermittedUser($this->hasWriteAccessToResourceType((int) $resource_type_id))
             ->setUserId($this->user_id);
 
         try {

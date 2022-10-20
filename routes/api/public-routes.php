@@ -15,7 +15,6 @@ use App\Http\Controllers\RequestManage;
 use App\Http\Controllers\RequestView;
 use App\Http\Controllers\ResourceTypeItemView;
 use App\Http\Controllers\SubcategoryView;
-use App\Http\Controllers\ToolView;
 use App\Http\Controllers\ItemPartialTransferView;
 use App\Http\Controllers\ItemView;
 use App\Http\Controllers\PermittedUserView;
@@ -410,11 +409,6 @@ Route::group(
         Route::post(
             'request/error-log',
             [RequestManage::class, 'createErrorLog']
-        );
-
-        Route::options(
-            'tools/cache',
-            [ToolView::class, 'optionsCache']
         );
     }
 );

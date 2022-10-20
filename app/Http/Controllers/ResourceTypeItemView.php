@@ -35,7 +35,6 @@ class ResourceTypeItemView extends Controller
     {
         $response = new \App\ItemType\AllocatedExpense\HttpResponse\ResourceTypeItem(
             $resource_type_id,
-            $this->hasWriteAccessToResourceType($resource_type_id),
             $this->user_id
         );
 
@@ -46,7 +45,6 @@ class ResourceTypeItemView extends Controller
     {
         $response = new \App\ItemType\Game\HttpResponse\ResourceTypeItem(
             $resource_type_id,
-            $this->hasWriteAccessToResourceType($resource_type_id),
             $this->user_id
         );
 
