@@ -41,7 +41,6 @@ class ResourceTypeManage extends Controller
         $cache_job_payload = (new \App\Cache\JobPayload())
             ->setGroupKey(\App\Cache\KeyGroup::RESOURCE_TYPE_CREATE)
             ->setRouteParameters([])
-            ->isPermittedUser(true)
             ->setUserId($this->user_id);
 
         try {
@@ -76,7 +75,7 @@ class ResourceTypeManage extends Controller
                 return $resource_type;
             });
 
-            ClearCache::dispatch($cache_job_payload->payload());
+            ClearCache::dispatchSync($cache_job_payload->payload());
         } catch (Exception $e) {
             return \App\HttpResponse\Response::failedToSaveModelForCreate($e);
         }
@@ -114,7 +113,6 @@ class ResourceTypeManage extends Controller
             ->setRouteParameters([
                 'resource_type_id' => $resource_type_id
             ])
-            ->isPermittedUser($this->hasWriteAccessToResourceType((int) $resource_type_id))
             ->setUserId($this->user_id);
 
         if (
@@ -131,7 +129,7 @@ class ResourceTypeManage extends Controller
                     $resource_type->delete();
                 });
 
-                ClearCache::dispatch($cache_job_payload->payload());
+                ClearCache::dispatchSync($cache_job_payload->payload());
 
                 return \App\HttpResponse\Response::successNoContent();
             } catch (QueryException $e) {
@@ -191,7 +189,6 @@ class ResourceTypeManage extends Controller
             ->setRouteParameters([
                 'resource_type_id' => $resource_type_id
             ])
-            ->isPermittedUser($this->hasWriteAccessToResourceType((int) $resource_type_id))
             ->setUserId($this->user_id);
 
         try {

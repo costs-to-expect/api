@@ -27,10 +27,10 @@ class ResourceTypeView extends Controller
      */
     public function index(Request $request): JsonResponse
     {
-        $cache_control = new \App\Cache\Control(true, $this->user_id);
+        $cache_control = new \App\Cache\Control($this->user_id);
         $cache_control->setTtlOneWeek();
 
-        $cache_summary = new \App\Cache\Summary();
+        $cache_summary = new \App\Cache\Response\Summary();
         $cache_summary->setFromCache($cache_control->getByKey($request->getRequestUri()));
 
         if ($cache_control->isRequestCacheable() === false || $cache_summary->valid() === false) {

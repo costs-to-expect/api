@@ -3,17 +3,17 @@
 namespace App\Jobs;
 
 use App\Cache\Control;
-use App\Cache\Job;
 use App\Cache\KeyGroup;
-use App\Cache\Trash;
 use App\Models\Permission;
 use App\Models\ResourceType;
-use App\User;
+use App\Notifications\FailedJob;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
+use Illuminate\Support\Facades\Config;
+use Illuminate\Support\Facades\Notification;
 use Throwable;
 
 /**
@@ -32,6 +32,8 @@ class ClearCache implements ShouldQueue
 
     protected array $payload;
 
+    public int $tries = 3;
+
     public function __construct(array $payload)
     {
         $this->payload = $payload;
@@ -44,33 +46,29 @@ class ClearCache implements ShouldQueue
      */
     public function handle()
     {
-        $payload = new Job($this->payload);
+        $cache_control = new Control($this->payload['user_id']);
 
-        $cache_control = new Control(
-            $payload->isPermittedUser(),
-            $payload->userId()
-        );
+        $cache_key_group = new KeyGroup($this->payload['route_parameters']);
+        $cache_keys = $cache_key_group->keys($this->payload['group_key']);
 
-        $cache_key_group = new KeyGroup($payload->routeParameters());
-        $cache_keys = $cache_key_group->keys($payload->groupKey());
-
-        if (array_key_exists('resource_type_id', $payload->routeParameters())) {
+        if (array_key_exists('resource_type_id', $this->payload['route_parameters'])) {
             $permitted_users = (new Permission())->permittedUsersForResourceType(
-                $payload->routeParameters()['resource_type_id'],
-                $payload->userId()
+                $this->payload['route_parameters']['resource_type_id'],
+                $this->payload['user_id']
             );
 
             $public_resource_types = (new ResourceType())->publicResourceTypes();
 
-            $trash = new Trash(
-                $cache_control,
-                $cache_keys,
-                $payload->routeParameters()['resource_type_id'],
-                $public_resource_types,
-                $permitted_users
-            );
+            $cache_control->clearMatchingCacheKeys($cache_keys);
 
-            $trash->all();
+            foreach ($permitted_users as $permitted_user) {
+                $cache_control_for_permitted_user = new Control($permitted_user);
+                $cache_control_for_permitted_user->clearMatchingCacheKeys($cache_keys);
+            }
+
+            if (in_array((int) $this->payload['route_parameters']['resource_type_id'], $public_resource_types, true)) {
+                $cache_control->clearMatchingPublicCacheKeys($cache_keys);
+            }
         } else {
             $cache_control->clearMatchingCacheKeys($cache_keys);
         }
@@ -78,12 +76,13 @@ class ClearCache implements ShouldQueue
 
     public function failed(Throwable $exception)
     {
-        $user = User::query()->find(1);
-        $user->notify(new \App\Notifications\FailedJob([
-                'message' => $exception->getMessage(),
-                'file' => $exception->getFile(),
-                'line' => $exception->getLine(),
-                'trace' => $exception->getTraceAsString()
-        ]));
+        Notification::route('mail', Config::get('api.app.config.admin_email'))
+            ->notify(new FailedJob([
+                    'message' => $exception->getMessage(),
+                    'file' => $exception->getFile(),
+                    'line' => $exception->getLine(),
+                    'trace' => $exception->getTraceAsString()
+                ])
+            );
     }
 }

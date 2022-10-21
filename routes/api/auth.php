@@ -42,37 +42,12 @@ Route::group(
         Route::options(
             'auth/login',
             [Authentication::class, 'optionsLogin']
-        );
+        )->name('auth.login.options');
 
         Route::get(
             'auth/logout',
             [Authentication::class, 'logout']
         )->name('auth.logout');
-
-        Route::options(
-            'auth/update-password',
-            [Authentication::class, 'optionsUpdatePassword']
-        );
-
-        Route::options(
-            'auth/update-profile',
-            [Authentication::class, 'optionsUpdateProfile']
-        );
-
-        Route::options(
-            'auth/user',
-            [Authentication::class, 'optionsUser']
-        );
-
-        Route::options(
-            'auth/user/tokens',
-            [Authentication::class, 'optionsTokens']
-        );
-
-        Route::options(
-            'auth/user/tokens/{token_id}',
-            [Authentication::class, 'optionsToken']
-        );
 
         Route::options(
             'auth/check',
@@ -107,29 +82,65 @@ Route::group(
     [
         'prefix' => Config::get('api.app.version.prefix'),
         'middleware' => [
-            'auth:sanctum'
+            'auth:sanctum',
+            'convert.route.parameters'
         ]
     ],
     static function () {
+        Route::options(
+            'auth/update-password',
+            [Authentication::class, 'optionsUpdatePassword']
+        )->name('auth.update-password.options');
+
         Route::post(
             'auth/update-password',
             [Authentication::class, 'updatePassword']
         )->name('auth.update-password');
+
+        Route::options(
+            'auth/update-profile',
+            [Authentication::class, 'optionsUpdateProfile']
+        )->name('auth.update-profile.options');
 
         Route::post(
             'auth/update-profile',
             [Authentication::class, 'updateProfile']
         )->name('auth.update-profile');
 
+        Route::options(
+            'auth/user',
+            [Authentication::class, 'optionsUser']
+        )->name('auth.user.options');
+
         Route::get(
             'auth/user',
             [Authentication::class, 'user']
         )->name('auth.user');
 
+        Route::options(
+            'auth/user/request-delete',
+            [Authentication::class, 'optionsRequestDelete']
+        )->name('auth.user.request-delete.options');
+
+        Route::post(
+            'auth/user/request-delete',
+            [Authentication::class, 'requestDelete']
+        )->name('auth.user.request-delete');
+
+        Route::options(
+            'auth/user/tokens',
+            [Authentication::class, 'optionsTokens']
+        )->name('auth.user.token.list.options');
+
         Route::get(
             'auth/user/tokens',
             [Authentication::class, 'tokens']
         )->name('auth.user.token.list');
+
+        Route::options(
+            'auth/user/tokens/{token_id}',
+            [Authentication::class, 'optionsToken']
+        )->name('auth.user.token.show.options');
 
         Route::get(
             'auth/user/tokens/{token_id}',
@@ -140,5 +151,65 @@ Route::group(
             'auth/user/tokens/{token_id}',
             [Authentication::class, 'deleteToken']
         )->name('auth.user.token.delete');
+
+        Route::get(
+            'auth/user/permitted-resource-types',
+            [Authentication::class, 'permittedResourceTypes']
+        )->name('auth.user.permitted-resource-types.list');
+
+        Route::options(
+            'auth/user/permitted-resource-types',
+            [Authentication::class, 'optionsPermittedResourceTypes']
+        )->name('auth.user.permitted-resource-types.list.options');
+
+        Route::get(
+            'auth/user/permitted-resource-types/{permitted_resource_type_id}',
+            [Authentication::class, 'permittedResourceType']
+        )->name('auth.user.permitted-resource-types.show');
+
+        Route::options(
+            'auth/user/permitted-resource-types/{permitted_resource_type_id}',
+            [Authentication::class, 'optionsPermittedResourceType']
+        )->name('auth.user.permitted-resource-types.show.options');
+
+        Route::options(
+            'auth/user/permitted-resource-types/{permitted_resource_type_id}/request-delete',
+            [Authentication::class, 'optionsRequestResourceTypeDelete']
+        )->name('auth.user.request-resource-type-delete.options');
+
+        Route::post(
+            'auth/user/permitted-resource-types/{permitted_resource_type_id}/request-delete',
+            [Authentication::class, 'requestResourceTypeDelete']
+        )->name('auth.user.request-resource-type-delete');
+
+        Route::get(
+            'auth/user/permitted-resource-types/{permitted_resource_type_id}/resources',
+            [Authentication::class, 'permittedResourceTypesResources']
+        )->name('auth.user.permitted-resource-types-resources.list');
+
+        Route::options(
+            'auth/user/permitted-resource-types/{permitted_resource_type_id}/resources',
+            [Authentication::class, 'optionsPermittedResourceTypeResources']
+        )->name('auth.user.permitted-resource-types-resources.list.options');
+
+        Route::get(
+            'auth/user/permitted-resource-types/{permitted_resource_type_id}/resources/{resource_id}',
+            [Authentication::class, 'permittedResourceTypesResource']
+        )->name('auth.user.permitted-resource-types-resources.show');
+
+        Route::options(
+            'auth/user/permitted-resource-types/{permitted_resource_type_id}/resources/{resource_id}',
+            [Authentication::class, 'optionsPermittedResourceTypeResource']
+        )->name('auth.user.permitted-resource-types-resources.show.options');
+
+        Route::options(
+            'auth/user/permitted-resource-types/{permitted_resource_type_id}/resources/{resource_id}/request-delete',
+            [Authentication::class, 'optionsRequestResourceDelete']
+        )->name('auth.user.request-resource-delete.options');
+
+        Route::post(
+            'auth/user/permitted-resource-types/{permitted_resource_type_id}/resources/{resource_id}/request-delete',
+            [Authentication::class, 'requestResourceDelete']
+        )->name('auth.user.request-resource-delete');
     }
 );

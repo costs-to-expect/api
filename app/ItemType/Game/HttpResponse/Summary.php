@@ -13,13 +13,11 @@ class Summary extends ApiSummaryResponse
     public function __construct(
         int $resource_type_id,
         int $resource_id,
-        bool $permitted_user = false,
         int $user_id = null
     ) {
         parent::__construct(
             $resource_type_id,
             $resource_id,
-            $permitted_user,
             $user_id
         );
 

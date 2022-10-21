@@ -60,7 +60,6 @@ class ItemManage extends Controller
                 'resource_type_id' => $resource_type_id,
                 'resource_id' => $resource_id
             ])
-            ->isPermittedUser($this->hasWriteAccessToResourceType($resource_type_id))
             ->setUserId($this->user_id);
 
         try {
@@ -126,7 +125,6 @@ class ItemManage extends Controller
                 'resource_type_id' => $resource_type_id,
                 'resource_id' => $resource_id
             ])
-            ->isPermittedUser($this->hasWriteAccessToResourceType($resource_type_id))
             ->setUserId($this->user_id);
 
         try {
@@ -191,7 +189,6 @@ class ItemManage extends Controller
                 'resource_type_id' => $resource_type_id,
                 'resource_id' => $resource_id
             ])
-            ->isPermittedUser($this->hasWriteAccessToResourceType($resource_type_id))
             ->setUserId($this->user_id);
 
         try {
@@ -275,7 +272,6 @@ class ItemManage extends Controller
                 'resource_type_id' => $resource_type_id,
                 'resource_id' => $resource_id
             ])
-            ->isPermittedUser($this->hasWriteAccessToResourceType($resource_type_id))
             ->setUserId($this->user_id);
 
         $item_instance = (new Item())->instance($resource_type_id, $resource_id, $item_id);
@@ -345,7 +341,6 @@ class ItemManage extends Controller
                 'resource_type_id' => $resource_type_id,
                 'resource_id' => $resource_id
             ])
-            ->isPermittedUser($this->hasWriteAccessToResourceType($resource_type_id))
             ->setUserId($this->user_id);
 
         $item_instance = (new Item())->instance($resource_type_id, $resource_id, $item_id);
@@ -407,7 +402,6 @@ class ItemManage extends Controller
                 'resource_type_id' => $resource_type_id,
                 'resource_id' => $resource_id
             ])
-            ->isPermittedUser($this->hasWriteAccessToResourceType($resource_type_id))
             ->setUserId($this->user_id);
 
         $item_instance = (new Item())->instance($resource_type_id, $resource_id, $item_id);
@@ -479,7 +473,6 @@ class ItemManage extends Controller
                 'resource_type_id' => $resource_type_id,
                 'resource_id' => $resource_id
             ])
-            ->isPermittedUser($this->hasWriteAccessToResourceType((int) $resource_type_id))
             ->setUserId($this->user_id);
 
         $item_model = new \App\ItemType\AllocatedExpense\Models\Item();
@@ -525,7 +518,6 @@ class ItemManage extends Controller
                 'resource_type_id' => $resource_type_id,
                 'resource_id' => $resource_id
             ])
-            ->isPermittedUser($this->hasWriteAccessToResourceType((int) $resource_type_id))
             ->setUserId($this->user_id);
 
         $item_model = new \App\ItemType\Budget\Models\Item();
@@ -568,7 +560,6 @@ class ItemManage extends Controller
                 'resource_type_id' => $resource_type_id,
                 'resource_id' => $resource_id
             ])
-            ->isPermittedUser($this->hasWriteAccessToResourceType((int) $resource_type_id))
             ->setUserId($this->user_id);
 
         $item_model = new \App\ItemType\Game\Models\Item();

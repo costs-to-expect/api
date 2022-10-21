@@ -33,7 +33,6 @@ class ItemView extends Controller
         $response = new \App\ItemType\AllocatedExpense\HttpResponse\Summary(
             $resource_type_id,
             $resource_id,
-            $this->hasWriteAccessToResourceType($resource_type_id),
             $this->user_id
         );
 
@@ -45,7 +44,6 @@ class ItemView extends Controller
         $response = new \App\ItemType\Game\HttpResponse\Summary(
             $resource_type_id,
             $resource_id,
-            $this->hasWriteAccessToResourceType($resource_type_id),
             $this->user_id
         );
 

@@ -10,7 +10,6 @@ use App\HttpRequest\Parameter\Search;
 use App\HttpRequest\Parameter\Sort;
 use App\HttpResponse\Response;
 use App\ItemType\HttpResponse\ApiItemResponse;
-use App\Models\ItemCategory;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Config as LaravelConfig;
 
@@ -26,7 +25,7 @@ class Item extends ApiItemResponse
 
         $this->cache_control->setTtlOneWeek();
 
-        $cache_collection = new \App\Cache\Collection();
+        $cache_collection = new \App\Cache\Response\Collection();
         $cache_collection->setFromCache($this->cache_control->getByKey(request()->getRequestUri()));
 
         if (

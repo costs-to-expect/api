@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Cache;
+namespace App\Cache\Response;
 
 /**
  * Cache helper, container for the cached data, gives us a simple
@@ -12,11 +12,13 @@ namespace App\Cache;
  * @copyright Dean Blackborough 2018-2022
  * @license https://github.com/costs-to-expect/api/blob/master/LICENSE
  */
-class Summary
+class Collection
 {
     private bool $cached;
     private array $collection;
     private array $headers;
+    private array $pagination;
+    private int $total;
 
     /**
      * Create a cache response object
@@ -44,22 +46,30 @@ class Summary
     public function content(): array
     {
         return [
+            'total' => $this->total,
             'collection' => $this->collection,
-            'headers' => $this->headers
+            'headers' => $this->headers,
+            'pagination' => $this->pagination
         ];
     }
 
     /**
      * Create the cache data object
      *
+     * @param int $total
      * @param array $collection
+     * @param array $pagination
      * @param array $headers
      */
     public function create(
+        int $total,
         array $collection,
+        array $pagination,
         array $headers
     ): void {
+        $this->setTotal($total);
         $this->setCollection($collection);
+        $this->setPagination($pagination);
         $this->setHeaders($headers);
     }
 
@@ -87,14 +97,16 @@ class Summary
      * Pass in the content from the cache table, the content will include
      * four indexes, total, collection, headers and pagination
      *
-     * @param array $content
+     * @param array|null $content
      */
     public function setFromCache(array $content = null): void
     {
         if ($content !== null) {
             $this->cached = true;
+            $this->total = $content['total'];
             $this->collection = $content['collection'];
             $this->headers = $content['headers'];
+            $this->pagination = $content['pagination'];
         }
     }
 
@@ -106,6 +118,26 @@ class Summary
     private function setHeaders(array $headers): void
     {
         $this->headers = $headers;
+    }
+
+    /**
+     * Set the pagination data for the collection
+     *
+     * @param array $pagination
+     */
+    private function setPagination(array $pagination): void
+    {
+        $this->pagination = $pagination;
+    }
+
+    /**
+     * Set the total count for the collection
+     *
+     * @param int $total
+     */
+    private function setTotal(int $total): void
+    {
+        $this->total = $total;
     }
 
     /**

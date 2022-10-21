@@ -41,4 +41,10 @@ class User extends Authenticatable
     {
         $this->tokens()->where('last_used_at', '<', now()->subYear())->delete();
     }
+
+    public function instance(int $user_id): ?User
+    {
+        return $this->where('id', '=', $user_id)
+            ->first();
+    }
 }

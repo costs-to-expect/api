@@ -6,15 +6,15 @@ namespace App\HttpOptionResponse\Auth;
 
 use App\HttpOptionResponse\Response;
 
-class Check extends Response
+class PermittedResourceType extends Response
 {
     public function create()
     {
         $get = new \App\HttpVerb\Get();
         $this->verbs['GET'] = $get->setSortableParameters([])->
             setSearchableParameters([])->
-            setDescription('route-descriptions.auth_check_GET')->
-            setAuthenticationRequirement(false)->
+            setDescription('route-descriptions.auth_permitted_resource_type_GET')->
+            setAuthenticationRequirement(true)->
             setAuthenticationStatus($this->permissions['view'])->
             option();
 

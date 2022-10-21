@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Cache\Collection;
+use App\Cache\Response\Collection;
 use App\Cache\Control;
 use App\Models\Permission;
 use App\Models\ResourceType;
@@ -57,7 +57,7 @@ class Controller extends BaseController
         ) {
             $this->user_id = auth('api')->user()->id; // Safe as check above ensures not null
 
-            $cache_control = new Control(true, $this->user_id);
+            $cache_control = new Control($this->user_id);
             $cache_control->setTtlOneWeek();
 
             $cache_collection = new Collection();
@@ -88,7 +88,7 @@ class Controller extends BaseController
             auth()->guard('api')->user() !== null &&
             auth()->guard('api')->check() === true
         ) {
-            $cache_control = new Control(true, $this->user_id);
+            $cache_control = new Control($this->user_id);
             $cache_control->setTtlOneWeek();
         }
 

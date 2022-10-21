@@ -38,7 +38,6 @@ class ItemView extends Controller
         $response = new \App\ItemType\AllocatedExpense\HttpResponse\Item(
             $resource_type_id,
             $resource_id,
-            $this->hasWriteAccessToResourceType($resource_type_id),
             $this->user_id
         );
 
@@ -50,7 +49,6 @@ class ItemView extends Controller
         $response = new \App\ItemType\Budget\HttpResponse\Item(
             $resource_type_id,
             $resource_id,
-            $this->hasWriteAccessToResourceType($resource_type_id),
             $this->user_id
         );
 
@@ -62,7 +60,6 @@ class ItemView extends Controller
         $response = new \App\ItemType\Game\HttpResponse\Item(
             $resource_type_id,
             $resource_id,
-            $this->hasWriteAccessToResourceType($resource_type_id),
             $this->user_id
         );
 
@@ -93,7 +90,6 @@ class ItemView extends Controller
         $response = new \App\ItemType\AllocatedExpense\HttpResponse\Item(
             $resource_type_id,
             $resource_id,
-            $this->hasWriteAccessToResourceType($resource_type_id),
             $this->user_id
         );
 
@@ -105,7 +101,6 @@ class ItemView extends Controller
         $response = new \App\ItemType\Budget\HttpResponse\Item(
             $resource_type_id,
             $resource_id,
-            $this->hasWriteAccessToResourceType($resource_type_id),
             $this->user_id
         );
 
@@ -117,7 +112,6 @@ class ItemView extends Controller
         $response = new \App\ItemType\Game\HttpResponse\Item(
             $resource_type_id,
             $resource_id,
-            $this->hasWriteAccessToResourceType($resource_type_id),
             $this->user_id
         );
 

@@ -44,7 +44,6 @@ class PermittedUserManage extends Controller
             ->setRouteParameters([
                 'resource_type_id' => $resource_type_id
             ])
-            ->isPermittedUser($this->hasWriteAccessToResourceType((int) $resource_type_id))
             ->setUserId($this->user_id);
 
         try {
@@ -66,7 +65,6 @@ class PermittedUserManage extends Controller
                     $permitted_user_cache_job_payload = (new \App\Cache\JobPayload())
                         ->setGroupKey(\App\Cache\KeyGroup::RESOURCE_TYPE_CREATE)
                         ->setRouteParameters([])
-                        ->isPermittedUser($this->hasWriteAccessToResourceType((int)$resource_type_id))
                         ->setUserId($user->id);
 
                     ClearCache::dispatch($permitted_user_cache_job_payload->payload());
@@ -100,7 +98,6 @@ class PermittedUserManage extends Controller
         $cache_job_payload = (new \App\Cache\JobPayload())
             ->setGroupKey(\App\Cache\KeyGroup::PERMITTED_USER_DELETE)
             ->setRouteParameters([])
-            ->isPermittedUser($this->hasWriteAccessToResourceType((int) $resource_type_id))
             ->setUserId($this->user_id);
 
         try {

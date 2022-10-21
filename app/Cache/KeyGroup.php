@@ -116,9 +116,9 @@ class KeyGroup
             case self::RESOURCE_TYPE_DELETE:
             case self::PERMITTED_USER_DELETE:
                 return [
-                    $this->key->resourceTypes(),
                     $this->key->permittedResourceTypes(),
-                    $this->key->viewableResourceTypes()
+                    $this->key->viewableResourceTypes(),
+                    $this->key->resourceTypes(),
                 ];
 
             case self::PERMITTED_USER_CREATE:
@@ -131,6 +131,7 @@ class KeyGroup
             default:
                 // We need to write to a failed job of errors table so we can see the
                 // errors in the database
+                return [];
                 break;
         }
     }

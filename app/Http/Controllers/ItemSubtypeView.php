@@ -32,7 +32,7 @@ class ItemSubtypeView extends Controller
         $cache_control = new \App\Cache\Control();
         $cache_control->setTtlOneYear();
 
-        $cache_collection = new \App\Cache\Collection();
+        $cache_collection = new \App\Cache\Response\Collection();
         $cache_collection->setFromCache($cache_control->getByKey($request->getRequestUri()));
 
         if ($cache_control->isRequestCacheable() === false || $cache_collection->valid() === false) {

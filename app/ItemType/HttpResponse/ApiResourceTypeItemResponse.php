@@ -16,8 +16,6 @@ abstract class ApiResourceTypeItemResponse
 {
     protected int $resource_type_id;
 
-    protected bool $permitted_user;
-
     protected ?int $user_id;
 
     protected \App\Cache\Control $cache_control;
@@ -29,17 +27,12 @@ abstract class ApiResourceTypeItemResponse
 
     public function __construct(
         int $resource_type_id,
-        bool $permitted_user,
         ?int $user_id
     ) {
         $this->resource_type_id = $resource_type_id;
-        $this->permitted_user = $permitted_user;
         $this->user_id = $user_id;
 
-        $this->cache_control = new \App\Cache\Control(
-            $this->permitted_user,
-            $this->user_id
-        );
+        $this->cache_control = new \App\Cache\Control($this->user_id);
     }
 
     abstract public function response(): JsonResponse;

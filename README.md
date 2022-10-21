@@ -12,8 +12,8 @@ The documentation for the Costs to Expect API can be found at
 [postman.costs-to-expect.com](https://postman.costs-to-expect.com?version=latest). 
 
 The documentation is slowly being moved to a repository on 
-[GitHub](https://github.com/costs-to-expect/api-docs). It is taking a while to rewrite and update the documentation, 
-it will however be complete before the official of 'Budget'.
+[GitHub](https://github.com/costs-to-expect/api-docs). It is taking a while to rewrite and update the 
+documentation, it will however be complete before the official of 'Budget'.
 
 ## Apps
 
@@ -136,6 +136,20 @@ Public resources types provide READ access to everyone, WRITE access is limited 
 | POST         | v3/auth/update-profile                                                                                                                         |
 | GET/HEAD     | v3/auth/user                                                                                                                                   |
 | OPTIONS      | v3/auth/user                                                                                                                                   |
+| GET/HEAD     | v3/auth/user/permitted-resource-types                                                                                                          |
+| OPTIONS      | v3/auth/user/permitted-resource-types                                                                                                          |
+| GET/HEAD     | v3/auth/user/permitted-resource-types/{permitted_resource_type_id}                                                                             |
+| OPTIONS      | v3/auth/user/permitted-resource-types/{permitted_resource_type_id}                                                                             |
+| OPTIONS      | v3/auth/user/permitted-resource-types/{permitted_resource_type_id}/request-delete                                                              |
+| POST         | v3/auth/user/permitted-resource-types/{permitted_resource_type_id}/request-delete                                                              |
+| GET/HEAD     | v3/auth/user/permitted-resource-types/{permitted_resource_type_id}/resources                                                                   |
+| OPTIONS      | v3/auth/user/permitted-resource-types/{permitted_resource_type_id}/resources                                                                   |
+| GET/HEAD     | v3/auth/user/permitted-resource-types/{permitted_resource_type_id}/resources/{resource_id}                                                     |
+| OPTIONS      | v3/auth/user/permitted-resource-types/{permitted_resource_type_id}/resources/{resource_id}                                                     |
+| OPTIONS      | v3/auth/user/permitted-resource-types/{permitted_resource_type_id}/resources/{resource_id}/request-delete                                      |
+| POST         | v3/auth/user/permitted-resource-types/{permitted_resource_type_id}/resources/{resource_id}/request-delete                                      |
+| OPTIONS      | v3/auth/user/request-delete                                                                                                                    |
+| POST         | v3/auth/user/request-delete                                                                                                                    |
 | GET/HEAD     | v3/auth/user/tokens                                                                                                                            |
 | OPTIONS      | v3/auth/user/tokens                                                                                                                            |
 | DELETE       | v3/auth/user/tokens/{token_id}                                                                                                                 |
@@ -238,9 +252,6 @@ Public resources types provide READ access to everyone, WRITE access is limited 
 | GET/HEAD     | v3/request/error-log                                                                                                                           |
 | OPTIONS      | v3/request/error-log                                                                                                                           |
 | POST         | v3/request/error-log                                                                                                                           |
-| GET/HEAD     | v3/tools/cache                                                                                                                                 |
-| OPTIONS      | v3/tools/cache                                                                                                                                 |
-| DELETE       | v3/tools/cache                                                                                                                                 |
 
 ## Summary routes
 

@@ -41,6 +41,7 @@ class Hash
         $this->hashers['category'] = new Hashids($config['category'], $min_length);
         $this->hashers['subcategory'] = new Hashids($config['subcategory'], $min_length);
         $this->hashers['resource-type'] = new Hashids($config['resource-type'], $min_length);
+        $this->hashers['permitted-resource-type'] = new Hashids($config['resource-type'], $min_length);
         $this->hashers['resource'] = new Hashids($config['resource'], $min_length);
         $this->hashers['item'] = new Hashids($config['item'], $min_length);
         $this->hashers['item-category'] = new Hashids($config['item-category'], $min_length);
@@ -99,6 +100,11 @@ class Hash
     public function subcategory(): Hashids
     {
         return $this->hashers['subcategory'];
+    }
+
+    public function permittedResourceType(): Hashids
+    {
+        return $this->hashers['permitted-resource-type'];
     }
 
     public function resourceType(): Hashids

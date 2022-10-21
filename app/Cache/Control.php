@@ -29,11 +29,11 @@ class Control
 
     private string $public_cache_prefix = '-p-';
 
-    public function __construct(bool $permitted_user = false, int $user_id = null)
+    public function __construct(int $user_id = null)
     {
         $this->cache_prefix = $this->public_cache_prefix;
 
-        if ($permitted_user === true && $user_id !== null) {
+        if ($user_id !== null) {
             $this->cache_prefix = '-' . $user_id . '-';
             $this->visibility = 'private';
         }
@@ -45,6 +45,7 @@ class Control
 
     public function isRequestCacheable(): bool
     {
+        // Cacheable defaults to the ENV setting, the X-Skip-Cache header allows overriding of the setting
         $skip_cache = request()->header('X-Skip-Cache');
 
         if ($skip_cache !== null) {
@@ -52,16 +53,6 @@ class Control
         }
 
         return $this->cacheable;
-    }
-
-    public function clearCacheForRequestedKey(string $key): void
-    {
-        LaravelCache::forget($this->cache_prefix . $key);
-
-        // Clear public if possibly necessary
-        if ($this->cache_prefix !== $this->public_cache_prefix) {
-            LaravelCache::forget($this->public_cache_prefix . $key);
-        }
     }
 
     public function clearMatchingPublicCacheKeys(array $key_wildcards): void
@@ -75,7 +66,7 @@ class Control
         }
     }
 
-    public function clearCacheKeyByItsFullName(string $key): void
+    protected function clearCacheKeyByItsFullName(string $key): void
     {
         // We strip the cache prefix as we went to the db and the prefix will be in the string
         LaravelCache::forget(str_replace_first($this->laravel_cache_prefix, '', $key));
@@ -156,7 +147,7 @@ class Control
         return $this->visibility;
     }
 
-    public function fetchMatchingCacheKeys(
+    protected function fetchMatchingCacheKeys(
         string $key_wildcard
     ): array {
         return (new Cache())->matchingKeys(
@@ -165,7 +156,7 @@ class Control
         );
     }
 
-    public function fetchMatchingPublicCacheKeys(
+    protected function fetchMatchingPublicCacheKeys(
         string $key_wildcard
     ): array {
         return (new Cache())->matchingKeys(

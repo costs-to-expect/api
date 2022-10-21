@@ -8,7 +8,6 @@ use App\Http\Controllers\ItemManage;
 use App\Http\Controllers\ItemPartialTransferManage;
 use App\Http\Controllers\ItemSubcategoryManage;
 use App\Http\Controllers\ItemTransferManage;
-use App\Http\Controllers\ToolManage;
 use App\Http\Controllers\CategoryManage;
 use App\Http\Controllers\PermittedUserManage;
 use App\Http\Controllers\ResourceManage;
@@ -170,15 +169,5 @@ Route::group(
             'resource-types/{resource_type_id}/resources/{resource_id}/items/{item_id}/data/{key}',
             [ItemDataManage::class, 'update']
         )->name('item-data.update');
-
-        Route::get(
-            'tools/cache',
-            [ToolManage::class, 'cache']
-        );
-
-        Route::delete(
-            'tools/cache',
-            [ToolManage::class, 'deleteCache']
-        );
     }
 );

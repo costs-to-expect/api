@@ -15,6 +15,13 @@ return [
     'auth_user_token_GET' => 'Return the requested token for the signed-in user',
     'auth_user_token_DELETE' => 'Delete the requested token for the signed-in user',
     'auth_check_GET' => 'Check to see if the user is authenticated',
+    'auth_permitted_resource_type_GET' => 'Return the selected permitted resource type for the signed-in user',
+    'auth_permitted_resource_types_GET' => 'Return the permitted resource types for the signed-in user',
+    'auth_resource_GET' => 'Return the selected resource for the signed-in user',
+    'auth_resources_GET' => 'Return the resources for the selected permitted resource type for the signed-in user',
+    'auth_request_delete_POST' => 'Request the deletion of your account and all dependant data, this is an unrecoverable action. Note: Your access to any shared data will be removed, the remaining permitted users will retain ownership.',
+    'auth_request_resource_delete_POST' => 'Request the deletion of a resource and all dependant data, this is an unrecoverable action. Note: Your access to any shared data will be removed, the remaining permitted users will retain ownership.',
+    'auth_request_resource_type_delete_POST' => 'Request the deletion of a resource type and all dependant data, this is an unrecoverable action. Note: Your access to any shared data will be removed, the remaining permitted users will retain ownership.',
 
     'api_GET_index' => 'Return all the API routes',
     'api_GET_changelog' => 'Return the complete API changelog',
@@ -60,7 +67,7 @@ return [
     'resource_PATCH' => 'Update the selected resource',
     'resource_DELETE' => 'Delete the selected resource',
 
-    'item_allocated_expense_GET_index' => 'Return all the assigned expense for the selected resource',
+    'item_allocated_expense_GET_index' => 'Return all the assigned expenses for the selected resource',
     'item_budget_GET_index' => 'Return all the Budget entries for the selected Budget',
     'item_game_GET_index' => 'Return all the played games for the selected game',
 
@@ -122,8 +129,6 @@ return [
     'permitted_user_DELETE' => 'Delete the selected permitted user',
 
     'request_GET_error_log' => 'Return the error log',
-    'request_GET_cache' => 'Return the number of cached keys for the authenticated user',
-    'request_DELETE_cache' => 'Attempt to delete the cached keys for the authenticated user',
     'request_POST' => 'Create an error log report',
 
     'summary_category_GET_index' => 'Return a summary of the categories',
@@ -132,9 +137,9 @@ return [
     'summary_resource_type_GET_index' => 'Return a summary of the resource types',
     'summary_resource_GET_index' => 'Return a summary of the resources',
 
-    'summary_items_allocated_expense_GET_index'=> 'Return the summary of expense for the selected resource, review summary filters for all summary options',
+    'summary_items_allocated_expense_GET_index'=> 'Return the summary of expenses for the selected resource, review summary filters for all summary options',
     'summary_items_game_GET_index'=> 'Return the summary of games, review summary filters for all summary options',
 
-    'summary_resource_type_items_allocated_expense_GET_index' => 'Return the summary of expense for the selected resource type, review summary filters for all summary options',
+    'summary_resource_type_items_allocated_expense_GET_index' => 'Return the summary of expenses for the selected resource type, review summary filters for all summary options',
     'summary_resource_type_items_games_GET_index' => 'Return the summary of games for the selected game owner, review summary filters for all summary options',
 ];
