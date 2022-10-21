@@ -87,25 +87,60 @@ Route::group(
         ]
     ],
     static function () {
+        Route::options(
+            'auth/update-password',
+            [Authentication::class, 'optionsUpdatePassword']
+        )->name('auth.update-password.options');
+
         Route::post(
             'auth/update-password',
             [Authentication::class, 'updatePassword']
         )->name('auth.update-password');
+
+        Route::options(
+            'auth/update-profile',
+            [Authentication::class, 'optionsUpdateProfile']
+        )->name('auth.update-profile.options');
 
         Route::post(
             'auth/update-profile',
             [Authentication::class, 'updateProfile']
         )->name('auth.update-profile');
 
+        Route::options(
+            'auth/user',
+            [Authentication::class, 'optionsUser']
+        )->name('auth.user.options');
+
         Route::get(
             'auth/user',
             [Authentication::class, 'user']
         )->name('auth.user');
 
+        Route::options(
+            'auth/user/request-delete',
+            [Authentication::class, 'optionsRequestDelete']
+        )->name('auth.user.request-delete.options');
+
+        Route::post(
+            'auth/user/request-delete',
+            [Authentication::class, 'requestDelete']
+        )->name('auth.user.request-delete');
+
+        Route::options(
+            'auth/user/tokens',
+            [Authentication::class, 'optionsTokens']
+        )->name('auth.user.token.list.options');
+
         Route::get(
             'auth/user/tokens',
             [Authentication::class, 'tokens']
         )->name('auth.user.token.list');
+
+        Route::options(
+            'auth/user/tokens/{token_id}',
+            [Authentication::class, 'optionsToken']
+        )->name('auth.user.token.show.options');
 
         Route::get(
             'auth/user/tokens/{token_id}',
@@ -159,7 +194,7 @@ Route::group(
 
         Route::get(
             'auth/user/permitted-resource-types/{permitted_resource_type_id}/resources/{resource_id}',
-            [Authentication::class, 'permittedResourceTypesResources']
+            [Authentication::class, 'permittedResourceTypesResource']
         )->name('auth.user.permitted-resource-types-resources.show');
 
         Route::options(

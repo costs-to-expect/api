@@ -4,6 +4,7 @@ namespace App\Jobs;
 
 use App\ItemType\Select;
 use App\Models\Permission;
+use App\Models\PermittedUser;
 use App\Notifications\FailedJob;
 use App\Notifications\ResourceDeleted;
 use Illuminate\Bus\Queueable;
@@ -27,7 +28,6 @@ class DeleteResource implements ShouldQueue
     protected int $user_id;
     protected int $resource_type_id;
     protected int $resource_id;
-    protected bool $force;
 
     protected array $deletes;
 
@@ -36,60 +36,51 @@ class DeleteResource implements ShouldQueue
     public function __construct(
         int $user_id,
         int $resource_type_id,
-        int $resource_id,
-        bool $force
+        int $resource_id
     )
     {
         $this->user_id = $user_id;
         $this->resource_type_id = $resource_type_id;
         $this->resource_id = $resource_id;
-        $this->force = $force;
 
         $this->deletes = [];
     }
 
     public function handle()
     {
-        $process = false;
-
         $permitted_users = (new Permission())->permittedUsersForResourceType($this->resource_type_id, $this->user_id);
+
+        if (count($permitted_users) > 0) {
+            $permitted_user = (new PermittedUser())->instance($this->resource_type_id, $this->user_id);
+            $permitted_user?->delete();
+        }
+
         if (count($permitted_users) === 0) {
-            $process = true;
+            try {
+                DB::transaction(function () {
+                    $this->deletes['data'] = $this->deleteItemData($this->resource_id);
+                    $this->deletes['logs'] = $this->deleteItemLogs($this->resource_id);
+                    $this->deletes['subcategories'] = $this->deleteItemSubcategories($this->resource_id);
+                    $this->deletes['categories'] = $this->deleteItemCategories($this->resource_id);
+                    $this->deletes['transfers'] = $this->deleteTransfers($this->resource_id);
+                    $this->deletes['partial-transfers'] = $this->deletePartialTransfers($this->resource_id);
+                    $this->deletes['item-type-data'] = $this->deleteItemTypeData(
+                        $this->resource_type_id,
+                        $this->resource_id
+                    );
+                    $this->deletes['items'] = $this->deleteItems($this->resource_id);
+                    $this->deletes['resource-item-subtype'] = $this->deleteResourceItemSubType($this->resource_id);
+                    $this->deletes['resource'] = $this->deleteResource($this->resource_id);
+                });
+            } catch (Throwable $e) {
+                throw new \Exception($e->getMessage());
+            }
 
+            Notification::route('mail', Config::get('api.app.config.admin_email'))
+                ->notify(
+                    new ResourceDeleted($this->deletes)
+                );
         }
-
-        if ($this->force === true && count($permitted_users) > 0) {
-            $process = true;
-        }
-
-        if ($process === false) {
-            throw new \Exception('There are additional permitted users for the resource type and the force boolean is not set to true');
-        }
-
-        try {
-            DB::transaction(function () {
-
-                $this->deletes['data'] = $this->deleteItemData($this->resource_id);
-                $this->deletes['logs'] = $this->deleteItemLogs($this->resource_id);
-                $this->deletes['subcategories'] = $this->deleteItemSubcategories($this->resource_id);
-                $this->deletes['categories'] = $this->deleteItemCategories($this->resource_id);
-                $this->deletes['transfers'] = $this->deleteTransfers($this->resource_id);
-                $this->deletes['partial-transfers'] = $this->deletePartialTransfers($this->resource_id);
-                $this->deletes['item-type-data'] = $this->deleteItemTypeData($this->resource_type_id, $this->resource_id);
-                $this->deletes['items'] = $this->deleteItems($this->resource_id);
-                $this->deletes['resource-item-subtype'] = $this->deleteResourceItemSubType($this->resource_id);
-                $this->deletes['resource'] = $this->deleteResource($this->resource_id);
-
-            });
-
-
-        } catch (Throwable $e) {
-            throw new \Exception($e->getMessage());
-        }
-
-        Notification::route('mail', Config::get('api.app.config.admin_email'))
-            ->notify(new ResourceDeleted($this->deletes)
-            );
     }
 
     public function failed(Throwable $exception)

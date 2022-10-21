@@ -6,9 +6,11 @@ use App\HttpOptionResponse\Auth\PermittedResourceType;
 use App\HttpOptionResponse\Auth\PermittedResourceTypeResource;
 use App\HttpOptionResponse\Auth\PermittedResourceTypeResources;
 use App\HttpOptionResponse\Auth\PermittedResourceTypes;
+use App\HttpOptionResponse\Auth\RequestDelete;
 use App\HttpOptionResponse\Auth\RequestResourceDelete;
 use App\HttpOptionResponse\Auth\RequestResourceTypeDelete;
 use App\HttpResponse\Response;
+use App\Jobs\DeleteAccount;
 use App\Jobs\DeleteResource;
 use App\Jobs\DeleteResourceType;
 use App\Models\Permission;
@@ -53,7 +55,13 @@ class Authentication extends \Illuminate\Routing\Controller
 
     public function optionsCheck(): Http\JsonResponse
     {
-        $response = new Check([]);
+        $user = auth()->guard('api')->user();
+
+        if ($user === null) {
+            return Response::authenticationRequired();
+        }
+
+        $response = new Check(['view'=> true, 'manage'=> true]);
 
         return $response->create()->response();
     }
@@ -118,7 +126,7 @@ class Authentication extends \Illuminate\Routing\Controller
 
             return response()->json(['message' => trans('auth.unable-to-find-account')], 404);
         } catch (Exception $e) {
-            return response()->json(['message' => trans('auth.unable-to-create-password')], 500);
+            return response()->json(['message' => trans('auth.unable-to-create-password')], 403);
         }
     }
 
@@ -187,7 +195,7 @@ class Authentication extends \Illuminate\Routing\Controller
                 return response()->json([], 204);
             }
 
-            return response()->json(['message' => trans('auth.unable-to-find-account')], 500);
+            return response()->json(['message' => trans('auth.unable-to-find-account')], 403);
         } catch (Exception $e) {
             return response()->json(['message' => trans('auth.unable-to-create-password')], 500);
         }
@@ -303,36 +311,35 @@ class Authentication extends \Illuminate\Routing\Controller
             );
         }
 
-        if (
-            Auth::attempt(
+        if (Auth::attempt(
                 [
                     'email' => request('email'),
                     'password' => request('password')
                 ]
-            ) === true
-        ) {
+            ) === true)
+        {
             $user = Auth::guard('api')->user();
 
-            if ($user !== null) {
-                $request->user()->revokeOldTokens();
-
-                $token_name = 'costs-to-expect-api';
-                if ($request->input('device_name') !== null) {
-                    $token_name = str::slug($request->input('device_name')) . ':' . $token_name;
-                }
-
-                $token = $request->user()->createToken($token_name);
-                return response()->json(
-                    [
-                        'id' => $this->hash->user()->encode($user->id),
-                        'type' => 'Bearer',
-                        'token' => $token->plainTextToken,
-                    ],
-                    201
-                );
+            if ($user === null) {
+                return Response::authenticationRequired();
             }
 
-            return Response::authenticationFailed();
+            $request->user()->revokeOldTokens();
+
+            $token_name = 'costs-to-expect-api';
+            if ($request->input('device_name') !== null) {
+                $token_name = str::slug($request->input('device_name')) . ':' . $token_name;
+            }
+
+            $token = $request->user()->createToken($token_name);
+            return response()->json(
+                [
+                    'id' => $this->hash->user()->encode($user->id),
+                    'type' => 'Bearer',
+                    'token' => $token->plainTextToken,
+                ],
+                201
+            );
         }
 
         return Response::authenticationFailed();
@@ -355,12 +362,12 @@ class Authentication extends \Illuminate\Routing\Controller
     public function permittedResourceType($permitted_resource_type_id): Http\JsonResponse
     {
         $user = auth()->guard('api')->user();
-        $permitted_resource_types = [];
 
-        if ($user !== null) {
-            $permitted_resource_types = (new Permission())->permittedResourceTypesForUser($user->id);
+        if ($user === null) {
+            return Response::authenticationRequired();
         }
 
+        $permitted_resource_types = (new Permission())->permittedResourceTypesForUser($user->id);
         $permitted_resource_type = (new ResourceType())->single(
             $permitted_resource_type_id,
             $permitted_resource_types
@@ -377,13 +384,13 @@ class Authentication extends \Illuminate\Routing\Controller
 
     public function permittedResourceTypesResource($permitted_resource_type_id, $resource_id): Http\JsonResponse
     {
-        $permitted_resource_types = [];
         $user = auth()->guard('api')->user();
 
-        if ($user !== null) {
-            $permitted_resource_types = (new Permission())->permittedResourceTypesForUser($user->id);
+        if ($user === null) {
+            return Response::authenticationRequired();
         }
 
+        $permitted_resource_types = (new Permission())->permittedResourceTypesForUser($user->id);
         if (in_array($permitted_resource_type_id, $permitted_resource_types, true) === false) {
             return Response::notFound(trans('entities.resource-type'));
         }
@@ -398,19 +405,19 @@ class Authentication extends \Illuminate\Routing\Controller
         }
 
         return response()->json(
-            (new PermittedResourceTypeTransformer($resource))->asArray(),
+            (new ResourceTransformer($resource))->asArray(),
         );
     }
 
     public function permittedResourceTypesResources($permitted_resource_type_id): Http\JsonResponse
     {
-        $permitted_resource_types = [];
         $user = auth()->guard('api')->user();
 
-        if ($user !== null) {
-            $permitted_resource_types = (new Permission())->permittedResourceTypesForUser($user->id);
+        if ($user === null) {
+            return Response::authenticationRequired();
         }
 
+        $permitted_resource_types = (new Permission())->permittedResourceTypesForUser($user->id);
         if (in_array($permitted_resource_type_id, $permitted_resource_types, true) === false) {
             return Response::notFound(trans('entities.resource-type'));
         }
@@ -433,13 +440,13 @@ class Authentication extends \Illuminate\Routing\Controller
 
     public function permittedResourceTypes(): Http\JsonResponse
     {
-        $permitted_resource_types = [];
         $user = auth()->guard('api')->user();
 
-        if ($user !== null) {
-            $permitted_resource_types = (new Permission())->permittedResourceTypesForUser($user->id);
+        if ($user === null) {
+            return Response::authenticationRequired();
         }
 
+        $permitted_resource_types = (new Permission())->permittedResourceTypesForUser($user->id);
         $resource_types = (new ResourceType())->paginatedCollection(
             $permitted_resource_types,
             0,
@@ -525,15 +532,34 @@ class Authentication extends \Illuminate\Routing\Controller
         );
     }
 
-    public function requestResourceDelete(Request $request, $permitted_resource_type_id, $resource_id): Http\JsonResponse
+    public function requestDelete(Request $request): Http\JsonResponse
     {
-        $permitted_resource_types = [];
         $user = auth()->guard('api')->user();
 
-        if ($user !== null) {
-            $permitted_resource_types = (new Permission())->permittedResourceTypesForUser($user->id);
+        if ($user === null) {
+            return Response::authenticationRequired();
         }
 
+        DeleteAccount::dispatch($user->id);
+
+        return response()
+            ->json(
+                [
+                    'message' => trans('responses.delete-requested')
+                ],
+                201
+            );
+    }
+
+    public function requestResourceDelete(Request $request, $permitted_resource_type_id, $resource_id): Http\JsonResponse
+    {
+        $user = auth()->guard('api')->user();
+
+        if ($user === null) {
+            return Response::authenticationRequired();
+        }
+
+        $permitted_resource_types = (new Permission())->permittedResourceTypesForUser($user->id);
         if (in_array($permitted_resource_type_id, $permitted_resource_types, true) === false) {
             return Response::notFound(trans('entities.resource-type'));
         }
@@ -547,31 +573,10 @@ class Authentication extends \Illuminate\Routing\Controller
             return Response::notFound(trans('entities.resource'));
         }
 
-        $validator = Validator::make(
-            $request->only(['force']),
-            [
-                'force' => [
-                    'required',
-                    'boolean'
-                ]
-            ]
-        );
-
-        if ($validator->fails()) {
-            return response()->json(
-                [
-                    'message' => trans('responses.validation'),
-                    'fields' => $validator->errors()
-                ],
-                422
-            );
-        }
-
         DeleteResource::dispatch(
             $user->id,
             $permitted_resource_type_id,
-            $resource_id,
-            $request->boolean('force')
+            $resource_id
         );
 
         return response()
@@ -585,41 +590,20 @@ class Authentication extends \Illuminate\Routing\Controller
 
     public function requestResourceTypeDelete(Request $request, $permitted_resource_type_id): Http\JsonResponse
     {
-        $permitted_resource_types = [];
         $user = auth()->guard('api')->user();
 
-        if ($user !== null) {
-            $permitted_resource_types = (new Permission())->permittedResourceTypesForUser($user->id);
+        if ($user === null) {
+            return Response::authenticationRequired();
         }
 
+        $permitted_resource_types = (new Permission())->permittedResourceTypesForUser($user->id);
         if (in_array($permitted_resource_type_id, $permitted_resource_types, true) === false) {
             return Response::notFound(trans('entities.resource-type'));
         }
 
-        $validator = Validator::make(
-            $request->only(['force']),
-            [
-                'force' => [
-                    'required',
-                    'boolean'
-                ]
-            ]
-        );
-
-        if ($validator->fails()) {
-            return response()->json(
-                [
-                    'message' => trans('responses.validation'),
-                    'fields' => $validator->errors()
-                ],
-                422
-            );
-        }
-
         DeleteResourceType::dispatch(
             $user->id,
-            $permitted_resource_type_id,
-            $request->boolean('force')
+            $permitted_resource_type_id
         );
 
         return response()
@@ -635,7 +619,11 @@ class Authentication extends \Illuminate\Routing\Controller
     {
         $user = auth()->guard('api')->user();
 
-        $response = new PermittedResourceType(['view'=> $user !== null && $user->id !== null, 'manage'=> $user !== null && $user->id !== null]);
+        if ($user === null) {
+            return Response::authenticationRequired();
+        }
+
+        $response = new PermittedResourceType(['view'=> true, 'manage'=> true]);
 
         return $response->create()->response();
     }
@@ -644,7 +632,11 @@ class Authentication extends \Illuminate\Routing\Controller
     {
         $user = auth()->guard('api')->user();
 
-        $response = new PermittedResourceTypeResource(['view'=> $user !== null && $user->id !== null, 'manage'=> $user !== null && $user->id !== null]);
+        if ($user === null) {
+            return Response::authenticationRequired();
+        }
+
+        $response = new PermittedResourceTypeResource(['view'=> true, 'manage'=> true]);
 
         return $response->create()->response();
     }
@@ -653,7 +645,11 @@ class Authentication extends \Illuminate\Routing\Controller
     {
         $user = auth()->guard('api')->user();
 
-        $response = new PermittedResourceTypeResources(['view'=> $user !== null && $user->id !== null, 'manage'=> $user !== null && $user->id !== null]);
+        if ($user === null) {
+            return Response::authenticationRequired();
+        }
+
+        $response = new PermittedResourceTypeResources(['view'=> true, 'manage'=> true]);
 
         return $response->create()->response();
     }
@@ -662,7 +658,11 @@ class Authentication extends \Illuminate\Routing\Controller
     {
         $user = auth()->guard('api')->user();
 
-        $response = new PermittedResourceTypes(['view'=> $user !== null && $user->id !== null, 'manage'=> $user !== null && $user->id !== null]);
+        if ($user === null) {
+            return Response::authenticationRequired();
+        }
+
+        $response = new PermittedResourceTypes(['view'=> true, 'manage'=> true]);
 
         return $response->create()->response();
     }
@@ -674,15 +674,28 @@ class Authentication extends \Illuminate\Routing\Controller
         return $response->create()->response();
     }
 
-    public function optionsRequestResourceDelete($permitted_resource_type_id, $resource_id): Http\JsonResponse
+    public function optionsRequestDelete(): Http\JsonResponse
     {
-        $permitted_resource_types = [];
         $user = auth()->guard('api')->user();
 
-        if ($user !== null) {
-            $permitted_resource_types = (new Permission())->permittedResourceTypesForUser($user->id);
+        if ($user === null) {
+            return Response::authenticationRequired();
         }
 
+        $response = new RequestDelete(['view'=> true, 'manage'=> true]);
+
+        return $response->create()->response();
+    }
+
+    public function optionsRequestResourceDelete($permitted_resource_type_id, $resource_id): Http\JsonResponse
+    {
+        $user = auth()->guard('api')->user();
+
+        if ($user === null) {
+            return Response::authenticationRequired();
+        }
+
+        $permitted_resource_types = (new Permission())->permittedResourceTypesForUser($user->id);
         if (in_array($permitted_resource_type_id, $permitted_resource_types, true) === false) {
             return Response::notFound(trans('entities.resource-type'));
         }
@@ -696,31 +709,38 @@ class Authentication extends \Illuminate\Routing\Controller
             return Response::notFound(trans('entities.resource'));
         }
 
-        $response = new RequestResourceDelete(['view'=> $user !== null && $user->id !== null, 'manage'=> $user !== null && $user->id !== null]);
+        $response = new RequestResourceDelete(['view'=> true, 'manage'=> true]);
 
         return $response->create()->response();
     }
 
     public function optionsRequestResourceTypeDelete($permitted_resource_type_id): Http\JsonResponse
     {
-        $permitted_resource_types = [];
         $user = auth()->guard('api')->user();
 
-        if ($user !== null) {
-            $permitted_resource_types = (new Permission())->permittedResourceTypesForUser($user->id);
+        if ($user === null) {
+            return Response::authenticationRequired();
         }
+
+        $permitted_resource_types = (new Permission())->permittedResourceTypesForUser($user->id);
 
         if (in_array($permitted_resource_type_id, $permitted_resource_types, true) === false) {
             return Response::notFound(trans('entities.resource-type'));
         }
 
-        $response = new RequestResourceTypeDelete(['view'=> $user !== null && $user->id !== null, 'manage'=> $user !== null && $user->id !== null]);
+        $response = new RequestResourceTypeDelete(['view'=> true, 'manage'=> true]);
 
         return $response->create()->response();
     }
 
     public function updatePassword(Request $request): Http\JsonResponse
     {
+        $user = auth()->guard('api')->user();
+
+        if ($user === null) {
+            return Response::authenticationRequired();
+        }
+
         $validator = Validator::make(
             $request->only(['password', 'password_confirmation']),
             [
@@ -745,23 +765,21 @@ class Authentication extends \Illuminate\Routing\Controller
             );
         }
 
-        $user = auth()->guard('api')->user();
+        $user->password = Hash::make($request->input('password'));
+        $user->save();
 
-        if ($user !== null) {
-            $user->password = Hash::make($request->input('password'));
-            $user->save();
-
-            return response()->json([], 204);
-        }
-
-        return Response::authenticationFailed();
+        return response()->json([], 204);
     }
 
     public function optionsUpdateProfile(): Http\JsonResponse
     {
         $user = auth()->guard('api')->user();
 
-        $response = new UpdateProfile(['view'=> $user !== null && $user->id !== null, 'manage'=> $user !== null && $user->id !== null]);
+        if ($user === null) {
+            return Response::authenticationRequired();
+        }
+
+        $response = new UpdateProfile(['view'=> true, 'manage'=> true]);
 
         return $response->create()->response();
     }
@@ -770,7 +788,11 @@ class Authentication extends \Illuminate\Routing\Controller
     {
         $user = auth()->guard('api')->user();
 
-        $response = new UpdatePassword(['view'=> $user !== null && $user->id !== null, 'manage'=> $user !== null && $user->id !== null]);
+        if ($user === null) {
+            return Response::authenticationRequired();
+        }
+
+        $response = new UpdatePassword(['view'=> true, 'manage'=> true]);
 
         return $response->create()->response();
     }
@@ -802,148 +824,152 @@ class Authentication extends \Illuminate\Routing\Controller
 
         $user = auth()->guard('api')->user();
 
-        if ($user !== null) {
-            $fields = [];
-            if ($request->input('name') !== null) {
-                $fields['name'] = $request->input('name');
-            }
-            if ($request->input('email') !== null) {
-                $fields['email'] = $request->input('email');
-            }
-
-            if (count($fields) === 0) {
-                return Response::nothingToPatch();
-            }
-
-            try {
-                foreach ($fields as $field => $value) {
-                    $user->$field = $value;
-                }
-
-                $user->save();
-            } catch (Exception $e) {
-                return response()->json(['message' => trans('auth.unable-to-update-profile')], 401);
-            }
-
-            return response()->json([], 204);
+        if ($user === null) {
+            return Response::authenticationRequired();
         }
 
-        return Response::authenticationFailed();
+        $fields = [];
+        if ($request->input('name') !== null) {
+            $fields['name'] = $request->input('name');
+        }
+        if ($request->input('email') !== null) {
+            $fields['email'] = $request->input('email');
+        }
+
+        if (count($fields) === 0) {
+            return Response::nothingToPatch();
+        }
+
+        try {
+            foreach ($fields as $field => $value) {
+                $user->$field = $value;
+            }
+
+            $user->save();
+        } catch (Exception $e) {
+            return response()->json(['message' => trans('auth.unable-to-update-profile')], 401);
+        }
+
+        return response()->json([], 204);
     }
 
     public function user(): Http\JsonResponse
     {
         $user = auth()->guard('api')->user();
 
-        if ($user !== null) {
-            $tokens = [];
-            foreach ($user->tokens as $token) {
-                $tokens[] = [
-                    'id' => $token->id,
-                    'name' => $token->name,
-                    'token' => $token->token,
-                    'created' => $token->created_at,
-                    'last_used_at' => $token->last_used_at
-                ];
-            }
-
-            $user = [
-                'id' => $this->hash->user()->encode($user->id),
-                'name' => $user->name,
-                'email' => $user->email,
-                'tokens' => [
-                    'uri' => route('auth.user.token.list', [], false),
-                    'count' => count($tokens),
-                    'collection' => $tokens
-                ]
-            ];
-
-            return response()->json($user);
+        if ($user === null) {
+            return Response::authenticationRequired();
         }
 
-        return Response::authenticationFailed();
+        $tokens = [];
+        foreach ($user->tokens as $token) {
+            $tokens[] = [
+                'id' => $token->id,
+                'name' => $token->name,
+                'token' => $token->token,
+                'created' => $token->created_at,
+                'last_used_at' => $token->last_used_at
+            ];
+        }
+
+        $user = [
+            'id' => $this->hash->user()->encode($user->id),
+            'name' => $user->name,
+            'email' => $user->email,
+            'tokens' => [
+                'uri' => route('auth.user.token.list', [], false),
+                'count' => count($tokens),
+                'collection' => $tokens
+            ]
+        ];
+
+        return response()->json($user);
     }
 
     public function tokens(): Http\JsonResponse
     {
         $user = auth()->guard('api')->user();
 
-        if ($user !== null) {
-            $tokens = [];
-            foreach ($user->tokens as $token) {
-                $tokens[] = [
-                    'id' => $token->id,
-                    'name' => $token->name,
-                    'token' => $token->token,
-                    'created' => $token->created_at,
-                    'last_used_at' => $token->last_used_at
-                ];
-            }
-
-            return response()->json($tokens);
+        if ($user === null) {
+            return Response::authenticationRequired();
         }
 
-        return Response::authenticationFailed();
+        $tokens = [];
+        foreach ($user->tokens as $token) {
+            $tokens[] = [
+                'id' => $token->id,
+                'name' => $token->name,
+                'token' => $token->token,
+                'created' => $token->created_at,
+                'last_used_at' => $token->last_used_at
+            ];
+        }
+
+        return response()->json($tokens);
     }
 
     public function token($token_id): Http\JsonResponse
     {
         $user = auth()->guard('api')->user();
 
-        if ($user !== null) {
-            $tokens = [];
-            foreach ($user->tokens as $token) {
-                $tokens[$token->id] = [
-                    'id' => $token->id,
-                    'name' => $token->name,
-                    'token' => $token->token,
-                    'created' => $token->created_at,
-                    'last_used_at' => $token->last_used_at
-                ];
-            }
-
-            if (array_key_exists($token_id, $tokens)) {
-                return response()->json($tokens[$token_id]);
-            }
-
-            return Response::notFound();
+        if ($user === null) {
+            return Response::authenticationRequired();
         }
 
-        return Response::authenticationFailed();
+        $tokens = [];
+        foreach ($user->tokens as $token) {
+            $tokens[$token->id] = [
+                'id' => $token->id,
+                'name' => $token->name,
+                'token' => $token->token,
+                'created' => $token->created_at,
+                'last_used_at' => $token->last_used_at
+            ];
+        }
+
+        if (array_key_exists($token_id, $tokens)) {
+            return response()->json($tokens[$token_id]);
+        }
+
+        return Response::notFound();
     }
 
     public function deleteToken($token_id): Http\JsonResponse
     {
         $user = auth()->guard('api')->user();
 
-        if ($user !== null) {
-            $tokens = [];
-            foreach ($user->tokens as $token) {
-                $tokens[$token->id] = [
-                    'id' => $token->id,
-                    'name' => $token->name,
-                    'token' => $token->token,
-                    'created' => $token->created_at,
-                    'last_used_at' => $token->last_used_at
-                ];
-            }
-
-            if (array_key_exists($token_id, $tokens)) {
-                $user->tokens()->where('id', $token_id)->delete();
-                return Response::successNoContent();
-            }
-
-            return Response::notFound();
+        if ($user === null) {
+            return Response::authenticationRequired();
         }
 
-        return Response::authenticationFailed();
+        $tokens = [];
+        foreach ($user->tokens as $token) {
+            $tokens[$token->id] = [
+                'id' => $token->id,
+                'name' => $token->name,
+                'token' => $token->token,
+                'created' => $token->created_at,
+                'last_used_at' => $token->last_used_at
+            ];
+        }
+
+        if (array_key_exists($token_id, $tokens)) {
+            $user->tokens()->where('id', $token_id)->delete();
+            return Response::successNoContent();
+        }
+
+        return Response::notFound();
     }
 
     public function optionsUser(): Http\JsonResponse
     {
         $user = auth()->guard('api')->user();
 
-        $response = new \App\HttpOptionResponse\Auth\User(['view'=> $user !== null && $user->id !== null]);
+        if ($user === null) {
+            return Response::authenticationRequired();
+        }
+
+        $response = new \App\HttpOptionResponse\Auth\User(['view'=> true, 'manage'=> true]);
 
         return $response->create()->response();
     }
@@ -952,7 +978,11 @@ class Authentication extends \Illuminate\Routing\Controller
     {
         $user = auth()->guard('api')->user();
 
-        $response = new \App\HttpOptionResponse\Auth\Tokens(['view'=> $user !== null && $user->id !== null]);
+        if ($user === null) {
+            return Response::authenticationRequired();
+        }
+
+        $response = new \App\HttpOptionResponse\Auth\Tokens(['view'=> true, 'manage'=> true]);
 
         return $response->create()->response();
     }
@@ -961,10 +991,11 @@ class Authentication extends \Illuminate\Routing\Controller
     {
         $user = auth()->guard('api')->user();
 
-        $response = new \App\HttpOptionResponse\Auth\Token([
-            'view'=> $user !== null && $user->id !== null,
-            'manage'=> $user !== null && $user->id !== null,
-        ]);
+        if ($user === null) {
+            return Response::authenticationRequired();
+        }
+
+        $response = new \App\HttpOptionResponse\Auth\Token(['view'=> true, 'manage'=> true]);
 
         return $response->create()->response();
     }

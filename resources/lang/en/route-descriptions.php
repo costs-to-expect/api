@@ -19,8 +19,9 @@ return [
     'auth_permitted_resource_types_GET' => 'Return the permitted resource types for the signed-in user',
     'auth_resource_GET' => 'Return the selected resource for the signed-in user',
     'auth_resources_GET' => 'Return the resources for the selected permitted resource type for the signed-in user',
-    'auth_request_resource_delete_POST' => 'Request the deletion of a resource and all dependant data, this is and unrecoverable action',
-    'auth_request_resource_type_delete_POST' => 'Request the deletion of a resource type and all dependant data, this is and unrecoverable action',
+    'auth_request_delete_POST' => 'Request the deletion of your account and all dependant data, this is an unrecoverable action. Note: Your access to any shared data will be removed, the remaining permitted users will retain ownership.',
+    'auth_request_resource_delete_POST' => 'Request the deletion of a resource and all dependant data, this is an unrecoverable action. Note: Your access to any shared data will be removed, the remaining permitted users will retain ownership.',
+    'auth_request_resource_type_delete_POST' => 'Request the deletion of a resource type and all dependant data, this is an unrecoverable action. Note: Your access to any shared data will be removed, the remaining permitted users will retain ownership.',
 
     'api_GET_index' => 'Return all the API routes',
     'api_GET_changelog' => 'Return the complete API changelog',

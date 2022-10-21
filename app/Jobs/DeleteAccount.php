@@ -9,6 +9,7 @@ use App\Models\Resource;
 use App\Notifications\FailedJob;
 use App\Notifications\ResourceDeleted;
 use App\Notifications\ResourceTypeDeleted;
+use App\User;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldBeUnique;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -20,7 +21,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Notification;
 use Throwable;
 
-class DeleteResourceType implements ShouldQueue
+class DeleteAccount implements ShouldQueue
 {
     use Dispatchable;
     use InteractsWithQueue;
@@ -28,60 +29,67 @@ class DeleteResourceType implements ShouldQueue
     use SerializesModels;
 
     protected int $user_id;
-    protected int $resource_type_id;
 
     protected array $deletes;
 
     public int $tries = 1;
 
-    public function __construct(
-        int $user_id,
-        int $resource_type_id
-    )
+    public function __construct(int $user_id)
     {
         $this->user_id = $user_id;
-        $this->resource_type_id = $resource_type_id;
 
         $this->deletes = [];
     }
 
     public function handle()
     {
-        $permitted_users = (new Permission())->permittedUsersForResourceType($this->resource_type_id, $this->user_id);
+        $resource_types = (new Permission())->permittedResourceTypesForUser($this->user_id);
 
-        if (count($permitted_users) > 0) {
-            $permitted_user = (new PermittedUser())->instance($this->resource_type_id, $this->user_id);
-            $permitted_user?->delete();
-        }
+        foreach ($resource_types as $resource_type_id) {
+            $permitted_users = (new Permission())->permittedUsersForResourceType($resource_type_id, $this->user_id);
+            if (count($permitted_users) === 0) {
+                $resources = (new Resource())->paginatedCollection($resource_type_id);
 
-        if (count($permitted_users) === 0) {
-            $resources = (new Resource())->paginatedCollection($this->resource_type_id);
+                foreach ($resources as $resource) {
+                    $this->deleteResourceAndAllData($resource_type_id, $resource['resource_id']);
+                }
 
-            foreach ($resources as $resource) {
-                $this->deleteResourceAndAllData($this->resource_type_id, $resource['resource_id']);
-            }
+                $this->deletes = [];
 
-            $this->deletes = [];
+                try {
+                    DB::transaction(function () use ($resource_type_id) {
+                        $this->deletes['subcategories'] = $this->deleteSubcategories($resource_type_id);
+                        $this->deletes['categories'] = $this->deleteCategories($resource_type_id);
+                        $this->deletes['resource-type-item-type'] = $this->deleteResourceTypeItemType($resource_type_id);
+                        $this->deletes['permitted-users'] = $this->deletePermittedUsers($resource_type_id);
+                        $this->deletes['resource-type'] = $this->deleteResourceType($resource_type_id);
+                    });
 
-            try {
-                DB::transaction(function () {
-                    $this->deletes['subcategories'] = $this->deleteSubcategories($this->resource_type_id);
-                    $this->deletes['categories'] = $this->deleteCategories($this->resource_type_id);
-                    $this->deletes['resource-type-item-type'] = $this->deleteResourceTypeItemType(
-                        $this->resource_type_id
+
+                } catch (Throwable $e) {
+                    throw new \Exception($e->getMessage());
+                }
+
+                Notification::route('mail', Config::get('api.app.config.admin_email'))
+                    ->notify(new ResourceTypeDeleted($this->deletes)
                     );
-                    $this->deletes['permitted-users'] = $this->deletePermittedUsers($this->resource_type_id);
-                    $this->deletes['resource-type'] = $this->deleteResourceType($this->resource_type_id);
-                });
-            } catch (Throwable $e) {
-                throw new \Exception($e->getMessage());
             }
 
-            Notification::route('mail', Config::get('api.app.config.admin_email'))
-                ->notify(
-                    new ResourceTypeDeleted($this->deletes)
-                );
+            if (count($permitted_users) > 0) {
+                // Remove references to the user in the `permitted_user` table
+                DB::update('UPDATE `permitted_user` SET `added_by` = ? WHERE `added_by` = ?', [$permitted_users[0], $this->user_id]);
+
+                // Remove references to the user in the `item` table
+                DB::update('UPDATE `item` SET `created_by` = ? WHERE `created_by` = ?', [$permitted_users[0], $this->user_id]);
+                DB::update('UPDATE `item` SET `updated_by` = ? WHERE `updated_by` = ?', [$permitted_users[0], $this->user_id]);
+
+                $permitted_user = (new PermittedUser())->instance($resource_type_id, $this->user_id);
+                $permitted_user?->delete();
+            }
         }
+
+        $user = (new User())->instance($this->user_id);
+        $user?->delete();
     }
 
     public function failed(Throwable $exception)
