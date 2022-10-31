@@ -2,7 +2,11 @@
 
 The complete changelog for the Costs to Expect REST API, our changelog follows the format defined at https://keepachangelog.com/en/1.0.0/
 
-## [v3.06.01] - 2022-10-31
+## [v3.06.2] - 2022-11-01
+### Fixed
+- Item data and item log do not support the `budget` item type yet.
+
+## [v3.06.1] - 2022-10-31
 ### Changed
 - Adjusted cache invalidation, switched to synchronous cache clear
 
