@@ -28,7 +28,7 @@ class ItemLogManage extends Controller
     ): JsonResponse
     {
         $item_type = Select::itemType((int) $resource_type_id);
-        if ($item_type === 'allocated-expense') {
+        if ($item_type === 'allocated-expense' || $item_type === 'budget') {
             return Response::notSupported();
         }
 
