@@ -34,7 +34,7 @@ class ItemDataView extends Controller
         $item_type = Select::itemType((int) $resource_type_id);
 
         return match ($item_type) {
-            'allocated-expense' => Response::notSupported(),
+            'allocated-expense', 'budget' => Response::notSupported(),
             'game' => $this->gameCollection((int) $resource_type_id, (int) $resource_id, (int) $item_id),
             default => throw new \OutOfRangeException('No item type definition for ' . $item_type, 500),
         };
@@ -54,7 +54,7 @@ class ItemDataView extends Controller
         $item_type = Select::itemType((int) $resource_type_id);
 
         return match ($item_type) {
-            'allocated-expense' => Response::notSupported(),
+            'allocated-expense', 'budget' => Response::notSupported(),
             'game' => $this->gameOptionsIndex((int) $resource_type_id, (int) $resource_id, (int) $item_id),
             default => throw new \OutOfRangeException('No item type definition for ' . $item_type, 500),
         };
@@ -75,7 +75,7 @@ class ItemDataView extends Controller
         $item_type = Select::itemType((int) $resource_type_id);
 
         return match ($item_type) {
-            'allocated-expense' => Response::notSupported(),
+            'allocated-expense', 'budget' => Response::notSupported(),
             'game' => $this->gameOptionsShow((int) $resource_type_id, (int) $resource_id, (int) $item_id, $key),
             default => throw new \OutOfRangeException('No item type definition for ' . $item_type, 500),
         };
@@ -94,7 +94,7 @@ class ItemDataView extends Controller
         $item_type = Select::itemType((int) $resource_type_id);
 
         return match ($item_type) {
-            'allocated-expense' => Response::notSupported(),
+            'allocated-expense', 'budget' => Response::notSupported(),
             'game' => $this->gameShow((int) $resource_type_id, (int) $resource_id, (int) $item_id, $key),
             default => throw new \OutOfRangeException('No item type definition for ' . $item_type, 500),
         };
