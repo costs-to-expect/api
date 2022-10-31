@@ -194,7 +194,7 @@ class ResourceTypeManage extends Controller
         try {
             $resource_type->save();
 
-            ClearCache::dispatch($cache_job_payload->payload());
+            ClearCache::dispatchSync($cache_job_payload->payload());
         } catch (Exception $e) {
             return \App\HttpResponse\Response::failedToSaveModelForUpdate($e);
         }

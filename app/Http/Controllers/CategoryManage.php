@@ -51,7 +51,7 @@ class CategoryManage extends Controller
             ]);
             $category->save();
 
-            ClearCache::dispatch($cache_job_payload->payload());
+            ClearCache::dispatchSync($cache_job_payload->payload());
         } catch (Exception $e) {
             return Response::failedToSaveModelForCreate($e);
         }
@@ -93,7 +93,7 @@ class CategoryManage extends Controller
         try {
             $category->delete();
 
-            ClearCache::dispatch($cache_job_payload->payload());
+            ClearCache::dispatchSync($cache_job_payload->payload());
 
             return Response::successNoContent();
         } catch (QueryException $e) {
@@ -165,7 +165,7 @@ class CategoryManage extends Controller
         try {
             $category->save();
 
-            ClearCache::dispatch($cache_job_payload->payload());
+            ClearCache::dispatchSync($cache_job_payload->payload());
         } catch (Exception $e) {
             return Response::failedToSaveModelForUpdate($e);
         }

@@ -53,7 +53,7 @@ class ItemPartialTransferManage extends Controller
             if ($partial_transfer !== null) {
                 $partial_transfer->delete();
 
-                ClearCache::dispatch($cache_job_payload->payload());
+                ClearCache::dispatchSync($cache_job_payload->payload());
 
                 return Response::successNoContent();
             }
@@ -124,7 +124,7 @@ class ItemPartialTransferManage extends Controller
             ]);
             $partial_transfer->save();
 
-            ClearCache::dispatch($cache_job_payload->payload());
+            ClearCache::dispatchSync($cache_job_payload->payload());
         } catch (QueryException $e) {
             return Response::foreignKeyConstraintError($e);
         } catch (Exception $e) {
