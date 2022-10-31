@@ -2,6 +2,10 @@
 
 The complete changelog for the Costs to Expect REST API, our changelog follows the format defined at https://keepachangelog.com/en/1.0.0/
 
+## [v3.06.01] - 2022-10-31
+### Changed
+- Adjusted cache invalidation, switched to synchronous cache clear
+
 ## [v3.06.0] - 2022-10-21
 ### Added
 - I have added multiple routes unto `/auth/` to list permitted resource types and the corresponding permitted resources, these are to enable delete requests.

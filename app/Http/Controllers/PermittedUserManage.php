@@ -67,13 +67,13 @@ class PermittedUserManage extends Controller
                         ->setRouteParameters([])
                         ->setUserId($user->id);
 
-                    ClearCache::dispatch($permitted_user_cache_job_payload->payload());
+                    ClearCache::dispatchSync($permitted_user_cache_job_payload->payload());
                 } else {
                     throw new \RuntimeException('Unable to assign user or create clear cache request');
                 }
             });
 
-            ClearCache::dispatch($cache_job_payload->payload());
+            ClearCache::dispatchSync($cache_job_payload->payload());
         } catch (Exception $e) {
             return Response::failedToSaveModelForCreate($e);
         }
@@ -105,7 +105,7 @@ class PermittedUserManage extends Controller
                 $permitted_user->delete();
             });
 
-            ClearCache::dispatch($cache_job_payload->payload());
+            ClearCache::dispatchSync($cache_job_payload->payload());
 
             return Response::successNoContent();
         } catch (QueryException $e) {

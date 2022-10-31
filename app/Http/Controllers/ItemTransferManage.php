@@ -89,7 +89,7 @@ class ItemTransferManage extends Controller
                 return $item_transfer->save();
             });
 
-            ClearCache::dispatch($cache_job_payload->payload());
+            ClearCache::dispatchSync($cache_job_payload->payload());
         } catch (QueryException $e) {
             return \App\HttpResponse\Response::foreignKeyConstraintError($e);
         } catch (Exception $e) {

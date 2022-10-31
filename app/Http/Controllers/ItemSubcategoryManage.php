@@ -117,7 +117,7 @@ class ItemSubcategoryManage extends Controller
             ]);
             $item_sub_category->save();
 
-            ClearCache::dispatch($cache_job_payload->payload());
+            ClearCache::dispatchSync($cache_job_payload->payload());
         } catch (Exception $e) {
             return \App\HttpResponse\Response::failedToSaveModelForCreate($e);
         }
@@ -182,7 +182,7 @@ class ItemSubcategoryManage extends Controller
         try {
             $item_sub_category->delete();
 
-            ClearCache::dispatch($cache_job_payload->payload());
+            ClearCache::dispatchSync($cache_job_payload->payload());
 
             return \App\HttpResponse\Response::successNoContent();
         } catch (QueryException $e) {
