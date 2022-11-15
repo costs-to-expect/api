@@ -86,6 +86,15 @@ class DeleteAccount implements ShouldQueue
                 $permitted_user = (new PermittedUser())->instance($resource_type_id, $this->user_id);
                 $permitted_user?->delete();
             }
+
+            $cache_clear_payload = (new \App\Cache\JobPayload())
+                ->setGroupKey(\App\Cache\KeyGroup::RESOURCE_TYPE_DELETE)
+                ->setRouteParameters([
+                    'resource_type_id' => $resource_type_id
+                ])
+                ->setUserId($this->user_id);
+
+            ClearCache::dispatchSync($cache_clear_payload->payload());
         }
 
         $user = (new User())->instance($this->user_id);

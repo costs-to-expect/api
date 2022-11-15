@@ -2,6 +2,14 @@
 
 The complete changelog for the Costs to Expect REST API, our changelog follows the format defined at https://keepachangelog.com/en/1.0.0/
 
+## [v3.07.0] - 2022-11-15
+### Added 
+- I have added four more currencies to the API, CAD, AUD, NZD & INR.
+### Changed
+- Minor content updates to the landing page.
+### Fixed
+- I have added cache clear requests to the "delete" jobs added in v3.06.0. Data was being deleted but the cache was remaining.
+
 ## [v3.06.2] - 2022-11-01
 ### Fixed
 - Item data and item log do not support the `budget` item type yet.
