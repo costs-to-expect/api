@@ -82,6 +82,15 @@ class DeleteResourceType implements ShouldQueue
                     new ResourceTypeDeleted($this->deletes)
                 );
         }
+
+        $cache_clear_payload = (new \App\Cache\JobPayload())
+            ->setGroupKey(\App\Cache\KeyGroup::RESOURCE_TYPE_DELETE)
+            ->setRouteParameters([
+                'resource_type_id' => $this->resource_type_id
+            ])
+            ->setUserId($this->user_id);
+
+        ClearCache::dispatchSync($cache_clear_payload->payload());
     }
 
     public function failed(Throwable $exception)
