@@ -147,20 +147,22 @@
             <div class="my-3 py-3">
                 <h2 class="display-5">Budget</h2>
                 <p class="lead">A free powerful budgeting tool powered by the Costs to Expect API.</p>
+                <p class="small mb-0">In beta now, official release January 2023.</p>
             </div>
             <div class="bg-light shadow-sm mx-auto"
                  style="width: 80%; height: 400px; border-radius: 21px 21px 0 0;">
-                <img src="{{ asset('images/budget.png') }}" width="275" height="" alt="A screen shot of our in development Budget app" />
+                <a href="https://budget.costs-to-expect.com"><img src="{{ asset('images/budget.png') }}" width="275" height="" alt="A screen shot the budget overview in Budget" /></a>
             </div>
         </div>
         <div class="bg-light me-md-3 pt-3 px-3 pt-md-5 px-md-5 text-center overflow-hidden">
             <div class="my-3 p-3">
-                <h2 class="display-5">Yahtzee Game Scorer</h2>
-                <p class="lead">A fun little project powered by the API, no more designated scorer, everyone gets a score sheet</p>
+                <h2 class="display-5">Budget Pro</h2>
+                <p class="lead">Budget Pro is Budget on steroids - it's everything you love about Budget and much more.</p>
+                <p class="small mb-0">In development, due in the first half of 2023.</p>
             </div>
             <div class="bg-dark shadow-sm mx-auto"
                  style="width: 80%; height: 400px; border-radius: 21px 21px 0 0;">
-                <img src="{{ asset('images/yahtzee.png') }}" width="275" height="" alt="A screen shot of the score sheet for Yahtzee" />
+                <a href="https://budget.costs-to-expect.com"><img src="{{ asset('images/budget.png') }}" width="275" height="" alt="A screen shot the budget overview in Budget" /></a>
             </div>
         </div>
     </div>
@@ -168,24 +170,22 @@
     <div class="d-md-flex flex-md-equal w-100 my-md-3 ps-md-3">
         <div class="text-bg-dark me-md-3 pt-3 px-3 pt-md-5 px-md-5 text-center overflow-hidden">
             <div class="my-3 py-3">
-                <h2 class="display-5">Expense *</h2>
-                <p class="lead">A free powerful expense tracking tool powered by the Costs to Expect API.</p>
-                <p class="small mb-0">* App is being redeveloped, this is a screen shot of the old version.</p>
+                <h2 class="display-5">Yahtzee Game Scorer</h2>
+                <p class="lead">A fun little project powered by the API, no more designated scorer, everyone gets a score sheet</p>
             </div>
             <div class="bg-light shadow-sm mx-auto"
                  style="width: 80%; height: 400px; border-radius: 21px 21px 0 0;">
-                <img src="{{ asset('images/expense.png') }}" width="275" height="" alt="A screen shot of the old Expense app" />
+                <a href="https://yahtzee.game-scorer.com"><img src="{{ asset('images/yahtzee.png') }}" width="275" height="" alt="A screen shot of the score sheet for Yahtzee" /></a>
             </div>
         </div>
         <div class="bg-light me-md-3 pt-3 px-3 pt-md-5 px-md-5 text-center overflow-hidden">
             <div class="my-3 p-3">
                 <h2 class="display-5">Yatzy Game Scorer</h2>
-                <p class="lead">A fun little project powered by the API, no more designated scorer, everyone gets a score sheet</p>
-                <p class="small mb-0">We built Yahtzee so figured why not build Yatzy as well..</p>
+                <p class="lead">We built Yahtzee so figured why not build Yatzy as well. We haven't yet decided which version of the game we enjoy more.</p>
             </div>
             <div class="bg-dark shadow-sm mx-auto"
                  style="width: 80%; height: 400px; border-radius: 21px 21px 0 0;">
-                <img src="{{ asset('images/yatzy.png') }}" width="275" height="" alt="A screen shot of the score sheet for Yatzy" />
+                <a href="https://yatzy.game-scorer.com"><img src="{{ asset('images/yatzy.png') }}" width="275" height="" alt="A screen shot of the score sheet for Yatzy" /></a>
             </div>
         </div>
     </div>
@@ -216,6 +216,7 @@
             <ul class="list-unstyled text-small">
                 <li><a class="link-secondary" href="https://api.costs-to-expect.com">API</a></li>
                 <li><a class="link-secondary" href="https://budget.costs-to-expect.com">Budget</a></li>
+                <li><a class="link-secondary" href="https://budget-pro.costs-to-expect.com">Budget Pro</a></li>
                 <li><a class="link-secondary" href="https://app.costs-to-expect.com">Expense</a></li>
                 <li><a class="link-secondary" href="https://status.costs-to-expect.com">Service Status</a></li>
                 <li><a class="link-secondary" href="https://github.com/costs-to-expect">GitHub</a></li>
