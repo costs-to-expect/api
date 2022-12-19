@@ -611,7 +611,15 @@ class ItemManage extends Controller
 
         $validator = ValidatorFacade::make(
             [
-                ...$request->all(),
+                ...$request->only([
+                        'name',
+                        'description',
+                        'effective_date',
+                        'publish_after',
+                        'currency_id',
+                        'total',
+                        'percentage',
+                    ]),
                 ...['currency_id' => $currency_id]
             ],
             LaravelConfig::get($config_base_path . '.validation-post.fields', []),
@@ -664,7 +672,15 @@ class ItemManage extends Controller
 
         $validator = ValidatorFacade::make(
             [
-                ...$request->all(),
+                ...$request->only([
+                        'name',
+                        'description',
+                        'effective_date',
+                        'publish_after',
+                        'currency_id',
+                        'total',
+                        'percentage',
+                   ]),
                 ...$merge_array
             ],
             LaravelConfig::get($config_base_path . '.validation-patch.fields', []),
@@ -705,7 +721,18 @@ class ItemManage extends Controller
         }
 
         $validator = ValidatorFacade::make(
-            $request->all(),
+            $request->only([
+                'name',
+                'account',
+                'target_account',
+                'description',
+                'amount',
+                'category',
+                'start_date',
+                'end_date',
+                'disabled',
+                'frequency',
+            ]),
             LaravelConfig::get($config_base_path . '.validation-patch.fields', []),
             $messages
         );
@@ -736,7 +763,19 @@ class ItemManage extends Controller
 
         $validator = ValidatorFacade::make(
             [
-                ...$request->all(),
+                ...$request->only([
+                        'name',
+                        'account',
+                        'target_account',
+                        'description',
+                        'amount',
+                        'currency_id',
+                        'category',
+                        'start_date',
+                        'end_date',
+                        'disabled',
+                        'frequency',
+                    ]),
                 ...['currency_id' => $currency_id]
             ],
             LaravelConfig::get($config_base_path . '.validation-post.fields', []),
@@ -762,7 +801,10 @@ class ItemManage extends Controller
         }
 
         $validator = ValidatorFacade::make(
-            $request->all(),
+            $request->only([
+                'name',
+                'description',
+            ]),
             LaravelConfig::get($config_base_path . '.validation-post.fields', []),
             $messages
         );
@@ -798,7 +840,13 @@ class ItemManage extends Controller
 
         $validator = ValidatorFacade::make(
             [
-                ...$request->all(),
+                ...$request->only([
+                    'game',
+                    'statistics',
+                    'winner_id',
+                    'score',
+                    'complete',
+                ]),
                 ...$merge_array
             ],
             LaravelConfig::get($config_base_path . '.validation-patch.fields', []),

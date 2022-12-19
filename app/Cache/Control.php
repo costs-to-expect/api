@@ -17,7 +17,12 @@ use Illuminate\Support\Facades\Config;
  */
 class Control
 {
-    private bool $cacheable;
+    /**
+     * @var bool Should we cache responses? Defaults to whatever the
+     * APP_CACHE env variable is set to, can be overridden on a request with
+     * the X-Skip-Cache header
+     */
+    private bool $cache_responses;
 
     private int $ttl = 31536000;
 
@@ -38,7 +43,7 @@ class Control
             $this->visibility = 'private';
         }
 
-        $this->cacheable = (bool) Config::get('api.app.cache.enable');
+        $this->cache_responses = (bool) Config::get('api.app.cache.enable');
 
         $this->laravel_cache_prefix = Config::get('cache.prefix');
     }
@@ -52,7 +57,7 @@ class Control
             return false;
         }
 
-        return $this->cacheable;
+        return $this->cache_responses;
     }
 
     public function clearMatchingPublicCacheKeys(array $key_wildcards): void

@@ -2,6 +2,15 @@
 
 The complete changelog for the Costs to Expect REST API, our changelog follows the format defined at https://keepachangelog.com/en/1.0.0/
 
+## [v3.07.1] - 2022-12-19
+### Fixed
+- Content correction for landing page.
+- Minor test fixes.
+- Query incorrect for fetching permitted user.
+- Minor cache tweaks.
+- Switch from using request->all in validation.
+- Corrected config files.
+
 ## [v3.07.0] - 2022-11-15
 ### Added 
 - I have added four more currencies to the API, CAD, AUD, NZD & INR.

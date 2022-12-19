@@ -102,7 +102,12 @@ class Resource extends BaseValidator
 
         return ValidatorFacade::make(
             [
-                ...request()->all(),
+                ...request()->only([
+                    'name',
+                    'description',
+                    'data',
+                    'item_subtype_id',
+                ]),
                 ...['item_subtype_id' => $item_subtype_id]
             ],
             $this->createRules((int) $options['resource_type_id'], (int) $options['item_type_id']),
@@ -113,7 +118,11 @@ class Resource extends BaseValidator
     public function update(array $options = []): \Illuminate\Contracts\Validation\Validator
     {
         return ValidatorFacade::make(
-            request()->all(),
+            request()->only([
+                'name',
+                'description',
+                'data'
+            ]),
             $this->updateRules($options['resource_type_id'], $options['resource_id']),
             $this->translateMessages('api.resource.validation-patch.messages')
         );

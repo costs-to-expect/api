@@ -1,40 +1,18 @@
 {
-    "autoload": {
-        "classmap": [
-            "database/seeds",
-            "database/factories"
-        ],
-        "psr-4": {
-            "App\\": "app/"
-        }
-    },
-    "autoload-dev": {
-        "psr-4": {
-            "Tests\\": "Tests/"
-        }
-    },
-    "config": {
-        "optimize-autoloader": true,
-        "preferred-install": "dist",
-        "sort-packages": true
-    },
-    "description": "The API for Costs to Expect",
-    "extra": {
-        "laravel": {
-            "dont-discover": []
-        }
-    },
+    "name": "costs-to-expect/api",
+    "type": "project",
+    "description": "The API for Costs to Expect service",
     "keywords": [
         "API",
         "REST API",
         "Laravel",
+        "Laravel API",
         "Child cost",
-        "Expense API"
+        "Expense API",
+        "Budgeting API",
+        "Game scoring API"
     ],
     "license": "MIT",
-    "minimum-stability": "dev",
-    "name": "costs-to-expect/api",
-    "prefer-stable": true,
     "require": {
         "php": "^8.1",
         "ext-json": "*",
@@ -44,7 +22,6 @@
         "laravel/framework": "^9.0",
         "laravel/helpers": "^1.2",
         "laravel/sanctum": "^2.8",
-        "laravel/tinker": "^2.0",
         "symfony/http-client": "^6.0",
         "symfony/mailgun-mailer": "^6.0",
         "symfony/postmark-mailer": "^6.0"
@@ -58,6 +35,20 @@
         "phpunit/phpunit": "^9.0",
         "roave/security-advisories": "dev-latest"
     },
+    "autoload": {
+        "psr-4": {
+            "App\\": "app/"
+        },
+        "classmap": [
+            "database/seeds",
+            "database/factories"
+        ]
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Tests\\": "Tests/"
+        }
+    },
     "scripts": {
         "post-root-package-install": [
             "@php -r \"file_exists('.env') || copy('.env.example', '.env');\""
@@ -70,5 +61,16 @@
             "@php artisan package:discover"
         ]
     },
-    "type": "project"
+    "config": {
+        "optimize-autoloader": true,
+        "preferred-install": "dist",
+        "sort-packages": true
+    },
+    "extra": {
+        "laravel": {
+            "dont-discover": []
+        }
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true
 }

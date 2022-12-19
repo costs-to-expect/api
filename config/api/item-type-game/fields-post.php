@@ -5,8 +5,8 @@ declare(strict_types=1);
 return [
     'name' => [
         'field' => 'name',
-        'title' => 'item-type-game/fields.title-name',
-        'description' => 'item-type-game/fields.description-name',
+        'title' => 'item-type-game/fields-post.title-name',
+        'description' => 'item-type-game/fields-post.description-name',
         'type' => 'string',
         'validation' => [
             'max-length' => 255
@@ -15,8 +15,8 @@ return [
     ],
     'description' => [
         'field' => 'description',
-        'title' => 'item-type-game/fields.title-description',
-        'description' => 'item-type-game/fields.description-description',
+        'title' => 'item-type-game/fields-post.title-description',
+        'description' => 'item-type-game/fields-post.description-description',
         'type' => 'string',
         'required' => false
     ]

@@ -86,7 +86,7 @@ class Subcategory extends BaseValidator
         $this->requiredIndexes(['category_id'], $options);
 
         return ValidatorFacade::make(
-            request()->all(),
+            request()->only(['name', 'description']),
             $this->createRules((int) $options['category_id']),
             $this->translateMessages('api.subcategory.validation-post.messages')
         );
@@ -95,7 +95,7 @@ class Subcategory extends BaseValidator
     public function update(array $options = []): \Illuminate\Contracts\Validation\Validator
     {
         return ValidatorFacade::make(
-            request()->all(),
+            request()->only(['name', 'description']),
             $this->updateRules((int) $options['category_id'], (int) $options['subcategory_id']),
             $this->translateMessages('api.subcategory.validation-patch.messages')
         );

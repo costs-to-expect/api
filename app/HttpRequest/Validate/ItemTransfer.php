@@ -37,7 +37,7 @@ class ItemTransfer extends BaseValidator
 
         return ValidatorFacade::make(
             [
-                ...request()->all(),
+                ...request()->only(['resource_id']),
                 ...[
                     'resource_id' => $resource_id
                 ]

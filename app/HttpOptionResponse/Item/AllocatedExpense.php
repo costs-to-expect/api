@@ -26,7 +26,7 @@ class AllocatedExpense extends Response
             ->option();
 
         $patch = new \App\HttpVerb\Patch();
-        $this->verbs['PATCH'] = $patch->setFields(LaravelConfig::get($base_path . '.fields-post', []))
+        $this->verbs['PATCH'] = $patch->setFields(LaravelConfig::get($base_path . '.fields-patch', []))
             ->setDescription('route-descriptions.item_allocated_expense_PATCH')
             ->setAuthenticationStatus($this->permissions['manage'])
             ->setAuthenticationRequirement(true)
