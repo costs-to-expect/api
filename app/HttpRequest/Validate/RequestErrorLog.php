@@ -28,7 +28,14 @@ class RequestErrorLog extends BaseValidator
     public function create(array $options = []): \Illuminate\Contracts\Validation\Validator
     {
         return ValidatorFacade::make(
-            request()->all(),
+            request()->only([
+                'method',
+                'expected_status_code',
+                'returned_status_code',
+                'request_uri',
+                'source',
+                'debug'
+            ]),
             Config::get('api.request-error-log.validation-post.fields'),
             $this->translateMessages('api.request-error-log.validation-post.messages')
         );

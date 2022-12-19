@@ -45,7 +45,7 @@ class ItemPartialTransfer extends BaseValidator
         // We need to merge the decoded resource_id with the POSTed data
         return ValidatorFacade::make(
             [
-                ...request()->all(),
+                ...request()->only(['resource_id', 'percentage']),
                 ...[
                     'resource_id' => $resource_id,
                 ]

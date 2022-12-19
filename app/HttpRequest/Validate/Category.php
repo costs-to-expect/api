@@ -57,7 +57,7 @@ class Category extends BaseValidator
         $this->requiredIndexes(['resource_type_id','item_type'], $options);
 
         return ValidatorFacade::make(
-            request()->all(),
+            request()->only(['name', 'description']),
             $this->createRules((int) $options['resource_type_id']),
             $this->translateMessages(
                 ($options['item_type'] === 'game') ?
@@ -70,7 +70,7 @@ class Category extends BaseValidator
     public function update(array $options = []): ?\Illuminate\Contracts\Validation\Validator
     {
         return ValidatorFacade::make(
-            request()->all(),
+            request()->only(['name', 'description']),
             $this->updateRules($options['category_id'], $options['resource_type_id']),
             $this->translateMessages('api.category.validation-patch.messages')
         );
