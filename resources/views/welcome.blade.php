@@ -146,7 +146,7 @@
         <div class="text-bg-dark me-md-3 pt-3 px-3 pt-md-5 px-md-5 text-center overflow-hidden">
             <div class="my-3 py-3">
                 <h2 class="display-5">Budget</h2>
-                <p class="lead">A free powerful budgeting tool powered by the Costs to Expect API.</p>
+                <p class="lead">A free powerful easy to use budgeting tool powered by the Costs to Expect API. A budgeting tool so easy to use, it’s child play!</p>
                 <p class="small mb-0">In beta now, official release January 2023.</p>
             </div>
             <div class="bg-light shadow-sm mx-auto"

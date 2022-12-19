@@ -347,7 +347,7 @@ abstract class TestCase extends BaseTestCase
 
         $result = DB::select(DB::raw("SHOW TABLES LIKE 'users';"));
 
-        if (!count($result)) {
+        if (count($result) === 0) {
             $this->artisan('migrate:fresh');
 
             $user = new User();

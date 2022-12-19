@@ -35,7 +35,7 @@ class PermittedUser extends Model
     public function instance(int $resource_type_id, int $permitted_user_id): ?PermittedUser
     {
         return $this->where('resource_type_id', '=', $resource_type_id)->
-        where('user_id', '=', $permitted_user_id)->
+        where('id', '=', $permitted_user_id)->
         first();
     }
 
