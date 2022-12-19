@@ -150,8 +150,8 @@
                 <p class="small mb-0">In beta now, official release January 2023.</p>
             </div>
             <div class="bg-light shadow-sm mx-auto"
-                 style="width: 80%; height: 400px; border-radius: 21px 21px 0 0;">
-                <a href="https://budget.costs-to-expect.com"><img src="{{ asset('images/budget.png') }}" width="275" height="" alt="A screen shot the budget overview in Budget" /></a>
+                 style="width: 80%; border-radius: 21px 21px 0 0;">
+                <a href="https://budget.costs-to-expect.com"><img src="{{ asset('images/budget.png') }}" width="350" alt="A screen shot the budget overview in Budget" class="img-fluid" /></a>
             </div>
         </div>
         <div class="bg-light me-md-3 pt-3 px-3 pt-md-5 px-md-5 text-center overflow-hidden">
@@ -161,8 +161,8 @@
                 <p class="small mb-0">In development, due in the first half of 2023.</p>
             </div>
             <div class="bg-dark shadow-sm mx-auto"
-                 style="width: 80%; height: 400px; border-radius: 21px 21px 0 0;">
-                <a href="https://budget.costs-to-expect.com"><img src="{{ asset('images/budget.png') }}" width="275" height="" alt="A screen shot the budget overview in Budget" /></a>
+                 style="width: 80%; border-radius: 21px 21px 0 0;">
+                <a href="https://budget-pro.costs-to-expect.com"><img src="{{ asset('images/budget.png') }}" width="350" height="" alt="A screen shot the budget overview in Budget" class="img-fluid" /></a>
             </div>
         </div>
     </div>
@@ -174,8 +174,8 @@
                 <p class="lead">A fun little project powered by the API, no more designated scorer, everyone gets a score sheet</p>
             </div>
             <div class="bg-light shadow-sm mx-auto"
-                 style="width: 80%; height: 400px; border-radius: 21px 21px 0 0;">
-                <a href="https://yahtzee.game-scorer.com"><img src="{{ asset('images/yahtzee.png') }}" width="275" height="" alt="A screen shot of the score sheet for Yahtzee" /></a>
+                 style="width: 80%; border-radius: 21px 21px 0 0;">
+                <a href="https://yahtzee.game-scorer.com"><img src="{{ asset('images/yahtzee.png') }}" width="350" alt="A screen shot of the score sheet for Yahtzee" class="img-fluid" /></a>
             </div>
         </div>
         <div class="bg-light me-md-3 pt-3 px-3 pt-md-5 px-md-5 text-center overflow-hidden">
@@ -184,8 +184,8 @@
                 <p class="lead">We built Yahtzee so figured why not build Yatzy as well. We haven't yet decided which version of the game we enjoy more.</p>
             </div>
             <div class="bg-dark shadow-sm mx-auto"
-                 style="width: 80%; height: 400px; border-radius: 21px 21px 0 0;">
-                <a href="https://yatzy.game-scorer.com"><img src="{{ asset('images/yatzy.png') }}" width="275" height="" alt="A screen shot of the score sheet for Yatzy" /></a>
+                 style="width: 80%; border-radius: 21px 21px 0 0;">
+                <a href="https://yatzy.game-scorer.com"><img src="{{ asset('images/yatzy.png') }}" width="350" alt="A screen shot of the score sheet for Yatzy" class="img-fluid" /></a>
             </div>
         </div>
     </div>
