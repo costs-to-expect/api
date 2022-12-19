@@ -34,17 +34,16 @@ class Cache extends Model
         string $prefix,
         string $key
     ): array {
-        $summary_key = rtrim(str_replace('v3/', 'v3/summary/', $prefix . $key), '/');
+        $key = $prefix . rtrim($key, '/');
+        $summary_key = rtrim(str_replace('v3/', 'v3/summary/', $key), '/');
 
         $result = $this
-            ->where('expiration', '>', DB::raw('UNIX_TIMESTAMP()'))
-            ->where(static function ($query) use ($prefix, $key, $summary_key) {
-                $query->where('key', 'LIKE', $prefix . rtrim($key, '/') . '%')
+            ->where(static function ($query) use ($key, $summary_key) {
+                $query->where('key', 'LIKE', $key . '%')
                     ->orWhere('key', 'LIKE', $summary_key . '%');
             });
 
-        return $result
-            ->select('key')
+        return $result->select('key')
             ->get()
             ->toArray();
     }
