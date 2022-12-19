@@ -3,9 +3,9 @@
 declare(strict_types=1);
 
 return [
-    'version'=> 'v3.07.0',
+    'version'=> 'v3.07.1',
     'prefix' => 'v3',
-    'release_date' => '2022-11-15',
+    'release_date' => '2022-12-19',
     'changelog' => [
         'api' => '/v3/changelog',
         'markdown' => 'https://github.com/costs-to-expect/api/blob/master/CHANGELOG.md'
