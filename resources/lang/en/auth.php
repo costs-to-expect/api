@@ -18,7 +18,7 @@ return [
     'signed-out' => 'Account signed out',
 
     'email-or-token-invalid' => 'Sorry, the email and or token you supplied are invalid',
-    'unable-to-find-account' => 'Unable to fetch your account to create password, please try again later',
+    'unable-to-find-account' => 'Unable to find your account, please try again later',
     'unable-to-create-password' => 'Unable to create password, please try again later',
     'unable-to-create-account' => 'Unable to create the account, please try again later',
     'unable-process-forgot-password' => 'Unable to process your forgot password request, please try again later',
