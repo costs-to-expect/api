@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\HttpOptionResponse\Status;
 use App\HttpResponse\Header;
 use App\HttpOptionResponse\Changelog;
 use App\HttpOptionResponse\Root;
+use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Str;
@@ -17,11 +19,6 @@ use SplFileObject;
  */
 class IndexView extends Controller
 {
-    /**
-     * Return all routes
-     *
-     * @return \Illuminate\Http\JsonResponse
-     */
     public function index()
     {
         $routes_to_display = [];
@@ -64,9 +61,6 @@ class IndexView extends Controller
         );
     }
 
-    /**
-     * Generate the OPTIONS request
-     */
     public function optionsIndex()
     {
         $response = new Changelog(['view' => ($this->user_id !== null)]);
@@ -74,11 +68,6 @@ class IndexView extends Controller
         return $response->create()->response();
     }
 
-    /**
-     * Generate the change log request
-     *
-     * @return \Illuminate\Http\JsonResponse
-     */
     public function changeLog()
     {
         $changes = [];
@@ -123,12 +112,28 @@ class IndexView extends Controller
         );
     }
 
-    /**
-     * Generate the OPTIONS request for the change log
-     */
     public function optionsChangeLog()
     {
         $response = new Root(['view' => ($this->user_id !== null)]);
+
+        return $response->create()->response();
+    }
+
+    public function status()
+    {
+        $cache_config = Config::get('api.app.cache');
+
+        return response()->json(
+            [
+                'environment' =>  App::environment(),
+                'cache' => $cache_config['enable']
+            ]
+        );
+    }
+
+    public function optionsStatus()
+    {
+        $response = new Status(['view' => ($this->user_id !== null)]);
 
         return $response->create()->response();
     }

@@ -53,6 +53,16 @@ Route::group(
         );
 
         Route::get(
+            'status',
+            [\App\Http\Controllers\IndexView::class, 'status']
+        );
+
+        Route::options(
+            'status',
+            [IndexView::class, 'optionsStatus']
+        );
+
+        Route::get(
             'currencies',
             [CurrencyView::class, 'index']
         );

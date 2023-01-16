@@ -252,6 +252,8 @@ Public resources types provide READ access to everyone, WRITE access is limited 
 | GET/HEAD     | v3/request/error-log                                                                                                                           |
 | OPTIONS      | v3/request/error-log                                                                                                                           |
 | POST         | v3/request/error-log                                                                                                                           |
+| GET/HEAD     | v3/status                                                                                                                                      |
+| OPTIONS      | v3/status                                                                                                                                      |
 
 ## Summary routes
 

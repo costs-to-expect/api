@@ -25,6 +25,7 @@ return [
 
     'api_GET_index' => 'Return all the API routes',
     'api_GET_changelog' => 'Return the complete API changelog',
+    'api_GET_status' => 'Return the API status',
 
     'category_GET_index' => 'Return all the public categories, optionally, with authorisation include any private categories',
     'category_GET_show' => 'Return the selected category',
