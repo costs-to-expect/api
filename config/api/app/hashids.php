@@ -20,4 +20,7 @@ return [
     'user' => env('APP_HASH_SALT_USER'),
     'currency' => env('APP_HASH_SALT_CURRENCY'),
     'queue' => env('APP_HASH_SALT_QUEUE'),
+
+    'forgot-password' => env('APP_HASH_SALT_FORGOT_PASSWORD'),
+    'forgot-password-hash-min-length' => 20,
 ];

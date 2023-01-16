@@ -29,6 +29,7 @@ use App\Transformer\PermittedResourceType as PermittedResourceTypeTransformer;
 use App\Transformer\Resource as ResourceTransformer;
 use App\User;
 use Exception;
+use Hashids\Hashids;
 use Illuminate\Http;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -254,6 +255,9 @@ class Authentication extends \Illuminate\Routing\Controller
                 return response()->json(['error' => trans('auth.unable-process-forgot-password')], 500);
             }
 
+            $config = Config::get('api.app.hashids');
+            $hasher = new Hashids($config['forgot-password'], $config['forgot-password-hash-min-length']);
+
             return response()->json(
                 [
                     'message' => trans('auth.success-forgot-password-request'),
@@ -261,7 +265,7 @@ class Authentication extends \Illuminate\Routing\Controller
                         'create-new-password' => [
                             'uri' => Config::get('api.app.version.prefix') . '/auth/create-new-password?token=' . $create_token . '&email=' . $email,
                             'parameters' => [
-                                'token' => $create_token,
+                                'encoded_token' => $hasher->encode($create_token),
                                 'email' => $email
                             ]
                         ]
