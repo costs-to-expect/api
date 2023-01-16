@@ -256,7 +256,7 @@ class Authentication extends \Illuminate\Routing\Controller
             }
 
             $config = Config::get('api.app.hashids');
-            $hasher = new Hashids($config['forgot-password'], $config['forgot-password-hash-min-length']);
+            $encryptor = new \Illuminate\Encryption\Encrypter($config['forgot-password']);
 
             return response()->json(
                 [
@@ -265,7 +265,7 @@ class Authentication extends \Illuminate\Routing\Controller
                         'create-new-password' => [
                             'uri' => Config::get('api.app.version.prefix') . '/auth/create-new-password?token=' . $create_token . '&email=' . $email,
                             'parameters' => [
-                                'encoded_token' => $hasher->encode($create_token),
+                                'encrypted_token' => $encryptor->encryptString($create_token),
                                 'email' => $email
                             ]
                         ]

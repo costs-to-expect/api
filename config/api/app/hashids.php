@@ -22,5 +22,4 @@ return [
     'queue' => env('APP_HASH_SALT_QUEUE'),
 
     'forgot-password' => env('APP_HASH_SALT_FORGOT_PASSWORD'),
-    'forgot-password-hash-min-length' => 20,
 ];
