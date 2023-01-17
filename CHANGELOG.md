@@ -2,6 +2,14 @@
 
 The complete changelog for the Costs to Expect REST API, our changelog follows the format defined at https://keepachangelog.com/en/1.0.0/
 
+## [v3.08.0] - 2023-01-16
+### Added
+- Added a `/status` endpoint to return the environment and cache status for the API. 
+### Fixed
+- The forgot-password endpoint will return an encrypted token, not the actual token.
+- Fixed the config file for the forgot password options response.
+- Corrected the error message when forgot password can't find the account.
+
 ## [v3.07.1] - 2022-12-19
 ### Fixed
 - Content correction for landing page.

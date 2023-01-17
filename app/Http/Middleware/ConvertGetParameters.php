@@ -3,7 +3,6 @@
 namespace App\Http\Middleware;
 
 use App\HttpRequest\Hash;
-use App\HttpResponse\Response;
 use Closure;
 use Illuminate\Http\Request;
 
