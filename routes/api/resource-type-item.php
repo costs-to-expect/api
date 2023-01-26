@@ -23,5 +23,16 @@ Route::group(
             [App\Http\Controllers\View\ResourceTypeItemController::class, 'optionsIndex']
         );
 
+
+        Route::get(
+            'summary/resource-types/{resource_type_id}/items',
+            [App\Http\Controllers\Summary\View\ResourceTypeItemController::class, 'index']
+        );
+
+        Route::options(
+            'summary/resource-types/{resource_type_id}/items',
+            [App\Http\Controllers\Summary\View\ResourceTypeItemController::class, 'optionsIndex']
+        );
+
     }
 );

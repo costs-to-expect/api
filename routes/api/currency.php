@@ -15,22 +15,22 @@ Route::group(
 
         Route::get(
             'currencies',
-            [\App\Http\Controllers\View\CurrencyController::class, 'index']
+            [App\Http\Controllers\View\CurrencyController::class, 'index']
         );
 
         Route::options(
             'currencies',
-            [\App\Http\Controllers\View\CurrencyController::class, 'optionsIndex']
+            [App\Http\Controllers\View\CurrencyController::class, 'optionsIndex']
         );
 
         Route::get(
             'currencies/{currency_id}',
-            [\App\Http\Controllers\View\CurrencyController::class, 'show']
+            [App\Http\Controllers\View\CurrencyController::class, 'show']
         )->name('currency.show');
 
         Route::options(
             'currencies/{currency_id}',
-            [\App\Http\Controllers\View\CurrencyController::class, 'optionsShow']
+            [App\Http\Controllers\View\CurrencyController::class, 'optionsShow']
         );
 
     }

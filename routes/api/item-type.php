@@ -15,22 +15,22 @@ Route::group(
 
         Route::get(
             'item-types',
-            [\App\Http\Controllers\View\ItemTypeController::class, 'index']
+            [App\Http\Controllers\View\ItemTypeController::class, 'index']
         )->name('item-type.list');
 
         Route::options(
             'item-types',
-            [\App\Http\Controllers\View\ItemTypeController::class, 'optionsIndex']
+            [App\Http\Controllers\View\ItemTypeController::class, 'optionsIndex']
         );
 
         Route::get(
             'item-types/{item_type_id}',
-            [\App\Http\Controllers\View\ItemTypeController::class, 'show']
+            [App\Http\Controllers\View\ItemTypeController::class, 'show']
         )->name('item-type.show');
 
         Route::options(
             'item-types/{item_type_id}',
-            [\App\Http\Controllers\View\ItemTypeController::class, 'optionsShow']
+            [App\Http\Controllers\View\ItemTypeController::class, 'optionsShow']
         );
 
     }

@@ -15,22 +15,33 @@ Route::group(
 
         Route::get(
             'resource-types/{resource_type_id}/categories/{category_id}/subcategories',
-            [\App\Http\Controllers\View\SubcategoryController::class, 'index']
+            [App\Http\Controllers\View\SubcategoryController::class, 'index']
         )->name('subcategory.list');
 
         Route::options(
             'resource-types/{resource_type_id}/categories/{category_id}/subcategories',
-            [\App\Http\Controllers\View\SubcategoryController::class, 'optionsIndex']
+            [App\Http\Controllers\View\SubcategoryController::class, 'optionsIndex']
         );
 
         Route::get(
             'resource-types/{resource_type_id}/categories/{category_id}/subcategories/{subcategory_id}',
-            [\App\Http\Controllers\View\SubcategoryController::class, 'show']
+            [App\Http\Controllers\View\SubcategoryController::class, 'show']
         )->name('subcategory.show');
 
         Route::options(
             'resource-types/{resource_type_id}/categories/{category_id}/subcategories/{subcategory_id}',
-            [\App\Http\Controllers\View\SubcategoryController::class, 'optionsShow']
+            [App\Http\Controllers\View\SubcategoryController::class, 'optionsShow']
+        );
+
+
+        Route::get(
+            'summary/resource-types/{resource_type_id}/categories/{category_id}/subcategories',
+            [App\Http\Controllers\Summary\View\SubcategoryController::class, 'index']
+        );
+
+        Route::options(
+            'summary/resource-types/{resource_type_id}/categories/{category_id}/subcategories',
+            [App\Http\Controllers\Summary\View\SubcategoryController::class, 'optionsIndex']
         );
     }
 );

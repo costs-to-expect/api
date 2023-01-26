@@ -15,32 +15,32 @@ Route::group(
 
         Route::get(
             '',
-            [\App\Http\Controllers\View\IndexController::class, 'index']
+            [App\Http\Controllers\View\IndexController::class, 'index']
         );
 
         Route::options(
             '',
-            [\App\Http\Controllers\View\IndexController::class, 'optionsIndex']
+            [App\Http\Controllers\View\IndexController::class, 'optionsIndex']
         );
 
         Route::get(
             'changelog',
-            [\App\Http\Controllers\View\IndexController::class, 'changeLog']
+            [App\Http\Controllers\View\IndexController::class, 'changeLog']
         );
 
         Route::options(
             'changelog',
-            [\App\Http\Controllers\View\IndexController::class, 'optionsChangeLog']
+            [App\Http\Controllers\View\IndexController::class, 'optionsChangeLog']
         );
 
         Route::get(
             'status',
-            [\App\Http\Controllers\View\IndexController::class, 'status']
+            [App\Http\Controllers\View\IndexController::class, 'status']
         );
 
         Route::options(
             'status',
-            [\App\Http\Controllers\View\IndexController::class, 'optionsStatus']
+            [App\Http\Controllers\View\IndexController::class, 'optionsStatus']
         );
 
     }

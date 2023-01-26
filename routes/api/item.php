@@ -33,6 +33,17 @@ Route::group(
             [App\Http\Controllers\View\ItemController::class, 'optionsShow']
         )->name('item.show.options');
 
+
+        Route::get(
+            'summary/resource-types/{resource_type_id}/resources/{resource_id}/items',
+            [App\Http\Controllers\Summary\View\ItemController::class, 'index']
+        );
+
+        Route::options(
+            'summary/resource-types/{resource_type_id}/resources/{resource_id}/items',
+            [App\Http\Controllers\Summary\View\ItemController::class, 'optionsIndex']
+        );
+
     }
 );
 

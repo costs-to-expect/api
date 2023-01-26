@@ -3,8 +3,6 @@
 use Illuminate\Support\Facades\Route;
 
 require('api/auth.php');
-require('api/public-summary-routes.php');
-
 require('api/category.php');
 require('api/currency.php');
 require('api/index.php');

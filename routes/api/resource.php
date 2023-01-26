@@ -15,23 +15,34 @@ Route::group(
 
         Route::get(
             'resource-types/{resource_type_id}/resources',
-            [\App\Http\Controllers\View\ResourceController::class, 'index']
+            [App\Http\Controllers\View\ResourceController::class, 'index']
         )->name('resource.list');
 
         Route::options(
             'resource-types/{resource_type_id}/resources',
-            [\App\Http\Controllers\View\ResourceController::class, 'optionsIndex']
+            [App\Http\Controllers\View\ResourceController::class, 'optionsIndex']
         )->name('resource.list.options');
 
         Route::get(
             'resource-types/{resource_type_id}/resources/{resource_id}',
-            [\App\Http\Controllers\View\ResourceController::class, 'show']
+            [App\Http\Controllers\View\ResourceController::class, 'show']
         )->name('resource.show');
 
         Route::options(
             'resource-types/{resource_type_id}/resources/{resource_id}',
-            [\App\Http\Controllers\View\ResourceController::class, 'optionsShow']
+            [App\Http\Controllers\View\ResourceController::class, 'optionsShow']
         )->name('resource.show.options');
+
+
+        Route::get(
+            'summary/resource-types/{resource_type_id}/resources',
+            [App\Http\Controllers\Summary\View\ResourceController::class, 'index']
+        );
+
+        Route::options(
+            'summary/resource-types/{resource_type_id}/resources',
+            [App\Http\Controllers\Summary\View\ResourceController::class, 'optionsIndex']
+        );
 
     }
 );
