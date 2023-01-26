@@ -64,13 +64,7 @@ class AuthenticationController extends \Illuminate\Routing\Controller
         );
 
         if ($validator->fails()) {
-            return response()->json(
-                [
-                    'message' => trans('responses.validation'),
-                    'fields' => $validator->errors()
-                ],
-                422
-            );
+            return \App\HttpResponse\Response::validationErrors($validator);
         }
 
         try {
@@ -149,13 +143,7 @@ class AuthenticationController extends \Illuminate\Routing\Controller
         );
 
         if ($validator->fails()) {
-            return response()->json(
-                [
-                    'message' => trans('responses.validation'),
-                    'fields' => $validator->errors()
-                ],
-                422
-            );
+            return \App\HttpResponse\Response::validationErrors($validator);
         }
 
         try {
@@ -190,13 +178,7 @@ class AuthenticationController extends \Illuminate\Routing\Controller
         );
 
         if ($validator->fails()) {
-            return response()->json(
-                [
-                    'message' => trans('responses.validation'),
-                    'fields' => $validator->errors()
-                ],
-                422
-            );
+            return \App\HttpResponse\Response::validationErrors($validator);
         }
 
         $email = $request->input('email');
@@ -271,13 +253,7 @@ class AuthenticationController extends \Illuminate\Routing\Controller
         );
 
         if ($validator->fails()) {
-            return response()->json(
-                [
-                    'message' => trans('responses.validation'),
-                    'fields' => $validator->errors()
-                ],
-                422
-            );
+            return \App\HttpResponse\Response::validationErrors($validator);
         }
 
         if (Auth::attempt(
@@ -336,13 +312,7 @@ class AuthenticationController extends \Illuminate\Routing\Controller
         );
 
         if ($validator->fails()) {
-            return response()->json(
-                [
-                    'message' => trans('responses.validation'),
-                    'fields' => $validator->errors()
-                ],
-                422
-            );
+            return \App\HttpResponse\Response::validationErrors($validator);
         }
 
         try {
@@ -496,13 +466,7 @@ class AuthenticationController extends \Illuminate\Routing\Controller
         );
 
         if ($validator->fails()) {
-            return response()->json(
-                [
-                    'message' => trans('responses.validation'),
-                    'fields' => $validator->errors()
-                ],
-                422
-            );
+            return \App\HttpResponse\Response::validationErrors($validator);
         }
 
         $user->password = Hash::make($request->input('password'));
@@ -527,13 +491,7 @@ class AuthenticationController extends \Illuminate\Routing\Controller
         );
 
         if ($validator->fails()) {
-            return response()->json(
-                [
-                    'message' => trans('responses.validation'),
-                    'fields' => $validator->errors()
-                ],
-                422
-            );
+            return \App\HttpResponse\Response::validationErrors($validator);
         }
 
         $user = auth()->guard('api')->user();
