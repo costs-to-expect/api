@@ -1,6 +1,5 @@
 <?php
 
-use App\Http\Controllers\Authentication;
 use App\Http\Controllers\Manage\ItemCategoryController;
 use App\Http\Controllers\Manage\ItemDataController;
 use App\Http\Controllers\Manage\ItemLogController;
@@ -25,11 +24,6 @@ Route::group(
         ]
     ],
     static function () {
-        Route::get(
-            'auth/user',
-            [Authentication::class, 'user']
-        );
-
         Route::post(
             'resource-types',
             [ResourceTypeController::class, 'create']

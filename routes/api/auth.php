@@ -1,6 +1,5 @@
 <?php
 
-use App\Http\Controllers\Authentication;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Route;
 
@@ -11,68 +10,68 @@ Route::group(
     function () {
         Route::get(
             'auth/check',
-            [Authentication::class, 'check']
+            [App\Http\Controllers\View\AuthenticationController::class, 'check']
         )->name('auth.check');
 
         Route::post(
             'auth/create-new-password',
-            [Authentication::class, 'createNewPassword']
+            [App\Http\Controllers\Manage\AuthenticationController::class, 'createNewPassword']
         )->name('auth.create-new-password');
 
         Route::options(
             'auth/create-new-password',
-            [Authentication::class, 'optionsCreateNewPassword']
+            [App\Http\Controllers\View\AuthenticationController::class, 'optionsCreateNewPassword']
         );
 
         Route::post(
             'auth/forgot-password',
-            [Authentication::class, 'forgotPassword']
+            [App\Http\Controllers\Manage\AuthenticationController::class, 'forgotPassword']
         )->name('auth.forgot-password');
 
         Route::options(
             'auth/forgot-password',
-            [Authentication::class, 'optionsForgotPassword']
+            [App\Http\Controllers\View\AuthenticationController::class, 'optionsForgotPassword']
         );
 
         Route::post(
             'auth/login',
-            [Authentication::class, 'login']
+            [App\Http\Controllers\Manage\AuthenticationController::class, 'login']
         )->name('auth.login');
 
         Route::options(
             'auth/login',
-            [Authentication::class, 'optionsLogin']
+            [App\Http\Controllers\View\AuthenticationController::class, 'optionsLogin']
         )->name('auth.login.options');
 
         Route::get(
             'auth/logout',
-            [Authentication::class, 'logout']
+            [App\Http\Controllers\Manage\AuthenticationController::class, 'logout']
         )->name('auth.logout');
 
         Route::options(
             'auth/check',
-            [Authentication::class, 'optionsCheck']
+            [App\Http\Controllers\View\AuthenticationController::class, 'optionsCheck']
         );
 
         if (Config::get('api.app.config.registrations') === true) {
             Route::post(
                 'auth/register',
-                [Authentication::class, 'register']
+                [App\Http\Controllers\Manage\AuthenticationController::class, 'register']
             )->name('auth.register');
 
             Route::options(
                 'auth/register',
-                [Authentication::class, 'optionsRegister']
+                [App\Http\Controllers\View\AuthenticationController::class, 'optionsRegister']
             )->name('auth.register.options');
 
             Route::post(
                 'auth/create-password',
-                [Authentication::class, 'createPassword']
+                [App\Http\Controllers\Manage\AuthenticationController::class, 'createPassword']
             )->name('auth.create-password');
 
             Route::options(
                 'auth/create-password',
-                [Authentication::class, 'optionsCreatePassword']
+                [App\Http\Controllers\View\AuthenticationController::class, 'optionsCreatePassword']
             )->name('auth.create-password.options');
         }
     }
@@ -89,127 +88,127 @@ Route::group(
     static function () {
         Route::options(
             'auth/update-password',
-            [Authentication::class, 'optionsUpdatePassword']
+            [App\Http\Controllers\View\AuthenticationController::class, 'optionsUpdatePassword']
         )->name('auth.update-password.options');
 
         Route::post(
             'auth/update-password',
-            [Authentication::class, 'updatePassword']
+            [App\Http\Controllers\Manage\AuthenticationController::class, 'updatePassword']
         )->name('auth.update-password');
 
         Route::options(
             'auth/update-profile',
-            [Authentication::class, 'optionsUpdateProfile']
+            [App\Http\Controllers\View\AuthenticationController::class, 'optionsUpdateProfile']
         )->name('auth.update-profile.options');
 
         Route::post(
             'auth/update-profile',
-            [Authentication::class, 'updateProfile']
+            [App\Http\Controllers\Manage\AuthenticationController::class, 'updateProfile']
         )->name('auth.update-profile');
 
         Route::options(
             'auth/user',
-            [Authentication::class, 'optionsUser']
+            [App\Http\Controllers\View\AuthenticationController::class, 'optionsUser']
         )->name('auth.user.options');
 
         Route::get(
             'auth/user',
-            [Authentication::class, 'user']
-        )->name('auth.user');
+            [App\Http\Controllers\View\AuthenticationController::class, 'user']
+        );
 
         Route::options(
             'auth/user/request-delete',
-            [Authentication::class, 'optionsRequestDelete']
+            [App\Http\Controllers\View\AuthenticationController::class, 'optionsRequestDelete']
         )->name('auth.user.request-delete.options');
 
         Route::post(
             'auth/user/request-delete',
-            [Authentication::class, 'requestDelete']
+            [App\Http\Controllers\Manage\AuthenticationController::class, 'requestDelete']
         )->name('auth.user.request-delete');
 
         Route::options(
             'auth/user/tokens',
-            [Authentication::class, 'optionsTokens']
+            [App\Http\Controllers\View\AuthenticationController::class, 'optionsTokens']
         )->name('auth.user.token.list.options');
 
         Route::get(
             'auth/user/tokens',
-            [Authentication::class, 'tokens']
+            [App\Http\Controllers\View\AuthenticationController::class, 'tokens']
         )->name('auth.user.token.list');
 
         Route::options(
             'auth/user/tokens/{token_id}',
-            [Authentication::class, 'optionsToken']
+            [App\Http\Controllers\View\AuthenticationController::class, 'optionsToken']
         )->name('auth.user.token.show.options');
 
         Route::get(
             'auth/user/tokens/{token_id}',
-            [Authentication::class, 'token']
+            [App\Http\Controllers\View\AuthenticationController::class, 'token']
         )->name('auth.user.token.show');
 
         Route::delete(
             'auth/user/tokens/{token_id}',
-            [Authentication::class, 'deleteToken']
+            [App\Http\Controllers\Manage\AuthenticationController::class, 'deleteToken']
         )->name('auth.user.token.delete');
 
         Route::get(
             'auth/user/permitted-resource-types',
-            [Authentication::class, 'permittedResourceTypes']
+            [App\Http\Controllers\View\AuthenticationController::class, 'permittedResourceTypes']
         )->name('auth.user.permitted-resource-types.list');
 
         Route::options(
             'auth/user/permitted-resource-types',
-            [Authentication::class, 'optionsPermittedResourceTypes']
+            [App\Http\Controllers\View\AuthenticationController::class, 'optionsPermittedResourceTypes']
         )->name('auth.user.permitted-resource-types.list.options');
 
         Route::get(
             'auth/user/permitted-resource-types/{permitted_resource_type_id}',
-            [Authentication::class, 'permittedResourceType']
+            [App\Http\Controllers\View\AuthenticationController::class, 'permittedResourceType']
         )->name('auth.user.permitted-resource-types.show');
 
         Route::options(
             'auth/user/permitted-resource-types/{permitted_resource_type_id}',
-            [Authentication::class, 'optionsPermittedResourceType']
+            [App\Http\Controllers\View\AuthenticationController::class, 'optionsPermittedResourceType']
         )->name('auth.user.permitted-resource-types.show.options');
 
         Route::options(
             'auth/user/permitted-resource-types/{permitted_resource_type_id}/request-delete',
-            [Authentication::class, 'optionsRequestResourceTypeDelete']
+            [App\Http\Controllers\View\AuthenticationController::class, 'optionsRequestResourceTypeDelete']
         )->name('auth.user.request-resource-type-delete.options');
 
         Route::post(
             'auth/user/permitted-resource-types/{permitted_resource_type_id}/request-delete',
-            [Authentication::class, 'requestResourceTypeDelete']
+            [App\Http\Controllers\Manage\AuthenticationController::class, 'requestResourceTypeDelete']
         )->name('auth.user.request-resource-type-delete');
 
         Route::get(
             'auth/user/permitted-resource-types/{permitted_resource_type_id}/resources',
-            [Authentication::class, 'permittedResourceTypesResources']
+            [App\Http\Controllers\View\AuthenticationController::class, 'permittedResourceTypesResources']
         )->name('auth.user.permitted-resource-types-resources.list');
 
         Route::options(
             'auth/user/permitted-resource-types/{permitted_resource_type_id}/resources',
-            [Authentication::class, 'optionsPermittedResourceTypeResources']
+            [App\Http\Controllers\View\AuthenticationController::class, 'optionsPermittedResourceTypeResources']
         )->name('auth.user.permitted-resource-types-resources.list.options');
 
         Route::get(
             'auth/user/permitted-resource-types/{permitted_resource_type_id}/resources/{resource_id}',
-            [Authentication::class, 'permittedResourceTypesResource']
+            [App\Http\Controllers\View\AuthenticationController::class, 'permittedResourceTypesResource']
         )->name('auth.user.permitted-resource-types-resources.show');
 
         Route::options(
             'auth/user/permitted-resource-types/{permitted_resource_type_id}/resources/{resource_id}',
-            [Authentication::class, 'optionsPermittedResourceTypeResource']
+            [App\Http\Controllers\View\AuthenticationController::class, 'optionsPermittedResourceTypeResource']
         )->name('auth.user.permitted-resource-types-resources.show.options');
 
         Route::options(
             'auth/user/permitted-resource-types/{permitted_resource_type_id}/resources/{resource_id}/request-delete',
-            [Authentication::class, 'optionsRequestResourceDelete']
+            [App\Http\Controllers\View\AuthenticationController::class, 'optionsRequestResourceDelete']
         )->name('auth.user.request-resource-delete.options');
 
         Route::post(
             'auth/user/permitted-resource-types/{permitted_resource_type_id}/resources/{resource_id}/request-delete',
-            [Authentication::class, 'requestResourceDelete']
+            [App\Http\Controllers\Manage\AuthenticationController::class, 'requestResourceDelete']
         )->name('auth.user.request-resource-delete');
     }
 );
