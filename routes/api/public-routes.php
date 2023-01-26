@@ -1,24 +1,22 @@
 <?php
 
-use App\Http\Controllers\CategoryView;
-use App\Http\Controllers\CurrencyView;
-use App\Http\Controllers\IndexView;
-use App\Http\Controllers\ItemCategoryView;
-use App\Http\Controllers\ItemDataView;
-use App\Http\Controllers\ItemLogView;
-use App\Http\Controllers\ItemSubcategoryView;
-use App\Http\Controllers\ItemSubtypeView;
-use App\Http\Controllers\ItemTransferView;
-use App\Http\Controllers\ItemTypeView;
-use App\Http\Controllers\QueueView;
-use App\Http\Controllers\RequestManage;
-use App\Http\Controllers\RequestView;
-use App\Http\Controllers\ResourceTypeItemView;
-use App\Http\Controllers\SubcategoryView;
-use App\Http\Controllers\ItemPartialTransferView;
-use App\Http\Controllers\ItemView;
-use App\Http\Controllers\PermittedUserView;
-use App\Http\Controllers\ResourceView;
+use App\Http\Controllers\View\CategoryController;
+use App\Http\Controllers\View\CurrencyController;
+use App\Http\Controllers\View\IndexController;
+use App\Http\Controllers\View\ItemCategoryController;
+use App\Http\Controllers\View\ItemDataController;
+use App\Http\Controllers\View\ItemLogController;
+use App\Http\Controllers\View\ItemSubcategoryController;
+use App\Http\Controllers\View\ItemSubtypeController;
+use App\Http\Controllers\View\ItemTransferController;
+use App\Http\Controllers\View\ItemTypeController;
+use App\Http\Controllers\View\QueueController;
+use App\Http\Controllers\View\ResourceTypeItemController;
+use App\Http\Controllers\View\SubcategoryController;
+use App\Http\Controllers\View\ItemPartialTransferController;
+use App\Http\Controllers\View\ItemController;
+use App\Http\Controllers\View\PermittedUserController;
+use App\Http\Controllers\View\ResourceController;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Route;
 
@@ -34,391 +32,391 @@ Route::group(
         // Root of the API and CHANGELOG
         Route::get(
             '',
-            [IndexView::class, 'index']
+            [IndexController::class, 'index']
         );
 
         Route::options(
             '',
-            [IndexView::class, 'optionsIndex']
+            [IndexController::class, 'optionsIndex']
         );
 
         Route::get(
             'changelog',
-            [\App\Http\Controllers\IndexView::class, 'changeLog']
+            [\App\Http\Controllers\View\IndexController::class, 'changeLog']
         );
 
         Route::options(
             'changelog',
-            [IndexView::class, 'optionsChangeLog']
+            [IndexController::class, 'optionsChangeLog']
         );
 
         Route::get(
             'status',
-            [\App\Http\Controllers\IndexView::class, 'status']
+            [\App\Http\Controllers\View\IndexController::class, 'status']
         );
 
         Route::options(
             'status',
-            [IndexView::class, 'optionsStatus']
+            [IndexController::class, 'optionsStatus']
         );
 
         Route::get(
             'currencies',
-            [CurrencyView::class, 'index']
+            [CurrencyController::class, 'index']
         );
 
         Route::options(
             'currencies',
-            [CurrencyView::class, 'optionsIndex']
+            [CurrencyController::class, 'optionsIndex']
         );
 
         Route::get(
             'currencies/{currency_id}',
-            [\App\Http\Controllers\CurrencyView::class, 'show']
+            [\App\Http\Controllers\View\CurrencyController::class, 'show']
         )->name('currency.show');
 
         Route::options(
             'currencies/{currency_id}',
-            [CurrencyView::class, 'optionsShow']
+            [CurrencyController::class, 'optionsShow']
         );
 
         Route::get(
             'item-types',
-            [\App\Http\Controllers\ItemTypeView::class, 'index']
+            [\App\Http\Controllers\View\ItemTypeController::class, 'index']
         )->name('item-type.list');
 
         Route::options(
             'item-types',
-            [ItemTypeView::class, 'optionsIndex']
+            [ItemTypeController::class, 'optionsIndex']
         );
 
         Route::get(
             'item-types/{item_type_id}',
-            [ItemTypeView::class, 'show']
+            [ItemTypeController::class, 'show']
         )->name('item-type.show');
 
         Route::options(
             'item-types/{item_type_id}',
-            [ItemTypeView::class, 'optionsShow']
+            [ItemTypeController::class, 'optionsShow']
         );
 
         Route::get(
             'item-types/{item_type_id}/item-subtypes',
-            [ItemSubtypeView::class, 'index']
+            [ItemSubtypeController::class, 'index']
         );
 
         Route::options(
             'item-types/{item_type_id}/item-subtypes',
-            [ItemSubtypeView::class, 'optionsIndex']
+            [ItemSubtypeController::class, 'optionsIndex']
         );
 
         Route::get(
             'item-types/{item_type_id}/item-subtypes/{item_subtype_id}',
-            [\App\Http\Controllers\ItemSubtypeView::class, 'show']
+            [\App\Http\Controllers\View\ItemSubtypeController::class, 'show']
         )->name('item-subtype.show');
 
         Route::options(
             'item-types/{item_type_id}/item-subtypes/{item_subtype_id}',
-            [ItemSubtypeView::class, 'optionsShow']
+            [ItemSubtypeController::class, 'optionsShow']
         );
 
         Route::get(
             'queue',
-            [QueueView::class, 'index']
+            [QueueController::class, 'index']
         );
 
         Route::options(
             'queue',
-            [QueueView::class, 'optionsIndex']
+            [QueueController::class, 'optionsIndex']
         );
 
         Route::get(
             'queue/{queue_id}',
-            [QueueView::class, 'show']
+            [QueueController::class, 'show']
         );
 
         Route::options(
             'queue/{queue_id}',
-            [QueueView::class, 'optionsShow']
+            [QueueController::class, 'optionsShow']
         );
 
         Route::get(
             'resource-types',
-            [\App\Http\Controllers\ResourceTypeView::class, 'index']
+            [\App\Http\Controllers\View\ResourceTypeController::class, 'index']
         )->name('resource-type.list');
 
         Route::options(
             'resource-types',
-            [\App\Http\Controllers\ResourceTypeView::class, 'optionsIndex']
+            [\App\Http\Controllers\View\ResourceTypeController::class, 'optionsIndex']
         )->name('resource-type.list.options');
 
         Route::get(
             'resource-types/{resource_type_id}',
-            [\App\Http\Controllers\ResourceTypeView::class, 'show']
+            [\App\Http\Controllers\View\ResourceTypeController::class, 'show']
         )->name('resource-type.show');
 
         Route::options(
             'resource-types/{resource_type_id}',
-            [\App\Http\Controllers\ResourceTypeView::class, 'optionsShow']
+            [\App\Http\Controllers\View\ResourceTypeController::class, 'optionsShow']
         )->name('resource-type.show.options');
 
         Route::get(
             'resource-types/{resource_type_id}/categories',
-            [CategoryView::class, 'index']
+            [CategoryController::class, 'index']
         );
 
         Route::options(
             'resource-types/{resource_type_id}/categories',
-            [CategoryView::class, 'optionsIndex']
+            [CategoryController::class, 'optionsIndex']
         );
 
         Route::get(
             'resource-types/{resource_type_id}/categories/{category_id}',
-            [\App\Http\Controllers\CategoryView::class, 'show']
+            [\App\Http\Controllers\View\CategoryController::class, 'show']
         )->name('category.show');
 
         Route::options(
             'resource-types/{resource_type_id}/categories/{category_id}',
-            [CategoryView::class, 'optionsShow']
+            [CategoryController::class, 'optionsShow']
         );
 
         Route::get(
             'resource-types/{resource_type_id}/categories/{category_id}/subcategories',
-            [\App\Http\Controllers\SubcategoryView::class, 'index']
+            [\App\Http\Controllers\View\SubcategoryController::class, 'index']
         )->name('subcategory.list');
 
         Route::options(
             'resource-types/{resource_type_id}/categories/{category_id}/subcategories',
-            [SubcategoryView::class, 'optionsIndex']
+            [SubcategoryController::class, 'optionsIndex']
         );
 
         Route::get(
             'resource-types/{resource_type_id}/categories/{category_id}/subcategories/{subcategory_id}',
-            [\App\Http\Controllers\SubcategoryView::class, 'show']
+            [\App\Http\Controllers\View\SubcategoryController::class, 'show']
         )->name('subcategory.show');
 
         Route::options(
             'resource-types/{resource_type_id}/categories/{category_id}/subcategories/{subcategory_id}',
-            [SubcategoryView::class, 'optionsShow']
+            [SubcategoryController::class, 'optionsShow']
         );
 
         Route::get(
             'resource-types/{resource_type_id}/items',
-            [ResourceTypeItemView::class, 'index']
+            [ResourceTypeItemController::class, 'index']
         );
 
         Route::options(
             'resource-types/{resource_type_id}/items',
-            [ResourceTypeItemView::class, 'optionsIndex']
+            [ResourceTypeItemController::class, 'optionsIndex']
         );
 
         Route::get(
             'resource-types/{resource_type_id}/partial-transfers',
-            [ItemPartialTransferView::class, 'index']
+            [ItemPartialTransferController::class, 'index']
         )->name('partial-transfers.list');
 
         Route::options(
             'resource-types/{resource_type_id}/partial-transfers',
-            [ItemPartialTransferView::class, 'optionsIndex']
+            [ItemPartialTransferController::class, 'optionsIndex']
         )->name('partial-transfers.list.options');
 
         Route::get(
             'resource-types/{resource_type_id}/partial-transfers/{item_partial_transfer_id}',
-            [ItemPartialTransferView::class, 'show']
+            [ItemPartialTransferController::class, 'show']
         )->name('partial-transfers.show');
 
         Route::options(
             'resource-types/{resource_type_id}/partial-transfers/{item_partial_transfer_id}',
-            [ItemPartialTransferView::class, 'optionsShow']
+            [ItemPartialTransferController::class, 'optionsShow']
         )->name('partial-transfers.show.options');
 
         Route::get(
             'resource-types/{resource_type_id}/permitted-users',
-            [PermittedUserView::class, 'index']
+            [PermittedUserController::class, 'index']
         )->name('permitted-user.list');
 
         Route::options(
             'resource-types/{resource_type_id}/permitted-users',
-            [PermittedUserView::class, 'optionsIndex']
+            [PermittedUserController::class, 'optionsIndex']
         )->name('permitted-user.list.options');
 
         Route::get(
             'resource-types/{resource_type_id}/permitted-users/{permitted_user_id}',
-            [PermittedUserView::class, 'show']
+            [PermittedUserController::class, 'show']
         )->name('permitted-user.show');
 
         Route::options(
             'resource-types/{resource_type_id}/permitted-users/{permitted_user_id}',
-            [PermittedUserView::class, 'optionsShow']
+            [PermittedUserController::class, 'optionsShow']
         )->name('permitted-user.show.options');
 
         Route::get(
             'resource-types/{resource_type_id}/resources',
-            [ResourceView::class, 'index']
+            [ResourceController::class, 'index']
         )->name('resource.list');
 
         Route::options(
             'resource-types/{resource_type_id}/resources',
-            [ResourceView::class, 'optionsIndex']
+            [ResourceController::class, 'optionsIndex']
         )->name('resource.list.options');
 
         Route::get(
             'resource-types/{resource_type_id}/resources/{resource_id}',
-            [ResourceView::class, 'show']
+            [ResourceController::class, 'show']
         )->name('resource.show');
 
         Route::options(
             'resource-types/{resource_type_id}/resources/{resource_id}',
-            [ResourceView::class, 'optionsShow']
+            [ResourceController::class, 'optionsShow']
         )->name('resource.show.options');
 
         Route::get(
             'resource-types/{resource_type_id}/resources/{resource_id}/items',
-            [ItemView::class, 'index']
+            [ItemController::class, 'index']
         )->name('item.list');
 
         Route::options(
             'resource-types/{resource_type_id}/resources/{resource_id}/items',
-            [ItemView::class, 'optionsIndex']
+            [ItemController::class, 'optionsIndex']
         )->name('item.list.options');
 
         Route::get(
             'resource-types/{resource_type_id}/resources/{resource_id}/items/{item_id}',
-            [ItemView::class, 'show']
+            [ItemController::class, 'show']
         )->name('item.show');
 
         Route::options(
             'resource-types/{resource_type_id}/resources/{resource_id}/items/{item_id}',
-            [ItemView::class, 'optionsShow']
+            [ItemController::class, 'optionsShow']
         )->name('item.show.options');
 
         Route::options(
             'resource-types/{resource_type_id}/resources/{resource_id}/items/{item_id}/partial-transfer',
-            [ItemPartialTransferView::class, 'optionsTransfer']
+            [ItemPartialTransferController::class, 'optionsTransfer']
         );
 
         Route::options(
             'resource-types/{resource_type_id}/resources/{resource_id}/items/{item_id}/transfer',
-            [ItemTransferView::class, 'optionsTransfer']
+            [ItemTransferController::class, 'optionsTransfer']
         );
 
         Route::get(
             'resource-types/{resource_type_id}/resources/{resource_id}/items/{item_id}/categories',
-            [ItemCategoryView::class, 'index']
+            [ItemCategoryController::class, 'index']
         )->name('item.categories.list');
 
         Route::options(
             'resource-types/{resource_type_id}/resources/{resource_id}/items/{item_id}/categories',
-            [ItemCategoryView::class, 'optionsIndex']
+            [ItemCategoryController::class, 'optionsIndex']
         );
 
         Route::get(
             'resource-types/{resource_type_id}/resources/{resource_id}/items/{item_id}/categories/{item_category_id}',
-            [ItemCategoryView::class, 'show']
+            [ItemCategoryController::class, 'show']
         );
 
         Route::options(
             'resource-types/{resource_type_id}/resources/{resource_id}/items/{item_id}/categories/{item_category_id}',
-            [ItemCategoryView::class, 'optionsShow']
+            [ItemCategoryController::class, 'optionsShow']
         );
 
         Route::get(
             'resource-types/{resource_type_id}/resources/{resource_id}/items/{item_id}/categories/{item_category_id}/subcategories',
-            [ItemSubcategoryView::class, 'index']
+            [ItemSubcategoryController::class, 'index']
         );
 
         Route::options(
             'resource-types/{resource_type_id}/resources/{resource_id}/items/{item_id}/categories/{item_category_id}/subcategories',
-            [ItemSubcategoryView::class, 'optionsIndex']
+            [ItemSubcategoryController::class, 'optionsIndex']
         );
 
         Route::get(
             'resource-types/{resource_type_id}/resources/{resource_id}/items/{item_id}/categories/{item_category_id}/subcategories/{item_subcategory_id}',
-            [ItemSubcategoryView::class, 'show']
+            [ItemSubcategoryController::class, 'show']
         );
 
         Route::options(
             'resource-types/{resource_type_id}/resources/{resource_id}/items/{item_id}/categories/{item_category_id}/subcategories/{item_subcategory_id}',
-            [ItemSubcategoryView::class, 'optionsShow']
+            [ItemSubcategoryController::class, 'optionsShow']
         );
 
 
         Route::get(
             'resource-types/{resource_type_id}/resources/{resource_id}/items/{item_id}/data',
-            [ItemDataView::class, 'index']
+            [ItemDataController::class, 'index']
         )->name('item-data.list');
 
         Route::options(
             'resource-types/{resource_type_id}/resources/{resource_id}/items/{item_id}/data',
-            [ItemDataView::class, 'optionsIndex']
+            [ItemDataController::class, 'optionsIndex']
         )->name('item-data.list.options');
 
         Route::get(
             'resource-types/{resource_type_id}/resources/{resource_id}/items/{item_id}/data/{key}',
-            [ItemDataView::class, 'show']
+            [ItemDataController::class, 'show']
         )->name('item-data.show');
 
         Route::options(
             'resource-types/{resource_type_id}/resources/{resource_id}/items/{item_id}/data/{key}',
-            [ItemDataView::class, 'optionsShow']
+            [ItemDataController::class, 'optionsShow']
         )->name('item-data.show.options');
 
 
         Route::get(
             'resource-types/{resource_type_id}/resources/{resource_id}/items/{item_id}/log',
-            [ItemLogView::class, 'index']
+            [ItemLogController::class, 'index']
         )->name('item-log.list');
 
         Route::options(
             'resource-types/{resource_type_id}/resources/{resource_id}/items/{item_id}/log',
-            [ItemLogView::class, 'optionsIndex']
+            [ItemLogController::class, 'optionsIndex']
         )->name('item-log.list.options');
 
         Route::get(
             'resource-types/{resource_type_id}/resources/{resource_id}/items/{item_id}/log/{item_log_id}',
-            [ItemLogView::class, 'show']
+            [ItemLogController::class, 'show']
         )->name('item-log.show');
 
         Route::options(
             'resource-types/{resource_type_id}/resources/{resource_id}/items/{item_id}/log/{item_log_id}',
-            [ItemLogView::class, 'optionsShow']
+            [ItemLogController::class, 'optionsShow']
         )->name('item-log.show.options');
 
 
         Route::options(
             'resource-types/{resource_type_id}/transfers',
-            [ItemTransferView::class, 'optionsIndex']
+            [ItemTransferController::class, 'optionsIndex']
         );
 
         Route::get(
             'resource-types/{resource_type_id}/transfers',
-            [ItemTransferView::class, 'index']
+            [ItemTransferController::class, 'index']
         );
 
         Route::options(
             'resource-types/{resource_type_id}/transfers/{item_transfer_id}',
-            [ItemTransferView::class, 'optionsShow']
+            [ItemTransferController::class, 'optionsShow']
         );
 
         Route::get(
             'resource-types/{resource_type_id}/transfers/{item_transfer_id}',
-            [ItemTransferView::class, 'show']
+            [ItemTransferController::class, 'show']
         );
 
         // Request access and error logs
         Route::options(
             'request/error-log',
-            [RequestView::class, 'optionsErrorLog']
+            [ App\Http\Controllers\View\RequestController::class, 'optionsErrorLog']
         );
 
         Route::get(
             'request/error-log',
-            [RequestView::class, 'errorLog']
+            [ App\Http\Controllers\View\RequestController::class, 'errorLog']
         );
 
         Route::post(
             'request/error-log',
-            [RequestManage::class, 'createErrorLog']
+            [ App\Http\Controllers\Manage\RequestController::class, 'createErrorLog']
         );
     }
 );

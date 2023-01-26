@@ -1,18 +1,18 @@
 <?php
 
 use App\Http\Controllers\Authentication;
-use App\Http\Controllers\ItemCategoryManage;
-use App\Http\Controllers\ItemDataManage;
-use App\Http\Controllers\ItemLogManage;
-use App\Http\Controllers\ItemManage;
-use App\Http\Controllers\ItemPartialTransferManage;
-use App\Http\Controllers\ItemSubcategoryManage;
-use App\Http\Controllers\ItemTransferManage;
-use App\Http\Controllers\CategoryManage;
-use App\Http\Controllers\PermittedUserManage;
-use App\Http\Controllers\ResourceManage;
-use App\Http\Controllers\ResourceTypeManage;
-use App\Http\Controllers\SubcategoryManage;
+use App\Http\Controllers\Manage\ItemCategoryController;
+use App\Http\Controllers\Manage\ItemDataController;
+use App\Http\Controllers\Manage\ItemLogController;
+use App\Http\Controllers\Manage\ItemController;
+use App\Http\Controllers\Manage\ItemPartialTransferController;
+use App\Http\Controllers\Manage\ItemSubcategoryController;
+use App\Http\Controllers\Manage\ItemTransferController;
+use App\Http\Controllers\Manage\CategoryController;
+use App\Http\Controllers\Manage\PermittedUserController;
+use App\Http\Controllers\Manage\ResourceController;
+use App\Http\Controllers\Manage\ResourceTypeController;
+use App\Http\Controllers\Manage\SubcategoryController;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Route;
 
@@ -32,142 +32,142 @@ Route::group(
 
         Route::post(
             'resource-types',
-            [ResourceTypeManage::class, 'create']
+            [ResourceTypeController::class, 'create']
         )->name('resource-type.create');
 
         Route::post(
             'resource-types/{resource_type_id}/categories',
-            [CategoryManage::class, 'create']
+            [CategoryController::class, 'create']
         )->name('category.create');
 
         Route::post(
             'resource-types/{resource_type_id}/categories/{category_id}/subcategories',
-            [SubcategoryManage::class, 'create']
+            [SubcategoryController::class, 'create']
         )->name('subcategory.create');
 
         Route::post(
             'resource-types/{resource_type_id}/permitted-users',
-            [PermittedUserManage::class, 'create']
+            [PermittedUserController::class, 'create']
         )->name('permitted-user.create');
 
         Route::post(
             'resource-types/{resource_type_id}/resources',
-            [ResourceManage::class, 'create']
+            [ResourceController::class, 'create']
         )->name('resource.create');
 
         Route::post(
             'resource-types/{resource_type_id}/resources/{resource_id}/items',
-            [ItemManage::class, 'create']
+            [ItemController::class, 'create']
         );
 
         Route::post(
             'resource-types/{resource_type_id}/resources/{resource_id}/items/{item_id}/categories',
-            [ItemCategoryManage::class, 'create']
+            [ItemCategoryController::class, 'create']
         );
 
         Route::post(
             'resource-types/{resource_type_id}/resources/{resource_id}/items/{item_id}/categories/{item_category_id}/subcategories',
-            [ItemSubcategoryManage::class, 'create']
+            [ItemSubcategoryController::class, 'create']
         );
 
         Route::post(
             'resource-types/{resource_type_id}/resources/{resource_id}/items/{item_id}/data',
-            [ItemDataManage::class, 'create']
+            [ItemDataController::class, 'create']
         )->name('item-data.create');
 
         Route::post(
             'resource-types/{resource_type_id}/resources/{resource_id}/items/{item_id}/log',
-            [ItemLogManage::class, 'create']
+            [ItemLogController::class, 'create']
         )->name('item-log.create');
 
         Route::post(
             'resource-types/{resource_type_id}/resources/{resource_id}/items/{item_id}/partial-transfer',
-            [ItemPartialTransferManage::class, 'transfer']
+            [ItemPartialTransferController::class, 'transfer']
         );
 
         Route::post(
             'resource-types/{resource_type_id}/resources/{resource_id}/items/{item_id}/transfer',
-            [ItemTransferManage::class, 'transfer']
+            [ItemTransferController::class, 'transfer']
         );
 
         Route::delete(
             'resource-types/{resource_type_id}',
-            [ResourceTypeManage::class, 'delete']
+            [ResourceTypeController::class, 'delete']
         )->name('resource-type.delete');
 
         Route::delete(
             'resource-types/{resource_type_id}/permitted-users/{permitted_user_id}',
-            [PermittedUserManage::class, 'delete']
+            [PermittedUserController::class, 'delete']
         )->name('permitted-user.delete');
 
         Route::delete(
             'resource-types/{resource_type_id}/categories/{category_id}',
-            [CategoryManage::class, 'delete']
+            [CategoryController::class, 'delete']
         )->name('category.delete');
 
         Route::delete(
             'resource-types/{resource_type_id}/categories/{category_id}/subcategories/{subcategory_id}',
-            [SubcategoryManage::class, 'delete']
+            [SubcategoryController::class, 'delete']
         )->name('subcategory.delete');
 
         Route::delete(
             'resource-types/{resource_type_id}/partial-transfers/{item_partial_transfer_id}',
-            [ItemPartialTransferManage::class, 'delete']
+            [ItemPartialTransferController::class, 'delete']
         );
 
         Route::delete(
             'resource-types/{resource_type_id}/resources/{resource_id}',
-            [ResourceManage::class, 'delete']
+            [ResourceController::class, 'delete']
         )->name('resource.delete');
 
         Route::delete(
             'resource-types/{resource_type_id}/resources/{resource_id}/items/{item_id}',
-            [ItemManage::class, 'delete']
+            [ItemController::class, 'delete']
         );
 
         Route::delete(
             'resource-types/{resource_type_id}/resources/{resource_id}/items/{item_id}/categories/{item_category_id}',
-            [ItemCategoryManage::class, 'delete']
+            [ItemCategoryController::class, 'delete']
         );
 
         Route::delete(
             'resource-types/{resource_type_id}/resources/{resource_id}/items/{item_id}/categories/{item_category_id}/subcategories/{item_subcategory_id}',
-            [ItemSubcategoryManage::class, 'delete']
+            [ItemSubcategoryController::class, 'delete']
         );
 
         Route::delete(
             'resource-types/{resource_type_id}/resources/{resource_id}/items/{item_id}/data/{key}',
-            [ItemDataManage::class, 'delete']
+            [ItemDataController::class, 'delete']
         )->name('item-data.delete');
 
         Route::patch(
             'resource-types/{resource_type_id}',
-            [ResourceTypeManage::class, 'update']
+            [ResourceTypeController::class, 'update']
         )->name('resource-type.update');
 
         Route::patch(
             'resource-types/{resource_type_id}/categories/{category_id}',
-            [CategoryManage::class, 'update']
+            [CategoryController::class, 'update']
         )->name('category.update');
 
         Route::patch(
             'resource-types/{resource_type_id}/categories/{category_id}/subcategories/{subcategory_id}',
-            [SubcategoryManage::class, 'update']
+            [SubcategoryController::class, 'update']
         )->name('subcategory.update');
 
         Route::patch(
             'resource-types/{resource_type_id}/resources/{resource_id}',
-            [ResourceManage::class, 'update']
+            [ResourceController::class, 'update']
         )->name('resource.update');
 
         Route::patch(
             'resource-types/{resource_type_id}/resources/{resource_id}/items/{item_id}',
-            [ItemManage::class, 'update']
+            [ItemController::class, 'update']
         );
 
         Route::patch(
             'resource-types/{resource_type_id}/resources/{resource_id}/items/{item_id}/data/{key}',
-            [ItemDataManage::class, 'update']
+            [ItemDataController::class, 'update']
         )->name('item-data.update');
     }
 );
