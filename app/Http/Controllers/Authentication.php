@@ -141,7 +141,28 @@ class Authentication extends \Illuminate\Routing\Controller
     public function createNewPassword(Request $request): Http\JsonResponse
     {
         $email = Str::replaceFirst(' ', '+', urldecode($request->query('email')));
-        $token = $request->query('token');
+        $token = $request->query('encrypted_token');
+
+        if ($email === null || $token === null) {
+            return response()->json(
+                [
+                    'message'=> trans('auth.email-or-token-invalid')
+                ],
+                404
+            );
+        }
+
+        $encryptor = new \Illuminate\Encryption\Encrypter(Config::get('api.app.hashids')['forgot-password']);
+        try {
+            $token = $encryptor->decryptString($token);
+        } catch (\Exception $e) {
+            return response()->json(
+                [
+                    'message'=> trans('auth.email-or-token-invalid')
+                ],
+                404
+            );
+        }
 
         $tokens = DB::table('password_resets')
             ->where('email', '=', $email)
@@ -257,15 +278,16 @@ class Authentication extends \Illuminate\Routing\Controller
 
             $config = Config::get('api.app.hashids');
             $encryptor = new \Illuminate\Encryption\Encrypter($config['forgot-password']);
+            $encrypted_token = $encryptor->encryptString($create_token);
 
             return response()->json(
                 [
                     'message' => trans('auth.success-forgot-password-request'),
                     'uris' => [
                         'create-new-password' => [
-                            'uri' => Config::get('api.app.version.prefix') . '/auth/create-new-password?token=' . $create_token . '&email=' . $email,
+                            'uri' => Config::get('api.app.version.prefix') . '/auth/create-new-password?encrypted_token=' . $encrypted_token . '&email=' . $email,
                             'parameters' => [
-                                'encrypted_token' => $encryptor->encryptString($create_token),
+                                'encrypted_token' => $encrypted_token,
                                 'email' => $email
                             ]
                         ]
