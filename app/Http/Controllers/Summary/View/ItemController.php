@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Summary;
+namespace App\Http\Controllers\Summary\View;
 
 use App\Http\Controllers\Controller;
 use App\HttpResponse\Response;
@@ -11,7 +11,7 @@ use App\HttpOptionResponse\Item\Summary\AllocatedExpense;
 use App\HttpOptionResponse\Item\Summary\Game;
 use Illuminate\Http\JsonResponse;
 
-class ItemView extends Controller
+class ItemController extends Controller
 {
     public function index(string $resource_type_id, string $resource_id): JsonResponse
     {

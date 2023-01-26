@@ -1,50 +1,51 @@
 <?php
 
-namespace App\Http\Controllers\Summary;
+namespace App\Http\Controllers\Summary\View;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\HttpResponse\Header;
-use App\Models\Summary\Resource;
-use App\HttpOptionResponse\SummaryResourceCollection;
+use App\Models\Summary\Category;
+use App\HttpOptionResponse\SummaryCategoryCollection;
 use App\HttpRequest\Parameter;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Config;
 
 /**
- * Summary controller for the resource routes
+ * Summary controller for the categories routes
  *
  * @author Dean Blackborough <dean@g3d-development.com>
  * @copyright Dean Blackborough 2018-2022
  * @license https://github.com/costs-to-expect/api/blob/master/LICENSE
  */
-class ResourceView extends Controller
+class CategoryController extends Controller
 {
     /**
-     * Return a summary of the resources
+     * Return a summary of the categories
      *
-     * @param string $resource_type_id
+     * @param $resource_type_id
      *
      * @return JsonResponse
+     * @throws \JsonException
      */
-    public function index(Request $request, string $resource_type_id): JsonResponse
+    public function index(Request $request, $resource_type_id): JsonResponse
     {
         if ($this->hasViewAccessToResourceType((int) $resource_type_id) === false) {
             return \App\HttpResponse\Response::notFoundOrNotAccessible(trans('entities.resource-type'));
         }
 
         $cache_control = new \App\Cache\Control($this->user_id);
-        $cache_control->setTtlOneWeek();
+        $cache_control->setTtlOneMonth();
 
         $cache_summary = new \App\Cache\Response\Summary();
         $cache_summary->setFromCache($cache_control->getByKey($request->getRequestUri()));
 
         if ($cache_control->isRequestCacheable() === false || $cache_summary->valid() === false) {
             $search_parameters = Parameter\Search::fetch(
-                Config::get('api.resource.summary-searchable')
+                Config::get('api.category.summary-searchable')
             );
 
-            $summary = (new Resource())->totalCount(
+            $summary = (new Category())->total(
                 $resource_type_id,
                 $this->viewable_resource_types,
                 $search_parameters
@@ -61,11 +62,10 @@ class ResourceView extends Controller
             }
 
             $collection = [
-                'resources' => $total
+                'categories' => $total
             ];
 
-            $headers = new Header();
-            $headers
+            $headers = (new Header())
                 ->addCacheControl($cache_control->visibility(), $cache_control->ttl())
                 ->addETag($collection)
                 ->addSearch(Parameter\Search::xHeader());
@@ -83,19 +83,19 @@ class ResourceView extends Controller
 
 
     /**
-     * Generate the OPTIONS request for the resource summary
+     * Generate the OPTIONS request for the categories summary
      *
-     * @param string $resource_type_id
+     * @param $resource_type_id
      *
      * @return JsonResponse
      */
-    public function optionsIndex(string $resource_type_id): JsonResponse
+    public function optionsIndex($resource_type_id): JsonResponse
     {
         if ($this->hasViewAccessToResourceType((int) $resource_type_id) === false) {
             return \App\HttpResponse\Response::notFoundOrNotAccessible(trans('entities.resource-type'));
         }
 
-        $response = new SummaryResourceCollection($this->permissions((int) $resource_type_id));
+        $response = new SummaryCategoryCollection($this->permissions((int) $resource_type_id));
 
         return $response->create()->response();
     }

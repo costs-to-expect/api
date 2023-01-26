@@ -1,37 +1,37 @@
 <?php
 
-namespace App\Http\Controllers\Summary;
+namespace App\Http\Controllers\Summary\View;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\HttpResponse\Header;
-use App\Models\Summary\Category;
-use App\HttpOptionResponse\SummaryCategoryCollection;
+use App\Models\Summary\Subcategory;
+use App\HttpOptionResponse\SummarySubcategoryCollection;
 use App\HttpRequest\Parameter;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Config;
 
 /**
- * Summary controller for the categories routes
+ * Summary controller for the subcategories routes
  *
  * @author Dean Blackborough <dean@g3d-development.com>
  * @copyright Dean Blackborough 2018-2022
  * @license https://github.com/costs-to-expect/api/blob/master/LICENSE
  */
-class CategoryView extends Controller
+class SubcategoryController extends Controller
 {
     /**
-     * Return a summary of the categories
+     * Return a summary of the subcategories
      *
      * @param $resource_type_id
+     * @param $category_id
      *
      * @return JsonResponse
-     * @throws \JsonException
      */
-    public function index(Request $request, $resource_type_id): JsonResponse
+    public function index(Request $request, $resource_type_id, $category_id): JsonResponse
     {
         if ($this->hasViewAccessToResourceType((int) $resource_type_id) === false) {
-            return \App\HttpResponse\Response::notFoundOrNotAccessible(trans('entities.resource-type'));
+            return \App\HttpResponse\Response::notFoundOrNotAccessible(trans('entities.category'));
         }
 
         $cache_control = new \App\Cache\Control($this->user_id);
@@ -42,12 +42,12 @@ class CategoryView extends Controller
 
         if ($cache_control->isRequestCacheable() === false || $cache_summary->valid() === false) {
             $search_parameters = Parameter\Search::fetch(
-                Config::get('api.category.summary-searchable')
+                Config::get('api.subcategory.summary-searchable')
             );
 
-            $summary = (new Category())->total(
+            $summary = (new Subcategory())->totalCount(
                 $resource_type_id,
-                $this->viewable_resource_types,
+                $category_id,
                 $search_parameters
             );
 
@@ -62,10 +62,11 @@ class CategoryView extends Controller
             }
 
             $collection = [
-                'categories' => $total
+                'subcategories' => $total
             ];
 
-            $headers = (new Header())
+            $headers = new Header();
+            $headers
                 ->addCacheControl($cache_control->visibility(), $cache_control->ttl())
                 ->addETag($collection)
                 ->addSearch(Parameter\Search::xHeader());
@@ -83,19 +84,20 @@ class CategoryView extends Controller
 
 
     /**
-     * Generate the OPTIONS request for the categories summary
+     * Generate the OPTIONS request for the subcategories summary
      *
      * @param $resource_type_id
+     * @param $category_id
      *
      * @return JsonResponse
      */
-    public function optionsIndex($resource_type_id): JsonResponse
+    public function optionsIndex($resource_type_id, $category_id): JsonResponse
     {
         if ($this->hasViewAccessToResourceType((int) $resource_type_id) === false) {
-            return \App\HttpResponse\Response::notFoundOrNotAccessible(trans('entities.resource-type'));
+            return \App\HttpResponse\Response::notFoundOrNotAccessible(trans('entities.category'));
         }
 
-        $response = new SummaryCategoryCollection($this->permissions((int) $resource_type_id));
+        $response = new SummarySubcategoryCollection($this->permissions((int) $resource_type_id));
 
         return $response->create()->response();
     }

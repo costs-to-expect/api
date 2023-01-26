@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Summary;
+namespace App\Http\Controllers\Summary\View;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
@@ -18,7 +18,7 @@ use Illuminate\Support\Facades\Config;
  * @copyright Dean Blackborough 2018-2022
  * @license https://github.com/costs-to-expect/api/blob/master/LICENSE
  */
-class ResourceTypeView extends Controller
+class ResourceTypeController extends Controller
 {
     /**
      * Return a summary of the resource types

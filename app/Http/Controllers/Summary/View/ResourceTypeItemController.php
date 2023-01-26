@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Summary;
+namespace App\Http\Controllers\Summary\View;
 
 use App\Http\Controllers\Controller;
 use App\HttpResponse\Response;
@@ -16,7 +16,7 @@ use Illuminate\Http\JsonResponse;
  * @copyright Dean Blackborough 2018-2022
  * @license https://github.com/costs-to-expect/api/blob/master/LICENSE
  */
-class ResourceTypeItemView extends Controller
+class ResourceTypeItemController extends Controller
 {
     public function index(string $resource_type_id): JsonResponse
     {
