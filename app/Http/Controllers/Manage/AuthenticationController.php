@@ -287,7 +287,16 @@ class AuthenticationController extends \Illuminate\Routing\Controller
             );
         }
 
-        return Response::authenticationFailed();
+        $validation_errors = [];
+        $validation_errors['email']['errors'][] = trans('auth.failed');
+
+        return response()->json(
+            [
+                'message' => trans('responses.validation'),
+                'fields' => $validation_errors
+            ],
+            422
+        );
     }
 
     public function logout(): Http\JsonResponse
