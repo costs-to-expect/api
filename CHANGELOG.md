@@ -2,6 +2,16 @@
 
 The complete changelog for the Costs to Expect REST API, our changelog follows the format defined at https://keepachangelog.com/en/1.0.0/
 
+## [v3.09.0] - 2023-01-30
+### Changed
+- Split all route files based on 'entity' rather than 'visibility'.
+- Split the authentication controller into view and manage.
+- Split controllers based on function, view, manage and summary.
+- Updated the back-end and front-end dependencies.
+
+### Fixed
+- Fixed all authentication actions, validation message format updated to match the rest of the API. 
+
 ## [v3.08.0] - 2023-01-16
 ### Added
 - Added a `/status` endpoint to return the environment and cache status for the API. 
