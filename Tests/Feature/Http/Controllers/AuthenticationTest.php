@@ -508,7 +508,7 @@ final class AuthenticationTest extends TestCase
             ]
         );
 
-        $response->assertStatus(401);
+        $response->assertStatus(422);
     }
 
     /** @test */
@@ -547,7 +547,7 @@ final class AuthenticationTest extends TestCase
             ]
         );
 
-        $response->assertStatus(401);
+        $response->assertStatus(422);
     }
 
     /** @test */
@@ -751,7 +751,7 @@ final class AuthenticationTest extends TestCase
     /** @test */
     public function updatePasswordSuccess(): void
     {
-        $this->actingAs(User::find($this->getARandomUser()->id));
+        $this->actingAs(User::find($this->fetchRandomUser()->id));
 
         $new_password = $this->faker->password(12);
 
@@ -797,7 +797,7 @@ final class AuthenticationTest extends TestCase
     /** @test */
     public function updateProfileSuccess(): void
     {
-        $this->actingAs(User::find($this->getARandomUser()->id));
+        $this->actingAs(User::find($this->fetchRandomUser()->id));
 
         $response = $this->post(
             'v3/auth/update-profile',

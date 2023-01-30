@@ -12,10 +12,10 @@ final class SubcategoryManageTest extends TestCase
     {
         $this->actingAs(User::find(1));
 
-        $resource_type_id = $this->createAndReturnResourceTypeId();
-        $category_id = $this->createAndReturnCategoryId($resource_type_id);
+        $resource_type_id = $this->createRandomResourceType();
+        $category_id = $this->createRandomCategory($resource_type_id);
 
-        $response = $this->postSubcategory(
+        $response = $this->createRequestedSubcategory(
             $resource_type_id,
             $category_id,
             [
@@ -31,10 +31,10 @@ final class SubcategoryManageTest extends TestCase
     {
         $this->actingAs(User::find(1));
 
-        $resource_type_id = $this->createAndReturnResourceTypeId();
-        $category_id = $this->createAndReturnCategoryId($resource_type_id);
+        $resource_type_id = $this->createRandomResourceType();
+        $category_id = $this->createRandomCategory($resource_type_id);
 
-        $response = $this->postSubcategory(
+        $response = $this->createRequestedSubcategory(
             $resource_type_id,
             $category_id,
             []
@@ -48,11 +48,11 @@ final class SubcategoryManageTest extends TestCase
     {
         $this->actingAs(User::find(1));
 
-        $resource_type_id = $this->createAndReturnResourceTypeId();
-        $category_id = $this->createAndReturnCategoryId($resource_type_id);
+        $resource_type_id = $this->createRandomResourceType();
+        $category_id = $this->createRandomCategory($resource_type_id);
         $name = $this->faker->text();
 
-        $response = $this->postSubcategory(
+        $response = $this->createRequestedSubcategory(
             $resource_type_id,
             $category_id,
             [
@@ -64,7 +64,7 @@ final class SubcategoryManageTest extends TestCase
         $response->assertStatus(201);
 
         // Create another with the same name
-        $response = $this->postSubcategory(
+        $response = $this->createRequestedSubcategory(
             $resource_type_id,
             $category_id,
             [
@@ -81,9 +81,9 @@ final class SubcategoryManageTest extends TestCase
     {
         $this->actingAs(User::find(1));
 
-        $resource_type_id = $this->createAndReturnResourceTypeId();
+        $resource_type_id = $this->createRandomResourceType();
 
-        $response = $this->postSubcategory(
+        $response = $this->createRequestedSubcategory(
             $resource_type_id,
             'wwwwwwwwww',
             [
@@ -99,10 +99,10 @@ final class SubcategoryManageTest extends TestCase
     {
         $this->actingAs(User::find(1));
 
-        $resource_type_id = $this->createAndReturnResourceTypeId();
-        $category_id = $this->createAndReturnCategoryId($resource_type_id);
+        $resource_type_id = $this->createRandomResourceType();
+        $category_id = $this->createRandomCategory($resource_type_id);
 
-        $response = $this->postSubcategory(
+        $response = $this->createRequestedSubcategory(
             $resource_type_id,
             $category_id,
             [
@@ -119,11 +119,11 @@ final class SubcategoryManageTest extends TestCase
     {
         $this->actingAs(User::find(1));
 
-        $resource_type_id = $this->createAndReturnResourceTypeId();
-        $category_id = $this->createAndReturnCategoryId($resource_type_id);
-        $subcategory_id = $this->createAndReturnSubcategoryId($resource_type_id, $category_id);
+        $resource_type_id = $this->createRandomResourceType();
+        $category_id = $this->createRandomCategory($resource_type_id);
+        $subcategory_id = $this->createRandomSubcategory($resource_type_id, $category_id);
 
-        $response = $this->deleteSubcategory(
+        $response = $this->deleteRequestedSubcategory(
             $resource_type_id,
             $category_id,
             $subcategory_id
@@ -137,11 +137,11 @@ final class SubcategoryManageTest extends TestCase
     {
         $this->actingAs(User::find(1));
 
-        $resource_type_id = $this->createAndReturnResourceTypeId();
-        $category_id = $this->createAndReturnCategoryId($resource_type_id);
-        $subcategory_id = $this->createAndReturnSubcategoryId($resource_type_id, $category_id);
+        $resource_type_id = $this->createRandomResourceType();
+        $category_id = $this->createRandomCategory($resource_type_id);
+        $subcategory_id = $this->createRandomSubcategory($resource_type_id, $category_id);
 
-        $response = $this->patchSubcategory(
+        $response = $this->updatedRequestedSubcategory(
             $resource_type_id,
             $category_id,
             $subcategory_id,
@@ -158,11 +158,11 @@ final class SubcategoryManageTest extends TestCase
     {
         $this->actingAs(User::find(1));
 
-        $resource_type_id = $this->createAndReturnResourceTypeId();
-        $category_id = $this->createAndReturnCategoryId($resource_type_id);
-        $subcategory_id = $this->createAndReturnSubcategoryId($resource_type_id, $category_id);
+        $resource_type_id = $this->createRandomResourceType();
+        $category_id = $this->createRandomCategory($resource_type_id);
+        $subcategory_id = $this->createRandomSubcategory($resource_type_id, $category_id);
 
-        $response = $this->patchSubcategory(
+        $response = $this->updatedRequestedSubcategory(
             $resource_type_id,
             $category_id,
             $subcategory_id,
@@ -177,13 +177,13 @@ final class SubcategoryManageTest extends TestCase
     {
         $this->actingAs(User::find(1));
 
-        $resource_type_id = $this->createAndReturnResourceTypeId();
-        $category_id = $this->createAndReturnCategoryId($resource_type_id);
+        $resource_type_id = $this->createRandomResourceType();
+        $category_id = $this->createRandomCategory($resource_type_id);
 
         // Create first subcategory
         $name = $this->faker->text(200);
 
-        $response = $this->postSubcategory(
+        $response = $this->createRequestedSubcategory(
             $resource_type_id,
             $category_id,
             [
@@ -195,7 +195,7 @@ final class SubcategoryManageTest extends TestCase
         $response->assertStatus(201);
 
         // Create second subcategory
-        $response = $this->postSubcategory(
+        $response = $this->createRequestedSubcategory(
             $resource_type_id,
             $category_id,
             [
@@ -209,7 +209,7 @@ final class SubcategoryManageTest extends TestCase
         $subcategory_id = $response->json('id');
 
         // Attempt to set name of second subcategory to first name
-        $response = $this->patchSubcategory(
+        $response = $this->updatedRequestedSubcategory(
             $resource_type_id,
             $category_id,
             $subcategory_id,
@@ -226,11 +226,11 @@ final class SubcategoryManageTest extends TestCase
     {
         $this->actingAs(User::find(1));
 
-        $resource_type_id = $this->createAndReturnResourceTypeId();
-        $category_id = $this->createAndReturnCategoryId($resource_type_id);
-        $subcategory_id = $this->createAndReturnSubcategoryId($resource_type_id, $category_id);
+        $resource_type_id = $this->createRandomResourceType();
+        $category_id = $this->createRandomCategory($resource_type_id);
+        $subcategory_id = $this->createRandomSubcategory($resource_type_id, $category_id);
 
-        $response = $this->patchSubcategory(
+        $response = $this->updatedRequestedSubcategory(
             $resource_type_id,
             $category_id,
             $subcategory_id,
@@ -247,11 +247,11 @@ final class SubcategoryManageTest extends TestCase
     {
         $this->actingAs(User::find(1));
 
-        $resource_type_id = $this->createAndReturnResourceTypeId();
-        $category_id = $this->createAndReturnCategoryId($resource_type_id);
-        $subcategory_id = $this->createAndReturnSubcategoryId($resource_type_id, $category_id);
+        $resource_type_id = $this->createRandomResourceType();
+        $category_id = $this->createRandomCategory($resource_type_id);
+        $subcategory_id = $this->createRandomSubcategory($resource_type_id, $category_id);
 
-        $response = $this->patchSubcategory(
+        $response = $this->updatedRequestedSubcategory(
             $resource_type_id,
             $category_id,
             $subcategory_id,
@@ -268,11 +268,11 @@ final class SubcategoryManageTest extends TestCase
     {
         $this->actingAs(User::find(1));
 
-        $resource_type_id = $this->createAndReturnResourceTypeId();
-        $category_id = $this->createAndReturnCategoryId($resource_type_id);
-        $subcategory_id = $this->createAndReturnSubcategoryId($resource_type_id, $category_id);
+        $resource_type_id = $this->createRandomResourceType();
+        $category_id = $this->createRandomCategory($resource_type_id);
+        $subcategory_id = $this->createRandomSubcategory($resource_type_id, $category_id);
 
-        $response = $this->patchSubcategory(
+        $response = $this->updatedRequestedSubcategory(
             $resource_type_id,
             $category_id,
             $subcategory_id,

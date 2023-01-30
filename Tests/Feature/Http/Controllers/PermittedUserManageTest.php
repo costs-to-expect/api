@@ -12,9 +12,9 @@ final class PermittedUserManageTest extends TestCase
     {
         $this->actingAs(User::find(1));
 
-        $id = $this->createAndReturnResourceTypeId();
+        $id = $this->createRandomResourceType();
 
-        $response = $this->postPermittedUser(
+        $response = $this->createRequestedPermittedUser(
             $id,
             []
         );
@@ -27,9 +27,9 @@ final class PermittedUserManageTest extends TestCase
     {
         $this->actingAs(User::find(1));
 
-        $id = $this->createAndReturnResourceTypeId();
+        $id = $this->createRandomResourceType();
 
-        $response = $this->postPermittedUser(
+        $response = $this->createRequestedPermittedUser(
             $id,
             [
                 'email' => $this->faker->email
@@ -44,10 +44,10 @@ final class PermittedUserManageTest extends TestCase
     {
         $this->actingAs(User::find(1));
 
-        $id = $this->createAndReturnResourceTypeId();
-        $user = $this->getARandomUser();
+        $id = $this->createRandomResourceType();
+        $user = $this->fetchRandomUser();
 
-        $response = $this->postPermittedUser(
+        $response = $this->createRequestedPermittedUser(
             $id,
             [
                 'email' => $user->email,
@@ -62,10 +62,10 @@ final class PermittedUserManageTest extends TestCase
     {
         $this->actingAs(User::find(1));
 
-        $resource_type_id = $this->createAndReturnResourceTypeId();
-        $user = $this->getARandomUser();
+        $resource_type_id = $this->createRandomResourceType();
+        $user = $this->fetchRandomUser();
 
-        $response = $this->postPermittedUser(
+        $response = $this->createRequestedPermittedUser(
             $resource_type_id,
             [
                 'email' => $user->email,
@@ -74,12 +74,12 @@ final class PermittedUserManageTest extends TestCase
 
         $response->assertStatus(204);
 
-        $response = $this->getPermittedUsers(['resource_type_id'=> $resource_type_id]);
+        $response = $this->fetchAllPermittedUsers(['resource_type_id'=> $resource_type_id]);
         $response->assertStatus(200);
 
         $permitted_user_id = $response->json()[1]['id'];
 
-        $response = $this->deletePermittedUser($resource_type_id, $permitted_user_id);
+        $response = $this->deleteRequestedPermittedUser($resource_type_id, $permitted_user_id);
         $response->assertStatus(204);
     }
 }

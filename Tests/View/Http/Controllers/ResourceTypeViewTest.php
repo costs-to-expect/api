@@ -11,21 +11,21 @@ final class ResourceTypeViewTest extends TestCase
     public function optionsRequestForResourceType(): void
     {
         $this->actingAs(User::find(1));
-        $resource_type_id = $this->createAndReturnResourceTypeId();
+        $resource_type_id = $this->createRandomResourceType();
 
-        $response = $this->optionsResourceType(['resource_type_id' => $resource_type_id]);
+        $response = $this->fetchOptionsForResourceType(['resource_type_id' => $resource_type_id]);
         $response->assertStatus(200);
 
-        $this->assertJsonMatchesSchema($response->content(), 'api/schema/options/resource-type.json');
+        $this->assertProvidedJsonMatchesDefinedSchema($response->content(), 'api/schema/options/resource-type.json');
     }
 
     /** @test */
     public function optionsRequestForResourceTypeCollection(): void
     {
-        $response = $this->optionsResourceTypeCollection();
+        $response = $this->fetchOptionsForResourceTypeCollection();
         $response->assertStatus(200);
 
-        $this->assertJsonMatchesSchema($response->content(), 'api/schema/options/resource-type-collection.json');
+        $this->assertProvidedJsonMatchesDefinedSchema($response->content(), 'api/schema/options/resource-type-collection.json');
     }
 
     /** @test */
@@ -33,7 +33,7 @@ final class ResourceTypeViewTest extends TestCase
     {
         $this->actingAs(User::find(1));
 
-        $response = $this->getResourceTypes();
+        $response = $this->fetchAllResourceTypes();
 
         $response->assertStatus(200);
 
@@ -44,7 +44,7 @@ final class ResourceTypeViewTest extends TestCase
                 $this->fail('Unable to encode the JSON string');
             }
 
-            $this->assertJsonIsResourceType($json);
+            $this->assertJsonMatchesResourceTypeSchema($json);
         }
     }
 
@@ -53,7 +53,7 @@ final class ResourceTypeViewTest extends TestCase
     {
         $this->actingAs(User::find(1));
 
-        $response = $this->getResourceTypes(['offset'=>1, 'limit'=> 1]);
+        $response = $this->fetchAllResourceTypes(['offset'=>1, 'limit'=> 1]);
 
         $response->assertStatus(200);
         $response->assertHeader('X-Offset', 1);
@@ -66,7 +66,7 @@ final class ResourceTypeViewTest extends TestCase
                 $this->fail('Unable to encode the JSON string');
             }
 
-            $this->assertJsonIsResourceType($json);
+            $this->assertJsonMatchesResourceTypeSchema($json);
         }
     }
 
@@ -79,7 +79,7 @@ final class ResourceTypeViewTest extends TestCase
     {
         $this->actingAs(User::find(1));
 
-        $response = $this->getResourceTypes(['search'=>'description:resource-search']);
+        $response = $this->fetchAllResourceTypes(['search'=>'description:resource-search']);
 
         $response->assertStatus(200);
         $response->assertHeader('X-Search', 'description:resource-search');
@@ -91,7 +91,7 @@ final class ResourceTypeViewTest extends TestCase
                 $this->fail('Unable to encode the JSON string');
             }
 
-            $this->assertJsonIsResourceType($json);
+            $this->assertJsonMatchesResourceTypeSchema($json);
         }
     }
 
@@ -104,7 +104,7 @@ final class ResourceTypeViewTest extends TestCase
     {
         $this->actingAs(User::find(1));
 
-        $response = $this->getResourceTypes(['search'=>'name:resource-search']);
+        $response = $this->fetchAllResourceTypes(['search'=>'name:resource-search']);
 
         $response->assertStatus(200);
         $response->assertHeader('X-Search', 'name:resource-search');
@@ -116,7 +116,7 @@ final class ResourceTypeViewTest extends TestCase
                 $this->fail('Unable to encode the JSON string');
             }
 
-            $this->assertJsonIsResourceType($json);
+            $this->assertJsonMatchesResourceTypeSchema($json);
         }
     }
 
@@ -129,7 +129,7 @@ final class ResourceTypeViewTest extends TestCase
     {
         $this->actingAs(User::find(1));
 
-        $response = $this->getResourceTypes(['sort'=>'created:asc']);
+        $response = $this->fetchAllResourceTypes(['sort'=>'created:asc']);
 
         $response->assertStatus(200);
         $response->assertHeader('X-Sort', 'created:asc');
@@ -141,7 +141,7 @@ final class ResourceTypeViewTest extends TestCase
                 $this->fail('Unable to encode the JSON string');
             }
 
-            $this->assertJsonIsResourceType($json);
+            $this->assertJsonMatchesResourceTypeSchema($json);
         }
     }
 
@@ -154,7 +154,7 @@ final class ResourceTypeViewTest extends TestCase
     {
         $this->actingAs(User::find(1));
 
-        $response = $this->getResourceTypes(['sort'=>'name:asc']);
+        $response = $this->fetchAllResourceTypes(['sort'=>'name:asc']);
 
         $response->assertStatus(200);
         $response->assertHeader('X-Sort', 'name:asc');
@@ -166,7 +166,7 @@ final class ResourceTypeViewTest extends TestCase
                 $this->fail('Unable to encode the JSON string');
             }
 
-            $this->assertJsonIsResourceType($json);
+            $this->assertJsonMatchesResourceTypeSchema($json);
         }
     }
 
@@ -175,15 +175,15 @@ final class ResourceTypeViewTest extends TestCase
     {
         $this->actingAs(User::find(1));
 
-        $response = $this->getResourceTypes(['offset'=>0, 'limit'=> 1]);
+        $response = $this->fetchAllResourceTypes(['offset'=>0, 'limit'=> 1]);
         $response->assertStatus(200);
 
         $resource_type_id = $response->json()[0]['id'];
 
-        $response = $this->getResourceType(['resource_type_id'=> $resource_type_id]);
+        $response = $this->fetchResourceType(['resource_type_id'=> $resource_type_id]);
         $response->assertStatus(200);
 
-        $this->assertJsonIsResourceType($response->content());
+        $this->assertJsonMatchesResourceTypeSchema($response->content());
     }
 
     /** @test */
@@ -191,18 +191,18 @@ final class ResourceTypeViewTest extends TestCase
     {
         $this->actingAs(User::find(1));
 
-        $response = $this->getResourceTypes(['offset'=>0, 'limit'=> 1]);
+        $response = $this->fetchAllResourceTypes(['offset'=>0, 'limit'=> 1]);
         $response->assertStatus(200);
 
         $resource_type_id = $response->json()[0]['id'];
 
-        $response = $this->getResourceType([
+        $response = $this->fetchResourceType([
             'resource_type_id'=> $resource_type_id,
             'include-permitted-users' => true
         ]);
         $response->assertStatus(200);
 
-        $this->assertJsonIsResourceTypeAndIncludesPermittedUsers($response->content());
+        $this->assertJsonMatchesResourceTypeWhichIncludesPermittedUsersSchema($response->content());
     }
 
     /** @test */
@@ -210,19 +210,20 @@ final class ResourceTypeViewTest extends TestCase
     {
         $this->actingAs(User::find(1));
 
-        $response = $this->getResourceTypes(['offset'=>0, 'limit'=> 1]);
+        $response = $this->fetchAllResourceTypes(['offset'=>0, 'limit'=> 1]);
         $response->assertStatus(200);
 
         $resource_type_id = $response->json()[0]['id'];
 
-        $resource_id = $this->createAndReturnResourceId($resource_type_id);
+        $this->createRandomResource($resource_type_id);
+        $this->createRandomResource($resource_type_id);
 
-        $response = $this->getResourceType([
+        $response = $this->fetchResourceType([
             'resource_type_id'=> $resource_type_id,
             'include-resources' => true
         ]);
         $response->assertStatus(200);
 
-        $this->assertJsonIsResourceTypeAndIncludesResources($response->content());
+        $this->assertJsonMatchesResourceTypeWhichIncludesResourcesSchema($response->content());
     }
 }
