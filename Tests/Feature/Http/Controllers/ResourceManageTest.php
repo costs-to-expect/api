@@ -14,9 +14,9 @@ final class ResourceManageTest extends TestCase
     {
         $this->actingAs(User::find(1));
 
-        $id = $this->createAndReturnResourceTypeId();
+        $id = $this->createRandomResourceType();
 
-        $response = $this->postResource(
+        $response = $this->createRequestedResource(
             $id,
             [
                 'name' => $this->faker->text(200),
@@ -34,9 +34,9 @@ final class ResourceManageTest extends TestCase
     {
         $this->actingAs(User::find(1));
 
-        $id = $this->createAndReturnResourceTypeId();
+        $id = $this->createRandomResourceType();
 
-        $response = $this->postResource(
+        $response = $this->createRequestedResource(
             $id,
             [
                 'name' => $this->faker->text(200),
@@ -54,9 +54,9 @@ final class ResourceManageTest extends TestCase
     {
         $this->actingAs(User::find(1));
 
-        $id = $this->createAndReturnResourceTypeId();
+        $id = $this->createRandomResourceType();
 
-        $response = $this->postResource(
+        $response = $this->createRequestedResource(
             $id,
             [
                 'name' => $this->faker->text(200),
@@ -73,9 +73,9 @@ final class ResourceManageTest extends TestCase
     {
         $this->actingAs(User::find(1));
 
-        $id = $this->createAndReturnResourceTypeId();
+        $id = $this->createRandomResourceType();
 
-        $response = $this->postResource(
+        $response = $this->createRequestedResource(
             $id,
             [
                 'description' => $this->faker->text(200),
@@ -92,9 +92,9 @@ final class ResourceManageTest extends TestCase
     {
         $this->actingAs(User::find(1));
 
-        $id = $this->createAndReturnResourceTypeId();
+        $id = $this->createRandomResourceType();
 
-        $response = $this->postResource(
+        $response = $this->createRequestedResource(
             $id,
             []
         );
@@ -105,7 +105,7 @@ final class ResourceManageTest extends TestCase
     /** @test */
     public function createResourceFailsNoPermissionToResourceType(): void
     {
-        $this->actingAs(User::find($this->getARandomUser()->id)); // Random user
+        $this->actingAs(User::find($this->fetchRandomUser()->id)); // Random user
 
         $resource_type = ResourceType::query()
             ->join('permitted_user', 'resource_type.id', '=', 'permitted_user.resource_type_id')
@@ -116,7 +116,7 @@ final class ResourceManageTest extends TestCase
 
             $resource_type_id = (new Hash())->encode('resource-type', $resource_type->id);
 
-            $response = $this->postResource(
+            $response = $this->createRequestedResource(
                 $resource_type_id,
                 [
                     'name' => $this->faker->text(200),
@@ -137,11 +137,11 @@ final class ResourceManageTest extends TestCase
     {
         $this->actingAs(User::find(1));
 
-        $id = $this->createAndReturnResourceTypeId();
+        $id = $this->createRandomResourceType();
 
         $name = $this->faker->text(200);
 
-        $response = $this->postResource(
+        $response = $this->createRequestedResource(
             $id,
             [
                 'name' => $name,
@@ -153,7 +153,7 @@ final class ResourceManageTest extends TestCase
         $response->assertStatus(201);
 
         // Create again with non-unique name for resource type
-        $response = $this->postResource(
+        $response = $this->createRequestedResource(
             $id,
             [
                 'name' => $name,
@@ -170,9 +170,9 @@ final class ResourceManageTest extends TestCase
     {
         $this->actingAs(User::find(1));
 
-        $id = $this->createAndReturnResourceTypeId();
+        $id = $this->createRandomResourceType();
 
-        $response = $this->postResource(
+        $response = $this->createRequestedResource(
             $id,
             [
                 'name' => $this->faker->text(200),
@@ -182,7 +182,7 @@ final class ResourceManageTest extends TestCase
         );
 
         $response->assertStatus(201);
-        $this->assertJsonIsResource($response->content());
+        $this->assertJsonMatchesResourceSchema($response->content());
     }
 
     /** @test */
@@ -190,9 +190,9 @@ final class ResourceManageTest extends TestCase
     {
         $this->actingAs(User::find(1));
 
-        $id = $this->createAndReturnResourceTypeId();
+        $id = $this->createRandomResourceType();
 
-        $response = $this->postResource(
+        $response = $this->createRequestedResource(
             $id,
             [
                 'name' => $this->faker->text(200),
@@ -203,7 +203,7 @@ final class ResourceManageTest extends TestCase
         );
 
         $response->assertStatus(201);
-        $this->assertJsonIsResource($response->content());
+        $this->assertJsonMatchesResourceSchema($response->content());
     }
 
     /** @test */
@@ -211,10 +211,10 @@ final class ResourceManageTest extends TestCase
     {
         $this->actingAs(User::find(1));
 
-        $resource_type_id = $this->createAndReturnResourceTypeId();
-        $id = $this->createAndReturnResourceId($resource_type_id);
+        $resource_type_id = $this->createRandomResourceType();
+        $id = $this->createRandomResource($resource_type_id);
 
-        $response = $this->deleteResource($resource_type_id, $id);
+        $response = $this->deleteRequestedResource($resource_type_id, $id);
 
         $response->assertStatus(204);
     }
@@ -224,10 +224,10 @@ final class ResourceManageTest extends TestCase
     {
         $this->actingAs(User::find(1));
 
-        $resource_type_id = $this->createAndReturnResourceTypeId();
-        $resource_id = $this->createAndReturnResourceId($resource_type_id);
+        $resource_type_id = $this->createRandomResourceType();
+        $resource_id = $this->createRandomResource($resource_type_id);
 
-        $response = $this->patchResource(
+        $response = $this->updatedRequestedResource(
             $resource_type_id,
             $resource_id,
             [
@@ -243,10 +243,10 @@ final class ResourceManageTest extends TestCase
     {
         $this->actingAs(User::find(1));
 
-        $resource_type_id = $this->createAndReturnResourceTypeId();
-        $resource_id = $this->createAndReturnResourceId($resource_type_id);
+        $resource_type_id = $this->createRandomResourceType();
+        $resource_id = $this->createRandomResource($resource_type_id);
 
-        $response = $this->patchResource(
+        $response = $this->updatedRequestedResource(
             $resource_type_id,
             $resource_id,
             []
@@ -260,11 +260,11 @@ final class ResourceManageTest extends TestCase
     {
         $this->actingAs(User::find(1));
 
-        $resource_type_id = $this->createAndReturnResourceTypeId();
+        $resource_type_id = $this->createRandomResourceType();
 
         // Create first resource
         $name = $this->faker->text(200);
-        $response = $this->postResource(
+        $response = $this->createRequestedResource(
             $resource_type_id,
             [
                 'name' => $name,
@@ -276,7 +276,7 @@ final class ResourceManageTest extends TestCase
         $response->assertStatus(201);
 
         // Create second resource
-        $response = $this->postResource(
+        $response = $this->createRequestedResource(
             $resource_type_id,
             [
                 'name' => $this->faker->text(200),
@@ -289,7 +289,7 @@ final class ResourceManageTest extends TestCase
         $resource_id = $response->json('id');
 
         // Set name of second resource to first name
-        $response = $this->patchResource(
+        $response = $this->updatedRequestedResource(
             $resource_type_id,
             $resource_id,
             [
@@ -305,10 +305,10 @@ final class ResourceManageTest extends TestCase
     {
         $this->actingAs(User::find(1));
 
-        $resource_type_id = $this->createAndReturnResourceTypeId();
-        $resource_id = $this->createAndReturnResourceId($resource_type_id);
+        $resource_type_id = $this->createRandomResourceType();
+        $resource_id = $this->createRandomResource($resource_type_id);
 
-        $response = $this->patchResource(
+        $response = $this->updatedRequestedResource(
             $resource_type_id,
             $resource_id,
             [

@@ -14,9 +14,9 @@ final class CategoryManageTest extends TestCase
     {
         $this->actingAs(User::find(1));
 
-        $id = $this->createAndReturnResourceTypeId();
+        $id = $this->createRandomResourceType();
 
-        $response = $this->postCategory(
+        $response = $this->createRequestedCategory(
             $id,
             [
                 'name' => $this->faker->text(200),
@@ -31,9 +31,9 @@ final class CategoryManageTest extends TestCase
     {
         $this->actingAs(User::find(1));
 
-        $id = $this->createAndReturnResourceTypeId();
+        $id = $this->createRandomResourceType();
 
-        $response = $this->postCategory(
+        $response = $this->createRequestedCategory(
             $id,
             [
                 'description' => $this->faker->text(200),
@@ -46,7 +46,7 @@ final class CategoryManageTest extends TestCase
     /** @test */
     public function createCategoryFailsNoPermissionToResourceType(): void
     {
-        $this->actingAs(User::find($this->getARandomUser()->id)); // Random user
+        $this->actingAs(User::find($this->fetchRandomUser()->id)); // Random user
 
         $resource_type = ResourceType::query()
             ->join('permitted_user', 'resource_type.id', '=', 'permitted_user.resource_type_id')
@@ -57,7 +57,7 @@ final class CategoryManageTest extends TestCase
 
             $resource_type_id = (new Hash())->encode('resource-type', $resource_type->id);
 
-            $response = $this->postCategory(
+            $response = $this->createRequestedCategory(
                 $resource_type_id,
                 [
                     'name' => $this->faker->text(200),
@@ -77,9 +77,9 @@ final class CategoryManageTest extends TestCase
     {
         $this->actingAs(User::find(1));
 
-        $id = $this->createAndReturnResourceTypeId();
+        $id = $this->createRandomResourceType();
 
-        $response = $this->postCategory(
+        $response = $this->createRequestedCategory(
             $id,
             []
         );
@@ -92,11 +92,11 @@ final class CategoryManageTest extends TestCase
     {
         $this->actingAs(User::find(1));
 
-        $id = $this->createAndReturnResourceTypeId();
+        $id = $this->createRandomResourceType();
 
         $name = $this->faker->text(200);
 
-        $response = $this->postCategory(
+        $response = $this->createRequestedCategory(
             $id,
             [
                 'name' => $name,
@@ -107,7 +107,7 @@ final class CategoryManageTest extends TestCase
         $response->assertStatus(201);
 
         // Create again with non-unique name for resource type
-        $response = $this->postResource(
+        $response = $this->createRequestedResource(
             $id,
             [
                 'name' => $name,
@@ -123,9 +123,9 @@ final class CategoryManageTest extends TestCase
     {
         $this->actingAs(User::find(1));
 
-        $id = $this->createAndReturnResourceTypeId();
+        $id = $this->createRandomResourceType();
 
-        $response = $this->postCategory(
+        $response = $this->createRequestedCategory(
             $id,
             [
                 'name' => $this->faker->text(200),
@@ -134,7 +134,7 @@ final class CategoryManageTest extends TestCase
         );
 
         $response->assertStatus(201);
-        $this->assertJsonIsCategory($response->content());
+        $this->assertJsonMatchesCategorySchema($response->content());
     }
 
     /** @test */
@@ -142,10 +142,10 @@ final class CategoryManageTest extends TestCase
     {
         $this->actingAs(User::find(1));
 
-        $resource_type_id = $this->createAndReturnResourceTypeId();
-        $id = $this->createAndReturnCategoryId($resource_type_id);
+        $resource_type_id = $this->createRandomResourceType();
+        $id = $this->createRandomCategory($resource_type_id);
 
-        $response = $this->deleteCategory($resource_type_id, $id);
+        $response = $this->deleteRequestedCategory($resource_type_id, $id);
 
         $response->assertStatus(204);
     }
@@ -155,10 +155,10 @@ final class CategoryManageTest extends TestCase
     {
         $this->actingAs(User::find(1));
 
-        $resource_type_id = $this->createAndReturnResourceTypeId();
-        $category_id = $this->createAndReturnCategoryId($resource_type_id);
+        $resource_type_id = $this->createRandomResourceType();
+        $category_id = $this->createRandomCategory($resource_type_id);
 
-        $response = $this->patchCategory(
+        $response = $this->updateRequestedCategory(
             $resource_type_id,
             $category_id,
             [
@@ -174,10 +174,10 @@ final class CategoryManageTest extends TestCase
     {
         $this->actingAs(User::find(1));
 
-        $resource_type_id = $this->createAndReturnResourceTypeId();
-        $category_id = $this->createAndReturnCategoryId($resource_type_id);
+        $resource_type_id = $this->createRandomResourceType();
+        $category_id = $this->createRandomCategory($resource_type_id);
 
-        $response = $this->patchCategory(
+        $response = $this->updateRequestedCategory(
             $resource_type_id,
             $category_id,
             []
@@ -191,11 +191,11 @@ final class CategoryManageTest extends TestCase
     {
         $this->actingAs(User::find(1));
 
-        $resource_type_id = $this->createAndReturnResourceTypeId();
+        $resource_type_id = $this->createRandomResourceType();
 
         // Create first category
         $name = $this->faker->text(200);
-        $response = $this->postCategory(
+        $response = $this->createRequestedCategory(
             $resource_type_id,
             [
                 'name' => $name,
@@ -206,7 +206,7 @@ final class CategoryManageTest extends TestCase
         $response->assertStatus(201);
 
         // Create second category
-        $response = $this->postCategory(
+        $response = $this->createRequestedCategory(
             $resource_type_id,
             [
                 'name' => $this->faker->text(200),
@@ -218,7 +218,7 @@ final class CategoryManageTest extends TestCase
         $category_id = $response->json('id');
 
         // Attempt to set name of second category to first name
-        $response = $this->patchCategory(
+        $response = $this->updateRequestedCategory(
             $resource_type_id,
             $category_id,
             [
@@ -234,10 +234,10 @@ final class CategoryManageTest extends TestCase
     {
         $this->actingAs(User::find(1));
 
-        $resource_type_id = $this->createAndReturnResourceTypeId();
-        $category_id = $this->createAndReturnCategoryId($resource_type_id);
+        $resource_type_id = $this->createRandomResourceType();
+        $category_id = $this->createRandomCategory($resource_type_id);
 
-        $response = $this->patchCategory(
+        $response = $this->updateRequestedCategory(
             $resource_type_id,
             $category_id,
             [

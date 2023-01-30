@@ -9,18 +9,18 @@ final class AuthenticationTest extends TestCase
     /** @test */
     public function optionsRequestForCreatePassword(): void
     {
-        $response = $this->optionsCreatePassword();
+        $response = $this->fetchOptionsForCreatePassword();
         $response->assertStatus(200);
 
-        $this->assertJsonMatchesSchema($response->content(), 'api/schema/auth/options/create-password.json');
+        $this->assertProvidedJsonMatchesDefinedSchema($response->content(), 'api/schema/auth/options/create-password.json');
     }
 
     /** @test */
     public function optionsRequestForRegister(): void
     {
-        $response = $this->optionsRegister();
+        $response = $this->fetchOptionsForRegister();
         $response->assertStatus(200);
 
-        $this->assertJsonMatchesSchema($response->content(), 'api/schema/auth/options/register.json');
+        $this->assertProvidedJsonMatchesDefinedSchema($response->content(), 'api/schema/auth/options/register.json');
     }
 }

@@ -15,45 +15,45 @@ abstract class TestCase extends BaseTestCase
 {
     use CreatesApplication, Withfaker;
 
-    protected string $test_user_email = 'test-account-email@email.com';
-    protected string $test_user_password = 'test-account-secret-password';
+    protected string $email_for_expected_test_user = 'test-account-email@email.com';
+    protected string $password_for_expected_test_user = 'test-account-secret-password';
 
-    protected function assertJsonIsCategory($content): void
+    protected function assertJsonMatchesCategorySchema($content): void
     {
-        $this->assertJsonMatchesSchema($content, 'api/schema/category.json');
+        $this->assertProvidedJsonMatchesDefinedSchema($content, 'api/schema/category.json');
     }
 
-    protected function assertJsonIsItemType($content): void
+    protected function assertJsonMatchesItemTypeSchema($content): void
     {
-        $this->assertJsonMatchesSchema($content, 'api/schema/item-type.json');
+        $this->assertProvidedJsonMatchesDefinedSchema($content, 'api/schema/item-type.json');
     }
 
-    protected function assertJsonIsPermittedUser($content): void
+    protected function assertJsonMatchesPermittedUserSchema($content): void
     {
-        $this->assertJsonMatchesSchema($content, 'api/schema/permitted-user.json');
+        $this->assertProvidedJsonMatchesDefinedSchema($content, 'api/schema/permitted-user.json');
     }
 
-    protected function assertJsonIsResource($content): void
+    protected function assertJsonMatchesResourceSchema($content): void
     {
-        $this->assertJsonMatchesSchema($content, 'api/schema/resource.json');
+        $this->assertProvidedJsonMatchesDefinedSchema($content, 'api/schema/resource.json');
     }
 
-    protected function assertJsonIsResourceType($content): void
+    protected function assertJsonMatchesResourceTypeSchema($content): void
     {
-        $this->assertJsonMatchesSchema($content, 'api/schema/resource-type.json');
+        $this->assertProvidedJsonMatchesDefinedSchema($content, 'api/schema/resource-type.json');
     }
 
-    protected function assertJsonIsResourceTypeAndIncludesPermittedUsers($content): void
+    protected function assertJsonMatchesResourceTypeWhichIncludesPermittedUsersSchema($content): void
     {
-        $this->assertJsonMatchesSchema($content, 'api/schema/resource-type-include-permitted-users.json');
+        $this->assertProvidedJsonMatchesDefinedSchema($content, 'api/schema/resource-type-include-permitted-users.json');
     }
 
-    protected function assertJsonIsResourceTypeAndIncludesResources($content): void
+    protected function assertJsonMatchesResourceTypeWhichIncludesResourcesSchema($content): void
     {
-        $this->assertJsonMatchesSchema($content, 'api/schema/resource-type-include-resources.json');
+        $this->assertProvidedJsonMatchesDefinedSchema($content, 'api/schema/resource-type-include-resources.json');
     }
 
-    protected function assertJsonMatchesSchema($content, $schema_file): void
+    protected function assertProvidedJsonMatchesDefinedSchema($content, $schema_file): void
     {
         $schema = Schema::fromJsonString(file_get_contents(public_path($schema_file)));
         $validator = new Validator();
@@ -62,9 +62,9 @@ abstract class TestCase extends BaseTestCase
         self::assertTrue($result->isValid());
     }
 
-    protected function createAndReturnCategoryId(string $resource_type_id): string
+    protected function createRandomCategory(string $resource_type_id): string
     {
-        $response = $this->postCategory(
+        $response = $this->createRequestedCategory(
             $resource_type_id,
             [
                 'name' => $this->faker->text(200),
@@ -79,9 +79,9 @@ abstract class TestCase extends BaseTestCase
         $this->fail('Unable to create the category');
     }
 
-    protected function createAndReturnResourceId(string $resource_type_id): string
+    protected function createRandomResource(string $resource_type_id): string
     {
-        $response = $this->postResource(
+        $response = $this->createRequestedResource(
             $resource_type_id,
             [
                 'name' => $this->faker->text(200),
@@ -97,9 +97,9 @@ abstract class TestCase extends BaseTestCase
         $this->fail('Unable to create the resource');
     }
 
-    protected function createAndReturnResourceTypeId(): string
+    protected function createRandomResourceType(): string
     {
-        $response = $this->postResourceType(
+        $response = $this->createRequestedResourceType(
             [
                 'name' => $this->faker->text(255),
                 'description' => $this->faker->text,
@@ -116,9 +116,9 @@ abstract class TestCase extends BaseTestCase
         $this->fail('Unable to create the resource type');
     }
 
-    protected function createAndReturnSubcategoryId(string $resource_type_id, string $category_id): string
+    protected function createRandomSubcategory(string $resource_type_id, string $category_id): string
     {
-        $response = $this->postSubcategory(
+        $response = $this->createRequestedSubcategory(
             $resource_type_id,
             $category_id,
             [
@@ -134,35 +134,78 @@ abstract class TestCase extends BaseTestCase
         $this->fail('Unable to create the subcategory');
     }
 
-    protected function deleteCategory(string $resource_type_id, $category_id): TestResponse
+    protected function createRequestedCategory(string $resource_type_id, array $payload): TestResponse
+    {
+        return $this->post(
+            route('category.create', ['resource_type_id' => $resource_type_id]),
+            $payload
+        );
+    }
+
+    protected function createRequestedPermittedUser(string $resource_type_id, array $payload): TestResponse
+    {
+        return $this->post(
+            route('permitted-user.create', ['resource_type_id' => $resource_type_id]),
+            $payload
+        );
+    }
+
+    protected function createRequestedResource(string $resource_type_id, array $payload): TestResponse
+    {
+        return $this->post(
+            route('resource.create', ['resource_type_id' => $resource_type_id]),
+            $payload
+        );
+    }
+
+    protected function createRequestedResourceType(array $payload): TestResponse
+    {
+        return $this->post(route('resource-type.create'), $payload);
+    }
+
+    protected function createRequestedSubcategory(string $resource_type_id, string $category_id, array $payload): TestResponse
+    {
+        return $this->post(
+            route(
+                'subcategory.create',
+                [
+                    'resource_type_id' => $resource_type_id,
+                    'category_id' => $category_id
+                ]
+            ),
+            $payload
+        );
+    }
+
+    protected function deleteRequestedCategory(string $resource_type_id, $category_id): TestResponse
     {
         return $this->delete(
             route('category.delete', ['resource_type_id' => $resource_type_id, 'category_id' => $category_id]), []
         );
     }
 
-    protected function deletePermittedUser(string $resource_type_id, string $permitted_user_id): TestResponse
+    protected function deleteRequestedPermittedUser(string $resource_type_id, string $permitted_user_id): TestResponse
     {
         return $this->delete(
             route('permitted-user.delete', ['resource_type_id' => $resource_type_id, 'permitted_user_id' => $permitted_user_id]), []
         );
     }
 
-    protected function deleteResource(string $resource_type_id, $resource_id): TestResponse
+    protected function deleteRequestedResource(string $resource_type_id, $resource_id): TestResponse
     {
         return $this->delete(
             route('resource.delete', ['resource_type_id' => $resource_type_id, 'resource_id' => $resource_id]), []
         );
     }
 
-    protected function deleteResourceType(string $resource_type_id): TestResponse
+    protected function deleteRequestedResourceType(string $resource_type_id): TestResponse
     {
         return $this->delete(
             route('resource-type.delete', ['resource_type_id' => $resource_type_id]), []
         );
     }
 
-    protected function deleteSubcategory(string $resource_type_id, $category_id, $subcategory_id): TestResponse
+    protected function deleteRequestedSubcategory(string $resource_type_id, $category_id, $subcategory_id): TestResponse
     {
         return $this->delete(
             route(
@@ -177,47 +220,89 @@ abstract class TestCase extends BaseTestCase
         );
     }
 
-    protected function getARandomUser()
+    protected function fetchAllItemTypes(array $parameters = []): TestResponse
+    {
+        return $this->generatedRoute('item-type.list', $parameters);
+    }
+
+    protected function fetchAllPermittedUsers(array $parameters = []): TestResponse
+    {
+        return $this->generatedRoute('permitted-user.list', $parameters);
+    }
+
+    protected function fetchAllResourceTypes(array $parameters = []): TestResponse
+    {
+        return $this->generatedRoute('resource-type.list', $parameters);
+    }
+
+    protected function fetchItemType(array $parameters = []): TestResponse
+    {
+        return $this->generatedRoute('item-type.show', $parameters);
+    }
+
+    protected function fetchPermittedUser(array $parameters = []): TestResponse
+    {
+        return $this->generatedRoute('permitted-user.show', $parameters);
+    }
+
+    protected function fetchRandomUser()
     {
         return User::query()->where('id', '!=', 1)->inRandomOrder()->first();
     }
 
-    protected function getItemType(array $parameters = []): TestResponse
+    protected function fetchResourceType(array $parameters = []): TestResponse
     {
-        return $this->getRoute('item-type.show', $parameters);
+        return $this->generatedRoute('resource-type.show', $parameters);
     }
 
-    protected function getItemTypes(array $parameters = []): TestResponse
+    protected function fetchOptionsForCreatePassword(array $parameters = []): TestResponse
     {
-        return $this->getRoute('item-type.list', $parameters);
+        return $this->generateOptionsRoute('auth.create-password.options', $parameters);
     }
 
-    protected function getPermittedUser(array $parameters = []): TestResponse
+    protected function fetchOptionsForRegister(array $parameters = []): TestResponse
     {
-        return $this->getRoute('permitted-user.show', $parameters);
+        return $this->generateOptionsRoute('auth.register.options', $parameters);
     }
 
-    protected function getPermittedUsers(array $parameters = []): TestResponse
+    protected function fetchOptionsForResourceType(array $parameters = []): TestResponse
     {
-        return $this->getRoute('permitted-user.list', $parameters);
+        return $this->generateOptionsRoute('resource-type.show.options', $parameters);
     }
 
-    protected function getResourceType(array $parameters = []): TestResponse
+    protected function fetchOptionsForResourceTypeCollection(array $parameters = []): TestResponse
     {
-        return $this->getRoute('resource-type.show', $parameters);
+        return $this->generateOptionsRoute('resource-type.list.options', $parameters);
     }
 
-    protected function getResourceTypes(array $parameters = []): TestResponse
-    {
-        return $this->getRoute('resource-type.list', $parameters);
-    }
-
-    protected function getRoute(string $route, array $parameters = []): TestResponse
+    protected function generatedRoute(string $route, array $parameters = []): TestResponse
     {
         return $this->get(route($route, $parameters));
     }
 
-    protected function patchCategory(string $resource_type_id, string $category_id, array $payload): TestResponse
+    protected function generateOptionsRoute(string $route, array $parameters = []): TestResponse
+    {
+        return $this->options(route($route, $parameters));
+    }
+
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        $result = DB::select(DB::raw("SHOW TABLES LIKE 'users';"));
+
+        if (count($result) === 0) {
+            $this->artisan('migrate:fresh');
+
+            $user = new User();
+            $user->name = $this->faker->name;
+            $user->email = $this->email_for_expected_test_user;
+            $user->password = Hash::make($this->password_for_expected_test_user);
+            $user->save();
+        }
+    }
+
+    protected function updateRequestedCategory(string $resource_type_id, string $category_id, array $payload): TestResponse
     {
         return $this->patch(
             route(
@@ -231,7 +316,7 @@ abstract class TestCase extends BaseTestCase
         );
     }
 
-    protected function patchResource(string $resource_type_id, string $resource_id, array $payload): TestResponse
+    protected function updatedRequestedResource(string $resource_type_id, string $resource_id, array $payload): TestResponse
     {
         return $this->patch(
             route(
@@ -245,7 +330,7 @@ abstract class TestCase extends BaseTestCase
         );
     }
 
-    protected function patchResourceType(string $resource_type_id, array $payload): TestResponse
+    protected function updatedRequestedResourceType(string $resource_type_id, array $payload): TestResponse
     {
         return $this->patch(
             route('resource-type.update', ['resource_type_id' => $resource_type_id]),
@@ -253,7 +338,7 @@ abstract class TestCase extends BaseTestCase
         );
     }
 
-    protected function patchSubcategory(
+    protected function updatedRequestedSubcategory(
         string $resource_type_id,
         string $category_id,
         string $subcategory_id,
@@ -271,90 +356,5 @@ abstract class TestCase extends BaseTestCase
             ),
             $payload
         );
-    }
-
-    protected function optionsCreatePassword(array $parameters = []): TestResponse
-    {
-        return $this->optionsRoute('auth.create-password.options', $parameters);
-    }
-
-    protected function optionsRegister(array $parameters = []): TestResponse
-    {
-        return $this->optionsRoute('auth.register.options', $parameters);
-    }
-
-    protected function optionsResourceType(array $parameters = []): TestResponse
-    {
-        return $this->optionsRoute('resource-type.show.options', $parameters);
-    }
-
-    protected function optionsResourceTypeCollection(array $parameters = []): TestResponse
-    {
-        return $this->optionsRoute('resource-type.list.options', $parameters);
-    }
-
-    protected function optionsRoute(string $route, array $parameters = []): TestResponse
-    {
-        return $this->options(route($route, $parameters));
-    }
-
-    protected function postCategory(string $resource_type_id, array $payload): TestResponse
-    {
-        return $this->post(
-            route('category.create', ['resource_type_id' => $resource_type_id]),
-            $payload
-        );
-    }
-
-    protected function postPermittedUser(string $resource_type_id, array $payload): TestResponse
-    {
-        return $this->post(
-            route('permitted-user.create', ['resource_type_id' => $resource_type_id]),
-            $payload
-        );
-    }
-
-    protected function postResource(string $resource_type_id, array $payload): TestResponse
-    {
-        return $this->post(
-            route('resource.create', ['resource_type_id' => $resource_type_id]),
-            $payload
-        );
-    }
-
-    protected function postResourceType(array $payload): TestResponse
-    {
-        return $this->post(route('resource-type.create'), $payload);
-    }
-
-    protected function postSubcategory(string $resource_type_id, string $category_id, array $payload): TestResponse
-    {
-        return $this->post(
-            route(
-                'subcategory.create',
-                [
-                    'resource_type_id' => $resource_type_id,
-                    'category_id' => $category_id
-                ]
-            ),
-            $payload
-        );
-    }
-
-    protected function setUp(): void
-    {
-        parent::setUp();
-
-        $result = DB::select(DB::raw("SHOW TABLES LIKE 'users';"));
-
-        if (count($result) === 0) {
-            $this->artisan('migrate:fresh');
-
-            $user = new User();
-            $user->name = $this->faker->name;
-            $user->email = $this->test_user_email;
-            $user->password = Hash::make($this->test_user_password);
-            $user->save();
-        }
     }
 }

@@ -12,12 +12,12 @@ final class PermittedUserViewTest extends TestCase
     {
         $this->actingAs(User::find(1));
 
-        $response = $this->getResourceTypes();
+        $response = $this->fetchAllResourceTypes();
         $response->assertStatus(200);
 
         foreach ($response->json() as $resource_type) {
 
-            $permitted_user_response = $this->getPermittedUsers(['resource_type_id'=> $resource_type['id']]);
+            $permitted_user_response = $this->fetchAllPermittedUsers(['resource_type_id'=> $resource_type['id']]);
             $permitted_user_response->assertStatus(200);
 
             foreach ($permitted_user_response->json() as $permitted_user) {
@@ -27,7 +27,7 @@ final class PermittedUserViewTest extends TestCase
                     $this->fail('Unable to encode the JSON string');
                 }
 
-                $this->assertJsonIsPermittedUser($json);
+                $this->assertJsonMatchesPermittedUserSchema($json);
             }
         }
     }
@@ -37,19 +37,19 @@ final class PermittedUserViewTest extends TestCase
     {
         $this->actingAs(User::find(1));
 
-        $response = $this->getResourceTypes(['offset'=>0, 'limit'=> 1]);
+        $response = $this->fetchAllResourceTypes(['offset'=>0, 'limit'=> 1]);
         $response->assertStatus(200);
 
         $resource_type_id = $response->json()[0]['id'];
 
-        $response = $this->getPermittedUsers(['resource_type_id'=> $resource_type_id]);
+        $response = $this->fetchAllPermittedUsers(['resource_type_id'=> $resource_type_id]);
         $response->assertStatus(200);
 
         $permitted_user_id = $response->json()[0]['id'];
 
-        $response = $this->getPermittedUser(['resource_type_id'=> $resource_type_id, 'permitted_user_id' => $permitted_user_id]);
+        $response = $this->fetchPermittedUser(['resource_type_id'=> $resource_type_id, 'permitted_user_id' => $permitted_user_id]);
         $response->assertStatus(200);
 
-        $this->assertJsonIsPermittedUser($response->content());
+        $this->assertJsonMatchesPermittedUserSchema($response->content());
     }
 }

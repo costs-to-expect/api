@@ -58,10 +58,10 @@ final class AuthenticationTest extends TestCase
 
         $response->assertStatus(201);
 
-        $token = $response->json('uris.create-new-password.parameters.token');
+        $token = $response->json('uris.create-new-password.parameters.encrypted_token');
 
         $response = $this->post(
-            route('auth.create-new-password', ['email' => $this->faker->email, 'token' => $token]),
+            route('auth.create-new-password', ['email' => $this->faker->email, 'encrypted_token' => $token]),
             [
                 'password' => $password,
                 'password_confirmation' => $password
@@ -109,7 +109,7 @@ final class AuthenticationTest extends TestCase
         $response->assertStatus(201);
 
         $response = $this->post(
-            route('auth.create-new-password', ['email' => $email, 'token' => $this->faker->uuid]),
+            route('auth.create-new-password', ['email' => $email, 'encrypted_token' => $this->faker->uuid]),
             [
                 'password' => $password,
                 'password_confirmation' => $password
@@ -157,7 +157,7 @@ final class AuthenticationTest extends TestCase
         $response->assertStatus(201);
 
         $response = $this->post(
-            route('auth.create-new-password', ['email' => $this->faker->colorName, 'token' => $this->faker->colorName]),
+            route('auth.create-new-password', ['email' => $this->faker->colorName, 'encrypted_token' => $this->faker->colorName]),
             [
                 'password' => $password,
                 'password_confirmation' => $password
@@ -204,10 +204,10 @@ final class AuthenticationTest extends TestCase
 
         $response->assertStatus(201);
 
-        $token = $response->json('uris.create-new-password.parameters.token');
+        $token = $response->json('uris.create-new-password.parameters.encrypted_token');
 
         $response = $this->post(
-            route('auth.create-new-password', ['email' => $email, 'token' => $token]),
+            route('auth.create-new-password', ['email' => $email, 'encrypted_token' => $token]),
             []
         );
 
@@ -251,10 +251,10 @@ final class AuthenticationTest extends TestCase
 
         $response->assertStatus(201);
 
-        $token = $response->json('uris.create-new-password.parameters.token');
+        $token = $response->json('uris.create-new-password.parameters.encrypted_token');
 
         $response = $this->post(
-            route('auth.create-new-password', ['email' => $email, 'token' => $token]),
+            route('auth.create-new-password', ['email' => $email, 'encrypted_token' => $token]),
             [
                 'password' => $password,
                 'password_confirmation' => $password
@@ -508,7 +508,7 @@ final class AuthenticationTest extends TestCase
             ]
         );
 
-        $response->assertStatus(401);
+        $response->assertStatus(422);
     }
 
     /** @test */
@@ -547,7 +547,7 @@ final class AuthenticationTest extends TestCase
             ]
         );
 
-        $response->assertStatus(401);
+        $response->assertStatus(422);
     }
 
     /** @test */
@@ -751,7 +751,7 @@ final class AuthenticationTest extends TestCase
     /** @test */
     public function updatePasswordSuccess(): void
     {
-        $this->actingAs(User::find($this->getARandomUser()->id));
+        $this->actingAs(User::find($this->fetchRandomUser()->id));
 
         $new_password = $this->faker->password(12);
 
@@ -797,7 +797,7 @@ final class AuthenticationTest extends TestCase
     /** @test */
     public function updateProfileSuccess(): void
     {
-        $this->actingAs(User::find($this->getARandomUser()->id));
+        $this->actingAs(User::find($this->fetchRandomUser()->id));
 
         $response = $this->post(
             'v3/auth/update-profile',

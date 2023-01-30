@@ -19,7 +19,7 @@ final class ItemTypeViewTest extends TestCase
     {
         $this->actingAs(User::find(1));
 
-        $response = $this->getItemTypes();
+        $response = $this->fetchAllItemTypes();
         $response->assertStatus(200);
 
         foreach ($response->json() as $item) {
@@ -29,7 +29,7 @@ final class ItemTypeViewTest extends TestCase
                 $this->fail('Unable to encode the JSON string');
             }
 
-            $this->assertJsonIsItemType($json);
+            $this->assertJsonMatchesItemTypeSchema($json);
         }
     }
 
@@ -42,7 +42,7 @@ final class ItemTypeViewTest extends TestCase
     {
         $this->actingAs(User::find(1));
 
-        $response = $this->getItemTypes(['offset'=>1, 'limit'=> 2]);
+        $response = $this->fetchAllItemTypes(['offset'=>1, 'limit'=> 2]);
 
         $response->assertStatus(200);
         $response->assertHeader('X-Offset', 1);
@@ -55,7 +55,7 @@ final class ItemTypeViewTest extends TestCase
                 $this->fail('Unable to encode the JSON string');
             }
 
-            $this->assertJsonIsItemType($json);
+            $this->assertJsonMatchesItemTypeSchema($json);
         }
     }
 
@@ -68,7 +68,7 @@ final class ItemTypeViewTest extends TestCase
     {
         $this->actingAs(User::find(1));
 
-        $response = $this->getItemTypes(['search'=>'description:track']);
+        $response = $this->fetchAllItemTypes(['search'=>'description:track']);
 
         $response->assertStatus(200);
         $response->assertHeader('X-Search', 'description:track');
@@ -81,7 +81,7 @@ final class ItemTypeViewTest extends TestCase
                 $this->fail('Unable to encode the JSON string');
             }
 
-            $this->assertJsonIsItemType($json);
+            $this->assertJsonMatchesItemTypeSchema($json);
         }
     }
 
@@ -94,7 +94,7 @@ final class ItemTypeViewTest extends TestCase
     {
         $this->actingAs(User::find(1));
 
-        $response = $this->getItemTypes(['search'=>'name:game']);
+        $response = $this->fetchAllItemTypes(['search'=>'name:game']);
 
         $response->assertStatus(200);
         $response->assertHeader('X-Search', 'name:game');
@@ -107,7 +107,7 @@ final class ItemTypeViewTest extends TestCase
                 $this->fail('Unable to encode the JSON string');
             }
 
-            $this->assertJsonIsItemType($json);
+            $this->assertJsonMatchesItemTypeSchema($json);
         }
     }
 
@@ -120,7 +120,7 @@ final class ItemTypeViewTest extends TestCase
     {
         $this->actingAs(User::find(1));
 
-        $response = $this->getItemTypes(['search'=>'name:xxxxxxxxx']);
+        $response = $this->fetchAllItemTypes(['search'=>'name:xxxxxxxxx']);
 
         $response->assertStatus(200);
         $response->assertHeader('X-Search', 'name:xxxxxxxxx');
@@ -133,7 +133,7 @@ final class ItemTypeViewTest extends TestCase
                 $this->fail('Unable to encode the JSON string');
             }
 
-            $this->assertJsonIsItemType($json);
+            $this->assertJsonMatchesItemTypeSchema($json);
         }
     }
 
@@ -146,7 +146,7 @@ final class ItemTypeViewTest extends TestCase
     {
         $this->actingAs(User::find(1));
 
-        $response = $this->getItemTypes(['sort'=>'name:asc', 'limit' => 1]);
+        $response = $this->fetchAllItemTypes(['sort'=>'name:asc', 'limit' => 1]);
 
         $response->assertStatus(200);
         $response->assertHeader('X-Sort', 'name:asc');
@@ -159,7 +159,7 @@ final class ItemTypeViewTest extends TestCase
                 $this->fail('Unable to encode the JSON string');
             }
 
-            $this->assertJsonIsItemType($json);
+            $this->assertJsonMatchesItemTypeSchema($json);
         }
 
         $this->assertEquals('allocated-expense', $response->json()[0]['name']);
@@ -175,14 +175,14 @@ final class ItemTypeViewTest extends TestCase
     {
         $this->actingAs(User::find(1));
 
-        $response = $this->getItemTypes(['offset'=>0, 'limit'=> 1]);
+        $response = $this->fetchAllItemTypes(['offset'=>0, 'limit'=> 1]);
         $response->assertStatus(200);
 
         $item_type_id = $response->json()[0]['id'];
 
-        $response = $this->getItemType(['item_type_id'=> $item_type_id]);
+        $response = $this->fetchItemType(['item_type_id'=> $item_type_id]);
         $response->assertStatus(200);
 
-        $this->assertJsonIsItemType($response->content());
+        $this->assertJsonMatchesItemTypeSchema($response->content());
     }
 }
