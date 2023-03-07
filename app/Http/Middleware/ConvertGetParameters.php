@@ -34,13 +34,14 @@ class ConvertGetParameters
             'item-subtype',
             'item-type',
         ];
+        
 
         foreach ($params_to_convert as $param) {
             $param_value = $request->query($param);
             if ($param_value !== null) {
                 $id = $hash->decode($param, $param_value);
                 ($id !== false && is_int($id)) ? $value = $id : $value = null;
-                $request->request->add([$param => $value]);
+                $request->merge([$param => $value]);
             }
         }
 
