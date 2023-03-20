@@ -101,7 +101,7 @@
         <div class="text-bg-dark me-md-3 pt-3 px-3 pt-md-5 px-md-5 text-center overflow-hidden">
             <div class="my-3 py-3">
                 <h2 class="display-5">Open Source</h2>
-                <p class="lead">We benefit from countless Open Source projects, this is one of our ways of giving back.</p>
+                <p class="lead">We benefit from countless Open Source projects, this is one of our ways of giving back to the community.</p>
             </div>
         </div>
         <div class="bg-light me-md-3 pt-3 px-3 pt-md-5 px-md-5 text-center overflow-hidden">
@@ -116,7 +116,7 @@
         <div class="text-bg-dark me-md-3 pt-3 px-3 pt-md-5 px-md-5 text-center overflow-hidden">
             <div class="my-3 py-3">
                 <h2 class="display-5">Powerful</h2>
-                <p class="lead">Our API is scalable, we designed it knowing where we were going, we designed it knowing it would need to scale.</p>
+                <p class="lead">Our API is scalable, we designed it knowing where we were going later, we designed it knowing it would need to scale.</p>
             </div>
         </div>
         <div class="bg-light me-md-3 pt-3 px-3 pt-md-5 px-md-5 text-center overflow-hidden">
@@ -131,7 +131,7 @@
         <div class="text-bg-dark me-md-3 pt-3 px-3 pt-md-5 px-md-5 text-center overflow-hidden">
             <div class="my-3 py-3">
                 <h2 class="display-5">Configurable</h2>
-                <p class="lead">Everything is configurable, data types, validation, limits, check the config folder on GitHub.</p>
+                <p class="lead">Everything is configurable, data types, validation, limits, check the config folder on GitHub to see the configuration options.</p>
             </div>
         </div>
         <div class="bg-light me-md-3 pt-3 px-3 pt-md-5 px-md-5 text-center overflow-hidden">
@@ -146,23 +146,23 @@
         <div class="text-bg-dark me-md-3 pt-3 px-3 pt-md-5 px-md-5 text-center overflow-hidden">
             <div class="my-3 py-3">
                 <h2 class="display-5">Budget</h2>
-                <p class="lead">A free powerful easy to use budgeting tool powered by the Costs to Expect API. A budgeting tool so easy to use, it’s child play!</p>
-                <p class="small mb-0">In beta now, official release January 2023.</p>
+                <p class="lead">A free powerful easy to use open source budgeting tool powered by the Costs to Expect API. A budgeting tool so easy to use, it’s child play!</p>
+                <p class="small mb-0">Out now, officially released in January 2023.</p>
             </div>
             <div class="bg-light shadow-sm mx-auto"
                  style="width: 80%; border-radius: 21px 21px 0 0;">
-                <a href="https://budget.costs-to-expect.com"><img src="{{ asset('images/budget.png') }}" width="350" alt="A screen shot the budget overview in Budget" class="img-fluid" /></a>
+                <a href="https://budget.costs-to-expect.com"><img src="{{ asset('images/budget.png') }}" width="485" alt="A screen shot of the budget overview in Budget" class="img-fluid" /></a>
             </div>
         </div>
         <div class="bg-light me-md-3 pt-3 px-3 pt-md-5 px-md-5 text-center overflow-hidden">
             <div class="my-3 p-3">
                 <h2 class="display-5">Budget Pro</h2>
-                <p class="lead">Budget Pro is Budget on steroids - it's everything you love about Budget and much more.</p>
+                <p class="lead">Budget Pro is Budget on steroids - it's everything you love about Budget improved in every way. More viewing options, more controls, you name it.</p>
                 <p class="small mb-0">In development, due in the first half of 2023.</p>
             </div>
             <div class="bg-dark shadow-sm mx-auto"
                  style="width: 80%; border-radius: 21px 21px 0 0;">
-                <a href="https://budget-pro.costs-to-expect.com"><img src="{{ asset('images/budget.png') }}" width="350" height="" alt="A screen shot the budget overview in Budget" class="img-fluid" /></a>
+                <a href="https://budget-pro.costs-to-expect.com"><img src="{{ asset('images/budget-pro.png') }}" width="489" height="" alt="A screen shot of the budget overview in Budget Pro" class="img-fluid" /></a>
             </div>
         </div>
     </div>
@@ -171,7 +171,7 @@
         <div class="text-bg-dark me-md-3 pt-3 px-3 pt-md-5 px-md-5 text-center overflow-hidden">
             <div class="my-3 py-3">
                 <h2 class="display-5">Yahtzee Game Scorer</h2>
-                <p class="lead">A fun little project powered by the API, no more designated scorer, everyone gets a score sheet</p>
+                <p class="lead">A fun little project powered by the Costs to Expect API, no more designated scorer, everyone gets a score sheet</p>
             </div>
             <div class="bg-light shadow-sm mx-auto"
                  style="width: 80%; border-radius: 21px 21px 0 0;">
