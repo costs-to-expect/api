@@ -7,7 +7,7 @@ $version = Config::get('api.app.version');
 
 Route::view(
     '',
-    'welcome',
+    'landing',
     [
         'maintenance' => app()->isDownForMaintenance(),
         'version' => $version['version'],
