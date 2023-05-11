@@ -2,6 +2,10 @@
 
 The complete changelog for the Costs to Expect REST API, our changelog follows the format defined at https://keepachangelog.com/en/1.0.0/
 
+## [v3.10.0] - 2023-05-11
+### Changed
+- New landing page, switched to Tailwind
+
 ## [v3.09.0] - 2023-01-30
 ### Changed
 - Split all route files based on 'entity' rather than 'visibility'.
