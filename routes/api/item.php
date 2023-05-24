@@ -60,7 +60,7 @@ Route::group(
         Route::post(
             'resource-types/{resource_type_id}/resources/{resource_id}/items',
             [App\Http\Controllers\Action\ItemController::class, 'create']
-        );
+        )->name('item.create');
 
         Route::delete(
             'resource-types/{resource_type_id}/resources/{resource_id}/items/{item_id}',

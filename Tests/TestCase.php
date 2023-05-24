@@ -41,6 +41,10 @@ abstract class TestCase extends BaseTestCase
         ]
     ];
 
+    protected array $currency = [
+        'GBP' => 'epMqeYqPkL',
+    ];
+
     protected function assertJsonMatchesCategorySchema($content): void
     {
         $this->assertProvidedJsonMatchesDefinedSchema($content, 'api/schema/category.json');
@@ -230,6 +234,24 @@ abstract class TestCase extends BaseTestCase
         }
 
         $this->fail('Unable to create the game resource type');
+    }
+
+    protected function createItem(
+        string $resource_type_id,
+        string $resource_id,
+        array $payload
+    ): TestResponse
+    {
+        return $this->post(
+            route(
+                'item.create',
+                [
+                    'resource_type_id' => $resource_type_id,
+                    'resource_id' => $resource_id
+                ]
+            ),
+            $payload
+        );
     }
 
     protected function createRandomSubcategory(string $resource_type_id, string $category_id): string
