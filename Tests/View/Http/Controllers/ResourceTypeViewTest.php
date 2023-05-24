@@ -11,7 +11,7 @@ final class ResourceTypeViewTest extends TestCase
     public function optionsRequestForResourceType(): void
     {
         $this->actingAs(User::find(1));
-        $resource_type_id = $this->createRandomResourceType();
+        $resource_type_id = $this->createAllocatedExpenseResourceType();
 
         $response = $this->fetchOptionsForResourceType(['resource_type_id' => $resource_type_id]);
         $response->assertStatus(200);

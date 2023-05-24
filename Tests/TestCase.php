@@ -18,6 +18,13 @@ abstract class TestCase extends BaseTestCase
     protected string $email_for_expected_test_user = 'test-account-email@email.com';
     protected string $password_for_expected_test_user = 'test-account-secret-password';
 
+    protected array $item_types = [
+        'allocated-expense' => 'OqZwKX16bW',
+        'game' => '2AP1axw6L7',
+        'budget' => 'VezyrJyMlk',
+        'budget-pro' => 'WkxwR04GPo'
+    ];
+
     protected function assertJsonMatchesCategorySchema($content): void
     {
         $this->assertProvidedJsonMatchesDefinedSchema($content, 'api/schema/category.json');
@@ -97,14 +104,14 @@ abstract class TestCase extends BaseTestCase
         $this->fail('Unable to create the resource');
     }
 
-    protected function createRandomResourceType(): string
+    protected function createAllocatedExpenseResourceType(): string
     {
         $response = $this->createRequestedResourceType(
             [
                 'name' => $this->faker->text(255),
                 'description' => $this->faker->text,
                 'data' => '{"field":true}',
-                'item_type_id' => 'OqZwKX16bW',
+                'item_type_id' => $this->item_types['allocated-expense'],
                 'public' => false
             ]
         );
@@ -113,7 +120,7 @@ abstract class TestCase extends BaseTestCase
             return $response->json('id');
         }
 
-        $this->fail('Unable to create the resource type');
+        $this->fail('Unable to create the allocated expense resource type');
     }
 
     protected function createRandomSubcategory(string $resource_type_id, string $category_id): string
@@ -175,6 +182,29 @@ abstract class TestCase extends BaseTestCase
             ),
             $payload
         );
+    }
+
+    protected function createResourceType($item_type): string
+    {
+        if (array_key_exists($item_type, $this->item_types) === false) {
+            $this->fail('The requested item type is not an allowable value "' . $this->item_types[$item_type] . '"');
+        }
+
+        $response = $this->createRequestedResourceType(
+            [
+                'name' => $this->faker->text(255),
+                'description' => $this->faker->text,
+                'data' => '{"field":true}',
+                'item_type_id' => $this->item_types[$item_type],
+                'public' => false
+            ]
+        );
+
+        if ($response->assertStatus(201)) {
+            return $response->json('id');
+        }
+
+        $this->fail('Unable to create the ' . $this->item_types[$item_type] . ' resource type');
     }
 
     protected function deleteRequestedCategory(string $resource_type_id, $category_id): TestResponse

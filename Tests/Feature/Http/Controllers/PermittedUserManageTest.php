@@ -12,7 +12,7 @@ final class PermittedUserManageTest extends TestCase
     {
         $this->actingAs(User::find(1));
 
-        $id = $this->createRandomResourceType();
+        $id = $this->createAllocatedExpenseResourceType();
 
         $response = $this->createRequestedPermittedUser(
             $id,
@@ -27,7 +27,7 @@ final class PermittedUserManageTest extends TestCase
     {
         $this->actingAs(User::find(1));
 
-        $id = $this->createRandomResourceType();
+        $id = $this->createAllocatedExpenseResourceType();
 
         $response = $this->createRequestedPermittedUser(
             $id,
@@ -44,7 +44,7 @@ final class PermittedUserManageTest extends TestCase
     {
         $this->actingAs(User::find(1));
 
-        $id = $this->createRandomResourceType();
+        $id = $this->createAllocatedExpenseResourceType();
         $user = $this->fetchRandomUser();
 
         $response = $this->createRequestedPermittedUser(
@@ -62,7 +62,7 @@ final class PermittedUserManageTest extends TestCase
     {
         $this->actingAs(User::find(1));
 
-        $resource_type_id = $this->createRandomResourceType();
+        $resource_type_id = $this->createAllocatedExpenseResourceType();
         $user = $this->fetchRandomUser();
 
         $response = $this->createRequestedPermittedUser(

@@ -14,7 +14,7 @@ final class CategoryManageTest extends TestCase
     {
         $this->actingAs(User::find(1));
 
-        $id = $this->createRandomResourceType();
+        $id = $this->createAllocatedExpenseResourceType();
 
         $response = $this->createRequestedCategory(
             $id,
@@ -31,7 +31,7 @@ final class CategoryManageTest extends TestCase
     {
         $this->actingAs(User::find(1));
 
-        $id = $this->createRandomResourceType();
+        $id = $this->createAllocatedExpenseResourceType();
 
         $response = $this->createRequestedCategory(
             $id,
@@ -77,7 +77,7 @@ final class CategoryManageTest extends TestCase
     {
         $this->actingAs(User::find(1));
 
-        $id = $this->createRandomResourceType();
+        $id = $this->createAllocatedExpenseResourceType();
 
         $response = $this->createRequestedCategory(
             $id,
@@ -92,7 +92,7 @@ final class CategoryManageTest extends TestCase
     {
         $this->actingAs(User::find(1));
 
-        $id = $this->createRandomResourceType();
+        $id = $this->createAllocatedExpenseResourceType();
 
         $name = $this->faker->text(200);
 
@@ -123,7 +123,7 @@ final class CategoryManageTest extends TestCase
     {
         $this->actingAs(User::find(1));
 
-        $id = $this->createRandomResourceType();
+        $id = $this->createAllocatedExpenseResourceType();
 
         $response = $this->createRequestedCategory(
             $id,
@@ -142,7 +142,7 @@ final class CategoryManageTest extends TestCase
     {
         $this->actingAs(User::find(1));
 
-        $resource_type_id = $this->createRandomResourceType();
+        $resource_type_id = $this->createAllocatedExpenseResourceType();
         $id = $this->createRandomCategory($resource_type_id);
 
         $response = $this->deleteRequestedCategory($resource_type_id, $id);
@@ -155,7 +155,7 @@ final class CategoryManageTest extends TestCase
     {
         $this->actingAs(User::find(1));
 
-        $resource_type_id = $this->createRandomResourceType();
+        $resource_type_id = $this->createAllocatedExpenseResourceType();
         $category_id = $this->createRandomCategory($resource_type_id);
 
         $response = $this->updateRequestedCategory(
@@ -174,7 +174,7 @@ final class CategoryManageTest extends TestCase
     {
         $this->actingAs(User::find(1));
 
-        $resource_type_id = $this->createRandomResourceType();
+        $resource_type_id = $this->createAllocatedExpenseResourceType();
         $category_id = $this->createRandomCategory($resource_type_id);
 
         $response = $this->updateRequestedCategory(
@@ -191,7 +191,7 @@ final class CategoryManageTest extends TestCase
     {
         $this->actingAs(User::find(1));
 
-        $resource_type_id = $this->createRandomResourceType();
+        $resource_type_id = $this->createAllocatedExpenseResourceType();
 
         // Create first category
         $name = $this->faker->text(200);
@@ -234,7 +234,7 @@ final class CategoryManageTest extends TestCase
     {
         $this->actingAs(User::find(1));
 
-        $resource_type_id = $this->createRandomResourceType();
+        $resource_type_id = $this->createAllocatedExpenseResourceType();
         $category_id = $this->createRandomCategory($resource_type_id);
 
         $response = $this->updateRequestedCategory(

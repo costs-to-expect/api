@@ -14,7 +14,7 @@ final class ResourceManageTest extends TestCase
     {
         $this->actingAs(User::find(1));
 
-        $id = $this->createRandomResourceType();
+        $id = $this->createAllocatedExpenseResourceType();
 
         $response = $this->createRequestedResource(
             $id,
@@ -34,7 +34,7 @@ final class ResourceManageTest extends TestCase
     {
         $this->actingAs(User::find(1));
 
-        $id = $this->createRandomResourceType();
+        $id = $this->createAllocatedExpenseResourceType();
 
         $response = $this->createRequestedResource(
             $id,
@@ -54,7 +54,7 @@ final class ResourceManageTest extends TestCase
     {
         $this->actingAs(User::find(1));
 
-        $id = $this->createRandomResourceType();
+        $id = $this->createAllocatedExpenseResourceType();
 
         $response = $this->createRequestedResource(
             $id,
@@ -73,7 +73,7 @@ final class ResourceManageTest extends TestCase
     {
         $this->actingAs(User::find(1));
 
-        $id = $this->createRandomResourceType();
+        $id = $this->createAllocatedExpenseResourceType();
 
         $response = $this->createRequestedResource(
             $id,
@@ -92,7 +92,7 @@ final class ResourceManageTest extends TestCase
     {
         $this->actingAs(User::find(1));
 
-        $id = $this->createRandomResourceType();
+        $id = $this->createAllocatedExpenseResourceType();
 
         $response = $this->createRequestedResource(
             $id,
@@ -137,7 +137,7 @@ final class ResourceManageTest extends TestCase
     {
         $this->actingAs(User::find(1));
 
-        $id = $this->createRandomResourceType();
+        $id = $this->createAllocatedExpenseResourceType();
 
         $name = $this->faker->text(200);
 
@@ -170,7 +170,7 @@ final class ResourceManageTest extends TestCase
     {
         $this->actingAs(User::find(1));
 
-        $id = $this->createRandomResourceType();
+        $id = $this->createAllocatedExpenseResourceType();
 
         $response = $this->createRequestedResource(
             $id,
@@ -190,7 +190,7 @@ final class ResourceManageTest extends TestCase
     {
         $this->actingAs(User::find(1));
 
-        $id = $this->createRandomResourceType();
+        $id = $this->createAllocatedExpenseResourceType();
 
         $response = $this->createRequestedResource(
             $id,
@@ -211,7 +211,7 @@ final class ResourceManageTest extends TestCase
     {
         $this->actingAs(User::find(1));
 
-        $resource_type_id = $this->createRandomResourceType();
+        $resource_type_id = $this->createAllocatedExpenseResourceType();
         $id = $this->createRandomResource($resource_type_id);
 
         $response = $this->deleteRequestedResource($resource_type_id, $id);
@@ -224,7 +224,7 @@ final class ResourceManageTest extends TestCase
     {
         $this->actingAs(User::find(1));
 
-        $resource_type_id = $this->createRandomResourceType();
+        $resource_type_id = $this->createAllocatedExpenseResourceType();
         $resource_id = $this->createRandomResource($resource_type_id);
 
         $response = $this->updatedRequestedResource(
@@ -243,7 +243,7 @@ final class ResourceManageTest extends TestCase
     {
         $this->actingAs(User::find(1));
 
-        $resource_type_id = $this->createRandomResourceType();
+        $resource_type_id = $this->createAllocatedExpenseResourceType();
         $resource_id = $this->createRandomResource($resource_type_id);
 
         $response = $this->updatedRequestedResource(
@@ -260,7 +260,7 @@ final class ResourceManageTest extends TestCase
     {
         $this->actingAs(User::find(1));
 
-        $resource_type_id = $this->createRandomResourceType();
+        $resource_type_id = $this->createAllocatedExpenseResourceType();
 
         // Create first resource
         $name = $this->faker->text(200);
@@ -305,7 +305,7 @@ final class ResourceManageTest extends TestCase
     {
         $this->actingAs(User::find(1));
 
-        $resource_type_id = $this->createRandomResourceType();
+        $resource_type_id = $this->createAllocatedExpenseResourceType();
         $resource_id = $this->createRandomResource($resource_type_id);
 
         $response = $this->updatedRequestedResource(

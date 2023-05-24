@@ -12,7 +12,7 @@ final class SubcategoryManageTest extends TestCase
     {
         $this->actingAs(User::find(1));
 
-        $resource_type_id = $this->createRandomResourceType();
+        $resource_type_id = $this->createAllocatedExpenseResourceType();
         $category_id = $this->createRandomCategory($resource_type_id);
 
         $response = $this->createRequestedSubcategory(
@@ -31,7 +31,7 @@ final class SubcategoryManageTest extends TestCase
     {
         $this->actingAs(User::find(1));
 
-        $resource_type_id = $this->createRandomResourceType();
+        $resource_type_id = $this->createAllocatedExpenseResourceType();
         $category_id = $this->createRandomCategory($resource_type_id);
 
         $response = $this->createRequestedSubcategory(
@@ -48,7 +48,7 @@ final class SubcategoryManageTest extends TestCase
     {
         $this->actingAs(User::find(1));
 
-        $resource_type_id = $this->createRandomResourceType();
+        $resource_type_id = $this->createAllocatedExpenseResourceType();
         $category_id = $this->createRandomCategory($resource_type_id);
         $name = $this->faker->text();
 
@@ -81,7 +81,7 @@ final class SubcategoryManageTest extends TestCase
     {
         $this->actingAs(User::find(1));
 
-        $resource_type_id = $this->createRandomResourceType();
+        $resource_type_id = $this->createAllocatedExpenseResourceType();
 
         $response = $this->createRequestedSubcategory(
             $resource_type_id,
@@ -99,7 +99,7 @@ final class SubcategoryManageTest extends TestCase
     {
         $this->actingAs(User::find(1));
 
-        $resource_type_id = $this->createRandomResourceType();
+        $resource_type_id = $this->createAllocatedExpenseResourceType();
         $category_id = $this->createRandomCategory($resource_type_id);
 
         $response = $this->createRequestedSubcategory(
@@ -119,7 +119,7 @@ final class SubcategoryManageTest extends TestCase
     {
         $this->actingAs(User::find(1));
 
-        $resource_type_id = $this->createRandomResourceType();
+        $resource_type_id = $this->createAllocatedExpenseResourceType();
         $category_id = $this->createRandomCategory($resource_type_id);
         $subcategory_id = $this->createRandomSubcategory($resource_type_id, $category_id);
 
@@ -137,7 +137,7 @@ final class SubcategoryManageTest extends TestCase
     {
         $this->actingAs(User::find(1));
 
-        $resource_type_id = $this->createRandomResourceType();
+        $resource_type_id = $this->createAllocatedExpenseResourceType();
         $category_id = $this->createRandomCategory($resource_type_id);
         $subcategory_id = $this->createRandomSubcategory($resource_type_id, $category_id);
 
@@ -158,7 +158,7 @@ final class SubcategoryManageTest extends TestCase
     {
         $this->actingAs(User::find(1));
 
-        $resource_type_id = $this->createRandomResourceType();
+        $resource_type_id = $this->createAllocatedExpenseResourceType();
         $category_id = $this->createRandomCategory($resource_type_id);
         $subcategory_id = $this->createRandomSubcategory($resource_type_id, $category_id);
 
@@ -177,7 +177,7 @@ final class SubcategoryManageTest extends TestCase
     {
         $this->actingAs(User::find(1));
 
-        $resource_type_id = $this->createRandomResourceType();
+        $resource_type_id = $this->createAllocatedExpenseResourceType();
         $category_id = $this->createRandomCategory($resource_type_id);
 
         // Create first subcategory
@@ -226,7 +226,7 @@ final class SubcategoryManageTest extends TestCase
     {
         $this->actingAs(User::find(1));
 
-        $resource_type_id = $this->createRandomResourceType();
+        $resource_type_id = $this->createAllocatedExpenseResourceType();
         $category_id = $this->createRandomCategory($resource_type_id);
         $subcategory_id = $this->createRandomSubcategory($resource_type_id, $category_id);
 
@@ -247,7 +247,7 @@ final class SubcategoryManageTest extends TestCase
     {
         $this->actingAs(User::find(1));
 
-        $resource_type_id = $this->createRandomResourceType();
+        $resource_type_id = $this->createAllocatedExpenseResourceType();
         $category_id = $this->createRandomCategory($resource_type_id);
         $subcategory_id = $this->createRandomSubcategory($resource_type_id, $category_id);
 
@@ -268,7 +268,7 @@ final class SubcategoryManageTest extends TestCase
     {
         $this->actingAs(User::find(1));
 
-        $resource_type_id = $this->createRandomResourceType();
+        $resource_type_id = $this->createAllocatedExpenseResourceType();
         $category_id = $this->createRandomCategory($resource_type_id);
         $subcategory_id = $this->createRandomSubcategory($resource_type_id, $category_id);
 

@@ -8,6 +8,78 @@ use Tests\TestCase;
 final class ResourceTypeManageTest extends TestCase
 {
     /** @test */
+    public function createAllocatedExpenseResourceTypeSuccess(): void
+    {
+        $this->actingAs(User::find(1));
+
+        $response = $this->createRequestedResourceType(
+            [
+                'name' => $this->faker->text(255),
+                'description' => $this->faker->text,
+                'item_type_id' => $this->item_types['allocated-expense'],
+                'public' => false
+            ]
+        );
+
+        $response->assertStatus(201);
+        $this->assertJsonMatchesResourceTypeSchema($response->content());
+    }
+
+    /** @test */
+    public function createBudgetProResourceTypeSuccess(): void
+    {
+        $this->actingAs(User::find(1));
+
+        $response = $this->createRequestedResourceType(
+            [
+                'name' => $this->faker->text(255),
+                'description' => $this->faker->text,
+                'item_type_id' => $this->item_types['budget-pro'],
+                'public' => false
+            ]
+        );
+
+        $response->assertStatus(201);
+        $this->assertJsonMatchesResourceTypeSchema($response->content());
+    }
+
+    /** @test */
+    public function createBudgetResourceTypeSuccess(): void
+    {
+        $this->actingAs(User::find(1));
+
+        $response = $this->createRequestedResourceType(
+            [
+                'name' => $this->faker->text(255),
+                'description' => $this->faker->text,
+                'item_type_id' => $this->item_types['budget'],
+                'public' => false
+            ]
+        );
+
+        $response->assertStatus(201);
+        $this->assertJsonMatchesResourceTypeSchema($response->content());
+    }
+
+    /** @test */
+    public function createGameResourceTypeSuccess(): void
+    {
+        $this->actingAs(User::find(1));
+
+        $response = $this->createRequestedResourceType(
+            [
+                'name' => $this->faker->text(255),
+                'description' => $this->faker->text,
+                'item_type_id' => $this->item_types['game'],
+                'public' => false
+            ]
+        );
+
+        $response->assertStatus(201);
+        $this->assertJsonMatchesResourceTypeSchema($response->content());
+    }
+
+    /** @test */
     public function createResourceTypeFailsDataFieldNotValidJson(): void
     {
         $this->actingAs(User::find(1));
@@ -17,7 +89,7 @@ final class ResourceTypeManageTest extends TestCase
                 'name' => $this->faker->text(200),
                 'description' => $this->faker->text(200),
                 'data' => '{"field": "value}',
-                'item_type_id' => 'OqZwKX16bW',
+                'item_type_id' => $this->item_types['allocated_expense'],
             ]
         );
 
@@ -48,7 +120,7 @@ final class ResourceTypeManageTest extends TestCase
         $response = $this->createRequestedResourceType(
             [
                 'name' => $this->faker->text(200),
-                'item_type_id' => 'OqZwKX16bW'
+                'item_type_id' => $this->item_types['allocated_expense']
             ]
         );
 
@@ -63,7 +135,7 @@ final class ResourceTypeManageTest extends TestCase
         $response = $this->createRequestedResourceType(
             [
                 'description' => $this->faker->text(200),
-                'item_type_id' => 'OqZwKX16bW'
+                'item_type_id' => $this->item_types['allocated_expense']
             ]
         );
 
@@ -93,7 +165,7 @@ final class ResourceTypeManageTest extends TestCase
             [
                 'name' => $name,
                 'description' => $this->faker->text,
-                'item_type_id' => 'OqZwKX16bW',
+                'item_type_id' => $this->item_types['allocated_expense'],
                 'public' => false
             ]
         );
@@ -106,7 +178,7 @@ final class ResourceTypeManageTest extends TestCase
             [
                 'name' => $name,
                 'description' => $this->faker->text,
-                'item_type_id' => 'OqZwKX16bW',
+                'item_type_id' => $this->item_types['allocated_expense'],
                 'public' => false
             ]
         );
@@ -125,24 +197,6 @@ final class ResourceTypeManageTest extends TestCase
     }
 
     /** @test */
-    public function createResourceTypeSuccess(): void
-    {
-        $this->actingAs(User::find(1));
-
-        $response = $this->createRequestedResourceType(
-            [
-                'name' => $this->faker->text(255),
-                'description' => $this->faker->text,
-                'item_type_id' => 'OqZwKX16bW',
-                'public' => false
-            ]
-        );
-
-        $response->assertStatus(201);
-        $this->assertJsonMatchesResourceTypeSchema($response->content());
-    }
-
-    /** @test */
     public function createResourceTypeSuccessIncludeDataField(): void
     {
         $this->actingAs(User::find(1));
@@ -152,7 +206,7 @@ final class ResourceTypeManageTest extends TestCase
                 'name' => $this->faker->text(255),
                 'description' => $this->faker->text,
                 'data' => '{"field": "value"}',
-                'item_type_id' => 'OqZwKX16bW',
+                'item_type_id' => $this->item_types['allocated-expense'],
                 'public' => false
             ]
         );
@@ -170,7 +224,7 @@ final class ResourceTypeManageTest extends TestCase
             [
                 'name' => $this->faker->text(255),
                 'description' => $this->faker->text,
-                'item_type_id' => 'OqZwKX16bW',
+                'item_type_id' => $this->item_types['allocated-expense'],
                 'public' => false
             ]
         );
@@ -194,7 +248,7 @@ final class ResourceTypeManageTest extends TestCase
             [
                 'name' => $this->faker->text(255),
                 'description' => $this->faker->text,
-                'item_type_id' => 'OqZwKX16bW',
+                'item_type_id' => $this->item_types['allocated-expense'],
                 'public' => false
             ]
         );
@@ -223,7 +277,7 @@ final class ResourceTypeManageTest extends TestCase
             [
                 'name' => $this->faker->text(255),
                 'description' => $this->faker->text,
-                'item_type_id' => 'OqZwKX16bW',
+                'item_type_id' => $this->item_types['allocated-expense'],
                 'public' => false
             ]
         );
@@ -253,7 +307,7 @@ final class ResourceTypeManageTest extends TestCase
             [
                 'name' => $name,
                 'description' => $this->faker->text(255),
-                'item_type_id' => 'OqZwKX16bW',
+                'item_type_id' => $this->item_types['allocated-expense'],
                 'public' => false
             ]
         );
@@ -266,7 +320,7 @@ final class ResourceTypeManageTest extends TestCase
             [
                 'name' => $this->faker->text(255),
                 'description' => $this->faker->text(255),
-                'item_type_id' => 'OqZwKX16bW',
+                'item_type_id' => $this->item_types['allocated-expense'],
                 'public' => false
             ]
         );
@@ -296,7 +350,7 @@ final class ResourceTypeManageTest extends TestCase
             [
                 'name' => $this->faker->text(255),
                 'description' => $this->faker->text,
-                'item_type_id' => 'OqZwKX16bW',
+                'item_type_id' => $this->item_types['allocated-expense'],
                 'public' => false
             ]
         );
