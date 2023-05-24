@@ -216,7 +216,7 @@ final class ResourceTypeTest extends TestCase
     }
 
     /** @test */
-    public function deleteResourceTypeSuccess(): void
+    public function deleteAllocatedExpenseResourceTypeSuccess(): void
     {
         $this->actingAs(User::find(1));
 
@@ -225,6 +225,78 @@ final class ResourceTypeTest extends TestCase
                 'name' => $this->faker->text(255),
                 'description' => $this->faker->text,
                 'item_type_id' => $this->item_types['allocated-expense'],
+                'public' => false
+            ]
+        );
+
+        $response->assertStatus(201);
+        $this->assertJsonMatchesResourceTypeSchema($response->content());
+
+        $id = $response->json('id');
+
+        $response = $this->deleteRequestedResourceType($id);
+
+        $response->assertStatus(204);
+    }
+
+    /** @test */
+    public function deleteBudgetProResourceTypeSuccess(): void
+    {
+        $this->actingAs(User::find(1));
+
+        $response = $this->createResourceType(
+            [
+                'name' => $this->faker->text(255),
+                'description' => $this->faker->text,
+                'item_type_id' => $this->item_types['budget-pro'],
+                'public' => false
+            ]
+        );
+
+        $response->assertStatus(201);
+        $this->assertJsonMatchesResourceTypeSchema($response->content());
+
+        $id = $response->json('id');
+
+        $response = $this->deleteRequestedResourceType($id);
+
+        $response->assertStatus(204);
+    }
+
+    /** @test */
+    public function deleteBudgetResourceTypeSuccess(): void
+    {
+        $this->actingAs(User::find(1));
+
+        $response = $this->createResourceType(
+            [
+                'name' => $this->faker->text(255),
+                'description' => $this->faker->text,
+                'item_type_id' => $this->item_types['budget'],
+                'public' => false
+            ]
+        );
+
+        $response->assertStatus(201);
+        $this->assertJsonMatchesResourceTypeSchema($response->content());
+
+        $id = $response->json('id');
+
+        $response = $this->deleteRequestedResourceType($id);
+
+        $response->assertStatus(204);
+    }
+
+    /** @test */
+    public function deleteGameResourceTypeSuccess(): void
+    {
+        $this->actingAs(User::find(1));
+
+        $response = $this->createResourceType(
+            [
+                'name' => $this->faker->text(255),
+                'description' => $this->faker->text,
+                'item_type_id' => $this->item_types['game'],
                 'public' => false
             ]
         );
@@ -351,6 +423,93 @@ final class ResourceTypeTest extends TestCase
                 'name' => $this->faker->text(255),
                 'description' => $this->faker->text,
                 'item_type_id' => $this->item_types['allocated-expense'],
+                'public' => false
+            ]
+        );
+
+        $response->assertStatus(201);
+        $this->assertJsonMatchesResourceTypeSchema($response->content());
+
+        $id = $response->json('id');
+
+        $response = $this->updatedRequestedResourceType(
+            $id,
+            [
+                'name' => $this->faker->text(100)
+            ]
+        );
+
+        $response->assertStatus(204);
+    }
+
+    /** @test */
+    public function updateBudgetProResourceTypeSuccess(): void
+    {
+        $this->actingAs(User::find(1));
+
+        $response = $this->createResourceType(
+            [
+                'name' => $this->faker->text(255),
+                'description' => $this->faker->text,
+                'item_type_id' => $this->item_types['budget-pro'],
+                'public' => false
+            ]
+        );
+
+        $response->assertStatus(201);
+        $this->assertJsonMatchesResourceTypeSchema($response->content());
+
+        $id = $response->json('id');
+
+        $response = $this->updatedRequestedResourceType(
+            $id,
+            [
+                'name' => $this->faker->text(100)
+            ]
+        );
+
+        $response->assertStatus(204);
+    }
+
+    /** @test */
+    public function updateBudgetResourceTypeSuccess(): void
+    {
+        $this->actingAs(User::find(1));
+
+        $response = $this->createResourceType(
+            [
+                'name' => $this->faker->text(255),
+                'description' => $this->faker->text,
+                'item_type_id' => $this->item_types['budget'],
+                'public' => false
+            ]
+        );
+
+        $response->assertStatus(201);
+        $this->assertJsonMatchesResourceTypeSchema($response->content());
+
+        $id = $response->json('id');
+
+        $response = $this->updatedRequestedResourceType(
+            $id,
+            [
+                'name' => $this->faker->text(100)
+            ]
+        );
+
+        $response->assertStatus(204);
+    }
+
+    /** @test */
+    public function updateGameResourceTypeSuccess(): void
+    {
+        $this->actingAs(User::find(1));
+
+        $response = $this->createResourceType(
+            [
+                'name' => $this->faker->text(255),
+                'description' => $this->faker->text,
+                'item_type_id' => $this->item_types['game'],
                 'public' => false
             ]
         );
