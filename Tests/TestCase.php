@@ -28,6 +28,16 @@ abstract class TestCase extends BaseTestCase
     protected array $item_subtypes = [
         'allocated-expense' => [
             'default' => 'a56kbWV82n',
+        ],
+        'budget' => [
+            'default' => 'Q6OV9dk5dE',
+        ],
+        'budget-pro' => [
+            'default' => 'Y2ekBdlEbz',
+        ],
+        'game' => [
+            'yahtzee' => '3JgkeMkB4q',
+            'yatzy' => 'OZYlY5lbPJ',
         ]
     ];
 
@@ -99,7 +109,7 @@ abstract class TestCase extends BaseTestCase
             [
                 'name' => $this->faker->text(200),
                 'description' => $this->faker->text(200),
-                'item_subtype_id' => 'a56kbWV82n'
+                'item_subtype_id' => $this->item_subtypes['allocated-expense']['default'],
             ]
         );
 
@@ -127,6 +137,99 @@ abstract class TestCase extends BaseTestCase
         }
 
         $this->fail('Unable to create the allocated expense resource type');
+    }
+
+    protected function createBudgetProResourceType(): string
+    {
+        $response = $this->createResourceType(
+            [
+                'name' => $this->faker->text(255),
+                'description' => $this->faker->text,
+                'data' => '{"field":true}',
+                'item_type_id' => $this->item_types['budget-pro'],
+                'public' => false
+            ]
+        );
+
+        if ($response->assertStatus(201)) {
+            return $response->json('id');
+        }
+
+        $this->fail('Unable to create the budget pro resource type');
+    }
+
+    protected function createBudgetProResource(string $resource_type_id): string
+    {
+        $response = $this->createResource(
+            $resource_type_id,
+            [
+                'name' => $this->faker->text(200),
+                'description' => $this->faker->text(200),
+                'item_subtype_id' => $this->item_subtypes['budget-pro']['default']
+            ]
+        );
+
+        if ($response->assertStatus(201)) {
+            return $response->json('id');
+        }
+
+        $this->fail('Unable to create the resource');
+    }
+
+    protected function createBudgetResource(string $resource_type_id): string
+    {
+        $response = $this->createResource(
+            $resource_type_id,
+            [
+                'name' => $this->faker->text(200),
+                'description' => $this->faker->text(200),
+                'item_subtype_id' => $this->item_subtypes['budget']['default']
+            ]
+        );
+
+        if ($response->assertStatus(201)) {
+            return $response->json('id');
+        }
+
+        $this->fail('Unable to create the resource');
+    }
+
+    protected function createBudgetResourceType(): string
+    {
+        $response = $this->createResourceType(
+            [
+                'name' => $this->faker->text(255),
+                'description' => $this->faker->text,
+                'data' => '{"field":true}',
+                'item_type_id' => $this->item_types['budget'],
+                'public' => false
+            ]
+        );
+
+        if ($response->assertStatus(201)) {
+            return $response->json('id');
+        }
+
+        $this->fail('Unable to create the budget resource type');
+    }
+
+    protected function createGameResourceType(): string
+    {
+        $response = $this->createResourceType(
+            [
+                'name' => $this->faker->text(255),
+                'description' => $this->faker->text,
+                'data' => '{"field":true}',
+                'item_type_id' => $this->item_types['game'],
+                'public' => false
+            ]
+        );
+
+        if ($response->assertStatus(201)) {
+            return $response->json('id');
+        }
+
+        $this->fail('Unable to create the game resource type');
     }
 
     protected function createRandomSubcategory(string $resource_type_id, string $category_id): string
@@ -211,6 +314,42 @@ abstract class TestCase extends BaseTestCase
         }
 
         $this->fail('Unable to create the ' . $this->item_types[$item_type] . ' resource type');
+    }
+
+    protected function createYahtzeeResource(string $resource_type_id): string
+    {
+        $response = $this->createResource(
+            $resource_type_id,
+            [
+                'name' => $this->faker->text(200),
+                'description' => $this->faker->text(200),
+                'item_subtype_id' => $this->item_subtypes['game']['yahtzee']
+            ]
+        );
+
+        if ($response->assertStatus(201)) {
+            return $response->json('id');
+        }
+
+        $this->fail('Unable to create the resource');
+    }
+
+    protected function createYatzyResource(string $resource_type_id): string
+    {
+        $response = $this->createResource(
+            $resource_type_id,
+            [
+                'name' => $this->faker->text(200),
+                'description' => $this->faker->text(200),
+                'item_subtype_id' => $this->item_subtypes['game']['yatzy']
+            ]
+        );
+
+        if ($response->assertStatus(201)) {
+            return $response->json('id');
+        }
+
+        $this->fail('Unable to create the resource');
     }
 
     protected function deleteRequestedCategory(string $resource_type_id, $category_id): TestResponse
