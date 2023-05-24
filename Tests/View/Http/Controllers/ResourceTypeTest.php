@@ -5,10 +5,10 @@ namespace Tests\View\Http\Controllers;
 use App\User;
 use Tests\TestCase;
 
-final class ResourceTypeViewTest extends TestCase
+final class ResourceTypeTest extends TestCase
 {
     /** @test */
-    public function optionsRequestForResourceType(): void
+    public function optionsRequestForAllocatedExpenseResourceType(): void
     {
         $this->actingAs(User::find(1));
         $resource_type_id = $this->createAllocatedExpenseResourceType();
@@ -215,8 +215,8 @@ final class ResourceTypeViewTest extends TestCase
 
         $resource_type_id = $response->json()[0]['id'];
 
-        $this->createRandomResource($resource_type_id);
-        $this->createRandomResource($resource_type_id);
+        $this->createAllocatedExpenseResource($resource_type_id);
+        $this->createAllocatedExpenseResource($resource_type_id);
 
         $response = $this->fetchResourceType([
             'resource_type_id'=> $resource_type_id,

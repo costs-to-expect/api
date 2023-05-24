@@ -15,7 +15,7 @@ Route::group(
 
         Route::post(
             'auth/create-new-password',
-            [App\Http\Controllers\Manage\AuthenticationController::class, 'createNewPassword']
+            [App\Http\Controllers\Action\AuthenticationController::class, 'createNewPassword']
         )->name('auth.create-new-password');
 
         Route::options(
@@ -25,7 +25,7 @@ Route::group(
 
         Route::post(
             'auth/forgot-password',
-            [App\Http\Controllers\Manage\AuthenticationController::class, 'forgotPassword']
+            [App\Http\Controllers\Action\AuthenticationController::class, 'forgotPassword']
         )->name('auth.forgot-password');
 
         Route::options(
@@ -35,7 +35,7 @@ Route::group(
 
         Route::post(
             'auth/login',
-            [App\Http\Controllers\Manage\AuthenticationController::class, 'login']
+            [App\Http\Controllers\Action\AuthenticationController::class, 'login']
         )->name('auth.login');
 
         Route::options(
@@ -45,7 +45,7 @@ Route::group(
 
         Route::get(
             'auth/logout',
-            [App\Http\Controllers\Manage\AuthenticationController::class, 'logout']
+            [App\Http\Controllers\Action\AuthenticationController::class, 'logout']
         )->name('auth.logout');
 
         Route::options(
@@ -56,7 +56,7 @@ Route::group(
         if (Config::get('api.app.config.registrations') === true) {
             Route::post(
                 'auth/register',
-                [App\Http\Controllers\Manage\AuthenticationController::class, 'register']
+                [App\Http\Controllers\Action\AuthenticationController::class, 'register']
             )->name('auth.register');
 
             Route::options(
@@ -66,7 +66,7 @@ Route::group(
 
             Route::post(
                 'auth/create-password',
-                [App\Http\Controllers\Manage\AuthenticationController::class, 'createPassword']
+                [App\Http\Controllers\Action\AuthenticationController::class, 'createPassword']
             )->name('auth.create-password');
 
             Route::options(
@@ -93,7 +93,7 @@ Route::group(
 
         Route::post(
             'auth/update-password',
-            [App\Http\Controllers\Manage\AuthenticationController::class, 'updatePassword']
+            [App\Http\Controllers\Action\AuthenticationController::class, 'updatePassword']
         )->name('auth.update-password');
 
         Route::options(
@@ -103,7 +103,7 @@ Route::group(
 
         Route::post(
             'auth/update-profile',
-            [App\Http\Controllers\Manage\AuthenticationController::class, 'updateProfile']
+            [App\Http\Controllers\Action\AuthenticationController::class, 'updateProfile']
         )->name('auth.update-profile');
 
         Route::options(
@@ -123,7 +123,7 @@ Route::group(
 
         Route::post(
             'auth/user/request-delete',
-            [App\Http\Controllers\Manage\AuthenticationController::class, 'requestDelete']
+            [App\Http\Controllers\Action\AuthenticationController::class, 'requestDelete']
         )->name('auth.user.request-delete');
 
         Route::options(
@@ -148,7 +148,7 @@ Route::group(
 
         Route::delete(
             'auth/user/tokens/{token_id}',
-            [App\Http\Controllers\Manage\AuthenticationController::class, 'deleteToken']
+            [App\Http\Controllers\Action\AuthenticationController::class, 'deleteToken']
         )->name('auth.user.token.delete');
 
         Route::get(
@@ -178,7 +178,7 @@ Route::group(
 
         Route::post(
             'auth/user/permitted-resource-types/{permitted_resource_type_id}/request-delete',
-            [App\Http\Controllers\Manage\AuthenticationController::class, 'requestResourceTypeDelete']
+            [App\Http\Controllers\Action\AuthenticationController::class, 'requestResourceTypeDelete']
         )->name('auth.user.request-resource-type-delete');
 
         Route::get(
@@ -208,7 +208,7 @@ Route::group(
 
         Route::post(
             'auth/user/permitted-resource-types/{permitted_resource_type_id}/resources/{resource_id}/request-delete',
-            [App\Http\Controllers\Manage\AuthenticationController::class, 'requestResourceDelete']
+            [App\Http\Controllers\Action\AuthenticationController::class, 'requestResourceDelete']
         )->name('auth.user.request-resource-delete');
     }
 );

@@ -48,12 +48,12 @@ Route::group(
 
         Route::post(
             'resource-types/{resource_type_id}/resources/{resource_id}/items/{item_id}/categories',
-            [App\Http\Controllers\Manage\ItemCategoryController::class, 'create']
+            [App\Http\Controllers\Action\ItemCategoryController::class, 'create']
         );
 
         Route::delete(
             'resource-types/{resource_type_id}/resources/{resource_id}/items/{item_id}/categories/{item_category_id}',
-            [App\Http\Controllers\Manage\ItemCategoryController::class, 'delete']
+            [App\Http\Controllers\Action\ItemCategoryController::class, 'delete']
         );
 
     }

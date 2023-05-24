@@ -48,7 +48,7 @@ Route::group(
 
         Route::post(
             'resource-types/{resource_type_id}/resources/{resource_id}/items/{item_id}/log',
-            [App\Http\Controllers\Manage\ItemLogController::class, 'create']
+            [App\Http\Controllers\Action\ItemLogController::class, 'create']
         )->name('item-log.create');
 
     }

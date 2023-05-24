@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Http\Controllers\Manage;
+namespace App\Http\Controllers\Action;
 
 use App\Http\Controllers\Controller;
 use App\ItemType\Select;

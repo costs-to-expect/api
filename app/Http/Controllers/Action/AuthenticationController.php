@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Manage;
+namespace App\Http\Controllers\Action;
 
 use App\HttpResponse\Response;
 use App\Jobs\DeleteAccount;

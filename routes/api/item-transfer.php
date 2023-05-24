@@ -53,7 +53,7 @@ Route::group(
 
         Route::post(
             'resource-types/{resource_type_id}/resources/{resource_id}/items/{item_id}/transfer',
-            [App\Http\Controllers\Manage\ItemTransferController::class, 'transfer']
+            [App\Http\Controllers\Action\ItemTransferController::class, 'transfer']
         );
 
     }

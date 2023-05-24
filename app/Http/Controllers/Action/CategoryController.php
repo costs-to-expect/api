@@ -1,64 +1,56 @@
 <?php
 
-namespace App\Http\Controllers\Manage;
+namespace App\Http\Controllers\Action;
 
 use App\Http\Controllers\Controller;
+use App\Models\ResourceType;
 use Illuminate\Http\Request;
 use App\HttpResponse\Response;
 use App\Jobs\ClearCache;
-use App\Models\Subcategory;
-use App\HttpRequest\Validate\Subcategory as SubcategoryValidator;
-use App\Transformer\Subcategory as SubcategoryTransformer;
+use App\Models\Category;
+use App\HttpRequest\Validate\Category as CategoryValidator;
+use App\Transformer\Category as CategoryTransformer;
 use Exception;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\JsonResponse;
 
 /**
- * Manage category sub categories
- *
  * @author Dean Blackborough <dean@g3d-development.com>
  * @copyright Dean Blackborough 2018-2022
  * @license https://github.com/costs-to-expect/api/blob/master/LICENSE
  */
-class SubcategoryController extends Controller
+class CategoryController extends Controller
 {
-    protected bool $allow_entire_collection = true;
-
-    /**
-     * Create a new sub category
-     *
-     * @param $resource_type_id
-     * @param $category_id
-     *
-     * @return JsonResponse
-     */
-    public function create(Request $request, $resource_type_id, $category_id): JsonResponse
+    public function create(Request $request, $resource_type_id): JsonResponse
     {
         if ($this->hasWriteAccessToResourceType((int) $resource_type_id) === false) {
-            return \App\HttpResponse\Response::notFoundOrNotAccessible(trans('entities.category'));
+            return \App\HttpResponse\Response::notFoundOrNotAccessible(trans('entities.resource-type'));
         }
 
-        $validator = (new SubcategoryValidator())->create(['category_id' => $category_id]);
+        $resource_type = (new ResourceType())->single($resource_type_id, $this->permitted_resource_types);
 
+        $validator = (new CategoryValidator())->create([
+            'resource_type_id' => $resource_type_id,
+            'item_type' => $resource_type['resource_type_item_type_name']
+        ]);
         if ($validator->fails()) {
             return \App\HttpResponse\Response::validationErrors($validator);
         }
 
         $cache_job_payload = (new \App\Cache\JobPayload())
-            ->setGroupKey(\App\Cache\KeyGroup::SUBCATEGORY_CREATE)
+            ->setGroupKey(\App\Cache\KeyGroup::CATEGORY_CREATE)
             ->setRouteParameters([
-                'resource_type_id' => $resource_type_id,
-                'category_id' => $category_id
+                'resource_type_id' => $resource_type_id
             ])
             ->setUserId($this->user_id);
 
         try {
-            $sub_category = new Subcategory([
-                'category_id' => $category_id,
+            $category = new Category([
                 'name' => $request->input('name'),
-                'description' => $request->input('description')
+                'description' => $request->input('description'),
+                'resource_type_id' => $resource_type_id
             ]);
-            $sub_category->save();
+            $category->save();
 
             ClearCache::dispatchSync($cache_job_payload->payload());
         } catch (Exception $e) {
@@ -66,48 +58,41 @@ class SubcategoryController extends Controller
         }
 
         return response()->json(
-            (new SubcategoryTransformer((new Subcategory())->instanceToArray($sub_category)))->asArray(),
+            (new CategoryTransformer((new Category())->instanceToArray($category)))->asArray(),
             201
         );
     }
 
     /**
-     * Delete the requested sub category
+     * Delete the requested category
      *
      * @param $resource_type_id
      * @param $category_id
-     * @param $subcategory_id
      *
      * @return JsonResponse
      */
     public function delete(
         $resource_type_id,
-        $category_id,
-        $subcategory_id
+        $category_id
     ): JsonResponse {
         if ($this->hasWriteAccessToResourceType((int) $resource_type_id) === false) {
-            return \App\HttpResponse\Response::notFoundOrNotAccessible(trans('entities.subcategory'));
-        }
-
-        $sub_category = (new Subcategory())->instance(
-            $category_id,
-            $subcategory_id
-        );
-
-        if ($sub_category === null) {
-            return Response::notFound(trans('entities.subcategory'));
+            return \App\HttpResponse\Response::notFoundOrNotAccessible(trans('entities.item-category'));
         }
 
         $cache_job_payload = (new \App\Cache\JobPayload())
-            ->setGroupKey(\App\Cache\KeyGroup::SUBCATEGORY_DELETE)
+            ->setGroupKey(\App\Cache\KeyGroup::CATEGORY_DELETE)
             ->setRouteParameters([
-                'resource_type_id' => $resource_type_id,
-                'category_id' => $category_id
+                'resource_type_id' => $resource_type_id
             ])
             ->setUserId($this->user_id);
 
+        $category = (new Category())->find($category_id);
+        if ($category === null) {
+            return Response::notFound(trans('entities.category'));
+        }
+
         try {
-            $sub_category->delete();
+            $category->delete();
 
             ClearCache::dispatchSync($cache_job_payload->payload());
 
@@ -115,31 +100,27 @@ class SubcategoryController extends Controller
         } catch (QueryException $e) {
             return Response::foreignKeyConstraintError($e);
         } catch (Exception $e) {
-            return Response::notFound(trans('entities.subcategory'), $e);
+            return Response::notFound(trans('entities.category'), $e);
         }
     }
 
     /**
-     * Update the selected subcategory
+     * Update the selected category
      *
      * @param $resource_type_id
      * @param $category_id
-     * @param $subcategory_id
      *
      * @return JsonResponse
      */
-    public function update(Request $request, 
-        $resource_type_id,
-        $category_id,
-        $subcategory_id
-    ): JsonResponse {
+    public function update(Request $request, $resource_type_id, $category_id): JsonResponse
+    {
         if ($this->hasWriteAccessToResourceType((int) $resource_type_id) === false) {
-            return \App\HttpResponse\Response::notFoundOrNotAccessible(trans('entities.subcategory'));
+            return \App\HttpResponse\Response::notFoundOrNotAccessible(trans('entities.item-category'));
         }
 
-        $subcategory = (new Subcategory())->instance($category_id, $subcategory_id);
+        $category = (new Category())->instance($category_id);
 
-        if ($subcategory === null) {
+        if ($category === null) {
             return Response::failedToSelectModelForUpdateOrDelete();
         }
 
@@ -147,10 +128,14 @@ class SubcategoryController extends Controller
             return \App\HttpResponse\Response::nothingToPatch();
         }
 
-        $validator = (new SubcategoryValidator())->update([
-            'category_id' => (int)$category_id,
-            'subcategory_id' => (int)$subcategory_id
+        $validator = (new CategoryValidator())->update([
+            'resource_type_id' => $category->resource_type_id,
+            'category_id' => $category->id
         ]);
+
+        if ($validator === null) {
+            return Response::failedToSelectModelForUpdateOrDelete();
+        }
 
         if ($validator->fails()) {
             return \App\HttpResponse\Response::validationErrors($validator);
@@ -158,8 +143,8 @@ class SubcategoryController extends Controller
 
         $invalid_fields = $this->checkForInvalidFields(
             [
-                ...(new Subcategory())->patchableFields(),
-                ...(new SubcategoryValidator())->dynamicDefinedFields()
+                ...(new Category())->patchableFields(),
+                ...(new CategoryValidator())->dynamicDefinedFields()
             ]
         );
 
@@ -168,19 +153,18 @@ class SubcategoryController extends Controller
         }
 
         foreach ($request->all() as $key => $value) {
-            $subcategory->$key = $value;
+            $category->$key = $value;
         }
 
         $cache_job_payload = (new \App\Cache\JobPayload())
-            ->setGroupKey(\App\Cache\KeyGroup::SUBCATEGORY_UPDATE)
+            ->setGroupKey(\App\Cache\KeyGroup::CATEGORY_UPDATE)
             ->setRouteParameters([
-                'resource_type_id' => $resource_type_id,
-                'category_id' => $category_id
+                'resource_type_id' => $resource_type_id
             ])
             ->setUserId($this->user_id);
 
         try {
-            $subcategory->save();
+            $category->save();
 
             ClearCache::dispatchSync($cache_job_payload->payload());
         } catch (Exception $e) {

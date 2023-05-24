@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Manage;
+namespace App\Http\Controllers\Action;
 
 use App\Http\Controllers\Controller;
 use App\Models\ItemLog;

@@ -25,6 +25,12 @@ abstract class TestCase extends BaseTestCase
         'budget-pro' => 'WkxwR04GPo'
     ];
 
+    protected array $item_subtypes = [
+        'allocated-expense' => [
+            'default' => 'a56kbWV82n',
+        ]
+    ];
+
     protected function assertJsonMatchesCategorySchema($content): void
     {
         $this->assertProvidedJsonMatchesDefinedSchema($content, 'api/schema/category.json');
@@ -86,9 +92,9 @@ abstract class TestCase extends BaseTestCase
         $this->fail('Unable to create the category');
     }
 
-    protected function createRandomResource(string $resource_type_id): string
+    protected function createAllocatedExpenseResource(string $resource_type_id): string
     {
-        $response = $this->createRequestedResource(
+        $response = $this->createResource(
             $resource_type_id,
             [
                 'name' => $this->faker->text(200),
@@ -106,7 +112,7 @@ abstract class TestCase extends BaseTestCase
 
     protected function createAllocatedExpenseResourceType(): string
     {
-        $response = $this->createRequestedResourceType(
+        $response = $this->createResourceType(
             [
                 'name' => $this->faker->text(255),
                 'description' => $this->faker->text,
@@ -157,7 +163,7 @@ abstract class TestCase extends BaseTestCase
         );
     }
 
-    protected function createRequestedResource(string $resource_type_id, array $payload): TestResponse
+    protected function createResource(string $resource_type_id, array $payload): TestResponse
     {
         return $this->post(
             route('resource.create', ['resource_type_id' => $resource_type_id]),
@@ -165,7 +171,7 @@ abstract class TestCase extends BaseTestCase
         );
     }
 
-    protected function createRequestedResourceType(array $payload): TestResponse
+    protected function createResourceType(array $payload): TestResponse
     {
         return $this->post(route('resource-type.create'), $payload);
     }
@@ -184,13 +190,13 @@ abstract class TestCase extends BaseTestCase
         );
     }
 
-    protected function createResourceType($item_type): string
+    protected function createResourceTypeByItemType($item_type): string
     {
         if (array_key_exists($item_type, $this->item_types) === false) {
             $this->fail('The requested item type is not an allowable value "' . $this->item_types[$item_type] . '"');
         }
 
-        $response = $this->createRequestedResourceType(
+        $response = $this->createResourceType(
             [
                 'name' => $this->faker->text(255),
                 'description' => $this->faker->text,
@@ -221,7 +227,7 @@ abstract class TestCase extends BaseTestCase
         );
     }
 
-    protected function deleteRequestedResource(string $resource_type_id, $resource_id): TestResponse
+    protected function deleteResource(string $resource_type_id, $resource_id): TestResponse
     {
         return $this->delete(
             route('resource.delete', ['resource_type_id' => $resource_type_id, 'resource_id' => $resource_id]), []
@@ -346,7 +352,7 @@ abstract class TestCase extends BaseTestCase
         );
     }
 
-    protected function updatedRequestedResource(string $resource_type_id, string $resource_id, array $payload): TestResponse
+    protected function updatedResource(string $resource_type_id, string $resource_id, array $payload): TestResponse
     {
         return $this->patch(
             route(

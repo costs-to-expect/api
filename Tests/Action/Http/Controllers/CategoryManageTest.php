@@ -107,7 +107,7 @@ final class CategoryManageTest extends TestCase
         $response->assertStatus(201);
 
         // Create again with non-unique name for resource type
-        $response = $this->createRequestedResource(
+        $response = $this->createResource(
             $id,
             [
                 'name' => $name,

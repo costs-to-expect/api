@@ -7,22 +7,22 @@ use App\Models\ResourceType;
 use App\User;
 use Tests\TestCase;
 
-final class ResourceManageTest extends TestCase
+final class ResourceTest extends TestCase
 {
     /** @test */
-    public function createResourceFailsDataFieldNotValidJson(): void
+    public function createAllocatedExpenseResourceFailsDataFieldNotValidJson(): void
     {
         $this->actingAs(User::find(1));
 
         $id = $this->createAllocatedExpenseResourceType();
 
-        $response = $this->createRequestedResource(
+        $response = $this->createResource(
             $id,
             [
                 'name' => $this->faker->text(200),
                 'description' => $this->faker->text(200),
                 'data' => '{"field"=>true}',
-                'item_subtype_id' => 'a56kbWV82n'
+                'item_subtype_id' => $this->item_subtypes['allocated-expense']['default']
             ]
         );
 
@@ -30,13 +30,13 @@ final class ResourceManageTest extends TestCase
     }
 
     /** @test */
-    public function createResourceFailsItemSubtypeInvalid(): void
+    public function createAllocatedExpenseResourceFailsItemSubtypeInvalid(): void
     {
         $this->actingAs(User::find(1));
 
         $id = $this->createAllocatedExpenseResourceType();
 
-        $response = $this->createRequestedResource(
+        $response = $this->createResource(
             $id,
             [
                 'name' => $this->faker->text(200),
@@ -50,18 +50,18 @@ final class ResourceManageTest extends TestCase
     }
 
     /** @test */
-    public function createResourceFailsNoDescriptionInPayload(): void
+    public function createAllocatedExpenseResourceFailsNoDescriptionInPayload(): void
     {
         $this->actingAs(User::find(1));
 
         $id = $this->createAllocatedExpenseResourceType();
 
-        $response = $this->createRequestedResource(
+        $response = $this->createResource(
             $id,
             [
                 'name' => $this->faker->text(200),
                 'data' => '{"field"=>"data"}',
-                'item_subtype_id' => 'a56kbW'
+                'item_subtype_id' => $this->item_subtypes['allocated-expense']['default']
             ]
         );
 
@@ -69,18 +69,18 @@ final class ResourceManageTest extends TestCase
     }
 
     /** @test */
-    public function createResourceFailsNoNameInPayload(): void
+    public function createAllocatedExpenseResourceFailsNoNameInPayload(): void
     {
         $this->actingAs(User::find(1));
 
         $id = $this->createAllocatedExpenseResourceType();
 
-        $response = $this->createRequestedResource(
+        $response = $this->createResource(
             $id,
             [
                 'description' => $this->faker->text(200),
                 'data' => '{"field"=>"data"}',
-                'item_subtype_id' => 'a56kbW'
+                'item_subtype_id' => $this->item_subtypes['allocated-expense']['default']
             ]
         );
 
@@ -88,13 +88,13 @@ final class ResourceManageTest extends TestCase
     }
 
     /** @test */
-    public function createResourceFailsNoPayload(): void
+    public function createAllocatedExpenseResourceFailsNoPayload(): void
     {
         $this->actingAs(User::find(1));
 
         $id = $this->createAllocatedExpenseResourceType();
 
-        $response = $this->createRequestedResource(
+        $response = $this->createResource(
             $id,
             []
         );
@@ -103,7 +103,7 @@ final class ResourceManageTest extends TestCase
     }
 
     /** @test */
-    public function createResourceFailsNoPermissionToResourceType(): void
+    public function createAllocatedExpenseResourceFailsNoPermissionToResourceType(): void
     {
         $this->actingAs(User::find($this->fetchRandomUser()->id)); // Random user
 
@@ -116,12 +116,12 @@ final class ResourceManageTest extends TestCase
 
             $resource_type_id = (new Hash())->encode('resource-type', $resource_type->id);
 
-            $response = $this->createRequestedResource(
+            $response = $this->createResource(
                 $resource_type_id,
                 [
                     'name' => $this->faker->text(200),
                     'description' => $this->faker->text(200),
-                    'item_subtype_id' => 'a56kbWV82n'
+                    'item_subtype_id' => $this->item_subtypes['allocated-expense']['default']
                 ]
             );
 
@@ -133,7 +133,7 @@ final class ResourceManageTest extends TestCase
     }
 
     /** @test */
-    public function createResourceFailsNonUniqueName(): void
+    public function createAllocatedExpenseResourceFailsNonUniqueName(): void
     {
         $this->actingAs(User::find(1));
 
@@ -141,19 +141,19 @@ final class ResourceManageTest extends TestCase
 
         $name = $this->faker->text(200);
 
-        $response = $this->createRequestedResource(
+        $response = $this->createResource(
             $id,
             [
                 'name' => $name,
                 'description' => $this->faker->text(200),
-                'item_subtype_id' => 'a56kbWV82n'
+                'item_subtype_id' => $this->item_subtypes['allocated-expense']['default']
             ]
         );
 
         $response->assertStatus(201);
 
         // Create again with non-unique name for resource type
-        $response = $this->createRequestedResource(
+        $response = $this->createResource(
             $id,
             [
                 'name' => $name,
@@ -166,18 +166,18 @@ final class ResourceManageTest extends TestCase
     }
 
     /** @test */
-    public function createResourceSuccess(): void
+    public function createAllocatedExpenseResourceSuccess(): void
     {
         $this->actingAs(User::find(1));
 
         $id = $this->createAllocatedExpenseResourceType();
 
-        $response = $this->createRequestedResource(
+        $response = $this->createResource(
             $id,
             [
                 'name' => $this->faker->text(200),
                 'description' => $this->faker->text(200),
-                'item_subtype_id' => 'a56kbWV82n'
+                'item_subtype_id' => $this->item_subtypes['allocated-expense']['default']
             ]
         );
 
@@ -186,19 +186,19 @@ final class ResourceManageTest extends TestCase
     }
 
     /** @test */
-    public function createResourceSuccessIncludeDataField(): void
+    public function createAllocatedExpenseResourceSuccessIncludeDataField(): void
     {
         $this->actingAs(User::find(1));
 
         $id = $this->createAllocatedExpenseResourceType();
 
-        $response = $this->createRequestedResource(
+        $response = $this->createResource(
             $id,
             [
                 'name' => $this->faker->text(200),
                 'description' => $this->faker->text(200),
                 'data' => '{"field":true}',
-                'item_subtype_id' => 'a56kbWV82n'
+                'item_subtype_id' => $this->item_subtypes['allocated-expense']['default']
             ]
         );
 
@@ -207,27 +207,27 @@ final class ResourceManageTest extends TestCase
     }
 
     /** @test */
-    public function deleteResourceSuccess(): void
+    public function deleteAllocatedExpenseResourceSuccess(): void
     {
         $this->actingAs(User::find(1));
 
         $resource_type_id = $this->createAllocatedExpenseResourceType();
-        $id = $this->createRandomResource($resource_type_id);
+        $id = $this->createAllocatedExpenseResource($resource_type_id);
 
-        $response = $this->deleteRequestedResource($resource_type_id, $id);
+        $response = $this->deleteResource($resource_type_id, $id);
 
         $response->assertStatus(204);
     }
 
     /** @test */
-    public function updateResourceFailsExtraFieldsInPayload(): void
+    public function updateAllocatedExpenseResourceFailsExtraFieldsInPayload(): void
     {
         $this->actingAs(User::find(1));
 
         $resource_type_id = $this->createAllocatedExpenseResourceType();
-        $resource_id = $this->createRandomResource($resource_type_id);
+        $resource_id = $this->createAllocatedExpenseResource($resource_type_id);
 
-        $response = $this->updatedRequestedResource(
+        $response = $this->updatedResource(
             $resource_type_id,
             $resource_id,
             [
@@ -239,14 +239,14 @@ final class ResourceManageTest extends TestCase
     }
 
     /** @test */
-    public function updateResourceFailsNonPayload(): void
+    public function updateAllocatedExpenseResourceFailsNonPayload(): void
     {
         $this->actingAs(User::find(1));
 
         $resource_type_id = $this->createAllocatedExpenseResourceType();
-        $resource_id = $this->createRandomResource($resource_type_id);
+        $resource_id = $this->createAllocatedExpenseResource($resource_type_id);
 
-        $response = $this->updatedRequestedResource(
+        $response = $this->updatedResource(
             $resource_type_id,
             $resource_id,
             []
@@ -256,7 +256,7 @@ final class ResourceManageTest extends TestCase
     }
 
     /** @test */
-    public function updateResourceFailsNonUniqueName(): void
+    public function updateAllocatedExpenseResourceFailsNonUniqueName(): void
     {
         $this->actingAs(User::find(1));
 
@@ -264,24 +264,24 @@ final class ResourceManageTest extends TestCase
 
         // Create first resource
         $name = $this->faker->text(200);
-        $response = $this->createRequestedResource(
+        $response = $this->createResource(
             $resource_type_id,
             [
                 'name' => $name,
                 'description' => $this->faker->text(200),
-                'item_subtype_id' => 'a56kbWV82n'
+                'item_subtype_id' => $this->item_subtypes['allocated-expense']['default']
             ]
         );
 
         $response->assertStatus(201);
 
         // Create second resource
-        $response = $this->createRequestedResource(
+        $response = $this->createResource(
             $resource_type_id,
             [
                 'name' => $this->faker->text(200),
                 'description' => $this->faker->text(200),
-                'item_subtype_id' => 'a56kbWV82n'
+                'item_subtype_id' => $this->item_subtypes['allocated-expense']['default']
             ]
         );
 
@@ -289,7 +289,7 @@ final class ResourceManageTest extends TestCase
         $resource_id = $response->json('id');
 
         // Set name of second resource to first name
-        $response = $this->updatedRequestedResource(
+        $response = $this->updatedResource(
             $resource_type_id,
             $resource_id,
             [
@@ -301,14 +301,14 @@ final class ResourceManageTest extends TestCase
     }
 
     /** @test */
-    public function updateResourceSuccess(): void
+    public function updateAllocatedExpenseResourceSuccess(): void
     {
         $this->actingAs(User::find(1));
 
         $resource_type_id = $this->createAllocatedExpenseResourceType();
-        $resource_id = $this->createRandomResource($resource_type_id);
+        $resource_id = $this->createAllocatedExpenseResource($resource_type_id);
 
-        $response = $this->updatedRequestedResource(
+        $response = $this->updatedResource(
             $resource_type_id,
             $resource_id,
             [
