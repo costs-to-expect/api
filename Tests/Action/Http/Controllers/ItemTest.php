@@ -9,6 +9,69 @@ use Tests\TestCase;
 final class ItemTest extends TestCase
 {
     /** @test */
+    public function createAllocatedExpenseItemFailsCurrencyIdInvalid(): void
+    {
+        $this->actingAs(User::find(1));
+
+        $resource_type_id = $this->createAllocatedExpenseResourceType();
+        $resource_id = $this->createAllocatedExpenseResource($resource_type_id);
+
+        $response = $this->createItem(
+            $resource_type_id,
+            $resource_id,
+            [
+                'name' => $this->faker->text(200),
+                'description' => $this->faker->text(200),
+                'effective_date' => $this->faker->date(),
+                'currency_id' => 'epMqeYqPkp',
+                'total' => $this->randomMoneyValue(),
+            ]
+        );
+
+        $response->assertStatus(422);
+    }
+
+    /** @test */
+    public function createAllocatedExpenseItemFailsNoNameInPayload(): void
+    {
+        $this->actingAs(User::find(1));
+
+        $resource_type_id = $this->createAllocatedExpenseResourceType();
+        $resource_id = $this->createAllocatedExpenseResource($resource_type_id);
+
+        $response = $this->createItem(
+            $resource_type_id,
+            $resource_id,
+            [
+                'description' => $this->faker->text(200),
+                'effective_date' => $this->faker->date(),
+                'currency_id' => $this->currency['GBP'],
+                'total' => $this->randomMoneyValue(),
+            ]
+        );
+
+        $response->assertStatus(422);
+    }
+
+    /** @test */
+    public function createAllocatedExpenseItemFailsNoPayload(): void
+    {
+        $this->actingAs(User::find(1));
+
+        $resource_type_id = $this->createAllocatedExpenseResourceType();
+        $resource_id = $this->createAllocatedExpenseResource($resource_type_id);
+
+        $response = $this->createItem(
+            $resource_type_id,
+            $resource_id,
+            [
+            ]
+        );
+
+        $response->assertStatus(422);
+    }
+
+    /** @test */
     public function createAllocatedExpenseItemSuccess(): void
     {
         $this->actingAs(User::find(1));
@@ -30,6 +93,126 @@ final class ItemTest extends TestCase
 
         $response->assertStatus(201);
         $this->assertJsonMatchesAllocatedExpenseItemSchema($response->content());
+    }
+
+    /** @test */
+    public function createBudgetItemFailsAmountNotFormattedCorrectly(): void
+    {
+        $this->actingAs(User::find(1));
+
+        $resource_type_id = $this->createBudgetResourceType();
+        $resource_id = $this->createBudgetResource($resource_type_id);
+
+        $response = $this->createItem(
+            $resource_type_id,
+            $resource_id,
+            [
+                'name' => $this->faker->text(200),
+                'account' => Str::uuid()->toString(),
+                'description' => $this->faker->text(200),
+                'amount' => number_format($this->faker->randomFloat(2, 0.01, 99999999999.99), 2, '.', ','),
+                'currency_id' => $this->currency['GBP'],
+                'category' => 'income',
+                'start_date' => $this->faker->date(),
+                'frequency' => json_encode(['type'=>'monthly', 'day'=>null, 'exclusions' => []], JSON_THROW_ON_ERROR),
+            ]
+        );
+
+        $response->assertStatus(422);
+    }
+
+    /** @test */
+    public function createBudgetItemFailsCategoryInvalid(): void
+    {
+        $this->actingAs(User::find(1));
+
+        $resource_type_id = $this->createBudgetResourceType();
+        $resource_id = $this->createBudgetResource($resource_type_id);
+
+        $response = $this->createItem(
+            $resource_type_id,
+            $resource_id,
+            [
+                'name' => $this->faker->text(200),
+                'account' => Str::uuid()->toString(),
+                'description' => $this->faker->text(200),
+                'amount' => $this->randomMoneyValue(),
+                'currency_id' => $this->currency['GBP'],
+                'category' => 'not-income',
+                'start_date' => $this->faker->date(),
+                'frequency' => json_encode(['type'=>'monthly', 'day'=>null, 'exclusions' => []], JSON_THROW_ON_ERROR),
+            ]
+        );
+
+        $response->assertStatus(422);
+    }
+
+    /** @test */
+    public function createBudgetItemFailsCurrencyInvalid(): void
+    {
+        $this->actingAs(User::find(1));
+
+        $resource_type_id = $this->createBudgetResourceType();
+        $resource_id = $this->createBudgetResource($resource_type_id);
+
+        $response = $this->createItem(
+            $resource_type_id,
+            $resource_id,
+            [
+                'name' => $this->faker->text(200),
+                'account' => Str::uuid()->toString(),
+                'description' => $this->faker->text(200),
+                'amount' => $this->randomMoneyValue(),
+                'currency_id' => 'epMqeYqPko',
+                'category' => 'income',
+                'start_date' => $this->faker->date(),
+                'frequency' => json_encode(['type'=>'monthly', 'day'=>null, 'exclusions' => []], JSON_THROW_ON_ERROR),
+            ]
+        );
+
+        $response->assertStatus(422);
+    }
+
+    /** @test */
+    public function createBudgetItemFailsNoNameInPayload(): void
+    {
+        $this->actingAs(User::find(1));
+
+        $resource_type_id = $this->createBudgetResourceType();
+        $resource_id = $this->createBudgetResource($resource_type_id);
+
+        $response = $this->createItem(
+            $resource_type_id,
+            $resource_id,
+            [
+                'account' => Str::uuid()->toString(),
+                'description' => $this->faker->text(200),
+                'amount' => $this->randomMoneyValue(),
+                'currency_id' => $this->currency['GBP'],
+                'category' => 'income',
+                'start_date' => $this->faker->date(),
+                'frequency' => json_encode(['type'=>'monthly', 'day'=>null, 'exclusions' => []], JSON_THROW_ON_ERROR),
+            ]
+        );
+
+        $response->assertStatus(422);
+    }
+
+    /** @test */
+    public function createBudgetItemFailsNoPayload(): void
+    {
+        $this->actingAs(User::find(1));
+
+        $resource_type_id = $this->createBudgetResourceType();
+        $resource_id = $this->createBudgetResource($resource_type_id);
+
+        $response = $this->createItem(
+            $resource_type_id,
+            $resource_id,
+            []
+        );
+
+        $response->assertStatus(422);
     }
 
     /** @test */
@@ -57,6 +240,126 @@ final class ItemTest extends TestCase
 
         $response->assertStatus(201);
         $this->assertJsonMatchesBudgetItemSchema($response->content());
+    }
+
+    /** @test */
+    public function createBudgetProItemFailsAmountNotFormattedCorrectly(): void
+    {
+        $this->actingAs(User::find(1));
+
+        $resource_type_id = $this->createBudgetProResourceType();
+        $resource_id = $this->createBudgetProResource($resource_type_id);
+
+        $response = $this->createItem(
+            $resource_type_id,
+            $resource_id,
+            [
+                'name' => $this->faker->text(200),
+                'account' => Str::uuid()->toString(),
+                'description' => $this->faker->text(200),
+                'amount' => number_format($this->faker->randomFloat(2, 0.01, 99999999999.99), 2, '.', ','),
+                'currency_id' => $this->currency['GBP'],
+                'category' => 'income',
+                'start_date' => $this->faker->date(),
+                'frequency' => json_encode(['type'=>'monthly', 'day'=>null, 'exclusions' => []], JSON_THROW_ON_ERROR),
+            ]
+        );
+
+        $response->assertStatus(422);
+    }
+
+    /** @test */
+    public function createBudgetProItemFailsCategoryInvalid(): void
+    {
+        $this->actingAs(User::find(1));
+
+        $resource_type_id = $this->createBudgetProResourceType();
+        $resource_id = $this->createBudgetProResource($resource_type_id);
+
+        $response = $this->createItem(
+            $resource_type_id,
+            $resource_id,
+            [
+                'name' => $this->faker->text(200),
+                'account' => Str::uuid()->toString(),
+                'description' => $this->faker->text(200),
+                'amount' => $this->randomMoneyValue(),
+                'currency_id' => $this->currency['GBP'],
+                'category' => 'not-income',
+                'start_date' => $this->faker->date(),
+                'frequency' => json_encode(['type'=>'monthly', 'day'=>null, 'exclusions' => []], JSON_THROW_ON_ERROR),
+            ]
+        );
+
+        $response->assertStatus(422);
+    }
+
+    /** @test */
+    public function createBudgetProItemFailsCurrencyInvalid(): void
+    {
+        $this->actingAs(User::find(1));
+
+        $resource_type_id = $this->createBudgetProResourceType();
+        $resource_id = $this->createBudgetProResource($resource_type_id);
+
+        $response = $this->createItem(
+            $resource_type_id,
+            $resource_id,
+            [
+                'name' => $this->faker->text(200),
+                'account' => Str::uuid()->toString(),
+                'description' => $this->faker->text(200),
+                'amount' => $this->randomMoneyValue(),
+                'currency_id' => 'epMqeYqPko',
+                'category' => 'income',
+                'start_date' => $this->faker->date(),
+                'frequency' => json_encode(['type'=>'monthly', 'day'=>null, 'exclusions' => []], JSON_THROW_ON_ERROR),
+            ]
+        );
+
+        $response->assertStatus(422);
+    }
+
+    /** @test */
+    public function createBudgetProItemFailsNoNameInPayload(): void
+    {
+        $this->actingAs(User::find(1));
+
+        $resource_type_id = $this->createBudgetProResourceType();
+        $resource_id = $this->createBudgetProResource($resource_type_id);
+
+        $response = $this->createItem(
+            $resource_type_id,
+            $resource_id,
+            [
+                'account' => Str::uuid()->toString(),
+                'description' => $this->faker->text(200),
+                'amount' => $this->randomMoneyValue(),
+                'currency_id' => $this->currency['GBP'],
+                'category' => 'income',
+                'start_date' => $this->faker->date(),
+                'frequency' => json_encode(['type'=>'monthly', 'day'=>null, 'exclusions' => []], JSON_THROW_ON_ERROR),
+            ]
+        );
+
+        $response->assertStatus(422);
+    }
+
+    /** @test */
+    public function createBudgetProItemFailsNoPayload(): void
+    {
+        $this->actingAs(User::find(1));
+
+        $resource_type_id = $this->createBudgetProResourceType();
+        $resource_id = $this->createBudgetProResource($resource_type_id);
+
+        $response = $this->createItem(
+            $resource_type_id,
+            $resource_id,
+            []
+        );
+
+        $response->assertStatus(422);
     }
 
     /** @test */
