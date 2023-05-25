@@ -41,6 +41,7 @@ class ItemController extends Controller
         return match ($item_type) {
             'allocated-expense' => $this->createAllocatedExpense((int) $resource_type_id, (int) $resource_id),
             'budget' => $this->createBudget((int) $resource_type_id, (int) $resource_id),
+            'budget-pro' => $this->createBudgetPro((int) $resource_type_id, (int) $resource_id),
             'game' => $this->createGame((int) $resource_type_id, (int) $resource_id),
             default => throw new \OutOfRangeException('No item type definition for ' . $item_type, 500),
         };
@@ -169,6 +170,70 @@ class ItemController extends Controller
         return response()->json(
             (new \App\ItemType\Budget\Transformer\Item(
                 (new \App\ItemType\Budget\Models\Item())->instanceToArray($item_type_instance)
+            )
+            )->asArray(),
+            201
+        );
+    }
+
+    private function createBudgetPro(int $resource_type_id, int $resource_id): JsonResponse
+    {
+        $request = request();
+
+        $validator = $this->validateBudgetProForCreate();
+        if ($validator !== null) {
+            return \App\HttpResponse\Response::validationErrors($validator);
+        }
+
+        $cache_job_payload = (new JobPayload())
+            ->setGroupKey(KeyGroup::ITEM_CREATE)
+            ->setRouteParameters([
+                'resource_type_id' => $resource_type_id,
+                'resource_id' => $resource_id
+            ])
+            ->setUserId($this->user_id);
+
+        try {
+            $item_type_instance = DB::transaction(function () use ($request, $resource_id) {
+                $item_instance = new Item([
+                    'resource_id' => $resource_id,
+                    'created_by' => $this->user_id
+                ]);
+                $item_instance->save();
+
+                $hash = new Hash();
+                $currency_id = $hash->decode('currency', $request->input('currency_id'));
+
+                $item_type_instance = new \App\ItemType\BudgetPro\Models\Item([
+                    'item_id' => $item_instance->id,
+                    'name' => $request->input('name'),
+                    'account' => $request->input('account'),
+                    'target_account' => $request->input('target_account'),
+                    'description' => $request->input('description', null),
+                    'amount' => $request->input('amount', null),
+                    'currency_id' => $currency_id,
+                    'category' => $request->input('category', null),
+                    'start_date' => $request->input('start_date'),
+                    'end_date' => $request->input('end_date'),
+                    'disabled' => (bool) $request->input('disabled'),
+                    'frequency' => $request->input('frequency'),
+                    'created_at' => Date::now(),
+                    'updated_at' => null
+                ]);
+
+                $item_type_instance->save();
+
+                return $item_type_instance;
+            });
+
+            ClearCache::dispatchSync($cache_job_payload->payload());
+        } catch (Exception $e) {
+            return Response::failedToSaveModelForCreate($e);
+        }
+
+        return response()->json(
+            (new \App\ItemType\BudgetPro\Transformer\Item(
+                (new \App\ItemType\BudgetPro\Models\Item())->instanceToArray($item_type_instance)
             )
             )->asArray(),
             201
@@ -777,6 +842,51 @@ class ItemController extends Controller
                         'disabled',
                         'frequency',
                     ]),
+                ...['currency_id' => $currency_id]
+            ],
+            LaravelConfig::get($config_base_path . '.validation-post.fields', []),
+            $messages
+        );
+
+        if ($validator->fails()) {
+            return $validator;
+        }
+
+        return null;
+    }
+
+    private function validateBudgetProForCreate(): ?\Illuminate\Validation\Validator
+    {
+        $request = request();
+
+        $config_base_path = 'api.item-type-budget-pro';
+
+        $messages = [];
+        foreach (LaravelConfig::get($config_base_path . '.validation-post.messages', []) as $key => $custom_message) {
+            $messages[$key] = trans($custom_message);
+        }
+
+        $decode = $this->hash->currency()->decode($request->input('currency_id'));
+        $currency_id = null;
+        if (count($decode) === 1) {
+            $currency_id = $decode[0];
+        }
+
+        $validator = ValidatorFacade::make(
+            [
+                ...$request->only([
+                    'name',
+                    'account',
+                    'target_account',
+                    'description',
+                    'amount',
+                    'currency_id',
+                    'category',
+                    'start_date',
+                    'end_date',
+                    'disabled',
+                    'frequency',
+                ]),
                 ...['currency_id' => $currency_id]
             ],
             LaravelConfig::get($config_base_path . '.validation-post.fields', []),
