@@ -104,7 +104,7 @@ final class ItemTest extends TestCase
         );
 
         $response->assertStatus(201);
-        $this->assertJsonMatchesResourceSchema($response->content());
+        $this->assertJsonMatchesGameItemSchema($response->content());
     }
 
     /** @test */
@@ -125,6 +125,6 @@ final class ItemTest extends TestCase
         );
 
         $response->assertStatus(201);
-        $this->assertJsonMatchesResourceSchema($response->content());
+        $this->assertJsonMatchesGameItemSchema($response->content());
     }
 }

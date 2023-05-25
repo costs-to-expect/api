@@ -60,6 +60,11 @@ abstract class TestCase extends BaseTestCase
         $this->assertProvidedJsonMatchesDefinedSchema($content, 'api/schema/item-budget-pro.json');
     }
 
+    protected function assertJsonMatchesGameItemSchema($content): void
+    {
+        $this->assertProvidedJsonMatchesDefinedSchema($content, 'api/schema/item-game.json');
+    }
+
     protected function assertJsonMatchesCategorySchema($content): void
     {
         $this->assertProvidedJsonMatchesDefinedSchema($content, 'api/schema/category.json');

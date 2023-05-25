@@ -7,7 +7,7 @@ use App\Models\ResourceType;
 use App\User;
 use Tests\TestCase;
 
-final class CategoryManageTest extends TestCase
+final class CategoryTest extends TestCase
 {
     /** @test */
     public function createCategoryFailsNoDescriptionInPayload(): void

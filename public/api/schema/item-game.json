@@ -33,10 +33,10 @@
             ]
         },
         "score": {
-            "type": "integer"
+            "type": ["null", "integer"]
         },
         "complete": {
-            "type": "integer"
+            "type": ["null", "integer"]
         },
         "created": {
             "type": "string"
