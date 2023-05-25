@@ -658,7 +658,27 @@ abstract class TestCase extends BaseTestCase
         );
     }
 
-    protected function updatedResource(string $resource_type_id, string $resource_id, array $payload): TestResponse
+    protected function updateItem(
+        string $resource_type_id,
+        string $resource_id,
+        string $item_id,
+        array $payload
+    ): TestResponse
+    {
+        return $this->patch(
+            route(
+                'item.update',
+                [
+                    'resource_type_id' => $resource_type_id,
+                    'resource_id' => $resource_id,
+                    'item_id' => $item_id
+                ]
+            ),
+            $payload
+        );
+    }
+
+    protected function updateResource(string $resource_type_id, string $resource_id, array $payload): TestResponse
     {
         return $this->patch(
             route(
@@ -672,7 +692,7 @@ abstract class TestCase extends BaseTestCase
         );
     }
 
-    protected function updatedRequestedResourceType(string $resource_type_id, array $payload): TestResponse
+    protected function updateRequestedResourceType(string $resource_type_id, array $payload): TestResponse
     {
         return $this->patch(
             route('resource-type.update', ['resource_type_id' => $resource_type_id]),
@@ -680,7 +700,7 @@ abstract class TestCase extends BaseTestCase
         );
     }
 
-    protected function updatedRequestedSubcategory(
+    protected function updateRequestedSubcategory(
         string $resource_type_id,
         string $category_id,
         string $subcategory_id,

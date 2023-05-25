@@ -357,7 +357,7 @@ final class ResourceTest extends TestCase
         $resource_type_id = $this->createAllocatedExpenseResourceType();
         $resource_id = $this->createAllocatedExpenseResource($resource_type_id);
 
-        $response = $this->updatedResource(
+        $response = $this->updateResource(
             $resource_type_id,
             $resource_id,
             [
@@ -376,7 +376,7 @@ final class ResourceTest extends TestCase
         $resource_type_id = $this->createAllocatedExpenseResourceType();
         $resource_id = $this->createAllocatedExpenseResource($resource_type_id);
 
-        $response = $this->updatedResource(
+        $response = $this->updateResource(
             $resource_type_id,
             $resource_id,
             []
@@ -419,7 +419,7 @@ final class ResourceTest extends TestCase
         $resource_id = $response->json('id');
 
         // Set name of second resource to first name
-        $response = $this->updatedResource(
+        $response = $this->updateResource(
             $resource_type_id,
             $resource_id,
             [
@@ -438,7 +438,7 @@ final class ResourceTest extends TestCase
         $resource_type_id = $this->createAllocatedExpenseResourceType();
         $resource_id = $this->createAllocatedExpenseResource($resource_type_id);
 
-        $response = $this->updatedResource(
+        $response = $this->updateResource(
             $resource_type_id,
             $resource_id,
             [
@@ -457,7 +457,7 @@ final class ResourceTest extends TestCase
         $resource_type_id = $this->createBudgetProResourceType();
         $resource_id = $this->createBudgetProResource($resource_type_id);
 
-        $response = $this->updatedResource(
+        $response = $this->updateResource(
             $resource_type_id,
             $resource_id,
             [
@@ -476,7 +476,7 @@ final class ResourceTest extends TestCase
         $resource_type_id = $this->createBudgetResourceType();
         $resource_id = $this->createBudgetResource($resource_type_id);
 
-        $response = $this->updatedResource(
+        $response = $this->updateResource(
             $resource_type_id,
             $resource_id,
             [
@@ -495,7 +495,7 @@ final class ResourceTest extends TestCase
         $resource_type_id = $this->createGameResourceType();
         $resource_id = $this->createYahtzeeResource($resource_type_id);
 
-        $response = $this->updatedResource(
+        $response = $this->updateResource(
             $resource_type_id,
             $resource_id,
             [
@@ -514,7 +514,7 @@ final class ResourceTest extends TestCase
         $resource_type_id = $this->createGameResourceType();
         $resource_id = $this->createYatzyResource($resource_type_id);
 
-        $response = $this->updatedResource(
+        $response = $this->updateResource(
             $resource_type_id,
             $resource_id,
             [

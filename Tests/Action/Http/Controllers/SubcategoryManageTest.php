@@ -141,7 +141,7 @@ final class SubcategoryManageTest extends TestCase
         $category_id = $this->createRandomCategory($resource_type_id);
         $subcategory_id = $this->createRandomSubcategory($resource_type_id, $category_id);
 
-        $response = $this->updatedRequestedSubcategory(
+        $response = $this->updateRequestedSubcategory(
             $resource_type_id,
             $category_id,
             $subcategory_id,
@@ -162,7 +162,7 @@ final class SubcategoryManageTest extends TestCase
         $category_id = $this->createRandomCategory($resource_type_id);
         $subcategory_id = $this->createRandomSubcategory($resource_type_id, $category_id);
 
-        $response = $this->updatedRequestedSubcategory(
+        $response = $this->updateRequestedSubcategory(
             $resource_type_id,
             $category_id,
             $subcategory_id,
@@ -209,7 +209,7 @@ final class SubcategoryManageTest extends TestCase
         $subcategory_id = $response->json('id');
 
         // Attempt to set name of second subcategory to first name
-        $response = $this->updatedRequestedSubcategory(
+        $response = $this->updateRequestedSubcategory(
             $resource_type_id,
             $category_id,
             $subcategory_id,
@@ -230,7 +230,7 @@ final class SubcategoryManageTest extends TestCase
         $category_id = $this->createRandomCategory($resource_type_id);
         $subcategory_id = $this->createRandomSubcategory($resource_type_id, $category_id);
 
-        $response = $this->updatedRequestedSubcategory(
+        $response = $this->updateRequestedSubcategory(
             $resource_type_id,
             $category_id,
             $subcategory_id,
@@ -251,7 +251,7 @@ final class SubcategoryManageTest extends TestCase
         $category_id = $this->createRandomCategory($resource_type_id);
         $subcategory_id = $this->createRandomSubcategory($resource_type_id, $category_id);
 
-        $response = $this->updatedRequestedSubcategory(
+        $response = $this->updateRequestedSubcategory(
             $resource_type_id,
             $category_id,
             $subcategory_id,
@@ -272,7 +272,7 @@ final class SubcategoryManageTest extends TestCase
         $category_id = $this->createRandomCategory($resource_type_id);
         $subcategory_id = $this->createRandomSubcategory($resource_type_id, $category_id);
 
-        $response = $this->updatedRequestedSubcategory(
+        $response = $this->updateRequestedSubcategory(
             $resource_type_id,
             $category_id,
             $subcategory_id,

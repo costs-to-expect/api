@@ -70,7 +70,7 @@ Route::group(
         Route::patch(
             'resource-types/{resource_type_id}/resources/{resource_id}/items/{item_id}',
             [App\Http\Controllers\Action\ItemController::class, 'update']
-        );
+        )->name('item.update');
 
     }
 );

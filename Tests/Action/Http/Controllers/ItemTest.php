@@ -217,4 +217,109 @@ final class ItemTest extends TestCase
 
         $response->assertStatus(204);
     }
+
+    /** @test */
+    public function updateAllocatedExpenseItemSuccess(): void
+    {
+        $this->actingAs(User::find(1));
+
+        $resource_type_id = $this->createAllocatedExpenseResourceType();
+        $resource_id = $this->createAllocatedExpenseResource($resource_type_id);
+        $item_id = $this->createAllocatedExpenseItem($resource_type_id, $resource_id);
+
+        $response = $this->updateItem(
+            $resource_type_id,
+            $resource_id,
+            $item_id,
+            [
+                'name' => $this->faker->text(25)
+            ]
+        );
+
+        $response->assertStatus(204);
+    }
+
+    /** @test */
+    public function updateBudgetItemSuccess(): void
+    {
+        $this->actingAs(User::find(1));
+
+        $resource_type_id = $this->createBudgetResourceType();
+        $resource_id = $this->createBudgetResource($resource_type_id);
+        $item_id = $this->createBudgetItem($resource_type_id, $resource_id);
+
+        $response = $this->updateItem(
+            $resource_type_id,
+            $resource_id,
+            $item_id,
+            [
+                'name' => $this->faker->text(25)
+            ]
+        );
+
+        $response->assertStatus(204);
+    }
+
+    /** @test */
+    public function updateBudgetProItemSuccess(): void
+    {
+        $this->actingAs(User::find(1));
+
+        $resource_type_id = $this->createBudgetProResourceType();
+        $resource_id = $this->createBudgetProResource($resource_type_id);
+        $item_id = $this->createBudgetProItem($resource_type_id, $resource_id);
+
+        $response = $this->updateItem(
+            $resource_type_id,
+            $resource_id,
+            $item_id,
+            [
+                'name' => $this->faker->text(25)
+            ]
+        );
+
+        $response->assertStatus(204);
+    }
+
+    /** @test */
+    public function updateYahtzeeGameItemSuccess(): void
+    {
+        $this->actingAs(User::find(1));
+
+        $resource_type_id = $this->createGameResourceType();
+        $resource_id = $this->createYahtzeeResource($resource_type_id);
+        $item_id = $this->createYahtzeeGameItem($resource_type_id, $resource_id);
+
+        $response = $this->updateItem(
+            $resource_type_id,
+            $resource_id,
+            $item_id,
+            [
+                'game' => json_encode(['turns'=>[], 'data'=>null], JSON_THROW_ON_ERROR),
+            ]
+        );
+
+        $response->assertStatus(204);
+    }
+
+    /** @test */
+    public function updateYatzyGameItemSuccess(): void
+    {
+        $this->actingAs(User::find(1));
+
+        $resource_type_id = $this->createGameResourceType();
+        $resource_id = $this->createYahtzeeResource($resource_type_id);
+        $item_id = $this->createYahtzeeGameItem($resource_type_id, $resource_id);
+
+        $response = $this->updateItem(
+            $resource_type_id,
+            $resource_id,
+            $item_id,
+            [
+                'game' => json_encode(['turns'=>[], 'data'=>null], JSON_THROW_ON_ERROR),
+            ]
+        );
+
+        $response->assertStatus(204);
+    }
 }

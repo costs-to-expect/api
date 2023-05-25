@@ -330,7 +330,7 @@ final class ResourceTypeTest extends TestCase
 
         $id = $response->json('id');
 
-        $response = $this->updatedRequestedResourceType(
+        $response = $this->updateRequestedResourceType(
             $id,
             [
                 'extra' => $this->faker->text(100)
@@ -376,7 +376,7 @@ final class ResourceTypeTest extends TestCase
         $id = $response->json('id');
 
         // Update with same name as the first
-        $response = $this->updatedRequestedResourceType(
+        $response = $this->updateRequestedResourceType(
             $id,
             [
                 'name' => $name
@@ -405,7 +405,7 @@ final class ResourceTypeTest extends TestCase
 
         $id = $response->json('id');
 
-        $response = $this->updatedRequestedResourceType(
+        $response = $this->updateRequestedResourceType(
             $id,
             []
         );
@@ -432,7 +432,7 @@ final class ResourceTypeTest extends TestCase
 
         $id = $response->json('id');
 
-        $response = $this->updatedRequestedResourceType(
+        $response = $this->updateRequestedResourceType(
             $id,
             [
                 'name' => $this->faker->text(100)
@@ -461,7 +461,7 @@ final class ResourceTypeTest extends TestCase
 
         $id = $response->json('id');
 
-        $response = $this->updatedRequestedResourceType(
+        $response = $this->updateRequestedResourceType(
             $id,
             [
                 'name' => $this->faker->text(100)
@@ -490,7 +490,7 @@ final class ResourceTypeTest extends TestCase
 
         $id = $response->json('id');
 
-        $response = $this->updatedRequestedResourceType(
+        $response = $this->updateRequestedResourceType(
             $id,
             [
                 'name' => $this->faker->text(100)
@@ -519,7 +519,7 @@ final class ResourceTypeTest extends TestCase
 
         $id = $response->json('id');
 
-        $response = $this->updatedRequestedResourceType(
+        $response = $this->updateRequestedResourceType(
             $id,
             [
                 'name' => $this->faker->text(100)

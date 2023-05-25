@@ -309,6 +309,7 @@ class ItemController extends Controller
         return match ($item_type) {
             'allocated-expense' => $this->updateAllocatedExpense((int) $resource_type_id, (int) $resource_id, (int) $item_id),
             'budget' => $this->updateBudget((int) $resource_type_id, (int) $resource_id, (int) $item_id),
+            'budget-pro' => $this->updateBudgetPro((int) $resource_type_id, (int) $resource_id, (int) $item_id),
             'game' => $this->updateGame((int) $resource_type_id, (int) $resource_id, (int) $item_id),
             default => throw new \OutOfRangeException('No item type definition for ' . $item_type, 500),
         };
@@ -411,6 +412,61 @@ class ItemController extends Controller
 
         $item_instance = (new Item())->instance($resource_type_id, $resource_id, $item_id);
         $item_type_instance = (new \App\ItemType\Budget\Models\Item())->instance($item_id);
+
+        if ($item_instance === null || $item_type_instance === null) {
+            return Response::failedToSelectModelForUpdateOrDelete();
+        }
+
+        try {
+            $item_instance->updated_by = $this->user_id;
+            $item_instance->updated_at = Date::now();
+
+            DB::transaction(static function () use ($request, $item_instance, $item_type_instance) {
+                foreach ($request->all() as $key => $value) {
+                    $item_type_instance->$key = $value;
+                }
+
+                $item_type_instance->updated_at = Date::now();
+
+                return $item_instance->save() && $item_type_instance->save();
+            });
+
+            ClearCache::dispatchSync($cache_job_payload->payload());
+        } catch (Exception $e) {
+            return Response::failedToSaveModelForUpdate($e);
+        }
+
+        return Response::successNoContent();
+    }
+
+    private function updateBudgetPro(
+        int $resource_type_id,
+        int $resource_id,
+        int $item_id
+    ): JsonResponse {
+
+        $invalid_fields = $this->checkForInvalidFieldsForBudgetPro();
+        if ($invalid_fields !== null) {
+            return $invalid_fields;
+        }
+
+        $validator = $this->validateBudgetProForUpdate();
+        if ($validator !== null) {
+            return \App\HttpResponse\Response::validationErrors($validator);
+        }
+
+        $request = request();
+
+        $cache_job_payload = (new JobPayload())
+            ->setGroupKey(KeyGroup::ITEM_DELETE)
+            ->setRouteParameters([
+                'resource_type_id' => $resource_type_id,
+                'resource_id' => $resource_id
+            ])
+            ->setUserId($this->user_id);
+
+        $item_instance = (new Item())->instance($resource_type_id, $resource_id, $item_id);
+        $item_type_instance = (new \App\ItemType\BudgetPro\Models\Item())->instance($item_id);
 
         if ($item_instance === null || $item_type_instance === null) {
             return Response::failedToSelectModelForUpdateOrDelete();
@@ -818,11 +874,61 @@ class ItemController extends Controller
         return null;
     }
 
+    private function checkForInvalidFieldsForBudgetPro(): ?JsonResponse
+    {
+        $config_base_path = 'api.item-type-budget-pro';
+
+        $invalid_fields = $this->checkForInvalidFields(
+            array_keys(LaravelConfig::get($config_base_path . '.validation-patch.fields', []))
+        );
+
+        if (count($invalid_fields) > 0) {
+            return Response::invalidFieldsInRequest($invalid_fields);
+        }
+
+        return null;
+    }
+
     private function validateBudgetForUpdate(): ?\Illuminate\Validation\Validator
     {
         $request = request();
 
         $config_base_path = 'api.item-type-budget';
+
+        $messages = [];
+        foreach (LaravelConfig::get($config_base_path . '.validation-patch.messages', []) as $key => $custom_message) {
+            $messages[$key] = trans($custom_message);
+        }
+
+        $validator = ValidatorFacade::make(
+            $request->only([
+                'name',
+                'account',
+                'target_account',
+                'description',
+                'amount',
+                'category',
+                'start_date',
+                'end_date',
+                'disabled',
+                'frequency',
+            ]),
+            LaravelConfig::get($config_base_path . '.validation-patch.fields', []),
+            $messages
+        );
+
+        if ($validator->fails()) {
+            return $validator;
+        }
+
+        return null;
+    }
+
+    private function validateBudgetProForUpdate(): ?\Illuminate\Validation\Validator
+    {
+        $request = request();
+
+        $config_base_path = 'api.item-type-budget-pro';
 
         $messages = [];
         foreach (LaravelConfig::get($config_base_path . '.validation-patch.messages', []) as $key => $custom_message) {

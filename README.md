@@ -287,26 +287,26 @@ You can see our progress in the table below. We are hoping to add tests in each 
 not too concerned about missing anything as we still have all our tests in Postman, we won't disable our test monitor until 
 our local test suite is as complete as the Postman request tests.
 
-| Controller                          | Action   | View     | 
-|:------------------------------------|:---------|:---------|
-| Authentication                      | 35 Tests | 2 Tests  |
-| Category                            | 11 Tests | Non yet* |
-| Currency                            | Non yet* | Non yet* |
-| ItemCategory                        | Non yet* | Non yet* |
-| Item                                | 10 Tests | Non yet* |
-| ItemData                            | Non yet* | Non yet* |
-| ItemLog                             | Non yet* | Non yet* |
-| ItemPartialTransfer                 | Non yet* | Non yet* |
-| ItemSubcategory                     | Non yet* | Non yet* |
-| ItemTransfer                        | Non yet* | Non yet* |
-| ItemType                            | Non yet* | 7 Tests  |
-| PermittedUser                       | 4 Tests  | 2 Tests  |
-| Queue                               | Non yet* | Non yet* |
-| Request                             | Non yet* | Non yet* |
-| Resource                            | 24 Tests | Non yet* |
-| ResourceType                        | 23 Tests | 11 Tests |
-| Subcategory                         | 12 Tests | Non yet* |
-| **Total tests**                     | **119**  | **22**   |
+| Controller          | Action   | View     | 
+|:--------------------|:---------|:---------|
+| Authentication      | 35 Tests | 2 Tests  |
+| Category            | 11 Tests | Non yet* |
+| Currency            | Non yet* | Non yet* |
+| ItemCategory        | Non yet* | Non yet* |
+| Item                | 15 Tests | Non yet* |
+| ItemData            | Non yet* | Non yet* |
+| ItemLog             | Non yet* | Non yet* |
+| ItemPartialTransfer | Non yet* | Non yet* |
+| ItemSubcategory     | Non yet* | Non yet* |
+| ItemTransfer        | Non yet* | Non yet* |
+| ItemType            | Non yet* | 7 Tests  |
+| PermittedUser       | 4 Tests  | 2 Tests  |
+| Queue               | Non yet* | Non yet* |
+| Request             | Non yet* | Non yet* |
+| Resource            | 24 Tests | Non yet* |
+| ResourceType        | 23 Tests | 11 Tests |
+| Subcategory         | 12 Tests | Non yet* |
+| **Total tests**     | **124**  | **22**   |
 
 *Non yet does not mean there are no tests, it just means there are no PHPUnit tests. There are over 2000 tests in 
 a private Postman collection, I'm slowing transferring them locally and expanding the test suite.
