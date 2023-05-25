@@ -65,7 +65,7 @@ Route::group(
         Route::delete(
             'resource-types/{resource_type_id}/resources/{resource_id}/items/{item_id}',
             [App\Http\Controllers\Action\ItemController::class, 'delete']
-        );
+        )->name('item.delete');
 
         Route::patch(
             'resource-types/{resource_type_id}/resources/{resource_id}/items/{item_id}',

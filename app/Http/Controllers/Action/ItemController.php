@@ -523,6 +523,7 @@ class ItemController extends Controller
         return match ($item_type) {
             'allocated-expense' => $this->deleteAllocatedExpense((int) $resource_type_id, (int) $resource_id, (int) $item_id),
             'budget' => $this->deleteBudget((int) $resource_type_id, (int) $resource_id, (int) $item_id),
+            'budget-pro' => $this->deleteBudgetPro((int) $resource_type_id, (int) $resource_id, (int) $item_id),
             'game' => $this->deleteGame((int) $resource_type_id, (int) $resource_id, (int) $item_id),
             default => throw new \OutOfRangeException('No item type definition for ' . $item_type, 500),
         };
@@ -587,6 +588,48 @@ class ItemController extends Controller
             ->setUserId($this->user_id);
 
         $item_model = new \App\ItemType\Budget\Models\Item();
+
+        $item_type_instance = $item_model->instance($item_id);
+        $item_instance = (new Item())->instance($resource_type_id, $resource_id, $item_id);
+
+        if ($item_instance === null || $item_type_instance === null) {
+            return Response::notFound(trans('entities.item'));
+        }
+
+        if ($item_model->hasCategoryAssignments($item_id) === true) {
+            return Response::foreignKeyConstraintCategory();
+        }
+
+        try {
+            DB::transaction(static function () use ($item_id, $item_type_instance, $item_instance) {
+                $item_type_instance->delete();
+                $item_instance->delete();
+            });
+
+            ClearCache::dispatchSync($cache_job_payload->payload());
+
+            return Response::successNoContent();
+        } catch (QueryException $e) {
+            return Response::foreignKeyConstraintError($e);
+        } catch (Exception $e) {
+            return Response::notFound(trans('entities.item'), $e);
+        }
+    }
+
+    private function deleteBudgetPro(
+        string $resource_type_id,
+        string $resource_id,
+        string $item_id
+    ): JsonResponse {
+        $cache_job_payload = (new JobPayload())
+            ->setGroupKey(KeyGroup::ITEM_DELETE)
+            ->setRouteParameters([
+                'resource_type_id' => $resource_type_id,
+                'resource_id' => $resource_id
+            ])
+            ->setUserId($this->user_id);
+
+        $item_model = new \App\ItemType\BudgetPro\Models\Item();
 
         $item_type_instance = $item_model->instance($item_id);
         $item_instance = (new Item())->instance($resource_type_id, $resource_id, $item_id);

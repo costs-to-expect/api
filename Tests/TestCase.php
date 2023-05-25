@@ -7,6 +7,7 @@ use Illuminate\Foundation\Testing\TestCase as BaseTestCase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Str;
 use Illuminate\Testing\TestResponse;
 use Opis\JsonSchema\Schema;
 use Opis\JsonSchema\Validator;
@@ -126,6 +127,27 @@ abstract class TestCase extends BaseTestCase
         $this->fail('Unable to create the category');
     }
 
+    protected function createAllocatedExpenseItem(string $resource_type_id, string $resource_id): string
+    {
+        $response = $this->createItem(
+            $resource_type_id,
+            $resource_id,
+            [
+                'name' => $this->faker->text(200),
+                'description' => $this->faker->text(200),
+                'effective_date' => $this->faker->date(),
+                'currency_id' => $this->currency['GBP'],
+                'total' => $this->randomMoneyValue(),
+            ]
+        );
+
+        if ($response->assertStatus(201)) {
+            return $response->json('id');
+        }
+
+        $this->fail('Unable to create the allocated expense item');
+    }
+
     protected function createAllocatedExpenseResource(string $resource_type_id): string
     {
         $response = $this->createResource(
@@ -161,6 +183,54 @@ abstract class TestCase extends BaseTestCase
         }
 
         $this->fail('Unable to create the allocated expense resource type');
+    }
+
+    protected function createBudgetItem(string $resource_type_id, string $resource_id): string
+    {
+        $response = $this->createItem(
+            $resource_type_id,
+            $resource_id,
+            [
+                'name' => $this->faker->text(200),
+                'account' => Str::uuid()->toString(),
+                'description' => $this->faker->text(200),
+                'amount' => $this->randomMoneyValue(),
+                'currency_id' => $this->currency['GBP'],
+                'category' => 'income',
+                'start_date' => $this->faker->date(),
+                'frequency' => json_encode(['type'=>'monthly', 'day'=>null, 'exclusions' => []], JSON_THROW_ON_ERROR),
+            ]
+        );
+
+        if ($response->assertStatus(201)) {
+            return $response->json('id');
+        }
+
+        $this->fail('Unable to create the budget item');
+    }
+
+    protected function createBudgetProItem(string $resource_type_id, string $resource_id): string
+    {
+        $response = $this->createItem(
+            $resource_type_id,
+            $resource_id,
+            [
+                'name' => $this->faker->text(200),
+                'account' => Str::uuid()->toString(),
+                'description' => $this->faker->text(200),
+                'amount' => $this->randomMoneyValue(),
+                'currency_id' => $this->currency['GBP'],
+                'category' => 'income',
+                'start_date' => $this->faker->date(),
+                'frequency' => json_encode(['type'=>'monthly', 'day'=>null, 'exclusions' => []], JSON_THROW_ON_ERROR),
+            ]
+        );
+
+        if ($response->assertStatus(201)) {
+            return $response->json('id');
+        }
+
+        $this->fail('Unable to create the budget pro item');
     }
 
     protected function createBudgetProResourceType(): string
@@ -358,6 +428,42 @@ abstract class TestCase extends BaseTestCase
         $this->fail('Unable to create the ' . $this->item_types[$item_type] . ' resource type');
     }
 
+    protected function createYahtzeeGameItem(string $resource_type_id, string $resource_id): string
+    {
+        $response = $this->createItem(
+            $resource_type_id,
+            $resource_id,
+            [
+                'name' => $this->faker->text(200),
+                'description' => $this->faker->text(200),
+            ]
+        );
+
+        if ($response->assertStatus(201)) {
+            return $response->json('id');
+        }
+
+        $this->fail('Unable to create the yahtzee game item');
+    }
+
+    protected function createYatzyGameItem(string $resource_type_id, string $resource_id): string
+    {
+        $response = $this->createItem(
+            $resource_type_id,
+            $resource_id,
+            [
+                'name' => $this->faker->text(200),
+                'description' => $this->faker->text(200),
+            ]
+        );
+
+        if ($response->assertStatus(201)) {
+            return $response->json('id');
+        }
+
+        $this->fail('Unable to create the yatzy game item');
+    }
+
     protected function createYahtzeeResource(string $resource_type_id): string
     {
         $response = $this->createResource(
@@ -392,6 +498,20 @@ abstract class TestCase extends BaseTestCase
         }
 
         $this->fail('Unable to create the resource');
+    }
+
+    protected function deleteItem(string $resource_type_id, $resource_id, string $item_id): TestResponse
+    {
+        return $this->delete(
+            route(
+                'item.delete',
+                [
+                    'resource_type_id' => $resource_type_id,
+                    'resource_id' => $resource_id,
+                    'item_id' => $item_id
+                ]
+            )
+        );
     }
 
     protected function deleteRequestedCategory(string $resource_type_id, $category_id): TestResponse

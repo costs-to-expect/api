@@ -127,4 +127,94 @@ final class ItemTest extends TestCase
         $response->assertStatus(201);
         $this->assertJsonMatchesGameItemSchema($response->content());
     }
+
+    /** @test */
+    public function deleteAllocatedExpenseItemSuccess(): void
+    {
+        $this->actingAs(User::find(1));
+
+        $resource_type_id = $this->createAllocatedExpenseResourceType();
+        $resource_id = $this->createAllocatedExpenseResource($resource_type_id);
+        $item_id = $this->createAllocatedExpenseItem($resource_type_id,$resource_id);
+
+        $response = $this->deleteItem(
+            $resource_type_id,
+            $resource_id,
+            $item_id,
+        );
+
+        $response->assertStatus(204);
+    }
+
+    /** @test */
+    public function deleteBudgetItemSuccess(): void
+    {
+        $this->actingAs(User::find(1));
+
+        $resource_type_id = $this->createBudgetResourceType();
+        $resource_id = $this->createBudgetResource($resource_type_id);
+        $item_id = $this->createBudgetItem($resource_type_id, $resource_id);
+
+        $response = $this->deleteItem(
+            $resource_type_id,
+            $resource_id,
+            $item_id,
+        );
+
+        $response->assertStatus(204);
+    }
+
+    /** @test */
+    public function deleteBudgetProItemSuccess(): void
+    {
+        $this->actingAs(User::find(1));
+
+        $resource_type_id = $this->createBudgetProResourceType();
+        $resource_id = $this->createBudgetProResource($resource_type_id);
+        $item_id = $this->createBudgetProItem($resource_type_id, $resource_id);
+
+        $response = $this->deleteItem(
+            $resource_type_id,
+            $resource_id,
+            $item_id,
+        );
+
+        $response->assertStatus(204);
+    }
+
+    /** @test */
+    public function deleteYahtzeeGameItemSuccess(): void
+    {
+        $this->actingAs(User::find(1));
+
+        $resource_type_id = $this->createGameResourceType();
+        $resource_id = $this->createYahtzeeResource($resource_type_id);
+        $item_id = $this->createYahtzeeGameItem($resource_type_id, $resource_id);
+
+        $response = $this->deleteItem(
+            $resource_type_id,
+            $resource_id,
+            $item_id,
+        );
+
+        $response->assertStatus(204);
+    }
+
+    /** @test */
+    public function deleteYatzyGameItemSuccess(): void
+    {
+        $this->actingAs(User::find(1));
+
+        $resource_type_id = $this->createGameResourceType();
+        $resource_id = $this->createYatzyResource($resource_type_id);
+        $item_id = $this->createYatzyGameItem($resource_type_id, $resource_id);
+
+        $response = $this->deleteItem(
+            $resource_type_id,
+            $resource_id,
+            $item_id,
+        );
+
+        $response->assertStatus(204);
+    }
 }
