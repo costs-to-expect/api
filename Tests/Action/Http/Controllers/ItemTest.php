@@ -24,12 +24,12 @@ final class ItemTest extends TestCase
                 'description' => $this->faker->text(200),
                 'effective_date' => $this->faker->date(),
                 'currency_id' => $this->currency['GBP'],
-                'total' => $this->faker->randomFloat(2, 0.01, 9999999999999.99),
+                'total' => $this->randomMoneyValue(),
             ]
         );
 
         $response->assertStatus(201);
-        $this->assertJsonMatchesResourceSchema($response->content());
+        $this->assertJsonMatchesAllocatedExpenseItemSchema($response->content());
     }
 
     /** @test */
@@ -47,7 +47,7 @@ final class ItemTest extends TestCase
                 'name' => $this->faker->text(200),
                 'account' => Str::uuid()->toString(),
                 'description' => $this->faker->text(200),
-                'amount' => $this->faker->randomFloat(2, 0.01, 9999999999999.99),
+                'amount' => $this->randomMoneyValue(),
                 'currency_id' => $this->currency['GBP'],
                 'category' => 'income',
                 'start_date' => $this->faker->date(),
@@ -56,7 +56,7 @@ final class ItemTest extends TestCase
         );
 
         $response->assertStatus(201);
-        $this->assertJsonMatchesResourceSchema($response->content());
+        $this->assertJsonMatchesBudgetItemSchema($response->content());
     }
 
     /** @test */
@@ -74,7 +74,7 @@ final class ItemTest extends TestCase
                 'name' => $this->faker->text(200),
                 'account' => Str::uuid()->toString(),
                 'description' => $this->faker->text(200),
-                'amount' => $this->faker->randomFloat(2, 0.01, 9999999999999.99),
+                'amount' => $this->randomMoneyValue(),
                 'currency_id' => $this->currency['GBP'],
                 'category' => 'income',
                 'start_date' => $this->faker->date(),
@@ -83,7 +83,7 @@ final class ItemTest extends TestCase
         );
 
         $response->assertStatus(201);
-        $this->assertJsonMatchesResourceSchema($response->content());
+        $this->assertJsonMatchesBudgetProItemSchema($response->content());
     }
 
     /** @test */

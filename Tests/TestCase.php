@@ -45,6 +45,21 @@ abstract class TestCase extends BaseTestCase
         'GBP' => 'epMqeYqPkL',
     ];
 
+    protected function assertJsonMatchesAllocatedExpenseItemSchema($content): void
+    {
+        $this->assertProvidedJsonMatchesDefinedSchema($content, 'api/schema/item-allocated-expense.json');
+    }
+
+    protected function assertJsonMatchesBudgetItemSchema($content): void
+    {
+        $this->assertProvidedJsonMatchesDefinedSchema($content, 'api/schema/item-budget.json');
+    }
+
+    protected function assertJsonMatchesBudgetProItemSchema($content): void
+    {
+        $this->assertProvidedJsonMatchesDefinedSchema($content, 'api/schema/item-budget-pro.json');
+    }
+
     protected function assertJsonMatchesCategorySchema($content): void
     {
         $this->assertProvidedJsonMatchesDefinedSchema($content, 'api/schema/category.json');
@@ -480,6 +495,11 @@ abstract class TestCase extends BaseTestCase
     protected function generateOptionsRoute(string $route, array $parameters = []): TestResponse
     {
         return $this->options(route($route, $parameters));
+    }
+
+    protected function randomMoneyValue(): string
+    {
+        return number_format($this->faker->randomFloat(2, 0.01, 99999999999.99), 2, '.', '');
     }
 
     protected function setUp(): void
