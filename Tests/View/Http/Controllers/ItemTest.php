@@ -44,6 +44,6 @@ final class ItemTest extends TestCase
 
         $response->assertStatus(200);
 
-        //$this->assertProvidedJsonMatchesDefinedSchema($response->content(), 'api/schema/options/allocated-expense-collection.json');
+        $this->assertProvidedJsonMatchesDefinedSchema($response->content(), 'api/schema/options/allocated-expense-collection.json');
     }
 }

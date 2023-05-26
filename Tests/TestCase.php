@@ -107,7 +107,13 @@ abstract class TestCase extends BaseTestCase
         $validator = new Validator();
 
         $result = $validator->schemaValidation(json_decode($content), $schema);
-        self::assertTrue($result->isValid());
+
+        if ($result->isValid()) {
+            self::assertTrue(true);
+        } else {
+            dd($result->getErrors());
+            self::assertTrue(false);
+        }
     }
 
     protected function createRandomCategory(string $resource_type_id): string
