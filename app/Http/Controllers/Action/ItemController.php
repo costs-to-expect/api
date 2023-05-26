@@ -513,7 +513,13 @@ class ItemController extends Controller
         int $resource_type_id,
         int $resource_id,
         int $item_id
-    ): JsonResponse {
+    ): JsonResponse
+    {
+        $invalid_fields = $this->checkForInvalidFieldsForGame();
+        if ($invalid_fields !== null) {
+            return $invalid_fields;
+        }
+
         $this->validateGameForUpdate();
 
         $request = request();
