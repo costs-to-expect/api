@@ -597,6 +597,16 @@ abstract class TestCase extends BaseTestCase
         return $this->generateOptionsRoute('auth.create-password.options', $parameters);
     }
 
+    protected function fetchOptionsForItem(array $parameters = []): TestResponse
+    {
+        return $this->generateOptionsRoute('item.show.options', $parameters);
+    }
+
+    protected function fetchOptionsForItemCollection(array $parameters = []): TestResponse
+    {
+        return $this->generateOptionsRoute('item.list.options', $parameters);
+    }
+
     protected function fetchOptionsForRegister(array $parameters = []): TestResponse
     {
         return $this->generateOptionsRoute('auth.register.options', $parameters);
