@@ -70,22 +70,27 @@ return [
 
     'item_allocated_expense_GET_index' => 'Return all the assigned expenses for the selected resource',
     'item_budget_GET_index' => 'Return all the Budget entries for the selected Budget',
+    'item_budget_pro_GET_index' => 'Return all the Budget Pro entries for the selected Budget',
     'item_game_GET_index' => 'Return all the played games for the selected game',
 
     'item_allocated_expense_GET_show' => 'Return the selected expense',
     'item_budget_GET_show' => 'Return the selected Budget item',
+    'item_budget_pro_GET_show' => 'Return the selected Budget Pro item',
     'item_game_GET_show' => 'Return the selected game',
 
     'item_allocated_expense_POST' => 'Create a new expense',
     'item_budget_POST' => 'Create a new Budget item',
+    'item_budget_pro_POST' => 'Create a new Budget Pro item',
     'item_game_POST' => 'Create a new game',
 
     'item_allocated_expense_PATCH' => 'Update the selected expense',
     'item_budget_PATCH' => 'Update the selected Budget item',
+    'item_budget_pro_PATCH' => 'Update the selected Budget Pro item',
     'item_game_PATCH' => 'Update the selected game',
 
     'item_allocated_expense_DELETE' => 'Delete the selected expense',
     'item_budget_DELETE' => 'Delete the selected Budget item',
+    'item_budget_pro_DELETE' => 'Delete the selected Budget Pro item',
     'item_game_DELETE' => 'Delete the selected game',
 
     'item_category_GET_index' => 'Return the category assigned to the selected item',

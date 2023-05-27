@@ -84,6 +84,46 @@ final class ItemTest extends TestCase
 
         $response->assertStatus(200);
 
-        //$this->assertProvidedJsonMatchesDefinedSchema($response->content(), 'api/schema/options/budget-collection.json');
+        $this->assertProvidedJsonMatchesDefinedSchema($response->content(), 'api/schema/options/budget-collection.json');
+    }
+
+    /** @test */
+    public function optionsRequestForBudgetProItem(): void
+    {
+        $this->actingAs(User::find(1));
+        $resource_type_id = $this->createBudgetProResourceType();
+        $resource_id = $this->createBudgetProResource($resource_type_id);
+        $item_id = $this->createBudgetProItem($resource_type_id, $resource_id);
+
+        $response = $this->fetchOptionsForItem([
+            'resource_type_id' => $resource_type_id,
+            'resource_id' => $resource_id,
+            'item_id' => $item_id
+        ]);
+
+        $response->assertStatus(200);
+
+        $this->assertProvidedJsonMatchesDefinedSchema($response->content(), 'api/schema/options/budget-pro.json');
+    }
+
+    /** @test */
+    public function optionsRequestForBudgetProItemCollection(): void
+    {
+        $this->actingAs(User::find(1));
+        $resource_type_id = $this->createBudgetProResourceType();
+        $resource_id = $this->createBudgetProResource($resource_type_id);
+
+        $this->createBudgetProItem($resource_type_id, $resource_id);
+        $this->createBudgetProItem($resource_type_id, $resource_id);
+        $this->createBudgetProItem($resource_type_id, $resource_id);
+
+        $response = $this->fetchOptionsForItemCollection([
+            'resource_type_id' => $resource_type_id,
+            'resource_id' => $resource_id
+        ]);
+
+        $response->assertStatus(200);
+
+        $this->assertProvidedJsonMatchesDefinedSchema($response->content(), 'api/schema/options/budget-pro-collection.json');
     }
 }
