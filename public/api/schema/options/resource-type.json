@@ -294,6 +294,6 @@
     "required": [
         "DELETE",
         "GET",
-        "DELETE"
+        "PATCH"
     ]
 }
