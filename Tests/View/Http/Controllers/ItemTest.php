@@ -145,4 +145,23 @@ final class ItemTest extends TestCase
 
         $this->assertProvidedJsonMatchesDefinedSchema($response->content(), 'api/schema/options/yahtzee.json');
     }
+
+    /** @test */
+    public function optionsRequestForYatzyGameItem(): void
+    {
+        $this->actingAs(User::find(1));
+        $resource_type_id = $this->createGameResourceType();
+        $resource_id = $this->createYatzyResource($resource_type_id);
+        $item_id = $this->createYahtzeeGameItem($resource_type_id, $resource_id);
+
+        $response = $this->fetchOptionsForItem([
+            'resource_type_id' => $resource_type_id,
+            'resource_id' => $resource_id,
+            'item_id' => $item_id
+        ]);
+
+        $response->assertStatus(200);
+
+        $this->assertProvidedJsonMatchesDefinedSchema($response->content(), 'api/schema/options/yatzy.json');
+    }
 }
