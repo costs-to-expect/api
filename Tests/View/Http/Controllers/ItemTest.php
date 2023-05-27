@@ -63,7 +63,7 @@ final class ItemTest extends TestCase
 
         $response->assertStatus(200);
 
-        //$this->assertProvidedJsonMatchesDefinedSchema($response->content(), 'api/schema/options/budget.json');
+        $this->assertProvidedJsonMatchesDefinedSchema($response->content(), 'api/schema/options/budget.json');
     }
 
     /** @test */

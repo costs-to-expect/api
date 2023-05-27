@@ -1,0 +1,444 @@
+{
+    "$id": "https://api.costs-to-expect.com/v2/api/schema/options/budget.json",
+    "type": "object",
+    "properties": {
+        "DELETE": {
+            "type": "object",
+            "properties": {
+                "description": {
+                    "type": "string"
+                },
+                "authentication": {
+                    "type": "object",
+                    "properties": {
+                        "required": {
+                            "type": "boolean"
+                        },
+                        "authenticated": {
+                            "type": "boolean"
+                        }
+                    },
+                    "required": [
+                        "required",
+                        "authenticated"
+                    ]
+                }
+            },
+            "required": [
+                "description",
+                "authentication"
+            ]
+        },
+        "GET" : {
+            "type": "object",
+            "properties": {
+                "description": {
+                    "type": "string"
+                },
+                "authentication": {
+                    "type": "object",
+                    "properties": {
+                        "required": {
+                            "type": "boolean"
+                        },
+                        "authenticated": {
+                            "type": "boolean"
+                        }
+                    },
+                    "required": [
+                        "required",
+                        "authenticated"
+                    ]
+                },
+                "sortable": {
+                    "type": "array"
+                },
+                "searchable": {
+                    "type": "array"
+                },
+                "filterable": {
+                    "type": "array"
+                },
+                "parameters": {
+                    "type": "array"
+                }
+            },
+            "required": [
+                "description",
+                "authentication",
+                "sortable",
+                "searchable",
+                "filterable",
+                "parameters"
+            ]
+        },
+        "PATCH": {
+            "type": "object",
+            "properties": {
+                "description": {
+                    "type": "string"
+                },
+                "authentication": {
+                    "type": "object",
+                    "properties": {
+                        "required": {
+                            "type": "boolean"
+                        },
+                        "authenticated": {
+                            "type": "boolean"
+                        }
+                    },
+                    "required": [
+                        "required",
+                        "authenticated"
+                    ]
+                },
+                "fields": {
+                    "type": "object",
+                    "properties": {
+                        "name": {
+                            "type": "object",
+                            "properties": {
+                                "field": {
+                                    "type": "string"
+                                },
+                                "title": {
+                                    "type": "string"
+                                },
+                                "description": {
+                                    "type": "string"
+                                },
+                                "type": {
+                                    "type": "string"
+                                },
+                                "validation": {
+                                    "type": "object",
+                                    "properties": {
+                                        "max-length": {
+                                            "type": "integer"
+                                        }
+                                    },
+                                    "required": [
+                                        "max-length"
+                                    ]
+                                },
+                                "required": {
+                                    "type": "boolean"
+                                }
+                            },
+                            "required": [
+                                "field",
+                                "title",
+                                "description",
+                                "type",
+                                "validation",
+                                "required"
+                            ]
+                        },
+                        "account": {
+                            "type": "object",
+                            "properties": {
+                                "field": {
+                                    "type": "string"
+                                },
+                                "title": {
+                                    "type": "string"
+                                },
+                                "description": {
+                                    "type": "string"
+                                },
+                                "type": {
+                                    "type": "string"
+                                },
+                                "validation": {
+                                    "type": "object",
+                                    "properties": {
+                                        "max-length": {
+                                            "type": "integer"
+                                        }
+                                    },
+                                    "required": [
+                                        "max-length"
+                                    ]
+                                },
+                                "required": {
+                                    "type": "boolean"
+                                }
+                            },
+                            "required": [
+                                "field",
+                                "title",
+                                "description",
+                                "type",
+                                "validation",
+                                "required"
+                            ]
+                        },
+                        "target_account": {
+                            "type": "object",
+                            "properties": {
+                                "field": {
+                                    "type": "string"
+                                },
+                                "title": {
+                                    "type": "string"
+                                },
+                                "description": {
+                                    "type": "string"
+                                },
+                                "type": {
+                                    "type": "string"
+                                },
+                                "validation": {
+                                    "type": "object",
+                                    "properties": {
+                                        "max-length": {
+                                            "type": "integer"
+                                        }
+                                    },
+                                    "required": [
+                                        "max-length"
+                                    ]
+                                },
+                                "required": {
+                                    "type": "boolean"
+                                }
+                            },
+                            "required": [
+                                "field",
+                                "title",
+                                "description",
+                                "type",
+                                "validation",
+                                "required"
+                            ]
+                        },
+                        "description": {
+                            "type": "object",
+                            "properties": {
+                                "field": {
+                                    "type": "string"
+                                },
+                                "title": {
+                                    "type": "string"
+                                },
+                                "description": {
+                                    "type": "string"
+                                },
+                                "type": {
+                                    "type": "string"
+                                },
+                                "required": {
+                                    "type": "boolean"
+                                }
+                            },
+                            "required": [
+                                "field",
+                                "title",
+                                "description",
+                                "type",
+                                "required"
+                            ]
+                        },
+                        "amount": {
+                            "type": "object",
+                            "properties": {
+                                "field": {
+                                    "type": "string"
+                                },
+                                "title": {
+                                    "type": "string"
+                                },
+                                "description": {
+                                    "type": "string"
+                                },
+                                "type": {
+                                    "type": "string"
+                                },
+                                "required": {
+                                    "type": "boolean"
+                                }
+                            },
+                            "required": [
+                                "field",
+                                "title",
+                                "description",
+                                "type",
+                                "required"
+                            ]
+                        },
+                        "category": {
+                            "type": "object",
+                            "properties": {
+                                "field": {
+                                    "type": "string"
+                                },
+                                "title": {
+                                    "type": "string"
+                                },
+                                "description": {
+                                    "type": "string"
+                                },
+                                "type": {
+                                    "type": "string"
+                                },
+                                "validation": {
+                                    "type": "object",
+                                    "properties": {
+                                        "one-of": {
+                                            "type": "array"
+                                        }
+                                    },
+                                    "required": [
+                                        "one-of"
+                                    ]
+                                },
+                                "required": {
+                                    "type": "boolean"
+                                }
+                            },
+                            "required": [
+                                "field",
+                                "title",
+                                "description",
+                                "type",
+                                "validation",
+                                "required"
+                            ]
+                        },
+                        "start_date": {
+                            "type": "object",
+                            "properties": {
+                                "field": {
+                                    "type": "string"
+                                },
+                                "title": {
+                                    "type": "string"
+                                },
+                                "description": {
+                                    "type": "string"
+                                },
+                                "type": {
+                                    "type": "string"
+                                },
+                                "required": {
+                                    "type": "boolean"
+                                }
+                            },
+                            "required": [
+                                "field",
+                                "title",
+                                "description",
+                                "type",
+                                "required"
+                            ]
+                        },
+                        "end_date": {
+                            "type": "object",
+                            "properties": {
+                                "field": {
+                                    "type": "string"
+                                },
+                                "title": {
+                                    "type": "string"
+                                },
+                                "description": {
+                                    "type": "string"
+                                },
+                                "type": {
+                                    "type": "string"
+                                },
+                                "required": {
+                                    "type": "boolean"
+                                }
+                            },
+                            "required": [
+                                "field",
+                                "title",
+                                "description",
+                                "type",
+                                "required"
+                            ]
+                        },
+                        "disabled": {
+                            "type": "object",
+                            "properties": {
+                                "field": {
+                                    "type": "string"
+                                },
+                                "title": {
+                                    "type": "string"
+                                },
+                                "description": {
+                                    "type": "string"
+                                },
+                                "type": {
+                                    "type": "string"
+                                },
+                                "required": {
+                                    "type": "boolean"
+                                }
+                            },
+                            "required": [
+                                "field",
+                                "title",
+                                "description",
+                                "type",
+                                "required"
+                            ]
+                        },
+                        "frequency": {
+                            "type": "object",
+                            "properties": {
+                                "field": {
+                                    "type": "string"
+                                },
+                                "title": {
+                                    "type": "string"
+                                },
+                                "description": {
+                                    "type": "string"
+                                },
+                                "type": {
+                                    "type": "string"
+                                },
+                                "required": {
+                                    "type": "boolean"
+                                }
+                            },
+                            "required": [
+                                "field",
+                                "title",
+                                "description",
+                                "type",
+                                "required"
+                            ]
+                        }
+                    },
+                    "required": [
+                        "name",
+                        "account",
+                        "target_account",
+                        "description",
+                        "amount",
+                        "category",
+                        "start_date",
+                        "end_date",
+                        "disabled",
+                        "frequency"
+                    ]
+                }
+            },
+            "required": [
+                "description",
+                "authentication",
+                "fields"
+            ]
+        }
+    },
+    "required": [
+        "DELETE",
+        "GET",
+        "PATCH"
+    ]
+}

@@ -112,7 +112,6 @@ abstract class TestCase extends BaseTestCase
             self::assertTrue(true);
         } else {
             dd($result->getErrors());
-            self::assertTrue(false);
         }
     }
 
