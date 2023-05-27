@@ -6,8 +6,9 @@ The complete changelog for the Costs to Expect REST API, our changelog follows t
 ### Added
 - Added support for the 'budget-pro' item type. For now the 'budget-pro' item type is a duplicate of the 'budget' item type but that will change in the future.
 - Added additional tests for the resource controllers.
-- Added tests for the item controllers.
-- Added a second phpunit.xml file, this file allows you to run tests in your IDE with out Docker setup, the default phpunit.xml file is for the command line.
+- Added tests for the item action controller.
+- Added tests for the item view controller.
+- Added a second phpunit.xml file, this file allows you to run tests in your IDE without Docker setup, the default phpunit.xml file is for the command line.
 ### Changed
 - Reviewed the existing test, updated the test to match the App structure.
 - Renamed the "Manage" controllers, now "Action".
@@ -17,6 +18,7 @@ The complete changelog for the Costs to Expect REST API, our changelog follows t
 ### Fixed
 - Invalid field check missing in 'game' item update.
 - The 'game' schema file was incorrect, two fields can be null.
+- Referenced lang file incorrect for item type 'game' patch fields.
 
 ## [v3.10.0] - 2023-05-11
 ### Changed
