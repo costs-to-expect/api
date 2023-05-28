@@ -200,21 +200,31 @@ abstract class TestCase extends BaseTestCase
         $this->fail('Unable to create the allocated expense resource type');
     }
 
-    protected function createBudgetItem(string $resource_type_id, string $resource_id): string
+    protected function createBudgetItem(
+        string $resource_type_id,
+        string $resource_id,
+        array $override = []
+    ): string
     {
+        $payload = [
+            'name' => $this->faker->text(200),
+            'account' => Str::uuid()->toString(),
+            'description' => $this->faker->text(200),
+            'amount' => $this->randomMoneyValue(),
+            'currency_id' => $this->currency['GBP'],
+            'category' => 'income',
+            'start_date' => $this->faker->date(),
+            'frequency' => json_encode(['type'=>'monthly', 'day'=>null, 'exclusions' => []], JSON_THROW_ON_ERROR),
+        ];
+
+        foreach ($override as $k => $v) {
+            $payload[$k] = $v;
+        }
+
         $response = $this->createItem(
             $resource_type_id,
             $resource_id,
-            [
-                'name' => $this->faker->text(200),
-                'account' => Str::uuid()->toString(),
-                'description' => $this->faker->text(200),
-                'amount' => $this->randomMoneyValue(),
-                'currency_id' => $this->currency['GBP'],
-                'category' => 'income',
-                'start_date' => $this->faker->date(),
-                'frequency' => json_encode(['type'=>'monthly', 'day'=>null, 'exclusions' => []], JSON_THROW_ON_ERROR),
-            ]
+            $payload
         );
 
         if ($response->assertStatus(201)) {

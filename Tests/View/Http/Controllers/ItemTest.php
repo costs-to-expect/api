@@ -272,6 +272,43 @@ final class ItemTest extends TestCase
         }
     }
 
+    /**
+     * @test
+     * @runInSeparateProcess
+     * @preserveGlobalState disabled
+     */
+    public function budgetItemCollectionSortName(): void
+    {
+        $this->actingAs(User::find(1));
+
+        $resource_type_id = $this->createBudgetResourceType();
+        $resource_id = $this->createBudgetResource($resource_type_id);
+
+        $this->createBudgetItem($resource_type_id, $resource_id);
+        $this->createBudgetItem($resource_type_id, $resource_id, ['name' => 'AAAAAAAAAAAA']);
+        $this->createBudgetItem($resource_type_id, $resource_id);
+
+        $response = $this->fetchItemCollection([
+            $resource_type_id,
+            $resource_id,
+            'sort'=>'name:asc'
+        ]);
+
+        $response->assertStatus(200);
+        $response->assertHeader('X-Sort', 'name:asc');
+        $this->assertEquals('AAAAAAAAAAAA', $response->json()[0]['name']);
+
+        foreach ($response->json() as $item) {
+            try {
+                $json = json_encode($item, JSON_THROW_ON_ERROR);
+            } catch (\JsonException $e) {
+                $this->fail('Unable to encode the JSON string');
+            }
+
+            $this->assertJsonMatchesBudgetItemSchema($json);
+        }
+    }
+
     /** @test */
     public function budgetItemShow(): void
     {
