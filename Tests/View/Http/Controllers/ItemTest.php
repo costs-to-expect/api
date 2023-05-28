@@ -147,6 +147,27 @@ final class ItemTest extends TestCase
     }
 
     /** @test */
+    public function optionsRequestForYahtzeeGameItemCollection(): void
+    {
+        $this->actingAs(User::find(1));
+        $resource_type_id = $this->createGameResourceType();
+        $resource_id = $this->createYahtzeeResource($resource_type_id);
+
+        $this->createYahtzeeGameItem($resource_type_id, $resource_id);
+        $this->createYahtzeeGameItem($resource_type_id, $resource_id);
+        $this->createYahtzeeGameItem($resource_type_id, $resource_id);
+
+        $response = $this->fetchOptionsForItemCollection([
+            'resource_type_id' => $resource_type_id,
+            'resource_id' => $resource_id
+        ]);
+
+        $response->assertStatus(200);
+
+        $this->assertProvidedJsonMatchesDefinedSchema($response->content(), 'api/schema/options/yahtzee-collection.json');
+    }
+
+    /** @test */
     public function optionsRequestForYatzyGameItem(): void
     {
         $this->actingAs(User::find(1));
@@ -163,5 +184,26 @@ final class ItemTest extends TestCase
         $response->assertStatus(200);
 
         $this->assertProvidedJsonMatchesDefinedSchema($response->content(), 'api/schema/options/yatzy.json');
+    }
+
+    /** @test */
+    public function optionsRequestForYatzyGameItemCollection(): void
+    {
+        $this->actingAs(User::find(1));
+        $resource_type_id = $this->createGameResourceType();
+        $resource_id = $this->createYatzyResource($resource_type_id);
+
+        $this->createYatzyGameItem($resource_type_id, $resource_id);
+        $this->createYatzyGameItem($resource_type_id, $resource_id);
+        $this->createYatzyGameItem($resource_type_id, $resource_id);
+
+        $response = $this->fetchOptionsForItemCollection([
+            'resource_type_id' => $resource_type_id,
+            'resource_id' => $resource_id
+        ]);
+
+        $response->assertStatus(200);
+
+        $this->assertProvidedJsonMatchesDefinedSchema($response->content(), 'api/schema/options/yatzy-collection.json');
     }
 }
