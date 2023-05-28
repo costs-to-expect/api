@@ -51,6 +51,7 @@ final class ResourceTypeTest extends TestCase
     /** @test */
     public function resourceTypeCollectionPagination(): void
     {
+        // Todo - This test needs to be updated as per the item tests, test additional pagination headers
         $this->actingAs(User::find(1));
 
         $response = $this->fetchResourceTypeCollection(['offset'=>1, 'limit'=> 1]);
@@ -77,6 +78,7 @@ final class ResourceTypeTest extends TestCase
      */
     public function resourceTypeCollectionSearchDescription(): void
     {
+        // TODO - These tests need to be updated as per item tests, in addition to the below they need to check the results are filtered correctly
         $this->actingAs(User::find(1));
 
         $response = $this->fetchResourceTypeCollection(['search'=>'description:resource-search']);

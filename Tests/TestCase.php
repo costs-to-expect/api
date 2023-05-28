@@ -132,18 +132,28 @@ abstract class TestCase extends BaseTestCase
         $this->fail('Unable to create the category');
     }
 
-    protected function createAllocatedExpenseItem(string $resource_type_id, string $resource_id): string
+    protected function createAllocatedExpenseItem(
+        string $resource_type_id,
+        string $resource_id,
+        array $override = []
+    ): string
     {
+        $payload = [
+            'name' => $this->faker->text(200),
+            'description' => $this->faker->text(200),
+            'effective_date' => $this->faker->date(),
+            'currency_id' => $this->currency['GBP'],
+            'total' => $this->randomMoneyValue(),
+        ];
+
+        foreach ($override as $k => $v) {
+            $payload[$k] = $v;
+        }
+
         $response = $this->createItem(
             $resource_type_id,
             $resource_id,
-            [
-                'name' => $this->faker->text(200),
-                'description' => $this->faker->text(200),
-                'effective_date' => $this->faker->date(),
-                'currency_id' => $this->currency['GBP'],
-                'total' => $this->randomMoneyValue(),
-            ]
+            $payload
         );
 
         if ($response->assertStatus(201)) {

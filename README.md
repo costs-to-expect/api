@@ -293,7 +293,7 @@ our local test suite is as complete as the Postman request tests.
 | Category            | 11 Tests | Non yet* |
 | Currency            | Non yet* | Non yet* |
 | ItemCategory        | Non yet* | Non yet* |
-| Item                | 45 Tests | 20 Tests |
+| Item                | 45 Tests | 25 Tests |
 | ItemData            | Non yet* | Non yet* |
 | ItemLog             | Non yet* | Non yet* |
 | ItemPartialTransfer | Non yet* | Non yet* |
@@ -306,7 +306,7 @@ our local test suite is as complete as the Postman request tests.
 | Resource            | 24 Tests | Non yet* |
 | ResourceType        | 23 Tests | 11 Tests |
 | Subcategory         | 12 Tests | Non yet* |
-| **Total tests**     | **154**  | **42**   |
+| **Total tests**     | **154**  | **47**   |
 
 *Non yet does not mean there are no tests, it just means there are no PHPUnit tests. There are over 2000 tests in 
 a private Postman collection, I'm slowing transferring them locally and expanding the test suite.
