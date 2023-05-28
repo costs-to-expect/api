@@ -646,6 +646,10 @@ abstract class TestCase extends BaseTestCase
     {
         parent::setUp();
 
+        if (app()->environment() !== 'local') {
+            dd('Not in local environment, skipping tests');
+        }
+
         $result = DB::select(DB::raw("SHOW TABLES LIKE 'users';"));
 
         if (count($result) === 0) {

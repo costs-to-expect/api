@@ -1,5 +1,5 @@
 {
-    "$id": "https://api.costs-to-expect.com/v2/api/schema/options/yahtzee-collection.json",
+    "$id": "https://api.costs-to-expect.com/v2/api/schema/options/yatzy-collection.json",
     "type": "object",
     "properties": {
         "GET": {
