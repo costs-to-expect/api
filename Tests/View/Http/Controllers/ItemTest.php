@@ -38,6 +38,25 @@ final class ItemTest extends TestCase
     }
 
     /** @test */
+    public function allocatedExpenseItemShow(): void
+    {
+        $this->actingAs(User::find(1));
+
+        $resource_type_id = $this->createAllocatedExpenseResourceType();
+        $resource_id = $this->createAllocatedExpenseResource($resource_type_id);
+        $item_id = $this->createAllocatedExpenseItem($resource_type_id, $resource_id);
+
+        $response = $this->fetchItem([
+            $resource_type_id,
+            $resource_id,
+            $item_id
+        ]);
+        $response->assertStatus(200);
+
+        $this->assertJsonMatchesAllocatedExpenseItemSchema($response->content());
+    }
+
+    /** @test */
     public function budgetItemCollection(): void
     {
         $this->actingAs(User::find(1));
@@ -65,6 +84,25 @@ final class ItemTest extends TestCase
 
             $this->assertJsonMatchesBudgetItemSchema($json);
         }
+    }
+
+    /** @test */
+    public function budgetItemShow(): void
+    {
+        $this->actingAs(User::find(1));
+
+        $resource_type_id = $this->createBudgetResourceType();
+        $resource_id = $this->createBudgetResource($resource_type_id);
+        $item_id = $this->createBudgetItem($resource_type_id, $resource_id);
+
+        $response = $this->fetchItem([
+            $resource_type_id,
+            $resource_id,
+            $item_id
+        ]);
+        $response->assertStatus(200);
+
+        $this->assertJsonMatchesBudgetItemSchema($response->content());
     }
 
     /** @test */
@@ -98,63 +136,22 @@ final class ItemTest extends TestCase
     }
 
     /** @test */
-    public function yahtzeeGameItemCollection(): void
+    public function budgetProItemShow(): void
     {
         $this->actingAs(User::find(1));
 
-        $resource_type_id = $this->createGameResourceType();
-        $resource_id = $this->createYahtzeeResource($resource_type_id);
+        $resource_type_id = $this->createBudgetProResourceType();
+        $resource_id = $this->createBudgetProResource($resource_type_id);
+        $item_id = $this->createBudgetProItem($resource_type_id, $resource_id);
 
-        $this->createYahtzeeGameItem($resource_type_id, $resource_id);
-        $this->createYahtzeeGameItem($resource_type_id, $resource_id);
-        $this->createYahtzeeGameItem($resource_type_id, $resource_id);
-
-        $response = $this->fetchItemCollection([
+        $response = $this->fetchItem([
             $resource_type_id,
-            $resource_id
+            $resource_id,
+            $item_id
         ]);
-
         $response->assertStatus(200);
 
-        foreach ($response->json() as $item) {
-            try {
-                $json = json_encode($item, JSON_THROW_ON_ERROR);
-            } catch (\JsonException $e) {
-                $this->fail('Unable to encode the JSON string');
-            }
-
-            $this->assertJsonMatchesGameItemSchema($json);
-        }
-    }
-
-    /** @test */
-    public function yatzyGameItemCollection(): void
-    {
-        $this->actingAs(User::find(1));
-
-        $resource_type_id = $this->createGameResourceType();
-        $resource_id = $this->createYatzyResource($resource_type_id);
-
-        $this->createYatzyGameItem($resource_type_id, $resource_id);
-        $this->createYatzyGameItem($resource_type_id, $resource_id);
-        $this->createYatzyGameItem($resource_type_id, $resource_id);
-
-        $response = $this->fetchItemCollection([
-            $resource_type_id,
-            $resource_id
-        ]);
-
-        $response->assertStatus(200);
-
-        foreach ($response->json() as $item) {
-            try {
-                $json = json_encode($item, JSON_THROW_ON_ERROR);
-            } catch (\JsonException $e) {
-                $this->fail('Unable to encode the JSON string');
-            }
-
-            $this->assertJsonMatchesGameItemSchema($json);
-        }
+        $this->assertJsonMatchesBudgetProItemSchema($response->content());
     }
 
     /** @test */
@@ -355,5 +352,103 @@ final class ItemTest extends TestCase
         $response->assertStatus(200);
 
         $this->assertProvidedJsonMatchesDefinedSchema($response->content(), 'api/schema/options/yatzy-collection.json');
+    }
+
+    /** @test */
+    public function yahtzeeGameItemCollection(): void
+    {
+        $this->actingAs(User::find(1));
+
+        $resource_type_id = $this->createGameResourceType();
+        $resource_id = $this->createYahtzeeResource($resource_type_id);
+
+        $this->createYahtzeeGameItem($resource_type_id, $resource_id);
+        $this->createYahtzeeGameItem($resource_type_id, $resource_id);
+        $this->createYahtzeeGameItem($resource_type_id, $resource_id);
+
+        $response = $this->fetchItemCollection([
+            $resource_type_id,
+            $resource_id
+        ]);
+
+        $response->assertStatus(200);
+
+        foreach ($response->json() as $item) {
+            try {
+                $json = json_encode($item, JSON_THROW_ON_ERROR);
+            } catch (\JsonException $e) {
+                $this->fail('Unable to encode the JSON string');
+            }
+
+            $this->assertJsonMatchesGameItemSchema($json);
+        }
+    }
+
+    /** @test */
+    public function yahtzeeGameItemShow(): void
+    {
+        $this->actingAs(User::find(1));
+
+        $resource_type_id = $this->createGameResourceType();
+        $resource_id = $this->createYahtzeeResource($resource_type_id);
+        $item_id = $this->createYahtzeeGameItem($resource_type_id, $resource_id);
+
+        $response = $this->fetchItem([
+            $resource_type_id,
+            $resource_id,
+            $item_id
+        ]);
+        $response->assertStatus(200);
+
+        $this->assertJsonMatchesGameItemSchema($response->content());
+    }
+
+    /** @test */
+    public function yatzyGameItemCollection(): void
+    {
+        $this->actingAs(User::find(1));
+
+        $resource_type_id = $this->createGameResourceType();
+        $resource_id = $this->createYatzyResource($resource_type_id);
+
+        $this->createYatzyGameItem($resource_type_id, $resource_id);
+        $this->createYatzyGameItem($resource_type_id, $resource_id);
+        $this->createYatzyGameItem($resource_type_id, $resource_id);
+
+        $response = $this->fetchItemCollection([
+            $resource_type_id,
+            $resource_id
+        ]);
+
+        $response->assertStatus(200);
+
+        foreach ($response->json() as $item) {
+            try {
+                $json = json_encode($item, JSON_THROW_ON_ERROR);
+            } catch (\JsonException $e) {
+                $this->fail('Unable to encode the JSON string');
+            }
+
+            $this->assertJsonMatchesGameItemSchema($json);
+        }
+    }
+
+    /** @test */
+    public function yatzyGameItemShow(): void
+    {
+        $this->actingAs(User::find(1));
+
+        $resource_type_id = $this->createGameResourceType();
+        $resource_id = $this->createYatzyResource($resource_type_id);
+        $item_id = $this->createYatzyGameItem($resource_type_id, $resource_id);
+
+        $response = $this->fetchItem([
+            $resource_type_id,
+            $resource_id,
+            $item_id
+        ]);
+        $response->assertStatus(200);
+
+        $this->assertJsonMatchesGameItemSchema($response->content());
     }
 }

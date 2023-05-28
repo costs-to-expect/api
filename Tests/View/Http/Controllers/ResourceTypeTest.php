@@ -173,6 +173,7 @@ final class ResourceTypeTest extends TestCase
     /** @test */
     public function resourceTypeShow(): void
     {
+        // TODO - This test assumes the resource type was created elsewhere, not useful, fix it
         $this->actingAs(User::find(1));
 
         $response = $this->fetchResourceTypeCollection(['offset'=>0, 'limit'=> 1]);
