@@ -8,6 +8,156 @@ use Tests\TestCase;
 final class ItemTest extends TestCase
 {
     /** @test */
+    public function allocatedExpenseItemCollection(): void
+    {
+        $this->actingAs(User::find(1));
+
+        $resource_type_id = $this->createAllocatedExpenseResourceType();
+        $resource_id = $this->createAllocatedExpenseResource($resource_type_id);
+
+        $this->createAllocatedExpenseItem($resource_type_id, $resource_id);
+        $this->createAllocatedExpenseItem($resource_type_id, $resource_id);
+        $this->createAllocatedExpenseItem($resource_type_id, $resource_id);
+
+        $response = $this->fetchItemCollection([
+            $resource_type_id,
+            $resource_id
+        ]);
+
+        $response->assertStatus(200);
+
+        foreach ($response->json() as $item) {
+            try {
+                $json = json_encode($item, JSON_THROW_ON_ERROR);
+            } catch (\JsonException $e) {
+                $this->fail('Unable to encode the JSON string');
+            }
+
+            $this->assertJsonMatchesAllocatedExpenseItemSchema($json);
+        }
+    }
+
+    /** @test */
+    public function budgetItemCollection(): void
+    {
+        $this->actingAs(User::find(1));
+
+        $resource_type_id = $this->createBudgetResourceType();
+        $resource_id = $this->createBudgetResource($resource_type_id);
+
+        $this->createBudgetItem($resource_type_id, $resource_id);
+        $this->createBudgetItem($resource_type_id, $resource_id);
+        $this->createBudgetItem($resource_type_id, $resource_id);
+
+        $response = $this->fetchItemCollection([
+            $resource_type_id,
+            $resource_id
+        ]);
+
+        $response->assertStatus(200);
+
+        foreach ($response->json() as $item) {
+            try {
+                $json = json_encode($item, JSON_THROW_ON_ERROR);
+            } catch (\JsonException $e) {
+                $this->fail('Unable to encode the JSON string');
+            }
+
+            $this->assertJsonMatchesBudgetItemSchema($json);
+        }
+    }
+
+    /** @test */
+    public function budgetProItemCollection(): void
+    {
+        $this->actingAs(User::find(1));
+
+        $resource_type_id = $this->createBudgetProResourceType();
+        $resource_id = $this->createBudgetProResource($resource_type_id);
+
+        $this->createBudgetProItem($resource_type_id, $resource_id);
+        $this->createBudgetProItem($resource_type_id, $resource_id);
+        $this->createBudgetProItem($resource_type_id, $resource_id);
+
+        $response = $this->fetchItemCollection([
+            $resource_type_id,
+            $resource_id
+        ]);
+
+        $response->assertStatus(200);
+
+        foreach ($response->json() as $item) {
+            try {
+                $json = json_encode($item, JSON_THROW_ON_ERROR);
+            } catch (\JsonException $e) {
+                $this->fail('Unable to encode the JSON string');
+            }
+
+            $this->assertJsonMatchesBudgetProItemSchema($json);
+        }
+    }
+
+    /** @test */
+    public function yahtzeeGameItemCollection(): void
+    {
+        $this->actingAs(User::find(1));
+
+        $resource_type_id = $this->createGameResourceType();
+        $resource_id = $this->createYahtzeeResource($resource_type_id);
+
+        $this->createYahtzeeGameItem($resource_type_id, $resource_id);
+        $this->createYahtzeeGameItem($resource_type_id, $resource_id);
+        $this->createYahtzeeGameItem($resource_type_id, $resource_id);
+
+        $response = $this->fetchItemCollection([
+            $resource_type_id,
+            $resource_id
+        ]);
+
+        $response->assertStatus(200);
+
+        foreach ($response->json() as $item) {
+            try {
+                $json = json_encode($item, JSON_THROW_ON_ERROR);
+            } catch (\JsonException $e) {
+                $this->fail('Unable to encode the JSON string');
+            }
+
+            $this->assertJsonMatchesGameItemSchema($json);
+        }
+    }
+
+    /** @test */
+    public function yatzyGameItemCollection(): void
+    {
+        $this->actingAs(User::find(1));
+
+        $resource_type_id = $this->createGameResourceType();
+        $resource_id = $this->createYatzyResource($resource_type_id);
+
+        $this->createYatzyGameItem($resource_type_id, $resource_id);
+        $this->createYatzyGameItem($resource_type_id, $resource_id);
+        $this->createYatzyGameItem($resource_type_id, $resource_id);
+
+        $response = $this->fetchItemCollection([
+            $resource_type_id,
+            $resource_id
+        ]);
+
+        $response->assertStatus(200);
+
+        foreach ($response->json() as $item) {
+            try {
+                $json = json_encode($item, JSON_THROW_ON_ERROR);
+            } catch (\JsonException $e) {
+                $this->fail('Unable to encode the JSON string');
+            }
+
+            $this->assertJsonMatchesGameItemSchema($json);
+        }
+    }
+
+    /** @test */
     public function optionsRequestForAllocatedExpenseItem(): void
     {
         $this->actingAs(User::find(1));

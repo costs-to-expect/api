@@ -572,7 +572,12 @@ abstract class TestCase extends BaseTestCase
         return $this->generatedRoute('permitted-user.list', $parameters);
     }
 
-    protected function fetchAllResourceTypes(array $parameters = []): TestResponse
+    protected function fetchItemCollection(array $parameters = []): TestResponse
+    {
+        return $this->generatedRoute('item.list', $parameters);
+    }
+
+    protected function fetchResourceTypeCollection(array $parameters = []): TestResponse
     {
         return $this->generatedRoute('resource-type.list', $parameters);
     }

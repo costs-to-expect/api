@@ -33,7 +33,7 @@ final class ResourceTypeTest extends TestCase
     {
         $this->actingAs(User::find(1));
 
-        $response = $this->fetchAllResourceTypes();
+        $response = $this->fetchResourceTypeCollection();
 
         $response->assertStatus(200);
 
@@ -53,7 +53,7 @@ final class ResourceTypeTest extends TestCase
     {
         $this->actingAs(User::find(1));
 
-        $response = $this->fetchAllResourceTypes(['offset'=>1, 'limit'=> 1]);
+        $response = $this->fetchResourceTypeCollection(['offset'=>1, 'limit'=> 1]);
 
         $response->assertStatus(200);
         $response->assertHeader('X-Offset', 1);
@@ -79,7 +79,7 @@ final class ResourceTypeTest extends TestCase
     {
         $this->actingAs(User::find(1));
 
-        $response = $this->fetchAllResourceTypes(['search'=>'description:resource-search']);
+        $response = $this->fetchResourceTypeCollection(['search'=>'description:resource-search']);
 
         $response->assertStatus(200);
         $response->assertHeader('X-Search', 'description:resource-search');
@@ -104,7 +104,7 @@ final class ResourceTypeTest extends TestCase
     {
         $this->actingAs(User::find(1));
 
-        $response = $this->fetchAllResourceTypes(['search'=>'name:resource-search']);
+        $response = $this->fetchResourceTypeCollection(['search'=>'name:resource-search']);
 
         $response->assertStatus(200);
         $response->assertHeader('X-Search', 'name:resource-search');
@@ -129,7 +129,7 @@ final class ResourceTypeTest extends TestCase
     {
         $this->actingAs(User::find(1));
 
-        $response = $this->fetchAllResourceTypes(['sort'=>'created:asc']);
+        $response = $this->fetchResourceTypeCollection(['sort'=>'created:asc']);
 
         $response->assertStatus(200);
         $response->assertHeader('X-Sort', 'created:asc');
@@ -154,7 +154,7 @@ final class ResourceTypeTest extends TestCase
     {
         $this->actingAs(User::find(1));
 
-        $response = $this->fetchAllResourceTypes(['sort'=>'name:asc']);
+        $response = $this->fetchResourceTypeCollection(['sort'=>'name:asc']);
 
         $response->assertStatus(200);
         $response->assertHeader('X-Sort', 'name:asc');
@@ -175,7 +175,7 @@ final class ResourceTypeTest extends TestCase
     {
         $this->actingAs(User::find(1));
 
-        $response = $this->fetchAllResourceTypes(['offset'=>0, 'limit'=> 1]);
+        $response = $this->fetchResourceTypeCollection(['offset'=>0, 'limit'=> 1]);
         $response->assertStatus(200);
 
         $resource_type_id = $response->json()[0]['id'];
@@ -191,7 +191,7 @@ final class ResourceTypeTest extends TestCase
     {
         $this->actingAs(User::find(1));
 
-        $response = $this->fetchAllResourceTypes(['offset'=>0, 'limit'=> 1]);
+        $response = $this->fetchResourceTypeCollection(['offset'=>0, 'limit'=> 1]);
         $response->assertStatus(200);
 
         $resource_type_id = $response->json()[0]['id'];
@@ -210,7 +210,7 @@ final class ResourceTypeTest extends TestCase
     {
         $this->actingAs(User::find(1));
 
-        $response = $this->fetchAllResourceTypes(['offset'=>0, 'limit'=> 1]);
+        $response = $this->fetchResourceTypeCollection(['offset'=>0, 'limit'=> 1]);
         $response->assertStatus(200);
 
         $resource_type_id = $response->json()[0]['id'];

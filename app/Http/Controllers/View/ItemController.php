@@ -30,6 +30,7 @@ class ItemController extends Controller
         return match ($item_type) {
             'allocated-expense' => $this->allocatedExpenseCollection((int) $resource_type_id, (int) $resource_id),
             'budget' => $this->budgetCollection((int) $resource_type_id, (int) $resource_id),
+            'budget-pro' => $this->budgetProCollection((int) $resource_type_id, (int) $resource_id),
             'game' => $this->gameCollection((int) $resource_type_id, (int) $resource_id),
             default => throw new \OutOfRangeException('No item type definition for ' . $item_type, 500),
         };
@@ -49,6 +50,17 @@ class ItemController extends Controller
     private function budgetCollection(int $resource_type_id, int $resource_id): JsonResponse
     {
         $response = new \App\ItemType\Budget\HttpResponse\Item(
+            $resource_type_id,
+            $resource_id,
+            $this->user_id
+        );
+
+        return $response->collectionResponse();
+    }
+
+    private function budgetProCollection(int $resource_type_id, int $resource_id): JsonResponse
+    {
+        $response = new \App\ItemType\BudgetPro\HttpResponse\Item(
             $resource_type_id,
             $resource_id,
             $this->user_id
@@ -82,6 +94,7 @@ class ItemController extends Controller
         return match ($item_type) {
             'allocated-expense' => $this->allocatedExpense((int) $resource_type_id, (int) $resource_id, (int) $item_id),
             'budget' => $this->budget((int) $resource_type_id, (int) $resource_id, (int) $item_id),
+            'budget-pro' => $this->budgetPro((int) $resource_type_id, (int) $resource_id, (int) $item_id),
             'game' => $this->game((int) $resource_type_id, (int) $resource_id, (int) $item_id),
             default => throw new \OutOfRangeException('No item type definition for ' . $item_type, 500),
         };
@@ -101,6 +114,17 @@ class ItemController extends Controller
     private function budget(int $resource_type_id, int $resource_id, int $item_id): JsonResponse
     {
         $response = new \App\ItemType\Budget\HttpResponse\Item(
+            $resource_type_id,
+            $resource_id,
+            $this->user_id
+        );
+
+        return $response->showResponse($item_id);
+    }
+
+    private function budgetPro(int $resource_type_id, int $resource_id, int $item_id): JsonResponse
+    {
+        $response = new \App\ItemType\BudgetPro\HttpResponse\Item(
             $resource_type_id,
             $resource_id,
             $this->user_id
