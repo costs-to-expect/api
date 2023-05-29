@@ -11,6 +11,7 @@ final class ResourceTypeTest extends TestCase
     public function optionsRequestForAllocatedExpenseResourceType(): void
     {
         $this->actingAs(User::find(1));
+
         $resource_type_id = $this->createAllocatedExpenseResourceType();
 
         $response = $this->fetchOptionsForResourceType(['resource_type_id' => $resource_type_id]);
@@ -33,6 +34,10 @@ final class ResourceTypeTest extends TestCase
     {
         $this->actingAs(User::find(1));
 
+        $this->createAllocatedExpenseResourceType();
+        $this->createAllocatedExpenseResourceType();
+        $this->createAllocatedExpenseResourceType();
+
         $response = $this->fetchResourceTypeCollection();
 
         $response->assertStatus(200);
@@ -51,14 +56,19 @@ final class ResourceTypeTest extends TestCase
     /** @test */
     public function resourceTypeCollectionPagination(): void
     {
-        // Todo - This test needs to be updated as per the item tests, test additional pagination headers
         $this->actingAs(User::find(1));
 
-        $response = $this->fetchResourceTypeCollection(['offset'=>1, 'limit'=> 1]);
+        $this->createAllocatedExpenseResourceType();
+        $this->createAllocatedExpenseResourceType();
+        $this->createAllocatedExpenseResourceType();
+
+        $response = $this->fetchResourceTypeCollection(['offset' => 0, 'limit' => 2]);
 
         $response->assertStatus(200);
-        $response->assertHeader('X-Offset', 1);
-        $response->assertHeader('X-Limit', 1);
+        $response->assertHeader('X-Offset', 0);
+        $response->assertHeader('X-Limit', 2);
+        $response->assertHeader('X-Link-Previous', "");
+        $response->assertHeader('X-Link-Next', "/v3/resource-types?offset=2&limit=2");
 
         foreach ($response->json() as $item) {
             try {
@@ -78,13 +88,19 @@ final class ResourceTypeTest extends TestCase
      */
     public function resourceTypeCollectionSearchDescription(): void
     {
-        // TODO - These tests need to be updated as per item tests, in addition to the below they need to check the results are filtered correctly
         $this->actingAs(User::find(1));
 
-        $response = $this->fetchResourceTypeCollection(['search'=>'description:resource-search']);
+        $search_string = $this->faker->text(35);
+
+        $this->createAllocatedExpenseResourceType();
+        $this->createAllocatedExpenseResourceType(['description' => $search_string]);
+        $this->createAllocatedExpenseResourceType();
+
+        $response = $this->fetchResourceTypeCollection(['search'=>'description:' . $search_string]);
 
         $response->assertStatus(200);
-        $response->assertHeader('X-Search', 'description:resource-search');
+        $response->assertHeader('X-Search', 'description:' . urlencode($search_string));
+        $response->assertHeader('X-Count', 1);
 
         foreach ($response->json() as $item) {
             try {
@@ -106,10 +122,17 @@ final class ResourceTypeTest extends TestCase
     {
         $this->actingAs(User::find(1));
 
-        $response = $this->fetchResourceTypeCollection(['search'=>'name:resource-search']);
+        $search_string = $this->faker->text(35);
+
+        $this->createAllocatedExpenseResourceType();
+        $this->createAllocatedExpenseResourceType(['name' => $search_string]);
+        $this->createAllocatedExpenseResourceType();
+
+        $response = $this->fetchResourceTypeCollection(['search'=>'name:' . $search_string]);
 
         $response->assertStatus(200);
-        $response->assertHeader('X-Search', 'name:resource-search');
+        $response->assertHeader('X-Search', 'name:' . urlencode($search_string));
+        $response->assertHeader('X-Count', 1);
 
         foreach ($response->json() as $item) {
             try {
@@ -129,12 +152,20 @@ final class ResourceTypeTest extends TestCase
      */
     public function resourceTypeCollectionSortCreated(): void
     {
-        $this->actingAs(User::find(1));
+        $this->actingAs(User::find($this->createUser()));
 
-        $response = $this->fetchResourceTypeCollection(['sort'=>'created:asc']);
+        $this->createAllocatedExpenseResourceType();
+        $this->createAllocatedExpenseResourceType();
+        sleep(1); // Ensure the created_at timestamps are different
+        $this->createAllocatedExpenseResourceType(['name' => 'created-last']);
+
+        $response = $this->fetchResourceTypeCollection([
+            'sort'=>'created:desc'
+        ]);
 
         $response->assertStatus(200);
-        $response->assertHeader('X-Sort', 'created:asc');
+        $response->assertHeader('X-Sort', 'created:desc');
+        $this->assertEquals('created-last', $response->json()[0]['name']);
 
         foreach ($response->json() as $item) {
             try {
@@ -154,12 +185,19 @@ final class ResourceTypeTest extends TestCase
      */
     public function resourceTypeCollectionSortName(): void
     {
-        $this->actingAs(User::find(1));
+        $this->actingAs(User::find($this->createUser()));
 
-        $response = $this->fetchResourceTypeCollection(['sort'=>'name:asc']);
+        $this->createAllocatedExpenseResourceType();
+        $this->createAllocatedExpenseResourceType(['name' => 'AAAAAAAAAAAA']);
+        $this->createAllocatedExpenseResourceType();
+
+        $response = $this->fetchResourceTypeCollection([
+            'sort'=>'name:asc'
+        ]);
 
         $response->assertStatus(200);
         $response->assertHeader('X-Sort', 'name:asc');
+        $this->assertEquals('AAAAAAAAAAAA', $response->json()[0]['name']);
 
         foreach ($response->json() as $item) {
             try {
@@ -175,13 +213,9 @@ final class ResourceTypeTest extends TestCase
     /** @test */
     public function resourceTypeShow(): void
     {
-        // TODO - This test assumes the resource type was created elsewhere, not useful, fix it
         $this->actingAs(User::find(1));
 
-        $response = $this->fetchResourceTypeCollection(['offset'=>0, 'limit'=> 1]);
-        $response->assertStatus(200);
-
-        $resource_type_id = $response->json()[0]['id'];
+        $resource_type_id = $this->createAllocatedExpenseResourceType();
 
         $response = $this->fetchResourceType(['resource_type_id'=> $resource_type_id]);
         $response->assertStatus(200);
@@ -194,10 +228,7 @@ final class ResourceTypeTest extends TestCase
     {
         $this->actingAs(User::find(1));
 
-        $response = $this->fetchResourceTypeCollection(['offset'=>0, 'limit'=> 1]);
-        $response->assertStatus(200);
-
-        $resource_type_id = $response->json()[0]['id'];
+        $resource_type_id = $this->createAllocatedExpenseResourceType();
 
         $response = $this->fetchResourceType([
             'resource_type_id'=> $resource_type_id,
@@ -213,10 +244,7 @@ final class ResourceTypeTest extends TestCase
     {
         $this->actingAs(User::find(1));
 
-        $response = $this->fetchResourceTypeCollection(['offset'=>0, 'limit'=> 1]);
-        $response->assertStatus(200);
-
-        $resource_type_id = $response->json()[0]['id'];
+        $resource_type_id = $this->createAllocatedExpenseResourceType();
 
         $this->createAllocatedExpenseResource($resource_type_id);
         $this->createAllocatedExpenseResource($resource_type_id);

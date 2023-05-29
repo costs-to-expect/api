@@ -435,7 +435,7 @@ final class AuthenticationTest extends TestCase
     }
 
     /** @test */
-    public function forgot_password_success(): void
+    public function forgotPasswordSuccess(): void
     {
         $email = $this->faker->email;
         $password = $this->faker->password(12);

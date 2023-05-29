@@ -9,10 +9,12 @@ The complete changelog for the Costs to Expect REST API, our changelog follows t
 - Added tests for the item action controller.
 - Added tests for the item view controller.
 - Added a second phpunit.xml file, this file allows you to run tests in your IDE without Docker setup, the default phpunit.xml file is for the command line.
+- Added a test helper to create a new user.
 ### Changed
 - Reviewed the existing test, updated the test to match the App structure.
 - Renamed the "Manage" controllers, now "Action".
 - Updated the tests section of the README, simpler layout to separate action and view tests.
+- Updated the resource type tests, they create data rather then assuming it already exists.
 ### Removed
 - Removed anything related to Bootstrap, we are now using Tailwind.
 ### Fixed

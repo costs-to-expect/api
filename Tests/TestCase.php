@@ -181,17 +181,21 @@ abstract class TestCase extends BaseTestCase
         $this->fail('Unable to create the resource');
     }
 
-    protected function createAllocatedExpenseResourceType(): string
+    protected function createAllocatedExpenseResourceType(array $override = []): string
     {
-        $response = $this->createResourceType(
-            [
-                'name' => $this->faker->text(255),
-                'description' => $this->faker->text,
-                'data' => '{"field":true}',
-                'item_type_id' => $this->item_types['allocated-expense'],
-                'public' => false
-            ]
-        );
+        $payload = [
+            'name' => $this->faker->text(255),
+            'description' => $this->faker->text,
+            'data' => '{"field":true}',
+            'item_type_id' => $this->item_types['allocated-expense'],
+            'public' => false
+        ];
+
+        foreach ($override as $k => $v) {
+            $payload[$k] = $v;
+        }
+
+        $response = $this->createResourceType($payload);
 
         if ($response->assertStatus(201)) {
             return $response->json('id');
@@ -461,6 +465,17 @@ abstract class TestCase extends BaseTestCase
         }
 
         $this->fail('Unable to create the ' . $this->item_types[$item_type] . ' resource type');
+    }
+
+    protected function createUser(): int
+    {
+        $user = new User();
+        $user->name = $this->faker->name;
+        $user->email = $this->faker->email;
+        $user->password = Hash::make($this->faker->password);
+        $user->save();
+
+        return $user->id;
     }
 
     protected function createYahtzeeGameItem(
