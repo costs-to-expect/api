@@ -463,15 +463,25 @@ abstract class TestCase extends BaseTestCase
         $this->fail('Unable to create the ' . $this->item_types[$item_type] . ' resource type');
     }
 
-    protected function createYahtzeeGameItem(string $resource_type_id, string $resource_id): string
+    protected function createYahtzeeGameItem(
+        string $resource_type_id,
+        string $resource_id,
+        array $override = []
+    ): string
     {
+        $payload = [
+            'name' => $this->faker->text(200),
+            'description' => $this->faker->text(200),
+        ];
+
+        foreach ($override as $k => $v) {
+            $payload[$k] = $v;
+        }
+
         $response = $this->createItem(
             $resource_type_id,
             $resource_id,
-            [
-                'name' => $this->faker->text(200),
-                'description' => $this->faker->text(200),
-            ]
+            $payload
         );
 
         if ($response->assertStatus(201)) {
@@ -481,15 +491,25 @@ abstract class TestCase extends BaseTestCase
         $this->fail('Unable to create the yahtzee game item');
     }
 
-    protected function createYatzyGameItem(string $resource_type_id, string $resource_id): string
+    protected function createYatzyGameItem(
+        string $resource_type_id,
+        string $resource_id,
+        array $override = []
+    ): string
     {
+        $payload = [
+            'name' => $this->faker->text(200),
+            'description' => $this->faker->text(200),
+        ];
+
+        foreach ($override as $k => $v) {
+            $payload[$k] = $v;
+        }
+
         $response = $this->createItem(
             $resource_type_id,
             $resource_id,
-            [
-                'name' => $this->faker->text(200),
-                'description' => $this->faker->text(200),
-            ]
+            $payload
         );
 
         if ($response->assertStatus(201)) {
