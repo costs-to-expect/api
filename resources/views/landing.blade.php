@@ -167,7 +167,7 @@
                     <h1 class="mt-10 max-w-lg text-4xl font-bold tracking-tight text-gray-900 sm:text-6xl">Budget Pro (alpha)</h1>
                     <p class="mt-6 text-lg leading-8 text-gray-600">Budget Pro is Budget on steroids - it's everything you love about Budget improved in every way. More viewing options, more controls, you name it.</p>
                     <div class="mt-10 flex items-center gap-x-6">
-                        {{--<a href="https://budget.costs-to-expect.com/register" class="rounded-md bg-pinky-600 px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-pinky-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-pinky-600">Register for FREE</a>--}}
+                        <a href="https://budget-pro.costs-to-expect.com/register" class="rounded-md bg-pinky-600 px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-pinky-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-pinky-600">Register for FREE</a>
                         <a href="https://budget-pro.costs-to-expect.com" class="text-sm font-semibold leading-6 text-gray-900">Learn more <span aria-hidden="true">→</span></a>
                     </div>
                 </div>
