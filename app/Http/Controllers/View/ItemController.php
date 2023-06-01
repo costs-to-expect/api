@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\ItemType\Select;
 use App\ItemType\AllocatedExpense\AllowedValue as AllocatedExpenseAllowedValue;
 use App\ItemType\Budget\AllowedValue as BudgetAllowedValue;
+use App\ItemType\BudgetPro\AllowedValue as BudgetProAllowedValue;
 use App\ItemType\Game\AllowedValue as GameAllowedValue;
 use Illuminate\Http\JsonResponse;
 
@@ -29,6 +30,7 @@ class ItemController extends Controller
         return match ($item_type) {
             'allocated-expense' => $this->allocatedExpenseCollection((int) $resource_type_id, (int) $resource_id),
             'budget' => $this->budgetCollection((int) $resource_type_id, (int) $resource_id),
+            'budget-pro' => $this->budgetProCollection((int) $resource_type_id, (int) $resource_id),
             'game' => $this->gameCollection((int) $resource_type_id, (int) $resource_id),
             default => throw new \OutOfRangeException('No item type definition for ' . $item_type, 500),
         };
@@ -48,6 +50,17 @@ class ItemController extends Controller
     private function budgetCollection(int $resource_type_id, int $resource_id): JsonResponse
     {
         $response = new \App\ItemType\Budget\HttpResponse\Item(
+            $resource_type_id,
+            $resource_id,
+            $this->user_id
+        );
+
+        return $response->collectionResponse();
+    }
+
+    private function budgetProCollection(int $resource_type_id, int $resource_id): JsonResponse
+    {
+        $response = new \App\ItemType\BudgetPro\HttpResponse\Item(
             $resource_type_id,
             $resource_id,
             $this->user_id
@@ -81,6 +94,7 @@ class ItemController extends Controller
         return match ($item_type) {
             'allocated-expense' => $this->allocatedExpense((int) $resource_type_id, (int) $resource_id, (int) $item_id),
             'budget' => $this->budget((int) $resource_type_id, (int) $resource_id, (int) $item_id),
+            'budget-pro' => $this->budgetPro((int) $resource_type_id, (int) $resource_id, (int) $item_id),
             'game' => $this->game((int) $resource_type_id, (int) $resource_id, (int) $item_id),
             default => throw new \OutOfRangeException('No item type definition for ' . $item_type, 500),
         };
@@ -100,6 +114,17 @@ class ItemController extends Controller
     private function budget(int $resource_type_id, int $resource_id, int $item_id): JsonResponse
     {
         $response = new \App\ItemType\Budget\HttpResponse\Item(
+            $resource_type_id,
+            $resource_id,
+            $this->user_id
+        );
+
+        return $response->showResponse($item_id);
+    }
+
+    private function budgetPro(int $resource_type_id, int $resource_id, int $item_id): JsonResponse
+    {
+        $response = new \App\ItemType\BudgetPro\HttpResponse\Item(
             $resource_type_id,
             $resource_id,
             $this->user_id
@@ -132,6 +157,7 @@ class ItemController extends Controller
         return match ($item_type) {
             'allocated-expense' => $this->optionsAllocatedExpenseCollection((int) $resource_type_id, (int) $resource_id),
             'budget' => $this->optionsBudgetCollection((int) $resource_type_id, (int) $resource_id),
+            'budget-pro' => $this->optionsBudgetProCollection((int) $resource_type_id, (int) $resource_id),
             'game' => $this->optionsGameCollection((int) $resource_type_id, (int) $resource_id),
             default => throw new \OutOfRangeException('No options item type definition for ' . $item_type, 500),
         };
@@ -195,6 +221,7 @@ class ItemController extends Controller
         return match ($item_type) {
             'allocated-expense' => $this->optionsAllocatedExpenseShow((int) $resource_type_id, (int) $resource_id, (int) $item_id),
             'budget' => $this->optionsBudgetShow((int) $resource_type_id, (int) $resource_id, (int) $item_id),
+            'budget-pro' => $this->optionsBudgetProShow((int) $resource_type_id, (int) $resource_id, (int) $item_id),
             'game' => $this->optionsGameShow((int) $resource_type_id, (int) $resource_id, (int) $item_id),
             default => throw new \OutOfRangeException('No entity definition for ' . $item_type, 500),
         };
@@ -223,6 +250,41 @@ class ItemController extends Controller
 
         return (new \App\HttpOptionResponse\Item\AllocatedExpense($this->permissions((int) $resource_type_id)))
             ->setAllowedValuesForFields($allowed_values->fieldAllowedValuesForShow())
+            ->create()
+            ->response();
+    }
+
+    private function optionsBudgetProCollection(int $resource_type_id, int $resource_id): JsonResponse
+    {
+        $allowed_values = new BudgetProAllowedValue(
+            $this->viewable_resource_types,
+            $resource_type_id,
+            $resource_id
+        );
+
+        return (new \App\HttpOptionResponse\Item\BudgetProCollection($this->permissions($resource_type_id)))
+            ->setAllowedValuesForParameters($allowed_values->parameterAllowedValuesForCollection())
+            ->setAllowedValuesForFields($allowed_values->fieldAllowedValuesForCollection())
+            ->create()
+            ->response();
+    }
+
+    private function optionsBudgetProShow(
+        string $resource_type_id,
+        string $resource_id,
+        string $item_id
+    ): JsonResponse {
+        if ($this->hasViewAccessToResourceType((int) $resource_type_id) === false) {
+            return \App\HttpResponse\Response::notFoundOrNotAccessible(trans('entities.item'));
+        }
+
+        $item = (new \App\ItemType\BudgetPro\Models\Item())->single($resource_type_id, $resource_id, $item_id);
+
+        if ($item === null) {
+            return \App\HttpResponse\Response::notFound(trans('entities.item'));
+        }
+
+        return (new \App\HttpOptionResponse\Item\BudgetPro($this->permissions((int) $resource_type_id)))
             ->create()
             ->response();
     }

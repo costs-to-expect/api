@@ -477,12 +477,32 @@
                                                 "name",
                                                 "description"
                                             ]
+                                        },
+                                        "WkxwR04GPo": {
+                                            "type": "object",
+                                            "properties": {
+                                                "value": {
+                                                    "type": "string"
+                                                },
+                                                "name": {
+                                                    "type": "string"
+                                                },
+                                                "description": {
+                                                    "type": "string"
+                                                }
+                                            },
+                                            "required": [
+                                                "value",
+                                                "name",
+                                                "description"
+                                            ]
                                         }
                                     },
                                     "required": [
                                         "OqZwKX16bW",
                                         "2AP1axw6L7",
-                                        "VezyrJyMlk"
+                                        "VezyrJyMlk",
+                                        "WkxwR04GPo"
                                     ]
                                 }
                             },

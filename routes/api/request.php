@@ -25,7 +25,7 @@ Route::group(
 
         Route::post(
             'request/error-log',
-            [ App\Http\Controllers\Manage\RequestController::class, 'createErrorLog']
+            [ App\Http\Controllers\Action\RequestController::class, 'createErrorLog']
         );
 
     }

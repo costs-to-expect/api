@@ -2,6 +2,26 @@
 
 The complete changelog for the Costs to Expect REST API, our changelog follows the format defined at https://keepachangelog.com/en/1.0.0/
 
+## [v3.11.0] - 2023-05-26
+### Added
+- Added support for the 'budget-pro' item type. For now the 'budget-pro' item type is a duplicate of the 'budget' item type but that will change in the future.
+- Added additional tests for the resource controllers.
+- Added tests for the item action controller.
+- Added tests for the item view controller.
+- Added a second phpunit.xml file, this file allows you to run tests in your IDE without Docker setup, the default phpunit.xml file is for the command line.
+- Added a test helper to create a new user.
+### Changed
+- Reviewed the existing test, updated the test to match the App structure.
+- Renamed the "Manage" controllers, now "Action".
+- Updated the tests section of the README, simpler layout to separate action and view tests.
+- Updated the resource type tests, they create data rather then assuming it already exists.
+### Removed
+- Removed anything related to Bootstrap, we are now using Tailwind.
+### Fixed
+- Invalid field check missing in 'game' item update.
+- The 'game' schema file was incorrect, two fields can be null.
+- Referenced lang file incorrect for item type 'game' patch fields.
+
 ## [v3.10.0] - 2023-05-11
 ### Changed
 - New landing page, switched to Tailwind

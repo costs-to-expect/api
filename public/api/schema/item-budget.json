@@ -1,0 +1,77 @@
+{
+    "$id": "https://api.costs-to-expect.com/v2/api/schema/item-budget.json",
+    "type": "object",
+    "properties": {
+        "id": {
+            "type": "string"
+        },
+        "name": {
+            "type": "string"
+        },
+        "account": {
+            "type": "string"
+        },
+        "target_account": {
+            "type": ["null", "string"]
+        },
+        "description": {
+            "type": ["null", "string"]
+        },
+        "amount": {
+            "type": "string"
+        },
+        "currency": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "string"
+                },
+                "code": {
+                    "type": "string",
+                    "maxLength": 3,
+                    "minLength": 3
+                },
+                "name": {
+                    "type": "string"
+                }
+            }
+        },
+        "category": {
+            "type": "string"
+        },
+        "start_date": {
+            "type": "string"
+        },
+        "end_date": {
+            "type": ["null", "string"]
+        },
+        "disabled": {
+            "type": "boolean"
+        },
+        "frequency": {
+            "type": "object"
+        },
+        "created": {
+            "type": "string"
+        },
+        "updated": {
+            "type": ["null", "string"]
+        }
+    },
+    "required": [
+        "id",
+        "name",
+        "account",
+        "target_account",
+        "description",
+        "amount",
+        "currency",
+        "category",
+        "start_date",
+        "end_date",
+        "disabled",
+        "frequency",
+        "created",
+        "updated"
+    ]
+}

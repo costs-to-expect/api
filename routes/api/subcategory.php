@@ -58,17 +58,17 @@ Route::group(
 
         Route::post(
             'resource-types/{resource_type_id}/categories/{category_id}/subcategories',
-            [App\Http\Controllers\Manage\SubcategoryController::class, 'create']
+            [App\Http\Controllers\Action\SubcategoryController::class, 'create']
         )->name('subcategory.create');
 
         Route::delete(
             'resource-types/{resource_type_id}/categories/{category_id}/subcategories/{subcategory_id}',
-            [App\Http\Controllers\Manage\SubcategoryController::class, 'delete']
+            [App\Http\Controllers\Action\SubcategoryController::class, 'delete']
         )->name('subcategory.delete');
 
         Route::patch(
             'resource-types/{resource_type_id}/categories/{category_id}/subcategories/{subcategory_id}',
-            [App\Http\Controllers\Manage\SubcategoryController::class, 'update']
+            [App\Http\Controllers\Action\SubcategoryController::class, 'update']
         )->name('subcategory.update');
 
     }

@@ -48,17 +48,17 @@ Route::group(
 
         Route::post(
             'resource-types/{resource_type_id}/resources/{resource_id}/items/{item_id}/data',
-            [App\Http\Controllers\Manage\ItemDataController::class, 'create']
+            [App\Http\Controllers\Action\ItemDataController::class, 'create']
         )->name('item-data.create');
 
         Route::delete(
             'resource-types/{resource_type_id}/resources/{resource_id}/items/{item_id}/data/{key}',
-            [App\Http\Controllers\Manage\ItemDataController::class, 'delete']
+            [App\Http\Controllers\Action\ItemDataController::class, 'delete']
         )->name('item-data.delete');
 
         Route::patch(
             'resource-types/{resource_type_id}/resources/{resource_id}/items/{item_id}/data/{key}',
-            [App\Http\Controllers\Manage\ItemDataController::class, 'update']
+            [App\Http\Controllers\Action\ItemDataController::class, 'update']
         )->name('item-data.update');
 
     }

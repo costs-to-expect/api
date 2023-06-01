@@ -53,12 +53,12 @@ Route::group(
 
         Route::post(
             'resource-types/{resource_type_id}/resources/{resource_id}/items/{item_id}/partial-transfer',
-            [App\Http\Controllers\Manage\ItemPartialTransferController::class, 'transfer']
+            [App\Http\Controllers\Action\ItemPartialTransferController::class, 'transfer']
         );
 
         Route::delete(
             'resource-types/{resource_type_id}/partial-transfers/{item_partial_transfer_id}',
-            [App\Http\Controllers\Manage\ItemPartialTransferController::class, 'delete']
+            [App\Http\Controllers\Action\ItemPartialTransferController::class, 'delete']
         );
 
     }

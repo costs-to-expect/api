@@ -7,6 +7,7 @@ use Illuminate\Foundation\Testing\TestCase as BaseTestCase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Str;
 use Illuminate\Testing\TestResponse;
 use Opis\JsonSchema\Schema;
 use Opis\JsonSchema\Validator;
@@ -17,6 +18,53 @@ abstract class TestCase extends BaseTestCase
 
     protected string $email_for_expected_test_user = 'test-account-email@email.com';
     protected string $password_for_expected_test_user = 'test-account-secret-password';
+
+    protected array $item_types = [
+        'allocated-expense' => 'OqZwKX16bW',
+        'game' => '2AP1axw6L7',
+        'budget' => 'VezyrJyMlk',
+        'budget-pro' => 'WkxwR04GPo'
+    ];
+
+    protected array $item_subtypes = [
+        'allocated-expense' => [
+            'default' => 'a56kbWV82n',
+        ],
+        'budget' => [
+            'default' => 'Q6OV9dk5dE',
+        ],
+        'budget-pro' => [
+            'default' => 'Y2ekBdlEbz',
+        ],
+        'game' => [
+            'yahtzee' => '3JgkeMkB4q',
+            'yatzy' => 'OZYlY5lbPJ',
+        ]
+    ];
+
+    protected array $currency = [
+        'GBP' => 'epMqeYqPkL',
+    ];
+
+    protected function assertJsonMatchesAllocatedExpenseItemSchema($content): void
+    {
+        $this->assertProvidedJsonMatchesDefinedSchema($content, 'api/schema/item-allocated-expense.json');
+    }
+
+    protected function assertJsonMatchesBudgetItemSchema($content): void
+    {
+        $this->assertProvidedJsonMatchesDefinedSchema($content, 'api/schema/item-budget.json');
+    }
+
+    protected function assertJsonMatchesBudgetProItemSchema($content): void
+    {
+        $this->assertProvidedJsonMatchesDefinedSchema($content, 'api/schema/item-budget-pro.json');
+    }
+
+    protected function assertJsonMatchesGameItemSchema($content): void
+    {
+        $this->assertProvidedJsonMatchesDefinedSchema($content, 'api/schema/item-game.json');
+    }
 
     protected function assertJsonMatchesCategorySchema($content): void
     {
@@ -59,7 +107,12 @@ abstract class TestCase extends BaseTestCase
         $validator = new Validator();
 
         $result = $validator->schemaValidation(json_decode($content), $schema);
-        self::assertTrue($result->isValid());
+
+        if ($result->isValid()) {
+            self::assertTrue(true);
+        } else {
+            dd($result->getErrors());
+        }
     }
 
     protected function createRandomCategory(string $resource_type_id): string
@@ -79,14 +132,45 @@ abstract class TestCase extends BaseTestCase
         $this->fail('Unable to create the category');
     }
 
-    protected function createRandomResource(string $resource_type_id): string
+    protected function createAllocatedExpenseItem(
+        string $resource_type_id,
+        string $resource_id,
+        array $override = []
+    ): string
     {
-        $response = $this->createRequestedResource(
+        $payload = [
+            'name' => $this->faker->text(200),
+            'description' => $this->faker->text(200),
+            'effective_date' => $this->faker->date(),
+            'currency_id' => $this->currency['GBP'],
+            'total' => $this->randomMoneyValue(),
+        ];
+
+        foreach ($override as $k => $v) {
+            $payload[$k] = $v;
+        }
+
+        $response = $this->createItem(
+            $resource_type_id,
+            $resource_id,
+            $payload
+        );
+
+        if ($response->assertStatus(201)) {
+            return $response->json('id');
+        }
+
+        $this->fail('Unable to create the allocated expense item');
+    }
+
+    protected function createAllocatedExpenseResource(string $resource_type_id): string
+    {
+        $response = $this->createResource(
             $resource_type_id,
             [
                 'name' => $this->faker->text(200),
                 'description' => $this->faker->text(200),
-                'item_subtype_id' => 'a56kbWV82n'
+                'item_subtype_id' => $this->item_subtypes['allocated-expense']['default'],
             ]
         );
 
@@ -97,14 +181,105 @@ abstract class TestCase extends BaseTestCase
         $this->fail('Unable to create the resource');
     }
 
-    protected function createRandomResourceType(): string
+    protected function createAllocatedExpenseResourceType(array $override = []): string
     {
-        $response = $this->createRequestedResourceType(
+        $payload = [
+            'name' => $this->faker->text(255),
+            'description' => $this->faker->text,
+            'data' => '{"field":true}',
+            'item_type_id' => $this->item_types['allocated-expense'],
+            'public' => false
+        ];
+
+        foreach ($override as $k => $v) {
+            $payload[$k] = $v;
+        }
+
+        $response = $this->createResourceType($payload);
+
+        if ($response->assertStatus(201)) {
+            return $response->json('id');
+        }
+
+        $this->fail('Unable to create the allocated expense resource type');
+    }
+
+    protected function createBudgetItem(
+        string $resource_type_id,
+        string $resource_id,
+        array $override = []
+    ): string
+    {
+        $payload = [
+            'name' => $this->faker->text(200),
+            'account' => Str::uuid()->toString(),
+            'description' => $this->faker->text(200),
+            'amount' => $this->randomMoneyValue(),
+            'currency_id' => $this->currency['GBP'],
+            'category' => 'income',
+            'start_date' => $this->faker->date(),
+            'frequency' => json_encode(['type'=>'monthly', 'day'=>null, 'exclusions' => []], JSON_THROW_ON_ERROR),
+        ];
+
+        foreach ($override as $k => $v) {
+            $payload[$k] = $v;
+        }
+
+        $response = $this->createItem(
+            $resource_type_id,
+            $resource_id,
+            $payload
+        );
+
+        if ($response->assertStatus(201)) {
+            return $response->json('id');
+        }
+
+        $this->fail('Unable to create the budget item');
+    }
+
+    protected function createBudgetProItem(
+        string $resource_type_id,
+        string $resource_id,
+        array $override = []
+    ): string
+    {
+        $payload = [
+            'name' => $this->faker->text(200),
+            'account' => Str::uuid()->toString(),
+            'description' => $this->faker->text(200),
+            'amount' => $this->randomMoneyValue(),
+            'currency_id' => $this->currency['GBP'],
+            'category' => 'income',
+            'start_date' => $this->faker->date(),
+            'frequency' => json_encode(['type'=>'monthly', 'day'=>null, 'exclusions' => []], JSON_THROW_ON_ERROR),
+        ];
+
+        foreach ($override as $k => $v) {
+            $payload[$k] = $v;
+        }
+
+        $response = $this->createItem(
+            $resource_type_id,
+            $resource_id,
+            $payload
+        );
+
+        if ($response->assertStatus(201)) {
+            return $response->json('id');
+        }
+
+        $this->fail('Unable to create the budget pro item');
+    }
+
+    protected function createBudgetProResourceType(): string
+    {
+        $response = $this->createResourceType(
             [
                 'name' => $this->faker->text(255),
                 'description' => $this->faker->text,
                 'data' => '{"field":true}',
-                'item_type_id' => 'OqZwKX16bW',
+                'item_type_id' => $this->item_types['budget-pro'],
                 'public' => false
             ]
         );
@@ -113,7 +288,99 @@ abstract class TestCase extends BaseTestCase
             return $response->json('id');
         }
 
-        $this->fail('Unable to create the resource type');
+        $this->fail('Unable to create the budget pro resource type');
+    }
+
+    protected function createBudgetProResource(string $resource_type_id): string
+    {
+        $response = $this->createResource(
+            $resource_type_id,
+            [
+                'name' => $this->faker->text(200),
+                'description' => $this->faker->text(200),
+                'item_subtype_id' => $this->item_subtypes['budget-pro']['default']
+            ]
+        );
+
+        if ($response->assertStatus(201)) {
+            return $response->json('id');
+        }
+
+        $this->fail('Unable to create the resource');
+    }
+
+    protected function createBudgetResource(string $resource_type_id): string
+    {
+        $response = $this->createResource(
+            $resource_type_id,
+            [
+                'name' => $this->faker->text(200),
+                'description' => $this->faker->text(200),
+                'item_subtype_id' => $this->item_subtypes['budget']['default']
+            ]
+        );
+
+        if ($response->assertStatus(201)) {
+            return $response->json('id');
+        }
+
+        $this->fail('Unable to create the resource');
+    }
+
+    protected function createBudgetResourceType(): string
+    {
+        $response = $this->createResourceType(
+            [
+                'name' => $this->faker->text(255),
+                'description' => $this->faker->text,
+                'data' => '{"field":true}',
+                'item_type_id' => $this->item_types['budget'],
+                'public' => false
+            ]
+        );
+
+        if ($response->assertStatus(201)) {
+            return $response->json('id');
+        }
+
+        $this->fail('Unable to create the budget resource type');
+    }
+
+    protected function createGameResourceType(): string
+    {
+        $response = $this->createResourceType(
+            [
+                'name' => $this->faker->text(255),
+                'description' => $this->faker->text,
+                'data' => '{"field":true}',
+                'item_type_id' => $this->item_types['game'],
+                'public' => false
+            ]
+        );
+
+        if ($response->assertStatus(201)) {
+            return $response->json('id');
+        }
+
+        $this->fail('Unable to create the game resource type');
+    }
+
+    protected function createItem(
+        string $resource_type_id,
+        string $resource_id,
+        array $payload
+    ): TestResponse
+    {
+        return $this->post(
+            route(
+                'item.create',
+                [
+                    'resource_type_id' => $resource_type_id,
+                    'resource_id' => $resource_id
+                ]
+            ),
+            $payload
+        );
     }
 
     protected function createRandomSubcategory(string $resource_type_id, string $category_id): string
@@ -150,7 +417,7 @@ abstract class TestCase extends BaseTestCase
         );
     }
 
-    protected function createRequestedResource(string $resource_type_id, array $payload): TestResponse
+    protected function createResource(string $resource_type_id, array $payload): TestResponse
     {
         return $this->post(
             route('resource.create', ['resource_type_id' => $resource_type_id]),
@@ -158,7 +425,7 @@ abstract class TestCase extends BaseTestCase
         );
     }
 
-    protected function createRequestedResourceType(array $payload): TestResponse
+    protected function createResourceType(array $payload): TestResponse
     {
         return $this->post(route('resource-type.create'), $payload);
     }
@@ -177,6 +444,146 @@ abstract class TestCase extends BaseTestCase
         );
     }
 
+    protected function createResourceTypeByItemType($item_type): string
+    {
+        if (array_key_exists($item_type, $this->item_types) === false) {
+            $this->fail('The requested item type is not an allowable value "' . $this->item_types[$item_type] . '"');
+        }
+
+        $response = $this->createResourceType(
+            [
+                'name' => $this->faker->text(255),
+                'description' => $this->faker->text,
+                'data' => '{"field":true}',
+                'item_type_id' => $this->item_types[$item_type],
+                'public' => false
+            ]
+        );
+
+        if ($response->assertStatus(201)) {
+            return $response->json('id');
+        }
+
+        $this->fail('Unable to create the ' . $this->item_types[$item_type] . ' resource type');
+    }
+
+    protected function createUser(): int
+    {
+        $user = new User();
+        $user->name = $this->faker->name;
+        $user->email = $this->faker->email;
+        $user->password = Hash::make($this->faker->password);
+        $user->save();
+
+        return $user->id;
+    }
+
+    protected function createYahtzeeGameItem(
+        string $resource_type_id,
+        string $resource_id,
+        array $override = []
+    ): string
+    {
+        $payload = [
+            'name' => $this->faker->text(200),
+            'description' => $this->faker->text(200),
+        ];
+
+        foreach ($override as $k => $v) {
+            $payload[$k] = $v;
+        }
+
+        $response = $this->createItem(
+            $resource_type_id,
+            $resource_id,
+            $payload
+        );
+
+        if ($response->assertStatus(201)) {
+            return $response->json('id');
+        }
+
+        $this->fail('Unable to create the yahtzee game item');
+    }
+
+    protected function createYatzyGameItem(
+        string $resource_type_id,
+        string $resource_id,
+        array $override = []
+    ): string
+    {
+        $payload = [
+            'name' => $this->faker->text(200),
+            'description' => $this->faker->text(200),
+        ];
+
+        foreach ($override as $k => $v) {
+            $payload[$k] = $v;
+        }
+
+        $response = $this->createItem(
+            $resource_type_id,
+            $resource_id,
+            $payload
+        );
+
+        if ($response->assertStatus(201)) {
+            return $response->json('id');
+        }
+
+        $this->fail('Unable to create the yatzy game item');
+    }
+
+    protected function createYahtzeeResource(string $resource_type_id): string
+    {
+        $response = $this->createResource(
+            $resource_type_id,
+            [
+                'name' => $this->faker->text(200),
+                'description' => $this->faker->text(200),
+                'item_subtype_id' => $this->item_subtypes['game']['yahtzee']
+            ]
+        );
+
+        if ($response->assertStatus(201)) {
+            return $response->json('id');
+        }
+
+        $this->fail('Unable to create the resource');
+    }
+
+    protected function createYatzyResource(string $resource_type_id): string
+    {
+        $response = $this->createResource(
+            $resource_type_id,
+            [
+                'name' => $this->faker->text(200),
+                'description' => $this->faker->text(200),
+                'item_subtype_id' => $this->item_subtypes['game']['yatzy']
+            ]
+        );
+
+        if ($response->assertStatus(201)) {
+            return $response->json('id');
+        }
+
+        $this->fail('Unable to create the resource');
+    }
+
+    protected function deleteItem(string $resource_type_id, $resource_id, string $item_id): TestResponse
+    {
+        return $this->delete(
+            route(
+                'item.delete',
+                [
+                    'resource_type_id' => $resource_type_id,
+                    'resource_id' => $resource_id,
+                    'item_id' => $item_id
+                ]
+            )
+        );
+    }
+
     protected function deleteRequestedCategory(string $resource_type_id, $category_id): TestResponse
     {
         return $this->delete(
@@ -191,7 +598,7 @@ abstract class TestCase extends BaseTestCase
         );
     }
 
-    protected function deleteRequestedResource(string $resource_type_id, $resource_id): TestResponse
+    protected function deleteResource(string $resource_type_id, $resource_id): TestResponse
     {
         return $this->delete(
             route('resource.delete', ['resource_type_id' => $resource_type_id, 'resource_id' => $resource_id]), []
@@ -230,7 +637,17 @@ abstract class TestCase extends BaseTestCase
         return $this->generatedRoute('permitted-user.list', $parameters);
     }
 
-    protected function fetchAllResourceTypes(array $parameters = []): TestResponse
+    protected function fetchItem(array $parameters = []): TestResponse
+    {
+        return $this->generatedRoute('item.show', $parameters);
+    }
+
+    protected function fetchItemCollection(array $parameters = []): TestResponse
+    {
+        return $this->generatedRoute('item.list', $parameters);
+    }
+
+    protected function fetchResourceTypeCollection(array $parameters = []): TestResponse
     {
         return $this->generatedRoute('resource-type.list', $parameters);
     }
@@ -260,6 +677,16 @@ abstract class TestCase extends BaseTestCase
         return $this->generateOptionsRoute('auth.create-password.options', $parameters);
     }
 
+    protected function fetchOptionsForItem(array $parameters = []): TestResponse
+    {
+        return $this->generateOptionsRoute('item.show.options', $parameters);
+    }
+
+    protected function fetchOptionsForItemCollection(array $parameters = []): TestResponse
+    {
+        return $this->generateOptionsRoute('item.list.options', $parameters);
+    }
+
     protected function fetchOptionsForRegister(array $parameters = []): TestResponse
     {
         return $this->generateOptionsRoute('auth.register.options', $parameters);
@@ -285,9 +712,18 @@ abstract class TestCase extends BaseTestCase
         return $this->options(route($route, $parameters));
     }
 
+    protected function randomMoneyValue(): string
+    {
+        return number_format($this->faker->randomFloat(2, 0.01, 99999999999.99), 2, '.', '');
+    }
+
     protected function setUp(): void
     {
         parent::setUp();
+
+        if (app()->environment() !== 'local') {
+            dd('Not in local environment, skipping tests');
+        }
 
         $result = DB::select(DB::raw("SHOW TABLES LIKE 'users';"));
 
@@ -316,7 +752,27 @@ abstract class TestCase extends BaseTestCase
         );
     }
 
-    protected function updatedRequestedResource(string $resource_type_id, string $resource_id, array $payload): TestResponse
+    protected function updateItem(
+        string $resource_type_id,
+        string $resource_id,
+        string $item_id,
+        array $payload
+    ): TestResponse
+    {
+        return $this->patch(
+            route(
+                'item.update',
+                [
+                    'resource_type_id' => $resource_type_id,
+                    'resource_id' => $resource_id,
+                    'item_id' => $item_id
+                ]
+            ),
+            $payload
+        );
+    }
+
+    protected function updateResource(string $resource_type_id, string $resource_id, array $payload): TestResponse
     {
         return $this->patch(
             route(
@@ -330,7 +786,7 @@ abstract class TestCase extends BaseTestCase
         );
     }
 
-    protected function updatedRequestedResourceType(string $resource_type_id, array $payload): TestResponse
+    protected function updateRequestedResourceType(string $resource_type_id, array $payload): TestResponse
     {
         return $this->patch(
             route('resource-type.update', ['resource_type_id' => $resource_type_id]),
@@ -338,7 +794,7 @@ abstract class TestCase extends BaseTestCase
         );
     }
 
-    protected function updatedRequestedSubcategory(
+    protected function updateRequestedSubcategory(
         string $resource_type_id,
         string $category_id,
         string $subcategory_id,

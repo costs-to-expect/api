@@ -48,12 +48,12 @@ Route::group(
 
         Route::post(
             'resource-types/{resource_type_id}/permitted-users',
-            [App\Http\Controllers\Manage\PermittedUserController::class, 'create']
+            [App\Http\Controllers\Action\PermittedUserController::class, 'create']
         )->name('permitted-user.create');
 
         Route::delete(
             'resource-types/{resource_type_id}/permitted-users/{permitted_user_id}',
-            [App\Http\Controllers\Manage\PermittedUserController::class, 'delete']
+            [App\Http\Controllers\Action\PermittedUserController::class, 'delete']
         )->name('permitted-user.delete');
 
     }
