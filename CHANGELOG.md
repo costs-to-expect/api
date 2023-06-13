@@ -2,6 +2,11 @@
 
 The complete changelog for the Costs to Expect REST API, our changelog follows the format defined at https://keepachangelog.com/en/1.0.0/
 
+## [v3.11.1] - 2023-06-13
+### Fixed
+- The account deleting jobs are now all aware of the 'budget-pro' item type.
+- Added missing "not supported" responses for the 'budget-pro' item type.
+
 ## [v3.11.0] - 2023-05-26
 ### Added
 - Added support for the 'budget-pro' item type. For now the 'budget-pro' item type is a duplicate of the 'budget' item type but that will change in the future.
