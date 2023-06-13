@@ -129,6 +129,18 @@ class DeleteResource implements ShouldQueue
         ', [$resource_id]);
     }
 
+    protected function deleteBudgetProItems(int $resource_id): int
+    {
+        return DB::delete('
+            DELETE FROM
+                `item_type_budget_pro`
+            WHERE
+                `item_type_budget_pro`.`item_id` IN (
+                SELECT `item`.`id` FROM `item` WHERE `item`.`resource_id` = ?
+            )
+        ', [$resource_id]);
+    }
+
     protected function deleteGameItems(int $resource_id): int
     {
         return DB::delete('
@@ -210,6 +222,7 @@ class DeleteResource implements ShouldQueue
         return match ($item_type) {
             'allocated-expense' => $this->deleteAllocatedExpenseItems($resource_id),
             'budget' => $this->deleteBudgetItems($resource_id),
+            'budget-pro' => $this->deleteBudgetProItems($resource_id),
             'game' => $this->deleteGameItems($resource_id),
             default => throw new \OutOfRangeException('No item type definition for ' . $item_type, 500),
         };
