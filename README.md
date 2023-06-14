@@ -135,6 +135,8 @@ Public resources types provide READ access to everyone, WRITE access is limited 
 | POST         | v3/auth/update-profile                                                                                                                         |
 | GET/HEAD     | v3/auth/user                                                                                                                                   |
 | OPTIONS      | v3/auth/user                                                                                                                                   |
+| OPTIONS      | v3/auth/user/migrate/budget-pro/request-migration                                                                                              |
+| POST         | v3/auth/user/migrate/budget-pro/request-migration                                                                                              |
 | GET/HEAD     | v3/auth/user/permitted-resource-types                                                                                                          |
 | OPTIONS      | v3/auth/user/permitted-resource-types                                                                                                          |
 | GET/HEAD     | v3/auth/user/permitted-resource-types/{permitted_resource_type_id}                                                                             |
