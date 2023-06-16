@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\View;
 
+use App\HttpOptionResponse\Auth\MigrateBudgetPro;
 use App\HttpOptionResponse\Auth\PermittedResourceType;
 use App\HttpOptionResponse\Auth\PermittedResourceTypeResource;
 use App\HttpOptionResponse\Auth\PermittedResourceTypeResources;
@@ -181,6 +182,19 @@ class AuthenticationController extends \Illuminate\Routing\Controller
         );
 
         return response()->json($collection);
+    }
+
+    public function optionsMigrateBudgetProRequestDelete(): Http\JsonResponse
+    {
+        $user = auth()->guard('api')->user();
+
+        if ($user === null) {
+            return Response::authenticationRequired();
+        }
+
+        $response = new MigrateBudgetPro(['view'=> true, 'manage'=> true]);
+
+        return $response->create()->response();
     }
 
     public function optionsPermittedResourceType(): Http\JsonResponse

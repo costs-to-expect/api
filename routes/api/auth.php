@@ -151,6 +151,11 @@ Route::group(
             [App\Http\Controllers\Action\AuthenticationController::class, 'deleteToken']
         )->name('auth.user.token.delete');
 
+        Route::options(
+            'auth/user/migrate/budget-pro/request-migration',
+            [App\Http\Controllers\View\AuthenticationController::class, 'optionsMigrateBudgetProRequestDelete']
+        )->name('auth.user.migrate.budget-pro.request-delete.options');
+
         Route::get(
             'auth/user/permitted-resource-types',
             [App\Http\Controllers\View\AuthenticationController::class, 'permittedResourceTypes']
