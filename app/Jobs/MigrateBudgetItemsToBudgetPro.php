@@ -38,7 +38,7 @@ class MigrateBudgetItemsToBudgetPro implements ShouldQueue
         }
 
         if (count($resource_type) > 1) {
-            $this->fail(new \Exception('Budget Pro migration failed, there appears to be more than one free budget, something has going wrong somewhere for user id:' . $this->user_id));
+            $this->fail(new \Exception('Budget Pro migration failed, there appears to be more than one free budget resource type, something has going wrong somewhere for user id:' . $this->user_id));
         }
 
         $budget_resource_type_id = $resource_type[0]['id'];
@@ -47,11 +47,11 @@ class MigrateBudgetItemsToBudgetPro implements ShouldQueue
         $resource_type = $this->fetchResourceType($this->user_id, 'budget-pro');
 
         if (count($resource_type) === 0) {
-            $this->fail(new \Exception('Budget Pro migration failed, no budget resource type found for user id:' . $this->user_id));
+            $this->fail(new \Exception('Budget Pro migration failed, no budget-pro resource type found for user id:' . $this->user_id));
         }
 
         if (count($resource_type) > 1) {
-            $this->fail(new \Exception('Budget Pro migration failed, there appears to be more than one free budget, something has going wrong somewhere for user id:' . $this->user_id));
+            $this->fail(new \Exception('Budget Pro migration failed, there appears to be more than one budget-pro resource type, something has going wrong somewhere for user id:' . $this->user_id));
         }
 
         $budget_pro_resource_type_id = $resource_type[0]['id'];
