@@ -74,6 +74,11 @@ Route::group(
                 [App\Http\Controllers\View\AuthenticationController::class, 'optionsCreatePassword']
             )->name('auth.create-password.options');
         }
+
+        Route::options(
+            'auth/user/migrate/budget-pro/request-migration',
+            [App\Http\Controllers\View\AuthenticationController::class, 'optionsMigrateBudgetProRequestDelete']
+        )->name('auth.user.migrate.budget-pro.request-delete.options');
     }
 );
 
@@ -150,11 +155,6 @@ Route::group(
             'auth/user/tokens/{token_id}',
             [App\Http\Controllers\Action\AuthenticationController::class, 'deleteToken']
         )->name('auth.user.token.delete');
-
-        Route::options(
-            'auth/user/migrate/budget-pro/request-migration',
-            [App\Http\Controllers\View\AuthenticationController::class, 'optionsMigrateBudgetProRequestDelete']
-        )->name('auth.user.migrate.budget-pro.request-delete.options');
 
         Route::get(
             'auth/user/permitted-resource-types',

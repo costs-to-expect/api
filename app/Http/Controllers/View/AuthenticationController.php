@@ -188,11 +188,7 @@ class AuthenticationController extends \Illuminate\Routing\Controller
     {
         $user = auth()->guard('api')->user();
 
-        if ($user === null) {
-            return Response::authenticationRequired();
-        }
-
-        $response = new MigrateBudgetPro(['view'=> true, 'manage'=> true]);
+        $response = new MigrateBudgetPro(['view'=> $user !== null, 'manage'=> $user !== null]);
 
         return $response->create()->response();
     }
@@ -214,11 +210,7 @@ class AuthenticationController extends \Illuminate\Routing\Controller
     {
         $user = auth()->guard('api')->user();
 
-        if ($user === null) {
-            return Response::authenticationRequired();
-        }
-
-        $response = new PermittedResourceTypeResource(['view'=> true, 'manage'=> true]);
+        $response = new PermittedResourceTypeResource(['view'=> $user !== null, 'manage'=> $user !== null]);
 
         return $response->create()->response();
     }

@@ -1,0 +1,44 @@
+{
+    "$id": "https://api.costs-to-expect.com/v2/api/schema/auth/options/migrate-budget-pro-request-delete.json",
+    "type": "object",
+    "properties": {
+        "POST": {
+            "type": "object",
+            "properties": {
+                "description": {
+                    "type": "string"
+                },
+                "authentication": {
+                    "type": "object",
+                    "properties": {
+                        "required": {
+                            "type": "boolean"
+                        },
+                        "authenticated": {
+                            "type": "boolean"
+                        }
+                    },
+                    "required": [
+                        "required",
+                        "authenticated"
+                    ]
+                },
+                "fields": {
+                    "type": "array"
+                },
+                "parameters": {
+                    "type": "array"
+                }
+            },
+            "required": [
+                "description",
+                "authentication",
+                "fields",
+                "parameters"
+            ]
+        }
+    },
+    "required": [
+        "POST"
+    ]
+}

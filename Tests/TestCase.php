@@ -692,6 +692,11 @@ abstract class TestCase extends BaseTestCase
         return $this->generateOptionsRoute('auth.register.options', $parameters);
     }
 
+    protected function fetchOptionsForMigrateBudgetProRequestDelete(array $parameters = []): TestResponse
+    {
+        return $this->generateOptionsRoute('auth.user.migrate.budget-pro.request-delete.options', $parameters);
+    }
+
     protected function fetchOptionsForResourceType(array $parameters = []): TestResponse
     {
         return $this->generateOptionsRoute('resource-type.show.options', $parameters);
