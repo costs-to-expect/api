@@ -58,6 +58,31 @@ class MigrateBudgetItemsToBudgetPro implements ShouldQueue
 
 
         // Check to see if there is a budget resource
+        $resource = $this->fetchResource($budget_resource_type_id);
+
+        if (count($resource) === 0) {
+            $this->fail(new \Exception('Budget Pro migration failed, no budget resources for user id: ' . $this->user_id));
+        }
+
+        if (count($resource) > 1) {
+            $this->fail(new \Exception('Budget Pro migration failed, more than one budget resources for user id: ' . $this->user_id));
+        }
+
+        $budget_resource_id = $resource[0]['id'];
+        $budget_resource_data = $resource[0]['data'];
+
+        // Check to see if there is a budget-pro resource
+        $resource = $this->fetchResource($budget_pro_resource_type_id);
+
+        if (count($resource) === 0) {
+            $this->fail(new \Exception('Budget Pro migration failed, no budget-pro resources for user id: ' . $this->user_id));
+        }
+
+        if (count($resource) > 1) {
+            $this->fail(new \Exception('Budget Pro migration failed, more than one budget-pro resources for user id: ' . $this->user_id));
+        }
+
+        $budget_pro_resource_id = $resource[0]['id'];
 
 
 
@@ -65,6 +90,16 @@ class MigrateBudgetItemsToBudgetPro implements ShouldQueue
         // Check to see if there is a budget pro resource
         // Copy over the resource data
         // Copy over the items
+    }
+
+    private function fetchResource(int $resource_type_id): array
+    {
+        return DB::select('
+            SELECT 
+                `resource`.`id`, `resource`.`data`
+            FROM `resource`
+            WHERE `resource`.`resource_type_id` = ?
+        ', [$resource_type_id]);
     }
 
     private function fetchResourceType(int $user_id, string $item_type): array
