@@ -6,6 +6,7 @@ use App\HttpResponse\Response;
 use App\Jobs\DeleteAccount;
 use App\Jobs\DeleteResource;
 use App\Jobs\DeleteResourceType;
+use App\Jobs\MigrateBudgetItemsToBudgetPro;
 use App\Models\Permission;
 use App\Models\Resource;
 use App\Notifications\ForgotPassword;
@@ -304,6 +305,25 @@ class AuthenticationController extends \Illuminate\Routing\Controller
         Auth::guard('api')->logout();
 
         return response()->json(['message' => trans('auth.signed-out')], 200);
+    }
+
+    public function migrateBudgetProRequestDelete(): Http\JsonResponse
+    {
+        $user = auth()->guard('api')->user();
+
+        if ($user === null) {
+            return Response::authenticationRequired();
+        }
+
+        MigrateBudgetItemsToBudgetPro::dispatch($user->id);
+
+        return response()
+            ->json(
+                [
+                    'message' => trans('responses.migrate-requested')
+                ],
+                201
+            );
     }
 
     public function register(Request $request): Http\JsonResponse

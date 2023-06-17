@@ -121,40 +121,12 @@ Route::group(
             [App\Http\Controllers\View\AuthenticationController::class, 'user']
         );
 
-        Route::options(
-            'auth/user/request-delete',
-            [App\Http\Controllers\View\AuthenticationController::class, 'optionsRequestDelete']
-        )->name('auth.user.request-delete.options');
-
-        Route::post(
-            'auth/user/request-delete',
-            [App\Http\Controllers\Action\AuthenticationController::class, 'requestDelete']
-        )->name('auth.user.request-delete');
 
         Route::options(
-            'auth/user/tokens',
-            [App\Http\Controllers\View\AuthenticationController::class, 'optionsTokens']
-        )->name('auth.user.token.list.options');
+            'auth/user/migrate/budget-pro/request-migration',
+            [App\Http\Controllers\Action\AuthenticationController::class, 'migrateBudgetProRequestDelete']
+        )->name('auth.user.migrate.budget-pro.request-delete');
 
-        Route::get(
-            'auth/user/tokens',
-            [App\Http\Controllers\View\AuthenticationController::class, 'tokens']
-        )->name('auth.user.token.list');
-
-        Route::options(
-            'auth/user/tokens/{token_id}',
-            [App\Http\Controllers\View\AuthenticationController::class, 'optionsToken']
-        )->name('auth.user.token.show.options');
-
-        Route::get(
-            'auth/user/tokens/{token_id}',
-            [App\Http\Controllers\View\AuthenticationController::class, 'token']
-        )->name('auth.user.token.show');
-
-        Route::delete(
-            'auth/user/tokens/{token_id}',
-            [App\Http\Controllers\Action\AuthenticationController::class, 'deleteToken']
-        )->name('auth.user.token.delete');
 
         Route::get(
             'auth/user/permitted-resource-types',
@@ -215,5 +187,43 @@ Route::group(
             'auth/user/permitted-resource-types/{permitted_resource_type_id}/resources/{resource_id}/request-delete',
             [App\Http\Controllers\Action\AuthenticationController::class, 'requestResourceDelete']
         )->name('auth.user.request-resource-delete');
+
+
+        Route::options(
+            'auth/user/request-delete',
+            [App\Http\Controllers\View\AuthenticationController::class, 'optionsRequestDelete']
+        )->name('auth.user.request-delete.options');
+
+        Route::post(
+            'auth/user/request-delete',
+            [App\Http\Controllers\Action\AuthenticationController::class, 'requestDelete']
+        )->name('auth.user.request-delete');
+
+
+
+        Route::options(
+            'auth/user/tokens',
+            [App\Http\Controllers\View\AuthenticationController::class, 'optionsTokens']
+        )->name('auth.user.token.list.options');
+
+        Route::get(
+            'auth/user/tokens',
+            [App\Http\Controllers\View\AuthenticationController::class, 'tokens']
+        )->name('auth.user.token.list');
+
+        Route::options(
+            'auth/user/tokens/{token_id}',
+            [App\Http\Controllers\View\AuthenticationController::class, 'optionsToken']
+        )->name('auth.user.token.show.options');
+
+        Route::get(
+            'auth/user/tokens/{token_id}',
+            [App\Http\Controllers\View\AuthenticationController::class, 'token']
+        )->name('auth.user.token.show');
+
+        Route::delete(
+            'auth/user/tokens/{token_id}',
+            [App\Http\Controllers\Action\AuthenticationController::class, 'deleteToken']
+        )->name('auth.user.token.delete');
     }
 );
