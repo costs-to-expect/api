@@ -2,6 +2,7 @@
 
 namespace App\Jobs;
 
+use App\Models\Resource;
 use App\Notifications\FailedJob;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldBeUnique;
@@ -12,6 +13,7 @@ use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Notification;
+use League\CommonMark\Node\Inline\Newline;
 use Throwable;
 
 class MigrateBudgetItemsToBudgetPro implements ShouldQueue
@@ -34,11 +36,11 @@ class MigrateBudgetItemsToBudgetPro implements ShouldQueue
         $resource_type = $this->fetchResourceType($this->user_id, 'budget');
 
         if (count($resource_type) === 0) {
-            $this->fail(new \Exception('Budget Pro migration failed, no budget resource type found for user id:' . $this->user_id));
+            $this->fail(new \Exception('No budget resource type found for user id:' . $this->user_id));
         }
 
         if (count($resource_type) > 1) {
-            $this->fail(new \Exception('Budget Pro migration failed, there appears to be more than one free budget resource type, something has going wrong somewhere for user id:' . $this->user_id));
+            $this->fail(new \Exception('There appears to be more than one free budget resource type, something has going wrong somewhere for user id:' . $this->user_id));
         }
 
         $budget_resource_type_id = $resource_type[0]['id'];
@@ -47,11 +49,11 @@ class MigrateBudgetItemsToBudgetPro implements ShouldQueue
         $resource_type = $this->fetchResourceType($this->user_id, 'budget-pro');
 
         if (count($resource_type) === 0) {
-            $this->fail(new \Exception('Budget Pro migration failed, no budget-pro resource type found for user id:' . $this->user_id));
+            $this->fail(new \Exception('No budget-pro resource type found for user id:' . $this->user_id));
         }
 
         if (count($resource_type) > 1) {
-            $this->fail(new \Exception('Budget Pro migration failed, there appears to be more than one budget-pro resource type, something has going wrong somewhere for user id:' . $this->user_id));
+            $this->fail(new \Exception('There appears to be more than one budget-pro resource type, something has going wrong somewhere for user id:' . $this->user_id));
         }
 
         $budget_pro_resource_type_id = $resource_type[0]['id'];
@@ -61,11 +63,11 @@ class MigrateBudgetItemsToBudgetPro implements ShouldQueue
         $resource = $this->fetchResource($budget_resource_type_id);
 
         if (count($resource) === 0) {
-            $this->fail(new \Exception('Budget Pro migration failed, no budget resources for user id: ' . $this->user_id));
+            $this->fail(new \Exception('No budget resources for user id: ' . $this->user_id));
         }
 
         if (count($resource) > 1) {
-            $this->fail(new \Exception('Budget Pro migration failed, more than one budget resources for user id: ' . $this->user_id));
+            $this->fail(new \Exception('More than one budget resources for user id: ' . $this->user_id));
         }
 
         $budget_resource_id = $resource[0]['id'];
@@ -75,21 +77,106 @@ class MigrateBudgetItemsToBudgetPro implements ShouldQueue
         $resource = $this->fetchResource($budget_pro_resource_type_id);
 
         if (count($resource) === 0) {
-            $this->fail(new \Exception('Budget Pro migration failed, no budget-pro resources for user id: ' . $this->user_id));
+            $this->fail(new \Exception('No budget-pro resources for user id: ' . $this->user_id));
         }
 
         if (count($resource) > 1) {
-            $this->fail(new \Exception('Budget Pro migration failed, more than one budget-pro resources for user id: ' . $this->user_id));
+            $this->fail(new \Exception('More than one budget-pro resources for user id: ' . $this->user_id));
         }
 
         $budget_pro_resource_id = $resource[0]['id'];
 
+        // Check to see how many budget items there are
+        $budget_items = $this->fetchBudgetItems($budget_resource_id);
 
+        if (count($budget_items) === 0) {
+            $this->fail(new \Exception('No budget items, nothing to migrate for user id: ' . $this->user_id));
+        }
 
-        // Check to see if there are items
-        // Check to see if there is a budget pro resource
-        // Copy over the resource data
-        // Copy over the items
+        // Check to see how many budget pro items there are
+        $budget_pro_items = $this->fetchBudgetProItems($budget_pro_resource_id);
+
+        if (count($budget_pro_items) !== 0) {
+            $this->fail(new \Exception('There are items in the budget pro budget, can\'t process the migration'));
+        }
+
+        foreach ($budget_items as $item) {
+            $item_model = new \App\Models\Item();
+            $item_model->resource_id = $budget_pro_resource_id;
+            $item_model->created_by = $this->user_id;
+            $item_model->save();
+
+            $budget_pro_model = new \App\ItemType\BudgetPro\Models\Item();
+            $budget_pro_model->item_id = $item_model->id;
+            $budget_pro_model->name = $item['name'];
+            $budget_pro_model->account = $item['account'];
+            $budget_pro_model->target_account = $item['target_account'];
+            $budget_pro_model->description = $item['description'];
+            $budget_pro_model->amount = $item['amount'];
+            $budget_pro_model->currency_id = $item['currency_id'];
+            $budget_pro_model->category = $item['category'];
+            $budget_pro_model->start_date = $item['start_date'];
+            $budget_pro_model->end_date = $item['end_date'];
+            $budget_pro_model->disabled = $item['disabled'];
+            $budget_pro_model->frequency = $item['frequency'];
+            $budget_pro_model->save();
+        }
+
+        $resource = (new Resource())->instance($budget_pro_resource_type_id, $budget_pro_resource_id);
+        if($resource !== null) {
+            $resource->data = $budget_resource_data;
+            $resource->save();
+        }
+    }
+
+    public function fetchBudgetItems(int $resource_id)
+    {
+        return DB::select('
+            SELECT 
+                `item_type_budget`.`name`,
+                `item_type_budget`.`account`,
+                `item_type_budget`.`target_account`,
+                `item_type_budget`.`description`,
+                `item_type_budget`.`amount`,
+                `item_type_budget`.`currency_id`,
+                `item_type_budget`.`category`,
+                `item_type_budget`.`start_date`,
+                `item_type_budget`.`end_date`,
+                `item_type_budget`.`disabled`,
+                `item_type_budget`.`frequency`
+            FROM 
+                `item` 
+            INNER JOIN 
+                `item_type_budget` ON 
+                    `item`.`id` = `item_type_budget`.`item_id`
+            WHERE
+                `item`.`resource_id` = ?
+        ', [$resource_id]);
+    }
+
+    public function fetchBudgetProItems(int $resource_id)
+    {
+        return DB::select('
+            SELECT 
+                `item_type_budget_pro`.`name`,
+                `item_type_budget_pro`.`account`,
+                `item_type_budget_pro`.`target_account`,
+                `item_type_budget_pro`.`description`,
+                `item_type_budget_pro`.`amount`,
+                `item_type_budget_pro`.`currency_id`,
+                `item_type_budget_pro`.`category`,
+                `item_type_budget_pro`.`start_date`,
+                `item_type_budget_pro`.`end_date`,
+                `item_type_budget_pro`.`disabled`,
+                `item_type_budget_pro`.`frequency`
+            FROM 
+                `item` 
+            INNER JOIN 
+                `item_type_budget_pro` ON 
+                    `item`.`id` = `item_type_budget_pro`.`item_id`
+            WHERE
+                `item`.`resource_id` = ?
+        ', [$resource_id]);
     }
 
     private function fetchResource(int $resource_type_id): array
@@ -124,7 +211,7 @@ class MigrateBudgetItemsToBudgetPro implements ShouldQueue
     {
         Notification::route('mail', Config::get('api.app.config.admin_email'))
             ->notify(new FailedJob([
-                    'message' => $exception->getMessage(),
+                    'message' => 'Budget Migration Failed: ' . $exception->getMessage(),
                     'file' => $exception->getFile(),
                     'line' => $exception->getLine(),
                     'trace' => $exception->getTraceAsString()
