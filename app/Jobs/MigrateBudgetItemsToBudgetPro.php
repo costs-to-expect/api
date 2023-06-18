@@ -13,7 +13,6 @@ use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Notification;
-use League\CommonMark\Node\Inline\Newline;
 use Throwable;
 
 class MigrateBudgetItemsToBudgetPro implements ShouldQueue

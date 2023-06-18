@@ -2,6 +2,13 @@
 
 The complete changelog for the Costs to Expect REST API, our changelog follows the format defined at https://keepachangelog.com/en/1.0.0/
 
+## [v3.12.0] - 2023-06-18
+### Added
+- Added a route for budget to budget-pro migrations, copies over all the budget item.
+- Added an OPTIONS request test for the new migrate route.
+### Changed
+
+
 ## [v3.11.1] - 2023-06-13
 ### Fixed
 - The account deleting jobs are now all aware of the 'budget-pro' item type.
