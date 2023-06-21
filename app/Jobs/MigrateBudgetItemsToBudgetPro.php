@@ -99,36 +99,47 @@ class MigrateBudgetItemsToBudgetPro implements ShouldQueue
             $this->fail(new \Exception('There are items in the budget pro budget, can\'t process the migration'));
         }
 
-        foreach ($budget_items as $item) {
-            $item_model = new \App\Models\Item();
-            $item_model->resource_id = $budget_pro_resource_id;
-            $item_model->created_by = $this->user_id;
-            $item_model->save();
+        try {
+            DB::transaction(function() use (
+                $budget_items,
+                $budget_pro_resource_id,
+                $budget_pro_resource_type_id,
+                $budget_resource_data
+            ) {
+                foreach ($budget_items as $item) {
+                    $item_model = new \App\Models\Item();
+                    $item_model->resource_id = $budget_pro_resource_id;
+                    $item_model->created_by = $this->user_id;
+                    $item_model->save();
 
-            $budget_pro_model = new \App\ItemType\BudgetPro\Models\Item();
-            $budget_pro_model->item_id = $item_model->id;
-            $budget_pro_model->name = $item['name'];
-            $budget_pro_model->account = $item['account'];
-            $budget_pro_model->target_account = $item['target_account'];
-            $budget_pro_model->description = $item['description'];
-            $budget_pro_model->amount = $item['amount'];
-            $budget_pro_model->currency_id = $item['currency_id'];
-            $budget_pro_model->category = $item['category'];
-            $budget_pro_model->start_date = $item['start_date'];
-            $budget_pro_model->end_date = $item['end_date'];
-            $budget_pro_model->disabled = $item['disabled'];
-            $budget_pro_model->frequency = $item['frequency'];
-            $budget_pro_model->save();
-        }
+                    $budget_pro_model = new \App\ItemType\BudgetPro\Models\Item();
+                    $budget_pro_model->item_id = $item_model->id;
+                    $budget_pro_model->name = $item['name'];
+                    $budget_pro_model->account = $item['account'];
+                    $budget_pro_model->target_account = $item['target_account'];
+                    $budget_pro_model->description = $item['description'];
+                    $budget_pro_model->amount = $item['amount'];
+                    $budget_pro_model->currency_id = $item['currency_id'];
+                    $budget_pro_model->category = $item['category'];
+                    $budget_pro_model->start_date = $item['start_date'];
+                    $budget_pro_model->end_date = $item['end_date'];
+                    $budget_pro_model->disabled = $item['disabled'];
+                    $budget_pro_model->frequency = $item['frequency'];
+                    $budget_pro_model->save();
+                }
 
-        $resource = (new Resource())->instance($budget_pro_resource_type_id, $budget_pro_resource_id);
-        if($resource !== null) {
-            $resource->data = $budget_resource_data;
-            $resource->save();
+                $resource = (new Resource())->instance($budget_pro_resource_type_id, $budget_pro_resource_id);
+                if ($resource !== null) {
+                    $resource->data = $budget_resource_data;
+                    $resource->save();
+                }
+            });
+        } catch (\Exception) {
+            $this->fail(new \Exception('Failed to create all the items or save the resource data'));
         }
     }
 
-    public function fetchBudgetItems(int $resource_id)
+    public function fetchBudgetItems(int $resource_id): array
     {
         return DB::select('
             SELECT 
@@ -153,7 +164,7 @@ class MigrateBudgetItemsToBudgetPro implements ShouldQueue
         ', [$resource_id]);
     }
 
-    public function fetchBudgetProItems(int $resource_id)
+    public function fetchBudgetProItems(int $resource_id): array
     {
         return DB::select('
             SELECT 
@@ -206,7 +217,7 @@ class MigrateBudgetItemsToBudgetPro implements ShouldQueue
         ', [$user_id, $item_type]);
     }
 
-    public function failed(Throwable $exception)
+    public function failed(Throwable $exception): void
     {
         Notification::route('mail', Config::get('api.app.config.admin_email'))
             ->notify(new FailedJob([
