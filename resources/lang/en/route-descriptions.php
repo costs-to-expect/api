@@ -15,6 +15,7 @@ return [
     'auth_user_token_GET' => 'Return the requested token for the signed-in user',
     'auth_user_token_DELETE' => 'Delete the requested token for the signed-in user',
     'auth_check_GET' => 'Check to see if the user is authenticated',
+    'auth_migrate_budget_pro_POST' => 'Request the migration of a Budget to Budget Pro',
     'auth_permitted_resource_type_GET' => 'Return the selected permitted resource type for the signed-in user',
     'auth_permitted_resource_types_GET' => 'Return the permitted resource types for the signed-in user',
     'auth_resource_GET' => 'Return the selected resource for the signed-in user',

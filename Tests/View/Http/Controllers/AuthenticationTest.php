@@ -16,6 +16,15 @@ final class AuthenticationTest extends TestCase
     }
 
     /** @test */
+    public function optionsRequestForMigrateBudgetProRequestDelete(): void
+    {
+        $response = $this->fetchOptionsForMigrateBudgetProRequestDelete();
+        $response->assertStatus(200);
+
+        $this->assertProvidedJsonMatchesDefinedSchema($response->content(), 'api/schema/auth/options/migrate-budget-pro-request-delete.json');
+    }
+
+    /** @test */
     public function optionsRequestForRegister(): void
     {
         $response = $this->fetchOptionsForRegister();

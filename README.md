@@ -135,6 +135,8 @@ Public resources types provide READ access to everyone, WRITE access is limited 
 | POST         | v3/auth/update-profile                                                                                                                         |
 | GET/HEAD     | v3/auth/user                                                                                                                                   |
 | OPTIONS      | v3/auth/user                                                                                                                                   |
+| OPTIONS      | v3/auth/user/migrate/budget-pro/request-migration                                                                                              |
+| POST         | v3/auth/user/migrate/budget-pro/request-migration                                                                                              |
 | GET/HEAD     | v3/auth/user/permitted-resource-types                                                                                                          |
 | OPTIONS      | v3/auth/user/permitted-resource-types                                                                                                          |
 | GET/HEAD     | v3/auth/user/permitted-resource-types/{permitted_resource_type_id}                                                                             |
@@ -285,11 +287,11 @@ We are in the process of moving our feature tests from Postman, we are moving th
 
 You can see our progress in the table below. We are hoping to add tests in each new release. We are 
 not too concerned about missing anything as we still have all our tests in Postman, we won't disable our test monitor until 
-our local test suite is as complete as the Postman request tests.
+our local test suite is as complete as the Postman request test suite.
 
 | Controller          | Action   | View     | 
 |:--------------------|:---------|:---------|
-| Authentication      | 35 Tests | 2 Tests  |
+| Authentication      | 35 Tests | 3 Tests  |
 | Category            | 11 Tests | Non yet* |
 | Currency            | Non yet* | Non yet* |
 | ItemCategory        | Non yet* | Non yet* |
@@ -306,7 +308,7 @@ our local test suite is as complete as the Postman request tests.
 | Resource            | 24 Tests | Non yet* |
 | ResourceType        | 23 Tests | 11 Tests |
 | Subcategory         | 12 Tests | Non yet* |
-| **Total tests**     | **154**  | **61**   |
+| **Total tests**     | **154**  | **62**   |
 
 *Non yet does not mean there are no tests, it just means there are no PHPUnit tests. There are over 2000 tests in 
 a private Postman collection, I'm slowing transferring them locally and expanding the test suite.
