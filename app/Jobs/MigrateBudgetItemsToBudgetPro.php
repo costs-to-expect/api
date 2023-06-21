@@ -42,7 +42,7 @@ class MigrateBudgetItemsToBudgetPro implements ShouldQueue
             $this->fail(new \Exception('There appears to be more than one free budget resource type, something has going wrong somewhere for user id:' . $this->user_id));
         }
 
-        $budget_resource_type_id = $resource_type[0]['id'];
+        $budget_resource_type_id = $resource_type[0]->id;
 
         // Check to see if there is a budget-pro resource type
         $resource_type = $this->fetchResourceType($this->user_id, 'budget-pro');
@@ -55,7 +55,7 @@ class MigrateBudgetItemsToBudgetPro implements ShouldQueue
             $this->fail(new \Exception('There appears to be more than one budget-pro resource type, something has going wrong somewhere for user id:' . $this->user_id));
         }
 
-        $budget_pro_resource_type_id = $resource_type[0]['id'];
+        $budget_pro_resource_type_id = $resource_type[0]->id;
 
 
         // Check to see if there is a budget resource
@@ -69,8 +69,8 @@ class MigrateBudgetItemsToBudgetPro implements ShouldQueue
             $this->fail(new \Exception('More than one budget resources for user id: ' . $this->user_id));
         }
 
-        $budget_resource_id = $resource[0]['id'];
-        $budget_resource_data = $resource[0]['data'];
+        $budget_resource_id = $resource[0]->id;
+        $budget_resource_data = $resource[0]->data;
 
         // Check to see if there is a budget-pro resource
         $resource = $this->fetchResource($budget_pro_resource_type_id);
@@ -83,7 +83,7 @@ class MigrateBudgetItemsToBudgetPro implements ShouldQueue
             $this->fail(new \Exception('More than one budget-pro resources for user id: ' . $this->user_id));
         }
 
-        $budget_pro_resource_id = $resource[0]['id'];
+        $budget_pro_resource_id = $resource[0]->id;
 
         // Check to see how many budget items there are
         $budget_items = $this->fetchBudgetItems($budget_resource_id);
@@ -114,17 +114,17 @@ class MigrateBudgetItemsToBudgetPro implements ShouldQueue
 
                     $budget_pro_model = new \App\ItemType\BudgetPro\Models\Item();
                     $budget_pro_model->item_id = $item_model->id;
-                    $budget_pro_model->name = $item['name'];
-                    $budget_pro_model->account = $item['account'];
-                    $budget_pro_model->target_account = $item['target_account'];
-                    $budget_pro_model->description = $item['description'];
-                    $budget_pro_model->amount = $item['amount'];
-                    $budget_pro_model->currency_id = $item['currency_id'];
-                    $budget_pro_model->category = $item['category'];
-                    $budget_pro_model->start_date = $item['start_date'];
-                    $budget_pro_model->end_date = $item['end_date'];
-                    $budget_pro_model->disabled = $item['disabled'];
-                    $budget_pro_model->frequency = $item['frequency'];
+                    $budget_pro_model->name = $item->name;
+                    $budget_pro_model->account = $item->account;
+                    $budget_pro_model->target_account = $item->target_account;
+                    $budget_pro_model->description = $item->description;
+                    $budget_pro_model->amount = $item->amount;
+                    $budget_pro_model->currency_id = $item->currency_id;
+                    $budget_pro_model->category = $item->category;
+                    $budget_pro_model->start_date = $item->start_date;
+                    $budget_pro_model->end_date = $item->end_date;
+                    $budget_pro_model->disabled = $item->disabled;
+                    $budget_pro_model->frequency = $item->frequency;
                     $budget_pro_model->save();
                 }
 

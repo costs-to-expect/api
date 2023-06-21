@@ -122,7 +122,7 @@ Route::group(
         );
 
 
-        Route::options(
+        Route::post(
             'auth/user/migrate/budget-pro/request-migration',
             [App\Http\Controllers\Action\AuthenticationController::class, 'migrateBudgetProRequestDelete']
         )->name('auth.user.migrate.budget-pro.request-delete');
