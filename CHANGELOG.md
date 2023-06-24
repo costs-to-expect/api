@@ -2,6 +2,10 @@
 
 The complete changelog for the Costs to Expect REST API, our changelog follows the format defined at https://keepachangelog.com/en/1.0.0/
 
+## [v3.12.1] - 2023-06-24
+### Fixed
+- Clear resource cache after successful migration.
+
 ## [v3.12.0] - 2023-06-21
 ### Added
 - Added a route for budget to budget-pro migrations, copies over all the budget item and resource (accounts) data.
