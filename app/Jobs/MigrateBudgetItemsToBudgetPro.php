@@ -125,6 +125,7 @@ class MigrateBudgetItemsToBudgetPro implements ShouldQueue
                     $budget_pro_model->end_date = $item->end_date;
                     $budget_pro_model->disabled = $item->disabled;
                     $budget_pro_model->frequency = $item->frequency;
+                    $budget_pro_model->created_at = 'NOW()';
                     $budget_pro_model->save();
                 }
 
