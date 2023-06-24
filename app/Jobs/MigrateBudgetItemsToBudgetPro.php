@@ -125,7 +125,7 @@ class MigrateBudgetItemsToBudgetPro implements ShouldQueue
                     $budget_pro_model->end_date = $item->end_date;
                     $budget_pro_model->disabled = $item->disabled;
                     $budget_pro_model->frequency = $item->frequency;
-                    $budget_pro_model->created_at = 'NOW()';
+                    $budget_pro_model->created_at = $item_model->created_at;
                     $budget_pro_model->save();
                 }
 
@@ -134,20 +134,20 @@ class MigrateBudgetItemsToBudgetPro implements ShouldQueue
                     $resource->data = $budget_resource_data;
                     $resource->save();
                 }
-
-                $cache_clear_payload = (new \App\Cache\JobPayload())
-                    ->setGroupKey(\App\Cache\KeyGroup::RESOURCE_DELETE)
-                    ->setRouteParameters([
-                        'resource_type_id' => $budget_pro_resource_type_id,
-                        'resource_id' => $budget_pro_resource_id
-                    ])
-                    ->setUserId($this->user_id);
-
-                ClearCache::dispatchSync($cache_clear_payload->payload());
             });
         } catch (\Exception) {
             $this->fail(new \Exception('Failed to create all the items or save the resource data'));
         }
+
+        $cache_clear_payload = (new \App\Cache\JobPayload())
+            ->setGroupKey(\App\Cache\KeyGroup::RESOURCE_DELETE)
+            ->setRouteParameters([
+                'resource_type_id' => $budget_pro_resource_type_id,
+                'resource_id' => $budget_pro_resource_id
+            ])
+            ->setUserId($this->user_id);
+
+        ClearCache::dispatchSync($cache_clear_payload->payload());
     }
 
     public function fetchBudgetItems(int $resource_id): array
