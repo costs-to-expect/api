@@ -46,6 +46,7 @@ class DeleteAccount implements ShouldQueue
         $resource_types = (new Permission())->permittedResourceTypesForUser($this->user_id);
 
         foreach ($resource_types as $resource_type_id) {
+            /*TODO This is confusing to read as you are actually fetching number of permitted users excluding the given user*/
             $permitted_users = (new Permission())->permittedUsersForResourceType($resource_type_id, $this->user_id);
             if (count($permitted_users) === 0) {
                 $resources = (new Resource())->paginatedCollection($resource_type_id);
