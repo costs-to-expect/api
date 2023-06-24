@@ -133,6 +133,16 @@ class MigrateBudgetItemsToBudgetPro implements ShouldQueue
                     $resource->data = $budget_resource_data;
                     $resource->save();
                 }
+
+                $cache_clear_payload = (new \App\Cache\JobPayload())
+                    ->setGroupKey(\App\Cache\KeyGroup::RESOURCE_DELETE)
+                    ->setRouteParameters([
+                        'resource_type_id' => $budget_pro_resource_type_id,
+                        'resource_id' => $budget_pro_resource_id
+                    ])
+                    ->setUserId($this->user_id);
+
+                ClearCache::dispatchSync($cache_clear_payload->payload());
             });
         } catch (\Exception) {
             $this->fail(new \Exception('Failed to create all the items or save the resource data'));
