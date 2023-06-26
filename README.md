@@ -112,6 +112,8 @@ resource type.
 
 Public resources types provide READ access to everyone, WRITE access is limited to the permitted users.
 
+You can exclude public resource types by include exclude-public=true in the query string.
+
 | HTTP Verb(s) | Route                                                                                                                                          |
 |:-------------|:-----------------------------------------------------------------------------------------------------------------------------------------------|
 | GET/HEAD     | v3/                                                                                                                                            |

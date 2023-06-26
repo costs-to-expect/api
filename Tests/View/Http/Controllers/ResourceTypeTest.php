@@ -7,6 +7,122 @@ use Tests\TestCase;
 
 final class ResourceTypeTest extends TestCase
 {
+    /**
+     * @test
+     * @runInSeparateProcess
+     * @preserveGlobalState disabled
+     */
+    public function allocatedExpenseResourceTypeCollection(): void
+    {
+        $this->actingAs(User::find($this->createUser()));
+
+        $this->createAllocatedExpenseResourceType();
+        $this->createAllocatedExpenseResourceType();
+
+        $response = $this->fetchResourceTypeCollection(['item-type'=>$this->item_types['allocated-expense'], 'exclude-public'=>'true']);
+
+        $response->assertStatus(200);
+        $response->assertHeader('X-Total-Count', 2);
+        $response->assertHeader('X-Count', 2);
+
+        foreach ($response->json() as $item) {
+            try {
+                $json = json_encode($item, JSON_THROW_ON_ERROR);
+            } catch (\JsonException $e) {
+                $this->fail('Unable to encode the JSON string');
+            }
+
+            $this->assertJsonMatchesResourceTypeSchema($json);
+        }
+    }
+
+    /**
+     * @test
+     * @runInSeparateProcess
+     * @preserveGlobalState disabled
+     */
+    public function budgetResourceTypeCollection(): void
+    {
+        $this->actingAs(User::find($this->createUser()));
+
+        $this->createBudgetResourceType();
+        $this->createBudgetResourceType();
+
+        $response = $this->fetchResourceTypeCollection(['item-type'=>$this->item_types['budget'], 'exclude-public'=>'true']);
+
+        $response->assertStatus(200);
+        $response->assertHeader('X-Total-Count', 2);
+        $response->assertHeader('X-Count', 2);
+
+        foreach ($response->json() as $item) {
+            try {
+                $json = json_encode($item, JSON_THROW_ON_ERROR);
+            } catch (\JsonException $e) {
+                $this->fail('Unable to encode the JSON string');
+            }
+
+            $this->assertJsonMatchesResourceTypeSchema($json);
+        }
+    }
+
+    /**
+     * @test
+     * @runInSeparateProcess
+     * @preserveGlobalState disabled
+     */
+    public function budgetProResourceTypeCollection(): void
+    {
+        $this->actingAs(User::find($this->createUser()));
+
+        $this->createBudgetProResourceType();
+        $this->createBudgetProResourceType();
+
+        $response = $this->fetchResourceTypeCollection(['item-type'=>$this->item_types['budget-pro'], 'exclude-public'=>'true']);
+
+        $response->assertStatus(200);
+        $response->assertHeader('X-Total-Count', 2);
+        $response->assertHeader('X-Count', 2);
+
+        foreach ($response->json() as $item) {
+            try {
+                $json = json_encode($item, JSON_THROW_ON_ERROR);
+            } catch (\JsonException $e) {
+                $this->fail('Unable to encode the JSON string');
+            }
+
+            $this->assertJsonMatchesResourceTypeSchema($json);
+        }
+    }
+
+    /**
+     * @test
+     * @runInSeparateProcess
+     * @preserveGlobalState disabled
+     */
+    public function gameResourceTypeCollection(): void
+    {
+        $this->actingAs(User::find($this->createUser()));
+
+        $this->createGameResourceType();
+        $this->createGameResourceType();
+
+        $response = $this->fetchResourceTypeCollection(['item-type'=>$this->item_types['game'], 'exclude-public'=>'true']);
+
+        $response->assertStatus(200);
+        $response->assertHeader('X-Total-Count', 2);
+        $response->assertHeader('X-Count', 2);
+
+        foreach ($response->json() as $item) {
+            try {
+                $json = json_encode($item, JSON_THROW_ON_ERROR);
+            } catch (\JsonException $e) {
+                $this->fail('Unable to encode the JSON string');
+            }
+
+            $this->assertJsonMatchesResourceTypeSchema($json);
+        }
+    }
+
     /** @test */
     public function optionsRequestForAllocatedExpenseResourceType(): void
     {
@@ -30,27 +146,42 @@ final class ResourceTypeTest extends TestCase
     }
 
     /** @test */
-    public function resourceTypeCollection(): void
+    public function optionsRequestForBudgetResourceType(): void
     {
         $this->actingAs(User::find(1));
 
-        $this->createAllocatedExpenseResourceType();
-        $this->createAllocatedExpenseResourceType();
-        $this->createAllocatedExpenseResourceType();
+        $resource_type_id = $this->createBudgetResourceType();
 
-        $response = $this->fetchResourceTypeCollection();
-
+        $response = $this->fetchOptionsForResourceType(['resource_type_id' => $resource_type_id]);
         $response->assertStatus(200);
 
-        foreach ($response->json() as $item) {
-            try {
-                $json = json_encode($item, JSON_THROW_ON_ERROR);
-            } catch (\JsonException $e) {
-                $this->fail('Unable to encode the JSON string');
-            }
+        $this->assertProvidedJsonMatchesDefinedSchema($response->content(), 'api/schema/options/resource-type.json');
+    }
 
-            $this->assertJsonMatchesResourceTypeSchema($json);
-        }
+    /** @test */
+    public function optionsRequestForBudgetProResourceType(): void
+    {
+        $this->actingAs(User::find(1));
+
+        $resource_type_id = $this->createBudgetProResourceType();
+
+        $response = $this->fetchOptionsForResourceType(['resource_type_id' => $resource_type_id]);
+        $response->assertStatus(200);
+
+        $this->assertProvidedJsonMatchesDefinedSchema($response->content(), 'api/schema/options/resource-type.json');
+    }
+
+    /** @test */
+    public function optionsRequestForGameResourceType(): void
+    {
+        $this->actingAs(User::find(1));
+
+        $resource_type_id = $this->createGameResourceType();
+
+        $response = $this->fetchOptionsForResourceType(['resource_type_id' => $resource_type_id]);
+        $response->assertStatus(200);
+
+        $this->assertProvidedJsonMatchesDefinedSchema($response->content(), 'api/schema/options/resource-type.json');
     }
 
     /** @test */
