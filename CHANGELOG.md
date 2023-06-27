@@ -2,6 +2,13 @@
 
 The complete changelog for the Costs to Expect REST API, our changelog follows the format defined at https://keepachangelog.com/en/1.0.0/
 
+## [v3.13.0] - 2023-07-xx
+### Changed
+- Reviewed and updated the resource type tests, added tests for each 'item-type' and updated the tests to exclude pulling public resource types.
+### Fixed
+- Added a message to the readme to explain the 'exclude-public' URI parameter.
+- Minor fixes to the budget-pro migrate job.
+
 ## [v3.12.1] - 2023-06-24
 ### Fixed
 - Clear resource cache after successful migration.
