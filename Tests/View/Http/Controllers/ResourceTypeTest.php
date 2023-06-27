@@ -344,6 +344,7 @@ final class ResourceTypeTest extends TestCase
         $response = $this->fetchOptionsForResourceType(['resource_type_id' => $resource_type_id]);
         $response->assertStatus(200);
 
+        // Standard resource type for now, may change in the future
         $this->assertProvidedJsonMatchesDefinedSchema($response->content(), 'api/schema/options/resource-type.json');
     }
 
@@ -366,6 +367,7 @@ final class ResourceTypeTest extends TestCase
         $response = $this->fetchOptionsForResourceType(['resource_type_id' => $resource_type_id]);
         $response->assertStatus(200);
 
+        // Standard resource type for now, may change in the future
         $this->assertProvidedJsonMatchesDefinedSchema($response->content(), 'api/schema/options/resource-type.json');
     }
 
@@ -379,6 +381,7 @@ final class ResourceTypeTest extends TestCase
         $response = $this->fetchOptionsForResourceType(['resource_type_id' => $resource_type_id]);
         $response->assertStatus(200);
 
+        // Standard resource type for now, may change in the future
         $this->assertProvidedJsonMatchesDefinedSchema($response->content(), 'api/schema/options/resource-type.json');
     }
 
@@ -392,6 +395,7 @@ final class ResourceTypeTest extends TestCase
         $response = $this->fetchOptionsForResourceType(['resource_type_id' => $resource_type_id]);
         $response->assertStatus(200);
 
+        // Standard resource type for now, may change in the future
         $this->assertProvidedJsonMatchesDefinedSchema($response->content(), 'api/schema/options/resource-type.json');
     }
 }
