@@ -5,6 +5,7 @@ The complete changelog for the Costs to Expect REST API, our changelog follows t
 ## [v3.13.0] - 2023-07-xx
 ### Changed
 - Reviewed and updated the resource type tests, added tests for each 'item-type' and updated the tests to exclude pulling public resource types.
+- Added two buttons to the landing page, one to access the API, one to view the docs.
 ### Fixed
 - Added a message to the readme to explain the 'exclude-public' URI parameter.
 - Minor fixes to the budget-pro migrate job.

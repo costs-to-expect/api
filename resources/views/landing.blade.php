@@ -31,6 +31,10 @@
                 <h2 class="text-xl font-semibold leading-7 text-black">API</h2>
                 <p class="mt-2 text-4xl font-bold tracking-tight text-pinky-600 sm:text-4xl">Costs to Expect API</p>
                 <p class="mt-3 text-lg leading-8 text-gray-600">A flexible Open Source REST API that is the backbone of the Costs to Expect Service.</p>
+                <p class="mt-10">
+                    <a href="/v3" class="rounded-md bg-pinky-600 px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-pinky-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-pinky-600">Access API</a>
+                    <a href="https://github.com/costs-to-expect/api-docs" class="rounded-md bg-pinky-600 px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-pinky-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-pinky-600">Docs</a>
+                </p>
             </div>
             <div class="mx-auto mt-16 max-w-2xl sm:mt-20 lg:mt-24 lg:max-w-none">
                 <dl class="grid max-w-xl grid-cols-1 gap-x-8 gap-y-16 lg:max-w-none lg:grid-cols-3">
