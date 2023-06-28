@@ -703,6 +703,11 @@ abstract class TestCase extends BaseTestCase
         return $this->optionsRoute('resource.show.options', $parameters);
     }
 
+    protected function fetchOptionsForResourceCollection(array $parameters = []): TestResponse
+    {
+        return $this->optionsRoute('resource.list.options', $parameters);
+    }
+
     protected function fetchOptionsForResourceType(array $parameters = []): TestResponse
     {
         return $this->optionsRoute('resource-type.show.options', $parameters);

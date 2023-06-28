@@ -26,6 +26,22 @@ final class ResourceTest extends TestCase
     }
 
     /** @test */
+    public function optionsRequestForAllocatedExpenseResourceCollection(): void
+    {
+        $this->actingAs(User::find(1));
+
+        $resource_type_id = $this->createAllocatedExpenseResourceType();
+
+        $response = $this->fetchOptionsForResourceCollection([
+            'resource_type_id' => $resource_type_id
+        ]);
+        $response->assertStatus(200);
+
+        // Resource is the same for all types, we are testing the OPTIONS request for the different item types, until the resources differ later on.
+        $this->assertProvidedJsonMatchesDefinedSchema($response->content(), 'api/schema/options/resource-collection.json');
+    }
+
+    /** @test */
     public function optionsRequestForBudgetResource(): void
     {
         $this->actingAs(User::find(1));
@@ -41,6 +57,22 @@ final class ResourceTest extends TestCase
 
         // Resource is the same for all types, we are testing the OPTIONS request for the different item types, until the resources differ later on.
         $this->assertProvidedJsonMatchesDefinedSchema($response->content(), 'api/schema/options/resource.json');
+    }
+
+    /** @test */
+    public function optionsRequestForBudgetResourceCollection(): void
+    {
+        $this->actingAs(User::find(1));
+
+        $resource_type_id = $this->createBudgetResourceType();
+
+        $response = $this->fetchOptionsForResourceCollection([
+            'resource_type_id' => $resource_type_id
+        ]);
+        $response->assertStatus(200);
+
+        // Resource is the same for all types, we are testing the OPTIONS request for the different item types, until the resources differ later on.
+        $this->assertProvidedJsonMatchesDefinedSchema($response->content(), 'api/schema/options/resource-collection.json');
     }
 
     /** @test */
@@ -62,6 +94,22 @@ final class ResourceTest extends TestCase
     }
 
     /** @test */
+    public function optionsRequestForBudgetProResourceCollection(): void
+    {
+        $this->actingAs(User::find(1));
+
+        $resource_type_id = $this->createBudgetProResourceType();
+
+        $response = $this->fetchOptionsForResourceCollection([
+            'resource_type_id' => $resource_type_id
+        ]);
+        $response->assertStatus(200);
+
+        // Resource is the same for all types, we are testing the OPTIONS request for the different item types, until the resources differ later on.
+        $this->assertProvidedJsonMatchesDefinedSchema($response->content(), 'api/schema/options/resource-collection.json');
+    }
+
+    /** @test */
     public function optionsRequestForYahtzeeResource(): void
     {
         $this->actingAs(User::find(1));
@@ -80,6 +128,22 @@ final class ResourceTest extends TestCase
     }
 
     /** @test */
+    public function optionsRequestForYahtzeeResourceCollection(): void
+    {
+        $this->actingAs(User::find(1));
+
+        $resource_type_id = $this->createGameResourceType();
+
+        $response = $this->fetchOptionsForResourceCollection([
+            'resource_type_id' => $resource_type_id
+        ]);
+        $response->assertStatus(200);
+
+        // Resource is the same for all types, we are testing the OPTIONS request for the different item types, until the resources differ later on.
+        $this->assertProvidedJsonMatchesDefinedSchema($response->content(), 'api/schema/options/resource-collection.json');
+    }
+
+    /** @test */
     public function optionsRequestForYatzyResource(): void
     {
         $this->actingAs(User::find(1));
@@ -95,5 +159,21 @@ final class ResourceTest extends TestCase
 
         // Resource is the same for all types, we are testing the OPTIONS request for the different item types, until the resources differ later on.
         $this->assertProvidedJsonMatchesDefinedSchema($response->content(), 'api/schema/options/resource.json');
+    }
+
+    /** @test */
+    public function optionsRequestForYatzyResourceCollection(): void
+    {
+        $this->actingAs(User::find(1));
+
+        $resource_type_id = $this->createGameResourceType();
+
+        $response = $this->fetchOptionsForResourceCollection([
+            'resource_type_id' => $resource_type_id
+        ]);
+        $response->assertStatus(200);
+
+        // Resource is the same for all types, we are testing the OPTIONS request for the different item types, until the resources differ later on.
+        $this->assertProvidedJsonMatchesDefinedSchema($response->content(), 'api/schema/options/resource-collection.json');
     }
 }
