@@ -310,16 +310,22 @@ abstract class TestCase extends BaseTestCase
         $this->fail('Unable to create the resource');
     }
 
-    protected function createBudgetResource(string $resource_type_id): string
+    protected function createBudgetResource(
+        string $resource_type_id,
+        array $override = []
+    ): string
     {
-        $response = $this->createResource(
-            $resource_type_id,
-            [
-                'name' => $this->faker->text(200),
-                'description' => $this->faker->text(200),
-                'item_subtype_id' => $this->item_subtypes['budget']['default']
-            ]
-        );
+        $payload = [
+            'name' => $this->faker->text(200),
+            'description' => $this->faker->text(200),
+            'item_subtype_id' => $this->item_subtypes['budget']['default']
+        ];
+
+        foreach ($override as $k => $v) {
+            $payload[$k] = $v;
+        }
+
+        $response = $this->createResource($resource_type_id, $payload);
 
         if ($response->assertStatus(201)) {
             return $response->json('id');
@@ -646,6 +652,11 @@ abstract class TestCase extends BaseTestCase
     protected function fetchItemCollection(array $parameters = []): TestResponse
     {
         return $this->route('item.list', $parameters);
+    }
+
+    protected function fetchResourceCollection(array $parameters = []): TestResponse
+    {
+        return $this->route('resource.list', $parameters);
     }
 
     protected function fetchResourceTypeCollection(array $parameters = []): TestResponse
