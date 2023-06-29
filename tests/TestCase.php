@@ -116,15 +116,21 @@ abstract class TestCase extends BaseTestCase
         }
     }
 
-    protected function createRandomCategory(string $resource_type_id): string
+    protected function createRandomCategory(
+        string $resource_type_id,
+        array $override = []
+    ): string
     {
-        $response = $this->createRequestedCategory(
-            $resource_type_id,
-            [
-                'name' => $this->faker->text(200),
-                'description' => $this->faker->text(200),
-            ]
-        );
+        $payload = [
+            'name' => $this->faker->text(200),
+            'description' => $this->faker->text(200),
+        ];
+
+        foreach ($override as $k => $v) {
+            $payload[$k] = $v;
+        }
+
+        $response = $this->createCategory($resource_type_id, $payload);
 
         if ($response->assertStatus(201)) {
             return $response->json('id');
@@ -408,7 +414,7 @@ abstract class TestCase extends BaseTestCase
         $this->fail('Unable to create the subcategory');
     }
 
-    protected function createRequestedCategory(string $resource_type_id, array $payload): TestResponse
+    protected function createCategory(string $resource_type_id, array $payload): TestResponse
     {
         return $this->post(
             route('category.create', ['resource_type_id' => $resource_type_id]),
@@ -644,6 +650,11 @@ abstract class TestCase extends BaseTestCase
         return $this->route('permitted-user.list', $parameters);
     }
 
+    protected function fetchCategoryCollection(array $parameters = []): TestResponse
+    {
+        return $this->route('category.list', $parameters);
+    }
+
     protected function fetchItem(array $parameters = []): TestResponse
     {
         return $this->route('item.show', $parameters);
@@ -682,6 +693,16 @@ abstract class TestCase extends BaseTestCase
     protected function fetchResourceType(array $parameters = []): TestResponse
     {
         return $this->route('resource-type.show', $parameters);
+    }
+
+    protected function fetchOptionsForCategory(array $parameters = []): TestResponse
+    {
+        return $this->optionsRoute('category.show.options', $parameters);
+    }
+
+    protected function fetchOptionsForCategoryCollection(array $parameters = []): TestResponse
+    {
+        return $this->optionsRoute('category.list.options', $parameters);
     }
 
     protected function fetchOptionsForCreatePassword(array $parameters = []): TestResponse

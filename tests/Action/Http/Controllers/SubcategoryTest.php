@@ -5,7 +5,7 @@ namespace Tests\Action\Http\Controllers;
 use App\User;
 use Tests\TestCase;
 
-final class SubcategoryManageTest extends TestCase
+final class SubcategoryTest extends TestCase
 {
     /** @test */
     public function createSubcategoryFailsNoDescriptionInPayload(): void
