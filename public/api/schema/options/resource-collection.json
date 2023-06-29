@@ -1,35 +1,8 @@
 {
-    "$id": "https://api.costs-to-expect.com/v2/api/schema/options/resource-type.json",
+    "$id": "https://api.costs-to-expect.com/v2/api/schema/options/resource-collection.json",
     "type": "object",
     "properties": {
-        "DELETE": {
-            "type": "object",
-            "properties": {
-                "description": {
-                    "type": "string"
-                },
-                "authentication": {
-                    "type": "object",
-                    "properties": {
-                        "required": {
-                            "type": "boolean"
-                        },
-                        "authenticated": {
-                            "type": "boolean"
-                        }
-                    },
-                    "required": [
-                        "required",
-                        "authenticated"
-                    ]
-                }
-            },
-            "required": [
-                "description",
-                "authentication"
-            ]
-        },
-        "GET" : {
+        "GET": {
             "type": "object",
             "properties": {
                 "description": {
@@ -51,21 +24,48 @@
                     ]
                 },
                 "sortable": {
-                    "type": "array"
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
                 },
                 "searchable": {
-                    "type": "array"
-                },
-                "filterable": {
-                    "type": "array"
-                },
-                "parameters": {
                     "type": "object",
                     "properties": {
-                        "include-resources": {
+                        "name": {
                             "type": "object",
                             "properties": {
-                                "field": {
+                                "type": {
+                                    "type": "string"
+                                }
+                            }
+                        },
+                        "description": {
+                            "type": "object",
+                            "properties": {
+                                "type": {
+                                    "type": "string"
+                                }
+                            }
+                        }
+                    },
+                    "required": [
+                        "name",
+                        "description"
+                    ]
+                },
+                "filterable": {
+                    "type": [
+                        "array"
+                    ]
+                },
+                "parameters": {
+                    "type":"object",
+                    "properties": {
+                        "offset": {
+                            "type": "object",
+                            "properties": {
+                                "parameter": {
                                     "type": "string"
                                 },
                                 "title": {
@@ -73,6 +73,9 @@
                                 },
                                 "description": {
                                     "type": "string"
+                                },
+                                "default": {
+                                    "type": "integer"
                                 },
                                 "type": {
                                     "type": "string"
@@ -82,17 +85,18 @@
                                 }
                             },
                             "required": [
-                                "field",
+                                "parameter",
                                 "title",
                                 "description",
+                                "default",
                                 "type",
                                 "required"
                             ]
                         },
-                        "include-permitted-users": {
+                        "limit": {
                             "type": "object",
                             "properties": {
-                                "field": {
+                                "parameter": {
                                     "type": "string"
                                 },
                                 "title": {
@@ -100,6 +104,9 @@
                                 },
                                 "description": {
                                     "type": "string"
+                                },
+                                "default": {
+                                    "type": "integer"
                                 },
                                 "type": {
                                     "type": "string"
@@ -109,17 +116,150 @@
                                 }
                             },
                             "required": [
-                                "field",
+                                "parameter",
                                 "title",
                                 "description",
+                                "default",
                                 "type",
                                 "required"
+                            ]
+                        },
+                        "collection": {
+                            "type": "object",
+                            "properties": {
+                                "parameter": {
+                                    "type": "string"
+                                },
+                                "title": {
+                                    "type": "string"
+                                },
+                                "description": {
+                                    "type": "string"
+                                },
+                                "default": {
+                                    "type": "boolean"
+                                },
+                                "type": {
+                                    "type": "string"
+                                },
+                                "required": {
+                                    "type": "boolean"
+                                }
+                            },
+                            "required": [
+                                "parameter",
+                                "title",
+                                "description",
+                                "default",
+                                "type",
+                                "required"
+                            ]
+                        },
+                        "sort": {
+                            "type": "object",
+                            "properties": {
+                                "parameter": {
+                                    "type": "string"
+                                },
+                                "title": {
+                                    "type": "string"
+                                },
+                                "description": {
+                                    "type": "string"
+                                },
+                                "default": {
+                                    "type": "null"
+                                },
+                                "type": {
+                                    "type": "string"
+                                },
+                                "required": {
+                                    "type": "boolean"
+                                }
+                            },
+                            "required": [
+                                "parameter",
+                                "title",
+                                "description",
+                                "default",
+                                "type",
+                                "required"
+                            ]
+                        },
+                        "search": {
+                            "type": "object",
+                            "properties": {
+                                "parameter": {
+                                    "type": "string"
+                                },
+                                "title": {
+                                    "type": "string"
+                                },
+                                "description": {
+                                    "type": "string"
+                                },
+                                "default": {
+                                    "type": "null"
+                                },
+                                "type": {
+                                    "type": "string"
+                                },
+                                "required": {
+                                    "type": "boolean"
+                                }
+                            },
+                            "required": [
+                                "parameter",
+                                "title",
+                                "description",
+                                "default",
+                                "type",
+                                "required"
+                            ]
+                        },
+                        "item-subtype": {
+                            "type": "object",
+                            "properties": {
+                                "parameter": {
+                                    "type": "string"
+                                },
+                                "title": {
+                                    "type": "string"
+                                },
+                                "description": {
+                                    "type": "string"
+                                },
+                                "default": {
+                                    "type": "null"
+                                },
+                                "type": {
+                                    "type": "string"
+                                },
+                                "required": {
+                                    "type": "boolean"
+                                },
+                                "allowed_values": {
+                                    "type": "object"
+                                }
+                            },
+                            "required": [
+                                "parameter",
+                                "title",
+                                "description",
+                                "default",
+                                "type",
+                                "required",
+                                "allowed_values"
                             ]
                         }
                     },
                     "required": [
-                        "include-resources",
-                        "include-permitted-users"
+                        "offset",
+                        "limit",
+                        "collection",
+                        "sort",
+                        "search",
+                        "item-subtype"
                     ]
                 }
             },
@@ -128,10 +268,11 @@
                 "authentication",
                 "sortable",
                 "searchable",
-                "filterable"
+                "filterable",
+                "parameters"
             ]
         },
-        "PATCH": {
+        "POST": {
             "type": "object",
             "properties": {
                 "description": {
@@ -173,6 +314,9 @@
                                 "validation": {
                                     "type": "object",
                                     "properties": {
+                                        "unique-for": {
+                                            "type": "string"
+                                        },
                                         "max-length": {
                                             "type": "integer"
                                         }
@@ -248,7 +392,7 @@
                                 "required"
                             ]
                         },
-                        "public": {
+                        "item_subtype_id": {
                             "type": "object",
                             "properties": {
                                 "field": {
@@ -263,8 +407,22 @@
                                 "type": {
                                     "type": "string"
                                 },
+                                "validation": {
+                                    "type": "object",
+                                    "properties": {
+                                        "length": {
+                                            "type": "integer"
+                                        }
+                                    },
+                                    "required": [
+                                        "length"
+                                    ]
+                                },
                                 "required": {
                                     "type": "boolean"
+                                },
+                                "allowed_values": {
+                                    "type": "object"
                                 }
                             },
                             "required": [
@@ -272,6 +430,7 @@
                                 "title",
                                 "description",
                                 "type",
+                                "validation",
                                 "required"
                             ]
                         }
@@ -280,20 +439,20 @@
                         "name",
                         "description",
                         "data",
-                        "public"
+                        "item_subtype_id"
                     ]
                 }
             },
             "required": [
                 "description",
                 "authentication",
-                "fields"
+                "fields",
+                "parameters"
             ]
         }
     },
     "required": [
-        "DELETE",
         "GET",
-        "PATCH"
+        "POST"
     ]
 }

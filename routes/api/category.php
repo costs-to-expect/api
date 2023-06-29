@@ -16,12 +16,12 @@ Route::group(
         Route::get(
             'resource-types/{resource_type_id}/categories',
             [App\Http\Controllers\View\CategoryController::class, 'index']
-        );
+        )->name('category.list');
 
         Route::options(
             'resource-types/{resource_type_id}/categories',
             [App\Http\Controllers\View\CategoryController::class, 'optionsIndex']
-        );
+        )->name('category.list.options');
 
         Route::get(
             'resource-types/{resource_type_id}/categories/{category_id}',
@@ -31,7 +31,7 @@ Route::group(
         Route::options(
             'resource-types/{resource_type_id}/categories/{category_id}',
             [App\Http\Controllers\View\CategoryController::class, 'optionsShow']
-        );
+        )->name('category.show.options');
 
 
         Route::get(

@@ -2,6 +2,21 @@
 
 The complete changelog for the Costs to Expect REST API, our changelog follows the format defined at https://keepachangelog.com/en/1.0.0/
 
+## [v3.13.0] - 2023-06-29
+### Added
+- Added resource tests, action and view, also add category view tests.
+- Added the OPTIONS schema for the resource collection, categories collection, resource show and category show.
+- Added two buttons to the landing page, one to access the API, one to view the docs.
+- Added additional helper methods for testing.
+### Changed
+- Reviewed and updated the resource type tests, added tests for each 'item-type' and updated the tests to exclude pulling public resource types.
+- Reduced throttle limit to 300 requests per minute.
+- Removed throttle limit for tests.
+### Fixed
+- Added a message to the README to explain the 'exclude-public' URI parameter.
+- Minor fixes to the budget-pro migrate job.
+- Fix for data parameter validation.
+
 ## [v3.12.1] - 2023-06-24
 ### Fixed
 - Clear resource cache after successful migration.

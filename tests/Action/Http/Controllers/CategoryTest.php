@@ -16,7 +16,7 @@ final class CategoryTest extends TestCase
 
         $id = $this->createAllocatedExpenseResourceType();
 
-        $response = $this->createRequestedCategory(
+        $response = $this->createCategory(
             $id,
             [
                 'name' => $this->faker->text(200),
@@ -33,7 +33,7 @@ final class CategoryTest extends TestCase
 
         $id = $this->createAllocatedExpenseResourceType();
 
-        $response = $this->createRequestedCategory(
+        $response = $this->createCategory(
             $id,
             [
                 'description' => $this->faker->text(200),
@@ -57,7 +57,7 @@ final class CategoryTest extends TestCase
 
             $resource_type_id = (new Hash())->encode('resource-type', $resource_type->id);
 
-            $response = $this->createRequestedCategory(
+            $response = $this->createCategory(
                 $resource_type_id,
                 [
                     'name' => $this->faker->text(200),
@@ -79,7 +79,7 @@ final class CategoryTest extends TestCase
 
         $id = $this->createAllocatedExpenseResourceType();
 
-        $response = $this->createRequestedCategory(
+        $response = $this->createCategory(
             $id,
             []
         );
@@ -96,7 +96,7 @@ final class CategoryTest extends TestCase
 
         $name = $this->faker->text(200);
 
-        $response = $this->createRequestedCategory(
+        $response = $this->createCategory(
             $id,
             [
                 'name' => $name,
@@ -125,7 +125,7 @@ final class CategoryTest extends TestCase
 
         $id = $this->createAllocatedExpenseResourceType();
 
-        $response = $this->createRequestedCategory(
+        $response = $this->createCategory(
             $id,
             [
                 'name' => $this->faker->text(200),
@@ -135,6 +135,21 @@ final class CategoryTest extends TestCase
 
         $response->assertStatus(201);
         $this->assertJsonMatchesCategorySchema($response->content());
+    }
+
+    /** @test */
+    public function deleteCategoryFailsIdInvalid(): void
+    {
+        $this->actingAs(User::find(1));
+
+        $resource_type_id = $this->createAllocatedExpenseResourceType();
+        $id = $this->createRandomCategory($resource_type_id);
+
+        $response = $this->deleteRequestedCategory($resource_type_id, 'ABCDEDFGFG');
+        $response->assertStatus(403);
+
+        $response = $this->deleteRequestedCategory($resource_type_id, $id);
+        $response->assertStatus(204);
     }
 
     /** @test */
@@ -195,7 +210,7 @@ final class CategoryTest extends TestCase
 
         // Create first category
         $name = $this->faker->text(200);
-        $response = $this->createRequestedCategory(
+        $response = $this->createCategory(
             $resource_type_id,
             [
                 'name' => $name,
@@ -206,7 +221,7 @@ final class CategoryTest extends TestCase
         $response->assertStatus(201);
 
         // Create second category
-        $response = $this->createRequestedCategory(
+        $response = $this->createCategory(
             $resource_type_id,
             [
                 'name' => $this->faker->text(200),

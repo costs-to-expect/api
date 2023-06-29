@@ -1,5 +1,5 @@
 {
-    "$id": "https://api.costs-to-expect.com/v2/api/schema/options/resource-type.json",
+    "$id": "https://api.costs-to-expect.com/v2/api/schema/options/resource.json",
     "type": "object",
     "properties": {
         "DELETE": {
@@ -60,67 +60,7 @@
                     "type": "array"
                 },
                 "parameters": {
-                    "type": "object",
-                    "properties": {
-                        "include-resources": {
-                            "type": "object",
-                            "properties": {
-                                "field": {
-                                    "type": "string"
-                                },
-                                "title": {
-                                    "type": "string"
-                                },
-                                "description": {
-                                    "type": "string"
-                                },
-                                "type": {
-                                    "type": "string"
-                                },
-                                "required": {
-                                    "type": "boolean"
-                                }
-                            },
-                            "required": [
-                                "field",
-                                "title",
-                                "description",
-                                "type",
-                                "required"
-                            ]
-                        },
-                        "include-permitted-users": {
-                            "type": "object",
-                            "properties": {
-                                "field": {
-                                    "type": "string"
-                                },
-                                "title": {
-                                    "type": "string"
-                                },
-                                "description": {
-                                    "type": "string"
-                                },
-                                "type": {
-                                    "type": "string"
-                                },
-                                "required": {
-                                    "type": "boolean"
-                                }
-                            },
-                            "required": [
-                                "field",
-                                "title",
-                                "description",
-                                "type",
-                                "required"
-                            ]
-                        }
-                    },
-                    "required": [
-                        "include-resources",
-                        "include-permitted-users"
-                    ]
+                    "type": "array"
                 }
             },
             "required": [
@@ -128,7 +68,8 @@
                 "authentication",
                 "sortable",
                 "searchable",
-                "filterable"
+                "filterable",
+                "parameters"
             ]
         },
         "PATCH": {
@@ -173,6 +114,9 @@
                                 "validation": {
                                     "type": "object",
                                     "properties": {
+                                        "unique-for": {
+                                            "type": "string"
+                                        },
                                         "max-length": {
                                             "type": "integer"
                                         }
@@ -247,40 +191,12 @@
                                 "type",
                                 "required"
                             ]
-                        },
-                        "public": {
-                            "type": "object",
-                            "properties": {
-                                "field": {
-                                    "type": "string"
-                                },
-                                "title": {
-                                    "type": "string"
-                                },
-                                "description": {
-                                    "type": "string"
-                                },
-                                "type": {
-                                    "type": "string"
-                                },
-                                "required": {
-                                    "type": "boolean"
-                                }
-                            },
-                            "required": [
-                                "field",
-                                "title",
-                                "description",
-                                "type",
-                                "required"
-                            ]
                         }
                     },
                     "required": [
                         "name",
                         "description",
-                        "data",
-                        "public"
+                        "data"
                     ]
                 }
             },

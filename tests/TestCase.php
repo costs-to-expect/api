@@ -5,6 +5,7 @@ namespace Tests;
 use App\User;
 use Illuminate\Foundation\Testing\TestCase as BaseTestCase;
 use Illuminate\Foundation\Testing\WithFaker;
+use Illuminate\Routing\Middleware\ThrottleRequests;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
@@ -115,15 +116,21 @@ abstract class TestCase extends BaseTestCase
         }
     }
 
-    protected function createRandomCategory(string $resource_type_id): string
+    protected function createRandomCategory(
+        string $resource_type_id,
+        array $override = []
+    ): string
     {
-        $response = $this->createRequestedCategory(
-            $resource_type_id,
-            [
-                'name' => $this->faker->text(200),
-                'description' => $this->faker->text(200),
-            ]
-        );
+        $payload = [
+            'name' => $this->faker->text(200),
+            'description' => $this->faker->text(200),
+        ];
+
+        foreach ($override as $k => $v) {
+            $payload[$k] = $v;
+        }
+
+        $response = $this->createCategory($resource_type_id, $payload);
 
         if ($response->assertStatus(201)) {
             return $response->json('id');
@@ -309,16 +316,22 @@ abstract class TestCase extends BaseTestCase
         $this->fail('Unable to create the resource');
     }
 
-    protected function createBudgetResource(string $resource_type_id): string
+    protected function createBudgetResource(
+        string $resource_type_id,
+        array $override = []
+    ): string
     {
-        $response = $this->createResource(
-            $resource_type_id,
-            [
-                'name' => $this->faker->text(200),
-                'description' => $this->faker->text(200),
-                'item_subtype_id' => $this->item_subtypes['budget']['default']
-            ]
-        );
+        $payload = [
+            'name' => $this->faker->text(200),
+            'description' => $this->faker->text(200),
+            'item_subtype_id' => $this->item_subtypes['budget']['default']
+        ];
+
+        foreach ($override as $k => $v) {
+            $payload[$k] = $v;
+        }
+
+        $response = $this->createResource($resource_type_id, $payload);
 
         if ($response->assertStatus(201)) {
             return $response->json('id');
@@ -401,7 +414,7 @@ abstract class TestCase extends BaseTestCase
         $this->fail('Unable to create the subcategory');
     }
 
-    protected function createRequestedCategory(string $resource_type_id, array $payload): TestResponse
+    protected function createCategory(string $resource_type_id, array $payload): TestResponse
     {
         return $this->post(
             route('category.create', ['resource_type_id' => $resource_type_id]),
@@ -629,37 +642,47 @@ abstract class TestCase extends BaseTestCase
 
     protected function fetchAllItemTypes(array $parameters = []): TestResponse
     {
-        return $this->generatedRoute('item-type.list', $parameters);
+        return $this->route('item-type.list', $parameters);
     }
 
     protected function fetchAllPermittedUsers(array $parameters = []): TestResponse
     {
-        return $this->generatedRoute('permitted-user.list', $parameters);
+        return $this->route('permitted-user.list', $parameters);
+    }
+
+    protected function fetchCategoryCollection(array $parameters = []): TestResponse
+    {
+        return $this->route('category.list', $parameters);
     }
 
     protected function fetchItem(array $parameters = []): TestResponse
     {
-        return $this->generatedRoute('item.show', $parameters);
+        return $this->route('item.show', $parameters);
     }
 
     protected function fetchItemCollection(array $parameters = []): TestResponse
     {
-        return $this->generatedRoute('item.list', $parameters);
+        return $this->route('item.list', $parameters);
+    }
+
+    protected function fetchResourceCollection(array $parameters = []): TestResponse
+    {
+        return $this->route('resource.list', $parameters);
     }
 
     protected function fetchResourceTypeCollection(array $parameters = []): TestResponse
     {
-        return $this->generatedRoute('resource-type.list', $parameters);
+        return $this->route('resource-type.list', $parameters);
     }
 
     protected function fetchItemType(array $parameters = []): TestResponse
     {
-        return $this->generatedRoute('item-type.show', $parameters);
+        return $this->route('item-type.show', $parameters);
     }
 
     protected function fetchPermittedUser(array $parameters = []): TestResponse
     {
-        return $this->generatedRoute('permitted-user.show', $parameters);
+        return $this->route('permitted-user.show', $parameters);
     }
 
     protected function fetchRandomUser()
@@ -669,50 +692,70 @@ abstract class TestCase extends BaseTestCase
 
     protected function fetchResourceType(array $parameters = []): TestResponse
     {
-        return $this->generatedRoute('resource-type.show', $parameters);
+        return $this->route('resource-type.show', $parameters);
+    }
+
+    protected function fetchOptionsForCategory(array $parameters = []): TestResponse
+    {
+        return $this->optionsRoute('category.show.options', $parameters);
+    }
+
+    protected function fetchOptionsForCategoryCollection(array $parameters = []): TestResponse
+    {
+        return $this->optionsRoute('category.list.options', $parameters);
     }
 
     protected function fetchOptionsForCreatePassword(array $parameters = []): TestResponse
     {
-        return $this->generateOptionsRoute('auth.create-password.options', $parameters);
+        return $this->optionsRoute('auth.create-password.options', $parameters);
     }
 
     protected function fetchOptionsForItem(array $parameters = []): TestResponse
     {
-        return $this->generateOptionsRoute('item.show.options', $parameters);
+        return $this->optionsRoute('item.show.options', $parameters);
     }
 
     protected function fetchOptionsForItemCollection(array $parameters = []): TestResponse
     {
-        return $this->generateOptionsRoute('item.list.options', $parameters);
+        return $this->optionsRoute('item.list.options', $parameters);
     }
 
     protected function fetchOptionsForRegister(array $parameters = []): TestResponse
     {
-        return $this->generateOptionsRoute('auth.register.options', $parameters);
+        return $this->optionsRoute('auth.register.options', $parameters);
     }
 
     protected function fetchOptionsForMigrateBudgetProRequestDelete(array $parameters = []): TestResponse
     {
-        return $this->generateOptionsRoute('auth.user.migrate.budget-pro.request-delete.options', $parameters);
+        return $this->optionsRoute('auth.user.migrate.budget-pro.request-delete.options', $parameters);
+    }
+
+    protected function fetchOptionsForResource(array $parameters = []): TestResponse
+    {
+        return $this->optionsRoute('resource.show.options', $parameters);
+    }
+
+    protected function fetchOptionsForResourceCollection(array $parameters = []): TestResponse
+    {
+        return $this->optionsRoute('resource.list.options', $parameters);
     }
 
     protected function fetchOptionsForResourceType(array $parameters = []): TestResponse
     {
-        return $this->generateOptionsRoute('resource-type.show.options', $parameters);
+        return $this->optionsRoute('resource-type.show.options', $parameters);
     }
 
     protected function fetchOptionsForResourceTypeCollection(array $parameters = []): TestResponse
     {
-        return $this->generateOptionsRoute('resource-type.list.options', $parameters);
+        return $this->optionsRoute('resource-type.list.options', $parameters);
     }
 
-    protected function generatedRoute(string $route, array $parameters = []): TestResponse
+    protected function route(string $route, array $parameters = []): TestResponse
     {
         return $this->get(route($route, $parameters));
     }
 
-    protected function generateOptionsRoute(string $route, array $parameters = []): TestResponse
+    protected function optionsRoute(string $route, array $parameters = []): TestResponse
     {
         return $this->options(route($route, $parameters));
     }
@@ -729,6 +772,10 @@ abstract class TestCase extends BaseTestCase
         if (app()->environment() !== 'local') {
             dd('Not in local environment, skipping tests');
         }
+
+        $this->withoutMiddleware(
+            ThrottleRequests::class
+        );
 
         $result = DB::select(DB::raw("SHOW TABLES LIKE 'users';"));
 
