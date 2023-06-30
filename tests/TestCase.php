@@ -774,6 +774,16 @@ abstract class TestCase extends BaseTestCase
         return $this->optionsRoute('resource-type.list.options', $parameters);
     }
 
+    protected function fetchOptionsForSubcategory(array $parameters = []): TestResponse
+    {
+        return $this->optionsRoute('subcategory.show.options', $parameters);
+    }
+
+    protected function fetchOptionsForSubcategoryCollection(array $parameters = []): TestResponse
+    {
+        return $this->optionsRoute('subcategory.list.options', $parameters);
+    }
+
     protected function route(string $route, array $parameters = []): TestResponse
     {
         return $this->get(route($route, $parameters));

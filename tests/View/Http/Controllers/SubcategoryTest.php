@@ -421,4 +421,160 @@ final class SubcategoryTest extends TestCase
             $this->assertJsonMatchesSubcategorySchema($json);
         }
     }
+
+    /** @test */
+    public function optionsRequestForAllocatedExpenseSubcategory(): void
+    {
+        $this->actingAs(User::find($this->createUser()));
+
+        $resource_type_id = $this->createAllocatedExpenseResourceType();
+        $category_id = $this->createRandomCategory($resource_type_id);
+        $subcategory_id = $this->createRandomSubcategory($resource_type_id, $category_id);
+
+        $response = $this->fetchOptionsForSubcategory([
+            'resource_type_id' => $resource_type_id,
+            'category_id' => $category_id,
+            'subcategory_id' => $subcategory_id
+        ]);
+        $response->assertStatus(200);
+
+        $this->assertProvidedJsonMatchesDefinedSchema($response->content(), 'api/schema/options/subcategory.json');
+    }
+
+    /** @test */
+    public function optionsRequestForAllocatedExpenseSubcategoryCollection(): void
+    {
+        $this->actingAs(User::find($this->createUser()));
+
+        $resource_type_id = $this->createAllocatedExpenseResourceType();
+        $category_id = $this->createRandomCategory($resource_type_id);
+
+        $response = $this->fetchOptionsForSubcategoryCollection([
+            'resource_type_id' => $resource_type_id,
+            'category_id' => $category_id
+        ]);
+        $response->assertStatus(200);
+
+        $this->assertProvidedJsonMatchesDefinedSchema($response->content(), 'api/schema/options/subcategory-collection.json');
+    }
+
+    /** @test */
+    public function optionsRequestForBudgetProSubcategory(): void
+    {
+        $this->actingAs(User::find($this->createUser()));
+
+        $resource_type_id = $this->createBudgetProResourceType();
+        $category_id = $this->createRandomCategory($resource_type_id);
+        $subcategory_id = $this->createRandomSubcategory($resource_type_id, $category_id);
+
+        $response = $this->fetchOptionsForSubcategory([
+            'resource_type_id' => $resource_type_id,
+            'category_id' => $category_id,
+            'subcategory_id' => $subcategory_id
+        ]);
+        $response->assertStatus(200);
+
+        // Tests include as is for now, will be adjusted when API functionality
+        // changes to match the fact certain item types don't support categories and subcategories
+        $this->assertProvidedJsonMatchesDefinedSchema($response->content(), 'api/schema/options/subcategory.json');
+    }
+
+    /** @test */
+    public function optionsRequestForBudgetProSubcategoryCollection(): void
+    {
+        $this->actingAs(User::find($this->createUser()));
+
+        $resource_type_id = $this->createBudgetResourceType();
+        $category_id = $this->createRandomCategory($resource_type_id);
+
+        $response = $this->fetchOptionsForSubcategoryCollection([
+            'resource_type_id' => $resource_type_id,
+            'category_id' => $category_id
+        ]);
+        $response->assertStatus(200);
+
+        // Tests include as is for now, will be adjusted when API functionality
+        // changes to match the fact certain item types don't support categories and subcategories
+        $this->assertProvidedJsonMatchesDefinedSchema($response->content(), 'api/schema/options/subcategory-collection.json');
+    }
+
+    /** @test */
+    public function optionsRequestForBudgetSubcategory(): void
+    {
+        $this->actingAs(User::find($this->createUser()));
+
+        $resource_type_id = $this->createBudgetResourceType();
+        $category_id = $this->createRandomCategory($resource_type_id);
+        $subcategory_id = $this->createRandomSubcategory($resource_type_id, $category_id);
+
+        $response = $this->fetchOptionsForSubcategory([
+            'resource_type_id' => $resource_type_id,
+            'category_id' => $category_id,
+            'subcategory_id' => $subcategory_id
+        ]);
+        $response->assertStatus(200);
+
+        // Tests include as is for now, will be adjusted when API functionality
+        // changes to match the fact certain item types don't support categories and subcategories
+        $this->assertProvidedJsonMatchesDefinedSchema($response->content(), 'api/schema/options/subcategory.json');
+    }
+
+    /** @test */
+    public function optionsRequestForBudgetSubcategoryCollection(): void
+    {
+        $this->actingAs(User::find($this->createUser()));
+
+        $resource_type_id = $this->createBudgetResourceType();
+        $category_id = $this->createRandomCategory($resource_type_id);
+
+        $response = $this->fetchOptionsForSubcategoryCollection([
+            'resource_type_id' => $resource_type_id,
+            'category_id' => $category_id
+        ]);
+        $response->assertStatus(200);
+
+        // Tests include as is for now, will be adjusted when API functionality
+        // changes to match the fact certain item types don't support categories and subcategories
+        $this->assertProvidedJsonMatchesDefinedSchema($response->content(), 'api/schema/options/subcategory-collection.json');
+    }
+
+    /** @test */
+    public function optionsRequestForGameSubcategory(): void
+    {
+        $this->actingAs(User::find($this->createUser()));
+
+        $resource_type_id = $this->createGameResourceType();
+        $category_id = $this->createRandomCategory($resource_type_id);
+        $subcategory_id = $this->createRandomSubcategory($resource_type_id, $category_id);
+
+        $response = $this->fetchOptionsForSubcategory([
+            'resource_type_id' => $resource_type_id,
+            'category_id' => $category_id,
+            'subcategory_id' => $subcategory_id
+        ]);
+        $response->assertStatus(200);
+
+        // Tests include as is for now, will be adjusted when API functionality
+        // changes to match the fact certain item types don't support categories and subcategories
+        $this->assertProvidedJsonMatchesDefinedSchema($response->content(), 'api/schema/options/subcategory.json');
+    }
+
+    /** @test */
+    public function optionsRequestForGameSubcategoryCollection(): void
+    {
+        $this->actingAs(User::find($this->createUser()));
+
+        $resource_type_id = $this->createGameResourceType();
+        $category_id = $this->createRandomCategory($resource_type_id);
+
+        $response = $this->fetchOptionsForSubcategoryCollection([
+            'resource_type_id' => $resource_type_id,
+            'category_id' => $category_id
+        ]);
+        $response->assertStatus(200);
+
+        // Tests include as is for now, will be adjusted when API functionality
+        // changes to match the fact certain item types don't support categories and subcategories
+        $this->assertProvidedJsonMatchesDefinedSchema($response->content(), 'api/schema/options/subcategory-collection.json');
+    }
 }
