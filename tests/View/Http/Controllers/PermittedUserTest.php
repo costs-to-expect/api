@@ -5,7 +5,7 @@ namespace Tests\View\Http\Controllers;
 use App\User;
 use Tests\TestCase;
 
-final class PermittedUserViewTest extends TestCase
+final class PermittedUserTest extends TestCase
 {
     /** @test */
     public function permittedUserCollection(): void
