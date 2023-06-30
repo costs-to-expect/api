@@ -304,6 +304,34 @@ final class CategoryTest extends TestCase
      * @runInSeparateProcess
      * @preserveGlobalState disabled
      */
+    public function allocatedExpenseCategoryShowIncludeSubcategories(): void
+    {
+        $this->actingAs(User::find($this->createUser()));
+
+        $resource_type_id = $this->createAllocatedExpenseResourceType();
+        $category_id = $this->createRandomCategory($resource_type_id);
+        $this->createRandomSubcategory($resource_type_id, $category_id);
+        $this->createRandomSubcategory($resource_type_id, $category_id);
+        $this->createRandomSubcategory($resource_type_id, $category_id);
+
+        $response = $this->fetchCategory([
+            'resource_type_id' => $resource_type_id,
+            'category_id' => $category_id,
+            'include_subcategories' => true
+        ]);
+
+        $response->assertStatus(200);
+        $response->assertHeader('X-Total-Count', 1);
+        $response->assertHeader('X-Count', 1);
+
+        $this->assertJsonMatchesCategorySchemaWhichIncludesSubcategories($response->getContent());
+    }
+
+    /**
+     * @test
+     * @runInSeparateProcess
+     * @preserveGlobalState disabled
+     */
     public function budgetCategoryCollection(): void
     {
         $this->actingAs(User::find($this->createUser()));

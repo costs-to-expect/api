@@ -72,6 +72,11 @@ abstract class TestCase extends BaseTestCase
         $this->assertProvidedJsonMatchesDefinedSchema($content, 'api/schema/category.json');
     }
 
+    protected function assertJsonMatchesCategorySchemaWhichIncludesSubcategories($content): void
+    {
+        $this->assertProvidedJsonMatchesDefinedSchema($content, 'api/schema/category-include-subcategories.json');
+    }
+
     protected function assertJsonMatchesItemTypeSchema($content): void
     {
         $this->assertProvidedJsonMatchesDefinedSchema($content, 'api/schema/item-type.json');
@@ -667,6 +672,11 @@ abstract class TestCase extends BaseTestCase
     protected function fetchAllPermittedUsers(array $parameters = []): TestResponse
     {
         return $this->route('permitted-user.list', $parameters);
+    }
+
+    protected function fetchCategory(array $parameters = []): TestResponse
+    {
+        return $this->route('category.show', $parameters);
     }
 
     protected function fetchCategoryCollection(array $parameters = []): TestResponse
