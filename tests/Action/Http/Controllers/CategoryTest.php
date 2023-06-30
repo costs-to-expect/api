@@ -10,7 +10,7 @@ use Tests\TestCase;
 final class CategoryTest extends TestCase
 {
     /** @test */
-    public function createCategoryFailsNoDescriptionInPayload(): void
+    public function createAllocatedExpenseCategoryFailsNoDescriptionInPayload(): void
     {
         $this->actingAs(User::find(1));
 
@@ -27,7 +27,7 @@ final class CategoryTest extends TestCase
     }
 
     /** @test */
-    public function createCategoryFailsNoNameInPayload(): void
+    public function createAllocatedExpenseCategoryFailsNoNameInPayload(): void
     {
         $this->actingAs(User::find(1));
 
@@ -44,7 +44,7 @@ final class CategoryTest extends TestCase
     }
 
     /** @test */
-    public function createCategoryFailsNoPermissionToResourceType(): void
+    public function createAllocatedExpenseCategoryFailsNoPermissionToResourceType(): void
     {
         $this->actingAs(User::find($this->fetchRandomUser()->id)); // Random user
 
@@ -73,7 +73,7 @@ final class CategoryTest extends TestCase
     }
 
     /** @test */
-    public function createCategoryFailsNoPayload(): void
+    public function createAllocatedExpenseCategoryFailsNoPayload(): void
     {
         $this->actingAs(User::find(1));
 
@@ -88,7 +88,7 @@ final class CategoryTest extends TestCase
     }
 
     /** @test */
-    public function createCategoryFailsNonUniqueName(): void
+    public function createAllocatedExpenseCategoryFailsNonUniqueName(): void
     {
         $this->actingAs(User::find(1));
 
@@ -119,7 +119,7 @@ final class CategoryTest extends TestCase
     }
 
     /** @test */
-    public function createCategorySuccess(): void
+    public function createAllocatedExpenseCategorySuccess(): void
     {
         $this->actingAs(User::find(1));
 
@@ -138,7 +138,64 @@ final class CategoryTest extends TestCase
     }
 
     /** @test */
-    public function deleteCategoryFailsIdInvalid(): void
+    public function createBudgetCategorySuccess(): void
+    {
+        $this->actingAs(User::find(1));
+
+        $id = $this->createBudgetResourceType();
+
+        $response = $this->createCategory(
+            $id,
+            [
+                'name' => $this->faker->text(200),
+                'description' => $this->faker->text(200),
+            ]
+        );
+
+        $response->assertStatus(201);
+        $this->assertJsonMatchesCategorySchema($response->content());
+    }
+
+    /** @test */
+    public function createBudgetProCategorySuccess(): void
+    {
+        $this->actingAs(User::find(1));
+
+        $id = $this->createBudgetProResourceType();
+
+        $response = $this->createCategory(
+            $id,
+            [
+                'name' => $this->faker->text(200),
+                'description' => $this->faker->text(200),
+            ]
+        );
+
+        $response->assertStatus(201);
+        $this->assertJsonMatchesCategorySchema($response->content());
+    }
+
+    /** @test */
+    public function createGameCategorySuccess(): void
+    {
+        $this->actingAs(User::find(1));
+
+        $id = $this->createGameResourceType();
+
+        $response = $this->createCategory(
+            $id,
+            [
+                'name' => $this->faker->text(200),
+                'description' => $this->faker->text(200),
+            ]
+        );
+
+        $response->assertStatus(201);
+        $this->assertJsonMatchesCategorySchema($response->content());
+    }
+
+    /** @test */
+    public function deleteAllocatedExpenseCategoryFailsIdInvalid(): void
     {
         $this->actingAs(User::find(1));
 
@@ -153,7 +210,7 @@ final class CategoryTest extends TestCase
     }
 
     /** @test */
-    public function deleteCategorySuccess(): void
+    public function deleteAllocatedExpenseCategorySuccess(): void
     {
         $this->actingAs(User::find(1));
 
@@ -166,7 +223,46 @@ final class CategoryTest extends TestCase
     }
 
     /** @test */
-    public function updateCategoryFailsExtraFieldsInPayload(): void
+    public function deleteBudgetCategorySuccess(): void
+    {
+        $this->actingAs(User::find(1));
+
+        $resource_type_id = $this->createBudgetResourceType();
+        $id = $this->createRandomCategory($resource_type_id);
+
+        $response = $this->deleteRequestedCategory($resource_type_id, $id);
+
+        $response->assertStatus(204);
+    }
+
+    /** @test */
+    public function deleteBudgetProCategorySuccess(): void
+    {
+        $this->actingAs(User::find(1));
+
+        $resource_type_id = $this->createBudgetProResourceType();
+        $id = $this->createRandomCategory($resource_type_id);
+
+        $response = $this->deleteRequestedCategory($resource_type_id, $id);
+
+        $response->assertStatus(204);
+    }
+
+    /** @test */
+    public function deleteGameCategorySuccess(): void
+    {
+        $this->actingAs(User::find(1));
+
+        $resource_type_id = $this->createGameResourceType();
+        $id = $this->createRandomCategory($resource_type_id);
+
+        $response = $this->deleteRequestedCategory($resource_type_id, $id);
+
+        $response->assertStatus(204);
+    }
+
+    /** @test */
+    public function updateAllocatedExpenseCategoryFailsExtraFieldsInPayload(): void
     {
         $this->actingAs(User::find(1));
 
@@ -185,7 +281,7 @@ final class CategoryTest extends TestCase
     }
 
     /** @test */
-    public function updateCategoryFailsNoPayload(): void
+    public function updateAllocatedExpenseCategoryFailsNoPayload(): void
     {
         $this->actingAs(User::find(1));
 
@@ -202,7 +298,7 @@ final class CategoryTest extends TestCase
     }
 
     /** @test */
-    public function updateCategoryFailsNonUniqueName(): void
+    public function updateAllocatedExpenseCategoryFailsNonUniqueName(): void
     {
         $this->actingAs(User::find(1));
 
@@ -245,11 +341,68 @@ final class CategoryTest extends TestCase
     }
 
     /** @test */
-    public function updateCategorySuccess(): void
+    public function updateAllocatedExpenseCategorySuccess(): void
     {
         $this->actingAs(User::find(1));
 
         $resource_type_id = $this->createAllocatedExpenseResourceType();
+        $category_id = $this->createRandomCategory($resource_type_id);
+
+        $response = $this->updateRequestedCategory(
+            $resource_type_id,
+            $category_id,
+            [
+                'name' => $this->faker->text(25)
+            ]
+        );
+
+        $response->assertStatus(204);
+    }
+
+    /** @test */
+    public function updateBudgetCategorySuccess(): void
+    {
+        $this->actingAs(User::find(1));
+
+        $resource_type_id = $this->createBudgetResourceType();
+        $category_id = $this->createRandomCategory($resource_type_id);
+
+        $response = $this->updateRequestedCategory(
+            $resource_type_id,
+            $category_id,
+            [
+                'name' => $this->faker->text(25)
+            ]
+        );
+
+        $response->assertStatus(204);
+    }
+
+    /** @test */
+    public function updateBudgetProCategorySuccess(): void
+    {
+        $this->actingAs(User::find(1));
+
+        $resource_type_id = $this->createBudgetProResourceType();
+        $category_id = $this->createRandomCategory($resource_type_id);
+
+        $response = $this->updateRequestedCategory(
+            $resource_type_id,
+            $category_id,
+            [
+                'name' => $this->faker->text(25)
+            ]
+        );
+
+        $response->assertStatus(204);
+    }
+
+    /** @test */
+    public function updateGameCategorySuccess(): void
+    {
+        $this->actingAs(User::find(1));
+
+        $resource_type_id = $this->createGameResourceType();
         $category_id = $this->createRandomCategory($resource_type_id);
 
         $response = $this->updateRequestedCategory(
