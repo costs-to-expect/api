@@ -102,6 +102,11 @@ abstract class TestCase extends BaseTestCase
         $this->assertProvidedJsonMatchesDefinedSchema($content, 'api/schema/resource-type-include-resources.json');
     }
 
+    protected function assertJsonMatchesSubcategorySchema($content): void
+    {
+        $this->assertProvidedJsonMatchesDefinedSchema($content, 'api/schema/subcategory.json');
+    }
+
     protected function assertProvidedJsonMatchesDefinedSchema($content, $schema_file): void
     {
         $schema = Schema::fromJsonString(file_get_contents(public_path($schema_file)));
@@ -396,15 +401,25 @@ abstract class TestCase extends BaseTestCase
         );
     }
 
-    protected function createRandomSubcategory(string $resource_type_id, string $category_id): string
+    protected function createRandomSubcategory(
+        string $resource_type_id,
+        string $category_id,
+        array $override = []
+    ): string
     {
+        $payload = [
+            'name' => $this->faker->text(200),
+            'description' => $this->faker->text(200),
+        ];
+
+        foreach ($override as $k => $v) {
+            $payload[$k] = $v;
+        }
+
         $response = $this->createSubcategory(
             $resource_type_id,
             $category_id,
-            [
-                'name' => $this->faker->text(200),
-                'description' => $this->faker->text(200),
-            ]
+            $payload
         );
 
         if ($response->assertStatus(201)) {
@@ -697,6 +712,11 @@ abstract class TestCase extends BaseTestCase
     protected function fetchResourceType(array $parameters = []): TestResponse
     {
         return $this->route('resource-type.show', $parameters);
+    }
+
+    protected function fetchSubcategoryCollection(array $parameters = []): TestResponse
+    {
+        return $this->route('subcategory.list', $parameters);
     }
 
     protected function fetchOptionsForCategory(array $parameters = []): TestResponse
