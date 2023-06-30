@@ -398,7 +398,7 @@ abstract class TestCase extends BaseTestCase
 
     protected function createRandomSubcategory(string $resource_type_id, string $category_id): string
     {
-        $response = $this->createRequestedSubcategory(
+        $response = $this->createSubcategory(
             $resource_type_id,
             $category_id,
             [
@@ -443,7 +443,11 @@ abstract class TestCase extends BaseTestCase
         return $this->post(route('resource-type.create'), $payload);
     }
 
-    protected function createRequestedSubcategory(string $resource_type_id, string $category_id, array $payload): TestResponse
+    protected function createSubcategory(
+        string $resource_type_id,
+        string $category_id,
+        array $payload
+    ): TestResponse
     {
         return $this->post(
             route(
@@ -625,7 +629,7 @@ abstract class TestCase extends BaseTestCase
         );
     }
 
-    protected function deleteRequestedSubcategory(string $resource_type_id, $category_id, $subcategory_id): TestResponse
+    protected function deleteSubcategory(string $resource_type_id, $category_id, $subcategory_id): TestResponse
     {
         return $this->delete(
             route(
@@ -846,7 +850,7 @@ abstract class TestCase extends BaseTestCase
         );
     }
 
-    protected function updateRequestedSubcategory(
+    protected function updateSubcategory(
         string $resource_type_id,
         string $category_id,
         string $subcategory_id,
