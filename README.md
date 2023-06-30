@@ -2,29 +2,26 @@
 
 ## Overview
 
-Costs to Expect is a service original intended to track and forecast expenses. 
+Costs to Expect is a service originally intended to track and forecast expenses. 
 This API is the backbone of the service and is not limited to tracking expenses, over the years we have 
 made it flexible enough to record almost anything, including dice games.
 
 ## Documentation
 
 The documentation for the Costs to Expect API can be found at 
-[postman.costs-to-expect.com](https://postman.costs-to-expect.com?version=latest). 
-
-The documentation is slowly being moved to a repository on 
-[GitHub](https://github.com/costs-to-expect/api-docs). It is taking a while to rewrite and update the 
-documentation, it will however be complete before the official of 'Budget'.
+[GitHub](https://github.com/costs-to-expect/api-docs). It may not been 100% complete, our old documentation is 
+available on Postman at [postman.costs-to-expect.com](https://postman.costs-to-expect.com?version=latest).
 
 ## Apps
 
 The API is used by the following Apps;
 
-- [Budget](https://budget.costs-to-expect.com) Our free and Open Source Budget tool
+- [Budget](https://budget.costs-to-expect.com) Our free and Open Source Budgeting tool
 - [Budget Pro](https://budget-pro.costs-to-expect.com) (alpha) The commercial version of Budget
 - [Expense](https://app.costs-to-expect.com) Our free and Open Source expense tracker
-- [Social Experiment](https://www.costs-to-expect.com) How much does it cost to raise a child to adulthood in the UK?
 - [Yahtzee Game Scorer](https://yahtzee.game-score.com) Our Yahtzee Game Scorer, free for all to use
 - [Yatzy Game Scorer](https://yatzu.game-score.com) Our Yatzy Game Scorer, free for all to use
+- [Social Experiment](https://www.costs-to-expect.com) How much does it cost to raise a child to adulthood in the UK?
 
 ## Set up
 
@@ -77,13 +74,12 @@ return a validation error, the response will be 422 and include a fields array w
 
 ## Caching
 
-The API caches responses per authenticated user and also a public cache.
+The API caches responses per authenticated user and there is a public cache.
 
 You can skip reading from the cache for a specific request by adding the `X-Skip-Cache` header, any value will do, 
 the existence of the header is all that matters.
 
-Cache is cleared when we detect a change to relevant data, currently, there is a minor delay before cache is cleared, 
-we are planning to clear cache immediately, we want to review the performance impact before making the change.
+Cache is cleared when we detect a change to relevant data.
 
 ## Headers
 
@@ -266,7 +262,7 @@ parameters to break down the data, one example being
 `v3/summary/resource-types/{resource_type_id}/items`. 
 
 Review the OPTIONS request for each summary route to see the supported parameters, these should 
-largely match the matching non-summary route.
+largely match the non-summary route.
 
 | HTTP Verb(s) | Route                                                                               |
 |:-------------|:------------------------------------------------------------------------------------|
@@ -294,7 +290,7 @@ our local test suite is as complete as the Postman request test suite.
 | Controller          | Action   | View     | 
 |:--------------------|:---------|:---------|
 | Authentication      | 35 Tests | 3 Tests  |
-| Category            | 12 Tests | 19 Tests |
+| Category            | 21 Tests | 19 Tests |
 | Currency            | Non yet* | Non yet* |
 | ItemCategory        | Non yet* | Non yet* |
 | Item                | 45 Tests | 39 Tests |
@@ -309,8 +305,8 @@ our local test suite is as complete as the Postman request test suite.
 | Request             | Non yet* | Non yet* |
 | Resource            | 24 Tests | 22 Tests |
 | ResourceType        | 23 Tests | 17 Tests |
-| Subcategory         | 12 Tests | Non yet* |
-| **Total tests**     | **155**  | **109**  |
+| Subcategory         | 21 Tests | 19 Tests |
+| **Total tests**     | **173**  | **128**  |
 
 *Non yet does not mean there are no tests, it just means there are no PHPUnit tests. There are over 2000 tests in 
 a private Postman collection, I'm slowing transferring them locally and expanding the test suite.
