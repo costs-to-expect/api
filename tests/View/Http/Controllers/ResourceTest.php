@@ -40,6 +40,23 @@ final class ResourceTest extends TestCase
         }
     }
 
+    /** @test */
+    public function allocatedExpenseResourceShow(): void
+    {
+        $this->actingAs(User::find($this->createUser()));
+
+        $resource_type_id = $this->createAllocatedExpenseResourceType();
+        $resource_id = $this->createAllocatedExpenseResource($resource_type_id);
+
+        $response = $this->fetchResource([
+            'resource_type_id' => $resource_type_id,
+            'resource_id' => $resource_id
+        ]);
+
+        $response->assertStatus(200);
+        $this->assertJsonMatchesResourceSchema($response->content());
+    }
+
     /**
      * @test
      * @runInSeparateProcess
@@ -71,6 +88,23 @@ final class ResourceTest extends TestCase
 
             $this->assertJsonMatchesResourceSchema($json);
         }
+    }
+
+    /** @test */
+    public function budgetProResourceShow(): void
+    {
+        $this->actingAs(User::find($this->createUser()));
+
+        $resource_type_id = $this->createBudgetProResourceType();
+        $resource_id = $this->createBudgetProResource($resource_type_id);
+
+        $response = $this->fetchResource([
+            'resource_type_id' => $resource_type_id,
+            'resource_id' => $resource_id
+        ]);
+
+        $response->assertStatus(200);
+        $this->assertJsonMatchesResourceSchema($response->content());
     }
 
     /**
@@ -363,6 +397,23 @@ final class ResourceTest extends TestCase
     }
 
     /** @test */
+    public function budgetResourceShow(): void
+    {
+        $this->actingAs(User::find($this->createUser()));
+
+        $resource_type_id = $this->createBudgetResourceType();
+        $resource_id = $this->createBudgetResource($resource_type_id);
+
+        $response = $this->fetchResource([
+            'resource_type_id' => $resource_type_id,
+            'resource_id' => $resource_id
+        ]);
+
+        $response->assertStatus(200);
+        $this->assertJsonMatchesResourceSchema($response->content());
+    }
+
+    /** @test */
     public function optionsRequestForAllocatedExpenseResource(): void
     {
         $this->actingAs(User::find(1));
@@ -565,6 +616,23 @@ final class ResourceTest extends TestCase
         }
     }
 
+    /** @test */
+    public function yahtzeeResourceShow(): void
+    {
+        $this->actingAs(User::find($this->createUser()));
+
+        $resource_type_id = $this->createGameResourceType();
+        $resource_id = $this->createYahtzeeResource($resource_type_id);
+
+        $response = $this->fetchResource([
+            'resource_type_id' => $resource_type_id,
+            'resource_id' => $resource_id
+        ]);
+
+        $response->assertStatus(200);
+        $this->assertJsonMatchesResourceSchema($response->content());
+    }
+
     /**
      * @test
      * @runInSeparateProcess
@@ -596,5 +664,22 @@ final class ResourceTest extends TestCase
 
             $this->assertJsonMatchesResourceSchema($json);
         }
+    }
+
+    /** @test */
+    public function yatzyResourceShow(): void
+    {
+        $this->actingAs(User::find($this->createUser()));
+
+        $resource_type_id = $this->createGameResourceType();
+        $resource_id = $this->createYatzyResource($resource_type_id);
+
+        $response = $this->fetchResource([
+            'resource_type_id' => $resource_type_id,
+            'resource_id' => $resource_id
+        ]);
+
+        $response->assertStatus(200);
+        $this->assertJsonMatchesResourceSchema($response->content());
     }
 }

@@ -694,6 +694,11 @@ abstract class TestCase extends BaseTestCase
         return $this->route('item.list', $parameters);
     }
 
+    protected function fetchResource(array $parameters = []): TestResponse
+    {
+        return $this->route('resource.show', $parameters);
+    }
+
     protected function fetchResourceCollection(array $parameters = []): TestResponse
     {
         return $this->route('resource.list', $parameters);
