@@ -32,17 +32,6 @@
                 "id",
                 "name"
             ]
-        },
-        "subcategories": {
-            "type": "object",
-            "properties": {
-                "uri": {
-                    "type": "string"
-                },
-                "count": {
-                    "type": "integer"
-                }
-            }
         }
     },
     "required": [
@@ -50,7 +39,6 @@
         "name",
         "description",
         "created",
-        "resource_type",
-        "subcategories"
+        "resource_type"
     ]
 }
