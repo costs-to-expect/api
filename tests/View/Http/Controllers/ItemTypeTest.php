@@ -8,7 +8,7 @@ use Tests\TestCase;
 /**
  * @runTestsInSeparateProcesses
  */
-final class ItemTypeViewTest extends TestCase
+final class ItemTypeTest extends TestCase
 {
     /**
      * @test

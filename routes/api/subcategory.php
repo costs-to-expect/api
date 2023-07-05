@@ -21,7 +21,7 @@ Route::group(
         Route::options(
             'resource-types/{resource_type_id}/categories/{category_id}/subcategories',
             [App\Http\Controllers\View\SubcategoryController::class, 'optionsIndex']
-        );
+        )->name('subcategory.list.options');
 
         Route::get(
             'resource-types/{resource_type_id}/categories/{category_id}/subcategories/{subcategory_id}',
@@ -31,7 +31,7 @@ Route::group(
         Route::options(
             'resource-types/{resource_type_id}/categories/{category_id}/subcategories/{subcategory_id}',
             [App\Http\Controllers\View\SubcategoryController::class, 'optionsShow']
-        );
+        )->name('subcategory.show.options');
 
 
         Route::get(

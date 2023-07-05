@@ -32,14 +32,6 @@
                 "id",
                 "name"
             ]
-        },
-        "subcategories": {
-            "type": "object",
-            "properties": {
-                "count": {
-                    "type": "integer"
-                }
-            }
         }
     },
     "required": [

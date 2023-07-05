@@ -276,6 +276,53 @@ final class ResourceTypeTest extends TestCase
         }
     }
 
+    /** @test */
+    public function budgetResourceTypeShow(): void
+    {
+        $this->actingAs(User::find($this->createUser()));
+
+        $resource_type_id = $this->createBudgetResourceType();
+
+        $response = $this->fetchResourceType(['resource_type_id' => $resource_type_id]);
+
+        $response->assertStatus(200);
+        $this->assertJsonMatchesResourceTypeSchema($response->content());
+    }
+
+    /** @test */
+    public function budgetResourceTypeShowWithParameterIncludePermittedUsers(): void
+    {
+        $this->actingAs(User::find(1));
+
+        $resource_type_id = $this->createBudgetResourceType();
+
+        $response = $this->fetchResourceType([
+            'resource_type_id'=> $resource_type_id,
+            'include-permitted-users' => true
+        ]);
+        $response->assertStatus(200);
+
+        $this->assertJsonMatchesResourceTypeWhichIncludesPermittedUsersSchema($response->content());
+    }
+
+    /** @test */
+    public function budgetResourceTypeShowWithParameterIncludeResource(): void
+    {
+        $this->actingAs(User::find(1));
+
+        $resource_type_id = $this->createBudgetResourceType();
+
+        $this->createBudgetResource($resource_type_id);
+
+        $response = $this->fetchResourceType([
+            'resource_type_id'=> $resource_type_id,
+            'include-resources' => true
+        ]);
+        $response->assertStatus(200);
+
+        $this->assertJsonMatchesResourceTypeWhichIncludesResourcesSchema($response->content());
+    }
+
     /**
      * @test
      * @runInSeparateProcess
@@ -305,6 +352,53 @@ final class ResourceTypeTest extends TestCase
         }
     }
 
+    /** @test */
+    public function budgetProResourceTypeShow(): void
+    {
+        $this->actingAs(User::find($this->createUser()));
+
+        $resource_type_id = $this->createBudgetProResourceType();
+
+        $response = $this->fetchResourceType(['resource_type_id' => $resource_type_id]);
+
+        $response->assertStatus(200);
+        $this->assertJsonMatchesResourceTypeSchema($response->content());
+    }
+
+    /** @test */
+    public function budgetProResourceTypeShowWithParameterIncludePermittedUsers(): void
+    {
+        $this->actingAs(User::find(1));
+
+        $resource_type_id = $this->createBudgetProResourceType();
+
+        $response = $this->fetchResourceType([
+            'resource_type_id'=> $resource_type_id,
+            'include-permitted-users' => true
+        ]);
+        $response->assertStatus(200);
+
+        $this->assertJsonMatchesResourceTypeWhichIncludesPermittedUsersSchema($response->content());
+    }
+
+    /** @test */
+    public function budgetProResourceTypeShowWithParameterIncludeResource(): void
+    {
+        $this->actingAs(User::find(1));
+
+        $resource_type_id = $this->createBudgetProResourceType();
+
+        $this->createBudgetProResource($resource_type_id);
+
+        $response = $this->fetchResourceType([
+            'resource_type_id'=> $resource_type_id,
+            'include-resources' => true
+        ]);
+        $response->assertStatus(200);
+
+        $this->assertJsonMatchesResourceTypeWhichIncludesResourcesSchema($response->content());
+    }
+
     /**
      * @test
      * @runInSeparateProcess
@@ -332,6 +426,53 @@ final class ResourceTypeTest extends TestCase
 
             $this->assertJsonMatchesResourceTypeSchema($json);
         }
+    }
+
+    /** @test */
+    public function gameResourceTypeShow(): void
+    {
+        $this->actingAs(User::find($this->createUser()));
+
+        $resource_type_id = $this->createGameResourceType();
+
+        $response = $this->fetchResourceType(['resource_type_id' => $resource_type_id]);
+
+        $response->assertStatus(200);
+        $this->assertJsonMatchesResourceTypeSchema($response->content());
+    }
+
+    /** @test */
+    public function gameResourceTypeShowWithParameterIncludePermittedUsers(): void
+    {
+        $this->actingAs(User::find(1));
+
+        $resource_type_id = $this->createGameResourceType();
+
+        $response = $this->fetchResourceType([
+            'resource_type_id'=> $resource_type_id,
+            'include-permitted-users' => true
+        ]);
+        $response->assertStatus(200);
+
+        $this->assertJsonMatchesResourceTypeWhichIncludesPermittedUsersSchema($response->content());
+    }
+
+    /** @test */
+    public function gameResourceTypeShowWithParameterIncludeResource(): void
+    {
+        $this->actingAs(User::find(1));
+
+        $resource_type_id = $this->createGameResourceType();
+
+        $this->createYahtzeeResource($resource_type_id);
+
+        $response = $this->fetchResourceType([
+            'resource_type_id'=> $resource_type_id,
+            'include-resources' => true
+        ]);
+        $response->assertStatus(200);
+
+        $this->assertJsonMatchesResourceTypeWhichIncludesResourcesSchema($response->content());
     }
 
     /** @test */

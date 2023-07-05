@@ -1,0 +1,86 @@
+{
+    "$id": "https://api.costs-to-expect.com/v2/api/schema/category.json",
+    "type": "object",
+    "properties": {
+        "id": {
+            "type": "string"
+        },
+        "name": {
+            "type": "string"
+        },
+        "description": {
+            "type": "string"
+        },
+        "created": {
+            "type": "string"
+        },
+        "resource_type": {
+            "type": "object",
+            "properties": {
+                "uri": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                }
+            },
+            "required": [
+                "uri",
+                "id",
+                "name"
+            ]
+        },
+        "subcategories": {
+            "type": "object",
+            "properties": {
+                "uri": {
+                    "type": "string"
+                },
+                "count": {
+                    "type": "integer"
+                },
+                "collection": {
+                    "type": "array",
+                    "items": {
+                        "type": "object",
+                        "properties": {
+                            "id": {
+                                "type": "string"
+                            },
+                            "name": {
+                                "type": "string"
+                            },
+                            "description": {
+                                "type": "string"
+                            },
+                            "created": {
+                                "type": "string"
+                            },
+                            "updated": {
+                                "type": "string"
+                            }
+                        },
+                        "required": [
+                            "id",
+                            "name",
+                            "description",
+                            "created",
+                            "updated"
+                        ]
+                    }
+                }
+            }
+        }
+    },
+    "required": [
+        "id",
+        "name",
+        "description",
+        "created",
+        "resource_type",
+        "subcategories"
+    ]
+}
