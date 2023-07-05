@@ -2,6 +2,13 @@
 
 The complete changelog for the Costs to Expect REST API, our changelog follows the format defined at https://keepachangelog.com/en/1.0.0/
 
+## [v3.14.0] - 2023-07-05
+### Added
+- Continued expanding our test suite.
+### Changed
+- Added another site to the landing page.
+- Corrections and updates to the README.
+
 ## [v3.13.0] - 2023-06-29
 ### Added
 - Added resource tests, action and view, also add category view tests.

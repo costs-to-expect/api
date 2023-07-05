@@ -317,6 +317,25 @@ final class SubcategoryTest extends TestCase
         }
     }
 
+    /** @test */
+    public function allocatedExpenseSubcategoryShow(): void
+    {
+        $this->actingAs(User::find($this->createUser()));
+
+        $resource_type_id = $this->createAllocatedExpenseResourceType();
+        $category_id = $this->createRandomCategory($resource_type_id);
+        $subcategory_id = $this->createRandomSubcategory($resource_type_id, $category_id);
+
+        $response = $this->fetchSubcategory([
+            'resource_type_id' => $resource_type_id,
+            'category_id' => $category_id,
+            'subcategory_id' => $subcategory_id
+        ]);
+
+        $response->assertStatus(200);
+        $this->assertJsonMatchesSubcategorySchema($response->content());
+    }
+
     /**
      * @test
      * @runInSeparateProcess
@@ -350,6 +369,25 @@ final class SubcategoryTest extends TestCase
 
             $this->assertJsonMatchesSubcategorySchema($json);
         }
+    }
+
+    /** @test */
+    public function budgetProSubcategoryShow(): void
+    {
+        $this->actingAs(User::find($this->createUser()));
+
+        $resource_type_id = $this->createBudgetProResourceType();
+        $category_id = $this->createRandomCategory($resource_type_id);
+        $subcategory_id = $this->createRandomSubcategory($resource_type_id, $category_id);
+
+        $response = $this->fetchSubcategory([
+            'resource_type_id' => $resource_type_id,
+            'category_id' => $category_id,
+            'subcategory_id' => $subcategory_id
+        ]);
+
+        $response->assertStatus(200);
+        $this->assertJsonMatchesSubcategorySchema($response->content());
     }
 
     /**
@@ -387,6 +425,25 @@ final class SubcategoryTest extends TestCase
         }
     }
 
+    /** @test */
+    public function budgetSubcategoryShow(): void
+    {
+        $this->actingAs(User::find($this->createUser()));
+
+        $resource_type_id = $this->createBudgetResourceType();
+        $category_id = $this->createRandomCategory($resource_type_id);
+        $subcategory_id = $this->createRandomSubcategory($resource_type_id, $category_id);
+
+        $response = $this->fetchSubcategory([
+            'resource_type_id' => $resource_type_id,
+            'category_id' => $category_id,
+            'subcategory_id' => $subcategory_id
+        ]);
+
+        $response->assertStatus(200);
+        $this->assertJsonMatchesSubcategorySchema($response->content());
+    }
+
     /**
      * @test
      * @runInSeparateProcess
@@ -420,6 +477,25 @@ final class SubcategoryTest extends TestCase
 
             $this->assertJsonMatchesSubcategorySchema($json);
         }
+    }
+
+    /** @test */
+    public function gameSubcategoryShow(): void
+    {
+        $this->actingAs(User::find($this->createUser()));
+
+        $resource_type_id = $this->createGameResourceType();
+        $category_id = $this->createRandomCategory($resource_type_id);
+        $subcategory_id = $this->createRandomSubcategory($resource_type_id, $category_id);
+
+        $response = $this->fetchSubcategory([
+            'resource_type_id' => $resource_type_id,
+            'category_id' => $category_id,
+            'subcategory_id' => $subcategory_id
+        ]);
+
+        $response->assertStatus(200);
+        $this->assertJsonMatchesSubcategorySchema($response->content());
     }
 
     /** @test */
