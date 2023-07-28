@@ -197,11 +197,7 @@ class AuthenticationController extends \Illuminate\Routing\Controller
     {
         $user = auth()->guard('api')->user();
 
-        if ($user === null) {
-            return Response::authenticationRequired();
-        }
-
-        $response = new PermittedResourceType(['view'=> true, 'manage'=> true]);
+        $response = new PermittedResourceType(['view'=> $user !== null, 'manage'=> $user !== null]);
 
         return $response->create()->response();
     }
@@ -219,11 +215,7 @@ class AuthenticationController extends \Illuminate\Routing\Controller
     {
         $user = auth()->guard('api')->user();
 
-        if ($user === null) {
-            return Response::authenticationRequired();
-        }
-
-        $response = new PermittedResourceTypeResources(['view'=> true, 'manage'=> true]);
+        $response = new PermittedResourceTypeResources(['view'=> $user !== null, 'manage'=> $user !== null]);
 
         return $response->create()->response();
     }
@@ -232,11 +224,7 @@ class AuthenticationController extends \Illuminate\Routing\Controller
     {
         $user = auth()->guard('api')->user();
 
-        if ($user === null) {
-            return Response::authenticationRequired();
-        }
-
-        $response = new PermittedResourceTypes(['view'=> true, 'manage'=> true]);
+        $response = new PermittedResourceTypes(['view'=> $user !== null, 'manage'=> $user !== null]);
 
         return $response->create()->response();
     }
@@ -252,11 +240,7 @@ class AuthenticationController extends \Illuminate\Routing\Controller
     {
         $user = auth()->guard('api')->user();
 
-        if ($user === null) {
-            return Response::authenticationRequired();
-        }
-
-        $response = new RequestDelete(['view'=> true, 'manage'=> true]);
+        $response = new RequestDelete(['view'=> $user !== null, 'manage'=> $user !== null]);
 
         return $response->create()->response();
     }
@@ -311,11 +295,7 @@ class AuthenticationController extends \Illuminate\Routing\Controller
     {
         $user = auth()->guard('api')->user();
 
-        if ($user === null) {
-            return Response::authenticationRequired();
-        }
-
-        $response = new UpdateProfile(['view'=> true, 'manage'=> true]);
+        $response = new UpdateProfile(['view'=> $user !== null, 'manage'=> $user !== null]);
 
         return $response->create()->response();
     }
@@ -324,11 +304,7 @@ class AuthenticationController extends \Illuminate\Routing\Controller
     {
         $user = auth()->guard('api')->user();
 
-        if ($user === null) {
-            return Response::authenticationRequired();
-        }
-
-        $response = new UpdatePassword(['view'=> true, 'manage'=> true]);
+        $response = new UpdatePassword(['view'=> $user !== null, 'manage'=> $user !== null]);
 
         return $response->create()->response();
     }
@@ -418,11 +394,7 @@ class AuthenticationController extends \Illuminate\Routing\Controller
     {
         $user = auth()->guard('api')->user();
 
-        if ($user === null) {
-            return Response::authenticationRequired();
-        }
-
-        $response = new \App\HttpOptionResponse\Auth\User(['view'=> true, 'manage'=> true]);
+        $response = new \App\HttpOptionResponse\Auth\User(['view'=> $user !== null, 'manage'=> $user !== null]);
 
         return $response->create()->response();
     }
@@ -431,11 +403,7 @@ class AuthenticationController extends \Illuminate\Routing\Controller
     {
         $user = auth()->guard('api')->user();
 
-        if ($user === null) {
-            return Response::authenticationRequired();
-        }
-
-        $response = new \App\HttpOptionResponse\Auth\Tokens(['view'=> true, 'manage'=> true]);
+        $response = new \App\HttpOptionResponse\Auth\Tokens(['view'=> $user !== null, 'manage'=> $user !== null]);
 
         return $response->create()->response();
     }
@@ -444,11 +412,7 @@ class AuthenticationController extends \Illuminate\Routing\Controller
     {
         $user = auth()->guard('api')->user();
 
-        if ($user === null) {
-            return Response::authenticationRequired();
-        }
-
-        $response = new \App\HttpOptionResponse\Auth\Token(['view'=> true, 'manage'=> true]);
+        $response = new \App\HttpOptionResponse\Auth\Token(['view'=> $user !== null, 'manage'=> $user !== null]);
 
         return $response->create()->response();
     }

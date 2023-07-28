@@ -61,6 +61,7 @@ class PermittedUser extends Model
     ): array {
         $collection = $this->select(
             'permitted_user.id AS permitted_user_id',
+            'users.id AS permitted_user_user_id',
             'users.name AS permitted_user_name',
             'users.email AS permitted_user_email',
             'permitted_user.created_at AS permitted_user_created_at'
@@ -96,6 +97,7 @@ class PermittedUser extends Model
     {
         $result = $this->select(
             'permitted_user.id AS permitted_user_id',
+            'users.id AS permitted_user_user_id',
             'users.name AS permitted_user_name',
             'users.email AS permitted_user_email',
             'permitted_user.created_at AS permitted_user_created_at'
