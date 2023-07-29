@@ -2,6 +2,10 @@
 
 The complete changelog for the Costs to Expect REST API, our changelog follows the format defined at https://keepachangelog.com/en/1.0.0/
 
+## [v3.14.2] - 2023-07-29
+### Fixed
+- Adjusted the structure of the collection for permitted users, user should be an object.
+
 ## [v3.14.1] - 2023-07-28
 ### Fixed
 - User id not included in the permitted users responses.
