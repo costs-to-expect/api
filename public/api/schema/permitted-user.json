@@ -5,14 +5,24 @@
         "id": {
             "type": "string"
         },
-        "user_id": {
-            "type": "string"
-        },
-        "name": {
-            "type": "string"
-        },
-        "email": {
-            "type": "string"
+        "user": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "email": {
+                    "type": "string"
+                }
+            },
+            "required": [
+                "id",
+                "name",
+                "email"
+            ]
         },
         "created": {
             "type": "string"
@@ -20,9 +30,7 @@
     },
     "required": [
         "id",
-        "user_id",
-        "name",
-        "email",
+        "user",
         "created"
     ]
 }
