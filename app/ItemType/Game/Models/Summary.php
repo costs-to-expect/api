@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\ItemType\Game\Models;
 
-use App\Models\Clause;
+use App\Models\Utility;
 use Illuminate\Database\Eloquent\Model as LaravelModel;
 use Illuminate\Database\Query\Builder as QueryBuilder;
 
@@ -71,12 +71,12 @@ class Summary extends LaravelModel
             $collection->where($this->sub_table . '.complete', '=', 1);
         }
 
-        $collection = Clause::applySearch(
+        $collection = Utility::applySearchClauses(
             $collection,
             $this->sub_table,
             $search_parameters
         );
-        $collection = Clause::applyFiltering(
+        $collection = Utility::applyFilteringClauses(
             $collection,
             $this->sub_table,
             $filter_parameters

@@ -57,12 +57,12 @@ class Resource extends Model
             ->join('resource_type', 'resource.resource_type_id', 'resource_type.id')
             ->where('resource_type.id', '=', $resource_type_id);
 
-        $collection = Clause::applyViewableResourceTypes(
+        $collection = Utility::applyViewableResourceTypesClause(
             $collection,
             $viewable_resource_types
         );
 
-        $collection = Clause::applySearch($collection, $this->table, $search_parameters);
+        $collection = Utility::applySearchClauses($collection, $this->table, $search_parameters);
 
         return $collection->count();
     }
@@ -122,7 +122,7 @@ class Resource extends Model
             ->join('item_subtype', 'resource_item_subtype.item_subtype_id', 'item_subtype.id')
             ->where('resource.resource_type_id', '=', $resource_type_id);
 
-        $collection = Clause::applySearch($collection, $this->table, $search_parameters);
+        $collection = Utility::applySearchClauses($collection, $this->table, $search_parameters);
 
         if (
             array_key_exists('item-subtype', $request_parameters) === true &&

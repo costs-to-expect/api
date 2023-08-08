@@ -55,7 +55,7 @@ class ItemSubtype extends Model
             "{$this->table}.created_at AS {$this->table}_created_at"
         );
 
-        $collection = Clause::applySearch($collection, $this->table, $search_parameters);
+        $collection = Utility::applySearchClauses($collection, $this->table, $search_parameters);
 
         if (count($sort_parameters) > 0) {
             foreach ($sort_parameters as $field => $direction) {
@@ -113,7 +113,7 @@ class ItemSubtype extends Model
             ->select("{$this->table}.id")
             ->where("{$this->table}.item_type_id", '=', $item_type_id);
 
-        $collection = Clause::applySearch($collection, $this->table, $search_parameters);
+        $collection = Utility::applySearchClauses($collection, $this->table, $search_parameters);
 
         return $collection->count();
     }

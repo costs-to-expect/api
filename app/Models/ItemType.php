@@ -52,7 +52,7 @@ class ItemType extends Model
             'item_type.created_at AS item_type_created_at'
         );
 
-        $collection = Clause::applySearch($collection, $this->table, $search_parameters);
+        $collection = Utility::applySearchClauses($collection, $this->table, $search_parameters);
 
         if (count($sort_parameters) > 0) {
             foreach ($sort_parameters as $field => $direction) {
@@ -104,7 +104,7 @@ class ItemType extends Model
     {
         $collection = $this->select("item_type.id");
 
-        $collection = Clause::applySearch($collection, $this->table, $search_parameters);
+        $collection = Utility::applySearchClauses($collection, $this->table, $search_parameters);
 
         return $collection->count();
     }

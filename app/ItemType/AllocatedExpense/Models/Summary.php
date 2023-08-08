@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\ItemType\AllocatedExpense\Models;
 
-use App\Models\Clause;
+use App\Models\Utility;
 use Illuminate\Database\Eloquent\Model as LaravelModel;
 use Illuminate\Database\Query\Builder as QueryBuilder;
 use Illuminate\Support\Facades\DB;
@@ -75,7 +75,7 @@ class Summary extends LaravelModel
             ->where("resource_type.id", "=", $resource_type_id)
             ->where("resource.id", "=", $resource_id);
 
-        $collection = Clause::applyExcludeFutureUnpublished($collection, $parameters);
+        $collection = Utility::applyExcludeFutureUnpublishedClause($collection, $parameters);
 
         return $collection
             ->groupBy('item_category.category_id', 'currency.code')
@@ -141,7 +141,7 @@ class Summary extends LaravelModel
             ->where("resource.id", "=", $resource_id)
             ->where("category.id", "=", $category_id);
 
-        $collection = Clause::applyExcludeFutureUnpublished($collection, $parameters);
+        $collection = Utility::applyExcludeFutureUnpublishedClause($collection, $parameters);
 
         return $collection
             ->groupBy('item_category.category_id', 'currency.code')
@@ -213,19 +213,19 @@ class Summary extends LaravelModel
             $collection->whereRaw(DB::raw("MONTH({$this->sub_table}.effective_date) = {$month}"));
         }
 
-        $collection = Clause::applySearch(
+        $collection = Utility::applySearchClauses(
             $collection,
             $this->sub_table,
             $search_parameters
         );
 
-        $collection = Clause::applyFiltering(
+        $collection = Utility::applyFilteringClauses(
             $collection,
             $this->sub_table,
             $filter_parameters
         );
 
-        $collection = Clause::applyExcludeFutureUnpublished($collection, $parameters);
+        $collection = Utility::applyExcludeFutureUnpublishedClause($collection, $parameters);
 
         return $collection
             ->get()
@@ -284,7 +284,7 @@ class Summary extends LaravelModel
             ->where("resource.id", "=", $resource_id)
             ->whereRaw(DB::raw("YEAR({$this->sub_table}.effective_date) = '{$year}'"));
 
-        $collection = Clause::applyExcludeFutureUnpublished($collection, $parameters);
+        $collection = Utility::applyExcludeFutureUnpublishedClause($collection, $parameters);
 
         return $collection
             ->groupBy('month', 'currency.code')
@@ -348,7 +348,7 @@ class Summary extends LaravelModel
             ->whereRaw(DB::raw("YEAR({$this->sub_table}.effective_date) = '{$year}'"))
             ->whereRaw(DB::raw("MONTH({$this->sub_table}.effective_date) = '{$month}'"));
 
-        $collection = Clause::applyExcludeFutureUnpublished($collection, $parameters);
+        $collection = Utility::applyExcludeFutureUnpublishedClause($collection, $parameters);
 
         return $collection
             ->groupBy('month', 'currency.code')
@@ -415,7 +415,7 @@ class Summary extends LaravelModel
             ->where("resource.id", "=", $resource_id)
             ->where("category.id", "=", $category_id);
 
-        $collection = Clause::applyExcludeFutureUnpublished($collection, $parameters);
+        $collection = Utility::applyExcludeFutureUnpublishedClause($collection, $parameters);
 
         return $collection
             ->groupBy('item_sub_category.sub_category_id', 'currency.code')
@@ -485,7 +485,7 @@ class Summary extends LaravelModel
             ->where("category.id", "=", $category_id)
             ->where("sub_category.id", "=", $subcategory_id);
 
-        $collection = Clause::applyExcludeFutureUnpublished($collection, $parameters);
+        $collection = Utility::applyExcludeFutureUnpublishedClause($collection, $parameters);
 
         return $collection
             ->groupBy('item_sub_category.sub_category_id', 'currency.code')
@@ -541,7 +541,7 @@ class Summary extends LaravelModel
             ->where('resource.resource_type_id', '=', $resource_type_id)
             ->groupBy('currency.code');
 
-        $collection = Clause::applyExcludeFutureUnpublished($collection, $parameters);
+        $collection = Utility::applyExcludeFutureUnpublishedClause($collection, $parameters);
 
         return $collection
             ->get()
@@ -597,7 +597,7 @@ class Summary extends LaravelModel
             ->where("resource_type.id", "=", $resource_type_id)
             ->where("resource.id", "=", $resource_id);
 
-        $collection = Clause::applyExcludeFutureUnpublished($collection, $parameters);
+        $collection = Utility::applyExcludeFutureUnpublishedClause($collection, $parameters);
 
         return $collection
             ->groupBy('year', 'currency.code')
@@ -658,7 +658,7 @@ class Summary extends LaravelModel
             ->where("resource.id", "=", $resource_id)
             ->whereRaw(DB::raw("YEAR({$this->sub_table}.effective_date) = '{$year}'"));
 
-        $collection = Clause::applyExcludeFutureUnpublished($collection, $parameters);
+        $collection = Utility::applyExcludeFutureUnpublishedClause($collection, $parameters);
 
         return $collection
             ->groupBy('year', 'currency.code')

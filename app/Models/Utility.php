@@ -13,9 +13,9 @@ use Illuminate\Database\Query\Builder as QueryBuilder;
  * @copyright Dean Blackborough 2018-2022
  * @license https://github.com/costs-to-expect/api/blob/master/LICENSE
  */
-class Clause
+class Utility
 {
-    public static function applySearch(
+    public static function applySearchClauses(
         $collection,
         string $table,
         array $search_parameters = []
@@ -29,7 +29,7 @@ class Clause
         return $collection;
     }
 
-    public static function applyFiltering(
+    public static function applyFilteringClauses(
         $collection,
         string $table,
         array $filter_parameters = []
@@ -44,7 +44,7 @@ class Clause
         return $collection;
     }
 
-    public static function applyExcludeFutureUnpublished(
+    public static function applyExcludeFutureUnpublishedClause(
         $collection,
         array $parameters
     ) {
@@ -62,7 +62,7 @@ class Clause
         return $collection;
     }
 
-    public static function applyViewableResourceTypes(
+    public static function applyViewableResourceTypesClause(
         $collection,
         array $viewable_resource_types
     ) {

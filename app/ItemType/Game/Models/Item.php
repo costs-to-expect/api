@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\ItemType\Game\Models;
 
 use App\Models\Category;
-use App\Models\Clause;
+use App\Models\Utility;
 use Illuminate\Database\Eloquent\Model as LaravelModel;
 use Illuminate\Database\Query\Builder as QueryBuilder;
 use JetBrains\PhpStorm\ArrayShape;
@@ -122,12 +122,12 @@ class Item extends LaravelModel
             $collection->where($this->table . '.complete', '=', 1);
         }
 
-        $collection = Clause::applySearch(
+        $collection = Utility::applySearchClauses(
             $collection,
             $this->table,
             $search_parameters
         );
-        $collection = Clause::applyFiltering(
+        $collection = Utility::applyFilteringClauses(
             $collection,
             $this->table,
             $filter_parameters
@@ -172,12 +172,12 @@ class Item extends LaravelModel
             $collection->where($this->table . '.complete', '=', $parameters['complete']);
         }
 
-        $collection = Clause::applySearch(
+        $collection = Utility::applySearchClauses(
             $collection,
             $this->table,
             $search_parameters
         );
-        $collection = Clause::applyFiltering(
+        $collection = Utility::applyFilteringClauses(
             $collection,
             $this->table,
             $filter_parameters

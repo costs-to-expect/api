@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\ItemType\AllocatedExpense\Models;
 
-use App\Models\Clause;
+use App\Models\Utility;
 use App\Models\Currency;
 use App\HttpRequest\Validate\Boolean;
 use Illuminate\Database\Eloquent\Model as LaravelModel;
@@ -257,18 +257,18 @@ class Item extends LaravelModel
             $collection->where('item_sub_category.sub_category_id', '=', $parameters['subcategory']);
         }
 
-        $collection = Clause::applySearch(
+        $collection = Utility::applySearchClauses(
             $collection,
             $this->table,
             $search_parameters
         );
-        $collection = Clause::applyFiltering(
+        $collection = Utility::applyFilteringClauses(
             $collection,
             $this->table,
             $filter_parameters
         );
 
-        $collection = Clause::applyExcludeFutureUnpublished($collection, $parameters);
+        $collection = Utility::applyExcludeFutureUnpublishedClause($collection, $parameters);
 
         return $collection->count();
     }
@@ -393,10 +393,10 @@ class Item extends LaravelModel
             $collection->where('item_sub_category.sub_category_id', '=', $parameters['subcategory']);
         }
 
-        $collection = Clause::applySearch($collection, 'item_type_allocated_expense', $search_parameters);
-        $collection = Clause::applyFiltering($collection, 'item_type_allocated_expense', $filter_parameters);
+        $collection = Utility::applySearchClauses($collection, 'item_type_allocated_expense', $search_parameters);
+        $collection = Utility::applyFilteringClauses($collection, 'item_type_allocated_expense', $filter_parameters);
 
-        $collection = Clause::applyExcludeFutureUnpublished($collection, $parameters);
+        $collection = Utility::applyExcludeFutureUnpublishedClause($collection, $parameters);
 
         if (count($sort_parameters) > 0) {
             foreach ($sort_parameters as $field => $direction) {

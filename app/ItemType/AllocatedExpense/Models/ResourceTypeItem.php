@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\ItemType\AllocatedExpense\Models;
 
-use App\Models\Clause;
+use App\Models\Utility;
 use App\HttpRequest\Validate\Boolean;
 use Illuminate\Database\Eloquent\Model as LaravelModel;
 use Illuminate\Database\Query\Builder as QueryBuilder;
@@ -70,19 +70,19 @@ class ResourceTypeItem extends LaravelModel
             }
         }
 
-        $collection = Clause::applySearch(
+        $collection = Utility::applySearchClauses(
             $collection,
             $this->item_table,
             $search_parameters
         );
 
-        $collection = Clause::applyFiltering(
+        $collection = Utility::applyFilteringClauses(
             $collection,
             $this->item_table,
             $filter_parameters
         );
 
-        $collection = Clause::applyExcludeFutureUnpublished($collection, $parameters_collection);
+        $collection = Utility::applyExcludeFutureUnpublishedClause($collection, $parameters_collection);
 
         return $collection->count();
     }
@@ -203,19 +203,19 @@ class ResourceTypeItem extends LaravelModel
             }
         }
 
-        $collection = Clause::applySearch(
+        $collection = Utility::applySearchClauses(
             $collection,
             $this->item_table,
             $search_parameters
         );
 
-        $collection = Clause::applyFiltering(
+        $collection = Utility::applyFilteringClauses(
             $collection,
             $this->item_table,
             $filter_parameters
         );
 
-        $collection = Clause::applyExcludeFutureUnpublished($collection, $parameters_collection);
+        $collection = Utility::applyExcludeFutureUnpublishedClause($collection, $parameters_collection);
 
         if (count($sort_parameters) > 0) {
             foreach ($sort_parameters as $field => $direction) {

@@ -72,8 +72,7 @@ class DeleteAccount implements ShouldQueue
                 }
 
                 Notification::route('mail', Config::get('api.app.config.admin_email'))
-                    ->notify(new ResourceTypeDeleted($this->deletes)
-                    );
+                    ->notify(new ResourceTypeDeleted($this->deletes));
             }
 
             if (count($permitted_users) > 0) {

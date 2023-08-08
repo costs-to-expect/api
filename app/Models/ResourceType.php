@@ -68,12 +68,12 @@ class ResourceType extends Model
     ): int {
         $collection = $this->select("resource_type.id");
 
-        $collection = Clause::applyViewableResourceTypes(
+        $collection = Utility::applyViewableResourceTypesClause(
             $collection,
             $viewable_resource_types
         );
 
-        $collection = Clause::applySearch($collection, $this->table, $search_parameters);
+        $collection = Utility::applySearchClauses($collection, $this->table, $search_parameters);
 
         return $collection->count();
     }
@@ -132,12 +132,12 @@ class ResourceType extends Model
             ->join('item_type', 'resource_type_item_type.item_type_id', 'item_type.id')
             ->leftJoin("resource", "resource_type.id", "resource.id");
 
-        $collection = Clause::applyViewableResourceTypes(
+        $collection = Utility::applyViewableResourceTypesClause(
             $collection,
             $viewable_resource_types
         );
 
-        $collection = Clause::applySearch($collection, $this->table, $search_parameters);
+        $collection = Utility::applySearchClauses($collection, $this->table, $search_parameters);
 
         if (
             array_key_exists('item-type', $request_parameters) === true &&
@@ -200,7 +200,7 @@ class ResourceType extends Model
             ->join('item_type', 'resource_type_item_type.item_type_id', 'item_type.id')
             ->leftJoin("resource", "resource_type.id", "resource.id");
 
-        $result = Clause::applyViewableResourceTypes(
+        $result = Utility::applyViewableResourceTypesClause(
             $result,
             $viewable_resource_types
         );

@@ -58,7 +58,7 @@ class ItemTransfer extends Model
             $collection->where($this->table . '.item_id', '=', $parameters['item']);
         }
 
-        $collection = Clause::applyViewableResourceTypes(
+        $collection = Utility::applyViewableResourceTypesClause(
             $collection,
             $viewable_resource_types
         );
@@ -119,7 +119,7 @@ class ItemTransfer extends Model
             $collection->where($this->table . '.item_id', '=', $parameters['item']);
         }
 
-        $collection = Clause::applyViewableResourceTypes(
+        $collection = Utility::applyViewableResourceTypesClause(
             $collection,
             $viewable_resource_types
         );

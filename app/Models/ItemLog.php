@@ -65,7 +65,7 @@ class ItemLog extends Model
             ->where('resource.id', '=', $resource_id)
             ->where('resource_type.id', '=', $resource_type_id);
 
-        $collection = Clause::applyViewableResourceTypes(
+        $collection = Utility::applyViewableResourceTypesClause(
             $collection,
             $viewable_resource_types
         );
@@ -111,7 +111,7 @@ class ItemLog extends Model
             ->where('resource.id', '=', $resource_id)
             ->where('resource_type.id', '=', $resource_type_id);
 
-        $collection = Clause::applyViewableResourceTypes(
+        $collection = Utility::applyViewableResourceTypesClause(
             $collection,
             $viewable_resource_types
         );
@@ -143,7 +143,7 @@ class ItemLog extends Model
             ->where('resource_type.id', '=', $resource_type_id)
             ->where('item_log.id', '=', $item_log_id);
 
-        $result = Clause::applyViewableResourceTypes(
+        $result = Utility::applyViewableResourceTypesClause(
             $result,
             $viewable_resource_types
         );
@@ -179,7 +179,7 @@ class ItemLog extends Model
             ->where('resource_type.id', '=', $resource_type_id)
             ->where('item_log.id', '=', $item_log_id);
 
-        $result = Clause::applyViewableResourceTypes(
+        $result = Utility::applyViewableResourceTypesClause(
             $result,
             $viewable_resource_types
         );
