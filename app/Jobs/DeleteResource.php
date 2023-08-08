@@ -48,8 +48,7 @@ class DeleteResource implements ShouldQueue
 
     public function handle()
     {
-        /*TODO This is confusing to read as you are actually fetching number of permitted users excluding the given user*/
-        $permitted_users = (new Permission())->permittedUsersForResourceType($this->resource_type_id, $this->user_id);
+        $permitted_users = (new Permission())->additionalPermittedUsers($this->resource_type_id, $this->user_id);
 
         if (count($permitted_users) > 0) {
             $permitted_user = (new PermittedUser())->instance($this->resource_type_id, $this->user_id);

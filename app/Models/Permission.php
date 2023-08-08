@@ -80,13 +80,13 @@ class Permission extends Model
         return $permitted;
     }
 
-    public function permittedUsersForResourceType(int $resource_type_id, int $ignore_user_id): array
+    public function additionalPermittedUsers(int $resource_type_id, int $user_id_to_ignore): array
     {
         $users = [];
 
         $results = $this->query()
             ->where('resource_type_id', '=', $resource_type_id)
-            ->where('user_id', '!=', $ignore_user_id)
+            ->where('user_id', '!=', $user_id_to_ignore)
             ->select('user_id')
             ->get()
             ->toArray();
