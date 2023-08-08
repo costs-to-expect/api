@@ -17,7 +17,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property string $example
  *
  * @author Dean Blackborough <dean@g3d-development.com>
- * @copyright Dean Blackborough 2018-2022
+ * @copyright Dean Blackborough 2018-2023
  * @license https://github.com/costs-to-expect/api/blob/master/LICENSE
  */
 class ItemType extends Model

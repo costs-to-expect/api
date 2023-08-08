@@ -8,7 +8,7 @@ namespace App\HttpRequest\Parameter;
  * Fetch and validate any sort parameters
  *
  * @author Dean Blackborough <dean@g3d-development.com>
- * @copyright Dean Blackborough 2018-2022
+ * @copyright Dean Blackborough 2018-2023
  * @license https://github.com/costs-to-expect/api/blob/master/LICENSE
  */
 class Sort
