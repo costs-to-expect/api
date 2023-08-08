@@ -83,6 +83,13 @@ return [
         'type' => 'boolean',
         'required' => false
     ],
+    'deleted' => [
+        'field' => 'deleted',
+        'title' => 'item-type-budget-pro/fields-patch.title-deleted',
+        'description' => 'item-type-budget-pro/fields-patch.description-deleted',
+        'type' => 'boolean',
+        'required' => false
+    ],
     'frequency' => [
         'field' => 'frequency',
         'title' => 'item-type-budget-pro/fields-patch.title-frequency',

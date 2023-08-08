@@ -33,6 +33,9 @@ return [
     'title-disabled' => 'Disabled',
     'description-disabled' => 'Should the Budget item appear on the Budget',
 
+    'title-deleted' => 'Deleted',
+    'description-deleted' => 'Deleted budget items will not be fetched for the Budget',
+
     'title-frequency' => 'Frequency',
     'description-frequency' => 'Set the frequency with which the Budget item should repeat',
 ];

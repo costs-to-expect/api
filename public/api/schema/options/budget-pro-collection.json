@@ -723,6 +723,33 @@
                                 "required"
                             ]
                         },
+                        "deleted": {
+                            "type": "object",
+                            "properties": {
+                                "field": {
+                                    "type": "string"
+                                },
+                                "title": {
+                                    "type": "string"
+                                },
+                                "description": {
+                                    "type": "string"
+                                },
+                                "type": {
+                                    "type": "string"
+                                },
+                                "required": {
+                                    "type": "boolean"
+                                }
+                            },
+                            "required": [
+                                "field",
+                                "title",
+                                "description",
+                                "type",
+                                "required"
+                            ]
+                        },
                         "frequency": {
                             "type": "object",
                             "properties": {
@@ -762,6 +789,7 @@
                         "start_date",
                         "end_date",
                         "disabled",
+                        "deleted",
                         "frequency"
                     ]
                 }

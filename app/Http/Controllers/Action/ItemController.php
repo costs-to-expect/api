@@ -215,7 +215,8 @@ class ItemController extends Controller
                     'category' => $request->input('category', null),
                     'start_date' => $request->input('start_date'),
                     'end_date' => $request->input('end_date'),
-                    'disabled' => (bool) $request->input('disabled'),
+                    'disabled' => (bool) $request->input('disabled', false),
+                    'deleted' => (bool) $request->input('deleted', false),
                     'frequency' => $request->input('frequency'),
                     'created_at' => Date::now(),
                     'updated_at' => null
