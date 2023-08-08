@@ -47,9 +47,9 @@ class DeleteResourceType implements ShouldQueue
 
     public function handle()
     {
-        $permitted_users = (new Permission())->additionalPermittedUsers($this->resource_type_id, $this->user_id);
+        $additional_permitted_users = (new Permission())->additionalPermittedUsers($this->resource_type_id, $this->user_id);
 
-        if (count($permitted_users) > 0) {
+        if (count($additional_permitted_users) > 0) {
 
             /** Note
              * Yes, this is a hack as we are rewriting history when we removed a user from a resource type.
@@ -59,17 +59,17 @@ class DeleteResourceType implements ShouldQueue
              */
 
             // Remove references to the user in the `permitted_user` table
-            DB::update('UPDATE `permitted_user` SET `added_by` = ? WHERE `added_by` = ?', [$permitted_users[0], $this->user_id]);
+            DB::update('UPDATE `permitted_user` SET `added_by` = ? WHERE `added_by` = ?', [$additional_permitted_users[0], $this->user_id]);
 
             // Remove references to the user in the `item` table
-            DB::update('UPDATE `item` SET `created_by` = ? WHERE `created_by` = ?', [$permitted_users[0], $this->user_id]);
-            DB::update('UPDATE `item` SET `updated_by` = ? WHERE `updated_by` = ?', [$permitted_users[0], $this->user_id]);
+            DB::update('UPDATE `item` SET `created_by` = ? WHERE `created_by` = ?', [$additional_permitted_users[0], $this->user_id]);
+            DB::update('UPDATE `item` SET `updated_by` = ? WHERE `updated_by` = ?', [$additional_permitted_users[0], $this->user_id]);
 
             $permitted_user = (new PermittedUser())->instance($this->resource_type_id, $this->user_id);
             $permitted_user?->delete();
         }
 
-        if (count($permitted_users) === 0) {
+        if (count($additional_permitted_users) === 0) {
             $resources = (new Resource())->paginatedCollection($this->resource_type_id);
 
             foreach ($resources as $resource) {

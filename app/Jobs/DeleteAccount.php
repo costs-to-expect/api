@@ -46,8 +46,8 @@ class DeleteAccount implements ShouldQueue
         $resource_types = (new Permission())->permittedResourceTypesForUser($this->user_id);
 
         foreach ($resource_types as $resource_type_id) {
-            $permitted_users = (new Permission())->additionalPermittedUsers($resource_type_id, $this->user_id);
-            if (count($permitted_users) === 0) {
+            $additional_permitted_users = (new Permission())->additionalPermittedUsers($resource_type_id, $this->user_id);
+            if (count($additional_permitted_users) === 0) {
                 $resources = (new Resource())->paginatedCollection($resource_type_id);
 
                 foreach ($resources as $resource) {
@@ -74,7 +74,7 @@ class DeleteAccount implements ShouldQueue
                     ->notify(new ResourceTypeDeleted($this->deletes));
             }
 
-            if (count($permitted_users) > 0) {
+            if (count($additional_permitted_users) > 0) {
 
                 /** Note
                  * Yes, this is a hack as we are rewriting history when we removed a user from a resource type.
@@ -84,11 +84,11 @@ class DeleteAccount implements ShouldQueue
                  */
 
                 // Remove references to the user in the `permitted_user` table
-                DB::update('UPDATE `permitted_user` SET `added_by` = ? WHERE `added_by` = ?', [$permitted_users[0], $this->user_id]);
+                DB::update('UPDATE `permitted_user` SET `added_by` = ? WHERE `added_by` = ?', [$additional_permitted_users[0], $this->user_id]);
 
                 // Remove references to the user in the `item` table
-                DB::update('UPDATE `item` SET `created_by` = ? WHERE `created_by` = ?', [$permitted_users[0], $this->user_id]);
-                DB::update('UPDATE `item` SET `updated_by` = ? WHERE `updated_by` = ?', [$permitted_users[0], $this->user_id]);
+                DB::update('UPDATE `item` SET `created_by` = ? WHERE `created_by` = ?', [$additional_permitted_users[0], $this->user_id]);
+                DB::update('UPDATE `item` SET `updated_by` = ? WHERE `updated_by` = ?', [$additional_permitted_users[0], $this->user_id]);
 
                 $permitted_user = (new PermittedUser())->instance($resource_type_id, $this->user_id);
                 $permitted_user?->delete();

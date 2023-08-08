@@ -48,14 +48,14 @@ class DeleteResource implements ShouldQueue
 
     public function handle()
     {
-        $permitted_users = (new Permission())->additionalPermittedUsers($this->resource_type_id, $this->user_id);
+        $additional_permitted_users = (new Permission())->additionalPermittedUsers($this->resource_type_id, $this->user_id);
 
-        if (count($permitted_users) > 0) {
+        if (count($additional_permitted_users) > 0) {
             $permitted_user = (new PermittedUser())->instance($this->resource_type_id, $this->user_id);
             $permitted_user?->delete();
         }
 
-        if (count($permitted_users) === 0) {
+        if (count($additional_permitted_users) === 0) {
             try {
                 DB::transaction(function () {
                     $this->deletes['data'] = Utility::deleteItemData($this->resource_id);
