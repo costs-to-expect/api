@@ -361,8 +361,11 @@
                         <p class="mb-2 text-sm text-gray-800">Version {{ $version }}<br />
                             Released {{ date('jS M Y', strtotime($date)) }}
                         </p>
-                        <p class="text-sm text-gray-800">
+                        <p class="mb-2 text-sm text-gray-800">
                             Follow us on <a href="https://twitter.com/coststoexpect" class="text-pinky-500 hover:text-pinky-900">Twitter</a> &copy;
+                        </p>
+                        <p class="text-sm text-gray-800">
+                            Contact us via mail at <a href="mailto:support@costs-to-expect.com" class="text-pinky-500 hover:text-pinky-900">support@costs-to-expect.com</a>
                         </p>
                     </div>
                 </div>

@@ -18,7 +18,7 @@ use Illuminate\Support\Facades\Config;
  * @property string $description
  *
  * @author Dean Blackborough <dean@g3d-development.com>
- * @copyright Dean Blackborough 2018-2022
+ * @copyright Dean Blackborough 2018-2023
  * @license https://github.com/costs-to-expect/api/blob/master/LICENSE
  */
 class Subcategory extends Model
@@ -46,7 +46,7 @@ class Subcategory extends Model
             ->where('sub_category.category_id', '=', $category_id)
             ->where('category.resource_type_id', '=', $resource_type_id);
 
-        $collection = Clause::applySearch($collection, $this->table, $search_parameters);
+        $collection = Utility::applySearchClauses($collection, $this->table, $search_parameters);
 
         return $collection->count();
     }
@@ -88,7 +88,7 @@ class Subcategory extends Model
             ->where('sub_category.category_id', '=', $category_id)
             ->where('category.resource_type_id', '=', $resource_type_id);
 
-        $collection = Clause::applySearch($collection, $this->table, $search_parameters);
+        $collection = Utility::applySearchClauses($collection, $this->table, $search_parameters);
 
         if (count($sort_parameters) > 0) {
             foreach ($sort_parameters as $field => $direction) {

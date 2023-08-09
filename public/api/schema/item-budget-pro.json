@@ -48,6 +48,9 @@
         "disabled": {
             "type": "boolean"
         },
+        "deleted": {
+            "type": "boolean"
+        },
         "frequency": {
             "type": "object"
         },
@@ -70,6 +73,7 @@
         "start_date",
         "end_date",
         "disabled",
+        "deleted",
         "frequency",
         "created",
         "updated"

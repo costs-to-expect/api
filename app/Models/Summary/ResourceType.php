@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Models\Summary;
 
-use App\Models\Clause;
+use App\Models\Utility;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Query\Builder as QueryBuilder;
 
@@ -18,7 +18,7 @@ use Illuminate\Database\Query\Builder as QueryBuilder;
  * @property string $data
  *
  * @author Dean Blackborough <dean@g3d-development.com>
- * @copyright Dean Blackborough 2018-2022
+ * @copyright Dean Blackborough 2018-2023
  * @license https://github.com/costs-to-expect/api/blob/master/LICENSE
  */
 class ResourceType extends Model
@@ -39,12 +39,12 @@ class ResourceType extends Model
                 ) AS last_updated"
             );
 
-        $collection = Clause::applyViewableResourceTypes(
+        $collection = Utility::applyViewableResourceTypesClause(
             $collection,
             $viewable_resource_types
         );
 
-        $collection = Clause::applySearch($collection, $this->table, $search_parameters);
+        $collection = Utility::applySearchClauses($collection, $this->table, $search_parameters);
 
         return $collection
             ->get()

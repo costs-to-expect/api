@@ -58,6 +58,7 @@ class Item extends Transformer
             'start_date' => $to_transform['item_start_date'],
             'end_date' => $to_transform['item_end_date'],
             'disabled' => (bool) $to_transform['item_disabled'],
+            'deleted' => (bool) $to_transform['item_deleted'],
             'frequency' => $frequency,
             'created' => $to_transform['item_created_at'],
             'updated' => $to_transform['item_updated_at']

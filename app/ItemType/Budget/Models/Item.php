@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\ItemType\Budget\Models;
 
-use App\Models\Clause;
+use App\Models\Utility;
 use App\Models\Currency;
 use Illuminate\Database\Eloquent\Model as LaravelModel;
 use Illuminate\Database\Query\Builder as QueryBuilder;
@@ -13,7 +13,7 @@ use JetBrains\PhpStorm\ArrayShape;
 /**
  * @mixin QueryBuilder
  * @author Dean Blackborough <dean@g3d-development.com>
- * @copyright Dean Blackborough 2018-2022
+ * @copyright Dean Blackborough 2018-2023
  * @license https://github.com/costs-to-expect/api/blob/master/LICENSE
  */
 class Item extends LaravelModel
@@ -140,12 +140,12 @@ class Item extends LaravelModel
             $collection->where($this->table . '.complete', '=', 1);
         }
 
-        $collection = Clause::applySearch(
+        $collection = Utility::applySearchClauses(
             $collection,
             $this->table,
             $search_parameters
         );
-        $collection = Clause::applyFiltering(
+        $collection = Utility::applyFilteringClauses(
             $collection,
             $this->table,
             $filter_parameters
@@ -191,12 +191,12 @@ class Item extends LaravelModel
             ->where('resource_id', '=', $resource_id)
             ->where('resource.resource_type_id', '=', $resource_type_id);
 
-        $collection = Clause::applySearch(
+        $collection = Utility::applySearchClauses(
             $collection,
             $this->table,
             $search_parameters
         );
-        $collection = Clause::applyFiltering(
+        $collection = Utility::applyFilteringClauses(
             $collection,
             $this->table,
             $filter_parameters

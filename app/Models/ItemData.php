@@ -17,7 +17,7 @@ use JetBrains\PhpStorm\ArrayShape;
  * @property string $updated_at
  *
  * @author Dean Blackborough <dean@g3d-development.com>
- * @copyright Dean Blackborough 2018-2022
+ * @copyright Dean Blackborough 2018-2023
  * @license https://github.com/costs-to-expect/api/blob/master/LICENSE
  */
 class ItemData extends Model
@@ -63,7 +63,7 @@ class ItemData extends Model
             ->where('resource.id', '=', $resource_id)
             ->where('resource_type.id', '=', $resource_type_id);
 
-        $collection = Clause::applyViewableResourceTypes(
+        $collection = Utility::applyViewableResourceTypesClause(
             $collection,
             $viewable_resource_types
         );
@@ -108,7 +108,7 @@ class ItemData extends Model
             ->where('resource.id', '=', $resource_id)
             ->where('resource_type.id', '=', $resource_type_id);
 
-        $collection = Clause::applyViewableResourceTypes(
+        $collection = Utility::applyViewableResourceTypesClause(
             $collection,
             $viewable_resource_types
         );
@@ -139,7 +139,7 @@ class ItemData extends Model
             ->where('resource_type.id', '=', $resource_type_id)
             ->where('item_data.key', '=', $key);
 
-        $result = Clause::applyViewableResourceTypes(
+        $result = Utility::applyViewableResourceTypesClause(
             $result,
             $viewable_resource_types
         );
@@ -175,7 +175,7 @@ class ItemData extends Model
             ->where('resource_type.id', '=', $resource_type_id)
             ->where('item_data.key', '=', $key);
 
-        $result = Clause::applyViewableResourceTypes(
+        $result = Utility::applyViewableResourceTypesClause(
             $result,
             $viewable_resource_types
         );

@@ -16,7 +16,7 @@ use Illuminate\Database\Query\Builder as QueryBuilder;
  * @property int $added_by
  *
  * @author Dean Blackborough <dean@g3d-development.com>
- * @copyright Dean Blackborough 2018-2022
+ * @copyright Dean Blackborough 2018-2023
  * @license https://github.com/costs-to-expect/api/blob/master/LICENSE
  */
 class Permission extends Model
@@ -80,13 +80,13 @@ class Permission extends Model
         return $permitted;
     }
 
-    public function permittedUsersForResourceType(int $resource_type_id, int $ignore_user_id): array
+    public function additionalPermittedUsers(int $resource_type_id, int $user_id_to_ignore): array
     {
         $users = [];
 
         $results = $this->query()
             ->where('resource_type_id', '=', $resource_type_id)
-            ->where('user_id', '!=', $ignore_user_id)
+            ->where('user_id', '!=', $user_id_to_ignore)
             ->select('user_id')
             ->get()
             ->toArray();

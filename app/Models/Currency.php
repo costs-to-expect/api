@@ -15,7 +15,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property string $name
  *
  * @author Dean Blackborough <dean@g3d-development.com>
- * @copyright Dean Blackborough 2018-2022
+ * @copyright Dean Blackborough 2018-2023
  * @license https://github.com/costs-to-expect/api/blob/master/LICENSE
  */
 class Currency extends Model
@@ -48,7 +48,7 @@ class Currency extends Model
             "{$this->table}.created_at AS {$this->table}_created_at"
         );
 
-        $collection = Clause::applySearch($collection, $this->table, $search_parameters);
+        $collection = Utility::applySearchClauses($collection, $this->table, $search_parameters);
 
         if (count($sort_parameters) > 0) {
             foreach ($sort_parameters as $field => $direction) {
@@ -97,7 +97,7 @@ class Currency extends Model
     {
         $collection = $this->select("{$this->table}.id");
 
-        $collection = Clause::applySearch($collection, $this->table, $search_parameters);
+        $collection = Utility::applySearchClauses($collection, $this->table, $search_parameters);
 
         return $collection->count();
     }

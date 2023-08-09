@@ -2,10 +2,10 @@
 
 namespace App\Jobs;
 
-use App\ItemType\Select;
 use App\Models\Permission;
 use App\Models\PermittedUser;
 use App\Models\Resource;
+use App\Models\Utility;
 use App\Notifications\FailedJob;
 use App\Notifications\ResourceDeleted;
 use App\Notifications\ResourceTypeDeleted;
@@ -46,9 +46,8 @@ class DeleteAccount implements ShouldQueue
         $resource_types = (new Permission())->permittedResourceTypesForUser($this->user_id);
 
         foreach ($resource_types as $resource_type_id) {
-            /*TODO This is confusing to read as you are actually fetching number of permitted users excluding the given user*/
-            $permitted_users = (new Permission())->permittedUsersForResourceType($resource_type_id, $this->user_id);
-            if (count($permitted_users) === 0) {
+            $additional_permitted_users = (new Permission())->additionalPermittedUsers($resource_type_id, $this->user_id);
+            if (count($additional_permitted_users) === 0) {
                 $resources = (new Resource())->paginatedCollection($resource_type_id);
 
                 foreach ($resources as $resource) {
@@ -59,11 +58,11 @@ class DeleteAccount implements ShouldQueue
 
                 try {
                     DB::transaction(function () use ($resource_type_id) {
-                        $this->deletes['subcategories'] = $this->deleteSubcategories($resource_type_id);
-                        $this->deletes['categories'] = $this->deleteCategories($resource_type_id);
-                        $this->deletes['resource-type-item-type'] = $this->deleteResourceTypeItemType($resource_type_id);
-                        $this->deletes['permitted-users'] = $this->deletePermittedUsers($resource_type_id);
-                        $this->deletes['resource-type'] = $this->deleteResourceType($resource_type_id);
+                        $this->deletes['subcategories'] = Utility::deleteSubcategories($resource_type_id);
+                        $this->deletes['categories'] = Utility::deleteCategories($resource_type_id);
+                        $this->deletes['resource-type-item-type'] = Utility::deleteResourceTypeItemType($resource_type_id);
+                        $this->deletes['permitted-users'] = Utility::deletePermittedUsers($resource_type_id);
+                        $this->deletes['resource-type'] = Utility::deleteResourceType($resource_type_id);
                     });
 
 
@@ -72,17 +71,24 @@ class DeleteAccount implements ShouldQueue
                 }
 
                 Notification::route('mail', Config::get('api.app.config.admin_email'))
-                    ->notify(new ResourceTypeDeleted($this->deletes)
-                    );
+                    ->notify(new ResourceTypeDeleted($this->deletes));
             }
 
-            if (count($permitted_users) > 0) {
+            if (count($additional_permitted_users) > 0) {
+
+                /** Note
+                 * Yes, this is a hack as we are rewriting history when we removed a user from a resource type.
+                 * Eventually we will solve this another, probably by using a placeholder user for each resource type
+                 * so we can show something line [Deleted User] in responses rather than the current incorrect
+                 * behaviour
+                 */
+
                 // Remove references to the user in the `permitted_user` table
-                DB::update('UPDATE `permitted_user` SET `added_by` = ? WHERE `added_by` = ?', [$permitted_users[0], $this->user_id]);
+                DB::update('UPDATE `permitted_user` SET `added_by` = ? WHERE `added_by` = ?', [$additional_permitted_users[0], $this->user_id]);
 
                 // Remove references to the user in the `item` table
-                DB::update('UPDATE `item` SET `created_by` = ? WHERE `created_by` = ?', [$permitted_users[0], $this->user_id]);
-                DB::update('UPDATE `item` SET `updated_by` = ? WHERE `updated_by` = ?', [$permitted_users[0], $this->user_id]);
+                DB::update('UPDATE `item` SET `created_by` = ? WHERE `created_by` = ?', [$additional_permitted_users[0], $this->user_id]);
+                DB::update('UPDATE `item` SET `updated_by` = ? WHERE `updated_by` = ?', [$additional_permitted_users[0], $this->user_id]);
 
                 $permitted_user = (new PermittedUser())->instance($resource_type_id, $this->user_id);
                 $permitted_user?->delete();
@@ -102,6 +108,32 @@ class DeleteAccount implements ShouldQueue
         $user?->delete();
     }
 
+    protected function deleteResourceAndAllData(int $resource_type_id, int $resource_id)
+    {
+        $this->deletes = [];
+
+        try {
+            DB::transaction(function () use ($resource_type_id, $resource_id) {
+                $this->deletes['data'] = Utility::deleteItemData($resource_id);
+                $this->deletes['logs'] = Utility::deleteItemLogs($resource_id);
+                $this->deletes['subcategories'] = Utility::deleteItemSubcategories($resource_id);
+                $this->deletes['categories'] = Utility::deleteItemCategories($resource_id);
+                $this->deletes['transfers'] = Utility::deleteTransfers($resource_id);
+                $this->deletes['partial-transfers'] = Utility::deletePartialTransfers($resource_id);
+                $this->deletes['item-type-data'] = Utility::deleteItemTypeData($resource_type_id, $resource_id);
+                $this->deletes['items'] = Utility::deleteItems($resource_id);
+                $this->deletes['resource-item-subtype'] = Utility::deleteResourceItemSubType($resource_id);
+                $this->deletes['resource'] = Utility::deleteResource($resource_id);
+            });
+        } catch (Throwable $e) {
+            $this->fail($e);
+        }
+
+        Notification::route('mail', Config::get('api.app.config.admin_email'))
+            ->notify(new ResourceDeleted($this->deletes)
+            );
+    }
+
     public function failed(Throwable $exception)
     {
         Notification::route('mail', Config::get('api.app.config.admin_email'))
@@ -112,250 +144,5 @@ class DeleteAccount implements ShouldQueue
                     'trace' => $exception->getTraceAsString()
                 ])
             );
-    }
-
-    protected function deleteAllocatedExpenseItems(int $resource_id): int
-    {
-        return DB::delete('
-            DELETE FROM
-                `item_type_allocated_expense`
-            WHERE
-                `item_type_allocated_expense`.`item_id` IN (
-                SELECT `item`.`id` FROM `item` WHERE `item`.`resource_id` = ?
-            )
-        ', [$resource_id]);
-    }
-
-    protected function deleteBudgetItems(int $resource_id): int
-    {
-        return DB::delete('
-            DELETE FROM
-                `item_type_budget`
-            WHERE
-                `item_type_budget`.`item_id` IN (
-                SELECT `item`.`id` FROM `item` WHERE `item`.`resource_id` = ?
-            )
-        ', [$resource_id]);
-    }
-
-    protected function deleteBudgetProItems(int $resource_id): int
-    {
-        return DB::delete('
-            DELETE FROM
-                `item_type_budget_pro`
-            WHERE
-                `item_type_budget_pro`.`item_id` IN (
-                SELECT `item`.`id` FROM `item` WHERE `item`.`resource_id` = ?
-            )
-        ', [$resource_id]);
-    }
-
-    protected function deleteCategories(int $resource_type_id): int
-    {
-        return DB::delete('
-            DELETE FROM
-                `category`
-            WHERE
-                `category`.`resource_type_id` = ?
-        ', [$resource_type_id]);
-    }
-
-    protected function deleteGameItems(int $resource_id): int
-    {
-        return DB::delete('
-            DELETE FROM
-                `item_type_game`
-            WHERE
-                `item_type_game`.`item_id` IN (
-                SELECT `item`.`id` FROM `item` WHERE `item`.`resource_id` = ?
-            )
-        ', [$resource_id]);
-    }
-
-    protected function deleteItemCategories(int $resource_id): int
-    {
-        return DB::delete('
-            DELETE FROM 
-                `item_category`
-            WHERE `item_category`.`item_id` IN (
-                SELECT `item`.`id` FROM `item` WHERE `item`.`resource_id` = ?
-            )
-        ', [$resource_id]);
-    }
-
-    protected function deleteItemData(int $resource_id): int
-    {
-        return DB::delete('
-            DELETE FROM 
-                `item_data`
-            WHERE
-                `item_data`.`item_id` IN (
-                SELECT `item`.`id` FROM `item` WHERE `item`.`resource_id` = ?
-            )
-        ', [$resource_id]);
-    }
-
-    protected function deleteItemLogs(int $resource_id): int
-    {
-        return DB::delete('
-            DELETE FROM 
-                `item_log`
-            WHERE
-                `item_log`.`item_id` IN (
-                SELECT `item`.`id` FROM `item` WHERE `item`.`resource_id` = ?
-            )
-        ', [$resource_id]);
-    }
-
-    protected function deleteItems(int $resource_id): int
-    {
-        return DB::delete('
-            DELETE FROM
-                `item`
-            WHERE `item`.`resource_id` = ?
-        ', [$resource_id]);
-    }
-
-    protected function deleteItemSubcategories(int $resource_id): int
-    {
-        return DB::delete('
-            DELETE FROM 
-                `item_sub_category`
-            WHERE
-                `item_sub_category`.`item_category_id` IN (
-                SELECT
-                    `item_category`.`id`
-                FROM
-                    `item_category`
-                WHERE `item_category`.`item_id` IN (
-                    SELECT `item`.`id` FROM `item` WHERE `item`.`resource_id` = ?
-               )
-            )
-        ', [$resource_id]);
-    }
-
-    protected function deleteItemTypeData(int $resource_type_id, int $resource_id): int
-    {
-        $item_type = Select::itemType($resource_type_id);
-
-        return match ($item_type) {
-            'allocated-expense' => $this->deleteAllocatedExpenseItems($resource_id),
-            'budget' => $this->deleteBudgetItems($resource_id),
-            'budget-pro' => $this->deleteBudgetProItems($resource_id),
-            'game' => $this->deleteGameItems($resource_id),
-            default => throw new \OutOfRangeException('No item type definition for ' . $item_type, 500),
-        };
-    }
-
-    protected function deletePartialTransfers(int $resource_id): int
-    {
-        return DB::delete('
-            DELETE FROM
-                `item_transfer`
-            WHERE `item_transfer`.`item_id` IN (
-                SELECT `item`.`id` FROM `item` WHERE `item`.`resource_id` = ?
-            )
-        ', [$resource_id]);
-    }
-
-    protected function deletePermittedUsers(int $resource_type_id): int
-    {
-        return DB::delete('
-            DELETE FROM
-                `permitted_user`
-            WHERE
-                `permitted_user`.`resource_type_id` = ?
-        ', [$resource_type_id]);
-    }
-
-    protected function deleteResource(int $resource_id): int
-    {
-        return DB::delete('
-            DELETE FROM
-                `resource`
-            WHERE `resource`.`id` = ?
-        ', [$resource_id]);
-    }
-
-    protected function deleteResourceAndAllData(int $resource_type_id, int $resource_id)
-    {
-        $this->deletes = [];
-
-        try {
-            DB::transaction(function () use ($resource_type_id, $resource_id) {
-
-                $this->deletes['data'] = $this->deleteItemData($resource_id);
-                $this->deletes['logs'] = $this->deleteItemLogs($resource_id);
-                $this->deletes['subcategories'] = $this->deleteItemSubcategories($resource_id);
-                $this->deletes['categories'] = $this->deleteItemCategories($resource_id);
-                $this->deletes['transfers'] = $this->deleteTransfers($resource_id);
-                $this->deletes['partial-transfers'] = $this->deletePartialTransfers($resource_id);
-                $this->deletes['item-type-data'] = $this->deleteItemTypeData($resource_type_id, $resource_id);
-                $this->deletes['items'] = $this->deleteItems($resource_id);
-                $this->deletes['resource-item-subtype'] = $this->deleteResourceItemSubType($resource_id);
-                $this->deletes['resource'] = $this->deleteResource($resource_id);
-
-            });
-
-
-        } catch (Throwable $e) {
-            $this->fail($e);
-        }
-
-        Notification::route('mail', Config::get('api.app.config.admin_email'))
-            ->notify(new ResourceDeleted($this->deletes)
-            );
-    }
-
-    protected function deleteResourceItemSubType(int $resource_id): int
-    {
-        return DB::delete('
-            DELETE FROM
-                `resource_item_subtype`
-            WHERE `resource_item_subtype`.`resource_id` = ?
-        ', [$resource_id]);
-    }
-
-    protected function deleteResourceType(int $resource_type_id): int
-    {
-        return DB::delete('
-            DELETE FROM
-                `resource_type`
-            WHERE
-                `resource_type`.`id` = ?
-        ', [$resource_type_id]);
-    }
-
-    protected function deleteResourceTypeItemType(int $resource_type_id): int
-    {
-        return DB::delete('
-            DELETE FROM
-                `resource_type_item_type`
-            WHERE
-                `resource_type_item_type`.`resource_type_id` = ?
-        ', [$resource_type_id]);
-    }
-
-    protected function deleteSubcategories(int $resource_type_id): int
-    {
-        return DB::delete('
-            DELETE FROM
-                `sub_category`
-            WHERE
-                `sub_category`.`category_id` IN (
-                SELECT `category`.`id` FROM `category` WHERE `category`.`resource_type_id` = ?
-            )
-        ', [$resource_type_id]);
-    }
-
-    protected function deleteTransfers(int $resource_id): int
-    {
-        return DB::delete('
-            DELETE FROM
-                `item_partial_transfer`
-            WHERE `item_partial_transfer`.`item_id` IN (
-                SELECT `item`.`id` FROM `item` WHERE `item`.`resource_id` = ?
-            )
-        ', [$resource_id]);
     }
 }

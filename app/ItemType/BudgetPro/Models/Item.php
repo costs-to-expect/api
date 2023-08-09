@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\ItemType\BudgetPro\Models;
 
-use App\Models\Clause;
+use App\Models\Utility;
 use App\Models\Currency;
 use Illuminate\Database\Eloquent\Model as LaravelModel;
 use Illuminate\Database\Query\Builder as QueryBuilder;
@@ -52,6 +52,7 @@ class Item extends LaravelModel
         'item_start_date' => "string",
         'item_end_date' => "string",
         'item_disabled' => "int",
+        'item_deleted' => "int",
         'item_frequency' => "string",
         'item_created_at' => "string",
         'item_updated_at' => "string"
@@ -72,6 +73,7 @@ class Item extends LaravelModel
             'item_start_date' => $item->start_date,
             'item_end_date' => $item->end_date,
             'item_disabled' => $item->disabled,
+            'item_deleted' => $item->deleted,
             'item_frequency' => $item->frequency,
             'item_created_at' => ($item->created_at !== null) ? $item->created_at->toDateTimeString() : null,
             'item_updated_at' => ($item->updated_at !== null) ? $item->updated_at->toDateTimeString() : null,
@@ -98,6 +100,7 @@ class Item extends LaravelModel
             "{$this->table}.start_date AS item_start_date",
             "{$this->table}.end_date AS item_end_date",
             "{$this->table}.disabled AS item_disabled",
+            "{$this->table}.deleted AS item_deleted",
             "{$this->table}.frequency AS item_frequency",
             "{$this->table}.created_at AS item_created_at",
             "{$this->table}.updated_at AS item_updated_at"
@@ -113,13 +116,7 @@ class Item extends LaravelModel
             ->where("{$this->table}.item_id", '=', $item_id)
             ->where('item.id', '=', $item_id);
 
-        $item = $result->select($fields)->first();
-
-        if ($item !== null) {
-            return $item->toArray();
-        }
-
-        return null;
+        return $result->select($fields)->first()?->toArray();
     }
 
     public function totalCount(
@@ -136,16 +133,19 @@ class Item extends LaravelModel
             ->where('resource_id', '=', $resource_id)
             ->where('resource.resource_type_id', '=', $resource_type_id);
 
-        if (array_key_exists('complete', $parameters) === true) {
-            $collection->where($this->table . '.complete', '=', 1);
+        if (
+            array_key_exists('include-deleted', $parameters) === false ||
+            $parameters['include-deleted'] === false
+        ) {
+            $collection->where($this->table . '.deleted', '=', 0);
         }
 
-        $collection = Clause::applySearch(
+        $collection = Utility::applySearchClauses(
             $collection,
             $this->table,
             $search_parameters
         );
-        $collection = Clause::applyFiltering(
+        $collection = Utility::applyFilteringClauses(
             $collection,
             $this->table,
             $filter_parameters
@@ -178,6 +178,7 @@ class Item extends LaravelModel
             "{$this->table}.start_date AS item_start_date",
             "{$this->table}.end_date AS item_end_date",
             "{$this->table}.disabled AS item_disabled",
+            "{$this->table}.deleted AS item_deleted",
             "{$this->table}.frequency AS item_frequency",
             "{$this->table}.created_at AS item_created_at",
             "{$this->table}.updated_at AS item_updated_at"
@@ -191,12 +192,19 @@ class Item extends LaravelModel
             ->where('resource_id', '=', $resource_id)
             ->where('resource.resource_type_id', '=', $resource_type_id);
 
-        $collection = Clause::applySearch(
+        if (
+            array_key_exists('include-deleted', $parameters) === false ||
+            $parameters['include-deleted'] === false
+        ) {
+            $collection->where($this->table . '.deleted', '=', 0);
+        }
+
+        $collection = Utility::applySearchClauses(
             $collection,
             $this->table,
             $search_parameters
         );
-        $collection = Clause::applyFiltering(
+        $collection = Utility::applyFilteringClauses(
             $collection,
             $this->table,
             $filter_parameters

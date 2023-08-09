@@ -16,7 +16,7 @@ use Illuminate\Database\Query\Builder as QueryBuilder;
  * @property int $added_by
  *
  * @author Dean Blackborough <dean@g3d-development.com>
- * @copyright Dean Blackborough 2018-2022
+ * @copyright Dean Blackborough 2018-2023
  * @license https://github.com/costs-to-expect/api/blob/master/LICENSE
  */
 class PermittedUser extends Model
@@ -47,7 +47,7 @@ class PermittedUser extends Model
             join('users', 'permitted_user.user_id', 'users.id')->
             where('permitted_user.resource_type_id', '=', $resource_type_id);
 
-        $collection = Clause::applySearch($collection, 'users', $search_parameters);
+        $collection = Utility::applySearchClauses($collection, 'users', $search_parameters);
 
         return $collection->count('permitted_user.id');
     }
@@ -69,7 +69,7 @@ class PermittedUser extends Model
             join('users', 'permitted_user.user_id', 'users.id')->
             where('permitted_user.resource_type_id', '=', $resource_type_id);
 
-        $collection = Clause::applySearch($collection, 'users', $search_parameters);
+        $collection = Utility::applySearchClauses($collection, 'users', $search_parameters);
 
         if (count($sort_parameters) > 0) {
             foreach ($sort_parameters as $field => $direction) {

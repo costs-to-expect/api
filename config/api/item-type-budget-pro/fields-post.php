@@ -93,6 +93,13 @@ return [
         'type' => 'boolean',
         'required' => false
     ],
+    'deleted' => [
+        'field' => 'deleted',
+        'title' => 'item-type-budget-pro/fields-post.title-deleted',
+        'description' => 'item-type-budget-pro/fields-post.description-deleted',
+        'type' => 'boolean',
+        'required' => false
+    ],
     'frequency' => [
         'field' => 'frequency',
         'title' => 'item-type-budget-pro/fields-post.title-frequency',

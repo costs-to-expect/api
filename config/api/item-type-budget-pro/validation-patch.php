@@ -51,6 +51,10 @@ return [
             'sometimes',
             'boolean'
         ],
+        'deleted' => [
+            'sometimes',
+            'boolean'
+        ],
         'frequency' => [
             'sometimes',
             'json'

@@ -174,13 +174,45 @@
                                 "type",
                                 "required"
                             ]
+                        },
+                        "include-deleted": {
+                            "type": "object",
+                            "properties": {
+                                "parameter": {
+                                    "type": "string"
+                                },
+                                "title": {
+                                    "type": "string"
+                                },
+                                "description": {
+                                    "type": "string"
+                                },
+                                "default": {
+                                    "type": "boolean"
+                                },
+                                "type": {
+                                    "type": "string"
+                                },
+                                "required": {
+                                    "type": "boolean"
+                                }
+                            },
+                            "required": [
+                                "parameter",
+                                "title",
+                                "description",
+                                "default",
+                                "type",
+                                "required"
+                            ]
                         }
                     },
                     "required": [
                         "offset",
                         "limit",
                         "sort",
-                        "search"
+                        "search",
+                        "include-deleted"
                     ]
                 }
             },
@@ -723,6 +755,33 @@
                                 "required"
                             ]
                         },
+                        "deleted": {
+                            "type": "object",
+                            "properties": {
+                                "field": {
+                                    "type": "string"
+                                },
+                                "title": {
+                                    "type": "string"
+                                },
+                                "description": {
+                                    "type": "string"
+                                },
+                                "type": {
+                                    "type": "string"
+                                },
+                                "required": {
+                                    "type": "boolean"
+                                }
+                            },
+                            "required": [
+                                "field",
+                                "title",
+                                "description",
+                                "type",
+                                "required"
+                            ]
+                        },
                         "frequency": {
                             "type": "object",
                             "properties": {
@@ -762,6 +821,7 @@
                         "start_date",
                         "end_date",
                         "disabled",
+                        "deleted",
                         "frequency"
                     ]
                 }

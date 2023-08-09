@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\ItemType\AllocatedExpense\Models;
 
-use App\Models\Clause;
+use App\Models\Utility;
 use Illuminate\Database\Eloquent\Model as LaravelModel;
 use Illuminate\Database\Query\Builder as QueryBuilder;
 use Illuminate\Support\Facades\DB;
@@ -12,7 +12,7 @@ use Illuminate\Support\Facades\DB;
 /**
  * @mixin QueryBuilder
  * @author Dean Blackborough <dean@g3d-development.com>
- * @copyright Dean Blackborough 2018-2022
+ * @copyright Dean Blackborough 2018-2023
  * @license https://github.com/costs-to-expect/api/blob/master/LICENSE
  */
 class SummaryResourceTypeItem extends LaravelModel
@@ -46,7 +46,7 @@ class SummaryResourceTypeItem extends LaravelModel
             ->join('currency', "{$this->sub_table}.currency_id", 'currency.id')
             ->where('resource_type.id', '=', $resource_type_id);
 
-        $collection = Clause::applyExcludeFutureUnpublished($collection, $parameters);
+        $collection = Utility::applyExcludeFutureUnpublishedClause($collection, $parameters);
 
         return $collection
             ->groupBy('currency.code')
@@ -106,7 +106,7 @@ class SummaryResourceTypeItem extends LaravelModel
             ->join('currency', "{$this->sub_table}.currency_id", 'currency.id')
             ->where('resource_type.id', '=', $resource_type_id);
 
-        $collection = Clause::applyExcludeFutureUnpublished($collection, $parameters);
+        $collection = Utility::applyExcludeFutureUnpublishedClause($collection, $parameters);
 
         return $collection
             ->groupBy('resource.id', 'currency.code')
@@ -143,7 +143,7 @@ class SummaryResourceTypeItem extends LaravelModel
             ->join('currency', "{$this->sub_table}.currency_id", 'currency.id')
             ->where("resource_type.id", "=", $resource_type_id);
 
-        $collection = Clause::applyExcludeFutureUnpublished($collection, $parameters);
+        $collection = Utility::applyExcludeFutureUnpublishedClause($collection, $parameters);
 
         return $collection
             ->groupBy('year', 'currency.code')
@@ -183,7 +183,7 @@ class SummaryResourceTypeItem extends LaravelModel
             ->where("resource_type.id", "=", $resource_type_id)
             ->where(DB::raw("YEAR({$this->sub_table}.effective_date)"), '=', $year);
 
-        $collection = Clause::applyExcludeFutureUnpublished($collection, $parameters);
+        $collection = Utility::applyExcludeFutureUnpublishedClause($collection, $parameters);
 
         return $collection
             ->groupBy('month', 'currency.code')
@@ -226,7 +226,7 @@ class SummaryResourceTypeItem extends LaravelModel
             ->where(DB::raw("YEAR({$this->sub_table}.effective_date)"), '=', $year)
             ->where(DB::raw("MONTH({$this->sub_table}.effective_date)"), '=', $month);
 
-        $collection = Clause::applyExcludeFutureUnpublished($collection, $parameters);
+        $collection = Utility::applyExcludeFutureUnpublishedClause($collection, $parameters);
 
         return $collection
             ->groupBy('month', 'currency.code')
@@ -266,7 +266,7 @@ class SummaryResourceTypeItem extends LaravelModel
             ->where("resource_type.id", "=", $resource_type_id)
             ->where(DB::raw("YEAR({$this->sub_table}.effective_date)"), '=', $year);
 
-        $collection = Clause::applyExcludeFutureUnpublished($collection, $parameters);
+        $collection = Utility::applyExcludeFutureUnpublishedClause($collection, $parameters);
 
         return $collection
             ->groupBy('year', 'currency.code')
@@ -306,7 +306,7 @@ class SummaryResourceTypeItem extends LaravelModel
             ->where("category.resource_type_id", "=", $resource_type_id)
             ->where("resource_type.id", "=", $resource_type_id);
 
-        $collection = Clause::applyExcludeFutureUnpublished($collection, $parameters);
+        $collection = Utility::applyExcludeFutureUnpublishedClause($collection, $parameters);
 
         return $collection
             ->groupBy('category.id', 'currency.code')
@@ -349,7 +349,7 @@ class SummaryResourceTypeItem extends LaravelModel
             ->where("resource_type.id", "=", $resource_type_id)
             ->where("category.id", '=', $category_id);
 
-        $collection = Clause::applyExcludeFutureUnpublished($collection, $parameters);
+        $collection = Utility::applyExcludeFutureUnpublishedClause($collection, $parameters);
 
         return $collection
             ->groupBy('category.id', 'currency.code')
@@ -408,19 +408,19 @@ class SummaryResourceTypeItem extends LaravelModel
             $collection->whereRaw(DB::raw("MONTH({$this->sub_table}.effective_date) = {$month}"));
         }
 
-        $collection = Clause::applySearch(
+        $collection = Utility::applySearchClauses(
             $collection,
             $this->sub_table,
             $search_parameters
         );
 
-        $collection = Clause::applyFiltering(
+        $collection = Utility::applyFilteringClauses(
             $collection,
             $this->sub_table,
             $filter_parameters
         );
 
-        $collection = Clause::applyExcludeFutureUnpublished($collection, $parameters);
+        $collection = Utility::applyExcludeFutureUnpublishedClause($collection, $parameters);
 
         return $collection
             ->groupBy('currency.code')
@@ -464,7 +464,7 @@ class SummaryResourceTypeItem extends LaravelModel
             ->where("resource_type.id", "=", $resource_type_id)
             ->where("category.id", "=", $category_id);
 
-        $collection = Clause::applyExcludeFutureUnpublished($collection, $parameters);
+        $collection = Utility::applyExcludeFutureUnpublishedClause($collection, $parameters);
 
         return $collection
             ->groupBy('sub_category.id', 'currency.code')
@@ -512,7 +512,7 @@ class SummaryResourceTypeItem extends LaravelModel
             ->where("category.id", "=", $category_id)
             ->where('sub_category.id', '=', $subcategory_id);
 
-        $collection = Clause::applyExcludeFutureUnpublished($collection, $parameters);
+        $collection = Utility::applyExcludeFutureUnpublishedClause($collection, $parameters);
 
         return $collection
             ->groupBy('sub_category.id', 'currency.code')

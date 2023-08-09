@@ -17,7 +17,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property string $example
  *
  * @author Dean Blackborough <dean@g3d-development.com>
- * @copyright Dean Blackborough 2018-2022
+ * @copyright Dean Blackborough 2018-2023
  * @license https://github.com/costs-to-expect/api/blob/master/LICENSE
  */
 class ItemType extends Model
@@ -52,7 +52,7 @@ class ItemType extends Model
             'item_type.created_at AS item_type_created_at'
         );
 
-        $collection = Clause::applySearch($collection, $this->table, $search_parameters);
+        $collection = Utility::applySearchClauses($collection, $this->table, $search_parameters);
 
         if (count($sort_parameters) > 0) {
             foreach ($sort_parameters as $field => $direction) {
@@ -104,7 +104,7 @@ class ItemType extends Model
     {
         $collection = $this->select("item_type.id");
 
-        $collection = Clause::applySearch($collection, $this->table, $search_parameters);
+        $collection = Utility::applySearchClauses($collection, $this->table, $search_parameters);
 
         return $collection->count();
     }

@@ -20,7 +20,7 @@ use Throwable;
  * Clear the requested cache keys
  *
  * @author Dean Blackborough <dean@g3d-development.com>
- * @copyright Dean Blackborough 2018-2022
+ * @copyright Dean Blackborough 2018-2023
  * @license https://github.com/costs-to-expect/api/blob/master/LICENSE
  */
 class ClearCache implements ShouldQueue
@@ -52,7 +52,7 @@ class ClearCache implements ShouldQueue
         $cache_keys = $cache_key_group->keys($this->payload['group_key']);
 
         if (array_key_exists('resource_type_id', $this->payload['route_parameters'])) {
-            $permitted_users = (new Permission())->permittedUsersForResourceType(
+            $additional_permitted_users = (new Permission())->additionalPermittedUsers(
                 $this->payload['route_parameters']['resource_type_id'],
                 $this->payload['user_id']
             );
@@ -61,7 +61,7 @@ class ClearCache implements ShouldQueue
 
             $cache_control->clearMatchingCacheKeys($cache_keys);
 
-            foreach ($permitted_users as $permitted_user) {
+            foreach ($additional_permitted_users as $permitted_user) {
                 $cache_control_for_permitted_user = new Control($permitted_user);
                 $cache_control_for_permitted_user->clearMatchingCacheKeys($cache_keys);
             }
