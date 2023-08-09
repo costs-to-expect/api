@@ -2,6 +2,17 @@
 
 The complete changelog for the Costs to Expect REST API, our changelog follows the format defined at https://keepachangelog.com/en/1.0.0/
 
+## [v3.15.0] - 2023-08-09
+### Added
+- Added an 'include-deleted' parameter for the Budget Pro collection, default collection will now not include deleted budget items.
+- Added two new tests for the new parameter.
+### Changed
+- Updated the API to run on PHP8.2.
+- Split the item tests by item type to allow for more granular testing.
+- Switched to the new email for Costs to Expect.
+- Renamed the model utility class and refactored the delete jobs to use the utility class.
+- Updated the copyright dates.
+
 ## [v3.14.2] - 2023-07-29
 ### Fixed
 - Adjusted the structure of the collection for permitted users, user should be an object.
