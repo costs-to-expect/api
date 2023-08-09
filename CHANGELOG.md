@@ -4,6 +4,7 @@ The complete changelog for the Costs to Expect REST API, our changelog follows t
 
 ## [v3.15.0] - 2023-08-09
 ### Added
+- Added a deleted field to Budget pro items, this field means we can reduce what we pull down for the Budget.
 - Added an 'include-deleted' parameter for the Budget Pro collection, default collection will now not include deleted budget items.
 - Added two new tests for the new parameter.
 ### Changed
