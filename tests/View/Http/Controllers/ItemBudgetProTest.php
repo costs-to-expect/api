@@ -7,7 +7,11 @@ use Tests\TestCase;
 
 final class ItemBudgetProTest extends TestCase
 {
-    /** @test */
+    /**
+     * @test
+     * @runInSeparateProcess
+     * @preserveGlobalState disabled
+     */
     public function budgetProItemCollection(): void
     {
         $this->actingAs(User::find(1));
@@ -25,6 +29,45 @@ final class ItemBudgetProTest extends TestCase
         ]);
 
         $response->assertStatus(200);
+        $response->assertHeader('X-Count', 3);
+
+        foreach ($response->json() as $item) {
+            try {
+                $json = json_encode($item, JSON_THROW_ON_ERROR);
+            } catch (\JsonException $e) {
+                $this->fail('Unable to encode the JSON string');
+            }
+
+            $this->assertJsonMatchesBudgetProItemSchema($json);
+        }
+    }
+
+    /**
+     * @test
+     * @runInSeparateProcess
+     * @preserveGlobalState disabled
+     */
+    public function budgetProItemCollectionExcludeDeleted(): void
+    {
+        $this->actingAs(User::find(1));
+
+        $resource_type_id = $this->createBudgetProResourceType();
+        $resource_id = $this->createBudgetProResource($resource_type_id);
+
+        $this->createBudgetProItem($resource_type_id, $resource_id);
+        $this->createBudgetProItem($resource_type_id, $resource_id);
+        $this->createBudgetProItem($resource_type_id, $resource_id);
+        $this->createBudgetProItem($resource_type_id, $resource_id, ['deleted'=>1]); // Show not be returned
+        $this->createBudgetProItem($resource_type_id, $resource_id, ['deleted'=>1]); // Show not be returned
+        $this->createBudgetProItem($resource_type_id, $resource_id, ['deleted'=>1]); // Show not be returned
+
+        $response = $this->fetchItemCollection([
+            $resource_type_id,
+            $resource_id
+        ]);
+
+        $response->assertStatus(200);
+        $response->assertHeader('X-Count', 3);
 
         foreach ($response->json() as $item) {
             try {
@@ -214,6 +257,43 @@ final class ItemBudgetProTest extends TestCase
         $response->assertStatus(200);
         $response->assertHeader('X-Sort', 'name:asc');
         $this->assertEquals('AAAAAAAAAAAA', $response->json()[0]['name']);
+
+        foreach ($response->json() as $item) {
+            try {
+                $json = json_encode($item, JSON_THROW_ON_ERROR);
+            } catch (\JsonException $e) {
+                $this->fail('Unable to encode the JSON string');
+            }
+
+            $this->assertJsonMatchesBudgetProItemSchema($json);
+        }
+    }
+
+    /**
+     * @test
+     * @runInSeparateProcess
+     * @preserveGlobalState disabled
+     */
+    public function budgetProItemCollectionWithParameterIncludeDeleted(): void
+    {
+        $this->actingAs(User::find(1));
+
+        $resource_type_id = $this->createBudgetProResourceType();
+        $resource_id = $this->createBudgetProResource($resource_type_id);
+
+        $this->createBudgetProItem($resource_type_id, $resource_id, ['deleted' => 1]);
+        $this->createBudgetProItem($resource_type_id, $resource_id, ['deleted' => 1]);
+        $this->createBudgetProItem($resource_type_id, $resource_id);
+
+        $response = $this->fetchItemCollection([
+            $resource_type_id,
+            $resource_id,
+            'include-deleted' => true
+        ]);
+
+        $response->assertStatus(200);
+        $response->assertHeader('X-Parameters', 'include-deleted:1');
+        $response->assertHeader('X-Count', 3);
 
         foreach ($response->json() as $item) {
             try {
