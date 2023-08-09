@@ -44,6 +44,7 @@ class Request
                     'include-subcategories',
                     'include-permitted-users',
                     'include-unpublished',
+                    'include-deleted',
                     'complete' => Boolean::convertedValue($request_parameters[$parameter]),
                     default => $request_parameters[$parameter],
                 };
@@ -72,6 +73,7 @@ class Request
                     break;
 
                 case 'include-categories':
+                case 'include-deleted':
                 case 'include-subcategories':
                 case 'include-resources':
                 case 'include-unpublished':

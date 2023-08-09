@@ -133,8 +133,11 @@ class Item extends LaravelModel
             ->where('resource_id', '=', $resource_id)
             ->where('resource.resource_type_id', '=', $resource_type_id);
 
-        if (array_key_exists('complete', $parameters) === true) {
-            $collection->where($this->table . '.complete', '=', 1);
+        if (
+            array_key_exists('include-deleted', $parameters) === false ||
+            $parameters['include-deleted'] === false
+        ) {
+            $collection->where($this->table . '.deleted', '=', 0);
         }
 
         $collection = Utility::applySearchClauses(
@@ -188,6 +191,13 @@ class Item extends LaravelModel
             ->join('currency', $this->table . '.currency_id', 'currency.id')
             ->where('resource_id', '=', $resource_id)
             ->where('resource.resource_type_id', '=', $resource_type_id);
+
+        if (
+            array_key_exists('include-deleted', $parameters) === false ||
+            $parameters['include-deleted'] === false
+        ) {
+            $collection->where($this->table . '.deleted', '=', 0);
+        }
 
         $collection = Utility::applySearchClauses(
             $collection,

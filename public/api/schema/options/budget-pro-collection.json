@@ -175,38 +175,7 @@
                                 "required"
                             ]
                         },
-                        "include-disabled": {
-                            "type": "object",
-                            "properties": {
-                                "parameter": {
-                                    "type": "string"
-                                },
-                                "title": {
-                                    "type": "string"
-                                },
-                                "description": {
-                                    "type": "string"
-                                },
-                                "default": {
-                                    "type": "boolean"
-                                },
-                                "type": {
-                                    "type": "string"
-                                },
-                                "required": {
-                                    "type": "boolean"
-                                }
-                            },
-                            "required": [
-                                "parameter",
-                                "title",
-                                "description",
-                                "default",
-                                "type",
-                                "required"
-                            ]
-                        },
-                        "include-enabled": {
+                        "include-deleted": {
                             "type": "object",
                             "properties": {
                                 "parameter": {
@@ -243,8 +212,7 @@
                         "limit",
                         "sort",
                         "search",
-                        "include-disabled",
-                        "include-enabled"
+                        "include-deleted"
                     ]
                 }
             },

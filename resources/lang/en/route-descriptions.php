@@ -71,7 +71,7 @@ return [
 
     'item_allocated_expense_GET_index' => 'Return all the assigned expenses for the selected resource',
     'item_budget_GET_index' => 'Return all the Budget entries for the selected Budget',
-    'item_budget_pro_GET_index' => 'Return all the Budget Pro entries for the selected Budget, by default, disabled budgets items are excluded',
+    'item_budget_pro_GET_index' => 'Return all the Budget Pro entries for the selected Budget, by default, deleted budgets items are excluded',
     'item_game_GET_index' => 'Return all the played games for the selected game',
 
     'item_allocated_expense_GET_show' => 'Return the selected expense',
