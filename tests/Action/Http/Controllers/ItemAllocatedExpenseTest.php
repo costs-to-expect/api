@@ -1,9 +1,8 @@
 <?php
 
-namespace Http\Controllers;
+namespace Tests\Action\Http\Controllers;
 
 use App\User;
-use Illuminate\Support\Str;
 use Tests\TestCase;
 
 final class ItemAllocatedExpenseTest extends TestCase

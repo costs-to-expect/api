@@ -1,6 +1,6 @@
 <?php
 
-namespace Http\Controllers;
+namespace Tests\Action\Http\Controllers;
 
 use App\User;
 use Illuminate\Support\Str;
