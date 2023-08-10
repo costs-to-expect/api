@@ -2,6 +2,10 @@
 
 The complete changelog for the Costs to Expect REST API, our changelog follows the format defined at https://keepachangelog.com/en/1.0.0/
 
+## [v3.15.1] - 2023-08-10
+### Fixed
+- Corrected the namespace for some tests.
+
 ## [v3.15.0] - 2023-08-09
 ### Added
 - Added a deleted field to Budget pro items, this field means we can reduce what we pull down for the Budget.
