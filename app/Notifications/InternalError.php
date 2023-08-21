@@ -32,7 +32,7 @@ class InternalError extends Notification implements ShouldQueue
     public function toMail($notifiable)
     {
         return (new MailMessage())
-            ->subject('Costs to Expect API: Internal Error')
+            ->subject('C2E API: Internal Error')
             ->greeting('Hi,')
             ->line('There was an internal error, details below')
             ->line("Message: " . $this->error['message'])

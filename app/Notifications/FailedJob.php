@@ -32,9 +32,9 @@ class FailedJob extends Notification implements ShouldQueue
     public function toMail($notifiable)
     {
         return (new MailMessage())
-            ->subject('Costs to Expect API: Failed job')
+            ->subject('C2E API: Failed job')
             ->greeting('Hi,')
-            ->line('A `ClearCache` job failed to run, details below')
+            ->line('A job failed to run, error details below')
             ->line("Message: " . $this->error['message'])
             ->line("File: " . $this->error['file'])
             ->line("Line: " . $this->error['line'])
