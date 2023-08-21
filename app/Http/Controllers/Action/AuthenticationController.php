@@ -219,6 +219,7 @@ class AuthenticationController extends \Illuminate\Routing\Controller
                     'uris' => [
                         'create-new-password' => [
                             'uri' => Config::get('api.app.version.prefix') . '/auth/create-new-password?encrypted_token=' . $encrypted_token . '&email=' . $email,
+                            'method' => 'POST',
                             'parameters' => [
                                 'encrypted_token' => $encrypted_token,
                                 'email' => $email
@@ -378,6 +379,7 @@ class AuthenticationController extends \Illuminate\Routing\Controller
                 'uris' => [
                     'create-password' => [
                         'uri' => Config::get('api.app.version.prefix') . '/auth/create-password?token=' . $create_token . '&email=' . $email,
+                        'method' => 'POST',
                         'parameters' => [
                             'token' => $create_token,
                             'email' => $email
