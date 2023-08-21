@@ -32,9 +32,9 @@ class ResourceTypeDeleted extends Notification implements ShouldQueue
     public function toMail($notifiable)
     {
         return (new MailMessage())
-            ->subject('Costs to Expect API: Resource Type Deleted')
+            ->subject('C2E API: Resource Type Deleted')
             ->greeting('Hi,')
-            ->line('A resource type was successfully deleted, details below')
+            ->line('A resource type was successfully deleted, below is a summary of the deletes.')
             ->line("Number of `subcategory` rows deleted: " . $this->deletes['subcategories'])
             ->line("Number of `category` rows deleted: " . $this->deletes['categories'])
             ->line("Number of `resource type item type` rows deleted: " . $this->deletes['resource-type-item-type'])

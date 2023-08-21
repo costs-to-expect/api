@@ -37,7 +37,7 @@ class ForgotPassword extends Notification implements ShouldQueue
         return (new MailMessage())
             ->subject('Costs to Expect API: Reset password')
             ->greeting('Hi,')
-            ->line('We have received a request to reset your password, if this we you please follow the steps below, if this was not you, please ignore this email and let us know.')
+            ->line('We have received a request to reset your password, if this was you please follow the step below, if this was not you, please ignore this email and let us know.')
             ->line("To create a new password please POST `password` and `password_confirmation` to " . url('/v3/auth/create-new-password?email=' . urlencode($this->user->email) . '&token=' . urlencode($this->token)))
             ->line('Thank you for using the Costs to Expect API.');
     }
