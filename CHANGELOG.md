@@ -2,6 +2,13 @@
 
 The complete changelog for the Costs to Expect REST API, our changelog follows the format defined at https://keepachangelog.com/en/1.0.0/
 
+## [v3.15.2] - 2023-08-21
+### Changed
+- Updated the content of all the notifications.
+- Added the method to the URIs in the authentication responses.
+### Fixed
+- Corrected the docs URL in the registered notification.
+
 ## [v3.15.1] - 2023-08-10
 ### Fixed
 - Corrected the namespace for some tests.
