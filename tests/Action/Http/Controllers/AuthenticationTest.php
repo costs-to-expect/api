@@ -719,6 +719,21 @@ final class AuthenticationTest extends TestCase
     }
 
     /** @test */
+    public function registrationSuccessSetRegisteredVia(): void
+    {
+        $response = $this->post(
+            route('auth.register'),
+            [
+                'name' => $this->faker->name,
+                'email' => $this->faker->email,
+                'registered_via' => 'budget-pro'
+            ]
+        );
+
+        $response->assertStatus(201);
+    }
+
+    /** @test */
     public function updatePasswordFailsMismatchedPasswords(): void
     {
         $this->actingAs(User::find(1));

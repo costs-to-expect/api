@@ -16,5 +16,12 @@ return [
         'description' => 'auth/register/fields.description-email',
         'type' => 'email',
         'required' => true
+    ],
+    'registered_via' => [
+        'field' => 'registered_via',
+        'title' => 'auth/register/fields.title-registered_via',
+        'description' => 'auth/register/fields.description-registered_via',
+        'type' => 'string',
+        'required' => false
     ]
 ];
