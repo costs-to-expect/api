@@ -61,8 +61,33 @@
                                     "type": "boolean"
                                 }
                             }
+                        },
+                        "registered_via": {
+                            "type": "object",
+                            "properties": {
+                                "field": {
+                                    "type": "string"
+                                },
+                                "title": {
+                                    "type": "string"
+                                },
+                                "description": {
+                                    "type": "string"
+                                },
+                                "type": {
+                                    "type": "string"
+                                },
+                                "required": {
+                                    "type": "boolean"
+                                }
+                            }
                         }
-                    }
+                    },
+                    "required": [
+                        "name",
+                        "email",
+                        "registered_via"
+                    ]
                 }
             },
             "required": [

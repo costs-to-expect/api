@@ -9,10 +9,12 @@ use Laravel\Sanctum\HasApiTokens;
 
 /**
  * @mixin QueryBuilder
+ * @property int $id
  * @property string $name
  * @property string $email
  * @property string $password
  * @property string $remember_token
+ * @property string|null $registered_via
  */
 class User extends Authenticatable
 {

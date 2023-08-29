@@ -7,5 +7,8 @@ return [
     'description-email' => 'Enter your email address',
 
     'title-name' => 'Name',
-    'description-name' => 'Enter your name'
+    'description-name' => 'Enter your name',
+
+    'title-registered_via' => 'Registered via',
+    'description-registered_via' => 'Optionally, enter the App the user registered via',
 ];

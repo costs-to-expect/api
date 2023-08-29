@@ -337,6 +337,10 @@ class AuthenticationController extends \Illuminate\Routing\Controller
                     'required',
                     'email',
                     Rule::unique(User::class, 'email')
+                ],
+                'registered_via' => [
+                    'sometimes',
+                    'string',
                 ]
             ]
         );
@@ -352,6 +356,7 @@ class AuthenticationController extends \Illuminate\Routing\Controller
             $user->name = $request->input('name');
             $user->email = $request->input('email');
             $user->password = Hash::make(Str::random(20));
+            $user->registered_via = $request->input('registered_via', 'api');
             $user->save();
 
             $create_token = Str::random(20);
