@@ -9,6 +9,7 @@ use Laravel\Sanctum\HasApiTokens;
 
 /**
  * @mixin QueryBuilder
+ * @property int $id
  * @property string $name
  * @property string $email
  * @property string $password
