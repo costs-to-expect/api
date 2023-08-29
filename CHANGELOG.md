@@ -2,6 +2,14 @@
 
 The complete changelog for the Costs to Expect REST API, our changelog follows the format defined at https://keepachangelog.com/en/1.0.0/
 
+## [v3.16.0] - 2023-08-29
+### Added
+- Added a command to prune partial users (bots) from the database.
+- Added a `registered_via` field to register to optionally allow recording the App the user registered via.
+### Change
+- Updated the Budget Pro image on the landing page and added a launching soon badge.
+- Updated our dependencies.
+
 ## [v3.15.2] - 2023-08-21
 ### Changed
 - Updated the content of all the notifications.

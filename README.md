@@ -17,7 +17,7 @@ available on Postman at [postman.costs-to-expect.com](https://postman.costs-to-e
 The API is used by the following Apps;
 
 - [Budget](https://budget.costs-to-expect.com) Our free and Open Source Budgeting tool
-- [Budget Pro](https://budget-pro.costs-to-expect.com) (alpha) The commercial version of Budget
+- [Budget Pro](https://budget-pro.costs-to-expect.com) The commercial version of Budget
 - [Expense](https://app.costs-to-expect.com) Our free and Open Source expense tracker
 - [Yahtzee Game Scorer](https://yahtzee.game-score.com) Our Yahtzee Game Scorer, free for all to use
 - [Yatzy Game Scorer](https://yatzu.game-score.com) Our Yatzy Game Scorer, free for all to use
@@ -289,7 +289,7 @@ our local test suite is as complete as the Postman request test suite.
 
 | Controller               | Action   | View     | 
 |:-------------------------|:---------|:---------|
-| Authentication           | 35 Tests | 3 Tests  |
+| Authentication           | 36 Tests | 3 Tests  |
 | Category                 | 21 Tests | 27 Tests |
 | Currency                 | Non yet* | Non yet* |
 | ItemCategory             | Non yet* | Non yet* |
@@ -309,7 +309,7 @@ our local test suite is as complete as the Postman request test suite.
 | Resource                 | 24 Tests | 27 Tests |
 | ResourceType             | 23 Tests | 26 Tests |
 | Subcategory              | 21 Tests | 23 Tests |
-| **Total tests**          | **173**  | **156**  |
+| **Total tests**          | **174**  | **156**  |
 
 *Non yet does not mean there are no tests, it just means there are no PHPUnit tests. There are over 2000 tests in 
 a private Postman collection, I'm slowing transferring them locally and expanding the test suite.
