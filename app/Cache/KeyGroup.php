@@ -12,6 +12,7 @@ class KeyGroup
 
     public const PERMITTED_USER_CREATE = 'permitted_user_create';
     public const PERMITTED_USER_DELETE = 'permitted_user_delete';
+    public const PERMITTED_USER_UPDATE = 'permitted_user_update';
 
     public const RESOURCE_CREATE = 'resource_create';
     public const RESOURCE_DELETE = 'resource_delete';
@@ -122,6 +123,7 @@ class KeyGroup
                 ];
 
             case self::PERMITTED_USER_CREATE:
+            case self::PERMITTED_USER_UPDATE:
                 return [
                     $this->key->permittedUsers(
                         (int) $this->parameters['resource_type_id']

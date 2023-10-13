@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Action;
 
 use App\HttpResponse\Response;
+use App\Jobs\ClearCache;
 use App\Jobs\DeleteAccount;
 use App\Jobs\DeleteResource;
 use App\Jobs\DeleteResourceType;
@@ -553,7 +554,23 @@ class AuthenticationController extends \Illuminate\Routing\Controller
                 $user->$field = $value;
             }
 
-            $user->save();
+            if ($user->save()) {
+
+                $permitted_resource_types = (new Permission())->permittedResourceTypesForUser($user->id);
+                foreach ($permitted_resource_types as $permitted_resource_type) {
+                    $cache_job_payload = (new \App\Cache\JobPayload())
+                        ->setGroupKey(\App\Cache\KeyGroup::PERMITTED_USER_UPDATE)
+                        ->setRouteParameters([
+                            'resource_type_id' => $permitted_resource_type
+                        ])
+                        ->setUserId($user->id);
+
+                    ClearCache::dispatchSync($cache_job_payload->payload());
+                }
+            }
+
+
+
         } catch (Exception $e) {
             return response()->json(['message' => trans('auth.unable-to-update-profile')], 401);
         }
