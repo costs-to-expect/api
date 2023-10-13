@@ -32,4 +32,22 @@ final class AuthenticationTest extends TestCase
 
         $this->assertProvidedJsonMatchesDefinedSchema($response->content(), 'api/schema/auth/options/register.json');
     }
+
+    /** @test */
+    public function optionsRequestForUpdatePassword(): void
+    {
+        $response = $this->fetchOptionsForUpdatePassword();
+        $response->assertStatus(200);
+
+        $this->assertProvidedJsonMatchesDefinedSchema($response->content(), 'api/schema/auth/options/update-password.json');
+    }
+
+    /** @test */
+    public function optionsRequestForUpdateProfile(): void
+    {
+        $response = $this->fetchOptionsForUpdateProfile();
+        $response->assertStatus(200);
+
+        $this->assertProvidedJsonMatchesDefinedSchema($response->content(), 'api/schema/auth/options/update-profile.json');
+    }
 }

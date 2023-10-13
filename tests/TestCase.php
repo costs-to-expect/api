@@ -804,6 +804,16 @@ abstract class TestCase extends BaseTestCase
         return $this->optionsRoute('subcategory.list.options', $parameters);
     }
 
+    protected function fetchOptionsForUpdatePassword(array $parameters = []): TestResponse
+    {
+        return $this->optionsRoute('auth.update-password.options', $parameters);
+    }
+
+    protected function fetchOptionsForUpdateProfile(array $parameters = []): TestResponse
+    {
+        return $this->optionsRoute('auth.update-profile.options', $parameters);
+    }
+
     protected function route(string $route, array $parameters = []): TestResponse
     {
         return $this->get(route($route, $parameters));
