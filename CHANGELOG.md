@@ -2,6 +2,14 @@
 
 The complete changelog for the Costs to Expect REST API, our changelog follows the format defined at https://keepachangelog.com/en/1.0.0/
 
+## [v3.16.1] - 2023-10-13
+### Added
+- Added additional authentication tests.
+### Fixed
+- Corrected the options response for /update-profile.
+- Updating user profile clears the permitted users collection for a resource type.
+- Minor token tweaks.
+
 ## [v3.16.0] - 2023-08-29
 ### Added
 - Added a command to prune partial users (bots) from the database.
