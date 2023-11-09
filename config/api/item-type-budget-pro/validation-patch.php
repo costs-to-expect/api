@@ -36,7 +36,7 @@ return [
         'category' => [
             'sometimes',
             'string',
-            Rule::in(['income', 'fixed', 'flexible', 'savings']),
+            Rule::in(['income', 'fixed', 'flexible', 'savings', 'transfer']),
         ],
         'start_date' => [
             'sometimes',
