@@ -2,6 +2,10 @@
 
 The complete changelog for the Costs to Expect REST API, our changelog follows the format defined at https://keepachangelog.com/en/1.0.0/
 
+## [v3.18.0] - 2024-09-01
+### Added
+- Added `NOK` as a new currency.
+
 ## [v3.17.0] - 2023-11-08
 ### Added
 - Added `transfer` support to the `budget-pro` item type.
