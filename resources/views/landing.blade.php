@@ -357,7 +357,7 @@
                     <div>
                         <h3 class="text-base font-medium text-lg text-gray-900">Support</h3>
                         <p class="mt-2 mb-2 text-sm text-gray-800">
-                            <a href="https://www.deanblackborough.com" class="text-pinky-500 hover:text-pinky-900">Dean Blackborough</a> &copy; 2018-2023
+                            <a href="https://www.deanblackborough.com" class="text-pinky-500 hover:text-pinky-900">Dean Blackborough</a> &copy; 2018-2025
                         </p>
                         <p class="mb-2 text-sm text-gray-800">Version {{ $version }}<br />
                             Released {{ date('jS M Y', strtotime($date)) }}
