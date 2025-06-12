@@ -841,7 +841,9 @@ abstract class TestCase extends BaseTestCase
             ThrottleRequests::class
         );
 
-        $result = DB::select(DB::raw("SHOW TABLES LIKE 'users';"));
+        $expression = DB::raw("SHOW TABLES LIKE 'users';");
+
+        $result = DB::select($expression->getValue(DB::connection()->getQueryGrammar()));
 
         if (count($result) === 0) {
             $this->artisan('migrate:fresh');
