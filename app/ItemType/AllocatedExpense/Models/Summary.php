@@ -207,10 +207,12 @@ class Summary extends LaravelModel
             $collection->where("sub_category.id", "=", $subcategory_id);
         }
         if ($year !== null) {
-            $collection->whereRaw(DB::raw("YEAR({$this->sub_table}.effective_date) = {$year}"));
+            $expression = DB::raw("YEAR({$this->sub_table}.effective_date) = {$year}");
+            $collection->whereRaw($expression->getValue(DB::connection()->getQueryGrammar()));
         }
         if ($month !== null) {
-            $collection->whereRaw(DB::raw("MONTH({$this->sub_table}.effective_date) = {$month}"));
+            $expression = DB::raw("MONTH({$this->sub_table}.effective_date) = {$month}");
+            $collection->whereRaw($expression->getValue(DB::connection()->getQueryGrammar()));
         }
 
         $collection = Utility::applySearchClauses(
@@ -248,6 +250,8 @@ class Summary extends LaravelModel
         int $year,
         array $parameters = []
     ): array {
+        $expression = DB::raw("YEAR({$this->sub_table}.effective_date) = '{$year}'");
+        
         $collection = $this
             ->selectRaw("
                 MONTH({$this->sub_table}.effective_date) as month,
@@ -282,7 +286,7 @@ class Summary extends LaravelModel
             ->join('currency', "{$this->sub_table}.currency_id", 'currency.id')
             ->where("resource_type.id", "=", $resource_type_id)
             ->where("resource.id", "=", $resource_id)
-            ->whereRaw(DB::raw("YEAR({$this->sub_table}.effective_date) = '{$year}'"));
+            ->whereRaw($expression->getValue(DB::connection()->getQueryGrammar()));
 
         $collection = Utility::applyExcludeFutureUnpublishedClause($collection, $parameters);
 
@@ -311,6 +315,9 @@ class Summary extends LaravelModel
         int $month,
         array $parameters = []
     ): array {
+        $expression_year = DB::raw("YEAR({$this->sub_table}.effective_date) = '{$year}'");
+        $expression_month = DB::raw("MONTH({$this->sub_table}.effective_date) = '{$month}'");
+        
         $collection = $this
             ->selectRaw("
                 MONTH({$this->sub_table}.effective_date) as month, 
@@ -345,8 +352,8 @@ class Summary extends LaravelModel
             ->join('currency', "{$this->sub_table}.currency_id", 'currency.id')
             ->where("resource_type.id", "=", $resource_type_id)
             ->where("resource.id", "=", $resource_id)
-            ->whereRaw(DB::raw("YEAR({$this->sub_table}.effective_date) = '{$year}'"))
-            ->whereRaw(DB::raw("MONTH({$this->sub_table}.effective_date) = '{$month}'"));
+            ->whereRaw($expression_year->getValue(DB::connection()->getQueryGrammar()))
+            ->whereRaw($expression_month->getValue(DB::connection()->getQueryGrammar()));
 
         $collection = Utility::applyExcludeFutureUnpublishedClause($collection, $parameters);
 
@@ -622,6 +629,8 @@ class Summary extends LaravelModel
         int $year,
         array $parameters = []
     ): array {
+        $expression = DB::raw("YEAR({$this->sub_table}.effective_date) = '{$year}'");
+        
         $collection = $this
             ->selectRaw("
                 YEAR({$this->sub_table}.effective_date) as year, 
@@ -656,7 +665,7 @@ class Summary extends LaravelModel
             ->join('currency', "{$this->sub_table}.currency_id", 'currency.id')
             ->where("resource_type.id", "=", $resource_type_id)
             ->where("resource.id", "=", $resource_id)
-            ->whereRaw(DB::raw("YEAR({$this->sub_table}.effective_date) = '{$year}'"));
+            ->whereRaw($expression->getValue(DB::connection()->getQueryGrammar()));
 
         $collection = Utility::applyExcludeFutureUnpublishedClause($collection, $parameters);
 

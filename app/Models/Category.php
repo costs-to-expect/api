@@ -147,6 +147,8 @@ class Category extends Model
 
     public function single(int $resource_type_id, int $category_id): ?array
     {
+        $expression = DB::raw('(SELECT COUNT(sub_category.id) FROM sub_category WHERE sub_category.category_id = category.id) AS category_subcategories');
+        
         $result = $this->join('resource_type', $this->table . '.resource_type_id', '=', 'resource_type.id')->
             where('category.id', '=', $category_id)->
             where('category.resource_type_id', '=', $resource_type_id)->
@@ -157,7 +159,7 @@ class Category extends Model
                 'category.description AS category_description',
                 'category.created_at AS category_created_at',
                 'category.updated_at AS category_updated_at',
-                DB::raw('(SELECT COUNT(sub_category.id) FROM sub_category WHERE sub_category.category_id = category.id) AS category_subcategories'),
+                $expression->getValue(DB::connection()->getQueryGrammar()),
                 'resource_type.id AS resource_type_id',
                 'resource_type.name AS resource_type_name'
             )->

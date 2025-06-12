@@ -47,12 +47,14 @@ class ResourceTypeItem extends LaravelModel
 
         if (array_key_exists('year', $parameters_collection) === true &&
             $parameters_collection['year'] !== null) {
-            $collection->where(DB::raw('YEAR(item_type_allocated_expense.effective_date)'), '=', $parameters_collection['year']);
+            $expression = DB::raw('YEAR(item_type_allocated_expense.effective_date)');
+            $collection->where($expression->getValue(DB::connection()->getQueryGrammar()), '=', $parameters_collection['year']);
         }
 
         if (array_key_exists('month', $parameters_collection) === true &&
             $parameters_collection['month'] !== null) {
-            $collection->where(DB::raw('MONTH(item_type_allocated_expense.effective_date)'), '=', $parameters_collection['month']);
+            $expression = DB::raw('MONTH(item_type_allocated_expense.effective_date)');
+            $collection->where($expression->getValue(DB::connection()->getQueryGrammar()), '=', $parameters_collection['month']);
         }
 
         if (array_key_exists('category', $parameters_collection) === true &&
@@ -179,12 +181,14 @@ class ResourceTypeItem extends LaravelModel
 
         if (array_key_exists('year', $parameters_collection) === true &&
             $parameters_collection['year'] !== null) {
-            $collection->where(DB::raw('YEAR(item_type_allocated_expense.effective_date)'), '=', $parameters_collection['year']);
+            $expression = DB::raw('YEAR(item_type_allocated_expense.effective_date)');
+            $collection->where($expression->getValue(DB::connection()->getQueryGrammar()), '=', $parameters_collection['year']);
         }
 
         if (array_key_exists('month', $parameters_collection) === true &&
             $parameters_collection['month'] !== null) {
-            $collection->where(DB::raw('MONTH(item_type_allocated_expense.effective_date)'), '=', $parameters_collection['month']);
+            $expression = DB::raw('MONTH(item_type_allocated_expense.effective_date)');
+            $collection->where($expression->getValue(DB::connection()->getQueryGrammar()), '=', $parameters_collection['month']);
         }
 
         if (array_key_exists('category', $parameters_collection) === true &&

@@ -167,6 +167,8 @@ class SummaryResourceTypeItem extends LaravelModel
         int $year,
         array $parameters
     ): array {
+        $expression = DB::raw("YEAR({$this->sub_table}.effective_date)");
+        
         $collection = $this
             ->selectRaw(
                 "
@@ -181,7 +183,7 @@ class SummaryResourceTypeItem extends LaravelModel
             ->join("resource_type", "resource_type.id", "resource.resource_type_id")
             ->join('currency', "{$this->sub_table}.currency_id", 'currency.id')
             ->where("resource_type.id", "=", $resource_type_id)
-            ->where(DB::raw("YEAR({$this->sub_table}.effective_date)"), '=', $year);
+            ->where($expression->getValue(DB::connection()->getQueryGrammar()), '=', $year);
 
         $collection = Utility::applyExcludeFutureUnpublishedClause($collection, $parameters);
 
@@ -209,6 +211,9 @@ class SummaryResourceTypeItem extends LaravelModel
         int $month,
         array $parameters
     ): array {
+        $expression_year = DB::raw("YEAR({$this->sub_table}.effective_date)");
+        $expression_month = DB::raw("MONTH({$this->sub_table}.effective_date)");
+        
         $collection = $this
             ->selectRaw(
                 "
@@ -223,8 +228,8 @@ class SummaryResourceTypeItem extends LaravelModel
             ->join("resource_type", "resource_type.id", "resource.resource_type_id")
             ->join('currency', "{$this->sub_table}.currency_id", 'currency.id')
             ->where("resource_type.id", "=", $resource_type_id)
-            ->where(DB::raw("YEAR({$this->sub_table}.effective_date)"), '=', $year)
-            ->where(DB::raw("MONTH({$this->sub_table}.effective_date)"), '=', $month);
+            ->where($expression_year->getValue(DB::connection()->getQueryGrammar()), '=', $year)
+            ->where($expression_month->getValue(DB::connection()->getQueryGrammar()), '=', $month);
 
         $collection = Utility::applyExcludeFutureUnpublishedClause($collection, $parameters);
 
@@ -250,6 +255,8 @@ class SummaryResourceTypeItem extends LaravelModel
         int $year,
         array $parameters
     ): array {
+        $expression = DB::raw("YEAR({$this->sub_table}.effective_date)");
+        
         $collection = $this
             ->selectRaw(
                 "
@@ -264,7 +271,7 @@ class SummaryResourceTypeItem extends LaravelModel
             ->join("resource_type", "resource_type.id", "resource.resource_type_id")
             ->join('currency', "{$this->sub_table}.currency_id", 'currency.id')
             ->where("resource_type.id", "=", $resource_type_id)
-            ->where(DB::raw("YEAR({$this->sub_table}.effective_date)"), '=', $year);
+            ->where($expression->getValue(DB::connection()->getQueryGrammar()), '=', $year);
 
         $collection = Utility::applyExcludeFutureUnpublishedClause($collection, $parameters);
 
@@ -379,6 +386,9 @@ class SummaryResourceTypeItem extends LaravelModel
         array $search_parameters = [],
         array $filter_parameters = []
     ): array {
+        $expression_year = DB::raw("YEAR({$this->sub_table}.effective_date) = {$year}");
+        $expression_month = DB::raw("MONTH({$this->sub_table}.effective_date) = {$month}");
+        
         $collection = $this
             ->selectRaw("
                 SUM({$this->sub_table}.actualised_total) AS total,
@@ -402,10 +412,10 @@ class SummaryResourceTypeItem extends LaravelModel
             $collection->where("sub_category.id", "=", $subcategory_id);
         }
         if ($year !== null) {
-            $collection->whereRaw(DB::raw("YEAR({$this->sub_table}.effective_date) = {$year}"));
+            $collection->whereRaw($expression_year->getValue(DB::connection()->getQueryGrammar()));
         }
         if ($month !== null) {
-            $collection->whereRaw(DB::raw("MONTH({$this->sub_table}.effective_date) = {$month}"));
+            $collection->whereRaw($expression_month->getValue(DB::connection()->getQueryGrammar()));
         }
 
         $collection = Utility::applySearchClauses(

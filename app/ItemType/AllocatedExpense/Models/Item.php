@@ -229,14 +229,16 @@ class Item extends LaravelModel
             array_key_exists('year', $parameters) === true &&
             $parameters['year'] !== null
         ) {
-            $collection->whereRaw(DB::raw("YEAR(item_type_allocated_expense.effective_date) = '{$parameters['year']}'"));
+            $expression = DB::raw("YEAR(item_type_allocated_expense.effective_date) = '{$parameters['year']}'");
+            $collection->whereRaw($expression->getValue(DB::connection()->getQueryGrammar()));
         }
 
         if (
             array_key_exists('month', $parameters) === true &&
             $parameters['month'] !== null
         ) {
-            $collection->whereRaw(DB::raw("MONTH(item_type_allocated_expense.effective_date) = '{$parameters['month']}'"));
+            $expression = DB::raw("MONTH(item_type_allocated_expense.effective_date) = '{$parameters['month']}'");
+            $collection->whereRaw($expression->getValue(DB::connection()->getQueryGrammar()));
         }
 
         if (
@@ -365,12 +367,14 @@ class Item extends LaravelModel
 
         if (array_key_exists('year', $parameters) === true &&
             $parameters['year'] !== null) {
-            $collection->whereRaw(DB::raw("YEAR(item_type_allocated_expense.effective_date) = '{$parameters['year']}'"));
+            $expression = DB::raw("YEAR(item_type_allocated_expense.effective_date) = '{$parameters['year']}'");
+            $collection->whereRaw($expression->getValue(DB::connection()->getQueryGrammar()));
         }
 
         if (array_key_exists('month', $parameters) === true &&
             $parameters['month'] !== null) {
-            $collection->whereRaw(DB::raw("MONTH(item_type_allocated_expense.effective_date) = '{$parameters['month']}'"));
+            $expression = DB::raw("MONTH(item_type_allocated_expense.effective_date) = '{$parameters['month']}'");
+            $collection->whereRaw($expression->getValue(DB::connection()->getQueryGrammar()));
         }
 
         if (
