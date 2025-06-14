@@ -828,32 +828,40 @@ abstract class TestCase extends BaseTestCase
     {
         return number_format($this->faker->randomFloat(2, 0.01, 99999999999.99), 2, '.', '');
     }
+    
+    public static function setUpBeforeClass(): void
+    {
+        $database = __DIR__ . '/../database/database.sqlite';
+
+        if (file_exists($database) === false) {
+            touch($database);
+            chmod($database, 0777);
+        }
+    }
 
     protected function setUp(): void
     {
         parent::setUp();
 
-        if (app()->environment() !== 'local') {
-            dd('Not in local environment, skipping tests');
+        if (app()->environment() !== 'testing') {
+            dd('Not in \'testing\' environment, skipping tests');
         }
 
         $this->withoutMiddleware(
             ThrottleRequests::class
         );
-
-        $expression = DB::raw("SHOW TABLES LIKE 'users';");
-
-        $result = DB::select($expression->getValue(DB::connection()->getQueryGrammar()));
-
-        if (count($result) === 0) {
-            $this->artisan('migrate:fresh');
-
-            $user = new User();
-            $user->name = $this->faker->name;
-            $user->email = $this->email_for_expected_test_user;
-            $user->password = Hash::make($this->password_for_expected_test_user);
-            $user->save();
+        
+        if (env('APP_KEY') === '' || env('APP_KEY') === null) {
+            $this->artisan('key:generate --env=testing');
         }
+        
+        $this->artisan('migrate:fresh');
+        
+        $user = new User();
+        $user->name = $this->faker->name;
+        $user->email = $this->email_for_expected_test_user;
+        $user->password = Hash::make($this->password_for_expected_test_user);
+        $user->save();
     }
 
     protected function updateRequestedCategory(string $resource_type_id, string $category_id, array $payload): TestResponse

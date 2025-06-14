@@ -9,8 +9,6 @@ final class CategoryTest extends TestCase
 {
     /**
      * @test
-     * @runInSeparateProcess
-     * @preserveGlobalState disabled
      */
     public function allocatedExpenseCategoryCollection(): void
     {
