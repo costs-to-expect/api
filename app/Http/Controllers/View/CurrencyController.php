@@ -16,7 +16,7 @@ use Illuminate\Support\Facades\Config;
 
 /**
  * @author Dean Blackborough <dean@g3d-development.com>
- * @copyright Dean Blackborough 2018-2023
+ * @copyright Dean Blackborough 2018-2025
  * @license https://github.com/costs-to-expect/api/blob/master/LICENSE
  */
 class CurrencyController extends Controller
@@ -37,26 +37,27 @@ class CurrencyController extends Controller
         $cache_collection->setFromCache($cache_control->getByKey($request->getRequestUri()));
 
         if ($cache_control->isRequestCacheable() === false || $cache_collection->valid() === false) {
-            $search_parameters = Parameter\Search::fetch(
-                Config::get('api.currency.searchable')
-            );
 
-            $sort_parameters = Parameter\Sort::fetch(
+            $searchRequestService = new Parameter\Search($request->get('search'));
+            $searchParameters = $searchRequestService->fetch(Config::get('api.currency.searchable'));
+
+            $sortRequestService = new Parameter\Sort($request->get('sort'));
+            $sort_parameters = $sortRequestService->fetch(
                 Config::get('api.currency.sortable')
             );
 
-            $total = (new Currency())->totalCount($search_parameters);
+            $total = (new Currency())->totalCount($searchParameters);
 
             $pagination = new \App\HttpResponse\Pagination($request->path(), $total);
             $pagination_parameters = $pagination->allowPaginationOverride($this->allow_entire_collection)->
-                setSearchParameters($search_parameters)->
+                setSearchParameters($searchParameters)->
                 setSortParameters($sort_parameters)->
                 parameters();
 
             $currencies = (new Currency())->paginatedCollection(
                 $pagination_parameters['offset'],
                 $pagination_parameters['limit'],
-                $search_parameters,
+                $searchParameters,
                 $sort_parameters
             );
 
@@ -71,8 +72,8 @@ class CurrencyController extends Controller
             $headers->collection($pagination_parameters, count($currencies), $total)->
                 addCacheControl($cache_control->visibility(), $cache_control->ttl())->
                 addETag($collection)->
-                addSearch(Parameter\Search::xHeader())->
-                addSort(Parameter\Sort::xHeader());
+                addSearch($searchRequestService->xHeader())->
+                addSort($sortRequestService->xHeader());
 
             $cache_collection->create($total, $collection, $pagination_parameters, $headers->headers());
             $cache_control->putByKey($request->getRequestUri(), $cache_collection->content());

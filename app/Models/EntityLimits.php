@@ -11,7 +11,7 @@ use Illuminate\Database\Query\Builder as QueryBuilder;
  * @mixin QueryBuilder
  *
  * @author Dean Blackborough <dean@g3d-development.com>
- * @copyright Dean Blackborough 2018-2023
+ * @copyright Dean Blackborough 2018-2025
  * @license https://github.com/costs-to-expect/api/blob/master/LICENSE
  */
 class EntityLimits extends Model
@@ -82,7 +82,7 @@ class EntityLimits extends Model
             ->join('item', $table . '.item_id', 'item.id')
             ->join('resource', 'item.resource_id', 'resource.id')
             ->where('resource.resource_type_id', '=', $resource_type_id)
-            ->selectRaw('YEAR(' . $aggregate . '(`' . $table . '`.`' . $field . '`)) AS `date_limit`')
+            ->selectRaw(Utility::yearExpression($aggregate . '(`' . $table . '`.`' . $field . '`)') . ' AS `date_limit`')
             ->first();
 
         if ($result !== null) {
@@ -104,7 +104,7 @@ class EntityLimits extends Model
             ->join('resource', 'item.resource_id', 'resource.id')
             ->where('resource.resource_type_id', '=', $resource_type_id)
             ->where('item.resource_id', '=', $resource_id)
-            ->selectRaw('YEAR(' . $aggregate . '(`' . $table . '`.`' . $field . '`)) AS `date_limit`')
+            ->selectRaw(Utility::yearExpression($aggregate . '(`' . $table . '`.`' . $field . '`)') . ' AS `date_limit`')
             ->first();
 
         if ($result !== null) {

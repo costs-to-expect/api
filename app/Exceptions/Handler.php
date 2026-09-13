@@ -69,7 +69,7 @@ class Handler extends ExceptionHandler
                 \App\HttpResponse\Response::maintenance();
                 break;
             case 500:
-                if (App::environment() === 'local') {
+                if (App::environment() === 'local' || App::environment() === 'testing') {
                     $response = [
                         'message' => $exception->getMessage(),
                         'trace' => $exception->getTraceAsString()
@@ -96,11 +96,10 @@ class Handler extends ExceptionHandler
                     ];
                 }
 
-                response()->json(
+                return response()->json(
                     $response,
                     500
-                )->send();
-                exit;
+                );
             default:
                 $message = $exception->getMessage();
                 break;
@@ -110,7 +109,7 @@ class Handler extends ExceptionHandler
             'message' => $message
         ];
 
-        if (App::environment() === 'local') {
+        if (App::environment() === 'local' || App::environment() === 'testing') {
             $response['trace'] = $exception->getTraceAsString();
         }
 

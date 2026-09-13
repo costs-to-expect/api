@@ -17,7 +17,7 @@ use Illuminate\Support\Facades\Config;
 
 /**
  * @author Dean Blackborough <dean@g3d-development.com>
- * @copyright Dean Blackborough 2018-2023
+ * @copyright Dean Blackborough 2018-2025
  * @license https://github.com/costs-to-expect/api/blob/master/LICENSE
  */
 class ItemTransferController extends Controller
@@ -46,7 +46,7 @@ class ItemTransferController extends Controller
         $cache_collection->setFromCache($cache_control->getByKey(request()->getRequestUri()));
 
         if ($cache_control->isRequestCacheable() === false || $cache_collection->valid() === false) {
-            $parameters = Parameter\Request::fetch(
+            $parameters = (new Parameter\Request(request()->all()))->fetch(
                 array_keys(Config::get('api.item-transfer.parameters'))
             );
 

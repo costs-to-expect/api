@@ -19,7 +19,7 @@ use Illuminate\Support\Facades\Config;
  * Manage resources
  *
  * @author Dean Blackborough <dean@g3d-development.com>
- * @copyright Dean Blackborough 2018-2023
+ * @copyright Dean Blackborough 2018-2025
  * @license https://github.com/costs-to-expect/api/blob/master/LICENSE
  */
 class ResourceController extends Controller
@@ -46,17 +46,15 @@ class ResourceController extends Controller
         $cache_collection->setFromCache($cache_control->getByKey($request->getRequestUri()));
 
         if ($cache_control->isRequestCacheable() === false || $cache_collection->valid() === false) {
-            $request_parameters = Parameter\Request::fetch(
-                array_keys(Config::get('api.resource.parameters'))
-            );
+            
+            $request_parameter_service = new Parameter\Request($request->all());
+            $request_parameters = $request_parameter_service->fetch(array_keys(Config::get('api.resource.parameters')));
 
-            $search_parameters = Parameter\Search::fetch(
-                Config::get('api.resource.searchable')
-            );
-
-            $sort_parameters = Parameter\Sort::fetch(
-                Config::get('api.resource.sortable')
-            );
+            $search_request_service = new Parameter\Search($request->get('search'));
+            $search_parameters = $search_request_service->fetch(Config::get('api.resource.searchable'));
+            
+            $sort_request_service = new Parameter\Sort($request->get('sort'));
+            $sort_parameters = $sort_request_service->fetch(Config::get('api.resource.sortable'));
 
             $total = (new Resource())->totalCount(
                 $resource_type_id,
@@ -92,13 +90,12 @@ class ResourceController extends Controller
                 $resources
             );
 
-            $headers = new Header();
-            $headers
+            $headers = (new Header())
                 ->collection($pagination_parameters, count($resources), $total)
                 ->addCacheControl($cache_control->visibility(), $cache_control->ttl())
                 ->addETag($collection)
-                ->addSearch(Parameter\Search::xHeader())
-                ->addSort(Parameter\Sort::xHeader());
+                ->addSearch($search_request_service->xHeader())
+                ->addSort($sort_request_service->xHeader());
 
             if ($last_updated !== null) {
                 $headers->addLastUpdated($last_updated);
@@ -113,11 +110,6 @@ class ResourceController extends Controller
 
     /**
      * Return a single resource
-     *
-     * @param string $resource_type_id
-     * @param string $resource_id
-     *
-     * @return JsonResponse
      */
     public function show(
         string $resource_type_id,

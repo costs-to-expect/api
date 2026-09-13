@@ -2,7 +2,6 @@
 
 namespace Tests\View\Http\Controllers;
 
-use App\User;
 use Tests\TestCase;
 
 final class PermittedUserTest extends TestCase
@@ -10,14 +9,14 @@ final class PermittedUserTest extends TestCase
     /** @test */
     public function permittedUserCollection(): void
     {
-        $this->actingAs(User::find(1));
+        $this->actingAs($this->createUser());
 
-        $response = $this->fetchResourceTypeCollection();
+        $response = $this->getToResourceTypeList();
         $response->assertStatus(200);
 
         foreach ($response->json() as $resource_type) {
 
-            $permitted_user_response = $this->fetchAllPermittedUsers(['resource_type_id'=> $resource_type['id']]);
+            $permitted_user_response = $this->getToPermittedUserList(['resource_type_id'=> $resource_type['id']]);
             $permitted_user_response->assertStatus(200);
 
             foreach ($permitted_user_response->json() as $permitted_user) {
@@ -35,19 +34,21 @@ final class PermittedUserTest extends TestCase
     /** @test */
     public function permittedUserShow(): void
     {
-        $this->actingAs(User::find(1));
+        $this->actingAs($this->createUser());
+        
+        $this->quickCreateAllocatedExpenseResourceType();
 
-        $response = $this->fetchResourceTypeCollection(['offset'=>0, 'limit'=> 1]);
+        $response = $this->getToResourceTypeList(['offset'=>0, 'limit'=> 1]);
         $response->assertStatus(200);
 
         $resource_type_id = $response->json()[0]['id'];
 
-        $response = $this->fetchAllPermittedUsers(['resource_type_id'=> $resource_type_id]);
+        $response = $this->getToPermittedUserList(['resource_type_id'=> $resource_type_id]);
         $response->assertStatus(200);
 
         $permitted_user_id = $response->json()[0]['id'];
 
-        $response = $this->fetchPermittedUser(['resource_type_id'=> $resource_type_id, 'permitted_user_id' => $permitted_user_id]);
+        $response = $this->getToPermittedUserShow(['resource_type_id'=> $resource_type_id, 'permitted_user_id' => $permitted_user_id]);
         $response->assertStatus(200);
 
         $this->assertJsonMatchesPermittedUserSchema($response->content());

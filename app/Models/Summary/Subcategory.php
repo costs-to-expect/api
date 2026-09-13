@@ -5,8 +5,10 @@ declare(strict_types=1);
 namespace App\Models\Summary;
 
 use App\Models\Utility;
+use Illuminate\Contracts\Database\Query\Expression;
 use Illuminate\Database\Query\Builder as QueryBuilder;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\DB;
 
 /**
  * @mixin QueryBuilder
@@ -17,7 +19,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property string $description
  *
  * @author Dean Blackborough <dean@g3d-development.com>
- * @copyright Dean Blackborough 2018-2023
+ * @copyright Dean Blackborough 2018-2025
  * @license https://github.com/costs-to-expect/api/blob/master/LICENSE
  */
 class Subcategory extends Model
@@ -31,24 +33,7 @@ class Subcategory extends Model
     ): array {
         $collection = $this
             ->selectRaw("COUNT(`{$this->table}`.`id`) AS total")
-            ->selectRaw(
-                "
-                (
-                    SELECT 
-                        GREATEST(
-                            MAX(`{$this->table}`.`created_at`), 
-                            IFNULL(MAX(`{$this->table}`.`updated_at`), 0),
-                            0
-                        )
-                    FROM 
-                        `{$this->table}` 
-                    WHERE
-                        `{$this->table}`.`category_id` = ? 
-                ) AS `last_updated`",
-                [
-                    $category_id
-                ]
-            )
+            ->selectRaw($this->lastUpdatedExpression()->getValue(DB::connection()->getQueryGrammar()), [$category_id])
             ->join('category', 'sub_category.category_id', 'category.id')
             ->where('sub_category.category_id', '=', $category_id)
             ->where('category.resource_type_id', '=', $resource_type_id);
@@ -57,5 +42,37 @@ class Subcategory extends Model
 
         return $collection->get()
             ->toArray();
+    }
+
+    private function lastUpdatedExpression(): Expression
+    {
+        if (DB::getDriverName() === 'mysql') {
+            return DB::raw("
+                (
+                    SELECT
+                        GREATEST(
+                            MAX(`{$this->table}`.`created_at`),
+                            IFNULL(MAX(`{$this->table}`.`updated_at`), 0),
+                            0
+                        )
+                    FROM
+                        `{$this->table}`
+                    WHERE
+                        `{$this->table}`.`category_id` = ?
+                ) AS `last_updated`");
+        }
+
+        return DB::raw("(
+                SELECT
+                    MAX(
+                        COALESCE({$this->table}.created_at, 0),
+                        COALESCE({$this->table}.updated_at, 0),
+                        0
+                    )
+                FROM
+                    {$this->table}
+                WHERE
+                    {$this->table}.category_id = ?
+            ) AS last_updated");
     }
 }

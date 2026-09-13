@@ -25,6 +25,11 @@ abstract class ApiResourceTypeItemResponse
     protected array $filter_parameters;
     protected array $sort_fields;
 
+    protected Request $request_service;
+    protected Search $search_service;
+    protected Filter $filter_service;
+    protected Sort $sort_service;
+
     public function __construct(
         int $resource_type_id,
         ?int $user_id
@@ -49,10 +54,10 @@ abstract class ApiResourceTypeItemResponse
             ->collection($pagination_parameters, $count, $total)
             ->addCacheControl($this->cache_control->visibility(), $this->cache_control->ttl())
             ->addETag($collection)
-            ->addSearch(Search::xHeader())
-            ->addSort(Sort::xHeader())
-            ->addParameters(Request::xHeader())
-            ->addFilter(Filter::xHeader());
+            ->addSearch($this->search_service->xHeader())
+            ->addSort($this->sort_service->xHeader())
+            ->addParameters($this->request_service->xHeader())
+            ->addFilter($this->filter_service->xHeader());
 
         if ($last_updated !== null) {
             $headers->addLastUpdated($last_updated);

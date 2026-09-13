@@ -6,26 +6,27 @@
 >
     <testsuites>
         <testsuite name="Action">
-            <directory suffix="Test.php">./Tests/Action</directory>
+            <directory suffix="Test.php">./tests/Action</directory>
         </testsuite>
         <testsuite name="View">
-            <directory suffix="Test.php">./Tests/View</directory>
+            <directory suffix="Test.php">./tests/View</directory>
         </testsuite>
     </testsuites>
-    <coverage processUncoveredFiles="false">
+    <source>
         <include>
             <directory suffix=".php">./app</directory>
         </include>
-    </coverage>
+    </source>
     <php>
-        <server name="APP_ENV" value="local"/>
+        <server name="APP_ENV" value="testing"/>
+        <server name="APP_CACHE" value="false"/>
         <server name="APP_DEBUG" value="true"/>
+        <server name="APP_KEY" value="base64:gb5P7MM2HiQG4OCuqLPgwnV2WMMq63u2T1Ly0GOsnI0="/>
         <server name="BCRYPT_ROUNDS" value="4"/>
         <server name="CACHE_DRIVER" value="database"/>
-        <server name="DB_CONNECTION" value="mysql"/>
-        <server name="DB_HOST" value="costs.api.mysql"/>
-        <server name="DB_DATABASE" value="api"/>
-        <server name="DB_PORT" value="3306"/>
+        <server name="DB_CONNECTION" value="sqlite"/>
+        <server name="DB_DATABASE" value=":memory:"/>
+        <server name="INTERNAL_API_KEY" value="testing-internal-api-key"/>
         <server name="MAIL_MAILER" value="array"/>
         <server name="QUEUE_CONNECTION" value="sync"/>
         <server name="SESSION_DRIVER" value="array"/>

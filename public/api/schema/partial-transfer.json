@@ -78,9 +78,6 @@
                 "user": {
                     "type": "object",
                     "properties": {
-                        "uri": {
-                            "type": "string"
-                        },
                         "id": {
                             "type": "string"
                         },
@@ -89,7 +86,6 @@
                         }
                     },
                     "required": [
-                        "uri",
                         "id",
                         "name"
                     ]

@@ -15,7 +15,7 @@ use Illuminate\Support\Facades\Config;
  * Summary controller for the categories routes
  *
  * @author Dean Blackborough <dean@g3d-development.com>
- * @copyright Dean Blackborough 2018-2023
+ * @copyright Dean Blackborough 2018-2025
  * @license https://github.com/costs-to-expect/api/blob/master/LICENSE
  */
 class CategoryController extends Controller
@@ -41,14 +41,14 @@ class CategoryController extends Controller
         $cache_summary->setFromCache($cache_control->getByKey($request->getRequestUri()));
 
         if ($cache_control->isRequestCacheable() === false || $cache_summary->valid() === false) {
-            $search_parameters = Parameter\Search::fetch(
-                Config::get('api.category.summary-searchable')
-            );
 
+            $searchRequestService = new Parameter\Search($request->get('search'));
+            $searchParameters = $searchRequestService->fetch(Config::get('api.category.summary-searchable'));
+            
             $summary = (new Category())->total(
                 $resource_type_id,
                 $this->viewable_resource_types,
-                $search_parameters
+                $searchParameters
             );
 
             $total = 0;
@@ -68,7 +68,7 @@ class CategoryController extends Controller
             $headers = (new Header())
                 ->addCacheControl($cache_control->visibility(), $cache_control->ttl())
                 ->addETag($collection)
-                ->addSearch(Parameter\Search::xHeader());
+                ->addSearch($searchRequestService->xHeader());
 
             if ($last_updated !== null) {
                 $headers->addLastUpdated($last_updated);

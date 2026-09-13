@@ -5,13 +5,15 @@ declare(strict_types=1);
 namespace App\ItemType\Game\Models;
 
 use App\Models\Utility;
+use Illuminate\Contracts\Database\Query\Expression;
 use Illuminate\Database\Eloquent\Model as LaravelModel;
 use Illuminate\Database\Query\Builder as QueryBuilder;
+use Illuminate\Support\Facades\DB;
 
 /**
  * @mixin QueryBuilder
  * @author Dean Blackborough <dean@g3d-development.com>
- * @copyright Dean Blackborough 2018-2023
+ * @copyright Dean Blackborough 2018-2025
  * @license https://github.com/costs-to-expect/api/blob/master/LICENSE
  */
 class ResourceTypeItem extends LaravelModel
@@ -118,35 +120,58 @@ class ResourceTypeItem extends LaravelModel
             $collection->orderBy($this->item_table . '.created_at', 'desc');
         }
 
+        $last_updated_expression = $this->lastUpdatedExpression();
+
         return $collection
             ->offset($offset)
             ->limit($limit)
             ->select($select_fields)
-            ->selectRaw(
-                "
+            ->selectRaw($last_updated_expression->getValue(DB::connection()->getQueryGrammar()), [$resource_type_id])
+            ->get()
+            ->toArray();
+    }
+
+    private function lastUpdatedExpression(): Expression
+    {
+        if (DB::getDriverName() === 'mysql') {
+            return DB::raw("
                 (
-                    SELECT 
+                    SELECT
                         GREATEST(
-                            MAX(`{$this->item_table}`.`created_at`), 
+                            MAX(`{$this->item_table}`.`created_at`),
                             IFNULL(MAX(`{$this->item_table}`.`updated_at`), 0),
                             0
                         )
-                    FROM 
+                    FROM
                         `{$this->item_table}`
-                    INNER JOIN 
-                        `item` ON 
+                    INNER JOIN
+                        `item` ON
                             {$this->item_table}.`item_id` = `{$this->table}`.`id`
-                    INNER JOIN 
-                        `resource` ON 
+                    INNER JOIN
+                        `resource` ON
                             `item`.`resource_id` = `resource`.`id`
                     WHERE
-                        `resource`.`resource_type_id` = ? 
-                ) AS `last_updated`",
-                [
-                    $resource_type_id
-                ]
-            )
-            ->get()
-            ->toArray();
+                        `resource`.`resource_type_id` = ?
+                ) AS `last_updated`");
+        }
+
+        return DB::raw("(
+                SELECT
+                    MAX(
+                        COALESCE({$this->item_table}.created_at, 0),
+                        COALESCE({$this->item_table}.updated_at, 0),
+                        0
+                    )
+                FROM
+                    {$this->item_table}
+                INNER JOIN
+                    item ON
+                        {$this->item_table}.item_id = {$this->table}.id
+                INNER JOIN
+                    resource ON
+                        item.resource_id = resource.id
+                WHERE
+                    resource.resource_type_id = ?
+            ) AS last_updated");
     }
 }

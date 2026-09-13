@@ -4,10 +4,12 @@ declare(strict_types=1);
 
 namespace App\Models;
 
+use Illuminate\Contracts\Database\Query\Expression;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Query\Builder as QueryBuilder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Config;
+use Illuminate\Support\Facades\DB;
 
 /**
  * @mixin QueryBuilder
@@ -18,7 +20,7 @@ use Illuminate\Support\Facades\Config;
  * @property string $description
  *
  * @author Dean Blackborough <dean@g3d-development.com>
- * @copyright Dean Blackborough 2018-2023
+ * @copyright Dean Blackborough 2018-2025
  * @license https://github.com/costs-to-expect/api/blob/master/LICENSE
  */
 class Subcategory extends Model
@@ -59,6 +61,8 @@ class Subcategory extends Model
         array $search_parameters = [],
         array $sort_parameters = []
     ): array {
+        $last_updated_expression = $this->lastUpdatedExpression();
+        
         $collection = $this
             ->select(
                 'sub_category.id AS subcategory_id',
@@ -66,24 +70,7 @@ class Subcategory extends Model
                 'sub_category.description AS subcategory_description',
                 'sub_category.created_at AS subcategory_created_at'
             )
-            ->selectRaw(
-                '
-                (
-                    SELECT 
-                        GREATEST(
-                            MAX(sub_category.created_at), 
-                            IFNULL(MAX(sub_category.updated_at), 0),
-                            0
-                        )
-                    FROM 
-                        sub_category
-                    WHERE 
-                        sub_category.category_id = ? 
-                ) AS last_updated',
-                [
-                    $category_id
-                ]
-            )
+            ->selectRaw($last_updated_expression->getValue(DB::connection()->getQueryGrammar()), [$category_id])
             ->join('category', 'sub_category.category_id', 'category.id')
             ->where('sub_category.category_id', '=', $category_id)
             ->where('category.resource_type_id', '=', $resource_type_id);
@@ -92,25 +79,20 @@ class Subcategory extends Model
 
         if (count($sort_parameters) > 0) {
             foreach ($sort_parameters as $field => $direction) {
-                switch ($field) {
-                    case 'created':
-                        $collection->orderBy($this->table . '.created_at', $direction);
-                        break;
-
-                    default:
-                        $collection->orderBy($this->table . '.' . $field, $direction);
-                        break;
+                if ($field === 'created') {
+                    $collection->orderBy($this->table . '.created_at', $direction);
+                } else {
+                    $collection->orderBy($this->table . '.' . $field, $direction);
                 }
             }
         } else {
             $collection->orderBy($this->table . '.name', 'asc');
         }
 
-        $collection->offset($offset)->
-            limit($limit);
+        $collection->offset($offset)
+            ->limit($limit);
 
-        return $collection->get()->
-            toArray();
+        return $collection->get()->toArray();
     }
 
     public function single(
@@ -159,5 +141,37 @@ class Subcategory extends Model
             'subcategory_description' => $subcategory->description,
             'subcategory_created_at' => $subcategory->created_at->toDateTimeString()
         ];
+    }
+
+    private function lastUpdatedExpression(): Expression
+    {
+        if (DB::getDriverName() === 'mysql') {
+            return DB::raw('
+                (
+                    SELECT 
+                        GREATEST(
+                            MAX(sub_category.created_at), 
+                            IFNULL(MAX(sub_category.updated_at), 0),
+                            0
+                        )
+                    FROM 
+                        sub_category
+                    WHERE 
+                        sub_category.category_id = ? 
+                ) AS last_updated');
+        }
+
+        return DB::raw('(
+                SELECT
+                    MAX(
+                        COALESCE(sub_category.created_at, 0),
+                        COALESCE(sub_category.updated_at, 0),
+                        0
+                    )
+                FROM
+                    sub_category
+                WHERE
+                    sub_category.category_id = ?
+            ) AS last_updated');
     }
 }

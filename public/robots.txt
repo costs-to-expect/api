@@ -1,0 +1,5 @@
+User-agent: *
+Allow: /
+Disallow: /v3/
+
+Sitemap: https://api.costs-to-expect.com/sitemap.xml

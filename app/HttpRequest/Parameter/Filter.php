@@ -11,23 +11,28 @@ use DateTime;
  * Fetch and validate any filter parameters
  *
  * @author Dean Blackborough <dean@g3d-development.com>
- * @copyright Dean Blackborough 2018-2023
+ * @copyright Dean Blackborough 2018-2025
  * @license https://github.com/costs-to-expect/api/blob/master/LICENSE
  */
 class Filter
 {
-    private static array $parameters = [];
+    private array $parameters = [];
+    
+    private ?string $filter_parameter;
+
+    public function __construct(?string $filter_parameter = null)
+    {
+        $this->filter_parameter = $filter_parameter;
+    }
 
     /**
      * Check the URI for the filter parameter, if the format is valid split the
      * string and set a filter array of the filter parameters and the ranges
      */
-    private static function find(): void
+    private function find(): void
     {
-        $filter_string = request()->get('filter');
-
-        if (is_string($filter_string) && $filter_string !== '') {
-            $filters = explode('|', $filter_string);
+        if ($this->filter_parameter !== null && $this->filter_parameter !== '') {
+            $filters = explode('|', $this->filter_parameter);
 
             foreach ($filters as $filter_range) {
                 $filter = explode(':', $filter_range);
@@ -41,10 +46,10 @@ class Filter
                             if (
                                 strlen($filter[1]) === 10 &&
                                 strlen($filter[2]) === 10 &&
-                                self::validateDate($filter[1]) === true &&
-                                self::validateDate($filter[2]) === true
+                                $this->validateDate($filter[1]) === true &&
+                                $this->validateDate($filter[2]) === true
                             ) {
-                                self::$parameters[$filter[0]] = [
+                                $this->parameters[$filter[0]] = [
                                     'from' => $filter[1],
                                     'to' => $filter[2]
                                 ];
@@ -52,9 +57,9 @@ class Filter
                             break;
                         case 'total':
                         case 'actualised_total':
-                            if (self::validateMoney($filter[1]) === false &&
-                                self::validateMoney($filter[2]) === false) {
-                                self::$parameters[$filter[0]] = [
+                            if ($this->validateMoney($filter[1]) === false &&
+                                $this->validateMoney($filter[2]) === false) {
+                                $this->parameters[$filter[0]] = [
                                     'from' => $filter[1],
                                     'to' => $filter[2]
                                 ];
@@ -76,11 +81,11 @@ class Filter
      *
      * @param array $parameters
      */
-    private static function validate(array $parameters): void
+    private function validate(array $parameters): void
     {
-        foreach (array_keys(self::$parameters) as $key) {
+        foreach (array_keys($this->parameters) as $key) {
             if (array_key_exists($key, $parameters) === false) {
-                unset(self::$parameters[$key]);
+                unset($this->parameters[$key]);
             }
         }
     }
@@ -93,12 +98,12 @@ class Filter
      *
      * @return array
      */
-    public static function fetch(array $parameters = []): array
+    public function fetch(array $parameters = []): array
     {
-        self::find();
-        self::validate($parameters);
+        $this->find();
+        $this->validate($parameters);
 
-        return self::$parameters;
+        return $this->parameters;
     }
 
     /**
@@ -106,11 +111,11 @@ class Filter
      *
      * @return string|null
      */
-    public static function xHeader(): ?string
+    public function xHeader(): ?string
     {
         $header = '';
 
-        foreach (self::$parameters as $key => $values) {
+        foreach ($this->parameters as $key => $values) {
             $header .= '|' . $key . ':' . urlencode($values['from']) . ':' . urlencode($values['to']);
         }
 
@@ -121,7 +126,7 @@ class Filter
         return null;
     }
 
-    private static function validateDate($date): bool
+    private function validateDate($date): bool
     {
         DateTime::createFromFormat('Y-m-d', $date);
         $errors = DateTime::getLastErrors();
@@ -133,7 +138,7 @@ class Filter
         return ($errors['warning_count'] === 0 && $errors['error_count'] === 0);
     }
 
-    private static function validateMoney($value): bool
+    private function validateMoney($value): bool
     {
         $validator = ValidatorFacade::make(
             [

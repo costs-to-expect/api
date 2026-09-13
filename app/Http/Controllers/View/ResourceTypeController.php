@@ -19,7 +19,7 @@ use Illuminate\Support\Facades\Config;
 
 /**
  * @author Dean Blackborough <dean@g3d-development.com>
- * @copyright Dean Blackborough 2018-2023
+ * @copyright Dean Blackborough 2018-2025
  * @license https://github.com/costs-to-expect/api/blob/master/LICENSE
  */
 class ResourceTypeController extends Controller
@@ -35,18 +35,16 @@ class ResourceTypeController extends Controller
         $cache_collection->setFromCache($cache_control->getByKey($request->getRequestUri()));
 
         if ($cache_control->isRequestCacheable() === false || $cache_collection->valid() === false) {
-            $request_parameters = Parameter\Request::fetch(
-                array_keys(Config::get('api.resource-type.parameters'))
-            );
+            
+            $request_parameter_service = new Parameter\Request($request->all());
+            $request_parameters = $request_parameter_service->fetch(array_keys(Config::get('api.resource-type.parameters')));
 
-            $search_parameters = Parameter\Search::fetch(
-                Config::get('api.resource-type.searchable')
-            );
-
-            $sort_parameters = Parameter\Sort::fetch(
-                Config::get('api.resource-type.sortable')
-            );
-
+            $search_request_service = new Parameter\Search($request->get('search'));
+            $search_parameters = $search_request_service->fetch(Config::get('api.resource-type.searchable'));
+            
+            $sort_request_service = new Parameter\Sort($request->get('sort'));
+            $sort_parameters = $sort_request_service->fetch(Config::get('api.resource-type.sortable'));
+            
             $total = (new ResourceType())->totalCount(
                 $this->viewable_resource_types,
                 $search_parameters
@@ -80,14 +78,13 @@ class ResourceTypeController extends Controller
                 },
                 $resource_types
             );
-
-            $headers = new Header();
-            $headers
+            
+            $headers = (new Header())
                 ->collection($pagination_parameters, count($resource_types), $total)
                 ->addCacheControl($cache_control->visibility(), $cache_control->ttl())
                 ->addETag($collection)
-                ->addSearch(Parameter\Search::xHeader())
-                ->addSort(Parameter\Sort::xHeader());
+                ->addSearch($search_request_service->xHeader())
+                ->addSort($sort_request_service->xHeader());
 
             if ($last_updated !== null) {
                 $headers->addLastUpdated($last_updated);
@@ -102,7 +99,8 @@ class ResourceTypeController extends Controller
 
     public function show(Request $request, $resource_type_id): JsonResponse
     {
-        $parameters = Parameter\Request::fetch(array_keys(Config::get('api.resource-type.parameters-show')));
+        $request_parameter_service = new Parameter\Request($request->all());
+        $request_parameters = $request_parameter_service->fetch(array_keys(Config::get('api.resource-type.parameters-show')));
 
         $resource_type = (new ResourceType())->single(
             (int) $resource_type_id,
@@ -116,21 +114,21 @@ class ResourceTypeController extends Controller
         $transformer_relations = [];
 
         if (
-            array_key_exists('include-resources', $parameters) === true &&
-            $parameters['include-resources'] === true
+            array_key_exists('include-resources', $request_parameters) === true &&
+            $request_parameters['include-resources'] === true
         ) {
             $transformer_relations['resources'] = (new Resource())->paginatedCollection((int) $resource_type_id);
         }
 
         if (
-            array_key_exists('include-permitted-users', $parameters) === true &&
-            $parameters['include-permitted-users'] === true
+            array_key_exists('include-permitted-users', $request_parameters) === true &&
+            $request_parameters['include-permitted-users'] === true
         ) {
             $transformer_relations['permitted_users'] = (new PermittedUser())->paginatedCollection((int) $resource_type_id);
         }
 
         $headers = new Header();
-        $headers->item()->addParameters(Parameter\Request::xHeader());
+        $headers->item()->addParameters($request_parameter_service->xHeader());
 
         return response()->json(
             (new ResourceTypeTransformer($resource_type, $transformer_relations))->asArray(),

@@ -2,7 +2,6 @@
 
 namespace Tests\Action\Http\Controllers;
 
-use App\User;
 use Illuminate\Support\Str;
 use Tests\TestCase;
 
@@ -11,12 +10,12 @@ final class ItemBudgetTest extends TestCase
     /** @test */
     public function createBudgetItemFailsAmountNotFormattedCorrectly(): void
     {
-        $this->actingAs(User::find(1));
+        $this->actingAs($this->createUser());
 
-        $resource_type_id = $this->createBudgetResourceType();
-        $resource_id = $this->createBudgetResource($resource_type_id);
+        $resource_type_id = $this->quickCreateBudgetResourceType();
+        $resource_id = $this->quickCreateBudgetResource($resource_type_id);
 
-        $response = $this->createItem(
+        $response = $this->postToItemCreate(
             $resource_type_id,
             $resource_id,
             [
@@ -37,12 +36,12 @@ final class ItemBudgetTest extends TestCase
     /** @test */
     public function createBudgetItemFailsCategoryInvalid(): void
     {
-        $this->actingAs(User::find(1));
+        $this->actingAs($this->createUser());
 
-        $resource_type_id = $this->createBudgetResourceType();
-        $resource_id = $this->createBudgetResource($resource_type_id);
+        $resource_type_id = $this->quickCreateBudgetResourceType();
+        $resource_id = $this->quickCreateBudgetResource($resource_type_id);
 
-        $response = $this->createItem(
+        $response = $this->postToItemCreate(
             $resource_type_id,
             $resource_id,
             [
@@ -63,12 +62,12 @@ final class ItemBudgetTest extends TestCase
     /** @test */
     public function createBudgetItemFailsCurrencyInvalid(): void
     {
-        $this->actingAs(User::find(1));
+        $this->actingAs($this->createUser());
 
-        $resource_type_id = $this->createBudgetResourceType();
-        $resource_id = $this->createBudgetResource($resource_type_id);
+        $resource_type_id = $this->quickCreateBudgetResourceType();
+        $resource_id = $this->quickCreateBudgetResource($resource_type_id);
 
-        $response = $this->createItem(
+        $response = $this->postToItemCreate(
             $resource_type_id,
             $resource_id,
             [
@@ -89,12 +88,12 @@ final class ItemBudgetTest extends TestCase
     /** @test */
     public function createBudgetItemFailsFrequencyJsonInvalid(): void
     {
-        $this->actingAs(User::find(1));
+        $this->actingAs($this->createUser());
 
-        $resource_type_id = $this->createBudgetResourceType();
-        $resource_id = $this->createBudgetResource($resource_type_id);
+        $resource_type_id = $this->quickCreateBudgetResourceType();
+        $resource_id = $this->quickCreateBudgetResource($resource_type_id);
 
-        $response = $this->createItem(
+        $response = $this->postToItemCreate(
             $resource_type_id,
             $resource_id,
             [
@@ -115,12 +114,12 @@ final class ItemBudgetTest extends TestCase
     /** @test */
     public function createBudgetItemFailsNoNameInPayload(): void
     {
-        $this->actingAs(User::find(1));
+        $this->actingAs($this->createUser());
 
-        $resource_type_id = $this->createBudgetResourceType();
-        $resource_id = $this->createBudgetResource($resource_type_id);
+        $resource_type_id = $this->quickCreateBudgetResourceType();
+        $resource_id = $this->quickCreateBudgetResource($resource_type_id);
 
-        $response = $this->createItem(
+        $response = $this->postToItemCreate(
             $resource_type_id,
             $resource_id,
             [
@@ -140,12 +139,12 @@ final class ItemBudgetTest extends TestCase
     /** @test */
     public function createBudgetItemFailsNoPayload(): void
     {
-        $this->actingAs(User::find(1));
+        $this->actingAs($this->createUser());
 
-        $resource_type_id = $this->createBudgetResourceType();
-        $resource_id = $this->createBudgetResource($resource_type_id);
+        $resource_type_id = $this->quickCreateBudgetResourceType();
+        $resource_id = $this->quickCreateBudgetResource($resource_type_id);
 
-        $response = $this->createItem(
+        $response = $this->postToItemCreate(
             $resource_type_id,
             $resource_id,
             []
@@ -157,12 +156,12 @@ final class ItemBudgetTest extends TestCase
     /** @test */
     public function createBudgetItemSuccess(): void
     {
-        $this->actingAs(User::find(1));
+        $this->actingAs($this->createUser());
 
-        $resource_type_id = $this->createBudgetResourceType();
-        $resource_id = $this->createBudgetResource($resource_type_id);
+        $resource_type_id = $this->quickCreateBudgetResourceType();
+        $resource_id = $this->quickCreateBudgetResource($resource_type_id);
 
-        $response = $this->createItem(
+        $response = $this->postToItemCreate(
             $resource_type_id,
             $resource_id,
             [
@@ -184,13 +183,13 @@ final class ItemBudgetTest extends TestCase
     /** @test */
     public function deleteBudgetItemFailsIdNotFound(): void
     {
-        $this->actingAs(User::find(1));
+        $this->actingAs($this->createUser());
 
-        $resource_type_id = $this->createBudgetResourceType();
-        $resource_id = $this->createBudgetResource($resource_type_id);
+        $resource_type_id = $this->quickCreateBudgetResourceType();
+        $resource_id = $this->quickCreateBudgetResource($resource_type_id);
         $item_id = '1234asdffgd';
 
-        $response = $this->deleteItem(
+        $response = $this->deleteToItemDelete(
             $resource_type_id,
             $resource_id,
             $item_id,
@@ -202,13 +201,13 @@ final class ItemBudgetTest extends TestCase
     /** @test */
     public function deleteBudgetItemSuccess(): void
     {
-        $this->actingAs(User::find(1));
+        $this->actingAs($this->createUser());
 
-        $resource_type_id = $this->createBudgetResourceType();
-        $resource_id = $this->createBudgetResource($resource_type_id);
-        $item_id = $this->createBudgetItem($resource_type_id, $resource_id);
+        $resource_type_id = $this->quickCreateBudgetResourceType();
+        $resource_id = $this->quickCreateBudgetResource($resource_type_id);
+        $item_id = $this->quickCreateBudgetItem($resource_type_id, $resource_id);
 
-        $response = $this->deleteItem(
+        $response = $this->deleteToItemDelete(
             $resource_type_id,
             $resource_id,
             $item_id,
@@ -220,13 +219,13 @@ final class ItemBudgetTest extends TestCase
     /** @test */
     public function updateBudgetItemFailsNonExistentField(): void
     {
-        $this->actingAs(User::find(1));
+        $this->actingAs($this->createUser());
 
-        $resource_type_id = $this->createBudgetResourceType();
-        $resource_id = $this->createBudgetResource($resource_type_id);
-        $item_id = $this->createBudgetItem($resource_type_id, $resource_id);
+        $resource_type_id = $this->quickCreateBudgetResourceType();
+        $resource_id = $this->quickCreateBudgetResource($resource_type_id);
+        $item_id = $this->quickCreateBudgetItem($resource_type_id, $resource_id);
 
-        $response = $this->updateItem(
+        $response = $this->patchToItemUpdate(
             $resource_type_id,
             $resource_id,
             $item_id,
@@ -241,13 +240,13 @@ final class ItemBudgetTest extends TestCase
     /** @test */
     public function updateBudgetItemFailsNoPayload(): void
     {
-        $this->actingAs(User::find(1));
+        $this->actingAs($this->createUser());
 
-        $resource_type_id = $this->createBudgetResourceType();
-        $resource_id = $this->createBudgetResource($resource_type_id);
-        $item_id = $this->createBudgetItem($resource_type_id, $resource_id);
+        $resource_type_id = $this->quickCreateBudgetResourceType();
+        $resource_id = $this->quickCreateBudgetResource($resource_type_id);
+        $item_id = $this->quickCreateBudgetItem($resource_type_id, $resource_id);
 
-        $response = $this->updateItem(
+        $response = $this->patchToItemUpdate(
             $resource_type_id,
             $resource_id,
             $item_id,
@@ -260,13 +259,13 @@ final class ItemBudgetTest extends TestCase
     /** @test */
     public function updateBudgetItemSuccess(): void
     {
-        $this->actingAs(User::find(1));
+        $this->actingAs($this->createUser());
 
-        $resource_type_id = $this->createBudgetResourceType();
-        $resource_id = $this->createBudgetResource($resource_type_id);
-        $item_id = $this->createBudgetItem($resource_type_id, $resource_id);
+        $resource_type_id = $this->quickCreateBudgetResourceType();
+        $resource_id = $this->quickCreateBudgetResource($resource_type_id);
+        $item_id = $this->quickCreateBudgetItem($resource_type_id, $resource_id);
 
-        $response = $this->updateItem(
+        $response = $this->patchToItemUpdate(
             $resource_type_id,
             $resource_id,
             $item_id,

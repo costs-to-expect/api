@@ -45,7 +45,7 @@ class AllowedValue
         }
 
         $parameters = Config::get('api.item-type-allocated-expense.parameters', []);
-        $parameters_set_in_request = Request::fetch(
+        $parameters_set_in_request = (new Request(request()->all()))->fetch(
             array_keys($parameters),
             $this->resource_type_id,
             $this->resource_id
@@ -72,7 +72,7 @@ class AllowedValue
         }
 
         $parameters = Config::get('api.resource-type-item-type-allocated-expense.parameters', []);
-        $parameters_set_in_request = Request::fetch(
+        $parameters_set_in_request = (new Request(request()->all()))->fetch(
             array_keys($parameters),
             $this->resource_type_id
         );

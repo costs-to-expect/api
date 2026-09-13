@@ -2,24 +2,16 @@
 
 namespace Tests\View\Http\Controllers;
 
-use App\User;
 use Tests\TestCase;
 
-/**
- * @runTestsInSeparateProcesses
- */
 final class ItemTypeTest extends TestCase
 {
-    /**
-     * @test
-     * @runInSeparateProcess
-     * @preserveGlobalState disabled
-     */
+    /** @test */
     public function itemTypeCollection(): void
     {
-        $this->actingAs(User::find(1));
+        $this->actingAs($this->createUser());
 
-        $response = $this->fetchAllItemTypes();
+        $response = $this->getToItemTypeList();
         $response->assertStatus(200);
 
         foreach ($response->json() as $item) {
@@ -33,16 +25,12 @@ final class ItemTypeTest extends TestCase
         }
     }
 
-    /**
-     * @test
-     * @runInSeparateProcess
-     * @preserveGlobalState disabled
-     */
+    /** @test */
     public function itemTypeCollectionPagination(): void
     {
-        $this->actingAs(User::find(1));
+        $this->actingAs($this->createUser());
 
-        $response = $this->fetchAllItemTypes(['offset'=>1, 'limit'=> 2]);
+        $response = $this->getToItemTypeList(['offset'=>1, 'limit'=> 2]);
 
         $response->assertStatus(200);
         $response->assertHeader('X-Offset', 1);
@@ -59,16 +47,12 @@ final class ItemTypeTest extends TestCase
         }
     }
 
-    /**
-     * @test
-     * @runInSeparateProcess
-     * @preserveGlobalState disabled
-     */
+    /** @test */
     public function itemTypeCollectionSearchDescription(): void
     {
-        $this->actingAs(User::find(1));
+        $this->actingAs($this->createUser());
 
-        $response = $this->fetchAllItemTypes(['search'=>'description:track']);
+        $response = $this->getToItemTypeList(['search'=>'description:track']);
 
         $response->assertStatus(200);
         $response->assertHeader('X-Search', 'description:track');
@@ -85,16 +69,12 @@ final class ItemTypeTest extends TestCase
         }
     }
 
-    /**
-     * @test
-     * @runInSeparateProcess
-     * @preserveGlobalState disabled
-     */
+    /** @test */
     public function itemTypeCollectionSearchName(): void
     {
-        $this->actingAs(User::find(1));
+        $this->actingAs($this->createUser());
 
-        $response = $this->fetchAllItemTypes(['search'=>'name:game']);
+        $response = $this->getToItemTypeList(['search'=>'name:game']);
 
         $response->assertStatus(200);
         $response->assertHeader('X-Search', 'name:game');
@@ -111,16 +91,12 @@ final class ItemTypeTest extends TestCase
         }
     }
 
-    /**
-     * @test
-     * @runInSeparateProcess
-     * @preserveGlobalState disabled
-     */
+    /** @test */
     public function itemTypeCollectionSearchNameNoResults(): void
     {
-        $this->actingAs(User::find(1));
+        $this->actingAs($this->createUser());
 
-        $response = $this->fetchAllItemTypes(['search'=>'name:xxxxxxxxx']);
+        $response = $this->getToItemTypeList(['search'=>'name:xxxxxxxxx']);
 
         $response->assertStatus(200);
         $response->assertHeader('X-Search', 'name:xxxxxxxxx');
@@ -137,16 +113,12 @@ final class ItemTypeTest extends TestCase
         }
     }
 
-    /**
-     * @test
-     * @runInSeparateProcess
-     * @preserveGlobalState disabled
-     */
+    /** @test */
     public function itemTypeCollectionSortName(): void
     {
-        $this->actingAs(User::find(1));
+        $this->actingAs($this->createUser());
 
-        $response = $this->fetchAllItemTypes(['sort'=>'name:asc', 'limit' => 1]);
+        $response = $this->getToItemTypeList(['sort'=>'name:asc', 'limit' => 1]);
 
         $response->assertStatus(200);
         $response->assertHeader('X-Sort', 'name:asc');
@@ -166,16 +138,12 @@ final class ItemTypeTest extends TestCase
 
     }
 
-    /**
-     * @test
-     * @runInSeparateProcess
-     * @preserveGlobalState disabled
-     */
+    /** @test */
     public function itemTypeShow(): void
     {
-        $this->actingAs(User::find(1));
+        $this->actingAs($this->createUser());
 
-        $response = $this->fetchAllItemTypes(['offset'=>0, 'limit'=> 1]);
+        $response = $this->getToItemTypeList(['offset'=>0, 'limit'=> 1]);
         $response->assertStatus(200);
 
         $item_type_id = $response->json()[0]['id'];

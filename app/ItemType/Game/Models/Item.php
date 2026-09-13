@@ -6,14 +6,16 @@ namespace App\ItemType\Game\Models;
 
 use App\Models\Category;
 use App\Models\Utility;
+use Illuminate\Contracts\Database\Query\Expression;
 use Illuminate\Database\Eloquent\Model as LaravelModel;
 use Illuminate\Database\Query\Builder as QueryBuilder;
+use Illuminate\Support\Facades\DB;
 use JetBrains\PhpStorm\ArrayShape;
 
 /**
  * @mixin QueryBuilder
  * @author Dean Blackborough <dean@g3d-development.com>
- * @copyright Dean Blackborough 2018-2023
+ * @copyright Dean Blackborough 2018-2025
  * @license https://github.com/costs-to-expect/api/blob/master/LICENSE
  */
 class Item extends LaravelModel
@@ -199,29 +201,13 @@ class Item extends LaravelModel
             $collection->orderBy('item.created_at', 'desc');
         }
 
+        $last_updated_expression = $this->lastUpdatedExpression();
+
         return $collection
             ->offset($offset)
             ->limit($limit)
             ->select($select_fields)
-            ->selectRaw("(
-                    SELECT 
-                        GREATEST(
-                            MAX(`{$this->table}`.`created_at`), 
-                            IFNULL(MAX(`{$this->table}`.`updated_at`), 0),
-                            0
-                        )
-                    FROM 
-                        `{$this->table}` 
-                    JOIN 
-                        `item` ON 
-                            `{$this->table}`.`item_id` = `item`.`id`
-                    WHERE
-                        `item`.`resource_id` = ? 
-                ) AS `last_updated`",
-                [
-                    $resource_id
-                ]
-            )
+            ->selectRaw($last_updated_expression->getValue(DB::connection()->getQueryGrammar()), [$resource_id])
             ->get()
             ->toArray();
     }
@@ -231,5 +217,43 @@ class Item extends LaravelModel
         // Do something here
 
         return false;
+    }
+
+    private function lastUpdatedExpression(): Expression
+    {
+        if (DB::getDriverName() === 'mysql') {
+            return DB::raw("
+                (
+                    SELECT
+                        GREATEST(
+                            MAX(`{$this->table}`.`created_at`),
+                            IFNULL(MAX(`{$this->table}`.`updated_at`), 0),
+                            0
+                        )
+                    FROM
+                        `{$this->table}`
+                    JOIN
+                        `item` ON
+                            `{$this->table}`.`item_id` = `item`.`id`
+                    WHERE
+                        `item`.`resource_id` = ?
+                ) AS `last_updated`");
+        }
+
+        return DB::raw("(
+                SELECT
+                    MAX(
+                        COALESCE({$this->table}.created_at, 0),
+                        COALESCE({$this->table}.updated_at, 0),
+                        0
+                    )
+                FROM
+                    {$this->table}
+                JOIN
+                    `item` ON
+                        `{$this->table}`.`item_id` = `item`.`id`
+                    WHERE
+                        `item`.`resource_id` = ?
+            ) AS last_updated");
     }
 }

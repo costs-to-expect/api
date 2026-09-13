@@ -7,6 +7,7 @@ namespace App\Models\Summary;
 use App\Models\Utility;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Query\Builder as QueryBuilder;
+use Illuminate\Support\Facades\DB;
 
 /**
  * @mixin QueryBuilder
@@ -18,7 +19,7 @@ use Illuminate\Database\Query\Builder as QueryBuilder;
  * @property string $data
  *
  * @author Dean Blackborough <dean@g3d-development.com>
- * @copyright Dean Blackborough 2018-2023
+ * @copyright Dean Blackborough 2018-2025
  * @license https://github.com/costs-to-expect/api/blob/master/LICENSE
  */
 class ResourceType extends Model
@@ -31,13 +32,7 @@ class ResourceType extends Model
     ): array {
         $collection = $this
             ->selectRaw('COUNT(resource_type.id) AS total')
-            ->selectRaw(
-                "GREATEST(
-                    MAX(`{$this->table}`.`created_at`),
-                    IFNULL(MAX(`{$this->table}`.`updated_at`), 0),
-                    0
-                ) AS last_updated"
-            );
+            ->selectRaw($this->lastUpdatedAggregateExpression());
 
         $collection = Utility::applyViewableResourceTypesClause(
             $collection,
@@ -49,5 +44,22 @@ class ResourceType extends Model
         return $collection
             ->get()
             ->toArray();
+    }
+
+    private function lastUpdatedAggregateExpression(): string
+    {
+        if (DB::getDriverName() === 'mysql') {
+            return "GREATEST(
+                    MAX(`{$this->table}`.`created_at`),
+                    IFNULL(MAX(`{$this->table}`.`updated_at`), 0),
+                    0
+                ) AS last_updated";
+        }
+
+        return "MAX(
+                    COALESCE({$this->table}.created_at, 0),
+                    COALESCE({$this->table}.updated_at, 0),
+                    0
+                ) AS last_updated";
     }
 }

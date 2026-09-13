@@ -8,23 +8,29 @@ namespace App\HttpRequest\Parameter;
  * Fetch and validate any sort parameters
  *
  * @author Dean Blackborough <dean@g3d-development.com>
- * @copyright Dean Blackborough 2018-2023
+ * @copyright Dean Blackborough 2018-2025
  * @license https://github.com/costs-to-expect/api/blob/master/LICENSE
  */
 class Sort
 {
-    private static array $fields = [];
+    private array $fields = [];
+    
+    private ?string $sort_parameter;
+
+    public function __construct(?string $sort_parameter = null)
+    {
+        $this->sort_parameter = $sort_parameter;
+    }
 
     /**
-     * Check the URI for the sort parameter, if the format is valid split the
-     * string and set a sort array of field direction
+     * Check the URI for the sort GET parameter if the format is 
+     * valid, split the string and create an array of the sort 
+     * fields and sort directions
      */
-    private static function find()
+    private function find(): void
     {
-        $sort_string = request()->get('sort');
-
-        if (is_string($sort_string) && strlen($sort_string) > 3) {
-            $sorts = explode('|', $sort_string);
+        if ($this->sort_parameter !== null && strlen($this->sort_parameter) > 3) {
+            $sorts = explode('|', $this->sort_parameter);
 
             foreach ($sorts as $sort) {
                 $sort = explode(':', $sort);
@@ -34,7 +40,7 @@ class Sort
                     count($sort) === 2 &&
                     in_array($sort[1], ['asc', 'desc']) === true
                 ) {
-                    self::$fields[$sort[0]] = $sort[1];
+                    $this->fields[$sort[0]] = $sort[1];
                 }
             }
         }
@@ -43,14 +49,14 @@ class Sort
     /**
      * Validate the supplied sort parameters array, if they aren't in the
      * expected array they are silently rejected
-     *
-     * @param array $fields
      */
-    private static function validate(array $fields)
+    private function validate(array $supported_fields): void
     {
-        foreach (array_keys(self::$fields) as $key) {
-            if (in_array($key, $fields, true) === false) {
-                unset(self::$fields[$key]);
+        $sortable_fields = $supported_fields;
+        
+        foreach (array_keys($this->fields) as $key) {
+            if (in_array($key, $sortable_fields, true) === false) {
+                unset($this->fields[$key]);
             }
         }
     }
@@ -59,16 +65,14 @@ class Sort
      * Return all the valid sort parameters, check the supplied array against
      * the set sort parameters
      *
-     * @param array $fields
-     *
      * @return array
      */
-    public static function fetch(array $fields = []): array
+    public function fetch(array $supported_fields = []): array
     {
-        self::find();
-        self::validate($fields);
+        $this->find();
+        $this->validate($supported_fields);
 
-        return self::$fields;
+        return $this->fields;
     }
 
     /**
@@ -76,11 +80,11 @@ class Sort
      *
      * @return string|null
      */
-    public static function xHeader(): ?string
+    public function xHeader(): ?string
     {
         $header = '';
 
-        foreach (self::$fields as $key => $value) {
+        foreach ($this->fields as $key => $value) {
             $header .= '|' . $key . ':' . urlencode($value);
         }
 

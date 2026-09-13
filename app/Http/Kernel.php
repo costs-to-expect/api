@@ -57,6 +57,7 @@ class Kernel extends HttpKernel
         'signed' => \Illuminate\Routing\Middleware\ValidateSignature::class,
         'throttle' => \Illuminate\Routing\Middleware\ThrottleRequests::class,
         'convert.route.parameters' => \App\Http\Middleware\ConvertRouteParameters::class,
-        'convert.get.parameters' => \App\Http\Middleware\ConvertGetParameters::class
+        'convert.get.parameters' => \App\Http\Middleware\ConvertGetParameters::class,
+        'internal-api-key' => \App\Http\Middleware\VerifyInternalApiKey::class
     ];
 }

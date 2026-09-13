@@ -2,7 +2,6 @@
 
 namespace Tests\Action\Http\Controllers;
 
-use App\User;
 use Tests\TestCase;
 
 final class ResourceTypeTest extends TestCase
@@ -10,9 +9,9 @@ final class ResourceTypeTest extends TestCase
     /** @test */
     public function createAllocatedExpenseResourceTypeFailsDataFieldNotValidJson(): void
     {
-        $this->actingAs(User::find(1));
+        $this->actingAs($this->createUser());
 
-        $response = $this->createResourceType(
+        $response = $this->postToResourceTypeCreate(
             [
                 'name' => $this->faker->text(200),
                 'description' => $this->faker->text(200),
@@ -27,9 +26,9 @@ final class ResourceTypeTest extends TestCase
     /** @test */
     public function createAllocatedExpenseResourceTypeFailsItemTypeInvalid(): void
     {
-        $this->actingAs(User::find(1));
+        $this->actingAs($this->createUser());
 
-        $response = $this->createResourceType(
+        $response = $this->postToResourceTypeCreate(
             [
                 'name' => $this->faker->text(200),
                 'description' => $this->faker->text(200),
@@ -43,9 +42,9 @@ final class ResourceTypeTest extends TestCase
     /** @test */
     public function createAllocatedExpenseResourceTypeFailsNoDescriptionInPayload(): void
     {
-        $this->actingAs(User::find(1));
+        $this->actingAs($this->createUser());
 
-        $response = $this->createResourceType(
+        $response = $this->postToResourceTypeCreate(
             [
                 'name' => $this->faker->text(200),
                 'item_type_id' => $this->item_types['allocated-expense']
@@ -58,9 +57,9 @@ final class ResourceTypeTest extends TestCase
     /** @test */
     public function createAllocatedExpenseResourceTypeFailsNoNameInPayload(): void
     {
-        $this->actingAs(User::find(1));
+        $this->actingAs($this->createUser());
 
-        $response = $this->createResourceType(
+        $response = $this->postToResourceTypeCreate(
             [
                 'description' => $this->faker->text(200),
                 'item_type_id' => $this->item_types['allocated-expense']
@@ -73,11 +72,11 @@ final class ResourceTypeTest extends TestCase
     /** @test */
     public function createAllocatedExpenseResourceTypeFailsNonUniqueName(): void
     {
-        $this->actingAs(User::find(1));
+        $this->actingAs($this->createUser());
 
         $name = $this->faker->text(255);
 
-        $response = $this->createResourceType(
+        $response = $this->postToResourceTypeCreate(
             [
                 'name' => $name,
                 'description' => $this->faker->text,
@@ -90,7 +89,7 @@ final class ResourceTypeTest extends TestCase
         $this->assertJsonMatchesResourceTypeSchema($response->content());
 
         // Create the second with the same name
-        $response = $this->createResourceType(
+        $response = $this->postToResourceTypeCreate(
             [
                 'name' => $name,
                 'description' => $this->faker->text,
@@ -105,9 +104,9 @@ final class ResourceTypeTest extends TestCase
     /** @test */
     public function createAllocatedExpenseResourceTypeSuccess(): void
     {
-        $this->actingAs(User::find(1));
+        $this->actingAs($this->createUser());
 
-        $response = $this->createResourceType(
+        $response = $this->postToResourceTypeCreate(
             [
                 'name' => $this->faker->text(255),
                 'description' => $this->faker->text,
@@ -123,9 +122,9 @@ final class ResourceTypeTest extends TestCase
     /** @test */
     public function createAllocatedExpenseResourceTypeSuccessIncludeDataField(): void
     {
-        $this->actingAs(User::find(1));
+        $this->actingAs($this->createUser());
 
-        $response = $this->createResourceType(
+        $response = $this->postToResourceTypeCreate(
             [
                 'name' => $this->faker->text(255),
                 'description' => $this->faker->text,
@@ -142,9 +141,9 @@ final class ResourceTypeTest extends TestCase
     /** @test */
     public function createBudgetProResourceTypeSuccess(): void
     {
-        $this->actingAs(User::find(1));
+        $this->actingAs($this->createUser());
 
-        $response = $this->createResourceType(
+        $response = $this->postToResourceTypeCreate(
             [
                 'name' => $this->faker->text(255),
                 'description' => $this->faker->text,
@@ -160,9 +159,9 @@ final class ResourceTypeTest extends TestCase
     /** @test */
     public function createBudgetResourceTypeSuccess(): void
     {
-        $this->actingAs(User::find(1));
+        $this->actingAs($this->createUser());
 
-        $response = $this->createResourceType(
+        $response = $this->postToResourceTypeCreate(
             [
                 'name' => $this->faker->text(255),
                 'description' => $this->faker->text,
@@ -178,9 +177,9 @@ final class ResourceTypeTest extends TestCase
     /** @test */
     public function createGameResourceTypeSuccess(): void
     {
-        $this->actingAs(User::find(1));
+        $this->actingAs($this->createUser());
 
-        $response = $this->createResourceType(
+        $response = $this->postToResourceTypeCreate(
             [
                 'name' => $this->faker->text(255),
                 'description' => $this->faker->text,
@@ -196,9 +195,9 @@ final class ResourceTypeTest extends TestCase
     /** @test */
     public function createResourceTypeFailsNoPayload(): void
     {
-        $this->actingAs(User::find(1));
+        $this->actingAs($this->createUser());
 
-        $response = $this->createResourceType(
+        $response = $this->postToResourceTypeCreate(
             []
         );
 
@@ -208,7 +207,7 @@ final class ResourceTypeTest extends TestCase
     /** @test */
     public function createResourceTypeFailsNotSignedIn(): void
     {
-        $response = $this->createResourceType(
+        $response = $this->postToResourceTypeCreate(
             []
         );
 
@@ -218,9 +217,9 @@ final class ResourceTypeTest extends TestCase
     /** @test */
     public function deleteAllocatedExpenseResourceTypeSuccess(): void
     {
-        $this->actingAs(User::find(1));
+        $this->actingAs($this->createUser());
 
-        $response = $this->createResourceType(
+        $response = $this->postToResourceTypeCreate(
             [
                 'name' => $this->faker->text(255),
                 'description' => $this->faker->text,
@@ -234,7 +233,7 @@ final class ResourceTypeTest extends TestCase
 
         $id = $response->json('id');
 
-        $response = $this->deleteRequestedResourceType($id);
+        $response = $this->deleteToResourceTypeDelete($id);
 
         $response->assertStatus(204);
     }
@@ -242,9 +241,9 @@ final class ResourceTypeTest extends TestCase
     /** @test */
     public function deleteBudgetProResourceTypeSuccess(): void
     {
-        $this->actingAs(User::find(1));
+        $this->actingAs($this->createUser());
 
-        $response = $this->createResourceType(
+        $response = $this->postToResourceTypeCreate(
             [
                 'name' => $this->faker->text(255),
                 'description' => $this->faker->text,
@@ -258,7 +257,7 @@ final class ResourceTypeTest extends TestCase
 
         $id = $response->json('id');
 
-        $response = $this->deleteRequestedResourceType($id);
+        $response = $this->deleteToResourceTypeDelete($id);
 
         $response->assertStatus(204);
     }
@@ -266,9 +265,9 @@ final class ResourceTypeTest extends TestCase
     /** @test */
     public function deleteBudgetResourceTypeSuccess(): void
     {
-        $this->actingAs(User::find(1));
+        $this->actingAs($this->createUser());
 
-        $response = $this->createResourceType(
+        $response = $this->postToResourceTypeCreate(
             [
                 'name' => $this->faker->text(255),
                 'description' => $this->faker->text,
@@ -282,7 +281,7 @@ final class ResourceTypeTest extends TestCase
 
         $id = $response->json('id');
 
-        $response = $this->deleteRequestedResourceType($id);
+        $response = $this->deleteToResourceTypeDelete($id);
 
         $response->assertStatus(204);
     }
@@ -290,9 +289,9 @@ final class ResourceTypeTest extends TestCase
     /** @test */
     public function deleteGameResourceTypeSuccess(): void
     {
-        $this->actingAs(User::find(1));
+        $this->actingAs($this->createUser());
 
-        $response = $this->createResourceType(
+        $response = $this->postToResourceTypeCreate(
             [
                 'name' => $this->faker->text(255),
                 'description' => $this->faker->text,
@@ -306,7 +305,7 @@ final class ResourceTypeTest extends TestCase
 
         $id = $response->json('id');
 
-        $response = $this->deleteRequestedResourceType($id);
+        $response = $this->deleteToResourceTypeDelete($id);
 
         $response->assertStatus(204);
     }
@@ -314,9 +313,9 @@ final class ResourceTypeTest extends TestCase
     /** @test */
     public function updateAllocatedExpenseResourceTypeFailsExtraFieldsInPayload(): void
     {
-        $this->actingAs(User::find(1));
+        $this->actingAs($this->createUser());
 
-        $response = $this->createResourceType(
+        $response = $this->postToResourceTypeCreate(
             [
                 'name' => $this->faker->text(255),
                 'description' => $this->faker->text,
@@ -330,7 +329,7 @@ final class ResourceTypeTest extends TestCase
 
         $id = $response->json('id');
 
-        $response = $this->updateRequestedResourceType(
+        $response = $this->patchToResourceTypeUpdate(
             $id,
             [
                 'extra' => $this->faker->text(100)
@@ -343,12 +342,12 @@ final class ResourceTypeTest extends TestCase
     /** @test */
     public function updateAllocatedExpenseResourceTypeFailsNonUniqueName(): void
     {
-        $this->actingAs(User::find(1));
+        $this->actingAs($this->createUser());
 
         $name = $this->faker->text(255);
 
         // Create the first resource type
-        $response = $this->createResourceType(
+        $response = $this->postToResourceTypeCreate(
             [
                 'name' => $name,
                 'description' => $this->faker->text(255),
@@ -361,7 +360,7 @@ final class ResourceTypeTest extends TestCase
         $this->assertJsonMatchesResourceTypeSchema($response->content());
 
         // Create the second resource type
-        $response = $this->createResourceType(
+        $response = $this->postToResourceTypeCreate(
             [
                 'name' => $this->faker->text(255),
                 'description' => $this->faker->text(255),
@@ -375,8 +374,8 @@ final class ResourceTypeTest extends TestCase
 
         $id = $response->json('id');
 
-        // Update with same name as the first
-        $response = $this->updateRequestedResourceType(
+        // Update with the same name as the first
+        $response = $this->patchToResourceTypeUpdate(
             $id,
             [
                 'name' => $name
@@ -389,9 +388,9 @@ final class ResourceTypeTest extends TestCase
     /** @test */
     public function updateAllocatedExpenseResourceTypeFailsNoPayload(): void
     {
-        $this->actingAs(User::find(1));
+        $this->actingAs($this->createUser());
 
-        $response = $this->createResourceType(
+        $response = $this->postToResourceTypeCreate(
             [
                 'name' => $this->faker->text(255),
                 'description' => $this->faker->text,
@@ -405,7 +404,7 @@ final class ResourceTypeTest extends TestCase
 
         $id = $response->json('id');
 
-        $response = $this->updateRequestedResourceType(
+        $response = $this->patchToResourceTypeUpdate(
             $id,
             []
         );
@@ -416,9 +415,9 @@ final class ResourceTypeTest extends TestCase
     /** @test */
     public function updateAllocatedExpenseResourceTypeSuccess(): void
     {
-        $this->actingAs(User::find(1));
+        $this->actingAs($this->createUser());
 
-        $response = $this->createResourceType(
+        $response = $this->postToResourceTypeCreate(
             [
                 'name' => $this->faker->text(255),
                 'description' => $this->faker->text,
@@ -432,7 +431,7 @@ final class ResourceTypeTest extends TestCase
 
         $id = $response->json('id');
 
-        $response = $this->updateRequestedResourceType(
+        $response = $this->patchToResourceTypeUpdate(
             $id,
             [
                 'name' => $this->faker->text(100)
@@ -445,9 +444,9 @@ final class ResourceTypeTest extends TestCase
     /** @test */
     public function updateBudgetProResourceTypeSuccess(): void
     {
-        $this->actingAs(User::find(1));
+        $this->actingAs($this->createUser());
 
-        $response = $this->createResourceType(
+        $response = $this->postToResourceTypeCreate(
             [
                 'name' => $this->faker->text(255),
                 'description' => $this->faker->text,
@@ -461,7 +460,7 @@ final class ResourceTypeTest extends TestCase
 
         $id = $response->json('id');
 
-        $response = $this->updateRequestedResourceType(
+        $response = $this->patchToResourceTypeUpdate(
             $id,
             [
                 'name' => $this->faker->text(100)
@@ -474,9 +473,9 @@ final class ResourceTypeTest extends TestCase
     /** @test */
     public function updateBudgetResourceTypeSuccess(): void
     {
-        $this->actingAs(User::find(1));
+        $this->actingAs($this->createUser());
 
-        $response = $this->createResourceType(
+        $response = $this->postToResourceTypeCreate(
             [
                 'name' => $this->faker->text(255),
                 'description' => $this->faker->text,
@@ -490,7 +489,7 @@ final class ResourceTypeTest extends TestCase
 
         $id = $response->json('id');
 
-        $response = $this->updateRequestedResourceType(
+        $response = $this->patchToResourceTypeUpdate(
             $id,
             [
                 'name' => $this->faker->text(100)
@@ -503,9 +502,9 @@ final class ResourceTypeTest extends TestCase
     /** @test */
     public function updateGameResourceTypeSuccess(): void
     {
-        $this->actingAs(User::find(1));
+        $this->actingAs($this->createUser());
 
-        $response = $this->createResourceType(
+        $response = $this->postToResourceTypeCreate(
             [
                 'name' => $this->faker->text(255),
                 'description' => $this->faker->text,
@@ -519,7 +518,7 @@ final class ResourceTypeTest extends TestCase
 
         $id = $response->json('id');
 
-        $response = $this->updateRequestedResourceType(
+        $response = $this->patchToResourceTypeUpdate(
             $id,
             [
                 'name' => $this->faker->text(100)

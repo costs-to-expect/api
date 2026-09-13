@@ -37,12 +37,12 @@ Route::group(
         Route::get(
             'summary/resource-types',
             [App\Http\Controllers\Summary\View\ResourceTypeController::class, 'index']
-        );
+        )->name('summary.resource-type.list');
 
         Route::options(
             'summary/resource-types',
             [App\Http\Controllers\Summary\View\ResourceTypeController::class, 'optionsIndex']
-        );
+        )->name('summary.resource-type.list.options');
 
     }
 );

@@ -4,8 +4,10 @@ declare(strict_types=1);
 
 namespace App\Models;
 
+use Illuminate\Contracts\Database\Query\Expression;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\DB;
 use JetBrains\PhpStorm\ArrayShape;
 
 /**
@@ -17,7 +19,7 @@ use JetBrains\PhpStorm\ArrayShape;
  * @property string $updated_at
  *
  * @author Dean Blackborough <dean@g3d-development.com>
- * @copyright Dean Blackborough 2018-2023
+ * @copyright Dean Blackborough 2018-2025
  * @license https://github.com/costs-to-expect/api/blob/master/LICENSE
  */
 class ItemLog extends Model
@@ -88,22 +90,7 @@ class ItemLog extends Model
                 'item_log.created_at AS item_log_created_at',
                 'item_log.updated_at AS item_log_updated_at',
             )
-            ->selectRaw("(
-                SELECT 
-                    GREATEST(
-                        MAX(`{$this->table}`.`created_at`), 
-                        IFNULL(MAX(`{$this->table}`.`updated_at`), 0),
-                        0
-                    )
-                FROM 
-                    `{$this->table}`
-                WHERE
-                    `{$this->table}`.`item_id` = ? 
-                ) AS `last_updated`",
-                [
-                    $item_id
-                ]
-            )
+            ->selectRaw($this->lastUpdatedExpression()->getValue(DB::connection()->getQueryGrammar()), [$item_id])
             ->join('item', 'item_log.item_id', 'item.id')
             ->join('resource', 'item.resource_id', 'resource.id')
             ->join('resource_type', 'resource.resource_type_id', 'resource_type.id')
@@ -190,5 +177,36 @@ class ItemLog extends Model
     public function deleteLogEntries(int $item_id): ?int
     {
         return self::query()->where($this->table . '.item_id', '=', $item_id)->delete();
+    }
+
+    private function lastUpdatedExpression(): Expression
+    {
+        if (DB::getDriverName() === 'mysql') {
+            return DB::raw("(
+                SELECT
+                    GREATEST(
+                        MAX(`{$this->table}`.`created_at`),
+                        IFNULL(MAX(`{$this->table}`.`updated_at`), 0),
+                        0
+                    )
+                FROM
+                    `{$this->table}`
+                WHERE
+                    `{$this->table}`.`item_id` = ?
+                ) AS `last_updated`");
+        }
+
+        return DB::raw("(
+                SELECT
+                    MAX(
+                        COALESCE({$this->table}.created_at, 0),
+                        COALESCE({$this->table}.updated_at, 0),
+                        0
+                    )
+                FROM
+                    {$this->table}
+                WHERE
+                    {$this->table}.item_id = ?
+            ) AS last_updated");
     }
 }

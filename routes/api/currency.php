@@ -16,12 +16,12 @@ Route::group(
         Route::get(
             'currencies',
             [App\Http\Controllers\View\CurrencyController::class, 'index']
-        );
+        )->name('currency.list');
 
         Route::options(
             'currencies',
             [App\Http\Controllers\View\CurrencyController::class, 'optionsIndex']
-        );
+        )->name('currency.list.options');
 
         Route::get(
             'currencies/{currency_id}',
@@ -31,7 +31,7 @@ Route::group(
         Route::options(
             'currencies/{currency_id}',
             [App\Http\Controllers\View\CurrencyController::class, 'optionsShow']
-        );
+        )->name('currency.show.options');
 
     }
 );

@@ -5,84 +5,80 @@ declare(strict_types=1);
 namespace App\HttpRequest\Parameter;
 
 /**
- * Fetch and validate any search parameters
+ * Fetch and validate any search parameters in the request URI.
  *
  * @author Dean Blackborough <dean@g3d-development.com>
- * @copyright Dean Blackborough 2018-2023
+ * @copyright Dean Blackborough 2018-2025
  * @license https://github.com/costs-to-expect/api/blob/master/LICENSE
  */
 class Search
 {
-    private static array $fields = [];
+    private array $fields = [];
+    private ?string $searchParameter;
+    
+    public function __construct(?string $searchParameter = null)
+    {
+        $this->searchParameter = $searchParameter;
+    }
 
     /**
-     * Check the URI for the search parameter, if the format is valid split the
-     * string and set a search array of search terms and search fields
+     * Check the request URI for a search parameter if it exists and the format 
+     * is valid we split the value and return an array of search terms
      */
-    private static function find(): void
+    private function find(): void
     {
-        $search_string = request()->get('search');
+        if ($this->searchParameter !== null && strlen($this->searchParameter) > 3) {
+            $searches = explode('|', $this->searchParameter);
 
-        if (is_string($search_string) && strlen($search_string) > 3) {
-            $searches = explode('|', $search_string);
-
-            foreach ($searches as $search) {
-                $search = explode(':', $search);
+            foreach ($searches as $_search) {
+                $search_values = explode(':', $_search);
 
                 if (
-                    is_array($search) === true &&
-                    count($search) === 2
+                    is_array($search_values) === true &&
+                    count($search_values) === 2
                 ) {
-                    self::$fields[$search[0]] = $search[1];
+                    $this->fields[$search_values[0]] = $search_values[1];
                 }
             }
         }
     }
 
     /**
-     * Validate the supplied search parameters array, if they aren't in the
-     * expected array they are silently rejected
-     *
-     * @param array $fields
+     * Validate any provided search parameters against a supported array. Any 
+     * that are not in the supported array are silently ignored.
      */
-    private static function validate(array $fields)
+    private function validate(array $supportedFields): void
     {
-        $searchable_fields = array_keys($fields);
+        $searchableFields = array_keys($supportedFields);
 
-        foreach (array_keys(self::$fields) as $key) {
-            if (in_array($key, $searchable_fields, true) === false) {
-                unset(self::$fields[$key]);
+        foreach (array_keys($this->fields) as $_key) {
+            if (in_array($_key, $searchableFields, true) === false) {
+                unset($this->fields[$_key]);
             }
         }
     }
 
     /**
-     * Return all the valid search parameters, check the supplied array against
-     * the set search parameters
-     *
-     * @param array $fields
-     *
-     * @return array
+     * Find, validate and return any search parameters in the request URI.
+     * The search parameters are validated against a supplied array
      */
-    public static function fetch(array $fields = []): array
+    public function fetch(array $supportedFields = []): array
     {
-        self::find();
-        self::validate($fields);
+        $this->find();
+        $this->validate($supportedFields);
 
-        return self::$fields;
+        return $this->fields;
     }
 
     /**
-     * Generate the X-Search header string for the valid search options
-     *
-     * @return string|null
+     * Generate the X-Search header string for any validate search options
      */
-    public static function xHeader(): ?string
+    public function xHeader(): ?string
     {
         $header = '';
 
-        foreach (self::$fields as $key => $value) {
-            $header .= '|' . $key . ':' . urlencode($value);
+        foreach ($this->fields as $_key => $_value) {
+            $header .= '|' . $_key . ':' . urlencode($_value);
         }
 
         if ($header !== '') {

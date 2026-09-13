@@ -23,6 +23,10 @@ abstract class ApiSummaryResponse
 
     protected array $search_parameters;
 
+    protected Parameter\Request $request_service;
+    protected Parameter\Filter $filter_service;
+    protected Parameter\Search $search_service;
+
     protected Model $model;
 
     protected \App\Cache\Control $cache_control;
@@ -53,9 +57,9 @@ abstract class ApiSummaryResponse
         $headers
             ->addCacheControl($cache_control->visibility(), $cache_control->ttl())
             ->addETag($collection)
-            ->addParameters(Parameter\Request::xHeader())
-            ->addFilter(Parameter\Filter::xHeader())
-            ->addSearch(Parameter\Search::xHeader());
+            ->addParameters($this->request_service->xHeader())
+            ->addFilter($this->filter_service->xHeader())
+            ->addSearch($this->search_service->xHeader());
 
         if (array_key_exists(0, $summary)) {
             if (array_key_exists('last_updated', $summary[0]) === true) {

@@ -16,17 +16,17 @@ Route::group(
         Route::options(
             'request/error-log',
             [ App\Http\Controllers\View\RequestController::class, 'optionsErrorLog']
-        );
+        )->name('request.error-log.list.options');
 
         Route::get(
             'request/error-log',
             [ App\Http\Controllers\View\RequestController::class, 'errorLog']
-        );
+        )->name('request.error-log.list');
 
         Route::post(
             'request/error-log',
             [ App\Http\Controllers\Action\RequestController::class, 'createErrorLog']
-        );
+        )->name('request.error-log.create');
 
     }
 );

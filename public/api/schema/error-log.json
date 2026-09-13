@@ -22,15 +22,15 @@
         },
         "debug": {
             "type": ["null", "string"]
-        },
-        "required": [
-            "method",
-            "expected_status_code",
-            "returned_status_code",
-            "request_uri",
-            "source",
-            "created",
-            "debug"
-        ]
-    }
+        }
+    },
+    "required": [
+        "method",
+        "expected_status_code",
+        "returned_status_code",
+        "request_uri",
+        "source",
+        "created",
+        "debug"
+    ]
 }

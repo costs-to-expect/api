@@ -2,11 +2,13 @@
 
 namespace Tests;
 
+use App\Models\PermittedUser;
+use App\Models\ResourceType;
+use App\Models\ResourceTypeItemType;
 use App\User;
 use Illuminate\Foundation\Testing\TestCase as BaseTestCase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Routing\Middleware\ThrottleRequests;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 use Illuminate\Testing\TestResponse;
@@ -82,6 +84,51 @@ abstract class TestCase extends BaseTestCase
         $this->assertProvidedJsonMatchesDefinedSchema($content, 'api/schema/item-type.json');
     }
 
+    protected function assertJsonMatchesCurrencySchema($content): void
+    {
+        $this->assertProvidedJsonMatchesDefinedSchema($content, 'api/schema/currency.json');
+    }
+
+    protected function assertJsonMatchesItemSubtypeSchema($content): void
+    {
+        $this->assertProvidedJsonMatchesDefinedSchema($content, 'api/schema/item-subtype.json');
+    }
+
+    protected function assertJsonMatchesItemCategorySchema($content): void
+    {
+        $this->assertProvidedJsonMatchesDefinedSchema($content, 'api/schema/item-category.json');
+    }
+
+    protected function assertJsonMatchesItemSubcategorySchema($content): void
+    {
+        $this->assertProvidedJsonMatchesDefinedSchema($content, 'api/schema/item-subcategory.json');
+    }
+
+    protected function assertJsonMatchesTransferSchema($content): void
+    {
+        $this->assertProvidedJsonMatchesDefinedSchema($content, 'api/schema/transfer.json');
+    }
+
+    protected function assertJsonMatchesPartialTransferSchema($content): void
+    {
+        $this->assertProvidedJsonMatchesDefinedSchema($content, 'api/schema/partial-transfer.json');
+    }
+
+    protected function assertJsonMatchesResourceTypeItemAllocatedExpenseSchema($content): void
+    {
+        $this->assertProvidedJsonMatchesDefinedSchema($content, 'api/schema/resource-type-item-allocated-expense.json');
+    }
+
+    protected function assertJsonMatchesResourceTypeItemGameSchema($content): void
+    {
+        $this->assertProvidedJsonMatchesDefinedSchema($content, 'api/schema/resource-type-item-game.json');
+    }
+
+    protected function assertJsonMatchesErrorLogSchema($content): void
+    {
+        $this->assertProvidedJsonMatchesDefinedSchema($content, 'api/schema/error-log.json');
+    }
+
     protected function assertJsonMatchesPermittedUserSchema($content): void
     {
         $this->assertProvidedJsonMatchesDefinedSchema($content, 'api/schema/permitted-user.json');
@@ -126,7 +173,7 @@ abstract class TestCase extends BaseTestCase
         }
     }
 
-    protected function createRandomCategory(
+    protected function quickCreateRandomCategory(
         string $resource_type_id,
         array $override = []
     ): string
@@ -140,7 +187,7 @@ abstract class TestCase extends BaseTestCase
             $payload[$k] = $v;
         }
 
-        $response = $this->createCategory($resource_type_id, $payload);
+        $response = $this->postToCategoryCreate($resource_type_id, $payload);
 
         if ($response->assertStatus(201)) {
             return $response->json('id');
@@ -149,7 +196,7 @@ abstract class TestCase extends BaseTestCase
         $this->fail('Unable to create the category');
     }
 
-    protected function createAllocatedExpenseItem(
+    protected function quickCreateAllocatedExpenseItem(
         string $resource_type_id,
         string $resource_id,
         array $override = []
@@ -167,7 +214,7 @@ abstract class TestCase extends BaseTestCase
             $payload[$k] = $v;
         }
 
-        $response = $this->createItem(
+        $response = $this->postToItemCreate(
             $resource_type_id,
             $resource_id,
             $payload
@@ -180,9 +227,9 @@ abstract class TestCase extends BaseTestCase
         $this->fail('Unable to create the allocated expense item');
     }
 
-    protected function createAllocatedExpenseResource(string $resource_type_id): string
+    protected function quickCreateAllocatedExpenseResource(string $resource_type_id): string
     {
-        $response = $this->createResource(
+        $response = $this->postToResourceCreate(
             $resource_type_id,
             [
                 'name' => $this->faker->text(200),
@@ -198,7 +245,7 @@ abstract class TestCase extends BaseTestCase
         $this->fail('Unable to create the resource');
     }
 
-    protected function createAllocatedExpenseResourceType(array $override = []): string
+    protected function quickCreateAllocatedExpenseResourceType(array $override = []): string
     {
         $payload = [
             'name' => $this->faker->text(255),
@@ -212,7 +259,7 @@ abstract class TestCase extends BaseTestCase
             $payload[$k] = $v;
         }
 
-        $response = $this->createResourceType($payload);
+        $response = $this->postToResourceTypeCreate($payload);
 
         if ($response->assertStatus(201)) {
             return $response->json('id');
@@ -221,7 +268,7 @@ abstract class TestCase extends BaseTestCase
         $this->fail('Unable to create the allocated expense resource type');
     }
 
-    protected function createBudgetItem(
+    protected function quickCreateBudgetItem(
         string $resource_type_id,
         string $resource_id,
         array $override = []
@@ -242,7 +289,7 @@ abstract class TestCase extends BaseTestCase
             $payload[$k] = $v;
         }
 
-        $response = $this->createItem(
+        $response = $this->postToItemCreate(
             $resource_type_id,
             $resource_id,
             $payload
@@ -255,7 +302,7 @@ abstract class TestCase extends BaseTestCase
         $this->fail('Unable to create the budget item');
     }
 
-    protected function createBudgetProItem(
+    protected function quickCreateBudgetProItem(
         string $resource_type_id,
         string $resource_id,
         array $override = []
@@ -276,7 +323,7 @@ abstract class TestCase extends BaseTestCase
             $payload[$k] = $v;
         }
 
-        $response = $this->createItem(
+        $response = $this->postToItemCreate(
             $resource_type_id,
             $resource_id,
             $payload
@@ -289,9 +336,9 @@ abstract class TestCase extends BaseTestCase
         $this->fail('Unable to create the budget pro item');
     }
 
-    protected function createBudgetProResourceType(): string
+    protected function quickCreateBudgetProResourceType(): string
     {
-        $response = $this->createResourceType(
+        $response = $this->postToResourceTypeCreate(
             [
                 'name' => $this->faker->text(255),
                 'description' => $this->faker->text,
@@ -308,9 +355,9 @@ abstract class TestCase extends BaseTestCase
         $this->fail('Unable to create the budget pro resource type');
     }
 
-    protected function createBudgetProResource(string $resource_type_id): string
+    protected function quickCreateBudgetProResource(string $resource_type_id): string
     {
-        $response = $this->createResource(
+        $response = $this->postToResourceCreate(
             $resource_type_id,
             [
                 'name' => $this->faker->text(200),
@@ -326,7 +373,7 @@ abstract class TestCase extends BaseTestCase
         $this->fail('Unable to create the resource');
     }
 
-    protected function createBudgetResource(
+    protected function quickCreateBudgetResource(
         string $resource_type_id,
         array $override = []
     ): string
@@ -341,7 +388,7 @@ abstract class TestCase extends BaseTestCase
             $payload[$k] = $v;
         }
 
-        $response = $this->createResource($resource_type_id, $payload);
+        $response = $this->postToResourceCreate($resource_type_id, $payload);
 
         if ($response->assertStatus(201)) {
             return $response->json('id');
@@ -350,9 +397,9 @@ abstract class TestCase extends BaseTestCase
         $this->fail('Unable to create the resource');
     }
 
-    protected function createBudgetResourceType(): string
+    protected function quickCreateBudgetResourceType(): string
     {
-        $response = $this->createResourceType(
+        $response = $this->postToResourceTypeCreate(
             [
                 'name' => $this->faker->text(255),
                 'description' => $this->faker->text,
@@ -369,9 +416,9 @@ abstract class TestCase extends BaseTestCase
         $this->fail('Unable to create the budget resource type');
     }
 
-    protected function createGameResourceType(): string
+    protected function quickCreateGameResourceType(): string
     {
-        $response = $this->createResourceType(
+        $response = $this->postToResourceTypeCreate(
             [
                 'name' => $this->faker->text(255),
                 'description' => $this->faker->text,
@@ -388,7 +435,306 @@ abstract class TestCase extends BaseTestCase
         $this->fail('Unable to create the game resource type');
     }
 
-    protected function createItem(
+    protected function quickCreateItemCategory(
+        string $resource_type_id,
+        string $resource_id,
+        string $item_id,
+        string $category_id
+    ): string
+    {
+        $response = $this->postToItemCategoryCreate(
+            $resource_type_id,
+            $resource_id,
+            $item_id,
+            ['category_id' => $category_id]
+        );
+
+        if ($response->assertStatus(201)) {
+            return $response->json('id');
+        }
+
+        $this->fail('Unable to create the item category');
+    }
+
+    protected function postToItemCategoryCreate(
+        string $resource_type_id,
+        string $resource_id,
+        string $item_id,
+        array $payload
+    ): TestResponse
+    {
+        return $this->post(
+            route(
+                'item.categories.create',
+                [
+                    'resource_type_id' => $resource_type_id,
+                    'resource_id' => $resource_id,
+                    'item_id' => $item_id
+                ]
+            ),
+            $payload
+        );
+    }
+
+    protected function quickCreateItemSubcategory(
+        string $resource_type_id,
+        string $resource_id,
+        string $item_id,
+        string $item_category_id,
+        string $subcategory_id
+    ): string
+    {
+        $response = $this->postToItemSubcategoryCreate(
+            $resource_type_id,
+            $resource_id,
+            $item_id,
+            $item_category_id,
+            ['subcategory_id' => $subcategory_id]
+        );
+
+        if ($response->assertStatus(201)) {
+            return $response->json('id');
+        }
+
+        $this->fail('Unable to create the item subcategory');
+    }
+
+    protected function postToItemSubcategoryCreate(
+        string $resource_type_id,
+        string $resource_id,
+        string $item_id,
+        string $item_category_id,
+        array $payload
+    ): TestResponse
+    {
+        return $this->post(
+            route(
+                'item-subcategory.create',
+                [
+                    'resource_type_id' => $resource_type_id,
+                    'resource_id' => $resource_id,
+                    'item_id' => $item_id,
+                    'item_category_id' => $item_category_id
+                ]
+            ),
+            $payload
+        );
+    }
+
+    protected function quickCreateItemData(
+        string $resource_type_id,
+        string $resource_id,
+        string $item_id,
+        array $override = []
+    ): string
+    {
+        $payload = [
+            'key' => $this->faker->unique()->word(),
+            'value' => json_encode(['field' => $this->faker->word()], JSON_THROW_ON_ERROR),
+        ];
+
+        foreach ($override as $k => $v) {
+            $payload[$k] = $v;
+        }
+
+        $response = $this->postToItemDataCreate($resource_type_id, $resource_id, $item_id, $payload);
+
+        if ($response->assertStatus(201)) {
+            return $payload['key'];
+        }
+
+        $this->fail('Unable to create the item data');
+    }
+
+    protected function postToItemDataCreate(
+        string $resource_type_id,
+        string $resource_id,
+        string $item_id,
+        array $payload
+    ): TestResponse
+    {
+        return $this->post(
+            route(
+                'item-data.create',
+                [
+                    'resource_type_id' => $resource_type_id,
+                    'resource_id' => $resource_id,
+                    'item_id' => $item_id
+                ]
+            ),
+            $payload
+        );
+    }
+
+    protected function patchToItemDataUpdate(
+        string $resource_type_id,
+        string $resource_id,
+        string $item_id,
+        string $key,
+        array $payload
+    ): TestResponse
+    {
+        return $this->patch(
+            route(
+                'item-data.update',
+                [
+                    'resource_type_id' => $resource_type_id,
+                    'resource_id' => $resource_id,
+                    'item_id' => $item_id,
+                    'key' => $key
+                ]
+            ),
+            $payload
+        );
+    }
+
+    protected function deleteToItemDataDelete(
+        string $resource_type_id,
+        string $resource_id,
+        string $item_id,
+        string $key
+    ): TestResponse
+    {
+        return $this->delete(
+            route(
+                'item-data.delete',
+                [
+                    'resource_type_id' => $resource_type_id,
+                    'resource_id' => $resource_id,
+                    'item_id' => $item_id,
+                    'key' => $key
+                ]
+            )
+        );
+    }
+
+    protected function quickCreateItemLog(
+        string $resource_type_id,
+        string $resource_id,
+        string $item_id,
+        array $override = []
+    ): string
+    {
+        $payload = [
+            'message' => $this->faker->text(200),
+            'parameters' => json_encode(['field' => $this->faker->word()], JSON_THROW_ON_ERROR),
+        ];
+
+        foreach ($override as $k => $v) {
+            $payload[$k] = $v;
+        }
+
+        $response = $this->postToItemLogCreate($resource_type_id, $resource_id, $item_id, $payload);
+
+        if ($response->assertStatus(201)) {
+            return $response->json('id');
+        }
+
+        $this->fail('Unable to create the item log');
+    }
+
+    protected function postToItemLogCreate(
+        string $resource_type_id,
+        string $resource_id,
+        string $item_id,
+        array $payload
+    ): TestResponse
+    {
+        return $this->post(
+            route(
+                'item-log.create',
+                [
+                    'resource_type_id' => $resource_type_id,
+                    'resource_id' => $resource_id,
+                    'item_id' => $item_id
+                ]
+            ),
+            $payload
+        );
+    }
+
+    protected function postToItemTransferCreate(
+        string $resource_type_id,
+        string $resource_id,
+        string $item_id,
+        array $payload
+    ): TestResponse
+    {
+        return $this->post(
+            route(
+                'item.transfer.create',
+                [
+                    'resource_type_id' => $resource_type_id,
+                    'resource_id' => $resource_id,
+                    'item_id' => $item_id
+                ]
+            ),
+            $payload
+        );
+    }
+
+    protected function postToItemPartialTransferCreate(
+        string $resource_type_id,
+        string $resource_id,
+        string $item_id,
+        array $payload
+    ): TestResponse
+    {
+        return $this->post(
+            route(
+                'item.partial-transfer.create',
+                [
+                    'resource_type_id' => $resource_type_id,
+                    'resource_id' => $resource_id,
+                    'item_id' => $item_id
+                ]
+            ),
+            $payload
+        );
+    }
+
+    protected function quickCreateItemPartialTransfer(
+        string $resource_type_id,
+        string $resource_id,
+        string $item_id,
+        string $to_resource_id,
+        int $percentage = 50
+    ): string
+    {
+        $response = $this->postToItemPartialTransferCreate(
+            $resource_type_id,
+            $resource_id,
+            $item_id,
+            [
+                'resource_id' => $to_resource_id,
+                'percentage' => $percentage
+            ]
+        );
+
+        if ($response->assertStatus(201)) {
+            return $response->json('id');
+        }
+
+        $this->fail('Unable to create the item partial transfer');
+    }
+
+    protected function deleteToItemPartialTransferDelete(
+        string $resource_type_id,
+        string $item_partial_transfer_id
+    ): TestResponse
+    {
+        return $this->delete(
+            route(
+                'partial-transfers.delete',
+                [
+                    'resource_type_id' => $resource_type_id,
+                    'item_partial_transfer_id' => $item_partial_transfer_id
+                ]
+            )
+        );
+    }
+
+    protected function postToItemCreate(
         string $resource_type_id,
         string $resource_id,
         array $payload
@@ -406,7 +752,7 @@ abstract class TestCase extends BaseTestCase
         );
     }
 
-    protected function createRandomSubcategory(
+    protected function quickCreateRandomSubcategory(
         string $resource_type_id,
         string $category_id,
         array $override = []
@@ -421,7 +767,7 @@ abstract class TestCase extends BaseTestCase
             $payload[$k] = $v;
         }
 
-        $response = $this->createSubcategory(
+        $response = $this->postToSubcategoryCreate(
             $resource_type_id,
             $category_id,
             $payload
@@ -434,7 +780,7 @@ abstract class TestCase extends BaseTestCase
         $this->fail('Unable to create the subcategory');
     }
 
-    protected function createCategory(string $resource_type_id, array $payload): TestResponse
+    protected function postToCategoryCreate(string $resource_type_id, array $payload): TestResponse
     {
         return $this->post(
             route('category.create', ['resource_type_id' => $resource_type_id]),
@@ -442,7 +788,7 @@ abstract class TestCase extends BaseTestCase
         );
     }
 
-    protected function createRequestedPermittedUser(string $resource_type_id, array $payload): TestResponse
+    protected function postToPermittedUserCreate(string $resource_type_id, array $payload): TestResponse
     {
         return $this->post(
             route('permitted-user.create', ['resource_type_id' => $resource_type_id]),
@@ -450,7 +796,7 @@ abstract class TestCase extends BaseTestCase
         );
     }
 
-    protected function createResource(string $resource_type_id, array $payload): TestResponse
+    protected function postToResourceCreate(string $resource_type_id, array $payload): TestResponse
     {
         return $this->post(
             route('resource.create', ['resource_type_id' => $resource_type_id]),
@@ -458,12 +804,12 @@ abstract class TestCase extends BaseTestCase
         );
     }
 
-    protected function createResourceType(array $payload): TestResponse
+    protected function postToResourceTypeCreate(array $payload): TestResponse
     {
         return $this->post(route('resource-type.create'), $payload);
     }
 
-    protected function createSubcategory(
+    protected function postToSubcategoryCreate(
         string $resource_type_id,
         string $category_id,
         array $payload
@@ -487,7 +833,7 @@ abstract class TestCase extends BaseTestCase
             $this->fail('The requested item type is not an allowable value "' . $this->item_types[$item_type] . '"');
         }
 
-        $response = $this->createResourceType(
+        $response = $this->postToResourceTypeCreate(
             [
                 'name' => $this->faker->text(255),
                 'description' => $this->faker->text,
@@ -504,7 +850,7 @@ abstract class TestCase extends BaseTestCase
         $this->fail('Unable to create the ' . $this->item_types[$item_type] . ' resource type');
     }
 
-    protected function createUser(): int
+    protected function createUserAndReturnId(): int
     {
         $user = new User();
         $user->name = $this->faker->name;
@@ -514,8 +860,19 @@ abstract class TestCase extends BaseTestCase
 
         return $user->id;
     }
+    
+    protected function createUser(): User
+    {
+        $user = new User();
+        $user->name = $this->faker->name;
+        $user->email = $this->faker->email;
+        $user->password = Hash::make($this->faker->password);
+        $user->save();
 
-    protected function createYahtzeeGameItem(
+        return $user;
+    }
+
+    protected function quickCreateYahtzeeGameItem(
         string $resource_type_id,
         string $resource_id,
         array $override = []
@@ -530,7 +887,7 @@ abstract class TestCase extends BaseTestCase
             $payload[$k] = $v;
         }
 
-        $response = $this->createItem(
+        $response = $this->postToItemCreate(
             $resource_type_id,
             $resource_id,
             $payload
@@ -543,7 +900,7 @@ abstract class TestCase extends BaseTestCase
         $this->fail('Unable to create the yahtzee game item');
     }
 
-    protected function createYatzyGameItem(
+    protected function quickCreateYatzyGameItem(
         string $resource_type_id,
         string $resource_id,
         array $override = []
@@ -558,7 +915,7 @@ abstract class TestCase extends BaseTestCase
             $payload[$k] = $v;
         }
 
-        $response = $this->createItem(
+        $response = $this->postToItemCreate(
             $resource_type_id,
             $resource_id,
             $payload
@@ -571,9 +928,9 @@ abstract class TestCase extends BaseTestCase
         $this->fail('Unable to create the yatzy game item');
     }
 
-    protected function createYahtzeeResource(string $resource_type_id): string
+    protected function quickCreateYahtzeeResource(string $resource_type_id): string
     {
-        $response = $this->createResource(
+        $response = $this->postToResourceCreate(
             $resource_type_id,
             [
                 'name' => $this->faker->text(200),
@@ -589,9 +946,9 @@ abstract class TestCase extends BaseTestCase
         $this->fail('Unable to create the resource');
     }
 
-    protected function createYatzyResource(string $resource_type_id): string
+    protected function quickCreateYatzyResource(string $resource_type_id): string
     {
-        $response = $this->createResource(
+        $response = $this->postToResourceCreate(
             $resource_type_id,
             [
                 'name' => $this->faker->text(200),
@@ -607,7 +964,7 @@ abstract class TestCase extends BaseTestCase
         $this->fail('Unable to create the resource');
     }
 
-    protected function deleteItem(string $resource_type_id, $resource_id, string $item_id): TestResponse
+    protected function deleteToItemDelete(string $resource_type_id, $resource_id, string $item_id): TestResponse
     {
         return $this->delete(
             route(
@@ -621,35 +978,35 @@ abstract class TestCase extends BaseTestCase
         );
     }
 
-    protected function deleteRequestedCategory(string $resource_type_id, $category_id): TestResponse
+    protected function deleteToCategoryDelete(string $resource_type_id, $category_id): TestResponse
     {
         return $this->delete(
             route('category.delete', ['resource_type_id' => $resource_type_id, 'category_id' => $category_id]), []
         );
     }
 
-    protected function deleteRequestedPermittedUser(string $resource_type_id, string $permitted_user_id): TestResponse
+    protected function deleteToPermittedUserDelete(string $resource_type_id, string $permitted_user_id): TestResponse
     {
         return $this->delete(
             route('permitted-user.delete', ['resource_type_id' => $resource_type_id, 'permitted_user_id' => $permitted_user_id]), []
         );
     }
 
-    protected function deleteResource(string $resource_type_id, $resource_id): TestResponse
+    protected function deleteToResourceDelete(string $resource_type_id, $resource_id): TestResponse
     {
         return $this->delete(
             route('resource.delete', ['resource_type_id' => $resource_type_id, 'resource_id' => $resource_id]), []
         );
     }
 
-    protected function deleteRequestedResourceType(string $resource_type_id): TestResponse
+    protected function deleteToResourceTypeDelete(string $resource_type_id): TestResponse
     {
         return $this->delete(
             route('resource-type.delete', ['resource_type_id' => $resource_type_id]), []
         );
     }
 
-    protected function deleteSubcategory(string $resource_type_id, $category_id, $subcategory_id): TestResponse
+    protected function deleteToSubcategoryDelete(string $resource_type_id, $category_id, $subcategory_id): TestResponse
     {
         return $this->delete(
             route(
@@ -664,47 +1021,411 @@ abstract class TestCase extends BaseTestCase
         );
     }
 
-    protected function fetchAllItemTypes(array $parameters = []): TestResponse
+    protected function getToIndex(array $parameters = []): TestResponse
+    {
+        return $this->route('index.show', $parameters);
+    }
+
+    protected function fetchOptionsForIndex(array $parameters = []): TestResponse
+    {
+        return $this->optionsRoute('index.show.options', $parameters);
+    }
+
+    protected function getToChangelog(array $parameters = []): TestResponse
+    {
+        return $this->route('index.changelog', $parameters);
+    }
+
+    protected function fetchOptionsForChangelog(array $parameters = []): TestResponse
+    {
+        return $this->optionsRoute('index.changelog.options', $parameters);
+    }
+
+    protected function getToStatus(array $parameters = []): TestResponse
+    {
+        return $this->route('index.status', $parameters);
+    }
+
+    protected function fetchOptionsForStatus(array $parameters = []): TestResponse
+    {
+        return $this->optionsRoute('index.status.options', $parameters);
+    }
+
+    protected function getToItemTypeList(array $parameters = []): TestResponse
     {
         return $this->route('item-type.list', $parameters);
     }
 
-    protected function fetchAllPermittedUsers(array $parameters = []): TestResponse
+    protected function getToCurrencyList(array $parameters = []): TestResponse
+    {
+        return $this->route('currency.list', $parameters);
+    }
+
+    protected function getToCurrencyShow(array $parameters = []): TestResponse
+    {
+        return $this->route('currency.show', $parameters);
+    }
+
+    protected function fetchOptionsForCurrencyCollection(array $parameters = []): TestResponse
+    {
+        return $this->optionsRoute('currency.list.options', $parameters);
+    }
+
+    protected function fetchOptionsForCurrency(array $parameters = []): TestResponse
+    {
+        return $this->optionsRoute('currency.show.options', $parameters);
+    }
+
+    protected function getToItemSubtypeList(array $parameters = []): TestResponse
+    {
+        return $this->route('item-subtype.list', $parameters);
+    }
+
+    protected function getToItemSubtypeShow(array $parameters = []): TestResponse
+    {
+        return $this->route('item-subtype.show', $parameters);
+    }
+
+    protected function fetchOptionsForItemSubtypeCollection(array $parameters = []): TestResponse
+    {
+        return $this->optionsRoute('item-subtype.list.options', $parameters);
+    }
+
+    protected function fetchOptionsForItemSubtype(array $parameters = []): TestResponse
+    {
+        return $this->optionsRoute('item-subtype.show.options', $parameters);
+    }
+
+    protected function getToQueueList(array $parameters = []): TestResponse
+    {
+        return $this->route('queue.list', $parameters);
+    }
+
+    protected function getToQueueShow(array $parameters = []): TestResponse
+    {
+        return $this->route('queue.show', $parameters);
+    }
+
+    protected function fetchOptionsForQueueCollection(array $parameters = []): TestResponse
+    {
+        return $this->optionsRoute('queue.list.options', $parameters);
+    }
+
+    protected function fetchOptionsForQueue(array $parameters = []): TestResponse
+    {
+        return $this->optionsRoute('queue.show.options', $parameters);
+    }
+
+    protected function getToItemCategoryList(array $parameters = []): TestResponse
+    {
+        return $this->route('item.categories.list', $parameters);
+    }
+
+    protected function getToItemCategoryShow(array $parameters = []): TestResponse
+    {
+        return $this->route('item.categories.show', $parameters);
+    }
+
+    protected function fetchOptionsForItemCategoryCollection(array $parameters = []): TestResponse
+    {
+        return $this->optionsRoute('item.categories.list.options', $parameters);
+    }
+
+    protected function fetchOptionsForItemCategory(array $parameters = []): TestResponse
+    {
+        return $this->optionsRoute('item.categories.show.options', $parameters);
+    }
+
+    protected function deleteToItemCategoryDelete(
+        string $resource_type_id,
+        string $resource_id,
+        string $item_id,
+        string $item_category_id
+    ): TestResponse
+    {
+        return $this->delete(
+            route(
+                'item.categories.delete',
+                [
+                    'resource_type_id' => $resource_type_id,
+                    'resource_id' => $resource_id,
+                    'item_id' => $item_id,
+                    'item_category_id' => $item_category_id
+                ]
+            )
+        );
+    }
+
+    protected function getToItemSubcategoryList(array $parameters = []): TestResponse
+    {
+        return $this->route('item-subcategory.list', $parameters);
+    }
+
+    protected function getToItemSubcategoryShow(array $parameters = []): TestResponse
+    {
+        return $this->route('item-subcategory.show', $parameters);
+    }
+
+    protected function fetchOptionsForItemSubcategoryCollection(array $parameters = []): TestResponse
+    {
+        return $this->optionsRoute('item-subcategory.list.options', $parameters);
+    }
+
+    protected function fetchOptionsForItemSubcategory(array $parameters = []): TestResponse
+    {
+        return $this->optionsRoute('item-subcategory.show.options', $parameters);
+    }
+
+    protected function getToItemDataList(array $parameters = []): TestResponse
+    {
+        return $this->route('item-data.list', $parameters);
+    }
+
+    protected function getToItemDataShow(array $parameters = []): TestResponse
+    {
+        return $this->route('item-data.show', $parameters);
+    }
+
+    protected function fetchOptionsForItemDataCollection(array $parameters = []): TestResponse
+    {
+        return $this->optionsRoute('item-data.list.options', $parameters);
+    }
+
+    protected function fetchOptionsForItemData(array $parameters = []): TestResponse
+    {
+        return $this->optionsRoute('item-data.show.options', $parameters);
+    }
+
+    protected function getToItemLogList(array $parameters = []): TestResponse
+    {
+        return $this->route('item-log.list', $parameters);
+    }
+
+    protected function getToItemLogShow(array $parameters = []): TestResponse
+    {
+        return $this->route('item-log.show', $parameters);
+    }
+
+    protected function fetchOptionsForItemLogCollection(array $parameters = []): TestResponse
+    {
+        return $this->optionsRoute('item-log.list.options', $parameters);
+    }
+
+    protected function fetchOptionsForItemLog(array $parameters = []): TestResponse
+    {
+        return $this->optionsRoute('item-log.show.options', $parameters);
+    }
+
+    protected function getToItemTransferList(array $parameters = []): TestResponse
+    {
+        return $this->route('item-transfer.list', $parameters);
+    }
+
+    protected function getToItemTransferShow(array $parameters = []): TestResponse
+    {
+        return $this->route('item-transfer.show', $parameters);
+    }
+
+    protected function fetchOptionsForItemTransferCollection(array $parameters = []): TestResponse
+    {
+        return $this->optionsRoute('item-transfer.list.options', $parameters);
+    }
+
+    protected function fetchOptionsForItemTransfer(array $parameters = []): TestResponse
+    {
+        return $this->optionsRoute('item-transfer.show.options', $parameters);
+    }
+
+    protected function fetchOptionsForItemTransferAction(array $parameters = []): TestResponse
+    {
+        return $this->optionsRoute('item.transfer.options', $parameters);
+    }
+
+    protected function getToItemPartialTransferList(array $parameters = []): TestResponse
+    {
+        return $this->route('partial-transfers.list', $parameters);
+    }
+
+    protected function getToItemPartialTransferShow(array $parameters = []): TestResponse
+    {
+        return $this->route('partial-transfers.show', $parameters);
+    }
+
+    protected function fetchOptionsForItemPartialTransferCollection(array $parameters = []): TestResponse
+    {
+        return $this->optionsRoute('partial-transfers.list.options', $parameters);
+    }
+
+    protected function fetchOptionsForItemPartialTransfer(array $parameters = []): TestResponse
+    {
+        return $this->optionsRoute('partial-transfers.show.options', $parameters);
+    }
+
+    protected function fetchOptionsForItemPartialTransferAction(array $parameters = []): TestResponse
+    {
+        return $this->optionsRoute('item.partial-transfer.options', $parameters);
+    }
+
+    protected function getToResourceTypeItemList(array $parameters = []): TestResponse
+    {
+        return $this->route('resource-type-item.list', $parameters);
+    }
+
+    protected function fetchOptionsForResourceTypeItemCollection(array $parameters = []): TestResponse
+    {
+        return $this->optionsRoute('resource-type-item.list.options', $parameters);
+    }
+
+    protected function getToSummaryResourceTypeItemList(array $parameters = []): TestResponse
+    {
+        return $this->route('summary.resource-type-item.list', $parameters);
+    }
+
+    protected function fetchOptionsForSummaryResourceTypeItemCollection(array $parameters = []): TestResponse
+    {
+        return $this->optionsRoute('summary.resource-type-item.list.options', $parameters);
+    }
+
+    protected function getToSummaryCategoryList(array $parameters = []): TestResponse
+    {
+        return $this->route('summary.category.list', $parameters);
+    }
+
+    protected function fetchOptionsForSummaryCategoryCollection(array $parameters = []): TestResponse
+    {
+        return $this->optionsRoute('summary.category.list.options', $parameters);
+    }
+
+    protected function getToSummarySubcategoryList(array $parameters = []): TestResponse
+    {
+        return $this->route('summary.subcategory.list', $parameters);
+    }
+
+    protected function fetchOptionsForSummarySubcategoryCollection(array $parameters = []): TestResponse
+    {
+        return $this->optionsRoute('summary.subcategory.list.options', $parameters);
+    }
+
+    protected function getToSummaryResourceList(array $parameters = []): TestResponse
+    {
+        return $this->route('summary.resource.list', $parameters);
+    }
+
+    protected function fetchOptionsForSummaryResourceCollection(array $parameters = []): TestResponse
+    {
+        return $this->optionsRoute('summary.resource.list.options', $parameters);
+    }
+
+    protected function getToSummaryResourceTypeList(array $parameters = []): TestResponse
+    {
+        return $this->route('summary.resource-type.list', $parameters);
+    }
+
+    protected function fetchOptionsForSummaryResourceTypeCollection(array $parameters = []): TestResponse
+    {
+        return $this->optionsRoute('summary.resource-type.list.options', $parameters);
+    }
+
+    protected function getToSummaryItemList(array $parameters = []): TestResponse
+    {
+        return $this->route('summary.item.list', $parameters);
+    }
+
+    protected function fetchOptionsForSummaryItemCollection(array $parameters = []): TestResponse
+    {
+        return $this->optionsRoute('summary.item.list.options', $parameters);
+    }
+
+    protected function getToRequestErrorLogList(array $parameters = []): TestResponse
+    {
+        return $this->route('request.error-log.list', $parameters);
+    }
+
+    protected function fetchOptionsForRequestErrorLogCollection(array $parameters = []): TestResponse
+    {
+        return $this->optionsRoute('request.error-log.list.options', $parameters);
+    }
+
+    protected function postToRequestErrorLogCreate(array $payload): TestResponse
+    {
+        return $this->post(route('request.error-log.create'), $payload);
+    }
+
+    protected function quickCreateRequestErrorLog(array $override = []): void
+    {
+        $payload = [
+            'method' => 'GET',
+            'expected_status_code' => 200,
+            'returned_status_code' => 500,
+            'request_uri' => '/v3/' . $this->faker->word(),
+            'source' => 'app',
+        ];
+
+        foreach ($override as $k => $v) {
+            $payload[$k] = $v;
+        }
+
+        $this->postToRequestErrorLogCreate($payload)->assertStatus(204);
+    }
+
+    protected function deleteToItemSubcategoryDelete(
+        string $resource_type_id,
+        string $resource_id,
+        string $item_id,
+        string $item_category_id,
+        string $item_subcategory_id
+    ): TestResponse
+    {
+        return $this->delete(
+            route(
+                'item-subcategory.delete',
+                [
+                    'resource_type_id' => $resource_type_id,
+                    'resource_id' => $resource_id,
+                    'item_id' => $item_id,
+                    'item_category_id' => $item_category_id,
+                    'item_subcategory_id' => $item_subcategory_id
+                ]
+            )
+        );
+    }
+
+    protected function getToPermittedUserList(array $parameters = []): TestResponse
     {
         return $this->route('permitted-user.list', $parameters);
     }
 
-    protected function fetchCategory(array $parameters = []): TestResponse
+    protected function getToCategoryShow(array $parameters = []): TestResponse
     {
         return $this->route('category.show', $parameters);
     }
 
-    protected function fetchCategoryCollection(array $parameters = []): TestResponse
+    protected function getToCategoryList(array $parameters = []): TestResponse
     {
         return $this->route('category.list', $parameters);
     }
 
-    protected function fetchItem(array $parameters = []): TestResponse
+    protected function getToItemShow(array $parameters = []): TestResponse
     {
         return $this->route('item.show', $parameters);
     }
 
-    protected function fetchItemCollection(array $parameters = []): TestResponse
+    protected function getToItemList(array $parameters = []): TestResponse
     {
         return $this->route('item.list', $parameters);
     }
 
-    protected function fetchResource(array $parameters = []): TestResponse
+    protected function getToResourceShow(array $parameters = []): TestResponse
     {
         return $this->route('resource.show', $parameters);
     }
 
-    protected function fetchResourceCollection(array $parameters = []): TestResponse
+    protected function getToResourceList(array $parameters = []): TestResponse
     {
         return $this->route('resource.list', $parameters);
     }
 
-    protected function fetchResourceTypeCollection(array $parameters = []): TestResponse
+    protected function getToResourceTypeList(array $parameters = []): TestResponse
     {
         return $this->route('resource-type.list', $parameters);
     }
@@ -714,7 +1435,7 @@ abstract class TestCase extends BaseTestCase
         return $this->route('item-type.show', $parameters);
     }
 
-    protected function fetchPermittedUser(array $parameters = []): TestResponse
+    protected function getToPermittedUserShow(array $parameters = []): TestResponse
     {
         return $this->route('permitted-user.show', $parameters);
     }
@@ -724,17 +1445,17 @@ abstract class TestCase extends BaseTestCase
         return User::query()->where('id', '!=', 1)->inRandomOrder()->first();
     }
 
-    protected function fetchResourceType(array $parameters = []): TestResponse
+    protected function getToResourceTypeShow(array $parameters = []): TestResponse
     {
         return $this->route('resource-type.show', $parameters);
     }
 
-    protected function fetchSubcategory(array $parameters = []): TestResponse
+    protected function getToSubcategoryShow(array $parameters = []): TestResponse
     {
         return $this->route('subcategory.show', $parameters);
     }
 
-    protected function fetchSubcategoryCollection(array $parameters = []): TestResponse
+    protected function getToSubcategoryList(array $parameters = []): TestResponse
     {
         return $this->route('subcategory.list', $parameters);
     }
@@ -814,6 +1535,106 @@ abstract class TestCase extends BaseTestCase
         return $this->optionsRoute('auth.update-profile.options', $parameters);
     }
 
+    protected function fetchOptionsForCheck(array $parameters = []): TestResponse
+    {
+        return $this->optionsRoute('auth.check.options', $parameters);
+    }
+
+    protected function fetchOptionsForCreateNewPassword(array $parameters = []): TestResponse
+    {
+        return $this->optionsRoute('auth.create-new-password.options', $parameters);
+    }
+
+    protected function fetchOptionsForForgotPassword(array $parameters = []): TestResponse
+    {
+        return $this->optionsRoute('auth.forgot-password.options', $parameters);
+    }
+
+    protected function getToAuthUser(array $parameters = []): TestResponse
+    {
+        return $this->route('auth.user.show', $parameters);
+    }
+
+    protected function fetchOptionsForAuthUser(array $parameters = []): TestResponse
+    {
+        return $this->optionsRoute('auth.user.options', $parameters);
+    }
+
+    protected function getToPermittedResourceTypeList(array $parameters = []): TestResponse
+    {
+        return $this->route('auth.user.permitted-resource-types.list', $parameters);
+    }
+
+    protected function fetchOptionsForPermittedResourceTypeCollection(array $parameters = []): TestResponse
+    {
+        return $this->optionsRoute('auth.user.permitted-resource-types.list.options', $parameters);
+    }
+
+    protected function getToPermittedResourceTypeShow(array $parameters = []): TestResponse
+    {
+        return $this->route('auth.user.permitted-resource-types.show', $parameters);
+    }
+
+    protected function fetchOptionsForPermittedResourceType(array $parameters = []): TestResponse
+    {
+        return $this->optionsRoute('auth.user.permitted-resource-types.show.options', $parameters);
+    }
+
+    protected function getToPermittedResourceTypeResourcesList(array $parameters = []): TestResponse
+    {
+        return $this->route('auth.user.permitted-resource-types-resources.list', $parameters);
+    }
+
+    protected function fetchOptionsForPermittedResourceTypeResourcesCollection(array $parameters = []): TestResponse
+    {
+        return $this->optionsRoute('auth.user.permitted-resource-types-resources.list.options', $parameters);
+    }
+
+    protected function getToPermittedResourceTypeResourceShow(array $parameters = []): TestResponse
+    {
+        return $this->route('auth.user.permitted-resource-types-resources.show', $parameters);
+    }
+
+    protected function fetchOptionsForPermittedResourceTypeResource(array $parameters = []): TestResponse
+    {
+        return $this->optionsRoute('auth.user.permitted-resource-types-resources.show.options', $parameters);
+    }
+
+    protected function fetchOptionsForAuthRequestDelete(array $parameters = []): TestResponse
+    {
+        return $this->optionsRoute('auth.user.request-delete.options', $parameters);
+    }
+
+    protected function fetchOptionsForAuthRequestResourceDelete(array $parameters = []): TestResponse
+    {
+        return $this->optionsRoute('auth.user.request-resource-delete.options', $parameters);
+    }
+
+    protected function fetchOptionsForAuthRequestResourceTypeDelete(array $parameters = []): TestResponse
+    {
+        return $this->optionsRoute('auth.user.request-resource-type-delete.options', $parameters);
+    }
+
+    protected function getToTokenList(array $parameters = []): TestResponse
+    {
+        return $this->route('auth.user.token.list', $parameters);
+    }
+
+    protected function fetchOptionsForTokenCollection(array $parameters = []): TestResponse
+    {
+        return $this->optionsRoute('auth.user.token.list.options', $parameters);
+    }
+
+    protected function getToTokenShow(array $parameters = []): TestResponse
+    {
+        return $this->route('auth.user.token.show', $parameters);
+    }
+
+    protected function fetchOptionsForToken(array $parameters = []): TestResponse
+    {
+        return $this->optionsRoute('auth.user.token.show.options', $parameters);
+    }
+
     protected function route(string $route, array $parameters = []): TestResponse
     {
         return $this->get(route($route, $parameters));
@@ -833,28 +1654,50 @@ abstract class TestCase extends BaseTestCase
     {
         parent::setUp();
 
-        if (app()->environment() !== 'local') {
-            dd('Not in local environment, skipping tests');
+        if (app()->environment() !== 'testing') {
+            dd('Not in \'testing\' environment, skipping tests');
         }
 
         $this->withoutMiddleware(
             ThrottleRequests::class
         );
 
-        $result = DB::select(DB::raw("SHOW TABLES LIKE 'users';"));
+        $this->withHeader('X-Internal-Api-Key', 'testing-internal-api-key');
 
-        if (count($result) === 0) {
-            $this->artisan('migrate:fresh');
-
-            $user = new User();
-            $user->name = $this->faker->name;
-            $user->email = $this->email_for_expected_test_user;
-            $user->password = Hash::make($this->password_for_expected_test_user);
-            $user->save();
+        if (env('APP_KEY') === '' || env('APP_KEY') === null) {
+            $this->artisan('key:generate --env=testing');
         }
+        
+        $this->artisan('migrate:fresh');
+
+        $hash = new \App\HttpRequest\Hash();
+        
+        // Set the primary user
+        $user = new User();
+        $user->name = $this->faker->text;
+        $user->email = $this->email_for_expected_test_user;
+        $user->password = Hash::make($this->password_for_expected_test_user);
+        $user->save();
+        
+        // Create the allocated expense resource type for the primary user
+        $resource_type = new ResourceType();
+        $resource_type->name = $this->faker->text;
+        $resource_type->description = $this->faker->text;
+        $resource_type->data = '{"field":true}';
+        $resource_type->save();
+        
+        $resource_type_item_type = new ResourceTypeItemType();
+        $resource_type_item_type->resource_type_id = $resource_type->id;
+        $resource_type_item_type->item_type_id = $hash->decode('item-type', $this->item_types['allocated-expense']);
+        
+        $permitted_user = new PermittedUser();
+        $permitted_user->resource_type_id = $resource_type->id;
+        $permitted_user->user_id = $user->id;
+        $permitted_user->added_by = $user->id;
+        $permitted_user->save();
     }
 
-    protected function updateRequestedCategory(string $resource_type_id, string $category_id, array $payload): TestResponse
+    protected function patchToCategoryUpdate(string $resource_type_id, string $category_id, array $payload): TestResponse
     {
         return $this->patch(
             route(
@@ -868,7 +1711,7 @@ abstract class TestCase extends BaseTestCase
         );
     }
 
-    protected function updateItem(
+    protected function patchToItemUpdate(
         string $resource_type_id,
         string $resource_id,
         string $item_id,
@@ -888,7 +1731,7 @@ abstract class TestCase extends BaseTestCase
         );
     }
 
-    protected function updateResource(string $resource_type_id, string $resource_id, array $payload): TestResponse
+    protected function patchToResourceUpdate(string $resource_type_id, string $resource_id, array $payload): TestResponse
     {
         return $this->patch(
             route(
@@ -902,7 +1745,7 @@ abstract class TestCase extends BaseTestCase
         );
     }
 
-    protected function updateRequestedResourceType(string $resource_type_id, array $payload): TestResponse
+    protected function patchToResourceTypeUpdate(string $resource_type_id, array $payload): TestResponse
     {
         return $this->patch(
             route('resource-type.update', ['resource_type_id' => $resource_type_id]),
@@ -910,7 +1753,7 @@ abstract class TestCase extends BaseTestCase
         );
     }
 
-    protected function updateSubcategory(
+    protected function patchToSubcategoryUpdate(
         string $resource_type_id,
         string $category_id,
         string $subcategory_id,

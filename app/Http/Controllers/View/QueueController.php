@@ -15,7 +15,7 @@ use Illuminate\Http\JsonResponse;
 
 /**
  * @author Dean Blackborough <dean@g3d-development.com>
- * @copyright Dean Blackborough 2018-2023
+ * @copyright Dean Blackborough 2018-2025
  * @license https://github.com/costs-to-expect/api/blob/master/LICENSE
  */
 class QueueController extends Controller
@@ -55,9 +55,7 @@ class QueueController extends Controller
             $headers = new Header();
             $headers->collection($pagination_parameters, count($jobs), $total)->
                 addCacheControl($cache_control->visibility(), $cache_control->ttl())->
-                addETag($collection)->
-                addSearch(Parameter\Search::xHeader())->
-                addSort(Parameter\Sort::xHeader());
+                addETag($collection);
 
             $cache_collection->create($total, $collection, $pagination_parameters, $headers->headers());
             $cache_control->putByKey($request->getRequestUri(), $cache_collection->content());

@@ -16,12 +16,12 @@ Route::group(
         Route::get(
             'item-types/{item_type_id}/item-subtypes',
             [App\Http\Controllers\View\ItemSubtypeController::class, 'index']
-        );
+        )->name('item-subtype.list');
 
         Route::options(
             'item-types/{item_type_id}/item-subtypes',
             [App\Http\Controllers\View\ItemSubtypeController::class, 'optionsIndex']
-        );
+        )->name('item-subtype.list.options');
 
         Route::get(
             'item-types/{item_type_id}/item-subtypes/{item_subtype_id}',
@@ -31,7 +31,7 @@ Route::group(
         Route::options(
             'item-types/{item_type_id}/item-subtypes/{item_subtype_id}',
             [App\Http\Controllers\View\ItemSubtypeController::class, 'optionsShow']
-        );
+        )->name('item-subtype.show.options');
 
     }
 );

@@ -2,7 +2,6 @@
 
 namespace Tests\Action\Http\Controllers;
 
-use App\User;
 use Tests\TestCase;
 
 final class PermittedUserTest extends TestCase
@@ -10,11 +9,11 @@ final class PermittedUserTest extends TestCase
     /** @test */
     public function createPermittedUserFailsNoPayload(): void
     {
-        $this->actingAs(User::find(1));
+        $this->actingAs($this->createUser());
 
-        $id = $this->createAllocatedExpenseResourceType();
+        $id = $this->quickCreateAllocatedExpenseResourceType();
 
-        $response = $this->createRequestedPermittedUser(
+        $response = $this->postToPermittedUserCreate(
             $id,
             []
         );
@@ -25,11 +24,11 @@ final class PermittedUserTest extends TestCase
     /** @test */
     public function createPermittedUserFailsUserDoesNotExist(): void
     {
-        $this->actingAs(User::find(1));
+        $this->actingAs($this->createUser());
 
-        $id = $this->createAllocatedExpenseResourceType();
+        $id = $this->quickCreateAllocatedExpenseResourceType();
 
-        $response = $this->createRequestedPermittedUser(
+        $response = $this->postToPermittedUserCreate(
             $id,
             [
                 'email' => $this->faker->email
@@ -42,12 +41,12 @@ final class PermittedUserTest extends TestCase
     /** @test */
     public function createPermittedUserSuccess(): void
     {
-        $this->actingAs(User::find(1));
+        $this->actingAs($this->createUser());
 
-        $id = $this->createAllocatedExpenseResourceType();
-        $user = $this->fetchRandomUser();
+        $id = $this->quickCreateAllocatedExpenseResourceType();
+        $user = $this->createUser();
 
-        $response = $this->createRequestedPermittedUser(
+        $response = $this->postToPermittedUserCreate(
             $id,
             [
                 'email' => $user->email,
@@ -60,12 +59,12 @@ final class PermittedUserTest extends TestCase
     /** @test */
     public function deletePermittedUserSuccess(): void
     {
-        $this->actingAs(User::find(1));
+        $this->actingAs($this->createUser());
 
-        $resource_type_id = $this->createAllocatedExpenseResourceType();
-        $user = $this->fetchRandomUser();
+        $resource_type_id = $this->quickCreateAllocatedExpenseResourceType();
+        $user = $this->createUser();
 
-        $response = $this->createRequestedPermittedUser(
+        $response = $this->postToPermittedUserCreate(
             $resource_type_id,
             [
                 'email' => $user->email,
@@ -74,12 +73,12 @@ final class PermittedUserTest extends TestCase
 
         $response->assertStatus(204);
 
-        $response = $this->fetchAllPermittedUsers(['resource_type_id'=> $resource_type_id]);
+        $response = $this->getToPermittedUserList(['resource_type_id'=> $resource_type_id]);
         $response->assertStatus(200);
 
         $permitted_user_id = $response->json()[1]['id'];
 
-        $response = $this->deleteRequestedPermittedUser($resource_type_id, $permitted_user_id);
+        $response = $this->deleteToPermittedUserDelete($resource_type_id, $permitted_user_id);
         $response->assertStatus(204);
     }
 }

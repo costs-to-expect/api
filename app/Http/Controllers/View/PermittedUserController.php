@@ -15,7 +15,7 @@ use Illuminate\Support\Facades\Config;
 
 /**
  * @author Dean Blackborough <dean@g3d-development.com>
- * @copyright Dean Blackborough 2018-2023
+ * @copyright Dean Blackborough 2018-2025
  * @license https://github.com/costs-to-expect/api/blob/master/LICENSE
  */
 class PermittedUserController extends Controller
@@ -35,13 +35,12 @@ class PermittedUserController extends Controller
         $cache_collection->setFromCache($cache_control->getByKey($request->getRequestUri()));
 
         if ($cache_control->isRequestCacheable() === false || $cache_collection->valid() === false) {
-            $search_parameters = Parameter\Search::fetch(
-                Config::get('api.permitted-user.searchable')
-            );
 
-            $sort_parameters = Parameter\Sort::fetch(
-                Config::get('api.permitted-user.sortable')
-            );
+            $search_request_service = new Parameter\Search($request->get('search'));
+            $search_parameters = $search_request_service->fetch(Config::get('api.permitted-user.searchable'));
+            
+            $sort_request_service = new Parameter\Sort($request->get('sort'));
+            $sort_parameters = $sort_request_service->fetch(Config::get('api.permitted-user.sortable'));
 
             $total = (new PermittedUser())->totalCount(
                 $resource_type_id,
@@ -69,12 +68,12 @@ class PermittedUserController extends Controller
                 $permitted_users
             );
 
-            $headers = new Header();
-            $headers->collection($pagination_parameters, count($permitted_users), $total)->
-                addCacheControl($cache_control->visibility(), $cache_control->ttl())->
-                addETag($collection)->
-                addSearch(Parameter\Search::xHeader())->
-                addSort(Parameter\Sort::xHeader());
+            $headers = (new Header())
+                ->collection($pagination_parameters, count($permitted_users), $total)
+                ->addCacheControl($cache_control->visibility(), $cache_control->ttl())
+                ->addETag($collection)
+                ->addSearch($search_request_service->xHeader())
+                ->addSort($sort_request_service->xHeader());
 
             $cache_collection->create($total, $collection, $pagination_parameters, $headers->headers());
             $cache_control->putByKey($request->getRequestUri(), $cache_collection->content());

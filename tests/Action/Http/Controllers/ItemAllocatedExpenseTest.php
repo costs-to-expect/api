@@ -2,7 +2,6 @@
 
 namespace Tests\Action\Http\Controllers;
 
-use App\User;
 use Tests\TestCase;
 
 final class ItemAllocatedExpenseTest extends TestCase
@@ -10,12 +9,12 @@ final class ItemAllocatedExpenseTest extends TestCase
     /** @test */
     public function createAllocatedExpenseItemFailsCurrencyIdInvalid(): void
     {
-        $this->actingAs(User::find(1));
+        $this->actingAs($this->createUser());
 
-        $resource_type_id = $this->createAllocatedExpenseResourceType();
-        $resource_id = $this->createAllocatedExpenseResource($resource_type_id);
+        $resource_type_id = $this->quickCreateAllocatedExpenseResourceType();
+        $resource_id = $this->quickCreateAllocatedExpenseResource($resource_type_id);
 
-        $response = $this->createItem(
+        $response = $this->postToItemCreate(
             $resource_type_id,
             $resource_id,
             [
@@ -33,12 +32,12 @@ final class ItemAllocatedExpenseTest extends TestCase
     /** @test */
     public function createAllocatedExpenseItemFailsNoNameInPayload(): void
     {
-        $this->actingAs(User::find(1));
+        $this->actingAs($this->createUser());
 
-        $resource_type_id = $this->createAllocatedExpenseResourceType();
-        $resource_id = $this->createAllocatedExpenseResource($resource_type_id);
+        $resource_type_id = $this->quickCreateAllocatedExpenseResourceType();
+        $resource_id = $this->quickCreateAllocatedExpenseResource($resource_type_id);
 
-        $response = $this->createItem(
+        $response = $this->postToItemCreate(
             $resource_type_id,
             $resource_id,
             [
@@ -55,12 +54,12 @@ final class ItemAllocatedExpenseTest extends TestCase
     /** @test */
     public function createAllocatedExpenseItemFailsNoPayload(): void
     {
-        $this->actingAs(User::find(1));
+        $this->actingAs($this->createUser());
 
-        $resource_type_id = $this->createAllocatedExpenseResourceType();
-        $resource_id = $this->createAllocatedExpenseResource($resource_type_id);
+        $resource_type_id = $this->quickCreateAllocatedExpenseResourceType();
+        $resource_id = $this->quickCreateAllocatedExpenseResource($resource_type_id);
 
-        $response = $this->createItem(
+        $response = $this->postToItemCreate(
             $resource_type_id,
             $resource_id,
             [
@@ -73,12 +72,12 @@ final class ItemAllocatedExpenseTest extends TestCase
     /** @test */
     public function createAllocatedExpenseItemSuccess(): void
     {
-        $this->actingAs(User::find(1));
+        $this->actingAs($this->createUser());
 
-        $resource_type_id = $this->createAllocatedExpenseResourceType();
-        $resource_id = $this->createAllocatedExpenseResource($resource_type_id);
+        $resource_type_id = $this->quickCreateAllocatedExpenseResourceType();
+        $resource_id = $this->quickCreateAllocatedExpenseResource($resource_type_id);
 
-        $response = $this->createItem(
+        $response = $this->postToItemCreate(
             $resource_type_id,
             $resource_id,
             [
@@ -97,13 +96,13 @@ final class ItemAllocatedExpenseTest extends TestCase
     /** @test */
     public function deleteAllocatedExpenseItemFailsIdNotFound(): void
     {
-        $this->actingAs(User::find(1));
+        $this->actingAs($this->createUser());
 
-        $resource_type_id = $this->createAllocatedExpenseResourceType();
-        $resource_id = $this->createAllocatedExpenseResource($resource_type_id);
+        $resource_type_id = $this->quickCreateAllocatedExpenseResourceType();
+        $resource_id = $this->quickCreateAllocatedExpenseResource($resource_type_id);
         $item_id = '1234asdffgd';
 
-        $response = $this->deleteItem(
+        $response = $this->deleteToItemDelete(
             $resource_type_id,
             $resource_id,
             $item_id,
@@ -115,13 +114,13 @@ final class ItemAllocatedExpenseTest extends TestCase
     /** @test */
     public function deleteAllocatedExpenseItemSuccess(): void
     {
-        $this->actingAs(User::find(1));
+        $this->actingAs($this->createUser());
 
-        $resource_type_id = $this->createAllocatedExpenseResourceType();
-        $resource_id = $this->createAllocatedExpenseResource($resource_type_id);
-        $item_id = $this->createAllocatedExpenseItem($resource_type_id,$resource_id);
+        $resource_type_id = $this->quickCreateAllocatedExpenseResourceType();
+        $resource_id = $this->quickCreateAllocatedExpenseResource($resource_type_id);
+        $item_id = $this->quickCreateAllocatedExpenseItem($resource_type_id,$resource_id);
 
-        $response = $this->deleteItem(
+        $response = $this->deleteToItemDelete(
             $resource_type_id,
             $resource_id,
             $item_id,
@@ -133,13 +132,13 @@ final class ItemAllocatedExpenseTest extends TestCase
     /** @test */
     public function updateAllocatedExpenseItemFailsNonExistentField(): void
     {
-        $this->actingAs(User::find(1));
+        $this->actingAs($this->createUser());
 
-        $resource_type_id = $this->createAllocatedExpenseResourceType();
-        $resource_id = $this->createAllocatedExpenseResource($resource_type_id);
-        $item_id = $this->createAllocatedExpenseItem($resource_type_id, $resource_id);
+        $resource_type_id = $this->quickCreateAllocatedExpenseResourceType();
+        $resource_id = $this->quickCreateAllocatedExpenseResource($resource_type_id);
+        $item_id = $this->quickCreateAllocatedExpenseItem($resource_type_id, $resource_id);
 
-        $response = $this->updateItem(
+        $response = $this->patchToItemUpdate(
             $resource_type_id,
             $resource_id,
             $item_id,
@@ -154,13 +153,13 @@ final class ItemAllocatedExpenseTest extends TestCase
     /** @test */
     public function updateAllocatedExpenseItemFailsNoPayload(): void
     {
-        $this->actingAs(User::find(1));
+        $this->actingAs($this->createUser());
 
-        $resource_type_id = $this->createAllocatedExpenseResourceType();
-        $resource_id = $this->createAllocatedExpenseResource($resource_type_id);
-        $item_id = $this->createAllocatedExpenseItem($resource_type_id, $resource_id);
+        $resource_type_id = $this->quickCreateAllocatedExpenseResourceType();
+        $resource_id = $this->quickCreateAllocatedExpenseResource($resource_type_id);
+        $item_id = $this->quickCreateAllocatedExpenseItem($resource_type_id, $resource_id);
 
-        $response = $this->updateItem(
+        $response = $this->patchToItemUpdate(
             $resource_type_id,
             $resource_id,
             $item_id,
@@ -173,13 +172,13 @@ final class ItemAllocatedExpenseTest extends TestCase
     /** @test */
     public function updateAllocatedExpenseItemSuccess(): void
     {
-        $this->actingAs(User::find(1));
+        $this->actingAs($this->createUser());
 
-        $resource_type_id = $this->createAllocatedExpenseResourceType();
-        $resource_id = $this->createAllocatedExpenseResource($resource_type_id);
-        $item_id = $this->createAllocatedExpenseItem($resource_type_id, $resource_id);
+        $resource_type_id = $this->quickCreateAllocatedExpenseResourceType();
+        $resource_id = $this->quickCreateAllocatedExpenseResource($resource_type_id);
+        $item_id = $this->quickCreateAllocatedExpenseItem($resource_type_id, $resource_id);
 
-        $response = $this->updateItem(
+        $response = $this->patchToItemUpdate(
             $resource_type_id,
             $resource_id,
             $item_id,

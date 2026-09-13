@@ -113,22 +113,30 @@ class Item extends ApiItemResponse
     protected function requestParameters(): void
     {
         $base_path = 'api.item-type-allocated-expense';
-
-        $this->request_parameters = Request::fetch(
+        
+        $request_parameter_service = new Request(request()->all());
+        $this->request_parameters = $request_parameter_service->fetch(
             array_keys(LaravelConfig::get($base_path . '.parameters', [])),
             $this->resource_type_id
         );
+        $this->request_service = $request_parameter_service;
 
-        $this->search_parameters = Search::fetch(
+        $search_parameter_service = new Search(request()->get('search'));
+        $this->search_parameters = $search_parameter_service->fetch(
             LaravelConfig::get($base_path . '.searchable', [])
         );
+        $this->search_service = $search_parameter_service;
 
-        $this->filter_parameters = Filter::fetch(
+        $filter_parameter_service = new Filter(request()->get('filter'));
+        $this->filter_parameters = $filter_parameter_service->fetch(
             LaravelConfig::get($base_path . '.filterable', [])
         );
+        $this->filter_service = $filter_parameter_service;
 
-        $this->sort_fields = Sort::fetch(
+        $sort_parameter_service = new Sort(request()->get('sort'));
+        $this->sort_fields = $sort_parameter_service->fetch(
             LaravelConfig::get($base_path . '.sortable', [])
         );
+        $this->sort_service = $sort_parameter_service;
     }
 }

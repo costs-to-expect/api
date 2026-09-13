@@ -54,13 +54,13 @@
                 }
 
             }
-        },
-        "required": [
-            "id",
-            "from",
-            "to",
-            "item",
-            "tramsferred"
-        ]
-    }
+        }
+    },
+    "required": [
+        "id",
+        "from",
+        "to",
+        "item",
+        "transferred"
+    ]
 }

@@ -19,7 +19,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property int $transferred_by
  *
  * @author Dean Blackborough <dean@g3d-development.com>
- * @copyright Dean Blackborough 2018-2023
+ * @copyright Dean Blackborough 2018-2025
  * @license https://github.com/costs-to-expect/api/blob/master/LICENSE
  */
 class ItemPartialTransfer extends Model
@@ -38,6 +38,7 @@ class ItemPartialTransfer extends Model
         $collection = $this
             ->select(
                 $this->table . '.id',
+                $this->table . '.resource_type_id',
                 $this->table . '.percentage',
                 $this->table . '.item_id AS item_item_id',
                 $this->table . '.created_at',
@@ -89,6 +90,7 @@ class ItemPartialTransfer extends Model
             ->where($this->table . '.id', '=', $item_partial_transfer_id)
             ->select(
                 $this->table . '.id',
+                $this->table . '.resource_type_id',
                 $this->table . '.percentage',
                 $this->table . '.item_id AS item_item_id',
                 'item_type_allocated_expense.name AS item_name',

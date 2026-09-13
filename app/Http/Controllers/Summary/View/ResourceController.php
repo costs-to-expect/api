@@ -15,17 +15,13 @@ use Illuminate\Support\Facades\Config;
  * Summary controller for the resource routes
  *
  * @author Dean Blackborough <dean@g3d-development.com>
- * @copyright Dean Blackborough 2018-2023
+ * @copyright Dean Blackborough 2018-2025
  * @license https://github.com/costs-to-expect/api/blob/master/LICENSE
  */
 class ResourceController extends Controller
 {
     /**
      * Return a summary of the resources
-     *
-     * @param string $resource_type_id
-     *
-     * @return JsonResponse
      */
     public function index(Request $request, string $resource_type_id): JsonResponse
     {
@@ -40,14 +36,14 @@ class ResourceController extends Controller
         $cache_summary->setFromCache($cache_control->getByKey($request->getRequestUri()));
 
         if ($cache_control->isRequestCacheable() === false || $cache_summary->valid() === false) {
-            $search_parameters = Parameter\Search::fetch(
-                Config::get('api.resource.summary-searchable')
-            );
+
+            $searchRequestService = new Parameter\Search($request->get('search'));
+            $searchParameters = $searchRequestService->fetch(Config::get('api.resource.summary-searchable'));
 
             $summary = (new Resource())->totalCount(
                 $resource_type_id,
                 $this->viewable_resource_types,
-                $search_parameters
+                $searchParameters
             );
 
             $total = 0;
@@ -68,7 +64,7 @@ class ResourceController extends Controller
             $headers
                 ->addCacheControl($cache_control->visibility(), $cache_control->ttl())
                 ->addETag($collection)
-                ->addSearch(Parameter\Search::xHeader());
+                ->addSearch($searchRequestService->xHeader());
 
             if ($last_updated !== null) {
                 $headers->addLastUpdated($last_updated);

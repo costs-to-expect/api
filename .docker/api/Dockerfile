@@ -7,6 +7,8 @@ RUN docker-php-ext-install pdo_mysql bcmath
 RUN apt-get update
 RUN apt-get install -y git zip unzip default-mysql-client
 
+COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
+
 RUN chown -R www-data:www-data /var/www/html \
     && a2enmod rewrite
 

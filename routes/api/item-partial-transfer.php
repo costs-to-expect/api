@@ -36,7 +36,7 @@ Route::group(
         Route::options(
             'resource-types/{resource_type_id}/resources/{resource_id}/items/{item_id}/partial-transfer',
             [App\Http\Controllers\View\ItemPartialTransferController::class, 'optionsTransfer']
-        );
+        )->name('item.partial-transfer.options');
 
     }
 );
@@ -54,12 +54,12 @@ Route::group(
         Route::post(
             'resource-types/{resource_type_id}/resources/{resource_id}/items/{item_id}/partial-transfer',
             [App\Http\Controllers\Action\ItemPartialTransferController::class, 'transfer']
-        );
+        )->name('item.partial-transfer.create');
 
         Route::delete(
             'resource-types/{resource_type_id}/partial-transfers/{item_partial_transfer_id}',
             [App\Http\Controllers\Action\ItemPartialTransferController::class, 'delete']
-        );
+        )->name('partial-transfers.delete');
 
     }
 );

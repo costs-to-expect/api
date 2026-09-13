@@ -21,17 +21,17 @@ Route::group(
         Route::options(
             'auth/create-new-password',
             [App\Http\Controllers\View\AuthenticationController::class, 'optionsCreateNewPassword']
-        );
+        )->name('auth.create-new-password.options');
 
         Route::post(
             'auth/forgot-password',
             [App\Http\Controllers\Action\AuthenticationController::class, 'forgotPassword']
-        )->name('auth.forgot-password');
+        )->middleware('internal-api-key')->name('auth.forgot-password');
 
         Route::options(
             'auth/forgot-password',
             [App\Http\Controllers\View\AuthenticationController::class, 'optionsForgotPassword']
-        );
+        )->name('auth.forgot-password.options');
 
         Route::post(
             'auth/login',
@@ -51,13 +51,13 @@ Route::group(
         Route::options(
             'auth/check',
             [App\Http\Controllers\View\AuthenticationController::class, 'optionsCheck']
-        );
+        )->name('auth.check.options');
 
         if (Config::get('api.app.config.registrations') === true) {
             Route::post(
                 'auth/register',
                 [App\Http\Controllers\Action\AuthenticationController::class, 'register']
-            )->name('auth.register');
+            )->middleware('internal-api-key')->name('auth.register');
 
             Route::options(
                 'auth/register',
@@ -155,7 +155,7 @@ Route::group(
         Route::get(
             'auth/user',
             [App\Http\Controllers\View\AuthenticationController::class, 'user']
-        );
+        )->name('auth.user.show');
 
         Route::post(
             'auth/user/migrate/budget-pro/request-migration',

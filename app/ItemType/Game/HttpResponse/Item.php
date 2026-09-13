@@ -154,21 +154,27 @@ class Item extends ApiItemResponse
     {
         $base_path = 'api.item-type-game';
 
-        $this->request_parameters = Request::fetch(
+        $requestParameterService = new Request(request()->all());
+        $this->request_parameters = $requestParameterService->fetch(
             array_keys(LaravelConfig::get($base_path . '.parameters', [])),
             $this->resource_type_id
         );
+        $this->request_service = $requestParameterService;
 
-        $this->search_parameters = Search::fetch(
-            LaravelConfig::get($base_path . '.searchable', [])
-        );
+        $searchParameterService = new Search(request()->get('search'));
+        $this->search_parameters = $searchParameterService->fetch(LaravelConfig::get($base_path . '.searchable', []));
+        $this->search_service = $searchParameterService;
 
-        $this->filter_parameters = Filter::fetch(
+        $filterParameterService = new Filter(request()->get('filter'));
+        $this->filter_parameters = $filterParameterService->fetch(
             LaravelConfig::get($base_path . '.filterable', [])
         );
+        $this->filter_service = $filterParameterService;
 
-        $this->sort_fields = Sort::fetch(
+        $sortParameterService = new Sort(request()->get('sort'));
+        $this->sort_fields = $sortParameterService->fetch(
             LaravelConfig::get($base_path . '.sortable', [])
         );
+        $this->sort_service = $sortParameterService;
     }
 }

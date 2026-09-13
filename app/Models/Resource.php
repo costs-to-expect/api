@@ -4,12 +4,14 @@ declare(strict_types=1);
 
 namespace App\Models;
 
+use Illuminate\Contracts\Database\Query\Expression;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOneThrough;
 use Illuminate\Database\Query\Builder as QueryBuilder;
 use Illuminate\Support\Facades\Config;
+use Illuminate\Support\Facades\DB;
 
 /**
  * @mixin QueryBuilder
@@ -21,7 +23,7 @@ use Illuminate\Support\Facades\Config;
  * @property string $data
  *
  * @author Dean Blackborough <dean@g3d-development.com>
- * @copyright Dean Blackborough 2018-2023
+ * @copyright Dean Blackborough 2018-2025
  * @license https://github.com/costs-to-expect/api/blob/master/LICENSE
  */
 class Resource extends Model
@@ -85,6 +87,8 @@ class Resource extends Model
         array $sort_parameters = [],
         array $request_parameters = []
     ): array {
+        $last_updated_expression = $this->lastUpdatedExpression();
+        
         $collection = $this
             ->select(
                 'resource_type_item_type.item_type_id AS resource_type_item_type_id',
@@ -98,24 +102,7 @@ class Resource extends Model
                 'item_subtype.name AS resource_item_subtype_name',
                 'item_subtype.description AS resource_item_subtype_description'
             )
-            ->selectRaw(
-                '
-                (
-                    SELECT 
-                        GREATEST(
-                            MAX(resource.created_at), 
-                            IFNULL(MAX(resource.updated_at), 0),
-                            0
-                        )
-                    FROM 
-                        resource
-                    WHERE
-                        `resource_type_id` = ? 
-                ) AS last_updated',
-                [
-                    $resource_type_id
-                ]
-            )
+            ->selectRaw($last_updated_expression->getValue(DB::connection()->getQueryGrammar()), [$resource_type_id])
             ->join('resource_type', 'resource.resource_type_id', 'resource_type.id')
             ->join('resource_type_item_type', 'resource_type_item_type.resource_type_id', 'resource_type.id')
             ->join('resource_item_subtype', 'resource_item_subtype.resource_id', 'resource.id')
@@ -230,5 +217,37 @@ class Resource extends Model
             ->where('resource_type_id', '=', $resource_type_id)
             ->where('id', '=', $resource_id)
             ->first();
+    }
+
+    private function lastUpdatedExpression(): Expression
+    {
+        if (DB::getDriverName() === 'mysql') {
+            return DB::raw('
+                (
+                    SELECT 
+                        GREATEST(
+                            MAX(resource.created_at), 
+                            IFNULL(MAX(resource.updated_at), 0),
+                            0
+                        )
+                    FROM 
+                        resource
+                    WHERE
+                        `resource_type_id` = ? 
+                ) AS last_updated');
+        }
+
+        return DB::raw('(
+                SELECT
+                    MAX(
+                        COALESCE(resource.created_at, 0),
+                        COALESCE(resource.updated_at, 0),
+                        0
+                    )
+                FROM
+                    resource 
+                WHERE
+                    `resource_type_id` = ? 
+            ) AS last_updated');
     }
 }

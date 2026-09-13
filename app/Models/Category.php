@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Models;
 
+use Illuminate\Contracts\Database\Query\Expression;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Query\Builder as QueryBuilder;
 use Illuminate\Database\Eloquent\Model;
@@ -19,7 +20,7 @@ use Illuminate\Support\Facades\DB;
  * @property string $description
  *
  * @author Dean Blackborough <dean@g3d-development.com>
- * @copyright Dean Blackborough 2018-2023
+ * @copyright Dean Blackborough 2018-2025
  * @license https://github.com/costs-to-expect/api/blob/master/LICENSE
  */
 class Category extends Model
@@ -72,7 +73,20 @@ class Category extends Model
         int $limit = 10,
         array $search_parameters = [],
         array $sort_parameters = []
-    ): array {
+    ): array 
+    {
+        $last_updated_expression = $this->lastUpdatedExpression();
+        $sub_category_count_expression = DB::raw('
+            (
+                SELECT 
+                    COUNT(`sub_category`.`id`) 
+                FROM 
+                    `sub_category` 
+                WHERE 
+                    `sub_category`.`category_id` = `category`.`id`
+            ) AS `category_subcategories`'
+        );
+        
         $collection = $this
             ->select(
                 'category.id AS category_id',
@@ -82,37 +96,9 @@ class Category extends Model
                 'category.updated_at AS category_updated_at',
                 'resource_type.id AS resource_type_id',
                 'resource_type.name AS resource_type_name',
-                'resource_type.name AS resource_type_name'
+                $sub_category_count_expression
             )
-            ->selectRaw(
-                '
-                (
-                    SELECT 
-                        COUNT(`sub_category`.`id`) 
-                    FROM 
-                        `sub_category` 
-                    WHERE 
-                        `sub_category`.`category_id` = `category`.`id`
-                ) AS `category_subcategories`'
-            )
-            ->selectRaw(
-                '
-                (
-                    SELECT 
-                        GREATEST(
-                            MAX(category.created_at), 
-                            IFNULL(MAX(category.updated_at), 0),
-                            0
-                        )
-                    FROM 
-                        category
-                    WHERE 
-                        category.resource_type_id = ? 
-                ) AS last_updated',
-                [
-                    $resource_type_id
-                ]
-            )
+            ->selectRaw($last_updated_expression->getValue(DB::connection()->getQueryGrammar()),[$resource_type_id])
             ->join("resource_type", "category.resource_type_id", "resource_type.id")
             ->where('category.resource_type_id', '=', $resource_type_id);
 
@@ -125,28 +111,26 @@ class Category extends Model
 
         if (count($sort_parameters) > 0) {
             foreach ($sort_parameters as $field => $direction) {
-                switch ($field) {
-                    case 'created':
-                        $collection->orderBy($this->table . '.created_at', $direction);
-                        break;
-
-                    default:
-                        $collection->orderBy($this->table . '.' . $field, $direction);
-                        break;
+                if ($field === 'created') {
+                    $collection->orderBy($this->table . '.created_at', $direction);
+                } else {
+                    $collection->orderBy($this->table . '.' . $field, $direction);
                 }
             }
         } else {
             $collection->orderBy('category.name', 'asc');
         }
 
-        $collection->offset($offset);
-        $collection->limit($limit);
+        $collection->offset($offset)
+            ->limit($limit);
 
         return $collection->get()->toArray();
     }
 
     public function single(int $resource_type_id, int $category_id): ?array
     {
+        $expression = DB::raw('(SELECT COUNT(`sub_category`.`id`) FROM `sub_category` WHERE `sub_category`.`category_id` = `category`.`id`) AS `category_subcategories`');
+        
         $result = $this->join('resource_type', $this->table . '.resource_type_id', '=', 'resource_type.id')->
             where('category.id', '=', $category_id)->
             where('category.resource_type_id', '=', $resource_type_id)->
@@ -157,17 +141,13 @@ class Category extends Model
                 'category.description AS category_description',
                 'category.created_at AS category_created_at',
                 'category.updated_at AS category_updated_at',
-                DB::raw('(SELECT COUNT(sub_category.id) FROM sub_category WHERE sub_category.category_id = category.id) AS category_subcategories'),
                 'resource_type.id AS resource_type_id',
                 'resource_type.name AS resource_type_name'
             )->
+            selectRaw($expression->getValue(DB::connection()->getQueryGrammar()))->
             first();
 
-        if ($result === null) {
-            return null;
-        }
-
-        return $result->toArray();
+        return $result?->toArray();
     }
 
     public function instance(int $category_id): ?Category
@@ -199,5 +179,36 @@ class Category extends Model
             'resource_type_id' => $category->resource_type_id,
             'resource_type_name' => $category->resourceType->name
         ];
+    }
+    
+    private function lastUpdatedExpression(): Expression
+    {
+        if (DB::getDriverName() === 'mysql') {
+            return DB::raw('(
+                    SELECT 
+                        GREATEST(
+                            MAX(category.created_at), 
+                            IFNULL(MAX(category.updated_at), 0),
+                            0
+                        )
+                    FROM 
+                        category
+                    WHERE 
+                        category.resource_type_id = ? 
+                ) AS last_updated');
+        }
+
+        return DB::raw('(
+                SELECT
+                    MAX(
+                        COALESCE(category.created_at, 0),
+                        COALESCE(category.updated_at, 0),
+                        0
+                    )
+                FROM
+                    category
+                WHERE
+                    category.resource_type_id = ?
+            ) AS last_updated');
     }
 }

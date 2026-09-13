@@ -17,7 +17,7 @@ use Illuminate\Support\Facades\Config;
  * Manage category sub categories
  *
  * @author Dean Blackborough <dean@g3d-development.com>
- * @copyright Dean Blackborough 2018-2023
+ * @copyright Dean Blackborough 2018-2025
  * @license https://github.com/costs-to-expect/api/blob/master/LICENSE
  */
 class SubcategoryController extends Controller
@@ -37,13 +37,12 @@ class SubcategoryController extends Controller
         $cache_collection->setFromCache($cache_control->getByKey($request->getRequestUri()));
 
         if ($cache_control->isRequestCacheable() === false || $cache_collection->valid() === false) {
-            $search_parameters = Parameter\Search::fetch(
-                Config::get('api.subcategory.searchable')
-            );
 
-            $sort_parameters = Parameter\Sort::fetch(
-                Config::get('api.subcategory.sortable')
-            );
+            $search_request_service = new Parameter\Search($request->get('search'));
+            $search_parameters = $search_request_service->fetch(Config::get('api.subcategory.searchable'));
+            
+            $sort_request_service = new Parameter\Sort($request->get('sort'));
+            $sort_parameters = $sort_request_service->fetch(Config::get('api.subcategory.sortable'));
 
             $total = (new Subcategory())->totalCount(
                 (int)$resource_type_id,
@@ -78,13 +77,12 @@ class SubcategoryController extends Controller
                 $subcategories
             );
 
-            $headers = new Header();
-            $headers
+            $headers = (new Header())
                 ->collection($pagination_parameters, count($subcategories), $total)
                 ->addCacheControl($cache_control->visibility(), $cache_control->ttl())
                 ->addETag($collection)
-                ->addSearch(Parameter\Search::xHeader())
-                ->addSort(Parameter\Sort::xHeader());
+                ->addSearch($search_request_service->xHeader())
+                ->addSort($sort_request_service->xHeader());
 
             if ($last_updated !== null) {
                 $headers->addLastUpdated($last_updated);

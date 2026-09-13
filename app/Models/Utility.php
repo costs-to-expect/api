@@ -12,7 +12,7 @@ use Illuminate\Support\Facades\DB;
 /**
  * @mixin QueryBuilder
  * @author Dean Blackborough <dean@g3d-development.com>
- * @copyright Dean Blackborough 2018-2023
+ * @copyright Dean Blackborough 2018-2025
  * @license https://github.com/costs-to-expect/api/blob/master/LICENSE
  */
 class Utility
@@ -57,7 +57,7 @@ class Utility
             $collection->where(static function ($collection) {
                 $collection
                     ->whereNull('item_type_allocated_expense.publish_after')
-                    ->orWhereRaw('item_type_allocated_expense.publish_after < NOW()');
+                    ->orWhereRaw('item_type_allocated_expense.publish_after < CURRENT_TIMESTAMP');
             });
         }
 
@@ -69,6 +69,24 @@ class Utility
         array $viewable_resource_types
     ) {
         return $collection->whereIn('resource_type.id', $viewable_resource_types);
+    }
+
+    public static function yearExpression(string $column): string
+    {
+        if (DB::getDriverName() === 'mysql') {
+            return "YEAR({$column})";
+        }
+
+        return "CAST(strftime('%Y', {$column}) AS INTEGER)";
+    }
+
+    public static function monthExpression(string $column): string
+    {
+        if (DB::getDriverName() === 'mysql') {
+            return "MONTH({$column})";
+        }
+
+        return "CAST(strftime('%m', {$column}) AS INTEGER)";
     }
 
     public static function deleteCategories(int $resource_type_id): int

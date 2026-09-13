@@ -19,8 +19,8 @@ The API is used by the following Apps;
 - [Budget](https://budget.costs-to-expect.com) Our free and Open Source Budgeting tool
 - [Budget Pro](https://budget-pro.costs-to-expect.com) The commercial version of Budget
 - [Expense](https://app.costs-to-expect.com) Our free and Open Source expense tracker
-- [Yahtzee Game Scorer](https://yahtzee.game-score.com) Our Yahtzee Game Scorer, free for all to use
-- [Yatzy Game Scorer](https://yatzu.game-score.com) Our Yatzy Game Scorer, free for all to use
+- [Yahtzee Game Scorer](https://yahtzee.game-scorer.com) Our Yahtzee Game Scorer, free for all to use
+- [Yatzy Game Scorer](https://yatzy.game-scorer.com) Our Yatzy Game Scorer, free for all to use
 - [Social Experiment](https://www.costs-to-expect.com) How much does it cost to raise a child to adulthood in the UK?
 
 ## Set up
@@ -46,21 +46,36 @@ Firstly, we need to check we are trying to access the right location,
 execute `docker compose exec costs.api.app ls`. You should see a list of the files and 
 directories at the project root. 
 
-Next, we need to configure the API by setting out local .ENV file our .env, 
+Next, we need to configure the API by copying our .env.example file to .env, 
 installing all dependencies and running our migrations.
 
 * Copy the `.env.example` file and name the copy `.env`. Set all the empty values, all 
 drivers have been set to our defaults, sessions, cache, and the queue default to the database driver.
 * `docker compose exec costs.api.app php artisan key:generate`
-* `docker compose exec costs.api.app php artisan migrate`)
+* `docker compose exec costs.api.app php artisan migrate`
 * `docker compose exec costs.api.app php artisan queue:work`
-* Run an OPTIONS request on `http://[your.domail.local:8080]/v3/resource_types`, you will see an OPTIONS response, 
-alternatively a GET request to `http://[your.domail.local:8080]/v1` will show all the defined routes.
-* You can create a user by POSTing to `http://[your.domail.local:8080]/v3/auth/register`. 
+* Run an OPTIONS request on `http://[your.domain.local:8080]/v3/resource-types`, you will see an OPTIONS response, 
+alternatively a GET request to `http://[your.domain.local:8080]/v3` will show all the defined routes.
+* You can create a user by POSTing to `http://[your.domain.local:8080]/v3/auth/register`. This route is only 
+callable by trusted internal services, see **Internal API key** below - you will need to set `INTERNAL_API_KEY` 
+in your `.env` and send it as the `X-Internal-Api-Key` header on the request, or the route will return a 403.
 * You create a password by POSTing a password and password_confirmation to the URI register response. 
-* You can sign-in by posting to `http://[your.domail.local:8080]/v3/auth/login` - you will need a bearer for all the routes that require authentication.
+* You can sign-in by posting to `http://[your.domain.local:8080]/v3/auth/login` - you will need a bearer for all the routes that require authentication.
 * Our API defaults to Mailgun, populate `MAILGUN_DOMAIN` and `MAILGUN_SECRET` with the relevant values from your account, 
 you will also need to set `MAIL_FROM_ADDRESS` and `MAIL_TO_ADDRESS`. You may need to set `Authorized Recipients` in Mailgun. 
+
+### Internal API key
+
+`auth/register` and `auth/forgot-password` both return a token in the response (a create-password link and a 
+reset-password link respectively). Both routes are intended to only ever be called by our own trusted backends, 
+never directly by a browser or mobile app, so both are gated behind the `VerifyInternalApiKey` middleware.
+
+* Set `INTERNAL_API_KEY` in your `.env` to any value, the middleware fails closed - an unset or empty value 
+means every request is rejected, not allowed through.
+* Every request to these two routes must include an `X-Internal-Api-Key` header set to that same value, sent 
+as a normal request header, not in the POST body.
+* The same key value has to be configured in every app that calls these routes.
+* All other routes are unaffected, this only applies to `auth/register` and `auth/forgot-password`.
 
 ## Responses
 
@@ -100,6 +115,13 @@ Responses will include multiple headers, the table below details the intention b
 | X-Parameters    | Request parameters applied to request               |
 | X-Filter        | Filter options applied to the request               |
 
+Two routes, `auth/register` and `auth/forgot-password`, require a request header rather than returning one, 
+see **Internal API key** above.
+
+| Header               | Purpose                                                             |
+|:---------------------|:---------------------------------------------------------------------|
+| X-Internal-Api-Key   | Required on `auth/register` and `auth/forgot-password`, must match `INTERNAL_API_KEY` |
+
 ## Routes
 
 Access to a route is limited based upon a users permitted resource types. When a user creates a resource type they 
@@ -121,12 +143,12 @@ You can exclude public resource types by include exclude-public=true in the quer
 | OPTIONS      | v3/auth/create-new-password                                                                                                                    |
 | POST         | v3/auth/create-new-password                                                                                                                    |
 | OPTIONS      | v3/auth/forgot-password                                                                                                                        |
-| POST         | v3/auth/forgot-password                                                                                                                        |
+| POST         | v3/auth/forgot-password *(requires `X-Internal-Api-Key`, see Internal API key)*                                                                |
 | OPTIONS      | v3/auth/login                                                                                                                                  |
 | POST         | v3/auth/login                                                                                                                                  |
-| GET          | v3/auth/logout                                                                                                                                 |
+| GET/HEAD     | v3/auth/logout                                                                                                                                  |
 | OPTIONS      | v3/auth/register                                                                                                                               |
-| POST         | v3/auth/register                                                                                                                               |
+| POST         | v3/auth/register *(requires `X-Internal-Api-Key`, see Internal API key)*                                                                       |
 | OPTIONS      | v3/auth/update-password                                                                                                                        |
 | POST         | v3/auth/update-password                                                                                                                        |
 | OPTIONS      | v3/auth/update-profile                                                                                                                         |
@@ -168,6 +190,10 @@ You can exclude public resource types by include exclude-public=true in the quer
 | OPTIONS      | v3/item-types/{item_type_id}/item-subtypes                                                                                                     |
 | GET/HEAD     | v3/item-types/{item_type_id}/item-subtypes/{item_subtype_id}                                                                                   |
 | OPTIONS      | v3/item-types/{item_type_id}/item-subtypes/{item_subtype_id}                                                                                   |
+| GET/HEAD     | v3/queue                                                                                                                                        |
+| OPTIONS      | v3/queue                                                                                                                                        |
+| GET/HEAD     | v3/queue/{queue_id}                                                                                                                             |
+| OPTIONS      | v3/queue/{queue_id}                                                                                                                             |
 | GET/HEAD     | v3/resource-types                                                                                                                              |
 | OPTIONS      | v3/resource-types                                                                                                                              |
 | POST         | v3/resource-types                                                                                                                              |
@@ -238,8 +264,8 @@ You can exclude public resource types by include exclude-public=true in the quer
 | GET/HEAD     | v3/resource-types/{resource_type_id}/resources/{resource_id}/items/{item_id}/log                                                               |
 | OPTIONS      | v3/resource-types/{resource_type_id}/resources/{resource_id}/items/{item_id}/log                                                               |
 | POST         | v3/resource-types/{resource_type_id}/resources/{resource_id}/items/{item_id}/log                                                               |
-| GET/HEAD     | v3/resource-types/{resource_type_id}/resources/{resource_id}/items/{item_id}/log/{item_data_id}                                                |
-| OPTIONS      | v3/resource-types/{resource_type_id}/resources/{resource_id}/items/{item_id}/log/{item_data_id}                                                |
+| GET/HEAD     | v3/resource-types/{resource_type_id}/resources/{resource_id}/items/{item_id}/log/{item_log_id}                                                 |
+| OPTIONS      | v3/resource-types/{resource_type_id}/resources/{resource_id}/items/{item_id}/log/{item_log_id}                                                 |
 | OPTIONS      | v3/resource-types/{resource_type_id}/resources/{resource_id}/items/{item_id}/partial-transfer                                                  |
 | POST         | v3/resource-types/{resource_type_id}/resources/{resource_id}/items/{item_id}/partial-transfer                                                  |
 | OPTIONS      | v3/resource-types/{resource_type_id}/resources/{resource_id}/items/{item_id}/transfer                                                          |
@@ -289,27 +315,34 @@ our local test suite is as complete as the Postman request test suite.
 
 | Controller               | Action   | View     | 
 |:-------------------------|:---------|:---------|
-| Authentication           | 36 Tests | 3 Tests  |
+| Authentication           | 49 Tests | 28 Tests |
 | Category                 | 21 Tests | 27 Tests |
-| Currency                 | Non yet* | Non yet* |
-| ItemCategory             | Non yet* | Non yet* |
+| Currency                 | Non yet* | 10 Tests |
+| Index                    | N/A      | 6 Tests  |
+| ItemCategory             | 7 Tests  | 9 Tests  |
 | Item (Allocated Expense) | 9 Tests  | 9 Tests  |
 | Item (Budget)            | 12 Tests | 9 Tests  |
 | Item (Budget Pro)        | 12 Tests | 11 Tests |
 | Item (Game)              | 12 Tests | 12 Tests |
-| ItemData                 | Non yet* | Non yet* |
-| ItemLog                  | Non yet* | Non yet* |
-| ItemPartialTransfer      | Non yet* | Non yet* |
-| ItemSubcategory          | Non yet* | Non yet* |
-| ItemTransfer             | Non yet* | Non yet* |
+| ItemData                 | 9 Tests  | 7 Tests  |
+| ItemLog                  | 4 Tests  | 7 Tests  |
+| ItemPartialTransfer      | 6 Tests  | 9 Tests  |
+| ItemSubcategory          | 7 Tests  | 9 Tests  |
+| ItemSubtype              | Non yet* | 10 Tests |
+| ItemTransfer             | 4 Tests  | 8 Tests  |
 | ItemType                 | Non yet* | 7 Tests  |
 | PermittedUser            | 4 Tests  | 2 Tests  |
-| Queue                    | Non yet* | Non yet* |
-| Request                  | Non yet* | Non yet* |
+| Queue                    | Non yet* | 4 Tests  |
+| Request                  | 5 Tests  | 4 Tests  |
 | Resource                 | 24 Tests | 27 Tests |
 | ResourceType             | 23 Tests | 26 Tests |
-| Subcategory              | 21 Tests | 23 Tests |
-| **Total tests**          | **174**  | **156**  |
+| ResourceTypeItem         | N/A      | 9 Tests  |
+| Subcategory              | 21 Tests | 22 Tests |
+| **Total tests**          | **229**  | **272**  |
 
 *Non yet does not mean there are no tests, it just means there are no PHPUnit tests. There are over 2000 tests in 
-a private Postman collection, I'm slowing transferring them locally and expanding the test suite.
+a private Postman collection, I'm slowing transferring them locally and expanding the test suite. N/A means there 
+is no controller of that type for the entity, for example there is no Action IndexController.
+
+The totals above cover these two controller directories only; the full test suite also includes Summary route 
+tests and non-controller tests, so it's larger again.

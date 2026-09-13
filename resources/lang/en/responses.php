@@ -23,5 +23,6 @@ return [
     'subcategory-limit' => 'Unable to handle your request, the number of allowable subcategory assignments reached',
     'invalid-route' => 'The requested route is invalid, please visit the index of the API to see all the valid routes https://api.costs-to-expect.com/v3',
     'delete-requested' => 'The delete request has been received, a job has been added to the queue to process the request',
-    'migrate-requested' => 'The migration request has been received, a job has been added to the queue to process the request'
+    'migrate-requested' => 'The migration request has been received, a job has been added to the queue to process the request',
+    'invalid-internal-api-key' => 'This route can only be called by a trusted internal service.'
 ];

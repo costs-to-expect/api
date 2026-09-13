@@ -1,5 +1,5 @@
 {
-    "$id": "https://api.costs-to-expect.com/v2/api/schema/category.json",
+    "$id": "https://api.costs-to-expect.com/v2/api/schema/currency.json",
     "type": "object",
     "properties": {
         "id": {
@@ -13,13 +13,14 @@
         "name": {
             "type": "string"
         },
-        "required": [
-            "id",
-            "code",
-            "name",
-            "description",
-            "example",
-            "created"
-        ]
-    }
+        "created": {
+            "type": "string"
+        }
+    },
+    "required": [
+        "id",
+        "code",
+        "name",
+        "created"
+    ]
 }

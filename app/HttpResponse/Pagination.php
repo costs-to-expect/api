@@ -12,7 +12,7 @@ use Illuminate\Support\Facades\Config;
  * Generate the pagination URIs based on all the request parameters
  *
  * @author Dean Blackborough <dean@g3d-development.com>
- * @copyright Dean Blackborough 2018-2023
+ * @copyright Dean Blackborough 2018-2025
  * @license https://github.com/costs-to-expect/api/blob/master/LICENSE
  */
 class Pagination
@@ -222,8 +222,11 @@ class Pagination
 
     private function generateUris(): array
     {
-        $this->offset = (int) request()->query('offset', 0);
-        $this->limit = (int) request()->query('limit', $this->limit);
+        $offset = (int) request()->query('offset', 0);
+        $this->offset = $offset >= 0 ? $offset : 0;
+
+        $limit = (int) request()->query('limit', $this->limit);
+        $this->limit = $limit > 0 ? $limit : $this->limit;
 
         if ($this->allow_override === true && Boolean::convertedValue(request()->query('collection')) === true) {
             $this->collection = true;

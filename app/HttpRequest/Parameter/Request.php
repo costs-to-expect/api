@@ -17,36 +17,36 @@ use App\HttpRequest\Validate\Boolean;
  * ignore any invalid parameters
  *
  * @author Dean Blackborough <dean@g3d-development.com>
- * @copyright Dean Blackborough 2018-2023
+ * @copyright Dean Blackborough 2018-2025
  * @license https://github.com/costs-to-expect/api/blob/master/LICENSE
  */
 class Request
 {
-    private static array $parameters = [];
-
-    /**
-     * Fetch any GET parameters from the URI and alter the type if necessary
-     *
-     * @param array $parameter_names
-     */
-    private static function find(array $parameter_names = []): void
+    private array $parameters = [];
+    
+    private array $request_parameters = [];
+    
+    public function __construct(array $request_parameters)
     {
-        $request_parameters = request()->all();
+        $this->request_parameters = $request_parameters;
+    }
+    
+    private function find(array $supported_parameters = []): void
+    {
+        $this->parameters = [];
 
-        self::$parameters = [];
-
-        foreach ($parameter_names as $parameter) {
-            if (array_key_exists($parameter, $request_parameters) === true &&
-                $request_parameters[$parameter] !== null) {
-                self::$parameters[$parameter] = match ($parameter) {
+        foreach ($supported_parameters as $parameter) {
+            if (array_key_exists($parameter, $this->request_parameters) === true &&
+                $this->request_parameters[$parameter] !== null) {
+                $this->parameters[$parameter] = match ($parameter) {
                     'include-resources',
                     'include-categories',
                     'include-subcategories',
                     'include-permitted-users',
                     'include-unpublished',
                     'include-deleted',
-                    'complete' => Boolean::convertedValue($request_parameters[$parameter]),
-                    default => $request_parameters[$parameter],
+                    'complete' => Boolean::convertedValue($this->request_parameters[$parameter]),
+                    default => $this->request_parameters[$parameter],
                 };
             }
         }
@@ -55,20 +55,17 @@ class Request
     /**
      * Validate the parameters array, check the set value to see if it is
      * valid, invalid values are silently removed from the parameters array
-     *
-     * @param integer|null $resource_type_id
-     * @param integer|null $resource_id
      */
-    private static function validate(?int $resource_type_id, ?int $resource_id): void
+    private function validate(?int $resource_type_id, ?int $resource_id): void
     {
-        foreach (array_keys(self::$parameters) as $key) {
+        foreach (array_keys($this->parameters) as $key) {
             switch ($key) {
                 case 'category':
                     if (
-                        array_key_exists($key, self::$parameters) === true &&
-                        (new Category())->where('id', '=', self::$parameters[$key])->exists() === false
+                        array_key_exists($key, $this->parameters) === true &&
+                        (new Category())->where('id', '=', $this->parameters[$key])->exists() === false
                     ) {
-                        unset(self::$parameters[$key]);
+                        unset($this->parameters[$key]);
                     }
                     break;
 
@@ -79,67 +76,67 @@ class Request
                 case 'include-unpublished':
                 case 'include-permitted-users':
                     if (
-                        array_key_exists($key, self::$parameters) === true &&
+                        array_key_exists($key, $this->parameters) === true &&
                         (
-                            Boolean::isConvertible(self::$parameters[$key]) === false ||
-                            Boolean::convertedValue(self::$parameters[$key]) === false
+                            Boolean::isConvertible($this->parameters[$key]) === false ||
+                            Boolean::convertedValue($this->parameters[$key]) === false
                         )
                     ) {
-                        unset(self::$parameters[$key]);
+                        unset($this->parameters[$key]);
                     }
                     break;
 
                 case 'complete':
                     if (
-                        array_key_exists($key, self::$parameters) === true &&
+                        array_key_exists($key, $this->parameters) === true &&
                         (
-                            Boolean::isConvertible(self::$parameters[$key]) === false
+                            Boolean::isConvertible($this->parameters[$key]) === false
                         )
                     ) {
-                        unset(self::$parameters[$key]);
+                        unset($this->parameters[$key]);
                     }
                     break;
 
                 case 'item-type':
                     if (
-                        array_key_exists($key, self::$parameters) === true &&
-                        (new ItemType())->where('id', '=', self::$parameters[$key])->exists() === false
+                        array_key_exists($key, $this->parameters) === true &&
+                        (new ItemType())->where('id', '=', $this->parameters[$key])->exists() === false
                     ) {
-                        unset(self::$parameters[$key]);
+                        unset($this->parameters[$key]);
                     }
                     break;
 
                 case 'month':
-                    if (array_key_exists($key, self::$parameters) === true &&
-                        (int)(self::$parameters[$key] > 0)) {
-                        self::$parameters[$key] = (int)self::$parameters[$key];
+                    if (array_key_exists($key, $this->parameters) === true &&
+                        (int)($this->parameters[$key] > 0)) {
+                        $this->parameters[$key] = (int)$this->parameters[$key];
 
-                        if (self::$parameters[$key] < 1 ||
-                            self::$parameters[$key] > 12) {
-                            unset(self::$parameters[$key]);
+                        if ($this->parameters[$key] < 1 ||
+                            $this->parameters[$key] > 12) {
+                            unset($this->parameters[$key]);
                         }
                     }
                     break;
 
                 case 'resource-type':
                     if (
-                        array_key_exists($key, self::$parameters) === true &&
-                        (new ResourceType())->where('id', '=', self::$parameters[$key])->exists() === false
+                        array_key_exists($key, $this->parameters) === true &&
+                        (new ResourceType())->where('id', '=', $this->parameters[$key])->exists() === false
                     ) {
-                        unset(self::$parameters[$key]);
+                        unset($this->parameters[$key]);
                     }
                     break;
 
                 case 'subcategory':
-                    if (array_key_exists($key, self::$parameters) === true) {
+                    if (array_key_exists($key, $this->parameters) === true) {
                         if (
-                            array_key_exists('category', self::$parameters) === false ||
+                            array_key_exists('category', $this->parameters) === false ||
                             (new Subcategory())->
-                            where('sub_category.id', '=', self::$parameters[$key])->
-                            where('sub_category.category_id', '=', self::$parameters['category'])->
+                            where('sub_category.id', '=', $this->parameters[$key])->
+                            where('sub_category.category_id', '=', $this->parameters['category'])->
                             exists() === false
                         ) {
-                            unset(self::$parameters[$key]);
+                            unset($this->parameters[$key]);
                         }
                     }
                     break;
@@ -149,17 +146,17 @@ class Request
                 case 'subcategories':
                 case 'years':
                     if (
-                        array_key_exists($key, self::$parameters) === true &&
-                        Boolean::isConvertible(self::$parameters[$key]) === false
+                        array_key_exists($key, $this->parameters) === true &&
+                        Boolean::isConvertible($this->parameters[$key]) === false
                     ) {
-                        unset(self::$parameters[$key]);
+                        unset($this->parameters[$key]);
                     }
                     break;
 
                 case 'year':
-                    if (array_key_exists($key, self::$parameters) === true &&
-                        (int)(self::$parameters[$key] > 0)) {
-                        self::$parameters[$key] = (int) self::$parameters[$key];
+                    if (array_key_exists($key, $this->parameters) === true &&
+                        (int)($this->parameters[$key] > 0)) {
+                        $this->parameters[$key] = (int) $this->parameters[$key];
 
                         $min_year_limit = (int) Date('Y');
                         $max_year_limit = (int) Date('Y');
@@ -191,25 +188,25 @@ class Request
                             }
                         }
 
-                        if (self::$parameters[$key] < $min_year_limit ||
-                            self::$parameters[$key] > $max_year_limit + 1) {
-                            unset(self::$parameters[$key]);
+                        if ($this->parameters[$key] < $min_year_limit ||
+                            $this->parameters[$key] > $max_year_limit + 1) {
+                            unset($this->parameters[$key]);
                         }
                     } else {
-                        unset(self::$parameters[$key]);
+                        unset($this->parameters[$key]);
                     }
                     break;
 
                 case 'source':
-                    if (array_key_exists($key, self::$parameters) === true) {
+                    if (array_key_exists($key, $this->parameters) === true) {
                         if (
-                            is_string(self::$parameters[$key]) === false ||
+                            is_string($this->parameters[$key]) === false ||
                             in_array(
-                                self::$parameters[$key],
+                                $this->parameters[$key],
                                 ['api', 'app', 'legacy', 'postman', 'website']
                             ) === false
                         ) {
-                            unset(self::$parameters[$key]);
+                            unset($this->parameters[$key]);
                         }
                     }
                     break;
@@ -223,22 +220,16 @@ class Request
 
     /**
      * Return all the valid collection parameters
-     *
-     * @param array $parameter_names
-     * @param integer|null $resource_type_id
-     * @param integer|null $resource_id
-     *
-     * @return array
      */
-    public static function fetch(
-        array $parameter_names = [],
+    public function fetch(
+        array $supported_parameters = [],
         ?int $resource_type_id = null,
         ?int $resource_id = null
     ): array {
-        self::find($parameter_names);
-        self::validate($resource_type_id, $resource_id);
+        $this->find($supported_parameters);
+        $this->validate($resource_type_id, $resource_id);
 
-        return self::$parameters;
+        return $this->parameters;
     }
 
     /**
@@ -246,22 +237,15 @@ class Request
      *
      * @return string|null
      */
-    public static function xHeader(): ?string
+    public function xHeader(): ?string
     {
         $header = '';
 
-        foreach (self::$parameters as $key => $value) {
-            switch ($key) {
-                case 'category':
-                case 'resource-type':
-                case 'subcategory':
-                    $header .= '|' . $key . ':' . urlencode((string) $_GET[$key]);
-                    break;
-
-                default:
-                    $header .= '|' . $key . ':' . urlencode((string) $value);
-                    break;
-            }
+        foreach ($this->parameters as $key => $value) {
+            $header .= match ($key) {
+                'category', 'resource-type', 'subcategory' => '|' . $key . ':' . urlencode((string)$this->request_parameters[$key]),
+                default => '|' . $key . ':' . urlencode((string)$value),
+            };
         }
 
         if ($header !== '') {

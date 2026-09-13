@@ -11,7 +11,7 @@ use Throwable;
 
 /**
  * @author Dean Blackborough <dean@g3d-development.com>
- * @copyright Dean Blackborough 2018-2023
+ * @copyright Dean Blackborough 2018-2025
  * @license https://github.com/costs-to-expect/api/blob/master/LICENSE
  */
 class Response
@@ -140,6 +140,16 @@ class Response
 
         return response()->json(
             $response,
+            403
+        );
+    }
+
+    public static function invalidInternalApiKey(): JsonResponse
+    {
+        return response()->json(
+            [
+                'message' => trans('responses.invalid-internal-api-key')
+            ],
             403
         );
     }

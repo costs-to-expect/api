@@ -16,20 +16,13 @@ use Illuminate\Support\Facades\Config;
 
 /**
  * @author Dean Blackborough <dean@g3d-development.com>
- * @copyright Dean Blackborough 2018-2023
+ * @copyright Dean Blackborough 2018-2025
  * @license https://github.com/costs-to-expect/api/blob/master/LICENSE
  */
 class CategoryController extends Controller
 {
     protected bool $allow_entire_collection = true;
 
-    /**
-     * Return the categories collection
-     *
-     * @param string $resource_type_id
-     *
-     * @return JsonResponse
-     */
     public function index(Request $request, $resource_type_id): JsonResponse
     {
         if ($this->hasViewAccessToResourceType((int) $resource_type_id) === false) {
@@ -43,13 +36,12 @@ class CategoryController extends Controller
         $cache_collection->setFromCache($cache_control->getByKey($request->getRequestUri()));
 
         if ($cache_control->isRequestCacheable() === false || $cache_collection->valid() === false) {
-            $search_parameters = Parameter\Search::fetch(
-                Config::get('api.category.searchable')
-            );
-
-            $sort_parameters = Parameter\Sort::fetch(
-                Config::get('api.category.sortable')
-            );
+            
+            $search_request_service = new Parameter\Search($request->get('search'));
+            $search_parameters = $search_request_service->fetch(Config::get('api.category.searchable'));
+            
+            $sort_request_service = new Parameter\Sort($request->get('sort'));
+            $sort_parameters = $sort_request_service->fetch(Config::get('api.category.sortable'));
 
             $total = (new Category())->total(
                 (int) $resource_type_id,
@@ -89,8 +81,8 @@ class CategoryController extends Controller
                 ->collection($pagination_parameters, count($categories), $total)
                 ->addCacheControl($cache_control->visibility(), $cache_control->ttl())
                 ->addETag($collection)
-                ->addSearch(Parameter\Search::xHeader())
-                ->addSort(Parameter\Sort::xHeader());
+                ->addSearch($search_request_service->xHeader())
+                ->addSort($sort_request_service->xHeader());
 
             if ($last_updated !== null) {
                 $headers->addLastUpdated($last_updated);
@@ -105,19 +97,15 @@ class CategoryController extends Controller
 
     /**
      * Return a single category
-     *
-     * @param $resource_type_id
-     * @param $category_id
-     *
-     * @return JsonResponse
      */
     public function show(Request $request, $resource_type_id, $category_id): JsonResponse
     {
         if ($this->hasViewAccessToResourceType((int) $resource_type_id) === false) {
             return \App\HttpResponse\Response::notFoundOrNotAccessible(trans('entities.category'));
         }
-
-        $parameters = Parameter\Request::fetch(array_keys(Config::get('api.category.parameters-show')));
+        
+        $request_parameter_service = new Parameter\Request($request->all());
+        $request_parameters = $request_parameter_service->fetch(array_keys(Config::get('api.category.parameters-show')));
 
         $category = (new Category())->single(
             (int) $resource_type_id,
@@ -130,8 +118,8 @@ class CategoryController extends Controller
 
         $subcategories = [];
         if (
-            array_key_exists('include-subcategories', $parameters) === true &&
-            $parameters['include-subcategories'] === true
+            array_key_exists('include-subcategories', $request_parameters) === true &&
+            $request_parameters['include-subcategories'] === true
         ) {
             $subcategories = (new Subcategory())->paginatedCollection(
                 (int) $resource_type_id,
@@ -144,7 +132,7 @@ class CategoryController extends Controller
         $headers = new Header();
         $headers->item();
 
-        $parameters_header = Parameter\Request::xHeader();
+        $parameters_header = $request_parameter_service->xHeader();
         if ($parameters_header !== null) {
             $headers->addParameters($parameters_header);
         }

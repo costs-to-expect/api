@@ -16,23 +16,23 @@ Route::group(
         Route::get(
             'resource-types/{resource_type_id}/items',
             [App\Http\Controllers\View\ResourceTypeItemController::class, 'index']
-        );
+        )->name('resource-type-item.list');
 
         Route::options(
             'resource-types/{resource_type_id}/items',
             [App\Http\Controllers\View\ResourceTypeItemController::class, 'optionsIndex']
-        );
+        )->name('resource-type-item.list.options');
 
 
         Route::get(
             'summary/resource-types/{resource_type_id}/items',
             [App\Http\Controllers\Summary\View\ResourceTypeItemController::class, 'index']
-        );
+        )->name('summary.resource-type-item.list');
 
         Route::options(
             'summary/resource-types/{resource_type_id}/items',
             [App\Http\Controllers\Summary\View\ResourceTypeItemController::class, 'optionsIndex']
-        );
+        )->name('summary.resource-type-item.list.options');
 
     }
 );

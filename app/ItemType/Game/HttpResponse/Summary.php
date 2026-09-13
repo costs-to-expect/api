@@ -3,6 +3,7 @@
 namespace App\ItemType\Game\HttpResponse;
 
 use App\HttpRequest\Parameter;
+use App\HttpRequest\Parameter\Search;
 use App\ItemType\HttpResponse\ApiSummaryResponse;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Config as LaravelConfig;
@@ -103,18 +104,22 @@ class Summary extends ApiSummaryResponse
     {
         $base_path = 'api.item-type-game';
 
-        $this->parameters = Parameter\Request::fetch(
+        $requestParameterService = new Parameter\Request(request()->all());
+        $this->parameters = $requestParameterService->fetch(
             array_keys(LaravelConfig::get($base_path . '.summary-parameters', [])),
             $this->resource_type_id,
             $this->resource_id
         );
+        $this->request_service = $requestParameterService;
 
-        $this->search_parameters = Parameter\Search::fetch(
-            LaravelConfig::get($base_path . '.summary-searchable', [])
-        );
+        $searchParameterService = new Search(request()->get('search'));
+        $this->search_parameters = $searchParameterService->fetch(LaravelConfig::get($base_path . '.summary-searchable', []));
+        $this->search_service = $searchParameterService;
 
-        $this->filter_parameters = Parameter\Filter::fetch(
+        $filterParameterService = new Parameter\Filter(request()->get('filter'));
+        $this->filter_parameters = $filterParameterService->fetch(
             LaravelConfig::get($base_path . '.summary-filterable', [])
         );
+        $this->filter_service = $filterParameterService;
     }
 }

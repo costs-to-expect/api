@@ -304,7 +304,16 @@ class AuthenticationController extends \Illuminate\Routing\Controller
 
     public function logout(): Http\JsonResponse
     {
-        Auth::guard('api')->logout();
+        $user = Auth::guard('api')->user();
+
+        if ($user === null) {
+            return Response::authenticationRequired();
+        }
+
+        $token = $user->currentAccessToken();
+        if ($token instanceof \Laravel\Sanctum\PersonalAccessToken) {
+            $token->delete();
+        }
 
         return response()->json(['message' => trans('auth.signed-out')], 200);
     }

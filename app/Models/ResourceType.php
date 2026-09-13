@@ -4,11 +4,13 @@ declare(strict_types=1);
 
 namespace App\Models;
 
+use Illuminate\Contracts\Database\Query\Expression;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOneThrough;
 use Illuminate\Database\Query\Builder as QueryBuilder;
 use Illuminate\Support\Facades\Config;
+use Illuminate\Support\Facades\DB;
 
 /**
  * @mixin QueryBuilder
@@ -20,7 +22,7 @@ use Illuminate\Support\Facades\Config;
  * @property string $data
  *
  * @author Dean Blackborough <dean@g3d-development.com>
- * @copyright Dean Blackborough 2018-2023
+ * @copyright Dean Blackborough 2018-2025
  * @license https://github.com/costs-to-expect/api/blob/master/LICENSE
  */
 class ResourceType extends Model
@@ -91,6 +93,17 @@ class ResourceType extends Model
         array $sort_parameters = [],
         array $request_parameters = []
     ): array {
+        $last_updated_expression = $this->lastUpdatedExpression();
+        $resource_count_expression = DB::raw('
+            (
+                SELECT 
+                    COUNT(resource.id) 
+                FROM 
+                    resource 
+                WHERE 
+                    resource.resource_type_id = resource_type.id
+            ) AS resource_type_resources');
+        
         $collection = $this
             ->select(
                 'resource_type.id AS resource_type_id',
@@ -104,30 +117,8 @@ class ResourceType extends Model
                 'item_type.friendly_name AS resource_type_item_type_friendly_name',
                 'item_type.description AS resource_type_item_type_description'
             )
-            ->selectRaw(
-                '
-                (
-                    SELECT 
-                        COUNT(resource.id) 
-                    FROM 
-                        resource 
-                    WHERE 
-                        resource.resource_type_id = resource_type.id
-                ) AS resource_type_resources'
-            )
-            ->selectRaw(
-                '
-                (
-                    SELECT 
-                        GREATEST(
-                            MAX(resource_type.created_at), 
-                            IFNULL(MAX(resource_type.updated_at), 0),
-                            0
-                        )
-                    FROM 
-                        resource_type 
-                ) AS last_updated'
-            )
+            ->selectRaw($last_updated_expression->getValue(DB::connection()->getQueryGrammar()))
+            ->selectRaw($resource_count_expression->getValue(DB::connection()->getQueryGrammar()))
             ->join('resource_type_item_type', 'resource_type.id', 'resource_type_item_type.resource_type_id')
             ->join('item_type', 'resource_type_item_type.item_type_id', 'item_type.id')
             ->leftJoin("resource", "resource_type.id", "resource.id");
@@ -148,22 +139,18 @@ class ResourceType extends Model
 
         if (count($sort_parameters) > 0) {
             foreach ($sort_parameters as $field => $direction) {
-                switch ($field) {
-                    case 'created':
-                        $collection->orderBy($this->table . '.created_at', $direction);
-                        break;
-
-                    default:
-                        $collection->orderBy($this->table . '.' . $field, $direction);
-                        break;
+                if ($field === 'created') {
+                    $collection->orderBy($this->table . '.created_at', $direction);
+                } else {
+                    $collection->orderBy($this->table . '.' . $field, $direction);
                 }
             }
         } else {
             $collection->orderByDesc($this->table . '.created_at');
         }
 
-        $collection->offset($offset);
-        $collection->limit($limit);
+        $collection->offset($offset)
+            ->limit($limit);
 
         return $collection->get()->toArray();
     }
@@ -172,6 +159,15 @@ class ResourceType extends Model
         int $resource_type_id,
         array $viewable_resource_types = []
     ): ?array {
+        $resource_count_expression = DB::raw('(
+                    SELECT 
+                        COUNT(resource.id) 
+                    FROM 
+                        resource 
+                    WHERE 
+                        resource.resource_type_id = resource_type.id
+                ) AS resource_type_resources'); 
+        
         $result = $this
             ->select(
                 'resource_type.id AS resource_type_id',
@@ -185,17 +181,7 @@ class ResourceType extends Model
                 'item_type.friendly_name AS resource_type_item_type_friendly_name',
                 'item_type.description AS resource_type_item_type_description'
             )
-            ->selectRaw(
-                '
-                (
-                    SELECT 
-                        COUNT(resource.id) 
-                    FROM 
-                        resource 
-                    WHERE 
-                        resource.resource_type_id = resource_type.id
-                ) AS resource_type_resources'
-            )
+            ->selectRaw($resource_count_expression->getValue(DB::connection()->getQueryGrammar()))
             ->join('resource_type_item_type', 'resource_type.id', 'resource_type_item_type.resource_type_id')
             ->join('item_type', 'resource_type_item_type.item_type_id', 'item_type.id')
             ->leftJoin("resource", "resource_type.id", "resource.id");
@@ -236,5 +222,33 @@ class ResourceType extends Model
     public function instance(int $resource_type_id): ?ResourceType
     {
         return $this->find($resource_type_id);
+    }
+
+    private function lastUpdatedExpression(): Expression
+    {
+        if (DB::getDriverName() === 'mysql') {
+            return DB::raw('
+                (
+                    SELECT 
+                        GREATEST(
+                            MAX(resource_type.created_at), 
+                            IFNULL(MAX(resource_type.updated_at), 0),
+                            0
+                        )
+                    FROM 
+                        resource_type 
+                ) AS last_updated');
+        }
+
+        return DB::raw('(
+                SELECT
+                    MAX(
+                        COALESCE(resource_type.created_at, 0),
+                        COALESCE(resource_type.updated_at, 0),
+                        0
+                    )
+                FROM
+                    resource_type
+            ) AS last_updated');
     }
 }

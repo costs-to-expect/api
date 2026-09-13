@@ -2,26 +2,20 @@
 
 namespace Tests\View\Http\Controllers;
 
-use App\User;
 use Tests\TestCase;
 
 final class CategoryTest extends TestCase
 {
-    /**
-     * @test
-     * @runInSeparateProcess
-     * @preserveGlobalState disabled
-     */
-    public function allocatedExpenseCategoryCollection(): void
+    public function testAllocatedExpenseCategoryCollection(): void
     {
-        $this->actingAs(User::find($this->createUser()));
+        $this->actingAs($this->createUser());
 
-        $resource_type_id = $this->createAllocatedExpenseResourceType();
-        $this->createRandomCategory($resource_type_id);
-        $this->createRandomCategory($resource_type_id);
-        $this->createRandomCategory($resource_type_id);
+        $resource_type_id = $this->quickCreateAllocatedExpenseResourceType();
+        $this->quickCreateRandomCategory($resource_type_id);
+        $this->quickCreateRandomCategory($resource_type_id);
+        $this->quickCreateRandomCategory($resource_type_id);
 
-        $response = $this->fetchCategoryCollection([
+        $response = $this->getToCategoryList([
             'resource_type_id' => $resource_type_id
         ]);
 
@@ -40,21 +34,16 @@ final class CategoryTest extends TestCase
         }
     }
 
-    /**
-     * @test
-     * @runInSeparateProcess
-     * @preserveGlobalState disabled
-     */
-    public function allocatedExpenseCategoryCollectionPagination(): void
+    public function testAllocatedExpenseCategoryCollectionPagination(): void
     {
-        $this->actingAs(User::find($this->createUser()));
+        $this->actingAs($this->createUser());
 
-        $resource_type_id = $this->createAllocatedExpenseResourceType();
-        $this->createRandomCategory($resource_type_id);
-        $this->createRandomCategory($resource_type_id);
-        $this->createRandomCategory($resource_type_id);
+        $resource_type_id = $this->quickCreateAllocatedExpenseResourceType();
+        $this->quickCreateRandomCategory($resource_type_id);
+        $this->quickCreateRandomCategory($resource_type_id);
+        $this->quickCreateRandomCategory($resource_type_id);
 
-        $response = $this->fetchCategoryCollection([
+        $response = $this->getToCategoryList([
             'resource_type_id' => $resource_type_id,
             'offset' => 0,
             'limit' => 2
@@ -79,21 +68,16 @@ final class CategoryTest extends TestCase
         }
     }
 
-    /**
-     * @test
-     * @runInSeparateProcess
-     * @preserveGlobalState disabled
-     */
-    public function allocatedExpenseCategoryCollectionPaginationPrevious(): void
+    public function testAllocatedExpenseCategoryCollectionPaginationPrevious(): void
     {
-        $this->actingAs(User::find($this->createUser()));
+        $this->actingAs($this->createUser());
 
-        $resource_type_id = $this->createAllocatedExpenseResourceType();
-        $this->createRandomCategory($resource_type_id);
-        $this->createRandomCategory($resource_type_id);
-        $this->createRandomCategory($resource_type_id);
+        $resource_type_id = $this->quickCreateAllocatedExpenseResourceType();
+        $this->quickCreateRandomCategory($resource_type_id);
+        $this->quickCreateRandomCategory($resource_type_id);
+        $this->quickCreateRandomCategory($resource_type_id);
 
-        $response = $this->fetchCategoryCollection([
+        $response = $this->getToCategoryList([
             'resource_type_id' => $resource_type_id,
             'offset' => 2,
             'limit' => 2
@@ -118,23 +102,18 @@ final class CategoryTest extends TestCase
         }
     }
 
-    /**
-     * @test
-     * @runInSeparateProcess
-     * @preserveGlobalState disabled
-     */
-    public function allocatedExpenseCategoryCollectionSearchDescription(): void
+    public function testAllocatedExpenseCategoryCollectionSearchDescription(): void
     {
-        $this->actingAs(User::find($this->createUser()));
+        $this->actingAs($this->createUser());
 
         $search_string = $this->faker->text(100);
 
-        $resource_type_id = $this->createAllocatedExpenseResourceType();
-        $this->createRandomCategory($resource_type_id);
-        $this->createRandomCategory($resource_type_id, ['description' => $search_string]);
-        $this->createRandomCategory($resource_type_id);
+        $resource_type_id = $this->quickCreateAllocatedExpenseResourceType();
+        $this->quickCreateRandomCategory($resource_type_id);
+        $this->quickCreateRandomCategory($resource_type_id, ['description' => $search_string]);
+        $this->quickCreateRandomCategory($resource_type_id);
 
-        $response = $this->fetchCategoryCollection([
+        $response = $this->getToCategoryList([
             'resource_type_id' => $resource_type_id,
             'search' => 'description:' . $search_string
         ]);
@@ -155,23 +134,18 @@ final class CategoryTest extends TestCase
         }
     }
 
-    /**
-     * @test
-     * @runInSeparateProcess
-     * @preserveGlobalState disabled
-     */
-    public function allocatedExpenseCategoryCollectionSearchName(): void
+    public function testAllocatedExpenseCategoryCollectionSearchName(): void
     {
-        $this->actingAs(User::find($this->createUser()));
+        $this->actingAs($this->createUser());
 
         $search_string = $this->faker->text(25);
 
-        $resource_type_id = $this->createAllocatedExpenseResourceType();
-        $this->createRandomCategory($resource_type_id);
-        $this->createRandomCategory($resource_type_id, ['name' => $search_string]);
-        $this->createRandomCategory($resource_type_id);
+        $resource_type_id = $this->quickCreateAllocatedExpenseResourceType();
+        $this->quickCreateRandomCategory($resource_type_id);
+        $this->quickCreateRandomCategory($resource_type_id, ['name' => $search_string]);
+        $this->quickCreateRandomCategory($resource_type_id);
 
-        $response = $this->fetchCategoryCollection([
+        $response = $this->getToCategoryList([
             'resource_type_id' => $resource_type_id,
             'search' => 'name:' . $search_string
         ]);
@@ -192,22 +166,17 @@ final class CategoryTest extends TestCase
         }
     }
 
-    /**
-     * @test
-     * @runInSeparateProcess
-     * @preserveGlobalState disabled
-     */
-    public function allocatedExpenseCategoryCollectionSortCreated(): void
+    public function testAllocatedExpenseCategoryCollectionSortCreated(): void
     {
-        $this->actingAs(User::find($this->createUser()));
+        $this->actingAs($this->createUser());
 
-        $resource_type_id = $this->createAllocatedExpenseResourceType();
-        $this->createRandomCategory($resource_type_id);
-        $this->createRandomCategory($resource_type_id);
+        $resource_type_id = $this->quickCreateAllocatedExpenseResourceType();
+        $this->quickCreateRandomCategory($resource_type_id);
+        $this->quickCreateRandomCategory($resource_type_id);
         sleep(2); // Ensure the created_at timestamps are different
-        $this->createRandomCategory($resource_type_id, ['name' => 'created-last']);
+        $this->quickCreateRandomCategory($resource_type_id, ['name' => 'created-last']);
 
-        $response = $this->fetchCategoryCollection([
+        $response = $this->getToCategoryList([
             'resource_type_id' => $resource_type_id,
             'sort'=>'created:desc'
         ]);
@@ -228,21 +197,16 @@ final class CategoryTest extends TestCase
         }
     }
 
-    /**
-     * @test
-     * @runInSeparateProcess
-     * @preserveGlobalState disabled
-     */
-    public function allocatedExpenseCategoryCollectionSortDescription(): void
+    public function testAllocatedExpenseCategoryCollectionSortDescription(): void
     {
-        $this->actingAs(User::find($this->createUser()));
+        $this->actingAs($this->createUser());
 
-        $resource_type_id = $this->createAllocatedExpenseResourceType();
-        $this->createRandomCategory($resource_type_id);
-        $this->createRandomCategory($resource_type_id, ['description' => 'ZZZZZZZZZZZZA']);
-        $this->createRandomCategory($resource_type_id);
+        $resource_type_id = $this->quickCreateAllocatedExpenseResourceType();
+        $this->quickCreateRandomCategory($resource_type_id);
+        $this->quickCreateRandomCategory($resource_type_id, ['description' => 'ZZZZZZZZZZZZA']);
+        $this->quickCreateRandomCategory($resource_type_id);
 
-        $response = $this->fetchCategoryCollection([
+        $response = $this->getToCategoryList([
             'resource_type_id' => $resource_type_id,
             'sort' => 'description:desc'
         ]);
@@ -262,23 +226,17 @@ final class CategoryTest extends TestCase
             $this->assertJsonMatchesCategorySchema($json);
         }
     }
-
-
-    /**
-     * @test
-     * @runInSeparateProcess
-     * @preserveGlobalState disabled
-     */
-    public function allocatedExpenseCategoryCollectionSortName(): void
+    
+    public function testAllocatedExpenseCategoryCollectionSortName(): void
     {
-        $this->actingAs(User::find($this->createUser()));
+        $this->actingAs($this->createUser());
 
-        $resource_type_id = $this->createAllocatedExpenseResourceType();
-        $this->createRandomCategory($resource_type_id);
-        $this->createRandomCategory($resource_type_id, ['name' => 'AAAAAAAAAAAAB']);
-        $this->createRandomCategory($resource_type_id);
+        $resource_type_id = $this->quickCreateAllocatedExpenseResourceType();
+        $this->quickCreateRandomCategory($resource_type_id);
+        $this->quickCreateRandomCategory($resource_type_id, ['name' => 'AAAAAAAAAAAAB']);
+        $this->quickCreateRandomCategory($resource_type_id);
 
-        $response = $this->fetchCategoryCollection([
+        $response = $this->getToCategoryList([
             'resource_type_id' => $resource_type_id,
             'sort' => 'name:asc'
         ]);
@@ -299,15 +257,14 @@ final class CategoryTest extends TestCase
         }
     }
 
-    /** @test */
-    public function allocatedExpenseCategoryShow(): void
+    public function testAllocatedExpenseCategoryShow(): void
     {
-        $this->actingAs(User::find($this->createUser()));
+        $this->actingAs($this->createUser());
 
-        $resource_type_id = $this->createAllocatedExpenseResourceType();
-        $category_id = $this->createRandomCategory($resource_type_id);
+        $resource_type_id = $this->quickCreateAllocatedExpenseResourceType();
+        $category_id = $this->quickCreateRandomCategory($resource_type_id);
 
-        $response = $this->fetchCategory([
+        $response = $this->getToCategoryShow([
             'resource_type_id' => $resource_type_id,
             'category_id' => $category_id
         ]);
@@ -320,15 +277,15 @@ final class CategoryTest extends TestCase
     /** @test */
     public function allocatedExpenseCategoryShowIncludeSubcategories(): void
     {
-        $this->actingAs(User::find($this->createUser()));
+        $this->actingAs($this->createUser());
 
-        $resource_type_id = $this->createAllocatedExpenseResourceType();
-        $category_id = $this->createRandomCategory($resource_type_id);
-        $this->createRandomSubcategory($resource_type_id, $category_id);
-        $this->createRandomSubcategory($resource_type_id, $category_id);
-        $this->createRandomSubcategory($resource_type_id, $category_id);
+        $resource_type_id = $this->quickCreateAllocatedExpenseResourceType();
+        $category_id = $this->quickCreateRandomCategory($resource_type_id);
+        $this->quickCreateRandomSubcategory($resource_type_id, $category_id);
+        $this->quickCreateRandomSubcategory($resource_type_id, $category_id);
+        $this->quickCreateRandomSubcategory($resource_type_id, $category_id);
 
-        $response = $this->fetchCategory([
+        $response = $this->getToCategoryShow([
             'resource_type_id' => $resource_type_id,
             'category_id' => $category_id,
             'include_subcategories' => true
@@ -338,23 +295,18 @@ final class CategoryTest extends TestCase
         $this->assertJsonMatchesCategorySchemaWhichIncludesSubcategories($response->getContent());
     }
 
-    /**
-     * @test
-     * @runInSeparateProcess
-     * @preserveGlobalState disabled
-     */
-    public function budgetCategoryCollection(): void
+    public function testBudgetCategoryCollection(): void
     {
-        $this->actingAs(User::find($this->createUser()));
+        $this->actingAs($this->createUser());
 
         // This test will change later when we remove access to categories for
         // the Budget and Budget pro item types, for now it is accessible
-        $resource_type_id = $this->createBudgetResourceType();
-        $this->createRandomCategory($resource_type_id);
-        $this->createRandomCategory($resource_type_id);
-        $this->createRandomCategory($resource_type_id);
+        $resource_type_id = $this->quickCreateBudgetResourceType();
+        $this->quickCreateRandomCategory($resource_type_id);
+        $this->quickCreateRandomCategory($resource_type_id);
+        $this->quickCreateRandomCategory($resource_type_id);
 
-        $response = $this->fetchCategoryCollection([
+        $response = $this->getToCategoryList([
             'resource_type_id' => $resource_type_id
         ]);
 
@@ -373,15 +325,14 @@ final class CategoryTest extends TestCase
         }
     }
 
-    /** @test */
-    public function budgetCategoryShow(): void
+    public function testBudgetCategoryShow(): void
     {
-        $this->actingAs(User::find($this->createUser()));
+        $this->actingAs($this->createUser());
 
-        $resource_type_id = $this->createBudgetResourceType();
-        $category_id = $this->createRandomCategory($resource_type_id);
+        $resource_type_id = $this->quickCreateBudgetResourceType();
+        $category_id = $this->quickCreateRandomCategory($resource_type_id);
 
-        $response = $this->fetchCategory([
+        $response = $this->getToCategoryShow([
             'resource_type_id' => $resource_type_id,
             'category_id' => $category_id
         ]);
@@ -391,18 +342,17 @@ final class CategoryTest extends TestCase
         $this->assertJsonMatchesCategorySchema($response->getContent());
     }
 
-    /** @test */
-    public function budgetCategoryShowIncludeSubcategories(): void
+    public function testBudgetCategoryShowIncludeSubcategories(): void
     {
-        $this->actingAs(User::find($this->createUser()));
+        $this->actingAs($this->createUser());
 
-        $resource_type_id = $this->createBudgetResourceType();
-        $category_id = $this->createRandomCategory($resource_type_id);
-        $this->createRandomSubcategory($resource_type_id, $category_id);
-        $this->createRandomSubcategory($resource_type_id, $category_id);
-        $this->createRandomSubcategory($resource_type_id, $category_id);
+        $resource_type_id = $this->quickCreateBudgetResourceType();
+        $category_id = $this->quickCreateRandomCategory($resource_type_id);
+        $this->quickCreateRandomSubcategory($resource_type_id, $category_id);
+        $this->quickCreateRandomSubcategory($resource_type_id, $category_id);
+        $this->quickCreateRandomSubcategory($resource_type_id, $category_id);
 
-        $response = $this->fetchCategory([
+        $response = $this->getToCategoryShow([
             'resource_type_id' => $resource_type_id,
             'category_id' => $category_id,
             'include_subcategories' => true
@@ -412,23 +362,18 @@ final class CategoryTest extends TestCase
         $this->assertJsonMatchesCategorySchemaWhichIncludesSubcategories($response->getContent());
     }
 
-    /**
-     * @test
-     * @runInSeparateProcess
-     * @preserveGlobalState disabled
-     */
-    public function budgetProCategoryCollection(): void
+    public function testBudgetProCategoryCollection(): void
     {
-        $this->actingAs(User::find($this->createUser()));
+        $this->actingAs($this->createUser());
 
         // This test will change later when we remove access to categories for
         // the Budget and Budget pro item types, for now it is accessible
-        $resource_type_id = $this->createBudgetProResourceType();
-        $this->createRandomCategory($resource_type_id);
-        $this->createRandomCategory($resource_type_id);
-        $this->createRandomCategory($resource_type_id);
+        $resource_type_id = $this->quickCreateBudgetProResourceType();
+        $this->quickCreateRandomCategory($resource_type_id);
+        $this->quickCreateRandomCategory($resource_type_id);
+        $this->quickCreateRandomCategory($resource_type_id);
 
-        $response = $this->fetchCategoryCollection([
+        $response = $this->getToCategoryList([
             'resource_type_id' => $resource_type_id
         ]);
 
@@ -447,15 +392,14 @@ final class CategoryTest extends TestCase
         }
     }
 
-    /** @test */
-    public function budgetProCategoryShow(): void
+    public function testBudgetProCategoryShow(): void
     {
-        $this->actingAs(User::find($this->createUser()));
+        $this->actingAs($this->createUser());
 
-        $resource_type_id = $this->createBudgetResourceType();
-        $category_id = $this->createRandomCategory($resource_type_id);
+        $resource_type_id = $this->quickCreateBudgetResourceType();
+        $category_id = $this->quickCreateRandomCategory($resource_type_id);
 
-        $response = $this->fetchCategory([
+        $response = $this->getToCategoryShow([
             'resource_type_id' => $resource_type_id,
             'category_id' => $category_id
         ]);
@@ -465,18 +409,17 @@ final class CategoryTest extends TestCase
         $this->assertJsonMatchesCategorySchema($response->getContent());
     }
 
-    /** @test */
-    public function budgetProCategoryShowIncludeSubcategories(): void
+    public function testBudgetProCategoryShowIncludeSubcategories(): void
     {
-        $this->actingAs(User::find($this->createUser()));
+        $this->actingAs($this->createUser());
 
-        $resource_type_id = $this->createBudgetProResourceType();
-        $category_id = $this->createRandomCategory($resource_type_id);
-        $this->createRandomSubcategory($resource_type_id, $category_id);
-        $this->createRandomSubcategory($resource_type_id, $category_id);
-        $this->createRandomSubcategory($resource_type_id, $category_id);
+        $resource_type_id = $this->quickCreateBudgetProResourceType();
+        $category_id = $this->quickCreateRandomCategory($resource_type_id);
+        $this->quickCreateRandomSubcategory($resource_type_id, $category_id);
+        $this->quickCreateRandomSubcategory($resource_type_id, $category_id);
+        $this->quickCreateRandomSubcategory($resource_type_id, $category_id);
 
-        $response = $this->fetchCategory([
+        $response = $this->getToCategoryShow([
             'resource_type_id' => $resource_type_id,
             'category_id' => $category_id,
             'include_subcategories' => true
@@ -486,21 +429,16 @@ final class CategoryTest extends TestCase
         $this->assertJsonMatchesCategorySchemaWhichIncludesSubcategories($response->getContent());
     }
 
-    /**
-     * @test
-     * @runInSeparateProcess
-     * @preserveGlobalState disabled
-     */
-    public function gameCategoryCollection(): void
+    public function testGameCategoryCollection(): void
     {
-        $this->actingAs(User::find($this->createUser()));
+        $this->actingAs($this->createUser());
 
-        $resource_type_id = $this->createGameResourceType();
-        $this->createRandomCategory($resource_type_id);
-        $this->createRandomCategory($resource_type_id);
-        $this->createRandomCategory($resource_type_id);
+        $resource_type_id = $this->quickCreateGameResourceType();
+        $this->quickCreateRandomCategory($resource_type_id);
+        $this->quickCreateRandomCategory($resource_type_id);
+        $this->quickCreateRandomCategory($resource_type_id);
 
-        $response = $this->fetchCategoryCollection([
+        $response = $this->getToCategoryList([
             'resource_type_id' => $resource_type_id
         ]);
 
@@ -519,15 +457,14 @@ final class CategoryTest extends TestCase
         }
     }
 
-    /** @test */
-    public function gameCategoryShow(): void
+    public function testGameCategoryShow(): void
     {
-        $this->actingAs(User::find($this->createUser()));
+        $this->actingAs($this->createUser());
 
-        $resource_type_id = $this->createGameResourceType();
-        $category_id = $this->createRandomCategory($resource_type_id);
+        $resource_type_id = $this->quickCreateGameResourceType();
+        $category_id = $this->quickCreateRandomCategory($resource_type_id);
 
-        $response = $this->fetchCategory([
+        $response = $this->getToCategoryShow([
             'resource_type_id' => $resource_type_id,
             'category_id' => $category_id
         ]);
@@ -537,18 +474,17 @@ final class CategoryTest extends TestCase
         $this->assertJsonMatchesCategorySchema($response->getContent());
     }
 
-    /** @test */
-    public function gameCategoryShowIncludeSubcategories(): void
+    public function testGameCategoryShowIncludeSubcategories(): void
     {
-        $this->actingAs(User::find($this->createUser()));
+        $this->actingAs($this->createUser());
 
-        $resource_type_id = $this->createGameResourceType();
-        $category_id = $this->createRandomCategory($resource_type_id);
-        $this->createRandomSubcategory($resource_type_id, $category_id);
-        $this->createRandomSubcategory($resource_type_id, $category_id);
-        $this->createRandomSubcategory($resource_type_id, $category_id);
+        $resource_type_id = $this->quickCreateGameResourceType();
+        $category_id = $this->quickCreateRandomCategory($resource_type_id);
+        $this->quickCreateRandomSubcategory($resource_type_id, $category_id);
+        $this->quickCreateRandomSubcategory($resource_type_id, $category_id);
+        $this->quickCreateRandomSubcategory($resource_type_id, $category_id);
 
-        $response = $this->fetchCategory([
+        $response = $this->getToCategoryShow([
             'resource_type_id' => $resource_type_id,
             'category_id' => $category_id,
             'include_subcategories' => true
@@ -558,13 +494,12 @@ final class CategoryTest extends TestCase
         $this->assertJsonMatchesCategorySchemaWhichIncludesSubcategories($response->getContent());
     }
 
-    /** @test */
-    public function optionsRequestForAllocatedExpenseCategory(): void
+    public function testOptionsRequestForAllocatedExpenseCategory(): void
     {
-        $this->actingAs(User::find($this->createUser()));
+        $this->actingAs($this->createUser());
 
-        $resource_type_id = $this->createAllocatedExpenseResourceType();
-        $category_id = $this->createRandomCategory($resource_type_id);
+        $resource_type_id = $this->quickCreateAllocatedExpenseResourceType();
+        $category_id = $this->quickCreateRandomCategory($resource_type_id);
 
         $response = $this->fetchOptionsForCategory([
             'resource_type_id' => $resource_type_id,
@@ -575,13 +510,12 @@ final class CategoryTest extends TestCase
         $this->assertProvidedJsonMatchesDefinedSchema($response->content(), 'api/schema/options/category.json');
     }
 
-    /** @test */
-    public function optionsRequestForAllocatedExpenseCategoryCollection(): void
+    public function testOptionsRequestForAllocatedExpenseCategoryCollection(): void
     {
-        $this->actingAs(User::find($this->createUser()));
+        $this->actingAs($this->createUser());
 
-        $resource_type_id = $this->createAllocatedExpenseResourceType();
-        $this->createRandomCategory($resource_type_id);
+        $resource_type_id = $this->quickCreateAllocatedExpenseResourceType();
+        $this->quickCreateRandomCategory($resource_type_id);
 
         $response = $this->fetchOptionsForCategoryCollection([
             'resource_type_id' => $resource_type_id
@@ -591,13 +525,12 @@ final class CategoryTest extends TestCase
         $this->assertProvidedJsonMatchesDefinedSchema($response->content(), 'api/schema/options/category-collection.json');
     }
 
-    /** @test */
-    public function optionsRequestForBudgetCategory(): void
+    public function testOptionsRequestForBudgetCategory(): void
     {
-        $this->actingAs(User::find($this->createUser()));
+        $this->actingAs($this->createUser());
 
-        $resource_type_id = $this->createBudgetResourceType();
-        $category_id = $this->createRandomCategory($resource_type_id);
+        $resource_type_id = $this->quickCreateBudgetResourceType();
+        $category_id = $this->quickCreateRandomCategory($resource_type_id);
 
         // This test will be modified later when access to categories is
         // removed for the Budget and Budget pro item types, for now it is accessible
@@ -610,13 +543,12 @@ final class CategoryTest extends TestCase
         $this->assertProvidedJsonMatchesDefinedSchema($response->content(), 'api/schema/options/category.json');
     }
 
-    /** @test */
-    public function optionsRequestForBudgetCategoryCollection(): void
+    public function testOptionsRequestForBudgetCategoryCollection(): void
     {
-        $this->actingAs(User::find($this->createUser()));
+        $this->actingAs($this->createUser());
 
-        $resource_type_id = $this->createBudgetResourceType();
-        $this->createRandomCategory($resource_type_id);
+        $resource_type_id = $this->quickCreateBudgetResourceType();
+        $this->quickCreateRandomCategory($resource_type_id);
 
         // This test will be modified later when we disable categories for the Budget
         // and Budget pro item type, for now it is accessible
@@ -628,13 +560,12 @@ final class CategoryTest extends TestCase
         $this->assertProvidedJsonMatchesDefinedSchema($response->content(), 'api/schema/options/category-collection.json');
     }
 
-    /** @test */
-    public function optionsRequestForBudgetProCategory(): void
+    public function testOptionsRequestForBudgetProCategory(): void
     {
-        $this->actingAs(User::find($this->createUser()));
+        $this->actingAs($this->createUser());
 
-        $resource_type_id = $this->createBudgetProResourceType();
-        $category_id = $this->createRandomCategory($resource_type_id);
+        $resource_type_id = $this->quickCreateBudgetProResourceType();
+        $category_id = $this->quickCreateRandomCategory($resource_type_id);
 
         // This test will be modified later when access to categories is
         // removed for the Budget and Budget pro item types, for now it is accessible
@@ -647,13 +578,12 @@ final class CategoryTest extends TestCase
         $this->assertProvidedJsonMatchesDefinedSchema($response->content(), 'api/schema/options/category.json');
     }
 
-    /** @test */
-    public function optionsRequestForBudgetProCategoryCollection(): void
+    public function testOptionsRequestForBudgetProCategoryCollection(): void
     {
-        $this->actingAs(User::find($this->createUser()));
+        $this->actingAs($this->createUser());
 
-        $resource_type_id = $this->createBudgetProResourceType();
-        $this->createRandomCategory($resource_type_id);
+        $resource_type_id = $this->quickCreateBudgetProResourceType();
+        $this->quickCreateRandomCategory($resource_type_id);
 
         // This test will be modified later when we disable categories for the Budget
         // and Budget pro item type, for now it is accessible
@@ -665,13 +595,12 @@ final class CategoryTest extends TestCase
         $this->assertProvidedJsonMatchesDefinedSchema($response->content(), 'api/schema/options/category-collection.json');
     }
 
-    /** @test */
-    public function optionsRequestForGameCategory(): void
+    public function testOptionsRequestForGameCategory(): void
     {
-        $this->actingAs(User::find($this->createUser()));
+        $this->actingAs($this->createUser());
 
-        $resource_type_id = $this->createGameResourceType();
-        $category_id = $this->createRandomCategory($resource_type_id);
+        $resource_type_id = $this->quickCreateGameResourceType();
+        $category_id = $this->quickCreateRandomCategory($resource_type_id);
 
         $response = $this->fetchOptionsForCategory([
             'resource_type_id' => $resource_type_id,
@@ -682,13 +611,12 @@ final class CategoryTest extends TestCase
         $this->assertProvidedJsonMatchesDefinedSchema($response->content(), 'api/schema/options/category.json');
     }
 
-    /** @test */
-    public function optionsRequestForGameCategoryCollection(): void
+    public function testOptionsRequestForGameCategoryCollection(): void
     {
-        $this->actingAs(User::find($this->createUser()));
+        $this->actingAs($this->createUser());
 
-        $resource_type_id = $this->createGameResourceType();
-        $this->createRandomCategory($resource_type_id);
+        $resource_type_id = $this->quickCreateGameResourceType();
+        $this->quickCreateRandomCategory($resource_type_id);
 
         $response = $this->fetchOptionsForCategoryCollection([
             'resource_type_id' => $resource_type_id

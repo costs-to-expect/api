@@ -37,12 +37,12 @@ Route::group(
         Route::get(
             'summary/resource-types/{resource_type_id}/resources/{resource_id}/items',
             [App\Http\Controllers\Summary\View\ItemController::class, 'index']
-        );
+        )->name('summary.item.list');
 
         Route::options(
             'summary/resource-types/{resource_type_id}/resources/{resource_id}/items',
             [App\Http\Controllers\Summary\View\ItemController::class, 'optionsIndex']
-        );
+        )->name('summary.item.list.options');
 
     }
 );

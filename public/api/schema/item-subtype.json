@@ -16,13 +16,13 @@
         },
         "created": {
             "type": "string"
-        },
-        "required": [
-            "id",
-            "name",
-            "friendly_name",
-            "description",
-            "created"
-        ]
-    }
+        }
+    },
+    "required": [
+        "id",
+        "name",
+        "friendly_name",
+        "description",
+        "created"
+    ]
 }
