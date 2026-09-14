@@ -17,6 +17,10 @@ use Illuminate\Support\Facades\Config;
  */
 class Control
 {
+    // Leaves headroom in the varchar(255) `key` column for the Laravel
+    // cache prefix and our own public/private cache prefix.
+    private const MAX_KEY_LENGTH = 200;
+
     /**
      * @var bool Should we cache responses? Defaults to whatever the
      * APP_CACHE env variable is set to, can be overridden on a request with
@@ -90,16 +94,38 @@ class Control
 
     public function getByKey(string $key): ?array
     {
-        return LaravelCache::get($this->cache_prefix . $key);
+        return LaravelCache::get($this->cache_prefix . $this->normalizeKey($key));
     }
 
     public function putByKey(string $key, array $data): bool
     {
         return LaravelCache::put(
-            $this->cache_prefix . $key,
+            $this->cache_prefix . $this->normalizeKey($key),
             $data,
             $this->ttl
         );
+    }
+
+    /**
+     * Keys are built from the request URI, query string included, so a long
+     * or malicious query string can overflow the `cache`.`key` column
+     * (SQLSTATE 22001). Collapse the query string to a fixed length hash
+     * once the key gets too long, keeping the path untouched so the
+     * wildcard matching in Cache::matchingKeys() still works.
+     */
+    private function normalizeKey(string $key): string
+    {
+        if (strlen($key) <= self::MAX_KEY_LENGTH) {
+            return $key;
+        }
+
+        [$path, $query] = array_pad(explode('?', $key, 2), 2, '');
+
+        if ($query !== '') {
+            return $path . '?' . sha1($query);
+        }
+
+        return substr($path, 0, self::MAX_KEY_LENGTH - 40) . sha1($path);
     }
 
     public function setTtl($seconds): void
