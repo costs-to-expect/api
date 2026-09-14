@@ -14,12 +14,16 @@ namespace App\HttpRequest\Parameter;
 class Sort
 {
     private array $fields = [];
-    
+
     private ?string $sort_parameter;
 
-    public function __construct(?string $sort_parameter = null)
+    /**
+     * @param mixed $sort_parameter Expected to be a string, but callers
+     * pass request input directly, e.g. `?sort[]=x` decodes to an array
+     */
+    public function __construct($sort_parameter = null)
     {
-        $this->sort_parameter = $sort_parameter;
+        $this->sort_parameter = is_string($sort_parameter) ? $sort_parameter : null;
     }
 
     /**

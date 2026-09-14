@@ -6,6 +6,7 @@ namespace App\HttpResponse;
 
 use App\HttpRequest\Hash;
 use App\HttpRequest\Validate\Boolean;
+use App\HttpRequest\Validate\Integer;
 use Illuminate\Support\Facades\Config;
 
 /**
@@ -222,11 +223,11 @@ class Pagination
 
     private function generateUris(): array
     {
-        $offset = (int) request()->query('offset', 0);
-        $this->offset = $offset >= 0 ? $offset : 0;
+        $offset = request()->query('offset');
+        $this->offset = Integer::isValid($offset) ? (int) $offset : 0;
 
-        $limit = (int) request()->query('limit', $this->limit);
-        $this->limit = $limit > 0 ? $limit : $this->limit;
+        $limit = request()->query('limit');
+        $this->limit = (Integer::isValid($limit) && (int) $limit > 0) ? (int) $limit : $this->limit;
 
         if ($this->allow_override === true && Boolean::convertedValue(request()->query('collection')) === true) {
             $this->collection = true;

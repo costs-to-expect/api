@@ -74,13 +74,15 @@ class Hash
 
     /**
      * @param string $type
-     * @param string $parameter
+     * @param mixed $parameter Expected to be a string, but callers pass
+     * request input directly, e.g. `?category[]=1` decodes to an array,
+     * so this can't be strictly typed
      *
      * @return false|integer
      */
-    public function decode(string $type, string $parameter)
+    public function decode(string $type, $parameter)
     {
-        if (array_key_exists($type, $this->hashers) === true) {
+        if (array_key_exists($type, $this->hashers) === true && is_string($parameter) === true) {
             $id = $this->hashers[$type]->decode($parameter);
             if (is_array($id) && array_key_exists(0, $id)) {
                 return (int) $id[0];
