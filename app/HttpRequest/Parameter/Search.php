@@ -15,10 +15,14 @@ class Search
 {
     private array $fields = [];
     private ?string $searchParameter;
-    
-    public function __construct(?string $searchParameter = null)
+
+    /**
+     * @param mixed $searchParameter Expected to be a string, but callers
+     * pass request input directly, e.g. `?search[]=x` decodes to an array
+     */
+    public function __construct($searchParameter = null)
     {
-        $this->searchParameter = $searchParameter;
+        $this->searchParameter = is_string($searchParameter) ? $searchParameter : null;
     }
 
     /**

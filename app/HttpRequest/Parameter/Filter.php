@@ -17,12 +17,16 @@ use DateTime;
 class Filter
 {
     private array $parameters = [];
-    
+
     private ?string $filter_parameter;
 
-    public function __construct(?string $filter_parameter = null)
+    /**
+     * @param mixed $filter_parameter Expected to be a string, but callers
+     * pass request input directly, e.g. `?filter[]=x` decodes to an array
+     */
+    public function __construct($filter_parameter = null)
     {
-        $this->filter_parameter = $filter_parameter;
+        $this->filter_parameter = is_string($filter_parameter) ? $filter_parameter : null;
     }
 
     /**
