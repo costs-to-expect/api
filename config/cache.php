@@ -41,7 +41,11 @@ return [
         'database' => [
             'driver' => 'database',
             'table' => 'cache',
-            'connection' => null,
+            // `mysql_cache` is a MySQL-only connection (forces READ COMMITTED
+            // to avoid rate-limiter deadlocks). Tests swap DB_CONNECTION to
+            // sqlite, so fall back to the default connection there rather
+            // than opening an unrelated in-memory sqlite database.
+            'connection' => env('DB_CONNECTION', 'mysql') === 'mysql' ? 'mysql_cache' : null,
         ],
 
         'file' => [
