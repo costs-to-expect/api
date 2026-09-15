@@ -21,6 +21,7 @@
         "hashids/hashids": "^4.1.0",
         "laravel/framework": "^10.0",
         "laravel/helpers": "^1.2",
+        "laravel/nightwatch": "^1.30",
         "laravel/sanctum": "^3.2",
         "symfony/http-client": "^6.0",
         "symfony/mailgun-mailer": "^6.0",
