@@ -150,9 +150,9 @@ final class ResourceTypeTest extends TestCase
     {
         $this->actingAs($this->createUser());
 
-        $this->quickCreateAllocatedExpenseResourceType();
+        $this->quickCreateAllocatedExpenseResourceType(['name' => 'MMMMMMMMMMMM']);
         $this->quickCreateAllocatedExpenseResourceType(['name' => 'AAAAAAAAAAAA']);
-        $this->quickCreateAllocatedExpenseResourceType();
+        $this->quickCreateAllocatedExpenseResourceType(['name' => 'ZZZZZZZZZZZZ']);
 
         $response = $this->getToResourceTypeList([
             'sort'=>'name:asc',

@@ -20,6 +20,13 @@ class Cache extends Model
 
     protected $guarded = ['key', 'value', 'expiration'];
 
+    // Always read from whatever connection the `database` cache store
+    // is actually writing to, rather than duplicating that config here.
+    public function getConnectionName(): ?string
+    {
+        return config('cache.stores.database.connection');
+    }
+
     /**
      * Fetch all the matching private cache keys that are a match or wildcard
      * match for the given key and prefix, optionally we can fetch summary

@@ -227,9 +227,9 @@ final class ItemAllocatedExpenseTest extends TestCase
         $resource_type_id = $this->quickCreateAllocatedExpenseResourceType();
         $resource_id = $this->quickCreateAllocatedExpenseResource($resource_type_id);
 
-        $this->quickCreateAllocatedExpenseItem($resource_type_id, $resource_id);
+        $this->quickCreateAllocatedExpenseItem($resource_type_id, $resource_id, ['name' => 'MMMMMMMMMMMM']);
         $this->quickCreateAllocatedExpenseItem($resource_type_id, $resource_id, ['name' => 'AAAAAAAAAAAA']);
-        $this->quickCreateAllocatedExpenseItem($resource_type_id, $resource_id);
+        $this->quickCreateAllocatedExpenseItem($resource_type_id, $resource_id, ['name' => 'ZZZZZZZZZZZZ']);
 
         $response = $this->getToItemList([
             $resource_type_id,

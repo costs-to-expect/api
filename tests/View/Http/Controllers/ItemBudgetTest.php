@@ -180,9 +180,9 @@ final class ItemBudgetTest extends TestCase
         $resource_type_id = $this->quickCreateBudgetResourceType();
         $resource_id = $this->quickCreateBudgetResource($resource_type_id);
 
-        $this->quickCreateBudgetItem($resource_type_id, $resource_id);
+        $this->quickCreateBudgetItem($resource_type_id, $resource_id, ['name' => 'MMMMMMMMMMMM']);
         $this->quickCreateBudgetItem($resource_type_id, $resource_id, ['name' => 'AAAAAAAAAAAA']);
-        $this->quickCreateBudgetItem($resource_type_id, $resource_id);
+        $this->quickCreateBudgetItem($resource_type_id, $resource_id, ['name' => 'ZZZZZZZZZZZZ']);
 
         $response = $this->getToItemList([
             $resource_type_id,

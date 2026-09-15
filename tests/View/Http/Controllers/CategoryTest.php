@@ -232,9 +232,9 @@ final class CategoryTest extends TestCase
         $this->actingAs($this->createUser());
 
         $resource_type_id = $this->quickCreateAllocatedExpenseResourceType();
-        $this->quickCreateRandomCategory($resource_type_id);
+        $this->quickCreateRandomCategory($resource_type_id, ['name' => 'MMMMMMMMMMMM']);
         $this->quickCreateRandomCategory($resource_type_id, ['name' => 'AAAAAAAAAAAAB']);
-        $this->quickCreateRandomCategory($resource_type_id);
+        $this->quickCreateRandomCategory($resource_type_id, ['name' => 'ZZZZZZZZZZZZ']);
 
         $response = $this->getToCategoryList([
             'resource_type_id' => $resource_type_id,
