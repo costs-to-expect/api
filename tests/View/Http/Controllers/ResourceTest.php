@@ -330,9 +330,9 @@ final class ResourceTest extends TestCase
         $this->actingAs($this->createUser());
 
         $resource_type_id = $this->quickCreateBudgetResourceType();
-        $this->quickCreateBudgetResource($resource_type_id);
+        $this->quickCreateBudgetResource($resource_type_id, ['name' => 'MMMMMMMMMMMM']);
         $this->quickCreateBudgetResource($resource_type_id, ['name' => 'AAAAAAAAAAAAB']);
-        $this->quickCreateBudgetResource($resource_type_id);
+        $this->quickCreateBudgetResource($resource_type_id, ['name' => 'ZZZZZZZZZZZZ']);
 
         $response = $this->getToResourceList([
             'resource_type_id' => $resource_type_id,

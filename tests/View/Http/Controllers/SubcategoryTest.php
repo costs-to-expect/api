@@ -260,9 +260,9 @@ final class SubcategoryTest extends TestCase
         $resource_type_id = $this->quickCreateAllocatedExpenseResourceType();
         $category_id = $this->quickCreateRandomCategory($resource_type_id);
 
-        $this->quickCreateRandomSubcategory($resource_type_id, $category_id);
+        $this->quickCreateRandomSubcategory($resource_type_id, $category_id, ['name' => 'MMMMMMMMMMMM']);
         $this->quickCreateRandomSubcategory($resource_type_id, $category_id, ['name' => 'AAAAAAAAAAAB']);
-        $this->quickCreateRandomSubcategory($resource_type_id, $category_id);
+        $this->quickCreateRandomSubcategory($resource_type_id, $category_id, ['name' => 'ZZZZZZZZZZZZ']);
 
         $response = $this->getToSubcategoryList([
             'resource_type_id' => $resource_type_id,
