@@ -26,11 +26,10 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v7
 
-      - name: Tune MySQL for CI (skip durability fsyncs, disable doublewrite)
+      - name: Tune MySQL for CI (skip durability fsyncs)
         run: |
           mysql -h127.0.0.1 -P3306 -uroot -proot -e "
             SET GLOBAL innodb_flush_log_at_trx_commit = 0;
-            SET GLOBAL innodb_doublewrite = OFF;
           "
 
       - name: Setup PHP
