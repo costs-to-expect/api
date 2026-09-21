@@ -136,7 +136,7 @@ Route::group(
     [
         'prefix' => Config::get('api.app.version.prefix'),
         'middleware' => [
-            'auth:sanctum',
+            'auth:api',
             'convert.route.parameters'
         ]
     ],

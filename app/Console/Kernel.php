@@ -27,6 +27,10 @@ class Kernel extends ConsoleKernel
         $schedule->command('api:prune-partial-users')
             ->dailyAt('10:00')
             ->runInBackground();
+
+        $schedule->command('sanctum:prune-expired --hours=24')
+            ->dailyAt('10:15')
+            ->runInBackground();
     }
 
     /**

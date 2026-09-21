@@ -39,16 +39,6 @@ class User extends Authenticatable
         'password', 'remember_token',
     ];
 
-    public function revokeOldTokens(): void
-    {
-        $this->tokens()
-            ->where(static function ($query) {
-                $query->where('last_used_at', '<', now()->subYear())
-                    ->orWhereNull('last_used_at');
-            })
-            ->delete();
-    }
-
     public function instance(int $user_id): ?User
     {
         return $this->where('id', '=', $user_id)

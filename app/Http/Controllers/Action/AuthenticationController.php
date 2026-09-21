@@ -272,14 +272,16 @@ class AuthenticationController extends \Illuminate\Routing\Controller
                 return Response::authenticationRequired();
             }
 
-            $request->user()->revokeOldTokens();
-
             $token_name = 'costs-to-expect-api';
             if ($request->input('device_name') !== null) {
                 $token_name = str::slug($request->input('device_name')) . ':' . $token_name;
             }
 
-            $token = $request->user()->createToken($token_name);
+            $token = $request->user()->createToken(
+                $token_name,
+                ['*'],
+                now()->addDays(Config::get('api.app.config.token_expiry_days'))
+            );
             return response()->json(
                 [
                     'id' => $this->hash->user()->encode($user->id),
