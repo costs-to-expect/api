@@ -73,6 +73,8 @@ class ItemSubtype extends Model
             $collection->orderByDesc("{$this->table}.created_at");
         }
 
+        $collection->orderBy("{$this->table}.id", 'asc');
+
         $collection
             ->where("{$this->table}.item_type_id", '=', $item_type_id)
             ->offset($offset)

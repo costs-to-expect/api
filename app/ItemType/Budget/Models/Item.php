@@ -220,6 +220,8 @@ class Item extends LaravelModel
             $collection->orderBy('item.created_at', 'desc');
         }
 
+        $collection->orderBy('item.id', 'asc');
+
         $last_updated_expression = $this->lastUpdatedExpression();
 
         return $collection

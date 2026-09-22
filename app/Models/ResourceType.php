@@ -149,6 +149,8 @@ class ResourceType extends Model
             $collection->orderByDesc($this->table . '.created_at');
         }
 
+        $collection->orderBy($this->table . '.id', 'asc');
+
         $collection->offset($offset)
             ->limit($limit);
 

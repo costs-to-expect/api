@@ -121,6 +121,8 @@ class Category extends Model
             $collection->orderBy('category.name', 'asc');
         }
 
+        $collection->orderBy('category.id', 'asc');
+
         $collection->offset($offset)
             ->limit($limit);
 

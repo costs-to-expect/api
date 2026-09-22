@@ -89,6 +89,8 @@ class Subcategory extends Model
             $collection->orderBy($this->table . '.name', 'asc');
         }
 
+        $collection->orderBy($this->table . '.id', 'asc');
+
         $collection->offset($offset)
             ->limit($limit);
 
