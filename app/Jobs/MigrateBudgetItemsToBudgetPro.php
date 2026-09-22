@@ -36,10 +36,14 @@ class MigrateBudgetItemsToBudgetPro implements ShouldQueue
 
         if (count($resource_type) === 0) {
             $this->fail(new \Exception('No budget resource type found for user id:' . $this->user_id));
+
+            return;
         }
 
         if (count($resource_type) > 1) {
             $this->fail(new \Exception('There appears to be more than one free budget resource type, something has going wrong somewhere for user id:' . $this->user_id));
+
+            return;
         }
 
         $budget_resource_type_id = $resource_type[0]->id;
@@ -49,10 +53,14 @@ class MigrateBudgetItemsToBudgetPro implements ShouldQueue
 
         if (count($resource_type) === 0) {
             $this->fail(new \Exception('No budget-pro resource type found for user id:' . $this->user_id));
+
+            return;
         }
 
         if (count($resource_type) > 1) {
             $this->fail(new \Exception('There appears to be more than one budget-pro resource type, something has going wrong somewhere for user id:' . $this->user_id));
+
+            return;
         }
 
         $budget_pro_resource_type_id = $resource_type[0]->id;
@@ -63,10 +71,14 @@ class MigrateBudgetItemsToBudgetPro implements ShouldQueue
 
         if (count($resource) === 0) {
             $this->fail(new \Exception('No budget resources for user id: ' . $this->user_id));
+
+            return;
         }
 
         if (count($resource) > 1) {
             $this->fail(new \Exception('More than one budget resources for user id: ' . $this->user_id));
+
+            return;
         }
 
         $budget_resource_id = $resource[0]->id;
@@ -77,10 +89,14 @@ class MigrateBudgetItemsToBudgetPro implements ShouldQueue
 
         if (count($resource) === 0) {
             $this->fail(new \Exception('No budget-pro resources for user id: ' . $this->user_id));
+
+            return;
         }
 
         if (count($resource) > 1) {
             $this->fail(new \Exception('More than one budget-pro resources for user id: ' . $this->user_id));
+
+            return;
         }
 
         $budget_pro_resource_id = $resource[0]->id;
@@ -90,6 +106,8 @@ class MigrateBudgetItemsToBudgetPro implements ShouldQueue
 
         if (count($budget_items) === 0) {
             $this->fail(new \Exception('No budget items, nothing to migrate for user id: ' . $this->user_id));
+
+            return;
         }
 
         // Check to see how many budget pro items there are
@@ -97,6 +115,8 @@ class MigrateBudgetItemsToBudgetPro implements ShouldQueue
 
         if (count($budget_pro_items) !== 0) {
             $this->fail(new \Exception('There are items in the budget pro budget, can\'t process the migration'));
+
+            return;
         }
 
         try {

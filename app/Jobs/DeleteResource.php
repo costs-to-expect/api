@@ -71,6 +71,8 @@ class DeleteResource implements ShouldQueue
                 });
             } catch (Throwable $e) {
                 $this->fail($e);
+
+                return;
             }
 
             Notification::route('mail', Config::get('api.app.config.admin_email'))
