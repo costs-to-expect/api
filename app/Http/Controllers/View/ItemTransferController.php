@@ -193,7 +193,7 @@ class ItemTransferController extends Controller
         );
 
         if ($item_transfer === null) {
-            return \App\HttpResponse\Response::notFound(trans('entities.item_transfer'));
+            return \App\HttpResponse\Response::notFound(trans('entities.item-transfer'));
         }
 
         $headers = new Header();

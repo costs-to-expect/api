@@ -113,7 +113,7 @@ class ItemPartialTransferController extends Controller
         );
 
         if ($item_partial_transfer === null) {
-            return \App\HttpResponse\Response::notFound(trans('entities.item_partial_transfer'));
+            return \App\HttpResponse\Response::notFound(trans('entities.item-partial-transfer'));
         }
 
         $headers = new Header();
