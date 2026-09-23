@@ -87,6 +87,8 @@ class PermittedUser extends Model
             $collection->orderBy($this->table . '.created_at', 'desc');
         }
 
+        $collection->orderBy($this->table . '.id', 'asc');
+
         return $collection->offset($offset)
             ->limit($limit)
             ->get()

@@ -18,6 +18,7 @@ use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Notification;
 use Throwable;
 
@@ -67,6 +68,14 @@ class DeleteAccount implements ShouldQueue
 
 
                 } catch (Throwable $e) {
+                    Log::error('DeleteAccount: failed to delete resource type', [
+                        'user_id' => $this->user_id,
+                        'resource_type_id' => $resource_type_id,
+                        'exception' => $e->getMessage(),
+                        'file' => $e->getFile(),
+                        'line' => $e->getLine(),
+                    ]);
+
                     throw new \Exception($e->getMessage());
                 }
 
@@ -126,7 +135,18 @@ class DeleteAccount implements ShouldQueue
                 $this->deletes['resource'] = Utility::deleteResource($resource_id);
             });
         } catch (Throwable $e) {
+            Log::error('DeleteAccount: failed to delete resource and its data', [
+                'user_id' => $this->user_id,
+                'resource_type_id' => $resource_type_id,
+                'resource_id' => $resource_id,
+                'exception' => $e->getMessage(),
+                'file' => $e->getFile(),
+                'line' => $e->getLine(),
+            ]);
+
             $this->fail($e);
+
+            return;
         }
 
         Notification::route('mail', Config::get('api.app.config.admin_email'))

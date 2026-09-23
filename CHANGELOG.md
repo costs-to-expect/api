@@ -2,6 +2,15 @@
 
 The complete changelog for the Costs to Expect REST API, our changelog follows the format defined at https://keepachangelog.com/en/1.0.0/
 
+## [v3.20.0] - 2026-09-22
+### Change
+- Updated to Laravel 12
+- More tests
+- Auth review and 90 day timeout on tokens
+
+### Fixed 
+- Ordering fix, no fallback ordering
+
 ## [v3.19.2] - 2026-09-19
 ### Change
 - Add MySQL tests for PRs, SQLite tests are for speeds

@@ -11,6 +11,9 @@
         <testsuite name="View">
             <directory suffix="Test.php">./tests/View</directory>
         </testsuite>
+        <testsuite name="Jobs">
+            <directory suffix="Test.php">./tests/Jobs</directory>
+        </testsuite>
     </testsuites>
     <source>
         <include>
@@ -27,8 +30,8 @@
         <server name="DB_CONNECTION" value="sqlite"/>
         <server name="DB_DATABASE" value=":memory:"/>
         <server name="INTERNAL_API_KEY" value="testing-internal-api-key"/>
-        <server name="MAIL_MAILER" value="array"/>
-        <server name="QUEUE_CONNECTION" value="sync"/>
+        <server name="MAIL_DRIVER" value="array"/>
+        <server name="QUEUE_DRIVER" value="sync"/>
         <server name="SESSION_DRIVER" value="array"/>
         <server name="TELESCOPE_ENABLED" value="false"/>
     </php>

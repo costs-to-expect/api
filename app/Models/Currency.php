@@ -66,6 +66,8 @@ class Currency extends Model
             $collection->orderByDesc("{$this->table}.code");
         }
 
+        $collection->orderBy("{$this->table}.id", 'asc');
+
         $collection->offset($offset);
         $collection->limit($limit);
 

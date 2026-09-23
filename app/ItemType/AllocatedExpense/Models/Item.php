@@ -428,6 +428,8 @@ class Item extends LaravelModel
             $collection->orderBy('item.created_at', 'desc');
         }
 
+        $collection->orderBy('item.id', 'asc');
+
         $collection->offset($offset);
         $collection->limit($limit);
         

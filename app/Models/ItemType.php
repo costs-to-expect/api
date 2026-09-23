@@ -70,6 +70,8 @@ class ItemType extends Model
             $collection->orderByDesc('item_type.created_at');
         }
 
+        $collection->orderBy('item_type.id', 'asc');
+
         $collection->offset($offset);
         $collection->limit($limit);
 
