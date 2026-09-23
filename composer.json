@@ -69,7 +69,12 @@
             "@php artisan package:discover"
         ],
         "test": "phpunit",
-        "test:coverage": "phpunit --coverage-html build/coverage-html --coverage-text --coverage-clover build/coverage.xml"
+        "test:coverage": "phpunit --coverage-html build/coverage-html --coverage-text --coverage-clover build/coverage.xml",
+        "docs:build": [
+            "./tailwindcss -i resources/css/landing.css -o public/css/landing.css --minify",
+            "@php artisan docs:build",
+            "./pagefind --site public/docs"
+        ]
     },
     "config": {
         "optimize-autoloader": true,

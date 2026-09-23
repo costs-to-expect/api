@@ -6,6 +6,7 @@
     <title>API Sections - Costs to Expect API Docs</title>
     <link rel="icon" sizes="48x48" href="/images/theme/favicon.ico">
     <link href="/css/landing.css?v=1790172630" rel="stylesheet"/>
+    <link href="/docs/pagefind/pagefind-ui.css" rel="stylesheet"/>
 </head>
 <body class="bg-white">
     <div class="mx-auto max-w-7xl px-6 py-8 lg:flex lg:gap-x-8">
@@ -17,6 +18,8 @@
                     Menu &#9662;
                 </button>
             </div>
+
+            <div id="docs-search" class="mb-6"></div>
 
             <div id="docs-nav-links" class="hidden lg:block">
                 <ul class="text-sm space-y-1 mb-6">
@@ -530,7 +533,7 @@
                             </div>
         </nav>
 
-        <main class="min-w-0 flex-1 prose">
+        <main class="min-w-0 flex-1 prose" data-pagefind-body>
             <h1>API Sections</h1>
 <p>There is an OPTIONS endpoint for each route, they largely include this documentation, or more accurately, this documentation was created from the OPTIONS request responses. Although we strive to ensure the documentation is up to date, the OPTIONS request responses should always have the most accurate information.</p>
 <p>We have tried to layout this file to match the structure of the API, for some routes that doesn't make sense, we will probably have tacked them on the end.</p>
@@ -723,6 +726,12 @@
                 toggle.setAttribute('aria-expanded', String(!isHidden));
             });
         })();
+    </script>
+    <script src="/docs/pagefind/pagefind-ui.js"></script>
+    <script>
+        window.addEventListener('DOMContentLoaded', function () {
+            new PagefindUI({ element: '#docs-search', showSubResults: true, showImages: false });
+        });
     </script>
 </body>
 </html>

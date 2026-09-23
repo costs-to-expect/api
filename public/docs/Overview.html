@@ -6,6 +6,7 @@
     <title>Costs to Expect API: Documentation - Costs to Expect API Docs</title>
     <link rel="icon" sizes="48x48" href="/images/theme/favicon.ico">
     <link href="/css/landing.css?v=1790172630" rel="stylesheet"/>
+    <link href="/docs/pagefind/pagefind-ui.css" rel="stylesheet"/>
 </head>
 <body class="bg-white">
     <div class="mx-auto max-w-7xl px-6 py-8 lg:flex lg:gap-x-8">
@@ -17,6 +18,8 @@
                     Menu &#9662;
                 </button>
             </div>
+
+            <div id="docs-search" class="mb-6"></div>
 
             <div id="docs-nav-links" class="hidden lg:block">
                 <ul class="text-sm space-y-1 mb-6">
@@ -530,7 +533,7 @@
                             </div>
         </nav>
 
-        <main class="min-w-0 flex-1 prose">
+        <main class="min-w-0 flex-1 prose" data-pagefind-body>
             <h1>Costs to Expect API: Documentation</h1>
 <h2>Self-documenting</h2>
 <p>We have tried to make our API as easy to use as possible, although our documentation is thorough, our goal is you don't read it, once you have fetched the response for the root of the API, you should be able to get at anything you need.</p>
@@ -632,6 +635,12 @@ we are planning to clear cache immediately, we want to review the performance im
                 toggle.setAttribute('aria-expanded', String(!isHidden));
             });
         })();
+    </script>
+    <script src="/docs/pagefind/pagefind-ui.js"></script>
+    <script>
+        window.addEventListener('DOMContentLoaded', function () {
+            new PagefindUI({ element: '#docs-search', showSubResults: true, showImages: false });
+        });
     </script>
 </body>
 </html>

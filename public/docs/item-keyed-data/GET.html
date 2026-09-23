@@ -6,6 +6,7 @@
     <title>Keyed Data - GET - Costs to Expect API Docs</title>
     <link rel="icon" sizes="48x48" href="/images/theme/favicon.ico">
     <link href="/css/landing.css?v=1790172630" rel="stylesheet"/>
+    <link href="/docs/pagefind/pagefind-ui.css" rel="stylesheet"/>
 </head>
 <body class="bg-white">
     <div class="mx-auto max-w-7xl px-6 py-8 lg:flex lg:gap-x-8">
@@ -17,6 +18,8 @@
                     Menu &#9662;
                 </button>
             </div>
+
+            <div id="docs-search" class="mb-6"></div>
 
             <div id="docs-nav-links" class="hidden lg:block">
                 <ul class="text-sm space-y-1 mb-6">
@@ -530,7 +533,7 @@
                             </div>
         </nav>
 
-        <main class="min-w-0 flex-1 prose">
+        <main class="min-w-0 flex-1 prose" data-pagefind-body>
             <p><a href="../Sections.html">API Sections</a>
 <a href="../resource-types/GET.html">Resource types</a>
 <a href="../resource-type/GET.html">Resource type</a>
@@ -593,6 +596,12 @@
                 toggle.setAttribute('aria-expanded', String(!isHidden));
             });
         })();
+    </script>
+    <script src="/docs/pagefind/pagefind-ui.js"></script>
+    <script>
+        window.addEventListener('DOMContentLoaded', function () {
+            new PagefindUI({ element: '#docs-search', showSubResults: true, showImages: false });
+        });
     </script>
 </body>
 </html>
