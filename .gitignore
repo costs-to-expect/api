@@ -13,3 +13,4 @@ _ide_helper.php
 .phpunit.result.cache
 *.sqlite-journal
 /build
+/tailwindcss

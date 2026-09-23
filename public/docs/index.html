@@ -1,0 +1,576 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>The Costs to Expect API - Costs to Expect API Docs</title>
+    <link rel="icon" sizes="48x48" href="/images/theme/favicon.ico">
+    <link href="/css/landing.css?v=1790172630" rel="stylesheet"/>
+</head>
+<body class="bg-white">
+    <div class="mx-auto max-w-7xl px-6 py-8 lg:flex lg:gap-x-8">
+        <nav class="lg:w-64 shrink-0 mb-8 lg:mb-0">
+            <div class="flex items-center justify-between lg:block">
+                <a href="/docs/" class="block font-semibold text-gray-900 mb-4">Costs to Expect API Docs</a>
+
+                <button type="button" id="docs-nav-toggle" class="lg:hidden mb-4 text-sm text-gray-600 hover:text-gray-900" aria-expanded="false" aria-controls="docs-nav-links">
+                    Menu &#9662;
+                </button>
+            </div>
+
+            <div id="docs-nav-links" class="hidden lg:block">
+                <ul class="text-sm space-y-1 mb-6">
+                                            <li>
+                            <a href="/docs/GET.html"
+                               class="text-gray-600 hover:text-gray-900">
+                                GET
+                            </a>
+                        </li>
+                                            <li>
+                            <a href="/docs/Overview.html"
+                               class="text-gray-600 hover:text-gray-900">
+                                Overview
+                            </a>
+                        </li>
+                                            <li>
+                            <a href="/docs/Sections.html"
+                               class="text-gray-600 hover:text-gray-900">
+                                Sections
+                            </a>
+                        </li>
+                                    </ul>
+
+                                    <div class="mb-4">
+                        <p class="text-xs font-semibold uppercase tracking-wide text-gray-400 mb-1">categories</p>
+                        <ul class="text-sm space-y-1">
+                                                            <li>
+                                    <a href="/docs/categories/GET.html"
+                                       class="text-gray-600 hover:text-gray-900">
+                                        GET
+                                    </a>
+                                </li>
+                                                            <li>
+                                    <a href="/docs/categories/POST.html"
+                                       class="text-gray-600 hover:text-gray-900">
+                                        POST
+                                    </a>
+                                </li>
+                                                    </ul>
+                    </div>
+                                    <div class="mb-4">
+                        <p class="text-xs font-semibold uppercase tracking-wide text-gray-400 mb-1">category</p>
+                        <ul class="text-sm space-y-1">
+                                                            <li>
+                                    <a href="/docs/category/DELETE.html"
+                                       class="text-gray-600 hover:text-gray-900">
+                                        DELETE
+                                    </a>
+                                </li>
+                                                            <li>
+                                    <a href="/docs/category/GET.html"
+                                       class="text-gray-600 hover:text-gray-900">
+                                        GET
+                                    </a>
+                                </li>
+                                                            <li>
+                                    <a href="/docs/category/PATCH.html"
+                                       class="text-gray-600 hover:text-gray-900">
+                                        PATCH
+                                    </a>
+                                </li>
+                                                    </ul>
+                    </div>
+                                    <div class="mb-4">
+                        <p class="text-xs font-semibold uppercase tracking-wide text-gray-400 mb-1">changelog</p>
+                        <ul class="text-sm space-y-1">
+                                                            <li>
+                                    <a href="/docs/changelog/GET.html"
+                                       class="text-gray-600 hover:text-gray-900">
+                                        GET
+                                    </a>
+                                </li>
+                                                    </ul>
+                    </div>
+                                    <div class="mb-4">
+                        <p class="text-xs font-semibold uppercase tracking-wide text-gray-400 mb-1">currencies</p>
+                        <ul class="text-sm space-y-1">
+                                                            <li>
+                                    <a href="/docs/currencies/GET.html"
+                                       class="text-gray-600 hover:text-gray-900">
+                                        GET
+                                    </a>
+                                </li>
+                                                    </ul>
+                    </div>
+                                    <div class="mb-4">
+                        <p class="text-xs font-semibold uppercase tracking-wide text-gray-400 mb-1">currency</p>
+                        <ul class="text-sm space-y-1">
+                                                            <li>
+                                    <a href="/docs/currency/GET.html"
+                                       class="text-gray-600 hover:text-gray-900">
+                                        GET
+                                    </a>
+                                </li>
+                                                    </ul>
+                    </div>
+                                    <div class="mb-4">
+                        <p class="text-xs font-semibold uppercase tracking-wide text-gray-400 mb-1">item-allocated-expense</p>
+                        <ul class="text-sm space-y-1">
+                                                            <li>
+                                    <a href="/docs/item-allocated-expense/DELETE.html"
+                                       class="text-gray-600 hover:text-gray-900">
+                                        DELETE
+                                    </a>
+                                </li>
+                                                            <li>
+                                    <a href="/docs/item-allocated-expense/GET.html"
+                                       class="text-gray-600 hover:text-gray-900">
+                                        GET
+                                    </a>
+                                </li>
+                                                            <li>
+                                    <a href="/docs/item-allocated-expense/PATCH.html"
+                                       class="text-gray-600 hover:text-gray-900">
+                                        PATCH
+                                    </a>
+                                </li>
+                                                    </ul>
+                    </div>
+                                    <div class="mb-4">
+                        <p class="text-xs font-semibold uppercase tracking-wide text-gray-400 mb-1">item-budget</p>
+                        <ul class="text-sm space-y-1">
+                                                            <li>
+                                    <a href="/docs/item-budget/DELETE.html"
+                                       class="text-gray-600 hover:text-gray-900">
+                                        DELETE
+                                    </a>
+                                </li>
+                                                            <li>
+                                    <a href="/docs/item-budget/GET.html"
+                                       class="text-gray-600 hover:text-gray-900">
+                                        GET
+                                    </a>
+                                </li>
+                                                            <li>
+                                    <a href="/docs/item-budget/PATCH.html"
+                                       class="text-gray-600 hover:text-gray-900">
+                                        PATCH
+                                    </a>
+                                </li>
+                                                    </ul>
+                    </div>
+                                    <div class="mb-4">
+                        <p class="text-xs font-semibold uppercase tracking-wide text-gray-400 mb-1">item-budget-pro</p>
+                        <ul class="text-sm space-y-1">
+                                                            <li>
+                                    <a href="/docs/item-budget-pro/DELETE.html"
+                                       class="text-gray-600 hover:text-gray-900">
+                                        DELETE
+                                    </a>
+                                </li>
+                                                            <li>
+                                    <a href="/docs/item-budget-pro/GET.html"
+                                       class="text-gray-600 hover:text-gray-900">
+                                        GET
+                                    </a>
+                                </li>
+                                                            <li>
+                                    <a href="/docs/item-budget-pro/PATCH.html"
+                                       class="text-gray-600 hover:text-gray-900">
+                                        PATCH
+                                    </a>
+                                </li>
+                                                    </ul>
+                    </div>
+                                    <div class="mb-4">
+                        <p class="text-xs font-semibold uppercase tracking-wide text-gray-400 mb-1">item-game</p>
+                        <ul class="text-sm space-y-1">
+                                                            <li>
+                                    <a href="/docs/item-game/DELETE.html"
+                                       class="text-gray-600 hover:text-gray-900">
+                                        DELETE
+                                    </a>
+                                </li>
+                                                            <li>
+                                    <a href="/docs/item-game/GET.html"
+                                       class="text-gray-600 hover:text-gray-900">
+                                        GET
+                                    </a>
+                                </li>
+                                                            <li>
+                                    <a href="/docs/item-game/PATCH.html"
+                                       class="text-gray-600 hover:text-gray-900">
+                                        PATCH
+                                    </a>
+                                </li>
+                                                    </ul>
+                    </div>
+                                    <div class="mb-4">
+                        <p class="text-xs font-semibold uppercase tracking-wide text-gray-400 mb-1">item-keyed-data</p>
+                        <ul class="text-sm space-y-1">
+                                                            <li>
+                                    <a href="/docs/item-keyed-data/DELETE.html"
+                                       class="text-gray-600 hover:text-gray-900">
+                                        DELETE
+                                    </a>
+                                </li>
+                                                            <li>
+                                    <a href="/docs/item-keyed-data/GET.html"
+                                       class="text-gray-600 hover:text-gray-900">
+                                        GET
+                                    </a>
+                                </li>
+                                                            <li>
+                                    <a href="/docs/item-keyed-data/PATCH.html"
+                                       class="text-gray-600 hover:text-gray-900">
+                                        PATCH
+                                    </a>
+                                </li>
+                                                    </ul>
+                    </div>
+                                    <div class="mb-4">
+                        <p class="text-xs font-semibold uppercase tracking-wide text-gray-400 mb-1">item-keyed-data-collection</p>
+                        <ul class="text-sm space-y-1">
+                                                            <li>
+                                    <a href="/docs/item-keyed-data-collection/GET.html"
+                                       class="text-gray-600 hover:text-gray-900">
+                                        GET
+                                    </a>
+                                </li>
+                                                            <li>
+                                    <a href="/docs/item-keyed-data-collection/POST.html"
+                                       class="text-gray-600 hover:text-gray-900">
+                                        POST
+                                    </a>
+                                </li>
+                                                    </ul>
+                    </div>
+                                    <div class="mb-4">
+                        <p class="text-xs font-semibold uppercase tracking-wide text-gray-400 mb-1">item-log</p>
+                        <ul class="text-sm space-y-1">
+                                                            <li>
+                                    <a href="/docs/item-log/GET.html"
+                                       class="text-gray-600 hover:text-gray-900">
+                                        GET
+                                    </a>
+                                </li>
+                                                    </ul>
+                    </div>
+                                    <div class="mb-4">
+                        <p class="text-xs font-semibold uppercase tracking-wide text-gray-400 mb-1">item-log-collection</p>
+                        <ul class="text-sm space-y-1">
+                                                            <li>
+                                    <a href="/docs/item-log-collection/GET.html"
+                                       class="text-gray-600 hover:text-gray-900">
+                                        GET
+                                    </a>
+                                </li>
+                                                            <li>
+                                    <a href="/docs/item-log-collection/POST.html"
+                                       class="text-gray-600 hover:text-gray-900">
+                                        POST
+                                    </a>
+                                </li>
+                                                    </ul>
+                    </div>
+                                    <div class="mb-4">
+                        <p class="text-xs font-semibold uppercase tracking-wide text-gray-400 mb-1">item-subtype</p>
+                        <ul class="text-sm space-y-1">
+                                                            <li>
+                                    <a href="/docs/item-subtype/GET.html"
+                                       class="text-gray-600 hover:text-gray-900">
+                                        GET
+                                    </a>
+                                </li>
+                                                    </ul>
+                    </div>
+                                    <div class="mb-4">
+                        <p class="text-xs font-semibold uppercase tracking-wide text-gray-400 mb-1">item-subtypes</p>
+                        <ul class="text-sm space-y-1">
+                                                            <li>
+                                    <a href="/docs/item-subtypes/GET.html"
+                                       class="text-gray-600 hover:text-gray-900">
+                                        GET
+                                    </a>
+                                </li>
+                                                    </ul>
+                    </div>
+                                    <div class="mb-4">
+                        <p class="text-xs font-semibold uppercase tracking-wide text-gray-400 mb-1">item-type</p>
+                        <ul class="text-sm space-y-1">
+                                                            <li>
+                                    <a href="/docs/item-type/GET.html"
+                                       class="text-gray-600 hover:text-gray-900">
+                                        GET
+                                    </a>
+                                </li>
+                                                    </ul>
+                    </div>
+                                    <div class="mb-4">
+                        <p class="text-xs font-semibold uppercase tracking-wide text-gray-400 mb-1">item-types</p>
+                        <ul class="text-sm space-y-1">
+                                                            <li>
+                                    <a href="/docs/item-types/GET.html"
+                                       class="text-gray-600 hover:text-gray-900">
+                                        GET
+                                    </a>
+                                </li>
+                                                    </ul>
+                    </div>
+                                    <div class="mb-4">
+                        <p class="text-xs font-semibold uppercase tracking-wide text-gray-400 mb-1">items-allocated-expense</p>
+                        <ul class="text-sm space-y-1">
+                                                            <li>
+                                    <a href="/docs/items-allocated-expense/GET.html"
+                                       class="text-gray-600 hover:text-gray-900">
+                                        GET
+                                    </a>
+                                </li>
+                                                            <li>
+                                    <a href="/docs/items-allocated-expense/POST.html"
+                                       class="text-gray-600 hover:text-gray-900">
+                                        POST
+                                    </a>
+                                </li>
+                                                    </ul>
+                    </div>
+                                    <div class="mb-4">
+                        <p class="text-xs font-semibold uppercase tracking-wide text-gray-400 mb-1">items-budget</p>
+                        <ul class="text-sm space-y-1">
+                                                            <li>
+                                    <a href="/docs/items-budget/GET.html"
+                                       class="text-gray-600 hover:text-gray-900">
+                                        GET
+                                    </a>
+                                </li>
+                                                            <li>
+                                    <a href="/docs/items-budget/POST.html"
+                                       class="text-gray-600 hover:text-gray-900">
+                                        POST
+                                    </a>
+                                </li>
+                                                    </ul>
+                    </div>
+                                    <div class="mb-4">
+                        <p class="text-xs font-semibold uppercase tracking-wide text-gray-400 mb-1">items-budget-pro</p>
+                        <ul class="text-sm space-y-1">
+                                                            <li>
+                                    <a href="/docs/items-budget-pro/GET.html"
+                                       class="text-gray-600 hover:text-gray-900">
+                                        GET
+                                    </a>
+                                </li>
+                                                            <li>
+                                    <a href="/docs/items-budget-pro/POST.html"
+                                       class="text-gray-600 hover:text-gray-900">
+                                        POST
+                                    </a>
+                                </li>
+                                                    </ul>
+                    </div>
+                                    <div class="mb-4">
+                        <p class="text-xs font-semibold uppercase tracking-wide text-gray-400 mb-1">items-game</p>
+                        <ul class="text-sm space-y-1">
+                                                            <li>
+                                    <a href="/docs/items-game/GET.html"
+                                       class="text-gray-600 hover:text-gray-900">
+                                        GET
+                                    </a>
+                                </li>
+                                                            <li>
+                                    <a href="/docs/items-game/POST.html"
+                                       class="text-gray-600 hover:text-gray-900">
+                                        POST
+                                    </a>
+                                </li>
+                                                    </ul>
+                    </div>
+                                    <div class="mb-4">
+                        <p class="text-xs font-semibold uppercase tracking-wide text-gray-400 mb-1">queue</p>
+                        <ul class="text-sm space-y-1">
+                                                            <li>
+                                    <a href="/docs/queue/GET.html"
+                                       class="text-gray-600 hover:text-gray-900">
+                                        GET
+                                    </a>
+                                </li>
+                                                    </ul>
+                    </div>
+                                    <div class="mb-4">
+                        <p class="text-xs font-semibold uppercase tracking-wide text-gray-400 mb-1">resource</p>
+                        <ul class="text-sm space-y-1">
+                                                            <li>
+                                    <a href="/docs/resource/DELETE.html"
+                                       class="text-gray-600 hover:text-gray-900">
+                                        DELETE
+                                    </a>
+                                </li>
+                                                            <li>
+                                    <a href="/docs/resource/GET.html"
+                                       class="text-gray-600 hover:text-gray-900">
+                                        GET
+                                    </a>
+                                </li>
+                                                            <li>
+                                    <a href="/docs/resource/PATCH.html"
+                                       class="text-gray-600 hover:text-gray-900">
+                                        PATCH
+                                    </a>
+                                </li>
+                                                    </ul>
+                    </div>
+                                    <div class="mb-4">
+                        <p class="text-xs font-semibold uppercase tracking-wide text-gray-400 mb-1">resource-type</p>
+                        <ul class="text-sm space-y-1">
+                                                            <li>
+                                    <a href="/docs/resource-type/DELETE.html"
+                                       class="text-gray-600 hover:text-gray-900">
+                                        DELETE
+                                    </a>
+                                </li>
+                                                            <li>
+                                    <a href="/docs/resource-type/GET.html"
+                                       class="text-gray-600 hover:text-gray-900">
+                                        GET
+                                    </a>
+                                </li>
+                                                            <li>
+                                    <a href="/docs/resource-type/PATCH.html"
+                                       class="text-gray-600 hover:text-gray-900">
+                                        PATCH
+                                    </a>
+                                </li>
+                                                    </ul>
+                    </div>
+                                    <div class="mb-4">
+                        <p class="text-xs font-semibold uppercase tracking-wide text-gray-400 mb-1">resource-types</p>
+                        <ul class="text-sm space-y-1">
+                                                            <li>
+                                    <a href="/docs/resource-types/GET.html"
+                                       class="text-gray-600 hover:text-gray-900">
+                                        GET
+                                    </a>
+                                </li>
+                                                            <li>
+                                    <a href="/docs/resource-types/POST.html"
+                                       class="text-gray-600 hover:text-gray-900">
+                                        POST
+                                    </a>
+                                </li>
+                                                    </ul>
+                    </div>
+                                    <div class="mb-4">
+                        <p class="text-xs font-semibold uppercase tracking-wide text-gray-400 mb-1">resources</p>
+                        <ul class="text-sm space-y-1">
+                                                            <li>
+                                    <a href="/docs/resources/GET.html"
+                                       class="text-gray-600 hover:text-gray-900">
+                                        GET
+                                    </a>
+                                </li>
+                                                            <li>
+                                    <a href="/docs/resources/POST.html"
+                                       class="text-gray-600 hover:text-gray-900">
+                                        POST
+                                    </a>
+                                </li>
+                                                    </ul>
+                    </div>
+                                    <div class="mb-4">
+                        <p class="text-xs font-semibold uppercase tracking-wide text-gray-400 mb-1">schemas</p>
+                        <ul class="text-sm space-y-1">
+                                                            <li>
+                                    <a href="/docs/schemas/Schemas.html"
+                                       class="text-gray-600 hover:text-gray-900">
+                                        Schemas
+                                    </a>
+                                </li>
+                                                    </ul>
+                    </div>
+                                    <div class="mb-4">
+                        <p class="text-xs font-semibold uppercase tracking-wide text-gray-400 mb-1">subcategories</p>
+                        <ul class="text-sm space-y-1">
+                                                            <li>
+                                    <a href="/docs/subcategories/GET.html"
+                                       class="text-gray-600 hover:text-gray-900">
+                                        GET
+                                    </a>
+                                </li>
+                                                            <li>
+                                    <a href="/docs/subcategories/POST.html"
+                                       class="text-gray-600 hover:text-gray-900">
+                                        POST
+                                    </a>
+                                </li>
+                                                    </ul>
+                    </div>
+                                    <div class="mb-4">
+                        <p class="text-xs font-semibold uppercase tracking-wide text-gray-400 mb-1">subcategory</p>
+                        <ul class="text-sm space-y-1">
+                                                            <li>
+                                    <a href="/docs/subcategory/DELETE.html"
+                                       class="text-gray-600 hover:text-gray-900">
+                                        DELETE
+                                    </a>
+                                </li>
+                                                            <li>
+                                    <a href="/docs/subcategory/GET.html"
+                                       class="text-gray-600 hover:text-gray-900">
+                                        GET
+                                    </a>
+                                </li>
+                                                            <li>
+                                    <a href="/docs/subcategory/PATCH.html"
+                                       class="text-gray-600 hover:text-gray-900">
+                                        PATCH
+                                    </a>
+                                </li>
+                                                    </ul>
+                    </div>
+                            </div>
+        </nav>
+
+        <main class="min-w-0 flex-1 prose">
+            <h1>The Costs to Expect API</h1>
+<h2>Overview</h2>
+<p>Costs to Expect is a service focused on tracking and forecasting, our long-term goal is to simplify all your budgeting and forecasting needs.</p>
+<p>You are not limited to tracking expenses, the Costs to Expect API can help you catalogue almost anything, over time we are going to add additional item types for our products but you are free to submit a PR or raise an issue explaining your need. In the future we plan to add a generic item type to allow open usage of the API.</p>
+<p>There are multiple products within the Costs to Expect service; they are all driven by this Open Source RESTful API, our Apps store very little data, typically just settings and caches.</p>
+<ul>
+<li><a href="https://budget.costs-to-expect.com">Budget</a> Our free and Open Source Budget tool</li>
+<li><a href="https://budget-pro.costs-to-expect.com">Budget Pro</a> Our Pro Budgeting tool, Budget on steriods</li>
+<li><a href="https://app.costs-to-expect.com">Expense</a> Our free and Open Source expense tracker</li>
+<li>Expense Pro (Coming soon) The commercial version of Expense</li>
+<li><a href="https://www.costs-to-expect.com">Social Experiment</a> How much does it cost to raise a child to adulthood in the UK?</li>
+<li><a href="https://yahtzee.game-score.com">Yahtzee Game Scorer</a> Our Yahtzee Game Scorer, free for all to use</li>
+<li><a href="https://yatzu.game-score.com">Yatzy Game Scorer</a> Our Yatzy Game Scorer, free for all to use</li>
+</ul>
+<h2>In a hurry?</h2>
+<p>If you are in a hurry and know your way around an API, head on over to the API <a href="https://github.com/costs-to-expect/api">repository</a> and read the <a href="https://github.com/costs-to-expect/api#readme">README</a>, we have listed all the routes and there is an OPTIONS request for everything.</p>
+<p>At a minimum, please read our overview, it details the API design.</p>
+<ul>
+<li><a href="Overview.html">API overview</a></li>
+</ul>
+<h2>Not in a hurry?</h2>
+<p>If you want to read all the docs, start with the two links below, the sections file contains links to every route/verb.</p>
+<ul>
+<li><a href="Overview.html">API overview</a></li>
+<li><a href="Sections.html">API sections</a></li>
+</ul>
+
+        </main>
+    </div>
+
+    <script>
+        (function () {
+            var toggle = document.getElementById('docs-nav-toggle');
+            var links = document.getElementById('docs-nav-links');
+
+            toggle.addEventListener('click', function () {
+                var isHidden = links.classList.toggle('hidden');
+                toggle.setAttribute('aria-expanded', String(!isHidden));
+            });
+        })();
+    </script>
+</body>
+</html>
