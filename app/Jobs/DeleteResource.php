@@ -15,6 +15,7 @@ use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Notification;
 use Throwable;
 
@@ -70,6 +71,15 @@ class DeleteResource implements ShouldQueue
                     $this->deletes['resource'] = Utility::deleteResource($this->resource_id);
                 });
             } catch (Throwable $e) {
+                Log::error('DeleteResource: failed to delete resource and its data', [
+                    'user_id' => $this->user_id,
+                    'resource_type_id' => $this->resource_type_id,
+                    'resource_id' => $this->resource_id,
+                    'exception' => $e->getMessage(),
+                    'file' => $e->getFile(),
+                    'line' => $e->getLine(),
+                ]);
+
                 $this->fail($e);
 
                 return;
