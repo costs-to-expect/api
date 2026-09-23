@@ -9,8 +9,15 @@
         "Laravel API",
         "Child cost",
         "Expense API",
+        "Expense tracking API",
         "Budgeting API",
-        "Game scoring API"
+        "Personal finance API",
+        "Financial forecasting API",
+        "Game scoring API",
+        "Yahtzee API",
+        "Yatzy API",
+        "Dice game API",
+        "Open source API"
     ],
     "license": "MIT",
     "require": {
