@@ -12,7 +12,7 @@ Categories are defined for a resource type and are this shareable among all the 
 
 ## Request
 
-**URL** : `/v3/resource_types/{resource_type_id}/categories/`
+**URL** : `/v3/resource-types/{resource_type_id}/categories`
 
 **Method** : `GET`
 

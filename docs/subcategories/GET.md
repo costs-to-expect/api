@@ -12,7 +12,7 @@ Subcategories allow additional categorisation below the category level.
 
 ## Request
 
-**URL** : `/v3/resource_types/{resource_type_id}/categories/{category__id}/subcategories`
+**URL** : `/v3/resource-types/{resource_type_id}/categories/{category_id}/subcategories`
 
 **Method** : `GET`
 

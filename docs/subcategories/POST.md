@@ -10,7 +10,7 @@ Create a new subcategory, the table below details the fields and their data type
 
 ## Request
 
-**URL** : `/v3/resource-types/{resource_type_id}/categories/{category_ud}/subcategories`
+**URL** : `/v3/resource-types/{resource_type_id}/categories/{category_id}/subcategories`
 
 **Method** : `POST`
 
