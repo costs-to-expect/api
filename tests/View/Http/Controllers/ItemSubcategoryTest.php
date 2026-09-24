@@ -162,7 +162,7 @@ final class ItemSubcategoryTest extends TestCase
             ['subcategory_id' => $subcategory_id]
         );
 
-        $response->assertStatus(400);
+        $response->assertStatus(405);
     }
 
     /** @test */

@@ -71,14 +71,14 @@ class ItemTransferController extends Controller
                 return \App\HttpResponse\Response::unableToDecode();
             }
 
-            DB::transaction(static function () use ($resource_type_id, $resource_id, $item_id, $new_resource_id, $user_id) {
+            $error_response = DB::transaction(static function () use ($resource_type_id, $resource_id, $item_id, $new_resource_id, $user_id) {
                 $item = (new Item())->instance($resource_type_id, $resource_id, $item_id);
-                if ($item !== null) {
-                    $item->resource_id = $new_resource_id;
-                    $item->save();
-                } else {
+                if ($item === null) {
                     return \App\HttpResponse\Response::failedToSelectModelForUpdateOrDelete();
                 }
+
+                $item->resource_id = $new_resource_id;
+                $item->save();
 
                 $item_transfer = new ItemTransfer([
                     'resource_type_id' => $resource_type_id,
@@ -87,8 +87,14 @@ class ItemTransferController extends Controller
                     'item_id' => $item_id,
                     'transferred_by' => $user_id
                 ]);
-                return $item_transfer->save();
+                $item_transfer->save();
+
+                return null;
             });
+
+            if ($error_response !== null) {
+                return $error_response;
+            }
 
             ClearCache::dispatchSync($cache_job_payload->payload());
         } catch (QueryException $e) {

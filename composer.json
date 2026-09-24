@@ -29,6 +29,7 @@
         "laravel/helpers": "^1.2",
         "laravel/nightwatch": "^1.30",
         "laravel/sanctum": "^4.0",
+        "league/commonmark": "^2.4",
         "symfony/http-client": "^6.0",
         "symfony/mailgun-mailer": "^6.0",
         "symfony/postmark-mailer": "^6.0"
@@ -68,7 +69,12 @@
             "@php artisan package:discover"
         ],
         "test": "phpunit",
-        "test:coverage": "phpunit --coverage-html build/coverage-html --coverage-text --coverage-clover build/coverage.xml"
+        "test:coverage": "phpunit --coverage-html build/coverage-html --coverage-text --coverage-clover build/coverage.xml",
+        "docs:build": [
+            "./tailwindcss -i resources/css/landing.css -o public/css/landing.css --minify",
+            "@php artisan docs:build",
+            "./pagefind --site public/docs"
+        ]
     },
     "config": {
         "optimize-autoloader": true,

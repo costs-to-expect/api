@@ -138,7 +138,7 @@ class ItemPartialTransferController extends Controller
         );
 
         if ($item_partial_transfer === null) {
-            return Response::notFound(trans('entities.item_partial_transfer'));
+            return Response::notFound(trans('entities.item-partial-transfer'));
         }
 
         return response()->json(
