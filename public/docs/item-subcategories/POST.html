@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Item subcategories - POST - Costs to Expect API Docs</title>
     <link rel="icon" sizes="48x48" href="/images/theme/favicon.ico">
-    <link href="/css/landing.css?v=1790172630" rel="stylesheet"/>
+    <link href="/css/landing.css?v=1790262466" rel="stylesheet"/>
     <link href="/docs/pagefind/pagefind-ui.css" rel="stylesheet"/>
 </head>
 <body class="bg-white">
@@ -1100,7 +1100,13 @@
     &quot;limit&quot;: 1
 }
 </code></pre>
-<p>Item types which don't support subcategories, such as game, always return this response with <code>limit</code> set to <code>0</code>.</p>
+<h3>Not supported</h3>
+<p><strong>Code</strong> : <code>405</code></p>
+<p><strong>Content</strong> :</p>
+<pre><code class="language-json">{
+    &quot;message&quot;: &quot;The requested route is not supported for the item type&quot;
+}
+</code></pre>
 <h3>Validation error</h3>
 <p><strong>Code</strong> : <code>422</code></p>
 <p><strong>Content</strong> :</p>

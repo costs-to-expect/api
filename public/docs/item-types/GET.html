@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Item types - GET - Costs to Expect API Docs</title>
     <link rel="icon" sizes="48x48" href="/images/theme/favicon.ico">
-    <link href="/css/landing.css?v=1790172630" rel="stylesheet"/>
+    <link href="/css/landing.css?v=1790262466" rel="stylesheet"/>
     <link href="/docs/pagefind/pagefind-ui.css" rel="stylesheet"/>
 </head>
 <body class="bg-white">
@@ -1045,9 +1045,11 @@
 <p>Item types dictate the type of item that gets added below a resource, item types adjust both the structure of the item object and the functions available.</p>
 <p><em>Support for new item types needs to be added in the code, we don't allow it to be changed via the API so no POST endpoint</em></p>
 <h2>Supported item types</h2>
-<p>The Costs to Expect API, supports three item types:</p>
+<p>The Costs to Expect API, supports five item types:</p>
 <h3>Allocated Expense</h3>
 <p>Chronological expenses tracking, use by the <a href="https://app.costs-to-expect.com">Expense</a> App. In addition to defining the data for an expense, you can set a publish after date and allocate a percentage of the total cost. Expenses can be partially transferred to other resources to split the cost and transferred entirely to another resource to move the cost.</p>
+<h3>Allocated Transaction</h3>
+<p>Chronological tracking of both income and expenses in a single tracker. Behaves the same as Allocated Expense (publish after date, allocated percentage, partial and full transfers between resources) but each item also records a <code>transaction_type</code> of <code>expense</code> or <code>income</code>, so a single tracker can hold both, and the collection can be filtered by transaction type.</p>
 <h3>Budget</h3>
 <p>Budget items are used by the <a href="https://budget.costs-to-expect.com">Budget</a> App. Budgets items are a definition of a planned expense and the frequency with which it occurs.</p>
 <h3>Budget Pro</h3>
@@ -1141,6 +1143,14 @@
         &quot;description&quot;: &quot;Track expenses over time, additionally, an expense can be partially allocated to another tracker.&quot;,
         &quot;example&quot;: &quot;Examples include, the cost to raise a child and start-up expenses for your business.&quot;,
         &quot;created&quot;: &quot;2019-09-18 12:47:07&quot;
+    },
+    {
+        &quot;id&quot;: &quot;X3VylR1Gkb&quot;,
+        &quot;name&quot;: &quot;allocated-transaction&quot;,
+        &quot;friendly_name&quot;: &quot;Create a transaction chronological tracker&quot;,
+        &quot;description&quot;: &quot;Track income and expenses over time in a single tracker.&quot;,
+        &quot;example&quot;: &quot;Examples include, a shared household account or a small business current account.&quot;,
+        &quot;created&quot;: &quot;2026-09-27 18:12:56&quot;
     }
 ]
 </code></pre>

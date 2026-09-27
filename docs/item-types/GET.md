@@ -10,11 +10,15 @@ Item types dictate the type of item that gets added below a resource, item types
 
 ## Supported item types 
 
-The Costs to Expect API, supports three item types:
+The Costs to Expect API, supports five item types:
 
 ### Allocated Expense
 
 Chronological expenses tracking, use by the [Expense](https://app.costs-to-expect.com) App. In addition to defining the data for an expense, you can set a publish after date and allocate a percentage of the total cost. Expenses can be partially transferred to other resources to split the cost and transferred entirely to another resource to move the cost.
+
+### Allocated Transaction
+
+Chronological tracking of both income and expenses in a single tracker. Behaves the same as Allocated Expense (publish after date, allocated percentage, partial and full transfers between resources) but each item also records a `transaction_type` of `expense` or `income`, so a single tracker can hold both, and the collection can be filtered by transaction type.
 
 ### Budget
 
@@ -82,6 +86,14 @@ sort | string | | Sort collection | sort=field1:asc|field2:desc
         "description": "Track expenses over time, additionally, an expense can be partially allocated to another tracker.",
         "example": "Examples include, the cost to raise a child and start-up expenses for your business.",
         "created": "2019-09-18 12:47:07"
+    },
+    {
+        "id": "X3VylR1Gkb",
+        "name": "allocated-transaction",
+        "friendly_name": "Create a transaction chronological tracker",
+        "description": "Track income and expenses over time in a single tracker.",
+        "example": "Examples include, a shared household account or a small business current account.",
+        "created": "2026-09-27 18:12:56"
     }
 ]
 ```
