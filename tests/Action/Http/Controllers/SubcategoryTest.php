@@ -2,11 +2,12 @@
 
 namespace Tests\Action\Http\Controllers;
 
+use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 
 final class SubcategoryTest extends TestCase
 {
-    /** @test */
+    #[Test]
     public function createAllocatedExpenseSubcategoryFailsNoDescriptionInPayload(): void
     {
         $this->actingAs($this->createUser());
@@ -25,7 +26,7 @@ final class SubcategoryTest extends TestCase
         $response->assertStatus(422);
     }
 
-    /** @test */
+    #[Test]
     public function createAllocatedExpenseSubcategoryFailsNoPayload(): void
     {
         $this->actingAs($this->createUser());
@@ -42,7 +43,7 @@ final class SubcategoryTest extends TestCase
         $response->assertStatus(422);
     }
 
-    /** @test */
+    #[Test]
     public function createAllocatedExpenseSubcategoryFailsNonUniqueName(): void
     {
         $this->actingAs($this->createUser());
@@ -75,7 +76,7 @@ final class SubcategoryTest extends TestCase
         $response->assertStatus(422);
     }
 
-       /** @test */
+       #[Test]
     public function createAllocatedExpenseSubcategoryForbiddenWhenCategoryIdInvalid(): void
     {
         $this->actingAs($this->createUser());
@@ -93,7 +94,7 @@ final class SubcategoryTest extends TestCase
         $response->assertStatus(403);
     }
 
-    /** @test */
+    #[Test]
     public function createAllocatedExpenseSubcategorySuccess(): void
     {
         $this->actingAs($this->createUser());
@@ -113,7 +114,7 @@ final class SubcategoryTest extends TestCase
         $response->assertStatus(201);
     }
 
-    /** @test */
+    #[Test]
     public function createBudgetSubcategorySuccess(): void
     {
         $this->actingAs($this->createUser());
@@ -133,7 +134,7 @@ final class SubcategoryTest extends TestCase
         $response->assertStatus(201);
     }
 
-    /** @test */
+    #[Test]
     public function createBudgetProSubcategorySuccess(): void
     {
         $this->actingAs($this->createUser());
@@ -153,7 +154,7 @@ final class SubcategoryTest extends TestCase
         $response->assertStatus(201);
     }
 
-    /** @test */
+    #[Test]
     public function createGameSubcategorySuccess(): void
     {
         $this->actingAs($this->createUser());
@@ -173,7 +174,7 @@ final class SubcategoryTest extends TestCase
         $response->assertStatus(201);
     }
 
-    /** @test */
+    #[Test]
     public function deleteAllocatedExpenseSubcategorySuccess(): void
     {
         $this->actingAs($this->createUser());
@@ -191,7 +192,7 @@ final class SubcategoryTest extends TestCase
         $response->assertStatus(204);
     }
 
-    /** @test */
+    #[Test]
     public function deleteBudgetSubcategorySuccess(): void
     {
         $this->actingAs($this->createUser());
@@ -209,7 +210,7 @@ final class SubcategoryTest extends TestCase
         $response->assertStatus(204);
     }
 
-    /** @test */
+    #[Test]
     public function deleteBudgetProSubcategorySuccess(): void
     {
         $this->actingAs($this->createUser());
@@ -227,7 +228,7 @@ final class SubcategoryTest extends TestCase
         $response->assertStatus(204);
     }
 
-    /** @test */
+    #[Test]
     public function deleteGameSubcategorySuccess(): void
     {
         $this->actingAs($this->createUser());
@@ -245,7 +246,7 @@ final class SubcategoryTest extends TestCase
         $response->assertStatus(204);
     }
 
-    /** @test */
+    #[Test]
     public function updateAllocatedExpenseSubcategoryFailsExtraFieldsInPayload(): void
     {
         $this->actingAs($this->createUser());
@@ -266,7 +267,7 @@ final class SubcategoryTest extends TestCase
         $response->assertStatus(400);
     }
 
-    /** @test */
+    #[Test]
     public function updateAllocatedExpenseSubcategoryFailsNoPayload(): void
     {
         $this->actingAs($this->createUser());
@@ -285,7 +286,7 @@ final class SubcategoryTest extends TestCase
         $response->assertStatus(400);
     }
 
-    /** @test */
+    #[Test]
     public function updateAllocatedExpenseSubcategoryFailsNonUniqueName(): void
     {
         $this->actingAs($this->createUser());
@@ -334,7 +335,7 @@ final class SubcategoryTest extends TestCase
         $response->assertStatus(422);
     }
 
-    /** @test */
+    #[Test]
     public function updateAllocatedExpenseSubcategoryDescriptionSuccess(): void
     {
         $this->actingAs($this->createUser());
@@ -355,7 +356,7 @@ final class SubcategoryTest extends TestCase
         $response->assertStatus(204);
     }
 
-    /** @test */
+    #[Test]
     public function updateAllocatedExpenseSubcategoryNameSuccess(): void
     {
         $this->actingAs($this->createUser());
@@ -376,7 +377,7 @@ final class SubcategoryTest extends TestCase
         $response->assertStatus(204);
     }
 
-    /** @test */
+    #[Test]
     public function updateAllocatedExpenseSubcategorySuccess(): void
     {
         $this->actingAs($this->createUser());
@@ -398,7 +399,7 @@ final class SubcategoryTest extends TestCase
         $response->assertStatus(204);
     }
 
-    /** @test */
+    #[Test]
     public function updateBudgetSubcategorySuccess(): void
     {
         $this->actingAs($this->createUser());
@@ -420,7 +421,7 @@ final class SubcategoryTest extends TestCase
         $response->assertStatus(204);
     }
 
-    /** @test */
+    #[Test]
     public function updateBudgetProSubcategorySuccess(): void
     {
         $this->actingAs($this->createUser());
@@ -442,7 +443,7 @@ final class SubcategoryTest extends TestCase
         $response->assertStatus(204);
     }
 
-    /** @test */
+    #[Test]
     public function updateGameSubcategorySuccess(): void
     {
         $this->actingAs($this->createUser());

@@ -2,11 +2,12 @@
 
 namespace Tests\View\Http\Controllers;
 
+use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 
 final class ItemLogTest extends TestCase
 {
-    /** @test */
+    #[Test]
     public function itemLogCollectionEmpty(): void
     {
         $this->actingAs($this->createUser());
@@ -26,7 +27,7 @@ final class ItemLogTest extends TestCase
         $this->assertEquals([], $response->json());
     }
 
-    /** @test */
+    #[Test]
     public function itemLogCollection(): void
     {
         $this->actingAs($this->createUser());
@@ -48,7 +49,7 @@ final class ItemLogTest extends TestCase
         $this->assertEquals('Rolled a Yahtzee', $response->json()[0]['message']);
     }
 
-    /** @test */
+    #[Test]
     public function itemLogShow(): void
     {
         $this->actingAs($this->createUser());
@@ -70,7 +71,7 @@ final class ItemLogTest extends TestCase
         $this->assertEquals('Rolled a Yahtzee', $response->json('message'));
     }
 
-    /** @test */
+    #[Test]
     public function itemLogShowNotFound(): void
     {
         $this->actingAs($this->createUser());
@@ -92,7 +93,7 @@ final class ItemLogTest extends TestCase
         $response->assertStatus(404);
     }
 
-    /** @test */
+    #[Test]
     public function itemLogNotSupportedForAllocatedExpense(): void
     {
         $this->actingAs($this->createUser());
@@ -110,7 +111,7 @@ final class ItemLogTest extends TestCase
         $response->assertStatus(405);
     }
 
-    /** @test */
+    #[Test]
     public function optionsRequestForItemLogCollection(): void
     {
         $this->actingAs($this->createUser());
@@ -128,7 +129,7 @@ final class ItemLogTest extends TestCase
         $response->assertStatus(200);
     }
 
-    /** @test */
+    #[Test]
     public function optionsRequestForItemLog(): void
     {
         $this->actingAs($this->createUser());

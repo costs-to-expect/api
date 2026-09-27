@@ -31,7 +31,7 @@ class ItemPartialTransferController extends Controller
         $item_type = Select::itemType((int) $resource_type_id);
 
         return match ($item_type) {
-            'allocated-expense' => $this->deleteAllocatedExpense((int) $resource_type_id, (int) $item_partial_transfer_id),
+            'allocated-expense', 'allocated-transaction' => $this->deleteAllocatedExpense((int) $resource_type_id, (int) $item_partial_transfer_id),
             'game' => Response::notSupported(),
             default => throw new \OutOfRangeException('No item type definition for ' . $item_type, 500),
         };
@@ -79,7 +79,7 @@ class ItemPartialTransferController extends Controller
         $item_type = Select::itemType((int) $resource_type_id);
 
         return match ($item_type) {
-            'allocated-expense' => $this->transferAllocatedExpense((int) $resource_type_id, (int) $resource_id, (int) $item_id),
+            'allocated-expense', 'allocated-transaction' => $this->transferAllocatedExpense((int) $resource_type_id, (int) $resource_id, (int) $item_id),
             'game' => Response::notSupported(),
             default => throw new \OutOfRangeException('No item type definition for ' . $item_type, 500),
         };

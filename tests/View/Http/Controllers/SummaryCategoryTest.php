@@ -2,11 +2,12 @@
 
 namespace Tests\View\Http\Controllers;
 
+use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 
 final class SummaryCategoryTest extends TestCase
 {
-    /** @test */
+    #[Test]
     public function summaryCategory(): void
     {
         $this->actingAs($this->createUser());
@@ -21,7 +22,7 @@ final class SummaryCategoryTest extends TestCase
         $this->assertEquals(2, $response->json('categories'));
     }
 
-    /** @test */
+    #[Test]
     public function summaryCategorySearch(): void
     {
         $this->actingAs($this->createUser());
@@ -40,7 +41,7 @@ final class SummaryCategoryTest extends TestCase
         $this->assertEquals(1, $response->json('categories'));
     }
 
-    /** @test */
+    #[Test]
     public function optionsRequestForSummaryCategoryCollection(): void
     {
         $this->actingAs($this->createUser());

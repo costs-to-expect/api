@@ -2,11 +2,12 @@
 
 namespace Tests\View\Http\Controllers;
 
+use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 
 final class ItemBudgetTest extends TestCase
 {
-    /** @test */
+    #[Test]
     public function budgetItemCollection(): void
     {
         $this->actingAs($this->createUser());
@@ -36,7 +37,7 @@ final class ItemBudgetTest extends TestCase
         }
     }
 
-    /** @test */
+    #[Test]
     public function budgetItemCollectionPagination(): void
     {
         $this->actingAs($this->createUser());
@@ -72,7 +73,7 @@ final class ItemBudgetTest extends TestCase
         }
     }
 
-    /** @test */
+    #[Test]
     public function budgetItemCollectionSearchName(): void
     {
         $this->actingAs($this->createUser());
@@ -105,7 +106,7 @@ final class ItemBudgetTest extends TestCase
         }
     }
 
-    /** @test */
+    #[Test]
     public function budgetItemCollectionSortAmount(): void
     {
         $this->actingAs($this->createUser());
@@ -138,7 +139,7 @@ final class ItemBudgetTest extends TestCase
         }
     }
 
-    /** @test */
+    #[Test]
     public function budgetItemCollectionSortCreated(): void
     {
         $this->actingAs($this->createUser());
@@ -172,7 +173,7 @@ final class ItemBudgetTest extends TestCase
         }
     }
 
-    /** @test */
+    #[Test]
     public function budgetItemCollectionSortName(): void
     {
         $this->actingAs($this->createUser());
@@ -205,7 +206,7 @@ final class ItemBudgetTest extends TestCase
         }
     }
 
-    /** @test */
+    #[Test]
     public function budgetItemShow(): void
     {
         $this->actingAs($this->createUser());
@@ -224,7 +225,7 @@ final class ItemBudgetTest extends TestCase
         $this->assertJsonMatchesBudgetItemSchema($response->content());
     }
 
-    /** @test */
+    #[Test]
     public function optionsRequestForBudgetItem(): void
     {
         $this->actingAs($this->createUser());
@@ -243,7 +244,7 @@ final class ItemBudgetTest extends TestCase
         $this->assertProvidedJsonMatchesDefinedSchema($response->content(), 'api/schema/options/budget.json');
     }
 
-    /** @test */
+    #[Test]
     public function optionsRequestForBudgetItemCollection(): void
     {
         $this->actingAs($this->createUser());

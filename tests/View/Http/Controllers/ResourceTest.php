@@ -2,11 +2,12 @@
 
 namespace Tests\View\Http\Controllers;
 
+use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 
 final class ResourceTest extends TestCase
 {
-    /** @test */
+    #[Test]
     public function allocatedExpenseResourceCollection(): void
     {
         $this->actingAs($this->createUser());
@@ -35,7 +36,7 @@ final class ResourceTest extends TestCase
         }
     }
 
-    /** @test */
+    #[Test]
     public function allocatedExpenseResourceShow(): void
     {
         $this->actingAs($this->createUser());
@@ -52,7 +53,7 @@ final class ResourceTest extends TestCase
         $this->assertJsonMatchesResourceSchema($response->content());
     }
 
-    /** @test */
+    #[Test]
     public function budgetProResourceCollection(): void
     {
         $this->actingAs($this->createUser());
@@ -81,7 +82,7 @@ final class ResourceTest extends TestCase
         }
     }
 
-    /** @test */
+    #[Test]
     public function budgetProResourceShow(): void
     {
         $this->actingAs($this->createUser());
@@ -98,7 +99,7 @@ final class ResourceTest extends TestCase
         $this->assertJsonMatchesResourceSchema($response->content());
     }
 
-    /** @test */
+    #[Test]
     public function budgetResourceCollection(): void
     {
         $this->actingAs($this->createUser());
@@ -127,7 +128,7 @@ final class ResourceTest extends TestCase
         }
     }
 
-    /** @test */
+    #[Test]
     public function budgetResourceCollectionPagination(): void
     {
         $this->actingAs($this->createUser());
@@ -162,7 +163,7 @@ final class ResourceTest extends TestCase
         }
     }
 
-    /** @test */
+    #[Test]
     public function budgetResourceCollectionPaginationPrevious(): void
     {
         $this->actingAs($this->createUser());
@@ -197,7 +198,7 @@ final class ResourceTest extends TestCase
         }
     }
 
-    /** @test */
+    #[Test]
     public function budgetResourceCollectionSearchDescription(): void
     {
         $this->actingAs($this->createUser());
@@ -229,7 +230,7 @@ final class ResourceTest extends TestCase
         }
     }
 
-    /** @test */
+    #[Test]
     public function budgetResourceCollectionSearchName(): void
     {
         $this->actingAs($this->createUser());
@@ -261,7 +262,7 @@ final class ResourceTest extends TestCase
         }
     }
 
-    /** @test */
+    #[Test]
     public function budgetResourceCollectionSortCreated(): void
     {
         $this->actingAs($this->createUser());
@@ -293,7 +294,7 @@ final class ResourceTest extends TestCase
         }
     }
 
-    /** @test */
+    #[Test]
     public function budgetResourceCollectionSortDescription(): void
     {
         $this->actingAs($this->createUser());
@@ -324,7 +325,7 @@ final class ResourceTest extends TestCase
         }
     }
 
-    /** @test */
+    #[Test]
     public function budgetResourceCollectionSortName(): void
     {
         $this->actingAs($this->createUser());
@@ -355,7 +356,7 @@ final class ResourceTest extends TestCase
         }
     }
 
-    /** @test */
+    #[Test]
     public function budgetResourceShow(): void
     {
         $this->actingAs($this->createUser());
@@ -372,7 +373,7 @@ final class ResourceTest extends TestCase
         $this->assertJsonMatchesResourceSchema($response->content());
     }
 
-    /** @test */
+    #[Test]
     public function optionsRequestForAllocatedExpenseResource(): void
     {
         $this->actingAs($this->createUser());
@@ -390,7 +391,7 @@ final class ResourceTest extends TestCase
         $this->assertProvidedJsonMatchesDefinedSchema($response->content(), 'api/schema/options/resource.json');
     }
 
-    /** @test */
+    #[Test]
     public function optionsRequestForAllocatedExpenseResourceCollection(): void
     {
         $this->actingAs($this->createUser());
@@ -406,7 +407,7 @@ final class ResourceTest extends TestCase
         $this->assertProvidedJsonMatchesDefinedSchema($response->content(), 'api/schema/options/resource-collection.json');
     }
 
-    /** @test */
+    #[Test]
     public function optionsRequestForBudgetResource(): void
     {
         $this->actingAs($this->createUser());
@@ -424,7 +425,7 @@ final class ResourceTest extends TestCase
         $this->assertProvidedJsonMatchesDefinedSchema($response->content(), 'api/schema/options/resource.json');
     }
 
-    /** @test */
+    #[Test]
     public function optionsRequestForBudgetResourceCollection(): void
     {
         $this->actingAs($this->createUser());
@@ -440,7 +441,7 @@ final class ResourceTest extends TestCase
         $this->assertProvidedJsonMatchesDefinedSchema($response->content(), 'api/schema/options/resource-collection.json');
     }
 
-    /** @test */
+    #[Test]
     public function optionsRequestForBudgetProResource(): void
     {
         $this->actingAs($this->createUser());
@@ -458,7 +459,7 @@ final class ResourceTest extends TestCase
         $this->assertProvidedJsonMatchesDefinedSchema($response->content(), 'api/schema/options/resource.json');
     }
 
-    /** @test */
+    #[Test]
     public function optionsRequestForBudgetProResourceCollection(): void
     {
         $this->actingAs($this->createUser());
@@ -474,7 +475,7 @@ final class ResourceTest extends TestCase
         $this->assertProvidedJsonMatchesDefinedSchema($response->content(), 'api/schema/options/resource-collection.json');
     }
 
-    /** @test */
+    #[Test]
     public function optionsRequestForYahtzeeResource(): void
     {
         $this->actingAs($this->createUser());
@@ -492,7 +493,7 @@ final class ResourceTest extends TestCase
         $this->assertProvidedJsonMatchesDefinedSchema($response->content(), 'api/schema/options/resource.json');
     }
 
-    /** @test */
+    #[Test]
     public function optionsRequestForYahtzeeResourceCollection(): void
     {
         $this->actingAs($this->createUser());
@@ -508,7 +509,7 @@ final class ResourceTest extends TestCase
         $this->assertProvidedJsonMatchesDefinedSchema($response->content(), 'api/schema/options/resource-collection.json');
     }
 
-    /** @test */
+    #[Test]
     public function optionsRequestForYatzyResource(): void
     {
         $this->actingAs($this->createUser());
@@ -526,7 +527,7 @@ final class ResourceTest extends TestCase
         $this->assertProvidedJsonMatchesDefinedSchema($response->content(), 'api/schema/options/resource.json');
     }
 
-    /** @test */
+    #[Test]
     public function optionsRequestForYatzyResourceCollection(): void
     {
         $this->actingAs($this->createUser());
@@ -542,7 +543,7 @@ final class ResourceTest extends TestCase
         $this->assertProvidedJsonMatchesDefinedSchema($response->content(), 'api/schema/options/resource-collection.json');
     }
 
-    /** @test */
+    #[Test]
     public function yahtzeeResourceCollection(): void
     {
         $this->actingAs($this->createUser());
@@ -571,7 +572,7 @@ final class ResourceTest extends TestCase
         }
     }
 
-    /** @test */
+    #[Test]
     public function yahtzeeResourceShow(): void
     {
         $this->actingAs($this->createUser());
@@ -588,7 +589,7 @@ final class ResourceTest extends TestCase
         $this->assertJsonMatchesResourceSchema($response->content());
     }
 
-    /** @test */
+    #[Test]
     public function yatzyResourceCollection(): void
     {
         $this->actingAs($this->createUser());
@@ -617,7 +618,7 @@ final class ResourceTest extends TestCase
         }
     }
 
-    /** @test */
+    #[Test]
     public function yatzyResourceShow(): void
     {
         $this->actingAs($this->createUser());

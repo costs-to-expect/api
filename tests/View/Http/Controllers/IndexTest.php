@@ -2,11 +2,12 @@
 
 namespace Tests\View\Http\Controllers;
 
+use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 
 final class IndexTest extends TestCase
 {
-    /** @test */
+    #[Test]
     public function index(): void
     {
         $response = $this->getToIndex();
@@ -17,14 +18,14 @@ final class IndexTest extends TestCase
         $this->assertNotEmpty($response->json('routes'));
     }
 
-    /** @test */
+    #[Test]
     public function optionsRequestForIndex(): void
     {
         $response = $this->fetchOptionsForIndex();
         $response->assertStatus(200);
     }
 
-    /** @test */
+    #[Test]
     public function changelog(): void
     {
         $response = $this->getToChangelog();
@@ -34,14 +35,14 @@ final class IndexTest extends TestCase
         $this->assertArrayHasKey('release', $response->json('releases')[0]);
     }
 
-    /** @test */
+    #[Test]
     public function optionsRequestForChangelog(): void
     {
         $response = $this->fetchOptionsForChangelog();
         $response->assertStatus(200);
     }
 
-    /** @test */
+    #[Test]
     public function apiStatus(): void
     {
         $response = $this->getToStatus();
@@ -51,7 +52,7 @@ final class IndexTest extends TestCase
         $this->assertFalse($response->json('cache'));
     }
 
-    /** @test */
+    #[Test]
     public function optionsRequestForStatus(): void
     {
         $response = $this->fetchOptionsForStatus();

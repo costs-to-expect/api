@@ -167,6 +167,7 @@ class Utility
 
         return match ($item_type) {
             'allocated-expense' => self::deleteItemTypeDataAllocatedExpense($resource_id),
+            'allocated-transaction' => self::deleteItemTypeDataAllocatedTransaction($resource_id),
             'budget' => self::deleteItemTypeDataBudget($resource_id),
             'budget-pro' => self::deleteItemTypeDataBudgetPro($resource_id),
             'game' => self::deleteItemTypeDataGame($resource_id),
@@ -181,6 +182,18 @@ class Utility
                 `item_type_allocated_expense`
             WHERE
                 `item_type_allocated_expense`.`item_id` IN (
+                SELECT `item`.`id` FROM `item` WHERE `item`.`resource_id` = ?
+            )
+        ', [$resource_id]);
+    }
+
+    private static function deleteItemTypeDataAllocatedTransaction(int $resource_id): int
+    {
+        return DB::delete('
+            DELETE FROM
+                `item_type_allocated_transaction`
+            WHERE
+                `item_type_allocated_transaction`.`item_id` IN (
                 SELECT `item`.`id` FROM `item` WHERE `item`.`resource_id` = ?
             )
         ', [$resource_id]);

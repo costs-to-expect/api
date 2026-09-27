@@ -2,11 +2,12 @@
 
 namespace Tests\Action\Http\Controllers;
 
+use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 
 final class ItemAllocatedExpenseTest extends TestCase
 {
-    /** @test */
+    #[Test]
     public function createAllocatedExpenseItemFailsCurrencyIdInvalid(): void
     {
         $this->actingAs($this->createUser());
@@ -29,7 +30,7 @@ final class ItemAllocatedExpenseTest extends TestCase
         $response->assertStatus(422);
     }
 
-    /** @test */
+    #[Test]
     public function createAllocatedExpenseItemFailsNoNameInPayload(): void
     {
         $this->actingAs($this->createUser());
@@ -51,7 +52,7 @@ final class ItemAllocatedExpenseTest extends TestCase
         $response->assertStatus(422);
     }
 
-    /** @test */
+    #[Test]
     public function createAllocatedExpenseItemFailsNoPayload(): void
     {
         $this->actingAs($this->createUser());
@@ -69,7 +70,7 @@ final class ItemAllocatedExpenseTest extends TestCase
         $response->assertStatus(422);
     }
 
-    /** @test */
+    #[Test]
     public function createAllocatedExpenseItemSuccess(): void
     {
         $this->actingAs($this->createUser());
@@ -93,7 +94,7 @@ final class ItemAllocatedExpenseTest extends TestCase
         $this->assertJsonMatchesAllocatedExpenseItemSchema($response->content());
     }
 
-    /** @test */
+    #[Test]
     public function deleteAllocatedExpenseItemFailsIdNotFound(): void
     {
         $this->actingAs($this->createUser());
@@ -111,7 +112,7 @@ final class ItemAllocatedExpenseTest extends TestCase
         $response->assertStatus(403);
     }
 
-    /** @test */
+    #[Test]
     public function deleteAllocatedExpenseItemSuccess(): void
     {
         $this->actingAs($this->createUser());
@@ -129,7 +130,7 @@ final class ItemAllocatedExpenseTest extends TestCase
         $response->assertStatus(204);
     }
 
-    /** @test */
+    #[Test]
     public function updateAllocatedExpenseItemFailsNonExistentField(): void
     {
         $this->actingAs($this->createUser());
@@ -150,7 +151,7 @@ final class ItemAllocatedExpenseTest extends TestCase
         $response->assertStatus(400);
     }
 
-    /** @test */
+    #[Test]
     public function updateAllocatedExpenseItemFailsNoPayload(): void
     {
         $this->actingAs($this->createUser());
@@ -169,7 +170,7 @@ final class ItemAllocatedExpenseTest extends TestCase
         $response->assertStatus(400);
     }
 
-    /** @test */
+    #[Test]
     public function updateAllocatedExpenseItemSuccess(): void
     {
         $this->actingAs($this->createUser());

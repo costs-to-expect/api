@@ -2,11 +2,12 @@
 
 namespace Tests\View\Http\Controllers;
 
+use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 
 final class ResourceTypeItemTest extends TestCase
 {
-    /** @test */
+    #[Test]
     public function resourceTypeItemAllocatedExpenseCollection(): void
     {
         $this->actingAs($this->createUser());
@@ -34,7 +35,7 @@ final class ResourceTypeItemTest extends TestCase
         }
     }
 
-    /** @test */
+    #[Test]
     public function resourceTypeItemAllocatedExpenseCollectionFilterYear(): void
     {
         $this->actingAs($this->createUser());
@@ -59,7 +60,7 @@ final class ResourceTypeItemTest extends TestCase
         }
     }
 
-    /** @test */
+    #[Test]
     public function resourceTypeItemAllocatedExpenseCollectionFilterYearAndMonth(): void
     {
         $this->actingAs($this->createUser());
@@ -85,7 +86,7 @@ final class ResourceTypeItemTest extends TestCase
         }
     }
 
-    /** @test */
+    #[Test]
     public function resourceTypeItemAllocatedExpenseCollectionFilterCategory(): void
     {
         $this->actingAs($this->createUser());
@@ -108,7 +109,7 @@ final class ResourceTypeItemTest extends TestCase
         $response->assertHeader('X-Total-Count', 1);
     }
 
-    /** @test */
+    #[Test]
     public function resourceTypeItemAllocatedExpenseCollectionIncludeCategories(): void
     {
         $this->actingAs($this->createUser());
@@ -129,7 +130,7 @@ final class ResourceTypeItemTest extends TestCase
         $this->assertNotEmpty($response->json()[0]['categories']);
     }
 
-    /** @test */
+    #[Test]
     public function resourceTypeItemAllocatedExpenseCollectionSortEffectiveDate(): void
     {
         $this->actingAs($this->createUser());
@@ -149,7 +150,7 @@ final class ResourceTypeItemTest extends TestCase
         $this->assertEquals('2023-01-01', $response->json()[0]['effective_date']);
     }
 
-    /** @test */
+    #[Test]
     public function resourceTypeItemAllocatedExpenseCollectionPagination(): void
     {
         $this->actingAs($this->createUser());
@@ -173,7 +174,7 @@ final class ResourceTypeItemTest extends TestCase
         $response->assertHeader('X-Count', 2);
     }
 
-    /** @test */
+    #[Test]
     public function resourceTypeItemGameCollection(): void
     {
         $this->actingAs($this->createUser());
@@ -198,7 +199,7 @@ final class ResourceTypeItemTest extends TestCase
         }
     }
 
-    /** @test */
+    #[Test]
     public function optionsRequestForResourceTypeItemCollection(): void
     {
         $this->actingAs($this->createUser());

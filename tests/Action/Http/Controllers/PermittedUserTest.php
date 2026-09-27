@@ -2,11 +2,12 @@
 
 namespace Tests\Action\Http\Controllers;
 
+use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 
 final class PermittedUserTest extends TestCase
 {
-    /** @test */
+    #[Test]
     public function createPermittedUserFailsNoPayload(): void
     {
         $this->actingAs($this->createUser());
@@ -21,7 +22,7 @@ final class PermittedUserTest extends TestCase
         $response->assertStatus(422);
     }
 
-    /** @test */
+    #[Test]
     public function createPermittedUserFailsUserDoesNotExist(): void
     {
         $this->actingAs($this->createUser());
@@ -38,7 +39,7 @@ final class PermittedUserTest extends TestCase
         $response->assertStatus(422);
     }
 
-    /** @test */
+    #[Test]
     public function createPermittedUserSuccess(): void
     {
         $this->actingAs($this->createUser());
@@ -56,7 +57,7 @@ final class PermittedUserTest extends TestCase
         $response->assertStatus(204);
     }
 
-    /** @test */
+    #[Test]
     public function deletePermittedUserSuccess(): void
     {
         $this->actingAs($this->createUser());

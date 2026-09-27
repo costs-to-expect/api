@@ -2,13 +2,12 @@
 
 namespace Tests\View\Http\Controllers;
 
+use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 
 final class SubcategoryTest extends TestCase
 {
-    /**
-     * @test
-     */
+    #[Test]
     public function allocatedExpenseSubcategoryCollection(): void
     {
         $this->actingAs($this->createUser());
@@ -39,7 +38,7 @@ final class SubcategoryTest extends TestCase
         }
     }
 
-    /** @test */
+    #[Test]
     public function allocatedExpenseSubcategoryCollectionPagination(): void
     {
         $this->actingAs($this->createUser());
@@ -76,7 +75,7 @@ final class SubcategoryTest extends TestCase
         }
     }
 
-    /** @test */
+    #[Test]
     public function allocatedExpenseSubcategoryCollectionPaginationPrevious(): void
     {
         $this->actingAs($this->createUser());
@@ -113,7 +112,7 @@ final class SubcategoryTest extends TestCase
         }
     }
 
-    /** @test */
+    #[Test]
     public function allocatedExpenseSubcategoryCollectionSearchDescription(): void
     {
         $this->actingAs($this->createUser());
@@ -148,7 +147,7 @@ final class SubcategoryTest extends TestCase
         }
     }
 
-    /** @test */
+    #[Test]
     public function allocatedExpenseSubcategoryCollectionSearchName(): void
     {
         $this->actingAs($this->createUser());
@@ -183,7 +182,7 @@ final class SubcategoryTest extends TestCase
         }
     }
 
-    /** @test */
+    #[Test]
     public function allocatedExpenseSubCategoryCollectionSortCreated(): void
     {
         $this->actingAs($this->createUser());
@@ -218,7 +217,7 @@ final class SubcategoryTest extends TestCase
         }
     }
 
-    /** @test */
+    #[Test]
     public function allocatedExpenseSubCategoryCollectionSortDescription(): void
     {
         $this->actingAs($this->createUser());
@@ -252,7 +251,7 @@ final class SubcategoryTest extends TestCase
         }
     }
 
-    /** @test */
+    #[Test]
     public function allocatedExpenseSubCategoryCollectionSortName(): void
     {
         $this->actingAs($this->createUser());
@@ -286,7 +285,7 @@ final class SubcategoryTest extends TestCase
         }
     }
 
-    /** @test */
+    #[Test]
     public function allocatedExpenseSubcategoryShow(): void
     {
         $this->actingAs($this->createUser());
@@ -305,7 +304,7 @@ final class SubcategoryTest extends TestCase
         $this->assertJsonMatchesSubcategorySchema($response->content());
     }
 
-    /** @test */
+    #[Test]
     public function budgetProSubcategoryCollection(): void
     {
         $this->actingAs($this->createUser());
@@ -336,7 +335,7 @@ final class SubcategoryTest extends TestCase
         }
     }
 
-    /** @test */
+    #[Test]
     public function budgetProSubcategoryShow(): void
     {
         $this->actingAs($this->createUser());
@@ -355,7 +354,7 @@ final class SubcategoryTest extends TestCase
         $this->assertJsonMatchesSubcategorySchema($response->content());
     }
 
-    /** @test */
+    #[Test]
     public function budgetSubcategoryCollection(): void
     {
         $this->actingAs($this->createUser());
@@ -386,7 +385,7 @@ final class SubcategoryTest extends TestCase
         }
     }
 
-    /** @test */
+    #[Test]
     public function budgetSubcategoryShow(): void
     {
         $this->actingAs($this->createUser());
@@ -405,7 +404,7 @@ final class SubcategoryTest extends TestCase
         $this->assertJsonMatchesSubcategorySchema($response->content());
     }
 
-    /** @test */
+    #[Test]
     public function gameSubcategoryCollection(): void
     {
         $this->actingAs($this->createUser());
@@ -436,7 +435,7 @@ final class SubcategoryTest extends TestCase
         }
     }
 
-    /** @test */
+    #[Test]
     public function gameSubcategoryShow(): void
     {
         $this->actingAs($this->createUser());
@@ -455,7 +454,7 @@ final class SubcategoryTest extends TestCase
         $this->assertJsonMatchesSubcategorySchema($response->content());
     }
 
-    /** @test */
+    #[Test]
     public function optionsRequestForAllocatedExpenseSubcategory(): void
     {
         $this->actingAs($this->createUser());
@@ -474,7 +473,7 @@ final class SubcategoryTest extends TestCase
         $this->assertProvidedJsonMatchesDefinedSchema($response->content(), 'api/schema/options/subcategory.json');
     }
 
-    /** @test */
+    #[Test]
     public function optionsRequestForAllocatedExpenseSubcategoryCollection(): void
     {
         $this->actingAs($this->createUser());
@@ -491,7 +490,7 @@ final class SubcategoryTest extends TestCase
         $this->assertProvidedJsonMatchesDefinedSchema($response->content(), 'api/schema/options/subcategory-collection.json');
     }
 
-    /** @test */
+    #[Test]
     public function optionsRequestForBudgetProSubcategory(): void
     {
         $this->actingAs($this->createUser());
@@ -512,7 +511,7 @@ final class SubcategoryTest extends TestCase
         $this->assertProvidedJsonMatchesDefinedSchema($response->content(), 'api/schema/options/subcategory.json');
     }
 
-    /** @test */
+    #[Test]
     public function optionsRequestForBudgetProSubcategoryCollection(): void
     {
         $this->actingAs($this->createUser());
@@ -531,7 +530,7 @@ final class SubcategoryTest extends TestCase
         $this->assertProvidedJsonMatchesDefinedSchema($response->content(), 'api/schema/options/subcategory-collection.json');
     }
 
-    /** @test */
+    #[Test]
     public function optionsRequestForBudgetSubcategory(): void
     {
         $this->actingAs($this->createUser());
@@ -552,7 +551,7 @@ final class SubcategoryTest extends TestCase
         $this->assertProvidedJsonMatchesDefinedSchema($response->content(), 'api/schema/options/subcategory.json');
     }
 
-    /** @test */
+    #[Test]
     public function optionsRequestForBudgetSubcategoryCollection(): void
     {
         $this->actingAs($this->createUser());
@@ -571,7 +570,7 @@ final class SubcategoryTest extends TestCase
         $this->assertProvidedJsonMatchesDefinedSchema($response->content(), 'api/schema/options/subcategory-collection.json');
     }
 
-    /** @test */
+    #[Test]
     public function optionsRequestForGameSubcategory(): void
     {
         $this->actingAs($this->createUser());
@@ -592,7 +591,7 @@ final class SubcategoryTest extends TestCase
         $this->assertProvidedJsonMatchesDefinedSchema($response->content(), 'api/schema/options/subcategory.json');
     }
 
-    /** @test */
+    #[Test]
     public function optionsRequestForGameSubcategoryCollection(): void
     {
         $this->actingAs($this->createUser());

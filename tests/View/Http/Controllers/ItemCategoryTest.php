@@ -2,11 +2,12 @@
 
 namespace Tests\View\Http\Controllers;
 
+use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 
 final class ItemCategoryTest extends TestCase
 {
-    /** @test */
+    #[Test]
     public function itemCategoryCollectionEmpty(): void
     {
         $this->actingAs($this->createUser());
@@ -26,7 +27,7 @@ final class ItemCategoryTest extends TestCase
         $this->assertEquals([], $response->json());
     }
 
-    /** @test */
+    #[Test]
     public function itemCategoryCollection(): void
     {
         $this->actingAs($this->createUser());
@@ -58,7 +59,7 @@ final class ItemCategoryTest extends TestCase
         }
     }
 
-    /** @test */
+    #[Test]
     public function itemCategoryShow(): void
     {
         $this->actingAs($this->createUser());
@@ -81,7 +82,7 @@ final class ItemCategoryTest extends TestCase
         $this->assertJsonMatchesItemCategorySchema($response->content());
     }
 
-    /** @test */
+    #[Test]
     public function itemCategoryShowNotFound(): void
     {
         $this->actingAs($this->createUser());
@@ -104,7 +105,7 @@ final class ItemCategoryTest extends TestCase
         $response->assertStatus(404);
     }
 
-    /** @test */
+    #[Test]
     public function itemCategoryAssignmentLimitForAllocatedExpense(): void
     {
         $this->actingAs($this->createUser());
@@ -127,7 +128,7 @@ final class ItemCategoryTest extends TestCase
         $response->assertStatus(400);
     }
 
-    /** @test */
+    #[Test]
     public function itemCategoryGameAllowsMultipleAssignments(): void
     {
         $this->actingAs($this->createUser());
@@ -152,7 +153,7 @@ final class ItemCategoryTest extends TestCase
         $response->assertHeader('X-Total-Count', 2);
     }
 
-    /** @test */
+    #[Test]
     public function itemCategoryDelete(): void
     {
         $this->actingAs($this->createUser());
@@ -176,7 +177,7 @@ final class ItemCategoryTest extends TestCase
         $response->assertStatus(404);
     }
 
-    /** @test */
+    #[Test]
     public function optionsRequestForItemCategoryCollection(): void
     {
         $this->actingAs($this->createUser());
@@ -194,7 +195,7 @@ final class ItemCategoryTest extends TestCase
         $response->assertStatus(200);
     }
 
-    /** @test */
+    #[Test]
     public function optionsRequestForItemCategory(): void
     {
         $this->actingAs($this->createUser());

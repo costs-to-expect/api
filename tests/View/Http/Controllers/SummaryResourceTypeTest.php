@@ -2,11 +2,12 @@
 
 namespace Tests\View\Http\Controllers;
 
+use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 
 final class SummaryResourceTypeTest extends TestCase
 {
-    /** @test */
+    #[Test]
     public function summaryResourceType(): void
     {
         $this->actingAs($this->createUser());
@@ -20,7 +21,7 @@ final class SummaryResourceTypeTest extends TestCase
         $this->assertEquals(2, $response->json('resource_types'));
     }
 
-    /** @test */
+    #[Test]
     public function summaryResourceTypeSearch(): void
     {
         $this->actingAs($this->createUser());
@@ -35,7 +36,7 @@ final class SummaryResourceTypeTest extends TestCase
         $this->assertEquals(1, $response->json('resource_types'));
     }
 
-    /** @test */
+    #[Test]
     public function optionsRequestForSummaryResourceTypeCollection(): void
     {
         $this->actingAs($this->createUser());

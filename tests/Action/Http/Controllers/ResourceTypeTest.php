@@ -2,11 +2,12 @@
 
 namespace Tests\Action\Http\Controllers;
 
+use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 
 final class ResourceTypeTest extends TestCase
 {
-    /** @test */
+    #[Test]
     public function createAllocatedExpenseResourceTypeFailsDataFieldNotValidJson(): void
     {
         $this->actingAs($this->createUser());
@@ -23,7 +24,7 @@ final class ResourceTypeTest extends TestCase
         $response->assertStatus(422);
     }
 
-    /** @test */
+    #[Test]
     public function createAllocatedExpenseResourceTypeFailsItemTypeInvalid(): void
     {
         $this->actingAs($this->createUser());
@@ -39,7 +40,7 @@ final class ResourceTypeTest extends TestCase
         $response->assertStatus(422);
     }
 
-    /** @test */
+    #[Test]
     public function createAllocatedExpenseResourceTypeFailsNoDescriptionInPayload(): void
     {
         $this->actingAs($this->createUser());
@@ -54,7 +55,7 @@ final class ResourceTypeTest extends TestCase
         $response->assertStatus(422);
     }
 
-    /** @test */
+    #[Test]
     public function createAllocatedExpenseResourceTypeFailsNoNameInPayload(): void
     {
         $this->actingAs($this->createUser());
@@ -69,7 +70,7 @@ final class ResourceTypeTest extends TestCase
         $response->assertStatus(422);
     }
 
-    /** @test */
+    #[Test]
     public function createAllocatedExpenseResourceTypeFailsNonUniqueName(): void
     {
         $this->actingAs($this->createUser());
@@ -101,7 +102,7 @@ final class ResourceTypeTest extends TestCase
         $response->assertStatus(422);
     }
 
-    /** @test */
+    #[Test]
     public function createAllocatedExpenseResourceTypeSuccess(): void
     {
         $this->actingAs($this->createUser());
@@ -119,7 +120,7 @@ final class ResourceTypeTest extends TestCase
         $this->assertJsonMatchesResourceTypeSchema($response->content());
     }
 
-    /** @test */
+    #[Test]
     public function createAllocatedExpenseResourceTypeSuccessIncludeDataField(): void
     {
         $this->actingAs($this->createUser());
@@ -138,7 +139,7 @@ final class ResourceTypeTest extends TestCase
         $this->assertJsonMatchesResourceTypeSchema($response->content());
     }
 
-    /** @test */
+    #[Test]
     public function createBudgetProResourceTypeSuccess(): void
     {
         $this->actingAs($this->createUser());
@@ -156,7 +157,7 @@ final class ResourceTypeTest extends TestCase
         $this->assertJsonMatchesResourceTypeSchema($response->content());
     }
 
-    /** @test */
+    #[Test]
     public function createBudgetResourceTypeSuccess(): void
     {
         $this->actingAs($this->createUser());
@@ -174,7 +175,7 @@ final class ResourceTypeTest extends TestCase
         $this->assertJsonMatchesResourceTypeSchema($response->content());
     }
 
-    /** @test */
+    #[Test]
     public function createGameResourceTypeSuccess(): void
     {
         $this->actingAs($this->createUser());
@@ -192,7 +193,7 @@ final class ResourceTypeTest extends TestCase
         $this->assertJsonMatchesResourceTypeSchema($response->content());
     }
 
-    /** @test */
+    #[Test]
     public function createResourceTypeFailsNoPayload(): void
     {
         $this->actingAs($this->createUser());
@@ -204,7 +205,7 @@ final class ResourceTypeTest extends TestCase
         $response->assertStatus(422);
     }
 
-    /** @test */
+    #[Test]
     public function createResourceTypeFailsNotSignedIn(): void
     {
         $response = $this->postToResourceTypeCreate(
@@ -214,7 +215,7 @@ final class ResourceTypeTest extends TestCase
         $response->assertStatus(403);
     }
 
-    /** @test */
+    #[Test]
     public function deleteAllocatedExpenseResourceTypeSuccess(): void
     {
         $this->actingAs($this->createUser());
@@ -238,7 +239,7 @@ final class ResourceTypeTest extends TestCase
         $response->assertStatus(204);
     }
 
-    /** @test */
+    #[Test]
     public function deleteBudgetProResourceTypeSuccess(): void
     {
         $this->actingAs($this->createUser());
@@ -262,7 +263,7 @@ final class ResourceTypeTest extends TestCase
         $response->assertStatus(204);
     }
 
-    /** @test */
+    #[Test]
     public function deleteBudgetResourceTypeSuccess(): void
     {
         $this->actingAs($this->createUser());
@@ -286,7 +287,7 @@ final class ResourceTypeTest extends TestCase
         $response->assertStatus(204);
     }
 
-    /** @test */
+    #[Test]
     public function deleteGameResourceTypeSuccess(): void
     {
         $this->actingAs($this->createUser());
@@ -310,7 +311,7 @@ final class ResourceTypeTest extends TestCase
         $response->assertStatus(204);
     }
 
-    /** @test */
+    #[Test]
     public function updateAllocatedExpenseResourceTypeFailsExtraFieldsInPayload(): void
     {
         $this->actingAs($this->createUser());
@@ -339,7 +340,7 @@ final class ResourceTypeTest extends TestCase
         $response->assertStatus(400);
     }
 
-    /** @test */
+    #[Test]
     public function updateAllocatedExpenseResourceTypeFailsNonUniqueName(): void
     {
         $this->actingAs($this->createUser());
@@ -385,7 +386,7 @@ final class ResourceTypeTest extends TestCase
         $response->assertStatus(422);
     }
 
-    /** @test */
+    #[Test]
     public function updateAllocatedExpenseResourceTypeFailsNoPayload(): void
     {
         $this->actingAs($this->createUser());
@@ -412,7 +413,7 @@ final class ResourceTypeTest extends TestCase
         $response->assertStatus(400);
     }
 
-    /** @test */
+    #[Test]
     public function updateAllocatedExpenseResourceTypeSuccess(): void
     {
         $this->actingAs($this->createUser());
@@ -441,7 +442,7 @@ final class ResourceTypeTest extends TestCase
         $response->assertStatus(204);
     }
 
-    /** @test */
+    #[Test]
     public function updateBudgetProResourceTypeSuccess(): void
     {
         $this->actingAs($this->createUser());
@@ -470,7 +471,7 @@ final class ResourceTypeTest extends TestCase
         $response->assertStatus(204);
     }
 
-    /** @test */
+    #[Test]
     public function updateBudgetResourceTypeSuccess(): void
     {
         $this->actingAs($this->createUser());
@@ -499,7 +500,7 @@ final class ResourceTypeTest extends TestCase
         $response->assertStatus(204);
     }
 
-    /** @test */
+    #[Test]
     public function updateGameResourceTypeSuccess(): void
     {
         $this->actingAs($this->createUser());

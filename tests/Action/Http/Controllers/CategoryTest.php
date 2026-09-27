@@ -4,11 +4,12 @@ namespace Tests\Action\Http\Controllers;
 
 use App\HttpRequest\Hash;
 use App\Models\ResourceType;
+use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 
 final class CategoryTest extends TestCase
 {
-    /** @test */
+    #[Test]
     public function createAllocatedExpenseCategoryFailsNoDescriptionInPayload(): void
     {
         $this->actingAs($this->createUser());
@@ -25,7 +26,7 @@ final class CategoryTest extends TestCase
         $response->assertStatus(422);
     }
 
-    /** @test */
+    #[Test]
     public function createAllocatedExpenseCategoryFailsNoNameInPayload(): void
     {
         $this->actingAs($this->createUser());
@@ -42,7 +43,7 @@ final class CategoryTest extends TestCase
         $response->assertStatus(422);
     }
 
-    /** @test */
+    #[Test]
     public function createAllocatedExpenseCategoryFailsNoPermissionToResourceType(): void
     {
         $user = $this->createUser();
@@ -73,7 +74,7 @@ final class CategoryTest extends TestCase
         }
     }
 
-    /** @test */
+    #[Test]
     public function createAllocatedExpenseCategoryFailsNoPayload(): void
     {
         $this->actingAs($this->createUser());
@@ -88,7 +89,7 @@ final class CategoryTest extends TestCase
         $response->assertStatus(422);
     }
 
-    /** @test */
+    #[Test]
     public function createAllocatedExpenseCategoryFailsNonUniqueName(): void
     {
         $this->actingAs($this->createUser());
@@ -119,7 +120,7 @@ final class CategoryTest extends TestCase
         $response->assertStatus(422);
     }
 
-    /** @test */
+    #[Test]
     public function createAllocatedExpenseCategorySuccess(): void
     {
         $this->actingAs($this->createUser());
@@ -138,7 +139,7 @@ final class CategoryTest extends TestCase
         $this->assertJsonMatchesCategorySchema($response->content());
     }
 
-    /** @test */
+    #[Test]
     public function createBudgetCategorySuccess(): void
     {
         $this->actingAs($this->createUser());
@@ -157,7 +158,7 @@ final class CategoryTest extends TestCase
         $this->assertJsonMatchesCategorySchema($response->content());
     }
 
-    /** @test */
+    #[Test]
     public function createBudgetProCategorySuccess(): void
     {
         $this->actingAs($this->createUser());
@@ -176,7 +177,7 @@ final class CategoryTest extends TestCase
         $this->assertJsonMatchesCategorySchema($response->content());
     }
 
-    /** @test */
+    #[Test]
     public function createGameCategorySuccess(): void
     {
         $this->actingAs($this->createUser());
@@ -195,7 +196,7 @@ final class CategoryTest extends TestCase
         $this->assertJsonMatchesCategorySchema($response->content());
     }
 
-    /** @test */
+    #[Test]
     public function deleteAllocatedExpenseCategoryFailsIdInvalid(): void
     {
         $this->actingAs($this->createUser());
@@ -210,7 +211,7 @@ final class CategoryTest extends TestCase
         $response->assertStatus(204);
     }
 
-    /** @test */
+    #[Test]
     public function deleteAllocatedExpenseCategorySuccess(): void
     {
         $this->actingAs($this->createUser());
@@ -223,7 +224,7 @@ final class CategoryTest extends TestCase
         $response->assertStatus(204);
     }
 
-    /** @test */
+    #[Test]
     public function deleteBudgetCategorySuccess(): void
     {
         $this->actingAs($this->createUser());
@@ -236,7 +237,7 @@ final class CategoryTest extends TestCase
         $response->assertStatus(204);
     }
 
-    /** @test */
+    #[Test]
     public function deleteBudgetProCategorySuccess(): void
     {
         $this->actingAs($this->createUser());
@@ -249,7 +250,7 @@ final class CategoryTest extends TestCase
         $response->assertStatus(204);
     }
 
-    /** @test */
+    #[Test]
     public function deleteGameCategorySuccess(): void
     {
         $this->actingAs($this->createUser());
@@ -262,7 +263,7 @@ final class CategoryTest extends TestCase
         $response->assertStatus(204);
     }
 
-    /** @test */
+    #[Test]
     public function updateAllocatedExpenseCategoryFailsExtraFieldsInPayload(): void
     {
         $this->actingAs($this->createUser());
@@ -281,7 +282,7 @@ final class CategoryTest extends TestCase
         $response->assertStatus(400);
     }
 
-    /** @test */
+    #[Test]
     public function updateAllocatedExpenseCategoryFailsNoPayload(): void
     {
         $this->actingAs($this->createUser());
@@ -298,7 +299,7 @@ final class CategoryTest extends TestCase
         $response->assertStatus(400);
     }
 
-    /** @test */
+    #[Test]
     public function updateAllocatedExpenseCategoryFailsNonUniqueName(): void
     {
         $this->actingAs($this->createUser());
@@ -341,7 +342,7 @@ final class CategoryTest extends TestCase
         $response->assertStatus(422);
     }
 
-    /** @test */
+    #[Test]
     public function updateAllocatedExpenseCategorySuccess(): void
     {
         $this->actingAs($this->createUser());
@@ -360,7 +361,7 @@ final class CategoryTest extends TestCase
         $response->assertStatus(204);
     }
 
-    /** @test */
+    #[Test]
     public function updateBudgetCategorySuccess(): void
     {
         $this->actingAs($this->createUser());
@@ -379,7 +380,7 @@ final class CategoryTest extends TestCase
         $response->assertStatus(204);
     }
 
-    /** @test */
+    #[Test]
     public function updateBudgetProCategorySuccess(): void
     {
         $this->actingAs($this->createUser());
@@ -398,7 +399,7 @@ final class CategoryTest extends TestCase
         $response->assertStatus(204);
     }
 
-    /** @test */
+    #[Test]
     public function updateGameCategorySuccess(): void
     {
         $this->actingAs($this->createUser());

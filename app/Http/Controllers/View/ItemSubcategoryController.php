@@ -4,6 +4,7 @@ namespace App\Http\Controllers\View;
 
 use App\Http\Controllers\Controller;
 use App\HttpOptionResponse\ItemSubcategory\AllocatedExpenseCollection;
+use App\HttpOptionResponse\ItemSubcategory\AllocatedTransactionCollection;
 use App\HttpOptionResponse\ItemSubcategoryItem;
 use App\HttpResponse\Header;
 use App\ItemType\Select;
@@ -32,7 +33,7 @@ class ItemSubcategoryController extends Controller
         $item_type = Select::itemType((int) $resource_type_id);
 
         return match ($item_type) {
-            'allocated-expense' => $this->itemSubcategoryCollection((int) $resource_type_id, (int) $resource_id, (int) $item_id, (int) $item_category_id),
+            'allocated-expense', 'allocated-transaction' => $this->itemSubcategoryCollection((int) $resource_type_id, (int) $resource_id, (int) $item_id, (int) $item_category_id),
             'game' => \App\HttpResponse\Response::notSupported(),
             default => throw new \OutOfRangeException('No item type definition for ' . $item_type, 500),
         };
@@ -99,7 +100,7 @@ class ItemSubcategoryController extends Controller
         $item_type = Select::itemType((int) $resource_type_id);
 
         return match ($item_type) {
-            'allocated-expense' => $this->itemSubcategory((int) $resource_type_id, (int) $resource_id, (int) $item_id, (int) $item_category_id, (int) $item_subcategory_id),
+            'allocated-expense', 'allocated-transaction' => $this->itemSubcategory((int) $resource_type_id, (int) $resource_id, (int) $item_id, (int) $item_category_id, (int) $item_subcategory_id),
             'game' => \App\HttpResponse\Response::notSupported(),
             default => throw new \OutOfRangeException('No item type definition for ' . $item_type, 500),
         };
@@ -152,6 +153,7 @@ class ItemSubcategoryController extends Controller
 
         return match ($item_type) {
             'allocated-expense' => $this->optionsAllocatedExpenseCollection((int) $resource_type_id, (int) $item_category_id),
+            'allocated-transaction' => $this->optionsAllocatedTransactionCollection((int) $resource_type_id, (int) $item_category_id),
             'game' => \App\HttpResponse\Response::notSupported(),
             default => throw new \OutOfRangeException('No item type definition for ' . $item_type, 500),
         };
@@ -177,6 +179,26 @@ class ItemSubcategoryController extends Controller
             ->response();
     }
 
+    private function optionsAllocatedTransactionCollection(
+        int $resource_type_id,
+        int $item_category_id
+    ): JsonResponse {
+        if ($this->hasViewAccessToResourceType($resource_type_id) === false) {
+            return \App\HttpResponse\Response::notFoundOrNotAccessible(trans('entities.item-category'));
+        }
+
+        $item_category = (new ItemCategory())->find($item_category_id);
+        if ($item_category === null) {
+            return \App\HttpResponse\Response::notFound(trans('entities.item-category'));
+        }
+
+        $response = new AllocatedTransactionCollection($this->permissions((int) $resource_type_id));
+
+        return $response->setAllowedValuesForFields((new \App\Models\AllowedValue\Subcategory())->allowedValues($item_category->category_id))
+            ->create()
+            ->response();
+    }
+
     public function optionsShow(
         string $resource_type_id,
         string $resource_id,
@@ -195,7 +217,7 @@ class ItemSubcategoryController extends Controller
         $item_type = Select::itemType((int) $resource_type_id);
 
         return match ($item_type) {
-            'allocated-expense' => $this->optionsItemSubcategoryShow((int) $resource_type_id, (int) $resource_id, (int) $item_id, (int) $item_category_id, (int) $item_subcategory_id),
+            'allocated-expense', 'allocated-transaction' => $this->optionsItemSubcategoryShow((int) $resource_type_id, (int) $resource_id, (int) $item_id, (int) $item_category_id, (int) $item_subcategory_id),
             'game' => \App\HttpResponse\Response::notSupported(),
             default => throw new \OutOfRangeException('No item type definition for ' . $item_type, 500),
         };

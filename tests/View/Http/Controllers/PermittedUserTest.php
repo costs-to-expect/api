@@ -2,11 +2,12 @@
 
 namespace Tests\View\Http\Controllers;
 
+use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 
 final class PermittedUserTest extends TestCase
 {
-    /** @test */
+    #[Test]
     public function permittedUserCollection(): void
     {
         $this->actingAs($this->createUser());
@@ -31,7 +32,7 @@ final class PermittedUserTest extends TestCase
         }
     }
 
-    /** @test */
+    #[Test]
     public function permittedUserShow(): void
     {
         $this->actingAs($this->createUser());

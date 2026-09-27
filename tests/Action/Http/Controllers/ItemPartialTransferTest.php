@@ -2,11 +2,12 @@
 
 namespace Tests\Action\Http\Controllers;
 
+use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 
 final class ItemPartialTransferTest extends TestCase
 {
-    /** @test */
+    #[Test]
     public function createItemPartialTransferFailsNoPayload(): void
     {
         $this->actingAs($this->createUser());
@@ -20,7 +21,7 @@ final class ItemPartialTransferTest extends TestCase
         $response->assertStatus(422);
     }
 
-    /** @test */
+    #[Test]
     public function createItemPartialTransferFailsPercentageOutOfRange(): void
     {
         $this->actingAs($this->createUser());
@@ -38,7 +39,7 @@ final class ItemPartialTransferTest extends TestCase
         $response->assertStatus(422);
     }
 
-    /** @test */
+    #[Test]
     public function createItemPartialTransferFailsSameResource(): void
     {
         $this->actingAs($this->createUser());
@@ -55,7 +56,7 @@ final class ItemPartialTransferTest extends TestCase
         $response->assertStatus(422);
     }
 
-    /** @test */
+    #[Test]
     public function createItemPartialTransferSuccess(): void
     {
         $this->actingAs($this->createUser());
@@ -74,7 +75,7 @@ final class ItemPartialTransferTest extends TestCase
         $this->assertEquals(30, $response->json('percentage'));
     }
 
-    /** @test */
+    #[Test]
     public function deleteItemPartialTransferFailsIdInvalid(): void
     {
         $this->actingAs($this->createUser());
@@ -85,7 +86,7 @@ final class ItemPartialTransferTest extends TestCase
         $response->assertStatus(403);
     }
 
-    /** @test */
+    #[Test]
     public function deleteItemPartialTransferSuccess(): void
     {
         $this->actingAs($this->createUser());

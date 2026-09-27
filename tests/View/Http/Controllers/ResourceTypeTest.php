@@ -2,11 +2,12 @@
 
 namespace Tests\View\Http\Controllers;
 
+use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 
 final class ResourceTypeTest extends TestCase
 {
-    /** @test */
+    #[Test]
     public function allocatedExpenseResourceTypeCollection(): void
     {
         $this->actingAs($this->createUser());
@@ -31,7 +32,7 @@ final class ResourceTypeTest extends TestCase
         }
     }
 
-    /** @test */
+    #[Test]
     public function allocatedExpenseResourceTypeCollectionPagination(): void
     {
         $this->actingAs($this->createUser());
@@ -59,7 +60,7 @@ final class ResourceTypeTest extends TestCase
         }
     }
 
-    /** @test */
+    #[Test]
     public function allocatedExpenseResourceTypeCollectionSearchDescription(): void
     {
         $this->actingAs($this->createUser());
@@ -87,7 +88,7 @@ final class ResourceTypeTest extends TestCase
         }
     }
 
-    /** @test */
+    #[Test]
     public function allocatedExpenseResourceTypeCollectionSearchName(): void
     {
         $this->actingAs($this->createUser());
@@ -115,7 +116,7 @@ final class ResourceTypeTest extends TestCase
         }
     }
 
-    /** @test */
+    #[Test]
     public function allocatedExpenseResourceTypeCollectionSortCreated(): void
     {
         $this->actingAs($this->createUser());
@@ -145,7 +146,7 @@ final class ResourceTypeTest extends TestCase
         }
     }
 
-    /** @test */
+    #[Test]
     public function allocatedExpenseResourceTypeCollectionSortName(): void
     {
         $this->actingAs($this->createUser());
@@ -174,7 +175,7 @@ final class ResourceTypeTest extends TestCase
         }
     }
 
-    /** @test */
+    #[Test]
     public function allocatedExpenseResourceTypeShow(): void
     {
         $this->actingAs($this->createUser());
@@ -187,7 +188,7 @@ final class ResourceTypeTest extends TestCase
         $this->assertJsonMatchesResourceTypeSchema($response->content());
     }
 
-    /** @test */
+    #[Test]
     public function allocatedExpenseResourceTypeShowWithParameterIncludePermittedUsers(): void
     {
         $this->actingAs($this->createUser());
@@ -203,7 +204,7 @@ final class ResourceTypeTest extends TestCase
         $this->assertJsonMatchesResourceTypeWhichIncludesPermittedUsersSchema($response->content());
     }
 
-    /** @test */
+    #[Test]
     public function allocatedExpenseResourceTypeShowWithParameterIncludeResource(): void
     {
         $this->actingAs($this->createUser());
@@ -222,7 +223,7 @@ final class ResourceTypeTest extends TestCase
         $this->assertJsonMatchesResourceTypeWhichIncludesResourcesSchema($response->content());
     }
 
-    /** @test */
+    #[Test]
     public function budgetResourceTypeCollection(): void
     {
         $this->actingAs($this->createUser());
@@ -247,7 +248,7 @@ final class ResourceTypeTest extends TestCase
         }
     }
 
-    /** @test */
+    #[Test]
     public function budgetResourceTypeShow(): void
     {
         $this->actingAs($this->createUser());
@@ -260,7 +261,7 @@ final class ResourceTypeTest extends TestCase
         $this->assertJsonMatchesResourceTypeSchema($response->content());
     }
 
-    /** @test */
+    #[Test]
     public function budgetResourceTypeShowWithParameterIncludePermittedUsers(): void
     {
         $this->actingAs($this->createUser());
@@ -276,7 +277,7 @@ final class ResourceTypeTest extends TestCase
         $this->assertJsonMatchesResourceTypeWhichIncludesPermittedUsersSchema($response->content());
     }
 
-    /** @test */
+    #[Test]
     public function budgetResourceTypeShowWithParameterIncludeResource(): void
     {
         $this->actingAs($this->createUser());
@@ -294,7 +295,7 @@ final class ResourceTypeTest extends TestCase
         $this->assertJsonMatchesResourceTypeWhichIncludesResourcesSchema($response->content());
     }
 
-    /** @test */
+    #[Test]
     public function budgetProResourceTypeCollection(): void
     {
         $this->actingAs($this->createUser());
@@ -319,7 +320,7 @@ final class ResourceTypeTest extends TestCase
         }
     }
 
-    /** @test */
+    #[Test]
     public function budgetProResourceTypeShow(): void
     {
         $this->actingAs($this->createUser());
@@ -332,7 +333,7 @@ final class ResourceTypeTest extends TestCase
         $this->assertJsonMatchesResourceTypeSchema($response->content());
     }
 
-    /** @test */
+    #[Test]
     public function budgetProResourceTypeShowWithParameterIncludePermittedUsers(): void
     {
         $this->actingAs($this->createUser());
@@ -348,7 +349,7 @@ final class ResourceTypeTest extends TestCase
         $this->assertJsonMatchesResourceTypeWhichIncludesPermittedUsersSchema($response->content());
     }
 
-    /** @test */
+    #[Test]
     public function budgetProResourceTypeShowWithParameterIncludeResource(): void
     {
         $this->actingAs($this->createUser());
@@ -366,7 +367,7 @@ final class ResourceTypeTest extends TestCase
         $this->assertJsonMatchesResourceTypeWhichIncludesResourcesSchema($response->content());
     }
 
-    /** @test */
+    #[Test]
     public function gameResourceTypeCollection(): void
     {
         $this->actingAs($this->createUser());
@@ -391,7 +392,7 @@ final class ResourceTypeTest extends TestCase
         }
     }
 
-    /** @test */
+    #[Test]
     public function gameResourceTypeShow(): void
     {
         $this->actingAs($this->createUser());
@@ -404,7 +405,7 @@ final class ResourceTypeTest extends TestCase
         $this->assertJsonMatchesResourceTypeSchema($response->content());
     }
 
-    /** @test */
+    #[Test]
     public function gameResourceTypeShowWithParameterIncludePermittedUsers(): void
     {
         $this->actingAs($this->createUser());
@@ -420,7 +421,7 @@ final class ResourceTypeTest extends TestCase
         $this->assertJsonMatchesResourceTypeWhichIncludesPermittedUsersSchema($response->content());
     }
 
-    /** @test */
+    #[Test]
     public function gameResourceTypeShowWithParameterIncludeResource(): void
     {
         $this->actingAs($this->createUser());
@@ -438,7 +439,7 @@ final class ResourceTypeTest extends TestCase
         $this->assertJsonMatchesResourceTypeWhichIncludesResourcesSchema($response->content());
     }
 
-    /** @test */
+    #[Test]
     public function optionsRequestForAllocatedExpenseResourceType(): void
     {
         $this->actingAs($this->createUser());
@@ -452,7 +453,7 @@ final class ResourceTypeTest extends TestCase
         $this->assertProvidedJsonMatchesDefinedSchema($response->content(), 'api/schema/options/resource-type.json');
     }
 
-    /** @test */
+    #[Test]
     public function optionsRequestForResourceTypeCollection(): void
     {
         $response = $this->fetchOptionsForResourceTypeCollection();
@@ -461,7 +462,7 @@ final class ResourceTypeTest extends TestCase
         $this->assertProvidedJsonMatchesDefinedSchema($response->content(), 'api/schema/options/resource-type-collection.json');
     }
 
-    /** @test */
+    #[Test]
     public function optionsRequestForBudgetResourceType(): void
     {
         $this->actingAs($this->createUser());
@@ -475,7 +476,7 @@ final class ResourceTypeTest extends TestCase
         $this->assertProvidedJsonMatchesDefinedSchema($response->content(), 'api/schema/options/resource-type.json');
     }
 
-    /** @test */
+    #[Test]
     public function optionsRequestForBudgetProResourceType(): void
     {
         $this->actingAs($this->createUser());
@@ -489,7 +490,7 @@ final class ResourceTypeTest extends TestCase
         $this->assertProvidedJsonMatchesDefinedSchema($response->content(), 'api/schema/options/resource-type.json');
     }
 
-    /** @test */
+    #[Test]
     public function optionsRequestForGameResourceType(): void
     {
         $this->actingAs($this->createUser());

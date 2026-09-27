@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Models;
 
+use App\ItemType\Select;
 use Illuminate\Database\Eloquent\Builder as QueryBuilder;
 use Illuminate\Database\Eloquent\Model;
 
@@ -28,6 +29,23 @@ class ItemPartialTransfer extends Model
 
     protected $guarded = ['id', 'created_at', 'updated_at'];
 
+    /**
+     * Partial transfers are only supported by item types that store a
+     * name/description on their own item-type table; the join table is
+     * resolved explicitly here rather than assumed, so it works for any
+     * of them
+     */
+    private function itemTypeTable(int $resource_type_id): string
+    {
+        $item_type = Select::itemType($resource_type_id);
+
+        return match ($item_type) {
+            'allocated-expense' => 'item_type_allocated_expense',
+            'allocated-transaction' => 'item_type_allocated_transaction',
+            default => throw new \OutOfRangeException('No item type definition for ' . $item_type, 500),
+        };
+    }
+
     public function paginatedCollection(
         int $resource_type_id,
         array $viewable_resource_types,
@@ -35,6 +53,8 @@ class ItemPartialTransfer extends Model
         int $limit = 10,
         array $parameters = []
     ): array {
+        $item_type_table = $this->itemTypeTable($resource_type_id);
+
         $collection = $this
             ->select(
                 $this->table . '.id',
@@ -42,8 +62,8 @@ class ItemPartialTransfer extends Model
                 $this->table . '.percentage',
                 $this->table . '.item_id AS item_item_id',
                 $this->table . '.created_at',
-                'item_type_allocated_expense.name AS item_name',
-                'item_type_allocated_expense.description AS item_description',
+                $item_type_table . '.name AS item_name',
+                $item_type_table . '.description AS item_description',
                 'from_resource.id AS from_resource_id',
                 'from_resource.name AS from_resource_name',
                 'to_resource.id AS to_resource_id',
@@ -55,7 +75,7 @@ class ItemPartialTransfer extends Model
             ->join("resource AS from_resource", $this->table . ".from", "from_resource.id")
             ->join("resource AS to_resource", $this->table . ".to", "to_resource.id")
             ->join("item", $this->table . ".item_id", "item.id")
-            ->join("item_type_allocated_expense", "item.id", "item_type_allocated_expense.item_id")
+            ->join($item_type_table, "item.id", $item_type_table . ".item_id")
             ->join("users", $this->table . ".transferred_by", "users.id")
             ->where($this->table . '.resource_type_id', '=', $resource_type_id);
 
@@ -79,12 +99,14 @@ class ItemPartialTransfer extends Model
         int $resource_type_id,
         int $item_partial_transfer_id
     ): ?array {
+        $item_type_table = $this->itemTypeTable($resource_type_id);
+
         $result = $this
             ->join("resource_type", $this->table . ".resource_type_id", "resource_type.id")
             ->join("resource AS from_resource", $this->table . ".from", "from_resource.id")
             ->join("resource AS to_resource", $this->table . ".to", "to_resource.id")
             ->join("item", $this->table . ".item_id", "item.id")
-            ->join("item_type_allocated_expense", "item.id", "item_type_allocated_expense.item_id")
+            ->join($item_type_table, "item.id", $item_type_table . ".item_id")
             ->join("users", $this->table . ".transferred_by", "users.id")
             ->where($this->table . '.resource_type_id', '=', $resource_type_id)
             ->where($this->table . '.id', '=', $item_partial_transfer_id)
@@ -93,8 +115,8 @@ class ItemPartialTransfer extends Model
                 $this->table . '.resource_type_id',
                 $this->table . '.percentage',
                 $this->table . '.item_id AS item_item_id',
-                'item_type_allocated_expense.name AS item_name',
-                'item_type_allocated_expense.description AS item_description',
+                $item_type_table . '.name AS item_name',
+                $item_type_table . '.description AS item_description',
                 $this->table . '.created_at',
                 'from_resource.id AS from_resource_id',
                 'from_resource.name AS from_resource_name',

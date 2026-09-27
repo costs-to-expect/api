@@ -1,0 +1,70 @@
+{
+    "$id": "https://api.costs-to-expect.com/v2/api/schema/item-allocated-transaction.json",
+    "type": "object",
+    "properties": {
+        "id": {
+            "type": "string"
+        },
+        "name": {
+            "type": "string"
+        },
+        "description": {
+            "type": ["null", "string"]
+        },
+        "currency": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "string"
+                },
+                "code": {
+                    "type": "string",
+                    "maxLength": 3,
+                    "minLength": 3
+                },
+                "name": {
+                    "type": "string"
+                }
+            }
+        },
+        "total": {
+            "type": "string"
+        },
+        "percentage": {
+            "type": "integer"
+        },
+        "actualised_total": {
+            "type": "string"
+        },
+        "transaction_type": {
+            "type": "string",
+            "enum": ["expense", "income"]
+        },
+        "effective_date": {
+            "type": "string"
+        },
+        "categories": {
+            "type": "array"
+        },
+        "created": {
+            "type": "string"
+        },
+        "updated": {
+            "type": ["null", "string"]
+        }
+    },
+    "required": [
+        "id",
+        "name",
+        "description",
+        "currency",
+        "total",
+        "percentage",
+        "actualised_total",
+        "transaction_type",
+        "effective_date",
+        "categories",
+        "created",
+        "updated"
+    ]
+}

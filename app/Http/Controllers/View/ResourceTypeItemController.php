@@ -5,6 +5,7 @@ namespace App\Http\Controllers\View;
 use App\Http\Controllers\Controller;
 use App\ItemType\Select;
 use App\ItemType\AllocatedExpense\AllowedValue as AllocatedExpenseAllowedValue;
+use App\ItemType\AllocatedTransaction\AllowedValue as AllocatedTransactionAllowedValue;
 use App\ItemType\Game\AllowedValue as GameAllowedValue;
 use Illuminate\Http\JsonResponse;
 
@@ -27,6 +28,7 @@ class ResourceTypeItemController extends Controller
 
         return match ($item_type) {
             'allocated-expense' => $this->allocatedExpenseCollection((int) $resource_type_id),
+            'allocated-transaction' => $this->allocatedTransactionCollection((int) $resource_type_id),
             'game' => $this->gameCollection((int) $resource_type_id),
             default => throw new \OutOfRangeException('No item type definition for ' . $item_type, 500),
         };
@@ -35,6 +37,16 @@ class ResourceTypeItemController extends Controller
     private function allocatedExpenseCollection(int $resource_type_id): JsonResponse
     {
         $response = new \App\ItemType\AllocatedExpense\HttpResponse\ResourceTypeItem(
+            $resource_type_id,
+            $this->user_id
+        );
+
+        return $response->response();
+    }
+
+    private function allocatedTransactionCollection(int $resource_type_id): JsonResponse
+    {
+        $response = new \App\ItemType\AllocatedTransaction\HttpResponse\ResourceTypeItem(
             $resource_type_id,
             $this->user_id
         );
@@ -62,6 +74,7 @@ class ResourceTypeItemController extends Controller
 
         return match ($item_type) {
             'allocated-expense' => $this->optionsAllocatedExpenseCollection((int) $resource_type_id),
+            'allocated-transaction' => $this->optionsAllocatedTransactionCollection((int) $resource_type_id),
             'game' => $this->optionsGameCollection((int) $resource_type_id),
             default => throw new \OutOfRangeException('No options item type definition for ' . $item_type, 500),
         };
@@ -75,6 +88,19 @@ class ResourceTypeItemController extends Controller
         );
 
         return (new \App\HttpOptionResponse\ResourceTypeItem\AllocatedExpenseCollection($this->permissions($resource_type_id)))
+            ->setAllowedValuesForParameters($allowed_values->parameterAllowedValuesForResourceTypeCollection())
+            ->create()
+            ->response();
+    }
+
+    private function optionsAllocatedTransactionCollection(int $resource_type_id): JsonResponse
+    {
+        $allowed_values = new AllocatedTransactionAllowedValue(
+            $this->viewable_resource_types,
+            $resource_type_id
+        );
+
+        return (new \App\HttpOptionResponse\ResourceTypeItem\AllocatedTransactionCollection($this->permissions($resource_type_id)))
             ->setAllowedValuesForParameters($allowed_values->parameterAllowedValuesForResourceTypeCollection())
             ->create()
             ->response();

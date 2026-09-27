@@ -2,11 +2,12 @@
 
 namespace Tests\View\Http\Controllers;
 
+use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 
 final class RequestErrorLogTest extends TestCase
 {
-    /** @test */
+    #[Test]
     public function requestErrorLogCollection(): void
     {
         $this->quickCreateRequestErrorLog(['request_uri' => '/v3/resource-types']);
@@ -28,7 +29,7 @@ final class RequestErrorLogTest extends TestCase
         }
     }
 
-    /** @test */
+    #[Test]
     public function requestErrorLogCollectionPagination(): void
     {
         $this->quickCreateRequestErrorLog();
@@ -44,7 +45,7 @@ final class RequestErrorLogTest extends TestCase
         $response->assertHeader('X-Total-Count', 3);
     }
 
-    /** @test */
+    #[Test]
     public function requestErrorLogCollectionIsPubliclyAccessibleWithoutAuthentication(): void
     {
         // Documents current (deliberately not-yet-fixed) behaviour: this endpoint
@@ -57,7 +58,7 @@ final class RequestErrorLogTest extends TestCase
         $response->assertHeader('X-Total-Count', 1);
     }
 
-    /** @test */
+    #[Test]
     public function optionsRequestForRequestErrorLogCollection(): void
     {
         $response = $this->fetchOptionsForRequestErrorLogCollection();

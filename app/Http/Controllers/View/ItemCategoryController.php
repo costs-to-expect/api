@@ -5,6 +5,8 @@ namespace App\Http\Controllers\View;
 use App\Http\Controllers\Controller;
 use App\HttpOptionResponse\ItemCategory\AllocatedExpense;
 use App\HttpOptionResponse\ItemCategory\AllocatedExpenseCollection;
+use App\HttpOptionResponse\ItemCategory\AllocatedTransaction;
+use App\HttpOptionResponse\ItemCategory\AllocatedTransactionCollection;
 use App\HttpOptionResponse\ItemCategory\Game;
 use App\HttpOptionResponse\ItemCategory\GameCollection;
 use App\HttpResponse\Header;
@@ -29,7 +31,7 @@ class ItemCategoryController extends Controller
         $item_type = Select::itemType((int) $resource_type_id);
 
         return match ($item_type) {
-            'allocated-expense', 'game' => $this->itemCategoryCollection((int) $resource_type_id, (int) $resource_id, (int) $item_id),
+            'allocated-expense', 'allocated-transaction', 'game' => $this->itemCategoryCollection((int) $resource_type_id, (int) $resource_id, (int) $item_id),
             default => throw new \OutOfRangeException('No item type definition for ' . $item_type, 500),
         };
     }
@@ -89,7 +91,7 @@ class ItemCategoryController extends Controller
         $item_type = Select::itemType((int) $resource_type_id);
 
         return match ($item_type) {
-            'allocated-expense', 'game' => $this->itemCategory((int) $resource_type_id, (int) $resource_id, (int) $item_id, (int) $item_category_id),
+            'allocated-expense', 'allocated-transaction', 'game' => $this->itemCategory((int) $resource_type_id, (int) $resource_id, (int) $item_id, (int) $item_category_id),
             default => throw new \OutOfRangeException('No item type definition for ' . $item_type, 500),
         };
     }
@@ -131,6 +133,7 @@ class ItemCategoryController extends Controller
 
         return match ($item_type) {
             'allocated-expense' => $this->optionsAllocatedExpenseCollection((int) $resource_type_id),
+            'allocated-transaction' => $this->optionsAllocatedTransactionCollection((int) $resource_type_id),
             'game' => $this->optionsGameCollection((int) $resource_type_id),
             default => throw new \OutOfRangeException('No item type definition for ' . $item_type, 500),
         };
@@ -143,6 +146,22 @@ class ItemCategoryController extends Controller
         }
 
         $response = new AllocatedExpenseCollection($this->permissions((int) $resource_type_id));
+
+        return $response
+            ->setAllowedValuesForFields(
+                (new \App\Models\AllowedValue\Category())->allowedValues($resource_type_id)
+            )
+            ->create()
+            ->response();
+    }
+
+    private function optionsAllocatedTransactionCollection(int $resource_type_id): JsonResponse
+    {
+        if ($this->hasViewAccessToResourceType($resource_type_id) === false) {
+            return \App\HttpResponse\Response::notFoundOrNotAccessible(trans('entities.item'));
+        }
+
+        $response = new AllocatedTransactionCollection($this->permissions((int) $resource_type_id));
 
         return $response
             ->setAllowedValuesForFields(
@@ -186,6 +205,7 @@ class ItemCategoryController extends Controller
 
         return match ($item_type) {
             'allocated-expense' => $this->optionsAllocatedExpenseShow((int) $resource_type_id, (int) $resource_id, (int) $item_id, (int) $item_category_id),
+            'allocated-transaction' => $this->optionsAllocatedTransactionShow((int) $resource_type_id, (int) $resource_id, (int) $item_id, (int) $item_category_id),
             'game' => $this->optionsGameShow((int) $resource_type_id, (int) $resource_id, (int) $item_id, (int) $item_category_id),
             default => throw new \OutOfRangeException('No item type definition for ' . $item_type, 500),
         };
@@ -209,6 +229,28 @@ class ItemCategoryController extends Controller
         }
 
         $response = new AllocatedExpense($this->permissions((int) $resource_type_id));
+
+        return $response->create()->response();
+    }
+
+    private function optionsAllocatedTransactionShow(
+        int $resource_type_id,
+        int $resource_id,
+        int $item_id,
+        int $item_category_id
+    ): JsonResponse {
+        $item_category = (new ItemCategory())->single(
+            $resource_type_id,
+            $resource_id,
+            $item_id,
+            $item_category_id
+        );
+
+        if ($item_category === null) {
+            return \App\HttpResponse\Response::notFound(trans('entities.item-category'));
+        }
+
+        $response = new AllocatedTransaction($this->permissions((int) $resource_type_id));
 
         return $response->create()->response();
     }

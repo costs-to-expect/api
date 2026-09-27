@@ -2,11 +2,12 @@
 
 namespace Tests\View\Http\Controllers;
 
+use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 
 final class QueueTest extends TestCase
 {
-    /** @test */
+    #[Test]
     public function queueCollection(): void
     {
         $this->actingAs($this->createUser());
@@ -17,7 +18,7 @@ final class QueueTest extends TestCase
         $this->assertEquals([], $response->json());
     }
 
-    /** @test */
+    #[Test]
     public function queueShowInvalidId(): void
     {
         $this->actingAs($this->createUser());
@@ -26,7 +27,7 @@ final class QueueTest extends TestCase
         $response->assertStatus(403);
     }
 
-    /** @test */
+    #[Test]
     public function optionsRequestForQueueCollection(): void
     {
         $this->actingAs($this->createUser());
@@ -35,7 +36,7 @@ final class QueueTest extends TestCase
         $response->assertStatus(200);
     }
 
-    /** @test */
+    #[Test]
     public function optionsRequestForQueueInvalidId(): void
     {
         $this->actingAs($this->createUser());

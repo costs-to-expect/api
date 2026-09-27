@@ -2,11 +2,12 @@
 
 namespace Tests\View\Http\Controllers;
 
+use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 
 final class ItemDataTest extends TestCase
 {
-    /** @test */
+    #[Test]
     public function itemDataCollectionEmpty(): void
     {
         $this->actingAs($this->createUser());
@@ -26,7 +27,7 @@ final class ItemDataTest extends TestCase
         $this->assertEquals([], $response->json());
     }
 
-    /** @test */
+    #[Test]
     public function itemDataCollection(): void
     {
         $this->actingAs($this->createUser());
@@ -49,7 +50,7 @@ final class ItemDataTest extends TestCase
         $this->assertEquals(['total' => 123], $response->json()[0]['value']);
     }
 
-    /** @test */
+    #[Test]
     public function itemDataShow(): void
     {
         $this->actingAs($this->createUser());
@@ -72,7 +73,7 @@ final class ItemDataTest extends TestCase
         $this->assertEquals(['total' => 123], $response->json('value'));
     }
 
-    /** @test */
+    #[Test]
     public function itemDataShowNotFound(): void
     {
         $this->actingAs($this->createUser());
@@ -91,7 +92,7 @@ final class ItemDataTest extends TestCase
         $response->assertStatus(404);
     }
 
-    /** @test */
+    #[Test]
     public function itemDataNotSupportedForAllocatedExpense(): void
     {
         $this->actingAs($this->createUser());
@@ -109,7 +110,7 @@ final class ItemDataTest extends TestCase
         $response->assertStatus(405);
     }
 
-    /** @test */
+    #[Test]
     public function optionsRequestForItemDataCollection(): void
     {
         $this->actingAs($this->createUser());
@@ -127,7 +128,7 @@ final class ItemDataTest extends TestCase
         $response->assertStatus(200);
     }
 
-    /** @test */
+    #[Test]
     public function optionsRequestForItemData(): void
     {
         $this->actingAs($this->createUser());

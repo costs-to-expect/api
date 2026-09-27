@@ -10,6 +10,7 @@ return [
     'subcategory' => 'Subcategory',
     'item' => 'Item',
     'item-allocated-expense' => 'Expense',
+    'item-allocated-transaction' => 'Transaction',
     'item-game' => 'Game',
     'item-data' => 'Keyed Data',
     'item-category' => 'Assigned Category',

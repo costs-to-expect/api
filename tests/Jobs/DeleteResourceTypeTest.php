@@ -7,11 +7,12 @@ use App\Jobs\DeleteResourceType;
 use App\Notifications\FailedJob;
 use App\Notifications\ResourceTypeDeleted;
 use Illuminate\Support\Facades\Notification;
+use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 
 class DeleteResourceTypeTest extends TestCase
 {
-    /** @test */
+    #[Test]
     public function soleOwnerCascadeDeletesResourceTypeAndAllData(): void
     {
         Notification::fake();
@@ -48,7 +49,7 @@ class DeleteResourceTypeTest extends TestCase
         Notification::assertSentOnDemandTimes(FailedJob::class, 0);
     }
 
-    /** @test */
+    #[Test]
     public function additionalPermittedUserOnlyRemovesThatUsersPermission(): void
     {
         Notification::fake();

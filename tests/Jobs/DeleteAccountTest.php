@@ -8,11 +8,12 @@ use App\Notifications\FailedJob;
 use App\Notifications\ResourceTypeDeleted;
 use App\User;
 use Illuminate\Support\Facades\Notification;
+use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 
 class DeleteAccountTest extends TestCase
 {
-    /** @test */
+    #[Test]
     public function soleOwnerAccountCascadeDeletesEverythingAndTheUser(): void
     {
         Notification::fake();
@@ -40,7 +41,7 @@ class DeleteAccountTest extends TestCase
         Notification::assertSentOnDemandTimes(FailedJob::class, 0);
     }
 
-    /** @test */
+    #[Test]
     public function additionalPermittedUserIsStrippedButUserIsStillDeleted(): void
     {
         Notification::fake();
@@ -71,7 +72,7 @@ class DeleteAccountTest extends TestCase
         Notification::assertSentOnDemandTimes(FailedJob::class, 0);
     }
 
-    /** @test */
+    #[Test]
     public function userWithNoResourceTypesIsJustDeleted(): void
     {
         Notification::fake();

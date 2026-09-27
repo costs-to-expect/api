@@ -1,0 +1,18 @@
+<?php
+
+declare(strict_types=1);
+
+return [
+    'description-prefix-category' => 'Include results with items assigned to \'',
+    'description-suffix-category' => '\' category',
+
+    'description-prefix-subcategory' => 'Include results with items assigned to \'',
+    'description-suffix-subcategory' => '\' subcategory',
+
+    'description-prefix-year' => 'Include results with effective date in ',
+
+    'description-prefix-month' => 'Include results with effective date in ',
+
+    'description-transaction-type-expense' => 'Include results that are an expense',
+    'description-transaction-type-income' => 'Include results that are income',
+];

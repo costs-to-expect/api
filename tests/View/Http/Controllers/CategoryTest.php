@@ -2,6 +2,7 @@
 
 namespace Tests\View\Http\Controllers;
 
+use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 
 final class CategoryTest extends TestCase
@@ -274,7 +275,7 @@ final class CategoryTest extends TestCase
         $this->assertJsonMatchesCategorySchema($response->getContent());
     }
 
-    /** @test */
+    #[Test]
     public function allocatedExpenseCategoryShowIncludeSubcategories(): void
     {
         $this->actingAs($this->createUser());

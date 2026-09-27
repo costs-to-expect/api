@@ -2,11 +2,12 @@
 
 namespace Tests\View\Http\Controllers;
 
+use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 
 final class CurrencyTest extends TestCase
 {
-    /** @test */
+    #[Test]
     public function currencyCollection(): void
     {
         $this->actingAs($this->createUser());
@@ -26,7 +27,7 @@ final class CurrencyTest extends TestCase
         }
     }
 
-    /** @test */
+    #[Test]
     public function currencyCollectionPagination(): void
     {
         $this->actingAs($this->createUser());
@@ -49,7 +50,7 @@ final class CurrencyTest extends TestCase
         }
     }
 
-    /** @test */
+    #[Test]
     public function currencyCollectionSearchCode(): void
     {
         $this->actingAs($this->createUser());
@@ -63,7 +64,7 @@ final class CurrencyTest extends TestCase
         $this->assertEquals('USD', $response->json()[0]['code']);
     }
 
-    /** @test */
+    #[Test]
     public function currencyCollectionSearchName(): void
     {
         $this->actingAs($this->createUser());
@@ -85,7 +86,7 @@ final class CurrencyTest extends TestCase
         }
     }
 
-    /** @test */
+    #[Test]
     public function currencyCollectionSearchNoResults(): void
     {
         $this->actingAs($this->createUser());
@@ -96,7 +97,7 @@ final class CurrencyTest extends TestCase
         $response->assertHeader('X-Count', 0);
     }
 
-    /** @test */
+    #[Test]
     public function currencyCollectionSortName(): void
     {
         $this->actingAs($this->createUser());
@@ -108,7 +109,7 @@ final class CurrencyTest extends TestCase
         $this->assertEquals('Australian Dollar', $response->json()[0]['name']);
     }
 
-    /** @test */
+    #[Test]
     public function currencyShow(): void
     {
         $this->actingAs($this->createUser());
@@ -124,7 +125,7 @@ final class CurrencyTest extends TestCase
         $this->assertJsonMatchesCurrencySchema($response->content());
     }
 
-    /** @test */
+    #[Test]
     public function currencyShowInvalidId(): void
     {
         $this->actingAs($this->createUser());
@@ -133,7 +134,7 @@ final class CurrencyTest extends TestCase
         $response->assertStatus(403);
     }
 
-    /** @test */
+    #[Test]
     public function optionsRequestForCurrencyCollection(): void
     {
         $this->actingAs($this->createUser());
@@ -142,7 +143,7 @@ final class CurrencyTest extends TestCase
         $response->assertStatus(200);
     }
 
-    /** @test */
+    #[Test]
     public function optionsRequestForCurrency(): void
     {
         $this->actingAs($this->createUser());
