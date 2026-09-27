@@ -8,11 +8,12 @@ use App\Notifications\FailedJob;
 use App\Notifications\ResourceDeleted;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Notification;
+use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 
 class DeleteResourceTest extends TestCase
 {
-    /** @test */
+    #[Test]
     public function soleOwnerCascadeDeletesResourceAndAllData(): void
     {
         Notification::fake();
@@ -42,7 +43,37 @@ class DeleteResourceTest extends TestCase
         Notification::assertSentOnDemandTimes(FailedJob::class, 0);
     }
 
-    /** @test */
+    #[Test]
+    public function soleOwnerCascadeDeletesAllocatedTransactionResourceAndAllData(): void
+    {
+        Notification::fake();
+
+        $hash = new Hash();
+
+        $owner = $this->createUser();
+        $this->actingAs($owner);
+
+        $resource_type_id = $this->quickCreateAllocatedTransactionResourceType();
+        $resource_id = $this->quickCreateAllocatedTransactionResource($resource_type_id);
+        $item_id = $this->quickCreateAllocatedTransactionItem($resource_type_id, $resource_id);
+
+        $raw_resource_type_id = $hash->decode('resource-type', $resource_type_id);
+        $raw_resource_id = $hash->decode('resource', $resource_id);
+        $raw_item_id = $hash->decode('item', $item_id);
+
+        $job = new DeleteResource($owner->id, $raw_resource_type_id, $raw_resource_id);
+        $job->handle();
+
+        $this->assertDatabaseMissing('resource', ['id' => $raw_resource_id]);
+        $this->assertDatabaseMissing('item', ['id' => $raw_item_id]);
+        $this->assertDatabaseMissing('item_type_allocated_transaction', ['item_id' => $raw_item_id]);
+        $this->assertDatabaseHas('resource_type', ['id' => $raw_resource_type_id]);
+
+        Notification::assertSentOnDemand(ResourceDeleted::class);
+        Notification::assertSentOnDemandTimes(FailedJob::class, 0);
+    }
+
+    #[Test]
     public function additionalPermittedUserOnlyRemovesThatUsersPermission(): void
     {
         Notification::fake();
@@ -74,7 +105,7 @@ class DeleteResourceTest extends TestCase
         Notification::assertSentOnDemandTimes(FailedJob::class, 0);
     }
 
-    /** @test */
+    #[Test]
     public function transactionFailureDoesNotSendASuccessNotification(): void
     {
         Notification::fake();

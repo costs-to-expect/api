@@ -2,11 +2,12 @@
 
 namespace Tests\Action\Http\Controllers;
 
+use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 
 final class ItemGameTest extends TestCase
 {
-    /** @test */
+    #[Test]
     public function createYahtzeeGameItemSuccess(): void
     {
         $this->actingAs($this->createUser());
@@ -27,7 +28,7 @@ final class ItemGameTest extends TestCase
         $this->assertJsonMatchesGameItemSchema($response->content());
     }
 
-    /** @test */
+    #[Test]
     public function createYatzyGameItemSuccess(): void
     {
         $this->actingAs($this->createUser());
@@ -48,7 +49,7 @@ final class ItemGameTest extends TestCase
         $this->assertJsonMatchesGameItemSchema($response->content());
     }
 
-    /** @test */
+    #[Test]
     public function deleteYahtzeeGameItemFailsNotFound(): void
     {
         $this->actingAs($this->createUser());
@@ -66,7 +67,7 @@ final class ItemGameTest extends TestCase
         $response->assertStatus(403);
     }
 
-    /** @test */
+    #[Test]
     public function deleteYahtzeeGameItemSuccess(): void
     {
         $this->actingAs($this->createUser());
@@ -84,7 +85,7 @@ final class ItemGameTest extends TestCase
         $response->assertStatus(204);
     }
 
-    /** @test */
+    #[Test]
     public function deleteYatzyGameItemFailsNotFound(): void
     {
         $this->actingAs($this->createUser());
@@ -102,7 +103,7 @@ final class ItemGameTest extends TestCase
         $response->assertStatus(403);
     }
 
-    /** @test */
+    #[Test]
     public function deleteYatzyGameItemSuccess(): void
     {
         $this->actingAs($this->createUser());
@@ -120,7 +121,7 @@ final class ItemGameTest extends TestCase
         $response->assertStatus(204);
     }
 
-    /** @test */
+    #[Test]
     public function updateYahtzeeGameItemFailsNonExistentField(): void
     {
         $this->actingAs($this->createUser());
@@ -141,7 +142,7 @@ final class ItemGameTest extends TestCase
         $response->assertStatus(400);
     }
 
-    /** @test */
+    #[Test]
     public function updateYahtzeeGameItemFailsNoPayload(): void
     {
         $this->actingAs($this->createUser());
@@ -160,7 +161,7 @@ final class ItemGameTest extends TestCase
         $response->assertStatus(400);
     }
 
-    /** @test */
+    #[Test]
     public function updateYahtzeeGameItemSuccess(): void
     {
         $this->actingAs($this->createUser());
@@ -181,7 +182,7 @@ final class ItemGameTest extends TestCase
         $response->assertStatus(204);
     }
 
-    /** @test */
+    #[Test]
     public function updateYatzyGameItemFailsNonExistentField(): void
     {
         $this->actingAs($this->createUser());
@@ -202,7 +203,7 @@ final class ItemGameTest extends TestCase
         $response->assertStatus(400);
     }
 
-    /** @test */
+    #[Test]
     public function updateYatzyGameItemFailsNoPayload(): void
     {
         $this->actingAs($this->createUser());
@@ -221,7 +222,7 @@ final class ItemGameTest extends TestCase
         $response->assertStatus(400);
     }
 
-    /** @test */
+    #[Test]
     public function updateYatzyGameItemSuccess(): void
     {
         $this->actingAs($this->createUser());

@@ -18,7 +18,6 @@ The API is used by the following Apps;
 
 - [Budget](https://budget.costs-to-expect.com) Our free and Open Source Budgeting tool
 - [Budget Pro](https://budget-pro.costs-to-expect.com) The commercial version of Budget
-- [Expense](https://app.costs-to-expect.com) Our free and Open Source expense tracker
 - [Yahtzee Game Scorer](https://yahtzee.game-scorer.com) Our Yahtzee Game Scorer, free for all to use
 - [Yatzy Game Scorer](https://yatzy.game-scorer.com) Our Yatzy Game Scorer, free for all to use
 - [Social Experiment](https://www.costs-to-expect.com) How much does it cost to raise a child to adulthood in the UK?
@@ -313,36 +312,33 @@ You can see our progress in the table below. We are hoping to add tests in each 
 not too concerned about missing anything as we still have all our tests in Postman, we won't disable our test monitor until 
 our local test suite is as complete as the Postman request test suite.
 
-| Controller               | Action   | View     | 
-|:-------------------------|:---------|:---------|
-| Authentication           | 49 Tests | 28 Tests |
-| Category                 | 21 Tests | 27 Tests |
-| Currency                 | Non yet* | 10 Tests |
-| Index                    | N/A      | 6 Tests  |
-| ItemCategory             | 7 Tests  | 9 Tests  |
-| Item (Allocated Expense) | 9 Tests  | 9 Tests  |
-| Item (Budget)            | 12 Tests | 9 Tests  |
-| Item (Budget Pro)        | 12 Tests | 11 Tests |
-| Item (Game)              | 12 Tests | 12 Tests |
-| ItemData                 | 9 Tests  | 7 Tests  |
-| ItemLog                  | 4 Tests  | 7 Tests  |
-| ItemPartialTransfer      | 6 Tests  | 9 Tests  |
-| ItemSubcategory          | 7 Tests  | 9 Tests  |
-| ItemSubtype              | Non yet* | 10 Tests |
-| ItemTransfer             | 4 Tests  | 8 Tests  |
-| ItemType                 | Non yet* | 7 Tests  |
-| PermittedUser            | 4 Tests  | 2 Tests  |
-| Queue                    | Non yet* | 4 Tests  |
-| Request                  | 5 Tests  | 4 Tests  |
-| Resource                 | 24 Tests | 27 Tests |
-| ResourceType             | 23 Tests | 26 Tests |
-| ResourceTypeItem         | N/A      | 9 Tests  |
-| Subcategory              | 21 Tests | 22 Tests |
-| **Total tests**          | **229**  | **272**  |
-
-*Non yet does not mean there are no tests, it just means there are no PHPUnit tests. There are over 2000 tests in 
-a private Postman collection, I'm slowing transferring them locally and expanding the test suite. N/A means there 
-is no controller of that type for the entity, for example there is no Action IndexController.
+| Controller                   | Action   | View     | 
+|:-----------------------------|:---------|:---------|
+| Authentication               | 49 Tests | 28 Tests |
+| Category                     | 21 Tests | 27 Tests |
+| Currency                     | N/A      | 10 Tests |
+| Index                        | N/A      | 6 Tests  |
+| ItemCategory                 | 7 Tests  | 9 Tests  |
+| Item (Allocated Expense)     | 9 Tests  | 9 Tests  |
+| Item (Allocated Transaction) | 10 Tests | 17 Tests |
+| Item (Budget)                | 12 Tests | 9 Tests  |
+| Item (Budget Pro)            | 12 Tests | 11 Tests |
+| Item (Game)                  | 12 Tests | 12 Tests |
+| ItemData                     | 9 Tests  | 7 Tests  |
+| ItemLog                      | 4 Tests  | 7 Tests  |
+| ItemPartialTransfer          | 6 Tests  | 9 Tests  |
+| ItemSubcategory              | 7 Tests  | 9 Tests  |
+| ItemSubtype                  | N/A      | 10 Tests |
+| ItemTransfer                 | 4 Tests  | 8 Tests  |
+| ItemType                     | N/A      | 7 Tests  |
+| PermittedUser                | 4 Tests  | 2 Tests  |
+| Queue                        | N/A      | 4 Tests  |
+| Request                      | 5 Tests  | 4 Tests  |
+| Resource                     | 24 Tests | 27 Tests |
+| ResourceType                 | 23 Tests | 26 Tests |
+| ResourceTypeItem             | N/A      | 9 Tests  |
+| Subcategory                  | 21 Tests | 22 Tests |
+| **Total tests**              | **239**  | **289**  |
 
 The totals above cover these two controller directories only; the full test suite also includes Summary route 
 tests and non-controller tests, so it's larger again.

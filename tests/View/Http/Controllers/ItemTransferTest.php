@@ -2,11 +2,12 @@
 
 namespace Tests\View\Http\Controllers;
 
+use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 
 final class ItemTransferTest extends TestCase
 {
-    /** @test */
+    #[Test]
     public function itemTransferCreate(): void
     {
         $this->actingAs($this->createUser());
@@ -26,7 +27,7 @@ final class ItemTransferTest extends TestCase
         $response->assertStatus(204);
     }
 
-    /** @test */
+    #[Test]
     public function itemTransferCollection(): void
     {
         $this->actingAs($this->createUser());
@@ -59,7 +60,7 @@ final class ItemTransferTest extends TestCase
         }
     }
 
-    /** @test */
+    #[Test]
     public function itemTransferShow(): void
     {
         $this->actingAs($this->createUser());
@@ -88,7 +89,7 @@ final class ItemTransferTest extends TestCase
         $this->assertJsonMatchesTransferSchema($response->content());
     }
 
-    /** @test */
+    #[Test]
     public function itemTransferShowNotFound(): void
     {
         $this->actingAs($this->createUser());
@@ -120,7 +121,7 @@ final class ItemTransferTest extends TestCase
         $response->assertStatus(404);
     }
 
-    /** @test */
+    #[Test]
     public function itemTransferNotSupportedForGame(): void
     {
         $this->actingAs($this->createUser());
@@ -131,7 +132,7 @@ final class ItemTransferTest extends TestCase
         $response->assertStatus(405);
     }
 
-    /** @test */
+    #[Test]
     public function optionsRequestForItemTransferCollection(): void
     {
         $this->actingAs($this->createUser());
@@ -142,7 +143,7 @@ final class ItemTransferTest extends TestCase
         $response->assertStatus(200);
     }
 
-    /** @test */
+    #[Test]
     public function optionsRequestForItemTransfer(): void
     {
         $this->actingAs($this->createUser());
@@ -169,7 +170,7 @@ final class ItemTransferTest extends TestCase
         $response->assertStatus(200);
     }
 
-    /** @test */
+    #[Test]
     public function optionsRequestForItemTransferAction(): void
     {
         $this->actingAs($this->createUser());

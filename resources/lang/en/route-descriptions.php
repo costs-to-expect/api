@@ -61,6 +61,7 @@ return [
     'resource_type_item_GET_index' => 'Return all the items assigned to the resources for this resource type',
 
     'resource_type_item_allocated_expense_GET_index' => 'Return all the expenses assigned to all the resources for the selected resource type',
+    'resource_type_item_allocated_transaction_GET_index' => 'Return all the transactions assigned to all the resources for the selected resource type',
     'resource_type_item_game_GET_index' => 'Return all the played games selected game owner',
 
     'resource_GET_index' => 'Return all the resources that are children of the selected resource type',
@@ -70,26 +71,31 @@ return [
     'resource_DELETE' => 'Delete the selected resource',
 
     'item_allocated_expense_GET_index' => 'Return all the assigned expenses for the selected resource',
+    'item_allocated_transaction_GET_index' => 'Return all the assigned transactions for the selected resource',
     'item_budget_GET_index' => 'Return all the Budget entries for the selected Budget',
     'item_budget_pro_GET_index' => 'Return all the Budget Pro entries for the selected Budget, by default, deleted budgets items are excluded',
     'item_game_GET_index' => 'Return all the played games for the selected game',
 
     'item_allocated_expense_GET_show' => 'Return the selected expense',
+    'item_allocated_transaction_GET_show' => 'Return the selected transaction',
     'item_budget_GET_show' => 'Return the selected Budget item',
     'item_budget_pro_GET_show' => 'Return the selected Budget Pro item',
     'item_game_GET_show' => 'Return the selected game',
 
     'item_allocated_expense_POST' => 'Create a new expense',
+    'item_allocated_transaction_POST' => 'Create a new transaction',
     'item_budget_POST' => 'Create a new Budget item',
     'item_budget_pro_POST' => 'Create a new Budget Pro item',
     'item_game_POST' => 'Create a new game',
 
     'item_allocated_expense_PATCH' => 'Update the selected expense',
+    'item_allocated_transaction_PATCH' => 'Update the selected transaction',
     'item_budget_PATCH' => 'Update the selected Budget item',
     'item_budget_pro_PATCH' => 'Update the selected Budget Pro item',
     'item_game_PATCH' => 'Update the selected game',
 
     'item_allocated_expense_DELETE' => 'Delete the selected expense',
+    'item_allocated_transaction_DELETE' => 'Delete the selected transaction',
     'item_budget_DELETE' => 'Delete the selected Budget item',
     'item_budget_pro_DELETE' => 'Delete the selected Budget Pro item',
     'item_game_DELETE' => 'Delete the selected game',
@@ -98,6 +104,7 @@ return [
     'item_category_GET_show' => 'Return the category assigned to the selected item',
 
     'item_category_POST_allocated_expense' => 'Assign a maximum of one category to the selected allocated-expense',
+    'item_category_POST_allocated_transaction' => 'Assign a maximum of one category to the selected allocated-transaction',
     'item_category_POST_game' => 'Assign the categories (players) to the selected game',
 
     'item_category_PATCH' => 'Update the category assigned to the selected item',
@@ -107,6 +114,7 @@ return [
     'item_sub_category_GET_show' => 'Return the subcategory assigned to the selected item',
 
     'item_sub_category_POST_allocated_expense' => 'Assign a maximum of one subcategory to the selected allocated-expense',
+    'item_sub_category_POST_allocated_transaction' => 'Assign a maximum of one subcategory to the selected allocated-transaction',
 
     'item_sub_category_PATCH' => 'Update the subcategory assigned to the selected item',
     'item_sub_category_DELETE' => 'Delete the subcategory assigned to the selected item',
@@ -145,8 +153,10 @@ return [
     'summary_resource_GET_index' => 'Return a summary of the resources',
 
     'summary_items_allocated_expense_GET_index'=> 'Return the summary of expenses for the selected resource, review summary filters for all summary options',
+    'summary_items_allocated_transaction_GET_index'=> 'Return the summary of transactions for the selected resource, review summary filters for all summary options',
     'summary_items_game_GET_index'=> 'Return the summary of games, review summary filters for all summary options',
 
     'summary_resource_type_items_allocated_expense_GET_index' => 'Return the summary of expenses for the selected resource type, review summary filters for all summary options',
+    'summary_resource_type_items_allocated_transaction_GET_index' => 'Return the summary of transactions for the selected resource type, review summary filters for all summary options',
     'summary_resource_type_items_games_GET_index' => 'Return the summary of games for the selected game owner, review summary filters for all summary options',
 ];

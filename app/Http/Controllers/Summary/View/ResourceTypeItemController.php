@@ -5,9 +5,11 @@ namespace App\Http\Controllers\Summary\View;
 use App\Http\Controllers\Controller;
 use App\HttpResponse\Response;
 use App\ItemType\AllocatedExpense\AllowedValue as AllocatedExpenseAllowedValue;
+use App\ItemType\AllocatedTransaction\AllowedValue as AllocatedTransactionAllowedValue;
 use App\ItemType\Game\AllowedValue as GameAllowedValue;
 use App\ItemType\Select;
 use App\HttpOptionResponse\ResourceTypeItem\Summary\AllocatedExpense;
+use App\HttpOptionResponse\ResourceTypeItem\Summary\AllocatedTransaction;
 use App\HttpOptionResponse\ResourceTypeItem\Summary\Game;
 use Illuminate\Http\JsonResponse;
 
@@ -28,6 +30,7 @@ class ResourceTypeItemController extends Controller
 
         return match ($item_type) {
             'allocated-expense' => $this->allocatedExpenseSummary((int) $resource_type_id),
+            'allocated-transaction' => $this->allocatedTransactionSummary((int) $resource_type_id),
             'game' => $this->gameSummary((int) $resource_type_id),
             default => throw new \OutOfRangeException('No item type definition for ' . $item_type, 500),
         };
@@ -36,6 +39,16 @@ class ResourceTypeItemController extends Controller
     private function allocatedExpenseSummary(int $resource_type_id): JsonResponse
     {
         $response = new \App\ItemType\AllocatedExpense\HttpResponse\SummaryResourceTypeItem(
+            $resource_type_id,
+            $this->user_id
+        );
+
+        return $response->response();
+    }
+
+    private function allocatedTransactionSummary(int $resource_type_id): JsonResponse
+    {
+        $response = new \App\ItemType\AllocatedTransaction\HttpResponse\SummaryResourceTypeItem(
             $resource_type_id,
             $this->user_id
         );
@@ -63,6 +76,7 @@ class ResourceTypeItemController extends Controller
 
         return match ($item_type) {
             'allocated-expense' => $this->optionsAllocatedExpense((int) $resource_type_id),
+            'allocated-transaction' => $this->optionsAllocatedTransaction((int) $resource_type_id),
             'game' => $this->optionsGame((int) $resource_type_id),
             default => throw new \OutOfRangeException('No item type definition for ' . $item_type, 500),
         };
@@ -76,6 +90,19 @@ class ResourceTypeItemController extends Controller
         );
 
         return (new AllocatedExpense($this->permissions($resource_type_id)))
+            ->setAllowedValuesForParameters($allowed_values->parameterAllowedValuesForResourceTypeCollection())
+            ->create()
+            ->response();
+    }
+
+    private function optionsAllocatedTransaction(int $resource_type_id): JsonResponse
+    {
+        $allowed_values = new AllocatedTransactionAllowedValue(
+            $this->viewable_resource_types,
+            $resource_type_id
+        );
+
+        return (new AllocatedTransaction($this->permissions($resource_type_id)))
             ->setAllowedValuesForParameters($allowed_values->parameterAllowedValuesForResourceTypeCollection())
             ->create()
             ->response();

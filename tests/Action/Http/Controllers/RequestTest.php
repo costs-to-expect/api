@@ -2,11 +2,12 @@
 
 namespace Tests\Action\Http\Controllers;
 
+use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 
 final class RequestTest extends TestCase
 {
-    /** @test */
+    #[Test]
     public function createErrorLogFailsNoPayload(): void
     {
         $response = $this->postToRequestErrorLogCreate([]);
@@ -14,7 +15,7 @@ final class RequestTest extends TestCase
         $response->assertStatus(422);
     }
 
-    /** @test */
+    #[Test]
     public function createErrorLogFailsInvalidSource(): void
     {
         $response = $this->postToRequestErrorLogCreate([
@@ -28,7 +29,7 @@ final class RequestTest extends TestCase
         $response->assertStatus(422);
     }
 
-    /** @test */
+    #[Test]
     public function createErrorLogFailsStatusCodeOutOfRange(): void
     {
         $response = $this->postToRequestErrorLogCreate([
@@ -42,7 +43,7 @@ final class RequestTest extends TestCase
         $response->assertStatus(422);
     }
 
-    /** @test */
+    #[Test]
     public function createErrorLogSuccess(): void
     {
         $response = $this->postToRequestErrorLogCreate([
@@ -56,7 +57,7 @@ final class RequestTest extends TestCase
         $response->assertStatus(204);
     }
 
-    /** @test */
+    #[Test]
     public function createErrorLogSuccessWithDebugField(): void
     {
         $response = $this->postToRequestErrorLogCreate([

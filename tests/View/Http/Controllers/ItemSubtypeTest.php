@@ -2,11 +2,12 @@
 
 namespace Tests\View\Http\Controllers;
 
+use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 
 final class ItemSubtypeTest extends TestCase
 {
-    /** @test */
+    #[Test]
     public function itemSubtypeCollection(): void
     {
         $this->actingAs($this->createUser());
@@ -26,7 +27,7 @@ final class ItemSubtypeTest extends TestCase
         }
     }
 
-    /** @test */
+    #[Test]
     public function itemSubtypeCollectionPagination(): void
     {
         $this->actingAs($this->createUser());
@@ -53,7 +54,7 @@ final class ItemSubtypeTest extends TestCase
         }
     }
 
-    /** @test */
+    #[Test]
     public function itemSubtypeCollectionSearchName(): void
     {
         $this->actingAs($this->createUser());
@@ -70,7 +71,7 @@ final class ItemSubtypeTest extends TestCase
         $this->assertEquals('yatzy', $response->json()[0]['name']);
     }
 
-    /** @test */
+    #[Test]
     public function itemSubtypeCollectionSearchNoResults(): void
     {
         $this->actingAs($this->createUser());
@@ -84,7 +85,7 @@ final class ItemSubtypeTest extends TestCase
         $response->assertHeader('X-Count', 0);
     }
 
-    /** @test */
+    #[Test]
     public function itemSubtypeCollectionSortName(): void
     {
         $this->actingAs($this->createUser());
@@ -100,7 +101,7 @@ final class ItemSubtypeTest extends TestCase
         $this->assertEquals('carcassonne', $response->json()[0]['name']);
     }
 
-    /** @test */
+    #[Test]
     public function itemSubtypeCollectionInvalidItemType(): void
     {
         $this->actingAs($this->createUser());
@@ -109,7 +110,7 @@ final class ItemSubtypeTest extends TestCase
         $response->assertStatus(403);
     }
 
-    /** @test */
+    #[Test]
     public function itemSubtypeShow(): void
     {
         $this->actingAs($this->createUser());
@@ -130,7 +131,7 @@ final class ItemSubtypeTest extends TestCase
         $this->assertJsonMatchesItemSubtypeSchema($response->content());
     }
 
-    /** @test */
+    #[Test]
     public function itemSubtypeShowInvalidId(): void
     {
         $this->actingAs($this->createUser());
@@ -142,7 +143,7 @@ final class ItemSubtypeTest extends TestCase
         $response->assertStatus(403);
     }
 
-    /** @test */
+    #[Test]
     public function optionsRequestForItemSubtypeCollection(): void
     {
         $this->actingAs($this->createUser());
@@ -153,7 +154,7 @@ final class ItemSubtypeTest extends TestCase
         $response->assertStatus(200);
     }
 
-    /** @test */
+    #[Test]
     public function optionsRequestForItemSubtype(): void
     {
         $this->actingAs($this->createUser());

@@ -2,11 +2,12 @@
 
 namespace Tests\Action\Http\Controllers;
 
+use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 
 final class ItemTransferTest extends TestCase
 {
-    /** @test */
+    #[Test]
     public function createItemTransferFailsNoPayload(): void
     {
         $this->actingAs($this->createUser());
@@ -20,7 +21,7 @@ final class ItemTransferTest extends TestCase
         $response->assertStatus(422);
     }
 
-    /** @test */
+    #[Test]
     public function createItemTransferFailsSameResource(): void
     {
         $this->actingAs($this->createUser());
@@ -36,7 +37,7 @@ final class ItemTransferTest extends TestCase
         $response->assertStatus(422);
     }
 
-    /** @test */
+    #[Test]
     public function createItemTransferFailsResourceFromDifferentResourceType(): void
     {
         $this->actingAs($this->createUser());
@@ -56,7 +57,7 @@ final class ItemTransferTest extends TestCase
         $response->assertStatus(422);
     }
 
-    /** @test */
+    #[Test]
     public function createItemTransferSuccess(): void
     {
         $this->actingAs($this->createUser());

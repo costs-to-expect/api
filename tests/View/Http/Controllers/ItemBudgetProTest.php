@@ -2,11 +2,12 @@
 
 namespace Tests\View\Http\Controllers;
 
+use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 
 final class ItemBudgetProTest extends TestCase
 {
-    /** @test */
+    #[Test]
     public function budgetProItemCollection(): void
     {
         $this->actingAs($this->createUser());
@@ -37,7 +38,7 @@ final class ItemBudgetProTest extends TestCase
         }
     }
 
-    /** @test */
+    #[Test]
     public function budgetProItemCollectionExcludeDeleted(): void
     {
         $this->actingAs($this->createUser());
@@ -71,7 +72,7 @@ final class ItemBudgetProTest extends TestCase
         }
     }
 
-    /** @test */
+    #[Test]
     public function budgetProItemCollectionPagination(): void
     {
         $this->actingAs($this->createUser());
@@ -107,7 +108,7 @@ final class ItemBudgetProTest extends TestCase
         }
     }
 
-    /** @test */
+    #[Test]
     public function budgetProItemCollectionSearchName(): void
     {
         $this->actingAs($this->createUser());
@@ -140,7 +141,7 @@ final class ItemBudgetProTest extends TestCase
         }
     }
 
-    /** @test */
+    #[Test]
     public function budgetProItemCollectionSortAmount(): void
     {
         $this->actingAs($this->createUser());
@@ -173,7 +174,7 @@ final class ItemBudgetProTest extends TestCase
         }
     }
 
-    /** @test */
+    #[Test]
     public function budgetProItemCollectionSortCreated(): void
     {
         $this->actingAs($this->createUser());
@@ -207,7 +208,7 @@ final class ItemBudgetProTest extends TestCase
         }
     }
 
-    /** @test */
+    #[Test]
     public function budgetProItemCollectionSortName(): void
     {
         $this->actingAs($this->createUser());
@@ -240,7 +241,7 @@ final class ItemBudgetProTest extends TestCase
         }
     }
 
-    /** @test */
+    #[Test]
     public function budgetProItemCollectionWithParameterIncludeDeleted(): void
     {
         $this->actingAs($this->createUser());
@@ -273,7 +274,7 @@ final class ItemBudgetProTest extends TestCase
         }
     }
 
-    /** @test */
+    #[Test]
     public function budgetProItemShow(): void
     {
         $this->actingAs($this->createUser());
@@ -292,7 +293,7 @@ final class ItemBudgetProTest extends TestCase
         $this->assertJsonMatchesBudgetProItemSchema($response->content());
     }
 
-    /** @test */
+    #[Test]
     public function optionsRequestForBudgetProItem(): void
     {
         $this->actingAs($this->createUser());
@@ -311,7 +312,7 @@ final class ItemBudgetProTest extends TestCase
         $this->assertProvidedJsonMatchesDefinedSchema($response->content(), 'api/schema/options/budget-pro.json');
     }
 
-    /** @test */
+    #[Test]
     public function optionsRequestForBudgetProItemCollection(): void
     {
         $this->actingAs($this->createUser());

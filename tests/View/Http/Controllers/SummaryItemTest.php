@@ -2,11 +2,12 @@
 
 namespace Tests\View\Http\Controllers;
 
+use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 
 final class SummaryItemTest extends TestCase
 {
-    /** @test */
+    #[Test]
     public function summaryItem(): void
     {
         $this->actingAs($this->createUser());
@@ -28,7 +29,7 @@ final class SummaryItemTest extends TestCase
         $this->assertEquals('150.00', $response->json()[0]['subtotal']);
     }
 
-    /** @test */
+    #[Test]
     public function summaryItemByYears(): void
     {
         $this->actingAs($this->createUser());
@@ -49,7 +50,7 @@ final class SummaryItemTest extends TestCase
         $this->assertCount(2, $response->json());
     }
 
-    /** @test */
+    #[Test]
     public function summaryItemByYearAndMonth(): void
     {
         $this->actingAs($this->createUser());
@@ -74,7 +75,7 @@ final class SummaryItemTest extends TestCase
         $this->assertEquals('125.00', $response->json('subtotals.0.subtotal'));
     }
 
-    /** @test */
+    #[Test]
     public function summaryItemByCategories(): void
     {
         $this->actingAs($this->createUser());
@@ -97,7 +98,7 @@ final class SummaryItemTest extends TestCase
         $this->assertEquals('100.00', $response->json()[0]['subtotals'][0]['subtotal']);
     }
 
-    /** @test */
+    #[Test]
     public function summaryItemByYear(): void
     {
         $this->actingAs($this->createUser());
@@ -121,7 +122,7 @@ final class SummaryItemTest extends TestCase
         $this->assertEquals('150.00', $response->json('subtotals.0.subtotal'));
     }
 
-    /** @test */
+    #[Test]
     public function summaryItemByYearAndMonths(): void
     {
         $this->actingAs($this->createUser());
@@ -144,7 +145,7 @@ final class SummaryItemTest extends TestCase
         $this->assertCount(2, $response->json());
     }
 
-    /** @test */
+    #[Test]
     public function summaryItemByCategory(): void
     {
         $this->actingAs($this->createUser());
@@ -167,7 +168,7 @@ final class SummaryItemTest extends TestCase
         $this->assertEquals('100.00', $response->json('subtotals.0.subtotal'));
     }
 
-    /** @test */
+    #[Test]
     public function summaryItemByCategoryAndSubcategories(): void
     {
         $this->actingAs($this->createUser());
@@ -194,7 +195,7 @@ final class SummaryItemTest extends TestCase
         $this->assertEquals('100.00', $response->json('0.subtotals.0.subtotal'));
     }
 
-    /** @test */
+    #[Test]
     public function summaryItemByCategoryAndSubcategory(): void
     {
         $this->actingAs($this->createUser());
@@ -220,7 +221,7 @@ final class SummaryItemTest extends TestCase
         $this->assertEquals('100.00', $response->json('subtotals.0.subtotal'));
     }
 
-    /** @test */
+    #[Test]
     public function summaryItemFilteredBySearch(): void
     {
         // filteredSummary() inner-joins item_category/item_sub_category, so an
@@ -252,7 +253,7 @@ final class SummaryItemTest extends TestCase
         $this->assertEquals('25.00', $response->json('0.subtotal'));
     }
 
-    /** @test */
+    #[Test]
     public function optionsRequestForSummaryItemCollection(): void
     {
         $this->actingAs($this->createUser());

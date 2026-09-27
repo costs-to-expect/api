@@ -2,11 +2,12 @@
 
 namespace Tests\View\Http\Controllers;
 
+use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 
 final class ItemTypeTest extends TestCase
 {
-    /** @test */
+    #[Test]
     public function itemTypeCollection(): void
     {
         $this->actingAs($this->createUser());
@@ -25,7 +26,7 @@ final class ItemTypeTest extends TestCase
         }
     }
 
-    /** @test */
+    #[Test]
     public function itemTypeCollectionPagination(): void
     {
         $this->actingAs($this->createUser());
@@ -47,7 +48,7 @@ final class ItemTypeTest extends TestCase
         }
     }
 
-    /** @test */
+    #[Test]
     public function itemTypeCollectionSearchDescription(): void
     {
         $this->actingAs($this->createUser());
@@ -56,7 +57,7 @@ final class ItemTypeTest extends TestCase
 
         $response->assertStatus(200);
         $response->assertHeader('X-Search', 'description:track');
-        $response->assertHeader('X-Count', 2);
+        $response->assertHeader('X-Count', 3);
 
         foreach ($response->json() as $item) {
             try {
@@ -69,7 +70,7 @@ final class ItemTypeTest extends TestCase
         }
     }
 
-    /** @test */
+    #[Test]
     public function itemTypeCollectionSearchName(): void
     {
         $this->actingAs($this->createUser());
@@ -91,7 +92,7 @@ final class ItemTypeTest extends TestCase
         }
     }
 
-    /** @test */
+    #[Test]
     public function itemTypeCollectionSearchNameNoResults(): void
     {
         $this->actingAs($this->createUser());
@@ -113,7 +114,7 @@ final class ItemTypeTest extends TestCase
         }
     }
 
-    /** @test */
+    #[Test]
     public function itemTypeCollectionSortName(): void
     {
         $this->actingAs($this->createUser());
@@ -138,7 +139,7 @@ final class ItemTypeTest extends TestCase
 
     }
 
-    /** @test */
+    #[Test]
     public function itemTypeShow(): void
     {
         $this->actingAs($this->createUser());

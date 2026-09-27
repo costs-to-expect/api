@@ -6,6 +6,9 @@ use App\Http\Controllers\Controller;
 use App\HttpOptionResponse\ItemTransfer\AllocatedExpense;
 use App\HttpOptionResponse\ItemTransfer\AllocatedExpenseCollection;
 use App\HttpOptionResponse\ItemTransfer\AllocatedExpenseTransfer;
+use App\HttpOptionResponse\ItemTransfer\AllocatedTransaction;
+use App\HttpOptionResponse\ItemTransfer\AllocatedTransactionCollection;
+use App\HttpOptionResponse\ItemTransfer\AllocatedTransactionTransfer;
 use App\HttpRequest\Parameter;
 use App\HttpResponse\Header;
 use App\HttpResponse\Response;
@@ -31,7 +34,7 @@ class ItemTransferController extends Controller
         $item_type = Select::itemType((int) $resource_type_id);
 
         return match ($item_type) {
-            'allocated-expense' => $this->collection((int) $resource_type_id),
+            'allocated-expense', 'allocated-transaction' => $this->collection((int) $resource_type_id),
             'game' => Response::notSupported(),
             default => throw new \OutOfRangeException('No item type definition for ' . $item_type, 500),
         };
@@ -98,6 +101,7 @@ class ItemTransferController extends Controller
 
         return match ($item_type) {
             'allocated-expense' => $this->optionsAllocatedExpenseCollection((int) $resource_type_id),
+            'allocated-transaction' => $this->optionsAllocatedTransactionCollection((int) $resource_type_id),
             'game' => Response::notSupported(),
             default => throw new \OutOfRangeException('No item type definition for ' . $item_type, 500),
         };
@@ -106,6 +110,13 @@ class ItemTransferController extends Controller
     private function optionsAllocatedExpenseCollection(int $resource_type_id): JsonResponse
     {
         $response = new AllocatedExpenseCollection($this->permissions($resource_type_id));
+
+        return $response->create()->response();
+    }
+
+    private function optionsAllocatedTransactionCollection(int $resource_type_id): JsonResponse
+    {
+        $response = new AllocatedTransactionCollection($this->permissions($resource_type_id));
 
         return $response->create()->response();
     }
@@ -120,6 +131,7 @@ class ItemTransferController extends Controller
 
         return match ($item_type) {
             'allocated-expense' => $this->optionsAllocatedExpenseShow((int) $resource_type_id),
+            'allocated-transaction' => $this->optionsAllocatedTransactionShow((int) $resource_type_id),
             'game' => Response::notSupported(),
             default => throw new \OutOfRangeException('No item type definition for ' . $item_type, 500),
         };
@@ -128,6 +140,13 @@ class ItemTransferController extends Controller
     private function optionsAllocatedExpenseShow(int $resource_type_id): JsonResponse
     {
         $response = new AllocatedExpense($this->permissions($resource_type_id));
+
+        return $response->create()->response();
+    }
+
+    private function optionsAllocatedTransactionShow(int $resource_type_id): JsonResponse
+    {
+        $response = new AllocatedTransaction($this->permissions($resource_type_id));
 
         return $response->create()->response();
     }
@@ -145,6 +164,7 @@ class ItemTransferController extends Controller
 
         return match ($item_type) {
             'allocated-expense' => $this->optionsAllocatedExpenseTransfer((int) $resource_type_id, (int) $resource_id),
+            'allocated-transaction' => $this->optionsAllocatedTransactionTransfer((int) $resource_type_id, (int) $resource_id),
             'game' => Response::notSupported(),
             default => throw new \OutOfRangeException('No item type definition for ' . $item_type, 500),
         };
@@ -155,6 +175,22 @@ class ItemTransferController extends Controller
         int $resource_id
     ): JsonResponse {
         $response = new AllocatedExpenseTransfer($this->permissions($resource_type_id));
+
+        return $response->setAllowedValuesForFields(
+            (new \App\Models\AllowedValue\Resource())->allowedValues(
+                $resource_type_id,
+                $resource_id
+            )
+        )->
+        create()->
+        response();
+    }
+
+    private function optionsAllocatedTransactionTransfer(
+        int $resource_type_id,
+        int $resource_id
+    ): JsonResponse {
+        $response = new AllocatedTransactionTransfer($this->permissions($resource_type_id));
 
         return $response->setAllowedValuesForFields(
             (new \App\Models\AllowedValue\Resource())->allowedValues(
@@ -177,7 +213,7 @@ class ItemTransferController extends Controller
         $item_type = Select::itemType((int) $resource_type_id);
 
         return match ($item_type) {
-            'allocated-expense' => $this->allocatedExpense((int) $resource_type_id, (int) $item_transfer_id),
+            'allocated-expense', 'allocated-transaction' => $this->allocatedExpense((int) $resource_type_id, (int) $item_transfer_id),
             'game' => Response::notSupported(),
             default => throw new \OutOfRangeException('No item type definition for ' . $item_type, 500),
         };

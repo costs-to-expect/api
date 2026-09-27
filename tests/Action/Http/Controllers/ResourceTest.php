@@ -4,11 +4,12 @@ namespace Tests\Action\Http\Controllers;
 
 use App\HttpRequest\Hash;
 use App\Models\ResourceType;
+use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 
 final class ResourceTest extends TestCase
 {
-    /** @test */
+    #[Test]
     public function createAllocatedExpenseResourceFailsDataFieldNotValidJson(): void
     {
         $this->actingAs($this->createUser());
@@ -28,7 +29,7 @@ final class ResourceTest extends TestCase
         $response->assertStatus(422);
     }
 
-    /** @test */
+    #[Test]
     public function createAllocatedExpenseResourceFailsItemSubtypeInvalid(): void
     {
         $this->actingAs($this->createUser());
@@ -48,7 +49,7 @@ final class ResourceTest extends TestCase
         $response->assertStatus(422);
     }
 
-    /** @test */
+    #[Test]
     public function createAllocatedExpenseResourceFailsNoDescriptionInPayload(): void
     {
         $this->actingAs($this->createUser());
@@ -67,7 +68,7 @@ final class ResourceTest extends TestCase
         $response->assertStatus(422);
     }
 
-    /** @test */
+    #[Test]
     public function createAllocatedExpenseResourceFailsNoNameInPayload(): void
     {
         $this->actingAs($this->createUser());
@@ -86,7 +87,7 @@ final class ResourceTest extends TestCase
         $response->assertStatus(422);
     }
 
-    /** @test */
+    #[Test]
     public function createAllocatedExpenseResourceFailsNonUniqueName(): void
     {
         $this->actingAs($this->createUser());
@@ -119,7 +120,7 @@ final class ResourceTest extends TestCase
         $response->assertStatus(422);
     }
 
-    /** @test */
+    #[Test]
     public function createAllocatedExpenseResourceFailsNoPayload(): void
     {
         $this->actingAs($this->createUser());
@@ -134,7 +135,7 @@ final class ResourceTest extends TestCase
         $response->assertStatus(422);
     }
 
-    /** @test */
+    #[Test]
     public function createAllocatedExpenseResourceFailsNoPermissionToResourceType(): void
     {
         $this->actingAs($this->createUser());
@@ -164,7 +165,7 @@ final class ResourceTest extends TestCase
         }
     }
 
-    /** @test */
+    #[Test]
     public function createAllocatedExpenseResourceSuccess(): void
     {
         $this->actingAs($this->createUser());
@@ -184,7 +185,7 @@ final class ResourceTest extends TestCase
         $this->assertJsonMatchesResourceSchema($response->content());
     }
 
-    /** @test */
+    #[Test]
     public function createAllocatedExpenseResourceSuccessIncludeDataField(): void
     {
         $this->actingAs($this->createUser());
@@ -205,7 +206,7 @@ final class ResourceTest extends TestCase
         $this->assertJsonMatchesResourceSchema($response->content());
     }
 
-    /** @test */
+    #[Test]
     public function createBudgetProResourceSuccess(): void
     {
         $this->actingAs($this->createUser());
@@ -225,7 +226,7 @@ final class ResourceTest extends TestCase
         $this->assertJsonMatchesResourceSchema($response->content());
     }
 
-    /** @test */
+    #[Test]
     public function createBudgetResourceSuccess(): void
     {
         $this->actingAs($this->createUser());
@@ -283,7 +284,7 @@ final class ResourceTest extends TestCase
         $this->assertJsonMatchesResourceSchema($response->content());
     }
 
-    /** @test */
+    #[Test]
     public function deleteAllocatedExpenseResourceSuccess(): void
     {
         $this->actingAs($this->createUser());
@@ -296,7 +297,7 @@ final class ResourceTest extends TestCase
         $response->assertStatus(204);
     }
 
-    /** @test */
+    #[Test]
     public function deleteBudgetProResourceSuccess(): void
     {
         $this->actingAs($this->createUser());
@@ -309,7 +310,7 @@ final class ResourceTest extends TestCase
         $response->assertStatus(204);
     }
 
-    /** @test */
+    #[Test]
     public function deleteBudgetResourceSuccess(): void
     {
         $this->actingAs($this->createUser());
@@ -322,7 +323,7 @@ final class ResourceTest extends TestCase
         $response->assertStatus(204);
     }
 
-    /** @test */
+    #[Test]
     public function deleteYahtzeeResourceSuccess(): void
     {
         $this->actingAs($this->createUser());
@@ -335,7 +336,7 @@ final class ResourceTest extends TestCase
         $response->assertStatus(204);
     }
 
-    /** @test */
+    #[Test]
     public function deleteYatzyResourceSuccess(): void
     {
         $this->actingAs($this->createUser());
@@ -348,7 +349,7 @@ final class ResourceTest extends TestCase
         $response->assertStatus(204);
     }
 
-    /** @test */
+    #[Test]
     public function updateAllocatedExpenseResourceFailsExtraFieldsInPayload(): void
     {
         $this->actingAs($this->createUser());
@@ -367,7 +368,7 @@ final class ResourceTest extends TestCase
         $response->assertStatus(400);
     }
 
-    /** @test */
+    #[Test]
     public function updateAllocatedExpenseResourceFailsNonPayload(): void
     {
         $this->actingAs($this->createUser());
@@ -384,7 +385,7 @@ final class ResourceTest extends TestCase
         $response->assertStatus(400);
     }
 
-    /** @test */
+    #[Test]
     public function updateAllocatedExpenseResourceFailsNonUniqueName(): void
     {
         $this->actingAs($this->createUser());
@@ -429,7 +430,7 @@ final class ResourceTest extends TestCase
         $response->assertStatus(422);
     }
 
-    /** @test */
+    #[Test]
     public function updateAllocatedExpenseResourceSuccess(): void
     {
         $this->actingAs($this->createUser());
@@ -448,7 +449,7 @@ final class ResourceTest extends TestCase
         $response->assertStatus(204);
     }
 
-    /** @test */
+    #[Test]
     public function updateBudgetProResourceSuccess(): void
     {
         $this->actingAs($this->createUser());
@@ -467,7 +468,7 @@ final class ResourceTest extends TestCase
         $response->assertStatus(204);
     }
 
-    /** @test */
+    #[Test]
     public function updateBudgetResourceSuccess(): void
     {
         $this->actingAs($this->createUser());
@@ -486,7 +487,7 @@ final class ResourceTest extends TestCase
         $response->assertStatus(204);
     }
 
-    /** @test */
+    #[Test]
     public function updateYahtzeeResourceSuccess(): void
     {
         $this->actingAs($this->createUser());
@@ -505,7 +506,7 @@ final class ResourceTest extends TestCase
         $response->assertStatus(204);
     }
 
-    /** @test */
+    #[Test]
     public function updateYatzyResourceSuccess(): void
     {
         $this->actingAs($this->createUser());

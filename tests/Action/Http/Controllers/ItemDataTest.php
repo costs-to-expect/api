@@ -2,11 +2,12 @@
 
 namespace Tests\Action\Http\Controllers;
 
+use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 
 final class ItemDataTest extends TestCase
 {
-    /** @test */
+    #[Test]
     public function createItemDataFailsNoPayload(): void
     {
         $this->actingAs($this->createUser());
@@ -20,7 +21,7 @@ final class ItemDataTest extends TestCase
         $response->assertStatus(422);
     }
 
-    /** @test */
+    #[Test]
     public function createItemDataFailsInvalidJsonValue(): void
     {
         $this->actingAs($this->createUser());
@@ -37,7 +38,7 @@ final class ItemDataTest extends TestCase
         $response->assertStatus(422);
     }
 
-    /** @test */
+    #[Test]
     public function createItemDataFailsNotSupportedForAllocatedExpense(): void
     {
         $this->actingAs($this->createUser());
@@ -54,7 +55,7 @@ final class ItemDataTest extends TestCase
         $response->assertStatus(405);
     }
 
-    /** @test */
+    #[Test]
     public function createItemDataSuccess(): void
     {
         $this->actingAs($this->createUser());
@@ -71,7 +72,7 @@ final class ItemDataTest extends TestCase
         $response->assertStatus(201);
     }
 
-    /** @test */
+    #[Test]
     public function updateItemDataFailsNoPayload(): void
     {
         $this->actingAs($this->createUser());
@@ -86,7 +87,7 @@ final class ItemDataTest extends TestCase
         $response->assertStatus(400);
     }
 
-    /** @test */
+    #[Test]
     public function updateItemDataFailsInvalidFieldsInRequest(): void
     {
         $this->actingAs($this->createUser());
@@ -104,7 +105,7 @@ final class ItemDataTest extends TestCase
         $response->assertStatus(400);
     }
 
-    /** @test */
+    #[Test]
     public function updateItemDataSuccess(): void
     {
         $this->actingAs($this->createUser());
@@ -129,7 +130,7 @@ final class ItemDataTest extends TestCase
         $this->assertEquals(['total' => 2], $response->json('value'));
     }
 
-    /** @test */
+    #[Test]
     public function deleteItemDataFailsKeyNotFound(): void
     {
         $this->actingAs($this->createUser());
@@ -142,7 +143,7 @@ final class ItemDataTest extends TestCase
         $response->assertStatus(403);
     }
 
-    /** @test */
+    #[Test]
     public function deleteItemDataSuccess(): void
     {
         $this->actingAs($this->createUser());

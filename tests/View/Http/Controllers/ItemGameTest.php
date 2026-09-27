@@ -2,11 +2,12 @@
 
 namespace Tests\View\Http\Controllers;
 
+use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 
 final class ItemGameTest extends TestCase
 {
-    /** @test */
+    #[Test]
     public function optionsRequestForYahtzeeGameItem(): void
     {
         $this->actingAs($this->createUser());
@@ -25,7 +26,7 @@ final class ItemGameTest extends TestCase
         $this->assertProvidedJsonMatchesDefinedSchema($response->content(), 'api/schema/options/yahtzee.json');
     }
 
-    /** @test */
+    #[Test]
     public function optionsRequestForYahtzeeGameItemCollection(): void
     {
         $this->actingAs($this->createUser());
@@ -46,7 +47,7 @@ final class ItemGameTest extends TestCase
         $this->assertProvidedJsonMatchesDefinedSchema($response->content(), 'api/schema/options/yahtzee-collection.json');
     }
 
-    /** @test */
+    #[Test]
     public function optionsRequestForYatzyGameItem(): void
     {
         $this->actingAs($this->createUser());
@@ -65,7 +66,7 @@ final class ItemGameTest extends TestCase
         $this->assertProvidedJsonMatchesDefinedSchema($response->content(), 'api/schema/options/yatzy.json');
     }
 
-    /** @test */
+    #[Test]
     public function optionsRequestForYatzyGameItemCollection(): void
     {
         $this->actingAs($this->createUser());
@@ -86,7 +87,7 @@ final class ItemGameTest extends TestCase
         $this->assertProvidedJsonMatchesDefinedSchema($response->content(), 'api/schema/options/yatzy-collection.json');
     }
 
-    /** @test */
+    #[Test]
     public function yahtzeeGameItemCollection(): void
     {
         $this->actingAs($this->createUser());
@@ -116,7 +117,7 @@ final class ItemGameTest extends TestCase
         }
     }
 
-    /** @test */
+    #[Test]
     public function yahtzeeGameItemCollectionPagination(): void
     {
         $this->actingAs($this->createUser());
@@ -152,7 +153,7 @@ final class ItemGameTest extends TestCase
         }
     }
 
-    /** @test */
+    #[Test]
     public function yahtzeeGameItemCollectionSortCreated(): void
     {
         $this->actingAs($this->createUser());
@@ -186,7 +187,7 @@ final class ItemGameTest extends TestCase
         }
     }
 
-    /** @test */
+    #[Test]
     public function yahtzeeGameItemShow(): void
     {
         $this->actingAs($this->createUser());
@@ -205,7 +206,7 @@ final class ItemGameTest extends TestCase
         $this->assertJsonMatchesGameItemSchema($response->content());
     }
 
-    /** @test */
+    #[Test]
     public function yatzyGameItemCollection(): void
     {
         $this->actingAs($this->createUser());
@@ -235,7 +236,7 @@ final class ItemGameTest extends TestCase
         }
     }
 
-    /** @test */
+    #[Test]
     public function yatzyGameItemCollectionPagination(): void
     {
         $this->actingAs($this->createUser());
@@ -271,7 +272,7 @@ final class ItemGameTest extends TestCase
         }
     }
 
-    /** @test */
+    #[Test]
     public function yatzyGameItemCollectionSortCreated(): void
     {
         $this->actingAs($this->createUser());
@@ -305,7 +306,7 @@ final class ItemGameTest extends TestCase
         }
     }
 
-    /** @test */
+    #[Test]
     public function yatzyGameItemShow(): void
     {
         $this->actingAs($this->createUser());

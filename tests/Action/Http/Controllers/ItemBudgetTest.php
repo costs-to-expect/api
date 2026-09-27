@@ -3,11 +3,12 @@
 namespace Tests\Action\Http\Controllers;
 
 use Illuminate\Support\Str;
+use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 
 final class ItemBudgetTest extends TestCase
 {
-    /** @test */
+    #[Test]
     public function createBudgetItemFailsAmountNotFormattedCorrectly(): void
     {
         $this->actingAs($this->createUser());
@@ -33,7 +34,7 @@ final class ItemBudgetTest extends TestCase
         $response->assertStatus(422);
     }
 
-    /** @test */
+    #[Test]
     public function createBudgetItemFailsCategoryInvalid(): void
     {
         $this->actingAs($this->createUser());
@@ -59,7 +60,7 @@ final class ItemBudgetTest extends TestCase
         $response->assertStatus(422);
     }
 
-    /** @test */
+    #[Test]
     public function createBudgetItemFailsCurrencyInvalid(): void
     {
         $this->actingAs($this->createUser());
@@ -85,7 +86,7 @@ final class ItemBudgetTest extends TestCase
         $response->assertStatus(422);
     }
 
-    /** @test */
+    #[Test]
     public function createBudgetItemFailsFrequencyJsonInvalid(): void
     {
         $this->actingAs($this->createUser());
@@ -111,7 +112,7 @@ final class ItemBudgetTest extends TestCase
         $response->assertStatus(422);
     }
 
-    /** @test */
+    #[Test]
     public function createBudgetItemFailsNoNameInPayload(): void
     {
         $this->actingAs($this->createUser());
@@ -136,7 +137,7 @@ final class ItemBudgetTest extends TestCase
         $response->assertStatus(422);
     }
 
-    /** @test */
+    #[Test]
     public function createBudgetItemFailsNoPayload(): void
     {
         $this->actingAs($this->createUser());
@@ -153,7 +154,7 @@ final class ItemBudgetTest extends TestCase
         $response->assertStatus(422);
     }
 
-    /** @test */
+    #[Test]
     public function createBudgetItemSuccess(): void
     {
         $this->actingAs($this->createUser());
@@ -180,7 +181,7 @@ final class ItemBudgetTest extends TestCase
         $this->assertJsonMatchesBudgetItemSchema($response->content());
     }
 
-    /** @test */
+    #[Test]
     public function deleteBudgetItemFailsIdNotFound(): void
     {
         $this->actingAs($this->createUser());
@@ -198,7 +199,7 @@ final class ItemBudgetTest extends TestCase
         $response->assertStatus(403);
     }
 
-    /** @test */
+    #[Test]
     public function deleteBudgetItemSuccess(): void
     {
         $this->actingAs($this->createUser());
@@ -216,7 +217,7 @@ final class ItemBudgetTest extends TestCase
         $response->assertStatus(204);
     }
 
-    /** @test */
+    #[Test]
     public function updateBudgetItemFailsNonExistentField(): void
     {
         $this->actingAs($this->createUser());
@@ -237,7 +238,7 @@ final class ItemBudgetTest extends TestCase
         $response->assertStatus(400);
     }
 
-    /** @test */
+    #[Test]
     public function updateBudgetItemFailsNoPayload(): void
     {
         $this->actingAs($this->createUser());
@@ -256,7 +257,7 @@ final class ItemBudgetTest extends TestCase
         $response->assertStatus(400);
     }
 
-    /** @test */
+    #[Test]
     public function updateBudgetItemSuccess(): void
     {
         $this->actingAs($this->createUser());

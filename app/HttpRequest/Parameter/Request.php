@@ -170,6 +170,10 @@ class Request
                                     $min_year_limit = $entity_model->minimumYearByResourceType($resource_type_id, 'item_type_allocated_expense', 'effective_date');
                                     $max_year_limit = $entity_model->maximumYearByResourceType($resource_type_id, 'item_type_allocated_expense', 'effective_date');
                                     break;
+                                case 'allocated-transaction':
+                                    $min_year_limit = $entity_model->minimumYearByResourceType($resource_type_id, 'item_type_allocated_transaction', 'effective_date');
+                                    $max_year_limit = $entity_model->maximumYearByResourceType($resource_type_id, 'item_type_allocated_transaction', 'effective_date');
+                                    break;
                                 default:
                                     // Do nothing
                                     break;
@@ -181,6 +185,10 @@ class Request
                                 case 'allocated-expense':
                                     $min_year_limit = $entity_model->minimumYearByResourceTypeAndResource($resource_type_id, $resource_id, 'item_type_allocated_expense', 'effective_date');
                                     $max_year_limit = $entity_model->maximumYearByResourceTypeAndResource($resource_type_id, $resource_id, 'item_type_allocated_expense', 'effective_date');
+                                    break;
+                                case 'allocated-transaction':
+                                    $min_year_limit = $entity_model->minimumYearByResourceTypeAndResource($resource_type_id, $resource_id, 'item_type_allocated_transaction', 'effective_date');
+                                    $max_year_limit = $entity_model->maximumYearByResourceTypeAndResource($resource_type_id, $resource_id, 'item_type_allocated_transaction', 'effective_date');
                                     break;
                                 default:
                                     // Do nothing
@@ -204,6 +212,20 @@ class Request
                             in_array(
                                 $this->parameters[$key],
                                 ['api', 'app', 'legacy', 'postman', 'website']
+                            ) === false
+                        ) {
+                            unset($this->parameters[$key]);
+                        }
+                    }
+                    break;
+
+                case 'transaction_type':
+                    if (array_key_exists($key, $this->parameters) === true) {
+                        if (
+                            is_string($this->parameters[$key]) === false ||
+                            in_array(
+                                $this->parameters[$key],
+                                ['expense', 'income']
                             ) === false
                         ) {
                             unset($this->parameters[$key]);

@@ -2,11 +2,12 @@
 
 namespace Tests\View\Http\Controllers;
 
+use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 
 final class ItemPartialTransferTest extends TestCase
 {
-    /** @test */
+    #[Test]
     public function itemPartialTransferCreate(): void
     {
         $this->actingAs($this->createUser());
@@ -27,7 +28,7 @@ final class ItemPartialTransferTest extends TestCase
         $this->assertEquals(30, $response->json('percentage'));
     }
 
-    /** @test */
+    #[Test]
     public function itemPartialTransferCollection(): void
     {
         $this->actingAs($this->createUser());
@@ -55,7 +56,7 @@ final class ItemPartialTransferTest extends TestCase
         }
     }
 
-    /** @test */
+    #[Test]
     public function itemPartialTransferShow(): void
     {
         $this->actingAs($this->createUser());
@@ -80,7 +81,7 @@ final class ItemPartialTransferTest extends TestCase
         $this->assertStringContainsString("resource-types/{$resource_type_id}/resources/{$from_resource_id}/items/{$item_id}", $response->json('item.uri'));
     }
 
-    /** @test */
+    #[Test]
     public function itemPartialTransferShowNotFound(): void
     {
         $this->actingAs($this->createUser());
@@ -110,7 +111,7 @@ final class ItemPartialTransferTest extends TestCase
         $response->assertStatus(404);
     }
 
-    /** @test */
+    #[Test]
     public function itemPartialTransferDelete(): void
     {
         $this->actingAs($this->createUser());
@@ -132,7 +133,7 @@ final class ItemPartialTransferTest extends TestCase
         $response->assertStatus(404);
     }
 
-    /** @test */
+    #[Test]
     public function itemPartialTransferNotSupportedForGame(): void
     {
         $this->actingAs($this->createUser());
@@ -143,7 +144,7 @@ final class ItemPartialTransferTest extends TestCase
         $response->assertStatus(405);
     }
 
-    /** @test */
+    #[Test]
     public function optionsRequestForItemPartialTransferCollection(): void
     {
         $this->actingAs($this->createUser());
@@ -154,7 +155,7 @@ final class ItemPartialTransferTest extends TestCase
         $response->assertStatus(200);
     }
 
-    /** @test */
+    #[Test]
     public function optionsRequestForItemPartialTransfer(): void
     {
         $this->actingAs($this->createUser());
@@ -173,7 +174,7 @@ final class ItemPartialTransferTest extends TestCase
         $response->assertStatus(200);
     }
 
-    /** @test */
+    #[Test]
     public function optionsRequestForItemPartialTransferAction(): void
     {
         $this->actingAs($this->createUser());

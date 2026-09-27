@@ -2,11 +2,12 @@
 
 namespace Tests\View\Http\Controllers;
 
+use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 
 final class SummaryResourceTypeItemTest extends TestCase
 {
-    /** @test */
+    #[Test]
     public function summaryResourceTypeItem(): void
     {
         $this->actingAs($this->createUser());
@@ -25,7 +26,7 @@ final class SummaryResourceTypeItemTest extends TestCase
         $this->assertEquals('150.00', $response->json()[0]['subtotal']);
     }
 
-    /** @test */
+    #[Test]
     public function summaryResourceTypeItemByYears(): void
     {
         $this->actingAs($this->createUser());
@@ -49,7 +50,7 @@ final class SummaryResourceTypeItemTest extends TestCase
         $this->assertEquals('50.00', $response->json()[1]['subtotals'][0]['subtotal']);
     }
 
-    /** @test */
+    #[Test]
     public function summaryResourceTypeItemByYear(): void
     {
         $this->actingAs($this->createUser());
@@ -70,7 +71,7 @@ final class SummaryResourceTypeItemTest extends TestCase
         $this->assertEquals('50.00', $response->json('subtotals.0.subtotal'));
     }
 
-    /** @test */
+    #[Test]
     public function summaryResourceTypeItemByMonths(): void
     {
         $this->actingAs($this->createUser());
@@ -93,7 +94,7 @@ final class SummaryResourceTypeItemTest extends TestCase
         $this->assertEquals('November', $response->json()[1]['month']);
     }
 
-    /** @test */
+    #[Test]
     public function summaryResourceTypeItemByMonth(): void
     {
         $this->actingAs($this->createUser());
@@ -117,7 +118,7 @@ final class SummaryResourceTypeItemTest extends TestCase
         $this->assertEquals('125.00', $response->json('subtotals.0.subtotal'));
     }
 
-    /** @test */
+    #[Test]
     public function summaryResourceTypeItemByCategories(): void
     {
         $this->actingAs($this->createUser());
@@ -139,7 +140,7 @@ final class SummaryResourceTypeItemTest extends TestCase
         $this->assertEquals('100.00', $response->json()[0]['subtotals'][0]['subtotal']);
     }
 
-    /** @test */
+    #[Test]
     public function summaryResourceTypeItemByCategory(): void
     {
         $this->actingAs($this->createUser());
@@ -160,7 +161,7 @@ final class SummaryResourceTypeItemTest extends TestCase
         $this->assertEquals('100.00', $response->json('subtotals.0.subtotal'));
     }
 
-    /** @test */
+    #[Test]
     public function summaryResourceTypeItemByResources(): void
     {
         $this->actingAs($this->createUser());
@@ -181,7 +182,7 @@ final class SummaryResourceTypeItemTest extends TestCase
         $this->assertCount(2, $response->json());
     }
 
-    /** @test */
+    #[Test]
     public function optionsRequestForSummaryResourceTypeItemCollection(): void
     {
         $this->actingAs($this->createUser());

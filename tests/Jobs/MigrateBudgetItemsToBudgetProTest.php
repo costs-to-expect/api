@@ -5,11 +5,12 @@ namespace Tests\Jobs;
 use App\Jobs\MigrateBudgetItemsToBudgetPro;
 use App\Notifications\FailedJob;
 use Illuminate\Support\Facades\Notification;
+use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 
 class MigrateBudgetItemsToBudgetProTest extends TestCase
 {
-    /** @test */
+    #[Test]
     public function handleReturnsCleanlyWhenNoBudgetResourceTypeExists(): void
     {
         $user_id = $this->createUserAndReturnId();
@@ -20,7 +21,7 @@ class MigrateBudgetItemsToBudgetProTest extends TestCase
         $this->assertDatabaseMissing('item_type_budget_pro', []);
     }
 
-    /** @test */
+    #[Test]
     public function handleReturnsCleanlyWhenNoBudgetProResourceTypeExists(): void
     {
         $user = $this->createUser();
@@ -36,7 +37,7 @@ class MigrateBudgetItemsToBudgetProTest extends TestCase
         $this->assertDatabaseMissing('item_type_budget_pro', []);
     }
 
-    /** @test */
+    #[Test]
     public function handleReturnsCleanlyWhenNoBudgetItemsExistToMigrate(): void
     {
         $user = $this->createUser();
@@ -58,7 +59,7 @@ class MigrateBudgetItemsToBudgetProTest extends TestCase
         $this->assertDatabaseMissing('item_type_budget_pro', []);
     }
 
-    /** @test */
+    #[Test]
     public function handleReturnsCleanlyWhenBudgetProResourceAlreadyHasItems(): void
     {
         $user = $this->createUser();
@@ -80,7 +81,7 @@ class MigrateBudgetItemsToBudgetProTest extends TestCase
         $this->assertDatabaseCount('item_type_budget_pro', 1);
     }
 
-    /** @test */
+    #[Test]
     public function handleMigratesBudgetItemsToTheEmptyBudgetProResource(): void
     {
         $user = $this->createUser();
@@ -103,7 +104,7 @@ class MigrateBudgetItemsToBudgetProTest extends TestCase
         $this->assertDatabaseHas('item_type_budget_pro', ['name' => 'migrate-me-two']);
     }
 
-    /** @test */
+    #[Test]
     public function failedSendsAFailedJobNotification(): void
     {
         Notification::fake();

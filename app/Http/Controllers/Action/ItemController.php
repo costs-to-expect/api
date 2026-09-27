@@ -40,6 +40,7 @@ class ItemController extends Controller
 
         return match ($item_type) {
             'allocated-expense' => $this->createAllocatedExpense((int) $resource_type_id, (int) $resource_id),
+            'allocated-transaction' => $this->createAllocatedTransaction((int) $resource_type_id, (int) $resource_id),
             'budget' => $this->createBudget((int) $resource_type_id, (int) $resource_id),
             'budget-pro' => $this->createBudgetPro((int) $resource_type_id, (int) $resource_id),
             'game' => $this->createGame((int) $resource_type_id, (int) $resource_id),
@@ -106,6 +107,72 @@ class ItemController extends Controller
         return response()->json(
             (new \App\ItemType\AllocatedExpense\Transformer\Item(
                 (new \App\ItemType\AllocatedExpense\Models\Item())->instanceToArray($item_type_instance)
+            )
+            )->asArray(),
+            201
+        );
+    }
+
+    private function createAllocatedTransaction(int $resource_type_id, int $resource_id): JsonResponse
+    {
+        $request = request();
+
+        $validator = $this->validateAllocatedTransactionForCreate();
+        if ($validator !== null) {
+            return \App\HttpResponse\Response::validationErrors($validator);
+        }
+
+        $cache_job_payload = (new JobPayload())
+            ->setGroupKey(KeyGroup::ITEM_CREATE)
+            ->setRouteParameters([
+                'resource_type_id' => $resource_type_id,
+                'resource_id' => $resource_id
+            ])
+            ->setUserId($this->user_id);
+
+        try {
+            $item_type_instance = DB::transaction(function () use ($request, $resource_id) {
+                $item_instance = new Item([
+                    'resource_id' => $resource_id,
+                    'created_by' => $this->user_id
+                ]);
+                $item_instance->save();
+
+                $hash = new Hash();
+                $currency_id = $hash->decode('currency', $request->input('currency_id'));
+
+                $item_type_instance = new \App\ItemType\AllocatedTransaction\Models\Item([
+                    'item_id' => $item_instance->id,
+                    'name' => $request->input('name'),
+                    'description' => $request->input('description', null),
+                    'effective_date' => $request->input('effective_date'),
+                    'publish_after' => $request->input('publish_after', null),
+                    'currency_id' => $currency_id,
+                    'total' => $request->input('total'),
+                    'percentage' => $request->input('percentage', 100),
+                    'transaction_type' => $request->input('transaction_type'),
+                    'created_at' => Date::now(),
+                    'updated_at' => null
+                ]);
+
+                $item_type_instance->setActualisedTotal(
+                    $request->input('total'),
+                    $request->input('percentage', 100)
+                );
+
+                $item_type_instance->save();
+
+                return $item_type_instance;
+            });
+
+            ClearCache::dispatchSync($cache_job_payload->payload());
+        } catch (Exception $e) {
+            return Response::failedToSaveModelForCreate($e);
+        }
+
+        return response()->json(
+            (new \App\ItemType\AllocatedTransaction\Transformer\Item(
+                (new \App\ItemType\AllocatedTransaction\Models\Item())->instanceToArray($item_type_instance)
             )
             )->asArray(),
             201
@@ -309,6 +376,7 @@ class ItemController extends Controller
 
         return match ($item_type) {
             'allocated-expense' => $this->updateAllocatedExpense((int) $resource_type_id, (int) $resource_id, (int) $item_id),
+            'allocated-transaction' => $this->updateAllocatedTransaction((int) $resource_type_id, (int) $resource_id, (int) $item_id),
             'budget' => $this->updateBudget((int) $resource_type_id, (int) $resource_id, (int) $item_id),
             'budget-pro' => $this->updateBudgetPro((int) $resource_type_id, (int) $resource_id, (int) $item_id),
             'game' => $this->updateGame((int) $resource_type_id, (int) $resource_id, (int) $item_id),
@@ -344,6 +412,75 @@ class ItemController extends Controller
 
         $item_instance = (new Item())->instance($resource_type_id, $resource_id, $item_id);
         $item_type_instance = (new \App\ItemType\AllocatedExpense\Models\Item())->instance($item_id);
+
+        if ($item_instance === null || $item_type_instance === null) {
+            return Response::failedToSelectModelForUpdateOrDelete();
+        }
+
+        try {
+            $item_instance->updated_by = $this->user_id;
+            $item_instance->updated_at = Date::now();
+
+            DB::transaction(static function () use ($request, $item_instance, $item_type_instance) {
+                $set_actualised = false;
+                foreach ($request->all() as $key => $value) {
+                    $item_type_instance->$key = $value;
+
+                    if (in_array($key, ['total', 'percentage']) === true) {
+                        $set_actualised = true;
+                    }
+
+                    if ($key === 'currency_id') {
+                        $hash = new Hash();
+                        $item_type_instance->$key = $hash->decode('currency', $request->input('currency_id'));
+                    }
+                }
+
+                if ($set_actualised === true) {
+                    $item_type_instance->setActualisedTotal($item_type_instance->total, $item_type_instance->percentage);
+                }
+
+                $item_type_instance->updated_at = Date::now();
+
+                return $item_instance->save() && $item_type_instance->save();
+            });
+
+            ClearCache::dispatchSync($cache_job_payload->payload());
+        } catch (Exception $e) {
+            return Response::failedToSaveModelForUpdate($e);
+        }
+
+        return Response::successNoContent();
+    }
+
+    private function updateAllocatedTransaction(
+        int $resource_type_id,
+        int $resource_id,
+        int $item_id
+    ): JsonResponse {
+
+        $invalid_fields = $this->checkForInvalidFieldsForAllocatedTransaction();
+        if ($invalid_fields !== null) {
+            return $invalid_fields;
+        }
+
+        $validator = $this->validateAllocatedTransactionForUpdate();
+        if ($validator !== null) {
+            return \App\HttpResponse\Response::validationErrors($validator);
+        }
+
+        $request = request();
+
+        $cache_job_payload = (new JobPayload())
+            ->setGroupKey(KeyGroup::ITEM_DELETE)
+            ->setRouteParameters([
+                'resource_type_id' => $resource_type_id,
+                'resource_id' => $resource_id
+            ])
+            ->setUserId($this->user_id);
+
+        $item_instance = (new Item())->instance($resource_type_id, $resource_id, $item_id);
+        $item_type_instance = (new \App\ItemType\AllocatedTransaction\Models\Item())->instance($item_id);
 
         if ($item_instance === null || $item_type_instance === null) {
             return Response::failedToSelectModelForUpdateOrDelete();
@@ -585,6 +722,7 @@ class ItemController extends Controller
 
         return match ($item_type) {
             'allocated-expense' => $this->deleteAllocatedExpense((int) $resource_type_id, (int) $resource_id, (int) $item_id),
+            'allocated-transaction' => $this->deleteAllocatedTransaction((int) $resource_type_id, (int) $resource_id, (int) $item_id),
             'budget' => $this->deleteBudget((int) $resource_type_id, (int) $resource_id, (int) $item_id),
             'budget-pro' => $this->deleteBudgetPro((int) $resource_type_id, (int) $resource_id, (int) $item_id),
             'game' => $this->deleteGame((int) $resource_type_id, (int) $resource_id, (int) $item_id),
@@ -606,6 +744,51 @@ class ItemController extends Controller
             ->setUserId($this->user_id);
 
         $item_model = new \App\ItemType\AllocatedExpense\Models\Item();
+
+        $item_type_instance = $item_model->instance($item_id);
+        $item_instance = (new Item())->instance($resource_type_id, $resource_id, $item_id);
+
+        if ($item_instance === null || $item_type_instance === null) {
+            return Response::notFound(trans('entities.item'));
+        }
+
+        if ($item_model->hasCategoryAssignments($item_id) === true) {
+            return Response::foreignKeyConstraintCategory();
+        }
+
+        try {
+            DB::transaction(static function () use ($item_id, $item_type_instance, $item_instance) {
+                (new ItemLog())->deleteLogEntries($item_id);
+                (new ItemTransfer())->deleteTransfers($item_id);
+                (new ItemPartialTransfer())->deleteTransfers($item_id);
+                $item_type_instance->delete();
+                $item_instance->delete();
+            });
+
+            ClearCache::dispatchSync($cache_job_payload->payload());
+
+            return Response::successNoContent();
+        } catch (QueryException $e) {
+            return Response::foreignKeyConstraintError($e);
+        } catch (Exception $e) {
+            return Response::notFound(trans('entities.item'), $e);
+        }
+    }
+
+    private function deleteAllocatedTransaction(
+        string $resource_type_id,
+        string $resource_id,
+        string $item_id
+    ): JsonResponse {
+        $cache_job_payload = (new JobPayload())
+            ->setGroupKey(KeyGroup::ITEM_DELETE)
+            ->setRouteParameters([
+                'resource_type_id' => $resource_type_id,
+                'resource_id' => $resource_id
+            ])
+            ->setUserId($this->user_id);
+
+        $item_model = new \App\ItemType\AllocatedTransaction\Models\Item();
 
         $item_type_instance = $item_model->instance($item_id);
         $item_instance = (new Item())->instance($resource_type_id, $resource_id, $item_id);
@@ -852,6 +1035,110 @@ class ItemController extends Controller
                         'currency_id',
                         'total',
                         'percentage',
+                   ]),
+                ...$merge_array
+            ],
+            LaravelConfig::get($config_base_path . '.validation-patch.fields', []),
+            $messages
+        );
+
+        if ($validator->fails()) {
+            return $validator;
+        }
+
+        return null;
+    }
+
+    private function validateAllocatedTransactionForCreate(): ?\Illuminate\Validation\Validator
+    {
+        $request = request();
+
+        $config_base_path = 'api.item-type-allocated-transaction';
+
+        $messages = [];
+        foreach (LaravelConfig::get($config_base_path . '.validation-post.messages', []) as $key => $custom_message) {
+            $messages[$key] = trans($custom_message);
+        }
+
+        $decode = $this->hash->currency()->decode($request->input('currency_id'));
+        $currency_id = null;
+        if (count($decode) === 1) {
+            $currency_id = $decode[0];
+        }
+
+        $validator = ValidatorFacade::make(
+            [
+                ...$request->only([
+                        'name',
+                        'description',
+                        'effective_date',
+                        'publish_after',
+                        'currency_id',
+                        'total',
+                        'percentage',
+                        'transaction_type',
+                    ]),
+                ...['currency_id' => $currency_id]
+            ],
+            LaravelConfig::get($config_base_path . '.validation-post.fields', []),
+            $messages
+        );
+
+        if ($validator->fails()) {
+            return $validator;
+        }
+
+        return null;
+    }
+
+    private function checkForInvalidFieldsForAllocatedTransaction(): ?JsonResponse
+    {
+        $config_base_path = 'api.item-type-allocated-transaction';
+
+        $invalid_fields = $this->checkForInvalidFields(
+            array_keys(LaravelConfig::get($config_base_path . '.validation-patch.fields', []))
+        );
+
+        if (count($invalid_fields) > 0) {
+            return Response::invalidFieldsInRequest($invalid_fields);
+        }
+
+        return null;
+    }
+
+    private function validateAllocatedTransactionForUpdate(): ?\Illuminate\Validation\Validator
+    {
+        $request = request();
+
+        $config_base_path = 'api.item-type-allocated-transaction';
+
+        $merge_array = [];
+        if (array_key_exists('currency_id', $request->all())) {
+            $decode = $this->hash->currency()->decode($request->input('currency_id'));
+            $currency_id = null;
+            if (count($decode) === 1) {
+                $currency_id = $decode[0];
+            }
+
+            $merge_array = ['currency_id' => $currency_id];
+        }
+
+        $messages = [];
+        foreach (LaravelConfig::get($config_base_path . '.validation-patch.messages', []) as $key => $custom_message) {
+            $messages[$key] = trans($custom_message);
+        }
+
+        $validator = ValidatorFacade::make(
+            [
+                ...$request->only([
+                        'name',
+                        'description',
+                        'effective_date',
+                        'publish_after',
+                        'currency_id',
+                        'total',
+                        'percentage',
+                        'transaction_type',
                    ]),
                 ...$merge_array
             ],

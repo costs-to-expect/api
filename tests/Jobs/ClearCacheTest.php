@@ -8,11 +8,12 @@ use App\HttpRequest\Hash;
 use App\Jobs\ClearCache;
 use App\Notifications\FailedJob;
 use Illuminate\Support\Facades\Notification;
+use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 
 class ClearCacheTest extends TestCase
 {
-    /** @test */
+    #[Test]
     public function handleClearsUserScopedKeysWithNoResourceTypeInPayload(): void
     {
         Notification::fake();
@@ -32,7 +33,7 @@ class ClearCacheTest extends TestCase
         Notification::assertSentOnDemandTimes(FailedJob::class, 0);
     }
 
-    /** @test */
+    #[Test]
     public function handleClearsKeysForAdditionalPermittedUsersOnAPrivateResourceType(): void
     {
         Notification::fake();
@@ -60,7 +61,7 @@ class ClearCacheTest extends TestCase
         Notification::assertSentOnDemandTimes(FailedJob::class, 0);
     }
 
-    /** @test */
+    #[Test]
     public function handleClearsPublicKeysForAPublicResourceType(): void
     {
         Notification::fake();
@@ -84,7 +85,7 @@ class ClearCacheTest extends TestCase
         Notification::assertSentOnDemandTimes(FailedJob::class, 0);
     }
 
-    /** @test */
+    #[Test]
     public function failedSendsAFailedJobNotification(): void
     {
         Notification::fake();

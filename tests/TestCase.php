@@ -24,6 +24,7 @@ abstract class TestCase extends BaseTestCase
 
     protected array $item_types = [
         'allocated-expense' => 'OqZwKX16bW',
+        'allocated-transaction' => 'X3VylR1Gkb',
         'game' => '2AP1axw6L7',
         'budget' => 'VezyrJyMlk',
         'budget-pro' => 'WkxwR04GPo'
@@ -32,6 +33,9 @@ abstract class TestCase extends BaseTestCase
     protected array $item_subtypes = [
         'allocated-expense' => [
             'default' => 'a56kbWV82n',
+        ],
+        'allocated-transaction' => [
+            'default' => 'nqQv48vYJO',
         ],
         'budget' => [
             'default' => 'Q6OV9dk5dE',
@@ -52,6 +56,11 @@ abstract class TestCase extends BaseTestCase
     protected function assertJsonMatchesAllocatedExpenseItemSchema($content): void
     {
         $this->assertProvidedJsonMatchesDefinedSchema($content, 'api/schema/item-allocated-expense.json');
+    }
+
+    protected function assertJsonMatchesAllocatedTransactionItemSchema($content): void
+    {
+        $this->assertProvidedJsonMatchesDefinedSchema($content, 'api/schema/item-allocated-transaction.json');
     }
 
     protected function assertJsonMatchesBudgetItemSchema($content): void
@@ -117,6 +126,11 @@ abstract class TestCase extends BaseTestCase
     protected function assertJsonMatchesResourceTypeItemAllocatedExpenseSchema($content): void
     {
         $this->assertProvidedJsonMatchesDefinedSchema($content, 'api/schema/resource-type-item-allocated-expense.json');
+    }
+
+    protected function assertJsonMatchesResourceTypeItemAllocatedTransactionSchema($content): void
+    {
+        $this->assertProvidedJsonMatchesDefinedSchema($content, 'api/schema/resource-type-item-allocated-transaction.json');
     }
 
     protected function assertJsonMatchesResourceTypeItemGameSchema($content): void
@@ -227,6 +241,38 @@ abstract class TestCase extends BaseTestCase
         $this->fail('Unable to create the allocated expense item');
     }
 
+    protected function quickCreateAllocatedTransactionItem(
+        string $resource_type_id,
+        string $resource_id,
+        array $override = []
+    ): string
+    {
+        $payload = [
+            'name' => $this->faker->text(200),
+            'description' => $this->faker->text(200),
+            'effective_date' => $this->faker->date(),
+            'currency_id' => $this->currency['GBP'],
+            'total' => $this->randomMoneyValue(),
+            'transaction_type' => 'expense',
+        ];
+
+        foreach ($override as $k => $v) {
+            $payload[$k] = $v;
+        }
+
+        $response = $this->postToItemCreate(
+            $resource_type_id,
+            $resource_id,
+            $payload
+        );
+
+        if ($response->assertStatus(201)) {
+            return $response->json('id');
+        }
+
+        $this->fail('Unable to create the allocated transaction item');
+    }
+
     protected function quickCreateAllocatedExpenseResource(string $resource_type_id): string
     {
         $response = $this->postToResourceCreate(
@@ -235,6 +281,24 @@ abstract class TestCase extends BaseTestCase
                 'name' => $this->faker->text(200),
                 'description' => $this->faker->text(200),
                 'item_subtype_id' => $this->item_subtypes['allocated-expense']['default'],
+            ]
+        );
+
+        if ($response->assertStatus(201)) {
+            return $response->json('id');
+        }
+
+        $this->fail('Unable to create the resource');
+    }
+
+    protected function quickCreateAllocatedTransactionResource(string $resource_type_id): string
+    {
+        $response = $this->postToResourceCreate(
+            $resource_type_id,
+            [
+                'name' => $this->faker->text(200),
+                'description' => $this->faker->text(200),
+                'item_subtype_id' => $this->item_subtypes['allocated-transaction']['default'],
             ]
         );
 
@@ -266,6 +330,29 @@ abstract class TestCase extends BaseTestCase
         }
 
         $this->fail('Unable to create the allocated expense resource type');
+    }
+
+    protected function quickCreateAllocatedTransactionResourceType(array $override = []): string
+    {
+        $payload = [
+            'name' => $this->faker->text(255),
+            'description' => $this->faker->text,
+            'data' => '{"field":true}',
+            'item_type_id' => $this->item_types['allocated-transaction'],
+            'public' => false
+        ];
+
+        foreach ($override as $k => $v) {
+            $payload[$k] = $v;
+        }
+
+        $response = $this->postToResourceTypeCreate($payload);
+
+        if ($response->assertStatus(201)) {
+            return $response->json('id');
+        }
+
+        $this->fail('Unable to create the allocated transaction resource type');
     }
 
     protected function quickCreateBudgetItem(

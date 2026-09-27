@@ -1,0 +1,24 @@
+<?php
+
+declare(strict_types=1);
+
+namespace App\HttpOptionResponse\ItemPartialTransfer;
+
+use App\HttpOptionResponse\Response;
+use Illuminate\Support\Facades\Config;
+
+class AllocatedTransactionTransfer extends Response
+{
+    public function create()
+    {
+        $post = new \App\HttpVerb\Post();
+        $this->verbs['POST'] = $post->setFields(Config::get('api.item-partial-transfer.fields-post'))->
+            setAllowedValuesForFields($this->allowed_values_for_fields)->
+            setDescription('route-descriptions.item_partial_transfer_POST')->
+            setAuthenticationStatus($this->permissions['manage'])->
+            setAuthenticationRequirement(true)->
+            option();
+
+        return $this;
+    }
+}

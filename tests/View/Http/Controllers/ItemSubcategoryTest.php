@@ -2,11 +2,12 @@
 
 namespace Tests\View\Http\Controllers;
 
+use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 
 final class ItemSubcategoryTest extends TestCase
 {
-    /** @test */
+    #[Test]
     public function itemSubcategoryCollectionEmpty(): void
     {
         $this->actingAs($this->createUser());
@@ -28,7 +29,7 @@ final class ItemSubcategoryTest extends TestCase
         $this->assertEquals([], $response->json());
     }
 
-    /** @test */
+    #[Test]
     public function itemSubcategoryCollection(): void
     {
         $this->actingAs($this->createUser());
@@ -62,7 +63,7 @@ final class ItemSubcategoryTest extends TestCase
         }
     }
 
-    /** @test */
+    #[Test]
     public function itemSubcategoryShow(): void
     {
         $this->actingAs($this->createUser());
@@ -88,7 +89,7 @@ final class ItemSubcategoryTest extends TestCase
         $this->assertJsonMatchesItemSubcategorySchema($response->content());
     }
 
-    /** @test */
+    #[Test]
     public function itemSubcategoryShowNotFound(): void
     {
         $this->actingAs($this->createUser());
@@ -116,7 +117,7 @@ final class ItemSubcategoryTest extends TestCase
         $response->assertStatus(404);
     }
 
-    /** @test */
+    #[Test]
     public function itemSubcategoryAssignmentLimit(): void
     {
         $this->actingAs($this->createUser());
@@ -142,7 +143,7 @@ final class ItemSubcategoryTest extends TestCase
         $response->assertStatus(400);
     }
 
-    /** @test */
+    #[Test]
     public function itemSubcategoryNotSupportedForGame(): void
     {
         $this->actingAs($this->createUser());
@@ -165,7 +166,7 @@ final class ItemSubcategoryTest extends TestCase
         $response->assertStatus(405);
     }
 
-    /** @test */
+    #[Test]
     public function itemSubcategoryDelete(): void
     {
         $this->actingAs($this->createUser());
@@ -192,7 +193,7 @@ final class ItemSubcategoryTest extends TestCase
         $response->assertStatus(404);
     }
 
-    /** @test */
+    #[Test]
     public function optionsRequestForItemSubcategoryCollection(): void
     {
         $this->actingAs($this->createUser());
@@ -213,7 +214,7 @@ final class ItemSubcategoryTest extends TestCase
         $response->assertStatus(200);
     }
 
-    /** @test */
+    #[Test]
     public function optionsRequestForItemSubcategory(): void
     {
         $this->actingAs($this->createUser());

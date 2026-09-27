@@ -2,11 +2,12 @@
 
 namespace Tests\View\Http\Controllers;
 
+use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 
 final class SummaryResourceTest extends TestCase
 {
-    /** @test */
+    #[Test]
     public function summaryResource(): void
     {
         $this->actingAs($this->createUser());
@@ -21,7 +22,7 @@ final class SummaryResourceTest extends TestCase
         $this->assertEquals(2, $response->json('resources'));
     }
 
-    /** @test */
+    #[Test]
     public function summaryResourceSearch(): void
     {
         $this->actingAs($this->createUser());
@@ -46,7 +47,7 @@ final class SummaryResourceTest extends TestCase
         $this->assertEquals(1, $response->json('resources'));
     }
 
-    /** @test */
+    #[Test]
     public function optionsRequestForSummaryResourceCollection(): void
     {
         $this->actingAs($this->createUser());

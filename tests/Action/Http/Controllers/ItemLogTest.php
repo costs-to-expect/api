@@ -2,11 +2,12 @@
 
 namespace Tests\Action\Http\Controllers;
 
+use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 
 final class ItemLogTest extends TestCase
 {
-    /** @test */
+    #[Test]
     public function createItemLogFailsNoPayload(): void
     {
         $this->actingAs($this->createUser());
@@ -20,7 +21,7 @@ final class ItemLogTest extends TestCase
         $response->assertStatus(422);
     }
 
-    /** @test */
+    #[Test]
     public function createItemLogFailsInvalidJsonParameters(): void
     {
         $this->actingAs($this->createUser());
@@ -37,7 +38,7 @@ final class ItemLogTest extends TestCase
         $response->assertStatus(422);
     }
 
-    /** @test */
+    #[Test]
     public function createItemLogFailsNotSupportedForAllocatedExpense(): void
     {
         $this->actingAs($this->createUser());
@@ -54,7 +55,7 @@ final class ItemLogTest extends TestCase
         $response->assertStatus(405);
     }
 
-    /** @test */
+    #[Test]
     public function createItemLogSuccess(): void
     {
         $this->actingAs($this->createUser());

@@ -4,11 +4,12 @@ namespace Tests\Action\Http\Controllers;
 
 use App\HttpRequest\Hash;
 use App\Models\ResourceType;
+use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 
 final class ItemCategoryTest extends TestCase
 {
-    /** @test */
+    #[Test]
     public function createItemCategoryFailsNoPayload(): void
     {
         $this->actingAs($this->createUser());
@@ -22,7 +23,7 @@ final class ItemCategoryTest extends TestCase
         $response->assertStatus(422);
     }
 
-    /** @test */
+    #[Test]
     public function createItemCategoryFailsInvalidCategoryId(): void
     {
         $this->actingAs($this->createUser());
@@ -38,7 +39,7 @@ final class ItemCategoryTest extends TestCase
         $response->assertStatus(422);
     }
 
-    /** @test */
+    #[Test]
     public function createItemCategoryFailsNoPermissionToResourceType(): void
     {
         $this->actingAs($this->createUser());
@@ -61,7 +62,7 @@ final class ItemCategoryTest extends TestCase
         $response->assertStatus(403);
     }
 
-    /** @test */
+    #[Test]
     public function createItemCategorySuccess(): void
     {
         $this->actingAs($this->createUser());
@@ -79,7 +80,7 @@ final class ItemCategoryTest extends TestCase
         $this->assertJsonMatchesItemCategorySchema($response->content());
     }
 
-    /** @test */
+    #[Test]
     public function createItemCategoryFailsAssignmentLimitReached(): void
     {
         $this->actingAs($this->createUser());
@@ -99,7 +100,7 @@ final class ItemCategoryTest extends TestCase
         $response->assertStatus(400);
     }
 
-    /** @test */
+    #[Test]
     public function deleteItemCategoryFailsIdInvalid(): void
     {
         $this->actingAs($this->createUser());
@@ -112,7 +113,7 @@ final class ItemCategoryTest extends TestCase
         $response->assertStatus(403);
     }
 
-    /** @test */
+    #[Test]
     public function deleteItemCategorySuccess(): void
     {
         $this->actingAs($this->createUser());

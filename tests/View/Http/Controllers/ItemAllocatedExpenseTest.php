@@ -2,11 +2,13 @@
 
 namespace Tests\View\Http\Controllers;
 
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 
 final class ItemAllocatedExpenseTest extends TestCase
 {
-    /** @test */
+    #[Test]
     public function allocatedExpenseItemCollection(): void
     {
         $this->actingAs($this->createUser());
@@ -36,7 +38,7 @@ final class ItemAllocatedExpenseTest extends TestCase
         }
     }
 
-    /** @test */
+    #[Test]
     public function allocatedExpenseItemCollectionFilterEffectiveDate(): void
     {
         $this->actingAs($this->createUser());
@@ -71,7 +73,7 @@ final class ItemAllocatedExpenseTest extends TestCase
         }
     }
 
-    /** @test */
+    #[Test]
     public function allocatedExpenseItemCollectionPagination(): void
     {
         $this->actingAs($this->createUser());
@@ -107,10 +109,8 @@ final class ItemAllocatedExpenseTest extends TestCase
         }
     }
 
-    /**
-     * @test
-     * @dataProvider rogueLimitAndOffsetValues
-     */
+    #[Test]
+    #[DataProvider('rogueLimitAndOffsetValues')]
     public function allocatedExpenseItemCollectionRogueLimitAndOffsetDoesNotError(
         int|string $limit,
         int|string $offset,
@@ -153,7 +153,7 @@ final class ItemAllocatedExpenseTest extends TestCase
         ];
     }
 
-    /** @test */
+    #[Test]
     public function allocatedExpenseItemCollectionSearchDescription(): void
     {
         $this->actingAs($this->createUser());
@@ -186,7 +186,7 @@ final class ItemAllocatedExpenseTest extends TestCase
         }
     }
 
-    /** @test */
+    #[Test]
     public function allocatedExpenseItemCollectionSearchName(): void
     {
         $this->actingAs($this->createUser());
@@ -219,7 +219,7 @@ final class ItemAllocatedExpenseTest extends TestCase
         }
     }
 
-    /** @test */
+    #[Test]
     public function allocatedExpenseItemCollectionSortName(): void
     {
         $this->actingAs($this->createUser());
@@ -252,7 +252,7 @@ final class ItemAllocatedExpenseTest extends TestCase
         }
     }
 
-    /** @test */
+    #[Test]
     public function allocatedExpenseItemShow(): void
     {
         $this->actingAs($this->createUser());
@@ -271,7 +271,7 @@ final class ItemAllocatedExpenseTest extends TestCase
         $this->assertJsonMatchesAllocatedExpenseItemSchema($response->content());
     }
 
-    /** @test */
+    #[Test]
     public function optionsRequestForAllocatedExpenseItem(): void
     {
         $this->actingAs($this->createUser());
@@ -290,7 +290,7 @@ final class ItemAllocatedExpenseTest extends TestCase
         $this->assertProvidedJsonMatchesDefinedSchema($response->content(), 'api/schema/options/allocated-expense.json');
     }
 
-    /** @test */
+    #[Test]
     public function optionsRequestForAllocatedExpenseItemCollection(): void
     {
         $this->actingAs($this->createUser());
