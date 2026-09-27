@@ -148,6 +148,19 @@ Items collection.
 - [PATCH](item-allocated-expense/PATCH.md)
 - [DELETE](/item-allocated-expense/DELETE.md)
 
+## Items (Allocated Transaction)
+
+Items collection.
+
+- [GET](/items-allocated-transaction/GET.md)
+- [POST](/items-allocated-transaction/POST.md)
+
+### (Item) Allocated Transaction
+
+- [GET](/item-allocated-transaction/GET.md)
+- [PATCH](item-allocated-transaction/PATCH.md)
+- [DELETE](/item-allocated-transaction/DELETE.md)
+
 ## Items (Budget)
 
 Items collection.
