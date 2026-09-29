@@ -12,6 +12,7 @@
     <div class="mx-auto max-w-7xl px-6 py-8 lg:flex lg:gap-x-8">
         <nav class="lg:w-64 shrink-0 mb-8 lg:mb-0">
             <div class="flex items-center justify-between lg:block">
+                <a href="/" class="block text-sm text-gray-500 hover:text-gray-900 mb-2">&larr; Costs to Expect</a>
                 <a href="/docs/" class="block font-semibold text-gray-900 mb-4">Costs to Expect API Docs</a>
 
                 <button type="button" id="docs-nav-toggle" class="lg:hidden mb-4 text-sm text-gray-600 hover:text-gray-900" aria-expanded="false" aria-controls="docs-nav-links">

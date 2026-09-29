@@ -39,7 +39,9 @@ return [
         ],
 
         'database' => [
-            'driver' => 'database',
+            // Same as Laravel's built-in "database" driver, but retries
+            // writes on MySQL deadlocks — see App\Cache\ResilientDatabaseStore.
+            'driver' => 'resilient_database',
             'table' => 'cache',
             // `mysql_cache` is a MySQL-only connection (forces READ COMMITTED
             // to avoid rate-limiter deadlocks). Tests swap DB_CONNECTION to
