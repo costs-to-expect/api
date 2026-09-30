@@ -12,7 +12,7 @@ use Tests\TestCase;
 final class RateLimiterTest extends TestCase
 {
     private const AUTHENTICATED_LIMIT = 300;
-    private const UNAUTHENTICATED_LIMIT = 60;
+    private const UNAUTHENTICATED_LIMIT = 120;
 
     protected function setUp(): void
     {
