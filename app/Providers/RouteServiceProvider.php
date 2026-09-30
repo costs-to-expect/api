@@ -45,7 +45,13 @@ class RouteServiceProvider extends ServiceProvider
     protected function configureRateLimiting()
     {
         RateLimiter::for('api', static function (Request $request) {
-            return Limit::perMinute(60)->by(optional($request->user())->id ?: $request->ip());
+            // throttle:api runs before the controller checks the bearer, and the default guard is
+            // `web`, so the `api` guard has to be asked for explicitly. Null for no/invalid bearer.
+            $user = $request->user('api');
+
+            return $user
+                ? Limit::perMinute(300)->by($user->id)
+                : Limit::perMinute(120)->by($request->ip());
         });
     }
 }
