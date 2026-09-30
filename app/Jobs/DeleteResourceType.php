@@ -126,7 +126,7 @@ class DeleteResourceType implements ShouldQueue
 
                 $this->deletes['data'] = Utility::deleteItemData($resource_id);
                 $this->deletes['logs'] = Utility::deleteItemLogs($resource_id);
-                $this->deletes['subcategories'] = Utility::deleteSubcategories($resource_id);
+                $this->deletes['subcategories'] = Utility::deleteItemSubcategories($resource_id);
                 $this->deletes['categories'] = Utility::deleteItemCategories($resource_id);
                 $this->deletes['transfers'] = Utility::deleteTransfers($resource_id);
                 $this->deletes['partial-transfers'] = Utility::deletePartialTransfers($resource_id);
