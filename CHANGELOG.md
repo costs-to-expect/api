@@ -2,6 +2,10 @@
 
 The complete changelog for the Costs to Expect REST API, our changelog follows the format defined at https://keepachangelog.com/en/1.0.0/
 
+## [v3.22.2] - 2026-09-30
+### Changed
+- Detect auth users and up the rate limit
+
 ## [v3.22.1] - 2026-09-29
 ### Changed
 - Added a link to root at the top of the docs
