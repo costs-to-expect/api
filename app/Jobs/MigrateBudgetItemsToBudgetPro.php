@@ -24,9 +24,16 @@ class MigrateBudgetItemsToBudgetPro implements ShouldQueue
 
     protected int $user_id;
 
-    public function __construct(int $user_id)
+    /**
+     * The Budget Pro budget to put the items in. Not set, it is the user's only one. Set, it is that
+     * one, which has to be one of theirs, and they can have several.
+     */
+    protected ?int $budget_pro_resource_id;
+
+    public function __construct(int $user_id, ?int $budget_pro_resource_id = null)
     {
         $this->user_id = $user_id;
+        $this->budget_pro_resource_id = $budget_pro_resource_id;
     }
 
     public function handle()
@@ -93,7 +100,19 @@ class MigrateBudgetItemsToBudgetPro implements ShouldQueue
             return;
         }
 
-        if (count($resource) > 1) {
+        if ($this->budget_pro_resource_id !== null) {
+            // The one asked for, which has to be one of this user's, never somebody else's
+            $resource = array_values(array_filter(
+                $resource,
+                fn (object $budget_pro_resource): bool => (int) $budget_pro_resource->id === $this->budget_pro_resource_id
+            ));
+
+            if (count($resource) === 0) {
+                $this->fail(new \Exception('The budget-pro resource asked for is not one of the budget-pro resources of user id: ' . $this->user_id));
+
+                return;
+            }
+        } elseif (count($resource) > 1) {
             $this->fail(new \Exception('More than one budget-pro resources for user id: ' . $this->user_id));
 
             return;

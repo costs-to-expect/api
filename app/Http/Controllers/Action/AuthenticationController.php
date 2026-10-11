@@ -320,7 +320,7 @@ class AuthenticationController extends \Illuminate\Routing\Controller
         return response()->json(['message' => trans('auth.signed-out')], 200);
     }
 
-    public function migrateBudgetProRequestDelete(): Http\JsonResponse
+    public function migrateBudgetProRequestDelete(Request $request): Http\JsonResponse
     {
         $user = auth()->guard('api')->user();
 
@@ -328,7 +328,20 @@ class AuthenticationController extends \Illuminate\Routing\Controller
             return Response::authenticationRequired();
         }
 
-        MigrateBudgetItemsToBudgetPro::dispatch($user->id);
+        /**
+         * The Budget Pro budget to put the items in, optional. Without one the migration is for the user's only
+         * Budget Pro budget, as it always was, and fails if they have more than one.
+         */
+        $budget_pro_resource_id = null;
+        if ($request->filled('resource_id')) {
+            $budget_pro_resource_id = $this->hash->decode('resource', $request->input('resource_id'));
+
+            if ($budget_pro_resource_id === false) {
+                return Response::notFoundOrNotAccessible(trans('entities.resource'));
+            }
+        }
+
+        MigrateBudgetItemsToBudgetPro::dispatch($user->id, $budget_pro_resource_id);
 
         return response()
             ->json(

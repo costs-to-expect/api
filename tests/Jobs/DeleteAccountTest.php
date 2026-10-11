@@ -86,4 +86,36 @@ class DeleteAccountTest extends TestCase
 
         Notification::assertSentOnDemandTimes(FailedJob::class, 0);
     }
+
+    #[Test]
+    public function aPermissionIsFoundByTheUserNotByItsOwnId(): void
+    {
+        Notification::fake();
+
+        $owner = $this->createUser();
+        $this->actingAs($owner);
+
+        // Another resource type first, so the permission rows no longer have the same ids as the users
+        $this->quickCreateAllocatedExpenseResourceType();
+
+        $resource_type_id = $this->quickCreateAllocatedExpenseResourceType();
+
+        $other_user = $this->createUser();
+        $this->postToPermittedUserCreate($resource_type_id, ['email' => $other_user->email])
+            ->assertStatus(204);
+
+        $raw_resource_type_id = (new Hash())->decode('resource-type', $resource_type_id);
+
+        $permission = \Illuminate\Support\Facades\DB::table('permitted_user')
+            ->where('resource_type_id', $raw_resource_type_id)
+            ->where('user_id', $other_user->id)
+            ->first();
+        $this->assertNotSame((int) $other_user->id, (int) $permission->id, 'The test needs the two to differ');
+
+        (new DeleteAccount($other_user->id))->handle();
+
+        $this->assertDatabaseMissing('permitted_user', ['id' => $permission->id]);
+        $this->assertDatabaseHas('resource_type', ['id' => $raw_resource_type_id]);
+        $this->assertDatabaseMissing('users', ['id' => $other_user->id]);
+    }
 }

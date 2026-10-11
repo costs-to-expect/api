@@ -52,8 +52,28 @@ class DeleteResource implements ShouldQueue
         $additional_permitted_users = (new Permission())->additionalPermittedUsers($this->resource_type_id, $this->user_id);
 
         if (count($additional_permitted_users) > 0) {
-            $permitted_user = (new PermittedUser())->instance($this->resource_type_id, $this->user_id);
-            $permitted_user?->delete();
+            $permitted_user = (new PermittedUser())->instanceByUserId($this->resource_type_id, $this->user_id);
+
+            /**
+             * Someone who was added to a shared resource type leaves it, they lose their access and nothing is
+             * deleted. Whoever set it up (they added themselves) would lose every resource in the resource type
+             * by deleting one and the resource would still be there, or has no permission at all to leave
+             * with, so it is not done. The job fails rather than report a delete that did not happen.
+             */
+            if ($permitted_user === null || (int) $permitted_user->added_by === $this->user_id) {
+                Log::error('DeleteResource: not deleting a resource from a resource type shared with other users', [
+                    'user_id' => $this->user_id,
+                    'resource_type_id' => $this->resource_type_id,
+                    'resource_id' => $this->resource_id,
+                    'permission_found' => $permitted_user !== null,
+                ]);
+
+                throw new \RuntimeException(
+                    'The resource type is shared with other users, the resource has not been deleted'
+                );
+            }
+
+            $permitted_user->delete();
         }
 
         if (count($additional_permitted_users) === 0) {

@@ -52,6 +52,20 @@ class DeleteResourceType implements ShouldQueue
 
         if (count($additional_permitted_users) > 0) {
 
+            // Looked up first, if there is nothing to remove the history is not rewritten and the job fails
+            $permitted_user = (new PermittedUser())->instanceByUserId($this->resource_type_id, $this->user_id);
+
+            if ($permitted_user === null) {
+                Log::error('DeleteResourceType: the user has no permission to remove from the shared resource type', [
+                    'user_id' => $this->user_id,
+                    'resource_type_id' => $this->resource_type_id,
+                ]);
+
+                throw new \RuntimeException(
+                    'The user has no permission on the shared resource type, nothing has been deleted'
+                );
+            }
+
             /** Note
              * Yes, this is a hack as we are rewriting history when we removed a user from a resource type.
              * Eventually we will solve this another, probably by using a placeholder user for each resource type
@@ -66,8 +80,7 @@ class DeleteResourceType implements ShouldQueue
             DB::update('UPDATE `item` SET `created_by` = ? WHERE `created_by` = ?', [$additional_permitted_users[0], $this->user_id]);
             DB::update('UPDATE `item` SET `updated_by` = ? WHERE `updated_by` = ?', [$additional_permitted_users[0], $this->user_id]);
 
-            $permitted_user = (new PermittedUser())->instance($this->resource_type_id, $this->user_id);
-            $permitted_user?->delete();
+            $permitted_user->delete();
         }
 
         if (count($additional_permitted_users) === 0) {

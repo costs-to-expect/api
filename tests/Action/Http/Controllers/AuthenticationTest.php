@@ -830,6 +830,48 @@ final class AuthenticationTest extends TestCase
         $response->assertStatus(201);
     }
 
+    public function testMigrateBudgetProRequestDeleteQueuesTheMigrationWithoutABudgetWhenNoneIsAskedFor(): void
+    {
+        \Illuminate\Support\Facades\Queue::fake();
+        $this->actingAs($this->createUser());
+
+        $this->post('v3/auth/user/migrate/budget-pro/request-migration', [])->assertStatus(201);
+
+        \Illuminate\Support\Facades\Queue::assertPushed(
+            \App\Jobs\MigrateBudgetItemsToBudgetPro::class,
+            fn (\App\Jobs\MigrateBudgetItemsToBudgetPro $job): bool => (new \ReflectionProperty($job, 'budget_pro_resource_id'))->getValue($job) === null
+        );
+    }
+
+    public function testMigrateBudgetProRequestDeleteQueuesTheMigrationForTheBudgetAskedFor(): void
+    {
+        \Illuminate\Support\Facades\Queue::fake();
+        $this->actingAs($this->createUser());
+
+        $hash = new \App\HttpRequest\Hash();
+
+        $this->post('v3/auth/user/migrate/budget-pro/request-migration', ['resource_id' => $hash->resource()->encode(123)])
+            ->assertStatus(201);
+
+        \Illuminate\Support\Facades\Queue::assertPushed(
+            \App\Jobs\MigrateBudgetItemsToBudgetPro::class,
+            fn (\App\Jobs\MigrateBudgetItemsToBudgetPro $job): bool => (new \ReflectionProperty($job, 'budget_pro_resource_id'))->getValue($job) === 123
+        );
+    }
+
+    public function testMigrateBudgetProRequestDeleteRefusesABudgetThatIsNotAnId(): void
+    {
+        \Illuminate\Support\Facades\Queue::fake();
+        $this->actingAs($this->createUser());
+
+        $this->post('v3/auth/user/migrate/budget-pro/request-migration', ['resource_id' => 'not-an-id'])
+            ->assertStatus(403);
+        $this->post('v3/auth/user/migrate/budget-pro/request-migration', ['resource_id' => ['array']])
+            ->assertStatus(403);
+
+        \Illuminate\Support\Facades\Queue::assertNothingPushed();
+    }
+
     public function testMigrateBudgetProRequestDeleteFailsUnauthenticated(): void
     {
         $response = $this->post('v3/auth/user/migrate/budget-pro/request-migration', []);
