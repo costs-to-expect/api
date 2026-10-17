@@ -22,7 +22,7 @@ Name | Type | Description
 name | string | The name of the expense
 description | string | A optional description of the expense
 effective_date | date / yyyy-mm-dd | The effective date for the expense
-publish_after | date / yyyy-mm-dd | Optionally, set a publish after date
+publish_after | date / yyyy-mm-dd | Optionally, set a publish after date, send `null` to clear it
 currency_id | string | The currency id, must be one of the allowed values
 total | decimal | The total amount of the expense
 percentage | integer | An optional percentage of total to allocate, defaults to 100

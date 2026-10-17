@@ -47,6 +47,7 @@ percentage | integer | No | An optional percentage of total to allocate, default
     "percentage": 100,
     "actualised_total": "2.50",
     "effective_date": "2022-08-28",
+    "publish_after": null,
     "categories": [],
     "created": "2022-08-28 11:26:07",
     "updated": null
