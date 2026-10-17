@@ -39,6 +39,9 @@
         "effective_date": {
             "type": "string"
         },
+        "publish_after": {
+            "type": ["null", "string"]
+        },
         "created": {
             "type": "string"
         },
@@ -72,6 +75,7 @@
         "percentage",
         "actualised_total",
         "effective_date",
+        "publish_after",
         "created",
         "updated",
         "categories",

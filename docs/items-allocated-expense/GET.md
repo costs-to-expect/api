@@ -55,6 +55,7 @@ month | integer | | Filter by month | month=1
         "percentage": 100,
         "actualised_total": "2.50",
         "effective_date": "2022-08-28",
+        "publish_after": null,
         "categories": [],
         "created": "2022-08-28 11:26:07",
         "updated": null
@@ -72,6 +73,7 @@ month | integer | | Filter by month | month=1
         "percentage": 100,
         "actualised_total": "20.00",
         "effective_date": "2022-08-26",
+        "publish_after": null,
         "categories": [],
         "created": "2022-08-26 19:44:47",
         "updated": null

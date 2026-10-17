@@ -36,6 +36,27 @@ final class ResourceTypeItemTest extends TestCase
     }
 
     #[Test]
+    public function resourceTypeItemAllocatedExpenseCollectionIncludesPublishAfter(): void
+    {
+        $this->actingAs($this->createUser());
+
+        $resource_type_id = $this->quickCreateAllocatedExpenseResourceType();
+        $resource_id = $this->quickCreateAllocatedExpenseResource($resource_type_id);
+
+        $this->quickCreateAllocatedExpenseItem($resource_type_id, $resource_id, ['name' => 'Already published', 'publish_after' => '2020-01-15']);
+        $this->quickCreateAllocatedExpenseItem($resource_type_id, $resource_id, ['name' => 'No date']);
+
+        $response = $this->getToResourceTypeItemList(['resource_type_id' => $resource_type_id]);
+        $response->assertStatus(200);
+
+        $this->assertEquals(['Already published' => '2020-01-15', 'No date' => null], array_column($response->json(), 'publish_after', 'name'));
+
+        foreach ($response->json() as $item) {
+            $this->assertJsonMatchesResourceTypeItemAllocatedExpenseSchema(json_encode($item, JSON_THROW_ON_ERROR));
+        }
+    }
+
+    #[Test]
     public function resourceTypeItemAllocatedExpenseCollectionFilterYear(): void
     {
         $this->actingAs($this->createUser());

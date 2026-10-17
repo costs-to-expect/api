@@ -190,4 +190,67 @@ final class ItemAllocatedExpenseTest extends TestCase
 
         $response->assertStatus(204);
     }
+
+    #[Test]
+    public function createAllocatedExpenseItemReturnsPublishAfter(): void
+    {
+        $this->actingAs($this->createUser());
+
+        $resource_type_id = $this->quickCreateAllocatedExpenseResourceType();
+        $resource_id = $this->quickCreateAllocatedExpenseResource($resource_type_id);
+
+        $with_date = $this->postToItemCreate(
+            $resource_type_id,
+            $resource_id,
+            [
+                'name' => $this->faker->text(200),
+                'effective_date' => '2026-09-20',
+                'publish_after' => '2099-01-31',
+                'currency_id' => $this->currency['GBP'],
+                'total' => $this->randomMoneyValue(),
+            ]
+        );
+
+        $with_date->assertStatus(201);
+        $this->assertSame('2099-01-31', $with_date->json('publish_after'));
+
+        $without_date = $this->postToItemCreate(
+            $resource_type_id,
+            $resource_id,
+            [
+                'name' => $this->faker->text(200),
+                'effective_date' => '2026-09-20',
+                'currency_id' => $this->currency['GBP'],
+                'total' => $this->randomMoneyValue(),
+            ]
+        );
+
+        $without_date->assertStatus(201);
+        $this->assertNull($without_date->json('publish_after'));
+    }
+
+    #[Test]
+    public function updateAllocatedExpenseItemCanSetAndClearPublishAfter(): void
+    {
+        $this->actingAs($this->createUser());
+
+        $resource_type_id = $this->quickCreateAllocatedExpenseResourceType();
+        $resource_id = $this->quickCreateAllocatedExpenseResource($resource_type_id);
+        $item_id = $this->quickCreateAllocatedExpenseItem($resource_type_id, $resource_id);
+
+        $this->patchToItemUpdate($resource_type_id, $resource_id, $item_id, ['publish_after' => '2099-01-31'])
+            ->assertStatus(204);
+
+        $this->assertSame(
+            '2099-01-31',
+            $this->getToItemShow([$resource_type_id, $resource_id, $item_id])->json('publish_after')
+        );
+
+        $this->patchToItemUpdate($resource_type_id, $resource_id, $item_id, ['publish_after' => null])
+            ->assertStatus(204);
+
+        $this->assertNull(
+            $this->getToItemShow([$resource_type_id, $resource_id, $item_id])->json('publish_after')
+        );
+    }
 }

@@ -272,6 +272,72 @@ final class ItemAllocatedExpenseTest extends TestCase
     }
 
     #[Test]
+    public function allocatedExpenseItemShowIncludesPublishAfter(): void
+    {
+        $this->actingAs($this->createUser());
+
+        $resource_type_id = $this->quickCreateAllocatedExpenseResourceType();
+        $resource_id = $this->quickCreateAllocatedExpenseResource($resource_type_id);
+
+        // A single item is returned whether or not it has been published yet
+        $held_back_id = $this->quickCreateAllocatedExpenseItem($resource_type_id, $resource_id, ['publish_after' => '2099-01-31']);
+        $plain_id = $this->quickCreateAllocatedExpenseItem($resource_type_id, $resource_id);
+
+        $held_back = $this->getToItemShow([$resource_type_id, $resource_id, $held_back_id]);
+        $held_back->assertStatus(200);
+        $this->assertJsonMatchesAllocatedExpenseItemSchema($held_back->content());
+        $this->assertSame('2099-01-31', $held_back->json('publish_after'));
+
+        $plain = $this->getToItemShow([$resource_type_id, $resource_id, $plain_id]);
+        $plain->assertStatus(200);
+        $this->assertNull($plain->json('publish_after'));
+    }
+
+    #[Test]
+    public function allocatedExpenseItemCollectionIncludesPublishAfter(): void
+    {
+        $this->actingAs($this->createUser());
+
+        $resource_type_id = $this->quickCreateAllocatedExpenseResourceType();
+        $resource_id = $this->quickCreateAllocatedExpenseResource($resource_type_id);
+
+        $this->quickCreateAllocatedExpenseItem($resource_type_id, $resource_id, ['name' => 'Already published', 'publish_after' => '2020-01-15']);
+        $this->quickCreateAllocatedExpenseItem($resource_type_id, $resource_id, ['name' => 'No date']);
+
+        $response = $this->getToItemList([$resource_type_id, $resource_id]);
+        $response->assertStatus(200);
+
+        $publish_after = array_column($response->json(), 'publish_after', 'name');
+
+        // The list order is not what is being tested
+        $this->assertEquals(['Already published' => '2020-01-15', 'No date' => null], $publish_after);
+
+        foreach ($response->json() as $item) {
+            $this->assertJsonMatchesAllocatedExpenseItemSchema(json_encode($item, JSON_THROW_ON_ERROR));
+        }
+    }
+
+    #[Test]
+    public function allocatedExpenseItemCollectionHidesUnpublishedItemsUnlessIncluded(): void
+    {
+        $this->actingAs($this->createUser());
+
+        $resource_type_id = $this->quickCreateAllocatedExpenseResourceType();
+        $resource_id = $this->quickCreateAllocatedExpenseResource($resource_type_id);
+
+        $this->quickCreateAllocatedExpenseItem($resource_type_id, $resource_id, ['name' => 'Held back', 'publish_after' => '2099-01-31']);
+        $this->quickCreateAllocatedExpenseItem($resource_type_id, $resource_id, ['name' => 'Published']);
+
+        $default = $this->getToItemList([$resource_type_id, $resource_id]);
+        $default->assertStatus(200);
+        $this->assertSame(['Published'], array_column($default->json(), 'name'));
+
+        $including = $this->getToItemList([$resource_type_id, $resource_id, 'include-unpublished' => 'true']);
+        $including->assertStatus(200);
+        $this->assertEquals(['Held back' => '2099-01-31', 'Published' => null], array_column($including->json(), 'publish_after', 'name'));
+    }
+
+    #[Test]
     public function optionsRequestForAllocatedExpenseItem(): void
     {
         $this->actingAs($this->createUser());

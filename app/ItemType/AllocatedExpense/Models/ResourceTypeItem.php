@@ -124,6 +124,7 @@ class ResourceTypeItem extends LaravelModel
             "currency.code AS item_currency_code",
             "currency.name AS item_currency_name",
             'item_type_allocated_expense.effective_date AS item_effective_date',
+            'item_type_allocated_expense.publish_after AS item_publish_after',
             'item_type_allocated_expense.total AS item_total',
             'item_type_allocated_expense.percentage AS item_percentage',
             'item_type_allocated_expense.actualised_total AS item_actualised_total',
