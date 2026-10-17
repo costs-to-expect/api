@@ -2,6 +2,10 @@
 
 The complete changelog for the Costs to Expect REST API, our changelog follows the format defined at https://keepachangelog.com/en/1.0.0/
 
+## [v3.23.1] - 2026-10-17
+### Fixed
+- Return `publish_after` for allocated expenses.
+
 ## [v3.23.0] - 2026-10-11
 ### Added
 - Optional `resource_id` for the Budget to Budget Pro migration, allows the user to choose which Budget Pro budget the items are migrated into when they have more than one
