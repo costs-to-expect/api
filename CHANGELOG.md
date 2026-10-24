@@ -2,6 +2,11 @@
 
 The complete changelog for the Costs to Expect REST API, our changelog follows the format defined at https://keepachangelog.com/en/1.0.0/
 
+## [v3.23.2] - 2026-10-24
+### Changed
+- Bumped the Docker image and minimum PHP requirement to 8.4
+- Updated the test workflow to run against PHP 8.4 and 8.5, dropped 8.2 and 8.3
+
 ## [v3.23.1] - 2026-10-17
 ### Fixed
 - Return `publish_after` for allocated expenses.
