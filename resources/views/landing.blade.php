@@ -182,7 +182,41 @@
             <div class="mx-auto max-w-7xl px-6 py-24 sm:py-32 lg:flex lg:items-center lg:gap-x-10 lg:px-8 lg:py-40">
                 <div class="mx-auto max-w-2xl lg:mx-0 lg:flex-auto">
                     <h2 class="mt-2 max-w-lg text-4xl font-bold tracking-tight text-gray-900 sm:text-6xl">Budget Pro</h2>
-                    <p class="mt-6 text-lg leading-8 text-gray-600">Budget Pro is a planning-first budgeting app for people who want control before they spend, not after. Most budgeting tools show you what you’ve already spent. Budget Pro shows you what’s coming next — and lets you change it before it happens</p>
+                    <p class="mt-6 text-lg leading-8 text-gray-600">Budget Pro is a planning-first budgeting app for people who want control before they spend, not after. Most budgeting tools show you what you’ve already spent. Budget Pro shows you what’s coming next — and lets you change it before it happens.</p>
+                    <p class="mt-4 text-base leading-7 text-gray-600">Add your income, expenses, savings and transfers between your own accounts, tell Budget Pro when each one lands, and watch your projected balances update as you make changes. No bank login, no Open Banking, just you in control of your numbers.</p>
+                    <ul role="list" class="mt-8 max-w-xl space-y-3 text-base leading-7 text-gray-600">
+                        <li class="flex gap-x-3">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="mt-1 h-5 w-5 flex-none text-pinky-600" aria-hidden="true">
+                                <path fill-rule="evenodd" d="M2.25 12c0-5.385 4.365-9.75 9.75-9.75s9.75 4.365 9.75 9.75-4.365 9.75-9.75 9.75S2.25 17.385 2.25 12zm13.36-1.814a.75.75 0 10-1.22-.872l-3.236 4.53L9.53 12.22a.75.75 0 00-1.06 1.06l2.25 2.25a.75.75 0 001.14-.094l3.75-5.25z" clip-rule="evenodd" />
+                            </svg>
+                            <span><strong class="font-semibold text-gray-900">See what happens next.</strong> Live projections for every account over a rolling three or six months, plus a combined monthly view of income, spending and projected closing balance.</span>
+                        </li>
+                        <li class="flex gap-x-3">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="mt-1 h-5 w-5 flex-none text-pinky-600" aria-hidden="true">
+                                <path fill-rule="evenodd" d="M2.25 12c0-5.385 4.365-9.75 9.75-9.75s9.75 4.365 9.75 9.75-4.365 9.75-9.75 9.75S2.25 17.385 2.25 12zm13.36-1.814a.75.75 0 10-1.22-.872l-3.236 4.53L9.53 12.22a.75.75 0 00-1.06 1.06l2.25 2.25a.75.75 0 001.14-.094l3.75-5.25z" clip-rule="evenodd" />
+                            </svg>
+                            <span><strong class="font-semibold text-gray-900">Model real money.</strong> Monthly, four-weekly, annual and one-off schedules, one-month adjustments and skipped months, built for four-weekly pay and irregular income.</span>
+                        </li>
+                        <li class="flex gap-x-3">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="mt-1 h-5 w-5 flex-none text-pinky-600" aria-hidden="true">
+                                <path fill-rule="evenodd" d="M2.25 12c0-5.385 4.365-9.75 9.75-9.75s9.75 4.365 9.75 9.75-4.365 9.75-9.75 9.75S2.25 17.385 2.25 12zm13.36-1.814a.75.75 0 10-1.22-.872l-3.236 4.53L9.53 12.22a.75.75 0 00-1.06 1.06l2.25 2.25a.75.75 0 001.14-.094l3.75-5.25z" clip-rule="evenodd" />
+                            </svg>
+                            <span><strong class="font-semibold text-gray-900">Save towards goals.</strong> Set a target on a savings account, use the calculators to see the monthly amount you need, and get a projected completion date based on your current rate.</span>
+                        </li>
+                        <li class="flex gap-x-3">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="mt-1 h-5 w-5 flex-none text-pinky-600" aria-hidden="true">
+                                <path fill-rule="evenodd" d="M2.25 12c0-5.385 4.365-9.75 9.75-9.75s9.75 4.365 9.75 9.75-4.365 9.75-9.75 9.75S2.25 17.385 2.25 12zm13.36-1.814a.75.75 0 10-1.22-.872l-3.236 4.53L9.53 12.22a.75.75 0 00-1.06 1.06l2.25 2.25a.75.75 0 001.14-.094l3.75-5.25z" clip-rule="evenodd" />
+                            </svg>
+                            <span><strong class="font-semibold text-gray-900">Up to three budgets.</strong> Each with its own accounts and currency, in sterling, euro, US, Canadian, Australian or New Zealand dollars, or Indian rupees.</span>
+                        </li>
+                        <li class="flex gap-x-3">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="mt-1 h-5 w-5 flex-none text-pinky-600" aria-hidden="true">
+                                <path fill-rule="evenodd" d="M2.25 12c0-5.385 4.365-9.75 9.75-9.75s9.75 4.365 9.75 9.75-4.365 9.75-9.75 9.75S2.25 17.385 2.25 12zm13.36-1.814a.75.75 0 10-1.22-.872l-3.236 4.53L9.53 12.22a.75.75 0 00-1.06 1.06l2.25 2.25a.75.75 0 001.14-.094l3.75-5.25z" clip-rule="evenodd" />
+                            </svg>
+                            <span><strong class="font-semibold text-gray-900">A history you can trust.</strong> Every item keeps a change history recording amounts, payments and adjustments, who changed them and when.</span>
+                        </li>
+                    </ul>
+                    <p class="mt-8 text-base leading-7 text-gray-600">Try it free for 30 days, no card needed. If you keep it, it’s a single payment of £89.99 for lifetime access, including future updates, with no subscription.</p>
                     <div class="mt-10 flex items-center gap-x-6">
                         <a href="https://budget-pro.costs-to-expect.com/register" class="rounded-md bg-pinky-600 px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-pinky-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-pinky-600">Register for FREE</a>
                         <a href="https://budget-pro.costs-to-expect.com/product/features" class="text-sm font-semibold leading-6 text-gray-900">See everything Budget Pro does <span aria-hidden="true">→</span></a>
@@ -222,6 +256,39 @@
                 <div class="mx-auto max-w-2xl lg:mx-0 lg:flex-auto">
                     <h2 class="mt-10 max-w-lg text-4xl font-bold tracking-tight text-gray-900 sm:text-6xl">Budget</h2>
                     <p class="mt-6 text-lg leading-8 text-gray-600">A free powerful easy to use open source budgeting tool powered by the Costs to Expect API. A budgeting tool so easy to use, it’s child play!</p>
+                    <p class="mt-4 text-base leading-7 text-gray-600">Add your income, expenses and savings, then see how your balances will look over the coming months. Change an amount, a date or an item and the projections update instantly. Not sure yet? Try the demo first.</p>
+                    <ul role="list" class="mt-8 max-w-xl space-y-3 text-base leading-7 text-gray-600">
+                        <li class="flex gap-x-3">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="mt-1 h-5 w-5 flex-none text-pinky-600" aria-hidden="true">
+                                <path fill-rule="evenodd" d="M2.25 12c0-5.385 4.365-9.75 9.75-9.75s9.75 4.365 9.75 9.75-4.365 9.75-9.75 9.75S2.25 17.385 2.25 12zm13.36-1.814a.75.75 0 10-1.22-.872l-3.236 4.53L9.53 12.22a.75.75 0 00-1.06 1.06l2.25 2.25a.75.75 0 001.14-.094l3.75-5.25z" clip-rule="evenodd" />
+                            </svg>
+                            <span><strong class="font-semibold text-gray-900">Instant projections.</strong> Every change you make updates your projected balances straight away.</span>
+                        </li>
+                        <li class="flex gap-x-3">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="mt-1 h-5 w-5 flex-none text-pinky-600" aria-hidden="true">
+                                <path fill-rule="evenodd" d="M2.25 12c0-5.385 4.365-9.75 9.75-9.75s9.75 4.365 9.75 9.75-4.365 9.75-9.75 9.75S2.25 17.385 2.25 12zm13.36-1.814a.75.75 0 10-1.22-.872l-3.236 4.53L9.53 12.22a.75.75 0 00-1.06 1.06l2.25 2.25a.75.75 0 001.14-.094l3.75-5.25z" clip-rule="evenodd" />
+                            </svg>
+                            <span><strong class="font-semibold text-gray-900">Flexible scheduling.</strong> Monthly, annual and one-off items, ad-hoc adjustments to amounts, and the option to exclude chosen months.</span>
+                        </li>
+                        <li class="flex gap-x-3">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="mt-1 h-5 w-5 flex-none text-pinky-600" aria-hidden="true">
+                                <path fill-rule="evenodd" d="M2.25 12c0-5.385 4.365-9.75 9.75-9.75s9.75 4.365 9.75 9.75-4.365 9.75-9.75 9.75S2.25 17.385 2.25 12zm13.36-1.814a.75.75 0 10-1.22-.872l-3.236 4.53L9.53 12.22a.75.75 0 00-1.06 1.06l2.25 2.25a.75.75 0 001.14-.094l3.75-5.25z" clip-rule="evenodd" />
+                            </svg>
+                            <span><strong class="font-semibold text-gray-900">Your currency.</strong> Budget in GBP, USD, EUR, CAD, AUD, NZD or INR.</span>
+                        </li>
+                        <li class="flex gap-x-3">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="mt-1 h-5 w-5 flex-none text-pinky-600" aria-hidden="true">
+                                <path fill-rule="evenodd" d="M2.25 12c0-5.385 4.365-9.75 9.75-9.75s9.75 4.365 9.75 9.75-4.365 9.75-9.75 9.75S2.25 17.385 2.25 12zm13.36-1.814a.75.75 0 10-1.22-.872l-3.236 4.53L9.53 12.22a.75.75 0 00-1.06 1.06l2.25 2.25a.75.75 0 001.14-.094l3.75-5.25z" clip-rule="evenodd" />
+                            </svg>
+                            <span><strong class="font-semibold text-gray-900">Open source.</strong> Free to use, MIT licensed, and powered by the Costs to Expect API.</span>
+                        </li>
+                        <li class="flex gap-x-3">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="mt-1 h-5 w-5 flex-none text-pinky-600" aria-hidden="true">
+                                <path fill-rule="evenodd" d="M2.25 12c0-5.385 4.365-9.75 9.75-9.75s9.75 4.365 9.75 9.75-4.365 9.75-9.75 9.75S2.25 17.385 2.25 12zm13.36-1.814a.75.75 0 10-1.22-.872l-3.236 4.53L9.53 12.22a.75.75 0 00-1.06 1.06l2.25 2.25a.75.75 0 001.14-.094l3.75-5.25z" clip-rule="evenodd" />
+                            </svg>
+                            <span><strong class="font-semibold text-gray-900">Room to grow.</strong> One budget, up to three projection accounts and 100 budget items. When you need more, Budget Pro can import your budget.</span>
+                        </li>
+                    </ul>
                     <div class="mt-10 flex items-center gap-x-6">
                         <a href="https://budget.costs-to-expect.com/register" class="rounded-md bg-pinky-600 px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-pinky-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-pinky-600">Register for FREE</a>
                         <a href="https://budget.costs-to-expect.com" class="text-sm font-semibold leading-6 text-gray-900">Learn more <span aria-hidden="true">→</span></a>
@@ -260,7 +327,41 @@
             <div class="mx-auto max-w-7xl px-6 py-24 sm:py-32 lg:flex lg:items-center lg:gap-x-10 lg:px-8 lg:py-40">
                 <div class="mx-auto max-w-2xl lg:mx-0 lg:flex-auto">
                     <h2 class="mt-10 max-w-lg text-4xl font-bold tracking-tight text-gray-900 sm:text-6xl">Yahtzee Game Scorer</h2>
-                    <p class="mt-6 text-lg leading-8 text-gray-600">A fun little project powered by the Costs to Expect API, no more designated scorer, everyone gets a score sheet</p>
+                    <p class="mt-6 text-lg leading-8 text-gray-600">A fun little project powered by the Costs to Expect API, no more designated scorer, everyone gets a score sheet. You bring the dice, we’ll do the maths.</p>
+                    <p class="mt-4 text-base leading-7 text-gray-600">One player signs in and picks who’s playing, everyone else gets a link to their own score sheet. Nobody else needs an account or an app.</p>
+                    <ul role="list" class="mt-8 max-w-xl space-y-3 text-base leading-7 text-gray-600">
+                        <li class="flex gap-x-3">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="mt-1 h-5 w-5 flex-none text-pinky-600" aria-hidden="true">
+                                <path fill-rule="evenodd" d="M2.25 12c0-5.385 4.365-9.75 9.75-9.75s9.75 4.365 9.75 9.75-4.365 9.75-9.75 9.75S2.25 17.385 2.25 12zm13.36-1.814a.75.75 0 10-1.22-.872l-3.236 4.53L9.53 12.22a.75.75 0 00-1.06 1.06l2.25 2.25a.75.75 0 001.14-.094l3.75-5.25z" clip-rule="evenodd" />
+                            </svg>
+                            <span><strong class="font-semibold text-gray-900">A sheet for everyone.</strong> Each player scores on their own phone, so nobody gets stuck being the scorer.</span>
+                        </li>
+                        <li class="flex gap-x-3">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="mt-1 h-5 w-5 flex-none text-pinky-600" aria-hidden="true">
+                                <path fill-rule="evenodd" d="M2.25 12c0-5.385 4.365-9.75 9.75-9.75s9.75 4.365 9.75 9.75-4.365 9.75-9.75 9.75S2.25 17.385 2.25 12zm13.36-1.814a.75.75 0 10-1.22-.872l-3.236 4.53L9.53 12.22a.75.75 0 00-1.06 1.06l2.25 2.25a.75.75 0 001.14-.094l3.75-5.25z" clip-rule="evenodd" />
+                            </svg>
+                            <span><strong class="font-semibold text-gray-900">Nothing to install.</strong> It runs in the browser and it’s free. Only the player who starts the game needs an account.</span>
+                        </li>
+                        <li class="flex gap-x-3">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="mt-1 h-5 w-5 flex-none text-pinky-600" aria-hidden="true">
+                                <path fill-rule="evenodd" d="M2.25 12c0-5.385 4.365-9.75 9.75-9.75s9.75 4.365 9.75 9.75-4.365 9.75-9.75 9.75S2.25 17.385 2.25 12zm13.36-1.814a.75.75 0 10-1.22-.872l-3.236 4.53L9.53 12.22a.75.75 0 00-1.06 1.06l2.25 2.25a.75.75 0 001.14-.094l3.75-5.25z" clip-rule="evenodd" />
+                            </svg>
+                            <span><strong class="font-semibold text-gray-900">The maths is done for you.</strong> Tap a scoring combination and record how it went, totals and the upper bonus are calculated automatically.</span>
+                        </li>
+                        <li class="flex gap-x-3">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="mt-1 h-5 w-5 flex-none text-pinky-600" aria-hidden="true">
+                                <path fill-rule="evenodd" d="M2.25 12c0-5.385 4.365-9.75 9.75-9.75s9.75 4.365 9.75 9.75-4.365 9.75-9.75 9.75S2.25 17.385 2.25 12zm13.36-1.814a.75.75 0 10-1.22-.872l-3.236 4.53L9.53 12.22a.75.75 0 00-1.06 1.06l2.25 2.25a.75.75 0 001.14-.094l3.75-5.25z" clip-rule="evenodd" />
+                            </svg>
+                            <span><strong class="font-semibold text-gray-900">Everyone sees everything.</strong> Every player can see every score as the game goes on, and the current leader gets a crown.</span>
+                        </li>
+                        <li class="flex gap-x-3">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="mt-1 h-5 w-5 flex-none text-pinky-600" aria-hidden="true">
+                                <path fill-rule="evenodd" d="M2.25 12c0-5.385 4.365-9.75 9.75-9.75s9.75 4.365 9.75 9.75-4.365 9.75-9.75 9.75S2.25 17.385 2.25 12zm13.36-1.814a.75.75 0 10-1.22-.872l-3.236 4.53L9.53 12.22a.75.75 0 00-1.06 1.06l2.25 2.25a.75.75 0 001.14-.094l3.75-5.25z" clip-rule="evenodd" />
+                            </svg>
+                            <span><strong class="font-semibold text-gray-900">Play again in one tap.</strong> Reuse the same players for the next game, and the winner of every finished game is saved to your history.</span>
+                        </li>
+                    </ul>
+                    <p class="mt-8 text-base leading-7 text-gray-600">Not sure yet? Try the demo score sheet without signing in, nothing is saved.</p>
                     <div class="mt-10 flex items-center gap-x-6">
                         <a href="https://yahtzee.game-scorer.com/register" class="rounded-md bg-pinky-600 px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-pinky-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-pinky-600">Register for FREE</a>
                         <a href="https://yahtzee.game-scorer.com" class="text-sm font-semibold leading-6 text-gray-900">Learn more <span aria-hidden="true">→</span></a>
@@ -300,6 +401,33 @@
                 <div class="mx-auto max-w-2xl lg:mx-0 lg:flex-auto">
                     <h2 class="mt-10 max-w-lg text-4xl font-bold tracking-tight text-gray-900 sm:text-6xl">Yatzy Game Scorer</h2>
                     <p class="mt-6 text-lg leading-8 text-gray-600">We built Yahtzee so figured why not build Yatzy as well. We haven't yet decided which version of the game we enjoy more.</p>
+                    <p class="mt-4 text-base leading-7 text-gray-600">Same idea as our Yahtzee scorer, shareable score sheets so no one has to be the scorer, with upper and lower section scores, bonuses and totals tracked for every player.</p>
+                    <ul role="list" class="mt-8 max-w-xl space-y-3 text-base leading-7 text-gray-600">
+                        <li class="flex gap-x-3">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="mt-1 h-5 w-5 flex-none text-pinky-600" aria-hidden="true">
+                                <path fill-rule="evenodd" d="M2.25 12c0-5.385 4.365-9.75 9.75-9.75s9.75 4.365 9.75 9.75-4.365 9.75-9.75 9.75S2.25 17.385 2.25 12zm13.36-1.814a.75.75 0 10-1.22-.872l-3.236 4.53L9.53 12.22a.75.75 0 00-1.06 1.06l2.25 2.25a.75.75 0 001.14-.094l3.75-5.25z" clip-rule="evenodd" />
+                            </svg>
+                            <span><strong class="font-semibold text-gray-900">Score from a link.</strong> Every player opens their own score sheet, with no sign-up and nothing to install.</span>
+                        </li>
+                        <li class="flex gap-x-3">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="mt-1 h-5 w-5 flex-none text-pinky-600" aria-hidden="true">
+                                <path fill-rule="evenodd" d="M2.25 12c0-5.385 4.365-9.75 9.75-9.75s9.75 4.365 9.75 9.75-4.365 9.75-9.75 9.75S2.25 17.385 2.25 12zm13.36-1.814a.75.75 0 10-1.22-.872l-3.236 4.53L9.53 12.22a.75.75 0 00-1.06 1.06l2.25 2.25a.75.75 0 001.14-.094l3.75-5.25z" clip-rule="evenodd" />
+                            </svg>
+                            <span><strong class="font-semibold text-gray-900">See who’s winning.</strong> Everyone can see everyone’s scores, with a crown for the current leader.</span>
+                        </li>
+                        <li class="flex gap-x-3">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="mt-1 h-5 w-5 flex-none text-pinky-600" aria-hidden="true">
+                                <path fill-rule="evenodd" d="M2.25 12c0-5.385 4.365-9.75 9.75-9.75s9.75 4.365 9.75 9.75-4.365 9.75-9.75 9.75S2.25 17.385 2.25 12zm13.36-1.814a.75.75 0 10-1.22-.872l-3.236 4.53L9.53 12.22a.75.75 0 00-1.06 1.06l2.25 2.25a.75.75 0 001.14-.094l3.75-5.25z" clip-rule="evenodd" />
+                            </svg>
+                            <span><strong class="font-semibold text-gray-900">Quick rematches.</strong> Play again with the same people in one tap, and the winner is saved to your history when the last turn is played.</span>
+                        </li>
+                        <li class="flex gap-x-3">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="mt-1 h-5 w-5 flex-none text-pinky-600" aria-hidden="true">
+                                <path fill-rule="evenodd" d="M2.25 12c0-5.385 4.365-9.75 9.75-9.75s9.75 4.365 9.75 9.75-4.365 9.75-9.75 9.75S2.25 17.385 2.25 12zm13.36-1.814a.75.75 0 10-1.22-.872l-3.236 4.53L9.53 12.22a.75.75 0 00-1.06 1.06l2.25 2.25a.75.75 0 001.14-.094l3.75-5.25z" clip-rule="evenodd" />
+                            </svg>
+                            <span><strong class="font-semibold text-gray-900">Free to use.</strong> Try the demo score sheet without signing in, nothing is saved.</span>
+                        </li>
+                    </ul>
                     <div class="mt-10 flex items-center gap-x-6">
                         <a href="https://yatzy.game-scorer.com/register" class="rounded-md bg-pinky-600 px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-pinky-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-pinky-600">Register for FREE</a>
                         <a href="https://yatzy.game-scorer.com" class="text-sm font-semibold leading-6 text-gray-900">Learn more <span aria-hidden="true">→</span></a>
@@ -339,6 +467,33 @@
                 <div class="mx-auto max-w-2xl lg:mx-0 lg:flex-auto">
                     <h2 class="mt-10 max-w-lg text-4xl font-bold tracking-tight text-gray-900 sm:text-6xl">Social Experiment</h2>
                     <p class="mt-6 text-lg leading-8 text-gray-600">We are running a social experiment where we are tracking the costs to raise a child in the UK.</p>
+                    <p class="mt-4 text-base leading-7 text-gray-600">Since 2013 we’ve been logging the expenses for raising our two children and publishing the figures openly. More than £100,000 has been recorded so far, real costs from childcare and education to Christmas and hobbies.</p>
+                    <ul role="list" class="mt-8 max-w-xl space-y-3 text-base leading-7 text-gray-600">
+                        <li class="flex gap-x-3">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="mt-1 h-5 w-5 flex-none text-pinky-600" aria-hidden="true">
+                                <path fill-rule="evenodd" d="M2.25 12c0-5.385 4.365-9.75 9.75-9.75s9.75 4.365 9.75 9.75-4.365 9.75-9.75 9.75S2.25 17.385 2.25 12zm13.36-1.814a.75.75 0 10-1.22-.872l-3.236 4.53L9.53 12.22a.75.75 0 00-1.06 1.06l2.25 2.25a.75.75 0 001.14-.094l3.75-5.25z" clip-rule="evenodd" />
+                            </svg>
+                            <span><strong class="font-semibold text-gray-900">Every expense in context.</strong> Each entry has a date, a category, a subcategory and a total cost.</span>
+                        </li>
+                        <li class="flex gap-x-3">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="mt-1 h-5 w-5 flex-none text-pinky-600" aria-hidden="true">
+                                <path fill-rule="evenodd" d="M2.25 12c0-5.385 4.365-9.75 9.75-9.75s9.75 4.365 9.75 9.75-4.365 9.75-9.75 9.75S2.25 17.385 2.25 12zm13.36-1.814a.75.75 0 10-1.22-.872l-3.236 4.53L9.53 12.22a.75.75 0 00-1.06 1.06l2.25 2.25a.75.75 0 001.14-.094l3.75-5.25z" clip-rule="evenodd" />
+                            </svg>
+                            <span><strong class="font-semibold text-gray-900">Shared costs, allocated.</strong> Costs that cover more than one child, like the weekly shop, are allocated to each child as a percentage.</span>
+                        </li>
+                        <li class="flex gap-x-3">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="mt-1 h-5 w-5 flex-none text-pinky-600" aria-hidden="true">
+                                <path fill-rule="evenodd" d="M2.25 12c0-5.385 4.365-9.75 9.75-9.75s9.75 4.365 9.75 9.75-4.365 9.75-9.75 9.75S2.25 17.385 2.25 12zm13.36-1.814a.75.75 0 10-1.22-.872l-3.236 4.53L9.53 12.22a.75.75 0 00-1.06 1.06l2.25 2.25a.75.75 0 001.14-.094l3.75-5.25z" clip-rule="evenodd" />
+                            </svg>
+                            <span><strong class="font-semibold text-gray-900">Drill down.</strong> Browse totals per child and combined, then dig into the figures by year, category and subcategory.</span>
+                        </li>
+                        <li class="flex gap-x-3">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="mt-1 h-5 w-5 flex-none text-pinky-600" aria-hidden="true">
+                                <path fill-rule="evenodd" d="M2.25 12c0-5.385 4.365-9.75 9.75-9.75s9.75 4.365 9.75 9.75-4.365 9.75-9.75 9.75S2.25 17.385 2.25 12zm13.36-1.814a.75.75 0 10-1.22-.872l-3.236 4.53L9.53 12.22a.75.75 0 00-1.06 1.06l2.25 2.25a.75.75 0 001.14-.094l3.75-5.25z" clip-rule="evenodd" />
+                            </svg>
+                            <span><strong class="font-semibold text-gray-900">Powered by the API.</strong> Every figure is served by the Costs to Expect API, a real-world example of what you can build with it.</span>
+                        </li>
+                    </ul>
                     <div class="mt-10 flex items-center gap-x-6">
                         <a href="https://www.costs-to-expect.com" class="text-sm font-semibold leading-6 text-gray-900">Learn more <span aria-hidden="true">→</span></a>
                     </div>
