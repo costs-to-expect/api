@@ -2,6 +2,11 @@
 
 The complete changelog for the Costs to Expect REST API, our changelog follows the format defined at https://keepachangelog.com/en/1.0.0/
 
+## [v3.24.0] - 2026-10-25
+### Changed
+- Updated the landing page and added the two missing apps, Cashflow and Scrabble
+- Updated the images for Yahtzee and Yatzy, showing the old design
+
 ## [v3.23.2] - 2026-10-24
 ### Changed
 - Bumped the Docker image and minimum PHP requirement to 8.4
