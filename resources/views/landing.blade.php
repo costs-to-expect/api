@@ -254,6 +254,79 @@
             </svg>
             <div class="mx-auto max-w-7xl px-6 py-24 sm:py-32 lg:flex lg:items-center lg:gap-x-10 lg:px-8 lg:py-40">
                 <div class="mx-auto max-w-2xl lg:mx-0 lg:flex-auto">
+                    <h2 class="mt-10 max-w-lg text-4xl font-bold tracking-tight text-gray-900 sm:text-6xl">Cashflow</h2>
+                    <p class="mt-6 text-lg leading-8 text-gray-600">Money in. Money out. Allocated where it belongs. Cashflow tracks the money you spend and the money you receive, record each entry once, split it by percentage and see your running totals.</p>
+                    <p class="mt-4 text-base leading-7 text-gray-600">Built for keeping tabs on a handful of projects, a few properties or one small business.</p>
+                    <ul role="list" class="mt-8 max-w-xl space-y-3 text-base leading-7 text-gray-600">
+                        <li class="flex gap-x-3">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="mt-1 h-5 w-5 flex-none text-pinky-600" aria-hidden="true">
+                                <path fill-rule="evenodd" d="M2.25 12c0-5.385 4.365-9.75 9.75-9.75s9.75 4.365 9.75 9.75-4.365 9.75-9.75 9.75S2.25 17.385 2.25 12zm13.36-1.814a.75.75 0 10-1.22-.872l-3.236 4.53L9.53 12.22a.75.75 0 00-1.06 1.06l2.25 2.25a.75.75 0 001.14-.094l3.75-5.25z" clip-rule="evenodd" />
+                            </svg>
+                            <span><strong class="font-semibold text-gray-900">Split by percentage.</strong> Share one entry across projects, properties or clients in proportion to how it actually breaks down, each with its own colour and a bar showing its share.</span>
+                        </li>
+                        <li class="flex gap-x-3">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="mt-1 h-5 w-5 flex-none text-pinky-600" aria-hidden="true">
+                                <path fill-rule="evenodd" d="M2.25 12c0-5.385 4.365-9.75 9.75-9.75s9.75 4.365 9.75 9.75-4.365 9.75-9.75 9.75S2.25 17.385 2.25 12zm13.36-1.814a.75.75 0 10-1.22-.872l-3.236 4.53L9.53 12.22a.75.75 0 00-1.06 1.06l2.25 2.25a.75.75 0 001.14-.094l3.75-5.25z" clip-rule="evenodd" />
+                            </svg>
+                            <span><strong class="font-semibold text-gray-900">Separate trackers for separate things.</strong> Create a tracker for each thing you manage, for expenses or for transactions, each with its own resources, categories, reporting periods and default split.</span>
+                        </li>
+                        <li class="flex gap-x-3">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="mt-1 h-5 w-5 flex-none text-pinky-600" aria-hidden="true">
+                                <path fill-rule="evenodd" d="M2.25 12c0-5.385 4.365-9.75 9.75-9.75s9.75 4.365 9.75 9.75-4.365 9.75-9.75 9.75S2.25 17.385 2.25 12zm13.36-1.814a.75.75 0 10-1.22-.872l-3.236 4.53L9.53 12.22a.75.75 0 00-1.06 1.06l2.25 2.25a.75.75 0 001.14-.094l3.75-5.25z" clip-rule="evenodd" />
+                            </svg>
+                            <span><strong class="font-semibold text-gray-900">Reporting periods that fit.</strong> Define windows such as a financial year or school term, switch your totals between them, or view everything to date.</span>
+                        </li>
+                        <li class="flex gap-x-3">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="mt-1 h-5 w-5 flex-none text-pinky-600" aria-hidden="true">
+                                <path fill-rule="evenodd" d="M2.25 12c0-5.385 4.365-9.75 9.75-9.75s9.75 4.365 9.75 9.75-4.365 9.75-9.75 9.75S2.25 17.385 2.25 12zm13.36-1.814a.75.75 0 10-1.22-.872l-3.236 4.53L9.53 12.22a.75.75 0 00-1.06 1.06l2.25 2.25a.75.75 0 001.14-.094l3.75-5.25z" clip-rule="evenodd" />
+                            </svg>
+                            <span><strong class="font-semibold text-gray-900">More than one currency.</strong> Every currency gets its own total, nothing is ever converted or added together.</span>
+                        </li>
+                        <li class="flex gap-x-3">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="mt-1 h-5 w-5 flex-none text-pinky-600" aria-hidden="true">
+                                <path fill-rule="evenodd" d="M2.25 12c0-5.385 4.365-9.75 9.75-9.75s9.75 4.365 9.75 9.75-4.365 9.75-9.75 9.75S2.25 17.385 2.25 12zm13.36-1.814a.75.75 0 10-1.22-.872l-3.236 4.53L9.53 12.22a.75.75 0 00-1.06 1.06l2.25 2.25a.75.75 0 001.14-.094l3.75-5.25z" clip-rule="evenodd" />
+                            </svg>
+                            <span><strong class="font-semibold text-gray-900">Make it fit.</strong> Tag entries with categories and subcategories, or switch them off for a quicker form.</span>
+                        </li>
+                    </ul>
+                    <p class="mt-8 text-base leading-7 text-gray-600">Cashflow is in alpha, so expect some rough edges and changes, recurring expenses are still being finished. Sign in with your Costs to Expect account, or get in touch if you’d like access.</p>
+                    <div class="mt-10 flex items-center gap-x-6">
+                        <a href="mailto:support@costs-to-expect.com?subject=Cashflow%20alpha%20access" class="rounded-md bg-pinky-600 px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-pinky-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-pinky-600">Request alpha access</a>
+                        <a href="https://cashflow.costs-to-expect.com" class="text-sm font-semibold leading-6 text-gray-900">Learn more <span aria-hidden="true">→</span></a>
+                    </div>
+                </div>
+                <div class="mt-16 sm:mt-24 lg:mt-0 lg:flex-shrink-0 lg:flex-grow">
+                    <svg viewBox="0 0 366 729" role="img" class="mx-auto w-[22.875rem] max-w-full drop-shadow-xl">
+                        <title>Cashflow screenshot</title>
+                        <defs>
+                            <clipPath id="2ade4387-9c63-4fc4-b754-10e687a0d332">
+                                <rect width="316" height="684" rx="36" />
+                            </clipPath>
+                        </defs>
+                        <path fill="#4B5563" d="M363.315 64.213C363.315 22.99 341.312 1 300.092 1H66.751C25.53 1 3.528 22.99 3.528 64.213v44.68l-.857.143A2 2 0 0 0 1 111.009v24.611a2 2 0 0 0 1.671 1.973l.95.158a2.26 2.26 0 0 1-.093.236v26.173c.212.1.398.296.541.643l-1.398.233A2 2 0 0 0 1 167.009v47.611a2 2 0 0 0 1.671 1.973l1.368.228c-.139.319-.314.533-.511.653v16.637c.221.104.414.313.56.689l-1.417.236A2 2 0 0 0 1 237.009v47.611a2 2 0 0 0 1.671 1.973l1.347.225c-.135.294-.302.493-.49.607v377.681c0 41.213 22 63.208 63.223 63.208h95.074c.947-.504 2.717-.843 4.745-.843l.141.001h.194l.086-.001 33.704.005c1.849.043 3.442.37 4.323.838h95.074c41.222 0 63.223-21.999 63.223-63.212v-394.63c-.259-.275-.48-.796-.63-1.47l-.011-.133 1.655-.276A2 2 0 0 0 366 266.62v-77.611a2 2 0 0 0-1.671-1.973l-1.712-.285c.148-.839.396-1.491.698-1.811V64.213Z" />
+                        <path fill="#343E4E" d="M16 59c0-23.748 19.252-43 43-43h246c23.748 0 43 19.252 43 43v615c0 23.196-18.804 42-42 42H58c-23.196 0-42-18.804-42-42V59Z" />
+                        <foreignObject width="316" height="684" transform="translate(24 24)" clip-path="url(#2ade4387-9c63-4fc4-b754-10e687a0d332)">
+                            <img src="{{ asset('images/apps/cashflow.png') }}" alt="Cashflow money tracking app screenshot" />
+                        </foreignObject>
+                    </svg>
+                </div>
+            </div>
+        </div>
+
+        <div class="relative isolate pt-6">
+            <svg class="absolute inset-0 -z-10 h-full w-full stroke-gray-200 [mask-image:radial-gradient(100%_100%_at_top_right,white,transparent)]" aria-hidden="true">
+                <defs>
+                    <pattern id="83fd4e5a-9d52-42fc-97b6-718e5d7ee527" width="200" height="200" x="50%" y="-1" patternUnits="userSpaceOnUse">
+                        <path d="M100 200V.5M.5 .5H200" fill="none" />
+                    </pattern>
+                </defs>
+                <svg x="50%" y="-1" class="overflow-visible fill-gray-50">
+                    <path d="M-100.5 0h201v201h-201Z M699.5 0h201v201h-201Z M499.5 400h201v201h-201Z M-300.5 600h201v201h-201Z" stroke-width="0" />
+                </svg>
+                <rect width="100%" height="100%" stroke-width="0" fill="url(#83fd4e5a-9d52-42fc-97b6-718e5d7ee527)" />
+            </svg>
+            <div class="mx-auto max-w-7xl px-6 py-24 sm:py-32 lg:flex lg:items-center lg:gap-x-10 lg:px-8 lg:py-40">
+                <div class="mx-auto max-w-2xl lg:mx-0 lg:flex-auto">
                     <h2 class="mt-10 max-w-lg text-4xl font-bold tracking-tight text-gray-900 sm:text-6xl">Budget</h2>
                     <p class="mt-6 text-lg leading-8 text-gray-600">A free powerful easy to use open source budgeting tool powered by the Costs to Expect API. A budgeting tool so easy to use, it’s child play!</p>
                     <p class="mt-4 text-base leading-7 text-gray-600">Add your income, expenses and savings, then see how your balances will look over the coming months. Change an amount, a date or an item and the projections update instantly. Not sure yet? Try the demo first.</p>
@@ -465,6 +538,79 @@
             </svg>
             <div class="mx-auto max-w-7xl px-6 py-24 sm:py-32 lg:flex lg:items-center lg:gap-x-10 lg:px-8 lg:py-40">
                 <div class="mx-auto max-w-2xl lg:mx-0 lg:flex-auto">
+                    <h2 class="mt-10 max-w-lg text-4xl font-bold tracking-tight text-gray-900 sm:text-6xl">Scrabble Game Scorer</h2>
+                    <p class="mt-6 text-lg leading-8 text-gray-600">A game scorer powered by the Costs to Expect API. You still find the letters and play the words, we’ll keep count of the words, the bingos and who is winning.</p>
+                    <p class="mt-4 text-base leading-7 text-gray-600">One player signs in and chooses two to four players. Score every turn yourself on one screen, or give each player a link so they can add their own words on their phone.</p>
+                    <ul role="list" class="mt-8 max-w-xl space-y-3 text-base leading-7 text-gray-600">
+                        <li class="flex gap-x-3">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="mt-1 h-5 w-5 flex-none text-pinky-600" aria-hidden="true">
+                                <path fill-rule="evenodd" d="M2.25 12c0-5.385 4.365-9.75 9.75-9.75s9.75 4.365 9.75 9.75-4.365 9.75-9.75 9.75S2.25 17.385 2.25 12zm13.36-1.814a.75.75 0 10-1.22-.872l-3.236 4.53L9.53 12.22a.75.75 0 00-1.06 1.06l2.25 2.25a.75.75 0 001.14-.094l3.75-5.25z" clip-rule="evenodd" />
+                            </svg>
+                            <span><strong class="font-semibold text-gray-900">Add a turn in seconds.</strong> Type the word, enter its score and tap add. Playing all seven tiles earns a one-tap 50-point bingo, and the next player is shown.</span>
+                        </li>
+                        <li class="flex gap-x-3">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="mt-1 h-5 w-5 flex-none text-pinky-600" aria-hidden="true">
+                                <path fill-rule="evenodd" d="M2.25 12c0-5.385 4.365-9.75 9.75-9.75s9.75 4.365 9.75 9.75-4.365 9.75-9.75 9.75S2.25 17.385 2.25 12zm13.36-1.814a.75.75 0 10-1.22-.872l-3.236 4.53L9.53 12.22a.75.75 0 00-1.06 1.06l2.25 2.25a.75.75 0 001.14-.094l3.75-5.25z" clip-rule="evenodd" />
+                            </svg>
+                            <span><strong class="font-semibold text-gray-900">Tile by tile, if you like.</strong> Tap each letter to mark a double or triple square, a blank or a letter already on the board and the score adds up automatically, a nice way for children to see how the points are made.</span>
+                        </li>
+                        <li class="flex gap-x-3">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="mt-1 h-5 w-5 flex-none text-pinky-600" aria-hidden="true">
+                                <path fill-rule="evenodd" d="M2.25 12c0-5.385 4.365-9.75 9.75-9.75s9.75 4.365 9.75 9.75-4.365 9.75-9.75 9.75S2.25 17.385 2.25 12zm13.36-1.814a.75.75 0 10-1.22-.872l-3.236 4.53L9.53 12.22a.75.75 0 00-1.06 1.06l2.25 2.25a.75.75 0 001.14-.094l3.75-5.25z" clip-rule="evenodd" />
+                            </svg>
+                            <span><strong class="font-semibold text-gray-900">Every word, counted.</strong> The highest and lowest scoring words, the longest word, every bingo and the winner are saved to your history and stats when you finish the game.</span>
+                        </li>
+                        <li class="flex gap-x-3">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="mt-1 h-5 w-5 flex-none text-pinky-600" aria-hidden="true">
+                                <path fill-rule="evenodd" d="M2.25 12c0-5.385 4.365-9.75 9.75-9.75s9.75 4.365 9.75 9.75-4.365 9.75-9.75 9.75S2.25 17.385 2.25 12zm13.36-1.814a.75.75 0 10-1.22-.872l-3.236 4.53L9.53 12.22a.75.75 0 00-1.06 1.06l2.25 2.25a.75.75 0 001.14-.094l3.75-5.25z" clip-rule="evenodd" />
+                            </svg>
+                            <span><strong class="font-semibold text-gray-900">Records over time.</strong> Your average word, bingos, wins, closest game and biggest win.</span>
+                        </li>
+                        <li class="flex gap-x-3">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="mt-1 h-5 w-5 flex-none text-pinky-600" aria-hidden="true">
+                                <path fill-rule="evenodd" d="M2.25 12c0-5.385 4.365-9.75 9.75-9.75s9.75 4.365 9.75 9.75-4.365 9.75-9.75 9.75S2.25 17.385 2.25 12zm13.36-1.814a.75.75 0 10-1.22-.872l-3.236 4.53L9.53 12.22a.75.75 0 00-1.06 1.06l2.25 2.25a.75.75 0 001.14-.094l3.75-5.25z" clip-rule="evenodd" />
+                            </svg>
+                            <span><strong class="font-semibold text-gray-900">Free, nothing to install.</strong> It runs in the browser, player links need no app or sign-up, and replaying with the same group is a single tap.</span>
+                        </li>
+                    </ul>
+                    <p class="mt-8 text-base leading-7 text-gray-600">Not sure yet? Try the score sheet on the home page without signing in, nothing is saved.</p>
+                    <div class="mt-10 flex items-center gap-x-6">
+                        <a href="https://scrabble.game-scorer.com/register" class="rounded-md bg-pinky-600 px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-pinky-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-pinky-600">Register for FREE</a>
+                        <a href="https://scrabble.game-scorer.com" class="text-sm font-semibold leading-6 text-gray-900">Learn more <span aria-hidden="true">→</span></a>
+                    </div>
+                </div>
+                <div class="mt-16 sm:mt-24 lg:mt-0 lg:flex-shrink-0 lg:flex-grow">
+                    <svg viewBox="0 0 366 729" role="img" class="mx-auto w-[22.875rem] max-w-full drop-shadow-xl">
+                        <title>Scrabble screenshot</title>
+                        <defs>
+                            <clipPath id="2ade4387-9c63-4fc4-b754-10e687a0d332">
+                                <rect width="316" height="684" rx="36" />
+                            </clipPath>
+                        </defs>
+                        <path fill="#4B5563" d="M363.315 64.213C363.315 22.99 341.312 1 300.092 1H66.751C25.53 1 3.528 22.99 3.528 64.213v44.68l-.857.143A2 2 0 0 0 1 111.009v24.611a2 2 0 0 0 1.671 1.973l.95.158a2.26 2.26 0 0 1-.093.236v26.173c.212.1.398.296.541.643l-1.398.233A2 2 0 0 0 1 167.009v47.611a2 2 0 0 0 1.671 1.973l1.368.228c-.139.319-.314.533-.511.653v16.637c.221.104.414.313.56.689l-1.417.236A2 2 0 0 0 1 237.009v47.611a2 2 0 0 0 1.671 1.973l1.347.225c-.135.294-.302.493-.49.607v377.681c0 41.213 22 63.208 63.223 63.208h95.074c.947-.504 2.717-.843 4.745-.843l.141.001h.194l.086-.001 33.704.005c1.849.043 3.442.37 4.323.838h95.074c41.222 0 63.223-21.999 63.223-63.212v-394.63c-.259-.275-.48-.796-.63-1.47l-.011-.133 1.655-.276A2 2 0 0 0 366 266.62v-77.611a2 2 0 0 0-1.671-1.973l-1.712-.285c.148-.839.396-1.491.698-1.811V64.213Z" />
+                        <path fill="#343E4E" d="M16 59c0-23.748 19.252-43 43-43h246c23.748 0 43 19.252 43 43v615c0 23.196-18.804 42-42 42H58c-23.196 0-42-18.804-42-42V59Z" />
+                        <foreignObject width="316" height="684" transform="translate(24 24)" clip-path="url(#2ade4387-9c63-4fc4-b754-10e687a0d332)">
+                            <img src="{{ asset('images/apps/scrabble.png') }}" alt="Scrabble Game Scorer app screenshot" />
+                        </foreignObject>
+                    </svg>
+                </div>
+            </div>
+        </div>
+
+        <div class="relative isolate pt-6">
+            <svg class="absolute inset-0 -z-10 h-full w-full stroke-gray-200 [mask-image:radial-gradient(100%_100%_at_top_right,white,transparent)]" aria-hidden="true">
+                <defs>
+                    <pattern id="83fd4e5a-9d52-42fc-97b6-718e5d7ee527" width="200" height="200" x="50%" y="-1" patternUnits="userSpaceOnUse">
+                        <path d="M100 200V.5M.5 .5H200" fill="none" />
+                    </pattern>
+                </defs>
+                <svg x="50%" y="-1" class="overflow-visible fill-gray-50">
+                    <path d="M-100.5 0h201v201h-201Z M699.5 0h201v201h-201Z M499.5 400h201v201h-201Z M-300.5 600h201v201h-201Z" stroke-width="0" />
+                </svg>
+                <rect width="100%" height="100%" stroke-width="0" fill="url(#83fd4e5a-9d52-42fc-97b6-718e5d7ee527)" />
+            </svg>
+            <div class="mx-auto max-w-7xl px-6 py-24 sm:py-32 lg:flex lg:items-center lg:gap-x-10 lg:px-8 lg:py-40">
+                <div class="mx-auto max-w-2xl lg:mx-0 lg:flex-auto">
                     <h2 class="mt-10 max-w-lg text-4xl font-bold tracking-tight text-gray-900 sm:text-6xl">Social Experiment</h2>
                     <p class="mt-6 text-lg leading-8 text-gray-600">We are running a social experiment where we are tracking the costs to raise a child in the UK.</p>
                     <p class="mt-4 text-base leading-7 text-gray-600">Since 2013 we’ve been logging the expenses for raising our two children and publishing the figures openly. More than £100,000 has been recorded so far, real costs from childcare and education to Christmas and hobbies.</p>
@@ -532,6 +678,10 @@
                             </li>
 
                             <li>
+                                <a href="https://cashflow.costs-to-expect.com" class="text-base text-pinky-500 hover:text-pinky-900">Cashflow</a>
+                            </li>
+
+                            <li>
                                 <a href="https://budget.costs-to-expect.com" class="text-base text-pinky-500 hover:text-pinky-900">Budget</a>
                             </li>
 
@@ -557,6 +707,10 @@
 
                             <li>
                                 <a href="https://yatzy.game-scorer.com" class="text-base text-pinky-500 hover:text-pinky-900">Yatzy Game Scorer</a>
+                            </li>
+
+                            <li>
+                                <a href="https://scrabble.game-scorer.com" class="text-base text-pinky-500 hover:text-pinky-900">Scrabble Game Scorer</a>
                             </li>
                         </ul>
                     </div>
