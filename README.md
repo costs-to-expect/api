@@ -16,11 +16,13 @@ available on Postman at [postman.costs-to-expect.com](https://postman.costs-to-e
 
 The API is used by the following Apps;
 
-- [Budget](https://budget.costs-to-expect.com) Our free and Open Source Budgeting tool
-- [Budget Pro](https://budget-pro.costs-to-expect.com) The commercial version of Budget
-- [Yahtzee Game Scorer](https://yahtzee.game-scorer.com) Our Yahtzee Game Scorer, free for all to use
-- [Yatzy Game Scorer](https://yatzy.game-scorer.com) Our Yatzy Game Scorer, free for all to use
-- [Social Experiment](https://www.costs-to-expect.com) How much does it cost to raise a child to adulthood in the UK?
+- [Budget Pro](https://budget-pro.costs-to-expect.com) Budget Pro is a planning-first budgeting app for people who want control before they spend, not after. Most budgeting tools show you what you’ve already spent. Budget Pro shows you what’s coming next — and lets you change it before it happens.
+- [Cashflow](https://cashflow.costs-to-expect.com) Money in. Money out. Allocated where it belongs. Cashflow tracks the money you spend and the money you receive, record each entry once, split it by percentage and see your running totals.
+- [Budget](https://budget.costs-to-expect.com) A free powerful easy to use open source budgeting tool powered by the Costs to Expect API. A budgeting tool so easy to use, it’s child play!
+- [Yahtzee Game Scorer](https://yahtzee.game-scorer.com) A fun little project powered by the Costs to Expect API, no more designated scorer, everyone gets a score sheet. You bring the dice, we’ll do the maths.
+- [Yatzy Game Scorer](https://yatzy.game-scorer.com) We built Yahtzee so figured why not build Yatzy as well. We haven't yet decided which version of the game we enjoy more.
+- [Scrabble](https://scrabble.game-scorer.com) A game scorer powered by the Costs to Expect API. You still find the letters and play the words, we’ll keep count of the words, the bingos and who is winning.
+- [Social Experiment](https://www.costs-to-expect.com) We are running a social experiment where we are tracking the costs to raise a child in the UK.
 
 ## Set up
 
